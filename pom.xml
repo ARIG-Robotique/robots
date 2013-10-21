@@ -1,0 +1,26 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.arig.robot</groupId>
+	<artifactId>robot-system-lib-parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	
+	<name>ARIG Association - Robot System Librairie</name>
+	<description>Librairie Java regroupant les différentes action et interface pour les robot de l'association participant à la coupe de France de robotique.</description>
+	
+	<properties>
+	    <!-- Build properties -->
+	    
+		<!-- Lib dependencies -->
+		<lib.spring.version></lib.spring.version>
+		<lib.apache.commons.lang.version></lib.apache.commons.lang.version>
+		<lib.google.guava></lib.google.guava>	    
+	</properties>
+	
+	<modules>
+		<module>robot-system-lib-core</module>
+		<module>robot-system-lib-raspi</module>
+	</modules>
+</project>
