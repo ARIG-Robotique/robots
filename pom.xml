@@ -8,19 +8,117 @@
 	<packaging>pom</packaging>
 	
 	<name>ARIG Association - Robot System Librairie</name>
-	<description>Librairie Java regroupant les différentes action et interface pour les robot de l'association participant à la coupe de France de robotique.</description>
+	<description>Librairie Java regroupant les différentes action et interface pour les robots de l'association participant à la coupe de France de robotique.</description>
 	
 	<properties>
 	    <!-- Build properties -->
+	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	    <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
+	    
+	    <build.java.version>1.7</build.java.version>
+	    
+	    <plugin.compiler.version>3.1</plugin.compiler.version>
+	    <plugin.jar.version>2.4</plugin.jar.version>
 	    
 		<!-- Lib dependencies -->
-		<lib.spring.version></lib.spring.version>
-		<lib.apache.commons.lang.version></lib.apache.commons.lang.version>
-		<lib.google.guava></lib.google.guava>	    
+		<lib.lombok.version>1.12.2</lib.lombok.version>
+		<lib.spring.version>3.2.4.RELEASE</lib.spring.version>
+		<lib.apache.commons.lang.version>3.1</lib.apache.commons.lang.version>
+		<lib.google.guava.version>15.0</lib.google.guava.version>
+		<lib.slf4j.version>1.7.5</lib.slf4j.version>
+		<lib.pi4j.version>0.0.5</lib.pi4j.version>
+		<lib.junit.version>4.11</lib.junit.version>
 	</properties>
 	
 	<modules>
 		<module>robot-system-lib-core</module>
 		<module>robot-system-lib-raspi</module>
 	</modules>
+	
+	<scm>
+		<connection>scm:git:git://gitorious.org/arig-association/robot-system-lib-parent.git</connection>
+		<developerConnection>scm:git:ssh://git@gitorious.org/arig-association/robot-system-lib-parent.git</developerConnection>
+		<url>http://gitorious.org/arig-association/robot-system-lib-parent</url>
+	</scm>
+	
+	<dependencyManagement>
+		<dependencies>
+			<!-- Lombok -->
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>${lib.lombok.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			
+			<!-- Apache Commons -->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${lib.apache.commons.lang.version}</version>
+			</dependency>
+			
+			<!-- Google Guava -->
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${lib.google.guava.version}</version>
+			</dependency>
+			
+			<!-- Spring -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${lib.spring.version}</version>
+			</dependency>
+			
+			<!-- Raspberry Pi Java Librairie -->
+			<dependency>
+				<groupId>com.pi4j</groupId>
+				<artifactId>pi4j-core</artifactId>
+				<version>${lib.pi4j.version}</version>
+			</dependency>
+			
+			<!-- Logging -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>${lib.slf4j.version}</version>
+			</dependency>
+			
+			<!-- Tests -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${lib.spring.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${lib.junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${plugin.compiler.version}</version>
+				<configuration>
+					<encoding>${project.reporting.outputEncoding}</encoding>
+					<source>${build.java.version}</source>
+					<target>${build.java.version}</target>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>${plugin.jar.version}</version>
+			</plugin>
+		</plugins>
+	</build>
 </project>
