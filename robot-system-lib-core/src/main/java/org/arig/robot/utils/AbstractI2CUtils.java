@@ -3,10 +3,12 @@ package org.arig.robot.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import org.arig.robot.utils.exception.I2CException;
+import org.arig.robot.exception.I2CException;
+import org.springframework.util.Assert;
 
 /**
  * The Class AbstractI2CUtils.
@@ -17,15 +19,43 @@ import org.arig.robot.utils.exception.I2CException;
 public abstract class AbstractI2CUtils {
 
 	/** The board map. */
-	@Getter
+	@Getter(value = AccessLevel.PROTECTED)
 	private final Map<String, Byte> boardMap = new HashMap<>();
+
+	/**
+	 * Nb board registered.
+	 *
+	 * @return the int
+	 */
+	public int nbBoardRegistered() {
+		return boardMap.size();
+	}
+
+	/**
+	 * Execute scan.
+	 *
+	 * @throws I2CException the i2 c exception
+	 */
+	public final void executeScan() throws I2CException {
+		Assert.notEmpty(boardMap, "Le mapping des cartes et address est obligatoire");
+
+		scan();
+	}
+
+	/**
+	 * Reset.
+	 *
+	 * @throws I2CException the i2 c exception
+	 */
+	public abstract void reset() throws I2CException;
 
 	/**
 	 * Scan.
 	 *
-	 * @throws RuntimeException the runtime exception
+	 * @throws I2CException the i2 c exception
 	 */
-	public abstract void scan() throws RuntimeException;
+	protected abstract void scan() throws I2CException;
+
 
 	/**
 	 * Checks if is error.
@@ -52,7 +82,10 @@ public abstract class AbstractI2CUtils {
 	 * @param address the address
 	 */
 	public void registerBoard(final String boardName, final Byte address) {
-		AbstractI2CUtils.log.info(String.format("Enregistrement de la carte %s a l'adresse %s."));
+		Assert.notNull(address, "L'addresse doit être précisé");
+		Assert.hasText(boardName, "Le nom de la carte doit être précisé");
+
+		AbstractI2CUtils.log.info(String.format("Enregistrement de la carte %s a l'adresse %02X.", boardName, address));
 		boardMap.put(boardName, address);
 	}
 

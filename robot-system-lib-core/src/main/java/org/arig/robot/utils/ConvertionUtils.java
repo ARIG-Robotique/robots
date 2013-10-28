@@ -96,6 +96,6 @@ public final class ConvertionUtils {
 	 * @return the double
 	 */
 	public double radToPulse(final double val) {
-		return Math.toDegrees(degToPulse(val));
+		return degToPulse(Math.toDegrees(val));
 	}
 }

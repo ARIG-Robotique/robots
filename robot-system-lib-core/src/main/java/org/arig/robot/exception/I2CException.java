@@ -1,4 +1,4 @@
-package org.arig.robot.utils.exception;
+package org.arig.robot.exception;
 
 /**
  * The Class I2CException.
