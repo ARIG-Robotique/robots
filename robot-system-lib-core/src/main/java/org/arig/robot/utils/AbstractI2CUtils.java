@@ -85,7 +85,7 @@ public abstract class AbstractI2CUtils {
 		Assert.notNull(address, "L'addresse doit être précisé");
 		Assert.hasText(boardName, "Le nom de la carte doit être précisé");
 
-		AbstractI2CUtils.log.info(String.format("Enregistrement de la carte %s a l'adresse %02X.", boardName, address));
+		AbstractI2CUtils.log.debug(String.format("Enregistrement de la carte %s a l'adresse 0x%02X.", boardName, address));
 		boardMap.put(boardName, address);
 	}
 
