@@ -66,6 +66,13 @@ public abstract class AbstractI2CUtils {
 	public abstract boolean isError(final Byte returnCode);
 
 	/**
+	 * Prints the error.
+	 *
+	 * @param returnCode the return code
+	 */
+	public abstract void printError(final Byte returnCode);
+
+	/**
 	 * Checks if is ok.
 	 *
 	 * @param returnCode the return code
