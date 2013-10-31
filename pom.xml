@@ -41,6 +41,14 @@
 		<url>http://gitorious.org/arig-association/robot-system-lib-parent</url>
 	</scm>
 	
+	<distributionManagement>
+		<site>
+			<id>robot-system-lib-java-site</id>
+			<name>Site</name>
+			<url>http://www.arig-association.org/robot-system-lib-java</url>
+		</site>
+	</distributionManagement>
+	
 	<dependencyManagement>
 		<dependencies>
 			<!-- Lombok -->
