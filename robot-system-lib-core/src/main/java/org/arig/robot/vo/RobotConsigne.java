@@ -24,60 +24,84 @@ import org.arig.robot.vo.enums.TypeConsigne;
  */
 public class RobotConsigne {
 
-	/** Gets the position. */
-	@Getter
-	private final RobotPosition position;
+    /** Gets the position. */
+    @Getter
+    private final RobotPosition position;
 
-	/** Gets the consigne polaire. */
-	@Getter
-	private final ConsignePolaire consignePolaire;
+    /** Gets the consigne polaire. */
+    @Getter
+    private final ConsignePolaire consignePolaire;
 
-	/** The type. */
-	@Getter
-	private final List<TypeConsigne> types = new ArrayList<>();
+    /** The type. */
+    private final List<TypeConsigne> types = new ArrayList<>();
 
-	/**
-	 * Instantiates a new robot consigne.
-	 */
-	public RobotConsigne() {
-		position = new RobotPosition();
-		consignePolaire = new ConsignePolaire();
-		consignePolaire.setFrein(true);
-		setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
-	}
+    /**
+     * Instantiates a new robot consigne.
+     */
+    public RobotConsigne() {
+        position = new RobotPosition();
+        consignePolaire = new ConsignePolaire();
+        consignePolaire.setFrein(true);
+        setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+    }
 
-	/**
-	 * Sets the types.
-	 *
-	 * @param values the new types
-	 */
-	public void setTypes(final TypeConsigne ... values) {
-		types.clear();
-		for (final TypeConsigne tc : values) {
-			types.add(tc);
-		}
-	}
+    /**
+     * Sets the types.
+     *
+     * @param values the new types
+     */
+    public void setTypes(final TypeConsigne ... values) {
+        types.clear();
+        for (final TypeConsigne tc : values) {
+            types.add(tc);
+        }
+    }
 
-	/**
-	 * Enable frein.
-	 */
-	public void enableFrein() {
-		consignePolaire.setFrein(true);
-	}
+    /**
+     * Checks if is type.
+     *
+     * @param t the type
+     * @return true, if is type
+     */
+    public boolean isType(final TypeConsigne t) {
+        return types.contains(t);
+    }
 
-	/**
-	 * Disable frein.
-	 */
-	public void disableFrein() {
-		consignePolaire.setFrein(false);
-	}
+    /**
+     * Checks if is all types.
+     *
+     * @param types the types
+     * @return true, if is all types
+     */
+    public boolean isAllTypes(final TypeConsigne ... types) {
+        boolean result = true;
+        for (final TypeConsigne t : types) {
+            result = result & isType(t);
+        }
 
-	/**
-	 * Gets the frein.
-	 *
-	 * @return the frein
-	 */
-	public boolean getFrein() {
-		return consignePolaire.isFrein();
-	}
+        return result;
+    }
+
+    /**
+     * Enable frein.
+     */
+    public void enableFrein() {
+        consignePolaire.setFrein(true);
+    }
+
+    /**
+     * Disable frein.
+     */
+    public void disableFrein() {
+        consignePolaire.setFrein(false);
+    }
+
+    /**
+     * Gets the frein.
+     *
+     * @return the frein
+     */
+    public boolean getFrein() {
+        return consignePolaire.isFrein();
+    }
 }
