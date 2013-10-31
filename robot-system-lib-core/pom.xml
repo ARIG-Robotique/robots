@@ -12,6 +12,8 @@
 	<artifactId>robot-system-lib-core</artifactId>
 	<packaging>jar</packaging>
 	
+	<name>ARIG Association - Robot System Librairie - Core</name>
+	
 	<dependencies>
 	   <!-- Lombok -->
 		<dependency>
