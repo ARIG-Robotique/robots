@@ -29,6 +29,7 @@ public class ArigLMD18200Motors extends AbstractMotors {
 	@Override
 	public void moteur1(final int val) {
 		final int cmd = check(val);
+		ArigLMD18200Motors.log.info(String.format("Commande du moteur 1 : %s", cmd));
 		if (cmd == prevM1) {
 			return;
 		}
@@ -43,6 +44,7 @@ public class ArigLMD18200Motors extends AbstractMotors {
 	@Override
 	public void moteur2(final int val) {
 		final int cmd = check(val);
+		ArigLMD18200Motors.log.info(String.format("Commande du moteur 2 : %s", cmd));
 		if (cmd == prevM2) {
 			return;
 		}
@@ -58,6 +60,7 @@ public class ArigLMD18200Motors extends AbstractMotors {
 	 */
 	public void moteur3(final int val) {
 		final int cmd = check(val);
+		ArigLMD18200Motors.log.info(String.format("Commande du moteur 3 : %s", cmd));
 		if (cmd == prevM3) {
 			return;
 		}
@@ -73,6 +76,7 @@ public class ArigLMD18200Motors extends AbstractMotors {
 	 */
 	public void moteur4(final int val) {
 		final int cmd = check(val);
+		ArigLMD18200Motors.log.info(String.format("Commande du moteur 4 : %s", cmd));
 		if (cmd == prevM4) {
 			return;
 		}
