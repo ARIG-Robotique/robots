@@ -13,6 +13,7 @@
 	<packaging>jar</packaging>
 	
 	<name>ARIG Association - Robot System Librairie - Core</name>
+	<description>Librairie coeur du système.</description>
 	
 	<dependencies>
 	   <!-- Lombok -->

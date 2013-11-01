@@ -12,6 +12,7 @@
 	<packaging>jar</packaging>
 	
 	<name>ARIG Association - Robot System Librairie - Raspberry Pi specific implementation</name>
+	<description>Implémentation pour Raspberry Pi</description>
 	
 	<dependencies>
 		<!-- Lombok -->
