@@ -21,7 +21,7 @@ public class RobotPosition {
 	private double y;
 
 	/** The angle. */
-	private int angle;
+	private double angle;
 
 	/**
 	 * Instantiates a new robot position.
@@ -37,9 +37,27 @@ public class RobotPosition {
 	 * @param y the y
 	 * @param angle the angle
 	 */
-	public void updatePosition(final double x, final double y, final int angle) {
+	public void updatePosition(final double x, final double y, final double angle) {
 		setX(x);
 		setY(y);
 		setAngle(angle);
+	}
+
+	/**
+	 * Adds the delta x.
+	 *
+	 * @param dX the d x
+	 */
+	public void addDeltaX(final double dX) {
+		x += dX;
+	}
+
+	/**
+	 * Adds the delta y.
+	 *
+	 * @param dY the d y
+	 */
+	public void addDeltaY(final double dY) {
+		y += dY;
 	}
 }
