@@ -301,7 +301,7 @@ public class MD22Motors extends AbstractMotors {
 	public void printVersion() {
 		final byte retCode = i2cManager.sendData(address, MD22Motors.MD22_VERSION_REGISTER);
 		if (i2cManager.getUtils().isOk(retCode)) {
-			final short version = i2cManager.getData();
+			final byte version = i2cManager.getData(address);
 			MD22Motors.log.info(String.format("MD22 DC Motors (V : %s)", version));
 		} else {
 			i2cManager.getUtils().printError(retCode);

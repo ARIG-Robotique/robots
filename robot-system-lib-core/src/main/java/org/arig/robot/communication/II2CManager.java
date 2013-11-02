@@ -9,26 +9,45 @@ import org.arig.robot.utils.AbstractI2CUtils;
  */
 public interface II2CManager {
 
-    /**
-     * Send data.
-     *
-     * @param address the address
-     * @param datas the datas
-     * @return the byte
-     */
-    byte sendData(final int address, final byte ... datas);
+	/**
+	 * Send data.
+	 *
+	 * @param address the address
+	 * @param datas the datas
+	 * @return the byte
+	 */
+	byte sendData(final int address, final byte ... datas);
 
-    /**
-     * Gets the data.
-     *
-     * @return the data
-     */
-    short getData();
+	/**
+	 * Send data.
+	 *
+	 * @param address the address
+	 * @param nbResult the nb result
+	 * @param datas the datas
+	 * @return the byte
+	 */
+	byte sendData(final int address, final int nbResult, final byte ... datas);
 
-    /**
-     * Gets the utils.
-     *
-     * @return the utils
-     */
-    AbstractI2CUtils getUtils();
+	/**
+	 * Gets the data.
+	 *
+	 * @param address the address
+	 * @return the data
+	 */
+	byte getData(final int address);
+
+	/**
+	 * Gets the datas.
+	 *
+	 * @param address the address
+	 * @return the datas
+	 */
+	byte[] getDatas(final int address);
+
+	/**
+	 * Gets the utils.
+	 *
+	 * @return the utils
+	 */
+	AbstractI2CUtils getUtils();
 }

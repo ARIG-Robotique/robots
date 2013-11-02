@@ -111,7 +111,7 @@ public class SD21Servos {
 	public void printVersion() {
 		final byte retCode = i2cManager.sendData(address, SD21Servos.SD21_VERSION_REGISTER);
 		if (i2cManager.getUtils().isOk(retCode)) {
-			final short version = i2cManager.getData();
+			final short version = i2cManager.getData(address);
 			SD21Servos.log.info(String.format("SD21 ServoMotors (V : %s)", version));
 		} else {
 			i2cManager.getUtils().printError(retCode);
