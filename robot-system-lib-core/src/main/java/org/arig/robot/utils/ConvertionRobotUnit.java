@@ -3,14 +3,14 @@ package org.arig.robot.utils;
 import lombok.Getter;
 
 /**
- * The Class ConvertionUtils.
+ * The Class ConvertionRobotUnit.
  * 
  * Cette classe permet de réalisé les changements d'unité.
  * Elle réalie les convertions pulse <-> mm et pulse <-> °
  * 
  * @author mythril
  */
-public final class ConvertionUtils {
+public final class ConvertionRobotUnit {
 
 	/** The count per mm. */
 	@Getter
@@ -31,7 +31,7 @@ public final class ConvertionUtils {
 	/**
 	 * Instantiates a new convertion utils.
 	 */
-	public ConvertionUtils(final double countPerMm, final double countPerDegree) {
+	public ConvertionRobotUnit(final double countPerMm, final double countPerDegree) {
 		this.countPerMm = countPerMm;
 		this.countPerDegree = countPerDegree;
 

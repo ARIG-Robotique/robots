@@ -7,12 +7,12 @@ import org.arig.robot.exception.I2CException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * The Class ARIGEncoders.
- * 
+ * The Class ARIG2WheelsEncoders.
+ *
  * @author mythril
  */
 @Slf4j
-public class ARIGEncoders extends AbstractEncoders {
+public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
 
 	/** The address droit. */
 	private final byte addressDroit;
@@ -30,7 +30,7 @@ public class ARIGEncoders extends AbstractEncoders {
 	 * @param addressGauche the address gauche
 	 * @param addressDroit the address droit
 	 */
-	public ARIGEncoders(final byte addressGauche, final byte addressDroit) {
+	public ARIG2WheelsEncoders(final byte addressGauche, final byte addressDroit) {
 		this.addressGauche = addressGauche;
 		this.addressDroit = addressDroit;
 	}
@@ -40,10 +40,10 @@ public class ARIGEncoders extends AbstractEncoders {
 	 */
 	@Override
 	public void reset() {
-		ARIGEncoders.log.info("Reset carte codeur droit");
+		ARIG2WheelsEncoders.log.info("Reset carte codeur droit");
 		lectureDroit();
 
-		ARIGEncoders.log.info("Reset carte codeur gauche");
+		ARIG2WheelsEncoders.log.info("Reset carte codeur gauche");
 		lectureGauche();
 	}
 
@@ -55,7 +55,7 @@ public class ARIGEncoders extends AbstractEncoders {
 		try {
 			return lectureData(addressGauche);
 		} catch (final I2CException e) {
-			ARIGEncoders.log.error("Erreur lors de la lecture du codeur gauche : " + e.toString());
+			ARIG2WheelsEncoders.log.error("Erreur lors de la lecture du codeur gauche : " + e.toString());
 			return 0;
 		}
 	}
@@ -68,7 +68,7 @@ public class ARIGEncoders extends AbstractEncoders {
 		try {
 			return lectureData(addressDroit);
 		} catch (final I2CException e) {
-			ARIGEncoders.log.error("Erreur lors de la lecture du codeur droit : " + e.toString());
+			ARIG2WheelsEncoders.log.error("Erreur lors de la lecture du codeur droit : " + e.toString());
 			return 0;
 		}
 	}
@@ -96,7 +96,7 @@ public class ARIGEncoders extends AbstractEncoders {
 		value = datas[0] << 8;
 		value += datas[1];
 
-		ARIGEncoders.log.info(String.format("Lecture de la valeur %s pour le codeur %d", value, address));
+		ARIG2WheelsEncoders.log.info(String.format("Lecture de la valeur %s pour le codeur %d", value, address));
 		return value;
 	}
 }

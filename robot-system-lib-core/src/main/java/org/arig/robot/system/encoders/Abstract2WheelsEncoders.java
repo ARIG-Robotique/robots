@@ -4,12 +4,12 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * The Class AbstractEncoders.
- * 
+ * The Class Abstract2WheelsEncoders.
+ *
  * @author mythril
  */
 @Slf4j
-public abstract class AbstractEncoders {
+public abstract class Abstract2WheelsEncoders {
 
 	/** The distance. */
 	@Getter
@@ -28,7 +28,7 @@ public abstract class AbstractEncoders {
 	/**
 	 * Instantiates a new abstract encoders.
 	 */
-	protected AbstractEncoders() {
+	protected Abstract2WheelsEncoders() {
 		distance = orientation = 0;
 		coefDroit = coefGauche = 1.0;
 	}
@@ -43,7 +43,7 @@ public abstract class AbstractEncoders {
 
 		// TODO : Ajouter le loggeur CSV
 
-		AbstractEncoders.log.info(String.format("Lecture des valeurs codeurs : Gauche = %s ; Droit = %s", gauche, droit));
+		Abstract2WheelsEncoders.log.info(String.format("Lecture des valeurs codeurs : Gauche = %s ; Droit = %s", gauche, droit));
 	}
 
 	/**

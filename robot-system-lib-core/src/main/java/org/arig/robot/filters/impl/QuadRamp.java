@@ -2,7 +2,7 @@ package org.arig.robot.filters.impl;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.arig.robot.utils.ConvertionUtils;
+import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -15,10 +15,10 @@ public class QuadRamp {
 
 	/** The conv. */
 	@Autowired
-	private ConvertionUtils conv;
+	private ConvertionRobotUnit conv;
 
 	/** The sample time. */
-	private double sampleTime;
+	private double sampleTimeS;
 
 	/** The ramp acc. */
 	private double rampAcc;
@@ -45,11 +45,11 @@ public class QuadRamp {
 	 * Instantiates a new quad ramp.
 	 */
 	public QuadRamp() {
-		sampleTime = 0.010;
+		sampleTimeS = 0.010;
 		rampAcc = 100.0;
 		rampDec = 100.0;
 
-		QuadRamp.log.info(String.format("Initialisation par défaut (SampleTime : %s ; Rampe ACC : %s ; Rampe DEC : %s", sampleTime, rampAcc, rampDec));
+		QuadRamp.log.info(String.format("Initialisation par défaut (SampleTime : %s ; Rampe ACC : %s ; Rampe DEC : %s", sampleTimeS, rampAcc, rampDec));
 
 		reset();
 		updateStepVitesse();
@@ -62,12 +62,12 @@ public class QuadRamp {
 	 * @param rampAcc the ramp acc
 	 * @param rampDec the ramp dec
 	 */
-	public QuadRamp(final double sampleTimeMs, final double rampAcc, final double rampDec) {
-		sampleTime = sampleTimeMs / 1000;
+	public QuadRamp(final double sampleTimeS, final double rampAcc, final double rampDec) {
+		this.sampleTimeS = sampleTimeS / 1000;
 		this.rampAcc = rampAcc;
 		this.rampDec = rampDec;
 
-		QuadRamp.log.info(String.format("Initialisation (SampleTime : %s ; Rampe ACC : %s ; Rampe DEC : %s", sampleTime, rampAcc, rampDec));
+		QuadRamp.log.info(String.format("Initialisation (SampleTime : %s ; Rampe ACC : %s ; Rampe DEC : %s", sampleTimeS, rampAcc, rampDec));
 
 		reset();
 		updateStepVitesse();
@@ -79,7 +79,7 @@ public class QuadRamp {
 	 * @param value the new sample time ms
 	 */
 	public void setSampleTimeMs(final double value) {
-		sampleTime = value / 1000;
+		sampleTimeS = value / 1000;
 		updateStepVitesse();
 	}
 
@@ -107,8 +107,8 @@ public class QuadRamp {
 	 * Update step vitesse.
 	 */
 	private void updateStepVitesse() {
-		stepVitesseAccel = rampAcc * sampleTime;
-		stepVitesseDecel = rampDec * sampleTime;
+		stepVitesseAccel = rampAcc * sampleTimeS;
+		stepVitesseDecel = rampDec * sampleTimeS;
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class QuadRamp {
 		vitesseCourante = Math.max(vitesseCourante, 0);
 
 		// Calcul de la valeur théorique en fonction de la vitesse.
-		final double pulseForVitesse = conv.mmToPulse(vitesseCourante) * sampleTime;
+		final double pulseForVitesse = conv.mmToPulse(vitesseCourante) * sampleTimeS;
 
 		// Consigne théorique en fonction de la vitesse
 		double ecartTheorique = pulseForVitesse;
