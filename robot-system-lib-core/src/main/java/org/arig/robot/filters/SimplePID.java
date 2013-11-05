@@ -1,8 +1,7 @@
-package org.arig.robot.filters.impl;
+package org.arig.robot.filters;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.arig.robot.filters.IPidFilter;
 
 /**
  * The Class SimplePID.

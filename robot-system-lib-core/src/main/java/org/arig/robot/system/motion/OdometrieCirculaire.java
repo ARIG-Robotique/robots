@@ -1,6 +1,5 @@
-package org.arig.robot.system.motion.impl;
+package org.arig.robot.system.motion;
 
-import org.arig.robot.system.motion.AbstractOdometrie;
 import org.arig.robot.vo.enums.TypeOdometrie;
 
 /**

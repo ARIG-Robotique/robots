@@ -1,11 +1,10 @@
-package org.arig.robot.system.motion.impl;
+package org.arig.robot.system.motion;
 
 import lombok.Setter;
 
 import org.arig.robot.filters.IPidFilter;
-import org.arig.robot.filters.impl.QuadRamp;
+import org.arig.robot.filters.IRampFilter;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
-import org.arig.robot.system.motion.IAsservissement;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.vo.ConsignePolaire;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +42,12 @@ public class AsservissementPolaire implements IAsservissement {
 	/** The filter distance. */
 	@Autowired
 	@Qualifier("rampDistance")
-	private QuadRamp filterDistance;
+	private IRampFilter rampDistance;
 
 	/** The filter orientation. */
 	@Autowired
 	@Qualifier("rampOrientation")
-	private QuadRamp filterOrientation;
+	private IRampFilter rampOrientation;
 
 	/** The set point distance. */
 	private double setPointDistance;
@@ -90,7 +89,13 @@ public class AsservissementPolaire implements IAsservissement {
 	 */
 	@Override
 	public void reset(final boolean resetFilters) {
+		pidDistance.reset();
+		pidOrientation.reset();
 
+		if (resetFilters) {
+			rampDistance.reset();
+			rampOrientation.reset();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -99,8 +104,8 @@ public class AsservissementPolaire implements IAsservissement {
 	@Override
 	public void process() {
 		// Application du filtre pour la génération du profil trapézoidale et définition des consignes
-		setPointDistance = filterDistance.filter(consignePolaire.getVitesseDistance(), consignePolaire.getConsigneDistance(), consignePolaire.isFrein());
-		setPointOrientation = filterOrientation.filter(consignePolaire.getVitesseOrientation(), consignePolaire.getConsigneOrientation(), true); // Toujours le frein pour l'orientation
+		setPointDistance = rampDistance.filter(consignePolaire.getVitesseDistance(), consignePolaire.getConsigneDistance(), encoders.getDistance(), consignePolaire.isFrein());
+		setPointOrientation = rampOrientation.filter(consignePolaire.getVitesseOrientation(), consignePolaire.getConsigneOrientation(), encoders.getOrientation(), true); // Toujours le frein pour l'orientation
 
 		// Calcul des filtre PID
 		outputDistance = pidDistance.compute(setPointDistance, encoders.getDistance());

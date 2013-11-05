@@ -1,4 +1,4 @@
-package org.arig.robot.filters.impl;
+package org.arig.robot.filters;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author mythril
  */
 @Slf4j
-public class QuadRamp {
+public class QuadRamp implements IRampFilter {
 
 	/** The conv. */
 	@Autowired
@@ -37,9 +37,6 @@ public class QuadRamp {
 
 	/** The distance decel. */
 	private double distanceDecel;
-
-	/** The ecart precedent. */
-	private double ecartPrecedent;
 
 	/**
 	 * Instantiates a new quad ramp.
@@ -78,6 +75,7 @@ public class QuadRamp {
 	 *
 	 * @param value the new sample time ms
 	 */
+	@Override
 	public void setSampleTimeMs(final double value) {
 		sampleTimeS = value / 1000;
 		updateStepVitesse();
@@ -88,6 +86,7 @@ public class QuadRamp {
 	 *
 	 * @param value the new ramp acc
 	 */
+	@Override
 	public void setRampAcc(final double value) {
 		rampAcc = value;
 		updateStepVitesse();
@@ -98,6 +97,7 @@ public class QuadRamp {
 	 *
 	 * @param value the new ramp dec
 	 */
+	@Override
 	public void setRampDec(final double value) {
 		rampDec = value;
 		updateStepVitesse();
@@ -114,11 +114,11 @@ public class QuadRamp {
 	/**
 	 * Reset.
 	 */
+	@Override
 	public void reset() {
 		QuadRamp.log.info("Reset des paramètres");
 
 		distanceDecel = 0;
-		ecartPrecedent = 0;
 		vitesseCourante = 0;
 	}
 
@@ -131,7 +131,8 @@ public class QuadRamp {
 	 * @param frein the frein
 	 * @return the double
 	 */
-	public double filter(final double vitesse, final double consigne, final boolean frein) {
+	@Override
+	public double filter(final double vitesse, final double consigne, final double mesure, final boolean frein) {
 		// Calcul de la distance de décéleration en fonction des parametres
 		distanceDecel = conv.mmToPulse(vitesseCourante * vitesseCourante / (2 * rampDec));
 		if (vitesseCourante > vitesse || Math.abs(consigne) <= distanceDecel && frein) {
@@ -155,33 +156,6 @@ public class QuadRamp {
 			ecartTheorique = -ecartTheorique;
 		}
 
-		return ecartTheorique;
-	}
-
-	/**
-	 * /!\ EXPERIMENTAL
-	 *
-	 * Application du filtre "logarithmique".
-	 * Cette méthode est appelé depuis la sub routine d'asservissement
-	 *
-	 * FIXME : ça merde lors de la phase de décéleration.
-	 *
-	 * @param vitesse the vitesse
-	 * @param consigne the consigne
-	 * @param mesure the mesure
-	 * @param frein the frein
-	 * @return the double
-	 */
-	public double filterLog(final double vitesse, final double consigne, final double mesure, final boolean frein) {
-		// Récupération de la version normal et ajout de l'écart précedent
-		final double ecartTheorique = filter(vitesse, consigne, frein) + ecartPrecedent;
-		ecartPrecedent = ecartTheorique - mesure;
-
-		/* TODO : Logger pour le CSV
-		#ifdef DEBUG_MODE
-			//Serial.print(";FOutLog");Serial.print(ecartTheorique);
-		#endif
-		 */
 		return ecartTheorique;
 	}
 }
