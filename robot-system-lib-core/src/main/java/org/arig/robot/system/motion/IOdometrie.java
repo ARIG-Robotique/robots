@@ -10,31 +10,34 @@ import org.arig.robot.vo.enums.TypeOdometrie;
  */
 public interface IOdometrie {
 
-	/**
-	 * Gets the position.
-	 *
-	 * @return the position
-	 */
-	RobotPosition getPosition();
+    /**
+     * Gets the position.
+     * 
+     * @return the position
+     */
+    RobotPosition getPosition();
 
-	/**
-	 * Gets the type.
-	 *
-	 * @return the type
-	 */
-	TypeOdometrie getType();
+    /**
+     * Gets the type.
+     * 
+     * @return the type
+     */
+    TypeOdometrie getType();
 
-	/**
-	 * Inits the odometrie.
-	 *
-	 * @param x the x
-	 * @param y the y
-	 * @param angle the angle
-	 */
-	void initOdometrie(final double x, final double y, final int angle);
+    /**
+     * Inits the odometrie.
+     * 
+     * @param x
+     *            the x
+     * @param y
+     *            the y
+     * @param angle
+     *            the angle
+     */
+    void initOdometrie(final double x, final double y, final int angle);
 
-	/**
-	 * Calcul position.
-	 */
-	void calculPosition();
+    /**
+     * Calcul position.
+     */
+    void calculPosition();
 }

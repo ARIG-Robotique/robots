@@ -7,20 +7,21 @@ package org.arig.robot.system.motion;
  */
 public interface IAsservissement {
 
-	/**
-	 * Process.
-	 */
-	void process();
+    /**
+     * Process.
+     */
+    void process();
 
-	/**
-	 * Reset.
-	 */
-	void reset();
+    /**
+     * Reset.
+     */
+    void reset();
 
-	/**
-	 * Reset.
-	 *
-	 * @param resetFilters the reset filters
-	 */
-	void reset(final boolean resetFilters);
+    /**
+     * Reset.
+     * 
+     * @param resetFilters
+     *            the reset filters
+     */
+    void reset(final boolean resetFilters);
 }

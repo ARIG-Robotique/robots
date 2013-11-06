@@ -11,22 +11,22 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum TypeConsigne {
 
-	/** The xy. */
-	XY(1),
+    /** The xy. */
+    XY(1),
 
-	/** The dist. */
-	DIST(2),
+    /** The dist. */
+    DIST(2),
 
-	/** The angle. */
-	ANGLE(4),
+    /** The angle. */
+    ANGLE(4),
 
-	/** The line. */
-	LINE(8),
+    /** The line. */
+    LINE(8),
 
-	/** The circle. */
-	CIRCLE(16);
+    /** The circle. */
+    CIRCLE(16);
 
-	/** The value. */
-	@Getter
-	private final int value;
+    /** The value. */
+    @Getter
+    private final int value;
 }

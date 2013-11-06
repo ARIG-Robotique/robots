@@ -10,37 +10,37 @@ import lombok.Data;
 @Data
 public class ConsignePolaire {
 
-	/** The consigne distance. */
-	private long consigneDistance;
+    /** The consigne distance. */
+    private long consigneDistance;
 
-	/** The vitesse distance. */
-	private long vitesseDistance;
+    /** The vitesse distance. */
+    private long vitesseDistance;
 
-	/** The consigne orientation. */
-	private long consigneOrientation;
+    /** The consigne orientation. */
+    private long consigneOrientation;
 
-	/** The vitesse orientation. */
-	private long vitesseOrientation;
+    /** The vitesse orientation. */
+    private long vitesseOrientation;
 
-	/** The cmd droit. */
-	private int cmdDroit;
+    /** The cmd droit. */
+    private int cmdDroit;
 
-	/** The cmd gauche. */
-	private int cmdGauche;
+    /** The cmd gauche. */
+    private int cmdGauche;
 
-	/** The frein. */
-	boolean frein;
+    /** The frein. */
+    boolean frein;
 
-	/**
-	 * Instantiates a new consigne polaire.
-	 */
-	public ConsignePolaire() {
-		consigneDistance = 0;
-		consigneOrientation = 0;
-		vitesseDistance = 100;
-		vitesseOrientation = 100;
-		cmdDroit = 0;
-		cmdGauche = 0;
-		frein = true;
-	}
+    /**
+     * Instantiates a new consigne polaire.
+     */
+    public ConsignePolaire() {
+        consigneDistance = 0;
+        consigneOrientation = 0;
+        vitesseDistance = 100;
+        vitesseOrientation = 100;
+        cmdDroit = 0;
+        cmdGauche = 0;
+        frein = true;
+    }
 }

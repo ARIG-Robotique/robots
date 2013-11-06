@@ -7,9 +7,9 @@ package org.arig.robot.vo.enums;
  */
 public enum TypeOdometrie {
 
-	/** The lineaire. */
-	LINEAIRE,
+    /** The lineaire. */
+    LINEAIRE,
 
-	/** The circulaire. */
-	CIRCULAIRE;
+    /** The circulaire. */
+    CIRCULAIRE;
 }

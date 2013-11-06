@@ -17,126 +17,133 @@ import org.springframework.beans.factory.annotation.Qualifier;
  */
 public class AsservissementPolaire implements IAsservissement {
 
-	/** The conv. */
-	@Autowired
-	private ConvertionRobotUnit conv;
+    /** The conv. */
+    @Autowired
+    private ConvertionRobotUnit conv;
 
-	/** The consigne polaire. */
-	@Autowired
-	private ConsignePolaire consignePolaire;
+    /** The consigne polaire. */
+    @Autowired
+    private ConsignePolaire consignePolaire;
 
-	/** The encoders. */
-	@Autowired
-	private Abstract2WheelsEncoders encoders;
+    /** The encoders. */
+    @Autowired
+    private Abstract2WheelsEncoders encoders;
 
-	/** The pid distance. */
-	@Autowired
-	@Qualifier("pidDistance")
-	private IPidFilter pidDistance;
+    /** The pid distance. */
+    @Autowired
+    @Qualifier("pidDistance")
+    private IPidFilter pidDistance;
 
-	/** The pid orientation. */
-	@Autowired
-	@Qualifier("pidOrientation")
-	private IPidFilter pidOrientation;
+    /** The pid orientation. */
+    @Autowired
+    @Qualifier("pidOrientation")
+    private IPidFilter pidOrientation;
 
-	/** The filter distance. */
-	@Autowired
-	@Qualifier("rampDistance")
-	private IRampFilter rampDistance;
+    /** The filter distance. */
+    @Autowired
+    @Qualifier("rampDistance")
+    private IRampFilter rampDistance;
 
-	/** The filter orientation. */
-	@Autowired
-	@Qualifier("rampOrientation")
-	private IRampFilter rampOrientation;
+    /** The filter orientation. */
+    @Autowired
+    @Qualifier("rampOrientation")
+    private IRampFilter rampOrientation;
 
-	/** The set point distance. */
-	private double setPointDistance;
+    /** The set point distance. */
+    private double setPointDistance;
 
-	/** The set point orientation. */
-	private double setPointOrientation;
+    /** The set point orientation. */
+    private double setPointOrientation;
 
-	/** The output distance. */
-	private double outputDistance;
+    /** The output distance. */
+    private double outputDistance;
 
-	/** The output orientation. */
-	private double outputOrientation;
+    /** The output orientation. */
+    private double outputOrientation;
 
-	/** The min fenetre distance. */
-	@Setter
-	private double minFenetreDistance;
+    /** The min fenetre distance. */
+    @Setter
+    private double minFenetreDistance;
 
-	/** The min fenetre orientation. */
-	@Setter
-	private double minFenetreOrientation;
+    /** The min fenetre orientation. */
+    @Setter
+    private double minFenetreOrientation;
 
-	/**
-	 * Instantiates a new asservissement polaire.
-	 */
-	public AsservissementPolaire() {
-		super();
-	}
+    /**
+     * Instantiates a new asservissement polaire.
+     */
+    public AsservissementPolaire() {
+        super();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.arig.robot.system.motion.IAsservissement#reset()
-	 */
-	@Override
-	public void reset() {
-		reset(false);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.arig.robot.system.motion.IAsservissement#reset()
+     */
+    @Override
+    public void reset() {
+        reset(false);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.arig.robot.system.motion.IAsservissement#reset(boolean)
-	 */
-	@Override
-	public void reset(final boolean resetFilters) {
-		pidDistance.reset();
-		pidOrientation.reset();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.arig.robot.system.motion.IAsservissement#reset(boolean)
+     */
+    @Override
+    public void reset(final boolean resetFilters) {
+        pidDistance.reset();
+        pidOrientation.reset();
 
-		if (resetFilters) {
-			rampDistance.reset();
-			rampOrientation.reset();
-		}
-	}
+        if (resetFilters) {
+            rampDistance.reset();
+            rampOrientation.reset();
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.arig.robot.system.motion.IAsservissement#process()
-	 */
-	@Override
-	public void process() {
-		// Application du filtre pour la génération du profil trapézoidale et définition des consignes
-		setPointDistance = rampDistance.filter(consignePolaire.getVitesseDistance(), consignePolaire.getConsigneDistance(), encoders.getDistance(), consignePolaire.isFrein());
-		setPointOrientation = rampOrientation.filter(consignePolaire.getVitesseOrientation(), consignePolaire.getConsigneOrientation(), encoders.getOrientation(), true); // Toujours le frein pour l'orientation
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.arig.robot.system.motion.IAsservissement#process()
+     */
+    @Override
+    public void process() {
+        // Application du filtre pour la génération du profil trapézoidale et définition des consignes
+        setPointDistance = rampDistance.filter(consignePolaire.getVitesseDistance(), consignePolaire.getConsigneDistance(), encoders.getDistance(), consignePolaire.isFrein());
+        // Toujours le frein pour l'orientation
+        setPointOrientation = rampOrientation.filter(consignePolaire.getVitesseOrientation(), consignePolaire.getConsigneOrientation(), encoders.getOrientation(), true);
 
-		// Calcul des filtre PID
-		outputDistance = pidDistance.compute(setPointDistance, encoders.getDistance());
-		outputOrientation = pidOrientation.compute(setPointOrientation, encoders.getOrientation());
+        // Calcul des filtres PID
+        outputDistance = pidDistance.compute(setPointDistance, encoders.getDistance());
+        outputOrientation = pidOrientation.compute(setPointOrientation, encoders.getOrientation());
 
-		// Consigne moteurs
-		consignePolaire.setCmdDroit((int) (outputDistance + outputOrientation));
-		consignePolaire.setCmdGauche((int) (outputDistance - outputOrientation));
-	}
+        // Consigne moteurs
+        consignePolaire.setCmdDroit((int) (outputDistance + outputOrientation));
+        consignePolaire.setCmdGauche((int) (outputDistance - outputOrientation));
+    }
 
-	/**
-	 * Méthode permettant de récuperer la zone pour la fenetre en distance.
-	 *
-	 * @return the fenetre approche distance
-	 */
-	public double getFenetreApprocheDistance() {
-		// Application du théorème de Shannon
-		// En gros l'idée est que la fenêtre varie en fonction de la vitesse afin qu'a pleine bourre on la dépasse pas
-		// et que l'on se mette a faire des tours sur soit même
-		return Math.max(minFenetreDistance, 3 * setPointDistance);
-	}
+    /**
+     * Méthode permettant de récuperer la zone pour la fenetre en distance.
+     * 
+     * @return the fenetre approche distance
+     */
+    public double getFenetreApprocheDistance() {
+        // Application du théorème de Shannon
+        // En gros l'idée est que la fenêtre varie en fonction de la vitesse afin qu'a pleine bourre on la dépasse pas
+        // et que l'on se mette a faire des tours sur soit même
+        return Math.max(minFenetreDistance, 3 * setPointDistance);
+    }
 
-	/**
-	 * Méthode permettant de récuperer la zone pour la fenetre en distance.
-	 *
-	 * @return the fenetre approche orientation
-	 */
-	public double getFenetreApprocheOrientation() {
-		// Application du théorème de Shannon
-		// En gros l'idée est que la fenêtre varie en fonction de la vitesse afin qu'a pleine bourre on la dépasse pas
-		// et que l'on se mette a faire des tours sur soit même
-		return Math.max(minFenetreOrientation, 3 * setPointOrientation);
-	}
+    /**
+     * Méthode permettant de récuperer la zone pour la fenetre en distance.
+     * 
+     * @return the fenetre approche orientation
+     */
+    public double getFenetreApprocheOrientation() {
+        // Application du théorème de Shannon
+        // En gros l'idée est que la fenêtre varie en fonction de la vitesse afin qu'a pleine bourre on la dépasse pas
+        // et que l'on se mette a faire des tours sur soit même
+        return Math.max(minFenetreOrientation, 3 * setPointOrientation);
+    }
 }

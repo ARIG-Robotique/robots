@@ -29,6 +29,7 @@ public class AbstractI2CUtilsTest {
     @BeforeClass
     public static void initClass() {
         AbstractI2CUtilsTest.impl = new AbstractI2CUtils() {
+
             @Override
             protected void scan() throws I2CException {
                 AbstractI2CUtilsTest.log.info("Dummy scan !");
@@ -57,7 +58,7 @@ public class AbstractI2CUtilsTest {
      */
     @Before
     public void initTest() {
-        for (byte b = 1 ; b < 4 ; b++) {
+        for (byte b = 1; b < 4; b++) {
             AbstractI2CUtilsTest.impl.registerBoard("Board " + b, b);
         }
     }
@@ -93,7 +94,7 @@ public class AbstractI2CUtilsTest {
     public void testRegisterBoard() {
         final int init = AbstractI2CUtilsTest.impl.nbBoardRegistered();
 
-        for (byte b = 1 ; b < 4 ; b++) {
+        for (byte b = 1; b < 4; b++) {
             AbstractI2CUtilsTest.impl.registerBoard("Board Bis " + b, b);
         }
 
@@ -124,8 +125,9 @@ public class AbstractI2CUtilsTest {
 
     /**
      * Text execute scan.
-     *
-     * @throws I2CException the i2 c exception
+     * 
+     * @throws I2CException
+     *             the i2 c exception
      */
     @Test
     public void textExecuteScan() throws I2CException {
@@ -134,8 +136,9 @@ public class AbstractI2CUtilsTest {
 
     /**
      * Test get unknown board.
-     *
-     * @throws I2CException the i2 c exception
+     * 
+     * @throws I2CException
+     *             the i2 c exception
      */
     @Test(expected = I2CException.class)
     public void testGetUnknownBoard() throws I2CException {
@@ -144,8 +147,9 @@ public class AbstractI2CUtilsTest {
 
     /**
      * Test get known board.
-     *
-     * @throws I2CException the i2 c exception
+     * 
+     * @throws I2CException
+     *             the i2 c exception
      */
     @Test
     public void testGetKnownBoard() throws I2CException {
