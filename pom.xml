@@ -32,7 +32,7 @@
 	    
 		<!-- Lib dependencies -->
 		<lib.lombok.version>1.12.2</lib.lombok.version>
-		<lib.spring.version>3.2.4.RELEASE</lib.spring.version>
+		<lib.spring.version>3.2.5.RELEASE</lib.spring.version>
 		<lib.apache.commons.lang.version>3.1</lib.apache.commons.lang.version>
 		<lib.google.guava.version>15.0</lib.google.guava.version>
 		<lib.slf4j.version>1.7.5</lib.slf4j.version>
