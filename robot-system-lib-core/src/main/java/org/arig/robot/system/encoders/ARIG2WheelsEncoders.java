@@ -1,7 +1,6 @@
 package org.arig.robot.system.encoders;
 
 import lombok.extern.slf4j.Slf4j;
-
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.exception.I2CException;
 import org.springframework.beans.factory.annotation.Autowired;

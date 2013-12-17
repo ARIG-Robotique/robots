@@ -1,12 +1,13 @@
 package org.arig.robot.system;
 
 import lombok.Getter;
-
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.IAsservissement;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motors.AbstractMotors;
 import org.arig.robot.utils.ConvertionRobotUnit;
+import org.arig.robot.vo.RobotConsigne;
+import org.arig.robot.vo.enums.TypeConsigne;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -40,13 +41,17 @@ public class RobotManager {
     @Autowired
     private ConvertionRobotUnit conv;
 
+    /** Consigne du robot sur la table */
+    @Autowired
+    private RobotConsigne consigne;
+
     /** The trajet atteint. */
     @Getter
-    private final boolean trajetAtteint = false;
+    private boolean trajetAtteint = false;
 
     /** The trajet en approche. */
     @Getter
-    private final boolean trajetEnApproche = false;
+    private boolean trajetEnApproche = false;
 
     /** The avoidance in progress. */
     private boolean avoidanceInProgress = false;
@@ -128,7 +133,7 @@ public class RobotManager {
             asserv.reset(true);
             avoidanceInProgress = true;
         } else if (obstacleDetector.hasObstacle() && avoidanceInProgress) {
-            // TODO : Trajectoire d'évittement. Comme le hasObstacle externalisé cette gestion au programme principale
+            // TODO : Trajectoire d'évittement. Comme le hasObstacle externaliser cette gestion au programme principal
         } else if (!obstacleDetector.hasObstacle() && avoidanceInProgress) {
             avoidanceInProgress = false;
         } else {
@@ -136,7 +141,7 @@ public class RobotManager {
             asserv.process();
 
             // 3.4.3 Envoi aux moteurs
-            motors.generateMouvement(gauche, droit);
+            motors.generateMouvement(consigne.getCmdGauche(), consigne.getCmdDroit());
         }
 
         // 4. Gestion des flags pour le séquencement du calcul de la position
@@ -144,7 +149,106 @@ public class RobotManager {
     }
 
     /**
-     * Goto point mm.
+     * Calcul des consignes d'asservissement
+     * -> a : Gestion en fonction de l'odométrie
+     * -> b : Si dans fenêtre d'approche : consigne(n) = consigne(n - 1) - d(position)
+     */
+    private void calculConsigne() {
+
+        if (!trajetAtteint && consigne.isType(TypeConsigne.XY)) {
+            // Calcul en fonction de l'odométrie
+            long dX = (long) (consigne.getX() - odom.getPosition().getX());
+            long dY = (long) (consigne.getY() - odom.getPosition().getY());
+
+            // Calcul des consignes
+            long consDist = calculDistanceConsigne(dX, dY);
+            long consOrient = calculAngleConsigne(dX, dY);
+
+            // Calcul du coef d'annulation de la distance
+            // Permet d'effectuer d'abord une rotation avant de lancer le déplacement.
+            if (Math.abs(consOrient) > startAngle) {
+                consDist = (long) (consDist * ((startAngle - Math.abs(consOrient)) / startAngle));
+            }
+
+            // Sauvegarde des consignes
+            consigne.setConsigneDistance(consDist);
+            consigne.setConsigneOrientation(consOrient);
+
+        } else if (!trajetAtteint && consigne.isType(TypeConsigne.LINE)) {
+            // TODO : Consigne de suivi de ligne (géré les clothoïde pour la liaisons)
+
+        } else if (!trajetAtteint && consigne.isType(TypeConsigne.CIRCLE)) {
+            // TODO : Consigne de rotation autour d'un point.
+
+        } else {
+            // Calcul par différence vis a vis de la valeur codeur(asservissement de position "basique")
+
+            if (consigne.isType(TypeConsigne.DIST)) {
+                consigne.setConsigneDistance((long) (consigne.getConsigneDistance() - encoders.getDistance()));
+            }
+            if (consigne.isType(TypeConsigne.ANGLE)) {
+                consigne.setConsigneOrientation((long) (consigne.getConsigneOrientation() - encoders.getOrientation()));
+            }
+        }
+    }
+
+    /**
+     * Méthode de calcul de la consigne d'angle en fonction de dX et dY.
+     *
+     * @param dX
+     * @param dY
+     * @return
+     */
+    private long calculAngleConsigne(long dX, long dY) {
+        double alpha = conv.radToPulse(Math.atan2(conv.pulseToRad(dY), conv.pulseToRad(dX)));
+
+        // Ajustement a PI
+        double orient = alpha - odom.getPosition().getAngle();
+        if (orient > conv.getPiPulse()) {
+            orient = orient - conv.getPi2Pulse();
+        } else if (orient < -conv.getPiPulse()) {
+            orient = orient + conv.getPi2Pulse();
+        }
+
+        return (long) orient;
+    }
+
+    /**
+     * Méthode de calcul de la consigne de distance en fonction de dX et dY.
+     *
+     * @param dX
+     * @param dY
+     * @return
+     */
+    private long calculDistanceConsigne(long dX, long dY) {
+        return (long) Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
+    }
+
+    private void gestionFlags() {
+        // TODO : Voir si il ne serait pas judicieux de traiter le cas des consignes XY avec un rayon sur le point a atteindre
+        if (consigne.isFrein()
+                && Math.abs(consigne.getConsigneDistance()) < fenetreArretDistance
+                && Math.abs(consigne.getConsigneOrientation()) < fenetreArretOrientation) {
+
+            // Le trajet est atteint
+            trajetAtteint = true;
+        }
+
+        if (Math.abs(consigne.getConsigneDistance()) < asserv.getFenetreApprocheDistance()
+                && Math.abs(consigne.getConsigneOrientation()) < asserv.getFenetreApprocheOrientation()) {
+
+            // Modification du type de consigne pour la stabilisation
+            consigne.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+
+            // Notification que le point de passage est atteint
+            if (!consigne.isFrein()) {
+                trajetEnApproche = true;
+            }
+        }
+    }
+
+    /**
+     * Méthode permettant de donner une consigne de position sur un point
      * 
      * @param x
      *            the x
@@ -154,33 +258,48 @@ public class RobotManager {
      *            the frein
      */
     public void gotoPointMM(final double x, final double y, final boolean frein) {
+        consigne.setAngle(0);
+        consigne.setX(conv.mmToPulse(x));
+        consigne.setY(conv.mmToPulse(y));
+        consigne.setFrein(frein);
+        consigne.setTypes(TypeConsigne.XY);
 
+        prepareNextMouvement();
     }
 
     /**
-     * Goto orientation deg.
+     * Méthode permettant d'aligner le robot sur un angle en fonction du repere
      * 
      * @param angle
      *            the angle
      */
     public void gotoOrientationDeg(final double angle) {
-
+        double newOrient = angle - conv.pulseToDeg(odom.getPosition().getAngle());
+        tourneDeg(newOrient);
     }
 
     /**
-     * Align front to.
+     * Méthode permettant d'aligner le robot face a un point
      * 
      * @param x
      *            the x
      * @param y
      *            the y
      */
-    public void alignFrontTo(final double x, final double y) {
+    public void alignFrontTo(final long x, final long y) {
+        long dX = (long) (conv.mmToPulse(x) - odom.getPosition().getX());
+        long dY = (long) (conv.mmToPulse(y) - odom.getPosition().getY());
 
+        consigne.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+        consigne.setConsigneDistance(0);
+        consigne.setConsigneOrientation(calculAngleConsigne(dX, dY));
+        consigne.setFrein(true);
+
+        prepareNextMouvement();
     }
 
     /**
-     * Align back to.
+     * Méthode permettant d'aligner le robot dos a un point
      * 
      * @param x
      *            the x
@@ -188,37 +307,62 @@ public class RobotManager {
      *            the y
      */
     public void alignBackTo(final double x, final double y) {
+        long dX = (long) (conv.mmToPulse(x) - odom.getPosition().getX());
+        long dY = (long) (conv.mmToPulse(y) - odom.getPosition().getY());
 
+        long consOrient = calculAngleConsigne(dX, dY);
+        if (consOrient > 0) {
+            consOrient -= conv.getPiPulse();
+        } else {
+            consOrient += conv.getPiPulse();
+        }
+
+        consigne.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+        consigne.setConsigneDistance(0);
+        consigne.setConsigneOrientation(consOrient);
+        consigne.setFrein(true);
+
+        prepareNextMouvement();
     }
 
     /**
-     * Avance mm.
+     * Méthode permettant d'effectuer un déplacement en avant de distance fixe.
      * 
      * @param distance
      *            the distance
      */
     public void avanceMM(final double distance) {
+        consigne.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+        consigne.setConsigneDistance((long) conv.mmToPulse(distance));
+        consigne.setConsigneOrientation(0);
+        consigne.setFrein(true);
 
+        prepareNextMouvement();
     }
 
     /**
-     * Recule mm.
+     * Méthode permettant d'effectuer un déplacement en arriere de distance fixe
      * 
      * @param distance
      *            the distance
      */
     public void reculeMM(final double distance) {
-
+        avanceMM(-distance);
     }
 
     /**
-     * Tourne deg.
+     * Méthode permettant d'effectuer une rotation d'angle fixe
      * 
      * @param angle
      *            the angle
      */
     public void tourneDeg(final double angle) {
+        consigne.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+        consigne.setConsigneDistance(0);
+        consigne.setConsigneOrientation((long) conv.degToPulse(angle));
+        consigne.setFrein(true);
 
+        prepareNextMouvement();
     }
 
     /**
@@ -234,7 +378,7 @@ public class RobotManager {
      *            the y2
      */
     public void followLine(final double x1, final double y1, final double x2, final double y2) {
-
+        // TODO : A implémenter la commande
     }
 
     /**
@@ -248,6 +392,32 @@ public class RobotManager {
      *            the r
      */
     public void turnAround(final double x, final double y, final double r) {
+        // TODO : A implémenter la commande
+    }
 
+    /**
+     * Méthode pour préparer le prochain mouvement.
+     */
+    private void prepareNextMouvement() {
+        // Reset de l'erreur de l'asserv sur le mouvement précédent lorsqu'il
+        // s'agit d'un nouveau mouvement au départ vitesse presque nulle.
+        if (trajetAtteint) {
+            asserv.reset();
+        }
+
+        // Réinitialisation des infos de trajet.
+        trajetAtteint = false;
+        trajetEnApproche = false;
+    }
+
+    /**
+     * Définition des vitesses de déplacement sur les deux axes du robot.
+     *
+     * @param vDistance
+     * @param vOrientation
+     */
+    public void setVitesse(long vDistance, long vOrientation) {
+        consigne.setVitesseDistance(vDistance);
+        consigne.setVitesseOrientation(vOrientation);
     }
 }

@@ -3,6 +3,8 @@ package org.arig.robot.vo;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
 
 import org.arig.robot.vo.enums.TypeConsigne;
@@ -10,30 +12,67 @@ import org.arig.robot.vo.enums.TypeConsigne;
 /**
  * The Class RobotConsigne.
  * 
- * y (2000) | | | | | |---------------------------------- x (3000) 0,0 Theta = 0 dans le sens de X
+ * y (2000) |
+ *          |
+ *          |
+ *          |
+ *          |
+ *          |---------------------------------- x (3000)
+ *         0,0
+ *
+ * Theta = 0 dans le sens de X
  * 
  * @author mythril
  */
+@Data
 public class RobotConsigne {
 
-    /** Gets the position. */
-    @Getter
-    private final RobotPosition position;
+    /** The x. */
+    private double x;
 
-    /** Gets the consigne polaire. */
-    @Getter
-    private final ConsignePolaire consignePolaire;
+    /** The y. */
+    private double y;
+
+    /** The angle. */
+    private double angle;
+
+    /** The consigne distance. */
+    private long consigneDistance;
+
+    /** The vitesse distance. */
+    private long vitesseDistance;
+
+    /** The consigne orientation. */
+    private long consigneOrientation;
+
+    /** The vitesse orientation. */
+    private long vitesseOrientation;
+
+    /** The cmd droit. */
+    private int cmdDroit;
+
+    /** The cmd gauche. */
+    private int cmdGauche;
+
+    /** The frein. */
+    private boolean frein;
 
     /** The type. */
+    @Getter(AccessLevel.NONE)
     private final List<TypeConsigne> types = new ArrayList<>();
 
     /**
      * Instantiates a new robot consigne.
      */
     public RobotConsigne() {
-        position = new RobotPosition();
-        consignePolaire = new ConsignePolaire();
-        consignePolaire.setFrein(true);
+        x = y = angle = 0;
+        consigneDistance = 0;
+        consigneOrientation = 0;
+        vitesseDistance = 100;
+        vitesseOrientation = 100;
+        cmdDroit = 0;
+        cmdGauche = 0;
+        frein = true;
         setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
     }
 
@@ -75,28 +114,5 @@ public class RobotConsigne {
         }
 
         return result;
-    }
-
-    /**
-     * Enable frein.
-     */
-    public void enableFrein() {
-        consignePolaire.setFrein(true);
-    }
-
-    /**
-     * Disable frein.
-     */
-    public void disableFrein() {
-        consignePolaire.setFrein(false);
-    }
-
-    /**
-     * Gets the frein.
-     * 
-     * @return the frein
-     */
-    public boolean getFrein() {
-        return consignePolaire.isFrein();
     }
 }

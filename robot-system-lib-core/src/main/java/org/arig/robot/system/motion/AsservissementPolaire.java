@@ -1,12 +1,11 @@
 package org.arig.robot.system.motion;
 
 import lombok.Setter;
-
 import org.arig.robot.filters.IPidFilter;
 import org.arig.robot.filters.IRampFilter;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.vo.ConsignePolaire;
+import org.arig.robot.vo.RobotConsigne;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -23,7 +22,7 @@ public class AsservissementPolaire implements IAsservissement {
 
     /** The consigne polaire. */
     @Autowired
-    private ConsignePolaire consignePolaire;
+    private RobotConsigne consigne;
 
     /** The encoders. */
     @Autowired
@@ -110,17 +109,17 @@ public class AsservissementPolaire implements IAsservissement {
     @Override
     public void process() {
         // Application du filtre pour la génération du profil trapézoidale et définition des consignes
-        setPointDistance = rampDistance.filter(consignePolaire.getVitesseDistance(), consignePolaire.getConsigneDistance(), encoders.getDistance(), consignePolaire.isFrein());
+        setPointDistance = rampDistance.filter(consigne.getVitesseDistance(), consigne.getConsigneDistance(), encoders.getDistance(), consigne.isFrein());
         // Toujours le frein pour l'orientation
-        setPointOrientation = rampOrientation.filter(consignePolaire.getVitesseOrientation(), consignePolaire.getConsigneOrientation(), encoders.getOrientation(), true);
+        setPointOrientation = rampOrientation.filter(consigne.getVitesseOrientation(), consigne.getConsigneOrientation(), encoders.getOrientation(), true);
 
         // Calcul des filtres PID
         outputDistance = pidDistance.compute(setPointDistance, encoders.getDistance());
         outputOrientation = pidOrientation.compute(setPointOrientation, encoders.getOrientation());
 
         // Consigne moteurs
-        consignePolaire.setCmdDroit((int) (outputDistance + outputOrientation));
-        consignePolaire.setCmdGauche((int) (outputDistance - outputOrientation));
+        consigne.setCmdDroit((int) (outputDistance + outputOrientation));
+        consigne.setCmdGauche((int) (outputDistance - outputOrientation));
     }
 
     /**

@@ -1,7 +1,6 @@
 package org.arig.robot.system.motion;
 
 import lombok.Getter;
-
 import org.arig.robot.vo.RobotPosition;
 import org.arig.robot.vo.enums.TypeOdometrie;
 
