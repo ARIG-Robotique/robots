@@ -39,11 +39,11 @@ public class RobotConsigne {
     /** The consigne distance. */
     private long consigneDistance;
 
-    /** The vitesse distance. */
-    private long vitesseDistance;
-
     /** The consigne orientation. */
     private long consigneOrientation;
+
+    /** The vitesse distance. */
+    private long vitesseDistance;
 
     /** The vitesse orientation. */
     private long vitesseOrientation;

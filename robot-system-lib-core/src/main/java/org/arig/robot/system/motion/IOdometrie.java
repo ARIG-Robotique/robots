@@ -11,13 +11,6 @@ import org.arig.robot.vo.enums.TypeOdometrie;
 public interface IOdometrie {
 
     /**
-     * Gets the position.
-     * 
-     * @return the position
-     */
-    RobotPosition getPosition();
-
-    /**
      * Gets the type.
      * 
      * @return the type

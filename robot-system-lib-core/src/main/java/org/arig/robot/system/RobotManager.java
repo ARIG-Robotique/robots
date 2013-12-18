@@ -44,6 +44,11 @@ public class RobotManager {
     @Autowired
     private ConvertionRobotUnit conv;
 
+    /** The position. */
+    @Autowired
+    @Qualifier("currentPosition")
+    private RobotPosition position;
+
     /** Consigne du robot sur la table */
     @Autowired
     private RobotConsigne consigne;
@@ -160,8 +165,8 @@ public class RobotManager {
 
         if (!trajetAtteint && consigne.isType(TypeConsigne.XY)) {
             // Calcul en fonction de l'odométrie
-            long dX = (long) (consigne.getX() - odom.getPosition().getX());
-            long dY = (long) (consigne.getY() - odom.getPosition().getY());
+            long dX = (long) (consigne.getX() - position.getX());
+            long dY = (long) (consigne.getY() - position.getY());
 
             // Calcul des consignes
             long consDist = calculDistanceConsigne(dX, dY);
@@ -206,7 +211,7 @@ public class RobotManager {
         double alpha = conv.radToPulse(Math.atan2(conv.pulseToRad(dY), conv.pulseToRad(dX)));
 
         // Ajustement a PI
-        double orient = alpha - odom.getPosition().getAngle();
+        double orient = alpha - position.getAngle();
         if (orient > conv.getPiPulse()) {
             orient = orient - conv.getPi2Pulse();
         } else if (orient < -conv.getPiPulse()) {
@@ -277,7 +282,7 @@ public class RobotManager {
      *            the angle
      */
     public void gotoOrientationDeg(final double angle) {
-        double newOrient = angle - conv.pulseToDeg(odom.getPosition().getAngle());
+        double newOrient = angle - conv.pulseToDeg(position.getAngle());
         tourneDeg(newOrient);
     }
 
@@ -290,8 +295,8 @@ public class RobotManager {
      *            the y
      */
     public void alignFrontTo(final long x, final long y) {
-        long dX = (long) (conv.mmToPulse(x) - odom.getPosition().getX());
-        long dY = (long) (conv.mmToPulse(y) - odom.getPosition().getY());
+        long dX = (long) (conv.mmToPulse(x) - position.getX());
+        long dY = (long) (conv.mmToPulse(y) - position.getY());
 
         consigne.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
         consigne.setConsigneDistance(0);
@@ -310,8 +315,8 @@ public class RobotManager {
      *            the y
      */
     public void alignBackTo(final double x, final double y) {
-        long dX = (long) (conv.mmToPulse(x) - odom.getPosition().getX());
-        long dY = (long) (conv.mmToPulse(y) - odom.getPosition().getY());
+        long dX = (long) (conv.mmToPulse(x) - position.getX());
+        long dY = (long) (conv.mmToPulse(y) - position.getY());
 
         long consOrient = calculAngleConsigne(dX, dY);
         if (consOrient > 0) {

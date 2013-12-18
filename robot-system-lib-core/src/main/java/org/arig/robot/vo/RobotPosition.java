@@ -7,10 +7,6 @@ import lombok.Data;
  * 
  * @author mythril
  */
-
-/**
- * Instantiates a new robot position.
- */
 @Data
 public class RobotPosition {
 
