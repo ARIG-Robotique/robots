@@ -21,7 +21,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 public class AbstractI2CManagerTest {
 
     /** The impl. */
-    private static AbstractI2CManager impl;
+    private static AbstractI2CManager<Byte> impl;
 
     /**
      * Inits the class.
@@ -36,30 +36,10 @@ public class AbstractI2CManagerTest {
             }
 
             @Override
-            public void reset() throws I2CException {
-                getBoardMap().clear();
-            }
+            public void sendData(String deviceName, byte... datas) {}
 
             @Override
-            public boolean isError(final Byte returnCode) {
-                // Unix like implementation
-                return returnCode != 0;
-            }
-
-            @Override
-            public void printError(final Byte returnCode) {
-                AbstractI2CManagerTest.log.error("Code d'erreur : " + returnCode);
-            }
-
-            @Override
-            public byte sendData(String deviceName, byte... datas) {
-                return 0;
-            }
-
-            @Override
-            public byte sendData(String deviceName, int nbResult, byte... datas) {
-                return 0;
-            }
+            public void sendData(String deviceName, int nbResult, byte... datas) {}
 
             @Override
             public byte getData(String deviceName) {
@@ -67,7 +47,7 @@ public class AbstractI2CManagerTest {
             }
 
             @Override
-            public byte[] getDatas(String deviceName) {
+            public byte[] getDatas(String deviceName, int size) {
                 return new byte[] {12, 32, 45};
             }
         };
@@ -112,22 +92,13 @@ public class AbstractI2CManagerTest {
      */
     @Test
     public void testRegisterBoard() {
-        final int init = AbstractI2CManagerTest.impl.nbBoardRegistered();
+        final int init = AbstractI2CManagerTest.impl.nbDeviceRegistered();
 
         for (byte b = 1; b < 4; b++) {
             AbstractI2CManagerTest.impl.registerDevice("Board Bis " + b, b);
         }
 
-        Assert.assertEquals(init + 3, AbstractI2CManagerTest.impl.nbBoardRegistered());
-    }
-
-    /**
-     * Test is ok.
-     */
-    @Test
-    public void testIsOk() {
-        Assert.assertTrue(AbstractI2CManagerTest.impl.isOk((byte) 0));
-        Assert.assertFalse(AbstractI2CManagerTest.impl.isOk((byte) 1));
+        Assert.assertEquals(init + 3, AbstractI2CManagerTest.impl.nbDeviceRegistered());
     }
 
     /**

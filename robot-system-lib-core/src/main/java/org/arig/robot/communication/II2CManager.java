@@ -23,40 +23,14 @@ public interface II2CManager {
     void reset() throws I2CException;
 
     /**
-     * Checks if is error.
-     *
-     * @param returnCode
-     *            the return code
-     * @return true, if is error
-     */
-    boolean isError(final Byte returnCode);
-
-    /**
-     * Checks if is ok
-     *
-     * @param returnCode
-     * @return
-     */
-    boolean isOk(final Byte returnCode);
-
-    /**
-     * Prints the error.
-     *
-     * @param returnCode
-     *            the return code
-     */
-    void printError(final Byte returnCode);
-
-    /**
      * Send data.
      *
      * @param deviceName
      *            the address
      * @param datas
      *            the datas
-     * @return the byte
      */
-    byte sendData(final String deviceName, final byte... datas);
+    void sendData(final String deviceName, final byte... datas) throws I2CException;
 
     /**
      * Send data.
@@ -69,7 +43,7 @@ public interface II2CManager {
      *            the datas
      * @return the byte
      */
-    byte sendData(final String deviceName, final int nbResult, final byte... datas);
+    void sendData(final String deviceName, final int nbResult, final byte... datas) throws I2CException;
 
     /**
      * Gets the data.
@@ -78,7 +52,7 @@ public interface II2CManager {
      *            the address
      * @return the data
      */
-    byte getData(final String deviceName);
+    byte getData(final String deviceName) throws I2CException;
 
     /**
      * Gets the datas.
@@ -87,5 +61,5 @@ public interface II2CManager {
      *            the address
      * @return the datas
      */
-    byte[] getDatas(final String deviceName);
+    byte[] getDatas(final String deviceName, final int size) throws I2CException;
 }

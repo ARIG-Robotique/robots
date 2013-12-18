@@ -2,6 +2,7 @@ package org.arig.robot.system.servos;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.II2CManager;
+import org.arig.robot.exception.I2CException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -28,7 +29,7 @@ public class SD21Servos {
     /**
      * Instantiates a new s d21 servos.
      * 
-     * @param address
+     * @param deviceName
      *            the address
      */
     public SD21Servos(final String deviceName) {
@@ -37,7 +38,8 @@ public class SD21Servos {
 
     /**
      * Gets the base register. Renvoi le registre de base pour un servo. Par éxemple pour le servo 1 : 0 : SPEED
-     * REGISTER 1 : LOW BYTE POSITION REGISTER 2 : HIGH BYTE POSITION REGISTER
+     * REGISTER 1 : LOW BYTE POSITION
+     * REGISTER 2 : HIGH BYTE POSITION REGISTER
      * 
      * @param servoNb
      *            the servo nb
@@ -60,10 +62,11 @@ public class SD21Servos {
             return;
         }
 
-        SD21Servos.log.info(String.format("Définition de la position du servo %d (Position = %d)", servoNb, position));
-        final byte retCode = i2cManager.sendData(deviceName, (byte) (SD21Servos.getBaseRegister(servoNb) + 1), (byte) (position & 0xFF), (byte) (position >> 8));
-        if (i2cManager.isError(retCode)) {
-            i2cManager.printError(retCode);
+        try {
+            SD21Servos.log.info(String.format("Définition de la position du servo %d (Position = %d)", servoNb, position));
+            i2cManager.sendData(deviceName, (byte) (SD21Servos.getBaseRegister(servoNb) + 1), (byte) (position & 0xFF), (byte) (position >> 8));
+        } catch (I2CException e) {
+            log.error("Erreur lors de l'envoi de la position");
         }
     }
 
@@ -80,10 +83,11 @@ public class SD21Servos {
             return;
         }
 
-        SD21Servos.log.info(String.format("Définiion de la vitesse du servo %d (Vitesse = %d)", servoNb, speed));
-        final byte retCode = i2cManager.sendData(deviceName, SD21Servos.getBaseRegister(servoNb), speed);
-        if (i2cManager.isError(retCode)) {
-            i2cManager.printError(retCode);
+        try {
+            SD21Servos.log.info(String.format("Définiion de la vitesse du servo %d (Vitesse = %d)", servoNb, speed));
+            i2cManager.sendData(deviceName, SD21Servos.getBaseRegister(servoNb), speed);
+        } catch (I2CException e) {
+            log.error("Erreur lors de l'envoi de la vitesse");
         }
     }
 
@@ -102,10 +106,11 @@ public class SD21Servos {
             return;
         }
 
-        SD21Servos.log.info(String.format("Comande du servo %d (Vitesse = %d,  Position = %d)", servoNb, speed, position));
-        final byte retCode = i2cManager.sendData(deviceName, SD21Servos.getBaseRegister(servoNb), speed, (byte) (position & 0xFF), (byte) (position >> 8));
-        if (i2cManager.isError(retCode)) {
-            i2cManager.printError(retCode);
+        try {
+            SD21Servos.log.info(String.format("Comande du servo %d (Vitesse = %d,  Position = %d)", servoNb, speed, position));
+            i2cManager.sendData(deviceName, SD21Servos.getBaseRegister(servoNb), speed, (byte) (position & 0xFF), (byte) (position >> 8));
+        } catch (I2CException e) {
+            log.error("Erreur lors de la définition de la vitesse et de la position");
         }
     }
 
@@ -113,12 +118,12 @@ public class SD21Servos {
      * Prints the version.
      */
     public void printVersion() {
-        final byte retCode = i2cManager.sendData(deviceName, SD21Servos.SD21_VERSION_REGISTER);
-        if (i2cManager.isOk(retCode)) {
+        try {
+            i2cManager.sendData(deviceName, SD21Servos.SD21_VERSION_REGISTER);
             final short version = i2cManager.getData(deviceName);
             SD21Servos.log.info(String.format("SD21 ServoMotors (V : %s)", version));
-        } else {
-            i2cManager.printError(retCode);
+        } catch (I2CException e) {
+            log.error("Erreur lors de la récupération de la version de la carte SD21");
         }
     }
 

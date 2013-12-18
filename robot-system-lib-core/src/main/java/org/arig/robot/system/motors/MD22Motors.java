@@ -2,6 +2,7 @@ package org.arig.robot.system.motors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.II2CManager;
+import org.arig.robot.exception.I2CException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -170,9 +171,10 @@ public class MD22Motors extends AbstractMotors {
         }
         prevM1 = cmd;
 
-        final byte retCode = i2cManager.sendData(deviceName, MD22Motors.MOTOR1_REGISTER, cmd);
-        if (i2cManager.isError(retCode)) {
-            i2cManager.printError(retCode);
+        try {
+            i2cManager.sendData(deviceName, MD22Motors.MOTOR1_REGISTER, cmd);
+        } catch (I2CException e) {
+            log.error("Impossible d'envoyer la commande moteur 1");
         }
     }
 
@@ -190,9 +192,10 @@ public class MD22Motors extends AbstractMotors {
         }
         prevM1 = cmd;
 
-        final byte retCode = i2cManager.sendData(deviceName, MD22Motors.MOTOR2_REGISTER, cmd);
-        if (i2cManager.isError(retCode)) {
-            i2cManager.printError(retCode);
+        try {
+            i2cManager.sendData(deviceName, MD22Motors.MOTOR2_REGISTER, cmd);
+        } catch (I2CException e) {
+            log.error("Impossible d'envoyer la commande moteur 2");
         }
     }
 
@@ -235,9 +238,10 @@ public class MD22Motors extends AbstractMotors {
 
         // Set mode
         if (transmit) {
-            final byte retCode = i2cManager.sendData(deviceName, MD22Motors.MODE_REGISTER, modeValue);
-            if (i2cManager.isError(retCode)) {
-                i2cManager.printError(retCode);
+            try {
+                i2cManager.sendData(deviceName, MD22Motors.MODE_REGISTER, modeValue);
+            } catch (I2CException e) {
+                log.error("Impossible d'enregistrer le mode");
             }
         }
     }
@@ -304,9 +308,10 @@ public class MD22Motors extends AbstractMotors {
 
         // Set accelleration
         if (transmit) {
-            final byte retCode = i2cManager.sendData(deviceName, MD22Motors.ACCEL_REGISTER, value);
-            if (i2cManager.isError(retCode)) {
-                i2cManager.printError(retCode);
+            try {
+                i2cManager.sendData(deviceName, MD22Motors.ACCEL_REGISTER, value);
+            } catch (I2CException e) {
+                log.error("Impossible de configurer l'acceleration");
             }
         }
     }
@@ -318,12 +323,12 @@ public class MD22Motors extends AbstractMotors {
      */
     @Override
     public void printVersion() {
-        final byte retCode = i2cManager.sendData(deviceName, MD22Motors.MD22_VERSION_REGISTER);
-        if (i2cManager.isOk(retCode)) {
+        try {
+            i2cManager.sendData(deviceName, MD22Motors.MD22_VERSION_REGISTER);
             final byte version = i2cManager.getData(deviceName);
             MD22Motors.log.info(String.format("MD22 DC Motors (V : %s)", version));
-        } else {
-            i2cManager.printError(retCode);
+        } catch (I2CException e) {
+            log.error("Erreur lors de la récupération de la version de la carte MD22");
         }
     }
 }

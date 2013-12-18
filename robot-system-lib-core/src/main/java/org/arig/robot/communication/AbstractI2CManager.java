@@ -20,15 +20,15 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
 
     /** The board map. */
     @Getter(value = AccessLevel.PROTECTED)
-    private final Map<String, D> boardMap = new HashMap<>();
+    private final Map<String, D> deviceMap = new HashMap<>();
 
     /**
      * Nb board registered.
      * 
      * @return the int
      */
-    public int nbBoardRegistered() {
-        return boardMap.size();
+    public int nbDeviceRegistered() {
+        return deviceMap.size();
     }
 
     /**
@@ -38,9 +38,15 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
      *             the i2 c exception
      */
     public final void executeScan() throws I2CException {
-        Assert.notEmpty(boardMap, "Le mapping des cartes et address est obligatoire");
+        Assert.notEmpty(deviceMap, "Le mapping des cartes est obligatoire");
 
         scan();
+    }
+
+    @Override
+    public void reset() throws I2CException {
+        log.info("Reset des cartes enregistrés");
+        deviceMap.clear();
     }
 
     /**
@@ -64,7 +70,7 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
         Assert.hasText(deviceName, "Le nom de la carte doit être précisé");
 
         AbstractI2CManager.log.debug(String.format("Enregistrement de la carte %s (%s).", deviceName, device.toString()));
-        boardMap.put(deviceName, device);
+        deviceMap.put(deviceName, device);
     }
 
     /**
@@ -76,8 +82,8 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
      * @throws I2CException
      */
     public D getDevice(final String deviceName) throws I2CException {
-        if (boardMap.containsKey(deviceName)) {
-            return boardMap.get(deviceName);
+        if (deviceMap.containsKey(deviceName)) {
+            return deviceMap.get(deviceName);
         }
 
         // FallBack
@@ -85,15 +91,4 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
         AbstractI2CManager.log.warn(message);
         throw new I2CException(message);
     }
-
-    /**
-     * Checks if is ok
-     *
-     * @param returnCode
-     * @return
-     */
-    public boolean isOk(final Byte returnCode) {
-        return !isError(returnCode);
-    }
-
 }
