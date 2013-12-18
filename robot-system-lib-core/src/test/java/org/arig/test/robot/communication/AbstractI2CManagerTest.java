@@ -1,9 +1,9 @@
-package org.arig.test.robot.utils;
+package org.arig.test.robot.communication;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.arig.robot.exception.I2CException;
-import org.arig.robot.utils.AbstractI2CUtils;
+import org.arig.robot.communication.AbstractI2CManager;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -12,27 +12,27 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
 /**
- * The Class AbstractI2CUtilsTest.
+ * The Class AbstractI2CManagerTest.
  * 
  * @author mythril
  */
 @Slf4j
 @RunWith(BlockJUnit4ClassRunner.class)
-public class AbstractI2CUtilsTest {
+public class AbstractI2CManagerTest {
 
     /** The impl. */
-    private static AbstractI2CUtils impl;
+    private static AbstractI2CManager impl;
 
     /**
      * Inits the class.
      */
     @BeforeClass
     public static void initClass() {
-        AbstractI2CUtilsTest.impl = new AbstractI2CUtils() {
+        AbstractI2CManagerTest.impl = new AbstractI2CManager<Byte>() {
 
             @Override
             protected void scan() throws I2CException {
-                AbstractI2CUtilsTest.log.info("Dummy scan !");
+                AbstractI2CManagerTest.log.info("Dummy scan !");
             }
 
             @Override
@@ -48,7 +48,27 @@ public class AbstractI2CUtilsTest {
 
             @Override
             public void printError(final Byte returnCode) {
-                AbstractI2CUtilsTest.log.error("Code d'erreur : " + returnCode);
+                AbstractI2CManagerTest.log.error("Code d'erreur : " + returnCode);
+            }
+
+            @Override
+            public byte sendData(String deviceName, byte... datas) {
+                return 0;
+            }
+
+            @Override
+            public byte sendData(String deviceName, int nbResult, byte... datas) {
+                return 0;
+            }
+
+            @Override
+            public byte getData(String deviceName) {
+                return 127;
+            }
+
+            @Override
+            public byte[] getDatas(String deviceName) {
+                return new byte[] {12, 32, 45};
             }
         };
     }
@@ -59,7 +79,7 @@ public class AbstractI2CUtilsTest {
     @Before
     public void initTest() {
         for (byte b = 1; b < 4; b++) {
-            AbstractI2CUtilsTest.impl.registerBoard("Board " + b, b);
+            AbstractI2CManagerTest.impl.registerDevice("Board " + b, b);
         }
     }
 
@@ -68,7 +88,7 @@ public class AbstractI2CUtilsTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRegisterBoard1() {
-        AbstractI2CUtilsTest.impl.registerBoard(null, null);
+        AbstractI2CManagerTest.impl.registerDevice(null, null);
     }
 
     /**
@@ -76,7 +96,7 @@ public class AbstractI2CUtilsTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRegisterBoard2() {
-        AbstractI2CUtilsTest.impl.registerBoard(null, (byte) 1);
+        AbstractI2CManagerTest.impl.registerDevice(null, (byte) 1);
     }
 
     /**
@@ -84,7 +104,7 @@ public class AbstractI2CUtilsTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testRegisterBoard3() {
-        AbstractI2CUtilsTest.impl.registerBoard("", (byte) -1);
+        AbstractI2CManagerTest.impl.registerDevice("", (byte) -1);
     }
 
     /**
@@ -92,13 +112,13 @@ public class AbstractI2CUtilsTest {
      */
     @Test
     public void testRegisterBoard() {
-        final int init = AbstractI2CUtilsTest.impl.nbBoardRegistered();
+        final int init = AbstractI2CManagerTest.impl.nbBoardRegistered();
 
         for (byte b = 1; b < 4; b++) {
-            AbstractI2CUtilsTest.impl.registerBoard("Board Bis " + b, b);
+            AbstractI2CManagerTest.impl.registerDevice("Board Bis " + b, b);
         }
 
-        Assert.assertEquals(init + 3, AbstractI2CUtilsTest.impl.nbBoardRegistered());
+        Assert.assertEquals(init + 3, AbstractI2CManagerTest.impl.nbBoardRegistered());
     }
 
     /**
@@ -106,8 +126,8 @@ public class AbstractI2CUtilsTest {
      */
     @Test
     public void testIsOk() {
-        Assert.assertTrue(AbstractI2CUtilsTest.impl.isOk((byte) 0));
-        Assert.assertFalse(AbstractI2CUtilsTest.impl.isOk((byte) 1));
+        Assert.assertTrue(AbstractI2CManagerTest.impl.isOk((byte) 0));
+        Assert.assertFalse(AbstractI2CManagerTest.impl.isOk((byte) 1));
     }
 
     /**
@@ -116,8 +136,8 @@ public class AbstractI2CUtilsTest {
     @Test(expected = IllegalArgumentException.class)
     public void testExecuteScanWithoutMapping() {
         try {
-            AbstractI2CUtilsTest.impl.reset();
-            AbstractI2CUtilsTest.impl.executeScan();
+            AbstractI2CManagerTest.impl.reset();
+            AbstractI2CManagerTest.impl.executeScan();
         } catch (final I2CException e) {
             Assert.fail("Pas la bonne exception : " + e.toString());
         }
@@ -131,7 +151,7 @@ public class AbstractI2CUtilsTest {
      */
     @Test
     public void textExecuteScan() throws I2CException {
-        AbstractI2CUtilsTest.impl.executeScan();
+        AbstractI2CManagerTest.impl.executeScan();
     }
 
     /**
@@ -142,7 +162,7 @@ public class AbstractI2CUtilsTest {
      */
     @Test(expected = I2CException.class)
     public void testGetUnknownBoard() throws I2CException {
-        AbstractI2CUtilsTest.impl.getBoardAddress("Unknown Board");
+        AbstractI2CManagerTest.impl.getDevice("Unknown Board");
     }
 
     /**
@@ -153,6 +173,6 @@ public class AbstractI2CUtilsTest {
      */
     @Test
     public void testGetKnownBoard() throws I2CException {
-        Assert.assertEquals(2, AbstractI2CUtilsTest.impl.getBoardAddress("Board 2"), 0);
+        Assert.assertEquals(2, (byte) AbstractI2CManagerTest.impl.getDevice("Board 2"), 0);
     }
 }

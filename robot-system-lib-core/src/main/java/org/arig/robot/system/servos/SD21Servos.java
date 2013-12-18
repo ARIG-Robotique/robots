@@ -16,7 +16,7 @@ public class SD21Servos {
     public static final byte SD21_VERSION_REGISTER = 0x40;
 
     /** The address. */
-    protected byte address;
+    protected String deviceName;
 
     /** The ret code. */
     protected byte retCode;
@@ -31,8 +31,8 @@ public class SD21Servos {
      * @param address
      *            the address
      */
-    public SD21Servos(final byte address) {
-        this.address = address;
+    public SD21Servos(final String deviceName) {
+        this.deviceName = deviceName;
     }
 
     /**
@@ -61,9 +61,9 @@ public class SD21Servos {
         }
 
         SD21Servos.log.info(String.format("Définition de la position du servo %d (Position = %d)", servoNb, position));
-        final byte retCode = i2cManager.sendData(address, (byte) (SD21Servos.getBaseRegister(servoNb) + 1), (byte) (position & 0xFF), (byte) (position >> 8));
-        if (i2cManager.getUtils().isError(retCode)) {
-            i2cManager.getUtils().printError(retCode);
+        final byte retCode = i2cManager.sendData(deviceName, (byte) (SD21Servos.getBaseRegister(servoNb) + 1), (byte) (position & 0xFF), (byte) (position >> 8));
+        if (i2cManager.isError(retCode)) {
+            i2cManager.printError(retCode);
         }
     }
 
@@ -81,9 +81,9 @@ public class SD21Servos {
         }
 
         SD21Servos.log.info(String.format("Définiion de la vitesse du servo %d (Vitesse = %d)", servoNb, speed));
-        final byte retCode = i2cManager.sendData(address, SD21Servos.getBaseRegister(servoNb), speed);
-        if (i2cManager.getUtils().isError(retCode)) {
-            i2cManager.getUtils().printError(retCode);
+        final byte retCode = i2cManager.sendData(deviceName, SD21Servos.getBaseRegister(servoNb), speed);
+        if (i2cManager.isError(retCode)) {
+            i2cManager.printError(retCode);
         }
     }
 
@@ -103,9 +103,9 @@ public class SD21Servos {
         }
 
         SD21Servos.log.info(String.format("Comande du servo %d (Vitesse = %d,  Position = %d)", servoNb, speed, position));
-        final byte retCode = i2cManager.sendData(address, SD21Servos.getBaseRegister(servoNb), speed, (byte) (position & 0xFF), (byte) (position >> 8));
-        if (i2cManager.getUtils().isError(retCode)) {
-            i2cManager.getUtils().printError(retCode);
+        final byte retCode = i2cManager.sendData(deviceName, SD21Servos.getBaseRegister(servoNb), speed, (byte) (position & 0xFF), (byte) (position >> 8));
+        if (i2cManager.isError(retCode)) {
+            i2cManager.printError(retCode);
         }
     }
 
@@ -113,12 +113,12 @@ public class SD21Servos {
      * Prints the version.
      */
     public void printVersion() {
-        final byte retCode = i2cManager.sendData(address, SD21Servos.SD21_VERSION_REGISTER);
-        if (i2cManager.getUtils().isOk(retCode)) {
-            final short version = i2cManager.getData(address);
+        final byte retCode = i2cManager.sendData(deviceName, SD21Servos.SD21_VERSION_REGISTER);
+        if (i2cManager.isOk(retCode)) {
+            final short version = i2cManager.getData(deviceName);
             SD21Servos.log.info(String.format("SD21 ServoMotors (V : %s)", version));
         } else {
-            i2cManager.getUtils().printError(retCode);
+            i2cManager.printError(retCode);
         }
     }
 

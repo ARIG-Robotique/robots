@@ -1,14 +1,17 @@
 package org.arig.robot.system;
 
 import lombok.Getter;
+import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.IAsservissement;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motors.AbstractMotors;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.vo.RobotConsigne;
+import org.arig.robot.vo.RobotPosition;
 import org.arig.robot.vo.enums.TypeConsigne;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * The Class RobotManager.
@@ -18,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class RobotManager {
 
     /** The obstacle detector. */
-    @Autowired
+    @Autowired(required = false)
     private IObstacleDetector obstacleDetector;
 
     /** The odom. */
@@ -128,13 +131,13 @@ public class RobotManager {
         calculConsigne();
 
         // 3. Gestion de l'evittement, de la reprise, et du cycle continue
-        if (obstacleDetector.hasObstacle() && !avoidanceInProgress) {
+        if (obstacleDetector != null && obstacleDetector.hasObstacle() && !avoidanceInProgress) {
             stop();
             asserv.reset(true);
             avoidanceInProgress = true;
-        } else if (obstacleDetector.hasObstacle() && avoidanceInProgress) {
+        } else if (obstacleDetector != null && obstacleDetector.hasObstacle() && avoidanceInProgress) {
             // TODO : Trajectoire d'évittement. Comme le hasObstacle externaliser cette gestion au programme principal
-        } else if (!obstacleDetector.hasObstacle() && avoidanceInProgress) {
+        } else if (obstacleDetector != null && !obstacleDetector.hasObstacle() && avoidanceInProgress) {
             avoidanceInProgress = false;
         } else {
             // 3.4.1 Asservissement sur les consignes
@@ -379,6 +382,7 @@ public class RobotManager {
      */
     public void followLine(final double x1, final double y1, final double x2, final double y2) {
         // TODO : A implémenter la commande
+        throw new NotYetImplementedException();
     }
 
     /**
@@ -393,6 +397,7 @@ public class RobotManager {
      */
     public void turnAround(final double x, final double y, final double r) {
         // TODO : A implémenter la commande
+        throw new NotYetImplementedException();
     }
 
     /**

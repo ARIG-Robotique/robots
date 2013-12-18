@@ -62,7 +62,7 @@ public class MD22Motors extends AbstractMotors {
     private II2CManager i2cManager;
 
     /** The address. */
-    private final int address;
+    private final String deviceName;
 
     /** The mode value. */
     private byte modeValue;
@@ -76,27 +76,27 @@ public class MD22Motors extends AbstractMotors {
     /**
      * Instantiates a new m d22 motors.
      * 
-     * @param address
+     * @param deviceName
      *            the address
      */
-    public MD22Motors(final short address) {
-        this(address, MD22Motors.DEFAULT_MODE_VALUE, MD22Motors.DEFAULT_ACCEL_VALUE);
+    public MD22Motors(final String deviceName) {
+        this(deviceName, MD22Motors.DEFAULT_MODE_VALUE, MD22Motors.DEFAULT_ACCEL_VALUE);
     }
 
     /**
      * Instantiates a new m d22 motors.
      * 
-     * @param address
+     * @param deviceName
      *            the address
      * @param mode
      *            the mode
      * @param accel
      *            the accel
      */
-    public MD22Motors(final short address, final byte mode, final byte accel) {
+    public MD22Motors(final String deviceName, final byte mode, final byte accel) {
         super();
 
-        this.address = address;
+        this.deviceName = deviceName;
         modeValue = mode;
         accelValue = accel;
 
@@ -170,9 +170,9 @@ public class MD22Motors extends AbstractMotors {
         }
         prevM1 = cmd;
 
-        final byte retCode = i2cManager.sendData(address, MD22Motors.MOTOR1_REGISTER, cmd);
-        if (i2cManager.getUtils().isError(retCode)) {
-            i2cManager.getUtils().printError(retCode);
+        final byte retCode = i2cManager.sendData(deviceName, MD22Motors.MOTOR1_REGISTER, cmd);
+        if (i2cManager.isError(retCode)) {
+            i2cManager.printError(retCode);
         }
     }
 
@@ -190,9 +190,9 @@ public class MD22Motors extends AbstractMotors {
         }
         prevM1 = cmd;
 
-        final byte retCode = i2cManager.sendData(address, MD22Motors.MOTOR2_REGISTER, cmd);
-        if (i2cManager.getUtils().isError(retCode)) {
-            i2cManager.getUtils().printError(retCode);
+        final byte retCode = i2cManager.sendData(deviceName, MD22Motors.MOTOR2_REGISTER, cmd);
+        if (i2cManager.isError(retCode)) {
+            i2cManager.printError(retCode);
         }
     }
 
@@ -235,9 +235,9 @@ public class MD22Motors extends AbstractMotors {
 
         // Set mode
         if (transmit) {
-            final byte retCode = i2cManager.sendData(address, MD22Motors.MODE_REGISTER, modeValue);
-            if (i2cManager.getUtils().isError(retCode)) {
-                i2cManager.getUtils().printError(retCode);
+            final byte retCode = i2cManager.sendData(deviceName, MD22Motors.MODE_REGISTER, modeValue);
+            if (i2cManager.isError(retCode)) {
+                i2cManager.printError(retCode);
             }
         }
     }
@@ -258,17 +258,23 @@ public class MD22Motors extends AbstractMotors {
      * So to calculate the time (in seconds) for the acceleration to complete : time = accel reg value * 64us * steps.
      * For example :
      * 
-     * ---------------------------------------------------------------------------------- | Accel reg | Time/step |
-     * Current speed | New speed | Steps | Acceleration time |
-     * ---------------------------------------------------------------------------------- | 0 | 0 | 0 | 255 | 255 | 0 |
-     * ---------------------------------------------------------------------------------- | 20 | 1.28ms | 127 | 255 |
-     * 128 | 164ms | ---------------------------------------------------------------------------------- | 50 | 3.2ms |
-     * 80 | 0 | 80 | 256ms | ---------------------------------------------------------------------------------- | 100 |
-     * 6.4ms | 45 | 7 | 38 | 243ms | ----------------------------------------------------------------------------------
+     * ----------------------------------------------------------------------------------
+     * | Accel reg | Time/step | Current speed | New speed | Steps | Acceleration time |
+     * ----------------------------------------------------------------------------------
+     * | 0 | 0 | 0 | 255 | 255 | 0 |
+     * ----------------------------------------------------------------------------------
+     * | 20 | 1.28ms | 127 | 255 | 128 | 164ms |
+     * ----------------------------------------------------------------------------------
+     * | 50 | 3.2ms | 80 | 0 | 80 | 256ms |
+     * ----------------------------------------------------------------------------------
+     * | 100 | 6.4ms | 45 | 7 | 38 | 243ms |
+     * ----------------------------------------------------------------------------------
      * | 150 | 9.6ms | 255 | 5 | 250 | 2.4s |
-     * ---------------------------------------------------------------------------------- | 200 | 12.8ms | 127 | 0 | 127
-     * | 1.63s | ---------------------------------------------------------------------------------- | 255 | 16.32ms | 65
-     * | 150 | 85 | 1.39s | ----------------------------------------------------------------------------------
+     * ----------------------------------------------------------------------------------
+     * | 200 | 12.8ms | 127 | 0 | 127 | 1.63s |
+     * ----------------------------------------------------------------------------------
+     * | 255 | 16.32ms | 65 | 150 | 85 | 1.39s |
+     * ----------------------------------------------------------------------------------
      * 
      * @param value
      *            the new accel
@@ -298,9 +304,9 @@ public class MD22Motors extends AbstractMotors {
 
         // Set accelleration
         if (transmit) {
-            final byte retCode = i2cManager.sendData(address, MD22Motors.ACCEL_REGISTER, value);
-            if (i2cManager.getUtils().isError(retCode)) {
-                i2cManager.getUtils().printError(retCode);
+            final byte retCode = i2cManager.sendData(deviceName, MD22Motors.ACCEL_REGISTER, value);
+            if (i2cManager.isError(retCode)) {
+                i2cManager.printError(retCode);
             }
         }
     }
@@ -312,12 +318,12 @@ public class MD22Motors extends AbstractMotors {
      */
     @Override
     public void printVersion() {
-        final byte retCode = i2cManager.sendData(address, MD22Motors.MD22_VERSION_REGISTER);
-        if (i2cManager.getUtils().isOk(retCode)) {
-            final byte version = i2cManager.getData(address);
+        final byte retCode = i2cManager.sendData(deviceName, MD22Motors.MD22_VERSION_REGISTER);
+        if (i2cManager.isOk(retCode)) {
+            final byte version = i2cManager.getData(deviceName);
             MD22Motors.log.info(String.format("MD22 DC Motors (V : %s)", version));
         } else {
-            i2cManager.getUtils().printError(retCode);
+            i2cManager.printError(retCode);
         }
     }
 }

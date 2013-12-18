@@ -1,5 +1,6 @@
 package org.arig.robot.system.motion;
 
+import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.vo.enums.TypeOdometrie;
 
 /**
@@ -21,6 +22,6 @@ public class OdometrieCirculaire extends AbstractOdometrie {
      */
     @Override
     protected void process() {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        throw new NotYetImplementedException();
     }
 }

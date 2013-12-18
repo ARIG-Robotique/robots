@@ -1,6 +1,7 @@
 package org.arig.robot.system.encoders;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.communication.AbstractI2CManager;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.exception.I2CException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
 
     /** The address droit. */
-    private final byte addressDroit;
+    private final String deviceNameDroit;
 
     /** The address gauche. */
-    private final byte addressGauche;
+    private final String deviceNameGauche;
 
     /** The i2c manager. */
     @Autowired
@@ -26,14 +27,14 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
     /**
      * Instantiates a new aRIG encoders.
      * 
-     * @param addressGauche
+     * @param deviceNameGauche
      *            the address gauche
-     * @param addressDroit
+     * @param deviceNameDroit
      *            the address droit
      */
-    public ARIG2WheelsEncoders(final byte addressGauche, final byte addressDroit) {
-        this.addressGauche = addressGauche;
-        this.addressDroit = addressDroit;
+    public ARIG2WheelsEncoders(final String deviceNameGauche, final String deviceNameDroit) {
+        this.deviceNameGauche = deviceNameGauche;
+        this.deviceNameDroit = deviceNameDroit;
     }
 
     /*
@@ -58,7 +59,7 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
     @Override
     protected double lectureGauche() {
         try {
-            return lectureData(addressGauche);
+            return lectureData(deviceNameGauche);
         } catch (final I2CException e) {
             ARIG2WheelsEncoders.log.error("Erreur lors de la lecture du codeur gauche : " + e.toString());
             return 0;
@@ -73,7 +74,7 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
     @Override
     protected double lectureDroit() {
         try {
-            return lectureData(addressDroit);
+            return lectureData(deviceNameDroit);
         } catch (final I2CException e) {
             ARIG2WheelsEncoders.log.error("Erreur lors de la lecture du codeur droit : " + e.toString());
             return 0;
@@ -81,29 +82,29 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
     }
 
     /**
-     * Lecture data depuis nos cartes codeur Arduino. {@link https
-     * ://www.gitorious.org/arig-association/quadratic-reader/}
+     * Lecture data depuis nos cartes codeur Arduino. {@link https://www.gitorious.org/arig-association/quadratic-reader/}
      * 
-     * 1) On envoi la commande de lecture. 2) On récupère 2 octets (int sur 2 octet avec un AVR 8 bits)
+     * 1) On envoi la commande de lecture.
+     * 2) On récupère 2 octets (int sur 2 octet avec un AVR 8 bits)
      * 
-     * @param address
-     *            the address
+     * @param deviceName
+     *            the deviceName
      * @return the int
      * @throws I2CException
      */
-    private int lectureData(final byte address) throws I2CException {
-        final byte retCode = i2cManager.sendData(address, 2);
-        if (i2cManager.getUtils().isError(retCode)) {
-            i2cManager.getUtils().printError(retCode);
-            throw new I2CException("Impossible de lire la valeur codeur pour la carte " + address);
+    private int lectureData(final String deviceName) throws I2CException {
+        final byte retCode = i2cManager.sendData(deviceName, 2);
+        if (i2cManager.isError(retCode)) {
+            i2cManager.printError(retCode);
+            throw new I2CException("Impossible de lire la valeur codeur pour la carte " + deviceName);
         }
 
         int value = 0;
-        final byte[] datas = i2cManager.getDatas(address);
+        final byte[] datas = i2cManager.getDatas(deviceName);
         value = datas[0] << 8;
         value += datas[1];
 
-        ARIG2WheelsEncoders.log.info(String.format("Lecture de la valeur %s pour le codeur %d", value, address));
+        ARIG2WheelsEncoders.log.info(String.format("Lecture de la valeur %s pour le codeur %d", value, deviceName));
         return value;
     }
 }
