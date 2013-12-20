@@ -19,16 +19,35 @@ import java.util.Set;
 @Slf4j
 public class RaspiI2CManager extends AbstractI2CManager<I2CDevice> {
 
-    private static final Byte ERROR_CODE = null;
-
     @Autowired
     private I2CBus busI2c;
 
+    /**
+     * Enregistrement d'un de
+     *
+     * @param deviceName Nom du device
+     * @param address address du device.
+     */
+    public void registerDevice(final String deviceName, final int address) throws I2CException {
+        try {
+            super.registerDevice(deviceName, busI2c.getDevice(address));
+        } catch (IOException e) {
+            final String errorMessage = String.format("Impossible d'enregistrer le device %s a l'adresse 0x02X", deviceName, address);
+            log.error(errorMessage, e);
+            throw new I2CException(errorMessage, e);
+        }
+    }
+
+    /**
+     * Execute un scan afin de detecter si tous les devices enregistré sont bien présent.
+     *
+     * @throws I2CException
+     */
     @Override
     protected void scan() throws I2CException {
         List<String> deviceNotFound = new ArrayList<>();
 
-        // Controle que les device enregistré sont bien présent.
+        // Contrôle que les devices enregistré sont bien présent.
         RaspiI2CManager.log.info("Verification des devices enregistrés");
         Set<String> deviceNames = getDeviceMap().keySet();
         for (String name : deviceNames) {
