@@ -13,4 +13,36 @@
     <artifactId>main-robot</artifactId>
     <packaging>jar</packaging>
 
+    <name>ARIG Association - Prehistobot projects - Robot principal</name>
+    <description>Programme pour le robot principal de la coupe 2014</description>
+
+    <build>
+    </build>
+
+    <dependencies>
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Arig dependencies -->
+        <dependency>
+            <groupId>org.arig.robot</groupId>
+            <artifactId>robot-system-lib-raspi</artifactId>
+        </dependency>
+
+        <!-- Tests -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
