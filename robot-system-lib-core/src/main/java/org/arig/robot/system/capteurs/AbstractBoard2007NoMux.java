@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The Class Board2007NoMux.
+ * The Class AbstractBoard2007NoMux.
  * 
  * @param <P>
  *            the generic type
@@ -14,7 +14,7 @@ import java.util.Map;
  * @author mythril
  */
 @Slf4j
-public abstract class Board2007NoMux<P> implements IDigitalCapteurs<P> {
+public abstract class AbstractBoard2007NoMux<P> implements IDigitalCapteurs<P> {
 
     /** The Constant NB_CAPTEUR. */
     protected static final int NB_CAPTEUR = 23;
@@ -97,7 +97,7 @@ public abstract class Board2007NoMux<P> implements IDigitalCapteurs<P> {
     /**
      * Instantiates a new board2007 no mux.
      */
-    public Board2007NoMux() {
+    public AbstractBoard2007NoMux() {
     }
 
     /**
@@ -147,7 +147,7 @@ public abstract class Board2007NoMux<P> implements IDigitalCapteurs<P> {
             capteurPins.put(capteurId, pin);
             capteurReverse.put(capteurId, reverse);
 
-            Board2007NoMux.log.info(String.format("Configuration capteur %s sur la pin %s", capteurId, pin.toString()));
+            AbstractBoard2007NoMux.log.info(String.format("Configuration capteur %s sur la pin %s", capteurId, pin.toString()));
         }
     }
 
@@ -180,6 +180,12 @@ public abstract class Board2007NoMux<P> implements IDigitalCapteurs<P> {
      */
     protected abstract void registerCapteur(final P pin, final boolean pullUp);
 
+    /**
+     * Lecture de la valeur d'un capteur
+     *
+     * @param pin
+     * @return
+     */
     protected abstract boolean readCapteur(final P pin);
 
     /**
@@ -191,6 +197,6 @@ public abstract class Board2007NoMux<P> implements IDigitalCapteurs<P> {
      * @return true, if successful
      */
     protected boolean check(final int capteurId) {
-        return capteurId >= 0 && capteurId < Board2007NoMux.NB_CAPTEUR;
+        return capteurId >= 0 && capteurId < AbstractBoard2007NoMux.NB_CAPTEUR;
     }
 }
