@@ -1,11 +1,13 @@
 package org.arig.robot.system.capteurs;
 
+import java.util.List;
+
 /**
  * The Interface ICapteurs.
  * 
  * @author mythril
  */
-public interface IDigitalCapteurs<P> {
+public interface IDigitalInputCapteurs<P> {
 
     /**
      * Sets the pin for capteur.
@@ -15,7 +17,7 @@ public interface IDigitalCapteurs<P> {
      * @param pin
      *            the pin
      */
-    void setPinForCapteur(final int capteurId, final P pin);
+    void setInputPinForCapteur(final int capteurId, final P pin);
 
     /**
      * Sets the pin for capteur.
@@ -27,7 +29,7 @@ public interface IDigitalCapteurs<P> {
      * @param reverse
      *            the reverse
      */
-    void setPinForCapteur(final int capteurId, final P pin, final boolean reverse);
+    void setInputPinForCapteur(final int capteurId, final P pin, final boolean reverse);
 
     /**
      * Sets the pin for capteur.
@@ -41,7 +43,7 @@ public interface IDigitalCapteurs<P> {
      * @param pullUp
      *            the pull up
      */
-    void setPinForCapteur(final int capteurId, final P pin, final boolean reverse, final boolean pullUp);
+    void setInputPinForCapteur(final int capteurId, final P pin, final boolean reverse, final boolean pullUp);
 
     /**
      * Read capteur value.
@@ -51,4 +53,11 @@ public interface IDigitalCapteurs<P> {
      * @return true, if successful
      */
     boolean readCapteurValue(final int capteurId) throws IllegalArgumentException;
+
+    /**
+     * Renvoi la liste des id enregistré
+     *
+     * @return
+     */
+    List<Integer> getIds();
 }

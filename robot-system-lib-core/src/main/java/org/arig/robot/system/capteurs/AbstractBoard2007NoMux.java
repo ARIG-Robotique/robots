@@ -2,7 +2,9 @@ package org.arig.robot.system.capteurs;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,7 +16,7 @@ import java.util.Map;
  * @author mythril
  */
 @Slf4j
-public abstract class AbstractBoard2007NoMux<P> implements IDigitalCapteurs<P> {
+public abstract class AbstractBoard2007NoMux<P> implements IDigitalInputCapteurs<P> {
 
     /** The Constant NB_CAPTEUR. */
     protected static final int NB_CAPTEUR = 23;
@@ -109,8 +111,8 @@ public abstract class AbstractBoard2007NoMux<P> implements IDigitalCapteurs<P> {
      *            the pin
      */
     @Override
-    public void setPinForCapteur(final int capteurId, final P pin) {
-        setPinForCapteur(capteurId, pin, false, false);
+    public void setInputPinForCapteur(final int capteurId, final P pin) {
+        setInputPinForCapteur(capteurId, pin, false, false);
     }
 
     /**
@@ -124,8 +126,8 @@ public abstract class AbstractBoard2007NoMux<P> implements IDigitalCapteurs<P> {
      *            the reverse
      */
     @Override
-    public void setPinForCapteur(final int capteurId, final P pin, final boolean reverse) {
-        setPinForCapteur(capteurId, pin, reverse, false);
+    public void setInputPinForCapteur(final int capteurId, final P pin, final boolean reverse) {
+        setInputPinForCapteur(capteurId, pin, reverse, false);
     }
 
     /**
@@ -141,9 +143,9 @@ public abstract class AbstractBoard2007NoMux<P> implements IDigitalCapteurs<P> {
      *            the pull up
      */
     @Override
-    public void setPinForCapteur(final int capteurId, final P pin, final boolean reverse, final boolean pullUp) {
+    public void setInputPinForCapteur(final int capteurId, final P pin, final boolean reverse, final boolean pullUp) {
         if (check(capteurId)) {
-            registerCapteur(pin, pullUp);
+            registerInputCapteur(capteurId, pin, pullUp);
             capteurPins.put(capteurId, pin);
             capteurReverse.put(capteurId, reverse);
 
@@ -159,7 +161,7 @@ public abstract class AbstractBoard2007NoMux<P> implements IDigitalCapteurs<P> {
     @Override
     public boolean readCapteurValue(final int capteurId) {
         if (check(capteurId) && capteurPins.containsKey(capteurId)) {
-            boolean result = readCapteur(capteurPins.get(capteurId));
+            boolean result = readCapteur(capteurId, capteurPins.get(capteurId));
             if (capteurReverse.get(capteurId)) {
                 result = !result;
             }
@@ -170,6 +172,13 @@ public abstract class AbstractBoard2007NoMux<P> implements IDigitalCapteurs<P> {
         throw new IllegalArgumentException("ID Capteur invalid : " + capteurId);
     }
 
+    @Override
+    public List<Integer> getIds() {
+        List<Integer> res = new ArrayList<>();
+        res.addAll(capteurPins.keySet());
+        return res;
+    }
+
     /**
      * Register capteur.
      * 
@@ -178,7 +187,7 @@ public abstract class AbstractBoard2007NoMux<P> implements IDigitalCapteurs<P> {
      * @param pullUp
      *            the pull up
      */
-    protected abstract void registerCapteur(final P pin, final boolean pullUp);
+    protected abstract void registerInputCapteur(final int capteurId, final P pin, final boolean pullUp);
 
     /**
      * Lecture de la valeur d'un capteur
@@ -186,7 +195,7 @@ public abstract class AbstractBoard2007NoMux<P> implements IDigitalCapteurs<P> {
      * @param pin
      * @return
      */
-    protected abstract boolean readCapteur(final P pin);
+    protected abstract boolean readCapteur(final int capteurId, final P pin);
 
     /**
      * Check. Contrôle que l'ID du capteur est bien dans les bornes pour eviter une erreur de lecture du tableau des
