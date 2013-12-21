@@ -1,11 +1,14 @@
 package org.arig.robot.system.capteurs;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The Class AbstractBoard2007NoMux.
@@ -21,74 +24,58 @@ public abstract class AbstractBoard2007NoMux<P> implements IDigitalInputCapteurs
     /** The Constant NB_CAPTEUR. */
     protected static final int NB_CAPTEUR = 23;
 
-    /** The Constant GP2D_01. */
-    public static final int GP2D_01 = 0x00; // 0
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+    public enum CapteursDefinition {
 
-    /** The Constant GP2D_02. */
-    public static final int GP2D_02 = 0x01;
+        GP2D_01(0x00, "Capteur GP2D 1"), // 0
+        GP2D_02(0x01, "Capteur GP2D 2"),
+        GP2D_03(0x02, "Capteur GP2D 3"),
+        GP2D_04(0x03, "Capteur GP2D 4"),
+        GP2D_05(0x04, "Capteur GP2D 5"),
+        GP2D_06(0x05, "Capteur GP2D 6"),
+        GP2D_07(0x06, "Capteur GP2D 7"),
+        GP2D_08(0x07, "Capteur GP2D 8"),
+        GP2D_09(0x08, "Capteur GP2D 9"),
+        GP2D_10(0x09, "Capteur GP2D 10"),
 
-    /** The Constant GP2D_03. */
-    public static final int GP2D_03 = 0x02;
+        SWITCH_01(0x0A, "Capteur micro switch 1"),
+        SWITCH_02(0x0B, "Capteur micro switch 2"),
+        SWITCH_03(0x0C, "Capteur micro switch 3"),
+        SWITCH_04(0x0D, "Capteur micro switch 4"),
+        SWITCH_05(0x0E, "Capteur micro switch 5"),
+        SWITCH_06(0x0F, "Capteur micro switch 6"),
 
-    /** The Constant GP2D_04. */
-    public static final int GP2D_04 = 0x03;
+        LUM_01(0x10, "Capteur barriere lumineuse 1"),
+        LUM_02(0x11, "Capteur barriere lumineuse 2"),
+        LUM_03(0x12, "Capteur barriere lumineuse 3"),
+        LUM_04(0x13, "Capteur barriere lumineuse 4"),
 
-    /** The Constant GP2D_05. */
-    public static final int GP2D_05 = 0x04;
+        IND_01(0x14, "Capteur inductid 1"),
+        IND_02(0x15, "Capteur inductif 2"),
 
-    /** The Constant GP2D_06. */
-    public static final int GP2D_06 = 0x05;
+        EQUIPE(0x16, "Capteur couleur équipe"); // 22
 
-    /** The Constant GP2D_07. */
-    public static final int GP2D_07 = 0x06;
+        @Getter
+        private final Integer id;
 
-    /** The Constant GP2D_08. */
-    public static final int GP2D_08 = 0x07;
+        @Getter
+        private final String description;
 
-    /** The Constant GP2D_09. */
-    public static final int GP2D_09 = 0x08;
+    }
 
-    /** The Constant GP2D_10. */
-    public static final int GP2D_10 = 0x09;
+    private Function<Integer, CapteursDefinition> convertCapteurId = new Function<Integer, CapteursDefinition>() {
+        @Override
+        public CapteursDefinition apply(Integer input) {
+            for (CapteursDefinition c : CapteursDefinition.values()) {
+                if (c.getId().equals(input)) {
+                    return c;
+                }
+            }
 
-    /** The Constant SWITCH_01. */
-    public static final int SWITCH_01 = 0x0A;
-
-    /** The Constant SWITCH_02. */
-    public static final int SWITCH_02 = 0x0B;
-
-    /** The Constant SWITCH_03. */
-    public static final int SWITCH_03 = 0x0C;
-
-    /** The Constant SWITCH_04. */
-    public static final int SWITCH_04 = 0x0D;
-
-    /** The Constant SWITCH_05. */
-    public static final int SWITCH_05 = 0x0E;
-
-    /** The Constant SWITCH_06. */
-    public static final int SWITCH_06 = 0x0F;
-
-    /** The Constant LUM_01. */
-    public static final int LUM_01 = 0x10;
-
-    /** The Constant LUM_02. */
-    public static final int LUM_02 = 0x11;
-
-    /** The Constant LUM_03. */
-    public static final int LUM_03 = 0x12;
-
-    /** The Constant LUM_04. */
-    public static final int LUM_04 = 0x13;
-
-    /** The Constant IND_01. */
-    public static final int IND_01 = 0x14;
-
-    /** The Constant IND_02. */
-    public static final int IND_02 = 0x15;
-
-    /** The Constant EQUIPE. */
-    public static final int EQUIPE = 0x16; // 22
+            // Fallback
+            return null;
+        }
+    };
 
     /** The capteur pins. */
     protected final Map<Integer, P> capteurPins = new HashMap<>();
@@ -177,6 +164,10 @@ public abstract class AbstractBoard2007NoMux<P> implements IDigitalInputCapteurs
         List<Integer> res = new ArrayList<>();
         res.addAll(capteurPins.keySet());
         return res;
+    }
+
+    public CapteursDefinition getDefinitionById(int capteurId) {
+        return convertCapteurId.apply(capteurId);
     }
 
     /**
