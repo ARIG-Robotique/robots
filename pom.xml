@@ -34,9 +34,10 @@
 
         <!-- Lib dependencies -->
         <lib.lombok.version>1.12.2</lib.lombok.version>
+        <lib.jetty.version>9.1.0.v20131115</lib.jetty.version>
         <lib.spring.version>4.0.0.RELEASE</lib.spring.version>
-        <lib.spring.security.version></lib.spring.security.version>
-        <lib.spring.boot.version></lib.spring.boot.version>
+        <lib.spring.boot.version>0.5.0.M6</lib.spring.boot.version>
+        <lib.jackson.version>2.2.2</lib.jackson.version>
         <lib.junit.version>4.11</lib.junit.version>
 
         <!-- Arig dependencies -->
@@ -52,6 +53,17 @@
         <developerConnection>scm:git:ssh://git@gitorious.org/arig-association/prehistobot.git</developerConnection>
         <url>http://gitorious.org/arig-association/prehistobot</url>
     </scm>
+
+    <repositories>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>http://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <distributionManagement>
         <site>
@@ -97,6 +109,34 @@
                 <groupId>org.arig.robot</groupId>
                 <artifactId>robot-system-lib-raspi</artifactId>
                 <version>${lib.robot.version}</version>
+            </dependency>
+
+            <!-- Spring Web -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${lib.spring.version}</version>
+            </dependency>
+
+            <!-- Spring Boot -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-autoconfigure</artifactId>
+                <version>${lib.spring.boot.version}</version>
+            </dependency>
+
+            <!-- Jackson JSON processor -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${lib.jackson.version}</version>
+            </dependency>
+
+            <!-- Jetty webserver -->
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-webapp</artifactId>
+                <version>${lib.jetty.version}</version>
             </dependency>
 
             <!-- Tests -->
