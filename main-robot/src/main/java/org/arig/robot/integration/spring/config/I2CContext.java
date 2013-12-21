@@ -16,7 +16,7 @@ import java.io.IOException;
  * Created by mythril on 21/12/13.
  */
 @Configuration
-@Profile("i2c")
+@Profile("raspi")
 public class I2CContext {
 
     @Bean

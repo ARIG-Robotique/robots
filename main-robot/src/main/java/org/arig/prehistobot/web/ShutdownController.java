@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by mythril on 21/12/13.
  */
 @RestController
-public class ShutdownController implements ApplicationContextAware {
-
-    @Setter
-    private ApplicationContext applicationContext;
+public class ShutdownController {
 
     @RequestMapping("/shutdown")
     public String shutdown() {

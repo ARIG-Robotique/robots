@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Created by mythril on 21/12/13.
  */
-@Profile("i2c")
+@Profile("raspi")
 @RestController
 @RequestMapping("/motors")
 @Slf4j

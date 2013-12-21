@@ -4,6 +4,7 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
+import org.arig.robot.system.capteurs.AbstractBoard2007NoMux;
 import org.arig.robot.system.capteurs.IDigitalInputCapteurs;
 import org.arig.robot.system.capteurs.RaspiBoard2007NoMux;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +15,7 @@ import org.springframework.context.annotation.Profile;
  * Created by mythril on 21/12/13.
  */
 @Configuration
-@Profile("gpio")
+@Profile("raspi")
 public class GPIOContext {
 
     @Bean(destroyMethod = "shutdown")
@@ -25,7 +26,7 @@ public class GPIOContext {
     @Bean
     public IDigitalInputCapteurs<Pin> capteurs() {
         RaspiBoard2007NoMux c = new RaspiBoard2007NoMux(gpioController());
-        c.setInputPinForCapteur(RaspiBoard2007NoMux.EQUIPE, RaspiPin.GPIO_14);
+        c.setInputPinForCapteur(RaspiBoard2007NoMux.CapteursDefinition.EQUIPE.getId(), RaspiPin.GPIO_14);
 
         return c;
     }
