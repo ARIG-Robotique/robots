@@ -23,6 +23,7 @@
 	    <plugin.jar.version>2.4</plugin.jar.version>
 	    <plugin.jacoco.version>0.6.3.201306030806</plugin.jacoco.version>
 	   	<plugin.pmd.version>3.0.1</plugin.pmd.version>
+        <plugin.jdepend.version>2.0-beta-2</plugin.jdepend.version>
 	   	<plugin.findbugs.version>2.5.2</plugin.findbugs.version>
 		<plugin.surefire.version>2.16</plugin.surefire.version>	 
 		<plugin.checkstyle.version>2.10</plugin.checkstyle.version>  
@@ -264,6 +265,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jdepend-maven-plugin</artifactId>
+                <version>${plugin.jdepend.version}</version>
 			</plugin>
 
 			<plugin>
