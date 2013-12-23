@@ -4,7 +4,6 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
-import org.arig.robot.system.capteurs.AbstractBoard2007NoMux;
 import org.arig.robot.system.capteurs.IDigitalInputCapteurs;
 import org.arig.robot.system.capteurs.RaspiBoard2007NoMux;
 import org.springframework.context.annotation.Bean;
