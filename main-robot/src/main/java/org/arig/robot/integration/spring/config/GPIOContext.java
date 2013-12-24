@@ -23,7 +23,7 @@ public class GPIOContext {
     }
 
     @Bean
-    public IDigitalInputCapteurs<Pin> capteurs() {
+    public RaspiBoard2007NoMux capteurs() {
         RaspiBoard2007NoMux c = new RaspiBoard2007NoMux(gpioController());
         c.setInputPinForCapteur(RaspiBoard2007NoMux.CapteursDefinition.EQUIPE.getId(), RaspiPin.GPIO_14);
 
