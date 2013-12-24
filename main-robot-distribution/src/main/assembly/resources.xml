@@ -14,7 +14,7 @@
     <fileSets>
         <!-- Script de resources -->
         <fileSet>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>/main-robot/</outputDirectory>
             <directory>${project.build.directory}/package</directory>
         </fileSet>
     </fileSets>
@@ -22,19 +22,8 @@
     <dependencySets>
         <!-- App dependencies -->
         <dependencySet>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>/main-robot/libs</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>
-            <includes>
-                <include>*:main-robot:jar:*</include>
-            </includes>
-        </dependencySet>
-
-        <dependencySet>
-            <outputDirectory>/libs</outputDirectory>
-            <useProjectArtifact>false</useProjectArtifact>
-            <excludes>
-                <exclude>*:main-robot:jar:*</exclude>
-            </excludes>
         </dependencySet>
     </dependencySets>
 </assembly>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration>
+
+	<!-- Déclaration d'un appender qui va stocker les traces dans un fichier texte.
+		Le chemin d'accès à ce fichier peut-être soit absolu, soit relatif au répertoire de travail du serveur d'application. -->
+	<appender name="ApplicationFile" class="org.apache.log4j.FileAppender">
+		<param name="File" value="logs/${logFileName}.log" />
+		<param name="Append" value="true" />
+		<param name="Encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ABSOLUTE} [%t] %-5p [%X{principal} %X{ip}] [%c] %M : (ligne %L) - %m %n" />
+		</layout>
+	</appender>
+	<appender name="AsyncApplicationFile" class="org.apache.log4j.AsyncAppender">
+		<param name="BufferSize" value="500"/>
+		<appender-ref ref="ApplicationFile"/>
+	</appender>
+
+	<!-- ******************************** -->
+	<!-- Configuration pour l'application -->
+	<!-- ******************************** -->
+	<logger name="org.springframework">
+		<level value="INFO" />
+	</logger>
+
+	<logger name="org.arig">
+		<level value="INFO" />
+	</logger>
+
+	<!-- *********** -->
+	<!-- Root Logger -->
+	<!-- *********** -->
+	<root>
+		<level value="ERROR" />
+		<appender-ref ref="AsyncApplicationFile" />
+	</root>
+</log4j:configuration>
