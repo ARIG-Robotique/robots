@@ -19,8 +19,11 @@ import java.util.Set;
 @Slf4j
 public class RaspiI2CManager extends AbstractI2CManager<I2CDevice> {
 
-    @Autowired
-    private I2CBus busI2c;
+    private final I2CBus busI2c;
+
+    public RaspiI2CManager(I2CBus busI2c) {
+        this.busI2c = busI2c;
+    }
 
     /**
      * Enregistrement d'un de
