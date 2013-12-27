@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<!DOCTYPE log4j:configuration SYSTEM
+        "/Users/mythril/Documents/workspace-java/prehistobot-parent/main-robot-distribution/src/main/resources/libs/log4j.dtd">
 <log4j:configuration>
+
+    <appender name="Console" class="org.apache.log4j.ConsoleAppender">
+        <param name="Encoding" value="UTF-8" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ABSOLUTE} boot%X{context} - ${PID} %5p [%t] --- [%c] %M : (ligne %L) - %m %n" />
+        </layout>
+    </appender>
+    <appender name="AsyncConsole" class="org.apache.log4j.AsyncAppender">
+        <param name="BufferSize" value="500"/>
+        <appender-ref ref="Console"/>
+    </appender>
 
 	<!-- Déclaration d'un appender qui va stocker les traces dans un fichier texte.
 		Le chemin d'accès à ce fichier peut-être soit absolu, soit relatif au répertoire de travail du serveur d'application. -->
@@ -9,7 +21,7 @@
 		<param name="Append" value="true" />
 		<param name="Encoding" value="UTF-8" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{ABSOLUTE} [%t] %-5p [%X{principal} %X{ip}] [%c] %M : (ligne %L) - %m %n" />
+			<param name="ConversionPattern" value="%d{ABSOLUTE} boot%X{context} - ${PID} %5p [%t] --- [%c] %M : (ligne %L) - %m %n" />
 		</layout>
 	</appender>
 	<appender name="AsyncApplicationFile" class="org.apache.log4j.AsyncAppender">
@@ -33,6 +45,7 @@
 	<!-- *********** -->
 	<root>
 		<level value="ERROR" />
+        <appender-ref ref="AsyncConsole" />
 		<appender-ref ref="AsyncApplicationFile" />
 	</root>
 </log4j:configuration>

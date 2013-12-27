@@ -43,6 +43,14 @@
 
         <!-- Arig dependencies -->
         <lib.robot.version>1.1.0-SNAPSHOT</lib.robot.version>
+
+        <!-- Raspberry PI Dev properties (TO BE OVERRIDED by profile if necessary) -->
+        <pi.transfer>true</pi.transfer>
+        <pi.user>pi</pi.user>
+        <pi.password>raspberry</pi.password>
+        <pi.host>raspberry</pi.host>
+        <pi.port>22</pi.port>
+        <pi.dirCopyTo>/home/pi</pi.dirCopyTo>
     </properties>
 
     <modules>

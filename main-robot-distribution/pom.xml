@@ -17,6 +17,10 @@
     <name>ARIG Association - Prehistobot projects - Robot principal packaging</name>
     <description>Packaging robot principal de la coupe 2014</description>
 
+    <properties>
+        <app.install.dir>${pi.dirCopyTo}/main-robot</app.install.dir>
+    </properties>
+
     <build>
         <resources>
             <resource>
@@ -67,6 +71,68 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- OPTIONALLY DEPLOY THE FINAL ASSEMBLY TO THE RASBERRY PI -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+
+                    <!-- Install the compiled distribution to the Raspberry Pi -->
+                    <execution>
+                        <id>transfer-compiled-jar</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                         classpathref="maven.plugin.classpath" />
+                                <if>
+                                    <equals arg1="${pi.transfer}" arg2="true" />
+                                    <then>
+                                        <!-- Nettoyage version précédentes -->
+                                        <sshexec host="${pi.host}" username="${pi.user}" password="${pi.password}" port="${pi.port}"
+                                                 trust="true" verbose="true" failonerror="false"
+                                                 command="rm -Rf ${app.install.dir}/libs ${app.install.dir}/conf ${app.install.dir}/*.sh" />
+
+                                        <!-- Copy the JAR file to the Raspberry Pi -->
+                                        <scp file="${project.build.directory}/${project.artifactId}-${project.version}-raspi.tar.gz"
+                                            todir="${pi.user}:${pi.password}@${pi.host}:${pi.dirCopyTo}"
+                                            port="${pi.port}" trust="true" verbose="true" failonerror="true">
+                                        </scp>
+
+                                        <!-- Install de l'app -->
+                                        <sshexec host="${pi.host}" username="${pi.user}" password="${pi.password}" port="${pi.port}"
+                                                 trust="true" verbose="true" failonerror="false"
+                                                 command="cd ${pi.dirCopyTo}; tar xzf ${project.artifactId}-${project.version}-raspi.tar.gz; chmod a+x ${app.install.dir}/*.sh" />
+                                    </then>
+                                    <else>
+                                        <echo>SSH transfer/installation of prehistobot main-robot has been disabled.</echo>
+                                    </else>
+                                </if>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant-jsch</artifactId>
+                        <version>1.7.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.jcraft</groupId>
+                        <artifactId>jsch</artifactId>
+                        <version>0.1.42</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>20020829</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
