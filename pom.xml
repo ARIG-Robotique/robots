@@ -131,7 +131,7 @@
             <!-- Spring Boot -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-autoconfigure</artifactId>
+                <artifactId>spring-boot-actuator</artifactId>
                 <version>${lib.spring.boot.version}</version>
             </dependency>
 

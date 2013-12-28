@@ -12,11 +12,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan("org.arig.prehistobot")
-@PropertySource(ignoreResourceNotFound = true, value = {
-    "${config.data.directory}/prehistobot.properties"
-})
 public class ApplicationContext {
-
-
 }
 

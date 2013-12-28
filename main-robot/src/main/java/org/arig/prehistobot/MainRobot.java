@@ -25,10 +25,4 @@ public class MainRobot {
         ctx = SpringApplication.run(contextClasses, args);
         ctx.addApplicationListener(new MainRobotListener());
     }
-
-    public static void shutdown() {
-        if (ctx != null) {
-            SpringApplication.exit(ctx);
-        }
-    }
 }

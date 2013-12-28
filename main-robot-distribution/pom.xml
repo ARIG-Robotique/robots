@@ -95,7 +95,7 @@
                                         <!-- Nettoyage version précédentes -->
                                         <sshexec host="${pi.host}" username="${pi.user}" password="${pi.password}" port="${pi.port}"
                                                  trust="true" verbose="true" failonerror="false"
-                                                 command="rm -Rf ${app.install.dir}/libs ${app.install.dir}/conf ${app.install.dir}/*.sh" />
+                                                 command="rm -Rf ${app.install.dir}/libs ${app.install.dir}/config ${app.install.dir}/*.sh" />
 
                                         <!-- Copy the JAR file to the Raspberry Pi -->
                                         <scp file="${project.build.directory}/${project.artifactId}-${project.version}-raspi.tar.gz"
@@ -106,7 +106,7 @@
                                         <!-- Install de l'app -->
                                         <sshexec host="${pi.host}" username="${pi.user}" password="${pi.password}" port="${pi.port}"
                                                  trust="true" verbose="true" failonerror="false"
-                                                 command="cd ${pi.dirCopyTo}; tar xzf ${project.artifactId}-${project.version}-raspi.tar.gz; chmod a+x ${app.install.dir}/*.sh" />
+                                                 command="cd ${pi.dirCopyTo}; tar xzf ${project.artifactId}-${project.version}-raspi.tar.gz; chmod a+x ${app.install.dir}/*.sh; rm -f ${project.artifactId}-${project.version}-raspi.tar.gz" />
                                     </then>
                                     <else>
                                         <echo>SSH transfer/installation of prehistobot main-robot has been disabled.</echo>
