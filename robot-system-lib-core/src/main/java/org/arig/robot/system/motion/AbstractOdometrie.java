@@ -2,7 +2,7 @@ package org.arig.robot.system.motion;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import org.arig.robot.vo.RobotPosition;
+import org.arig.robot.vo.Position;
 import org.arig.robot.vo.enums.TypeOdometrie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,7 +18,7 @@ public abstract class AbstractOdometrie implements IOdometrie {
     @Autowired
     @Qualifier("currentPosition")
     @Getter(AccessLevel.PROTECTED)
-    private RobotPosition position;
+    private Position position;
 
     /** The type. */
     @Getter

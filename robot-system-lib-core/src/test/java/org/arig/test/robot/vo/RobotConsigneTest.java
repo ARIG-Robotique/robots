@@ -1,6 +1,6 @@
 package org.arig.test.robot.vo;
 
-import org.arig.robot.vo.RobotConsigne;
+import org.arig.robot.vo.CommandeRobot;
 import org.arig.robot.vo.enums.TypeConsigne;
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 public class RobotConsigneTest {
 
     /** The consigne. */
-    private final RobotConsigne consigne = new RobotConsigne();
+    private final CommandeRobot consigne = new CommandeRobot();
 
     /**
      * Test is type.

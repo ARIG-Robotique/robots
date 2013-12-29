@@ -7,8 +7,8 @@ import org.arig.robot.system.motion.IAsservissement;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motors.AbstractMotors;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.vo.RobotConsigne;
-import org.arig.robot.vo.RobotPosition;
+import org.arig.robot.vo.CommandeRobot;
+import org.arig.robot.vo.Position;
 import org.arig.robot.vo.enums.TypeConsigne;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,11 +47,11 @@ public class RobotManager {
     /** The position. */
     @Autowired
     @Qualifier("currentPosition")
-    private RobotPosition position;
+    private Position position;
 
     /** Consigne du robot sur la table */
     @Autowired
-    private RobotConsigne consigne;
+    private CommandeRobot cmdRobot;
 
     /** The trajet atteint. */
     @Getter
@@ -149,7 +149,7 @@ public class RobotManager {
             asserv.process();
 
             // 3.4.3 Envoi aux moteurs
-            motors.generateMouvement(consigne.getCmdGauche(), consigne.getCmdDroit());
+            motors.generateMouvement(cmdRobot.getMoteur().getGauche(), cmdRobot.getMoteur().getDroit());
         }
 
         // 4. Gestion des flags pour le séquencement du calcul de la position
@@ -163,10 +163,10 @@ public class RobotManager {
      */
     private void calculConsigne() {
 
-        if (!trajetAtteint && consigne.isType(TypeConsigne.XY)) {
+        if (!trajetAtteint && cmdRobot.isType(TypeConsigne.XY)) {
             // Calcul en fonction de l'odométrie
-            long dX = (long) (consigne.getX() - position.getX());
-            long dY = (long) (consigne.getY() - position.getY());
+            long dX = (long) (cmdRobot.getPosition().getPt().getX() - position.getPt().getX());
+            long dY = (long) (cmdRobot.getPosition().getPt().getY() - position.getPt().getY());
 
             // Calcul des consignes
             long consDist = calculDistanceConsigne(dX, dY);
@@ -179,23 +179,23 @@ public class RobotManager {
             }
 
             // Sauvegarde des consignes
-            consigne.setConsigneDistance(consDist);
-            consigne.setConsigneOrientation(consOrient);
+            cmdRobot.getConsigne().setDistance(consDist);
+            cmdRobot.getConsigne().setOrientation(consOrient);
 
-        } else if (!trajetAtteint && consigne.isType(TypeConsigne.LINE)) {
+        } else if (!trajetAtteint && cmdRobot.isType(TypeConsigne.LINE)) {
             // TODO : Consigne de suivi de ligne (géré les clothoïde pour la liaisons)
 
-        } else if (!trajetAtteint && consigne.isType(TypeConsigne.CIRCLE)) {
+        } else if (!trajetAtteint && cmdRobot.isType(TypeConsigne.CIRCLE)) {
             // TODO : Consigne de rotation autour d'un point.
 
         } else {
             // Calcul par différence vis a vis de la valeur codeur(asservissement de position "basique")
 
-            if (consigne.isType(TypeConsigne.DIST)) {
-                consigne.setConsigneDistance((long) (consigne.getConsigneDistance() - encoders.getDistance()));
+            if (cmdRobot.isType(TypeConsigne.DIST)) {
+                cmdRobot.getConsigne().setDistance((long) (cmdRobot.getConsigne().getDistance() - encoders.getDistance()));
             }
-            if (consigne.isType(TypeConsigne.ANGLE)) {
-                consigne.setConsigneOrientation((long) (consigne.getConsigneOrientation() - encoders.getOrientation()));
+            if (cmdRobot.isType(TypeConsigne.ANGLE)) {
+                cmdRobot.getConsigne().setOrientation((long) (cmdRobot.getConsigne().getOrientation() - encoders.getOrientation()));
             }
         }
     }
@@ -234,22 +234,22 @@ public class RobotManager {
 
     private void gestionFlags() {
         // TODO : Voir si il ne serait pas judicieux de traiter le cas des consignes XY avec un rayon sur le point a atteindre
-        if (consigne.isFrein()
-                && Math.abs(consigne.getConsigneDistance()) < fenetreArretDistance
-                && Math.abs(consigne.getConsigneOrientation()) < fenetreArretOrientation) {
+        if (cmdRobot.isFrein()
+                && Math.abs(cmdRobot.getConsigne().getDistance()) < fenetreArretDistance
+                && Math.abs(cmdRobot.getConsigne().getOrientation()) < fenetreArretOrientation) {
 
             // Le trajet est atteint
             trajetAtteint = true;
         }
 
-        if (Math.abs(consigne.getConsigneDistance()) < asserv.getFenetreApprocheDistance()
-                && Math.abs(consigne.getConsigneOrientation()) < asserv.getFenetreApprocheOrientation()) {
+        if (Math.abs(cmdRobot.getConsigne().getDistance()) < asserv.getFenetreApprocheDistance()
+                && Math.abs(cmdRobot.getConsigne().getOrientation()) < asserv.getFenetreApprocheOrientation()) {
 
             // Modification du type de consigne pour la stabilisation
-            consigne.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+            cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
 
             // Notification que le point de passage est atteint
-            if (!consigne.isFrein()) {
+            if (!cmdRobot.isFrein()) {
                 trajetEnApproche = true;
             }
         }
@@ -266,11 +266,11 @@ public class RobotManager {
      *            the frein
      */
     public void gotoPointMM(final double x, final double y, final boolean frein) {
-        consigne.setAngle(0);
-        consigne.setX(conv.mmToPulse(x));
-        consigne.setY(conv.mmToPulse(y));
-        consigne.setFrein(frein);
-        consigne.setTypes(TypeConsigne.XY);
+        cmdRobot.getPosition().setAngle(0);
+        cmdRobot.getPosition().getPt().setX(conv.mmToPulse(x));
+        cmdRobot.getPosition().getPt().setY(conv.mmToPulse(y));
+        cmdRobot.setFrein(frein);
+        cmdRobot.setTypes(TypeConsigne.XY);
 
         prepareNextMouvement();
     }
@@ -295,13 +295,13 @@ public class RobotManager {
      *            the y
      */
     public void alignFrontTo(final long x, final long y) {
-        long dX = (long) (conv.mmToPulse(x) - position.getX());
-        long dY = (long) (conv.mmToPulse(y) - position.getY());
+        long dX = (long) (conv.mmToPulse(x) - position.getPt().getX());
+        long dY = (long) (conv.mmToPulse(y) - position.getPt().getY());
 
-        consigne.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
-        consigne.setConsigneDistance(0);
-        consigne.setConsigneOrientation(calculAngleConsigne(dX, dY));
-        consigne.setFrein(true);
+        cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+        cmdRobot.getConsigne().setDistance(0);
+        cmdRobot.getConsigne().setOrientation(calculAngleConsigne(dX, dY));
+        cmdRobot.setFrein(true);
 
         prepareNextMouvement();
     }
@@ -315,8 +315,8 @@ public class RobotManager {
      *            the y
      */
     public void alignBackTo(final double x, final double y) {
-        long dX = (long) (conv.mmToPulse(x) - position.getX());
-        long dY = (long) (conv.mmToPulse(y) - position.getY());
+        long dX = (long) (conv.mmToPulse(x) - position.getPt().getX());
+        long dY = (long) (conv.mmToPulse(y) - position.getPt().getY());
 
         long consOrient = calculAngleConsigne(dX, dY);
         if (consOrient > 0) {
@@ -325,10 +325,10 @@ public class RobotManager {
             consOrient += conv.getPiPulse();
         }
 
-        consigne.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
-        consigne.setConsigneDistance(0);
-        consigne.setConsigneOrientation(consOrient);
-        consigne.setFrein(true);
+        cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+        cmdRobot.getConsigne().setDistance(0);
+        cmdRobot.getConsigne().setOrientation(consOrient);
+        cmdRobot.setFrein(true);
 
         prepareNextMouvement();
     }
@@ -340,10 +340,10 @@ public class RobotManager {
      *            the distance
      */
     public void avanceMM(final double distance) {
-        consigne.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
-        consigne.setConsigneDistance((long) conv.mmToPulse(distance));
-        consigne.setConsigneOrientation(0);
-        consigne.setFrein(true);
+        cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+        cmdRobot.getConsigne().setDistance((long) conv.mmToPulse(distance));
+        cmdRobot.getConsigne().setOrientation(0);
+        cmdRobot.setFrein(true);
 
         prepareNextMouvement();
     }
@@ -365,10 +365,10 @@ public class RobotManager {
      *            the angle
      */
     public void tourneDeg(final double angle) {
-        consigne.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
-        consigne.setConsigneDistance(0);
-        consigne.setConsigneOrientation((long) conv.degToPulse(angle));
-        consigne.setFrein(true);
+        cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+        cmdRobot.getConsigne().setDistance(0);
+        cmdRobot.getConsigne().setOrientation((long) conv.degToPulse(angle));
+        cmdRobot.setFrein(true);
 
         prepareNextMouvement();
     }
@@ -427,7 +427,7 @@ public class RobotManager {
      * @param vOrientation
      */
     public void setVitesse(long vDistance, long vOrientation) {
-        consigne.setVitesseDistance(vDistance);
-        consigne.setVitesseOrientation(vOrientation);
+        cmdRobot.getVitesse().setDistance(vDistance);
+        cmdRobot.getVitesse().setOrientation(vOrientation);
     }
 }

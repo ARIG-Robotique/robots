@@ -10,49 +10,24 @@ import lombok.Getter;
 import org.arig.robot.vo.enums.TypeConsigne;
 
 /**
- * The Class RobotConsigne.
- * 
- * y (2000) |
- *          |
- *          |
- *          |
- *          |
- *          |---------------------------------- x (3000)
- *         0,0
- *
- * Theta = 0 dans le sens de X
+ * The Class CommandeRobot.
  * 
  * @author mythril
  */
 @Data
-public class RobotConsigne {
+public class CommandeRobot {
 
-    /** The x. */
-    private double x;
+    /** Position a atteindre pour cette commande */
+    private Position position;
 
-    /** The y. */
-    private double y;
+    /** Commande moteur a appliquer */
+    private CommandeMoteur moteur;
 
-    /** The angle. */
-    private double angle;
+    /** Vitesse a appliquer */
+    private Vitesse vitesse;
 
-    /** The consigne distance. */
-    private long consigneDistance;
-
-    /** The consigne orientation. */
-    private long consigneOrientation;
-
-    /** The vitesse distance. */
-    private long vitesseDistance;
-
-    /** The vitesse orientation. */
-    private long vitesseOrientation;
-
-    /** The cmd droit. */
-    private int cmdDroit;
-
-    /** The cmd gauche. */
-    private int cmdGauche;
+    /** Consigne de déplacement pour l'asservissement */
+    private Consigne consigne;
 
     /** The frein. */
     private boolean frein;
@@ -64,14 +39,11 @@ public class RobotConsigne {
     /**
      * Instantiates a new robot consigne.
      */
-    public RobotConsigne() {
-        x = y = angle = 0;
-        consigneDistance = 0;
-        consigneOrientation = 0;
-        vitesseDistance = 100;
-        vitesseOrientation = 100;
-        cmdDroit = 0;
-        cmdGauche = 0;
+    public CommandeRobot() {
+        position = new Position();
+        moteur = new CommandeMoteur();
+        vitesse = new Vitesse(100, 100);
+        consigne = new Consigne();
         frein = true;
         setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
     }

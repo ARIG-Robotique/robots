@@ -1,6 +1,5 @@
 package org.arig.robot.system.motion;
 
-import org.arig.robot.vo.RobotPosition;
 import org.arig.robot.vo.enums.TypeOdometrie;
 
 /**
