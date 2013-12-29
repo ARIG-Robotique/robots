@@ -16,4 +16,14 @@ public interface IPathFinder {
      * @return Le chemin a emprunter pour atteindre la cible en evitant les obtacles.
      */
     Chemin findPath(Point from, Point to);
+
+    /**
+     * Initialisation du graph par une image en noir et blanc. Le noir représente les zone inaccessible.
+     *
+     * @param imgData
+     * @param tileX
+     * @param tileY
+     * @param allowDiagonal
+     */
+    void makeGraphFromBWImage(byte [] imgData, int tileX, int tileY, boolean allowDiagonal);
 }
