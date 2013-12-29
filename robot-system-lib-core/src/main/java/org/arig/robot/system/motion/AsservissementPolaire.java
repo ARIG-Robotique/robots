@@ -16,10 +16,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
  */
 public class AsservissementPolaire implements IAsservissement {
 
-    /** The conv. */
-    @Autowired
-    private ConvertionRobotUnit conv;
-
     /** The commande robot. */
     @Autowired
     private CommandeRobot cmdRobot;
