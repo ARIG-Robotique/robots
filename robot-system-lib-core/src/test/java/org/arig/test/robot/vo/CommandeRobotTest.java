@@ -8,14 +8,14 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
 /**
- * The Class RobotConsigneTest.
+ * The Class CommandeRobotTest.
  * 
  * @author GregoryDepuille
  */
 
 /** The Constant log. */
 @RunWith(BlockJUnit4ClassRunner.class)
-public class RobotConsigneTest {
+public class CommandeRobotTest {
 
     /** The consigne. */
     private final CommandeRobot consigne = new CommandeRobot();

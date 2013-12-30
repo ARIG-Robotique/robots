@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 /**
+ * Définition par une liste de points du chemin a parcourir pour aller d'un point A a B.
+ *
  * Created by mythril on 29/12/13.
  */
 public class Chemin {
@@ -21,9 +23,17 @@ public class Chemin {
         points.add(pt);
     }
 
-    public Point getNextPoint() {
-        if (!points.isEmpty()) {
-            Iterator<Point> it = points.iterator();
+    public int nbPoints() {
+        return points.size();
+    }
+
+    public boolean hasNext() {
+        return !points.isEmpty();
+    }
+
+    public Point next() {
+        Iterator<Point> it = points.iterator();
+        if (it.hasNext()) {
             Point p = it.next();
             it.remove();
             return p;

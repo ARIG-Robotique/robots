@@ -3,10 +3,12 @@ package org.arig.robot.system.pathfinding;
 import org.arig.robot.vo.Chemin;
 import org.arig.robot.vo.Point;
 
+import java.io.File;
+
 /**
  * Created by mythril on 29/12/13.
  */
-public interface IPathFinder {
+public interface IPathFinder<A> {
 
     /**
      * Méthode pour réaliser une detection de chemin a emprunter.
@@ -18,12 +20,45 @@ public interface IPathFinder {
     Chemin findPath(Point from, Point to);
 
     /**
-     * Initialisation du graph par une image en noir et blanc. Le noir représente les zone inaccessible.
+     * Définition de l'algorithme
      *
-     * @param imgData
-     * @param tileX
-     * @param tileY
+     * @param algorithm
+     */
+    void setAlgorithm(A algorithm);
+
+    /**
+     * Nombre de tuiles sur l'axe X
+     *
+     * @param nbTileX
+     */
+    void setNbTileX(int nbTileX);
+
+    /**
+     * Nombre de tuiles sur l'axe Y
+     *
+     * @param nbTileY
+     */
+    void setNbTileY(int nbTileY);
+
+    /**
+     * Setter pour authorisé les déplacement en diagonale dans le graph
+     *
      * @param allowDiagonal
      */
-    void makeGraphFromBWImage(byte [] imgData, int tileX, int tileY, boolean allowDiagonal);
+    void setAllowDiagonal(boolean allowDiagonal);
+
+    /**
+     * Initialisation du graph par une image en noir et blanc. Le noir représente les zones inaccessible.
+     *
+     * @param filePath
+     */
+    void makeGraphFromBWImage(String filePath);
+
+    /**
+     * Intialisation du graph par une image en noir et blanc. Le noir représente les zones inaccessible
+     *
+     * @param file
+     */
+    void makeGraphFromBWImage(File file);
+
 }

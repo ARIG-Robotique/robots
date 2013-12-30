@@ -5,9 +5,13 @@ package org.arig.robot.system.pathfinding;
  */
 public enum PathFinderAlgorithm {
 
-    A_STAR_HEURISTIC,
+    DEPTH_FIRST_SEARCH,
 
-    A_STAR_MANHATAN,
+    BREADTH_FIRST_SEARCH,
+
+    A_STAR_EUCLIDIAN,
+
+    A_STAR_MANHATTAN,
 
     DIJKSTRA;
 }
