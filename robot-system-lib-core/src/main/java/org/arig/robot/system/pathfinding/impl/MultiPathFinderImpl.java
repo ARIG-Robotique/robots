@@ -4,12 +4,16 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.system.pathfinding.AbstractPathFinder;
 import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
+import org.arig.robot.utils.ImageUtils;
 import org.arig.robot.vo.Chemin;
 import org.arig.robot.vo.Point;
 import org.springframework.util.Assert;
 import pathfinder.*;
 
 import javax.imageio.ImageIO;
+
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -72,9 +76,11 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
 
         BufferedImage img;
         try {
-           img = ImageIO.read(file);
+           img = ImageUtils.mirrorX(ImageIO.read(file));
 
-           // FIXME : Appliquer un mirroir horizontale sur l'image. Le repère robot est différent du repère informatique.
+           // Temp
+           ImageIO.write(img, "png", new File("C:/Users/GregoryDepuille/Desktop/output.png"));
+           
         } catch (IOException e) {
             log.error("Impossible de lire l'image : " + e.toString());
             throw new RuntimeException(e);

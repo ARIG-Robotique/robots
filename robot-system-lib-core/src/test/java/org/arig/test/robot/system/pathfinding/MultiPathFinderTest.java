@@ -2,6 +2,7 @@ package org.arig.test.robot.system.pathfinding;
 
 import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
+import org.arig.robot.utils.ImageUtils;
 import org.arig.robot.vo.Chemin;
 import org.arig.robot.vo.Point;
 import org.junit.Assert;
@@ -49,13 +50,17 @@ public class MultiPathFinderTest {
 
 
         URL url = getClass().getResource("/assets/labyrinthe.png");
-        BufferedImage img = ImageIO.read(new File(url.getPath()));
+        BufferedImage src = ImageIO.read(new File(url.getPath()));
+        BufferedImage img = new BufferedImage(src.getWidth(), src.getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics2D g = img.createGraphics();
+        g.setBackground(Color.WHITE);
         g.setColor(Color.BLUE);
         while(c.hasNext()) {
             Point p = c.next();
-            g.drawOval((int) p.getX(), (int) p.getY(), 10, 10);
+            g.fillOval((int) p.getX(), (int) p.getY(), 10, 10);
         }
-        ImageIO.write(img, "png", new File("output.png"));
+        g.dispose();
+        
+        //ImageIO.write(ImageUtils.mirrorX(img), "png", new File("C:/Users/GregoryDepuille/Desktop/outputPath.png"));
     }
 }
