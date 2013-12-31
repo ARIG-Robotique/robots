@@ -50,8 +50,7 @@ public class MultiPathFinderTest {
 
 
         URL url = getClass().getResource("/assets/labyrinthe.png");
-        BufferedImage src = ImageIO.read(new File(url.getPath()));
-        BufferedImage img = new BufferedImage(src.getWidth(), src.getHeight(), BufferedImage.TYPE_INT_RGB);
+        BufferedImage img = ImageUtils.mirrorX(ImageIO.read(new File(url.getPath())));
         Graphics2D g = img.createGraphics();
         g.setBackground(Color.WHITE);
         g.setColor(Color.BLUE);
@@ -61,6 +60,6 @@ public class MultiPathFinderTest {
         }
         g.dispose();
         
-        //ImageIO.write(ImageUtils.mirrorX(img), "png", new File("C:/Users/GregoryDepuille/Desktop/outputPath.png"));
+        ImageIO.write(ImageUtils.mirrorX(img), "png", new File("C:/Users/GregoryDepuille/Desktop/outputPath.png"));
     }
 }

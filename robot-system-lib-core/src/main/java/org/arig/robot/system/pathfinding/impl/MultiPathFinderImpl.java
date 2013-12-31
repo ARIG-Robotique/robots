@@ -77,10 +77,6 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
         BufferedImage img;
         try {
            img = ImageUtils.mirrorX(ImageIO.read(file));
-
-           // Temp
-           ImageIO.write(img, "png", new File("C:/Users/GregoryDepuille/Desktop/output.png"));
-           
         } catch (IOException e) {
             log.error("Impossible de lire l'image : " + e.toString());
             throw new RuntimeException(e);
