@@ -1,5 +1,6 @@
 package org.arig.robot.system.pathfinding.impl;
 
+import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.system.pathfinding.AbstractPathFinder;
 import org.arig.robot.vo.Chemin;
 import org.arig.robot.vo.Point;
@@ -15,10 +16,14 @@ import java.io.File;
 public class NoPathFinderImpl extends AbstractPathFinder<Integer> {
 
     @Override
-    public Chemin findPath(Point from, Point to) {
+    public Chemin findPath(Point from, Point to) throws NoPathFoundException {
+        return findPath(from, to, 0.0f);
+    }
+
+    @Override
+    public Chemin findPath(Point from, Point to, float maxDistance) throws NoPathFoundException {
         Chemin c = new Chemin();
         c.addPoint(to);
-
         return c;
     }
 

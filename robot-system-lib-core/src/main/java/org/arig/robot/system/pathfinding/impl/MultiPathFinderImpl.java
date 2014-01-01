@@ -2,6 +2,7 @@ package org.arig.robot.system.pathfinding.impl;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.system.pathfinding.AbstractPathFinder;
 import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 import org.arig.robot.utils.ImageUtils;
@@ -11,9 +12,6 @@ import org.springframework.util.Assert;
 import pathfinder.*;
 
 import javax.imageio.ImageIO;
-
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -47,21 +45,50 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
     }
 
     @Override
-    public Chemin findPath(Point from, Point to) {
+    public Chemin findPath(Point from, Point to) throws NoPathFoundException {
+        return findPath(from, to, 1.0f);
+    }
+
+    @Override
+    public Chemin findPath(Point from, Point to, float maxDistance) throws NoPathFoundException {
         Assert.notNull(graph, "Le graph de la carte doit être initialisé");
 
         if (pf == null) {
             definePathFinder();
         }
 
-        GraphNode startNode = graph.getNodeAt(from.getX(), from.getY(), 0, 16.0f);
-        GraphNode endNode = graph.getNodeAt(to.getX(), to.getY(), 0, 16.0f);
+        log.info(String.format("Recherche de chemin de %s a %s avec l'algorithme %s", from.toString(), to.toString(), getAlgorithm().toString()));
 
+        // Démarrage
+        long start = System.currentTimeMillis();
+
+        GraphNode startNode;
+        GraphNode endNode;
+
+        if ((startNode = graph.getNodeAt(from.getX(), from.getY(), 0, maxDistance)) == null) {
+            log.error("Impossible de trouver le noeud de départ");
+            throw new NoPathFoundException(NoPathFoundException.ErrorType.START_NODE_DOES_NOT_EXIST);
+        }
+        if ((endNode = graph.getNodeAt(to.getX(), to.getY(), 0, maxDistance)) == null) {
+            log.error("Impossible de trouver le noeud d'arrivé");
+            throw new NoPathFoundException(NoPathFoundException.ErrorType.END_NODE_DOES_NOT_EXIST);
+        }
+        log.info("Récupération des nodes : " + (System.currentTimeMillis() - start) + " ms");
+
+        start = System.currentTimeMillis();
         LinkedList<GraphNode> graphNodes = pf.search(startNode.id(), endNode.id(), true);
+        if (graphNodes.isEmpty()) {
+            log.error("Impossible de trouber le chemin pour le trajet.");
+            throw new NoPathFoundException(NoPathFoundException.ErrorType.NO_PATH_FOUND);
+        }
+        log.info("Calcul du chemin : " + (System.currentTimeMillis() - start) + " ms");
+
         Chemin c = new Chemin();
+        // TODO : Limiter le nombre de points a uniquement les changement de direction
         for (GraphNode gn : graphNodes) {
             c.addPoint(new Point(gn.x(), gn.y()));
         }
+        log.info(String.format("Chemin de %s point(s)", c.nbPoints()));
 
         return c;
     }

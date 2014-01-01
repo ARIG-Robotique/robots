@@ -1,5 +1,6 @@
 package org.arig.robot.system.pathfinding;
 
+import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.vo.Chemin;
 import org.arig.robot.vo.Point;
 
@@ -17,7 +18,17 @@ public interface IPathFinder<A> {
      * @param to Point a atteindre
      * @return Le chemin a emprunter pour atteindre la cible en evitant les obtacles.
      */
-    Chemin findPath(Point from, Point to);
+    Chemin findPath(Point from, Point to) throws NoPathFoundException;
+
+    /**
+     * Méthode pour réaliser une detection de chemin a emprunter.
+     *
+     * @param from Point d'origine
+     * @param to Point a atteindre
+     * @param maxDistance Distance max pour trouver un noeud.
+     * @return Le chemin a emprunter pour atteindre la cible en evitant les obtacles.
+     */
+    Chemin findPath(Point from, Point to, float maxDistance) throws NoPathFoundException;
 
     /**
      * Définition de l'algorithme

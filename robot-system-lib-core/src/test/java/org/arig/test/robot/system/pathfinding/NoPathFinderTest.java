@@ -1,6 +1,7 @@
 package org.arig.test.robot.system.pathfinding;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.system.pathfinding.impl.NoPathFinderImpl;
 import org.arig.robot.vo.Chemin;
 import org.arig.robot.vo.Point;
@@ -19,7 +20,7 @@ public class NoPathFinderTest {
     private NoPathFinderImpl pf = new NoPathFinderImpl();
 
     @Test
-    public void testFindPath() {
+    public void testFindPath() throws NoPathFoundException {
         Point from = new Point(10, 10);
         Point to = new Point(20, 20);
 
