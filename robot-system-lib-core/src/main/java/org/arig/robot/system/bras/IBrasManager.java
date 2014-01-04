@@ -7,5 +7,5 @@ import org.arig.robot.vo.Point3D;
  */
 public interface IBrasManager {
 
-    void setPosition(Point3D position);
+    void toP(Point3D P);
 }
