@@ -1,5 +1,6 @@
 package org.arig.test.robot.system.pathfinding;
 
+import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
@@ -10,6 +11,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -21,6 +24,8 @@ import java.net.URL;
 /**
  * Created by mythril on 30/12/13.
  */
+@Slf4j
+@RunWith(BlockJUnit4ClassRunner.class)
 public class MultiPathFinderTest {
 
     private static MultiPathFinderImpl pf;
