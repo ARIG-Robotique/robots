@@ -46,6 +46,12 @@
             <groupId>org.lagers</groupId>
             <artifactId>path-finder</artifactId>
         </dependency>
+
+        <!-- Librairie CSV -->
+        <dependency>
+            <groupId>net.sourceforge.javacsv</groupId>
+            <artifactId>javacsv</artifactId>
+        </dependency>
 		
 		<!-- Logging -->
 		<dependency>
