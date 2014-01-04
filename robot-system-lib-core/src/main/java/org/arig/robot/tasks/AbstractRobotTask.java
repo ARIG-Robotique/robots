@@ -35,7 +35,7 @@ public abstract class AbstractRobotTask extends Thread implements IRobotTask {
             try {
                 sleep(delay - elapsedTime);
             } catch (InterruptedException e) {
-                log.error("Thread interrompu : " + e.toString());
+                log.error("Sleep Thread interrompu : " + e.toString());
             }
         }
 
