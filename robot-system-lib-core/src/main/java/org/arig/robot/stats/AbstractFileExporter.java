@@ -14,6 +14,7 @@ import java.util.List;
 public abstract class AbstractFileExporter implements IStatsExporter {
 
     @Autowired
+    @Getter(AccessLevel.PROTECTED)
     private List<IStatsObject> statsObjectList;
 
     @Getter(AccessLevel.PROTECTED)
