@@ -50,9 +50,9 @@
 	</modules>
 	
 	<scm>
-		<connection>scm:git:git://gitorious.org/arig-association/robot-system-lib-parent.git</connection>
-		<developerConnection>scm:git:ssh://git@gitorious.org/arig-association/robot-system-lib-parent.git</developerConnection>
-		<url>http://gitorious.org/arig-association/robot-system-lib-parent</url>
+		<connection>scm:git:git://github.com/ARIG-Robotique/robot-system-lib-parent.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/ARIG-Robotique/robot-system-lib-parent.git</developerConnection>
+		<url>http://github.com/ARIG-Robotique/robot-system-lib-parent</url>
 	</scm>
 
     <repositories>
