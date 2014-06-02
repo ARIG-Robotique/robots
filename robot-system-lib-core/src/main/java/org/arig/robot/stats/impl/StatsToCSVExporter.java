@@ -17,6 +17,7 @@ import java.util.*;
  */
 @Slf4j
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 public class StatsToCSVExporter extends AbstractFileExporter {
 
