@@ -59,9 +59,9 @@
     </modules>
 
     <scm>
-        <connection>scm:git:git://gitorious.org/arig-association/prehistobot.git</connection>
-        <developerConnection>scm:git:ssh://git@gitorious.org/arig-association/prehistobot.git</developerConnection>
-        <url>http://gitorious.org/arig-association/prehistobot</url>
+        <connection>scm:git:git://github.org/ARIG-Robotique/prehistobot.git</connection>
+        <developerConnection>scm:git:ssh://git@github.org/ARIG-Robotique/prehistobot.git</developerConnection>
+        <url>http://github.org/ARIG-Robotique/prehistobot</url>
     </scm>
 
     <repositories>
