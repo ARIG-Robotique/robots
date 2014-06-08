@@ -4,7 +4,12 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.arig.robot</groupId>
+    <parent>
+        <groupId>org.arig.robot</groupId>
+        <artifactId>robot-projects</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
     <artifactId>prehistobot-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
