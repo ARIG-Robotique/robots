@@ -11,7 +11,7 @@ public interface IStatsExporter {
 
     void setFile(File f);
 
-    void process();
+    void export();
 
     void end();
 }

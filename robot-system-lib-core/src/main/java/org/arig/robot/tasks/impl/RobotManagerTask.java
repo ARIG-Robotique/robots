@@ -1,5 +1,6 @@
 package org.arig.robot.tasks.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.stats.IStatsExporter;
 import org.arig.robot.system.RobotManager;
 import org.arig.robot.tasks.AbstractRobotTask;
@@ -10,6 +11,7 @@ import java.util.List;
 /**
  * Created by mythril on 04/01/14.
  */
+@Slf4j
 public class RobotManagerTask extends AbstractRobotTask {
 
     @Autowired
@@ -19,27 +21,15 @@ public class RobotManagerTask extends AbstractRobotTask {
     private List<IStatsExporter> statsExporterList;
 
     @Override
-    protected void init() {
-        // NOP
-    }
-
-    @Override
-    protected void process() {
+    public void run() {
+        if (log.isDebugEnabled()) {
+            log.debug("Execution Robot Manager task");
+        }
         manager.process();
 
         if (statsExporterList != null) {
             for (IStatsExporter e : statsExporterList) {
-                e.process();
-            }
-        }
-    }
-
-    @Override
-    protected void end() {
-        manager.stop();
-        if (statsExporterList != null) {
-            for (IStatsExporter e : statsExporterList) {
-                e.end();
+                e.export();
             }
         }
     }

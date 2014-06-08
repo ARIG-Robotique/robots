@@ -1,4 +1,4 @@
-package org.arig.robot.filters;
+package org.arig.robot.filters.pid;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,7 +43,7 @@ public class SimplePID implements IPidFilter {
     /*
      * (non-Javadoc)
      * 
-     * @see org.arig.robot.filters.IPidFilter#setTunings(double, double, double)
+     * @see org.arig.robot.filters.pid.IPidFilter#setTunings(double, double, double)
      */
     @Override
     public void setTunings(final double kp, final double ki, final double kd) {
@@ -57,7 +57,7 @@ public class SimplePID implements IPidFilter {
     /*
      * (non-Javadoc)
      * 
-     * @see org.arig.robot.filters.IPidFilter#reset()
+     * @see org.arig.robot.filters.pid.IPidFilter#reset()
      */
     @Override
     public void reset() {
@@ -70,7 +70,7 @@ public class SimplePID implements IPidFilter {
     /*
      * (non-Javadoc)
      * 
-     * @see org.arig.robot.filters.IPidFilter#compute(double, double)
+     * @see org.arig.robot.filters.pid.IPidFilter#compute(double, double)
      */
     @Override
     public double compute(final double consigne, final double mesure) {

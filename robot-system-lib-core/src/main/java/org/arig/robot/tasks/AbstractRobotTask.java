@@ -3,6 +3,8 @@ package org.arig.robot.tasks;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by mythril on 03/01/14.
  */
@@ -10,39 +12,15 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class AbstractRobotTask extends Thread implements IRobotTask {
 
     @Setter
-    private int delay;
+    private long delay;
 
-    @Setter
-    private DelayMode mode;
-
-    private boolean isRun = true;
-
-    public void shutdown() {
-        isRun = false;
+    /**
+     * Setter pour le delay d'éxécution de la tâche.
+     *
+     * @param delay valeur de temp
+     * @param unit unité de la valeur de temps
+     */
+    public void setDelay(long delay, TimeUnit unit) {
+        setDelay(unit.toMillis(delay));
     }
-
-    @Override
-    public void run() {
-        init();
-
-        while(isRun) {
-            long startTime = System.currentTimeMillis();
-
-            process();
-
-            long elapsedTime = (mode == DelayMode.AT_START) ? System.currentTimeMillis() - startTime : 0;
-
-            try {
-                sleep(delay - elapsedTime);
-            } catch (InterruptedException e) {
-                log.error("Sleep Thread interrompu : " + e.toString());
-            }
-        }
-
-        end();
-    }
-
-    protected abstract void init();
-    protected abstract void process();
-    protected abstract void end();
 }

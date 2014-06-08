@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.stats.AbstractFileExporter;
 import org.arig.robot.stats.IStatsObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 
+import javax.annotation.PostConstruct;
 import java.io.*;
 import java.nio.charset.UnsupportedCharsetException;
 import java.text.SimpleDateFormat;
@@ -50,16 +52,21 @@ public class StatsToCSVExporter extends AbstractFileExporter {
     @Getter(AccessLevel.NONE)
     private Set<String> keys = null;
 
-    @Override
-    public void process() {
+    @Autowired
+    private Environment env;
+
+    @PostConstruct
+    public void init() {
         // Création du fichier si il n'existe pas
         if (getFile() == null) {
             final SimpleDateFormat sdf = new SimpleDateFormat("'CSV-'yyyyMMddHHmmssSSS", Locale.FRENCH);
-            setFile(new File("./graph", sdf.format(new Date()) + ".csv"));
+            setFile(new File(env.getRequiredProperty("robot.export.directory", String.class), sdf.format(new Date()) + ".csv"));
         }
+    }
 
+    @Override
+    public void export() {
         try {
-
             Map<String, String> values = new HashMap<>();
             for (IStatsObject o : getStatsObjectList()) {
                 values.putAll(o.getValues());

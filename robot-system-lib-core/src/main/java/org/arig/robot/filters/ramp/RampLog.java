@@ -1,7 +1,7 @@
-package org.arig.robot.filters;
+package org.arig.robot.filters.ramp;
 
 /**
- * The Class QuadRampLog.
+ * The Class RampLog.
  * 
  * /!\ EXPERIMENTAL
  * 
@@ -9,7 +9,7 @@ package org.arig.robot.filters;
  * 
  * @author mythril
  */
-public class QuadRampLog extends QuadRamp {
+public class RampLog extends Ramp {
 
     /** The ecart precedent. */
     private double ecartPrecedent;
@@ -17,7 +17,7 @@ public class QuadRampLog extends QuadRamp {
     /*
      * (non-Javadoc)
      * 
-     * @see org.arig.robot.filters.QuadRamp#reset()
+     * @see org.arig.robot.filters.ramp.Ramp#reset()
      */
     @Override
     public void reset() {

@@ -1,4 +1,4 @@
-package org.arig.robot.filters;
+package org.arig.robot.filters.pid;
 
 /**
  * The Interface IPidFilter.

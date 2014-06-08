@@ -42,13 +42,12 @@ public class MultiPathFinderTest {
         pf.setNbTileY(40);
         pf.setAllowDiagonal(true);
 
-        dir = new File("/Users/mythril/Desktop/path");
-        if (!dir.exists()) {
-            dir.mkdirs();
-        } else {
+        String tmpDir = System.getProperty("java.io.tmpdir");
+        dir = new File(tmpDir + "/arig/robot/path");
+        if (dir.exists()) {
             dir.delete();
-            dir.mkdirs();
         }
+        dir.mkdirs();
     }
 
     @Before

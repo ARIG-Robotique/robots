@@ -1,10 +1,9 @@
 package org.arig.robot.system.motion;
 
 import lombok.Setter;
-import org.arig.robot.filters.IPidFilter;
-import org.arig.robot.filters.IRampFilter;
+import org.arig.robot.filters.pid.IPidFilter;
+import org.arig.robot.filters.ramp.IRampFilter;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
-import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.vo.CommandeRobot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

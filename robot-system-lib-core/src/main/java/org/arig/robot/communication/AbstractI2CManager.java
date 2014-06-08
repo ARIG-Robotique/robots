@@ -39,7 +39,6 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
      */
     public final void executeScan() throws I2CException {
         Assert.notEmpty(deviceMap, "Le mapping des cartes est obligatoire");
-
         scan();
     }
 

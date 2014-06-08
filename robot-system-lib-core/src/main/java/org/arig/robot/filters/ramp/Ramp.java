@@ -1,17 +1,19 @@
-package org.arig.robot.filters;
+package org.arig.robot.filters.ramp;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.concurrent.TimeUnit;
+
 /**
- * The Class QuadRamp.
+ * The Class Ramp.
  * 
  * @author mythril
  */
 @Slf4j
-public class QuadRamp implements IRampFilter {
+public class Ramp implements IRampFilter {
 
     /** The conv. */
     @Autowired
@@ -41,15 +43,12 @@ public class QuadRamp implements IRampFilter {
     /**
      * Instantiates a new quad ramp.
      */
-    public QuadRamp() {
+    public Ramp() {
         sampleTimeS = 0.010;
         rampAcc = 100.0;
         rampDec = 100.0;
 
-        QuadRamp.log
-                .info(String
-                        .format("Initialisation par défaut (SampleTime : %s ; Rampe ACC : %s ; Rampe DEC : %s",
-                                sampleTimeS, rampAcc, rampDec));
+        Ramp.log.info(String.format("Initialisation par défaut (SampleTime : %s ; Rampe ACC : %s ; Rampe DEC : %s", sampleTimeS, rampAcc, rampDec));
 
         reset();
         updateStepVitesse();
@@ -65,16 +64,13 @@ public class QuadRamp implements IRampFilter {
      * @param rampDec
      *            the ramp dec
      */
-    public QuadRamp(final double sampleTimeS, final double rampAcc,
-            final double rampDec) {
-        this.sampleTimeS = sampleTimeS / 1000;
+    public Ramp(final double sampleTimeMs, final double rampAcc,
+                final double rampDec) {
+        this.sampleTimeS = sampleTimeMs / 1000;
         this.rampAcc = rampAcc;
         this.rampDec = rampDec;
 
-        QuadRamp.log
-                .info(String
-                        .format("Initialisation (SampleTime : %s ; Rampe ACC : %s ; Rampe DEC : %s",
-                                sampleTimeS, rampAcc, rampDec));
+        Ramp.log.info(String.format("Initialisation (SampleTime : %s ; Rampe ACC : %s ; Rampe DEC : %s", sampleTimeS, rampAcc, rampDec));
 
         reset();
         updateStepVitesse();
@@ -87,9 +83,14 @@ public class QuadRamp implements IRampFilter {
      *            the new sample time ms
      */
     @Override
-    public void setSampleTimeMs(final double value) {
+    public void setSampleTime(final double value) {
         sampleTimeS = value / 1000;
         updateStepVitesse();
+    }
+
+    @Override
+    public void setSampleTime(double value, TimeUnit unit) {
+        setSampleTime((double) unit.toMillis((long) value));
     }
 
     /**
@@ -129,7 +130,7 @@ public class QuadRamp implements IRampFilter {
      */
     @Override
     public void reset() {
-        QuadRamp.log.info("Reset des paramètres");
+        Ramp.log.info("Reset des paramètres");
 
         distanceDecel = 0;
         vitesseCourante = 0;

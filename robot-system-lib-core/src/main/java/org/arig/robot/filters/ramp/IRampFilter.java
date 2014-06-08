@@ -1,4 +1,6 @@
-package org.arig.robot.filters;
+package org.arig.robot.filters.ramp;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Interface IRampFilter.
@@ -8,12 +10,19 @@ package org.arig.robot.filters;
 public interface IRampFilter {
 
     /**
-     * Sets the sample time ms.
+     * Sets the sample time in ms.
      * 
-     * @param value
-     *            the new sample time ms
+     * @param value the new sample time ms
      */
-    public void setSampleTimeMs(final double value);
+    public void setSampleTime(final double value);
+
+    /**
+     * Sets the sample time with a specific unit.
+     *
+     * @param value
+     * @param unit
+     */
+    public void setSampleTime(final double value, TimeUnit unit);
 
     /**
      * Sets the ramp acc.
