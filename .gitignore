@@ -2,6 +2,12 @@
 .project
 .classpath
 .settings/
+
 .idea/
-target/
 *.iml
+*.ipr
+*.iws
+
+.gradle/
+build/
+target/

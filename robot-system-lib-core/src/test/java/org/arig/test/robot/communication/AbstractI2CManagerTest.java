@@ -1,9 +1,8 @@
 package org.arig.test.robot.communication;
 
 import lombok.extern.slf4j.Slf4j;
-
-import org.arig.robot.exception.I2CException;
 import org.arig.robot.communication.AbstractI2CManager;
+import org.arig.robot.exception.I2CException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;

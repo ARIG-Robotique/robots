@@ -1,0 +1,196 @@
+// Configuration pour le build
+buildscript {
+	repositories {
+		mavenCentral()
+		mavenLocal()
+	}
+	dependencies {
+		// Add build plugins here
+	}
+}
+
+// Configuration de tous les projets
+configure(allprojects) {
+	group = 'org.arig.robot'
+	version = '1.1.0-SNAPSHOT'
+	
+	// Variable de configuration
+	ext {
+		// Project dependencies
+		javaVersion = '1.7'
+		javaTestVersion = javaVersion
+
+		// Dependencies versions
+		lombokVersion = '1.14.2'
+		springVersion = '4.0.5.RELEASE'
+		apacheCommonsLangVersion = '3.1'
+		googleGuavaVersion = '17.0'
+		slf4jVersion = '1.7.7'
+		pi4jVersion = '0.0.5'
+		pathFinderVersion = '0.1.2'
+		javaCsvVersion = '2.1'
+
+		// Test dependencies versions
+		junitVersion = '4.11'
+	}
+	
+	// Plugin de build
+	apply plugin: 'java'
+	apply plugin: 'maven'
+	
+	// Plugin pour les IDE
+    apply plugin: 'idea'
+	
+	// Définition de configurations supplémentaire (non standard)
+	configurations {
+        provided
+    }
+	
+	// Version pour la compilation
+	compileJava {
+		sourceCompatibility = javaVersion
+		targetCompatibility = javaVersion
+	}
+
+	compileTestJava {
+		sourceCompatibility = javaTestVersion
+		targetCompatibility = javaTestVersion
+	}	
+	
+	// Classpath de compilation
+	sourceSets {
+        main {
+            compileClasspath += configurations.provided
+        }
+        test {
+            compileClasspath += configurations.provided
+            runtimeClasspath += configurations.provided
+        }
+    }
+	
+	// Configuration des repository de dépendences
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven { url "http://repo.opengeo.org/" }
+    }
+
+	// Dependence commune pour tous les projets
+    dependencies {
+        provided(
+            [group: 'org.projectlombok', name: 'lombok', version: lombokVersion]
+        )
+
+        testCompile(
+            [group: 'org.springframework', name: 'spring-test', version: springVersion],
+            [group: 'junit', name: 'junit', version: junitVersion]
+        )
+    }	
+	
+	// Intégration avec IntellijIDEA
+	idea {
+        project {
+            ext.jdkName = javaVersion
+            ext.languageLevel = javaVersion
+        }
+
+        module {
+            ext.downloadJavadoc = true
+            ext.downloadSource = true
+
+            scopes.PROVIDED.plus += configurations.provided
+        }
+    }
+}
+
+// Configuration communes des sous projets
+configure(subprojects) { subproject ->
+
+	// Configuration de la construction des Jars
+	jar {
+		manifest.attributes["Implementation-Title"] = subproject.name
+		manifest.attributes["Implementation-Version"] = subproject.version
+		manifest.attributes["Created-By"] = "Gradle " + gradle.gradleVersion
+		manifest.attributes["Build-Jdk"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
+	}
+	
+	// Configuration pour la Javadoc
+	javadoc {
+		classpath = project.sourceSets.main.compileClasspath + configurations.provided
+	
+		options {
+			memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+			author = true
+			header = project.name
+		}
+	}
+	
+	// Construction du jar de source
+	task sourcesJar(type: Jar, dependsOn:classes) {
+		classifier = "sources"
+		from sourceSets.main.allJava.srcDirs
+		include "**/*.java"
+	}
+	
+	// Construction du jar de javadoc
+	task javadocJar(type: Jar) {
+		classifier = "javadoc"
+		from javadoc
+	}
+	
+	// Liste des artéfact
+	artifacts {
+		archives sourcesJar
+		archives javadocJar
+	}
+}
+
+// Configuration du projet racine
+configure(rootProject) {
+	description = "ARIG Association - Robot System Librairie"
+
+	// Suppression des artéfact par défaut sur le rootProject (jar, etc...)
+	configurations.archives.artifacts.clear()
+
+	task wrapper(type: Wrapper) {
+		description = "Generates gradlew[.bat] scripts"
+		gradleVersion = "1.12"
+
+		doLast() {
+			def gradleOpts = "-XX:MaxMetaspaceSize=1024m -Xmx1024m"
+			def gradleBatOpts = "$gradleOpts -XX:MaxHeapSize=256m"
+			
+			File wrapperFile = file("gradlew")
+			wrapperFile.text = wrapperFile.text.replace("DEFAULT_JVM_OPTS=", "GRADLE_OPTS=\"$gradleOpts \$GRADLE_OPTS\"\nDEFAULT_JVM_OPTS=")
+			
+			File wrapperBatFile = file("gradlew.bat")
+			wrapperBatFile.text = wrapperBatFile.text.replace("set DEFAULT_JVM_OPTS=", "set GRADLE_OPTS=$gradleBatOpts %GRADLE_OPTS%\nset DEFAULT_JVM_OPTS=")
+		}
+	}
+}
+
+project("robot-system-lib-core") {
+	description = "ARIG Association - Robot System Librairie - Core : Librairie coeur du système."
+	
+	dependencies {
+		compile(
+			[group: 'org.apache.commons', name: 'commons-lang3', version: apacheCommonsLangVersion],
+			[group: 'com.google.guava', name: 'guava', version: googleGuavaVersion],
+			[group: 'org.springframework', name: 'spring-context', version: springVersion],
+			[group: 'org.lagers', name: 'path-finder', version: pathFinderVersion],
+			[group: 'net.sourceforge.javacsv', name: 'javacsv', version: javaCsvVersion],
+			[group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion]
+		)
+	}
+}
+
+project ("robot-system-lib-raspi") {
+	description = "ARIG Association - Robot System Librairie - Raspberry Pi : Implémentation pour Raspberry Pi."
+	
+	dependencies {
+		compile(
+			[project(':robot-system-lib-core')],
+			[group: 'com.pi4j', name: 'pi4j-core', version: pi4jVersion]
+		)
+	}
+}

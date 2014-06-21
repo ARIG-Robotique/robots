@@ -1,6 +1,9 @@
 package org.arig.robot.vo;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * Created by mythril on 04/01/14.

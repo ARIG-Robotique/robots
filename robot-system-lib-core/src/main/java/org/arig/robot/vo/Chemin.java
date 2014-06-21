@@ -1,7 +1,5 @@
 package org.arig.robot.vo;
 
-import lombok.AllArgsConstructor;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;

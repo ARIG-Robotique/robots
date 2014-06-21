@@ -2,7 +2,6 @@ package org.arig.robot.stats;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
