@@ -1,0 +1,47 @@
+// Plugins
+apply plugin: 'java'
+apply plugin: 'spring-boot'
+
+// Project properties
+sourceCompatibility = rootProject.javaVersion
+targetCompatibility = rootProject.javaVersion
+
+configurations {
+	provided
+}
+
+sourceSets {
+	main {
+		compileClasspath += configurations.provided
+	}
+	test {
+		compileClasspath += configurations.provided
+		runtimeClasspath += configurations.provided
+	}
+}
+
+// Configuration des repositories
+repositories {
+	mavenCentral()
+	mavenLocal()
+}
+
+// Project dependencies
+dependencies {
+	provided(
+		[group: 'org.projectlombok', name: 'lombok', version: rootProject.lombokVersion]
+	)
+
+    compile(
+        [group: 'org.arig.robot', name: 'robot-system-lib-raspi', version: rootProject.robotSystemLibVersion],
+        [group: 'org.springframework', name: 'spring-webmvc', version: rootProject.springVersion],
+        [group: 'org.springframework.boot', name: 'spring-boot-actuator', version: rootProject.springBootVersion],
+        [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: rootProject.jacksonVersion],
+        [group: 'org.eclipse.jetty', name: 'jetty-webapp', version: rootProject.jettyVersion]
+    )
+	
+	testCompile(
+		[group: 'org.springframework', name: 'spring-test', version: springVersion],
+		[group: 'junit', name: 'junit', version: junitVersion]
+	)
+}
