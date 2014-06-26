@@ -1,1 +1,3 @@
-include 'main-robot'
+rootProject.name = "prehistobot"
+
+include "main-robot"

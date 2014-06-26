@@ -1,35 +1,174 @@
-// Variable de configuration
-ext {
-    // Project dependencies
-    javaVersion = '1.7'
-
-    // Dependencies versions
-    lombokVersion = '1.14.2'
-    springVersion = '4.0.5.RELEASE'
-	springBootVersion = '1.1.2.RELEASE'
-    jacksonVersion = '2.3.3'
-	jettyVersion = '9.2.0.v20140526'
-
-	// ARIG dependencies
-	robotSystemLibVersion = '1.1.0-SNAPSHOT'
-
-    // Test dependencies versions
-    junitVersion = '4.11'
+// Configuration pour le build
+buildscript {
+	repositories {
+		mavenCentral()
+		mavenLocal()
+	}
+	dependencies {
+		// Add build plugins here
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:$(springBootVersion)")
+	}
 }
 
-// Configuration des sous projets
-subprojects {
-
-    group = 'org.arig.robot'
-    version = '1.0.0-SNAPSHOT'
+// Configuration de tous les projets
+configure(allprojects) {
+	group = 'org.arig.robot'
+	version = '1.0.0-SNAPSHOT'
 	
-	buildscript {
-		repositories {
-			mavenCentral()
-			mavenLocal()
-		}
-		dependencies {
-			classpath("org.springframework.boot:spring-boot-gradle-plugin:1.1.2.RELEASE")
-		}
+	// Variable de configuration
+	ext {
+		// Project dependencies
+		javaVersion = '1.7'
+		javaTestVersion = javaVersion
+
+		// Dependencies versions
+		lombokVersion = '1.14.2'
+		springVersion = '4.0.5.RELEASE'
+		springBootVersion = '1.1.2.RELEASE'
+		jacksonVersion = '2.3.3'
+		jettyVersion = '9.2.0.v20140526'
+
+		// ARIG dependencies
+		robotSystemLibVersion = '1.1.0-SNAPSHOT'
+
+		// Test dependencies versions
+		junitVersion = '4.11'
+	}
+
+	// Plugin de build
+	apply plugin: 'java'
+	apply plugin: 'maven'
+	
+	// Plugin pour les IDE
+    apply plugin: 'idea'
+	
+	// Définition de configurations supplémentaire (non standard)
+	configurations {
+        provided
+    }
+	
+	// Version pour la compilation
+	compileJava {
+		sourceCompatibility = javaVersion
+		targetCompatibility = javaVersion
+	}
+
+	compileTestJava {
+		sourceCompatibility = javaTestVersion
+		targetCompatibility = javaTestVersion
 	}	
+	
+	// Classpath de compilation
+	sourceSets {
+        main {
+            compileClasspath += configurations.provided
+        }
+        test {
+            compileClasspath += configurations.provided
+            runtimeClasspath += configurations.provided
+        }
+    }
+	
+	// Configuration des repository de dépendences
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven { url "http://repo.opengeo.org/" }
+    }
+
+	// Dependence commune pour tous les projets
+    dependencies {
+        provided(
+            [group: 'org.projectlombok', name: 'lombok', version: lombokVersion]
+        )
+
+        testCompile(
+            [group: 'org.springframework', name: 'spring-test', version: springVersion],
+            [group: 'junit', name: 'junit', version: junitVersion]
+        )
+    }	
+	
+	// Intégration avec IntellijIDEA
+	idea {
+        project {
+            ext.jdkName = javaVersion
+            ext.languageLevel = javaVersion
+        }
+
+        module {
+            ext.downloadJavadoc = true
+            ext.downloadSource = true
+
+            scopes.PROVIDED.plus += configurations.provided
+        }
+    }
+}
+
+// Configuration communes des sous projets
+configure(subprojects) { subproject ->
+
+	// Configuration de la construction des Jars
+	jar {
+		manifest.attributes["Implementation-Title"] = subproject.name
+		manifest.attributes["Implementation-Version"] = subproject.version
+		manifest.attributes["Created-By"] = "Gradle " + gradle.gradleVersion
+		manifest.attributes["Build-Jdk"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
+	}
+	
+	// Configuration pour la Javadoc
+	javadoc {
+		classpath = project.sourceSets.main.compileClasspath + configurations.provided
+	
+		options {
+			memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+			author = true
+			header = project.name
+		}
+	}
+	
+	// Construction du jar de source
+	task sourcesJar(type: Jar, dependsOn:classes) {
+		classifier = "sources"
+		from sourceSets.main.allJava.srcDirs
+		include "**/*.java"
+	}
+	
+	// Construction du jar de javadoc
+	task javadocJar(type: Jar) {
+		classifier = "javadoc"
+		from javadoc
+	}
+	
+	// Liste des artéfact
+	artifacts {
+		archives sourcesJar
+		archives javadocJar
+	}
+}
+
+// Configuration du projet racine
+configure(rootProject) {
+	description = "ARIG Association - Prehistobot projects"
+
+	// Suppression des artéfact par défaut sur le rootProject (jar, etc...)
+	configurations.archives.artifacts.clear()
+
+	task wrapper(type: Wrapper) {
+		description = "Generates gradlew[.bat] scripts"
+		gradleVersion = "1.12"
+	}
+}
+
+project("main-robot") {
+	description = "ARIG Association - Prehistobot projects - Robot principal"
+	
+	dependencies {
+		compile(
+			[group: 'org.arig.robot', name: 'robot-system-lib-raspi', version: robotSystemLibVersion],
+			[group: 'org.springframework', name: 'spring-webmvc', version: springVersion],
+			[group: 'org.springframework.boot', name: 'spring-boot-actuator', version: springBootVersion],
+			[group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion],
+			[group: 'org.eclipse.jetty', name: 'jetty-webapp', version: jettyVersion]
+		)
+	}
 }
