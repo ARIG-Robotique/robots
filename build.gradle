@@ -6,7 +6,7 @@ buildscript {
 	}
 	dependencies {
 		// Add build plugins here
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:$(springBootVersion)")
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.1.2.RELEASE")
 	}
 }
 
