@@ -104,7 +104,7 @@ configure(allprojects) {
     }
 }
 
-// Configuration communes des sous projets
+// Configuration communes des sous projets Java
 configure(subprojects.findAll { it.name.indexOf("-dart") == -1 }) { subproject ->
 
 	// Configuration de la construction des Jars
