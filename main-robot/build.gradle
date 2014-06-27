@@ -2,6 +2,7 @@ description = "ARIG Association - Prehistobot projects - Robot principal"
 
 dependencies {
     compile(
+        project(':main-robot-gui'),
         [group: 'org.arig.robot', name: 'robot-system-lib-raspi', version: robotSystemLibVersion],
         [group: 'org.springframework', name: 'spring-webmvc', version: springVersion],
         [group: 'org.springframework.boot', name: 'spring-boot-actuator', version: springBootVersion],
