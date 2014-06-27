@@ -105,7 +105,7 @@ configure(allprojects) {
 }
 
 // Configuration communes des sous projets Java
-configure(subprojects.findAll { it.name.indexOf("-dart") == -1 }) { subproject ->
+configure(subprojects.findAll { it.name.indexOf("-gui") == -1 }) { subproject ->
 
 	// Configuration de la construction des Jars
 	jar {
@@ -144,6 +144,44 @@ configure(subprojects.findAll { it.name.indexOf("-dart") == -1 }) { subproject -
 		archives sourcesJar
 		archives javadocJar
 	}
+}
+
+// Configuration communes des sous projets GUI (Dart)
+configure(subprojects.findAll { it.name.indexOf("-gui") != -1 }) { subproject ->
+    apply plugin: 'java'
+
+    jar {
+        from 'build/web'
+        eachFile { details ->
+            details.path = details.path.startsWith('META-INF') ?: 'static/' + details.path
+        }
+        // Jar contains duplicate empty folders, see Gradle issue:
+        // http://issues.gradle.org/browse/GRADLE-1830
+        // so we need to set includeEmptyDirs to false
+        includeEmptyDirs = false
+    }
+
+    task pubClean(type: Delete) {
+        delete 'build'
+    }
+
+    // We build in debug mode in order to have .dart files copied to build directory by pub
+    task pubBuild(type: Exec) {
+        executable 'pub'
+        args 'build'
+        args '--mode=debug'
+    }
+
+    task copyDartFiles(type: Copy, dependsOn: 'pubBuild') {
+        from('web') {
+            include 'main.dart'
+            include 'packages/**'
+        }
+        into 'build/web'
+    }
+
+    jar.dependsOn pubBuild
+    clean.dependsOn pubClean
 }
 
 // Configuration du projet racine
