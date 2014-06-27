@@ -105,7 +105,7 @@ configure(allprojects) {
 }
 
 // Configuration communes des sous projets
-configure(subprojects) { subproject ->
+configure(subprojects.findAll { it.name.indexOf("-dart") == -1 }) { subproject ->
 
 	// Configuration de la construction des Jars
 	jar {
@@ -156,19 +156,5 @@ configure(rootProject) {
 	task wrapper(type: Wrapper) {
 		description = "Generates gradlew[.bat] scripts"
 		gradleVersion = "1.12"
-	}
-}
-
-project("main-robot") {
-	description = "ARIG Association - Prehistobot projects - Robot principal"
-	
-	dependencies {
-		compile(
-			[group: 'org.arig.robot', name: 'robot-system-lib-raspi', version: robotSystemLibVersion],
-			[group: 'org.springframework', name: 'spring-webmvc', version: springVersion],
-			[group: 'org.springframework.boot', name: 'spring-boot-actuator', version: springBootVersion],
-			[group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion],
-			[group: 'org.eclipse.jetty', name: 'jetty-webapp', version: jettyVersion]
-		)
 	}
 }

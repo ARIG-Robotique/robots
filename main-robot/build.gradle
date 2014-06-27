@@ -1,0 +1,11 @@
+description = "ARIG Association - Prehistobot projects - Robot principal"
+
+dependencies {
+    compile(
+        [group: 'org.arig.robot', name: 'robot-system-lib-raspi', version: robotSystemLibVersion],
+        [group: 'org.springframework', name: 'spring-webmvc', version: springVersion],
+        [group: 'org.springframework.boot', name: 'spring-boot-actuator', version: springBootVersion],
+        [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion],
+        [group: 'org.eclipse.jetty', name: 'jetty-webapp', version: jettyVersion]
+    )
+}
