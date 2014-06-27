@@ -1,7 +1,7 @@
-name: angular_dart_demo
-version: 0.0.1
+name: main-robot-gui
+version: 1.0.0
 dependencies:
-  angular: 0.10.0
+  angular: any
   shadow_dom: any
 dev_dependencies:
   unittest: any

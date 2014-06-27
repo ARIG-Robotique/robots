@@ -9,3 +9,6 @@
 .gradle/
 target/
 build/
+
+*-gui/**/packages/
+pubspec.lock
