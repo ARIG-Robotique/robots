@@ -167,9 +167,14 @@ configure(subprojects.findAll { it.name.indexOf("-gui") != -1 }) { subproject ->
 
     // We build in debug mode in order to have .dart files copied to build directory by pub
     task pubBuild(type: Exec) {
-        executable 'pub'
-        args 'build'
-        args '--mode=debug'
+        String osName = System.getProperty("os.name").toLowerCase()
+        if (osName.contains("windows")) {
+            commandLine 'cmd', '/c', 'pub', 'get'
+            commandLine 'cmd', '/c', 'pub', 'build', '--mode=debug'
+        } else {
+            commandLine 'pub', 'get'
+            commandLine 'pub', 'build', '--mode=debug'
+        }
     }
 
     task copyDartFiles(type: Copy, dependsOn: 'pubBuild') {
