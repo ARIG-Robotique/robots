@@ -1,4 +1,4 @@
-name: main-robot-gui
+name: mainRobotGUI
 version: 1.0.0
 dependencies:
   angular: any
