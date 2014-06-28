@@ -37,6 +37,7 @@ configure(allprojects) {
 
 	// Plugin de build
 	apply plugin: 'java'
+	apply plugin: 'spring-boot'
 	apply plugin: 'maven'
 	
 	// Plugin pour les IDE
