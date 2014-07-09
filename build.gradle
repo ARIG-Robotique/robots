@@ -1,12 +1,14 @@
 // Configuration pour le build
 buildscript {
+    ext.springBootVersion = '1.1.4.RELEASE'
+
 	repositories {
-		mavenCentral()
-		mavenLocal()
+        mavenLocal()
+        mavenCentral()
 	}
 	dependencies {
 		// Add build plugins here
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.1.2.RELEASE")
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 	}
 }
 
@@ -23,10 +25,6 @@ configure(allprojects) {
 
 		// Dependencies versions
 		lombokVersion = '1.14.2'
-		springVersion = '4.0.5.RELEASE'
-		springBootVersion = '1.1.2.RELEASE'
-		jacksonVersion = '2.3.3'
-		jettyVersion = '9.2.0.v20140526'
 
 		// ARIG dependencies
 		robotSystemLibVersion = '1.1.0-SNAPSHOT'
@@ -37,7 +35,6 @@ configure(allprojects) {
 
 	// Plugin de build
 	apply plugin: 'java'
-	apply plugin: 'spring-boot'
 	apply plugin: 'maven'
 	
 	// Plugin pour les IDE
@@ -72,23 +69,11 @@ configure(allprojects) {
 	
 	// Configuration des repository de dépendences
     repositories {
-        mavenCentral()
         mavenLocal()
+        mavenCentral()
         maven { url "http://repo.opengeo.org/" }
     }
 
-	// Dependence commune pour tous les projets
-    dependencies {
-        provided(
-            [group: 'org.projectlombok', name: 'lombok', version: lombokVersion]
-        )
-
-        testCompile(
-            [group: 'org.springframework', name: 'spring-test', version: springVersion],
-            [group: 'junit', name: 'junit', version: junitVersion]
-        )
-    }	
-	
 	// Intégration avec IntellijIDEA
 	idea {
         project {
@@ -107,6 +92,8 @@ configure(allprojects) {
 
 // Configuration communes des sous projets Java
 configure(subprojects.findAll { it.name.indexOf("-gui") == -1 }) { subproject ->
+    // Les projets non GUI sont package avec Spring Boot
+    apply plugin: 'spring-boot'
 
 	// Configuration de la construction des Jars
 	jar {
@@ -126,7 +113,7 @@ configure(subprojects.findAll { it.name.indexOf("-gui") == -1 }) { subproject ->
 			header = project.name
 		}
 	}
-	
+
 	// Construction du jar de source
 	task sourcesJar(type: Jar, dependsOn:classes) {
 		classifier = "sources"
@@ -145,13 +132,28 @@ configure(subprojects.findAll { it.name.indexOf("-gui") == -1 }) { subproject ->
 		archives sourcesJar
 		archives javadocJar
 	}
+
+    // Dependence commune pour tous les projets
+    dependencies {
+        provided(
+            [group: 'org.projectlombok', name: 'lombok', version: lombokVersion]
+        )
+
+        testCompile(
+            [group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion]
+        )
+    }
 }
 
 // Configuration communes des sous projets GUI (Dart)
 configure(subprojects.findAll { it.name.indexOf("-gui") != -1 }) { subproject ->
-    apply plugin: 'java'
-
     jar {
+        manifest.attributes["Implementation-Title"] = subproject.name
+        manifest.attributes["Implementation-Version"] = subproject.version
+        manifest.attributes["Created-By"] = "Gradle " + gradle.gradleVersion
+        manifest.attributes["Build-Dart"] = ""
+        manifest.attributes["Build-Jdk"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
+
         from 'build/web'
         eachFile { details ->
             details.path = details.path.startsWith('META-INF') ?: 'static/' + details.path
@@ -162,12 +164,26 @@ configure(subprojects.findAll { it.name.indexOf("-gui") != -1 }) { subproject ->
         includeEmptyDirs = false
     }
 
+    task pubVersion(type: Exec) {
+        String osName = System.getProperty("os.name").toLowerCase()
+        if (osName.contains("windows")) {
+            commandLine 'cmd', '/c', 'pub', 'version'
+        } else {
+            commandLine 'pub', 'version'
+        }
+
+        standardOutput = new ByteArrayOutputStream()
+        ext.output = {
+            return standardOutput.toString()
+        }
+    }
+
     task pubClean(type: Delete) {
         delete 'build'
     }
 
     // We build in debug mode in order to have .dart files copied to build directory by pub
-    task pubBuild(type: Exec) {
+    task pubBuild(type: Exec, dependsOn: pubVersion) {
         String osName = System.getProperty("os.name").toLowerCase()
         if (osName.contains("windows")) {
             commandLine 'cmd', '/c', 'pub', 'get'
@@ -176,14 +192,6 @@ configure(subprojects.findAll { it.name.indexOf("-gui") != -1 }) { subproject ->
             commandLine 'pub', 'get'
             commandLine 'pub', 'build', '--mode=debug'
         }
-    }
-
-    task copyDartFiles(type: Copy, dependsOn: 'pubBuild') {
-        from('web') {
-            include 'main.dart'
-            include 'packages/**'
-        }
-        into 'build/web'
     }
 
     jar.dependsOn pubBuild
