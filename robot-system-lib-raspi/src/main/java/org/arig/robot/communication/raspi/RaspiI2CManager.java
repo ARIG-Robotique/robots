@@ -56,6 +56,7 @@ public class RaspiI2CManager extends AbstractI2CManager<I2CDevice> {
             I2CDevice device = getDevice(name);
             try {
                 device.read();
+                log.info("Scan {} : {}", name, device.toString());
             } catch (IOException e) {
                 RaspiI2CManager.log.warn(String.format("Impossible de communiquer avec le périphérique %s (%s) : %s", name, device.toString(), e.toString()));
                 deviceNotFound.add(name);

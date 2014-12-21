@@ -78,7 +78,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
         start = System.currentTimeMillis();
         LinkedList<GraphNode> graphNodes = pf.search(startNode.id(), endNode.id(), true);
         if (graphNodes.isEmpty()) {
-            log.error("Impossible de trouber le chemin pour le trajet.");
+            log.error("Impossible de trouver le chemin pour le trajet.");
             throw new NoPathFoundException(NoPathFoundException.ErrorType.NO_PATH_FOUND);
         }
         log.info("Calcul du chemin : " + (System.currentTimeMillis() - start) + " ms");

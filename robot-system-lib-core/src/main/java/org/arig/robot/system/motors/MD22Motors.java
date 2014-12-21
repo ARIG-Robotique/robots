@@ -38,7 +38,7 @@ public class MD22Motors extends AbstractMotors {
     private static final byte DEFAULT_MODE_VALUE = MD22Motors.MODE_0;
 
     /** The Constant DEFAULT_ACCEL_VALUE. */
-    private static final byte DEFAULT_ACCEL_VALUE = 20;
+    private static final short DEFAULT_ACCEL_VALUE = 20;
 
     /** The Constant MIN_VAL_MODE_0. */
     private static final byte MIN_VAL_MODE_0 = 0;
@@ -69,7 +69,7 @@ public class MD22Motors extends AbstractMotors {
     private byte modeValue;
 
     /** The accel value. */
-    private byte accelValue;
+    private short accelValue;
 
     /** The stop val. */
     private int offsetVal;
@@ -94,7 +94,7 @@ public class MD22Motors extends AbstractMotors {
      * @param accel
      *            the accel
      */
-    public MD22Motors(final String deviceName, final byte mode, final byte accel) {
+    public MD22Motors(final String deviceName, final byte mode, final short accel) {
         super();
 
         this.deviceName = deviceName;
@@ -262,7 +262,7 @@ public class MD22Motors extends AbstractMotors {
      * @param value
      *            the new accel
      */
-    public void setAccel(final byte value) {
+    public void setAccel(final short value) {
         setAccel(value, true);
     }
 
@@ -274,12 +274,12 @@ public class MD22Motors extends AbstractMotors {
      * @param transmit
      *            the transmit
      */
-    private void setAccel(byte value, final boolean transmit) {
+    private void setAccel(short value, final boolean transmit) {
         if (value < 0) {
             value = 0;
         }
-        if (value > (byte) 255) {
-            value = (byte) 255;
+        if (value > 255) {
+            value = 255;
         }
         accelValue = value;
 
@@ -287,7 +287,7 @@ public class MD22Motors extends AbstractMotors {
         if (transmit) {
             MD22Motors.log.info(String.format("Configuration de l'acceleration : %d", accelValue));
             try {
-                i2cManager.sendData(deviceName, MD22Motors.ACCEL_REGISTER, accelValue);
+                i2cManager.sendData(deviceName, MD22Motors.ACCEL_REGISTER, (byte) accelValue);
             } catch (I2CException e) {
                 log.error("Impossible de configurer l'acceleration");
             }

@@ -13,14 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public class SD21Servos {
 
-    /** The Constant SD21_VERSION_REGISTER. */
-    public static final byte SD21_VERSION_REGISTER = 0x40;
+    /** The Constant VERSION_REGISTER. */
+    public static final byte VERSION_REGISTER = 0x40;
 
     /** The address. */
     protected String deviceName;
-
-    /** The ret code. */
-    protected byte retCode;
 
     /** The i2c manager. */
     @Autowired
@@ -119,7 +116,7 @@ public class SD21Servos {
      */
     public void printVersion() {
         try {
-            i2cManager.sendData(deviceName, SD21Servos.SD21_VERSION_REGISTER);
+            i2cManager.sendData(deviceName, SD21Servos.VERSION_REGISTER);
             final short version = i2cManager.getData(deviceName);
             SD21Servos.log.info(String.format("SD21 ServoMotors (V : %s)", version));
         } catch (I2CException e) {
