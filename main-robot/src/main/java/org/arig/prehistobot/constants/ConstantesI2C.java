@@ -6,11 +6,14 @@ package org.arig.prehistobot.constants;
 public interface ConstantesI2C {
 
     static String SERVO_DEVICE_NAME = "SD21";
-    static int SD21_ADDRESS = 0x12;
-
-    static int SERVO_BRAS_DROIT = 1;
-    static int SERVO_BRAS_GAUCHE = 2;
+    static int SD21_ADDRESS = 0x61;
 
     static String PROPULSION_DEVICE_NAME = "MD22";
-    static int MD22_ADDRESS = 0x55;
+    static int MD22_ADDRESS = 0x58;
+
+    static String CODEUR_MOTEUR_GAUCHE = "Codeur Moteur Gauche";
+    static int CODEUR_GAUCHE_ADDRESS = 0x32;
+
+    static String CODEUR_MOTEUR_DROIT = "Codeur Moteur Droit";
+    static int CODEUR_DROIT_ADDRESS = 0x30;
 }

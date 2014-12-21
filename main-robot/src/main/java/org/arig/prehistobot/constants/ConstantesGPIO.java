@@ -5,5 +5,4 @@ package org.arig.prehistobot.constants;
  */
 public interface ConstantesGPIO {
 
-
 }

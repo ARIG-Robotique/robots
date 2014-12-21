@@ -17,10 +17,10 @@ import java.util.List;
 /**
  * Created by mythril on 21/12/13.
  */
+@Slf4j
 @Profile("raspi")
 @RestController
 @RequestMapping("/capteurs")
-@Slf4j
 public class CapteurControllers {
 
     @Autowired
@@ -31,7 +31,7 @@ public class CapteurControllers {
         List<Capteur> capteurList = new ArrayList<>();
         for (Integer capteurId : dic.getIds()) {
             AbstractBoard2007NoMux.CapteursDefinition cd = dic.getDefinitionById(capteurId);
-            capteurList.add(new Function<AbstractBoard2007NoMux.CapteursDefinition, Capteur>() {
+            capteurList.add(new Function<AbstractBoard2007NoMux.CapteursDefinition, Capteur> () {
                 @Override
                 public Capteur apply(AbstractBoard2007NoMux.CapteursDefinition input) {
                     return new Capteur(input.getId(), String.format("%s (%s)", input.name(), input.getDescription()), dic.readCapteurValue(input.getId()));

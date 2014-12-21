@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Created by mythril on 21/12/13.
  */
+@Slf4j
 @Profile("raspi")
 @RestController
 @RequestMapping("/motors")
-@Slf4j
 public class MotorsControllers {
 
     @Autowired

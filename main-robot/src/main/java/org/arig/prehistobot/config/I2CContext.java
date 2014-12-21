@@ -11,6 +11,7 @@ import org.arig.robot.system.motors.MD22Motors;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 
 import java.io.IOException;
@@ -40,8 +41,9 @@ public class I2CContext {
 
     @Bean
     public MD22Motors motors() {
-        MD22Motors md22 = new MD22Motors(ConstantesI2C.PROPULSION_DEVICE_NAME);
-        md22.assignMotors(1, 2);
+        // Configuration de la carte moteur propulsion.
+        MD22Motors md22 = new MD22Motors(ConstantesI2C.PROPULSION_DEVICE_NAME, (byte) 1, (byte) 20);
+        md22.assignMotors(2, 1);
 
         return md22;
     }
