@@ -16,17 +16,17 @@ public class MD22Motors extends AbstractMotors {
     /** The Constant MODE_REGISTER. */
     public static final byte MODE_REGISTER = 0x00;
 
-    /** The Constant ACCEL_REGISTER. */
-    public static final byte ACCEL_REGISTER = 0x03;
-
     /** The Constant MOTOR1_REGISTER. */
     public static final byte MOTOR1_REGISTER = 0x01;
 
     /** The Constant MOTOR2_REGISTER. */
     public static final byte MOTOR2_REGISTER = 0x02;
 
-    /** The Constant MD22_VERSION_REGISTER. */
-    public static final byte MD22_VERSION_REGISTER = 0x07;
+    /** The Constant ACCEL_REGISTER. */
+    public static final byte ACCEL_REGISTER = 0x03;
+
+    /** The Constant VERSION_REGISTER. */
+    public static final byte VERSION_REGISTER = 0x07;
 
     /** The Constant MODE_0. */
     private static final byte MODE_0 = 0; // 0 (Reverse) - 128 (Stop) - 255 (Forward)
@@ -35,7 +35,7 @@ public class MD22Motors extends AbstractMotors {
     private static final byte MODE_1 = 1; // -128 (Reverse) - 0 (Stop) - 127 (Forward)
 
     /** The Constant DEFAULT_MODE_VALUE. */
-    private static final byte DEFAULT_MODE_VALUE = MD22Motors.MODE_1;
+    private static final byte DEFAULT_MODE_VALUE = MD22Motors.MODE_0;
 
     /** The Constant DEFAULT_ACCEL_VALUE. */
     private static final byte DEFAULT_ACCEL_VALUE = 20;
@@ -72,7 +72,7 @@ public class MD22Motors extends AbstractMotors {
     private byte accelValue;
 
     /** The stop val. */
-    private int stopVal;
+    private int offsetVal;
 
     /**
      * Instantiates a new m d22 motors.
@@ -140,37 +140,17 @@ public class MD22Motors extends AbstractMotors {
     /*
      * (non-Javadoc)
      * 
-     * @see org.arig.robot.system.motors.AbstractMotors#stop1()
-     */
-    @Override
-    public void stop1() {
-        moteur1(stopVal);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.motors.AbstractMotors#stop2()
-     */
-    @Override
-    public void stop2() {
-        moteur2(stopVal);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.arig.robot.system.motors.AbstractMotors#moteur1(int)
      */
     @Override
     public void moteur1(final int val) {
-        final byte cmd = (byte) check(val);
-        MD22Motors.log.info(String.format("Commande du moteur 1 : %s", cmd));
+        final byte cmd = (byte) check(val + offsetVal);
         if (cmd == prevM1) {
             return;
         }
         prevM1 = cmd;
 
+        MD22Motors.log.info(String.format("Commande du moteur 1 : %s", cmd));
         try {
             i2cManager.sendData(deviceName, MD22Motors.MOTOR1_REGISTER, cmd);
         } catch (I2CException e) {
@@ -185,13 +165,13 @@ public class MD22Motors extends AbstractMotors {
      */
     @Override
     public void moteur2(final int val) {
-        final byte cmd = (byte) check(val);
-        MD22Motors.log.info(String.format("Commande du moteur 1 : %s", cmd));
-        if (cmd == prevM1) {
+        final byte cmd = (byte) check(val + offsetVal);
+        if (cmd == prevM2) {
             return;
         }
-        prevM1 = cmd;
+        prevM2 = cmd;
 
+        MD22Motors.log.info(String.format("Commande du moteur 2 : %s", cmd));
         try {
             i2cManager.sendData(deviceName, MD22Motors.MOTOR2_REGISTER, cmd);
         } catch (I2CException e) {
@@ -223,21 +203,20 @@ public class MD22Motors extends AbstractMotors {
             case MODE_0:
                 minVal = MD22Motors.MIN_VAL_MODE_0;
                 maxVal = MD22Motors.MAX_VAL_MODE_0;
-                stopVal = MD22Motors.STOP_VAL_MODE_0;
+                offsetVal = MD22Motors.STOP_VAL_MODE_0;
                 break;
 
             case MODE_1:
             default:
                 minVal = MD22Motors.MIN_VAL_MODE_1;
                 maxVal = MD22Motors.MAX_VAL_MODE_1;
-                stopVal = MD22Motors.STOP_VAL_MODE_1;
+                offsetVal = MD22Motors.STOP_VAL_MODE_1;
                 break;
         }
 
-        MD22Motors.log.info(String.format("Configuration dans le mode %d (Min = %d, Max = %d, Stop = %d)", modeValue, minVal, maxVal, stopVal));
-
         // Set mode
         if (transmit) {
+            MD22Motors.log.info(String.format("Configuration dans le mode %d (Min = %d, Max = %d, Offset = %d)", modeValue, minVal, maxVal, offsetVal));
             try {
                 i2cManager.sendData(deviceName, MD22Motors.MODE_REGISTER, modeValue);
             } catch (I2CException e) {
@@ -302,14 +281,13 @@ public class MD22Motors extends AbstractMotors {
         if (value > (byte) 255) {
             value = (byte) 255;
         }
-
         accelValue = value;
-        MD22Motors.log.info(String.format("Configuration de l'acceleration : %d", accelValue));
 
         // Set accelleration
         if (transmit) {
+            MD22Motors.log.info(String.format("Configuration de l'acceleration : %d", accelValue));
             try {
-                i2cManager.sendData(deviceName, MD22Motors.ACCEL_REGISTER, value);
+                i2cManager.sendData(deviceName, MD22Motors.ACCEL_REGISTER, accelValue);
             } catch (I2CException e) {
                 log.error("Impossible de configurer l'acceleration");
             }
@@ -324,11 +302,11 @@ public class MD22Motors extends AbstractMotors {
     @Override
     public void printVersion() {
         try {
-            i2cManager.sendData(deviceName, MD22Motors.MD22_VERSION_REGISTER);
+            i2cManager.sendData(deviceName, MD22Motors.VERSION_REGISTER);
             final byte version = i2cManager.getData(deviceName);
             MD22Motors.log.info(String.format("MD22 DC Motors (V : %s)", version));
         } catch (I2CException e) {
-            log.error("Erreur lors de la récupération de la version de la carte MD22");
+            log.error("Erreur lors de la récupération de la version de la carte MD22", e);
         }
     }
 }

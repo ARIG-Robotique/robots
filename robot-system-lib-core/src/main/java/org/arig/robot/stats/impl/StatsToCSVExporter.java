@@ -14,7 +14,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by mythril on 04/01/14.
+ * Exporter CSV pour les analyses du robot.
+ *
+ * @author gdepuille
  */
 @Slf4j
 @Data

@@ -12,8 +12,6 @@ import org.junit.runners.BlockJUnit4ClassRunner;
  * 
  * @author GregoryDepuille
  */
-
-/** The Constant log. */
 @RunWith(BlockJUnit4ClassRunner.class)
 public class CommandeRobotTest {
 

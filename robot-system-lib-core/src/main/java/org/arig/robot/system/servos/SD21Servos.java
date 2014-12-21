@@ -101,7 +101,7 @@ public class SD21Servos {
      * @param position
      *            the position
      */
-    public void setPositionAndSpeed(final byte servoNb, final byte speed, final int position) {
+    public void setPositionAndSpeed(final byte servoNb, final int position, final byte speed) {
         if (!checkServo(servoNb)) {
             return;
         }

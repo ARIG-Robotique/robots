@@ -54,8 +54,8 @@ public abstract class AbstractMotors {
      *            the num moteur droit
      */
     public final void assignMotors(final int numMoteurGauche, final int numMoteurDroit) {
-        this.numMoteurDroit = numMoteurDroit;
         this.numMoteurGauche = numMoteurGauche;
+        this.numMoteurDroit = numMoteurDroit;
     }
 
     /**
@@ -175,16 +175,14 @@ public abstract class AbstractMotors {
     /**
      * Moteur1.
      * 
-     * @param cmd
-     *            the cmd
+     * @param val the cmd
      */
     public abstract void moteur1(final int val);
 
     /**
      * Moteur2.
      * 
-     * @param cmd
-     *            the cmd
+     * @param val the cmd
      */
     public abstract void moteur2(final int val);
 

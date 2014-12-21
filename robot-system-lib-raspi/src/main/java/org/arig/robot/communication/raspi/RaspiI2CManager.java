@@ -57,13 +57,13 @@ public class RaspiI2CManager extends AbstractI2CManager<I2CDevice> {
             try {
                 device.read();
             } catch (IOException e) {
-                RaspiI2CManager.log.warn(String.format("Impossible de communiqué avec le device %s (%s) : %s", name, device.toString(), e.toString()));
+                RaspiI2CManager.log.warn(String.format("Impossible de communiquer avec le périphérique %s (%s) : %s", name, device.toString(), e.toString()));
                 deviceNotFound.add(name);
             }
         }
 
         if (!deviceNotFound.isEmpty()) {
-            String errorMessage = "Tout les devices enregistré ne sont pas disponible : " + StringUtils.join(deviceNotFound, ", ");
+            String errorMessage = "Tout les devices enregistrés ne sont pas disponible : " + StringUtils.join(deviceNotFound, ", ");
             RaspiI2CManager.log.error(errorMessage);
             throw new I2CException(errorMessage);
         }
