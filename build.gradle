@@ -22,16 +22,12 @@ configure(allprojects) {
 
 		// Dependencies versions
 		lombokVersion = '1.14.8'
-		springVersion = '4.1.3.RELEASE'
+		springBootVersion = '1.2.0.RELEASE'
 		apacheCommonsLangVersion = '3.3.2'
 		googleGuavaVersion = '18.0'
-		slf4jVersion = '1.7.9'
 		pi4jVersion = '0.0.5'
 		pathFinderVersion = '0.1.2'
 		javaCsvVersion = '2.1'
-
-		// Test dependencies versions
-		junitVersion = '4.12'
 	}
 
 	// Plugin de build
@@ -82,8 +78,7 @@ configure(allprojects) {
         )
 
         testCompile(
-            [group: 'org.springframework', name: 'spring-test', version: springVersion],
-            [group: 'junit', name: 'junit', version: junitVersion]
+            [group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion],
         )
     }	
 	
@@ -126,6 +121,11 @@ configure(subprojects) { subproject ->
 			memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
 			author = true
 			header = project.name
+		}
+
+		// Désactivation de la Javadoc strict avec le JDK 8
+		if (org.gradle.api.JavaVersion.current().isJava8Compatible()) {
+			options.addStringOption('Xdoclint:none', '-quiet')
 		}
 	}
 	
