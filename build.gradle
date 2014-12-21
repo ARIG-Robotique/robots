@@ -1,6 +1,6 @@
 // Configuration pour le build
 buildscript {
-    ext.springBootVersion = '1.1.4.RELEASE'
+    ext.springBootVersion = '1.2.0.RELEASE'
 
 	repositories {
         mavenLocal()
@@ -20,17 +20,17 @@ configure(allprojects) {
 	// Variable de configuration
 	ext {
 		// Project dependencies
-		javaVersion = '1.7'
+		javaVersion = '1.8'
 		javaTestVersion = javaVersion
 
 		// Dependencies versions
-		lombokVersion = '1.14.2'
+		lombokVersion = '1.14.8'
 
 		// ARIG dependencies
 		robotSystemLibVersion = '1.1.0-SNAPSHOT'
 
 		// Test dependencies versions
-		junitVersion = '4.11'
+		junitVersion = '4.12'
 	}
 
 	// Plugin de build
@@ -77,15 +77,19 @@ configure(allprojects) {
 	// Intégration avec IntellijIDEA
 	idea {
         project {
-            ext.jdkName = javaVersion
-            ext.languageLevel = javaVersion
+            // Java configuration
+            //jdkName = javaVersion
+            //languageLevel = javaVersion
+
+            // Gestionnaire de source
+            //vcs = 'Git'
         }
 
         module {
-            ext.downloadJavadoc = true
-            ext.downloadSource = true
+            downloadJavadoc = true
+            downloadSources = true
 
-            scopes.PROVIDED.plus += configurations.provided
+            scopes.PROVIDED.plus += [configurations.provided]
         }
     }
 }
@@ -207,6 +211,6 @@ configure(rootProject) {
 
 	task wrapper(type: Wrapper) {
 		description = "Generates gradlew[.bat] scripts"
-		gradleVersion = "1.12"
+		gradleVersion = "2.2.1"
 	}
 }
