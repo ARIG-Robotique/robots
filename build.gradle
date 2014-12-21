@@ -17,23 +17,23 @@ configure(allprojects) {
 	// Variable de configuration
 	ext {
 		// Project dependencies
-		javaVersion = '1.7'
+		javaVersion = '1.8'
 		javaTestVersion = javaVersion
 
 		// Dependencies versions
-		lombokVersion = '1.14.2'
-		springVersion = '4.0.5.RELEASE'
-		apacheCommonsLangVersion = '3.1'
-		googleGuavaVersion = '17.0'
-		slf4jVersion = '1.7.7'
+		lombokVersion = '1.14.8'
+		springVersion = '4.1.3.RELEASE'
+		apacheCommonsLangVersion = '3.3.2'
+		googleGuavaVersion = '18.0'
+		slf4jVersion = '1.7.9'
 		pi4jVersion = '0.0.5'
 		pathFinderVersion = '0.1.2'
 		javaCsvVersion = '2.1'
 
 		// Test dependencies versions
-		junitVersion = '4.11'
+		junitVersion = '4.12'
 	}
-	
+
 	// Plugin de build
 	apply plugin: 'java'
 	apply plugin: 'maven'
@@ -90,16 +90,20 @@ configure(allprojects) {
 	// Intégration avec IntellijIDEA
 	idea {
         project {
-            ext.jdkName = javaVersion
-            ext.languageLevel = javaVersion
+			// Java configuration
+            //jdkName = javaVersion
+            //languageLevel = javaVersion
+
+			// Gestionnaire de source
+			//vcs = 'Git'
         }
 
         module {
-            ext.downloadJavadoc = true
-            ext.downloadSource = true
+            downloadJavadoc = true
+            downloadSources = true
 
-            scopes.PROVIDED.plus += configurations.provided
-        }
+			scopes.PROVIDED.plus += [configurations.provided]
+		}
     }
 }
 
@@ -154,6 +158,6 @@ configure(rootProject) {
 
 	task wrapper(type: Wrapper) {
 		description = "Generates gradlew[.bat] scripts"
-		gradleVersion = "1.12"
+		gradleVersion = "2.2.1"
 	}
 }
