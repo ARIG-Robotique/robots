@@ -25,25 +25,36 @@ public abstract class Abstract2WheelsEncoders {
     /** The coef droit. */
     private double coefDroit;
 
+    /** The alternate. */
+    private boolean alternate;
+
     /**
      * Instantiates a new abstract encoders.
      */
     protected Abstract2WheelsEncoders() {
         distance = orientation = 0;
         coefDroit = coefGauche = 1.0;
+        alternate = false;
     }
 
     /**
      * Lecture valeurs.
      */
     public void lectureValeurs() {
-        final double gauche = lectureGauche() * coefGauche;
-        final double droit = lectureDroit() * coefDroit;
+        final double gauche, droit;
+
+        if (alternate) {
+            gauche = lectureGauche() * coefGauche;
+            droit = lectureDroit() * coefDroit;
+        } else {
+            droit = lectureDroit() * coefDroit;
+            gauche = lectureGauche() * coefGauche;
+        }
+        alternate = !alternate;
+
         setValeursCodeurs(gauche, droit);
 
-        // TODO : Ajouter le loggeur CSV
-
-        Abstract2WheelsEncoders.log.info(String.format("Lecture des valeurs codeurs : Gauche = %s ; Droit = %s", gauche, droit));
+        Abstract2WheelsEncoders.log.info(String.format("Valeurs codeurs : Gauche = %s ; Droit = %s", gauche, droit));
     }
 
     /**

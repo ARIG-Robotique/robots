@@ -81,7 +81,7 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
     }
 
     /**
-     * Lecture data depuis nos cartes codeur Arduino. {@link https://www.gitorious.org/arig-association/quadratic-reader/}
+     * Lecture data depuis nos cartes codeur Arduino. {@link https://www.github.com/ARIG-ssociation/quadratic-reader/}
      * 
      * 1) On envoi la commande de lecture.
      * 2) On récupère 2 octets (int sur 2 octet avec un AVR 8 bits)
@@ -103,8 +103,6 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
         final byte[] datas = i2cManager.getDatas(deviceName, 2);
         value = datas[0] << 8;
         value += datas[1];
-
-        ARIG2WheelsEncoders.log.info(String.format("Lecture de la valeur %s pour le codeur %d", value, deviceName));
         return value;
     }
 }
