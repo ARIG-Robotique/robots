@@ -2,7 +2,9 @@ package org.arig.prehistobot;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.prehistobot.constants.ConstantesServos;
+import org.arig.robot.communication.II2CManager;
 import org.arig.robot.communication.raspi.RaspiI2CManager;
+import org.arig.robot.system.motors.AbstractMotors;
 import org.arig.robot.system.motors.MD22Motors;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.boot.SpringApplication;
@@ -26,11 +28,11 @@ public class MainRobot {
         ConfigurableApplicationContext ctx = SpringApplication.run(MainRobot.class, args);
 
         // Bus I2C
-        RaspiI2CManager i2CManager = ctx.getBean(RaspiI2CManager.class);
+        II2CManager i2CManager = ctx.getBean(RaspiI2CManager.class);
         i2CManager.executeScan();
 
         // Moteurs propulsion
-        MD22Motors motors = ctx.getBean(MD22Motors.class);
+        AbstractMotors motors = ctx.getBean(MD22Motors.class);
         motors.printVersion();
         motors.init();
 
