@@ -1,10 +1,13 @@
 description = "ARIG Association - Prehistobot projects - Robot principal"
 
 dependencies {
+    compile project(':main-robot-gui')
+    compile('org.springframework.boot:spring-boot-starter-web') {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
     compile(
-        project(':main-robot-gui'),
-        [group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: springBootVersion],
-        [group: 'org.arig.robot', name: 'robot-system-lib-raspi', version: robotSystemLibVersion],
-        [group: 'org.springframework.boot', name: 'spring-boot-actuator', version: springBootVersion],
+        [group: 'org.springframework.boot', name: 'spring-boot-starter-jetty'],
+        [group: 'org.springframework', name: 'spring-webmvc'],
+        [group: 'org.arig.robot', name: 'robot-system-lib-raspi', version: robotSystemLibVersion]
     )
 }
