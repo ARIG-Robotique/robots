@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Profile("raspi")
 @RestController
 @RequestMapping("/motors")
-public class MotorsControllers {
+public class MotorsController {
 
     @Autowired
     private MD22Motors md22Motors;

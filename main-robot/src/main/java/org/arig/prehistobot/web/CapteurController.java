@@ -21,13 +21,13 @@ import java.util.List;
 @Profile("raspi")
 @RestController
 @RequestMapping("/capteurs")
-public class CapteurControllers {
+public class CapteurController {
 
     @Autowired
     private RaspiBoard2007NoMux dic;
 
     @RequestMapping(method = RequestMethod.GET)
-    private List<Capteur> listAll() {
+    public List<Capteur> listAll() {
         List<Capteur> capteurList = new ArrayList<>();
         for (Integer capteurId : dic.getIds()) {
             AbstractBoard2007NoMux.CapteursDefinition cd = dic.getDefinitionById(capteurId);
