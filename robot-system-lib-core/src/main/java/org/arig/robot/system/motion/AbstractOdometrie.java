@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import org.arig.robot.vo.Position;
 import org.arig.robot.vo.enums.TypeOdometrie;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * 
  * @author mythril
  */
-public abstract class AbstractOdometrie implements IOdometrie {
+public abstract class AbstractOdometrie implements IOdometrie, InitializingBean {
 
     /** The position. */
     @Autowired
@@ -32,6 +33,10 @@ public abstract class AbstractOdometrie implements IOdometrie {
      */
     protected AbstractOdometrie(final TypeOdometrie type) {
         this.type = type;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
         initOdometrie(0, 0, 0);
     }
 

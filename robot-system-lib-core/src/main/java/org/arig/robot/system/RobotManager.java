@@ -1,6 +1,8 @@
 package org.arig.robot.system;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.IAsservissement;
@@ -10,6 +12,7 @@ import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.vo.CommandeRobot;
 import org.arig.robot.vo.Position;
 import org.arig.robot.vo.enums.TypeConsigne;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -18,7 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * 
  * @author mythril
  */
-public class RobotManager {
+public class RobotManager implements InitializingBean {
 
     /** The obstacle detector. */
     @Autowired(required = false)
@@ -65,13 +68,13 @@ public class RobotManager {
     private boolean avoidanceInProgress = false;
 
     /** The fenetre arret distance. */
-    private final double fenetreArretDistance;
+    private double fenetreArretDistance;
 
     /** The fenetre arret orientation. */
-    private final double fenetreArretOrientation;
+    private double fenetreArretOrientation;
 
     /** The start angle. */
-    private final double startAngle;
+    private double startAngle;
 
     /**
      * Instantiates a new robot manager.
@@ -85,13 +88,22 @@ public class RobotManager {
      */
     public RobotManager(final double arretDistanceMm, final double arretOrientDeg, final double coefAngle) {
         super();
-        fenetreArretDistance = conv.mmToPulse(arretDistanceMm);
-        fenetreArretOrientation = conv.degToPulse(arretOrientDeg);
+
+        // On stock les valeurs brut, le calcul sera fait sur le afterPropertiesSet.
+        fenetreArretDistance = arretDistanceMm;
+        fenetreArretOrientation = arretOrientDeg;
+        startAngle = coefAngle;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        fenetreArretDistance = conv.mmToPulse(fenetreArretDistance);
+        fenetreArretOrientation = conv.degToPulse(fenetreArretOrientation);
 
         // Angle de départ pour les déplacement.
         // Si l'angle est supérieur en absolu, on annule la distance
         // afin de naviguer en priorité en marche avant.
-        startAngle = coefAngle * conv.getPiPulse();
+        startAngle = startAngle * conv.getPiPulse();
     }
 
     /**
@@ -294,7 +306,7 @@ public class RobotManager {
      * @param y
      *            the y
      */
-    public void alignFrontTo(final long x, final long y) {
+    public void alignFrontTo(final double x, final double y) {
         long dX = (long) (conv.mmToPulse(x) - position.getPt().getX());
         long dY = (long) (conv.mmToPulse(y) - position.getPt().getY());
 
