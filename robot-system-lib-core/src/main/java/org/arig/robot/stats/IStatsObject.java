@@ -17,7 +17,7 @@ public interface IStatsObject {
     /**
      * Retourne l'ensemble des valeurs pour chaque clé
      *
-     * @return
+     * @return valeurs de stat par clé
      */
     Map<String, String> getValues();
 }

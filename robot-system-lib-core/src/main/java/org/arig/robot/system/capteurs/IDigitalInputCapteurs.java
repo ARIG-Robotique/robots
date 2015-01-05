@@ -57,7 +57,7 @@ public interface IDigitalInputCapteurs<P> {
     /**
      * Renvoi la liste des id enregistré
      *
-     * @return
+     * @return Liste des identifiant des capteurs enregistré
      */
     List<Integer> getIds();
 }

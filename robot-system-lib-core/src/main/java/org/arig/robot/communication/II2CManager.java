@@ -41,7 +41,6 @@ public interface II2CManager {
      *            the nb result
      * @param datas
      *            the datas
-     * @return the byte
      */
     void sendData(final String deviceName, final int nbResult, final byte... datas) throws I2CException;
 

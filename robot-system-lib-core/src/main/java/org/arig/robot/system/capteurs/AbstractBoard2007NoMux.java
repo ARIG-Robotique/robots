@@ -185,7 +185,8 @@ public abstract class AbstractBoard2007NoMux<P> implements IDigitalInputCapteurs
      * Lecture de la valeur d'un capteur
      *
      * @param pin
-     * @return
+     *
+     * @return Valeur booléen représentative de l'état du capteur.
      */
     protected abstract boolean readCapteur(final int capteurId, final P pin);
 

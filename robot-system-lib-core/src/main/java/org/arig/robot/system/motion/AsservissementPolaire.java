@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * 
  * @author mythril
  */
-public class AsservissementPolaire implements IAsservissement {
+public class AsservissementPolaire implements IAsservissementPolaire {
 
     /** The commande robot. */
     @Autowired

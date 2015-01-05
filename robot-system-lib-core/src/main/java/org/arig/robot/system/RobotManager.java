@@ -1,11 +1,10 @@
 package org.arig.robot.system;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.IAsservissement;
+import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motors.AbstractMotors;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -31,9 +30,9 @@ public class RobotManager implements InitializingBean {
     @Autowired
     private IOdometrie odom;
 
-    /** The asserv. */
+    /** The asservPolaire. */
     @Autowired
-    private IAsservissement asserv;
+    private IAsservissementPolaire asservPolaire;
 
     /** The encoders. */
     @Autowired
@@ -150,7 +149,7 @@ public class RobotManager implements InitializingBean {
         // 3. Gestion de l'evittement, de la reprise, et du cycle continue
         if (obstacleDetector != null && obstacleDetector.hasObstacle() && !avoidanceInProgress) {
             stop();
-            asserv.reset(true);
+            asservPolaire.reset(true);
             avoidanceInProgress = true;
         } else if (obstacleDetector != null && obstacleDetector.hasObstacle() && avoidanceInProgress) {
             // TODO : Trajectoire d'évittement. Comme le hasObstacle externaliser cette gestion au programme principal
@@ -158,7 +157,7 @@ public class RobotManager implements InitializingBean {
             avoidanceInProgress = false;
         } else {
             // 3.4.1 Asservissement sur les consignes
-            asserv.process();
+            asservPolaire.process();
 
             // 3.4.3 Envoi aux moteurs
             motors.generateMouvement(cmdRobot.getMoteur().getGauche(), cmdRobot.getMoteur().getDroit());
@@ -195,14 +194,13 @@ public class RobotManager implements InitializingBean {
             cmdRobot.getConsigne().setOrientation(consOrient);
 
         } else if (!trajetAtteint && cmdRobot.isType(TypeConsigne.LINE)) {
-            // TODO : Consigne de suivi de ligne (géré les clothoïde pour la liaisons)
+            // TODO : Consigne de suivi de ligne (gérer les clothoïde pour la liaisons)
 
         } else if (!trajetAtteint && cmdRobot.isType(TypeConsigne.CIRCLE)) {
             // TODO : Consigne de rotation autour d'un point.
 
         } else {
             // Calcul par différence vis a vis de la valeur codeur(asservissement de position "basique")
-
             if (cmdRobot.isType(TypeConsigne.DIST)) {
                 cmdRobot.getConsigne().setDistance((long) (cmdRobot.getConsigne().getDistance() - encoders.getDistance()));
             }
@@ -254,8 +252,8 @@ public class RobotManager implements InitializingBean {
             trajetAtteint = true;
         }
 
-        if (Math.abs(cmdRobot.getConsigne().getDistance()) < asserv.getFenetreApprocheDistance()
-                && Math.abs(cmdRobot.getConsigne().getOrientation()) < asserv.getFenetreApprocheOrientation()) {
+        if (Math.abs(cmdRobot.getConsigne().getDistance()) < asservPolaire.getFenetreApprocheDistance()
+                && Math.abs(cmdRobot.getConsigne().getOrientation()) < asservPolaire.getFenetreApprocheOrientation()) {
 
             // Modification du type de consigne pour la stabilisation
             cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
@@ -421,10 +419,10 @@ public class RobotManager implements InitializingBean {
      * Méthode pour préparer le prochain mouvement.
      */
     private void prepareNextMouvement() {
-        // Reset de l'erreur de l'asserv sur le mouvement précédent lorsqu'il
+        // Reset de l'erreur de l'asservPolaire sur le mouvement précédent lorsqu'il
         // s'agit d'un nouveau mouvement au départ vitesse presque nulle.
         if (trajetAtteint) {
-            asserv.reset();
+            asservPolaire.reset();
         }
 
         // Réinitialisation des infos de trajet.

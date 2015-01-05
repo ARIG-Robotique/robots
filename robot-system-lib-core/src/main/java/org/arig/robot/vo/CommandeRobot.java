@@ -21,13 +21,13 @@ public class CommandeRobot {
     private Position position;
 
     /** Commande moteur a appliquer */
-    private CommandeMoteur moteur;
+    private CommandeMoteurPropulsion2Roue moteur;
 
     /** Vitesse a appliquer */
-    private Vitesse vitesse;
+    private VitesseAsservissementPolaire vitesse;
 
     /** Consigne de déplacement pour l'asservissement */
-    private Consigne consigne;
+    private ConsigneAsservissementPolaire consigne;
 
     /** The frein. */
     private boolean frein;
@@ -41,9 +41,9 @@ public class CommandeRobot {
      */
     public CommandeRobot() {
         position = new Position();
-        moteur = new CommandeMoteur();
-        vitesse = new Vitesse(100, 100);
-        consigne = new Consigne();
+        moteur = new CommandeMoteurPropulsion2Roue();
+        vitesse = new VitesseAsservissementPolaire(100, 100);
+        consigne = new ConsigneAsservissementPolaire();
         frein = true;
         setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
     }

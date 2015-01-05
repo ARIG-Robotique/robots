@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Consigne {
+public class ConsigneAsservissementPolaire {
 
     /** The consigne distance. */
     private long distance;

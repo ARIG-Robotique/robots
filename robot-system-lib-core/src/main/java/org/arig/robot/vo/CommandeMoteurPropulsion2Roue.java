@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Vitesse {
+public class CommandeMoteurPropulsion2Roue {
 
-    /** The vitesse distance. */
-    private long distance;
+    /** The cmd droit. */
+    private int droit;
 
-    /** The vitesse orientation. */
-    private long orientation;
+    /** The cmd gauche. */
+    private int gauche;
 }
