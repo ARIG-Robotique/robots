@@ -1,35 +1,22 @@
 package org.arig.prehistobot;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.prehistobot.constants.ConstantesServos;
-import org.arig.robot.communication.II2CManager;
-import org.arig.robot.communication.raspi.RaspiI2CManager;
-import org.arig.robot.system.RobotManager;
-import org.arig.robot.system.motors.AbstractMotors;
-import org.arig.robot.system.motors.MD22Motors;
-import org.arig.robot.system.servos.SD21Servos;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
-
-import javax.annotation.security.RunAs;
 
 /**
  * Created by mythril on 20/12/13.
  */
 @Slf4j
-@Configuration
-@ComponentScan
-@EnableScheduling
-@EnableAutoConfiguration
 public class MainRobot {
 
     public static void main(final String [] args) throws Exception {
-        ConfigurableApplicationContext ctx = SpringApplication.run(MainRobot.class, args);
+        log.info("Demarrage du robot principal ...");
 
+        // Configuration de Jetty
+        JettyEmbeddedRunner jetty = new JettyEmbeddedRunner();
+        jetty.config();
+        jetty.join();
+
+        /*
         // Bus I2C
         II2CManager i2CManager = ctx.getBean(RaspiI2CManager.class);
         i2CManager.executeScan();
@@ -45,5 +32,7 @@ public class MainRobot {
         // Initialisation Robot Manager
         RobotManager rm = ctx.getBean(RobotManager.class);
         rm.init();
+
+        */
     }
 }

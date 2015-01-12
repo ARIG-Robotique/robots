@@ -1,4 +1,4 @@
-package org.arig.prehistobot.config;
+package org.arig.prehistobot.config.spring;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
@@ -23,8 +23,8 @@ public class GPIOContext {
     }
 
     @Bean
-    public RaspiBoard2007NoMux capteurs() {
-        RaspiBoard2007NoMux c = new RaspiBoard2007NoMux(gpioController());
+    public RaspiBoard2007NoMux capteurs(GpioController gpioController) {
+        RaspiBoard2007NoMux c = new RaspiBoard2007NoMux(gpioController);
         c.setInputPinForCapteur(RaspiBoard2007NoMux.CapteursDefinition.EQUIPE.getId(), RaspiPin.GPIO_07);
 
         return c;

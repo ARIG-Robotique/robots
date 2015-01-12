@@ -1,4 +1,4 @@
-package org.arig.prehistobot.config;
+package org.arig.prehistobot.config.spring;
 
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CFactory;
@@ -29,8 +29,8 @@ public class I2CContext {
     }
 
     @Bean
-    public II2CManager i2cManager() throws I2CException, IOException {
-        final RaspiI2CManager manager = new RaspiI2CManager(i2cBus());
+    public II2CManager i2cManager(I2CBus i2cBus) throws I2CException, IOException {
+        final RaspiI2CManager manager = new RaspiI2CManager(i2cBus);
         manager.registerDevice(ConstantesI2C.SERVO_DEVICE_NAME, ConstantesI2C.SD21_ADDRESS);
         manager.registerDevice(ConstantesI2C.PROPULSION_DEVICE_NAME, ConstantesI2C.MD22_ADDRESS);
         manager.registerDevice(ConstantesI2C.CODEUR_MOTEUR_DROIT, ConstantesI2C.CODEUR_DROIT_ADDRESS);

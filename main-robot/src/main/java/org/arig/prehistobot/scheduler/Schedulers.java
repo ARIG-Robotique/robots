@@ -2,6 +2,7 @@ package org.arig.prehistobot.scheduler;
 
 import org.arig.robot.system.RobotManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
  * Created by gdepuille on 23/12/14.
  */
 @Component
+@Profile("raspi")
 public class Schedulers {
 
     @Autowired

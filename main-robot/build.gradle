@@ -2,12 +2,12 @@ description = "ARIG Association - Prehistobot projects - Robot principal"
 
 dependencies {
     compile project(':main-robot-gui')
-    compile('org.springframework.boot:spring-boot-starter-web') {
-        exclude module: 'spring-boot-starter-tomcat'
-    }
     compile(
-        [group: 'org.springframework.boot', name: 'spring-boot-starter-jetty'],
-        [group: 'org.springframework', name: 'spring-webmvc'],
-        [group: 'org.arig.robot', name: 'robot-system-lib-raspi', version: robotSystemLibVersion]
+        [group: 'org.eclipse.jetty', name: 'jetty-server', version: jettyVersion],
+        [group: 'org.eclipse.jetty', name: 'jetty-webapp', version: jettyVersion],
+        [group: 'org.eclipse.jetty', name: 'jetty-annotations', version: jettyVersion],
+        [group: 'org.springframework', name: 'spring-webmvc', version: springVersion],
+        [group: 'org.arig.robot', name: 'robot-system-lib-raspi', version: robotSystemLibVersion],
+        [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion]
     )
 }

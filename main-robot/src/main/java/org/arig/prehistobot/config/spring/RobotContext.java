@@ -1,4 +1,4 @@
-package org.arig.prehistobot.config;
+package org.arig.prehistobot.config.spring;
 
 import org.arig.prehistobot.constants.ConstantesRobot;
 import org.arig.robot.filters.pid.IPidFilter;
@@ -16,11 +16,13 @@ import org.arig.robot.vo.Position;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Profile;
 
 /**
  * Created by gdepuille on 23/12/14.
  */
 @Configuration
+@Profile("raspi")
 public class RobotContext {
 
     @Bean

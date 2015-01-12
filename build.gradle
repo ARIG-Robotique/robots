@@ -1,6 +1,5 @@
 // Configuration pour le build
 buildscript {
-    ext.springBootVersion = '1.2.0.RELEASE'
 
 	repositories {
         mavenLocal()
@@ -8,7 +7,6 @@ buildscript {
 	}
 	dependencies {
 		// Add build plugins here
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 	}
 }
 
@@ -25,6 +23,11 @@ configure(allprojects) {
 
 		// Dependencies versions
 		lombokVersion = '1.14.8'
+        springVersion = '4.1.4.RELEASE'
+        jacksonVersion = '2.4.4'
+
+        // Container dependencies
+        jettyVersion = '9.2.1.v20140609'
 
 		// ARIG dependencies
 		robotSystemLibVersion = '1.1.0-SNAPSHOT'
@@ -96,9 +99,6 @@ configure(allprojects) {
 
 // Configuration communes des sous projets Java
 configure(subprojects.findAll { it.name.indexOf("-gui") == -1 }) { subproject ->
-    // Les projets non GUI sont package avec Spring Boot
-    apply plugin: 'spring-boot'
-
 	// Configuration de la construction des Jars
 	jar {
 		manifest.attributes["Implementation-Title"] = subproject.name
@@ -137,14 +137,15 @@ configure(subprojects.findAll { it.name.indexOf("-gui") == -1 }) { subproject ->
 		archives javadocJar
 	}
 
-    // Dependence commune pour tous les projets
+    // Dependence commune pour tous les projets java
     dependencies {
         provided(
             [group: 'org.projectlombok', name: 'lombok', version: lombokVersion]
         )
 
         testCompile(
-            [group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion]
+            [group: 'org.springframework', name: 'spring-test', version: springVersion],
+            [group: 'junit', name: 'junit', version: junitVersion]
         )
     }
 }
