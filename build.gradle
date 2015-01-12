@@ -22,10 +22,11 @@ configure(allprojects) {
 
 		// Dependencies versions
 		lombokVersion = '1.14.8'
-		springBootVersion = '1.2.0.RELEASE'
+		springVersion = '4.1.4.RELEASE'
 		apacheCommonsLangVersion = '3.3.2'
 		googleGuavaVersion = '18.0'
 		pi4jVersion = '0.0.5'
+		slf4jVersion = '1.7.10'
 		pathFinderVersion = '0.1.2'
 		javaCsvVersion = '2.1'
 	}
@@ -78,7 +79,7 @@ configure(allprojects) {
         )
 
         testCompile(
-            [group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion],
+            [group: 'org.springframework', name: 'spring-test', version: springVersion],
         )
     }	
 	
