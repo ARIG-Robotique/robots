@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html ng-app>
 <head>
-    <title>Hello, World! : {{firstName}} {{lastName}}</title>
+  <title>Hello, World! : {{firstName}} {{lastName}}</title>
+
+  <script src="packages/web_components/platform.js"></script>
+  <script src="packages/web_components/dart_support.js"></script>
 </head>
 <body>
   
@@ -9,7 +12,6 @@
   First name: <input type="text" ng-model="firstName">
   Last name : <input type="text" ng-model="lastName">
   
-  <script src="packages/shadow_dom/shadow_dom.min.js"></script>
   <script type="application/dart" src="main.dart"></script>
   <script type="text/javascript" src="packages/browser/dart.js"></script>
 </body>
