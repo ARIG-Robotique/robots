@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
  * Created by mythril on 20/12/13.
  */
 @Slf4j
-public class MainRobot {
+public class RobotApplication {
 
     public static void main(final String [] args) throws Exception {
         log.info("Demarrage du robot principal ...");
@@ -32,7 +32,6 @@ public class MainRobot {
         // Initialisation Robot Manager
         RobotManager rm = ctx.getBean(RobotManager.class);
         rm.init();
-
         */
     }
 }

@@ -27,7 +27,7 @@ configure(allprojects) {
         jacksonVersion = '2.4.4'
 
         // Container dependencies
-        jettyVersion = '9.2.1.v20140609'
+        jettyVersion = '9.2.6.v20141205'
 
 		// ARIG dependencies
 		robotSystemLibVersion = '1.1.0-SNAPSHOT'
@@ -105,6 +105,7 @@ configure(subprojects.findAll { it.name.indexOf("-gui") == -1 }) { subproject ->
 		manifest.attributes["Implementation-Version"] = subproject.version
 		manifest.attributes["Created-By"] = "Gradle " + gradle.gradleVersion
 		manifest.attributes["Build-Jdk"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
+        manifest.attributes["Main-Class"] = "org.arig.prehistobot.RobotApplication"
 	}
 	
 	// Configuration pour la Javadoc

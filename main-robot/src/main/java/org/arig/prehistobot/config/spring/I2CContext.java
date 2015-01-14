@@ -58,4 +58,3 @@ public class I2CContext {
         return new ARIG2WheelsEncoders(ConstantesI2C.CODEUR_MOTEUR_GAUCHE, ConstantesI2C.CODEUR_MOTEUR_DROIT);
     }
 }
-

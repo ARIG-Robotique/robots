@@ -6,10 +6,7 @@ import org.arig.robot.filters.pid.SimplePID;
 import org.arig.robot.filters.ramp.IRampFilter;
 import org.arig.robot.filters.ramp.Ramp;
 import org.arig.robot.system.RobotManager;
-import org.arig.robot.system.motion.AsservissementPolaire;
-import org.arig.robot.system.motion.IAsservissement;
-import org.arig.robot.system.motion.IOdometrie;
-import org.arig.robot.system.motion.OdometrieLineaire;
+import org.arig.robot.system.motion.*;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.vo.CommandeRobot;
 import org.arig.robot.vo.Position;
@@ -36,7 +33,7 @@ public class RobotContext {
     }
 
     @Bean
-    public IAsservissement asservissement() {
+    public IAsservissementPolaire asservissement() {
         AsservissementPolaire asserv = new AsservissementPolaire();
         asserv.setMinFenetreDistance(convertisseur().mmToPulse(1));
         asserv.setMinFenetreOrientation(convertisseur().degToPulse(0.1));

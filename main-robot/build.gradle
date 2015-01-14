@@ -11,3 +11,9 @@ dependencies {
         [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion]
     )
 }
+
+// Tâche de copy des dépendances
+task copyDependencies(type: Copy) {
+    into "$buildDir/dependencies"
+    from configurations.runtime
+}
