@@ -29,6 +29,9 @@ configure(allprojects) {
 		slf4jVersion = '1.7.10'
 		pathFinderVersion = '0.1.2'
 		javaCsvVersion = '2.1'
+
+		// Test dependencies versions
+		junitVersion = '4.12'
 	}
 
 	// Plugin de build
@@ -80,6 +83,7 @@ configure(allprojects) {
 
         testCompile(
             [group: 'org.springframework', name: 'spring-test', version: springVersion],
+			[group: 'junit', name: 'junit', version: junitVersion]
         )
     }	
 	
