@@ -22,12 +22,12 @@ configure(allprojects) {
 		javaTestVersion = javaVersion
 
 		// Dependencies versions
-		lombokVersion = '1.14.8'
-        springVersion = '4.1.4.RELEASE'
-        jacksonVersion = '2.4.4'
+		lombokVersion = '1.16.2'
+        springVersion = '4.1.5.RELEASE'
+        jacksonVersion = '2.5.1'
 
         // Container dependencies
-        jettyVersion = '9.2.6.v20141205'
+        jettyVersion = '9.2.9.v20150224'
 
 		// ARIG dependencies
 		robotSystemLibVersion = '1.1.0-SNAPSHOT'
@@ -213,6 +213,6 @@ configure(rootProject) {
 
 	task wrapper(type: Wrapper) {
 		description = "Generates gradlew[.bat] scripts"
-		gradleVersion = "2.2.1"
+		gradleVersion = "2.3"
 	}
 }
