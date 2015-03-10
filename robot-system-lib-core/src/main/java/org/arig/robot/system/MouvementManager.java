@@ -1,6 +1,8 @@
 package org.arig.robot.system;
 
 import lombok.Getter;
+import org.arig.robot.csv.CsvCollector;
+import org.arig.robot.csv.CsvData;
 import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.IAsservissement;
@@ -20,11 +22,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * 
  * @author mythril
  */
-public class RobotManager implements InitializingBean {
+public class MouvementManager implements InitializingBean {
 
     /** The obstacle detector. */
     @Autowired(required = false)
     private IObstacleDetector obstacleDetector;
+
+    /** Collector CSV */
+    @Autowired(required = false)
+    private CsvCollector csvCollector;
 
     /** The odom. */
     @Autowired
@@ -85,7 +91,7 @@ public class RobotManager implements InitializingBean {
      * @param coefAngle
      *            the coef angle
      */
-    public RobotManager(final double arretDistanceMm, final double arretOrientDeg, final double coefAngle) {
+    public MouvementManager(final double arretDistanceMm, final double arretOrientDeg, final double coefAngle) {
         super();
 
         // On stock les valeurs brut, le calcul sera fait sur le afterPropertiesSet.
@@ -139,6 +145,10 @@ public class RobotManager implements InitializingBean {
      * Process. Cette méthode permet de réaliser les fonctions lié aux déplacements.
      */
     public void process() {
+        if (csvCollector != null) {
+            csvCollector.addNewItem();
+        }
+
         // 1. Calcul de la position du robot
         encoders.lectureValeurs();
         odom.calculPosition();
@@ -207,6 +217,12 @@ public class RobotManager implements InitializingBean {
             if (cmdRobot.isType(TypeConsigne.ANGLE)) {
                 cmdRobot.getConsigne().setOrientation((long) (cmdRobot.getConsigne().getOrientation() - encoders.getOrientation()));
             }
+        }
+
+        if (csvCollector != null) {
+            CsvData c = csvCollector.getCurrent();
+            c.setConsigneDistance(cmdRobot.getConsigne().getDistance());
+            c.setConsigneOrient(cmdRobot.getConsigne().getOrientation());
         }
     }
 
