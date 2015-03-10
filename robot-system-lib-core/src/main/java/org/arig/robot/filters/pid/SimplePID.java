@@ -20,24 +20,16 @@ public class SimplePID implements IPidFilter {
     private double kd;
 
     /** The error sum. */
-    private double errorSum;
+    private double errorSum = 0;
 
     /** The last error. */
-    private double lastError;
+    private double lastError = 0;
 
     /**
      * Instantiates a new arig pid.
      */
     public SimplePID() {
         super();
-
-        kp = 0.8;
-        kd = 0.2;
-        ki = 0.1;
-
-        SimplePID.log.info(String.format("Initialisation des paramètres PID ( Kp = %s ; Ki = %s ; Kd = %s )", kp, ki, kd));
-
-        reset();
     }
 
     /*
@@ -47,7 +39,7 @@ public class SimplePID implements IPidFilter {
      */
     @Override
     public void setTunings(final double kp, final double ki, final double kd) {
-        SimplePID.log.info(String.format("Initialisation des paramètres PID ( Kp = %s ; Ki = %s ; Kd = %s )", kp, ki, kd));
+        SimplePID.log.info(String.format("Configuration des paramètres PID ( Kp = %s ; Ki = %s ; Kd = %s )", kp, ki, kd));
 
         this.kp = kp;
         this.kd = kd;
@@ -79,12 +71,6 @@ public class SimplePID implements IPidFilter {
         errorSum += error;
         lastError = error;
         final double result = kp * error + ki * errorSum + kd * deltaError;
-
-        // TODO : Ajouter un logger spécifique pour les données CSV
-        /*
-         * #ifdef final DEBUG_MODE Serial.print(";");Serial.print(consigne); Serial.print(";");Serial.print(mesure);
-         * Serial.print(";");Serial.print(errorSum); Serial.print(";");Serial.print(result); #endif
-         */
 
         return result;
     }

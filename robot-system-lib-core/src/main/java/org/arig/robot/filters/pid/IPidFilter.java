@@ -7,6 +7,16 @@ package org.arig.robot.filters.pid;
  */
 public interface IPidFilter {
 
+    enum PidMode {
+        AUTOMATIC,
+        MANUEL
+    }
+
+    enum PidType {
+        DIRECT,
+        REVERSE
+    }
+
     /**
      * Sets the tunings.
      * 
