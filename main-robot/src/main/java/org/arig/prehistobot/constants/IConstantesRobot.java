@@ -3,7 +3,13 @@ package org.arig.prehistobot.constants;
 /**
  * Created by gdepuille on 23/12/14.
  */
-public interface ConstantesRobot {
+public interface IConstantesRobot {
+
+    // Configuration asservissement //
+    static final double asservTimeMs = 10;
+
+    // Durée du match //
+    static final int matchTimeMs = 20000;
 
     // ----------------------------- //
     // Configuration des convertions //
@@ -30,4 +36,11 @@ public interface ConstantesRobot {
     static final double kpOrientation = 1.00;
     static final double kiOrientation = 0.10;
     static final double kdOrientation = 1.00;
+
+    // --------------------------- //
+    // Paramètre mouvement manager //
+    // --------------------------- //
+    static final double arretDistanceMm = 1;
+    static final double arretOrientDeg = 1;
+    static final double angleReculDeg = 95;
 }

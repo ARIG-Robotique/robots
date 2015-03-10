@@ -3,7 +3,7 @@ package org.arig.prehistobot.constants;
 /**
  * Created by gdepuille on 21/12/14.
  */
-public interface ConstantesServos {
+public interface IConstantesServos {
 
     static final byte SPEED_BRAS = 25;
     static final byte SPEED_PORTE = 15;

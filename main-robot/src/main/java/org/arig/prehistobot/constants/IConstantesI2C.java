@@ -3,7 +3,7 @@ package org.arig.prehistobot.constants;
 /**
  * Created by mythril on 21/12/13.
  */
-public interface ConstantesI2C {
+public interface IConstantesI2C {
 
     static String SERVO_DEVICE_NAME = "SD21";
     static int SD21_ADDRESS = 0x61;
