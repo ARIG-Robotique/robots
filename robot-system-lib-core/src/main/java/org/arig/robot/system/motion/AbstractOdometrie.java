@@ -2,6 +2,8 @@ package org.arig.robot.system.motion;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.arig.robot.csv.CsvCollector;
+import org.arig.robot.csv.CsvData;
 import org.arig.robot.vo.Position;
 import org.arig.robot.vo.enums.TypeOdometrie;
 import org.springframework.beans.factory.InitializingBean;
@@ -20,6 +22,9 @@ public abstract class AbstractOdometrie implements IOdometrie, InitializingBean 
     @Qualifier("currentPosition")
     @Getter(AccessLevel.PROTECTED)
     private Position position;
+
+    @Autowired(required = false)
+    private CsvCollector csvCollector;
 
     /** The type. */
     @Getter
@@ -64,12 +69,13 @@ public abstract class AbstractOdometrie implements IOdometrie, InitializingBean 
     public void calculPosition() {
         process();
 
-        // TODO : Loggeur CSV
-        /*
-         * #ifdef DEBUG_MODE Serial.print(";");Serial.print(Conv.pulseToMm(position.getX()));
-         * Serial.print(";");Serial.print(Conv.pulseToMm(position.getY())); Serial.print(";");Serial.print((double)
-         * Conv.pulseToDeg(position.getAngle())); #endif
-         */
+        if (csvCollector != null) {
+            CsvData c = csvCollector.getCurrent();
+            c.setX(getPosition().getPt().getX());
+            c.setY(getPosition().getPt().getY());
+            c.setAngle(getPosition().getAngle());
+            c.setTypeOdometrie(type.name());
+        }
     }
 
     /**

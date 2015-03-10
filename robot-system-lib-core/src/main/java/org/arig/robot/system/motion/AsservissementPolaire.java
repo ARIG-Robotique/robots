@@ -1,6 +1,8 @@
 package org.arig.robot.system.motion;
 
 import lombok.Setter;
+import org.arig.robot.csv.CsvCollector;
+import org.arig.robot.csv.CsvData;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.IRampFilter;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
@@ -14,6 +16,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * @author mythril
  */
 public class AsservissementPolaire implements IAsservissementPolaire {
+
+    @Autowired(required = false)
+    private CsvCollector csvCollector;
 
     /** The commande robot. */
     @Autowired
@@ -115,6 +120,16 @@ public class AsservissementPolaire implements IAsservissementPolaire {
         // Consigne moteurs
         cmdRobot.getMoteur().setDroit((int) (outputDistance + outputOrientation));
         cmdRobot.getMoteur().setGauche((int) (outputDistance - outputOrientation));
+
+        if (csvCollector != null) {
+            CsvData c = csvCollector.getCurrent();
+            c.setSetPointDistance(setPointDistance);
+            c.setSetPointOrient(setPointOrientation);
+            c.setOutputPidDistance(outputDistance);
+            c.setOutputPidOrient(outputOrientation);
+            c.setCmdMoteurGauche(cmdRobot.getMoteur().getGauche());
+            c.setCmdMoteurDroit(cmdRobot.getMoteur().getDroit());
+        }
     }
 
     /**
