@@ -38,7 +38,9 @@ public class ArigLMD18200Motors extends AbstractMotors {
         }
         prevM1 = cmd;
 
-        ArigLMD18200Motors.log.info(String.format("Commande du moteur 1 : %s", cmd));
+        if (log.isDebugEnabled()) {
+            ArigLMD18200Motors.log.debug(String.format("Commande du moteur 1 : %s", cmd));
+        }
         // TODO : Implementation de la commande
     }
 
@@ -55,7 +57,9 @@ public class ArigLMD18200Motors extends AbstractMotors {
         }
         prevM2 = cmd;
 
-        ArigLMD18200Motors.log.info(String.format("Commande du moteur 2 : %s", cmd));
+        if (log.isDebugEnabled()) {
+            ArigLMD18200Motors.log.debug(String.format("Commande du moteur 2 : %s", cmd));
+        }
         // TODO : Implémentation de la commande
     }
 
@@ -72,7 +76,9 @@ public class ArigLMD18200Motors extends AbstractMotors {
         }
         prevM3 = cmd;
 
-        ArigLMD18200Motors.log.info(String.format("Commande du moteur 3 : %s", cmd));
+        if (log.isDebugEnabled()) {
+            ArigLMD18200Motors.log.debug(String.format("Commande du moteur 3 : %s", cmd));
+        }
         // TODO : Implémentation de la commande
     }
 
@@ -89,7 +95,9 @@ public class ArigLMD18200Motors extends AbstractMotors {
         }
         prevM4 = cmd;
 
-        ArigLMD18200Motors.log.info(String.format("Commande du moteur 4 : %s", cmd));
+        if (log.isDebugEnabled()) {
+            ArigLMD18200Motors.log.debug(String.format("Commande du moteur 4 : %s", cmd));
+        }
         // TODO : Implémentation de la commande
     }
 

@@ -150,7 +150,9 @@ public class MD22Motors extends AbstractMotors {
         }
         prevM1 = cmd;
 
-        MD22Motors.log.info(String.format("Commande du moteur 1 : %s", cmd));
+        if (log.isDebugEnabled()) {
+            MD22Motors.log.debug(String.format("Commande du moteur 1 : %s", cmd));
+        }
         try {
             i2cManager.sendData(deviceName, MD22Motors.MOTOR1_REGISTER, cmd);
         } catch (I2CException e) {
@@ -171,7 +173,9 @@ public class MD22Motors extends AbstractMotors {
         }
         prevM2 = cmd;
 
-        MD22Motors.log.info(String.format("Commande du moteur 2 : %s", cmd));
+        if (log.isDebugEnabled()) {
+            MD22Motors.log.debug(String.format("Commande du moteur 2 : %s", cmd));
+        }
         try {
             i2cManager.sendData(deviceName, MD22Motors.MOTOR2_REGISTER, cmd);
         } catch (I2CException e) {
