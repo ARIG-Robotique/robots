@@ -1,8 +1,8 @@
-package org.arig.prehistobot.web;
+package org.arig.prehistobot.web.controller;
 
 import com.google.common.base.Function;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.prehistobot.model.Capteur;
+import org.arig.prehistobot.web.model.CapteurNumerique;
 import org.arig.robot.system.capteurs.AbstractBoard2007NoMux;
 import org.arig.robot.system.capteurs.RaspiBoard2007NoMux;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +27,14 @@ public class CapteurController {
     private RaspiBoard2007NoMux dic;
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Capteur> listAll() {
-        List<Capteur> capteurList = new ArrayList<>();
+    public List<CapteurNumerique> listAll() {
+        List<CapteurNumerique> capteurList = new ArrayList<>();
         for (Integer capteurId : dic.getIds()) {
             AbstractBoard2007NoMux.CapteursDefinition cd = dic.getDefinitionById(capteurId);
-            capteurList.add(new Function<AbstractBoard2007NoMux.CapteursDefinition, Capteur> () {
+            capteurList.add(new Function<AbstractBoard2007NoMux.CapteursDefinition, CapteurNumerique> () {
                 @Override
-                public Capteur apply(AbstractBoard2007NoMux.CapteursDefinition input) {
-                    return new Capteur(input.getId(), String.format("%s (%s)", input.name(), input.getDescription()), dic.readCapteurValue(input.getId()));
+                public CapteurNumerique apply(AbstractBoard2007NoMux.CapteursDefinition input) {
+                    return new CapteurNumerique(input.getId(), String.format("%s (%s)", input.name(), input.getDescription()), dic.readCapteurValue(input.getId()));
                 }
             }.apply(cd));
         }

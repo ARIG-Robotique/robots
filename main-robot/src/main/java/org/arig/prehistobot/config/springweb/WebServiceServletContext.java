@@ -14,11 +14,5 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 @EnableWebMvc
 @ComponentScan({"org.arig.prehistobot.web"})
-public class WebServletContext extends WebMvcConfigurerAdapter {
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Ajout du mapping pour servir l'application Dart
-        registry.addResourceHandler("/app/**").addResourceLocations("classpath:/static/");
-    }
+public class WebServiceServletContext extends WebMvcConfigurerAdapter {
 }

@@ -1,6 +1,8 @@
 package org.arig.prehistobot.scheduler;
 
-import org.arig.robot.system.RobotManager;
+import org.arig.prehistobot.constants.IConstantesRobot;
+import org.arig.prehistobot.model.RobotStatus;
+import org.arig.robot.system.MouvementManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,10 +16,15 @@ import org.springframework.stereotype.Component;
 public class Schedulers {
 
     @Autowired
-    private RobotManager rm;
+    private RobotStatus rs;
 
-    @Scheduled(fixedRate = 10)
+    @Autowired
+    private MouvementManager mouvementManager;
+
+    @Scheduled(fixedRate = (long) IConstantesRobot.asservTimeMs)
     public void robotManagerTask() {
-        rm.process();
+        if (rs.isAsservEnabled()) {
+            mouvementManager.process();
+        }
     }
 }

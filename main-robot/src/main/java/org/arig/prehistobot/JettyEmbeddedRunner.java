@@ -25,7 +25,7 @@ public class JettyEmbeddedRunner {
     private Server srv;
 
     public void config() throws Exception {
-        log.info("Configuration du Jetty embedded ...");
+        log.info("Configuration de Jetty ...");
 
         final int port = 8080;
 
@@ -55,7 +55,7 @@ public class JettyEmbeddedRunner {
         httpConnector.setIdleTimeout(30000);
         srv.addConnector(httpConnector);
 
-        // Application webapp
+        // Configuration du bootstrap de l'application servlet 3.x
         final AnnotationConfiguration myConfig = new AnnotationConfiguration() {
 
             @Override
@@ -80,12 +80,23 @@ public class JettyEmbeddedRunner {
         srv.setHandler(webAppCtx);
 
         // Start Jetty
+        log.info("Demarrage de Jetty ...");
         srv.start();
     }
 
     public void join() throws Exception {
         Assert.notNull(srv, "La configuration du serveur doit être réalisé avant.");
 
+        // Association au Pool de Threads
+        log.info("Association au pool de thread principal");
         srv.join();
+    }
+
+    public void stop() throws Exception {
+        Assert.notNull(srv, "La configuration du serveur doit être réalisé avant.");
+
+        if (srv.isRunning()) {
+            srv.stop();
+        }
     }
 }

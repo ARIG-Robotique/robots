@@ -1,4 +1,4 @@
-package org.arig.prehistobot.web;
+package org.arig.prehistobot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;

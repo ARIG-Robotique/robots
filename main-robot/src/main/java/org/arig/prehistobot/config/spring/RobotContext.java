@@ -1,18 +1,23 @@
 package org.arig.prehistobot.config.spring;
 
-import org.arig.prehistobot.constants.ConstantesRobot;
+import org.arig.prehistobot.Ordonanceur;
+import org.arig.prehistobot.constants.IConstantesRobot;
+import org.arig.prehistobot.model.RobotStatus;
+import org.arig.robot.csv.CsvCollector;
+import org.arig.robot.filters.pid.CompletePID;
 import org.arig.robot.filters.pid.IPidFilter;
-import org.arig.robot.filters.pid.SimplePID;
 import org.arig.robot.filters.ramp.IRampFilter;
 import org.arig.robot.filters.ramp.Ramp;
-import org.arig.robot.system.RobotManager;
-import org.arig.robot.system.motion.*;
+import org.arig.robot.system.MouvementManager;
+import org.arig.robot.system.motion.AsservissementPolaire;
+import org.arig.robot.system.motion.IAsservissementPolaire;
+import org.arig.robot.system.motion.IOdometrie;
+import org.arig.robot.system.motion.OdometrieLineaire;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.vo.CommandeRobot;
 import org.arig.robot.vo.Position;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 
 /**
@@ -24,19 +29,19 @@ public class RobotContext {
 
     @Bean
     public ConvertionRobotUnit convertisseur() {
-        return new ConvertionRobotUnit(ConstantesRobot.countPerMm, ConstantesRobot.countPerDeg);
+        return new ConvertionRobotUnit(IConstantesRobot.countPerMm, IConstantesRobot.countPerDeg);
     }
 
     @Bean
-    public RobotManager robotManager() {
-        return new RobotManager(1, 1, 95);
+    public MouvementManager mouvementManager() {
+        return new MouvementManager(IConstantesRobot.arretDistanceMm, IConstantesRobot.arretOrientDeg, IConstantesRobot.angleReculDeg);
     }
 
     @Bean
-    public IAsservissementPolaire asservissement() {
+    public IAsservissementPolaire asservissement(ConvertionRobotUnit convertisseur) {
         AsservissementPolaire asserv = new AsservissementPolaire();
-        asserv.setMinFenetreDistance(convertisseur().mmToPulse(1));
-        asserv.setMinFenetreOrientation(convertisseur().degToPulse(0.1));
+        asserv.setMinFenetreDistance(convertisseur.mmToPulse(1));
+        asserv.setMinFenetreOrientation(convertisseur.degToPulse(0.1));
         return asserv;
     }
 
@@ -57,25 +62,44 @@ public class RobotContext {
 
     @Bean(name = "pidDistance")
     public IPidFilter pidDistance() {
-        SimplePID pid = new SimplePID();
-        pid.setTunings(ConstantesRobot.kpDistance, ConstantesRobot.kiDistance, ConstantesRobot.kdDistance);
+        CompletePID pid = new CompletePID();
+        pid.setSampleTime((int) IConstantesRobot.asservTimeMs);
+        pid.setTunings(IConstantesRobot.kpDistance, IConstantesRobot.kiDistance, IConstantesRobot.kdDistance);
+        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
         return pid;
     }
 
     @Bean(name = "pidOrientation")
     public IPidFilter pidOrientation() {
-        SimplePID pid = new SimplePID();
-        pid.setTunings(ConstantesRobot.kpOrientation, ConstantesRobot.kiOrientation, ConstantesRobot.kdOrientation);
+        CompletePID pid = new CompletePID();
+        pid.setSampleTime((int) IConstantesRobot.asservTimeMs);
+        pid.setTunings(IConstantesRobot.kpOrientation, IConstantesRobot.kiOrientation, IConstantesRobot.kdOrientation);
+        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
         return pid;
     }
 
     @Bean(name = "rampDistance")
     public IRampFilter rampDistance() {
-        return new Ramp(10, ConstantesRobot.rampAccDistance, ConstantesRobot.rampDecDistance);
+        return new Ramp(IConstantesRobot.asservTimeMs, IConstantesRobot.rampAccDistance, IConstantesRobot.rampDecDistance);
     }
 
     @Bean(name = "rampOrientation")
     public IRampFilter rampOrientation() {
-        return new Ramp(10, ConstantesRobot.rampAccOrientation, ConstantesRobot.rampDecOrientation);
+        return new Ramp(IConstantesRobot.asservTimeMs, IConstantesRobot.rampAccOrientation, IConstantesRobot.rampDecOrientation);
+    }
+
+    @Bean
+    public RobotStatus robotStatus() {
+        return new RobotStatus();
+    }
+
+    @Bean
+    public Ordonanceur ordonenceur() {
+        return Ordonanceur.getInstance();
+    }
+
+    @Bean
+    public CsvCollector csvCollector() {
+        return new CsvCollector();
     }
 }

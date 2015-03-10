@@ -1,4 +1,4 @@
-package org.arig.prehistobot.model;
+package org.arig.prehistobot.web.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Capteur {
+public class CapteurNumerique {
 
     private Integer id;
 
