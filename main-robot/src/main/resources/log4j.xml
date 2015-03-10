@@ -39,7 +39,7 @@
 	<!-- Root Logger -->
 	<!-- *********** -->
 	<root>
-		<level value="INFO" />
+		<level value="WARN" />
 		<appender-ref ref="AsyncFile" />
 		<appender-ref ref="AsyncConsole" />
 	</root>
