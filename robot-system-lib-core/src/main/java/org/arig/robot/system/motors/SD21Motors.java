@@ -27,6 +27,8 @@ public class SD21Motors extends AbstractMotors {
      * Instantiates a new s d21 motors.
      */
     public SD21Motors(final byte motor1Register, final byte motor2Register) {
+        super();
+
         this.motor1Register = motor1Register;
         this.motor2Register = motor2Register;
 
@@ -47,6 +49,8 @@ public class SD21Motors extends AbstractMotors {
     @Override
     public void init() {
         stopAll();
+        sd21.setSpeed(motor1Register, (byte) 0);
+        sd21.setSpeed(motor2Register, (byte) 0);
     }
 
     /*

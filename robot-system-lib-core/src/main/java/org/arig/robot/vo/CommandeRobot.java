@@ -42,7 +42,7 @@ public class CommandeRobot {
     public CommandeRobot() {
         position = new Position();
         moteur = new CommandeMoteurPropulsion2Roue();
-        vitesse = new VitesseAsservissementPolaire(100, 100);
+        vitesse = new VitesseAsservissementPolaire(50, 50);
         consigne = new ConsigneAsservissementPolaire();
         frein = true;
         setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);

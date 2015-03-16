@@ -15,8 +15,6 @@ import java.util.Date;
 @Slf4j
 public class CompletePID implements IPidFilter {
 
-    private long lastTime;
-
     @Getter
     @Setter(AccessLevel.PRIVATE)
     private double input, output, setPoint;
@@ -36,6 +34,8 @@ public class CompletePID implements IPidFilter {
 
     public CompletePID() {
         super();
+        outMax = Double.MAX_VALUE;
+        outMin = Double.MIN_VALUE;
     }
 
     public void setMode(PidMode mode) {
@@ -88,25 +88,21 @@ public class CompletePID implements IPidFilter {
             return output;
         }
 
-        long now = new Date().getTime();
-        long timeChange = (now - lastTime);
-        if(timeChange >= sampleTime) {
-            /* Compute all the working error variables */
-            double error = setPoint - input;
-            iTerm += (ki * error);
-            if(iTerm > outMax) iTerm = outMax;
-            else if(iTerm < outMin) iTerm = outMin;
-            double dInput = (input - lastInput);
+        /* Compute all the working error variables */
+        double error = setPoint - input;
+        iTerm += (ki * error);
+        if(iTerm > outMax) iTerm = outMax;
+        else if(iTerm < outMin) iTerm = outMin;
+        double dInput = (input - lastInput);
 
-            /* Compute PID output */
-            output = kp * error + iTerm - kd * dInput;
-            if(output > outMax) output = outMax;
-            else if(output < outMin) output = outMin;
+        /* Compute PID output */
+        output = kp * error + iTerm - kd * dInput;
+        if(output > outMax) output = outMax;
+        else if(output < outMin) output = outMin;
 
-            /* Remember some variables for next time */
-            lastInput = input;
-            lastTime = now;
-        }
+        /* Remember some variables for next time */
+        lastInput = input;
+
         return output;
     }
 

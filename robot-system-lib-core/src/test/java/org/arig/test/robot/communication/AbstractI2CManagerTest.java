@@ -27,29 +27,7 @@ public class AbstractI2CManagerTest {
      */
     @BeforeClass
     public static void initClass() {
-        AbstractI2CManagerTest.impl = new AbstractI2CManager<Byte>() {
-
-            @Override
-            protected void scan() throws I2CException {
-                AbstractI2CManagerTest.log.info("Dummy scan !");
-            }
-
-            @Override
-            public void sendData(String deviceName, byte... datas) {}
-
-            @Override
-            public void sendData(String deviceName, int nbResult, byte... datas) {}
-
-            @Override
-            public byte getData(String deviceName) {
-                return 127;
-            }
-
-            @Override
-            public byte[] getDatas(String deviceName, int size) {
-                return new byte[] {12, 32, 45};
-            }
-        };
+        AbstractI2CManagerTest.impl = new DummyI2CManager();
     }
 
     /**
