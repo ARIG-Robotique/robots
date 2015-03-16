@@ -8,7 +8,8 @@ dependencies {
         [group: 'org.eclipse.jetty', name: 'jetty-annotations', version: jettyVersion],
         [group: 'org.springframework', name: 'spring-webmvc', version: springVersion],
         [group: 'org.arig.robot', name: 'robot-system-lib-raspi', version: robotSystemLibVersion],
-        [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion]
+        [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion],
+        [group: 'com.pi4j', name: 'pi4j-gpio-extension', version: pi4jVersion]
     )
 }
 
