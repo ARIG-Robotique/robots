@@ -11,6 +11,7 @@ import org.arig.robot.communication.II2CManager;
 import org.arig.robot.csv.CsvCollector;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.system.MouvementManager;
+import org.arig.robot.system.motors.AbstractMotors;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,6 +34,9 @@ public class Ordonanceur {
 
     @Autowired
     private SD21Servos servos;
+
+    @Autowired
+    private AbstractMotors motors;
 
     @Autowired
     private MouvementManager mouvementManager;
@@ -76,6 +80,43 @@ public class Ordonanceur {
         log.info("!!! ... ATTENTE TIRRETTE ... !!!");
         Scanner sc = new Scanner(System.in);
         while(!sc.nextLine().equalsIgnoreCase("start"));
+
+        try {
+            log.info("Test servos");
+            servos.setPosition(IConstantesServos.SERVO_BRAS_DROIT, IConstantesServos.BRAS_DROIT_CDX_HAUT);
+            servos.setPosition(IConstantesServos.SERVO_BRAS_GAUCHE, IConstantesServos.BRAS_GAUCHE_CDX_HAUT);
+            servos.setPosition(IConstantesServos.SERVO_PORTE_DROITE, IConstantesServos.PORTE_DROITE_OPEN);
+            servos.setPosition(IConstantesServos.SERVO_PORTE_GAUCHE, IConstantesServos.PORTE_GAUCHE_OPEN);
+            Thread.sleep(2000);
+            servos.setPosition(IConstantesServos.SERVO_PORTE_DROITE, IConstantesServos.PORTE_DROITE_INTERM);
+            servos.setPosition(IConstantesServos.SERVO_PORTE_GAUCHE, IConstantesServos.PORTE_GAUCHE_INTERM);
+            Thread.sleep(2000);
+            servos.setPositionAndSpeed(IConstantesServos.SERVO_BRAS_DROIT, IConstantesServos.BRAS_DROIT_HOME, IConstantesServos.SPEED_BRAS);
+            servos.setPositionAndSpeed(IConstantesServos.SERVO_BRAS_GAUCHE, IConstantesServos.BRAS_GAUCHE_HOME, IConstantesServos.SPEED_BRAS);
+            servos.setPositionAndSpeed(IConstantesServos.SERVO_PORTE_DROITE, IConstantesServos.PORTE_DROITE_CLOSE, IConstantesServos.SPEED_PORTE);
+            servos.setPositionAndSpeed(IConstantesServos.SERVO_PORTE_GAUCHE, IConstantesServos.PORTE_GAUCHE_CLOSE, IConstantesServos.SPEED_PORTE);
+            Thread.sleep(1000);
+
+            log.info("Test moteur droit");
+            motors.moteurDroit(100);
+            Thread.sleep(1000);
+            motors.stopDroit();
+            Thread.sleep(1000);
+            motors.moteurDroit(-100);
+            Thread.sleep(1000);
+            motors.stopDroit();
+
+            log.info("Test moteurs gauche");
+            motors.moteurGauche(100);
+            Thread.sleep(1000);
+            motors.stopGauche();
+            Thread.sleep(1000);
+            motors.moteurGauche(-100);
+            Thread.sleep(1000);
+            motors.stopGauche();
+        } catch (Exception e) {
+            log.info("Erreur d'attente", e);
+        }
 
         log.info("Démarrage du match");
         mouvementManager.resetEncodeurs();
