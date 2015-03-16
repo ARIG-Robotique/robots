@@ -1,7 +1,7 @@
 package org.arig.prehistobot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.system.motors.MD22Motors;
+import org.arig.robot.system.motors.AbstractMotors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,17 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class MotorsController {
 
     @Autowired
-    private MD22Motors md22Motors;
+    private AbstractMotors motors;
 
     @RequestMapping("/droit")
     public void setMotorDroit(@RequestParam(required = true) final Integer speed) {
         log.info("Modification de la vitesse du moteur droit : " + speed);
-        md22Motors.moteurDroit(speed);
+        motors.moteurDroit(speed);
     }
 
     @RequestMapping("/gauche")
     public void setMotorGauche(@RequestParam(required = true) final Integer speed) {
         log.info("Modification de la vitesse du moteur gauche : " + speed);
-        md22Motors.moteurGauche(speed);
+        motors.moteurGauche(speed);
     }
 }
