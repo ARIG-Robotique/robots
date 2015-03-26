@@ -35,7 +35,7 @@ public class CompletePID implements IPidFilter {
     public CompletePID() {
         super();
         outMax = Double.MAX_VALUE;
-        outMin = Double.MIN_VALUE;
+        outMin = -Double.MAX_VALUE;
     }
 
     public void setMode(PidMode mode) {
