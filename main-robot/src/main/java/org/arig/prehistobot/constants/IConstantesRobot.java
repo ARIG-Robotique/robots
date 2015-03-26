@@ -29,7 +29,7 @@ public interface IConstantesRobot {
     // -------------- //
     // Parametres PID //
     // -------------- //
-    /*
+
     static final double kpDistance = 0.30;
     static final double kiDistance = 0.20;
     static final double kdDistance = 0.90;
@@ -37,8 +37,8 @@ public interface IConstantesRobot {
     static final double kpOrientation = 1.00;
     static final double kiOrientation = 0.10;
     static final double kdOrientation = 1.00;
-    */
 
+    /*
     static final double kpDistance = 0.5;
     static final double kiDistance = 0.0;
     static final double kdDistance = 0.0;
@@ -46,7 +46,7 @@ public interface IConstantesRobot {
     static final double kpOrientation = 0.5;
     static final double kiOrientation = 0.0;
     static final double kdOrientation = 0.0;
-
+    */
 
     // --------------------------- //
     // Paramètre mouvement manager //
