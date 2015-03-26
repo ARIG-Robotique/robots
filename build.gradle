@@ -32,6 +32,7 @@ configure(allprojects) {
 
 		// Test dependencies versions
 		junitVersion = '4.12'
+		mockitoVersion = '1.10.19'
 	}
 
 	// Plugin de build
@@ -84,7 +85,8 @@ configure(allprojects) {
 
         testCompile(
             [group: 'org.springframework', name: 'spring-test', version: springVersion],
-			[group: 'junit', name: 'junit', version: junitVersion]
+			[group: 'junit', name: 'junit', version: junitVersion],
+			[group: 'org.mockito', name: 'mockito-core', version: mockitoVersion]
         )
     }	
 	
