@@ -12,7 +12,7 @@ public class RampTestContext {
 
     @Bean
     public ConvertionRobotUnit convertisseur() {
-        return new ConvertionRobotUnit(1, 1);
+        return new ConvertionRobotUnit(10, 10);
     }
 
     @Bean

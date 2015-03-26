@@ -65,7 +65,30 @@ public class CompletePidTest {
         writer.writeRecord(new String[] {"consigne", "input", "output"});
 
         CompletePID pid = getPid();
-        pid.setTunings(1, 0.5, 0);
+        pid.setTunings(1, 1, 0);
+
+        double consigne = 100;
+        double input = 0, output = 0;
+        for (int i = 0 ; i < 100 ; i++) {
+            if (i > 10) {
+                input = (i * consigne) / 100;
+            }
+            output = pid.compute(consigne, input);
+            log.info("Test P : consigne {}, input {}, output {}", consigne, input, output);
+            writer.writeRecord(new String[] {String.valueOf(consigne), String.valueOf(input), String.valueOf(output)});
+        }
+        writer.flush();
+        writer.close();
+    }
+
+    @Test
+    public void testPID() throws Exception {
+        File outputFile = new File(rootCsvDir, "complete-pid-PID.csv");
+        CsvWriter writer = new CsvWriter(new OutputStreamWriter(new FileOutputStream(outputFile, false), "UTF-8"), ';');
+        writer.writeRecord(new String[] {"consigne", "input", "output"});
+
+        CompletePID pid = getPid();
+        pid.setTunings(1, 1, 1);
 
         double consigne = 100;
         double input = 0, output = 0;
@@ -88,6 +111,7 @@ public class CompletePidTest {
         pid.setSampleTime(1);
         pid.reset();
         pid.initialise();
+
 
         return pid;
     }

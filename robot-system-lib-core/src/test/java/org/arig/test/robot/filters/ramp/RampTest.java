@@ -48,13 +48,16 @@ public class RampTest {
 
         double vitesse = 100;
         double output;
-        for (int i = 200 ; i >= -10 ; i--) {
+        for (int i = 200 ; i >= -200 ; i--) {
             if(i == 100) {
                 vitesse = 150;
             }
+            if (i == -100) {
+                vitesse = 100;
+            }
             output = filter.filter(vitesse, i, 0, true);
             log.info("Vitesse {}, consigne {}, output {}", vitesse, i, output);
-            writer.writeRecord(new String[]{String.valueOf(vitesse), String.valueOf(i), String.valueOf(output)});
+            writer.writeRecord(new String[]{String.valueOf(vitesse / 10), String.valueOf(i / 10), String.valueOf(output)});
         }
         writer.flush();
         writer.close();
