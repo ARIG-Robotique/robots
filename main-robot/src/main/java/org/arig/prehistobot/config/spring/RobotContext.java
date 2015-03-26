@@ -69,7 +69,6 @@ public class RobotContext {
         pid.setSampleTime((int) IConstantesRobot.asservTimeMs);
         pid.setTunings(IConstantesRobot.kpDistance, IConstantesRobot.kiDistance, IConstantesRobot.kdDistance);
         pid.setMode(IPidFilter.PidMode.AUTOMATIC);
-        pid.setOutputLimits(Double.MIN_VALUE, Double.MAX_VALUE);
         return pid;
     }
 
@@ -80,7 +79,6 @@ public class RobotContext {
         pid.setSampleTime((int) IConstantesRobot.asservTimeMs);
         pid.setTunings(IConstantesRobot.kpOrientation, IConstantesRobot.kiOrientation, IConstantesRobot.kdOrientation);
         pid.setMode(IPidFilter.PidMode.AUTOMATIC);
-        pid.setOutputLimits(Double.MIN_VALUE, Double.MAX_VALUE);
         return pid;
     }
 
