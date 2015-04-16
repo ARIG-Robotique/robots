@@ -1,4 +1,1 @@
-rootProject.name = "prehistobot"
-
-include "main-robot-gui"
-include "main-robot"
+rootProject.name = "nerell"

@@ -1,6 +1,5 @@
 // Configuration pour le build
 buildscript {
-
 	repositories {
         mavenLocal()
         mavenCentral()
@@ -10,211 +9,163 @@ buildscript {
 	}
 }
 
-// Configuration de tous les projets
-configure(allprojects) {
-	group = 'org.arig.robot'
-	version = '1.0.0-SNAPSHOT'
-	
-	// Variable de configuration
-	ext {
-		// Project dependencies
-		javaVersion = '1.8'
-		javaTestVersion = javaVersion
+// Configuration des repository de dépendences
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "http://repo.opengeo.org/" }
+    maven { url "https://oss.sonatype.org/content/groups/public" }
+}
 
-		// Dependencies versions
-		lombokVersion = '1.16.2'
-        springVersion = '4.1.5.RELEASE'
-        jacksonVersion = '2.5.1'
-        pi4jVersion = '1.0-SNAPSHOT'
+// Configuration général
+description = "ARIG Association - Eurobot Nerell"
+group = 'org.arig.robot'
+version = '1.0.0-SNAPSHOT'
 
-        // Container dependencies
-        jettyVersion = '9.2.9.v20150224'
+// Variable de configuration
+ext {
+    // Project dependencies
+    javaVersion = '1.8'
+    javaTestVersion = javaVersion
 
-		// ARIG dependencies
-		robotSystemLibVersion = '1.1.0-SNAPSHOT'
+    // Dependencies versions
+    lombokVersion = '1.16.2'
+    springVersion = '4.1.6.RELEASE'
+    jacksonVersion = '2.5.1'
+    pi4jVersion = '1.0-SNAPSHOT'
 
-		// Test dependencies versions
-		junitVersion = '4.12'
-	}
+    // Container dependencies
+    jettyVersion = '9.2.9.v20150224'
 
-	// Plugin de build
-	apply plugin: 'java'
-	apply plugin: 'maven'
-	
-	// Plugin pour les IDE
-    apply plugin: 'idea'
-	
-	// Définition de configurations supplémentaire (non standard)
-	configurations {
-        provided
+    // ARIG dependencies
+    robotSystemLibVersion = '1.1.0-SNAPSHOT'
+
+    // Test dependencies versions
+    junitVersion = '4.12'
+}
+
+// Plugin de build
+apply plugin: 'java'
+apply plugin: 'maven'
+
+// Plugin pour les IDE
+apply plugin: 'idea'
+
+// Définition de configurations supplémentaire (non standard)
+configurations {
+    provided
+}
+
+// Version pour la compilation
+compileJava {
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+}
+
+compileTestJava {
+    sourceCompatibility = javaTestVersion
+    targetCompatibility = javaTestVersion
+}
+
+// Classpath de compilation
+sourceSets {
+    main {
+        compileClasspath += configurations.provided
     }
-	
-	// Version pour la compilation
-	compileJava {
-		sourceCompatibility = javaVersion
-		targetCompatibility = javaVersion
-	}
-
-	compileTestJava {
-		sourceCompatibility = javaTestVersion
-		targetCompatibility = javaTestVersion
-	}	
-	
-	// Classpath de compilation
-	sourceSets {
-        main {
-            compileClasspath += configurations.provided
-        }
-        test {
-            compileClasspath += configurations.provided
-            runtimeClasspath += configurations.provided
-        }
-    }
-	
-	// Configuration des repository de dépendences
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven { url "http://repo.opengeo.org/" }
-        maven { url "https://oss.sonatype.org/content/groups/public" }
-    }
-
-	// Intégration avec IntellijIDEA
-	idea {
-        project {
-            // Java configuration
-            //jdkName = javaVersion
-            //languageLevel = javaVersion
-
-            // Gestionnaire de source
-            //vcs = 'Git'
-        }
-
-        module {
-            downloadJavadoc = true
-            downloadSources = true
-
-            scopes.PROVIDED.plus += [configurations.provided]
-        }
+    test {
+        compileClasspath += configurations.provided
+        runtimeClasspath += configurations.provided
     }
 }
 
-// Configuration communes des sous projets Java
-configure(subprojects.findAll { it.name.indexOf("-gui") == -1 }) { subproject ->
-	// Configuration de la construction des Jars
-	jar {
-		manifest.attributes["Implementation-Title"] = subproject.name
-		manifest.attributes["Implementation-Version"] = subproject.version
-		manifest.attributes["Created-By"] = "Gradle " + gradle.gradleVersion
-		manifest.attributes["Build-Jdk"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
-        manifest.attributes["Main-Class"] = "org.arig.prehistobot.RobotApplication"
-	}
-	
-	// Configuration pour la Javadoc
-	javadoc {
-		classpath = project.sourceSets.main.compileClasspath + configurations.provided
-	
-		options {
-			memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
-			author = true
-			header = project.name
-		}
-	}
+// Intégration avec IntellijIDEA
+idea {
+    project {
+        // Java configuration
+        //jdkName = javaVersion
+        //languageLevel = javaVersion
 
-	// Construction du jar de source
-	task sourcesJar(type: Jar, dependsOn:classes) {
-		classifier = "sources"
-		from sourceSets.main.allJava.srcDirs
-		include "**/*.java"
-	}
-	
-	// Construction du jar de javadoc
-	task javadocJar(type: Jar) {
-		classifier = "javadoc"
-		from javadoc
-	}
-	
-	// Liste des artéfact
-	artifacts {
-		archives sourcesJar
-		archives javadocJar
-	}
+        // Gestionnaire de source
+        //vcs = 'Git'
+    }
 
-    // Dependence commune pour tous les projets java
-    dependencies {
-        provided(
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+
+        scopes.PROVIDED.plus += [configurations.provided]
+    }
+}
+
+// Configuration de la construction des Jars
+jar {
+    manifest.attributes["Implementation-Title"] = project.name
+    manifest.attributes["Implementation-Version"] = project.version
+    manifest.attributes["Created-By"] = "Gradle " + gradle.gradleVersion
+    manifest.attributes["Build-Jdk"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
+    manifest.attributes["Main-Class"] = "org.arig.eurobot.RobotApplication"
+}
+
+// Configuration pour la Javadoc
+javadoc {
+    classpath = project.sourceSets.main.compileClasspath + configurations.provided
+
+    options {
+        memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+        author = true
+        header = project.name
+    }
+}
+
+// Dependence commune pour tous les projets java
+dependencies {
+    provided(
             [group: 'org.projectlombok', name: 'lombok', version: lombokVersion]
-        )
+    )
 
-        testCompile(
+    compile(
+            [group: 'org.eclipse.jetty', name: 'jetty-server', version: jettyVersion],
+            [group: 'org.eclipse.jetty', name: 'jetty-webapp', version: jettyVersion],
+            [group: 'org.eclipse.jetty', name: 'jetty-annotations', version: jettyVersion],
+            [group: 'org.springframework', name: 'spring-webmvc', version: springVersion],
+            [group: 'org.arig.robot', name: 'robot-system-lib-raspi', version: robotSystemLibVersion],
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion],
+            [group: 'com.pi4j', name: 'pi4j-gpio-extension', version: pi4jVersion]
+    )
+
+    testCompile(
             [group: 'org.springframework', name: 'spring-test', version: springVersion],
             [group: 'junit', name: 'junit', version: junitVersion]
-        )
-    }
+    )
 }
 
-// Configuration communes des sous projets GUI (Dart)
-configure(subprojects.findAll { it.name.indexOf("-gui") != -1 }) { subproject ->
-    jar {
-        manifest.attributes["Implementation-Title"] = subproject.name
-        manifest.attributes["Implementation-Version"] = subproject.version
-        manifest.attributes["Created-By"] = "Gradle " + gradle.gradleVersion
-        manifest.attributes["Build-Dart"] = ""
-        manifest.attributes["Build-Jdk"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
-
-        from 'build/web'
-        eachFile { details ->
-            details.path = details.path.startsWith('META-INF') ?: 'static/' + details.path
-        }
-        // Jar contains duplicate empty folders, see Gradle issue:
-        // http://issues.gradle.org/browse/GRADLE-1830
-        // so we need to set includeEmptyDirs to false
-        includeEmptyDirs = false
-    }
-
-    task pubVersion(type: Exec) {
-        String osName = System.getProperty("os.name").toLowerCase()
-        if (osName.contains("windows")) {
-            commandLine 'cmd', '/c', 'pub', 'version'
-        } else {
-            commandLine 'pub', 'version'
-        }
-
-        standardOutput = new ByteArrayOutputStream()
-        ext.output = {
-            return standardOutput.toString()
-        }
-    }
-
-    task pubClean(type: Delete) {
-        delete 'build'
-    }
-
-    // We build in debug mode in order to have .dart files copied to build directory by pub
-    task pubBuild(type: Exec, dependsOn: pubVersion) {
-        String osName = System.getProperty("os.name").toLowerCase()
-        if (osName.contains("windows")) {
-            commandLine 'cmd', '/c', 'pub', 'get'
-            commandLine 'cmd', '/c', 'pub', 'build', '--mode=debug'
-        } else {
-            commandLine 'pub', 'get'
-            commandLine 'pub', 'build', '--mode=debug'
-        }
-    }
-
-    jar.dependsOn pubBuild
-    clean.dependsOn pubClean
+// Construction du jar de source
+task sourcesJar(type: Jar, dependsOn:classes) {
+    classifier = "sources"
+    from sourceSets.main.allJava.srcDirs
+    include "**/*.java"
 }
 
-// Configuration du projet racine
-configure(rootProject) {
-	description = "ARIG Association - Prehistobot projects"
+// Construction du jar de javadoc
+task javadocJar(type: Jar) {
+    classifier = "javadoc"
+    from javadoc
+}
 
-	// Suppression des artéfact par défaut sur le rootProject (jar, etc...)
-	configurations.archives.artifacts.clear()
+// Tâche de copy des dépendances
+task copyDependencies(type: Copy) {
+    into "$buildDir/dependencies"
+    from configurations.runtime
+}
 
-	task wrapper(type: Wrapper) {
-		description = "Generates gradlew[.bat] scripts"
-		gradleVersion = "2.3"
-	}
+// Installation de Gradle Wrapper
+task wrapper(type: Wrapper) {
+    description = "Generates gradlew[.bat] scripts"
+    gradleVersion = "2.3"
+}
+
+// Liste des artéfact
+artifacts {
+    archives sourcesJar
+    archives javadocJar
 }
