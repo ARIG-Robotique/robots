@@ -152,10 +152,8 @@ public class Ramp implements IRampFilter {
     public double filter(final double vitesse, final double consigne,
             final double mesure, final boolean frein) {
         // Calcul de la distance de décéleration en fonction des parametres
-        distanceDecel = conv.mmToPulse(vitesseCourante * vitesseCourante
-                / (2 * rampDec));
-        if (vitesseCourante > vitesse || Math.abs(consigne) <= distanceDecel
-                && frein) {
+        distanceDecel = conv.mmToPulse(vitesseCourante * vitesseCourante / (2 * rampDec));
+        if (vitesseCourante > vitesse || (Math.abs(consigne) <= distanceDecel && frein)) {
             vitesseCourante -= stepVitesseDecel;
         } else if (vitesseCourante < vitesse) {
             vitesseCourante += stepVitesseAccel;
@@ -168,8 +166,7 @@ public class Ramp implements IRampFilter {
         vitesseCourante = Math.max(vitesseCourante, 0);
 
         // Calcul de la valeur théorique en fonction de la vitesse.
-        final double pulseForVitesse = conv.mmToPulse(vitesseCourante)
-                * sampleTimeS;
+        final double pulseForVitesse = conv.mmToPulse(vitesseCourante) * sampleTimeS;
 
         // Consigne théorique en fonction de la vitesse
         double ecartTheorique = pulseForVitesse;
