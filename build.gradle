@@ -32,10 +32,10 @@ ext {
     lombokVersion = '1.16.2'
     springVersion = '4.1.6.RELEASE'
     jacksonVersion = '2.5.1'
-    pi4jVersion = '1.0-SNAPSHOT'
+    pi4jVersion = '1.0'
 
     // Container dependencies
-    jettyVersion = '9.2.9.v20150224'
+    jettyVersion = '9.2.10.v20150310'
 
     // ARIG dependencies
     robotSystemLibVersion = '1.1.0-SNAPSHOT'

@@ -19,10 +19,6 @@ public class ServosController {
     @Autowired
     private SD21Servos sd21Servos;
 
-    public void List<Servo> servos() {
-
-    }
-
     @RequestMapping("/{idServo}")
     public void servosPositionAndSpeed(
             @PathVariable("idServo") final Byte idServo,
