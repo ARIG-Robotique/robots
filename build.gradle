@@ -22,10 +22,10 @@ configure(allprojects) {
 
 		// Dependencies versions
 		lombokVersion = '1.16.2'
-		springVersion = '4.1.5.RELEASE'
+		springVersion = '4.1.6.RELEASE'
 		apacheCommonsLangVersion = '3.3.2'
 		googleGuavaVersion = '18.0'
-		pi4jVersion = '1.0-SNAPSHOT'
+		pi4jVersion = '1.0'
 		slf4jVersion = '1.7.10'
 		pathFinderVersion = '0.1.2'
 		javaCsvVersion = '2.1'
