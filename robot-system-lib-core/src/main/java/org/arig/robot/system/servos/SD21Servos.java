@@ -60,7 +60,7 @@ public class SD21Servos {
         }
 
         try {
-            SD21Servos.log.info(String.format("Définition de la position du servo %d (Position = %d)", servoNb, position));
+            log.info("Définition de la position du servo {} (Position = {})", servoNb, position);
             i2cManager.sendData(deviceName, (byte) (SD21Servos.getBaseRegister(servoNb) + 1), (byte) (position & 0xFF), (byte) (position >> 8));
         } catch (I2CException e) {
             log.error("Erreur lors de l'envoi de la position");
@@ -81,7 +81,7 @@ public class SD21Servos {
         }
 
         try {
-            SD21Servos.log.info(String.format("Définiion de la vitesse du servo %d (Vitesse = %d)", servoNb, speed));
+            log.info(String.format("Définiion de la vitesse du servo %d (Vitesse = %d)", servoNb, speed));
             i2cManager.sendData(deviceName, SD21Servos.getBaseRegister(servoNb), speed);
         } catch (I2CException e) {
             log.error("Erreur lors de l'envoi de la vitesse");
@@ -104,7 +104,7 @@ public class SD21Servos {
         }
 
         try {
-            SD21Servos.log.info(String.format("Comande du servo %d (Vitesse = %d,  Position = %d)", servoNb, speed, position));
+            log.info(String.format("Comande du servo %d (Vitesse = %d,  Position = %d)", servoNb, speed, position));
             i2cManager.sendData(deviceName, SD21Servos.getBaseRegister(servoNb), speed, (byte) (position & 0xFF), (byte) (position >> 8));
         } catch (I2CException e) {
             log.error("Erreur lors de la définition de la vitesse et de la position");
@@ -118,7 +118,7 @@ public class SD21Servos {
         try {
             i2cManager.sendData(deviceName, SD21Servos.VERSION_REGISTER);
             final short version = i2cManager.getData(deviceName);
-            SD21Servos.log.info(String.format("SD21 ServoMotors (V : %s)", version));
+            log.info("SD21 ServoMotors (V : {})", version);
         } catch (I2CException e) {
             log.error("Erreur lors de la récupération de la version de la carte SD21");
         }
@@ -134,7 +134,7 @@ public class SD21Servos {
     private boolean checkServo(final byte servoNb) {
         final boolean result = servoNb >= 1 && servoNb <= 21;
         if (!result) {
-            SD21Servos.log.warn(String.format("Numéro de servo moteur invalide : %d", servoNb));
+            log.warn("Numéro de servo moteur invalide : {}", servoNb);
         }
         return result;
     }

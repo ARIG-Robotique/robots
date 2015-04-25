@@ -57,7 +57,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
             definePathFinder();
         }
 
-        log.info(String.format("Recherche de chemin de %s a %s avec l'algorithme %s", from.toString(), to.toString(), getAlgorithm().toString()));
+        log.info("Recherche de chemin de {} a {} avec l'algorithme {}", from.toString(), to.toString(), getAlgorithm().toString());
 
         // Démarrage
         long start = System.currentTimeMillis();
@@ -88,7 +88,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
         for (GraphNode gn : graphNodes) {
             c.addPoint(new Point(gn.x(), gn.y()));
         }
-        log.info(String.format("Chemin de %s point(s)", c.nbPoints()));
+        log.info("Chemin de {} point(s)", c.nbPoints());
 
         return c;
     }
@@ -97,7 +97,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
     public void makeGraphFromBWImage(File file) {
         if (!file.exists() && !file.canRead()) {
             String errorMessage = String.format("Impossible d'acceder au fichier %s (Existe : %s ; Readable : %s)", file.getAbsolutePath(), file.exists(), file.canRead());
-            MultiPathFinderImpl.log.error(errorMessage);
+            log.error(errorMessage);
             throw new IllegalArgumentException(errorMessage);
         }
 

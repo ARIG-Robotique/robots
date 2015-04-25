@@ -5,7 +5,6 @@ import org.arig.robot.csv.CsvCollector;
 import org.arig.robot.csv.CsvData;
 import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
-import org.arig.robot.system.motion.IAsservissement;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motors.AbstractMotors;

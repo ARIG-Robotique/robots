@@ -39,7 +39,7 @@ public class ArigLMD18200Motors extends AbstractMotors {
         prevM1 = cmd;
 
         if (log.isDebugEnabled()) {
-            ArigLMD18200Motors.log.debug(String.format("Commande du moteur 1 : %s", cmd));
+            log.debug("Commande du moteur 1 : {}", cmd);
         }
         // TODO : Implementation de la commande
     }
@@ -58,7 +58,7 @@ public class ArigLMD18200Motors extends AbstractMotors {
         prevM2 = cmd;
 
         if (log.isDebugEnabled()) {
-            ArigLMD18200Motors.log.debug(String.format("Commande du moteur 2 : %s", cmd));
+            log.debug("Commande du moteur 2 : {}", cmd);
         }
         // TODO : Implémentation de la commande
     }
@@ -77,7 +77,7 @@ public class ArigLMD18200Motors extends AbstractMotors {
         prevM3 = cmd;
 
         if (log.isDebugEnabled()) {
-            ArigLMD18200Motors.log.debug(String.format("Commande du moteur 3 : %s", cmd));
+            log.debug("Commande du moteur 3 : {}", cmd);
         }
         // TODO : Implémentation de la commande
     }
@@ -96,7 +96,7 @@ public class ArigLMD18200Motors extends AbstractMotors {
         prevM4 = cmd;
 
         if (log.isDebugEnabled()) {
-            ArigLMD18200Motors.log.debug(String.format("Commande du moteur 4 : %s", cmd));
+            log.debug("Commande du moteur 4 : {}", cmd);
         }
         // TODO : Implémentation de la commande
     }
@@ -108,6 +108,7 @@ public class ArigLMD18200Motors extends AbstractMotors {
      */
     @Override
     public void printVersion() {
-        ArigLMD18200Motors.log.info("ARIG carte LMD18200 4 moteurs version 0.0.1");
+        // TODO : Injecter la version du projet
+        log.info("ARIG carte LMD18200 4 moteurs version 1.0.0");
     }
 }

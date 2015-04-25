@@ -137,7 +137,7 @@ public abstract class AbstractBoard2007NoMux<P> implements IDigitalInputCapteurs
             capteurPins.put(capteurId, pin);
             capteurReverse.put(capteurId, reverse);
 
-            AbstractBoard2007NoMux.log.info(String.format("Configuration capteur %s sur la pin %s", capteurId, pin.toString()));
+            log.info("Configuration capteur {} sur la pin {}", capteurId, pin.toString());
         }
     }
 

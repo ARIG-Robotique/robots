@@ -68,7 +68,7 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
         Assert.notNull(device, "Le device doit être précisé");
         Assert.hasText(deviceName, "Le nom de la carte doit être précisé");
 
-        AbstractI2CManager.log.debug(String.format("Enregistrement de la carte %s (%s).", deviceName, device.toString()));
+        log.debug("Enregistrement de la carte {} ({}).", deviceName, device.toString());
         deviceMap.put(deviceName, device);
     }
 
@@ -87,7 +87,7 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
 
         // FallBack
         final String message = String.format("Carte inconnu : %s", deviceName);
-        AbstractI2CManager.log.warn(message);
+        log.warn(message);
         throw new I2CException(message);
     }
 }

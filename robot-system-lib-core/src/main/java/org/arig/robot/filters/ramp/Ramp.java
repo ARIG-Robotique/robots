@@ -44,14 +44,7 @@ public class Ramp implements IRampFilter {
      * Instantiates a new quad ramp.
      */
     public Ramp() {
-        sampleTimeS = 0.010;
-        rampAcc = 100.0;
-        rampDec = 100.0;
-
-        Ramp.log.info(String.format("Initialisation par défaut (SampleTime : %s ; Rampe ACC : %s ; Rampe DEC : %s", sampleTimeS, rampAcc, rampDec));
-
-        reset();
-        updateStepVitesse();
+        this(10, 100, 100);
     }
 
     /**
@@ -70,7 +63,7 @@ public class Ramp implements IRampFilter {
         this.rampAcc = rampAcc;
         this.rampDec = rampDec;
 
-        Ramp.log.info(String.format("Initialisation (SampleTime : %s ; Rampe ACC : %s ; Rampe DEC : %s", sampleTimeS, rampAcc, rampDec));
+        log.info("Initialisation par défaut (SampleTime : {} ; Rampe ACC : {} ; Rampe DEC : {}", sampleTimeS, rampAcc, rampDec);
 
         reset();
         updateStepVitesse();
@@ -130,7 +123,7 @@ public class Ramp implements IRampFilter {
      */
     @Override
     public void reset() {
-        Ramp.log.info("Reset des paramètres");
+        log.info("Reset des paramètres");
 
         distanceDecel = 0;
         vitesseCourante = 0;

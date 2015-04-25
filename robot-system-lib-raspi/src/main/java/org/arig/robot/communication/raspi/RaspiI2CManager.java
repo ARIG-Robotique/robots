@@ -50,7 +50,7 @@ public class RaspiI2CManager extends AbstractI2CManager<I2CDevice> {
         List<String> deviceNotFound = new ArrayList<>();
 
         // Contrôle que les devices enregistré sont bien présent.
-        RaspiI2CManager.log.info("Verification des devices enregistrés");
+        log.info("Verification des devices enregistrés");
         Set<String> deviceNames = getDeviceMap().keySet();
         for (String name : deviceNames) {
             I2CDevice device = getDevice(name);
@@ -58,14 +58,14 @@ public class RaspiI2CManager extends AbstractI2CManager<I2CDevice> {
                 device.read();
                 log.info("Scan {} : {}", name, device.toString());
             } catch (IOException e) {
-                RaspiI2CManager.log.warn(String.format("Impossible de communiquer avec le périphérique %s (%s) : %s", name, device.toString(), e.toString()));
+                log.warn("Impossible de communiquer avec le périphérique {} ({}) : {}", name, device.toString(), e.toString());
                 deviceNotFound.add(name);
             }
         }
 
         if (!deviceNotFound.isEmpty()) {
             String errorMessage = "Tout les devices enregistrés ne sont pas disponible : " + StringUtils.join(deviceNotFound, ", ");
-            RaspiI2CManager.log.error(errorMessage);
+            log.error(errorMessage);
             throw new I2CException(errorMessage);
         }
     }
@@ -75,8 +75,9 @@ public class RaspiI2CManager extends AbstractI2CManager<I2CDevice> {
         try {
             getDevice(deviceName).write(datas, 0, datas.length);
         } catch (IOException e) {
-            log.error(String.format("Erreur lors de l'envoi sur le device %s", deviceName));
-            throw new I2CException("Erreur d'ecriture de la carte " + deviceName, e);
+            String message = String.format("Erreur lors de l'envoi sur le device %s", deviceName);
+            log.error(message);
+            throw new I2CException(message, e);
         }
     }
 
@@ -90,8 +91,9 @@ public class RaspiI2CManager extends AbstractI2CManager<I2CDevice> {
         try {
             return (byte) getDevice(deviceName).read();
         } catch (IOException e) {
-            log.error("Erreur de lecture de la carte " + deviceName + " : " + e.toString());
-            throw new I2CException("Erreur de lecture de la carte " + deviceName, e);
+            String message = String.format("Erreur de lecture de la carte %s : %s", deviceName, e.toString());
+            log.error(message);
+            throw new I2CException(message, e);
         }
     }
 

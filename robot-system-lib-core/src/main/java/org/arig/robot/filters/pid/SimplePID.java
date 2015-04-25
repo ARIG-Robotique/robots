@@ -1,5 +1,6 @@
 package org.arig.robot.filters.pid;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -20,6 +21,7 @@ public class SimplePID implements IPidFilter {
     private double kd;
 
     /** The error sum. */
+    @Getter
     private double errorSum = 0;
 
     /** The last error. */
@@ -39,7 +41,7 @@ public class SimplePID implements IPidFilter {
      */
     @Override
     public void setTunings(final double kp, final double ki, final double kd) {
-        SimplePID.log.info(String.format("Configuration des paramètres PID ( Kp = %s ; Ki = %s ; Kd = %s )", kp, ki, kd));
+        log.info("Configuration des paramètres PID ( Kp = {} ; Ki = {} ; Kd = {} )", kp, ki, kd);
 
         this.kp = kp;
         this.kd = kd;
@@ -53,7 +55,7 @@ public class SimplePID implements IPidFilter {
      */
     @Override
     public void reset() {
-        SimplePID.log.info("Reset des paramètres du PID");
+        log.info("Reset des paramètres du PID");
 
         errorSum = 0;
         lastError = 0;

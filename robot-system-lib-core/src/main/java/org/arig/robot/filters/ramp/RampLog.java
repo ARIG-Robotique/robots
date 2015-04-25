@@ -5,7 +5,7 @@ package org.arig.robot.filters.ramp;
  * 
  * /!\ EXPERIMENTAL
  * 
- * Application du filtre "logarithmique".
+ * Application du filtre avec la somme de l'écart précédent.
  * 
  * @author mythril
  */
@@ -45,14 +45,9 @@ public class RampLog extends Ramp {
     public double filter(final double vitesse, final double consigne,
             final double mesure, final boolean frein) {
         // Récupération de la version normal et ajout de l'écart précedent
-        final double ecartTheorique = super.filter(vitesse, consigne, mesure,
-                frein) + ecartPrecedent;
+        final double ecartTheorique = super.filter(vitesse, consigne, mesure, frein) + ecartPrecedent;
         ecartPrecedent = ecartTheorique - mesure;
 
-        /*
-         * TODO : Logger pour le CSV #ifdef DEBUG_MODE
-         * //Serial.print(";FOutLog");Serial.print(ecartTheorique); #endif
-         */
         return ecartTheorique;
     }
 }

@@ -33,7 +33,7 @@ public abstract class AbstractPathFinder<A> implements IPathFinder<A> {
         File f = new File(filePath);
         if (!f.exists() && !f.canRead()) {
             String errorMessage = String.format("Impossible d'acceder au fichier %s (Existe : %s ; Readable : %s)", filePath, f.exists(), f.canRead());
-            AbstractPathFinder.log.error(errorMessage);
+            log.error(errorMessage);
             throw new IllegalArgumentException(errorMessage);
         }
 

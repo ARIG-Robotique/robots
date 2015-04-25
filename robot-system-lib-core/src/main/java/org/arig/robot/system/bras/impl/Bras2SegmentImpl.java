@@ -59,7 +59,8 @@ public class Bras2SegmentImpl extends AbstractBras {
         // Log.
         double angleServo1Deg = Math.toDegrees(alpha1);
         double angleServo2Deg = Math.toDegrees(alpha2);
-        log.info(String.format("Calcul des angles pour positionner le bras au point %s => servo 1 : %f° , servo 2 : %f°", P.toString(), angleServo1Deg, angleServo2Deg));
+
+        log.info("Calcul des angles pour positionner le bras au point {} => servo 1 : {}° , servo 2 :{}°", P.toString(), angleServo1Deg, angleServo2Deg);
 
         // TODO : Generation du mouvement
     }

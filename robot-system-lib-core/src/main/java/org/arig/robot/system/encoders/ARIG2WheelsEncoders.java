@@ -43,10 +43,10 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
      */
     @Override
     public void reset() {
-        ARIG2WheelsEncoders.log.info("Reset carte codeur droit");
+        log.info("Reset carte codeur droit");
         lectureDroit();
 
-        ARIG2WheelsEncoders.log.info("Reset carte codeur gauche");
+        log.info("Reset carte codeur gauche");
         lectureGauche();
     }
 
@@ -60,7 +60,7 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
         try {
             return lectureData(deviceNameGauche);
         } catch (final I2CException e) {
-            ARIG2WheelsEncoders.log.error("Erreur lors de la lecture du codeur gauche : " + e.toString());
+            log.error("Erreur lors de la lecture du codeur gauche : " + e.toString());
             return 0;
         }
     }
@@ -75,7 +75,7 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
         try {
             return lectureData(deviceNameDroit);
         } catch (final I2CException e) {
-            ARIG2WheelsEncoders.log.error("Erreur lors de la lecture du codeur droit : " + e.toString());
+            log.error("Erreur lors de la lecture du codeur droit : " + e.toString());
             return 0;
         }
     }
@@ -96,7 +96,7 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
             i2cManager.sendData(deviceName, 2);
         } catch (I2CException e) {
             log.error("Impossible de lire la valeur codeur pour la carte " + deviceName);
-            throw new I2CException("Impossible de lire la valeur codeur pour la carte " + deviceName);
+            throw new I2CException("Impossible de lire la valeur codeur pour la carte " + deviceName, e);
         }
 
         int value = 0;

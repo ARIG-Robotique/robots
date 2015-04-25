@@ -54,7 +54,7 @@ public class CompletePID implements IPidFilter {
             return;
         }
 
-        log.info(String.format("Configuration des paramètres PID ( Kp = %s ; Ki = %s ; Kd = %s )", kp, ki, kd));
+        log.info("Configuration des paramètres PID ( Kp = {} ; Ki = {} ; Kd = {} )", kp, ki, kd);
 
         double SampleTimeInSec = ((double) sampleTime) / 1000;
         this.kp = kp;
@@ -108,6 +108,7 @@ public class CompletePID implements IPidFilter {
 
     public void setSampleTime(int newSampleTime) {
         if (newSampleTime > 0) {
+            log.info("Configuration du pas temporel {}", newSampleTime);
             double ratio  = (double)newSampleTime / (double) sampleTime;
             ki *= ratio;
             kd /= ratio;
@@ -135,5 +136,10 @@ public class CompletePID implements IPidFilter {
         } else if(iTerm < outMin) {
             iTerm = outMin;
         }
+    }
+
+    @Override
+    public double getErrorSum() {
+        return iTerm;
     }
 }

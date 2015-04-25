@@ -44,4 +44,11 @@ public interface IPidFilter {
      * @return the double
      */
     double compute(final double consigne, final double mesure);
+
+    /**
+     * Accesseur sur la somme de l'erreur
+     *
+     * @return
+     */
+    double getErrorSum();
 }

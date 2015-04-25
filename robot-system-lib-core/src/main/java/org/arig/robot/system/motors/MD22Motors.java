@@ -128,7 +128,7 @@ public class MD22Motors extends AbstractMotors {
         try {
             Thread.sleep(100);
         } catch (final InterruptedException e) {
-            MD22Motors.log.error("Impossible de faire une pause", e);
+            log.error("Impossible de faire une pause", e);
         }
         setAccel(accelValue, transmit);
 
@@ -151,7 +151,7 @@ public class MD22Motors extends AbstractMotors {
         prevM1 = cmd;
 
         if (log.isDebugEnabled()) {
-            MD22Motors.log.debug(String.format("Commande du moteur 1 : %s", cmd));
+            log.debug("Commande du moteur 1 : {}", cmd);
         }
         try {
             i2cManager.sendData(deviceName, MD22Motors.MOTOR1_REGISTER, cmd);
@@ -174,7 +174,7 @@ public class MD22Motors extends AbstractMotors {
         prevM2 = cmd;
 
         if (log.isDebugEnabled()) {
-            MD22Motors.log.debug(String.format("Commande du moteur 2 : %s", cmd));
+            log.debug("Commande du moteur 2 : {}", cmd);
         }
         try {
             i2cManager.sendData(deviceName, MD22Motors.MOTOR2_REGISTER, cmd);
@@ -220,7 +220,7 @@ public class MD22Motors extends AbstractMotors {
 
         // Set mode
         if (transmit) {
-            MD22Motors.log.info(String.format("Configuration dans le mode %d (Min = %d, Max = %d, Offset = %d)", modeValue, minVal, maxVal, offsetVal));
+            log.info("Configuration dans le mode {} (Min = {}, Max = {}, Offset = {})", modeValue, minVal, maxVal, offsetVal);
             try {
                 i2cManager.sendData(deviceName, MD22Motors.MODE_REGISTER, modeValue);
             } catch (I2CException e) {
@@ -289,7 +289,7 @@ public class MD22Motors extends AbstractMotors {
 
         // Set accelleration
         if (transmit) {
-            MD22Motors.log.info(String.format("Configuration de l'acceleration : %d", accelValue));
+            log.info("Configuration de l'acceleration : {}", accelValue);
             try {
                 i2cManager.sendData(deviceName, MD22Motors.ACCEL_REGISTER, (byte) accelValue);
             } catch (I2CException e) {
@@ -308,7 +308,7 @@ public class MD22Motors extends AbstractMotors {
         try {
             i2cManager.sendData(deviceName, MD22Motors.VERSION_REGISTER);
             final byte version = i2cManager.getData(deviceName);
-            MD22Motors.log.info(String.format("MD22 DC Motors (V : %s)", version));
+            log.info("MD22 DC Motors (V : {})", version);
         } catch (I2CException e) {
             log.error("Erreur lors de la récupération de la version de la carte MD22", e);
         }
