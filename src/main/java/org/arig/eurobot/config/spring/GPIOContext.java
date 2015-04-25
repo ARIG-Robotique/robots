@@ -25,8 +25,8 @@ public class GPIOContext {
         return GpioFactory.getInstance();
     }
 
-    @Bean(name = "capteursSwitch", destroyMethod = "shutdown")
-    public PCF8574GpioProvider capteursSwitch(I2CBus bus) throws IOException {
+    @Bean(name = "pcfSwitch", destroyMethod = "shutdown")
+    public PCF8574GpioProvider pcfSwitch(I2CBus bus) throws IOException {
         PCF8574GpioProvider c = new PCF8574GpioProvider(bus, IConstantesI2C.PCF_NUM1_ADDRESS);
         c.setMode(IConstantesGPIO.N1_BTN_TAPIS, PinMode.DIGITAL_INPUT);
         c.setMode(IConstantesGPIO.N1_TIRETTE, PinMode.DIGITAL_INPUT);
@@ -39,8 +39,8 @@ public class GPIOContext {
         return c;
     }
 
-    @Bean(name = "capteursPresence", destroyMethod = "shutdown")
-    public PCF8574GpioProvider capteursPresence(I2CBus bus) throws IOException {
+    @Bean(name = "pcfPresence", destroyMethod = "shutdown")
+    public PCF8574GpioProvider pcfPresence(I2CBus bus) throws IOException {
         PCF8574GpioProvider c = new PCF8574GpioProvider(bus, IConstantesI2C.PCF_NUM2_ADDRESS);
         c.setMode(IConstantesGPIO.N2_PRESENCE_CENTRE, PinMode.DIGITAL_INPUT);
         c.setMode(IConstantesGPIO.N2_PRESENCE_DROITE, PinMode.DIGITAL_INPUT);
@@ -48,11 +48,19 @@ public class GPIOContext {
         return c;
     }
 
-    @Bean(name = "capteursAlim", destroyMethod = "shutdown")
-    public PCF8574GpioProvider capteursAlim(I2CBus bus) throws IOException {
+    @Bean(name = "pcfAlim", destroyMethod = "shutdown")
+    public PCF8574GpioProvider pcfAlim(I2CBus bus) throws IOException {
         PCF8574GpioProvider c = new PCF8574GpioProvider(bus, IConstantesI2C.PCF_ALIM_ADDRESS);
+        // Out
         c.setMode(IConstantesGPIO.ALIM_PUISSANCE_MOTEUR, PinMode.DIGITAL_OUTPUT);
         c.setMode(IConstantesGPIO.ALIM_PUISSANCE_SERVO, PinMode.DIGITAL_OUTPUT);
+        c.setMode(IConstantesGPIO.ALIM_PUISSANCE_3, PinMode.DIGITAL_OUTPUT);
+
+        // In
+        c.setMode(IConstantesGPIO.ALIM_AU, PinMode.DIGITAL_INPUT);
+        c.setMode(IConstantesGPIO.ALIM_EN_PUISSANCE_MOTEUR, PinMode.DIGITAL_INPUT);
+        c.setMode(IConstantesGPIO.ALIM_EN_PUISSANCE_SERVO, PinMode.DIGITAL_INPUT);
+        c.setMode(IConstantesGPIO.ALIM_EN_PUISSANCE_3, PinMode.DIGITAL_INPUT);
         return c;
     }
 }
