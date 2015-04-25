@@ -11,6 +11,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Configuration
 @EnableAsync
 @EnableScheduling
-@ComponentScan({"org.arig.prehistobot.scheduler"})
+@ComponentScan({"org.arig.eurobot.scheduler"})
 public class SchedulerContext {
 }

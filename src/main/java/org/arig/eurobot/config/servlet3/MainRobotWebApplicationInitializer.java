@@ -23,7 +23,7 @@ public class MainRobotWebApplicationInitializer implements WebApplicationInitial
     public void onStartup(ServletContext servletContext) throws ServletException {
         // 1. Initialisation du context Root de spring
         final AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-        rootContext.scan("org.arig.prehistobot.config.spring");
+        rootContext.scan("org.arig.eurobot.config.spring");
 
         // 2. Ajout des listeners
         servletContext.addListener(new ContextLoaderListener(rootContext));

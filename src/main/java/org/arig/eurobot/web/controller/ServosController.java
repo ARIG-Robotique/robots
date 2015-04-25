@@ -25,7 +25,7 @@ public class ServosController {
             @RequestParam("position") final Integer position,
             @RequestParam(value = "speed", required = false) final Byte speed) {
 
-        log.info(String.format("Modification du servo moteur %d : Pos -> %s ; Speed -> %s", idServo, position, speed));
+        log.info("Modification du servo moteur {} : Pos -> {} ; Speed -> {}", idServo, position, speed);
 
         if (speed != null) {
             sd21Servos.setPositionAndSpeed(idServo, position, speed);
