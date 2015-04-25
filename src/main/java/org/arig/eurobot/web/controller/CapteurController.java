@@ -31,12 +31,10 @@ public class CapteurController {
         List<CapteurNumerique> capteurList = new ArrayList<>();
         for (Integer capteurId : dic.getIds()) {
             AbstractBoard2007NoMux.CapteursDefinition cd = dic.getDefinitionById(capteurId);
-            capteurList.add(new Function<AbstractBoard2007NoMux.CapteursDefinition, CapteurNumerique> () {
-                @Override
-                public CapteurNumerique apply(AbstractBoard2007NoMux.CapteursDefinition input) {
-                    return new CapteurNumerique(input.getId(), String.format("%s (%s)", input.name(), input.getDescription()), dic.readCapteurValue(input.getId()));
-                }
-            }.apply(cd));
+
+            Function<AbstractBoard2007NoMux.CapteursDefinition, CapteurNumerique> f = (input) -> new CapteurNumerique(input.getId(), String.format("%s (%s)", input.name(), input.getDescription()), dic.readCapteurValue(input.getId()));
+
+            capteurList.add(f.apply(cd));
         }
 
         return capteurList;
