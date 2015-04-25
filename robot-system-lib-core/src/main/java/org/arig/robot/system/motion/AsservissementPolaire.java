@@ -141,7 +141,9 @@ public class AsservissementPolaire implements IAsservissementPolaire {
         // Application du théorème de Shannon
         // En gros l'idée est que la fenêtre varie en fonction de la vitesse afin qu'a pleine bourre on la dépasse pas
         // et que l'on se mette a faire des tours sur soit même
-        return Math.max(minFenetreDistance, 3 * setPointDistance);
+        //return Math.max(minFenetreDistance, 3 * setPointDistance);
+
+        return minFenetreDistance;
     }
 
     /**
@@ -153,6 +155,8 @@ public class AsservissementPolaire implements IAsservissementPolaire {
         // Application du théorème de Shannon
         // En gros l'idée est que la fenêtre varie en fonction de la vitesse afin qu'a pleine bourre on la dépasse pas
         // et que l'on se mette a faire des tours sur soit même
-        return Math.max(minFenetreOrientation, 3 * setPointOrientation);
+        //return Math.max(minFenetreOrientation, 3 * setPointOrientation);
+
+        return minFenetreOrientation;
     }
 }
