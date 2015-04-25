@@ -64,18 +64,15 @@ public abstract class AbstractBoard2007NoMux<P> implements IDigitalInputCapteurs
 
     }
 
-    private Function<Integer, CapteursDefinition> convertCapteurId = new Function<Integer, CapteursDefinition>() {
-        @Override
-        public CapteursDefinition apply(Integer input) {
-            for (CapteursDefinition c : CapteursDefinition.values()) {
-                if (c.getId().equals(input)) {
-                    return c;
-                }
+    private Function<Integer, CapteursDefinition> convertCapteurId = (input) -> {
+        for (CapteursDefinition c : CapteursDefinition.values()) {
+            if (c.getId().equals(input)) {
+                return c;
             }
-
-            // Fallback
-            return null;
         }
+
+        // Fallback
+        return null;
     };
 
     /** The capteur pins. */
