@@ -7,7 +7,7 @@ import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
-import org.arig.robot.system.motors.AbstractMotors;
+import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.vo.CommandeRobot;
 import org.arig.robot.vo.Position;
@@ -45,7 +45,7 @@ public class MouvementManager implements InitializingBean {
 
     /** The motors. */
     @Autowired
-    private AbstractMotors motors;
+    private AbstractPropulsionsMotors motors;
 
     /** The conv. */
     @Autowired

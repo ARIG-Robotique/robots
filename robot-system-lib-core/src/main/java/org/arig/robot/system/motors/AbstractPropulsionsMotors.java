@@ -1,11 +1,14 @@
 package org.arig.robot.system.motors;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * The Class AbstractMotors.
  * 
  * @author mythril
  */
-public abstract class AbstractMotors {
+@Slf4j
+public abstract class AbstractPropulsionsMotors {
 
     /** The Constant UNDEF_MOTOR. */
     public static final int UNDEF_MOTOR = 0;
@@ -40,8 +43,8 @@ public abstract class AbstractMotors {
     /**
      * Instantiates a new abstract motors.
      */
-    public AbstractMotors() {
-        assignMotors(AbstractMotors.UNDEF_MOTOR, AbstractMotors.UNDEF_MOTOR);
+    public AbstractPropulsionsMotors() {
+        assignMotors(AbstractPropulsionsMotors.UNDEF_MOTOR, AbstractPropulsionsMotors.UNDEF_MOTOR);
         alternate = false;
     }
 
@@ -86,9 +89,9 @@ public abstract class AbstractMotors {
      *             the illegal state exception
      */
     public final void moteurGauche(final int cmd) throws IllegalStateException {
-        if (numMoteurGauche == AbstractMotors.MOTOR_1) {
+        if (numMoteurGauche == AbstractPropulsionsMotors.MOTOR_1) {
             moteur1(cmd);
-        } else if (numMoteurGauche == AbstractMotors.MOTOR_2) {
+        } else if (numMoteurGauche == AbstractPropulsionsMotors.MOTOR_2) {
             moteur2(cmd);
         }
 
@@ -104,9 +107,9 @@ public abstract class AbstractMotors {
      *             the illegal state exception
      */
     public final void moteurDroit(final int cmd) throws IllegalStateException {
-        if (numMoteurDroit == AbstractMotors.MOTOR_1) {
+        if (numMoteurDroit == AbstractPropulsionsMotors.MOTOR_1) {
             moteur1(cmd);
-        } else if (numMoteurDroit == AbstractMotors.MOTOR_2) {
+        } else if (numMoteurDroit == AbstractPropulsionsMotors.MOTOR_2) {
             moteur2(cmd);
         }
 
@@ -128,9 +131,9 @@ public abstract class AbstractMotors {
      *             the illegal state exception
      */
     public final void stopGauche() throws IllegalStateException {
-        if (numMoteurGauche == AbstractMotors.MOTOR_1) {
+        if (numMoteurGauche == AbstractPropulsionsMotors.MOTOR_1) {
             stop1();
-        } else if (numMoteurGauche == AbstractMotors.MOTOR_2) {
+        } else if (numMoteurGauche == AbstractPropulsionsMotors.MOTOR_2) {
             stop2();
         }
 
@@ -144,9 +147,9 @@ public abstract class AbstractMotors {
      *             the illegal state exception
      */
     public final void stopDroit() throws IllegalStateException {
-        if (numMoteurDroit == AbstractMotors.MOTOR_1) {
+        if (numMoteurDroit == AbstractPropulsionsMotors.MOTOR_1) {
             stop1();
-        } else if (numMoteurDroit == AbstractMotors.MOTOR_2) {
+        } else if (numMoteurDroit == AbstractPropulsionsMotors.MOTOR_2) {
             stop2();
         }
 
@@ -214,7 +217,8 @@ public abstract class AbstractMotors {
      * Exception assignation moteur gauche.
      */
     private void exceptionAssignationMoteurGauche() {
-        if (numMoteurGauche == AbstractMotors.UNDEF_MOTOR) {
+        if (numMoteurGauche == AbstractPropulsionsMotors.UNDEF_MOTOR) {
+            log.error("L'assignation du moteur gauche n'est pas faite");
             throw new IllegalStateException("L'assignation du moteur gauche n'est pas faite");
         }
     }
@@ -223,7 +227,8 @@ public abstract class AbstractMotors {
      * Exception assignation moteur droit.
      */
     private void exceptionAssignationMoteurDroit() {
-        if (numMoteurDroit == AbstractMotors.UNDEF_MOTOR) {
+        if (numMoteurDroit == AbstractPropulsionsMotors.UNDEF_MOTOR) {
+            log.error("L'assignation du moteur droit n'est pas faite");
             throw new IllegalStateException("L'assignation du moteur droit n'est pas faite");
         }
     }

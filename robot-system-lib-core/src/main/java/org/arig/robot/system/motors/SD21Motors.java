@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 
  * @author GregoryDepuille
  */
-public class SD21Motors extends AbstractMotors {
+public class SD21Motors extends AbstractPropulsionsMotors {
 
     /** The motor1 register. */
     private final byte motor1Register;

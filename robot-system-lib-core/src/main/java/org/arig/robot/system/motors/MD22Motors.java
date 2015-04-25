@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author mythril
  */
 @Slf4j
-public class MD22Motors extends AbstractMotors {
+public class MD22Motors extends AbstractPropulsionsMotors {
 
     /** The Constant MODE_REGISTER. */
     public static final byte MODE_REGISTER = 0x00;

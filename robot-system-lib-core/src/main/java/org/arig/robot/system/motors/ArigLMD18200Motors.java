@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author mythril
  */
 @Slf4j
-public class ArigLMD18200Motors extends AbstractMotors {
+public class ArigLMD18200Motors extends AbstractPropulsionsMotors {
 
     /** The prev m3. */
     private int prevM3;
