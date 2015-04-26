@@ -262,16 +262,18 @@ public class MouvementManager implements InitializingBean {
 
     private void gestionFlags() {
         // TODO : Voir si il ne serait pas judicieux de traiter le cas des consignes XY avec un rayon sur le point a atteindre
-        if (cmdRobot.isFrein()
-                && Math.abs(cmdRobot.getConsigne().getDistance()) < fenetreArretDistance
-                && Math.abs(cmdRobot.getConsigne().getOrientation()) < fenetreArretOrientation) {
+        boolean distAtteint = Math.abs(cmdRobot.getConsigne().getDistance()) < fenetreArretDistance;
+        boolean orientAtteint = Math.abs(cmdRobot.getConsigne().getOrientation()) < fenetreArretOrientation;
+        trajetAtteint = cmdRobot.isFrein() && distAtteint && orientAtteint;
 
-            // Le trajet est atteint
-            trajetAtteint = true;
+        // Calcul des fenetre d'approche pour le passage au point suivant sans arret.
+        // Si on est en mode déplacement XY, seul la distance d'approche du point est importante.
+        boolean distApproche = Math.abs(cmdRobot.getConsigne().getDistance()) < asservPolaire.getFenetreApprocheDistance();
+        boolean orientApproche = true;
+        if (!cmdRobot.isType(TypeConsigne.XY)) {
+            orientApproche = Math.abs(cmdRobot.getConsigne().getOrientation()) < asservPolaire.getFenetreApprocheOrientation();
         }
-
-        if (Math.abs(cmdRobot.getConsigne().getDistance()) < asservPolaire.getFenetreApprocheDistance()
-                && Math.abs(cmdRobot.getConsigne().getOrientation()) < asservPolaire.getFenetreApprocheOrientation()) {
+        if (distApproche && orientApproche) {
 
             // Modification du type de consigne pour la stabilisation
             cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
