@@ -1,6 +1,8 @@
 package org.arig.robot.filters.pid;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -20,9 +22,17 @@ public class SimplePID implements IPidFilter {
     /** The kd. */
     private double kd;
 
+    @Getter
+    @Setter(AccessLevel.PRIVATE)
+    private double setPoint, input;
+
     /** The error sum. */
     @Getter
     private double errorSum = 0;
+
+    /** The output */
+    @Getter
+    private double output = 0;
 
     /** The last error. */
     private double lastError = 0;
@@ -68,12 +78,19 @@ public class SimplePID implements IPidFilter {
      */
     @Override
     public double compute(final double consigne, final double mesure) {
+        setSetPoint(consigne);
+        setInput(mesure);
+
         final double error = consigne - mesure;
         final double deltaError = error - lastError;
         errorSum += error;
         lastError = error;
-        final double result = kp * error + ki * errorSum + kd * deltaError;
+        output = kp * error + ki * errorSum + kd * deltaError;
+        return output;
+    }
 
-        return result;
+    @Override
+    public double getError() {
+        return lastError;
     }
 }

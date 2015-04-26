@@ -17,7 +17,7 @@ public class CompletePID implements IPidFilter {
 
     @Getter
     @Setter(AccessLevel.PRIVATE)
-    private double input, output, setPoint;
+    private double input, output, setPoint, error;
 
     private double iTerm, lastInput;
 
@@ -66,6 +66,8 @@ public class CompletePID implements IPidFilter {
             this.ki = (0 - this.ki);
             this.kd = (0 - this.kd);
         }
+
+        log.info("Paramètres PID réel en fonction du temps ( Kp = {} ; Ki = {} ; Kd = {} )", this.kp, this.ki, this.kd);
     }
 
     public void initialise() {
@@ -89,7 +91,7 @@ public class CompletePID implements IPidFilter {
         }
 
         /* Compute all the working error variables */
-        double error = setPoint - input;
+        error = setPoint - input;
         iTerm += (ki * error);
         if(iTerm > outMax) iTerm = outMax;
         else if(iTerm < outMin) iTerm = outMin;
@@ -108,7 +110,7 @@ public class CompletePID implements IPidFilter {
 
     public void setSampleTime(int newSampleTime) {
         if (newSampleTime > 0) {
-            log.info("Configuration du pas temporel {}", newSampleTime);
+            log.info("Configuration du pas temporel {} ms", newSampleTime);
             double ratio  = (double)newSampleTime / (double) sampleTime;
             ki *= ratio;
             kd /= ratio;

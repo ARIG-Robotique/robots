@@ -193,7 +193,7 @@ public class MouvementManager implements InitializingBean {
             long consOrient = calculAngleConsigne(dX, dY);
 
             // Calcul du coef d'annulation de la distance
-            // Permet d'effectuer d'abord une rotation avant de lancer le déplacement.
+            // Permet d'effectuer un demi tour en 3 temps.
             if (Math.abs(consOrient) > startAngle) {
                 consDist = (long) (consDist * ((startAngle - Math.abs(consOrient)) / startAngle));
             }
@@ -220,8 +220,11 @@ public class MouvementManager implements InitializingBean {
 
         if (csvCollector != null) {
             CsvData c = csvCollector.getCurrent();
+            c.setModeAsserv(cmdRobot.typeAsserv());
             c.setConsigneDistance(cmdRobot.getConsigne().getDistance());
             c.setConsigneOrient(cmdRobot.getConsigne().getOrientation());
+            c.setVitesseDistance(cmdRobot.getVitesse().getDistance());
+            c.setVitesseOrient(cmdRobot.getVitesse().getOrientation());
         }
     }
 
@@ -273,7 +276,7 @@ public class MouvementManager implements InitializingBean {
             // Modification du type de consigne pour la stabilisation
             cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
 
-            // Notification que le point de passage est atteint
+            // Notification que le point de passage est atteint uniquement lors d'un enchainement sans arret
             if (!cmdRobot.isFrein()) {
                 trajetEnApproche = true;
             }

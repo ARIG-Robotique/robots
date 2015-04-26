@@ -123,14 +123,24 @@ public class AsservissementPolaire implements IAsservissementPolaire {
 
         if (csvCollector != null) {
             CsvData c = csvCollector.getCurrent();
-            c.setSetPointDistance(setPointDistance);
-            c.setSetPointOrient(setPointOrientation);
-            c.setOutputPidDistance(outputDistance);
-            c.setOutputPidOrient(outputOrientation);
+            c.setSetPointDistance(pidDistance.getSetPoint());
+            c.setInputDistance(pidDistance.getInput());
+            c.setErreurDistance(pidDistance.getError());
+            c.setSumErreurDistance(pidDistance.getErrorSum());
+            c.setOutputPidDistance(pidDistance.getOutput());
+
+            c.setSetPointOrient(pidOrientation.getSetPoint());
+            c.setInputOrient(pidOrientation.getInput());
+            c.setErreurOrient(pidOrientation.getError());
+            c.setSumErreurOrient(pidOrientation.getErrorSum());
+            c.setOutputPidOrient(pidOrientation.getOutput());
+
             c.setCmdMoteurGauche(cmdRobot.getMoteur().getGauche());
             c.setCmdMoteurDroit(cmdRobot.getMoteur().getDroit());
         }
     }
+
+    // TODO : Déplacer ça dans le mouvement manager car pas utile de le faire ici.
 
     /**
      * Méthode permettant de récuperer la zone pour la fenetre en distance.

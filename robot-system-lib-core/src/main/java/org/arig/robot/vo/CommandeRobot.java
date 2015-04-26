@@ -2,11 +2,14 @@ package org.arig.robot.vo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.vo.enums.TypeConsigne;
 
 /**
@@ -86,5 +89,12 @@ public class CommandeRobot {
         }
 
         return result;
+    }
+
+    public String typeAsserv() {
+        Function<TypeConsigne, String> f = (input) -> input.name();
+
+        Optional<String> res = types.stream().map(f).reduce((a1, a2) -> a1 + "," + a2);
+        return res.isPresent() ? res.get() : StringUtils.EMPTY;
     }
 }

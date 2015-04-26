@@ -20,7 +20,6 @@ public class CsvCollector implements InitializingBean {
 
     private List<CsvData> datas;
 
-    @Getter
     private CsvData current;
 
     private File outputFile;
@@ -30,6 +29,14 @@ public class CsvCollector implements InitializingBean {
         // Création du fichier si il n'existe pas
         final SimpleDateFormat sdf = new SimpleDateFormat("'CSV-'yyyyMMddHHmmssSSS", Locale.FRENCH);
         outputFile = new File("logs", sdf.format(new Date()) + ".csv");
+    }
+
+    public CsvData getCurrent() {
+        if (current == null) {
+            addNewItem();
+        }
+
+        return current;
     }
 
     public void addNewItem() {
@@ -53,18 +60,30 @@ public class CsvCollector implements InitializingBean {
             writer.write("codeurDroit");
             writer.write("codeurDistance");
             writer.write("codeurOrientation");
+
             writer.write("modeAsserv");
             writer.write("typeOdom");
+
             writer.write("vitesseDistance");
             writer.write("vitesseOrient");
             writer.write("consigneDistance");
             writer.write("consigneOrient");
+
             writer.write("setPointDistance");
-            writer.write("setPointOrient");
+            writer.write("consigneDistance");
+            writer.write("erreurDistance");
+            writer.write("erreurSumDistance");
             writer.write("outputPidDistance");
+
+            writer.write("setPointOrient");
+            writer.write("consigneOrient");
+            writer.write("erreurOrient");
+            writer.write("erreurSumOrient");
             writer.write("outputPidOrient");
+
             writer.write("cmdMotGauche");
             writer.write("cmdMotDroit");
+
             writer.write("x");
             writer.write("y");
             writer.write("angle");
@@ -76,18 +95,30 @@ public class CsvCollector implements InitializingBean {
                 writer.write(String.valueOf(d.getCodeurDroit()));
                 writer.write(String.valueOf(d.getCodeurDistance()));
                 writer.write(String.valueOf(d.getCodeurOrient()));
+
                 writer.write(d.getModeAsserv());
                 writer.write(d.getTypeOdometrie());
+
                 writer.write(String.valueOf(d.getVitesseDistance()));
                 writer.write(String.valueOf(d.getVitesseOrient()));
                 writer.write(String.valueOf(d.getConsigneDistance()));
                 writer.write(String.valueOf(d.getConsigneOrient()));
+
                 writer.write(String.valueOf(d.getSetPointDistance()));
-                writer.write(String.valueOf(d.getSetPointOrient()));
+                writer.write(String.valueOf(d.getInputDistance()));
+                writer.write(String.valueOf(d.getErreurDistance()));
+                writer.write(String.valueOf(d.getSumErreurDistance()));
                 writer.write(String.valueOf(d.getOutputPidDistance()));
+
+                writer.write(String.valueOf(d.getSetPointOrient()));
+                writer.write(String.valueOf(d.getInputOrient()));
+                writer.write(String.valueOf(d.getErreurOrient()));
+                writer.write(String.valueOf(d.getSumErreurOrient()));
                 writer.write(String.valueOf(d.getOutputPidOrient()));
+
                 writer.write(String.valueOf(d.getCmdMoteurGauche()));
                 writer.write(String.valueOf(d.getCmdMoteurDroit()));
+
                 writer.write(String.valueOf(d.getX()));
                 writer.write(String.valueOf(d.getY()));
                 writer.write(String.valueOf(d.getAngle()));

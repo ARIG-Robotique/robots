@@ -46,9 +46,37 @@ public interface IPidFilter {
     double compute(final double consigne, final double mesure);
 
     /**
+     * Valeur de retour mesuré par rapport à la sortie
+     *
+     * @return la mesure d'entrée
+     */
+    double getInput();
+
+    /**
+     * Valeur de la consigne
+     *
+     * @return la consigne
+     */
+    double getSetPoint();
+
+    /**
+     * Sortie en fonction de la consigne, de la mesure et de la configuration
+     *
+     * @return la valeur de sortie du PID
+     */
+    double getOutput();
+
+    /**
      * Accesseur sur la somme de l'erreur
      *
-     * @return
+     * @return la somme de l'erreur
      */
     double getErrorSum();
+
+    /**
+     * Accesseur sur la dernière valeur de l'erreur
+     *
+     * @return La valeur instantané de l'erreur
+     */
+    double getError();
 }
