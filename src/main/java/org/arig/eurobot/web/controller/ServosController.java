@@ -1,11 +1,13 @@
 package org.arig.eurobot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.II2CManager;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by mythril on 21/12/13.

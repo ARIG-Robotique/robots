@@ -1,7 +1,7 @@
 package org.arig.eurobot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.system.motors.AbstractMotors;
+import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MotorsController {
 
     @Autowired
-    private AbstractMotors motors;
+    private AbstractPropulsionsMotors motors;
 
     @RequestMapping("/droit")
     public void setMotorDroit(@RequestParam(required = true) final Integer speed) {

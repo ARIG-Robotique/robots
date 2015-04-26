@@ -29,7 +29,14 @@ public class CodeursController {
         Map<String, Double> v = new HashMap<>();
         v.put("distance", encoders.getDistance());
         v.put("orientation", encoders.getOrientation());
+        v.put("gauche", encoders.getGauche());
+        v.put("droit", encoders.getDroit());
 
         return v;
+    }
+
+    @RequestMapping(value = "/reset", method = RequestMethod.GET)
+    public void resetValues() {
+        encoders.reset();
     }
 }

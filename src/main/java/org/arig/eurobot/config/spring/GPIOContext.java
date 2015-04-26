@@ -1,12 +1,12 @@
 package org.arig.eurobot.config.spring;
 
 import com.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
-import com.pi4j.io.gpio.*;
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.PinMode;
 import com.pi4j.io.i2c.I2CBus;
 import org.arig.eurobot.constants.IConstantesGPIO;
 import org.arig.eurobot.constants.IConstantesI2C;
-import org.arig.robot.system.capteurs.IDigitalInputCapteurs;
-import org.arig.robot.system.capteurs.RaspiBoard2007NoMux;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

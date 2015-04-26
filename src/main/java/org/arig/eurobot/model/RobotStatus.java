@@ -10,7 +10,11 @@ import lombok.Setter;
 @Data
 public class RobotStatus {
 
+    @Setter(AccessLevel.NONE)
     private boolean asservEnabled = false;
+
+    @Setter(AccessLevel.NONE)
+    private boolean matchEnabled = false;
 
     @Setter(AccessLevel.NONE)
     private int nbPied = 0;
@@ -20,6 +24,14 @@ public class RobotStatus {
 
     private boolean piedDroit = false;
     private boolean piedGauche = false;
+
+    public void enableAsserv() { asservEnabled = true; }
+
+    public void disableAsserv() { asservEnabled = false; }
+
+    public void enableMatch() { matchEnabled = true; }
+
+    public void disableMatch() { matchEnabled = false; }
 
     public void incNbPied() {
         nbPied ++;

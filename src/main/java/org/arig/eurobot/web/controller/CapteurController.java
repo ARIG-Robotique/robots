@@ -23,19 +23,19 @@ import java.util.List;
 @RequestMapping("/capteurs")
 public class CapteurController {
 
-    @Autowired
-    private RaspiBoard2007NoMux dic;
+    /*@Autowired
+    private RaspiBoard2007NoMux dic;*/
 
     @RequestMapping(method = RequestMethod.GET)
     public List<CapteurNumerique> listAll() {
         List<CapteurNumerique> capteurList = new ArrayList<>();
-        for (Integer capteurId : dic.getIds()) {
-            AbstractBoard2007NoMux.CapteursDefinition cd = dic.getDefinitionById(capteurId);
-
-            Function<AbstractBoard2007NoMux.CapteursDefinition, CapteurNumerique> f = (input) -> new CapteurNumerique(input.getId(), String.format("%s (%s)", input.name(), input.getDescription()), dic.readCapteurValue(input.getId()));
-
-            capteurList.add(f.apply(cd));
-        }
+//        for (Integer capteurId : dic.getIds()) {
+//            AbstractBoard2007NoMux.CapteursDefinition cd = dic.getDefinitionById(capteurId);
+//
+//            Function<AbstractBoard2007NoMux.CapteursDefinition, CapteurNumerique> f = (input) -> new CapteurNumerique(input.getId(), String.format("%s (%s)", input.name(), input.getDescription()), dic.readCapteurValue(input.getId()));
+//
+//            capteurList.add(f.apply(cd));
+//        }
 
         return capteurList;
     }

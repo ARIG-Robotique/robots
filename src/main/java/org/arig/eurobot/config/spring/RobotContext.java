@@ -42,8 +42,8 @@ public class RobotContext {
     @Bean
     public IAsservissementPolaire asservissement(ConvertionRobotUnit convertisseur) {
         AsservissementPolaire asserv = new AsservissementPolaire();
-        asserv.setMinFenetreDistance(convertisseur.mmToPulse(1));
-        asserv.setMinFenetreOrientation(convertisseur.degToPulse(0.1));
+        asserv.setMinFenetreDistance(convertisseur.mmToPulse(IConstantesRobot.approcheDistanceMm));
+        asserv.setMinFenetreOrientation(convertisseur.degToPulse(IConstantesRobot.approcheOrientationDeg));
         return asserv;
     }
 
@@ -65,20 +65,30 @@ public class RobotContext {
     @Bean(name = "pidDistance")
     public IPidFilter pidDistance() {
         log.info("Configuration PID Distance");
+        // PID Simple
+        //SimplePID pid = new SimplePID();
+
+        // PID Complet
         CompletePID pid = new CompletePID();
         pid.setSampleTime((int) IConstantesRobot.asservTimeMs);
-        pid.setTunings(IConstantesRobot.kpDistance, IConstantesRobot.kiDistance, IConstantesRobot.kdDistance);
         pid.setMode(IPidFilter.PidMode.AUTOMATIC);
+
+        pid.setTunings(IConstantesRobot.kpDistance, IConstantesRobot.kiDistance, IConstantesRobot.kdDistance);
         return pid;
     }
 
     @Bean(name = "pidOrientation")
     public IPidFilter pidOrientation() {
         log.info("Configuration PID Orientation");
+        // PID Simple
+        //SimplePID pid = new SimplePID();
+
+        // PID Complet
         CompletePID pid = new CompletePID();
         pid.setSampleTime((int) IConstantesRobot.asservTimeMs);
-        pid.setTunings(IConstantesRobot.kpOrientation, IConstantesRobot.kiOrientation, IConstantesRobot.kdOrientation);
         pid.setMode(IPidFilter.PidMode.AUTOMATIC);
+
+        pid.setTunings(IConstantesRobot.kpOrientation, IConstantesRobot.kiOrientation, IConstantesRobot.kdOrientation);
         return pid;
     }
 

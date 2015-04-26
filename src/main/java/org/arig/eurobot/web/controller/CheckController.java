@@ -18,8 +18,8 @@ public class CheckController {
     @RequestMapping()
     public Map<String, String> check() {
         Map<String, String> v = new HashMap<>();
-        v.put("nom", "Main Robot 2K13");
-        v.put("version", "1.0");
+        v.put("nom", "Elfa : Robomovies 2015");
+        v.put("version", "1.0.0");
 
         return v;
     }

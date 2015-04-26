@@ -7,7 +7,7 @@ import org.arig.robot.communication.II2CManager;
 import org.arig.robot.communication.raspi.RaspiI2CManager;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
-import org.arig.robot.system.motors.AbstractMotors;
+import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.MD22Motors;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +23,7 @@ import java.io.IOException;
 @Profile("raspi")
 public class I2CContext {
 
-    @Bean
+    @Bean(destroyMethod = "close")
     public I2CBus i2cBus() throws IOException {
         return I2CFactory.getInstance(I2CBus.BUS_1);
     }
@@ -36,11 +36,16 @@ public class I2CContext {
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_DROIT, IConstantesI2C.CODEUR_DROIT_ADDRESS);
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_GAUCHE, IConstantesI2C.CODEUR_GAUCHE_ADDRESS);
 
+        // Enregistrement juste pour le scan.
+        manager.registerDevice(IConstantesI2C.PCF_ALIM_DEVICE_NAME, IConstantesI2C.PCF_ALIM_ADDRESS);
+        manager.registerDevice(IConstantesI2C.PCF_NUM1_DEVICE_NAME, IConstantesI2C.PCF_NUM1_ADDRESS);
+        manager.registerDevice(IConstantesI2C.PCF_NUM2_DEVICE_NAME, IConstantesI2C.PCF_NUM2_ADDRESS);
+
         return manager;
     }
 
     @Bean
-    public AbstractMotors motors() {
+    public AbstractPropulsionsMotors motors() {
         // Configuration de la carte moteur propulsion.
         MD22Motors md22 = new MD22Motors(IConstantesI2C.PROPULSION_DEVICE_NAME, (byte) 1, (byte) 0);
         md22.assignMotors(2, 1);

@@ -7,13 +7,16 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.arig.eurobot.constants.IConstantesRobot;
 import org.arig.eurobot.constants.IConstantesServos;
 import org.arig.eurobot.model.RobotStatus;
+import org.arig.eurobot.services.IOServices;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.csv.CsvCollector;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.system.MouvementManager;
-import org.arig.robot.system.motors.AbstractMotors;
 import org.arig.robot.system.servos.SD21Servos;
+import org.arig.robot.utils.ConvertionRobotUnit;
+import org.arig.robot.vo.Position;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Scanner;
 
@@ -27,7 +30,10 @@ public class Ordonanceur {
     private static Ordonanceur INSTANCE;
 
     @Autowired
-    private RobotStatus rs;
+    private RobotStatus robotStatus;
+
+    @Autowired
+    private IOServices ioServices;
 
     @Autowired
     private II2CManager i2CManager;
@@ -36,10 +42,14 @@ public class Ordonanceur {
     private SD21Servos servos;
 
     @Autowired
-    private AbstractMotors motors;
+    private MouvementManager mouvementManager;
 
     @Autowired
-    private MouvementManager mouvementManager;
+    private ConvertionRobotUnit conv;
+
+    @Autowired
+    @Qualifier("currentPosition")
+    private Position position;
 
     @Autowired(required = false)
     private CsvCollector csvCollector;
@@ -84,6 +94,16 @@ public class Ordonanceur {
         log.info("Initialisation du contrôleur de mouvement");
         mouvementManager.init();
 
+        // Activation de la puissance
+        //ioServices.enableAlimMoteur();
+        //ioServices.enableAlimServoMoteur();
+
+        if (!ioServices.auOk()) {
+            log.warn("L'arrêt d'urgence est coupé.");
+            while(!ioServices.auOk());
+            log.info("Arrêt d'urgence OK");
+        }
+
         // Attente tirette.
         log.info("!!! ... ATTENTE TIRRETTE ... !!!");
         Scanner sc = new Scanner(System.in);
@@ -91,22 +111,33 @@ public class Ordonanceur {
 
         log.info("Démarrage du match");
         mouvementManager.resetEncodeurs();
-        rs.setAsservEnabled(true);
 
-        // Match de 90 secondes.
+        // TODO : A supprimer
+        mouvementManager.setVitesse(500L, 800L);
+        position.setAngle(conv.degToPulse(90));
+        // TODO : FIN A supprimer
+
+        // Activation
+        robotStatus.enableAsserv();
+
+        // Match de XX secondes.
         StopWatch matchTime = new StopWatch();
         matchTime.start();
         while(matchTime.getTime() < IConstantesRobot.matchTimeMs) {
             try {
-                Thread.sleep(500);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 log.error("Interruption du Thread", e);
             }
         }
         matchTime.stop();
 
-        mouvementManager.stop();
-        rs.setAsservEnabled(false);
+        // Arrêt de l'asservissement et des moteurs
+        robotStatus.disableAsserv();
+
+        // Désactivation de la puissance
+        //ioServices.disableAlimMoteur();
+        //ioServices.disableAlimServoMoteur();
 
         if (csvCollector != null) {
             csvCollector.exportToFile();

@@ -10,6 +10,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan({"org.arig.prehistobot.web"})
+@ComponentScan({"org.arig.eurobot.web"})
 public class WebServiceServletContext extends WebMvcConfigurerAdapter {
 }
