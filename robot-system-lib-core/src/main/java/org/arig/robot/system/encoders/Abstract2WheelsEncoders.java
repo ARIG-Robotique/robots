@@ -26,6 +26,12 @@ public abstract class Abstract2WheelsEncoders {
     @Getter
     private double orientation;
 
+    @Getter
+    private double gauche;
+
+    @Getter
+    private double droit;
+
     /** The coef gauche. */
     private double coefGauche;
 
@@ -48,7 +54,6 @@ public abstract class Abstract2WheelsEncoders {
      * Lecture valeurs.
      */
     public void lectureValeurs() {
-        final double gauche, droit;
 
         if (alternate) {
             gauche = lectureGauche() * coefGauche;
@@ -59,7 +64,7 @@ public abstract class Abstract2WheelsEncoders {
         }
         alternate = !alternate;
 
-        setValeursCodeurs(gauche, droit);
+        calculPolarValues();
 
         if (csvCollector != null) {
             CsvData c = csvCollector.getCurrent();
@@ -90,7 +95,7 @@ public abstract class Abstract2WheelsEncoders {
 
     /**
      * Lecture gauche.
-     * 
+     *
      * @return the double
      */
     protected abstract double lectureGauche();
@@ -103,14 +108,9 @@ public abstract class Abstract2WheelsEncoders {
     protected abstract double lectureDroit();
 
     /**
-     * Sets the valeurs codeurs.
-     * 
-     * @param gauche
-     *            the gauche
-     * @param droit
-     *            the droit
+     * Calcul des valeurs polaires.
      */
-    private void setValeursCodeurs(final double gauche, final double droit) {
+    private void calculPolarValues() {
         distance = (droit + gauche) / 2;
         orientation = droit - gauche;
     }

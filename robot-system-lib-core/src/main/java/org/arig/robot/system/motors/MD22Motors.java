@@ -307,7 +307,7 @@ public class MD22Motors extends AbstractPropulsionsMotors {
     public void printVersion() {
         try {
             i2cManager.sendData(deviceName, MD22Motors.VERSION_REGISTER);
-            final byte version = i2cManager.getData(deviceName);
+            final int version = i2cManager.getData(deviceName);
             log.info("MD22 DC Motors (V : {})", version);
         } catch (I2CException e) {
             log.error("Erreur lors de la récupération de la version de la carte MD22", e);

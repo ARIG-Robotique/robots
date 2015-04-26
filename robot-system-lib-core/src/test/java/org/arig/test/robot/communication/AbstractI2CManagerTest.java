@@ -121,6 +121,6 @@ public class AbstractI2CManagerTest {
      */
     @Test
     public void testGetKnownBoard() throws I2CException {
-        Assert.assertEquals(2, (byte) AbstractI2CManagerTest.impl.getDevice("Board 2"), 0);
+        Assert.assertEquals(2, AbstractI2CManagerTest.impl.getDevice("Board 2"), 0);
     }
 }

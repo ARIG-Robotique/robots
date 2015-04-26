@@ -117,7 +117,7 @@ public class SD21Servos {
     public void printVersion() {
         try {
             i2cManager.sendData(deviceName, SD21Servos.VERSION_REGISTER);
-            final short version = i2cManager.getData(deviceName);
+            final int version = i2cManager.getData(deviceName);
             log.info("SD21 ServoMotors (V : {})", version);
         } catch (I2CException e) {
             log.error("Erreur lors de la récupération de la version de la carte SD21");

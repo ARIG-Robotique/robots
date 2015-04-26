@@ -58,7 +58,11 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
     @Override
     protected double lectureGauche() {
         try {
-            return lectureData(deviceNameGauche);
+            double v = lectureData(deviceNameGauche);
+            if (log.isDebugEnabled()) {
+                log.debug("Lecture codeur gauche : {}", v);
+            }
+            return v;
         } catch (final I2CException e) {
             log.error("Erreur lors de la lecture du codeur gauche : " + e.toString());
             return 0;
@@ -73,7 +77,11 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
     @Override
     protected double lectureDroit() {
         try {
-            return lectureData(deviceNameDroit);
+            double v = lectureData(deviceNameDroit);
+            if (log.isDebugEnabled()) {
+                log.debug("Lecture codeur droit : {}", v);
+            }
+            return v;
         } catch (final I2CException e) {
             log.error("Erreur lors de la lecture du codeur droit : " + e.toString());
             return 0;
@@ -81,10 +89,10 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
     }
 
     /**
-     * Lecture data depuis nos cartes codeur Arduino. {@link https://www.github.com/ARIG-ssociation/quadratic-reader/}
+     * Lecture data depuis nos cartes codeur. {@link https://www.github.com/ARIG-ssociation/quadratic-reader/}
      * 
      * 1) On envoi la commande de lecture.
-     * 2) On récupère 2 octets (int sur 2 octet avec un AVR 8 bits)
+     * 2) On récupère un short (2 octets car int sur 2 octet avec un AVR 8 bits)
      * 
      * @param deviceName
      *            the deviceName
@@ -99,10 +107,7 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
             throw new I2CException("Impossible de lire la valeur codeur pour la carte " + deviceName, e);
         }
 
-        int value = 0;
         final byte[] datas = i2cManager.getDatas(deviceName, 2);
-        value = datas[0] << 8;
-        value += datas[1];
-        return value;
+        return ((short) ((datas[0] << 8) + (datas[1] & 0xFF)));
     }
 }
