@@ -1,9 +1,14 @@
 package org.arig.robot.system.servos;
 
+import com.google.common.collect.Multimap;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.exception.I2CException;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Class SD21Servos.
@@ -11,10 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author GregoryDepuille
  */
 @Slf4j
-public class SD21Servos {
+public class SD21Servos implements InitializingBean {
 
     /** The Constant VERSION_REGISTER. */
     public static final byte VERSION_REGISTER = 0x40;
+
+    private static final int NB_SERVOS = 21;
 
     /** The address. */
     protected String deviceName;
@@ -22,6 +29,17 @@ public class SD21Servos {
     /** The i2c manager. */
     @Autowired
     private II2CManager i2cManager;
+
+    private Map<Byte, Integer> lastPositions = new HashMap<>(21);
+    private Map<Byte, Byte> lastSpeed = new HashMap<>(21);
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        for (byte i = 1 ; i <= NB_SERVOS ; i++) {
+            lastPositions.put(i, 1500);
+            lastSpeed.put(i, (byte) 0);
+        }
+    }
 
     /**
      * Instantiates a new s d21 servos.
@@ -59,6 +77,12 @@ public class SD21Servos {
             return;
         }
 
+        if (getPosition(servoNb) == position) {
+            return;
+        }
+
+        lastPositions.put(servoNb, position);
+
         try {
             log.info("Définition de la position du servo {} (Position = {})", servoNb, position);
             i2cManager.sendData(deviceName, (byte) (SD21Servos.getBaseRegister(servoNb) + 1), (byte) (position & 0xFF), (byte) (position >> 8));
@@ -79,6 +103,12 @@ public class SD21Servos {
         if (!checkServo(servoNb)) {
             return;
         }
+
+        if (getSpeed(servoNb) == speed) {
+            return;
+        }
+
+        lastSpeed.put(servoNb, speed);
 
         try {
             log.info(String.format("Définiion de la vitesse du servo %d (Vitesse = %d)", servoNb, speed));
@@ -103,12 +133,47 @@ public class SD21Servos {
             return;
         }
 
+        if (getPosition(servoNb) == position && getSpeed(servoNb) == speed) {
+            return;
+        }
+
+        lastPositions.put(servoNb, position);
+        lastSpeed.put(servoNb, speed);
+
         try {
             log.info(String.format("Comande du servo %d (Vitesse = %d,  Position = %d)", servoNb, speed, position));
             i2cManager.sendData(deviceName, SD21Servos.getBaseRegister(servoNb), speed, (byte) (position & 0xFF), (byte) (position >> 8));
         } catch (I2CException e) {
             log.error("Erreur lors de la définition de la vitesse et de la position");
         }
+    }
+
+    /**
+     * Get the last position of servo
+     *
+     * @param servoNb
+     * @return
+     */
+    public int getPosition(final byte servoNb) {
+        if (!checkServo(servoNb)) {
+            return -1;
+        }
+
+        return lastPositions.get(servoNb);
+    }
+
+    /**
+     * Get the last speed of servo
+     *
+     * @param servoNb
+     * @return
+     */
+    public int getSpeed(final byte servoNb) {
+        if (!checkServo(servoNb)) {
+            return -1;
+        }
+
+        return lastSpeed.get(servoNb);
     }
 
     /**
@@ -132,7 +197,7 @@ public class SD21Servos {
      * @return true, if servo number are between 1 and 21. False otherwise
      */
     private boolean checkServo(final byte servoNb) {
-        final boolean result = servoNb >= 1 && servoNb <= 21;
+        final boolean result = servoNb >= 1 && servoNb <= NB_SERVOS;
         if (!result) {
             log.warn("Numéro de servo moteur invalide : {}", servoNb);
         }
