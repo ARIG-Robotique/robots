@@ -2,6 +2,7 @@ package org.arig.eurobot.model;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 
 /**
@@ -19,11 +20,9 @@ public class RobotStatus {
     @Setter(AccessLevel.NONE)
     private int nbPied = 0;
 
-    private boolean gobeletDroit = false;
-    private boolean gobeletGauche = false;
+    private boolean produitDroit = false;
+    private boolean produitGauche = false;
 
-    private boolean piedDroit = false;
-    private boolean piedGauche = false;
 
     public void enableAsserv() { asservEnabled = true; }
 

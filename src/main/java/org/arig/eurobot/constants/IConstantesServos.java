@@ -8,10 +8,10 @@ public interface IConstantesServos {
     // Constantes de vitesse
     static final byte SPEED_BRAS = 25;
     static final byte SPEED_TAPIS = 15;
-    static final byte SPEED_GOBELET = 15;
-    static final byte SPEED_MONTE_GOBELET = 15;
-    static final byte SPEED_ASCENSEUR = 50;
-    static final byte SPEED_PINCE = 50;
+    static final byte SPEED_GOBELET = 50;
+    static final byte SPEED_MONTE_GOBELET = 30;
+    static final byte SPEED_ASCENSEUR = 60;
+    static final byte SPEED_PINCE = 60;
     static final byte SPEED_GUIDE = 15;
     static final byte SPEED_SONAR = 15;
 

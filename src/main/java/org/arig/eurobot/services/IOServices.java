@@ -68,23 +68,27 @@ public class IOServices {
     }
 
     public boolean gobeletGauche() {
-        return pcfPresence.getState(IConstantesGPIO.N2_PRESENCE_GAUCHE) == PinState.LOW
-                && pcfSwitch.getState(IConstantesGPIO.N1_SW_GB_GAUCHE) == PinState.LOW;
+        return pcfSwitch.getState(IConstantesGPIO.N1_SW_GB_GAUCHE) == PinState.LOW;
+    }
+
+    public boolean produitGauche() {
+        return pcfPresence.getState(IConstantesGPIO.N2_PRESENCE_GAUCHE) == PinState.LOW;
     }
 
     public boolean piedGauche() {
-        return pcfPresence.getState(IConstantesGPIO.N2_PRESENCE_GAUCHE) == PinState.LOW
-                && pcfSwitch.getState(IConstantesGPIO.N1_SW_GB_GAUCHE) == PinState.HIGH;
+        return produitGauche() && !gobeletGauche();
     }
 
     public boolean gobeletDroit() {
-        return pcfPresence.getState(IConstantesGPIO.N2_PRESENCE_DROITE) == PinState.LOW
-                && pcfSwitch.getState(IConstantesGPIO.N1_SW_GB_DROIT) == PinState.LOW;
+        return pcfSwitch.getState(IConstantesGPIO.N1_SW_GB_DROIT) == PinState.LOW;
+    }
+
+    public boolean produitDroit() {
+        return pcfPresence.getState(IConstantesGPIO.N2_PRESENCE_DROITE) == PinState.LOW;
     }
 
     public boolean piedDroit() {
-        return pcfPresence.getState(IConstantesGPIO.N2_PRESENCE_DROITE) == PinState.LOW
-                && pcfSwitch.getState(IConstantesGPIO.N1_SW_GB_DROIT) == PinState.HIGH;
+        return produitDroit() && !gobeletDroit();
     }
 
     public boolean piedCentre() {

@@ -59,14 +59,50 @@ public class ServosServices {
             log.info("Pied au centre");
             servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
             servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
-            Thread.currentThread();
-            Thread.sleep(800);
+            Thread.currentThread().sleep(900);
             servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_FERME);
-            Thread.sleep(300);
+            Thread.currentThread().sleep(300);
             servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_HAUT);
             robotStatus.incNbPied();
-            Thread.sleep(1500);
+            Thread.currentThread().sleep(900);
         }
     }
 
+    public void checkProduitGauche() throws InterruptedException {
+        if (robotStatus.isProduitGauche()) {
+            return;
+        }
+
+        if (ioServices.produitGauche() || ioServices.gobeletGauche()) {
+            robotStatus.setProduitGauche(true);
+            servos.setPosition(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_PRODUIT);
+            Thread.currentThread().sleep(1500);
+            if (ioServices.gobeletGauche()) {
+                servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_HAUT);
+            }
+            log.info("Produit à gauche [ Pied : {} ; Gobelet {} ]", ioServices.piedGauche(), ioServices.gobeletGauche());
+        } else {
+            servos.setPosition(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_OUVERT);
+            servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_BAS);
+        }
+    }
+
+    public void checkProduitDroit() throws InterruptedException {
+        if (robotStatus.isProduitDroit()) {
+            return;
+        }
+
+        if (ioServices.produitDroit() || ioServices.gobeletDroit()) {
+            robotStatus.setProduitDroit(true);
+            servos.setPosition(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_PRODUIT);
+            Thread.currentThread().sleep(1500);
+            if (ioServices.gobeletDroit()) {
+                servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_HAUT);
+            }
+            log.info("Produit à droite [ Pied : {} ; Gobelet {} ]", ioServices.piedDroit(), ioServices.gobeletDroit());
+        } else {
+            servos.setPosition(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_OUVERT);
+            servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_BAS);
+        }
+    }
 }

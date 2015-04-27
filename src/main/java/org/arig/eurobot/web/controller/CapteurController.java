@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -25,7 +25,7 @@ public class CapteurController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Map<String, Boolean> listAll() {
-        Map<String, Boolean> capteurList = new HashMap<>();
+        Map<String, Boolean> capteurList = new LinkedHashMap<>();
 
         capteurList.put("AU", ioServices.auOk());
         capteurList.put("Puissance Moteur", ioServices.alimMoteurOk());
@@ -36,11 +36,13 @@ public class CapteurController {
         capteurList.put("Butée avant droite", ioServices.buteeAvantDroit());
         capteurList.put("Butée arrière gauche", ioServices.buteeArriereGauche());
         capteurList.put("Butée arrière droite", ioServices.buteeArriereDroit());
-        capteurList.put("Gobelet gauche", ioServices.gobeletGauche());
-        capteurList.put("Gobelet droit", ioServices.gobeletDroit());
+        capteurList.put("Pied ascenseur", ioServices.piedCentre());
         capteurList.put("Pied gauche", ioServices.piedGauche());
         capteurList.put("Pied droit", ioServices.piedDroit());
-        capteurList.put("Pied ascenseur", ioServices.piedCentre());
+        capteurList.put("Produit gauche", ioServices.produitGauche());
+        capteurList.put("Produit droit", ioServices.produitDroit());
+        capteurList.put("Gobelet gauche", ioServices.gobeletGauche());
+        capteurList.put("Gobelet droit", ioServices.gobeletDroit());
 
         return capteurList;
     }
