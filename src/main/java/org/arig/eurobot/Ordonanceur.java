@@ -104,10 +104,26 @@ public class Ordonanceur {
             log.info("Arrêt d'urgence OK");
         }
 
+        if (!ioServices.tirette()) {
+            log.warn("La tirette n'est pas la. Phase de préparation Nerell");
+            while(!ioServices.tirette()) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    log.error("Interruption du Thread pendant le check tapis", e);
+                }
+            }
+        }
+
         // Attente tirette.
         log.info("!!! ... ATTENTE TIRRETTE ... !!!");
         Scanner sc = new Scanner(System.in);
-        while(!sc.nextLine().equalsIgnoreCase("start"));
+        while(!sc.nextLine().equalsIgnoreCase("start") && ioServices.tirette()) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+            }
+        }
 
         log.info("Démarrage du match");
         mouvementManager.resetEncodeurs();
@@ -125,7 +141,7 @@ public class Ordonanceur {
         matchTime.start();
         while(matchTime.getTime() < IConstantesRobot.matchTimeMs) {
             try {
-                Thread.sleep(100);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 log.error("Interruption du Thread", e);
             }
@@ -134,6 +150,7 @@ public class Ordonanceur {
 
         // Arrêt de l'asservissement et des moteurs
         robotStatus.disableAsserv();
+        robotStatus.disableMatch();
 
         // Désactivation de la puissance
         //ioServices.disableAlimMoteur();
