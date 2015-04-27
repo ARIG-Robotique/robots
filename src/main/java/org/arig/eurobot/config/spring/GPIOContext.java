@@ -4,6 +4,7 @@ import com.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.PinMode;
+import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.i2c.I2CBus;
 import org.arig.eurobot.constants.IConstantesGPIO;
 import org.arig.eurobot.constants.IConstantesI2C;
@@ -20,9 +21,11 @@ import java.io.IOException;
 @Profile("raspi")
 public class GPIOContext {
 
-    @Bean(destroyMethod = "shutdown")
+    @Bean(name = "ioRaspi", destroyMethod = "shutdown")
     public GpioController gpioController() {
-        return GpioFactory.getInstance();
+        GpioController gpio = GpioFactory.getInstance();
+        gpio.provisionDigitalOutputPin(IConstantesGPIO.CMD_LED_RGB, PinState.LOW).low();
+        return gpio;
     }
 
     @Bean(name = "pcfSwitch", destroyMethod = "shutdown")
