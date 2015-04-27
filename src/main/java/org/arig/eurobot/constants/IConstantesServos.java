@@ -10,8 +10,8 @@ public interface IConstantesServos {
     static final byte SPEED_TAPIS = 15;
     static final byte SPEED_GOBELET = 15;
     static final byte SPEED_MONTE_GOBELET = 15;
-    static final byte SPEED_ASCENSEUR = 15;
-    static final byte SPEED_PINCE = 15;
+    static final byte SPEED_ASCENSEUR = 50;
+    static final byte SPEED_PINCE = 50;
     static final byte SPEED_GUIDE = 15;
     static final byte SPEED_SONAR = 15;
 
@@ -62,11 +62,11 @@ public interface IConstantesServos {
 
     static final int PINCE_OUVERTE = 1010;
     static final int PINCE_COULEUR = 1520;
-    static final int PINCE_FERME = 1580;
+    static final int PINCE_FERME = 1588;
 
     static final int ASCENSEUR_HAUT = 2210;
     static final int ASCENSEUR_BAS = 790;
 
     static final int GUIDE_OUVERT = 1240;
-    static final int GUIDE_FERME = 1520;
+    static final int GUIDE_FERME = 1470;
 }

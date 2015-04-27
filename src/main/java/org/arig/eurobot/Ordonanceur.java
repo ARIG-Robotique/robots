@@ -8,6 +8,7 @@ import org.arig.eurobot.constants.IConstantesRobot;
 import org.arig.eurobot.constants.IConstantesServos;
 import org.arig.eurobot.model.RobotStatus;
 import org.arig.eurobot.services.IOServices;
+import org.arig.eurobot.services.ServosServices;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.csv.CsvCollector;
 import org.arig.robot.exception.I2CException;
@@ -39,7 +40,7 @@ public class Ordonanceur {
     private II2CManager i2CManager;
 
     @Autowired
-    private SD21Servos servos;
+    private ServosServices servosServices;
 
     @Autowired
     private MouvementManager mouvementManager;
@@ -75,20 +76,8 @@ public class Ordonanceur {
         }
 
         // Init servos
-        log.info("Initialisation servos moteurs");
-        servos.printVersion();
-        servos.setPositionAndSpeed(IConstantesServos.BRAS_DROIT, IConstantesServos.BRAS_DROIT_HAUT, IConstantesServos.SPEED_BRAS);
-        servos.setPositionAndSpeed(IConstantesServos.BRAS_GAUCHE, IConstantesServos.BRAS_GAUCHE_HAUT, IConstantesServos.SPEED_BRAS);
-        servos.setPositionAndSpeed(IConstantesServos.TAPIS_DROIT, IConstantesServos.TAPIS_DROIT_FERME, IConstantesServos.SPEED_TAPIS);
-        servos.setPositionAndSpeed(IConstantesServos.TAPIS_GAUCHE, IConstantesServos.TAPIS_GAUCHE_FERME, IConstantesServos.SPEED_TAPIS);
-        servos.setPositionAndSpeed(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_FERME, IConstantesServos.SPEED_GOBELET);
-        servos.setPositionAndSpeed(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_FERME, IConstantesServos.SPEED_GOBELET);
-        servos.setPositionAndSpeed(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_BAS, IConstantesServos.SPEED_MONTE_GOBELET);
-        servos.setPositionAndSpeed(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_BAS, IConstantesServos.SPEED_MONTE_GOBELET);
-        servos.setPositionAndSpeed(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_HAUT, IConstantesServos.SPEED_ASCENSEUR);
-        servos.setPositionAndSpeed(IConstantesServos.PINCE, IConstantesServos.PINCE_FERME, IConstantesServos.SPEED_PINCE);
-        servos.setPositionAndSpeed(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT, IConstantesServos.SPEED_GUIDE);
-        servos.setPositionAndSpeed(IConstantesServos.SONAR, IConstantesServos.SONAR_CENTRE, IConstantesServos.SPEED_SONAR);
+        log.info("Position initiale des servos moteurs");
+        servosServices.setHome();
 
         // Initialisation Mouvement Manager
         log.info("Initialisation du contrôleur de mouvement");
@@ -107,6 +96,7 @@ public class Ordonanceur {
         if (!ioServices.tirette()) {
             log.warn("La tirette n'est pas la. Phase de préparation Nerell");
             while(!ioServices.tirette()) {
+                servosServices.checkBtnTapis();
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -135,6 +125,7 @@ public class Ordonanceur {
 
         // Activation
         robotStatus.enableAsserv();
+        robotStatus.enableMatch();
 
         // Match de XX secondes.
         StopWatch matchTime = new StopWatch();
