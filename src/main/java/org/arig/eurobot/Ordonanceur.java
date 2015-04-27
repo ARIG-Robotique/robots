@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.eurobot.constants.IConstantesRobot;
-import org.arig.eurobot.constants.IConstantesServos;
 import org.arig.eurobot.model.RobotStatus;
 import org.arig.eurobot.services.IOServices;
 import org.arig.eurobot.services.ServosServices;
@@ -13,7 +12,6 @@ import org.arig.robot.communication.II2CManager;
 import org.arig.robot.csv.CsvCollector;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.system.MouvementManager;
-import org.arig.robot.system.servos.SD21Servos;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.vo.Position;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,8 +117,9 @@ public class Ordonanceur {
         mouvementManager.resetEncodeurs();
 
         // TODO : A supprimer
-        mouvementManager.setVitesse(500L, 800L);
+        mouvementManager.setVitesse(200L, 800L);
         position.setAngle(conv.degToPulse(90));
+        mouvementManager.gotoPointMM(0, 1500, true);
         // TODO : FIN A supprimer
 
         // Activation
@@ -132,7 +131,7 @@ public class Ordonanceur {
         matchTime.start();
         while(matchTime.getTime() < IConstantesRobot.matchTimeMs) {
             try {
-                Thread.sleep(200);
+                Thread.currentThread().sleep(200);
             } catch (InterruptedException e) {
                 log.error("Interruption du Thread", e);
             }

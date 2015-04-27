@@ -11,6 +11,9 @@ public interface IConstantesRobot {
     // Durée du match //
     static final int matchTimeMs = 90000;
 
+    // Nb Thread Pool
+    static final int nbThreadScheduledExecutor = 10;
+
     // ----------------------------- //
     // Configuration des convertions //
     // ----------------------------- //

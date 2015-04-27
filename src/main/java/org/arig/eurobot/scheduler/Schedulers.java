@@ -23,9 +23,6 @@ public class Schedulers {
     private RobotStatus rs;
 
     @Autowired
-    private CommandeRobot cmdRobot;
-
-    @Autowired
     private MouvementManager mouvementManager;
 
     @Autowired
@@ -35,10 +32,6 @@ public class Schedulers {
     public void robotManagerTask() {
         if (rs.isAsservEnabled()) {
             mouvementManager.process();
-
-            // TODO : A nettoyer
-            System.out.println(cmdRobot.getConsigne().getDistance() + ";" + cmdRobot.getConsigne().getOrientation() +
-                    ";" + mouvementManager.isTrajetEnApproche() + ";" + mouvementManager.isTrajetAtteint());
         } else {
             mouvementManager.stop();
         }
@@ -51,6 +44,28 @@ public class Schedulers {
                 servosServices.checkAscenseur();
             } catch (InterruptedException e) {
                 log.error("Erreur lors du contrôle pour l'ascenseur {}", e.toString());
+            }
+        }
+    }
+
+    @Scheduled(fixedDelay = 100L)
+    public void produitGaucheTask() {
+        if (rs.isMatchEnabled()) {
+            try {
+                servosServices.checkProduitGauche();
+            } catch (InterruptedException e) {
+                log.error("Erreur lors du contrôle pour le produit gauche {}", e.toString());
+            }
+        }
+    }
+
+    @Scheduled(fixedDelay = 100L)
+    public void produitDroitTask() {
+        if (rs.isMatchEnabled()) {
+            try {
+                servosServices.checkProduitDroit();
+            } catch (InterruptedException e) {
+                log.error("Erreur lors du contrôle pour le produit droit  {}", e.toString());
             }
         }
     }
