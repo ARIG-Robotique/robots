@@ -92,6 +92,30 @@ public class SD21Servos implements InitializingBean {
     }
 
     /**
+     * Demande de mouvement avec attente théorique du déplacement
+     *
+     * @param servoNb Numéro du servo moteur
+     * @param newPosition Nouvelle position
+     */
+    public void setPositionAndWait(final byte servoNb, final int newPosition) {
+        int currentSpeed = getSpeed(servoNb);
+        int oldPosition = getPosition(servoNb);
+
+        if (oldPosition == newPosition) {
+            return;
+        }
+
+        setPosition(servoNb, newPosition);
+        try {
+            int waitTime = calculWaitTimeMs(oldPosition, newPosition, currentSpeed);
+            log.info("Attente pour le mouvement servo {} {} -> {} à la vitesse {}", servoNb, oldPosition, newPosition, currentSpeed);
+            Thread.currentThread().sleep(waitTime);
+        } catch (InterruptedException e) {
+            log.warn("Erreur d'attente pour le mouvement servo {} {} -> {} à la vitesse {}", servoNb, oldPosition, newPosition, currentSpeed);
+        }
+    }
+
+    /**
      * Sets the speed.
      * 
      * @param servoNb
@@ -149,10 +173,35 @@ public class SD21Servos implements InitializingBean {
     }
 
     /**
+     * Demande de mouvement et vitesse avec attente théorique du déplacement
+     *
+     * @param servoNb Numéro du servo moteur
+     * @param newPosition Nouvelle position
+     * @param newSpeed Nouvelle vitesse de déplacement
+     */
+    public void setPositionAndSpeedAndWait(final byte servoNb, final int newPosition, final byte newSpeed) {
+        int oldSpeed = getSpeed(servoNb);
+        int oldPosition = getPosition(servoNb);
+
+        if (oldPosition == newPosition && oldSpeed == newSpeed) {
+            return;
+        }
+
+        setPositionAndSpeed(servoNb, newPosition, newSpeed);
+        try {
+            int waitTime = calculWaitTimeMs(oldPosition, newPosition, newSpeed);
+            log.info("Attente pour le mouvement servo {} {} -> {} à la vitesse {}", servoNb, oldPosition, newPosition, newSpeed);
+            Thread.currentThread().sleep(waitTime);
+        } catch (InterruptedException e) {
+            log.warn("Erreur d'attente pour le mouvement servo {} {} -> {} à la vitesse {}", servoNb, oldPosition, newPosition, newSpeed);
+        }
+    }
+
+    /**
      * Get the last position of servo
      *
      * @param servoNb
-     * @return
+     * @return La dernière position du servo
      */
     public int getPosition(final byte servoNb) {
         if (!checkServo(servoNb)) {
@@ -166,7 +215,7 @@ public class SD21Servos implements InitializingBean {
      * Get the last speed of servo
      *
      * @param servoNb
-     * @return
+     * @return La dernière vitesse du servo
      */
     public int getSpeed(final byte servoNb) {
         if (!checkServo(servoNb)) {
@@ -202,5 +251,22 @@ public class SD21Servos implements InitializingBean {
             log.warn("Numéro de servo moteur invalide : {}", servoNb);
         }
         return result;
+    }
+
+    /**
+     * Calcul du temps d'attente théorique pour le mouvement.
+     *
+     * @param start Position de départ
+     * @param target Position d'arrivé
+     * @param speed Valeur de vitesse configuré
+     * @return
+     */
+    private int calculWaitTimeMs(int start, int target, int speed) {
+        try {
+            return (Math.abs(target - start) / speed) * 20;
+        } catch (ArithmeticException e) {
+            log.warn("Valeur du registre de vitesse {} : {}", speed, e.toString());
+            return 0;
+        }
     }
 }
