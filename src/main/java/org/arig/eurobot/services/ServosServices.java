@@ -1,6 +1,7 @@
 package org.arig.eurobot.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.eurobot.constants.IConstantesRobot;
 import org.arig.eurobot.constants.IConstantesServos;
 import org.arig.eurobot.model.RobotStatus;
 import org.arig.robot.system.servos.SD21Servos;
@@ -23,7 +24,11 @@ public class ServosServices {
     @Autowired
     private RobotStatus robotStatus;
 
-    public void setHome() {
+    /* **************************************** */
+    /* Méthode pour le positionnement d'origine */
+    /* **************************************** */
+
+    public void homes() {
         log.info("Servos en position initiale");
         servos.printVersion();
         servos.setPositionAndSpeed(IConstantesServos.BRAS_DROIT, IConstantesServos.BRAS_DROIT_HAUT, IConstantesServos.SPEED_BRAS);
@@ -40,6 +45,9 @@ public class ServosServices {
         servos.setPositionAndSpeed(IConstantesServos.SONAR, IConstantesServos.SONAR_CENTRE, IConstantesServos.SPEED_SONAR);
     }
 
+    /* ******************************************************** */
+    /* Méthode de contrôle pour les actions de prise de produit */
+    /* ******************************************************** */
 
     public void checkBtnTapis() {
         if (ioServices.btnTapis()) {
@@ -54,55 +62,69 @@ public class ServosServices {
         }
     }
 
-    public void checkAscenseur() throws InterruptedException {
-        if (ioServices.piedCentre()) {
-            log.info("Pied au centre");
-            servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
-            servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
-            Thread.currentThread().sleep(900);
-            servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_FERME);
-            Thread.currentThread().sleep(300);
-            servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_HAUT);
-            robotStatus.incNbPied();
-            Thread.currentThread().sleep(900);
+    public void checkAscenseur() {
+        if (ioServices.piedCentre() && robotStatus.getNbPied() < IConstantesRobot.nbPiedMax) {
+            priseProduitAscenseur();
         }
     }
 
-    public void checkProduitGauche() throws InterruptedException {
+    public void checkProduitGauche() {
         if (robotStatus.isProduitGauche()) {
             return;
         }
 
         if (ioServices.produitGauche() || ioServices.gobeletGauche()) {
-            robotStatus.setProduitGauche(true);
-            servos.setPosition(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_PRODUIT);
-            Thread.currentThread().sleep(1500);
-            if (ioServices.gobeletGauche()) {
-                servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_HAUT);
-            }
-            log.info("Produit à gauche [ Pied : {} ; Gobelet {} ]", ioServices.piedGauche(), ioServices.gobeletGauche());
+            priseProduitGauche();
         } else {
             servos.setPosition(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_OUVERT);
             servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_BAS);
         }
     }
 
-    public void checkProduitDroit() throws InterruptedException {
+    public void checkProduitDroit() {
         if (robotStatus.isProduitDroit()) {
             return;
         }
 
         if (ioServices.produitDroit() || ioServices.gobeletDroit()) {
-            robotStatus.setProduitDroit(true);
-            servos.setPosition(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_PRODUIT);
-            Thread.currentThread().sleep(1500);
-            if (ioServices.gobeletDroit()) {
-                servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_HAUT);
-            }
-            log.info("Produit à droite [ Pied : {} ; Gobelet {} ]", ioServices.piedDroit(), ioServices.gobeletDroit());
+            priseProduitDroit();
         } else {
             servos.setPosition(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_OUVERT);
             servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_BAS);
         }
+    }
+
+    /* *********************************** */
+    /* Méthode unitaire de gestion produit */
+    /* *********************************** */
+
+    public void priseProduitAscenseur() {
+        log.info("Prise d'un pied au centre");
+        servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
+        servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
+        servos.setPositionAndWait(IConstantesServos.PINCE, IConstantesServos.PINCE_FERME);
+        servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_HAUT);
+        robotStatus.incNbPied();
+        log.info("Pied dans l'ascenseur {}", robotStatus.getNbPied());
+    }
+
+    public void priseProduitGauche() {
+        log.info("Produit disponible à gauche");
+        servos.setPositionAndWait(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_PRODUIT);
+        if (ioServices.gobeletGauche()) {
+            servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_HAUT);
+        }
+        robotStatus.setProduitGauche(true);
+        log.info("Produit à gauche [ Pied : {} ; Gobelet {} ]", ioServices.piedGauche(), ioServices.gobeletGauche());
+    }
+
+    public void priseProduitDroit() {
+        log.info("Produit disponible à droite");
+        servos.setPositionAndWait(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_PRODUIT);
+        if (ioServices.gobeletDroit()) {
+            servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_HAUT);
+        }
+        robotStatus.setProduitDroit(true);
+        log.info("Produit à droite [ Pied : {} ; Gobelet {} ]", ioServices.piedDroit(), ioServices.gobeletDroit());
     }
 }

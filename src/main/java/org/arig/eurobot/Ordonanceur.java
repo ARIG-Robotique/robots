@@ -75,7 +75,7 @@ public class Ordonanceur {
 
         // Init servos
         log.info("Position initiale des servos moteurs");
-        servosServices.setHome();
+        servosServices.homes();
 
         // Initialisation Mouvement Manager
         log.info("Initialisation du contrôleur de mouvement");

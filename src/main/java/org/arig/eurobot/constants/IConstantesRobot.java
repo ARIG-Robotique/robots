@@ -59,4 +59,10 @@ public interface IConstantesRobot {
     static final double approcheDistanceMm = 10;
     static final double approcheOrientationDeg = 5;
     static final double angleReculDeg = 95;
+
+    // ----------------- //
+    // Paramètres métier //
+    // ----------------- //
+
+    static final int nbPiedMax = 4;
 }
