@@ -45,7 +45,7 @@ public class MainRobotWebApplicationInitializer implements WebApplicationInitial
         sr.setLoadOnStartup(1);
 
         final AnnotationConfigWebApplicationContext appServletContext = new AnnotationConfigWebApplicationContext();
-        webServletContext.register(FrontAppServletContext.class);
+        appServletContext.register(FrontAppServletContext.class);
         sr = servletContext.addServlet("app", new DispatcherServlet(webServletContext));
         sr.addMapping("/app/*");
         sr.setLoadOnStartup(2);
