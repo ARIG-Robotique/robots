@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Classe d'interface avec le composant I2C ADC de Gravitech
  *
- * @see <a href=" http://www.gravitech.us/i2c128anco.html">I2C ADC documentation</a>
+ * @see <a href="http://www.gravitech.us/i2c128anco.html">I2C ADC documentation</a>
  * @author gregorydepuille
  */
 @Slf4j
@@ -55,7 +55,6 @@ public class I2CAdcAnalogInput {
     @Autowired
     private II2CManager i2cManager;
 
-    @Getter(AccessLevel.PROTECTED)
     private final String deviceName;
 
     private InputMode inputMode = InputMode.SINGLE_ENDED_INPUTS;

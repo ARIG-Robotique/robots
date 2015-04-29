@@ -89,13 +89,14 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
     }
 
     /**
-     * Lecture data depuis nos cartes codeur. {@link https://www.github.com/ARIG-ssociation/quadratic-reader/}
+     * Lecture data depuis nos cartes codeur.
      * 
      * 1) On envoi la commande de lecture.
      * 2) On récupère un short (2 octets car int sur 2 octet avec un AVR 8 bits)
-     * 
-     * @param deviceName
-     *            the deviceName
+     *
+     * @see <a href="https://www.github.com/ARIG-ssociation/quadratic-reader/">GitHub Quadratic Reader</a>
+     *
+     * @param deviceName the deviceName
      * @return the int
      * @throws I2CException
      */
