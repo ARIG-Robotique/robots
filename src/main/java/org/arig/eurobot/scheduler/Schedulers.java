@@ -40,33 +40,21 @@ public class Schedulers {
     @Scheduled(fixedDelay = 100L)
     public void ascenseurTask() {
         if (rs.isMatchEnabled()) {
-            try {
-                servosServices.checkAscenseur();
-            } catch (InterruptedException e) {
-                log.error("Erreur lors du contrôle pour l'ascenseur {}", e.toString());
-            }
+            servosServices.checkAscenseur();
         }
     }
 
     @Scheduled(fixedDelay = 100L)
     public void produitGaucheTask() {
         if (rs.isMatchEnabled()) {
-            try {
-                servosServices.checkProduitGauche();
-            } catch (InterruptedException e) {
-                log.error("Erreur lors du contrôle pour le produit gauche {}", e.toString());
-            }
+            servosServices.checkProduitGauche();
         }
     }
 
     @Scheduled(fixedDelay = 100L)
     public void produitDroitTask() {
         if (rs.isMatchEnabled()) {
-            try {
-                servosServices.checkProduitDroit();
-            } catch (InterruptedException e) {
-                log.error("Erreur lors du contrôle pour le produit droit  {}", e.toString());
-            }
+            servosServices.checkProduitDroit();
         }
     }
 }
