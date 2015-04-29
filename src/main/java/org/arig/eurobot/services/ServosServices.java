@@ -45,6 +45,15 @@ public class ServosServices {
         servos.setPositionAndSpeed(IConstantesServos.SONAR, IConstantesServos.SONAR_CENTRE, IConstantesServos.SPEED_SONAR);
     }
 
+    public void end() {
+        log.info("Servos en position finale");
+        servos.setPosition(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_OUVERT);
+        servos.setPosition(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_OUVERT);
+        servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
+        servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
+        servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
+    }
+
     /* ******************************************************** */
     /* Méthode de contrôle pour les actions de prise de produit */
     /* ******************************************************** */

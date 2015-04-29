@@ -6,14 +6,14 @@ package org.arig.eurobot.constants;
 public interface IConstantesServos {
 
     // Constantes de vitesse
-    static final byte SPEED_BRAS = 25;
-    static final byte SPEED_TAPIS = 15;
+    static final byte SPEED_BRAS = 50;
+    static final byte SPEED_TAPIS = 25;
     static final byte SPEED_GOBELET = 50;
-    static final byte SPEED_MONTE_GOBELET = 30;
-    static final byte SPEED_ASCENSEUR = 60;
-    static final byte SPEED_PINCE = 60;
-    static final byte SPEED_GUIDE = 15;
-    static final byte SPEED_SONAR = 15;
+    static final byte SPEED_MONTE_GOBELET = 60;
+    static final byte SPEED_ASCENSEUR = 50;
+    static final byte SPEED_PINCE = 40;
+    static final byte SPEED_GUIDE = 50;
+    static final byte SPEED_SONAR = 50;
 
     // Constantes d'identification Servo
     static final byte BRAS_DROIT = 15;
@@ -65,7 +65,7 @@ public interface IConstantesServos {
     static final int PINCE_FERME = 1600;
 
     static final int ASCENSEUR_HAUT = 2210;
-    static final int ASCENSEUR_PLEIN = 1500;
+    static final int ASCENSEUR_PLEIN = 1300;
     static final int ASCENSEUR_BAS = 790;
 
     static final int GUIDE_OUVERT = 1240;

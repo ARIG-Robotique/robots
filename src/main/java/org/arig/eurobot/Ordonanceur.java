@@ -105,21 +105,15 @@ public class Ordonanceur {
 
         // Attente tirette.
         log.info("!!! ... ATTENTE TIRRETTE ... !!!");
-        Scanner sc = new Scanner(System.in);
-        while(!sc.nextLine().equalsIgnoreCase("start") && ioServices.tirette()) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-            }
-        }
+        while(ioServices.tirette());
 
         log.info("Démarrage du match");
         mouvementManager.resetEncodeurs();
 
         // TODO : A supprimer
-        mouvementManager.setVitesse(200L, 800L);
+        mouvementManager.setVitesse(200L, 200L);
         position.setAngle(conv.degToPulse(90));
-        mouvementManager.gotoPointMM(0, 1500, true);
+        //mouvementManager.gotoPointMM(0, 1500, true);
         // TODO : FIN A supprimer
 
         // Activation
@@ -142,9 +136,11 @@ public class Ordonanceur {
         robotStatus.disableAsserv();
         robotStatus.disableMatch();
 
-        // Désactivation de la puissance
+        // Ouverture des servos pour libérer ce que l'on as en stock
+        servosServices.end();
+
+        // Désactivation de la puissance moteur pour être sur de ne plus roulé
         //ioServices.disableAlimMoteur();
-        //ioServices.disableAlimServoMoteur();
 
         if (csvCollector != null) {
             csvCollector.exportToFile();

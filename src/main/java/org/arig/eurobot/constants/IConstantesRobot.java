@@ -11,15 +11,9 @@ public interface IConstantesRobot {
     // Durée du match //
     static final int matchTimeMs = 90000;
 
-    // Nb Thread Pool
-    static final int nbThreadScheduledExecutor = 10;
-
     // ----------------------------- //
     // Configuration des convertions //
     // ----------------------------- //
-
-    // 40000 p => 1528 mm : 40000 / 1528 = 26,178010471
-    //static final double countPerMm = 26.178010471;
 
     // 40000 p => 1524.5 mm : 40000 / 1524.5 = 26,238110856
     static final double countPerMm = 26.238110856;
@@ -58,7 +52,7 @@ public interface IConstantesRobot {
     static final double arretOrientDeg = 1;
     static final double approcheDistanceMm = 10;
     static final double approcheOrientationDeg = 5;
-    static final double angleReculDeg = 95;
+    static final double angleReculDeg = 45;
 
     // ----------------- //
     // Paramètres métier //
