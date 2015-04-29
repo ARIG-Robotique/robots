@@ -1,10 +1,12 @@
 package org.arig.eurobot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.eurobot.model.system.RobotInfo;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -13,14 +15,19 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping(value = "/robot")
-public class CheckController {
+public class RobotController {
 
-    @RequestMapping()
-    public Map<String, String> check() {
-        Map<String, String> v = new HashMap<>();
+    @RequestMapping("/name")
+    public Map<String, String> name() {
+        Map<String, String> v = new LinkedHashMap<>();
         v.put("nom", "Elfa : Robomovies 2015");
         v.put("version", "1.0.0");
 
         return v;
+    }
+
+    @RequestMapping("/system")
+    public RobotInfo system() {
+        return RobotInfo.getInstance();
     }
 }
