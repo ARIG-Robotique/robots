@@ -15,13 +15,13 @@ import java.util.Map;
 /**
  * Created by mythril on 21/12/13.
  */
-public class RaspiBoard2007NoMux extends AbstractBoard2007NoMux<Pin> {
+public class Raspi2007NoMux extends Abstract2007NoMux<Pin> {
 
     private final GpioController gpio;
 
     private Map<Integer, Boolean> values = new HashMap<>();
 
-    public RaspiBoard2007NoMux(GpioController gpio) {
+    public Raspi2007NoMux(GpioController gpio) {
         super();
         this.gpio = gpio;
     }

@@ -20,7 +20,7 @@ import java.util.Map;
  * @author mythril
  */
 @Slf4j
-public abstract class AbstractBoard2007NoMux<P> implements IDigitalInputCapteurs<P> {
+public abstract class Abstract2007NoMux<P> implements IDigitalInputCapteurs<P> {
 
     /** The Constant NB_CAPTEUR. */
     protected static final int NB_CAPTEUR = 23;
@@ -84,7 +84,7 @@ public abstract class AbstractBoard2007NoMux<P> implements IDigitalInputCapteurs
     /**
      * Instantiates a new board2007 no mux.
      */
-    public AbstractBoard2007NoMux() {
+    public Abstract2007NoMux() {
     }
 
     /**
@@ -196,6 +196,6 @@ public abstract class AbstractBoard2007NoMux<P> implements IDigitalInputCapteurs
      * @return true, if successful
      */
     protected boolean check(final int capteurId) {
-        return capteurId >= 0 && capteurId < AbstractBoard2007NoMux.NB_CAPTEUR;
+        return capteurId >= 0 && capteurId < Abstract2007NoMux.NB_CAPTEUR;
     }
 }
