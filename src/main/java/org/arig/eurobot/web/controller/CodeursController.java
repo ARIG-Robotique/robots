@@ -1,6 +1,7 @@
 package org.arig.eurobot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.eurobot.constants.IConstantesSpringConfig;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -15,7 +16,7 @@ import java.util.Map;
  * Created by gdepuille on 22/12/14.
  */
 @Slf4j
-@Profile("raspi")
+@Profile(IConstantesSpringConfig.profileMonitoring)
 @RestController
 @RequestMapping("/codeurs")
 public class CodeursController {

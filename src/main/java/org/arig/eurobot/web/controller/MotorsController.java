@@ -1,6 +1,7 @@
 package org.arig.eurobot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.eurobot.constants.IConstantesSpringConfig;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by mythril on 21/12/13.
  */
 @Slf4j
-@Profile("raspi")
+@Profile(IConstantesSpringConfig.profileMonitoring)
 @RestController
 @RequestMapping("/motors")
 public class MotorsController {

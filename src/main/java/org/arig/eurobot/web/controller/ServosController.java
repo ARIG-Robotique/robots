@@ -1,6 +1,7 @@
 package org.arig.eurobot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.eurobot.constants.IConstantesSpringConfig;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by mythril on 21/12/13.
  */
 @Slf4j
-@Profile("raspi")
+@Profile(IConstantesSpringConfig.profileMonitoring)
 @RestController
 @RequestMapping("/servos")
 public class ServosController {
@@ -27,11 +28,11 @@ public class ServosController {
             @RequestParam("position") final Integer position,
             @RequestParam(value = "speed", required = false) final Byte speed) {
 
-        log.info("Modification du servo moteur {} : Pos -> {} ; Speed -> {}", idServo, position, speed);
-
         if (speed != null) {
+            log.info("Modification du servo moteur {} : Pos -> {} ; Speed -> {}", idServo, position, speed);
             sd21Servos.setPositionAndSpeed(idServo, position, speed);
         } else {
+            log.info("Modification du servo moteur {} : Pos -> {}", idServo, position);
             sd21Servos.setPosition(idServo, position);
         }
     }

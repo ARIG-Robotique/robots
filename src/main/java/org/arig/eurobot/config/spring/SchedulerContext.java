@@ -1,16 +1,16 @@
 package org.arig.eurobot.config.spring;
 
-import org.arig.eurobot.constants.IConstantesRobot;
+import org.arig.eurobot.constants.IConstantesSpringConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Created by gdepuille on 12/01/15.
@@ -22,7 +22,7 @@ public class SchedulerContext implements SchedulingConfigurer {
 
     @Bean(destroyMethod="shutdown")
     public Executor taskExecutor() {
-        return Executors.newScheduledThreadPool(IConstantesRobot.nbThreadScheduledExecutor);
+        return Executors.newScheduledThreadPool(IConstantesSpringConfig.nbThreadScheduledExecutor);
     }
 
     @Override

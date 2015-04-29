@@ -19,14 +19,12 @@ import org.arig.robot.vo.CommandeRobot;
 import org.arig.robot.vo.Position;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 /**
  * Created by gdepuille on 23/12/14.
  */
 @Slf4j
 @Configuration
-@Profile("raspi")
 public class RobotContext {
 
     @Bean

@@ -5,9 +5,7 @@ import org.arig.eurobot.constants.IConstantesRobot;
 import org.arig.eurobot.model.RobotStatus;
 import org.arig.eurobot.services.ServosServices;
 import org.arig.robot.system.MouvementManager;
-import org.arig.robot.vo.CommandeRobot;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-@Profile("raspi")
 public class Schedulers {
 
     @Autowired

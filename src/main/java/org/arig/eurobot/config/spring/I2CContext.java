@@ -12,7 +12,6 @@ import org.arig.robot.system.motors.MD22Motors;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import java.io.IOException;
 
@@ -20,7 +19,6 @@ import java.io.IOException;
  * Created by mythril on 21/12/13.
  */
 @Configuration
-@Profile("raspi")
 public class I2CContext {
 
     @Bean(destroyMethod = "close")
