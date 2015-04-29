@@ -62,9 +62,10 @@ public interface IConstantesServos {
 
     static final int PINCE_OUVERTE = 1010;
     static final int PINCE_COULEUR = 1520;
-    static final int PINCE_FERME = 1588;
+    static final int PINCE_FERME = 1600;
 
     static final int ASCENSEUR_HAUT = 2210;
+    static final int ASCENSEUR_PLEIN = 1500;
     static final int ASCENSEUR_BAS = 790;
 
     static final int GUIDE_OUVERT = 1240;

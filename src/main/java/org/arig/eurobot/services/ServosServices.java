@@ -103,9 +103,9 @@ public class ServosServices {
         servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
         servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
         servos.setPositionAndWait(IConstantesServos.PINCE, IConstantesServos.PINCE_FERME);
-        servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_HAUT);
         robotStatus.incNbPied();
-        log.info("Pied dans l'ascenseur {}", robotStatus.getNbPied());
+        servos.setPositionAndWait(IConstantesServos.ASCENSEUR, robotStatus.getNbPied() == 4 ? IConstantesServos.ASCENSEUR_PLEIN : IConstantesServos.ASCENSEUR_HAUT);
+        log.info("{} pied{} dans l'ascenseur", robotStatus.getNbPied(), robotStatus.getNbPied() > 1 ? "s" : "");
     }
 
     public void priseProduitGauche() {
