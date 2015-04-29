@@ -10,8 +10,9 @@ import org.arig.robot.exception.I2CException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Classe d'interface avec le composant I2C ADC de Gravitech {@link http://www.gravitech.us/i2c128anco.html}
+ * Classe d'interface avec le composant I2C ADC de Gravitech
  *
+ * @see <a href=" http://www.gravitech.us/i2c128anco.html">I2C ADC documentation</a>
  * @author gregorydepuille
  */
 @Slf4j
