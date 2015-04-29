@@ -108,7 +108,7 @@ public class SD21Servos implements InitializingBean {
         setPosition(servoNb, newPosition);
         try {
             int waitTime = calculWaitTimeMs(oldPosition, newPosition, currentSpeed);
-            log.info("Attente pour le mouvement servo {} {} -> {} à la vitesse {}", servoNb, oldPosition, newPosition, currentSpeed);
+            log.info("Attente pour le mouvement servo {} {} -> {} à la vitesse de {} pendant {} ms", servoNb, oldPosition, newPosition, currentSpeed, waitTime);
             Thread.currentThread().sleep(waitTime);
         } catch (InterruptedException e) {
             log.warn("Erreur d'attente pour le mouvement servo {} {} -> {} à la vitesse {}", servoNb, oldPosition, newPosition, currentSpeed);
@@ -190,7 +190,7 @@ public class SD21Servos implements InitializingBean {
         setPositionAndSpeed(servoNb, newPosition, newSpeed);
         try {
             int waitTime = calculWaitTimeMs(oldPosition, newPosition, newSpeed);
-            log.info("Attente pour le mouvement servo {} {} -> {} à la vitesse {}", servoNb, oldPosition, newPosition, newSpeed);
+            log.info("Attente pour le mouvement servo {} {} -> {} à la vitesse de {} pendant {} ms", servoNb, oldPosition, newPosition, newSpeed, waitTime);
             Thread.currentThread().sleep(waitTime);
         } catch (InterruptedException e) {
             log.warn("Erreur d'attente pour le mouvement servo {} {} -> {} à la vitesse {}", servoNb, oldPosition, newPosition, newSpeed);
@@ -263,7 +263,7 @@ public class SD21Servos implements InitializingBean {
      */
     private int calculWaitTimeMs(int start, int target, int speed) {
         try {
-            return (Math.abs(target - start) / speed) * 20;
+            return (Math.abs(target - start) / speed) * 25;
         } catch (ArithmeticException e) {
             log.warn("Valeur du registre de vitesse {} : {}", speed, e.toString());
             return 0;
