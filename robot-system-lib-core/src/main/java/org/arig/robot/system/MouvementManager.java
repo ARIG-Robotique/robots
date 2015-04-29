@@ -107,7 +107,7 @@ public class MouvementManager implements InitializingBean {
         // Angle de départ pour les déplacement.
         // Si l'angle est supérieur en absolu, on annule la distance
         // afin de naviguer en priorité en marche avant.
-        startAngle = startAngle * conv.getPiPulse();
+        startAngle = conv.degToPulse(startAngle) * conv.getPiPulse();
     }
 
     /**
