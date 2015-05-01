@@ -254,20 +254,37 @@ public class MouvementManager implements InitializingBean {
     }
 
     private void gestionFlags() {
-        // TODO : Voir si il ne serait pas judicieux de traiter le cas des consignes XY avec un rayon sur le point a atteindre
-        boolean distAtteint = Math.abs(cmdRobot.getConsigne().getDistance()) < fenetreArretDistance;
-        boolean orientAtteint = Math.abs(cmdRobot.getConsigne().getOrientation()) < fenetreArretOrientation;
+        boolean distAtteint, orientAtteint, distApproche, orientApproche;
+
+        // ------------------------------------------------------------------------------- //
+        // Calcul du trajet atteints en mode freinage (toujours en DIST,ANGLE ici normale) //
+        // ------------------------------------------------------------------------------- //
+
+        distAtteint = Math.abs(cmdRobot.getConsigne().getDistance()) < fenetreArretDistance;
+        orientAtteint = Math.abs(cmdRobot.getConsigne().getOrientation()) < fenetreArretOrientation;
         trajetAtteint = cmdRobot.isFrein() && distAtteint && orientAtteint;
 
-        // Calcul des fenetre d'approche pour le passage au point suivant sans arret.
-        // Si on est en mode déplacement XY, seul la distance d'approche du point est importante.
-        boolean distApproche = Math.abs(cmdRobot.getConsigne().getDistance()) < asservPolaire.getFenetreApprocheDistance();
-        boolean orientApproche = true;
-        if (!cmdRobot.isType(TypeConsigne.XY)) {
-            orientApproche = Math.abs(cmdRobot.getConsigne().getOrientation()) < asservPolaire.getFenetreApprocheOrientation();
-        }
-        if (distApproche && orientApproche) {
+        // -------------------------------------------------------------------------- //
+        // Calcul des fenetres d'approche pour le passage au point suivant sans arret //
+        // -------------------------------------------------------------------------- //
 
+        // Si on est en mode déplacement XY, seul la distance d'approche du point est importante.
+        if (cmdRobot.isType(TypeConsigne.XY)) {
+            // Calcul en fonction de l'odométrie
+            long dX = (long) (cmdRobot.getPosition().getPt().getX() - position.getPt().getX());
+            long dY = (long) (cmdRobot.getPosition().getPt().getY() - position.getPt().getY());
+
+            // On recalcul car la consigne de distance est altéré par le coeficient pour le demi tour
+            distApproche = Math.abs(calculDistanceConsigne(dX, dY)) < fenetreArretDistance;
+            orientApproche = true;
+        } else {
+            distApproche = Math.abs(cmdRobot.getConsigne().getDistance()) < fenetreApprocheDistance;
+            orientApproche = Math.abs(cmdRobot.getConsigne().getOrientation()) < fenetreApprocheOrientation;
+        }
+
+        // Lorsque l'on est dans la fenetre d'approche on bascule l'asserve en mode basique
+        // Si on ne fait pas ça on obtient une spirale sur le point d'arrivé qui est jolie mais pas très pratique
+        if (distApproche && orientApproche) {
             // Modification du type de consigne pour la stabilisation
             cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
 
