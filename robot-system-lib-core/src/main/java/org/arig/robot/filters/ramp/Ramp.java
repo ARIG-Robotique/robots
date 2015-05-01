@@ -123,8 +123,6 @@ public class Ramp implements IRampFilter {
      */
     @Override
     public void reset() {
-        log.info("Reset des paramètres");
-
         distanceDecel = 0;
         vitesseCourante = 0;
     }

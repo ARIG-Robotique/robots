@@ -42,11 +42,8 @@ public class AsservissementPolaireTestContext {
     }
 
     @Bean
-    public IAsservissementPolaire asservissement(ConvertionRobotUnit convertisseur) {
-        AsservissementPolaire asserv = new AsservissementPolaire();
-        asserv.setMinFenetreDistance(convertisseur.mmToPulse(1));
-        asserv.setMinFenetreOrientation(convertisseur.degToPulse(0.1));
-        return asserv;
+    public IAsservissementPolaire asservissement() {
+        return new AsservissementPolaire();
     }
 
     @Bean

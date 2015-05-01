@@ -60,14 +60,6 @@ public class AsservissementPolaire implements IAsservissementPolaire {
     /** The output orientation. */
     private double outputOrientation;
 
-    /** The min fenetre distance. */
-    @Setter
-    private double minFenetreDistance;
-
-    /** The min fenetre orientation. */
-    @Setter
-    private double minFenetreOrientation;
-
     /**
      * Instantiates a new asservissement polaire.
      */
@@ -138,35 +130,5 @@ public class AsservissementPolaire implements IAsservissementPolaire {
             c.setCmdMoteurGauche(cmdRobot.getMoteur().getGauche());
             c.setCmdMoteurDroit(cmdRobot.getMoteur().getDroit());
         }
-    }
-
-    // TODO : Déplacer ça dans le mouvement manager car pas utile de le faire ici.
-
-    /**
-     * Méthode permettant de récuperer la zone pour la fenetre en distance.
-     * 
-     * @return the fenetre approche distance
-     */
-    public double getFenetreApprocheDistance() {
-        // Application du théorème de Shannon
-        // En gros l'idée est que la fenêtre varie en fonction de la vitesse afin qu'a pleine bourre on la dépasse pas
-        // et que l'on se mette a faire des tours sur soit même
-        //return Math.max(minFenetreDistance, 3 * setPointDistance);
-
-        return minFenetreDistance;
-    }
-
-    /**
-     * Méthode permettant de récuperer la zone pour la fenetre en distance.
-     * 
-     * @return the fenetre approche orientation
-     */
-    public double getFenetreApprocheOrientation() {
-        // Application du théorème de Shannon
-        // En gros l'idée est que la fenêtre varie en fonction de la vitesse afin qu'a pleine bourre on la dépasse pas
-        // et que l'on se mette a faire des tours sur soit même
-        //return Math.max(minFenetreOrientation, 3 * setPointOrientation);
-
-        return minFenetreOrientation;
     }
 }

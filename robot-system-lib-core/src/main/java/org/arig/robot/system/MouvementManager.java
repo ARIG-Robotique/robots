@@ -17,15 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
- * The Class RobotManager.
+ * The Class MouvementManager.
  * 
  * @author mythril
  */
 public class MouvementManager implements InitializingBean {
-
-    /** The obstacle detector. */
-    @Autowired(required = false)
-    private IObstacleDetector obstacleDetector;
 
     /** Collector CSV */
     @Autowired(required = false)
@@ -62,22 +58,22 @@ public class MouvementManager implements InitializingBean {
 
     /** The trajet atteint. */
     @Getter
-    private boolean trajetAtteint = false;
+    private boolean trajetAtteint, trajetEnApproche = false;
 
-    /** The trajet en approche. */
-    @Getter
-    private boolean trajetEnApproche = false;
-
-    /** The avoidance in progress. */
-    private boolean avoidanceInProgress = false;
-
-    /** The fenetre arret distance. */
+    /* Fenetre d'arret / approche distance */
+    private double fenetreApprocheDistance;
     private double fenetreArretDistance;
+    private final double arretDistanceMm;
+    private final double approcheDistanceMm;
 
-    /** The fenetre arret orientation. */
+    /* Fenetre d'arret / approche orientation */
+    private double fenetreApprocheOrientation;
     private double fenetreArretOrientation;
+    private final double arretOrientDeg;
+    private final double approcheOrientDeg;
 
     /** The start angle. */
+    private final double coefAngle;
     private double startAngle;
 
     /**
@@ -90,24 +86,31 @@ public class MouvementManager implements InitializingBean {
      * @param coefAngle
      *            the coef angle
      */
-    public MouvementManager(final double arretDistanceMm, final double arretOrientDeg, final double coefAngle) {
+    public MouvementManager(final double arretDistanceMm, final double approcheDistanceMm,
+                            final double arretOrientDeg, final double approcheOrientDeg,
+                            final double coefAngle) {
         super();
 
         // On stock les valeurs brut, le calcul sera fait sur le afterPropertiesSet.
-        fenetreArretDistance = arretDistanceMm;
-        fenetreArretOrientation = arretOrientDeg;
-        startAngle = coefAngle;
+        this.arretDistanceMm = arretDistanceMm;
+        this.approcheDistanceMm = approcheDistanceMm;
+        this.arretOrientDeg = arretOrientDeg;
+        this.approcheOrientDeg = approcheOrientDeg;
+        this.coefAngle = coefAngle;
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        fenetreArretDistance = conv.mmToPulse(fenetreArretDistance);
-        fenetreArretOrientation = conv.degToPulse(fenetreArretOrientation);
+        fenetreArretDistance = conv.mmToPulse(arretDistanceMm);
+        fenetreApprocheDistance = conv.mmToPulse(approcheDistanceMm);
+
+        fenetreArretOrientation = conv.degToPulse(arretOrientDeg);
+        fenetreApprocheOrientation = conv.degToPulse(approcheOrientDeg);
 
         // Angle de départ pour les déplacement.
         // Si l'angle est supérieur en absolu, on annule la distance
         // afin de naviguer en priorité en marche avant.
-        startAngle = conv.degToPulse(startAngle) * conv.getPiPulse();
+        startAngle = coefAngle * conv.getPiPulse();
     }
 
     /**
@@ -138,6 +141,7 @@ public class MouvementManager implements InitializingBean {
     public void stop() {
         motors.stopDroit();
         motors.stopGauche();
+        asservPolaire.reset(true);
     }
 
     /**
@@ -155,24 +159,13 @@ public class MouvementManager implements InitializingBean {
         // 2. Calcul des consignes
         calculConsigne();
 
-        // 3. Gestion de l'evittement, de la reprise, et du cycle continue
-        if (obstacleDetector != null && obstacleDetector.hasObstacle() && !avoidanceInProgress) {
-            stop();
-            asservPolaire.reset(true);
-            avoidanceInProgress = true;
-        } else if (obstacleDetector != null && obstacleDetector.hasObstacle() && avoidanceInProgress) {
-            // TODO : Trajectoire d'évittement. Comme le hasObstacle externaliser cette gestion au programme principal
-        } else if (obstacleDetector != null && !obstacleDetector.hasObstacle() && avoidanceInProgress) {
-            avoidanceInProgress = false;
-        } else {
-            // 3.4.1 Asservissement sur les consignes
-            asservPolaire.process();
+        // 3. Asservissement sur les consignes
+        asservPolaire.process();
 
-            // 3.4.3 Envoi aux moteurs
-            motors.generateMouvement(cmdRobot.getMoteur().getGauche(), cmdRobot.getMoteur().getDroit());
-        }
+        // 4. Envoi aux moteurs
+        motors.generateMouvement(cmdRobot.getMoteur().getGauche(), cmdRobot.getMoteur().getDroit());
 
-        // 4. Gestion des flags pour le séquencement du calcul de la position
+        // 5. Gestion des flags pour indiquer l'approche et l'atteinte sur l'objectif
         gestionFlags();
     }
 
