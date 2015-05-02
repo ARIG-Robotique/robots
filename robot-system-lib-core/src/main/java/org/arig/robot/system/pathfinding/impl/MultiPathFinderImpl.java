@@ -2,6 +2,7 @@ package org.arig.robot.system.pathfinding.impl;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.system.pathfinding.AbstractPathFinder;
 import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
@@ -16,6 +17,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by mythril on 29/12/13.
@@ -60,11 +65,10 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
         log.info("Recherche de chemin de {} a {} avec l'algorithme {}", from.toString(), to.toString(), getAlgorithm().toString());
 
         // Démarrage
-        long start = System.currentTimeMillis();
+        StopWatch sw = new StopWatch();
+        sw.start();
 
-        GraphNode startNode;
-        GraphNode endNode;
-
+        GraphNode startNode, endNode;
         if ((startNode = graph.getNodeAt(from.getX(), from.getY(), 0, maxDistance)) == null) {
             log.error("Impossible de trouver le noeud de départ");
             throw new NoPathFoundException(NoPathFoundException.ErrorType.START_NODE_DOES_NOT_EXIST);
@@ -73,22 +77,45 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
             log.error("Impossible de trouver le noeud d'arrivé");
             throw new NoPathFoundException(NoPathFoundException.ErrorType.END_NODE_DOES_NOT_EXIST);
         }
-        log.info("Récupération des nodes : " + (System.currentTimeMillis() - start) + " ms");
+        sw.split();
+        log.info("Récupération des nodes en {}", sw.toSplitString());
 
-        start = System.currentTimeMillis();
+        sw.unsplit();
         LinkedList<GraphNode> graphNodes = pf.search(startNode.id(), endNode.id(), true);
         if (graphNodes.isEmpty()) {
             log.error("Impossible de trouver le chemin pour le trajet.");
             throw new NoPathFoundException(NoPathFoundException.ErrorType.NO_PATH_FOUND);
         }
-        log.info("Calcul du chemin : " + (System.currentTimeMillis() - start) + " ms");
+        sw.split();
+        log.info("Calcul du chemin en {}", sw.toSplitString());
+        sw.stop();
 
+        // Transformation des nodes en points
+        List<Point> points = graphNodes.parallelStream()
+                .map(g -> new Point(g.x(), g.y()))
+                .collect(Collectors.toList());
+
+        // Le point 0 est le "from".
+        // On exclus le dernier point qui est le "to"
         Chemin c = new Chemin();
-        // TODO : Limiter le nombre de points a uniquement les changement de direction
-        for (GraphNode gn : graphNodes) {
-            c.addPoint(new Point(gn.x(), gn.y()));
+        Double anglePrecedent = null;
+        for (int i = 1 ; i < points.size() - 1 ; i++) {
+            Point ptPrec = points.get(i - 1);
+            Point pt = points.get(i);
+            // Calcul de l'angle avec le point précédent
+            // Si l'angle est différent de 0, alors c'est un point de passage
+            double dX = pt.getX() - ptPrec.getX();
+            double dY = pt.getY() - ptPrec.getY();
+            double angle = Math.toDegrees(Math.atan2(dY, dX));
+            if (anglePrecedent != null && angle != anglePrecedent) {
+                c.addPoint(ptPrec);
+            }
+            anglePrecedent = angle;
         }
-        log.info("Chemin de {} point(s)", c.nbPoints());
+        log.info("Chemin de {} point(s) de passage", c.nbPoints());
+
+        // Ajout du dernier point.
+        c.addPoint(to);
 
         return c;
     }
@@ -183,6 +210,8 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
                     break;
             }
         }
+
+        Assert.notNull(pf, "Le path finding ne peut être null après sa définition.");
     }
 
     @Override
