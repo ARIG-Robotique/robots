@@ -88,6 +88,9 @@ public class CsvCollector implements InitializingBean {
             writer.write("y");
             writer.write("angle");
 
+            writer.write("Trajet en approche");
+            writer.write("Trajet atteint");
+
             writer.endRecord();
 
             for (CsvData d : datas) {
@@ -122,6 +125,9 @@ public class CsvCollector implements InitializingBean {
                 writer.write(String.valueOf(d.getX()));
                 writer.write(String.valueOf(d.getY()));
                 writer.write(String.valueOf(d.getAngle()));
+
+                writer.write(Boolean.toString(d.isTrajetEnApproche()));
+                writer.write(Boolean.toString(d.isTrajetAtteint()));
 
                 writer.endRecord();
             }

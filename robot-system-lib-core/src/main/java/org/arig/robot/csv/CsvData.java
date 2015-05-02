@@ -45,4 +45,8 @@ public class CsvData {
     // Commande moteurs
     private int cmdMoteurGauche;
     private int cmdMoteurDroit;
+
+    // Position
+    private boolean trajetAtteint;
+    private boolean trajetEnApproche;
 }

@@ -1,6 +1,7 @@
 package org.arig.robot.system;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.csv.CsvCollector;
 import org.arig.robot.csv.CsvData;
 import org.arig.robot.exception.NotYetImplementedException;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * 
  * @author mythril
  */
+@Slf4j
 public class MouvementManager implements InitializingBean {
 
     /** Collector CSV */
@@ -213,7 +215,6 @@ public class MouvementManager implements InitializingBean {
 
         if (csvCollector != null) {
             CsvData c = csvCollector.getCurrent();
-            c.setModeAsserv(cmdRobot.typeAsserv());
             c.setConsigneDistance(cmdRobot.getConsigne().getDistance());
             c.setConsigneOrient(cmdRobot.getConsigne().getOrientation());
             c.setVitesseDistance(cmdRobot.getVitesse().getDistance());
@@ -292,6 +293,13 @@ public class MouvementManager implements InitializingBean {
             if (!cmdRobot.isFrein()) {
                 trajetEnApproche = true;
             }
+        }
+
+        if (csvCollector != null) {
+            CsvData c = csvCollector.getCurrent();
+            c.setModeAsserv(cmdRobot.typeAsserv());
+            c.setTrajetAtteint(trajetAtteint);
+            c.setTrajetEnApproche(trajetEnApproche);
         }
     }
 
