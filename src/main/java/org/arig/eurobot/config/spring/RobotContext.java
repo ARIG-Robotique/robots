@@ -14,6 +14,10 @@ import org.arig.robot.system.motion.AsservissementPolaire;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motion.OdometrieLineaire;
+import org.arig.robot.system.pathfinding.AbstractPathFinder;
+import org.arig.robot.system.pathfinding.IPathFinder;
+import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
+import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.vo.CommandeRobot;
 import org.arig.robot.vo.Position;
@@ -34,31 +38,22 @@ public class RobotContext {
 
     @Bean
     public MouvementManager mouvementManager() {
-        return new MouvementManager(IConstantesRobot.arretDistanceMm, IConstantesRobot.arretOrientDeg, IConstantesRobot.angleReculDeg);
+        return new MouvementManager(IConstantesRobot.arretDistanceMm, IConstantesRobot.approcheDistanceMm,
+                IConstantesRobot.arretOrientDeg, IConstantesRobot.approcheOrientationDeg,
+                IConstantesRobot.angleReculDeg);
     }
 
     @Bean
-    public IAsservissementPolaire asservissement(ConvertionRobotUnit convertisseur) {
-        AsservissementPolaire asserv = new AsservissementPolaire();
-        asserv.setMinFenetreDistance(convertisseur.mmToPulse(IConstantesRobot.approcheDistanceMm));
-        asserv.setMinFenetreOrientation(convertisseur.degToPulse(IConstantesRobot.approcheOrientationDeg));
-        return asserv;
-    }
+    public IAsservissementPolaire asservissement() { return new AsservissementPolaire(); }
 
     @Bean
-    public IOdometrie odometrie() {
-        return new OdometrieLineaire();
-    }
+    public IOdometrie odometrie() { return new OdometrieLineaire(); }
 
     @Bean
-    public CommandeRobot cmdRobot() {
-        return new CommandeRobot();
-    }
+    public CommandeRobot cmdRobot() { return new CommandeRobot(); }
 
     @Bean(name = "currentPosition")
-    public Position currentPosition() {
-        return new Position();
-    }
+    public Position currentPosition() { return new Position(); }
 
     @Bean(name = "pidDistance")
     public IPidFilter pidDistance() {
@@ -103,17 +98,26 @@ public class RobotContext {
     }
 
     @Bean
-    public RobotStatus robotStatus() {
-        return new RobotStatus();
+    public MultiPathFinderImpl pathFinder() {
+        MultiPathFinderImpl pf = new MultiPathFinderImpl();
+        pf.setAllowDiagonal(true);
+        pf.setAlgorithm(PathFinderAlgorithm.A_STAR_MANHATTAN);
+        //pf.setNbTileX(300);
+        //pf.setNbTileY(200);
+
+        // TODO : A supprimer
+        pf.setNbTileX(118);
+        pf.setNbTileY(180);
+
+        return pf;
     }
 
     @Bean
-    public Ordonanceur ordonenceur() {
-        return Ordonanceur.getInstance();
-    }
+    public RobotStatus robotStatus() { return new RobotStatus(); }
 
     @Bean
-    public CsvCollector csvCollector() {
-        return new CsvCollector();
-    }
+    public Ordonanceur ordonenceur() { return Ordonanceur.getInstance(); }
+
+    @Bean
+    public CsvCollector csvCollector() { return new CsvCollector(); }
 }

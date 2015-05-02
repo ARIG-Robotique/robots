@@ -12,12 +12,14 @@ import org.arig.robot.communication.II2CManager;
 import org.arig.robot.csv.CsvCollector;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.system.MouvementManager;
+import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.utils.ConvertionRobotUnit;
+import org.arig.robot.vo.Point;
 import org.arig.robot.vo.Position;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.util.Scanner;
+import java.io.File;
 
 /**
  * Created by gdepuille on 08/03/15.
@@ -42,6 +44,9 @@ public class Ordonanceur {
 
     @Autowired
     private MouvementManager mouvementManager;
+
+    @Autowired
+    private MultiPathFinderImpl pf;
 
     @Autowired
     private ConvertionRobotUnit conv;
@@ -88,8 +93,14 @@ public class Ordonanceur {
         if (!ioServices.auOk()) {
             log.warn("L'arrêt d'urgence est coupé.");
             while(!ioServices.auOk());
-            log.info("Arrêt d'urgence OK");
         }
+        log.info("Arrêt d'urgence OK");
+
+        if (!ioServices.alimMoteurOk() || !ioServices.alimServoOk()) {
+            log.warn("Alimentation puissance NOK (Moteur : {} ; Servos : {})", ioServices.alimMoteurOk(), ioServices.alimServoOk());
+            while(!ioServices.alimMoteurOk() && !ioServices.alimServoOk());
+        }
+        log.info("Alimentation puissance OK (Moteur : {} ; Servos : {})", ioServices.alimMoteurOk(), ioServices.alimServoOk());
 
         if (!ioServices.tirette()) {
             log.warn("La tirette n'est pas la. Phase de préparation Nerell");
@@ -102,18 +113,24 @@ public class Ordonanceur {
                 }
             }
         }
+        log.info("Phase de préparation terminé");
 
         // Attente tirette.
-        log.info("!!! ... ATTENTE TIRRETTE ... !!!");
+        log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
         while(ioServices.tirette());
+
+        // Début du compteur de temps pour le match
+        StopWatch matchTime = new StopWatch();
+        matchTime.start();
 
         log.info("Démarrage du match");
         mouvementManager.resetEncodeurs();
 
         // TODO : A supprimer
-        mouvementManager.setVitesse(200L, 200L);
+        mouvementManager.setVitesse(200L, 8000L);
+        pf.makeGraphFromBWImage(new File("./maps/table-test.png"));
+        position.setPt(new Point(conv.mmToPulse(365), conv.mmToPulse(165)));
         position.setAngle(conv.degToPulse(90));
-        //mouvementManager.gotoPointMM(0, 1500, true);
         // TODO : FIN A supprimer
 
         // Activation
@@ -121,8 +138,6 @@ public class Ordonanceur {
         robotStatus.enableMatch();
 
         // Match de XX secondes.
-        StopWatch matchTime = new StopWatch();
-        matchTime.start();
         while(matchTime.getTime() < IConstantesRobot.matchTimeMs) {
             try {
                 Thread.currentThread().sleep(200);
@@ -140,7 +155,7 @@ public class Ordonanceur {
         servosServices.end();
 
         // Désactivation de la puissance moteur pour être sur de ne plus roulé
-        //ioServices.disableAlimMoteur();
+        ioServices.disableAlimMoteur();
 
         if (csvCollector != null) {
             csvCollector.exportToFile();

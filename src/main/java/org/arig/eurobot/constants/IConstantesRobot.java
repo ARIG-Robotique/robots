@@ -38,11 +38,11 @@ public interface IConstantesRobot {
 //    static final double kiDistance = 18.75;
 //    static final double kdDistance = 0.0;
     static final double kpDistance = 0.65;
-    static final double kiDistance = 8.0;
+    static final double kiDistance = 4.0;
     static final double kdDistance = 0.00050;
 
     static final double kpOrientation = 0.15;
-    static final double kiOrientation = 6.5;
+    static final double kiOrientation = 3.5;
     static final double kdOrientation = 0.0050;
 
     // --------------------------- //
@@ -52,7 +52,7 @@ public interface IConstantesRobot {
     static final double arretOrientDeg = 1;
     static final double approcheDistanceMm = 10;
     static final double approcheOrientationDeg = 5;
-    static final double angleReculDeg = 45;
+    static final double angleReculDeg = 0.45;
 
     // ----------------- //
     // Paramètres métier //
