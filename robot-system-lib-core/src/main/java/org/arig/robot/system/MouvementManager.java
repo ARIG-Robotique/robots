@@ -287,7 +287,7 @@ public class MouvementManager implements InitializingBean {
             long dY = (long) (cmdRobot.getPosition().getPt().getY() - position.getPt().getY());
 
             // On recalcul car la consigne de distance est altéré par le coeficient pour le demi tour
-            distApproche = Math.abs(calculDistanceConsigne(dX, dY)) < fenetreArretDistance;
+            distApproche = Math.abs(calculDistanceConsigne(dX, dY)) < fenetreApprocheDistance;
             orientApproche = true;
         } else {
             distApproche = Math.abs(cmdRobot.getConsigne().getDistance()) < fenetreApprocheDistance;
@@ -325,6 +325,7 @@ public class MouvementManager implements InitializingBean {
      *            the frein
      */
     public void gotoPointMM(final double x, final double y, final boolean frein) {
+        log.info("Va au point X = {}mm ; Y = {}mm {}", x, y, frein ? "et arrete toi" : "sans arret");
         cmdRobot.getPosition().setAngle(0);
         cmdRobot.getPosition().getPt().setX(conv.mmToPulse(x));
         cmdRobot.getPosition().getPt().setY(conv.mmToPulse(y));
@@ -341,6 +342,7 @@ public class MouvementManager implements InitializingBean {
      *            the angle
      */
     public void gotoOrientationDeg(final double angle) {
+        log.info("Aligne toi sur l'angle {}°", angle);
         double newOrient = angle - conv.pulseToDeg(position.getAngle());
         tourneDeg(newOrient);
     }
@@ -354,6 +356,8 @@ public class MouvementManager implements InitializingBean {
      *            the y
      */
     public void alignFrontTo(final double x, final double y) {
+        log.info("Aligne ton avant sur le point X = {}mm ; Y = {}mm", x, y);
+
         long dX = (long) (conv.mmToPulse(x) - position.getPt().getX());
         long dY = (long) (conv.mmToPulse(y) - position.getPt().getY());
 
@@ -374,6 +378,8 @@ public class MouvementManager implements InitializingBean {
      *            the y
      */
     public void alignBackTo(final double x, final double y) {
+        log.info("Aligne ton cul sur le point X = {}mm ; Y = {}mm", x, y);
+
         long dX = (long) (conv.mmToPulse(x) - position.getPt().getX());
         long dY = (long) (conv.mmToPulse(y) - position.getPt().getY());
 
@@ -399,6 +405,10 @@ public class MouvementManager implements InitializingBean {
      *            the distance
      */
     public void avanceMM(final double distance) {
+        if (distance > 0) {
+            log.info("Avance de {}mm", distance);
+        }
+
         cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
         cmdRobot.getConsigne().setDistance((long) conv.mmToPulse(distance));
         cmdRobot.getConsigne().setOrientation(0);
@@ -414,6 +424,7 @@ public class MouvementManager implements InitializingBean {
      *            the distance
      */
     public void reculeMM(final double distance) {
+        log.info("Recul de {}mm", Math.abs(distance));
         avanceMM(-distance);
     }
 
@@ -424,6 +435,8 @@ public class MouvementManager implements InitializingBean {
      *            the angle
      */
     public void tourneDeg(final double angle) {
+        log.info("Tourne de {}°", angle);
+
         cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
         cmdRobot.getConsigne().setDistance(0);
         cmdRobot.getConsigne().setOrientation((long) conv.degToPulse(angle));
@@ -488,5 +501,32 @@ public class MouvementManager implements InitializingBean {
     public void setVitesse(long vDistance, long vOrientation) {
         cmdRobot.getVitesse().setDistance(vDistance);
         cmdRobot.getVitesse().setOrientation(vOrientation);
+    }
+
+    /**
+     * Permet d'attendre le passage au point suivant
+     */
+    public void waitMouvement() {
+        if (cmdRobot.isFrein()) {
+            log.info("Attente fin de trajet");
+            while(!isTrajetAtteint()){
+                try {
+                    Thread.currentThread().sleep(1);
+                } catch (InterruptedException e) {
+                    log.error("Problème dans l'attente d'atteinte du point : {}", e.toString());
+                }
+            }
+            log.info("Trajet atteint");
+        } else {
+            log.info("Attente approche du point de passage");
+            while(!isTrajetEnApproche()){
+                try {
+                    Thread.currentThread().sleep(1);
+                } catch (InterruptedException e) {
+                    log.error("Problème dans l'approche du point : {}", e.toString());
+                }
+            }
+            log.info("Point de passage atteint");
+        }
     }
 }
