@@ -76,7 +76,7 @@ public class MouvementManager implements InitializingBean {
 
     /** The start angle. */
     private final double coefAngle;
-    private double startAngle;
+    private long startAngle;
 
     /**
      * Instantiates a new robot manager.
@@ -112,7 +112,8 @@ public class MouvementManager implements InitializingBean {
         // Angle de départ pour les déplacement.
         // Si l'angle est supérieur en absolu, on annule la distance
         // afin de naviguer en priorité en marche avant.
-        startAngle = coefAngle * conv.getPiPulse();
+        startAngle = (long) (coefAngle * conv.getPiPulse());
+        log.info("Angle pour le demi tour {}°", conv.pulseToDeg(startAngle));
     }
 
     /**
@@ -190,7 +191,7 @@ public class MouvementManager implements InitializingBean {
             // Calcul du coef d'annulation de la distance
             // Permet d'effectuer un demi tour en 3 temps.
             if (Math.abs(consOrient) > startAngle) {
-                consDist = (long) (consDist * ((startAngle - Math.abs(consOrient)) / startAngle));
+                consDist = (consDist * ((startAngle - Math.abs(consOrient)) / startAngle));
             }
 
             // Sauvegarde des consignes
@@ -233,14 +234,24 @@ public class MouvementManager implements InitializingBean {
         double alpha = conv.radToPulse(Math.atan2(conv.pulseToRad(dY), conv.pulseToRad(dX)));
 
         // Ajustement a PI
-        double orient = alpha - position.getAngle();
-        if (orient > conv.getPiPulse()) {
-            orient = orient - conv.getPi2Pulse();
-        } else if (orient < -conv.getPiPulse()) {
-            orient = orient + conv.getPi2Pulse();
+        return (long) ajusteAngle(alpha - position.getAngle());
+    }
+
+    /**
+     * Méthode permettant d'ajuster l'angle en fonction du bornage +Pi .. -Pi
+     *
+     * @param angle
+     * @return
+     */
+    private double ajusteAngle(double angle) {
+        if (angle > conv.getPiPulse()) {
+            return ajusteAngle(angle - conv.getPi2Pulse());
+        } else if (angle < -conv.getPiPulse()) {
+            return ajusteAngle(angle + conv.getPi2Pulse());
         }
 
-        return (long) orient;
+        // L'angle est dans les borne.
+        return angle;
     }
 
     /**
