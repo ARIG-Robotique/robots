@@ -4,4 +4,4 @@ echo "Compilation ..."
 
 echo "Déploiement ..."
 scp ./build/libs/nerell-*-SNAPSHOT.jar 192.168.1.31:/home/pi/nerell/
-scp ./src/main/scripts/* 192.168.1.31:/home/pi/nerell/
+scp -r ./src/main/scripts/* 192.168.1.31:/home/pi/nerell/
