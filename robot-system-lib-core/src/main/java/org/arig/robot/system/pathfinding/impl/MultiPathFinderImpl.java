@@ -1,6 +1,9 @@
 package org.arig.robot.system.pathfinding.impl;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.exception.NoPathFoundException;
@@ -27,7 +30,10 @@ import java.util.stream.Stream;
  */
 @Slf4j
 @NoArgsConstructor
-public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm> {
+public class MultiPathFinderImpl extends AbstractPathFinder {
+
+    @Getter(AccessLevel.PROTECTED)
+    private PathFinderAlgorithm algorithm;
 
     /** The PathFinder */
     private IGraphSearch pf = null;
@@ -64,7 +70,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
 
         log.info("Recherche de chemin de {} a {} avec l'algorithme {}", from.toString(), to.toString(), getAlgorithm().toString());
 
-        // Démarrage
+        // Pour les stats de temps
         StopWatch sw = new StopWatch();
         sw.start();
 
@@ -88,7 +94,6 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
         }
         sw.split();
         log.info("Calcul du chemin en {}", sw.toSplitString());
-        sw.stop();
 
         // Transformation des nodes en points
         List<Point> points = graphNodes.parallelStream()
@@ -112,21 +117,34 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
             }
             anglePrecedent = angle;
         }
-        log.info("Chemin de {} point(s) de passage", c.nbPoints());
 
         // Ajout du dernier point.
         c.addPoint(to);
+
+        sw.split();
+        log.info("Chemin de {} point(s) de passage filtré en {}", c.nbPoints() - 1, sw.toSplitString());
+        sw.stop();
+
+        // Ecriture d'une image pour le path finding
+        LinkedList<Point> pts = new LinkedList<>();
+        pts.add(from);
+        pts.addAll(c.getPoints());
+        saveImagePath(pts);
 
         return c;
     }
 
     @Override
-    public void makeGraphFromBWImage(File file) {
+    public void construitGraphDepuisImageNoirEtBlanc(File file) {
         if (!file.exists() && !file.canRead()) {
             String errorMessage = String.format("Impossible d'acceder au fichier %s (Existe : %s ; Readable : %s)", file.getAbsolutePath(), file.exists(), file.canRead());
             log.error(errorMessage);
             throw new IllegalArgumentException(errorMessage);
         }
+        super.setMapSource(file);
+
+        StopWatch sw = new StopWatch();
+        sw.start();
 
         BufferedImage img;
         try {
@@ -137,6 +155,10 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
         }
 
         Assert.notNull(img, "L'image ne peut pas être null");
+
+        sw.split();
+        log.info("Lecture de l'image pour le graph en {}", sw.toSplitString());
+
 
         int dx = img.getWidth() / getNbTileX();
         int dy = img.getHeight() / getNbTileY();
@@ -149,7 +171,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
         float cost;
         int px, py, nodeID, color;
         GraphNode aNode;
-        graph = new Graph();
+        graph = new Graph(getNbTileX() * getNbTileY()); // On initialise à 50 % du maillage pour gagner du temps sur les allocations mémoires.
 
         py = sy;
         for(int y = 0; y < getNbTileY() ; y++){
@@ -160,7 +182,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
                 color = img.getRGB(px, py) & 0xFF;
                 cost = 1;
 
-                // If color is not black then create the node and edges
+                // Si la couleur n'est pas noir, on ajoute les noeuds et les liens.
                 if(color != 0){
                     aNode = new GraphNode(nodeID, px, py);
                     graph.addNode(aNode);
@@ -188,6 +210,10 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
             }
             py += dy;
         }
+
+        sw.split();
+        log.info("Construction du graph en {}", sw.toSplitString());
+        sw.stop();
     }
 
     private void definePathFinder() {
@@ -215,8 +241,12 @@ public class MultiPathFinderImpl extends AbstractPathFinder<PathFinderAlgorithm>
     }
 
     @Override
+    protected String suffixResultImageName() {
+        return "-" + algorithm.name();
+    }
+
     public void setAlgorithm(PathFinderAlgorithm algorithm) {
-        super.setAlgorithm(algorithm);
+        this.algorithm = algorithm;
         pf = null;
     }
 

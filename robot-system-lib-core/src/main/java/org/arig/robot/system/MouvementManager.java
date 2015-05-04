@@ -1,16 +1,21 @@
 package org.arig.robot.system;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.csv.CsvCollector;
 import org.arig.robot.csv.CsvData;
+import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
+import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
+import org.arig.robot.vo.Chemin;
 import org.arig.robot.vo.CommandeRobot;
+import org.arig.robot.vo.Point;
 import org.arig.robot.vo.Position;
 import org.arig.robot.vo.enums.TypeConsigne;
 import org.springframework.beans.factory.InitializingBean;
@@ -49,6 +54,9 @@ public class MouvementManager implements InitializingBean {
     @Autowired
     private ConvertionRobotUnit conv;
 
+    @Autowired
+    private IPathFinder pathFinder;
+
     /** The position. */
     @Autowired
     @Qualifier("currentPosition")
@@ -77,6 +85,10 @@ public class MouvementManager implements InitializingBean {
     /** The start angle. */
     private final double coefAngle;
     private long startAngle;
+
+    /** Valeur de distance minimale entre deux points pour faire 1 seul mouvement */
+    @Setter
+    private double distanceMiniEntrePointMm = 300;
 
     /**
      * Instantiates a new robot manager.
@@ -315,24 +327,66 @@ public class MouvementManager implements InitializingBean {
     }
 
     /**
+     * Génération d'un déplacement avec le Path Finding
+     *
+     * @param x
+     * @param y
+     * @throws NoPathFoundException
+     */
+    public void pathTo(final double x, final double y) throws NoPathFoundException {
+        log.info("Demande de chemin vers X = {}mm ; Y = {}mm", x, y);
+        Point ptFrom = new Point(conv.pulseToMm(position.getPt().getX()) / 10, conv.pulseToMm(position.getPt().getY()) / 10);
+        Point ptTo = new Point(x / 10, y / 10);
+        Chemin c = pathFinder.findPath(ptFrom, ptTo);
+        while (c.hasNext()) {
+            Point p = c.next();
+            Point pRobot = new Point(p.getX() * 10, p.getY() * 10);
+            double dist = 10 * (Math.sqrt(Math.pow(p.getX() - ptFrom.getX(), 2) + Math.pow(p.getY() - ptFrom.getY(), 2)));
+            log.info("Distance avec le prochain point {}mm (seuil {}mm)", dist, distanceMiniEntrePointMm);
+            if (dist < distanceMiniEntrePointMm) {
+                // La distance est inférieur à 300 mm, on fait deux mouvement.
+                log.info("On y va en deux fois. Alignement front");
+                alignFrontTo(pRobot.getX(), pRobot.getY());
+                log.info("Ligne droite");
+                avanceMM(dist);
+            } else {
+                log.info("Ecart entre point suffisant, positionnement XY");
+                gotoPointMM(pRobot.getX(), pRobot.getY());
+            }
+
+            // Mise à jour de la position From après le mouvement
+            ptFrom.setX(conv.pulseToMm(position.getPt().getX()) / 10);
+            ptFrom.setY(conv.pulseToMm(position.getPt().getY()) / 10);
+        }
+    }
+
+    /**
+     * Méthode permettant de donner une consigne de position sur un point
+     *
+     * @param x
+     * @param y
+     */
+    public void gotoPointMM(final double x, final double y) {
+        gotoPointMM(x, y, true);
+    }
+
+    /**
      * Méthode permettant de donner une consigne de position sur un point
      * 
      * @param x
-     *            the x
      * @param y
-     *            the y
-     * @param frein
-     *            the frein
+     * @param avecArret
      */
-    public void gotoPointMM(final double x, final double y, final boolean frein) {
-        log.info("Va au point X = {}mm ; Y = {}mm {}", x, y, frein ? "et arrete toi" : "sans arret");
+    public void gotoPointMM(final double x, final double y, final boolean avecArret) {
+        log.info("Va au point X = {}mm ; Y = {}mm {}", x, y, avecArret ? "et arrete toi" : "sans arret");
         cmdRobot.getPosition().setAngle(0);
         cmdRobot.getPosition().getPt().setX(conv.mmToPulse(x));
         cmdRobot.getPosition().getPt().setY(conv.mmToPulse(y));
-        cmdRobot.setFrein(frein);
+        cmdRobot.setFrein(avecArret);
         cmdRobot.setTypes(TypeConsigne.XY);
 
         prepareNextMouvement();
+        waitMouvement();
     }
 
     /**
@@ -367,6 +421,7 @@ public class MouvementManager implements InitializingBean {
         cmdRobot.setFrein(true);
 
         prepareNextMouvement();
+        waitMouvement();
     }
 
     /**
@@ -396,6 +451,7 @@ public class MouvementManager implements InitializingBean {
         cmdRobot.setFrein(true);
 
         prepareNextMouvement();
+        waitMouvement();
     }
 
     /**
@@ -415,6 +471,7 @@ public class MouvementManager implements InitializingBean {
         cmdRobot.setFrein(true);
 
         prepareNextMouvement();
+        waitMouvement();
     }
 
     /**
@@ -443,6 +500,7 @@ public class MouvementManager implements InitializingBean {
         cmdRobot.setFrein(true);
 
         prepareNextMouvement();
+        waitMouvement();
     }
 
     /**

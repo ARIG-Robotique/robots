@@ -1,5 +1,8 @@
 package org.arig.robot.vo;
 
+import lombok.Data;
+import lombok.Getter;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -9,13 +12,10 @@ import java.util.LinkedHashSet;
  *
  * Created by mythril on 29/12/13.
  */
+@Data
 public class Chemin {
 
-    private Collection<Point> points;
-
-    public Chemin() {
-        points = new LinkedHashSet<>();
-    }
+    private final Collection<Point> points = new LinkedHashSet<>();
 
     public void addPoint(final Point pt) {
         points.add(pt);

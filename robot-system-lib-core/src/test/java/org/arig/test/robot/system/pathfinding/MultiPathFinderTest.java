@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
-import org.arig.robot.utils.ImageUtils;
 import org.arig.robot.vo.Chemin;
 import org.arig.robot.vo.Point;
 import org.junit.Assert;
@@ -14,9 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -48,12 +44,13 @@ public class MultiPathFinderTest {
             dir.delete();
         }
         dir.mkdirs();
+        pf.setPathDir(dir);
     }
 
     @Before
     public void beforeTest() {
         URL url = getClass().getResource("/assets/labyrinthe.png");
-        pf.makeGraphFromBWImage(new File(url.getPath()));
+        pf.construitGraphDepuisImageNoirEtBlanc(new File(url.getPath()));
 
         from = new Point(25, 25);
         to = new Point(365, 305);
@@ -87,8 +84,6 @@ public class MultiPathFinderTest {
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
         Assert.assertTrue(c.hasNext());
-
-        saveFile(c, new File(dir, "outputAStarManhattan.png"));
     }
 
     @Test
@@ -97,8 +92,6 @@ public class MultiPathFinderTest {
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
         Assert.assertTrue(c.hasNext());
-
-        saveFile(c, new File(dir, "outputAStarEuclidian.png"));
     }
 
     @Test
@@ -107,8 +100,6 @@ public class MultiPathFinderTest {
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
         Assert.assertTrue(c.hasNext());
-
-        saveFile(c, new File(dir, "outputDijkstra.png"));
     }
 
     @Test
@@ -117,8 +108,6 @@ public class MultiPathFinderTest {
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
         Assert.assertTrue(c.hasNext());
-
-        saveFile(c, new File(dir, "outputBreadthFirstSearch.png"));
     }
 
     @Test
@@ -127,42 +116,5 @@ public class MultiPathFinderTest {
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
         Assert.assertTrue(c.hasNext());
-
-        saveFile(c, new File(dir, "outputDepthFirstSearch.png"));
-    }
-
-    private void saveFile(Chemin c, File f) throws IOException {
-        URL url = getClass().getResource("/assets/labyrinthe.png");
-        BufferedImage img = ImageUtils.mirrorX(ImageIO.read(new File(url.getPath())));
-        Graphics2D g = img.createGraphics();
-        g.setBackground(Color.WHITE);
-        Point currentPoint = null;
-        Point precedencePoint = null;
-        while(c.hasNext()) {
-            // Couleur du premier et des autres points
-            g.setColor((currentPoint == null) ? Color.RED : Color.BLACK);
-            currentPoint = c.next();
-
-            // Couleur du dernier point
-            if (!c.hasNext()) {
-               g.setColor(Color.GREEN);
-            }
-            if (precedencePoint != null) {
-                Color back = g.getColor();
-
-                g.setColor(Color.BLUE);
-                g.drawLine((int) precedencePoint.getX(), (int) precedencePoint.getY(),
-                        (int) currentPoint.getX(), (int) currentPoint.getY());
-
-                g.setColor(back);
-            }
-
-            g.fillOval((int) currentPoint.getX() - 5, (int) currentPoint.getY() - 5, 10, 10);
-
-            precedencePoint = currentPoint;
-        }
-        g.dispose();
-
-        ImageIO.write(ImageUtils.mirrorX(img), "png", f);
     }
 }

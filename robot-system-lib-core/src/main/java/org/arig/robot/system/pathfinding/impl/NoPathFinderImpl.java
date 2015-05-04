@@ -6,6 +6,7 @@ import org.arig.robot.vo.Chemin;
 import org.arig.robot.vo.Point;
 
 import java.io.File;
+import java.util.LinkedList;
 
 /**
  * /!\ Faux PathFinder
@@ -13,7 +14,7 @@ import java.io.File;
  *
  * Created by mythril on 30/12/13.
  */
-public class NoPathFinderImpl extends AbstractPathFinder<Integer> {
+public class NoPathFinderImpl extends AbstractPathFinder {
 
     @Override
     public Chemin findPath(Point from, Point to) throws NoPathFoundException {
@@ -28,7 +29,7 @@ public class NoPathFinderImpl extends AbstractPathFinder<Integer> {
     }
 
     @Override
-    public void makeGraphFromBWImage(File file) {
-        // NOP
+    public void construitGraphDepuisImageNoirEtBlanc(File file) {
+        super.setMapSource(file);
     }
 }
