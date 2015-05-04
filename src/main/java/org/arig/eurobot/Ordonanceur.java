@@ -154,10 +154,12 @@ public class Ordonanceur {
         robotStatus.disableMatch();
 
         // Ouverture des servos pour libérer ce que l'on as en stock
-        servosServices.end();
+        servosServices.deposeColonneFinMatch();
+        servosServices.deposeGobeletDroitFinMatch();
+        servosServices.deposeGobeletGaucheFinMatch();
 
-        // Désactivation de la puissance moteur pour être sur de ne plus roulé
-        ioServices.disableAlimMoteur();
+        // Désactivation de la puissance moteur pour être sur de ne plus rouler
+        //ioServices.disableAlimMoteur();
 
         if (csvCollector != null) {
             csvCollector.exportToFile();
