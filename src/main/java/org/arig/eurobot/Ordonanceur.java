@@ -12,7 +12,7 @@ import org.arig.robot.communication.II2CManager;
 import org.arig.robot.csv.CsvCollector;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.system.MouvementManager;
-import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
+import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.vo.Point;
 import org.arig.robot.vo.Position;
@@ -46,7 +46,7 @@ public class Ordonanceur {
     private MouvementManager mouvementManager;
 
     @Autowired
-    private MultiPathFinderImpl pf;
+    private IPathFinder pathFinder;
 
     @Autowired
     private ConvertionRobotUnit conv;
@@ -115,6 +115,9 @@ public class Ordonanceur {
         }
         log.info("Phase de préparation terminé");
 
+        log.info("Chargement de la carte");
+        pathFinder.construitGraphDepuisImageNoirEtBlanc(new File("./maps/table-test-obstacle.png"));
+
         // Attente tirette.
         log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
         while(ioServices.tirette());
@@ -127,8 +130,7 @@ public class Ordonanceur {
         mouvementManager.resetEncodeurs();
 
         // TODO : A supprimer
-        mouvementManager.setVitesse(200L, 8000L);
-        pf.makeGraphFromBWImage(new File("./maps/table-test.png"));
+        mouvementManager.setVitesse(300L, 800L);
         position.setPt(new Point(conv.mmToPulse(365), conv.mmToPulse(165)));
         position.setAngle(conv.degToPulse(90));
         // TODO : FIN A supprimer

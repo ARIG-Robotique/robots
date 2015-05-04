@@ -14,7 +14,6 @@ import org.arig.robot.system.motion.AsservissementPolaire;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motion.OdometrieLineaire;
-import org.arig.robot.system.pathfinding.AbstractPathFinder;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
@@ -23,6 +22,8 @@ import org.arig.robot.vo.CommandeRobot;
 import org.arig.robot.vo.Position;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.io.File;
 
 /**
  * Created by gdepuille on 23/12/14.
@@ -38,9 +39,11 @@ public class RobotContext {
 
     @Bean
     public MouvementManager mouvementManager() {
-        return new MouvementManager(IConstantesRobot.arretDistanceMm, IConstantesRobot.approcheDistanceMm,
+        MouvementManager mv = new MouvementManager(IConstantesRobot.arretDistanceMm, IConstantesRobot.approcheDistanceMm,
                 IConstantesRobot.arretOrientDeg, IConstantesRobot.approcheOrientationDeg,
                 IConstantesRobot.angleReculDeg);
+        mv.setDistanceMiniEntrePointMm(IConstantesRobot.distanceMiniEntrePointMm);
+        return mv;
     }
 
     @Bean
@@ -98,10 +101,15 @@ public class RobotContext {
     }
 
     @Bean
-    public MultiPathFinderImpl pathFinder() {
+    public IPathFinder pathFinder() {
         MultiPathFinderImpl pf = new MultiPathFinderImpl();
         pf.setAllowDiagonal(true);
-        pf.setAlgorithm(PathFinderAlgorithm.A_STAR_MANHATTAN);
+        pf.setAlgorithm(IConstantesRobot.pathFindingAlgo);
+        File pathDir = new File("./logs/paths");
+        if (pathDir.exists()) {
+            pathDir.delete();
+        }
+        pf.setPathDir(pathDir);
         //pf.setNbTileX(300);
         //pf.setNbTileY(200);
 
@@ -116,7 +124,7 @@ public class RobotContext {
     public RobotStatus robotStatus() { return new RobotStatus(); }
 
     @Bean
-    public Ordonanceur ordonenceur() { return Ordonanceur.getInstance(); }
+    public Ordonanceur ordonanceur() { return Ordonanceur.getInstance(); }
 
     @Bean
     public CsvCollector csvCollector() { return new CsvCollector(); }

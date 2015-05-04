@@ -1,5 +1,7 @@
 package org.arig.eurobot.constants;
 
+import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
+
 /**
  * Created by gdepuille on 23/12/14.
  */
@@ -9,7 +11,7 @@ public interface IConstantesRobot {
     static final double asservTimeMs = 10;
 
     // Durée du match //
-    static final int matchTimeMs = 90000;
+    static final int matchTimeMs = 89500;
 
     // ----------------------------- //
     // Configuration des convertions //
@@ -48,15 +50,20 @@ public interface IConstantesRobot {
     // --------------------------- //
     // Paramètre mouvement manager //
     // --------------------------- //
+    static final double distanceMiniEntrePointMm = 400;
     static final double arretDistanceMm = 1;
     static final double arretOrientDeg = 1;
     static final double approcheDistanceMm = 10;
     static final double approcheOrientationDeg = 5;
     static final double angleReculDeg = 0.45;
 
+    // ---------------------- //
+    // Paramètre path finding //
+    // ---------------------- //
+    static final PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.A_STAR_MANHATTAN;
+
     // ----------------- //
     // Paramètres métier //
     // ----------------- //
-
     static final int nbPiedMax = 4;
 }
