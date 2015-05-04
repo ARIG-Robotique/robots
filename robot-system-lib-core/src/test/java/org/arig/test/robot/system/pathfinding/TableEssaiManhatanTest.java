@@ -26,7 +26,7 @@ import java.net.URL;
  */
 @Slf4j
 @RunWith(BlockJUnit4ClassRunner.class)
-public class MultiPathFinderTestTableTest {
+public class TableEssaiManhatanTest {
 
     private static MultiPathFinderImpl pf;
 
@@ -43,9 +43,9 @@ public class MultiPathFinderTestTableTest {
         pf.setNbTileY(1800);
         pf.setAllowDiagonal(true);
 
-        URL url = MultiPathFinderTestTableTest.class.getClass().getResource("/assets/planche-essai03.png");
+        URL url = TableEssaiManhatanTest.class.getClass().getResource("/assets/planche-essai03.png");
         imgSource = new File(url.getPath());
-        pf.makeGraphFromBWImage(imgSource);
+        pf.construitGraphDepuisImageNoirEtBlanc(imgSource);
         pf.setAlgorithm(PathFinderAlgorithm.A_STAR_MANHATTAN);
 
         String tmpDir = System.getProperty("java.io.tmpdir");
@@ -58,7 +58,7 @@ public class MultiPathFinderTestTableTest {
 
     @Before
     public void beforeTest() {
-        pf.makeGraphFromBWImage(imgSource);
+        pf.construitGraphDepuisImageNoirEtBlanc(imgSource);
     }
 
     @Test
