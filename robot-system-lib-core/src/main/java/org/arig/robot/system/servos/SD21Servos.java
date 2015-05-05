@@ -84,7 +84,9 @@ public class SD21Servos implements InitializingBean {
         lastPositions.put(servoNb, position);
 
         try {
-            log.info("Définition de la position du servo {} (Position = {})", servoNb, position);
+            if (log.isDebugEnabled()) {
+                log.debug("Définition de la position du servo {} (Position = {})", servoNb, position);
+            }
             i2cManager.sendData(deviceName, (byte) (SD21Servos.getBaseRegister(servoNb) + 1), (byte) (position & 0xFF), (byte) (position >> 8));
         } catch (I2CException e) {
             log.error("Erreur lors de l'envoi de la position");
@@ -108,7 +110,9 @@ public class SD21Servos implements InitializingBean {
         setPosition(servoNb, newPosition);
         try {
             int waitTime = calculWaitTimeMs(oldPosition, newPosition, currentSpeed);
-            log.info("Attente pour le mouvement servo {} {} -> {} à la vitesse de {} pendant {} ms", servoNb, oldPosition, newPosition, currentSpeed, waitTime);
+            if (log.isDebugEnabled()) {
+                log.debug("Attente pour le mouvement servo {} {} -> {} à la vitesse de {} pendant {} ms", servoNb, oldPosition, newPosition, currentSpeed, waitTime);
+            }
             Thread.currentThread().sleep(waitTime);
         } catch (InterruptedException e) {
             log.warn("Erreur d'attente pour le mouvement servo {} {} -> {} à la vitesse {}", servoNb, oldPosition, newPosition, currentSpeed);
@@ -165,7 +169,9 @@ public class SD21Servos implements InitializingBean {
         lastSpeed.put(servoNb, speed);
 
         try {
-            log.info(String.format("Comande du servo %d (Vitesse = %d,  Position = %d)", servoNb, speed, position));
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Comande du servo %d (Vitesse = %d,  Position = %d)", servoNb, speed, position));
+            }
             i2cManager.sendData(deviceName, SD21Servos.getBaseRegister(servoNb), speed, (byte) (position & 0xFF), (byte) (position >> 8));
         } catch (I2CException e) {
             log.error("Erreur lors de la définition de la vitesse et de la position");
@@ -190,7 +196,9 @@ public class SD21Servos implements InitializingBean {
         setPositionAndSpeed(servoNb, newPosition, newSpeed);
         try {
             int waitTime = calculWaitTimeMs(oldPosition, newPosition, newSpeed);
-            log.info("Attente pour le mouvement servo {} {} -> {} à la vitesse de {} pendant {} ms", servoNb, oldPosition, newPosition, newSpeed, waitTime);
+            if (log.isDebugEnabled()) {
+                log.debug("Attente pour le mouvement servo {} {} -> {} à la vitesse de {} pendant {} ms", servoNb, oldPosition, newPosition, newSpeed, waitTime);
+            }
             Thread.currentThread().sleep(waitTime);
         } catch (InterruptedException e) {
             log.warn("Erreur d'attente pour le mouvement servo {} {} -> {} à la vitesse {}", servoNb, oldPosition, newPosition, newSpeed);
