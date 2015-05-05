@@ -20,14 +20,13 @@ import java.util.concurrent.Future;
  * @author gdepuille
  */
 @Slf4j
-@AllArgsConstructor
 public class SRF02I2CSonar {
 
     // Write Registers
     private static final byte COMMAND_REGISTER = 0;
 
     // Read Registers
-    private static final byte SOFTWARE_REGISTER = COMMAND_REGISTER;
+    private static final byte VERSION_REGISTER = COMMAND_REGISTER;
     private static final byte RANGE_HIGH_BYTE_REGISTER = 2;
     private static final byte RANGE_LOW_BYTE_REGISTER = 3;
     private static final byte AUTOTUNE_MINIMUM_HIGH_BYTE_REGISTER = 4;
@@ -97,7 +96,7 @@ public class SRF02I2CSonar {
     }
 
     @Async
-    public AsyncResult<Integer> readValue() {
+    public Future<Integer> readValue() {
         if (log.isDebugEnabled()) {
             log.debug("Lecture du Sonar {}", deviceName);
         }
@@ -127,6 +126,19 @@ public class SRF02I2CSonar {
         } catch (I2CException | InterruptedException e) {
             log.error("Erreur de lecture du Sonar {} : {}", deviceName, e.toString());
             return new AsyncResult<>(INVALID_VALUE);
+        }
+    }
+
+    /**
+     * Prints the version.
+     */
+    public void printVersion() {
+        try {
+            i2cManager.sendData(deviceName, VERSION_REGISTER);
+            final int version = i2cManager.getData(deviceName);
+            log.info("Sonar {} (V : {})", deviceName, version);
+        } catch (I2CException e) {
+            log.error("Erreur lors de la récupération de la version du capteur SRF02 {}", deviceName);
         }
     }
 }
