@@ -2,6 +2,8 @@ package org.arig.eurobot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.eurobot.constants.IConstantesSpringConfig;
+import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.exception.ObstacleFoundException;
 import org.arig.robot.system.MouvementManager;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.vo.Position;
@@ -44,33 +46,38 @@ public class PositionController {
         return pos;
     }
 
-    @RequestMapping(value = "/go", method = RequestMethod.GET)
-    public void va(@RequestParam("x") final double x, @RequestParam("y") final double y) {
+    @RequestMapping(value = "/pathPosition", method = RequestMethod.GET)
+    public void cheminVersPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws NoPathFoundException, ObstacleFoundException {
+        mouvementManager.pathTo(x, y);
+    }
+
+    @RequestMapping(value = "/allerPosition", method = RequestMethod.GET)
+    public void allerEnPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws ObstacleFoundException {
         mouvementManager.gotoPointMM(x, y, true);
     }
 
     @RequestMapping(value = "/face", method = RequestMethod.GET)
-    public void alignFace(@RequestParam("x") final double x, @RequestParam("y") final double y) {
+    public void alignFace(@RequestParam("x") final double x, @RequestParam("y") final double y) throws ObstacleFoundException {
         mouvementManager.alignFrontTo(x, y);
     }
 
     @RequestMapping(value = "/dos", method = RequestMethod.GET)
-    public void alignDos(@RequestParam("x") final double x, @RequestParam("y") final double y) {
+    public void alignDos(@RequestParam("x") final double x, @RequestParam("y") final double y) throws ObstacleFoundException {
         mouvementManager.alignBackTo(x, y);
     }
 
     @RequestMapping(value = "/tourne", method = RequestMethod.GET)
-    public void tourne(@RequestParam("angle") final double angle) {
+    public void tourne(@RequestParam("angle") final double angle) throws ObstacleFoundException {
         mouvementManager.tourneDeg(angle);
     }
 
     @RequestMapping(value = "/avance", method = RequestMethod.GET)
-    public void avance(@RequestParam("distance") final double distance) {
+    public void avance(@RequestParam("distance") final double distance) throws ObstacleFoundException {
         mouvementManager.avanceMM(distance);
     }
 
     @RequestMapping(value = "/recule", method = RequestMethod.GET)
-    public void recule(@RequestParam("distance") final double distance) {
+    public void recule(@RequestParam("distance") final double distance) throws ObstacleFoundException {
         mouvementManager.reculeMM(distance);
     }
 }

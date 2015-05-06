@@ -61,10 +61,6 @@ public class RobotContext {
     @Bean(name = "pidDistance")
     public IPidFilter pidDistance() {
         log.info("Configuration PID Distance");
-        // PID Simple
-        //SimplePID pid = new SimplePID();
-
-        // PID Complet
         CompletePID pid = new CompletePID();
         pid.setSampleTime((int) IConstantesRobot.asservTimeMs);
         pid.setMode(IPidFilter.PidMode.AUTOMATIC);
@@ -76,10 +72,6 @@ public class RobotContext {
     @Bean(name = "pidOrientation")
     public IPidFilter pidOrientation() {
         log.info("Configuration PID Orientation");
-        // PID Simple
-        //SimplePID pid = new SimplePID();
-
-        // PID Complet
         CompletePID pid = new CompletePID();
         pid.setSampleTime((int) IConstantesRobot.asservTimeMs);
         pid.setMode(IPidFilter.PidMode.AUTOMATIC);

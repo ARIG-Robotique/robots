@@ -86,7 +86,7 @@ public class Ordonanceur {
         log.info("Initialisation du contrôleur de mouvement");
         mouvementManager.init();
 
-        // Activation de la puissance
+        // FIXME : Activation de la puissance
         //ioServices.enableAlimMoteur();
         //ioServices.enableAlimServoMoteur();
 
@@ -106,17 +106,13 @@ public class Ordonanceur {
             log.warn("La tirette n'est pas la. Phase de préparation Nerell");
             while(!ioServices.tirette()) {
                 servosServices.checkBtnTapis();
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    log.error("Interruption du Thread pendant le check tapis", e);
-                }
+                ioServices.equipe();
             }
         }
         log.info("Phase de préparation terminé");
 
         log.info("Chargement de la carte");
-        pathFinder.construitGraphDepuisImageNoirEtBlanc(new File("./maps/table-test-obstacle.png"));
+        pathFinder.construitGraphDepuisImageNoirEtBlanc(new File("./maps/table-test.png"));
 
         // Attente tirette.
         log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
@@ -148,6 +144,7 @@ public class Ordonanceur {
             }
         }
         matchTime.stop();
+        log.info("Fin de l'ordonancement du match. Durée {} ms", matchTime.getTime());
 
         // Arrêt de l'asservissement et des moteurs
         robotStatus.disableAsserv();
@@ -158,13 +155,11 @@ public class Ordonanceur {
         servosServices.deposeGobeletDroitFinMatch();
         servosServices.deposeGobeletGaucheFinMatch();
 
-        // Désactivation de la puissance moteur pour être sur de ne plus rouler
+        // FIXME : Désactivation de la puissance moteur pour être sur de ne plus rouler
         //ioServices.disableAlimMoteur();
 
         if (csvCollector != null) {
             csvCollector.exportToFile();
         }
-
-        log.info("Fin de l'ordonancement du match. Durée {} ms", matchTime.getTime());
     }
 }

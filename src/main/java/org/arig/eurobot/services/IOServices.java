@@ -1,9 +1,12 @@
 package org.arig.eurobot.services;
 
 import com.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
-import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.*;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.eurobot.constants.IConstantesGPIO;
+import org.arig.eurobot.model.RobotStatus;
+import org.arig.eurobot.model.Team;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -13,7 +16,14 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class IOServices {
+public class IOServices implements InitializingBean {
+
+    @Autowired
+    private RobotStatus rs;
+
+    @Autowired
+    @Qualifier("ioRaspi")
+    private GpioController gpio;
 
     @Autowired
     @Qualifier("pcfAlim")
@@ -26,6 +36,97 @@ public class IOServices {
     @Autowired
     @Qualifier("pcfPresence")
     private PCF8574GpioProvider pcfPresence;
+
+    // Référence sur les PIN Input
+    GpioPinDigitalInput pinEquipe;
+
+    // Référence sur les PIN Output
+    GpioPinDigitalOutput pinAlimPuissanceMoteur;
+    GpioPinDigitalOutput pinAlimPuissanceServosMoteur;
+    GpioPinDigitalOutput pinAlimPuissance3;
+    GpioPinDigitalOutput pinCmdLedCapteurRGB;
+    GpioPinDigitalOutput pinLedRGB_R;
+    GpioPinDigitalOutput pinLedRGB_G;
+    GpioPinDigitalOutput pinLedRGB_B;
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        // Config PCF8574 //
+        // -------------- //
+
+        // Switch
+        pcfSwitch.setMode(IConstantesGPIO.N1_BTN_TAPIS, PinMode.DIGITAL_INPUT);
+        pcfSwitch.setMode(IConstantesGPIO.N1_TIRETTE, PinMode.DIGITAL_INPUT);
+        pcfSwitch.setMode(IConstantesGPIO.N1_SW_ARRIERE_DROIT, PinMode.DIGITAL_INPUT);
+        pcfSwitch.setMode(IConstantesGPIO.N1_SW_ARRIERE_GAUCHE, PinMode.DIGITAL_INPUT);
+        pcfSwitch.setMode(IConstantesGPIO.N1_SW_AVANT_DROIT, PinMode.DIGITAL_INPUT);
+        pcfSwitch.setMode(IConstantesGPIO.N1_SW_AVANT_GAUCHE, PinMode.DIGITAL_INPUT);
+        pcfSwitch.setMode(IConstantesGPIO.N1_SW_GB_DROIT, PinMode.DIGITAL_INPUT);
+        pcfSwitch.setMode(IConstantesGPIO.N1_SW_GB_GAUCHE, PinMode.DIGITAL_INPUT);
+
+        // Présence
+        pcfPresence.setMode(IConstantesGPIO.N2_PRESENCE_CENTRE, PinMode.DIGITAL_INPUT);
+        pcfPresence.setMode(IConstantesGPIO.N2_PRESENCE_DROITE, PinMode.DIGITAL_INPUT);
+        pcfPresence.setMode(IConstantesGPIO.N2_PRESENCE_GAUCHE, PinMode.DIGITAL_INPUT);
+
+        // Alim
+        pcfAlim.setMode(IConstantesGPIO.ALIM_AU, PinMode.DIGITAL_INPUT);
+        pcfAlim.setMode(IConstantesGPIO.ALIM_EN_PUISSANCE_MOTEUR, PinMode.DIGITAL_INPUT);
+        pcfAlim.setMode(IConstantesGPIO.ALIM_EN_PUISSANCE_SERVO, PinMode.DIGITAL_INPUT);
+        pcfAlim.setMode(IConstantesGPIO.ALIM_EN_PUISSANCE_3, PinMode.DIGITAL_INPUT);
+
+        pinAlimPuissanceMoteur = gpio.provisionDigitalOutputPin(pcfAlim, IConstantesGPIO.ALIM_PUISSANCE_MOTEUR);
+        pinAlimPuissanceServosMoteur = gpio.provisionDigitalOutputPin(pcfAlim, IConstantesGPIO.ALIM_PUISSANCE_SERVO);
+        pinAlimPuissance3 = gpio.provisionDigitalOutputPin(pcfAlim, IConstantesGPIO.ALIM_PUISSANCE_3);
+
+        // Config des IO raspi //
+        // ------------------- //
+
+        // Inputs
+        pinEquipe = gpio.provisionDigitalInputPin(IConstantesGPIO.EQUIPE);
+        gpio.provisionDigitalInputPin(IConstantesGPIO.IRQ_ALIM);
+        gpio.provisionDigitalInputPin(IConstantesGPIO.IRQ_1);
+        gpio.provisionDigitalInputPin(IConstantesGPIO.IRQ_2);
+        gpio.provisionDigitalInputPin(IConstantesGPIO.IRQ_3);
+        gpio.provisionDigitalInputPin(IConstantesGPIO.IRQ_4);
+        gpio.provisionDigitalInputPin(IConstantesGPIO.IRQ_5);
+        gpio.provisionDigitalInputPin(IConstantesGPIO.IRQ_6);
+
+        // Output
+        pinCmdLedCapteurRGB = gpio.provisionDigitalOutputPin(IConstantesGPIO.CMD_LED_RGB, PinState.LOW);
+        pinLedRGB_R = gpio.provisionDigitalOutputPin(IConstantesGPIO.PWM_R);
+        pinLedRGB_G = gpio.provisionDigitalOutputPin(IConstantesGPIO.PWM_G);
+        pinLedRGB_B = gpio.provisionDigitalOutputPin(IConstantesGPIO.PWM_B);
+
+        // On éteint la led du capteur, elle pique les yeux.
+        pinCmdLedCapteurRGB.low();
+        pinLedRGB_R.high();
+        pinLedRGB_G.low();
+        pinLedRGB_B.low();
+    }
+
+    // --------------------------------------------------------- //
+    // --------------------- CHECK PREPARATION ----------------- //
+    // --------------------------------------------------------- //
+
+    public boolean btnTapis() {
+        return pcfSwitch.getState(IConstantesGPIO.N1_BTN_TAPIS) == PinState.LOW;
+    }
+
+    public Team equipe() {
+        rs.setTeam(pinEquipe.isHigh() ? Team.JAUNE : Team.VERTE);
+        if (rs.getTeam() == Team.JAUNE) {
+            pinLedRGB_R.high();
+            pinLedRGB_G.high();
+            pinLedRGB_B.low();
+        } else {
+            pinLedRGB_R.low();
+            pinLedRGB_G.high();
+            pinLedRGB_B.low();
+        }
+
+        return rs.getTeam();
+    }
 
     // --------------------------------------------------------- //
     // -------------------------- INPUT ------------------------ //
@@ -45,10 +146,6 @@ public class IOServices {
 
     public boolean tirette() {
         return pcfSwitch.getState(IConstantesGPIO.N1_TIRETTE) == PinState.LOW;
-    }
-
-    public boolean btnTapis() {
-        return pcfSwitch.getState(IConstantesGPIO.N1_BTN_TAPIS) == PinState.LOW;
     }
 
     public boolean buteeAvantGauche() {
@@ -101,18 +198,18 @@ public class IOServices {
 
     public void enableAlimMoteur() {
         log.info("Activation puissance moteur");
-        pcfAlim.setState(IConstantesGPIO.ALIM_PUISSANCE_MOTEUR, PinState.LOW);
+        pinAlimPuissanceMoteur.low();
     }
     public void disableAlimMoteur() {
         log.info("Desactivation puissance moteur");
-        pcfAlim.setState(IConstantesGPIO.ALIM_PUISSANCE_MOTEUR, PinState.HIGH);
+        pinAlimPuissanceMoteur.high();
     }
     public void enableAlimServoMoteur() {
         log.info("Activation puissance servos-moteur");
-        pcfAlim.setState(IConstantesGPIO.ALIM_PUISSANCE_SERVO, PinState.LOW);
+        pinAlimPuissanceServosMoteur.low();
     }
     public void disableAlimServoMoteur() {
         log.info("Desactivation puissance servos-moteur");
-        pcfAlim.setState(IConstantesGPIO.ALIM_PUISSANCE_SERVO, PinState.HIGH);
+        pinAlimPuissanceServosMoteur.high();
     }
 }

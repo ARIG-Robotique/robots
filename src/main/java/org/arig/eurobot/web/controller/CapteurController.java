@@ -25,14 +25,15 @@ public class CapteurController {
     private IOServices ioServices;
 
     @RequestMapping(method = RequestMethod.GET)
-    public Map<String, Boolean> listAll() {
-        Map<String, Boolean> capteurList = new LinkedHashMap<>();
+    public Map<String, Object> listAll() {
+        Map<String, Object> capteurList = new LinkedHashMap<>();
 
         capteurList.put("AU", ioServices.auOk());
         capteurList.put("Puissance Moteur", ioServices.alimMoteurOk());
         capteurList.put("Puissance Servo", ioServices.alimServoOk());
         capteurList.put("Tirette", ioServices.tirette());
         capteurList.put("Bouton tapis", ioServices.btnTapis());
+        capteurList.put("Equipe", ioServices.equipe());
         capteurList.put("Butée avant gauche", ioServices.buteeAvantGauche());
         capteurList.put("Butée avant droite", ioServices.buteeAvantDroit());
         capteurList.put("Butée arrière gauche", ioServices.buteeArriereGauche());

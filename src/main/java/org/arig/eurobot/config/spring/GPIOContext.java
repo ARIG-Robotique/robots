@@ -21,47 +21,21 @@ public class GPIOContext {
 
     @Bean(name = "ioRaspi", destroyMethod = "shutdown")
     public GpioController gpioController() {
-        GpioController gpio = GpioFactory.getInstance();
-        gpio.provisionDigitalOutputPin(IConstantesGPIO.CMD_LED_RGB, PinState.LOW).low();
-        return gpio;
+        return GpioFactory.getInstance();
     }
 
     @Bean(name = "pcfSwitch", destroyMethod = "shutdown")
     public PCF8574GpioProvider pcfSwitch(I2CBus bus) throws IOException {
-        PCF8574GpioProvider c = new PCF8574GpioProvider(bus, IConstantesI2C.PCF_NUM1_ADDRESS);
-        c.setMode(IConstantesGPIO.N1_BTN_TAPIS, PinMode.DIGITAL_INPUT);
-        c.setMode(IConstantesGPIO.N1_TIRETTE, PinMode.DIGITAL_INPUT);
-        c.setMode(IConstantesGPIO.N1_SW_ARRIERE_DROIT, PinMode.DIGITAL_INPUT);
-        c.setMode(IConstantesGPIO.N1_SW_ARRIERE_GAUCHE, PinMode.DIGITAL_INPUT);
-        c.setMode(IConstantesGPIO.N1_SW_AVANT_DROIT, PinMode.DIGITAL_INPUT);
-        c.setMode(IConstantesGPIO.N1_SW_AVANT_GAUCHE, PinMode.DIGITAL_INPUT);
-        c.setMode(IConstantesGPIO.N1_SW_GB_DROIT, PinMode.DIGITAL_INPUT);
-        c.setMode(IConstantesGPIO.N1_SW_GB_GAUCHE, PinMode.DIGITAL_INPUT);
-        return c;
+        return new PCF8574GpioProvider(bus, IConstantesI2C.PCF_NUM1_ADDRESS);
     }
 
     @Bean(name = "pcfPresence", destroyMethod = "shutdown")
     public PCF8574GpioProvider pcfPresence(I2CBus bus) throws IOException {
-        PCF8574GpioProvider c = new PCF8574GpioProvider(bus, IConstantesI2C.PCF_NUM2_ADDRESS);
-        c.setMode(IConstantesGPIO.N2_PRESENCE_CENTRE, PinMode.DIGITAL_INPUT);
-        c.setMode(IConstantesGPIO.N2_PRESENCE_DROITE, PinMode.DIGITAL_INPUT);
-        c.setMode(IConstantesGPIO.N2_PRESENCE_GAUCHE, PinMode.DIGITAL_INPUT);
-        return c;
+        return new PCF8574GpioProvider(bus, IConstantesI2C.PCF_NUM2_ADDRESS);
     }
 
     @Bean(name = "pcfAlim", destroyMethod = "shutdown")
     public PCF8574GpioProvider pcfAlim(I2CBus bus) throws IOException {
-        PCF8574GpioProvider c = new PCF8574GpioProvider(bus, IConstantesI2C.PCF_ALIM_ADDRESS);
-        // Out
-        c.setMode(IConstantesGPIO.ALIM_PUISSANCE_MOTEUR, PinMode.DIGITAL_OUTPUT);
-        c.setMode(IConstantesGPIO.ALIM_PUISSANCE_SERVO, PinMode.DIGITAL_OUTPUT);
-        c.setMode(IConstantesGPIO.ALIM_PUISSANCE_3, PinMode.DIGITAL_OUTPUT);
-
-        // In
-        c.setMode(IConstantesGPIO.ALIM_AU, PinMode.DIGITAL_INPUT);
-        c.setMode(IConstantesGPIO.ALIM_EN_PUISSANCE_MOTEUR, PinMode.DIGITAL_INPUT);
-        c.setMode(IConstantesGPIO.ALIM_EN_PUISSANCE_SERVO, PinMode.DIGITAL_INPUT);
-        c.setMode(IConstantesGPIO.ALIM_EN_PUISSANCE_3, PinMode.DIGITAL_INPUT);
-        return c;
+        return new PCF8574GpioProvider(bus, IConstantesI2C.PCF_ALIM_ADDRESS);
     }
 }

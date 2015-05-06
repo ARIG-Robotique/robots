@@ -7,6 +7,8 @@ import lombok.Setter;
 @Data
 public class RobotStatus {
 
+    private Team team;
+
     @Setter(AccessLevel.NONE)
     private boolean asservEnabled = false;
 
@@ -18,7 +20,6 @@ public class RobotStatus {
 
     private boolean produitDroit = false;
     private boolean produitGauche = false;
-
 
     public void enableAsserv() { asservEnabled = true; }
 
