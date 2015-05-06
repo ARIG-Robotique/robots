@@ -4,10 +4,12 @@ import org.arig.robot.filters.ramp.IRampFilter;
 import org.arig.robot.filters.ramp.Ramp;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * Created by gdepuille on 15/03/15.
  */
+@Configuration
 public class RampTestContext {
 
     @Bean
