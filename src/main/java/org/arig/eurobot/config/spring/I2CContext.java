@@ -6,6 +6,7 @@ import org.arig.eurobot.constants.IConstantesI2C;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.communication.raspi.RaspiI2CManager;
 import org.arig.robot.exception.I2CException;
+import org.arig.robot.filters.values.MovingIntegerValueAverage;
 import org.arig.robot.system.capteurs.SRF02I2CSonar;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
@@ -68,22 +69,30 @@ public class I2CContext {
 
     @Bean(name = "usFront")
     public SRF02I2CSonar usFront() {
-        return new SRF02I2CSonar(IConstantesI2C.US_FRONT);
+        SRF02I2CSonar sonar = new SRF02I2CSonar(IConstantesI2C.US_FRONT);
+        sonar.setAvg(new MovingIntegerValueAverage());
+        return sonar;
     }
 
     @Bean(name = "usGauche")
     public SRF02I2CSonar usGauche() {
-        return new SRF02I2CSonar(IConstantesI2C.US_GAUCHE);
+        SRF02I2CSonar sonar = new SRF02I2CSonar(IConstantesI2C.US_GAUCHE);
+        sonar.setAvg(new MovingIntegerValueAverage());
+        return sonar;
     }
 
     @Bean(name = "usDroit")
     public SRF02I2CSonar usDroit() {
-        return new SRF02I2CSonar(IConstantesI2C.US_DROIT);
+        SRF02I2CSonar sonar = new SRF02I2CSonar(IConstantesI2C.US_DROIT);
+        sonar.setAvg(new MovingIntegerValueAverage());
+        return sonar;
     }
 
     @Bean(name = "usBack")
     public SRF02I2CSonar usBack() {
-        return new SRF02I2CSonar(IConstantesI2C.US_BACK);
+        SRF02I2CSonar sonar = new SRF02I2CSonar(IConstantesI2C.US_BACK);
+        sonar.setAvg(new MovingIntegerValueAverage());
+        return sonar;
     }
 
 }
