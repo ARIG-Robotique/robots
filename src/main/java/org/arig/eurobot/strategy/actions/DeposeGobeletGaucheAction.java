@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.eurobot.constants.IConstantesServos;
 import org.arig.eurobot.model.RobotStatus;
+import org.arig.eurobot.services.ServosService;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.ObstacleFoundException;
 import org.arig.robot.strategy.IAction;
@@ -23,7 +24,7 @@ public class DeposeGobeletGaucheAction implements IAction {
     private MouvementManager mv;
 
     @Autowired
-    private SD21Servos servos;
+    private ServosService servosService;
 
     @Autowired
     private RobotStatus rs;
@@ -53,8 +54,7 @@ public class DeposeGobeletGaucheAction implements IAction {
             mv.pathTo(210, 210);
             mv.gotoOrientationDeg(180);
             mv.avanceMM(200);
-            servos.setPositionAndWait(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_BAS);
-            servos.setPosition(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_OUVERT);
+            servosService.deposeGobeletGauche();
             mv.reculeMM(200);
             rs.setProduitGauche(false);
         } catch (NoPathFoundException | ObstacleFoundException e) {

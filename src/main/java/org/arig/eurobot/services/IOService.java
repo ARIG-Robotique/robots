@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class IOServices implements InitializingBean {
+public class IOService implements InitializingBean {
 
     @Autowired
     private RobotStatus rs;

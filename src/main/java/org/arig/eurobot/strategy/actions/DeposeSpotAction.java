@@ -2,13 +2,12 @@ package org.arig.eurobot.strategy.actions;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.eurobot.constants.IConstantesServos;
 import org.arig.eurobot.model.RobotStatus;
+import org.arig.eurobot.services.ServosService;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.ObstacleFoundException;
 import org.arig.robot.strategy.IAction;
 import org.arig.robot.system.MouvementManager;
-import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +22,7 @@ public class DeposeSpotAction implements IAction {
     private MouvementManager mv;
 
     @Autowired
-    private SD21Servos servos;
+    private ServosService servosService;
 
     @Autowired
     private RobotStatus rs;
@@ -53,11 +52,10 @@ public class DeposeSpotAction implements IAction {
             mv.pathTo(700, 210);
             mv.gotoOrientationDeg(0);
             mv.avanceMM(200);
-            servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
-            servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
-            servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
+            servosService.deposeColonneAuSol();
             mv.reculeMM(200);
             rs.resetNbPied();
+            servosService.fermeGuide();
         } catch (NoPathFoundException | ObstacleFoundException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         }

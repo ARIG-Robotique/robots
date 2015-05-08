@@ -66,6 +66,7 @@ public interface IConstantesServos {
 
     static final int ASCENSEUR_HAUT = 2210;
     static final int ASCENSEUR_PLEIN = 1300;
+    static final int ASCENSEUR_DEPOSE = 1000;
     static final int ASCENSEUR_BAS = 790;
 
     static final int GUIDE_OUVERT = 1240;

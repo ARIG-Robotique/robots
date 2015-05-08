@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.eurobot.constants.IConstantesRobot;
 import org.arig.eurobot.model.RobotStatus;
-import org.arig.eurobot.services.IOServices;
-import org.arig.eurobot.services.ServosServices;
+import org.arig.eurobot.services.IOService;
+import org.arig.eurobot.services.ServosService;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.csv.CsvCollector;
 import org.arig.robot.exception.I2CException;
@@ -34,13 +34,13 @@ public class Ordonanceur {
     private RobotStatus robotStatus;
 
     @Autowired
-    private IOServices ioServices;
+    private IOService ioService;
 
     @Autowired
     private II2CManager i2CManager;
 
     @Autowired
-    private ServosServices servosServices;
+    private ServosService servosService;
 
     @Autowired
     private MouvementManager mouvementManager;
@@ -80,7 +80,7 @@ public class Ordonanceur {
 
         // Init servos
         log.info("Position initiale des servos moteurs");
-        servosServices.homes();
+        servosService.homes();
 
         // Initialisation Mouvement Manager
         log.info("Initialisation du contrôleur de mouvement");
@@ -90,23 +90,23 @@ public class Ordonanceur {
         //ioServices.enableAlimMoteur();
         //ioServices.enableAlimServoMoteur();
 
-        if (!ioServices.auOk()) {
+        if (!ioService.auOk()) {
             log.warn("L'arrêt d'urgence est coupé.");
-            while(!ioServices.auOk());
+            while(!ioService.auOk());
         }
         log.info("Arrêt d'urgence OK");
 
-        if (!ioServices.alimMoteurOk() || !ioServices.alimServoOk()) {
-            log.warn("Alimentation puissance NOK (Moteur : {} ; Servos : {})", ioServices.alimMoteurOk(), ioServices.alimServoOk());
-            while(!ioServices.alimMoteurOk() && !ioServices.alimServoOk());
+        if (!ioService.alimMoteurOk() || !ioService.alimServoOk()) {
+            log.warn("Alimentation puissance NOK (Moteur : {} ; Servos : {})", ioService.alimMoteurOk(), ioService.alimServoOk());
+            while(!ioService.alimMoteurOk() && !ioService.alimServoOk());
         }
-        log.info("Alimentation puissance OK (Moteur : {} ; Servos : {})", ioServices.alimMoteurOk(), ioServices.alimServoOk());
+        log.info("Alimentation puissance OK (Moteur : {} ; Servos : {})", ioService.alimMoteurOk(), ioService.alimServoOk());
 
-        if (!ioServices.tirette()) {
+        if (!ioService.tirette()) {
             log.warn("La tirette n'est pas la. Phase de préparation Nerell");
-            while(!ioServices.tirette()) {
-                servosServices.checkBtnTapis();
-                ioServices.equipe();
+            while(!ioService.tirette()) {
+                servosService.checkBtnTapis();
+                ioService.equipe();
             }
         }
         log.info("Phase de préparation terminé");
@@ -116,7 +116,7 @@ public class Ordonanceur {
 
         // Attente tirette.
         log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
-        while(ioServices.tirette());
+        while(ioService.tirette());
 
         // Début du compteur de temps pour le match
         StopWatch matchTime = new StopWatch();
@@ -148,12 +148,13 @@ public class Ordonanceur {
 
         // Arrêt de l'asservissement et des moteurs
         robotStatus.disableAsserv();
+        robotStatus.disableAvoidance();
         robotStatus.disableMatch();
 
         // Ouverture des servos pour libérer ce que l'on as en stock
-        servosServices.deposeColonneFinMatch();
-        servosServices.deposeGobeletDroitFinMatch();
-        servosServices.deposeGobeletGaucheFinMatch();
+        servosService.deposeColonneFinMatch();
+        servosService.deposeGobeletDroitFinMatch();
+        servosService.deposeGobeletGaucheFinMatch();
 
         // FIXME : Désactivation de la puissance moteur pour être sur de ne plus rouler
         //ioServices.disableAlimMoteur();

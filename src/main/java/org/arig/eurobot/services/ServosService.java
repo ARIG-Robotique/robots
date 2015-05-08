@@ -1,7 +1,6 @@
 package org.arig.eurobot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.eurobot.constants.IConstantesGPIO;
 import org.arig.eurobot.constants.IConstantesRobot;
 import org.arig.eurobot.constants.IConstantesServos;
 import org.arig.eurobot.model.RobotStatus;
@@ -15,13 +14,13 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class ServosServices {
+public class ServosService {
 
     @Autowired
     private SD21Servos servos;
 
     @Autowired
-    private IOServices ioServices;
+    private IOService ioService;
 
     @Autowired
     private RobotStatus robotStatus;
@@ -50,6 +49,11 @@ public class ServosServices {
     @Async
     public void deposeGobeletDroitFinMatch() {
         log.info("Dépose gobelet droit fin de match");
+        deposeGobeletDroit();
+    }
+
+    public void deposeGobeletDroit() {
+        log.info("Dépose gobelet droit");
         servos.setPositionAndWait(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_BAS);
         servos.setPosition(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_OUVERT);
     }
@@ -57,6 +61,11 @@ public class ServosServices {
     @Async
     public void deposeGobeletGaucheFinMatch() {
         log.info("Dépose gobelet gauche fin de match");
+        deposeGobeletGauche();
+    }
+
+    public void deposeGobeletGauche() {
+        log.info("Dépose gobelet gauche");
         servos.setPositionAndWait(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_BAS);
         servos.setPosition(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_OUVERT);
     }
@@ -64,6 +73,11 @@ public class ServosServices {
     @Async
     public void deposeColonneFinMatch() {
         log.info("Dépose de la colonne en fin de match");
+        deposeColonneAuSol();
+    }
+
+    public void deposeColonneAuSol() {
+        log.info("Dépose de la colonne au sol");
         servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
         servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
         servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
@@ -74,7 +88,7 @@ public class ServosServices {
     /* ******************************************************** */
 
     public void checkBtnTapis() {
-        if (ioServices.btnTapis()) {
+        if (ioService.btnTapis()) {
             servos.setPosition(IConstantesServos.TAPIS_DROIT, IConstantesServos.TAPIS_DROIT_OUVERT);
             servos.setPosition(IConstantesServos.TAPIS_GAUCHE, IConstantesServos.TAPIS_GAUCHE_OUVERT);
             servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
@@ -86,7 +100,7 @@ public class ServosServices {
     }
 
     public void checkAscenseur() {
-        if (ioServices.piedCentre() && robotStatus.getNbPied() < IConstantesRobot.nbPiedMax) {
+        if (ioService.piedCentre() && robotStatus.getNbPied() < IConstantesRobot.nbPiedMax) {
             priseProduitAscenseur();
         }
     }
@@ -94,14 +108,14 @@ public class ServosServices {
     public void checkProduitGauche() {
         if (robotStatus.isProduitGauche()) {
             // Contole qu'il ne s'agissait pas d'un produit phantôme
-            if (!ioServices.piedGauche() && !ioServices.gobeletGauche()) {
+            if (!ioService.piedGauche() && !ioService.gobeletGauche()) {
                 robotStatus.setProduitGauche(false);
             } else {
                 return;
             }
         }
 
-        if (ioServices.produitGauche() || ioServices.gobeletGauche()) {
+        if (ioService.produitGauche() || ioService.gobeletGauche()) {
             priseProduitGauche();
         } else {
             servos.setPosition(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_OUVERT);
@@ -112,7 +126,7 @@ public class ServosServices {
     public void checkProduitDroit() {
         if (robotStatus.isProduitDroit()) {
             // Contole qu'il ne s'agissait pas d'un produit phantôme
-            if (!ioServices.piedDroit() && !ioServices.gobeletDroit()) {
+            if (!ioService.piedDroit() && !ioService.gobeletDroit()) {
                 robotStatus.setProduitDroit(false);
             } else {
                 return;
@@ -120,7 +134,7 @@ public class ServosServices {
         }
 
 
-        if (ioServices.produitDroit() || ioServices.gobeletDroit()) {
+        if (ioService.produitDroit() || ioService.gobeletDroit()) {
             priseProduitDroit();
         } else {
             servos.setPosition(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_OUVERT);
@@ -145,20 +159,24 @@ public class ServosServices {
     public void priseProduitGauche() {
         log.info("Produit disponible à gauche");
         servos.setPositionAndWait(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_PRODUIT);
-        if (ioServices.gobeletGauche()) {
+        if (ioService.gobeletGauche()) {
             servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_HAUT);
         }
-        robotStatus.setProduitGauche(ioServices.piedGauche() || ioServices.gobeletGauche());
-        log.info("Produit à gauche {} [ Pied : {} ; Gobelet {} ]", robotStatus.isProduitGauche(), ioServices.piedGauche(), ioServices.gobeletGauche());
+        robotStatus.setProduitGauche(ioService.piedGauche() || ioService.gobeletGauche());
+        log.info("Produit à gauche {} [ Pied : {} ; Gobelet {} ]", robotStatus.isProduitGauche(), ioService.piedGauche(), ioService.gobeletGauche());
     }
 
     public void priseProduitDroit() {
         log.info("Produit disponible à droite");
         servos.setPositionAndWait(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_PRODUIT);
-        if (ioServices.gobeletDroit()) {
+        if (ioService.gobeletDroit()) {
             servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_HAUT);
         }
-        robotStatus.setProduitDroit(ioServices.piedDroit() || ioServices.gobeletDroit());
-        log.info("Produit à droite {} [ Pied : {} ; Gobelet {} ]", robotStatus.isProduitDroit(), ioServices.piedDroit(), ioServices.gobeletDroit());
+        robotStatus.setProduitDroit(ioService.piedDroit() || ioService.gobeletDroit());
+        log.info("Produit à droite {} [ Pied : {} ; Gobelet {} ]", robotStatus.isProduitDroit(), ioService.piedDroit(), ioService.gobeletDroit());
+    }
+
+    public void fermeGuide() {
+        servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_FERME);
     }
 }

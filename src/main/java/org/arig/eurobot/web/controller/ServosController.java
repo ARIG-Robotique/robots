@@ -95,6 +95,7 @@ public class ServosController {
                 .setName("Ascenseur")
                 .addPosition(new ServoPositionDTO("Haut", IConstantesServos.ASCENSEUR_HAUT))
                 .addPosition(new ServoPositionDTO("Plein", IConstantesServos.ASCENSEUR_PLEIN))
+                .addPosition(new ServoPositionDTO("Bordure depose", IConstantesServos.ASCENSEUR_DEPOSE))
                 .addPosition(new ServoPositionDTO("Bas", IConstantesServos.ASCENSEUR_BAS));
         res.add(ascenseur);
 
