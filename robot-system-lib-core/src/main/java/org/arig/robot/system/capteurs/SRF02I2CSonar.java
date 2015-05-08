@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.exception.I2CException;
+import org.arig.robot.filters.values.IAverage;
+import org.arig.robot.filters.values.PassThroughValueAverage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -69,6 +71,9 @@ public class SRF02I2CSonar {
     @Getter
     private boolean fakeMode = false;
 
+    @Setter
+    private IAverage<Integer> avg = new PassThroughValueAverage();
+
     public SRF02I2CSonar(String deviceName) {
         this.deviceName = deviceName;
     }
@@ -122,7 +127,7 @@ public class SRF02I2CSonar {
                 }
                 log.debug("Résultat de la lecture du sonar {} = {} {}", deviceName, res, unit);
             }
-            return new AsyncResult<>(res);
+            return new AsyncResult<>(avg.average(res));
         } catch (I2CException | InterruptedException e) {
             log.error("Erreur de lecture du Sonar {} : {}", deviceName, e.toString());
             return new AsyncResult<>(INVALID_VALUE);
