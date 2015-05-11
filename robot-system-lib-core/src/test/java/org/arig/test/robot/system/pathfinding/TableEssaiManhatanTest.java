@@ -13,9 +13,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
+import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 
 /**
  * Created by mythril on 30/12/13.
@@ -54,7 +57,7 @@ public class TableEssaiManhatanTest {
     }
 
     @Test
-    public void testFindFirstPath() throws IOException, NoPathFoundException  {
+    public void testFindFirstPath() throws IOException, NoPathFoundException {
         Point from = new Point(36, 21);
         Point to = new Point(90, 140);
         Chemin c = pf.findPath(from, to);
@@ -63,7 +66,7 @@ public class TableEssaiManhatanTest {
     }
 
     @Test
-    public void testFindSecondPath() throws IOException, NoPathFoundException  {
+    public void testFindSecondPath() throws IOException, NoPathFoundException {
         Point from = new Point(90,140);
         Point to = new Point(25, 120);
         Chemin c = pf.findPath(from, to);
@@ -72,7 +75,7 @@ public class TableEssaiManhatanTest {
     }
 
     @Test
-    public void testFindThirdPath() throws IOException, NoPathFoundException  {
+    public void testFindThirdPath() throws IOException, NoPathFoundException {
         Point from = new Point(25, 120);
         Point to = new Point(70, 50);
         Chemin c = pf.findPath(from, to);
@@ -81,11 +84,38 @@ public class TableEssaiManhatanTest {
     }
 
     @Test
-    public void testFindFourthPath() throws IOException, NoPathFoundException  {
+    public void testFindFourthPath() throws IOException, NoPathFoundException {
         Point from = new Point(70, 50);
         Point to = new Point(25, 50);
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
         Assert.assertTrue(c.hasNext());
+    }
+
+    @Test
+    public void testAddObstacle() throws IOException, NoPathFoundException, InterruptedException {
+        Point from = new Point(36, 21);
+        Point to = new Point(90, 140);
+        Chemin c = pf.findPath(from, to);
+        Assert.assertNotNull(c);
+        Assert.assertTrue(c.hasNext());
+
+        Polygon obs = new Polygon();
+        obs.addPoint(-30, 15);
+        obs.addPoint(-15, 30);
+        obs.addPoint(15, 30);
+        obs.addPoint(30, 15);
+        obs.addPoint(30, -15);
+        obs.addPoint(15, -30);
+        obs.addPoint(-15, -30);
+        obs.addPoint(-30, -15);
+        obs.translate(70, 50);
+        pf.addObstacles(obs);
+        c = pf.findPath(from, to);
+        Assert.assertNotNull(c);
+        Assert.assertTrue(c.hasNext());
+
+        LocalDateTime waitTime = LocalDateTime.now().plusSeconds(6);
+        while (LocalDateTime.now().isBefore(waitTime)) ;
     }
 }

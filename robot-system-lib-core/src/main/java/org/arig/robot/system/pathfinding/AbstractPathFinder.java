@@ -7,7 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.utils.ImageUtils;
 import org.arig.robot.vo.Point;
+import org.arig.robot.vo.Position;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.Assert;
 
@@ -25,6 +28,11 @@ import java.util.List;
 @Slf4j
 public abstract class AbstractPathFinder implements IPathFinder, InitializingBean {
 
+    /** The position. */
+    @Autowired
+    @Qualifier("currentPosition")
+    private Position position;
+
     @Setter
     @Getter(AccessLevel.PROTECTED)
     private int nbTileX = 20;
@@ -37,13 +45,10 @@ public abstract class AbstractPathFinder implements IPathFinder, InitializingBea
     @Getter(AccessLevel.PROTECTED)
     private boolean allowDiagonal = true;
 
-    @Setter(AccessLevel.PROTECTED)
-    private File mapSource;
-
     @Setter
-    private File pathDir;
+    protected File pathDir;
 
-    private final DateTimeFormatter dteFormat = DateTimeFormatter.ISO_DATE_TIME;
+    protected final DateTimeFormatter dteFormat = DateTimeFormatter.ISO_DATE_TIME;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -65,6 +70,13 @@ public abstract class AbstractPathFinder implements IPathFinder, InitializingBea
     }
 
     /**
+     * Méthode renvoyant l'image courante pour la sauvegarde du path en image.
+     *
+     * @return L'image courante
+     */
+    protected abstract BufferedImage getCurrentBufferedImage();
+
+    /**
      * Enregistre le chemin calculer dans le répertoire './path'.
      * Le nom du fichier sera à la date de création du fichier.
      *
@@ -72,11 +84,12 @@ public abstract class AbstractPathFinder implements IPathFinder, InitializingBea
      */
     @Async
     public void saveImagePath(List<Point> pts) {
-        Assert.notNull(mapSource, "La map source doit être définie");
-
         try {
-            BufferedImage img = ImageUtils.mirrorX(ImageIO.read(mapSource));
+            BufferedImage current = getCurrentBufferedImage();
+            BufferedImage img = new BufferedImage(current.getWidth(), current.getHeight(), current.getType());
             Graphics2D g = img.createGraphics();
+            g.drawImage(current, 0, 0, null);
+
             g.setBackground(Color.WHITE);
             org.arig.robot.vo.Point currentPoint = null;
             org.arig.robot.vo.Point precedencePoint = null;
@@ -102,6 +115,12 @@ public abstract class AbstractPathFinder implements IPathFinder, InitializingBea
                 g.fillOval((int) currentPoint.getX() - 5, (int) currentPoint.getY() - 5, 10, 10);
 
                 precedencePoint = currentPoint;
+            }
+
+            // Dessin de la position du robot
+            if (position != null) {
+                g.setColor(Color.YELLOW);
+                g.fillRect((int) (position.getPt().getX() / 10) - 5, (int) (position.getPt().getY() / 10) - 5, 10, 10);
             }
             g.dispose();
 

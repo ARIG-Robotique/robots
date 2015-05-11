@@ -72,7 +72,7 @@ public class SRF02I2CSonar {
     private boolean fakeMode = false;
 
     @Setter
-    private IAverage<Integer> avg = new PassThroughValueAverage();
+    private IAverage<Integer> avg = new PassThroughValueAverage<>();
 
     public SRF02I2CSonar(String deviceName) {
         this.deviceName = deviceName;

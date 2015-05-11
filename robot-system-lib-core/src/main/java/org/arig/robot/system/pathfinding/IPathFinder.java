@@ -4,6 +4,7 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.vo.Chemin;
 import org.arig.robot.vo.Point;
 
+import java.awt.*;
 import java.io.File;
 
 /**
@@ -28,7 +29,7 @@ public interface IPathFinder {
      * @param maxDistance Distance max pour trouver un noeud.
      * @return Le chemin a emprunter pour atteindre la cible en evitant les obtacles.
      */
-    Chemin findPath(Point from, Point to, float maxDistance) throws NoPathFoundException;
+    Chemin findPath(Point from, Point to, double maxDistance) throws NoPathFoundException;
 
     /**
      * Nombre de tuiles sur l'axe X
@@ -64,5 +65,12 @@ public interface IPathFinder {
      * @param file
      */
     void construitGraphDepuisImageNoirEtBlanc(File file);
+
+    /**
+     * Ajout d'un obstacle sur la map.
+     *
+     * @param obstacles Les polygones représentant les obstacles détecté.
+     */
+    void addObstacles(Polygon... obstacles);
 
 }

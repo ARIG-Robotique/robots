@@ -35,10 +35,10 @@ public class OdometrieLineaire extends AbstractOdometrie {
     protected void process() {
         double newTheta = getPosition().getAngle() + encoders.getOrientation();
 
-        // Ajustement a 2 PI près
-        if (newTheta > conv.getPi2Pulse()) {
+        // Ajustement a PI près
+        if (newTheta > conv.getPiPulse()) {
             newTheta -= conv.getPi2Pulse();
-        } else if (newTheta < -conv.getPi2Pulse()) {
+        } else if (newTheta < -conv.getPiPulse()) {
             newTheta += conv.getPi2Pulse();
         }
 

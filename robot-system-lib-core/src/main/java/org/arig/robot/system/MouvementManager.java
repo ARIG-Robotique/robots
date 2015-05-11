@@ -5,9 +5,11 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.csv.CsvCollector;
 import org.arig.robot.csv.CsvData;
+import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.exception.ObstacleFoundException;
+import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
@@ -57,6 +59,9 @@ public class MouvementManager implements InitializingBean {
 
     @Autowired
     private IPathFinder pathFinder;
+
+    @Autowired
+    private AbstractRobotStatus rs;
 
     /** The position. */
     @Autowired
@@ -190,6 +195,8 @@ public class MouvementManager implements InitializingBean {
             // A.2 On positionne la commande moteur pour ne plus bouger
             cmdRobot.getMoteur().setDroit(0);
             cmdRobot.getMoteur().setGauche(0);
+
+            // On
         } else {
             // C. Pas d'obstacle, asservissement koi
             // C.1. Calcul des consignes
@@ -355,13 +362,13 @@ public class MouvementManager implements InitializingBean {
      * @param y
      * @throws NoPathFoundException
      */
-    public void pathTo(final double x, final double y) throws NoPathFoundException {
+    public void pathTo(final double x, final double y) throws NoPathFoundException, AvoidingException {
         boolean trajetOk = false;
         do {
+            Point ptFrom = new Point(conv.pulseToMm(position.getPt().getX()) / 10, conv.pulseToMm(position.getPt().getY()) / 10);
+            Point ptTo = new Point(x / 10, y / 10);
             try {
                 log.info("Demande de chemin vers X = {}mm ; Y = {}mm", x, y);
-                Point ptFrom = new Point(conv.pulseToMm(position.getPt().getX()) / 10, conv.pulseToMm(position.getPt().getY()) / 10);
-                Point ptTo = new Point(x / 10, y / 10);
                 Chemin c = pathFinder.findPath(ptFrom, ptTo);
                 while (c.hasNext()) {
                     Point p = c.next();
@@ -369,7 +376,7 @@ public class MouvementManager implements InitializingBean {
                     double dist = 10 * (Math.sqrt(Math.pow(p.getX() - ptFrom.getX(), 2) + Math.pow(p.getY() - ptFrom.getY(), 2)));
                     log.info("Distance avec le prochain point {}mm (seuil {}mm)", dist, distanceMiniEntrePointMm);
                     if (dist < distanceMiniEntrePointMm) {
-                        // La distance est inférieur à 300 mm, on fait deux mouvement.
+                        // La distance est inférieur à X mm, on fait deux mouvements.
                         log.info("On y va en deux fois. Alignement front");
                         alignFrontTo(pRobot.getX(), pRobot.getY());
                         log.info("Puis ligne droite");
@@ -388,6 +395,20 @@ public class MouvementManager implements InitializingBean {
                 trajetOk = true;
             } catch (ObstacleFoundException e) {
                 log.info("Obstacle trouvé, on tente un autre chemin");
+                try {
+                    rs.disableAvoidance();
+                    ptFrom.setX(conv.pulseToMm(position.getPt().getX()) / 10);
+                    ptFrom.setY(conv.pulseToMm(position.getPt().getY()) / 10);
+                    Chemin c = pathFinder.findPath(ptFrom, ptTo);
+                    Point p = c.next();
+                    Point pRobot = new Point(p.getX() * 10, p.getY() * 10);
+                    alignFrontTo(pRobot.getX(), pRobot.getY());
+                } catch (ObstacleFoundException ofe) {
+                    log.error("Erreur lors de l'évittement on tente autre chose.");
+                    throw new AvoidingException();
+                } finally {
+                    rs.enableAvoidance();
+                }
             }
         } while(!trajetOk);
     }
