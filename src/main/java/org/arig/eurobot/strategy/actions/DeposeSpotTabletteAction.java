@@ -3,7 +3,10 @@ package org.arig.eurobot.strategy.actions;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.eurobot.model.RobotStatus;
+import org.arig.eurobot.model.Team;
+import org.arig.eurobot.services.IOService;
 import org.arig.eurobot.services.ServosService;
+import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.ObstacleFoundException;
 import org.arig.robot.strategy.IAction;
@@ -16,7 +19,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class DeposeSpotAction implements IAction {
+public class DeposeSpotTabletteAction implements IAction {
 
     @Autowired
     private MouvementManager mv;
@@ -27,12 +30,15 @@ public class DeposeSpotAction implements IAction {
     @Autowired
     private RobotStatus rs;
 
+    @Autowired
+    private IOService ioService;
+
     @Getter
-    private final boolean completed = false;
+    private boolean completed = false;
 
     @Override
     public String name() {
-        return "Dépose spot action";
+        return "Dépose spot sur la tablette action";
     }
 
     @Override
@@ -42,22 +48,33 @@ public class DeposeSpotAction implements IAction {
 
     @Override
     public boolean isValid() {
-        return rs.getNbPied() > 3;
+        return rs.getNbPied() == 3 && rs.isInitialCollectFinished() && !ioService.piedDroit() && !ioService.piedGauche();
     }
 
     @Override
     public void execute() {
-        log.info("Execution de l'action de dépose d'un spot");
         try {
-            mv.pathTo(700, 210);
-            mv.gotoOrientationDeg(0);
-            mv.avanceMM(200);
-            servosService.deposeColonneAuSol();
+            mv.setVitesse(400, 800);
+            if (rs.getTeam() == Team.JAUNE) {
+                mv.pathTo(1650, 1300);
+                mv.gotoOrientationDeg(0);
+                servosService.leveGobelets();
+                mv.setVitesse(200, 800);
+                mv.gotoPointMM(1780, 1300);
+            } else {
+                // TODO : Vert
+            }
+
+            rs.disableAscenseur();
+            servosService.deposeColonneSurTablette();
             mv.reculeMM(200);
             rs.resetNbPied();
+            rs.enableAscenseur();
             servosService.fermeGuide();
-        } catch (NoPathFoundException | ObstacleFoundException e) {
+            rs.setBalleDansAscenseur(false);
+        } catch (NoPathFoundException | ObstacleFoundException | AvoidingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         }
+        completed = true;
     }
 }

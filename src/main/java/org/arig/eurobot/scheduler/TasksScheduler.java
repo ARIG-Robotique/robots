@@ -49,14 +49,14 @@ public class TasksScheduler {
         }
     }
 
-    @Scheduled(fixedDelay = 30)
+    /*@Scheduled(fixedDelay = 200)
     public void obstacleAvoidanceTask() {
         if (rs.isAvoidanceEnabled()) {
             avoidanceService.process();
         }
-    }
+    }*/
 
-    @Scheduled(fixedDelay = 50)
+    @Scheduled(fixedDelay = 100)
     public void strategyTask() {
         if (rs.isMatchEnabled()) {
             strategyManager.execute();
@@ -65,22 +65,8 @@ public class TasksScheduler {
 
     @Scheduled(fixedDelay = 100)
     public void ascenseurTask() {
-        if (rs.isMatchEnabled()) {
+        if (rs.isAscenseurEnabled()) {
             servosService.checkAscenseur();
-        }
-    }
-
-    @Scheduled(fixedDelay = 100)
-    public void produitGaucheTask() {
-        if (rs.isMatchEnabled()) {
-            servosService.checkProduitGauche();
-        }
-    }
-
-    @Scheduled(fixedDelay = 100)
-    public void produitDroitTask() {
-        if (rs.isMatchEnabled()) {
-            servosService.checkProduitDroit();
         }
     }
 }

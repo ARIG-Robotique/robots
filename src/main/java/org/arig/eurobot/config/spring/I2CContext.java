@@ -94,5 +94,4 @@ public class I2CContext {
         sonar.setAvg(new MovingIntegerValueAverage());
         return sonar;
     }
-
 }

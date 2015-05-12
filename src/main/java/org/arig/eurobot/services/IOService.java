@@ -38,16 +38,16 @@ public class IOService implements InitializingBean {
     private PCF8574GpioProvider pcfPresence;
 
     // Référence sur les PIN Input
-    GpioPinDigitalInput pinEquipe;
+    private GpioPinDigitalInput pinEquipe;
 
     // Référence sur les PIN Output
-    GpioPinDigitalOutput pinAlimPuissanceMoteur;
-    GpioPinDigitalOutput pinAlimPuissanceServosMoteur;
-    GpioPinDigitalOutput pinAlimPuissance3;
-    GpioPinDigitalOutput pinCmdLedCapteurRGB;
-    GpioPinDigitalOutput pinLedRGB_R;
-    GpioPinDigitalOutput pinLedRGB_G;
-    GpioPinDigitalOutput pinLedRGB_B;
+    private GpioPinDigitalOutput pinAlimPuissanceMoteur;
+    private GpioPinDigitalOutput pinAlimPuissanceServosMoteur;
+    private GpioPinDigitalOutput pinAlimPuissance3;
+    private GpioPinDigitalOutput pinCmdLedCapteurRGB;
+    private GpioPinDigitalOutput pinLedRGB_R;
+    private GpioPinDigitalOutput pinLedRGB_G;
+    private GpioPinDigitalOutput pinLedRGB_B;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -100,7 +100,7 @@ public class IOService implements InitializingBean {
 
         // On éteint la led du capteur, elle pique les yeux.
         pinCmdLedCapteurRGB.low();
-        pinLedRGB_R.high();
+        pinLedRGB_R.low();
         pinLedRGB_G.low();
         pinLedRGB_B.low();
     }
@@ -114,7 +114,7 @@ public class IOService implements InitializingBean {
     }
 
     public Team equipe() {
-        rs.setTeam(pinEquipe.isHigh() ? Team.JAUNE : Team.VERTE);
+        rs.setTeam(pinEquipe.isHigh() ? Team.JAUNE : Team.VERT);
         if (rs.getTeam() == Team.JAUNE) {
             pinLedRGB_R.high();
             pinLedRGB_G.high();
@@ -164,28 +164,28 @@ public class IOService implements InitializingBean {
         return pcfSwitch.getState(IConstantesGPIO.N1_SW_ARRIERE_DROIT) == PinState.LOW;
     }
 
+    public boolean produitGauche() {
+        return piedGauche() || gobeletGauche();
+    }
+
     public boolean gobeletGauche() {
         return pcfSwitch.getState(IConstantesGPIO.N1_SW_GB_GAUCHE) == PinState.LOW;
     }
 
-    public boolean produitGauche() {
-        return pcfPresence.getState(IConstantesGPIO.N2_PRESENCE_GAUCHE) == PinState.LOW;
+    public boolean piedGauche() {
+        return pcfPresence.getState(IConstantesGPIO.N2_PRESENCE_GAUCHE) == PinState.LOW && !gobeletGauche();
     }
 
-    public boolean piedGauche() {
-        return produitGauche() && !gobeletGauche();
+    public boolean produitDroit() {
+        return piedDroit() || gobeletDroit();
     }
 
     public boolean gobeletDroit() {
         return pcfSwitch.getState(IConstantesGPIO.N1_SW_GB_DROIT) == PinState.LOW;
     }
 
-    public boolean produitDroit() {
-        return pcfPresence.getState(IConstantesGPIO.N2_PRESENCE_DROITE) == PinState.LOW;
-    }
-
     public boolean piedDroit() {
-        return produitDroit() && !gobeletDroit();
+        return pcfPresence.getState(IConstantesGPIO.N2_PRESENCE_DROITE) == PinState.LOW && !gobeletDroit();
     }
 
     public boolean piedCentre() {
@@ -195,6 +195,18 @@ public class IOService implements InitializingBean {
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
+
+    public void colorAUKo() {
+        pinLedRGB_R.high();
+        pinLedRGB_G.low();
+        pinLedRGB_B.low();
+    }
+
+    public void clearTeamColor() {
+        pinLedRGB_R.low();
+        pinLedRGB_G.low();
+        pinLedRGB_B.low();
+    }
 
     public void enableAlimMoteur() {
         log.info("Activation puissance moteur");

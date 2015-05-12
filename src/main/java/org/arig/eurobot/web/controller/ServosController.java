@@ -36,6 +36,7 @@ public class ServosController {
         brasDroit.setId(IConstantesServos.BRAS_DROIT).setSpeed(IConstantesServos.SPEED_BRAS)
                 .setName("Bras droit")
                 .addPosition(new ServoPositionDTO("Haut", IConstantesServos.BRAS_DROIT_HAUT))
+                .addPosition(new ServoPositionDTO("Clap", IConstantesServos.BRAS_DROIT_CLAP))
                 .addPosition(new ServoPositionDTO("Bas", IConstantesServos.BRAS_DROIT_BAS));
         res.add(brasDroit);
 
@@ -43,6 +44,7 @@ public class ServosController {
         brasGauche.setId(IConstantesServos.BRAS_GAUCHE).setSpeed(IConstantesServos.SPEED_BRAS)
                 .setName("Bras gauche")
                 .addPosition(new ServoPositionDTO("Haut", IConstantesServos.BRAS_GAUCHE_HAUT))
+                .addPosition(new ServoPositionDTO("Clap", IConstantesServos.BRAS_GAUCHE_CLAP))
                 .addPosition(new ServoPositionDTO("Bas", IConstantesServos.BRAS_GAUCHE_BAS));
         res.add(brasGauche);
 
@@ -65,7 +67,7 @@ public class ServosController {
                 .setName("Pince produit droit")
                 .addPosition(new ServoPositionDTO("Ouvert", IConstantesServos.GOBELET_DROIT_OUVERT))
                 .addPosition(new ServoPositionDTO("Produit", IConstantesServos.GOBELET_DROIT_PRODUIT))
-                .addPosition(new ServoPositionDTO("Ferme", IConstantesServos.GOBELET_DROIT_FERME));
+                .addPosition(new ServoPositionDTO("Init", IConstantesServos.GOBELET_DROIT_INIT));
         res.add(gobeletDroit);
 
         ServoDTO gobeletGauche = new ServoDTO();
@@ -73,7 +75,7 @@ public class ServosController {
                 .setName("Pince produit gauche")
                 .addPosition(new ServoPositionDTO("Ouvert", IConstantesServos.GOBELET_GAUCHE_OUVERT))
                 .addPosition(new ServoPositionDTO("Produit", IConstantesServos.GOBELET_GAUCHE_PRODUIT))
-                .addPosition(new ServoPositionDTO("Ferme", IConstantesServos.GOBELET_GAUCHE_FERME));
+                .addPosition(new ServoPositionDTO("Init", IConstantesServos.GOBELET_GAUCHE_INIT));
         res.add(gobeletGauche);
 
         ServoDTO monteGobeletDroit = new ServoDTO();
@@ -93,9 +95,10 @@ public class ServosController {
         ServoDTO ascenseur = new ServoDTO();
         ascenseur.setId(IConstantesServos.ASCENSEUR).setSpeed(IConstantesServos.SPEED_ASCENSEUR)
                 .setName("Ascenseur")
-                .addPosition(new ServoPositionDTO("Haut", IConstantesServos.ASCENSEUR_HAUT))
+                .addPosition(new ServoPositionDTO("Haut pied", IConstantesServos.ASCENSEUR_HAUT_PIED))
+                .addPosition(new ServoPositionDTO("Haut balle", IConstantesServos.ASCENSEUR_HAUT_BALLE))
                 .addPosition(new ServoPositionDTO("Plein", IConstantesServos.ASCENSEUR_PLEIN))
-                .addPosition(new ServoPositionDTO("Bordure depose", IConstantesServos.ASCENSEUR_DEPOSE))
+                .addPosition(new ServoPositionDTO("Bordure depose", IConstantesServos.ASCENSEUR_DEPOSE_BORDURE))
                 .addPosition(new ServoPositionDTO("Bas", IConstantesServos.ASCENSEUR_BAS));
         res.add(ascenseur);
 
@@ -104,7 +107,8 @@ public class ServosController {
                 .setName("Pince")
                 .addPosition(new ServoPositionDTO("Ouverte", IConstantesServos.PINCE_OUVERTE))
                 .addPosition(new ServoPositionDTO("Check couleur", IConstantesServos.PINCE_COULEUR))
-                .addPosition(new ServoPositionDTO("Ferme", IConstantesServos.PINCE_FERME));
+                .addPosition(new ServoPositionDTO("Prise balle", IConstantesServos.PINCE_PRISE_BALLE))
+                .addPosition(new ServoPositionDTO("Prise pied", IConstantesServos.PINCE_PRISE_PIED));
         res.add(pince);
 
         ServoDTO guide = new ServoDTO();

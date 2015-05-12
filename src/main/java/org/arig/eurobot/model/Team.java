@@ -5,5 +5,5 @@ package org.arig.eurobot.model;
  */
 public enum Team {
     JAUNE,
-    VERTE;
+    VERT;
 }

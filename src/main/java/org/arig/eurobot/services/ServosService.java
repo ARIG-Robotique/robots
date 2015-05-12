@@ -36,12 +36,12 @@ public class ServosService {
         servos.setPositionAndSpeed(IConstantesServos.BRAS_GAUCHE, IConstantesServos.BRAS_GAUCHE_HAUT, IConstantesServos.SPEED_BRAS);
         servos.setPositionAndSpeed(IConstantesServos.TAPIS_DROIT, IConstantesServos.TAPIS_DROIT_FERME, IConstantesServos.SPEED_TAPIS);
         servos.setPositionAndSpeed(IConstantesServos.TAPIS_GAUCHE, IConstantesServos.TAPIS_GAUCHE_FERME, IConstantesServos.SPEED_TAPIS);
-        servos.setPositionAndSpeed(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_FERME, IConstantesServos.SPEED_GOBELET);
-        servos.setPositionAndSpeed(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_FERME, IConstantesServos.SPEED_GOBELET);
-        servos.setPositionAndSpeed(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_BAS, IConstantesServos.SPEED_MONTE_GOBELET);
-        servos.setPositionAndSpeed(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_BAS, IConstantesServos.SPEED_MONTE_GOBELET);
-        servos.setPositionAndSpeed(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_HAUT, IConstantesServos.SPEED_ASCENSEUR);
-        servos.setPositionAndSpeed(IConstantesServos.PINCE, IConstantesServos.PINCE_FERME, IConstantesServos.SPEED_PINCE);
+        servos.setPositionAndSpeed(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_HAUT, IConstantesServos.SPEED_MONTE_GOBELET);
+        servos.setPositionAndSpeed(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_HAUT, IConstantesServos.SPEED_MONTE_GOBELET);
+        servos.setPositionAndSpeed(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_PRODUIT, IConstantesServos.SPEED_GOBELET);
+        servos.setPositionAndSpeed(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_PRODUIT, IConstantesServos.SPEED_GOBELET);
+        servos.setPositionAndSpeed(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_HAUT_PIED, IConstantesServos.SPEED_ASCENSEUR);
+        servos.setPositionAndSpeed(IConstantesServos.PINCE, IConstantesServos.PINCE_PRISE_PIED, IConstantesServos.SPEED_PINCE);
         servos.setPositionAndSpeed(IConstantesServos.GUIDE, IConstantesServos.GUIDE_FERME, IConstantesServos.SPEED_GUIDE);
         servos.setPositionAndSpeed(IConstantesServos.SONAR, IConstantesServos.SONAR_CENTRE, IConstantesServos.SPEED_SONAR);
     }
@@ -55,7 +55,7 @@ public class ServosService {
     public void deposeGobeletDroit() {
         log.info("Dépose gobelet droit");
         servos.setPositionAndWait(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_BAS);
-        servos.setPosition(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_OUVERT);
+        servos.setPositionAndWait(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_OUVERT);
     }
 
     @Async
@@ -67,7 +67,7 @@ public class ServosService {
     public void deposeGobeletGauche() {
         log.info("Dépose gobelet gauche");
         servos.setPositionAndWait(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_BAS);
-        servos.setPosition(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_OUVERT);
+        servos.setPositionAndWait(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_OUVERT);
     }
 
     @Async
@@ -79,8 +79,21 @@ public class ServosService {
     public void deposeColonneAuSol() {
         log.info("Dépose de la colonne au sol");
         servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
-        servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
         servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
+        servos.setPositionAndWait(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
+    }
+
+    public void deposeColonneSurTablette() {
+        log.info("Dépose de la colonne sur la tablette");
+        servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_DEPOSE_BORDURE);
+        servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
+        servos.setPositionAndWait(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
+    }
+
+    public void leveGobelets() {
+        log.info("Leve gobelets");
+        servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_HAUT);
+        servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_HAUT);
     }
 
     /* ******************************************************** */
@@ -105,55 +118,18 @@ public class ServosService {
         }
     }
 
-    public void checkProduitGauche() {
-        if (robotStatus.isProduitGauche()) {
-            // Contole qu'il ne s'agissait pas d'un produit phantôme
-            if (!ioService.piedGauche() && !ioService.gobeletGauche()) {
-                robotStatus.setProduitGauche(false);
-            } else {
-                return;
-            }
-        }
-
-        if (ioService.produitGauche() || ioService.gobeletGauche()) {
-            priseProduitGauche();
-        } else {
-            servos.setPosition(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_OUVERT);
-            servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_BAS);
-        }
-    }
-
-    public void checkProduitDroit() {
-        if (robotStatus.isProduitDroit()) {
-            // Contole qu'il ne s'agissait pas d'un produit phantôme
-            if (!ioService.piedDroit() && !ioService.gobeletDroit()) {
-                robotStatus.setProduitDroit(false);
-            } else {
-                return;
-            }
-        }
-
-
-        if (ioService.produitDroit() || ioService.gobeletDroit()) {
-            priseProduitDroit();
-        } else {
-            servos.setPosition(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_OUVERT);
-            servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_BAS);
-        }
-    }
-
     /* *********************************** */
     /* Méthode unitaire de gestion produit */
     /* *********************************** */
 
     public void priseProduitAscenseur() {
         log.info("Prise d'un pied au centre");
+        robotStatus.incNbPied();
+        log.info("{} pied{} dans l'ascenseur", robotStatus.getNbPied(), robotStatus.getNbPied() > 1 ? "s" : "");
         servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
         servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
-        servos.setPositionAndWait(IConstantesServos.PINCE, IConstantesServos.PINCE_FERME);
-        robotStatus.incNbPied();
-        servos.setPositionAndWait(IConstantesServos.ASCENSEUR, robotStatus.getNbPied() == 4 ? IConstantesServos.ASCENSEUR_PLEIN : IConstantesServos.ASCENSEUR_HAUT);
-        log.info("{} pied{} dans l'ascenseur", robotStatus.getNbPied(), robotStatus.getNbPied() > 1 ? "s" : "");
+        servos.setPositionAndWait(IConstantesServos.PINCE, IConstantesServos.PINCE_PRISE_PIED);
+        servos.setPositionAndWait(IConstantesServos.ASCENSEUR, robotStatus.getNbPied() == 4 ? IConstantesServos.ASCENSEUR_PLEIN : IConstantesServos.ASCENSEUR_HAUT_PIED);
     }
 
     public void priseProduitGauche() {
@@ -162,8 +138,18 @@ public class ServosService {
         if (ioService.gobeletGauche()) {
             servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_HAUT);
         }
-        robotStatus.setProduitGauche(ioService.piedGauche() || ioService.gobeletGauche());
-        log.info("Produit à gauche {} [ Pied : {} ; Gobelet {} ]", robotStatus.isProduitGauche(), ioService.piedGauche(), ioService.gobeletGauche());
+        log.info("Produit à gauche [ Pied : {} ; Gobelet : {} ]", ioService.piedGauche(), ioService.gobeletGauche());
+    }
+
+    public void ouvrePriseGauche() {
+        log.info("Ouverture prise produit gauche");
+        servos.setPosition(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_OUVERT);
+        servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_BAS);
+    }
+
+    public void fermeProduitGauche() {
+        servos.setPosition(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_PRODUIT);
+        servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_BAS);
     }
 
     public void priseProduitDroit() {
@@ -172,8 +158,18 @@ public class ServosService {
         if (ioService.gobeletDroit()) {
             servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_HAUT);
         }
-        robotStatus.setProduitDroit(ioService.piedDroit() || ioService.gobeletDroit());
-        log.info("Produit à droite {} [ Pied : {} ; Gobelet {} ]", robotStatus.isProduitDroit(), ioService.piedDroit(), ioService.gobeletDroit());
+        log.info("Produit à droite [ Pied : {} ; Gobelet : {} ]", ioService.piedDroit(), ioService.gobeletDroit());
+    }
+
+    public void ouvrePriseDroite() {
+        log.info("Ouverture prise produit droit");
+        servos.setPosition(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_OUVERT);
+        servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_BAS);
+    }
+
+    public void fermeProduitDroit() {
+        servos.setPosition(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_PRODUIT);
+        servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_BAS);
     }
 
     public void fermeGuide() {

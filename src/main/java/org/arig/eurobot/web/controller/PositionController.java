@@ -2,6 +2,7 @@ package org.arig.eurobot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.eurobot.constants.IConstantesSpringConfig;
+import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.ObstacleFoundException;
 import org.arig.robot.system.MouvementManager;
@@ -47,7 +48,7 @@ public class PositionController {
     }
 
     @RequestMapping(value = "/pathPosition", method = RequestMethod.GET)
-    public void cheminVersPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws NoPathFoundException, ObstacleFoundException {
+    public void cheminVersPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws NoPathFoundException, ObstacleFoundException, AvoidingException {
         mouvementManager.pathTo(x, y);
     }
 

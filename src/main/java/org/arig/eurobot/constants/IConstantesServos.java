@@ -35,16 +35,18 @@ public interface IConstantesServos {
     static final int SONAR_GAUCHE = 1110;
 
     static final int BRAS_DROIT_HAUT = 1930;
+    static final int BRAS_DROIT_CLAP = 1250;
     static final int BRAS_DROIT_BAS = 860;
 
     static final int BRAS_GAUCHE_HAUT = 700;
+    static final int BRAS_GAUCHE_CLAP = 1450;
     static final int BRAS_GAUCHE_BAS = 1910;
 
-    static final int TAPIS_DROIT_OUVERT = 1780;
-    static final int TAPIS_DROIT_FERME = 2140;
+    static final int TAPIS_DROIT_OUVERT = 1200;
+    static final int TAPIS_DROIT_FERME = 2110;
 
-    static final int TAPIS_GAUCHE_OUVERT = 960;
-    static final int TAPIS_GAUCHE_FERME = 635;
+    static final int TAPIS_GAUCHE_OUVERT = 1500;
+    static final int TAPIS_GAUCHE_FERME = 670;
 
     static final int MONTE_GB_DROIT_HAUT = 1010;
     static final int MONTE_GB_DROIT_BAS = 2360;
@@ -52,21 +54,23 @@ public interface IConstantesServos {
     static final int MONTE_GB_GAUCHE_HAUT = 1790;
     static final int MONTE_GB_GAUCHE_BAS = 530;
 
-    static final int GOBELET_DROIT_OUVERT = 1040;
+    static final int GOBELET_DROIT_OUVERT = 1400;
     static final int GOBELET_DROIT_PRODUIT = 1890;
-    static final int GOBELET_DROIT_FERME = 2040;
+    static final int GOBELET_DROIT_INIT = 2290;
 
-    static final int GOBELET_GAUCHE_OUVERT = 2050;
+    static final int GOBELET_GAUCHE_OUVERT = 1650;
     static final int GOBELET_GAUCHE_PRODUIT = 1160;
-    static final int GOBELET_GAUCHE_FERME = 1010;
+    static final int GOBELET_GAUCHE_INIT = 750;
 
     static final int PINCE_OUVERTE = 1150;
     static final int PINCE_COULEUR = 1600;
-    static final int PINCE_FERME = 1891;
+    static final int PINCE_PRISE_BALLE = 1690;
+    static final int PINCE_PRISE_PIED = 1915;
 
-    static final int ASCENSEUR_HAUT = 2210;
-    static final int ASCENSEUR_PLEIN = 1300;
-    static final int ASCENSEUR_DEPOSE = 1000;
+    static final int ASCENSEUR_HAUT_PIED = 2210;
+    static final int ASCENSEUR_HAUT_BALLE = 1700;
+    static final int ASCENSEUR_PLEIN = 970;
+    static final int ASCENSEUR_DEPOSE_BORDURE = 1300;
     static final int ASCENSEUR_BAS = 790;
 
     static final int GUIDE_OUVERT = 1240;

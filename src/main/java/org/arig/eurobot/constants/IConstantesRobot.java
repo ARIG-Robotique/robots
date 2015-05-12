@@ -13,6 +13,12 @@ public interface IConstantesRobot {
     // Durée du match //
     static final int matchTimeMs = 89500;
 
+    // Valeurs min / max en mm des axes du repères
+    static final int minX = 150;
+    static final int minY = 150;
+    static final int maxX = 2000 - 150;
+    static final int maxY = 3000 - 150;
+
     // ----------------------------- //
     // Configuration des convertions //
     // ----------------------------- //

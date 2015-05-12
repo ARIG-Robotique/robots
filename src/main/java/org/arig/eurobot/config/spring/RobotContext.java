@@ -98,16 +98,9 @@ public class RobotContext {
         pf.setAllowDiagonal(true);
         pf.setAlgorithm(IConstantesRobot.pathFindingAlgo);
         File pathDir = new File("./logs/paths");
-        if (pathDir.exists()) {
-            pathDir.delete();
-        }
         pf.setPathDir(pathDir);
-        //pf.setNbTileX(300);
-        //pf.setNbTileY(200);
-
-        // TODO : A supprimer
-        pf.setNbTileX(118);
-        pf.setNbTileY(180);
+        pf.setNbTileX(200);
+        pf.setNbTileY(300);
 
         return pf;
     }
