@@ -102,7 +102,13 @@ public class MouvementManager implements InitializingBean {
 
     /** Valeur de distance minimale entre deux points pour faire 1 seul mouvement */
     @Setter
-    private double distanceMiniEntrePointMm = 300;
+    private double distanceMiniEntrePointMm = 400;
+
+    @Setter
+    private double distanceChangementVitesse = 800;
+
+    @Setter
+    private long vitesseLente = 200;
 
     /**
      * Instantiates a new robot manager.
@@ -187,16 +193,12 @@ public class MouvementManager implements InitializingBean {
 
         // 2. Gestion de l'evittement
         if (obstacleFound) {
-            // A. Obstacle détecté
-
-            // A.1 On stop les moteurs
+            // Obstacle détecté, on stop les moteurs
             stop();
 
-            // A.2 On positionne la commande moteur pour ne plus bouger
+            // Commande moteur null
             cmdRobot.getMoteur().setDroit(0);
             cmdRobot.getMoteur().setGauche(0);
-
-            // On
         } else {
             // C. Pas d'obstacle, asservissement koi
             // C.1. Calcul des consignes
@@ -364,7 +366,14 @@ public class MouvementManager implements InitializingBean {
      */
     public void pathTo(final double x, final double y) throws NoPathFoundException, AvoidingException {
         boolean trajetOk = false;
+        long backupVitesse = cmdRobot.getVitesse().getDistance();
+        int nbTentative = 0;
         do {
+            if (nbTentative > 2) {
+                log.warn("Plus de deux tentatives pour atteindre le point, on passe en erreur");
+                throw new AvoidingException();
+            }
+
             Point ptFrom = new Point(conv.pulseToMm(position.getPt().getX()) / 10, conv.pulseToMm(position.getPt().getY()) / 10);
             Point ptTo = new Point(x / 10, y / 10);
             try {
@@ -374,15 +383,21 @@ public class MouvementManager implements InitializingBean {
                     Point p = c.next();
                     Point pRobot = new Point(p.getX() * 10, p.getY() * 10);
                     double dist = 10 * (Math.sqrt(Math.pow(p.getX() - ptFrom.getX(), 2) + Math.pow(p.getY() - ptFrom.getY(), 2)));
-                    log.info("Distance avec le prochain point {}mm (seuil {}mm)", dist, distanceMiniEntrePointMm);
+                    log.info("Distance avec le prochain point {}mm (seuil distance 2 mvt {}mm, seuil distance vitesse {}mm)", dist, distanceMiniEntrePointMm, distanceChangementVitesse);
                     if (dist < distanceMiniEntrePointMm) {
                         // La distance est inférieur à X mm, on fait deux mouvements.
                         log.info("On y va en deux fois. Alignement front");
                         alignFrontTo(pRobot.getX(), pRobot.getY());
                         log.info("Puis ligne droite");
                         avanceMM(dist);
+                    } else if (dist < distanceChangementVitesse) {
+                        // La distance est inférieur on réduit la vitesse de déplacement
+                        log.info("Distance trop faible on réduit la vitesse de {} à {}", cmdRobot.getVitesse().getDistance(), vitesseLente);
+                        cmdRobot.getVitesse().setDistance(vitesseLente);
+                        gotoPointMM(pRobot.getX(), pRobot.getY());
                     } else {
-                        log.info("Ecart entre point suffisant, positionnement XY");
+                        log.info("Ecart entre point suffisant, positionnement XY à la vitesse de {}", backupVitesse);
+                        cmdRobot.getVitesse().setDistance(backupVitesse);
                         gotoPointMM(pRobot.getX(), pRobot.getY());
                     }
 
@@ -395,6 +410,7 @@ public class MouvementManager implements InitializingBean {
                 trajetOk = true;
             } catch (ObstacleFoundException e) {
                 log.info("Obstacle trouvé, on tente un autre chemin");
+                nbTentative++;
                 try {
                     rs.disableAvoidance();
                     ptFrom.setX(conv.pulseToMm(position.getPt().getX()) / 10);
@@ -408,8 +424,10 @@ public class MouvementManager implements InitializingBean {
                     throw new AvoidingException();
                 } finally {
                     rs.enableAvoidance();
+                    cmdRobot.getVitesse().setDistance(backupVitesse);
                 }
             }
+            cmdRobot.getVitesse().setDistance(backupVitesse);
         } while(!trajetOk);
     }
 

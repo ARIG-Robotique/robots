@@ -79,6 +79,10 @@ public class CompletePID implements IPidFilter {
 
     @Override
     public void reset() {
+        input = 0;
+        error = 0;
+        output = 0;
+        initialise();
     }
 
     @Override
