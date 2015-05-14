@@ -27,15 +27,8 @@ public interface IConstantesServos {
     static final byte ASCENSEUR = 18;
     static final byte PINCE = 17;
     static final byte GUIDE = 21;
-    static final byte SONAR = 7;
 
     // Constantes de position
-    static final int SONAR_M_45_DEG = 2040;
-    static final int SONAR_M_22_DEG = 1850;
-    static final int SONAR_0_DEG = 1610;
-    static final int SONAR_P_22_DEG = 1375;
-    static final int SONAR_P_45_DEG = 1130;
-
     static final int BRAS_DROIT_HAUT = 1930;
     static final int BRAS_DROIT_CLAP = 1250;
     static final int BRAS_DROIT_BAS = 860;

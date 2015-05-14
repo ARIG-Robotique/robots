@@ -9,6 +9,17 @@ import com.pi4j.io.gpio.RaspiPin;
  */
 public interface IConstantesGPIO {
 
+    // ------- //
+    // I2C ADC //
+    // ------- //
+
+    static final byte GP2D_AVANT_GAUCHE = 0;
+    static final byte GP2D_AVANT_DROIT = 1;
+    static final byte GP2D_AVANT_LATERAL_GAUCHE = 2;
+    static final byte GP2D_AVANT_LATERAL_DROIT = 3;
+    static final byte GP2D_ARRIERE_GAUCHE = 4;
+    static final byte GP2D_ARRIERE_DROIT = 5;
+
     // ---------------- //
     // Expander PCF8574 //
     // ---------------- //

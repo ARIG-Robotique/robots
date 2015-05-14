@@ -118,14 +118,6 @@ public class ServosController {
                 .addPosition(new ServoPositionDTO("Ferme", IConstantesServos.GUIDE_FERME));
         res.add(guide);
 
-        ServoDTO sonar = new ServoDTO();
-        sonar.setId(IConstantesServos.SONAR).setSpeed(IConstantesServos.SPEED_SONAR)
-                .setName("Sonar")
-                .addPosition(new ServoPositionDTO("Droite (-X°)", IConstantesServos.SONAR_M_45_DEG))
-                .addPosition(new ServoPositionDTO("Centre (0°)", IConstantesServos.SONAR_0_DEG))
-                .addPosition(new ServoPositionDTO("Gauche (X°)", IConstantesServos.SONAR_P_45_DEG));
-        res.add(sonar);
-
         return res;
     }
 

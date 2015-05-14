@@ -43,7 +43,6 @@ public class ServosService {
         servos.setPositionAndSpeed(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_HAUT_PIED, IConstantesServos.SPEED_ASCENSEUR);
         servos.setPositionAndSpeed(IConstantesServos.PINCE, IConstantesServos.PINCE_PRISE_PIED, IConstantesServos.SPEED_PINCE);
         servos.setPositionAndSpeed(IConstantesServos.GUIDE, IConstantesServos.GUIDE_FERME, IConstantesServos.SPEED_GUIDE);
-        servos.setPositionAndSpeed(IConstantesServos.SONAR, IConstantesServos.SONAR_0_DEG, IConstantesServos.SPEED_SONAR);
     }
 
     @Async
