@@ -13,7 +13,7 @@ public interface IConstantesServos {
     static final byte SPEED_ASCENSEUR = 50;
     static final byte SPEED_PINCE = 40;
     static final byte SPEED_GUIDE = 50;
-    static final byte SPEED_SONAR = 40;
+    static final byte SPEED_SONAR = 0;
 
     // Constantes d'identification Servo
     static final byte BRAS_DROIT = 15;
@@ -30,9 +30,11 @@ public interface IConstantesServos {
     static final byte SONAR = 7;
 
     // Constantes de position
-    static final int SONAR_DROITE = 2040;
-    static final int SONAR_CENTRE = 1660;
-    static final int SONAR_GAUCHE = 1110;
+    static final int SONAR_M_45_DEG = 2040;
+    static final int SONAR_M_22_DEG = 1850;
+    static final int SONAR_0_DEG = 1610;
+    static final int SONAR_P_22_DEG = 1375;
+    static final int SONAR_P_45_DEG = 1130;
 
     static final int BRAS_DROIT_HAUT = 1930;
     static final int BRAS_DROIT_CLAP = 1250;

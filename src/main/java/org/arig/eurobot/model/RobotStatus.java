@@ -23,6 +23,17 @@ public class RobotStatus extends AbstractRobotStatus {
     }
 
     @Setter(AccessLevel.NONE)
+    private boolean calageBordureEnabled = false;
+    public void enableCalageBordure() {
+        log.info("Activation calage bordure");
+        calageBordureEnabled = true;
+    }
+    public void disableCalageBordure() {
+        log.info("Désactivation calage bordure");
+        calageBordureEnabled = false;
+    }
+
+    @Setter(AccessLevel.NONE)
     private int nbPied = 0;
 
     public void incNbPied() {
@@ -44,6 +55,11 @@ public class RobotStatus extends AbstractRobotStatus {
     private boolean gobeletCentraleRecupere = false;
     private boolean gobeletClapJauneRecupere = false;
     private boolean gobeletClapVertRecuere = false;
+
+    // Pieds
+    private boolean pied1Recupere = false;
+    private boolean pied2Recupere = false;
+    private boolean pied3Recupere = false;
 
     // Zones dépose salle cinema principal
     private boolean gobeletSalleCinemaEscalierPose = false;

@@ -2,21 +2,15 @@ package org.arig.eurobot.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.eurobot.constants.IConstantesRobot;
-import org.arig.eurobot.constants.IConstantesServos;
 import org.arig.eurobot.model.RobotStatus;
-import org.arig.eurobot.services.AvoidanceService;
+import org.arig.eurobot.services.CalageBordureService;
 import org.arig.eurobot.services.ServosService;
 import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.MouvementManager;
-import org.arig.robot.system.capteurs.SRF02I2CSonar;
-import org.arig.robot.system.servos.SD21Servos;
+import org.arig.robot.system.avoiding.IAvoidingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /**
  * Created by gdepuille on 23/12/14.
@@ -38,10 +32,13 @@ public class TasksScheduler {
     private ServosService servosService;
 
     @Autowired
-    private AvoidanceService avoidanceService;
+    private IAvoidingService avoidingService;
+
+    @Autowired
+    private CalageBordureService calageBordure;
 
     @Scheduled(fixedRate = (long) IConstantesRobot.asservTimeMs)
-    public void robotManagerTask() {
+    public void asservissementTask() {
         if (rs.isAsservEnabled()) {
             mouvementManager.process();
         } else {
@@ -49,12 +46,19 @@ public class TasksScheduler {
         }
     }
 
-    /*@Scheduled(fixedDelay = 200)
+    @Scheduled(fixedDelay = 100)
     public void obstacleAvoidanceTask() {
         if (rs.isAvoidanceEnabled()) {
-            avoidanceService.process();
+            avoidingService.process();
         }
-    }*/
+    }
+
+    @Scheduled(fixedDelay = 200)
+    public void calageBordureTask() {
+        if (rs.isCalageBordureEnabled()) {
+            calageBordure.process();
+        }
+    }
 
     @Scheduled(fixedDelay = 100)
     public void strategyTask() {

@@ -4,12 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.eurobot.Ordonanceur;
 import org.arig.eurobot.constants.IConstantesRobot;
 import org.arig.eurobot.model.RobotStatus;
+import org.arig.eurobot.services.avoiding.BasicAvoidingService;
+import org.arig.eurobot.services.avoiding.CompleteAvoidingService;
 import org.arig.robot.csv.CsvCollector;
 import org.arig.robot.filters.pid.CompletePID;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.IRampFilter;
 import org.arig.robot.filters.ramp.Ramp;
 import org.arig.robot.system.MouvementManager;
+import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.motion.AsservissementPolaire;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
@@ -20,8 +23,11 @@ import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.vo.CommandeRobot;
 import org.arig.robot.vo.Position;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 
 import java.io.File;
 
@@ -30,7 +36,11 @@ import java.io.File;
  */
 @Slf4j
 @Configuration
+@PropertySource({"file:./application.properties"})
 public class RobotContext {
+
+    @Autowired
+    private Environment env;
 
     @Bean
     public ConvertionRobotUnit convertisseur() {
@@ -43,7 +53,19 @@ public class RobotContext {
                 IConstantesRobot.arretOrientDeg, IConstantesRobot.approcheOrientationDeg,
                 IConstantesRobot.angleReculDeg);
         mv.setDistanceMiniEntrePointMm(IConstantesRobot.distanceMiniEntrePointMm);
+        mv.setDistanceChangementVitesse(IConstantesRobot.distanceChangementVitesse);
+        mv.setVitesseLente(IConstantesRobot.vitesseLente);
         return mv;
+    }
+
+    @Bean
+    public IAvoidingService avoidingService() {
+        IConstantesRobot.AvoidingSelection avoidingImplementation = env.getProperty("avoidance.service.implementation", IConstantesRobot.AvoidingSelection.class);
+        if (avoidingImplementation == IConstantesRobot.AvoidingSelection.BASIC) {
+            return new BasicAvoidingService();
+        } else {
+            return new CompleteAvoidingService();
+        }
     }
 
     @Bean

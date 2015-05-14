@@ -25,6 +25,9 @@ public interface IConstantesI2C {
     static String PCF_NUM2_DEVICE_NAME = "Carte numérique 2";
     static int PCF_NUM2_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3F;
 
+    static String I2C_ADC_DEVICE_NAME = "I2C ADC";
+    static int I2C_ADC_ADDRESS = 0x48;
+
     static String PROPULSION_DEVICE_NAME = "MD22";
     static int MD22_ADDRESS = 0x58;
 

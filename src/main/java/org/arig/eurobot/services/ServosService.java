@@ -43,7 +43,7 @@ public class ServosService {
         servos.setPositionAndSpeed(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_HAUT_PIED, IConstantesServos.SPEED_ASCENSEUR);
         servos.setPositionAndSpeed(IConstantesServos.PINCE, IConstantesServos.PINCE_PRISE_PIED, IConstantesServos.SPEED_PINCE);
         servos.setPositionAndSpeed(IConstantesServos.GUIDE, IConstantesServos.GUIDE_FERME, IConstantesServos.SPEED_GUIDE);
-        servos.setPositionAndSpeed(IConstantesServos.SONAR, IConstantesServos.SONAR_CENTRE, IConstantesServos.SPEED_SONAR);
+        servos.setPositionAndSpeed(IConstantesServos.SONAR, IConstantesServos.SONAR_0_DEG, IConstantesServos.SPEED_SONAR);
     }
 
     @Async
@@ -56,6 +56,13 @@ public class ServosService {
         log.info("Dépose gobelet droit");
         servos.setPositionAndWait(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_BAS);
         servos.setPositionAndWait(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_OUVERT);
+    }
+
+    @Async
+    public void ouvreTapisFinMath() {
+        log.info("Ouverture pince tapis fin de match");
+        servos.setPosition(IConstantesServos.TAPIS_DROIT, IConstantesServos.TAPIS_DROIT_OUVERT);
+        servos.setPosition(IConstantesServos.TAPIS_GAUCHE, IConstantesServos.TAPIS_GAUCHE_OUVERT);
     }
 
     @Async
@@ -79,15 +86,15 @@ public class ServosService {
     public void deposeColonneAuSol() {
         log.info("Dépose de la colonne au sol");
         servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
-        servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
         servos.setPositionAndWait(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
+        servos.setPositionAndWait(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
     }
 
     public void deposeColonneSurTablette() {
         log.info("Dépose de la colonne sur la tablette");
         servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_DEPOSE_BORDURE);
-        servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
         servos.setPositionAndWait(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
+        servos.setPositionAndWait(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
     }
 
     public void leveGobelets() {

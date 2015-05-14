@@ -2,6 +2,7 @@ package org.arig.eurobot.strategy.actions;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.eurobot.constants.IConstantesRobot;
 import org.arig.eurobot.model.RobotStatus;
 import org.arig.eurobot.model.Team;
 import org.arig.eurobot.services.IOService;
@@ -13,6 +14,8 @@ import org.arig.robot.strategy.IAction;
 import org.arig.robot.system.MouvementManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 /**
  * Created by gdepuille on 06/05/15.
@@ -36,6 +39,8 @@ public class DeposeSpotTabletteAction implements IAction {
     @Getter
     private boolean completed = false;
 
+    private LocalDateTime validTime = LocalDateTime.now();
+
     @Override
     public String name() {
         return "Dépose spot sur la tablette action";
@@ -43,38 +48,54 @@ public class DeposeSpotTabletteAction implements IAction {
 
     @Override
     public int order() {
+        // Il faut la poser dès que possible.
         return 1000;
     }
 
     @Override
     public boolean isValid() {
-        return rs.getNbPied() == 3 && rs.isInitialCollectFinished() && !ioService.piedDroit() && !ioService.piedGauche();
+        if (validTime.isAfter(LocalDateTime.now())) {
+            return false;
+        }
+
+        return rs.isInitialCollectFinished() && rs.getNbPied() == 3
+                && !ioService.piedDroit() && !ioService.piedGauche();
     }
 
     @Override
     public void execute() {
         try {
-            mv.setVitesse(400, 800);
+            mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             if (rs.getTeam() == Team.JAUNE) {
                 mv.pathTo(1650, 1300);
                 mv.gotoOrientationDeg(0);
                 servosService.leveGobelets();
-                mv.setVitesse(200, 800);
-                mv.gotoPointMM(1780, 1300);
+                try {
+                    mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
+                    rs.enableCalageBordure();
+                    mv.gotoPointMM(1780, 1300);
+                } catch (ObstacleFoundException e) {
+                    log.info("Caler sur bordure");
+                } finally {
+                    rs.disableCalageBordure();
+                }
             } else {
                 // TODO : Vert
             }
 
             rs.disableAscenseur();
             servosService.deposeColonneSurTablette();
+            mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             mv.reculeMM(200);
             rs.resetNbPied();
-            rs.enableAscenseur();
             servosService.fermeGuide();
             rs.setBalleDansAscenseur(false);
+            completed = true;
         } catch (NoPathFoundException | ObstacleFoundException | AvoidingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+            validTime = LocalDateTime.now().plusSeconds(10);
+        } finally {
+            rs.enableAscenseur();
         }
-        completed = true;
     }
 }

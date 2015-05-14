@@ -18,6 +18,7 @@ public interface IConstantesRobot {
     static final int minY = 150;
     static final int maxX = 2000 - 150;
     static final int maxY = 3000 - 150;
+    //static final int maxY = 1500;
 
     // ----------------------------- //
     // Configuration des convertions //
@@ -38,6 +39,20 @@ public interface IConstantesRobot {
     static final double rampAccOrientation = 800.0; // en mm/s2
     static final double rampDecOrientation = 800.0; // en mm/s2
 
+    // -------------------------- //
+    // Configuration des vitesses //
+    // -------------------------- //
+
+    static final long vitesseOrientation = 800;
+
+    static final long vitesseHaute = 600;
+    static final long vitesseMoyenne = 400;
+    static final long vitesseLente = 200;
+    static final long vitesseSuperLente = 100;
+
+    static final long vitessePath = vitesseMoyenne;
+    static final long vitesseMouvement = vitesseLente;
+
     // -------------- //
     // Parametres PID //
     // -------------- //
@@ -57,11 +72,19 @@ public interface IConstantesRobot {
     // Paramètre mouvement manager //
     // --------------------------- //
     static final double distanceMiniEntrePointMm = 400;
+    static final double distanceChangementVitesse = 700;
     static final double arretDistanceMm = 1;
     static final double arretOrientDeg = 1;
     static final double approcheDistanceMm = 10;
     static final double approcheOrientationDeg = 5;
     static final double angleReculDeg = 0.45;
+
+    // -------------------------- //
+    // Paramètre Avoiding service //
+    // -------------------------- //
+    enum AvoidingSelection {
+        BASIC, FULL
+    }
 
     // ---------------------- //
     // Paramètre path finding //

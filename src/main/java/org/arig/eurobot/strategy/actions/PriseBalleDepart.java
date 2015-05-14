@@ -2,6 +2,7 @@ package org.arig.eurobot.strategy.actions;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.eurobot.constants.IConstantesRobot;
 import org.arig.eurobot.constants.IConstantesServos;
 import org.arig.eurobot.model.RobotStatus;
 import org.arig.eurobot.model.Team;
@@ -13,10 +14,10 @@ import org.arig.robot.exception.ObstacleFoundException;
 import org.arig.robot.strategy.IAction;
 import org.arig.robot.system.MouvementManager;
 import org.arig.robot.system.servos.SD21Servos;
-import org.arig.robot.vo.Position;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 /**
  * Created by gdepuille on 11/05/15.
@@ -43,6 +44,8 @@ public class PriseBalleDepart implements IAction {
     @Getter
     private boolean completed = false;
 
+    private LocalDateTime validTime = LocalDateTime.now();
+
     @Override
     public String name() {
         return "Prise balle zone départ action";
@@ -50,11 +53,16 @@ public class PriseBalleDepart implements IAction {
 
     @Override
     public int order() {
-        return 800;
+        // Histoire que ce soit prioritaire quand même vis a vis des action de collecte
+        return 500;
     }
 
     @Override
     public boolean isValid() {
+        if (validTime.isAfter(LocalDateTime.now())) {
+            return false;
+        }
+
         return rs.getNbPied() == 0 && rs.getIndexZoneDeposeSallePrincipale() == 0
                 && !ioService.piedDroit() && !ioService.piedGauche();
     }
@@ -62,15 +70,22 @@ public class PriseBalleDepart implements IAction {
     @Override
     public void execute() {
         try {
-            mv.setVitesse(400, 800);
+            mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             if (rs.getTeam() == Team.JAUNE) {
                 mv.pathTo(1000, 500);
                 servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
                 servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
                 servosService.leveGobelets();
                 mv.gotoOrientationDeg(-90);
-                mv.setVitesse(200, 800);
-                mv.gotoPointMM(1000, 187);
+                try {
+                    mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
+                    rs.enableCalageBordure();
+                    mv.gotoPointMM(1000, 185);
+                } catch (ObstacleFoundException e) {
+                    log.info("Caler sur bordure");
+                } finally {
+                    rs.disableCalageBordure();
+                }
             } else {
                 // TODO : Vert
             }
@@ -78,6 +93,7 @@ public class PriseBalleDepart implements IAction {
             servos.setPositionAndWait(IConstantesServos.PINCE, IConstantesServos.PINCE_PRISE_BALLE);
             servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_HAUT_BALLE);
             rs.setBalleDansAscenseur(true);
+            mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             mv.reculeMM(50);
 
             boolean gbDroit = ioService.gobeletDroit();
@@ -89,7 +105,6 @@ public class PriseBalleDepart implements IAction {
                 } else if (ioService.gobeletGauche()) {
                     servosService.deposeGobeletGauche();
                 }
-                mv.setVitesse(400, 800);
                 mv.reculeMM(200);
                 servosService.fermeProduitDroit();
                 servosService.fermeProduitGauche();
@@ -99,6 +114,7 @@ public class PriseBalleDepart implements IAction {
             completed = true;
         } catch (NoPathFoundException | ObstacleFoundException | AvoidingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+            validTime = LocalDateTime.now().plusSeconds(10);
         } finally {
             servosService.priseProduitDroit();
             servosService.priseProduitGauche();

@@ -17,6 +17,8 @@ import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 /**
  * Created by gdepuille on 10/05/15.
  */
@@ -42,6 +44,8 @@ public class DeposeTapisAction implements IAction {
     @Getter
     private boolean completed = false;
 
+    private LocalDateTime validTime = LocalDateTime.now();
+
     @Override
     public String name() {
         return "Dépose tapis action";
@@ -49,11 +53,15 @@ public class DeposeTapisAction implements IAction {
 
     @Override
     public int order() {
-        return 500;
+        return 12;
     }
 
     @Override
     public boolean isValid() {
+        if (validTime.isAfter(LocalDateTime.now())) {
+            return false;
+        }
+
         if (rs.getNbPied() < IConstantesRobot.nbPiedMax) {
             if (rs.getTeam() == Team.JAUNE) {
                 return rs.isGobeletEscalierJauneRecupere() && !ioService.produitDroit();
@@ -68,29 +76,27 @@ public class DeposeTapisAction implements IAction {
     @Override
     public void execute() {
         try {
-            mv.setVitesse(400, 800);
+            mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             if (rs.getTeam() == Team.JAUNE) {
                 mv.pathTo(700, 740);
                 mv.gotoOrientationDeg(180);
                 servosService.ouvrePriseDroite();
                 servos.setPositionAndWait(IConstantesServos.BRAS_DROIT, IConstantesServos.BRAS_DROIT_BAS);
-                mv.setVitesse(200, 800);
-                mv.gotoPointMM(300, 740);
+                mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
+                mv.avanceMM(400);
                 servos.setPositionAndWait(IConstantesServos.TAPIS_DROIT, IConstantesServos.TAPIS_DROIT_OUVERT);
                 servos.setPositionAndWait(IConstantesServos.BRAS_DROIT, IConstantesServos.BRAS_DROIT_HAUT);
                 servos.setPosition(IConstantesServos.TAPIS_DROIT, IConstantesServos.TAPIS_DROIT_FERME);
                 rs.setTapisPresent(false);
                 servosService.priseProduitDroit();
-                mv.reculeMM(50);
                 mv.tourneDeg(90);
                 if (ioService.piedDroit()) {
-                    mv.avanceMM(200);
+                    mv.avanceMM(250);
                     servosService.ouvrePriseDroite();
                     mv.reculeMM(150);
                     servosService.priseProduitDroit();
                     mv.tourneDeg(-30);
                     mv.avanceMM(150);
-                    mv.gotoPointMM(300, 600);
                 }
             } else {
                 // TODO : Vert
@@ -99,6 +105,7 @@ public class DeposeTapisAction implements IAction {
             completed = true;
         } catch (NoPathFoundException | ObstacleFoundException | AvoidingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+            validTime = LocalDateTime.now().plusSeconds(10);
         } finally {
             servosService.priseProduitDroit();
             servosService.priseProduitGauche();

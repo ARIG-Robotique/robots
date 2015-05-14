@@ -181,6 +181,7 @@ public class Ordonanceur {
         servosService.deposeColonneFinMatch();
         servosService.deposeGobeletDroitFinMatch();
         servosService.deposeGobeletGaucheFinMatch();
+        servosService.ouvreTapisFinMath();
 
         // FIXME : Désactivation de la puissance moteur pour être sur de ne plus rouler
         //ioServices.disableAlimMoteur();
