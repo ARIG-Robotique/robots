@@ -79,7 +79,9 @@ public class ServosService {
     @Async
     public void deposeColonneFinMatch() {
         log.info("Dépose de la colonne en fin de match");
-        deposeColonneAuSol();
+        servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
+        servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
+        servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
     }
 
     public void deposeColonneAuSol() {

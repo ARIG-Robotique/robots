@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.eurobot.constants.IConstantesRobot;
 import org.arig.eurobot.model.RobotStatus;
+import org.arig.eurobot.model.Team;
 import org.arig.eurobot.services.IOService;
 import org.arig.eurobot.services.ServosService;
 import org.arig.robot.exception.AvoidingException;
@@ -17,17 +18,14 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 /**
- * Created by gdepuille on 13/05/15.
+ * Created by gdepuille on 11/05/15.
  */
 @Slf4j
 @Component
-public class CollecteGobeletCommunAction implements IAction {
+public class PriseGobeletEscalierVertAction implements IAction {
 
     @Autowired
     private MouvementManager mv;
-
-    @Autowired
-    private RobotStatus rs;
 
     @Autowired
     private IOService ioService;
@@ -35,51 +33,57 @@ public class CollecteGobeletCommunAction implements IAction {
     @Autowired
     private ServosService servosService;
 
+    @Autowired
+    private RobotStatus rs;
+
     @Getter
     private boolean completed = false;
-
-    @Override
-    public String name() {
-        return "Collecte du gobelet commun";
-    }
-
-    @Override
-    public int order() {
-        return 0;
-    }
 
     private LocalDateTime validTime = LocalDateTime.now();
 
     @Override
-    public boolean isValid() {
-        // TODO : Rendre valide
-        return false;
+    public String name() {
+        return "Prise gobelet escalier vert";
+    }
 
-        /*
+    @Override
+    public int order() {
+        return (rs.getTeam() == Team.VERT) ? 600 : 0;
+    }
+
+    @Override
+    public boolean isValid() {
         if (validTime.isAfter(LocalDateTime.now())) {
             return false;
         }
-        return !rs.isGobeletCentraleRecupere() && !ioService.produitGauche();
-        */
+        return !ioService.produitDroit() || !ioService.produitGauche();
     }
 
     @Override
     public void execute() {
         try {
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
-            mv.pathTo(1250, 1500);
-            mv.gotoOrientationDeg(0);
-            // TODO : Prendre aussi a droite si vide.
-            servosService.ouvrePriseGauche();
-            mv.gotoPointMM(1550, 1385);
+            mv.pathTo(1200, 3000 - 910);
+            mv.gotoOrientationDeg(180);
+            if (!ioService.produitDroit()) {
+                // On prend à droite
+                servosService.ouvrePriseDroite();
+                mv.gotoPointMM(900, 3000 - 795);
+            } else {
+                // On prend à gauche
+                servosService.ouvrePriseGauche();
+                mv.gotoPointMM(900, 3000 - 1025);
+            }
+            servosService.priseProduitDroit();
             servosService.priseProduitGauche();
-            rs.setGobeletCentraleRecupere(true);
+            rs.setGobeletEscalierVertRecupere(true);
             completed = true;
-        } catch (ObstacleFoundException | AvoidingException | NoPathFoundException e) {
+        } catch (NoPathFoundException | ObstacleFoundException | AvoidingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             validTime = LocalDateTime.now().plusSeconds(10);
-            rs.setGobeletCentraleRecupere(false);
-            servosService.fermeProduitGauche();
+        } finally {
+            servosService.priseProduitDroit();
+            servosService.priseProduitGauche();
         }
     }
 }

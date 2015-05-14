@@ -56,11 +56,9 @@ public class InitialCollectAction implements IAction, InitializingBean {
         return 1000;
     }
 
-    private LocalDateTime validTime = LocalDateTime.now();
-
     @Override
     public boolean isValid() {
-        return validTime.isBefore(LocalDateTime.now());
+        return true;
     }
 
     @Override
@@ -104,12 +102,48 @@ public class InitialCollectAction implements IAction, InitializingBean {
                 mv.gotoPointMM(1650, 1100);
                 rs.setPied3Recupere(true);
                 rs.setInitialCollectFinished(true);
+
             } else {
-                // TODO : Vert
+                // Pied 1
+                mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
+                mv.gotoPointMM(1355, 3000 - 870);
+                rs.setPied1Recupere(true);
+
+                // Pied 2
+                mv.setVitesse(IConstantesRobot.vitesseSuperLente, IConstantesRobot.vitesseOrientation);
+                mv.gotoPointMM(1400, 3000 - 1300);
+                rs.setPied2Recupere(true);
+
+                // Gobelet 1 (commun)
+                if (collectGobeletInitiale) {
+                    log.info("Collecte du gobelet commun pendant la collecte initiale activé");
+                    try {
+                        mv.setVitesse(IConstantesRobot.vitesseSuperLente, IConstantesRobot.vitesseOrientation);
+                        mv.gotoPointMM(1250, 1500);
+                        mv.gotoOrientationDeg(0);
+                        servosService.ouvrePriseDroite();
+                        mv.gotoPointMM(1550, 3000 - 1385);
+                        servosService.priseProduitDroit();
+                        rs.setGobeletCentraleRecupere(true);
+                    } catch (ObstacleFoundException e) {
+                        log.warn("Impossible de récupérer le gobelet commun.");
+                        rs.setGobeletCentraleRecupere(false);
+                        servosService.fermeProduitDroit();
+                    }
+                } else {
+                    log.info("Collecte du gobelet commun pendant la collecte initiale désactivé");
+                }
+
+                // Pied 3
+                mv.setVitesse(IConstantesRobot.vitesseSuperLente, IConstantesRobot.vitesseOrientation);
+                mv.gotoPointMM(1490, 3000 - 1100);
+                mv.alignFrontTo(1770, 3000 - 1100);
+                mv.gotoPointMM(1650, 3000 - 1100);
+                rs.setPied3Recupere(true);
+                rs.setInitialCollectFinished(true);
             }
         } catch (ObstacleFoundException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
-            validTime = LocalDateTime.now().plusSeconds(10);
         }
     }
 }

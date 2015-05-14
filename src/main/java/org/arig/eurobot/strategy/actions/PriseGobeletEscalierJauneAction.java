@@ -43,7 +43,7 @@ public class PriseGobeletEscalierJauneAction implements IAction {
 
     @Override
     public String name() {
-        return "Prise gobelet escalier jaune action";
+        return "Prise gobelet escalier jaune";
     }
 
     @Override
@@ -65,14 +65,15 @@ public class PriseGobeletEscalierJauneAction implements IAction {
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             mv.pathTo(1200, 910);
             mv.gotoOrientationDeg(180);
-            if (!ioService.produitDroit()) {
-                // On prend à droite
-                servosService.ouvrePriseDroite();
-                mv.gotoPointMM(900, 795);
-            } else {
+            if (!ioService.produitGauche()) {
                 // On prend à gauche
                 servosService.ouvrePriseGauche();
                 mv.gotoPointMM(900, 1025);
+            } else {
+
+                // On prend à droite
+                servosService.ouvrePriseDroite();
+                mv.gotoPointMM(900, 795);
             }
             servosService.priseProduitDroit();
             servosService.priseProduitGauche();

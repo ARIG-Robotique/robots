@@ -2,6 +2,7 @@ package org.arig.eurobot.model;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.model.AbstractRobotStatus;
 
 @Slf4j
@@ -10,6 +11,20 @@ import org.arig.robot.model.AbstractRobotStatus;
 public class RobotStatus extends AbstractRobotStatus {
 
     private Team team;
+
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private StopWatch matchTime = new StopWatch();
+
+    public void startMatch() {
+        matchTime.start();
+    }
+    public void stopMatch() {
+        matchTime.stop();
+    }
+    public long getElapsedTime() {
+        return matchTime.getTime();
+    }
 
     @Setter(AccessLevel.NONE)
     private boolean ascenseurEnabled = false;

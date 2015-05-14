@@ -56,24 +56,25 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             // Stockages des points d'obstacles
             List<Point> detectedPoints = new ArrayList<>();
 
-            if (cmdRobot.getConsigne().getDistance() > 0) {
-                // Marche avant
-                int distanceAvantGauche = gpAvantGauche.average(analogInput.readCapteurValue(IConstantesGPIO.GP2D_AVANT_GAUCHE));
-                int distanceAvantDroit = gpAvantDroit.average(analogInput.readCapteurValue(IConstantesGPIO.GP2D_AVANT_DROIT));
-                int distanceAvantLateralGauche = gpAvantLateralGauche.average(analogInput.readCapteurValue(IConstantesGPIO.GP2D_AVANT_LATERAL_GAUCHE));
-                int distanceAvantLateralDroit = gpAvantLateralDroit.average(analogInput.readCapteurValue(IConstantesGPIO.GP2D_AVANT_LATERAL_DROIT));
 
-                if (distanceAvantGauche > 850 || distanceAvantDroit > 850 || distanceAvantLateralGauche > 850 || distanceAvantLateralDroit > 850) {
+            //if (cmdRobot.getConsigne().getDistance() > 0) {
+            // Marche avant
+            int distanceAvantGauche = gpAvantGauche.average(analogInput.readCapteurValue(IConstantesGPIO.GP2D_AVANT_GAUCHE));
+            int distanceAvantDroit = gpAvantDroit.average(analogInput.readCapteurValue(IConstantesGPIO.GP2D_AVANT_DROIT));
+            int distanceAvantLateralGauche = gpAvantLateralGauche.average(analogInput.readCapteurValue(IConstantesGPIO.GP2D_AVANT_LATERAL_GAUCHE));
+            int distanceAvantLateralDroit = gpAvantLateralDroit.average(analogInput.readCapteurValue(IConstantesGPIO.GP2D_AVANT_LATERAL_DROIT));
+
+                if (distanceAvantGauche > 850 || distanceAvantDroit > 920 || distanceAvantLateralGauche > 850 || distanceAvantLateralDroit > 850) {
                     detectedPoints.add(new Point());
                 }
-            } else {
+            /*} else {
                 int distanceArriereGauche = gpArriereGauche.average(analogInput.readCapteurValue(IConstantesGPIO.GP2D_ARRIERE_GAUCHE));
                 int distanceArriereDroit = gpArriereDroit.average(analogInput.readCapteurValue(IConstantesGPIO.GP2D_ARRIERE_DROIT));
 
                 if (distanceArriereDroit > 850 || distanceArriereGauche > 850) {
                     detectedPoints.add(new Point());
                 }
-            }
+            }*/
 
             // 3. Si inclus, on stop et on met a jour le path
             processWithPoints(detectedPoints);

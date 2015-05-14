@@ -33,7 +33,6 @@ public class BasicAvoidingService extends AbstractAvoidingService {
 
     private boolean currentObstacle = false;
 
-
     @Override
     protected void processWithPoints(List<Point> points) {
         if (!points.isEmpty() && !currentObstacle) {

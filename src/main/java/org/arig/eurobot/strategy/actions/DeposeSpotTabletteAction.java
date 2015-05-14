@@ -43,7 +43,7 @@ public class DeposeSpotTabletteAction implements IAction {
 
     @Override
     public String name() {
-        return "Dépose spot sur la tablette action";
+        return "Dépose spot sur la tablette";
     }
 
     @Override
@@ -67,20 +67,33 @@ public class DeposeSpotTabletteAction implements IAction {
         try {
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             if (rs.getTeam() == Team.JAUNE) {
-                mv.pathTo(1650, 1300);
+                mv.pathTo(1650, 1230);
                 mv.gotoOrientationDeg(0);
+                rs.disableAvoidance();
                 servosService.leveGobelets();
                 try {
                     mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
                     rs.enableCalageBordure();
-                    mv.gotoPointMM(1780, 1300);
+                    mv.gotoPointMM(1780, 1230);
                 } catch (ObstacleFoundException e) {
                     log.info("Caler sur bordure");
                 } finally {
                     rs.disableCalageBordure();
                 }
             } else {
-                // TODO : Vert
+                mv.pathTo(1650, 3000 - 1230);
+                mv.gotoOrientationDeg(0);
+                rs.disableAvoidance();
+                servosService.leveGobelets();
+                try {
+                    mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
+                    rs.enableCalageBordure();
+                    mv.gotoPointMM(1780, 3000 - 1230);
+                } catch (ObstacleFoundException e) {
+                    log.info("Caler sur bordure");
+                } finally {
+                    rs.disableCalageBordure();
+                }
             }
 
             rs.disableAscenseur();
@@ -96,6 +109,7 @@ public class DeposeSpotTabletteAction implements IAction {
             validTime = LocalDateTime.now().plusSeconds(10);
         } finally {
             rs.enableAscenseur();
+            rs.disableAvoidance();
         }
     }
 }

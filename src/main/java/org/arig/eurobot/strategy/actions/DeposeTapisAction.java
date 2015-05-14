@@ -48,7 +48,7 @@ public class DeposeTapisAction implements IAction {
 
     @Override
     public String name() {
-        return "Dépose tapis action";
+        return "Dépose tapis";
     }
 
     @Override
@@ -60,6 +60,10 @@ public class DeposeTapisAction implements IAction {
     public boolean isValid() {
         if (validTime.isAfter(LocalDateTime.now())) {
             return false;
+        }
+
+        if (rs.getElapsedTime() > 60000) {
+            return true;
         }
 
         if (rs.getNbPied() < IConstantesRobot.nbPiedMax) {
@@ -83,13 +87,16 @@ public class DeposeTapisAction implements IAction {
                 servosService.ouvrePriseDroite();
                 servos.setPositionAndWait(IConstantesServos.BRAS_DROIT, IConstantesServos.BRAS_DROIT_BAS);
                 mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
+                rs.disableAvoidance();
                 mv.avanceMM(400);
                 servos.setPositionAndWait(IConstantesServos.TAPIS_DROIT, IConstantesServos.TAPIS_DROIT_OUVERT);
                 servos.setPositionAndWait(IConstantesServos.BRAS_DROIT, IConstantesServos.BRAS_DROIT_HAUT);
                 servos.setPosition(IConstantesServos.TAPIS_DROIT, IConstantesServos.TAPIS_DROIT_FERME);
                 rs.setTapisPresent(false);
                 servosService.priseProduitDroit();
+                mv.reculeMM(100);
                 mv.tourneDeg(90);
+                rs.enableAvoidance();
                 if (ioService.piedDroit()) {
                     mv.avanceMM(250);
                     servosService.ouvrePriseDroite();
@@ -99,7 +106,29 @@ public class DeposeTapisAction implements IAction {
                     mv.avanceMM(150);
                 }
             } else {
-                // TODO : Vert
+                mv.pathTo(700, 3000 - 740);
+                mv.gotoOrientationDeg(180);
+                servosService.ouvrePriseGauche();
+                servos.setPositionAndWait(IConstantesServos.BRAS_GAUCHE, IConstantesServos.BRAS_GAUCHE_BAS);
+                mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
+                rs.disableAvoidance();
+                mv.avanceMM(400);
+                servos.setPositionAndWait(IConstantesServos.TAPIS_GAUCHE, IConstantesServos.TAPIS_GAUCHE_OUVERT);
+                servos.setPositionAndWait(IConstantesServos.BRAS_GAUCHE, IConstantesServos.BRAS_GAUCHE_HAUT);
+                servos.setPosition(IConstantesServos.TAPIS_GAUCHE, IConstantesServos.TAPIS_GAUCHE_FERME);
+                rs.setTapisPresent(false);
+                servosService.priseProduitGauche();
+                mv.reculeMM(100);
+                mv.tourneDeg(-90);
+                rs.enableAvoidance();
+                if (ioService.piedGauche()) {
+                    mv.avanceMM(250);
+                    servosService.ouvrePriseGauche();
+                    mv.reculeMM(150);
+                    servosService.priseProduitGauche();
+                    mv.tourneDeg(30);
+                    mv.avanceMM(150);
+                }
             }
 
             completed = true;
@@ -109,6 +138,7 @@ public class DeposeTapisAction implements IAction {
         } finally {
             servosService.priseProduitDroit();
             servosService.priseProduitGauche();
+            rs.enableAvoidance();
         }
     }
 }

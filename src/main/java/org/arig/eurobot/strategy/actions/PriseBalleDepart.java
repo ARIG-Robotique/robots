@@ -48,7 +48,7 @@ public class PriseBalleDepart implements IAction {
 
     @Override
     public String name() {
-        return "Prise balle zone départ action";
+        return "Prise balle zone départ";
     }
 
     @Override
@@ -73,6 +73,7 @@ public class PriseBalleDepart implements IAction {
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             if (rs.getTeam() == Team.JAUNE) {
                 mv.pathTo(1000, 500);
+                rs.disableAvoidance();
                 servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
                 servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
                 servosService.leveGobelets();
@@ -87,14 +88,28 @@ public class PriseBalleDepart implements IAction {
                     rs.disableCalageBordure();
                 }
             } else {
-                // TODO : Vert
+                mv.pathTo(1000, 3000 - 500);
+                rs.disableAvoidance();
+                servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
+                servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
+                servosService.leveGobelets();
+                mv.gotoOrientationDeg(90);
+                try {
+                    mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
+                    rs.enableCalageBordure();
+                    mv.gotoPointMM(1000, 3000 - 185);
+                } catch (ObstacleFoundException e) {
+                    log.info("Caler sur bordure");
+                } finally {
+                    rs.disableCalageBordure();
+                }
             }
 
             servos.setPositionAndWait(IConstantesServos.PINCE, IConstantesServos.PINCE_PRISE_BALLE);
             servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_HAUT_BALLE);
             rs.setBalleDansAscenseur(true);
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
-            mv.reculeMM(50);
+            mv.reculeMM(70);
 
             boolean gbDroit = ioService.gobeletDroit();
             boolean gbGauche = ioService.gobeletGauche();
@@ -118,6 +133,7 @@ public class PriseBalleDepart implements IAction {
         } finally {
             servosService.priseProduitDroit();
             servosService.priseProduitGauche();
+            rs.enableAvoidance();
         }
     }
 }

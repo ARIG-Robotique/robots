@@ -14,11 +14,11 @@ public interface IConstantesGPIO {
     // ------- //
 
     static final byte GP2D_AVANT_GAUCHE = 0;
-    static final byte GP2D_AVANT_DROIT = 1;
-    static final byte GP2D_AVANT_LATERAL_GAUCHE = 2;
-    static final byte GP2D_AVANT_LATERAL_DROIT = 3;
-    static final byte GP2D_ARRIERE_GAUCHE = 4;
-    static final byte GP2D_ARRIERE_DROIT = 5;
+    static final byte GP2D_AVANT_DROIT = 4;
+    static final byte GP2D_AVANT_LATERAL_GAUCHE = 3;
+    static final byte GP2D_AVANT_LATERAL_DROIT = 1;
+    //static final byte GP2D_ARRIERE_GAUCHE = 6;
+    //static final byte GP2D_ARRIERE_DROIT = 7;
 
     // ---------------- //
     // Expander PCF8574 //

@@ -150,8 +150,7 @@ public class Ordonanceur {
         while(ioService.tirette());
 
         // Début du compteur de temps pour le match
-        StopWatch matchTime = new StopWatch();
-        matchTime.start();
+        robotStatus.startMatch();
 
         log.info("Démarrage du match");
 
@@ -161,15 +160,15 @@ public class Ordonanceur {
         robotStatus.enableAscenseur();
 
         // Match de XX secondes.
-        while(matchTime.getTime() < IConstantesRobot.matchTimeMs) {
+        while(robotStatus.getElapsedTime() < IConstantesRobot.matchTimeMs) {
             try {
                 Thread.currentThread().sleep(200);
             } catch (InterruptedException e) {
                 log.error("Interruption du Thread", e);
             }
         }
-        matchTime.stop();
-        log.info("Fin de l'ordonancement du match. Durée {} ms", matchTime.getTime());
+        robotStatus.stopMatch();
+        log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
 
         // Arrêt de l'asservissement et des moteurs
         robotStatus.disableAsserv();
