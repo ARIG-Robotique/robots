@@ -63,7 +63,7 @@ public class CollectePied1Action implements IAction {
             completed = true;
         } catch (AvoidingException | NoPathFoundException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
-            validTime = LocalDateTime.now().plusSeconds(10);
+            validTime = LocalDateTime.now().plusSeconds(IConstantesRobot.invalidActionTimeSecond);
         }
     }
 }

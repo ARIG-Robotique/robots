@@ -142,7 +142,7 @@ public class DeposeTapisAction implements IAction {
             completed = true;
         } catch (NoPathFoundException | ObstacleFoundException | AvoidingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
-            validTime = LocalDateTime.now().plusSeconds(10);
+            validTime = LocalDateTime.now().plusSeconds(IConstantesRobot.invalidActionTimeSecond);
         } finally {
             rs.enableAvoidance();
         }

@@ -92,7 +92,7 @@ public class PriseGobeletEscalierVertAction implements IAction {
             completed = true;
         } catch (ObstacleFoundException | AvoidingException | NoPathFoundException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
-            validTime = LocalDateTime.now().plusSeconds(10);
+            validTime = LocalDateTime.now().plusSeconds(IConstantesRobot.invalidActionTimeSecond);
             rs.setGobeletEscalierVertRecupere(false);
         } finally {
             if (droite) {

@@ -147,7 +147,7 @@ public class DeposeSpotSallePrincipaleAction implements IAction {
             }
         } catch (NoPathFoundException | ObstacleFoundException | AvoidingException e) {
             DeposeSpotSallePrincipaleAction.log.error("Erreur d'éxécution de l'action : {}", e.toString());
-            validTime = LocalDateTime.now().plusSeconds(10);
+            validTime = LocalDateTime.now().plusSeconds(IConstantesRobot.invalidActionTimeSecond);
         } finally {
             rs.enableAscenseur();
             rs.enableAvoidance();
