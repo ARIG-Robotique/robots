@@ -14,11 +14,16 @@ public interface IConstantesRobot {
     static final int matchTimeMs = 89500;
 
     // Valeurs min / max en mm des axes du repères
-    static final int minX = 150;
-    static final int minY = 150;
-    static final int maxX = 2000 - 150;
-    static final int maxY = 3000 - 150;
+    static final int minX = 170;
+    static final int minY = 100;
+    static final int maxX = 2000 - 100;
+    static final int maxY = 3000 - 100;
     //static final int maxY = 1500;
+
+    static final int minXEscalier = 0;
+    static final int maxXEscalier = 450;
+    static final int minYEscalier = 950;
+    static final int maxYEscalier = 2050;
 
     // ----------------------------- //
     // Configuration des convertions //
