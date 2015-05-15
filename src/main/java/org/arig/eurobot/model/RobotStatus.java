@@ -69,12 +69,22 @@ public class RobotStatus extends AbstractRobotStatus {
     private boolean gobeletEscalierVertRecupere = false;
     private boolean gobeletCentraleRecupere = false;
     private boolean gobeletClapJauneRecupere = false;
-    private boolean gobeletClapVertRecuere = false;
+    private boolean gobeletClapVertRecupere = false;
 
     // Pieds
-    private boolean pied1Recupere = false;
-    private boolean pied2Recupere = false;
-    private boolean pied3Recupere = false;
+    private boolean pied1Recupere = false; // Collecte init
+    private boolean pied2Recupere = false; // Collecte init
+    private boolean pied3Recupere = false; // Collecte init
+    private boolean pied4Recupere = false; // Tapis / Escalier
+    private boolean pied5Recupere = false; // Proche repère
+    private boolean pied6Recupere = false; // Proche clap 1
+    private boolean pied7Recupere = false; // Proche clap 1 (dans le coin)
+    private boolean pied8Recupere = false; // Tapis / Escalier (dans le coin)
+
+    // Clap
+    private boolean clap1Fait = false;
+    private boolean clap2Fait = false;
+    private boolean clap3Fait = false;
 
     // Zones dépose salle cinema principal
     private boolean gobeletSalleCinemaEscalierPose = false;
