@@ -144,8 +144,6 @@ public class DeposeTapisAction implements IAction {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             validTime = LocalDateTime.now().plusSeconds(10);
         } finally {
-            servosService.priseProduitDroit();
-            servosService.priseProduitGauche();
             rs.enableAvoidance();
         }
     }

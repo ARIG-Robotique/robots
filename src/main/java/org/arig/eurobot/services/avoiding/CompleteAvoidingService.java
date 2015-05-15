@@ -34,8 +34,8 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
         List<Polygon> polygons = new ArrayList<>();
         for (Point pt : points) {
             // 3.2 Définition de l'obstacle (autour de nous)
-            int r1 = (int) Math.cos(22.5) * getDistanceCentreObstacle();
-            int r2 = (int) Math.sin(22.5) * getDistanceCentreObstacle();
+            int r1 = (int) Math.cos(22.5) * getDistanceCentreObstacle() / 10;
+            int r2 = (int) Math.sin(22.5) * getDistanceCentreObstacle() / 10;
 
             Polygon polygonObstacle = new Polygon();
             polygonObstacle.addPoint(r2, r1);
