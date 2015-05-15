@@ -4,6 +4,9 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.vo.Point;
+
+import java.util.List;
 
 /**
  * Created by gdepuille on 08/05/15.
@@ -41,4 +44,6 @@ public abstract class AbstractRobotStatus {
 
     public void enableMatch() { matchEnabled = true; }
     public void disableMatch() { matchEnabled = false; }
+
+    public abstract List<Point> echappementPointsCm();
 }
