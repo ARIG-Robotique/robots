@@ -482,13 +482,28 @@ public class MouvementManager implements InitializingBean {
      */
     public void alignFrontTo(final double x, final double y) throws ObstacleFoundException {
         log.info("Aligne ton avant sur le point X = {}mm ; Y = {}mm", x, y);
+        alignFrontToAvecDecalage(x, y, 0);
+    }
+
+    /**
+     * Alignement sur un point avec un décalage en degré (dans le sens trigo)
+     *
+     * @param x
+     * @param y
+     * @param decalageDeg
+     * @throws ObstacleFoundException
+     */
+    public void alignFrontToAvecDecalage(final double x, final double y, final double decalageDeg) throws ObstacleFoundException {
+        if (decalageDeg != 0) {
+            log.info("Décalage de {}° par rapport au point X = {}mm ; Y = {}mm", decalageDeg, x, y);
+        }
 
         long dX = (long) (conv.mmToPulse(x) - position.getPt().getX());
         long dY = (long) (conv.mmToPulse(y) - position.getPt().getY());
 
         cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
         cmdRobot.getConsigne().setDistance(0);
-        cmdRobot.getConsigne().setOrientation(calculAngleConsigne(dX, dY));
+        cmdRobot.getConsigne().setOrientation(calculAngleConsigne(dX, dY) + (long) conv.degToPulse(decalageDeg));
         cmdRobot.setFrein(true);
 
         prepareNextMouvement();
@@ -535,8 +550,22 @@ public class MouvementManager implements InitializingBean {
         if (distance > 0) {
             log.info("Avance de {}mm", distance);
         }
+        cmdAvanceMMByType(distance, TypeConsigne.DIST, TypeConsigne.ANGLE);
+    }
 
-        cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+    public void avanceMMSansAngle(final double distance) throws ObstacleFoundException {
+        if (distance > 0) {
+            log.info("Avance de {}mm sans contrôle d'angle", distance);
+        }
+        cmdAvanceMMByType(distance, TypeConsigne.DIST);
+    }
+
+    private void cmdAvanceMMByType(final double distance, TypeConsigne ... types) throws ObstacleFoundException {
+        if (distance > 0) {
+            log.info("Avance de {}mm sans contrôle d'angle", distance);
+        }
+
+        cmdRobot.setTypes(types);
         cmdRobot.getConsigne().setDistance((long) conv.mmToPulse(distance));
         cmdRobot.getConsigne().setOrientation(0);
         cmdRobot.setFrein(true);
@@ -554,6 +583,11 @@ public class MouvementManager implements InitializingBean {
     public void reculeMM(final double distance) throws ObstacleFoundException {
         log.info("Recul de {}mm", Math.abs(distance));
         avanceMM(-distance);
+    }
+
+    public void reculeMMSansAngle(final double distance) throws ObstacleFoundException {
+        log.info("Recul de {}mm sans angle", Math.abs(distance));
+        avanceMMSansAngle(-distance);
     }
 
     /**

@@ -7,6 +7,7 @@ import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.IRampFilter;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.vo.CommandeRobot;
+import org.arig.robot.vo.enums.TypeConsigne;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -101,13 +102,20 @@ public class AsservissementPolaire implements IAsservissementPolaire {
     @Override
     public void process() {
         // Application du filtre pour la génération du profil trapézoidale et définition des consignes
-        setPointDistance = rampDistance.filter(cmdRobot.getVitesse().getDistance(), cmdRobot.getConsigne().getDistance(), encoders.getDistance(), cmdRobot.isFrein());
+        // de distance pour le mode DIST ou XY
+        if (cmdRobot.isType(TypeConsigne.DIST) || cmdRobot.isType(TypeConsigne.XY)) {
+            setPointDistance = rampDistance.filter(cmdRobot.getVitesse().getDistance(), cmdRobot.getConsigne().getDistance(), encoders.getDistance(), cmdRobot.isFrein());
+            outputDistance = pidDistance.compute(setPointDistance, encoders.getDistance());
+        } else {
+            outputDistance = 0;
+        }
         // Toujours le frein pour l'orientation
-        setPointOrientation = rampOrientation.filter(cmdRobot.getVitesse().getOrientation(), cmdRobot.getConsigne().getOrientation(), encoders.getOrientation(), true);
-
-        // Calcul des filtres PID
-        outputDistance = pidDistance.compute(setPointDistance, encoders.getDistance());
-        outputOrientation = pidOrientation.compute(setPointOrientation, encoders.getOrientation());
+        if (cmdRobot.isType(TypeConsigne.ANGLE) || cmdRobot.isType(TypeConsigne.XY)) {
+            setPointOrientation = rampOrientation.filter(cmdRobot.getVitesse().getOrientation(), cmdRobot.getConsigne().getOrientation(), encoders.getOrientation(), true);
+            outputOrientation = pidOrientation.compute(setPointOrientation, encoders.getOrientation());
+        } else {
+            outputOrientation = 0;
+        }
 
         // Consigne moteurs
         cmdRobot.getMoteur().setDroit((int) (outputDistance + outputOrientation));
