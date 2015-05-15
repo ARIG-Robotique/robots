@@ -96,11 +96,11 @@ public class RobotStatus extends AbstractRobotStatus {
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    private double [] zonesDeposeSallePrincipalJaune = {250, 350, 450};
+    private double [] zonesDeposeSallePrincipalJaune = {300, 400, 500};
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    private double [] zonesDeposeSallePrincipalVert = {2750, 2650, 2550};
+    private double [] zonesDeposeSallePrincipalVert = {2700, 2600, 2500};
 
     public double getYZoneDeposePrincipale() {
         double [] tmp = (team == Team.JAUNE) ? zonesDeposeSallePrincipalJaune : zonesDeposeSallePrincipalVert;

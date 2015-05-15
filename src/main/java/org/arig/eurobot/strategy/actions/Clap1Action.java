@@ -78,6 +78,11 @@ public class Clap1Action implements IAction {
             servos.setPosition(IConstantesServos.BRAS_DROIT, IConstantesServos.BRAS_DROIT_HAUT);
             servos.setPosition(IConstantesServos.BRAS_GAUCHE, IConstantesServos.BRAS_GAUCHE_HAUT);
             rs.setClap1Fait(true);
+            if (rs.getTeam() == Team.JAUNE) {
+                rs.setGobeletClapJauneRecupere(true);
+            } else {
+                rs.setGobeletClapVertRecupere(true);
+            }
             completed = true;
         } catch (ObstacleFoundException | AvoidingException | NoPathFoundException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());

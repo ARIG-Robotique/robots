@@ -129,11 +129,20 @@ public class DeposeSpotSallePrincipaleAction implements IAction {
                 mv.gotoPointMM(1000, rs.getYZoneDeposePrincipale()); // Prend en compte la TEAM
 
                 rs.disableAscenseur();
-                servosService.deposeColonneSurTablette();
+                if (rs.getNbPied() > 0) {
+                    servosService.deposeColonneAuSol();
+                    rs.resetNbPied();
+                    rs.setBalleDansAscenseur(false);
+                }
+                if (ioService.produitDroit()) {
+                    servosService.deposeGobeletDroitFinMatch();
+                }
+                if (ioService.produitGauche()) {
+                    servosService.deposeGobeletGaucheFinMatch();
+                }
+
                 mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
                 mv.reculeMM(200);
-                rs.resetNbPied();
-                rs.setBalleDansAscenseur(false);
                 mv.gotoOrientationDeg(rs.getTeam() == Team.JAUNE ? 90 : -90);
             }
         } catch (NoPathFoundException | ObstacleFoundException | AvoidingException e) {

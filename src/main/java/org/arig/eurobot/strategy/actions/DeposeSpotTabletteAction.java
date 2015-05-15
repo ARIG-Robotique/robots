@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
  * Created by gdepuille on 06/05/15.
  */
 @Slf4j
-@Component
+//@Component
 public class DeposeSpotTabletteAction implements IAction {
 
     @Autowired

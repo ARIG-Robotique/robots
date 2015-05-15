@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  * Created by gdepuille on 14/05/15.
  */
 @Slf4j
-@Component
+//@Component
 public class CollectePied2Action implements IAction {
 
     @Autowired

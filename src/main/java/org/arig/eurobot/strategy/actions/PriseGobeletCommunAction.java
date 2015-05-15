@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
  * Created by gdepuille on 13/05/15.
  */
 @Slf4j
-@Component
+//@Component
 public class PriseGobeletCommunAction implements IAction {
 
     @Autowired
