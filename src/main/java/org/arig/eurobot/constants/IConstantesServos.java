@@ -8,20 +8,26 @@ public interface IConstantesServos {
     // Constantes de vitesse
     static final byte SPEED_BRAS = 50;
     static final byte SPEED_TAPIS = 25;
-    static final byte SPEED_GOBELET = 50;
-    static final byte SPEED_MONTE_GOBELET = 60;
+    static final byte SPEED_GOBELET = 0;
+    static final byte SPEED_MONTE_GOBELET = 0;
     static final byte SPEED_ASCENSEUR = 0;
     static final byte SPEED_PINCE = 0;
     static final byte SPEED_GUIDE = 0;
-    static final byte SPEED_SONAR = 0;
+
+    // Tempo servos
+    static final long WAIT_PINCE = 400;
+    static final long WAIT_ASCENSEUR = 500;
+    static final long WAIT_GUIDE = 500;
+    static final long WAIT_MONTE_GB = 500;
+    static final long WAIT_PRODUIT = 400;
 
     // Constantes d'identification Servo
     static final byte BRAS_DROIT = 15;
     static final byte BRAS_GAUCHE = 10;
     static final byte TAPIS_DROIT = 11;
     static final byte TAPIS_GAUCHE = 14;
-    static final byte GOBELET_DROIT = 12;
-    static final byte GOBELET_GAUCHE = 13;
+    static final byte PRODUIT_DROIT = 12;
+    static final byte PRODUIT_GAUCHE = 13;
     static final byte MONTE_GOBELET_DROIT = 20;
     static final byte MONTE_GOBELET_GAUCHE = 19;
     static final byte ASCENSEUR = 18;
@@ -49,13 +55,13 @@ public interface IConstantesServos {
     static final int MONTE_GB_GAUCHE_HAUT = 1790;
     static final int MONTE_GB_GAUCHE_BAS = 530;
 
-    static final int GOBELET_DROIT_OUVERT = 1400;
-    static final int GOBELET_DROIT_PRODUIT = 1890;
-    static final int GOBELET_DROIT_INIT = 2290;
+    static final int PRODUIT_DROIT_OUVERT = 1400;
+    static final int PRODUIT_DROIT_FERME = 1890;
+    static final int PRODUIT_DROIT_INIT = 2290;
 
-    static final int GOBELET_GAUCHE_OUVERT = 1650;
-    static final int GOBELET_GAUCHE_PRODUIT = 1160;
-    static final int GOBELET_GAUCHE_INIT = 750;
+    static final int PRODUIT_GAUCHE_OUVERT = 1650;
+    static final int PRODUIT_GAUCHE_FERME = 1160;
+    static final int PRODUIT_GAUCHE_INIT = 750;
 
     static final int PINCE_OUVERTE = 1150;
     static final int PINCE_COULEUR = 1600;

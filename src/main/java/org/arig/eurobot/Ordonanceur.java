@@ -3,7 +3,6 @@ package org.arig.eurobot;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.StopWatch;
 import org.arig.eurobot.constants.IConstantesRobot;
 import org.arig.eurobot.constants.IConstantesServos;
 import org.arig.eurobot.model.RobotStatus;
@@ -120,8 +119,8 @@ public class Ordonanceur {
         log.info("Phase de préparation terminé");
 
         // Positionnement initiale
-        servos.setPosition(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_INIT);
-        servos.setPosition(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_INIT);
+        servos.setPosition(IConstantesServos.PRODUIT_DROIT, IConstantesServos.PRODUIT_DROIT_INIT);
+        servos.setPosition(IConstantesServos.PRODUIT_GAUCHE, IConstantesServos.PRODUIT_GAUCHE_INIT);
 
         mouvementManager.resetEncodeurs();
         robotStatus.enableAsserv();

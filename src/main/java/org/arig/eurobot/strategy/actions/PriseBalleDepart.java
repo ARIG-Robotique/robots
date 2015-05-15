@@ -33,9 +33,6 @@ public class PriseBalleDepart implements IAction {
     private IOService ioService;
 
     @Autowired
-    private SD21Servos servos;
-
-    @Autowired
     private ServosService servosService;
 
     @Autowired
@@ -74,8 +71,7 @@ public class PriseBalleDepart implements IAction {
             if (rs.getTeam() == Team.JAUNE) {
                 mv.pathTo(1000, 500);
                 rs.disableAvoidance();
-                servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
-                servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
+                servosService.ouvrePince();
                 servosService.leveGobelets();
                 mv.gotoOrientationDeg(-90);
                 try {
@@ -91,8 +87,7 @@ public class PriseBalleDepart implements IAction {
             } else {
                 mv.pathTo(1000, 3000 - 500);
                 rs.disableAvoidance();
-                servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
-                servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
+                servosService.ouvrePince();
                 servosService.leveGobelets();
                 mv.gotoOrientationDeg(90);
                 try {
@@ -107,10 +102,7 @@ public class PriseBalleDepart implements IAction {
                 }
             }
 
-            servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_PRISE_BALLE);
-            try { Thread.currentThread().sleep(400); } catch (InterruptedException e) { }
-            servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_HAUT_BALLE);
-            try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
+            servosService.priseBalleDansAscenseur();
             rs.setBalleDansAscenseur(true);
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             mv.reculeMM(70);

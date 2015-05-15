@@ -63,19 +63,19 @@ public class ServosController {
         res.add(tapisGauche);
 
         ServoDTO gobeletDroit = new ServoDTO();
-        gobeletDroit.setId(IConstantesServos.GOBELET_DROIT).setSpeed(IConstantesServos.SPEED_GOBELET)
+        gobeletDroit.setId(IConstantesServos.PRODUIT_DROIT).setSpeed(IConstantesServos.SPEED_GOBELET)
                 .setName("Pince produit droit")
-                .addPosition(new ServoPositionDTO("Ouvert", IConstantesServos.GOBELET_DROIT_OUVERT))
-                .addPosition(new ServoPositionDTO("Produit", IConstantesServos.GOBELET_DROIT_PRODUIT))
-                .addPosition(new ServoPositionDTO("Init", IConstantesServos.GOBELET_DROIT_INIT));
+                .addPosition(new ServoPositionDTO("Ouvert", IConstantesServos.PRODUIT_DROIT_OUVERT))
+                .addPosition(new ServoPositionDTO("Produit", IConstantesServos.PRODUIT_DROIT_FERME))
+                .addPosition(new ServoPositionDTO("Init", IConstantesServos.PRODUIT_DROIT_INIT));
         res.add(gobeletDroit);
 
         ServoDTO gobeletGauche = new ServoDTO();
-        gobeletGauche.setId(IConstantesServos.GOBELET_GAUCHE).setSpeed(IConstantesServos.SPEED_GOBELET)
+        gobeletGauche.setId(IConstantesServos.PRODUIT_GAUCHE).setSpeed(IConstantesServos.SPEED_GOBELET)
                 .setName("Pince produit gauche")
-                .addPosition(new ServoPositionDTO("Ouvert", IConstantesServos.GOBELET_GAUCHE_OUVERT))
-                .addPosition(new ServoPositionDTO("Produit", IConstantesServos.GOBELET_GAUCHE_PRODUIT))
-                .addPosition(new ServoPositionDTO("Init", IConstantesServos.GOBELET_GAUCHE_INIT));
+                .addPosition(new ServoPositionDTO("Ouvert", IConstantesServos.PRODUIT_GAUCHE_OUVERT))
+                .addPosition(new ServoPositionDTO("Produit", IConstantesServos.PRODUIT_GAUCHE_FERME))
+                .addPosition(new ServoPositionDTO("Init", IConstantesServos.PRODUIT_GAUCHE_INIT));
         res.add(gobeletGauche);
 
         ServoDTO monteGobeletDroit = new ServoDTO();

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.eurobot.constants.IConstantesRobot;
 import org.arig.eurobot.constants.IConstantesServos;
 import org.arig.eurobot.model.RobotStatus;
+import org.arig.eurobot.model.Team;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -38,8 +39,8 @@ public class ServosService {
         servos.setPositionAndSpeed(IConstantesServos.TAPIS_GAUCHE, IConstantesServos.TAPIS_GAUCHE_FERME, IConstantesServos.SPEED_TAPIS);
         servos.setPositionAndSpeed(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_HAUT, IConstantesServos.SPEED_MONTE_GOBELET);
         servos.setPositionAndSpeed(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_HAUT, IConstantesServos.SPEED_MONTE_GOBELET);
-        servos.setPositionAndSpeed(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_PRODUIT, IConstantesServos.SPEED_GOBELET);
-        servos.setPositionAndSpeed(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_PRODUIT, IConstantesServos.SPEED_GOBELET);
+        servos.setPositionAndSpeed(IConstantesServos.PRODUIT_DROIT, IConstantesServos.PRODUIT_DROIT_FERME, IConstantesServos.SPEED_GOBELET);
+        servos.setPositionAndSpeed(IConstantesServos.PRODUIT_GAUCHE, IConstantesServos.PRODUIT_GAUCHE_FERME, IConstantesServos.SPEED_GOBELET);
         servos.setPositionAndSpeed(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_HAUT_PIED, IConstantesServos.SPEED_ASCENSEUR);
         servos.setPositionAndSpeed(IConstantesServos.PINCE, IConstantesServos.PINCE_PRISE_PIED, IConstantesServos.SPEED_PINCE);
         servos.setPositionAndSpeed(IConstantesServos.GUIDE, IConstantesServos.GUIDE_FERME, IConstantesServos.SPEED_GUIDE);
@@ -53,8 +54,10 @@ public class ServosService {
 
     public void deposeGobeletDroit() {
         log.info("Dépose gobelet droit");
-        servos.setPositionAndWait(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_BAS);
-        servos.setPositionAndWait(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_OUVERT);
+        servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_BAS);
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_MONTE_GB); } catch (InterruptedException e) { }
+        servos.setPosition(IConstantesServos.PRODUIT_DROIT, IConstantesServos.PRODUIT_DROIT_OUVERT);
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { }
     }
 
     @Async
@@ -62,6 +65,11 @@ public class ServosService {
         log.info("Ouverture pince tapis fin de match");
         servos.setPosition(IConstantesServos.TAPIS_DROIT, IConstantesServos.TAPIS_DROIT_OUVERT);
         servos.setPosition(IConstantesServos.TAPIS_GAUCHE, IConstantesServos.TAPIS_GAUCHE_OUVERT);
+        if (robotStatus.getTeam() == Team.JAUNE) {
+            servos.setPosition(IConstantesServos.BRAS_DROIT, IConstantesServos.BRAS_DROIT_CLAP);
+        } else {
+            servos.setPosition(IConstantesServos.BRAS_GAUCHE, IConstantesServos.BRAS_GAUCHE_CLAP);
+        }
     }
 
     @Async
@@ -72,15 +80,17 @@ public class ServosService {
 
     public void deposeGobeletGauche() {
         log.info("Dépose gobelet gauche");
-        servos.setPositionAndWait(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_BAS);
-        servos.setPositionAndWait(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_OUVERT);
+        servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_BAS);
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_MONTE_GB); } catch (InterruptedException e) { }
+        servos.setPosition(IConstantesServos.PRODUIT_GAUCHE, IConstantesServos.PRODUIT_GAUCHE_OUVERT);
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { }
     }
 
     @Async
     public void deposeColonneFinMatch() {
         log.info("Dépose de la colonne en fin de match");
         servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
-        try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { }
         servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
         servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
     }
@@ -88,21 +98,21 @@ public class ServosService {
     public void deposeColonneAuSol() {
         log.info("Dépose de la colonne au sol");
         servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
-        try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { }
         servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
-        try { Thread.currentThread().sleep(400); } catch (InterruptedException e) { }
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PINCE); } catch (InterruptedException e) { }
         servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
-        try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_GUIDE); } catch (InterruptedException e) { }
     }
 
     public void deposeColonneSurTablette() {
         log.info("Dépose de la colonne sur la tablette");
         servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_DEPOSE_BORDURE);
-        try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { }
         servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
-        try { Thread.currentThread().sleep(400); } catch (InterruptedException e) { }
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PINCE); } catch (InterruptedException e) { }
         servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
-        try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_GUIDE); } catch (InterruptedException e) { }
     }
 
     public void leveGobelets() {
@@ -143,51 +153,97 @@ public class ServosService {
         log.info("{} pied{} dans l'ascenseur", robotStatus.getNbPied(), robotStatus.getNbPied() > 1 ? "s" : "");
         servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
         servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
-        try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { }
         servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_PRISE_PIED);
-        try { Thread.currentThread().sleep(400); } catch (InterruptedException e) { }
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PINCE); } catch (InterruptedException e) { }
         servos.setPosition(IConstantesServos.ASCENSEUR, robotStatus.getNbPied() == IConstantesRobot.nbPiedMax ? IConstantesServos.ASCENSEUR_PLEIN : IConstantesServos.ASCENSEUR_HAUT_PIED);
-        try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { }
+    }
+
+    public void priseBalleDansAscenseur() {
+        servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_PRISE_BALLE);
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PINCE); } catch (InterruptedException e) { }
+        servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_HAUT_BALLE);
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { }
+    }
+
+    public void ouvrePince() {
+        servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
+        servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
+    }
+
+    @Async
+    public void priseProduitGaucheAsync() {
+        priseProduitGauche();
     }
 
     public void priseProduitGauche() {
         log.info("Produit disponible à gauche");
-        servos.setPositionAndWait(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_PRODUIT);
+        servos.setPosition(IConstantesServos.PRODUIT_GAUCHE, IConstantesServos.PRODUIT_GAUCHE_FERME);
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { }
         if (ioService.gobeletGauche()) {
             servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_HAUT);
         }
         log.info("Produit à gauche [ Pied : {} ; Gobelet : {} ]", ioService.piedGauche(), ioService.gobeletGauche());
+
+        if (!ioService.produitGauche()) {
+            initProduitGauche();
+        }
+    }
+
+    @Async
+    public void ouvrePriseGaucheAsync() {
+        ouvrePriseGauche();
     }
 
     public void ouvrePriseGauche() {
         log.info("Ouverture prise produit gauche");
-        servos.setPosition(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_OUVERT);
+        servos.setPosition(IConstantesServos.PRODUIT_GAUCHE, IConstantesServos.PRODUIT_GAUCHE_OUVERT);
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { }
         servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_BAS);
     }
 
     public void initProduitGauche() {
-        servos.setPositionAndWait(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_HAUT);
-        servos.setPosition(IConstantesServos.GOBELET_GAUCHE, IConstantesServos.GOBELET_GAUCHE_INIT);
+        servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_HAUT);
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_MONTE_GB); } catch (InterruptedException e) { }
+        servos.setPosition(IConstantesServos.PRODUIT_GAUCHE, IConstantesServos.PRODUIT_GAUCHE_INIT);
+    }
+
+    @Async
+    public void priseProduitDroitAsync() {
+        priseProduitDroit();
     }
 
     public void priseProduitDroit() {
         log.info("Produit disponible à droite");
-        servos.setPositionAndWait(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_PRODUIT);
+        servos.setPosition(IConstantesServos.PRODUIT_DROIT, IConstantesServos.PRODUIT_DROIT_FERME);
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { }
         if (ioService.gobeletDroit()) {
             servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_HAUT);
         }
         log.info("Produit à droite [ Pied : {} ; Gobelet : {} ]", ioService.piedDroit(), ioService.gobeletDroit());
+
+        if (!ioService.produitDroit()) {
+            initProduitDroit();
+        }
+    }
+
+    @Async
+    public void ouvrePriseDroiteAsync() {
+        ouvrePriseDroite();
     }
 
     public void ouvrePriseDroite() {
         log.info("Ouverture prise produit droit");
-        servos.setPosition(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_OUVERT);
+        servos.setPosition(IConstantesServos.PRODUIT_DROIT, IConstantesServos.PRODUIT_DROIT_OUVERT);
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { }
         servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_BAS);
     }
 
     public void initProduitDroit() {
-        servos.setPositionAndWait(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_HAUT);
-        servos.setPosition(IConstantesServos.GOBELET_DROIT, IConstantesServos.GOBELET_DROIT_INIT);
+        servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_HAUT);
+        try { Thread.currentThread().sleep(IConstantesServos.WAIT_MONTE_GB); } catch (InterruptedException e) { }
+        servos.setPosition(IConstantesServos.PRODUIT_DROIT, IConstantesServos.PRODUIT_DROIT_INIT);
     }
 
     public void fermeGuide() {

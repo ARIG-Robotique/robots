@@ -77,12 +77,12 @@ public class PriseGobeletEscalierVertAction implements IAction {
             double r = Math.sqrt(Math.pow(830 - 1200, 2));
             double alpha = Math.asin(115 / r);
 
-            if (!ioService.produitGauche()) {
-                mv.alignFrontToAvecDecalage(830, 2090, Math.toDegrees(-alpha));
-                servosService.ouvrePriseGauche();
-            } else {
+            if (!ioService.produitDroit()) {
                 mv.alignFrontToAvecDecalage(830, 2090, Math.toDegrees(alpha));
                 servosService.ouvrePriseDroite();
+            } else {
+                mv.alignFrontToAvecDecalage(830, 2090, Math.toDegrees(-alpha));
+                servosService.ouvrePriseGauche();
             }
             mv.avanceMM(r * Math.cos(alpha) - 110);
             servosService.priseProduitGauche();

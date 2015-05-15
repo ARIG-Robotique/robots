@@ -84,7 +84,10 @@ public class DeposeTapisAction implements IAction {
             if (rs.getTeam() == Team.JAUNE) {
                 mv.pathTo(700, 740);
                 mv.gotoOrientationDeg(180);
-                servosService.ouvrePriseDroite();
+                boolean hasProduitOnStart = ioService.produitDroit();
+                if (!hasProduitOnStart) {
+                    servosService.ouvrePriseDroite();
+                }
                 servos.setPositionAndWait(IConstantesServos.BRAS_DROIT, IConstantesServos.BRAS_DROIT_BAS);
                 mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
                 rs.disableAvoidance();
@@ -109,7 +112,10 @@ public class DeposeTapisAction implements IAction {
             } else {
                 mv.pathTo(700, 3000 - 740);
                 mv.gotoOrientationDeg(180);
-                servosService.ouvrePriseGauche();
+                boolean hasProduitOnStart = ioService.produitGauche();
+                if (!hasProduitOnStart) {
+                    servosService.ouvrePriseGauche();
+                }
                 servos.setPositionAndWait(IConstantesServos.BRAS_GAUCHE, IConstantesServos.BRAS_GAUCHE_BAS);
                 mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
                 rs.disableAvoidance();
