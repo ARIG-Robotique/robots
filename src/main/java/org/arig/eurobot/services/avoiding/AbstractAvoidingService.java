@@ -1,5 +1,8 @@
 package org.arig.eurobot.services.avoiding;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.eurobot.constants.IConstantesGPIO;
 import org.arig.eurobot.constants.IConstantesRobot;
@@ -37,7 +40,11 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
     @Autowired
     private I2CAdcAnalogInput analogInput;
 
-    private static final int distanceObstacleMm = 300;
+    private static final int distanceDetectionObstacleMm = 300;
+
+    @Setter
+    @Getter(AccessLevel.PROTECTED)
+    private int distanceCentreObstacle = 500;
 
     private MovingIntegerValueAverage gpAvantGauche = new MovingIntegerValueAverage();
     private MovingIntegerValueAverage gpAvantDroit = new MovingIntegerValueAverage();
@@ -62,29 +69,29 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             System.out.println(String.format("%s;%s;%s;%s", distanceAvantLateralGauche, distanceAvantGauche, distanceAvantDroit, distanceAvantLateralDroit));
 
             if (distanceAvantGauche > 1550) {
-                Point p = getPointFromAngle(15);
-                if (p != null) {
-                    detectedPoints.add(p);
+                Point p = getPointFromAngle(distanceDetectionObstacleMm, 15);
+                if (checkPointInTable(p)) {
+                    detectedPoints.add(getPointFromAngle(distanceCentreObstacle, 15));
                 }
             }
 
             if (distanceAvantDroit > 1550) {
-                Point p = getPointFromAngle(-15);
-                if (p != null) {
-                    detectedPoints.add(p);
+                Point p = getPointFromAngle(distanceDetectionObstacleMm, -15);
+                if (checkPointInTable(p)) {
+                    detectedPoints.add(getPointFromAngle(distanceCentreObstacle, -15));
                 }
             }
 
             if (distanceAvantLateralGauche > 1780) {
-                Point p = getPointFromAngle(45);
-                if (p != null) {
-                    detectedPoints.add(p);
+                Point p = getPointFromAngle(distanceDetectionObstacleMm, 45);
+                if (checkPointInTable(p)) {
+                    detectedPoints.add(getPointFromAngle(distanceCentreObstacle, 45));
                 }
             }
             if (distanceAvantLateralDroit > 1780) {
-                Point p = getPointFromAngle(-45);
-                if (p != null) {
-                    detectedPoints.add(p);
+                Point p = getPointFromAngle(distanceDetectionObstacleMm, -45);
+                if (checkPointInTable(p)) {
+                    detectedPoints.add(getPointFromAngle(distanceCentreObstacle, -45));
                 }
             }
 
@@ -104,7 +111,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
      * @param angleDeg Valeur en degré sur le robot.
      * @return Le point si présent sur la table, null sinon
      */
-    private Point getPointFromAngle(double angleDeg) {
+    private Point getPointFromAngle(int distanceObstacleMm, double angleDeg) {
         // 1.A Récupération du point dans le repère cartésien de la table par
         double theta = conv.pulseToRad(position.getAngle()) + Math.toRadians(angleDeg); // On calcul la position sur l'angle du repère pour n'avoir que la translation a faire
         Point ptObstacle = new Point();
@@ -116,7 +123,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
         ptObstacle.addDeltaY(conv.pulseToMm(position.getPt().getY()));
 
         // 2. Controles inclus sur la table
-        return (checkPointInTable(ptObstacle)) ? ptObstacle : null;
+        return ptObstacle;
     }
 
     /**

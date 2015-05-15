@@ -4,6 +4,10 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.model.AbstractRobotStatus;
+import org.arig.robot.vo.Point;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @Slf4j
 @Data
@@ -11,6 +15,23 @@ import org.arig.robot.model.AbstractRobotStatus;
 public class RobotStatus extends AbstractRobotStatus {
 
     private Team team;
+
+    private static List<Point> echappementJaune = new LinkedList<>();
+    private static List<Point> echappementVert = new LinkedList<>();
+    static {
+        echappementJaune.add(new Point(110, 80));
+        echappementJaune.add(new Point(160, 70));
+        echappementJaune.add(new Point(130, 150));
+
+        for (Point p : echappementJaune) {
+            echappementVert.add(new Point(p.getX(), 300 - p.getY()));
+        }
+    }
+
+    @Override
+    public List<Point> echappementPointsCm() {
+        return team == Team.JAUNE ? echappementJaune : echappementVert;
+    }
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)

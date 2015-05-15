@@ -109,8 +109,6 @@ public class Ordonanceur {
         }
         log.info("Alimentation puissance OK (Moteur : {} ; Servos : {})", ioService.alimMoteurOk(), ioService.alimServoOk());
 
-        robotStatus.enableAscenseur();
-
         if (!ioService.tirette()) {
             log.warn("La tirette n'est pas la. Phase de préparation Nerell");
             while(!ioService.tirette()) {

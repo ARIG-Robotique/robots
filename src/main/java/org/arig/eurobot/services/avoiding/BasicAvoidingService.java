@@ -35,13 +35,20 @@ public class BasicAvoidingService extends AbstractAvoidingService {
 
     @Override
     protected void processWithPoints(List<Point> points) {
+        // Log de détection avec un sémaphore
         if (!points.isEmpty() && !currentObstacle) {
             log.info("Attente que l'obstacle sans aille ...");
-            mouvementManager.setObstacleFound(true);
             currentObstacle = true;
         }
+        if (!points.isEmpty()) {
+            mouvementManager.setObstacleFound(true);
+        }
+
         if (points.isEmpty() && currentObstacle) {
             log.info("L'obstacle à disparu on relance le cycle.");
+        }
+
+        if (points.isEmpty()) {
             // 3.4 On relance le bouzin
             mouvementManager.setObstacleFound(false);
             currentObstacle = false;

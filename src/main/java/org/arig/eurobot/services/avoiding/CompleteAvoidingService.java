@@ -34,15 +34,18 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
         List<Polygon> polygons = new ArrayList<>();
         for (Point pt : points) {
             // 3.2 Définition de l'obstacle (autour de nous)
+            int r1 = (int) Math.cos(22.5) * getDistanceCentreObstacle();
+            int r2 = (int) Math.sin(22.5) * getDistanceCentreObstacle();
+
             Polygon polygonObstacle = new Polygon();
-            polygonObstacle.addPoint(-40, 18);
-            polygonObstacle.addPoint(-18, 40);
-            polygonObstacle.addPoint(18, 40);
-            polygonObstacle.addPoint(40, 18);
-            polygonObstacle.addPoint(40, -18);
-            polygonObstacle.addPoint(18, -40);
-            polygonObstacle.addPoint(-18, -40);
-            polygonObstacle.addPoint(-40, -18);
+            polygonObstacle.addPoint(r2, r1);
+            polygonObstacle.addPoint(r1, r2);
+            polygonObstacle.addPoint(r1, -r2);
+            polygonObstacle.addPoint(r2, -r1);
+            polygonObstacle.addPoint(-r2, -r1);
+            polygonObstacle.addPoint(-r1, -r2);
+            polygonObstacle.addPoint(-r1, r2);
+            polygonObstacle.addPoint(-r2, r1);
             polygonObstacle.translate((int) pt.getX() / 10, (int) pt.getY() / 10);
             polygons.add(polygonObstacle);
         }
