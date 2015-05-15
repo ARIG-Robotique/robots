@@ -74,7 +74,7 @@ public class PriseBalleDepart implements IAction {
             if (rs.getTeam() == Team.JAUNE) {
                 mv.pathTo(1000, 500);
                 rs.disableAvoidance();
-                servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
+                servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
                 servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
                 servosService.leveGobelets();
                 mv.gotoOrientationDeg(-90);
@@ -91,7 +91,7 @@ public class PriseBalleDepart implements IAction {
             } else {
                 mv.pathTo(1000, 3000 - 500);
                 rs.disableAvoidance();
-                servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
+                servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
                 servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
                 servosService.leveGobelets();
                 mv.gotoOrientationDeg(90);
@@ -107,8 +107,10 @@ public class PriseBalleDepart implements IAction {
                 }
             }
 
-            servos.setPositionAndWait(IConstantesServos.PINCE, IConstantesServos.PINCE_PRISE_BALLE);
-            servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_HAUT_BALLE);
+            servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_PRISE_BALLE);
+            try { Thread.currentThread().sleep(400); } catch (InterruptedException e) { }
+            servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_HAUT_BALLE);
+            try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
             rs.setBalleDansAscenseur(true);
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             mv.reculeMM(70);

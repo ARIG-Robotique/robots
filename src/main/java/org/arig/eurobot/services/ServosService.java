@@ -79,22 +79,27 @@ public class ServosService {
     @Async
     public void deposeColonneFinMatch() {
         log.info("Dépose de la colonne en fin de match");
-        servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
+        servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
+        try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
         servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
         servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
     }
 
     public void deposeColonneAuSol() {
         log.info("Dépose de la colonne au sol");
-        servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
-        servos.setPositionAndWait(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
+        servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
+        try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
+        servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
+        try { Thread.currentThread().sleep(400); } catch (InterruptedException e) { }
         servos.setPositionAndWait(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
     }
 
     public void deposeColonneSurTablette() {
         log.info("Dépose de la colonne sur la tablette");
-        servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_DEPOSE_BORDURE);
-        servos.setPositionAndWait(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
+        servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_DEPOSE_BORDURE);
+        try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
+        servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
+        try { Thread.currentThread().sleep(400); } catch (InterruptedException e) { }
         servos.setPositionAndWait(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
     }
 
@@ -135,9 +140,12 @@ public class ServosService {
         robotStatus.incNbPied();
         log.info("{} pied{} dans l'ascenseur", robotStatus.getNbPied(), robotStatus.getNbPied() > 1 ? "s" : "");
         servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
-        servos.setPositionAndWait(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
-        servos.setPositionAndWait(IConstantesServos.PINCE, IConstantesServos.PINCE_PRISE_PIED);
-        servos.setPositionAndWait(IConstantesServos.ASCENSEUR, robotStatus.getNbPied() == 4 ? IConstantesServos.ASCENSEUR_PLEIN : IConstantesServos.ASCENSEUR_HAUT_PIED);
+        servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
+        try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
+        servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_PRISE_PIED);
+        try { Thread.currentThread().sleep(400); } catch (InterruptedException e) { }
+        servos.setPosition(IConstantesServos.ASCENSEUR, robotStatus.getNbPied() == IConstantesRobot.nbPiedMax ? IConstantesServos.ASCENSEUR_PLEIN : IConstantesServos.ASCENSEUR_HAUT_PIED);
+        try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
     }
 
     public void priseProduitGauche() {
