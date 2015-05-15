@@ -97,6 +97,7 @@ public interface IConstantesRobot {
     // Paramètre path finding //
     // ---------------------- //
     static final PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.A_STAR_MANHATTAN;
+    static final int invalidActionTimeSecond = 3;
 
     // ----------------- //
     // Paramètres métier //

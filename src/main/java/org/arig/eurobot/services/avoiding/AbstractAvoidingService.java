@@ -66,8 +66,6 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             int distanceAvantLateralGauche = gpAvantLateralGauche.average(analogInput.readCapteurValue(IConstantesGPIO.GP2D_AVANT_LATERAL_GAUCHE));
             int distanceAvantLateralDroit = gpAvantLateralDroit.average(analogInput.readCapteurValue(IConstantesGPIO.GP2D_AVANT_LATERAL_DROIT));
 
-            System.out.println(String.format("%s;%s;%s;%s", distanceAvantLateralGauche, distanceAvantGauche, distanceAvantDroit, distanceAvantLateralDroit));
-
             if (distanceAvantGauche > 1550) {
                 Point p = getPointFromAngle(distanceDetectionObstacleMm, 15);
                 if (checkPointInTable(p)) {
