@@ -47,12 +47,14 @@ public class ServosService {
     }
 
     @Async
-    public void deposeGobeletDroitFinMatch() {
+    public void deposeProduitDroitFinMatch() {
         log.info("Dépose gobelet droit fin de match");
-        deposeGobeletDroit();
+        if (ioService.produitDroit()) {
+            deposeProduitDroit();
+        }
     }
 
-    public void deposeGobeletDroit() {
+    public void deposeProduitDroit() {
         log.info("Dépose gobelet droit");
         servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_BAS);
         try { Thread.currentThread().sleep(IConstantesServos.WAIT_MONTE_GB); } catch (InterruptedException e) { }
@@ -73,12 +75,14 @@ public class ServosService {
     }
 
     @Async
-    public void deposeGobeletGaucheFinMatch() {
+    public void deposeProduitGaucheFinMatch() {
         log.info("Dépose gobelet gauche fin de match");
-        deposeGobeletGauche();
+        if (ioService.produitGauche()) {
+            deposeProduitGauche();
+        }
     }
 
-    public void deposeGobeletGauche() {
+    public void deposeProduitGauche() {
         log.info("Dépose gobelet gauche");
         servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_BAS);
         try { Thread.currentThread().sleep(IConstantesServos.WAIT_MONTE_GB); } catch (InterruptedException e) { }
@@ -89,10 +93,12 @@ public class ServosService {
     @Async
     public void deposeColonneFinMatch() {
         log.info("Dépose de la colonne en fin de match");
-        servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { }
-        servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
-        servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
+        if (robotStatus.getNbPied() > 0) {
+            servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
+            try { Thread.currentThread().sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { }
+            servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
+            servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
+        }
     }
 
     public void deposeColonneAuSol() {

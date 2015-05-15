@@ -94,10 +94,10 @@ public class DeposeSpotSallePrincipaleAction implements IAction {
                 rs.disableAscenseur();
                 servosService.deposeColonneAuSol();
                 if (ioService.produitDroit()) {
-                    servosService.deposeGobeletDroitFinMatch();
+                    servosService.deposeProduitDroitFinMatch();
                 }
                 if (ioService.produitGauche()) {
-                    servosService.deposeGobeletGaucheFinMatch();
+                    servosService.deposeProduitGaucheFinMatch();
                 }
                 mv.reculeMM(200);
                 rs.resetNbPied();
@@ -135,10 +135,10 @@ public class DeposeSpotSallePrincipaleAction implements IAction {
                     rs.setBalleDansAscenseur(false);
                 }
                 if (ioService.produitDroit()) {
-                    servosService.deposeGobeletDroitFinMatch();
+                    servosService.deposeProduitDroitFinMatch();
                 }
                 if (ioService.produitGauche()) {
-                    servosService.deposeGobeletGaucheFinMatch();
+                    servosService.deposeProduitGaucheFinMatch();
                 }
 
                 mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);

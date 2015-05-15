@@ -109,6 +109,8 @@ public class Ordonanceur {
         }
         log.info("Alimentation puissance OK (Moteur : {} ; Servos : {})", ioService.alimMoteurOk(), ioService.alimServoOk());
 
+        robotStatus.enableAscenseur();
+
         if (!ioService.tirette()) {
             log.warn("La tirette n'est pas la. Phase de préparation Nerell");
             while(!ioService.tirette()) {
@@ -177,8 +179,8 @@ public class Ordonanceur {
 
         // Ouverture des servos pour libérer ce que l'on as en stock
         servosService.deposeColonneFinMatch();
-        servosService.deposeGobeletDroitFinMatch();
-        servosService.deposeGobeletGaucheFinMatch();
+        servosService.deposeProduitDroitFinMatch();
+        servosService.deposeProduitGaucheFinMatch();
         servosService.ouvreTapisFinMath();
 
         // FIXME : Désactivation de la puissance moteur pour être sur de ne plus rouler
