@@ -1,4 +1,4 @@
-package org.arig.eurobot.strategy.actions;
+package org.arig.eurobot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 //@Component
-public class CollectePied4Action implements IAction {
+public class CollectePied5Action implements IAction {
 
     @Autowired
     private MouvementManager mv;
@@ -41,7 +41,7 @@ public class CollectePied4Action implements IAction {
 
     @Override
     public String name() {
-        return "Collecte du pied 4";
+        return "Collecte du pied 5";
     }
 
     @Override
@@ -56,34 +56,33 @@ public class CollectePied4Action implements IAction {
         if (validTime.isAfter(LocalDateTime.now())) {
             return false;
         }
-        return !rs.isPied4Recupere() && rs.getNbPied() < IConstantesRobot.nbPiedMax
-                && (rs.getTeam() == Team.JAUNE) ? !ioService.produitDroit() : !ioService.produitGauche();
+        return !rs.isPied5Recupere() && rs.isPied4Recupere() && rs.getNbPied() < IConstantesRobot.nbPiedMax
+                && !ioService.produitDroit() && !ioService.produitGauche();
     }
 
     @Override
     public void execute() {
         try {
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
+            servosService.initProduitDroit();
+            servosService.initProduitGauche();
             if (rs.getTeam() == Team.JAUNE) {
                 mv.pathTo(400, 650);
                 rs.disableAvoidance();
-                servosService.initProduitDroit();
-                mv.alignFrontTo(200, 850);
-                mv.gotoPointMM(300, 750);
+                mv.alignFrontTo(100, 850);
             } else {
                 mv.pathTo(400, 3000 - 650);
                 rs.disableAvoidance();
-                servosService.initProduitGauche();
-                mv.alignFrontTo(200, 3000 - 850);
-                mv.gotoPointMM(300, 3000 - 750);
+                mv.alignFrontTo(100, 3000 - 850);
             }
+            mv.avanceMM(220);
             try {
                 Thread.currentThread().sleep(500);
             } catch (InterruptedException e) {
                 log.warn("Erreur d'attente dans la prise du pied : {}", e.toString());
             }
             mv.reculeMM(200);
-            rs.setPied4Recupere(true);
+            rs.setPied5Recupere(true);
             completed = true;
         } catch (ObstacleFoundException | AvoidingException | NoPathFoundException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());

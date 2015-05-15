@@ -1,4 +1,4 @@
-package org.arig.eurobot.strategy.actions;
+package org.arig.eurobot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +22,8 @@ import java.time.LocalDateTime;
  * Created by gdepuille on 11/05/15.
  */
 @Slf4j
-@Component
-public class PriseGobeletClapVertAction implements IAction {
+//@Component
+public class PriseGobeletClapJauneAction implements IAction {
 
     @Autowired
     private Environment env;
@@ -47,18 +47,18 @@ public class PriseGobeletClapVertAction implements IAction {
 
     @Override
     public String name() {
-        return "Prise gobelet clap vert";
+        return "Prise gobelet clap jaune";
     }
 
     @Override
     public int order() {
-        return (rs.getTeam() == Team.VERT) ? 4 : 0;
+        return (rs.getTeam() == Team.JAUNE) ? 4 : 0;
     }
 
     @Override
     public boolean isValid() {
         boolean adverseZoneEnabled = env.getProperty("strategy.collect.zone.adverse", Boolean.class);
-        if (rs.getTeam() == Team.JAUNE && !adverseZoneEnabled) {
+        if (rs.getTeam() == Team.VERT && !adverseZoneEnabled) {
             return false;
         }
 
@@ -73,26 +73,26 @@ public class PriseGobeletClapVertAction implements IAction {
         boolean droite = false;
         try {
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
-            mv.pathTo(1500, 2500);
+            mv.pathTo(1500, 500);
 
-            double r = Math.sqrt(Math.pow(1750 - 1500, 2) + Math.pow(2750 - 2500, 2));
+            double r = Math.sqrt(Math.pow(1750 - 1500, 2) + Math.pow(250 - 500, 2));
             double alpha = Math.asin(115 / r);
 
             if (!ioService.produitGauche()) {
-                mv.alignFrontToAvecDecalage(1750, 2750, Math.toDegrees(-alpha));
+                mv.alignFrontToAvecDecalage(1750, 250, Math.toDegrees(-alpha));
                 servosService.ouvrePriseGauche();
             } else {
-                mv.alignFrontToAvecDecalage(1750, 2750, Math.toDegrees(alpha));
+                mv.alignFrontToAvecDecalage(1750, 250, Math.toDegrees(alpha));
                 servosService.ouvrePriseDroite();
                 droite = true;
             }
             mv.avanceMM(r * Math.cos(alpha) - 110);
-            rs.setGobeletClapVertRecupere(true);
+            rs.setGobeletClapJauneRecupere(true);
             completed = true;
         } catch (ObstacleFoundException | AvoidingException | NoPathFoundException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             validTime = LocalDateTime.now().plusSeconds(10);
-            rs.setGobeletClapVertRecupere(false);
+            rs.setGobeletClapJauneRecupere(false);
         } finally {
             if (droite) {
                 servosService.priseProduitDroit();

@@ -1,4 +1,4 @@
-package org.arig.eurobot.strategy.actions;
+package org.arig.eurobot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -18,23 +18,23 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 /**
- * Created by gdepuille on 11/05/15.
+ * Created by gdepuille on 06/05/15.
  */
 @Slf4j
-@Component
-public class PriseBalleDepart implements IAction {
+//@Component
+public class DeposeSpotTabletteAction implements IAction {
 
     @Autowired
     private MouvementManager mv;
-
-    @Autowired
-    private IOService ioService;
 
     @Autowired
     private ServosService servosService;
 
     @Autowired
     private RobotStatus rs;
+
+    @Autowired
+    private IOService ioService;
 
     @Getter
     private boolean completed = false;
@@ -43,13 +43,13 @@ public class PriseBalleDepart implements IAction {
 
     @Override
     public String name() {
-        return "Prise balle zone départ";
+        return "Dépose spot sur la tablette";
     }
 
     @Override
     public int order() {
-        // Histoire que ce soit prioritaire quand même vis a vis des action de collecte
-        return 500;
+        // Il faut la poser dès que possible.
+        return 1000;
     }
 
     @Override
@@ -58,8 +58,8 @@ public class PriseBalleDepart implements IAction {
             return false;
         }
 
-        return rs.getNbPied() == 0 && rs.getIndexZoneDeposeSallePrincipale() == 0
-                && !ioService.piedDroit() && !ioService.piedGauche() && !rs.isBalleDansAscenseur();
+        return rs.isInitialCollectFinished() && rs.getNbPied() == 3
+                && !ioService.piedDroit() && !ioService.piedGauche();
     }
 
     @Override
@@ -67,15 +67,14 @@ public class PriseBalleDepart implements IAction {
         try {
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             if (rs.getTeam() == Team.JAUNE) {
-                mv.pathTo(1000, 500);
+                mv.pathTo(1650, 1260);
+                mv.gotoOrientationDeg(0);
                 rs.disableAvoidance();
-                servosService.ouvrePince();
                 servosService.leveGobelets();
-                mv.gotoOrientationDeg(-90);
                 try {
                     mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
                     rs.enableCalageBordure();
-                    mv.gotoPointMM(1000, 175);
+                    mv.gotoPointMM(1770, 1260);
                     mv.avanceMMSansAngle(30);
                 } catch (ObstacleFoundException e) {
                     log.info("Caler sur bordure");
@@ -83,15 +82,14 @@ public class PriseBalleDepart implements IAction {
                     rs.disableCalageBordure();
                 }
             } else {
-                mv.pathTo(1000, 3000 - 500);
+                mv.pathTo(1650, 3000 - 1260);
+                mv.gotoOrientationDeg(0);
                 rs.disableAvoidance();
-                servosService.ouvrePince();
                 servosService.leveGobelets();
-                mv.gotoOrientationDeg(90);
                 try {
                     mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
                     rs.enableCalageBordure();
-                    mv.gotoPointMM(1000, 3000 - 175);
+                    mv.gotoPointMM(1770, 3000 - 1260);
                     mv.avanceMMSansAngle(30);
                 } catch (ObstacleFoundException e) {
                     log.info("Caler sur bordure");
@@ -100,33 +98,19 @@ public class PriseBalleDepart implements IAction {
                 }
             }
 
-            servosService.priseBalleDansAscenseur();
-            rs.setBalleDansAscenseur(true);
+            rs.disableAscenseur();
+            servosService.deposeColonneSurTablette();
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
-            mv.reculeMM(70);
-
-            boolean gbDroit = ioService.gobeletDroit();
-            boolean gbGauche = ioService.gobeletGauche();
-            if (gbDroit || gbGauche) {
-                rs.getYZoneDeposePrincipale();
-                if (ioService.gobeletDroit()) {
-                    servosService.deposeProduitDroit();
-                } else if (ioService.gobeletGauche()) {
-                    servosService.deposeProduitGauche();
-                }
-                mv.reculeMM(200);
-                servosService.priseProduitDroit();
-                servosService.priseProduitGauche();
-            }
-
-            mv.tourneDeg(180);
+            mv.reculeMM(200);
+            rs.resetNbPied();
+            servosService.fermeGuide();
+            rs.setBalleDansAscenseur(false);
             completed = true;
         } catch (NoPathFoundException | ObstacleFoundException | AvoidingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             validTime = LocalDateTime.now().plusSeconds(10);
         } finally {
-            servosService.priseProduitDroit();
-            servosService.priseProduitGauche();
+            rs.enableAscenseur();
             rs.enableAvoidance();
         }
     }

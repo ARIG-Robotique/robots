@@ -1,17 +1,17 @@
-package org.arig.eurobot.strategy.actions;
+package org.arig.eurobot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.eurobot.constants.IConstantesRobot;
+import org.arig.eurobot.constants.IConstantesServos;
 import org.arig.eurobot.model.RobotStatus;
 import org.arig.eurobot.model.Team;
-import org.arig.eurobot.services.IOService;
-import org.arig.eurobot.services.ServosService;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.ObstacleFoundException;
 import org.arig.robot.strategy.IAction;
 import org.arig.robot.system.MouvementManager;
+import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 @Component
-public class CollectePied1Action implements IAction {
+public class Clap2Action implements IAction {
 
     @Autowired
     private MouvementManager mv;
@@ -30,12 +30,15 @@ public class CollectePied1Action implements IAction {
     @Autowired
     private RobotStatus rs;
 
+    @Autowired
+    private SD21Servos servos;
+
     @Getter
     private boolean completed = false;
 
     @Override
     public String name() {
-        return "Collecte du pied 1";
+        return "Clap 2";
     }
 
     @Override
@@ -50,7 +53,11 @@ public class CollectePied1Action implements IAction {
         if (validTime.isAfter(LocalDateTime.now())) {
             return false;
         }
-        return !rs.isPied1Recupere() && rs.getNbPied() < IConstantesRobot.nbPiedMax;
+        if (rs.getElapsedTime() > 60000) {
+            return true;
+        }
+
+        return !rs.isTapisPresent();
     }
 
     @Override
@@ -58,13 +65,21 @@ public class CollectePied1Action implements IAction {
         try {
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             if (rs.getTeam() == Team.JAUNE) {
-                mv.pathTo(1355, 870);
+                mv.pathTo(2000 - 270, 750);
+                mv.gotoOrientationDeg(90);
+                servos.setPositionAndWait(IConstantesServos.BRAS_DROIT, IConstantesServos.BRAS_DROIT_CLAP);
+                mv.gotoPointMM(2000 - 270, 900);
             } else {
-                mv.pathTo(1355, 3000 - 870);
+                mv.pathTo(2000 - 270, 3000 - 750);
+                mv.gotoOrientationDeg(-90);
+                servos.setPositionAndWait(IConstantesServos.BRAS_GAUCHE, IConstantesServos.BRAS_GAUCHE_CLAP);
+                mv.gotoPointMM(2000 - 270, 3000 - 900);
             }
-            rs.setPied1Recupere(true);
+            servos.setPosition(IConstantesServos.BRAS_DROIT, IConstantesServos.BRAS_DROIT_HAUT);
+            servos.setPosition(IConstantesServos.BRAS_GAUCHE, IConstantesServos.BRAS_GAUCHE_HAUT);
+            rs.setClap2Fait(true);
             completed = true;
-        } catch (AvoidingException | NoPathFoundException e) {
+        } catch (ObstacleFoundException | AvoidingException | NoPathFoundException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             validTime = LocalDateTime.now().plusSeconds(10);
         }

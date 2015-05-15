@@ -1,4 +1,4 @@
-package org.arig.eurobot.strategy.actions;
+package org.arig.eurobot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,6 @@ import org.arig.robot.strategy.IAction;
 import org.arig.robot.system.MouvementManager;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -22,11 +21,8 @@ import java.time.LocalDateTime;
  * Created by gdepuille on 14/05/15.
  */
 @Slf4j
-@Component
-public class Clap3Action implements IAction {
-
-    @Autowired
-    private Environment env;
+//@Component
+public class Clap1Action implements IAction {
 
     @Autowired
     private MouvementManager mv;
@@ -42,12 +38,12 @@ public class Clap3Action implements IAction {
 
     @Override
     public String name() {
-        return "Clap 3";
+        return "Clap 1";
     }
 
     @Override
     public int order() {
-        return -5;
+        return 5;
     }
 
     private LocalDateTime validTime = LocalDateTime.now();
@@ -57,7 +53,11 @@ public class Clap3Action implements IAction {
         if (validTime.isAfter(LocalDateTime.now())) {
             return false;
         }
-        return env.getProperty("strategy.collect.zone.adverse", Boolean.class);
+        if (rs.getElapsedTime() > 60000) {
+            return true;
+        }
+
+        return rs.isPied8Recupere() && !rs.isTapisPresent();
     }
 
     @Override
@@ -65,19 +65,36 @@ public class Clap3Action implements IAction {
         try {
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             if (rs.getTeam() == Team.JAUNE) {
-                mv.pathTo(2000 - 270, 2550);
-                mv.gotoOrientationDeg(-90);
-                servos.setPositionAndWait(IConstantesServos.BRAS_GAUCHE, IConstantesServos.BRAS_GAUCHE_CLAP);
-                mv.gotoPointMM(2000 - 270, 2400);
-            } else {
-                mv.pathTo(2000 - 270, 3000 - 2550);
-                mv.gotoOrientationDeg(90);
+                if (!rs.isGobeletClapJauneRecupere()) {
+                    mv.pathTo(1500, 500);
+                    mv.alignFrontTo(2000 - 270, 270);
+                    mv.gotoPointMM(2000 - 270, 270);
+                } else {
+                    mv.pathTo(2000 - 270, 270);
+                }
+                mv.gotoOrientationDeg(60);
                 servos.setPositionAndWait(IConstantesServos.BRAS_DROIT, IConstantesServos.BRAS_DROIT_CLAP);
-                mv.gotoPointMM(2000 - 270, 3000 - 2400);
+                mv.gotoOrientationDeg(95);
+            } else {
+                if (!rs.isGobeletClapJauneRecupere()) {
+                    mv.pathTo(1500, 2500);
+                    mv.alignFrontTo(2000 - 270, 3000 - 270);
+                    mv.gotoPointMM(2000 - 270, 3000 - 270);
+                } else {
+                    mv.pathTo(2000 - 270, 3000 - 270);
+                }
+                mv.gotoOrientationDeg(-60);
+                servos.setPositionAndWait(IConstantesServos.BRAS_GAUCHE, IConstantesServos.BRAS_GAUCHE_CLAP);
+                mv.gotoOrientationDeg(-95);
             }
             servos.setPosition(IConstantesServos.BRAS_DROIT, IConstantesServos.BRAS_DROIT_HAUT);
             servos.setPosition(IConstantesServos.BRAS_GAUCHE, IConstantesServos.BRAS_GAUCHE_HAUT);
-            rs.setClap3Fait(true);
+            rs.setClap1Fait(true);
+            if (rs.getTeam() == Team.JAUNE) {
+                rs.setGobeletClapJauneRecupere(true);
+            } else {
+                rs.setGobeletClapVertRecupere(true);
+            }
             completed = true;
         } catch (ObstacleFoundException | AvoidingException | NoPathFoundException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
