@@ -98,7 +98,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
 
         sw.unsplit();
         LinkedList<GraphNode> graphNodes = pf.search(startNode.id(), endNode.id(), true);
-        if (graphNodes.isEmpty()) {
+        if (graphNodes == null || graphNodes.isEmpty()) {
             log.error("Impossible de trouver le chemin pour le trajet.");
             throw new NoPathFoundException(NoPathFoundException.ErrorType.NO_PATH_FOUND);
         }
