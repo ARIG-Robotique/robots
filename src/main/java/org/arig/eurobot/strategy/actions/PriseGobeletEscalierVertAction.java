@@ -70,6 +70,8 @@ public class PriseGobeletEscalierVertAction implements IAction {
 
     @Override
     public void execute() {
+        boolean droite = false;
+
         try {
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             mv.pathTo(1200, 2090);
@@ -80,13 +82,12 @@ public class PriseGobeletEscalierVertAction implements IAction {
             if (!ioService.produitDroit()) {
                 mv.alignFrontToAvecDecalage(830, 2090, Math.toDegrees(alpha));
                 servosService.ouvrePriseDroite();
+                droite = true;
             } else {
                 mv.alignFrontToAvecDecalage(830, 2090, Math.toDegrees(-alpha));
                 servosService.ouvrePriseGauche();
             }
             mv.avanceMM(r * Math.cos(alpha) - 110);
-            servosService.priseProduitGauche();
-            servosService.priseProduitDroit();
             rs.setGobeletEscalierVertRecupere(true);
             completed = true;
         } catch (ObstacleFoundException | AvoidingException | NoPathFoundException e) {
@@ -94,8 +95,11 @@ public class PriseGobeletEscalierVertAction implements IAction {
             validTime = LocalDateTime.now().plusSeconds(10);
             rs.setGobeletEscalierVertRecupere(false);
         } finally {
-            servosService.priseProduitDroit();
-            servosService.priseProduitGauche();
+            if (droite) {
+                servosService.priseProduitDroit();
+            } else {
+                servosService.priseProduitGauche();
+            }
         }
     }
 }

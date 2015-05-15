@@ -70,6 +70,7 @@ public class PriseGobeletClapJauneAction implements IAction {
 
     @Override
     public void execute() {
+        boolean droite = false;
         try {
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             mv.pathTo(1500, 500);
@@ -83,10 +84,9 @@ public class PriseGobeletClapJauneAction implements IAction {
             } else {
                 mv.alignFrontToAvecDecalage(1750, 250, Math.toDegrees(alpha));
                 servosService.ouvrePriseDroite();
+                droite = true;
             }
             mv.avanceMM(r * Math.cos(alpha) - 110);
-            servosService.priseProduitGauche();
-            servosService.priseProduitDroit();
             rs.setGobeletClapJauneRecupere(true);
             completed = true;
         } catch (ObstacleFoundException | AvoidingException | NoPathFoundException e) {
@@ -94,8 +94,11 @@ public class PriseGobeletClapJauneAction implements IAction {
             validTime = LocalDateTime.now().plusSeconds(10);
             rs.setGobeletClapJauneRecupere(false);
         } finally {
-            servosService.priseProduitDroit();
-            servosService.priseProduitGauche();
+            if (droite) {
+                servosService.priseProduitDroit();
+            } else {
+                servosService.priseProduitGauche();
+            }
         }
     }
 }
