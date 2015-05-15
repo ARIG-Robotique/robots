@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 @Component
-public class InitialCollectAction implements IAction, InitializingBean {
+public class CollecteInitialeAction implements IAction, InitializingBean {
 
     @Autowired
     private Environment env;
@@ -81,15 +81,19 @@ public class InitialCollectAction implements IAction, InitializingBean {
                     try {
                         mv.setVitesse(IConstantesRobot.vitesseSuperLente, IConstantesRobot.vitesseOrientation);
                         mv.gotoPointMM(1250, 1500);
-                        mv.gotoOrientationDeg(0);
+                        double r = Math.sqrt(Math.pow(1650 - 1250, 2));
+                        double alpha = Math.asin(115 / r);
+
+                        mv.alignFrontToAvecDecalage(1650, 1500, Math.toDegrees(-alpha));
                         servosService.ouvrePriseGauche();
-                        mv.gotoPointMM(1550, 1385);
+                        mv.avanceMM(r * Math.cos(alpha) - 110);
                         servosService.priseProduitGauche();
+                        servosService.priseProduitDroit();
                         rs.setGobeletCentraleRecupere(true);
                     } catch (ObstacleFoundException e) {
                         log.warn("Impossible de récupérer le gobelet commun.");
                         rs.setGobeletCentraleRecupere(false);
-                        servosService.fermeProduitGauche();
+                        servosService.priseProduitGauche();
                     }
                 } else {
                     log.info("Collecte du gobelet commun pendant la collecte initiale désactivé");
@@ -120,15 +124,20 @@ public class InitialCollectAction implements IAction, InitializingBean {
                     try {
                         mv.setVitesse(IConstantesRobot.vitesseSuperLente, IConstantesRobot.vitesseOrientation);
                         mv.gotoPointMM(1250, 1500);
-                        mv.gotoOrientationDeg(0);
+                        double r = Math.sqrt(Math.pow(1650 - 1250, 2));
+                        double alpha = Math.asin(115 / r);
+
+                        mv.alignFrontToAvecDecalage(1650, 1500, Math.toDegrees(alpha));
                         servosService.ouvrePriseDroite();
-                        mv.gotoPointMM(1550, 3000 - 1385);
+                        mv.avanceMM(r * Math.cos(alpha) - 110);
+                        servosService.priseProduitGauche();
                         servosService.priseProduitDroit();
                         rs.setGobeletCentraleRecupere(true);
                     } catch (ObstacleFoundException e) {
                         log.warn("Impossible de récupérer le gobelet commun.");
                         rs.setGobeletCentraleRecupere(false);
-                        servosService.fermeProduitDroit();
+                        servosService.priseProduitDroit();
+                        servosService.priseProduitGauche();
                     }
                 } else {
                     log.info("Collecte du gobelet commun pendant la collecte initiale désactivé");

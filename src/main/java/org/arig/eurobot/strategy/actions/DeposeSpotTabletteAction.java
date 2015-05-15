@@ -67,28 +67,30 @@ public class DeposeSpotTabletteAction implements IAction {
         try {
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             if (rs.getTeam() == Team.JAUNE) {
-                mv.pathTo(1650, 1230);
+                mv.pathTo(1650, 1260);
                 mv.gotoOrientationDeg(0);
                 rs.disableAvoidance();
                 servosService.leveGobelets();
                 try {
                     mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
                     rs.enableCalageBordure();
-                    mv.gotoPointMM(1780, 1230);
+                    mv.gotoPointMM(1770, 1260);
+                    mv.avanceMMSansAngle(30);
                 } catch (ObstacleFoundException e) {
                     log.info("Caler sur bordure");
                 } finally {
                     rs.disableCalageBordure();
                 }
             } else {
-                mv.pathTo(1650, 3000 - 1230);
+                mv.pathTo(1650, 3000 - 1260);
                 mv.gotoOrientationDeg(0);
                 rs.disableAvoidance();
                 servosService.leveGobelets();
                 try {
                     mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
                     rs.enableCalageBordure();
-                    mv.gotoPointMM(1780, 3000 - 1230);
+                    mv.gotoPointMM(1770, 3000 - 1260);
+                    mv.avanceMMSansAngle(30);
                 } catch (ObstacleFoundException e) {
                     log.info("Caler sur bordure");
                 } finally {
@@ -109,7 +111,7 @@ public class DeposeSpotTabletteAction implements IAction {
             validTime = LocalDateTime.now().plusSeconds(10);
         } finally {
             rs.enableAscenseur();
-            rs.disableAvoidance();
+            rs.enableAvoidance();
         }
     }
 }

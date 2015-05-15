@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.eurobot.constants.IConstantesRobot;
 import org.arig.eurobot.model.RobotStatus;
+import org.arig.eurobot.model.Team;
 import org.arig.eurobot.services.IOService;
 import org.arig.eurobot.services.ServosService;
 import org.arig.robot.exception.AvoidingException;
@@ -17,11 +18,11 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 /**
- * Created by gdepuille on 13/05/15.
+ * Created by gdepuille on 14/05/15.
  */
 @Slf4j
 @Component
-public class CollecteGobeletCommunAction implements IAction {
+public class CollectePied4Action implements IAction {
 
     @Autowired
     private MouvementManager mv;
@@ -40,46 +41,55 @@ public class CollecteGobeletCommunAction implements IAction {
 
     @Override
     public String name() {
-        return "Collecte du gobelet commun";
+        return "Collecte du pied 4";
     }
 
     @Override
     public int order() {
-        return 0;
+        return 5;
     }
 
     private LocalDateTime validTime = LocalDateTime.now();
 
     @Override
     public boolean isValid() {
-        // TODO : Rendre valide
-        return false;
-
-        /*
         if (validTime.isAfter(LocalDateTime.now())) {
             return false;
         }
-        return !rs.isGobeletCentraleRecupere() && !ioService.produitGauche();
-        */
+        return !rs.isPied4Recupere() && rs.getNbPied() < IConstantesRobot.nbPiedMax
+                && (rs.getTeam() == Team.JAUNE) ? !ioService.produitDroit() : !ioService.produitGauche();
     }
 
     @Override
     public void execute() {
         try {
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
-            mv.pathTo(1250, 1500);
-            mv.gotoOrientationDeg(0);
-            // TODO : Prendre aussi a droite si vide.
-            servosService.ouvrePriseGauche();
-            mv.gotoPointMM(1550, 1385);
-            servosService.priseProduitGauche();
-            rs.setGobeletCentraleRecupere(true);
+            if (rs.getTeam() == Team.JAUNE) {
+                mv.pathTo(400, 650);
+                rs.disableAvoidance();
+                servosService.initProduitDroit();
+                mv.alignFrontTo(200, 850);
+                mv.gotoPointMM(300, 750);
+            } else {
+                mv.pathTo(400, 3000 - 650);
+                rs.disableAvoidance();
+                servosService.initProduitGauche();
+                mv.alignFrontTo(200, 3000 - 850);
+                mv.gotoPointMM(300, 3000 - 750);
+            }
+            try {
+                Thread.currentThread().sleep(500);
+            } catch (InterruptedException e) {
+                log.warn("Erreur d'attente dans la prise du pied : {}", e.toString());
+            }
+            mv.reculeMM(200);
+            rs.setPied4Recupere(true);
             completed = true;
         } catch (ObstacleFoundException | AvoidingException | NoPathFoundException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             validTime = LocalDateTime.now().plusSeconds(10);
-            rs.setGobeletCentraleRecupere(false);
-            servosService.fermeProduitGauche();
+        } finally {
+            rs.enableAvoidance();
         }
     }
 }

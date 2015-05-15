@@ -102,8 +102,9 @@ public class DeposeTapisAction implements IAction {
                     servosService.ouvrePriseDroite();
                     mv.reculeMM(150);
                     servosService.priseProduitDroit();
-                    mv.tourneDeg(-30);
+                    mv.tourneDeg(-25);
                     mv.avanceMM(150);
+                    rs.setPied4Recupere(true);
                 }
             } else {
                 mv.pathTo(700, 3000 - 740);
@@ -126,8 +127,9 @@ public class DeposeTapisAction implements IAction {
                     servosService.ouvrePriseGauche();
                     mv.reculeMM(150);
                     servosService.priseProduitGauche();
-                    mv.tourneDeg(30);
+                    mv.tourneDeg(25);
                     mv.avanceMM(150);
+                    rs.setPied4Recupere(true);
                 }
             }
 

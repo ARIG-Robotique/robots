@@ -64,7 +64,7 @@ public class PriseBalleDepart implements IAction {
         }
 
         return rs.getNbPied() == 0 && rs.getIndexZoneDeposeSallePrincipale() == 0
-                && !ioService.piedDroit() && !ioService.piedGauche();
+                && !ioService.piedDroit() && !ioService.piedGauche() && !rs.isBalleDansAscenseur();
     }
 
     @Override
@@ -81,7 +81,8 @@ public class PriseBalleDepart implements IAction {
                 try {
                     mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
                     rs.enableCalageBordure();
-                    mv.gotoPointMM(1000, 185);
+                    mv.gotoPointMM(1000, 175);
+                    mv.avanceMMSansAngle(30);
                 } catch (ObstacleFoundException e) {
                     log.info("Caler sur bordure");
                 } finally {
@@ -97,7 +98,8 @@ public class PriseBalleDepart implements IAction {
                 try {
                     mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
                     rs.enableCalageBordure();
-                    mv.gotoPointMM(1000, 3000 - 185);
+                    mv.gotoPointMM(1000, 3000 - 175);
+                    mv.avanceMMSansAngle(30);
                 } catch (ObstacleFoundException e) {
                     log.info("Caler sur bordure");
                 } finally {
@@ -121,8 +123,8 @@ public class PriseBalleDepart implements IAction {
                     servosService.deposeGobeletGauche();
                 }
                 mv.reculeMM(200);
-                servosService.fermeProduitDroit();
-                servosService.fermeProduitGauche();
+                servosService.priseProduitDroit();
+                servosService.priseProduitGauche();
             }
 
             mv.tourneDeg(180);

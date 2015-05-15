@@ -13,6 +13,7 @@ import org.arig.robot.exception.ObstacleFoundException;
 import org.arig.robot.strategy.IAction;
 import org.arig.robot.system.MouvementManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -36,6 +37,9 @@ public class PriseGobeletEscalierJauneAction implements IAction {
     @Autowired
     private RobotStatus rs;
 
+    @Autowired
+    private Environment env;
+
     @Getter
     private boolean completed = false;
 
@@ -53,6 +57,11 @@ public class PriseGobeletEscalierJauneAction implements IAction {
 
     @Override
     public boolean isValid() {
+        boolean adverseZoneEnabled = env.getProperty("strategy.collect.zone.adverse", Boolean.class);
+        if (rs.getTeam() == Team.VERT && !adverseZoneEnabled) {
+            return false;
+        }
+
         if (validTime.isAfter(LocalDateTime.now())) {
             return false;
         }
@@ -64,24 +73,26 @@ public class PriseGobeletEscalierJauneAction implements IAction {
         try {
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             mv.pathTo(1200, 910);
-            mv.gotoOrientationDeg(180);
-            if (!ioService.produitGauche()) {
-                // On prend à gauche
-                servosService.ouvrePriseGauche();
-                mv.gotoPointMM(900, 1025);
-            } else {
 
-                // On prend à droite
+            double r = Math.sqrt(Math.pow(830 - 1200, 2));
+            double alpha = Math.asin(115 / r);
+
+            if (!ioService.produitGauche()) {
+                mv.alignFrontToAvecDecalage(830, 910, Math.toDegrees(-alpha));
+                servosService.ouvrePriseGauche();
+            } else {
+                mv.alignFrontToAvecDecalage(830, 910, Math.toDegrees(alpha));
                 servosService.ouvrePriseDroite();
-                mv.gotoPointMM(900, 795);
             }
-            servosService.priseProduitDroit();
+            mv.avanceMM(r * Math.cos(alpha) - 110);
             servosService.priseProduitGauche();
+            servosService.priseProduitDroit();
             rs.setGobeletEscalierJauneRecupere(true);
             completed = true;
-        } catch (NoPathFoundException | ObstacleFoundException | AvoidingException e) {
+        } catch (ObstacleFoundException | AvoidingException | NoPathFoundException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             validTime = LocalDateTime.now().plusSeconds(10);
+            rs.setGobeletEscalierJauneRecupere(false);
         } finally {
             servosService.priseProduitDroit();
             servosService.priseProduitGauche();
