@@ -12,7 +12,7 @@ public interface IConstantesServos {
     static final byte SPEED_MONTE_GOBELET = 60;
     static final byte SPEED_ASCENSEUR = 0;
     static final byte SPEED_PINCE = 0;
-    static final byte SPEED_GUIDE = 50;
+    static final byte SPEED_GUIDE = 0;
     static final byte SPEED_SONAR = 0;
 
     // Constantes d'identification Servo

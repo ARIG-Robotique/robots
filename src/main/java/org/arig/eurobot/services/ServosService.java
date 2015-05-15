@@ -91,7 +91,8 @@ public class ServosService {
         try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
         servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
         try { Thread.currentThread().sleep(400); } catch (InterruptedException e) { }
-        servos.setPositionAndWait(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
+        servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
+        try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
     }
 
     public void deposeColonneSurTablette() {
@@ -100,7 +101,8 @@ public class ServosService {
         try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
         servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
         try { Thread.currentThread().sleep(400); } catch (InterruptedException e) { }
-        servos.setPositionAndWait(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
+        servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
+        try { Thread.currentThread().sleep(500); } catch (InterruptedException e) { }
     }
 
     public void leveGobelets() {
