@@ -66,13 +66,13 @@ public class DeposeSpotSallePrincipaleAction implements IAction {
         }
 
         int nbPied = 4;
-        /*if (rs.getElapsedTime() > 70000) {
+        if (rs.getElapsedTime() > 70000) {
             nbPied = 1;
         } else if (rs.getElapsedTime() > 60000) {
             nbPied = 2;
         } else if (rs.getElapsedTime() > 50000) {
             nbPied = 3;
-        }*/
+        }
 
         return rs.getNbPied() >= nbPied;
     }
