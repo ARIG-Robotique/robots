@@ -79,6 +79,8 @@ public class DeposeSpotSallePrincipaleAction implements IAction {
 
     @Override
     public void execute() {
+        boolean droite = false;
+        boolean gauche = false;
         try {
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             if (rs.getTeam() == Team.JAUNE) {
@@ -95,9 +97,11 @@ public class DeposeSpotSallePrincipaleAction implements IAction {
                 servosService.deposeColonneAuSol();
                 if (ioService.produitDroit()) {
                     servosService.deposeProduitDroitFinMatch();
+                    droite = true;
                 }
                 if (ioService.produitGauche()) {
                     servosService.deposeProduitGaucheFinMatch();
+                    gauche = true;
                 }
                 mv.reculeMM(200);
                 rs.resetNbPied();
@@ -136,9 +140,11 @@ public class DeposeSpotSallePrincipaleAction implements IAction {
                 }
                 if (ioService.produitDroit()) {
                     servosService.deposeProduitDroitFinMatch();
+                    droite = true;
                 }
                 if (ioService.produitGauche()) {
                     servosService.deposeProduitGaucheFinMatch();
+                    gauche = true;
                 }
 
                 mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
@@ -151,8 +157,12 @@ public class DeposeSpotSallePrincipaleAction implements IAction {
         } finally {
             rs.enableAscenseur();
             rs.enableAvoidance();
-            servosService.priseProduitDroit();
-            servosService.priseProduitGauche();
+            if (droite) {
+                servosService.priseProduitDroit();
+            }
+            if (gauche) {
+                servosService.priseProduitGauche();
+            }
             servosService.fermeGuide();
         }
     }

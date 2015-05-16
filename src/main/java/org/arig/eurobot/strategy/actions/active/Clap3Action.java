@@ -47,7 +47,7 @@ public class Clap3Action implements IAction {
 
     @Override
     public int order() {
-        return 4;
+        return 2;
     }
 
     private LocalDateTime validTime = LocalDateTime.now();
