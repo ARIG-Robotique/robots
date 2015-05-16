@@ -1,4 +1,4 @@
-package org.arig.eurobot.strategy.actions.disabled;
+package org.arig.eurobot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
  * Created by gdepuille on 11/05/15.
  */
 @Slf4j
-//@Component
+@Component
 public class PriseGobeletClapJauneAction implements IAction {
 
     @Autowired
@@ -91,7 +91,7 @@ public class PriseGobeletClapJauneAction implements IAction {
             completed = true;
         } catch (ObstacleFoundException | AvoidingException | NoPathFoundException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
-            validTime = LocalDateTime.now().plusSeconds(10);
+            validTime = LocalDateTime.now().plusSeconds(IConstantesRobot.invalidActionTimeSecond);
             rs.setGobeletClapJauneRecupere(false);
         } finally {
             if (droite) {

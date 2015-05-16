@@ -52,7 +52,7 @@ public class PriseGobeletEscalierJauneAction implements IAction {
 
     @Override
     public int order() {
-        return (rs.getTeam() == Team.JAUNE) ? 600 : 0;
+        return (rs.getTeam() == Team.JAUNE) ? 600 : -4;
     }
 
     @Override

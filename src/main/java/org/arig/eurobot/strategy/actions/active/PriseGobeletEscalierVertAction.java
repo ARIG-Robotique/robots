@@ -52,7 +52,7 @@ public class PriseGobeletEscalierVertAction implements IAction {
 
     @Override
     public int order() {
-        return (rs.getTeam() == Team.VERT) ? 600 : 0;
+        return (rs.getTeam() == Team.VERT) ? 600 : -4;
     }
 
     @Override
