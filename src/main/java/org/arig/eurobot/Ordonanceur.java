@@ -161,6 +161,9 @@ public class Ordonanceur {
         // Match de XX secondes.
         while(robotStatus.getElapsedTime() < IConstantesRobot.matchTimeMs) {
             try {
+                if (robotStatus.getElapsedTime() > 45000) {
+                    System.setProperty("strategy.collect.zone.adverse", "true");
+                }
                 Thread.currentThread().sleep(200);
             } catch (InterruptedException e) {
                 log.error("Interruption du Thread", e);
