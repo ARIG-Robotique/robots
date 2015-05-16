@@ -73,24 +73,12 @@ public class Clap1Action implements IAction {
         try {
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             if (rs.getTeam() == Team.JAUNE) {
-                if (!rs.isGobeletClapJauneRecupere()) {
-                    mv.pathTo(1500, 500);
-                    mv.alignFrontTo(2000 - 270, 270);
-                    mv.gotoPointMM(2000 - 270, 270);
-                } else {
-                    mv.pathTo(2000 - 270, 270);
-                }
+                mv.pathTo(2000 - 270, 270);
                 mv.gotoOrientationDeg(60);
                 servos.setPositionAndWait(IConstantesServos.BRAS_DROIT, IConstantesServos.BRAS_DROIT_CLAP);
                 mv.gotoOrientationDeg(95);
             } else {
-                if (!rs.isGobeletClapJauneRecupere()) {
-                    mv.pathTo(1500, 2500);
-                    mv.alignFrontTo(2000 - 270, 3000 - 270);
-                    mv.gotoPointMM(2000 - 270, 3000 - 270);
-                } else {
-                    mv.pathTo(2000 - 270, 3000 - 270);
-                }
+                mv.pathTo(2000 - 270, 3000 - 270);
                 mv.gotoOrientationDeg(-60);
                 servos.setPositionAndWait(IConstantesServos.BRAS_GAUCHE, IConstantesServos.BRAS_GAUCHE_CLAP);
                 mv.gotoOrientationDeg(-95);
