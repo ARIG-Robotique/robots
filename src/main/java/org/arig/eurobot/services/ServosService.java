@@ -64,13 +64,15 @@ public class ServosService {
 
     @Async
     public void ouvreTapisFinMath() {
-        log.info("Ouverture pince tapis fin de match");
-        servos.setPosition(IConstantesServos.TAPIS_DROIT, IConstantesServos.TAPIS_DROIT_OUVERT);
-        servos.setPosition(IConstantesServos.TAPIS_GAUCHE, IConstantesServos.TAPIS_GAUCHE_OUVERT);
-        if (robotStatus.getTeam() == Team.JAUNE) {
-            servos.setPosition(IConstantesServos.BRAS_DROIT, IConstantesServos.BRAS_DROIT_CLAP);
-        } else {
-            servos.setPosition(IConstantesServos.BRAS_GAUCHE, IConstantesServos.BRAS_GAUCHE_CLAP);
+        if (robotStatus.isTapisPresent()) {
+            log.info("Ouverture pince tapis fin de match");
+            servos.setPosition(IConstantesServos.TAPIS_DROIT, IConstantesServos.TAPIS_DROIT_OUVERT);
+            servos.setPosition(IConstantesServos.TAPIS_GAUCHE, IConstantesServos.TAPIS_GAUCHE_OUVERT);
+            if (robotStatus.getTeam() == Team.JAUNE) {
+                servos.setPosition(IConstantesServos.BRAS_DROIT, IConstantesServos.BRAS_DROIT_CLAP);
+            } else {
+                servos.setPosition(IConstantesServos.BRAS_GAUCHE, IConstantesServos.BRAS_GAUCHE_CLAP);
+            }
         }
     }
 
