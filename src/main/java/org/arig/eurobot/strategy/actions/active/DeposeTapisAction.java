@@ -82,7 +82,7 @@ public class DeposeTapisAction implements IAction {
         try {
             mv.setVitesse(IConstantesRobot.vitessePath, IConstantesRobot.vitesseOrientation);
             if (rs.getTeam() == Team.JAUNE) {
-                mv.pathTo(700, 740);
+                mv.pathTo(700, 730);
                 mv.gotoOrientationDeg(180);
                 boolean hasProduitOnStart = ioService.produitDroit();
                 if (!hasProduitOnStart) {
@@ -110,7 +110,7 @@ public class DeposeTapisAction implements IAction {
                     rs.setPied4Recupere(true);
                 }
             } else {
-                mv.pathTo(700, 3000 - 740);
+                mv.pathTo(700, 3000 - 730);
                 mv.gotoOrientationDeg(180);
                 boolean hasProduitOnStart = ioService.produitGauche();
                 if (!hasProduitOnStart) {

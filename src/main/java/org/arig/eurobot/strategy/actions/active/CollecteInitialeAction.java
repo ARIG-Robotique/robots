@@ -9,8 +9,12 @@ import org.arig.eurobot.services.ServosService;
 import org.arig.robot.exception.ObstacleFoundException;
 import org.arig.robot.strategy.IAction;
 import org.arig.robot.system.MouvementManager;
+import org.arig.robot.utils.ConvertionRobotUnit;
+import org.arig.robot.vo.Point;
+import org.arig.robot.vo.Position;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +33,15 @@ public class CollecteInitialeAction implements IAction, InitializingBean {
 
     @Autowired
     private RobotStatus rs;
+
+    /** The conv. */
+    @Autowired
+    private ConvertionRobotUnit conv;
+
+    /** The position. */
+    @Autowired
+    @Qualifier("currentPosition")
+    private Position position;
 
     @Autowired
     private ServosService servosService;
@@ -69,7 +82,7 @@ public class CollecteInitialeAction implements IAction, InitializingBean {
                 rs.setPied1Recupere(true);
 
                 // Pied 2
-                mv.setVitesse(IConstantesRobot.vitesseSuperLente, IConstantesRobot.vitesseOrientation);
+                mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
                 mv.gotoPointMM(1400, 1300);
                 rs.setPied2Recupere(true);
 
@@ -77,7 +90,6 @@ public class CollecteInitialeAction implements IAction, InitializingBean {
                 if (collectGobeletInitiale) {
                     log.info("Collecte du gobelet commun pendant la collecte initiale activé");
                     try {
-                        mv.setVitesse(IConstantesRobot.vitesseSuperLente, IConstantesRobot.vitesseOrientation);
                         mv.gotoPointMM(1250, 1500);
                         double r = Math.sqrt(Math.pow(1650 - 1250, 2));
                         double alpha = Math.asin(115 / r);
@@ -98,10 +110,12 @@ public class CollecteInitialeAction implements IAction, InitializingBean {
                 }
 
                 // Pied 3
-                mv.setVitesse(IConstantesRobot.vitesseSuperLente, IConstantesRobot.vitesseOrientation);
-                mv.gotoPointMM(1490, 1100);
+                //mv.gotoPointMM(1490, 1100);
                 mv.alignFrontTo(1770, 1100);
-                mv.gotoPointMM(1650, 1100);
+                Point ptFrom = new Point(conv.pulseToMm(position.getPt().getX()), conv.pulseToMm(position.getPt().getY()));
+                Point ptTo = new Point(1770, 1100);
+                double dist = Math.sqrt(Math.pow(ptTo.getX() - ptFrom.getX(), 2) + Math.pow(ptTo.getY() - ptFrom.getY(), 2)) - 115;
+                mv.avanceMM(dist);
                 rs.setPied3Recupere(true);
                 rs.setInitialCollectFinished(true);
 
@@ -112,7 +126,7 @@ public class CollecteInitialeAction implements IAction, InitializingBean {
                 rs.setPied1Recupere(true);
 
                 // Pied 2
-                mv.setVitesse(IConstantesRobot.vitesseSuperLente, IConstantesRobot.vitesseOrientation);
+                mv.setVitesse(IConstantesRobot.vitesseMouvement, IConstantesRobot.vitesseOrientation);
                 mv.gotoPointMM(1400, 3000 - 1300);
                 rs.setPied2Recupere(true);
 
@@ -120,7 +134,6 @@ public class CollecteInitialeAction implements IAction, InitializingBean {
                 if (collectGobeletInitiale) {
                     log.info("Collecte du gobelet commun pendant la collecte initiale activé");
                     try {
-                        mv.setVitesse(IConstantesRobot.vitesseSuperLente, IConstantesRobot.vitesseOrientation);
                         mv.gotoPointMM(1250, 1500);
                         double r = Math.sqrt(Math.pow(1650 - 1250, 2));
                         double alpha = Math.asin(115 / r);
@@ -142,10 +155,12 @@ public class CollecteInitialeAction implements IAction, InitializingBean {
                 }
 
                 // Pied 3
-                mv.setVitesse(IConstantesRobot.vitesseSuperLente, IConstantesRobot.vitesseOrientation);
-                mv.gotoPointMM(1490, 3000 - 1100);
+                //mv.gotoPointMM(1490, 3000 - 1100);
                 mv.alignFrontTo(1770, 3000 - 1100);
-                mv.gotoPointMM(1650, 3000 - 1100);
+                Point ptFrom = new Point(conv.pulseToMm(position.getPt().getX()), conv.pulseToMm(position.getPt().getY()));
+                Point ptTo = new Point(1770, 3000 - 1100);
+                double dist = Math.sqrt(Math.pow(ptTo.getX() - ptFrom.getX(), 2) + Math.pow(ptTo.getY() - ptFrom.getY(), 2)) - 115;
+                mv.avanceMM(dist);
                 rs.setPied3Recupere(true);
                 rs.setInitialCollectFinished(true);
             }
