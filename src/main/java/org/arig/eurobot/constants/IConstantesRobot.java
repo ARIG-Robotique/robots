@@ -54,10 +54,10 @@ public interface IConstantesRobot {
     static final long vitesseHaute = 600;
     static final long vitesseMoyenneHaute = 500;
     static final long vitesseMoyenneBasse = 400;
-    static final long vitesseLente = 250;
-    static final long vitesseSuperLente = 150;
+    static final long vitesseLente = 300;
+    static final long vitesseSuperLente = 200;
 
-    static final long vitessePath = vitesseMoyenneHaute;
+    static final long vitessePath = vitesseSuperHaute;
     static final long vitesseMouvement = vitesseLente;
 
     // -------------- //
@@ -67,11 +67,11 @@ public interface IConstantesRobot {
 //    static final double kpDistance = 0.75;
 //    static final double kiDistance = 18.75;
 //    static final double kdDistance = 0.0;
-    static final double kpDistance = 0.75;
+    static final double kpDistance = 1.5;
     static final double kiDistance = 4.0;
     static final double kdDistance = 0.00050;
 
-    static final double kpOrientation = 0.25;
+    static final double kpOrientation = 0.5;
     static final double kiOrientation = 3.5;
     static final double kdOrientation = 0.0050;
 
