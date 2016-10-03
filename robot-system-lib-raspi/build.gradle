@@ -1,0 +1,8 @@
+description = "ARIG Association - Robot System Librairie - Raspberry Pi : Implémentation pour Raspberry Pi."
+
+dependencies {
+    compile(
+        [project(':robot-system-lib-core')],
+        [group: 'com.pi4j', name: 'pi4j-core', version: pi4jVersion]
+    )
+}

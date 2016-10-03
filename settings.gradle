@@ -1,0 +1,4 @@
+rootProject.name = "robot-system-lib"
+
+include "robot-system-lib-core"
+include "robot-system-lib-raspi"
