@@ -28,8 +28,6 @@ configure(allprojects) {
 		googleGuavaVersion = '18.0'
 		pi4jVersion = '1.0'
 		slf4jVersion = '1.7.10'
-		pathFinderVersion = '1.0'
-		javaCsvVersion = '2.1'
 
 		// Test dependencies versions
 		junitVersion = '4.12'
