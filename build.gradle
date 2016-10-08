@@ -11,10 +11,8 @@ buildscript {
 
 // Configuration des repository de dépendences
 repositories {
-    mavenLocal()
-    mavenCentral()
-    maven { url "http://repo.opengeo.org/" }
-    maven { url "https://oss.sonatype.org/content/groups/public" }
+	mavenLocal()
+	mavenCentral()
 }
 
 // Configuration général
@@ -53,119 +51,105 @@ apply plugin: 'idea'
 
 // Définition de configurations supplémentaire (non standard)
 configurations {
-    provided
+	provided
 }
 
 // Version pour la compilation
 compileJava {
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
+  sourceCompatibility = javaVersion
+  targetCompatibility = javaVersion
 }
 
 compileTestJava {
-    sourceCompatibility = javaTestVersion
-    targetCompatibility = javaTestVersion
+  sourceCompatibility = javaTestVersion
+  targetCompatibility = javaTestVersion
 }
 
 // Classpath de compilation
 sourceSets {
-    main {
-        compileClasspath += configurations.provided
-    }
-    test {
-        compileClasspath += configurations.provided
-        runtimeClasspath += configurations.provided
-    }
+  main {
+      compileClasspath += configurations.provided
+  }
+  test {
+      compileClasspath += configurations.provided
+      runtimeClasspath += configurations.provided
+  }
 }
 
 // Intégration avec IntellijIDEA
 idea {
-    project {
-        // Java configuration
-        //jdkName = javaVersion
-        //languageLevel = javaVersion
-
-        // Gestionnaire de source
-        //vcs = 'Git'
-    }
-
-    module {
-        downloadJavadoc = true
-        downloadSources = true
-
-        scopes.PROVIDED.plus += [configurations.provided]
-    }
+	//targetVersion = "14"
 }
 
 // Configuration de la construction des Jars
 jar {
-    manifest.attributes["Implementation-Title"] = project.name
-    manifest.attributes["Implementation-Version"] = project.version
-    manifest.attributes["Created-By"] = "Gradle " + gradle.gradleVersion
-    manifest.attributes["Build-Jdk"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
-    manifest.attributes["Main-Class"] = "org.arig.eurobot.RobotApplication"
+	manifest.attributes["Implementation-Title"] = project.name
+	manifest.attributes["Implementation-Version"] = project.version
+	manifest.attributes["Created-By"] = "Gradle " + gradle.gradleVersion
+	manifest.attributes["Build-Jdk"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
+	manifest.attributes["Main-Class"] = "org.arig.eurobot.RobotApplication"
 }
 
 // Configuration pour la Javadoc
 javadoc {
-    classpath = project.sourceSets.main.compileClasspath + configurations.provided
+	classpath = project.sourceSets.main.compileClasspath + configurations.provided
 
-    options {
-        memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
-        author = true
-        header = project.name
-    }
+	options {
+		memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+		author = true
+		header = project.name
+	}
 }
 
 // Dependence commune pour tous les projets java
 dependencies {
-    provided(
-            [group: 'org.projectlombok', name: 'lombok', version: lombokVersion]
-    )
+	provided(
+		[group: 'org.projectlombok', name: 'lombok', version: lombokVersion]
+	)
 
-    compile(
-            [group: 'org.eclipse.jetty', name: 'jetty-server', version: jettyVersion],
-            [group: 'org.eclipse.jetty', name: 'jetty-webapp', version: jettyVersion],
-            [group: 'org.eclipse.jetty', name: 'jetty-annotations', version: jettyVersion],
-            [group: 'org.springframework', name: 'spring-webmvc', version: springVersion],
-            [group: 'org.arig.robot', name: 'robot-system-lib-raspi', version: robotSystemLibVersion],
-            [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion],
-            [group: 'com.pi4j', name: 'pi4j-gpio-extension', version: pi4jVersion]
-    )
+	compile(
+		[group: 'org.eclipse.jetty', name: 'jetty-server', version: jettyVersion],
+		[group: 'org.eclipse.jetty', name: 'jetty-webapp', version: jettyVersion],
+		[group: 'org.eclipse.jetty', name: 'jetty-annotations', version: jettyVersion],
+		[group: 'org.springframework', name: 'spring-webmvc', version: springVersion],
+		[group: 'org.arig.robot', name: 'robot-system-lib-raspi', version: robotSystemLibVersion],
+		[group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion],
+		[group: 'com.pi4j', name: 'pi4j-gpio-extension', version: pi4jVersion]
+	)
 
-    testCompile(
-            [group: 'org.springframework', name: 'spring-test', version: springVersion],
-            [group: 'junit', name: 'junit', version: junitVersion]
-    )
+	testCompile(
+		[group: 'org.springframework', name: 'spring-test', version: springVersion],
+		[group: 'junit', name: 'junit', version: junitVersion]
+	)
 }
 
 // Construction du jar de source
 task sourcesJar(type: Jar, dependsOn:classes) {
-    classifier = "sources"
-    from sourceSets.main.allJava.srcDirs
-    include "**/*.java"
+  classifier = "sources"
+  from sourceSets.main.allJava.srcDirs
+  include "**/*.java"
 }
 
 // Construction du jar de javadoc
 task javadocJar(type: Jar) {
-    classifier = "javadoc"
-    from javadoc
+  classifier = "javadoc"
+  from javadoc
 }
 
 // Tâche de copy des dépendances
 task copyDependencies(type: Copy) {
-    into "$buildDir/dependencies"
-    from configurations.runtime
+  into "$buildDir/dependencies"
+  from configurations.runtime
 }
 
 // Installation de Gradle Wrapper
 task wrapper(type: Wrapper) {
-    description = "Generates gradlew[.bat] scripts"
-    gradleVersion = "2.3"
+  description = "Generates gradlew[.bat] scripts"
+  gradleVersion = "3.1"
 }
 
 // Liste des artéfact
 artifacts {
-    archives sourcesJar
-    archives javadocJar
+  archives sourcesJar
+  archives javadocJar
 }
