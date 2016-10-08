@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration>
+
+	<!-- Appender fichier (async) -->
+	<appender name="File" class="org.apache.log4j.FileAppender">
+		<param name="File" value="logs/nerell.log" />
+		<param name="Append" value="true" />
+		<param name="Encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} %-5p [%t] [%x %c] - %m%n" />
+		</layout>
+	</appender>
+	<appender name="AsyncFile" class="org.apache.log4j.AsyncAppender">
+		<param name="BufferSize" value="500"/>
+		<appender-ref ref="File"/>
+	</appender>
+
+	<!-- Appender console (async) -->
+	<appender name="Console" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} %-5p [%t] [%x %c] - %m%n"/>
+		</layout>
+	</appender>
+	<appender name="AsyncConsole" class="org.apache.log4j.AsyncAppender">
+		<param name="BufferSize" value="500"/>
+		<appender-ref ref="Console"/>
+	</appender>
+	
+	<!-- ******************************** -->
+	<!-- Configuration pour l'application -->
+	<!-- ******************************** -->
+
+	<logger name="org.arig">
+		<level value="DEBUG" />
+	</logger>
+	
+	<!-- *********** -->
+	<!-- Root Logger -->
+	<!-- *********** -->
+	<root>
+		<level value="INFO" />
+		<appender-ref ref="AsyncFile" />
+		<appender-ref ref="AsyncConsole" />
+	</root>
+</log4j:configuration>
