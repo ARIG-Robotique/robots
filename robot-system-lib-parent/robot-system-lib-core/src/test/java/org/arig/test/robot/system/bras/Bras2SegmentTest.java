@@ -25,6 +25,5 @@ public class Bras2SegmentTest {
     @Test
     public void testToP() {
         impl.toP(new Point3D(8, 0, 0));
-
     }
 }

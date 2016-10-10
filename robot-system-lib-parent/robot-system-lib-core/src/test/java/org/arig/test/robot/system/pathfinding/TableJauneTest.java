@@ -58,7 +58,7 @@ public class TableJauneTest {
     @Test
     public void testFindPath() throws IOException, NoPathFoundException {
         Point from = new Point(149, 150);
-        Point to = new Point(177, 110);
+        Point to = new Point(170, 100);
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
         Assert.assertTrue(c.hasNext());

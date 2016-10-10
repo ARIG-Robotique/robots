@@ -1,13 +1,13 @@
 description = "ARIG Association - Robot System Librairie - Core : Librairie coeur du système."
 
 dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+
     compile(
         [group: 'org.springframework', name: 'spring-context', version: springVersion],
         [group: 'org.apache.commons', name: 'commons-lang3', version: apacheCommonsLangVersion],
         [group: 'org.apache.commons', name: 'commons-collections4', version: apacheCommonsCollectionsVersion],
         [group: 'com.google.guava', name: 'guava', version: googleGuavaVersion],
-        [group: 'org.lagers', name: 'path-finder', version: pathFinderVersion],
-        [group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion],
-        [group: 'net.sourceforge.javacsv', name: 'javacsv', version: javaCsvVersion]
+        [group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion]
     )
 }

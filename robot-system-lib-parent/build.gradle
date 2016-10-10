@@ -1,8 +1,8 @@
 // Configuration pour le build
 buildscript {
 	repositories {
-		mavenCentral()
 		mavenLocal()
+		mavenCentral()
 	}
 	dependencies {
 		// Add build plugins here
@@ -13,7 +13,7 @@ buildscript {
 configure(allprojects) {
 	group = 'org.arig.robot'
 	version = '1.1.0-SNAPSHOT'
-	
+
 	// Variable de configuration
 	ext {
 		// Project dependencies
@@ -28,8 +28,6 @@ configure(allprojects) {
 		googleGuavaVersion = '18.0'
 		pi4jVersion = '1.0'
 		slf4jVersion = '1.7.10'
-		pathFinderVersion = '0.1.2'
-		javaCsvVersion = '2.1'
 
 		// Test dependencies versions
 		junitVersion = '4.12'
@@ -39,15 +37,15 @@ configure(allprojects) {
 	// Plugin de build
 	apply plugin: 'java'
 	apply plugin: 'maven'
-	
+
 	// Plugin pour les IDE
-    apply plugin: 'idea'
-	
+  apply plugin: 'idea'
+
 	// Définition de configurations supplémentaire (non standard)
 	configurations {
         provided
-    }
-	
+  }
+
 	// Version pour la compilation
 	compileJava {
 		sourceCompatibility = javaVersion
@@ -57,58 +55,42 @@ configure(allprojects) {
 	compileTestJava {
 		sourceCompatibility = javaTestVersion
 		targetCompatibility = javaTestVersion
-	}	
-	
+	}
+
 	// Classpath de compilation
 	sourceSets {
-        main {
-            compileClasspath += configurations.provided
-        }
-        test {
-            compileClasspath += configurations.provided
-            runtimeClasspath += configurations.provided
-        }
-    }
-	
+		main {
+			compileClasspath += configurations.provided
+		}
+		test {
+			compileClasspath += configurations.provided
+			runtimeClasspath += configurations.provided
+		}
+	}
+
 	// Configuration des repository de dépendences
-    repositories {
-        mavenCentral()
-        mavenLocal()
-        maven { url "http://repo.opengeo.org/" }
-		maven { url "https://oss.sonatype.org/content/groups/public" }
-    }
+	repositories {
+		mavenLocal()
+		mavenCentral()
+	}
 
 	// Dependence commune pour tous les projets
-    dependencies {
-        provided(
-            [group: 'org.projectlombok', name: 'lombok', version: lombokVersion]
-        )
+	dependencies {
+		provided(
+			[group: 'org.projectlombok', name: 'lombok', version: lombokVersion]
+		)
 
-        testCompile(
-            [group: 'org.springframework', name: 'spring-test', version: springVersion],
+		testCompile(
+			[group: 'org.springframework', name: 'spring-test', version: springVersion],
 			[group: 'junit', name: 'junit', version: junitVersion],
 			[group: 'org.mockito', name: 'mockito-core', version: mockitoVersion]
-        )
-    }	
-	
+		)
+	}
+
 	// Intégration avec IntellijIDEA
 	idea {
-        project {
-			// Java configuration
-            //jdkName = javaVersion
-            //languageLevel = javaVersion
-
-			// Gestionnaire de source
-			//vcs = 'Git'
-        }
-
-        module {
-            downloadJavadoc = true
-            downloadSources = true
-
-			scopes.PROVIDED.plus += [configurations.provided]
-		}
-    }
+		targetVersion = "14"
+	}
 }
 
 // Configuration communes des sous projets
@@ -121,11 +103,11 @@ configure(subprojects) { subproject ->
 		manifest.attributes["Created-By"] = "Gradle " + gradle.gradleVersion
 		manifest.attributes["Build-Jdk"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
 	}
-	
+
 	// Configuration pour la Javadoc
 	javadoc {
 		classpath = project.sourceSets.main.compileClasspath + configurations.provided
-	
+
 		options {
 			memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
 			author = true
@@ -137,20 +119,20 @@ configure(subprojects) { subproject ->
 			options.addStringOption('Xdoclint:none', '-quiet')
 		}
 	}
-	
+
 	// Construction du jar de source
 	task sourcesJar(type: Jar, dependsOn:classes) {
 		classifier = "sources"
 		from sourceSets.main.allJava.srcDirs
 		include "**/*.java"
 	}
-	
+
 	// Construction du jar de javadoc
 	task javadocJar(type: Jar) {
 		classifier = "javadoc"
 		from javadoc
 	}
-	
+
 	// Liste des artéfact
 	artifacts {
 		archives sourcesJar
@@ -167,6 +149,6 @@ configure(rootProject) {
 
 	task wrapper(type: Wrapper) {
 		description = "Generates gradlew[.bat] scripts"
-		gradleVersion = "2.3"
+		gradleVersion = "3.1"
 	}
 }
