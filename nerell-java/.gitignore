@@ -1,0 +1,16 @@
+
+.project
+.classpath
+.settings/
+
+.idea/
+*.iml
+
+.gradle/
+target/
+build/
+
+pubspec.lock
+.pub/
+*-gui/**/packages/
+main-robot-gui/web/packages
