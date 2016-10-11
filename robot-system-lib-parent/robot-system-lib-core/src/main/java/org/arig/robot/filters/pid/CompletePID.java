@@ -4,6 +4,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.influxdb.dto.Point;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * source http://brettbeauregard.com/blog/2011/04/improving-the-beginners-pid-introduction/
@@ -12,6 +17,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class CompletePID implements IPidFilter {
+
+    @Autowired
+    private IMonitoringWrapper monitoringWrapper;
 
     @Getter
     @Setter(AccessLevel.PRIVATE)
@@ -27,13 +35,15 @@ public class CompletePID implements IPidFilter {
 
     private boolean inAuto = false;
 
+    private final String name;
+
     @Setter
     private PidType controllerDirection = PidType.DIRECT;
 
-    public CompletePID() {
-        super();
+    public CompletePID(final String name) {
         outMax = Double.MAX_VALUE;
         outMin = -Double.MAX_VALUE;
+        this.name = name;
     }
 
     public void setMode(PidMode mode) {
@@ -89,6 +99,7 @@ public class CompletePID implements IPidFilter {
         setInput(mesure);
 
         if (!inAuto) {
+            sendMonitoring();
             return output;
         }
 
@@ -107,6 +118,7 @@ public class CompletePID implements IPidFilter {
         /* Remember some variables for next time */
         lastInput = input;
 
+        sendMonitoring();
         return output;
     }
 
@@ -145,5 +157,19 @@ public class CompletePID implements IPidFilter {
     @Override
     public double getErrorSum() {
         return iTerm;
+    }
+
+    private void sendMonitoring() {
+        // Construction du monitoring
+        Point serie = Point.measurement(name)
+                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                .addField("setPoint", getSetPoint())
+                .addField("input", getInput())
+                .addField("error", getError())
+                .addField("errorSum", getErrorSum())
+                .addField("output", getOutput())
+                .build();
+
+        monitoringWrapper.write(serie);
     }
 }

@@ -1,23 +1,38 @@
 package org.arig.test.robot.filters.pid;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.pid.CompletePID;
 import org.arig.robot.filters.pid.IPidFilter;
+import org.arig.test.robot.system.motion.AsservissementPolaireTestContext;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * Created by gdepuille on 15/03/15.
  */
 @Slf4j
-@RunWith(BlockJUnit4ClassRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = { PidContext.class })
 public class CompletePidTest {
 
+    @Autowired
+    private CompletePID pid;
+
+    @Before
+    public void init() {
+        pid.reset();
+    }
+
     @Test
-    public void testP() throws Exception {
-        CompletePID pid = getPid();
+    @SneakyThrows
+    public void testP() {
         pid.setTunings(1, 0, 0);
 
         double consigne = 100;
@@ -29,12 +44,14 @@ public class CompletePidTest {
             output = pid.compute(consigne, input);
             log.info("Test P : consigne {}, input {}, output {}", consigne, input, output);
             Assert.assertEquals(consigne - input, output, 1);
+
+            Thread.currentThread().sleep(10);
         }
     }
 
     @Test
-    public void testPI() throws Exception {
-        CompletePID pid = getPid();
+    @SneakyThrows
+    public void testPI() {
         pid.setTunings(1, 1, 0);
 
         double consigne = 100;
@@ -45,12 +62,14 @@ public class CompletePidTest {
             }
             output = pid.compute(consigne, input);
             log.info("Test P : consigne {}, input {}, output {}", consigne, input, output);
+
+            Thread.currentThread().sleep(10);
         }
     }
 
     @Test
-    public void testPID() throws Exception {
-        CompletePID pid = getPid();
+    @SneakyThrows
+    public void testPID() {
         pid.setTunings(1, 1, 1);
 
         double consigne = 100;
@@ -61,18 +80,8 @@ public class CompletePidTest {
             }
             output = pid.compute(consigne, input);
             log.info("Test P : consigne {}, input {}, output {}", consigne, input, output);
+
+            Thread.currentThread().sleep(10);
         }
-    }
-
-    private CompletePID getPid() {
-        CompletePID pid = new CompletePID();
-        pid.setControllerDirection(IPidFilter.PidType.DIRECT);
-        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
-        pid.setSampleTime(1);
-        pid.reset();
-        pid.initialise();
-
-
-        return pid;
     }
 }

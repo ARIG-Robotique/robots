@@ -1,5 +1,6 @@
 package org.arig.test.robot.filters.pid;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.pid.SimplePID;
@@ -8,25 +9,24 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * Created by gdepuille on 15/03/15.
  */
 @Slf4j
-@RunWith(BlockJUnit4ClassRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = { PidContext.class })
 public class SimplePidTest {
 
-    private static IPidFilter pid;
-
-    @BeforeClass
-    public static void initClass() {
-        pid = new SimplePID();
-    }
+    @Autowired
+    private SimplePID pid;
 
     @Test
+    @SneakyThrows
     public void testP() {
-        pid.setTunings(1, 0, 0);
-
         double consigne = 100;
         double input = 0, output = 0;
         for (int i = 0 ; i < 100 ; i++) {
@@ -36,6 +36,8 @@ public class SimplePidTest {
             output = pid.compute(consigne, input);
             log.info("Test P : consigne {}, input {}, output {}", consigne, input, output);
             Assert.assertEquals(consigne - input, output, 1);
+
+            Thread.currentThread().sleep(10);
         }
     }
 }

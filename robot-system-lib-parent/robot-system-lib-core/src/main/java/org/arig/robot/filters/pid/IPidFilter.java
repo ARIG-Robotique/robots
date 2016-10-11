@@ -1,5 +1,7 @@
 package org.arig.robot.filters.pid;
 
+import org.influxdb.dto.Point;
+
 /**
  * The Interface IPidFilter.
  * 
@@ -79,4 +81,5 @@ public interface IPidFilter {
      * @return La valeur instantané de l'erreur
      */
     double getError();
+
 }

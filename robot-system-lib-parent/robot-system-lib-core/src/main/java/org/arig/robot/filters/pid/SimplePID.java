@@ -4,6 +4,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.influxdb.dto.Point;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Class SimplePID.
@@ -12,6 +17,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class SimplePID implements IPidFilter {
+
+    @Autowired
+    private IMonitoringWrapper monitoringWrapper;
 
     /** The kp. */
     private double kp;
@@ -37,18 +45,15 @@ public class SimplePID implements IPidFilter {
     /** The last error. */
     private double lastError = 0;
 
+    private final String name;
+
     /**
      * Instantiates a new arig pid.
      */
-    public SimplePID() {
-        super();
+    public SimplePID(String name) {
+        this.name = name;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.filters.pid.IPidFilter#setTunings(double, double, double)
-     */
     @Override
     public void setTunings(final double kp, final double ki, final double kd) {
         log.info("Configuration des paramètres PID ( Kp = {} ; Ki = {} ; Kd = {} )", kp, ki, kd);
@@ -58,11 +63,6 @@ public class SimplePID implements IPidFilter {
         this.ki = ki;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.filters.pid.IPidFilter#reset()
-     */
     @Override
     public void reset() {
         log.info("Reset des paramètres du PID");
@@ -71,11 +71,6 @@ public class SimplePID implements IPidFilter {
         lastError = 0;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.filters.pid.IPidFilter#compute(double, double)
-     */
     @Override
     public double compute(final double consigne, final double mesure) {
         setSetPoint(consigne);
@@ -86,11 +81,26 @@ public class SimplePID implements IPidFilter {
         errorSum += error;
         lastError = error;
         output = kp * error + ki * errorSum + kd * deltaError;
+        sendMonitoring();
         return output;
     }
 
     @Override
     public double getError() {
         return lastError;
+    }
+
+    private void sendMonitoring() {
+        // Construction du monitoring
+        Point serie = Point.measurement(name)
+                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                .addField("setPoint", getSetPoint())
+                .addField("input", getInput())
+                .addField("error", getError())
+                .addField("errorSum", getErrorSum())
+                .addField("output", getOutput())
+                .build();
+
+        monitoringWrapper.write(serie);
     }
 }
