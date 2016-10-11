@@ -1,6 +1,5 @@
 package org.arig.robot.system.motion;
 
-import lombok.Setter;
 import org.arig.robot.csv.CsvCollector;
 import org.arig.robot.csv.CsvData;
 import org.arig.robot.filters.pid.IPidFilter;

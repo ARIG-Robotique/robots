@@ -1,7 +1,6 @@
 package org.arig.robot.vo;
 
 import lombok.Data;
-import lombok.Getter;
 
 import java.util.Collection;
 import java.util.Iterator;

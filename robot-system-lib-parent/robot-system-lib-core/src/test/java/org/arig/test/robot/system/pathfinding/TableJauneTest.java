@@ -13,11 +13,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDateTime;
 
 /**
  * Created by mythril on 30/12/13.

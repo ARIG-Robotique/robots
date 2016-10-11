@@ -1,6 +1,5 @@
 package org.arig.robot.system.capteurs;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;

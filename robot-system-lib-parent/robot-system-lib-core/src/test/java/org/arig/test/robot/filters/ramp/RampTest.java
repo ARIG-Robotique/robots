@@ -2,15 +2,10 @@ package org.arig.test.robot.filters.ramp;
 
 import com.csvreader.CsvWriter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.filters.pid.IPidFilter;
-import org.arig.robot.filters.pid.SimplePID;
 import org.arig.robot.filters.ramp.IRampFilter;
-import org.arig.robot.filters.ramp.Ramp;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

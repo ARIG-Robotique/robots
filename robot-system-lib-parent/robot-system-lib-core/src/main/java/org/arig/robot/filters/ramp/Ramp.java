@@ -1,7 +1,6 @@
 package org.arig.robot.filters.ramp;
 
 import lombok.extern.slf4j.Slf4j;
-
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 

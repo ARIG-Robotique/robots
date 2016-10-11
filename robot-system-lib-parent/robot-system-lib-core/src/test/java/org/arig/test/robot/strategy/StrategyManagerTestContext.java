@@ -1,7 +1,5 @@
 package org.arig.test.robot.strategy;
 
-import org.arig.robot.filters.ramp.IRampFilter;
-import org.arig.robot.filters.ramp.Ramp;
 import org.arig.robot.strategy.IAction;
 import org.arig.robot.strategy.StrategyManager;
 import org.arig.test.robot.strategy.actions.InvalidWhenNotRunAfter10SecondsAndCompletedAfter2ExecutionAction;

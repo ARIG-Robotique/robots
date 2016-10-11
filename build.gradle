@@ -31,7 +31,7 @@ configure(allprojects) {
 		slf4jVersion = '1.7.10'
 
 		// Container dependencies
-    jettyVersion = '9.2.10.v20150310'
+    	jettyVersion = '9.2.10.v20150310'
 
 		// Test dependencies versions
 		junitVersion = '4.12'
@@ -44,12 +44,12 @@ configure(allprojects) {
 	apply plugin: 'maven'
 
 	// Plugin pour les IDE
-  apply plugin: 'idea'
+  	apply plugin: 'idea'
 
-	// Définition de configurations supplémentaire (non standard)
+	// Définition de configurations supplémentaire (non standard
 	configurations {
         provided
-  }
+  	}
 
 	// Version pour la compilation
 	compileJava {
@@ -95,6 +95,15 @@ configure(allprojects) {
 	// Intégration avec IntellijIDEA
 	idea {
 		targetVersion = "14"
+
+		module {
+			jdkName = javaVersion
+
+			scopes.PROVIDED.plus += [ configurations.provided ]
+
+			downloadJavadoc = true
+			downloadSources = true
+		}
 	}
 }
 

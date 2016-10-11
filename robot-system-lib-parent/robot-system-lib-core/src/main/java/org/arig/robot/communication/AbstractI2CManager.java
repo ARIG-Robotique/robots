@@ -1,14 +1,13 @@
 package org.arig.robot.communication;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
 import org.arig.robot.exception.I2CException;
 import org.springframework.util.Assert;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Class AbstractI2CManager.

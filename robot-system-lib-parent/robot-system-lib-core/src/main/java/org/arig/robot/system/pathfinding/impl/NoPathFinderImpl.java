@@ -8,7 +8,6 @@ import org.arig.robot.vo.Point;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.LinkedList;
 import java.util.List;
 
 /**

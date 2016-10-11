@@ -4,14 +4,11 @@ import com.csvreader.CsvWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.pid.CompletePID;
 import org.arig.robot.filters.pid.IPidFilter;
-import org.arig.robot.filters.pid.SimplePID;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
 import java.io.FileOutputStream;
