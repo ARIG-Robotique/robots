@@ -2,6 +2,7 @@ package org.arig.eurobot.config.spring;
 
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CFactory;
+import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 import org.arig.eurobot.constants.IConstantesI2C;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.communication.raspi.RaspiI2CManager;
@@ -26,7 +27,7 @@ import java.io.IOException;
 public class I2CContext {
 
     @Bean(destroyMethod = "close")
-    public I2CBus i2cBus() throws IOException {
+    public I2CBus i2cBus() throws IOException, UnsupportedBusNumberException {
         return I2CFactory.getInstance(I2CBus.BUS_1);
     }
 

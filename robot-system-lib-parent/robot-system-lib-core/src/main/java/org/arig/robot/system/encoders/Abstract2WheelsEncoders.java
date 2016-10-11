@@ -2,9 +2,6 @@ package org.arig.robot.system.encoders;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.csv.CsvCollector;
-import org.arig.robot.csv.CsvData;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The Class Abstract2WheelsEncoders.
@@ -13,10 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @Slf4j
 public abstract class Abstract2WheelsEncoders {
-
-    /** Collector CSV */
-    @Autowired(required = false)
-    private CsvCollector csvCollector;
 
     /** The distance. */
     @Getter
@@ -66,13 +59,13 @@ public abstract class Abstract2WheelsEncoders {
 
         calculPolarValues();
 
-        if (csvCollector != null) {
-            CsvData c = csvCollector.getCurrent();
-            c.setCodeurGauche(gauche);
-            c.setCodeurDroit(droit);
-            c.setCodeurDistance(distance);
-            c.setCodeurOrient(orientation);
-        }
+//        if (csvCollector != null) {
+//            CsvData c = csvCollector.getCurrent();
+//            c.setCodeurGauche(gauche);
+//            c.setCodeurDroit(droit);
+//            c.setCodeurDistance(distance);
+//            c.setCodeurOrient(orientation);
+//        }
     }
 
     /**

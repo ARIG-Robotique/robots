@@ -3,8 +3,6 @@ package org.arig.robot.system;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.csv.CsvCollector;
-import org.arig.robot.csv.CsvData;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.NotYetImplementedException;
@@ -32,10 +30,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
  */
 @Slf4j
 public class MouvementManager implements InitializingBean {
-
-    /** Collector CSV */
-    @Autowired(required = false)
-    private CsvCollector csvCollector;
 
     /** The odom. */
     @Autowired
@@ -183,10 +177,6 @@ public class MouvementManager implements InitializingBean {
      * Process. Cette méthode permet de réaliser les fonctions lié aux déplacements.
      */
     public void process() {
-        if (csvCollector != null) {
-            csvCollector.addNewItem();
-        }
-
         // 1. Calcul de la position du robot
         encoders.lectureValeurs();
         odom.calculPosition();
@@ -257,13 +247,13 @@ public class MouvementManager implements InitializingBean {
             }
         }
 
-        if (csvCollector != null) {
-            CsvData c = csvCollector.getCurrent();
-            c.setConsigneDistance(cmdRobot.getConsigne().getDistance());
-            c.setConsigneOrient(cmdRobot.getConsigne().getOrientation());
-            c.setVitesseDistance(cmdRobot.getVitesse().getDistance());
-            c.setVitesseOrient(cmdRobot.getVitesse().getOrientation());
-        }
+//        if (csvCollector != null) {
+//            CsvData c = csvCollector.getCurrent();
+//            c.setConsigneDistance(cmdRobot.getConsigne().getDistance());
+//            c.setConsigneOrient(cmdRobot.getConsigne().getOrientation());
+//            c.setVitesseDistance(cmdRobot.getVitesse().getDistance());
+//            c.setVitesseOrient(cmdRobot.getVitesse().getOrientation());
+//        }
     }
 
     /**
@@ -349,12 +339,12 @@ public class MouvementManager implements InitializingBean {
             }
         }
 
-        if (csvCollector != null) {
-            CsvData c = csvCollector.getCurrent();
-            c.setModeAsserv(cmdRobot.typeAsserv());
-            c.setTrajetAtteint(trajetAtteint);
-            c.setTrajetEnApproche(trajetEnApproche);
-        }
+//        if (csvCollector != null) {
+//            CsvData c = csvCollector.getCurrent();
+//            c.setModeAsserv(cmdRobot.typeAsserv());
+//            c.setTrajetAtteint(trajetAtteint);
+//            c.setTrajetEnApproche(trajetEnApproche);
+//        }
     }
 
     /**

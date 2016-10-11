@@ -10,7 +10,6 @@ import org.arig.eurobot.model.Team;
 import org.arig.eurobot.services.IOService;
 import org.arig.eurobot.services.ServosService;
 import org.arig.robot.communication.II2CManager;
-import org.arig.robot.csv.CsvCollector;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.exception.ObstacleFoundException;
 import org.arig.robot.system.MouvementManager;
@@ -60,9 +59,6 @@ public class Ordonanceur {
     @Autowired
     @Qualifier("currentPosition")
     private Position position;
-
-    @Autowired(required = false)
-    private CsvCollector csvCollector;
 
     public static Ordonanceur getInstance() {
         if (INSTANCE == null) {
@@ -186,10 +182,6 @@ public class Ordonanceur {
 
         // FIXME : Désactivation de la puissance moteur pour être sur de ne plus rouler
         //ioServices.disableAlimMoteur();
-
-        if (csvCollector != null) {
-            csvCollector.exportToFile();
-        }
 
         // On éteint la couleur de la team.
         ioService.clearTeamColor();

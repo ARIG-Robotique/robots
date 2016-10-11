@@ -2,8 +2,6 @@ package org.arig.robot.system.motion;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import org.arig.robot.csv.CsvCollector;
-import org.arig.robot.csv.CsvData;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.vo.Position;
 import org.arig.robot.vo.enums.TypeOdometrie;
@@ -23,9 +21,6 @@ public abstract class AbstractOdometrie implements IOdometrie, InitializingBean 
     @Qualifier("currentPosition")
     @Getter(AccessLevel.PROTECTED)
     private Position position;
-
-    @Autowired(required = false)
-    private CsvCollector csvCollector;
 
     @Autowired
     private ConvertionRobotUnit conv;
@@ -73,13 +68,13 @@ public abstract class AbstractOdometrie implements IOdometrie, InitializingBean 
     public void calculPosition() {
         process();
 
-        if (csvCollector != null) {
-            CsvData c = csvCollector.getCurrent();
-            c.setX(conv.pulseToMm(getPosition().getPt().getX()));
-            c.setY(conv.pulseToMm(getPosition().getPt().getY()));
-            c.setAngle(conv.pulseToDeg(getPosition().getAngle()));
-            c.setTypeOdometrie(type.name());
-        }
+//        if (csvCollector != null) {
+//            CsvData c = csvCollector.getCurrent();
+//            c.setX(conv.pulseToMm(getPosition().getPt().getX()));
+//            c.setY(conv.pulseToMm(getPosition().getPt().getY()));
+//            c.setAngle(conv.pulseToDeg(getPosition().getAngle()));
+//            c.setTypeOdometrie(type.name());
+//        }
     }
 
     /**

@@ -6,7 +6,6 @@ import org.arig.eurobot.constants.IConstantesRobot;
 import org.arig.eurobot.model.RobotStatus;
 import org.arig.eurobot.services.avoiding.BasicAvoidingService;
 import org.arig.eurobot.services.avoiding.CompleteAvoidingService;
-import org.arig.robot.csv.CsvCollector;
 import org.arig.robot.filters.pid.CompletePID;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.IRampFilter;
@@ -18,7 +17,6 @@ import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motion.OdometrieLineaire;
 import org.arig.robot.system.pathfinding.IPathFinder;
-import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.vo.CommandeRobot;
@@ -132,7 +130,4 @@ public class RobotContext {
 
     @Bean
     public Ordonanceur ordonanceur() { return Ordonanceur.getInstance(); }
-
-    @Bean
-    public CsvCollector csvCollector() { return new CsvCollector(); }
 }

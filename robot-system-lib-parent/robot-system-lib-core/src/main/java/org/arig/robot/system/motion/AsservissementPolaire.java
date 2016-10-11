@@ -1,7 +1,5 @@
 package org.arig.robot.system.motion;
 
-import org.arig.robot.csv.CsvCollector;
-import org.arig.robot.csv.CsvData;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.IRampFilter;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
@@ -16,9 +14,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * @author mythril
  */
 public class AsservissementPolaire implements IAsservissementPolaire {
-
-    @Autowired(required = false)
-    private CsvCollector csvCollector;
 
     /** The commande robot. */
     @Autowired
@@ -67,21 +62,11 @@ public class AsservissementPolaire implements IAsservissementPolaire {
         super();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.motion.IAsservissement#reset()
-     */
     @Override
     public void reset() {
         reset(false);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.motion.IAsservissement#reset(boolean)
-     */
     @Override
     public void reset(final boolean resetFilters) {
         pidDistance.reset();
@@ -93,11 +78,6 @@ public class AsservissementPolaire implements IAsservissementPolaire {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.motion.IAsservissement#process()
-     */
     @Override
     public void process() {
         // Application du filtre pour la génération du profil trapézoidale et définition des consignes
@@ -120,22 +100,22 @@ public class AsservissementPolaire implements IAsservissementPolaire {
         cmdRobot.getMoteur().setDroit((int) (outputDistance + outputOrientation));
         cmdRobot.getMoteur().setGauche((int) (outputDistance - outputOrientation));
 
-        if (csvCollector != null) {
-            CsvData c = csvCollector.getCurrent();
-            c.setSetPointDistance(pidDistance.getSetPoint());
-            c.setInputDistance(pidDistance.getInput());
-            c.setErreurDistance(pidDistance.getError());
-            c.setSumErreurDistance(pidDistance.getErrorSum());
-            c.setOutputPidDistance(pidDistance.getOutput());
-
-            c.setSetPointOrient(pidOrientation.getSetPoint());
-            c.setInputOrient(pidOrientation.getInput());
-            c.setErreurOrient(pidOrientation.getError());
-            c.setSumErreurOrient(pidOrientation.getErrorSum());
-            c.setOutputPidOrient(pidOrientation.getOutput());
-
-            c.setCmdMoteurGauche(cmdRobot.getMoteur().getGauche());
-            c.setCmdMoteurDroit(cmdRobot.getMoteur().getDroit());
-        }
+//        if (csvCollector != null) {
+//            CsvData c = csvCollector.getCurrent();
+//            c.setSetPointDistance(pidDistance.getSetPoint());
+//            c.setInputDistance(pidDistance.getInput());
+//            c.setErreurDistance(pidDistance.getError());
+//            c.setSumErreurDistance(pidDistance.getErrorSum());
+//            c.setOutputPidDistance(pidDistance.getOutput());
+//
+//            c.setSetPointOrient(pidOrientation.getSetPoint());
+//            c.setInputOrient(pidOrientation.getInput());
+//            c.setErreurOrient(pidOrientation.getError());
+//            c.setSumErreurOrient(pidOrientation.getErrorSum());
+//            c.setOutputPidOrient(pidOrientation.getOutput());
+//
+//            c.setCmdMoteurGauche(cmdRobot.getMoteur().getGauche());
+//            c.setCmdMoteurDroit(cmdRobot.getMoteur().getDroit());
+//        }
     }
 }
