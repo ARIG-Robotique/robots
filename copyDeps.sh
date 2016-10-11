@@ -3,4 +3,4 @@ echo "Compilation ..."
 ./gradlew clean copyDependencies
 
 echo "Déploiement ..."
-scp ./build/dependencies/*.jar $1:/home/pi/nerell/libs/
+scp ./nerell-java/build/dependencies/*.jar $1:/home/pi/nerell/libs/

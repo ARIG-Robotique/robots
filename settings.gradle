@@ -1,0 +1,6 @@
+rootProject.name = "robots"
+
+include "robot-system-lib-parent"
+include "robot-system-lib-parent:robot-system-lib-core"
+include "robot-system-lib-parent:robot-system-lib-raspi"
+include "nerell-java"
