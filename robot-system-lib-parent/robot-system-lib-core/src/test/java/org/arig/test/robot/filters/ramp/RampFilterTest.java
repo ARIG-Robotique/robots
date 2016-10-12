@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RampTestContext.class})
-public class RampTest {
+public class RampFilterTest {
 
     @Autowired
     private IRampFilter filter;
@@ -30,7 +30,7 @@ public class RampTest {
             if (i == -100) {
                 vitesse = 100;
             }
-            output = filter.filter(vitesse, i, 0, true);
+            output = filter.filter(vitesse, i, true);
             log.info("Vitesse {}, consigne {}, output {}", vitesse, i, output);
         }
     }

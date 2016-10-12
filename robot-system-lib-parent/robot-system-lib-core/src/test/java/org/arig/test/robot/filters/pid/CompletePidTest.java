@@ -2,14 +2,11 @@ package org.arig.test.robot.filters.pid;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.filters.pid.CompletePID;
-import org.arig.robot.filters.pid.IPidFilter;
-import org.arig.test.robot.system.motion.AsservissementPolaireTestContext;
+import org.arig.robot.filters.pid.CompletePidFilter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -23,7 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class CompletePidTest {
 
     @Autowired
-    private CompletePID pid;
+    private CompletePidFilter pid;
 
     @Before
     public void init() {

@@ -16,10 +16,7 @@ import java.util.concurrent.TimeUnit;
  * Created by gdepuille on 10/03/15.
  */
 @Slf4j
-public class CompletePID implements IPidFilter {
-
-    @Autowired
-    private IMonitoringWrapper monitoringWrapper;
+public class CompletePidFilter extends AbstractPidFilter {
 
     @Getter
     @Setter(AccessLevel.PRIVATE)
@@ -35,15 +32,13 @@ public class CompletePID implements IPidFilter {
 
     private boolean inAuto = false;
 
-    private final String name;
-
     @Setter
     private PidType controllerDirection = PidType.DIRECT;
 
-    public CompletePID(final String name) {
+    public CompletePidFilter(final String name) {
+        super(name);
         outMax = Double.MAX_VALUE;
         outMin = -Double.MAX_VALUE;
-        this.name = name;
     }
 
     public void setMode(PidMode mode) {
@@ -157,19 +152,5 @@ public class CompletePID implements IPidFilter {
     @Override
     public double getErrorSum() {
         return iTerm;
-    }
-
-    private void sendMonitoring() {
-        // Construction du monitoring
-        Point serie = Point.measurement(name)
-                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                .addField("setPoint", getSetPoint())
-                .addField("input", getInput())
-                .addField("error", getError())
-                .addField("errorSum", getErrorSum())
-                .addField("output", getOutput())
-                .build();
-
-        monitoringWrapper.write(serie);
     }
 }

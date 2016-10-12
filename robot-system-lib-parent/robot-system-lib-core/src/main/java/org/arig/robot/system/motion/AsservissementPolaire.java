@@ -83,14 +83,14 @@ public class AsservissementPolaire implements IAsservissementPolaire {
         // Application du filtre pour la génération du profil trapézoidale et définition des consignes
         // de distance pour le mode DIST ou XY
         if (cmdRobot.isType(TypeConsigne.DIST) || cmdRobot.isType(TypeConsigne.XY)) {
-            setPointDistance = rampDistance.filter(cmdRobot.getVitesse().getDistance(), cmdRobot.getConsigne().getDistance(), encoders.getDistance(), cmdRobot.isFrein());
+            setPointDistance = rampDistance.filter(cmdRobot.getVitesse().getDistance(), cmdRobot.getConsigne().getDistance(), cmdRobot.isFrein());
             outputDistance = pidDistance.compute(setPointDistance, encoders.getDistance());
         } else {
             outputDistance = 0;
         }
         // Toujours le frein pour l'orientation
         if (cmdRobot.isType(TypeConsigne.ANGLE) || cmdRobot.isType(TypeConsigne.XY)) {
-            setPointOrientation = rampOrientation.filter(cmdRobot.getVitesse().getOrientation(), cmdRobot.getConsigne().getOrientation(), encoders.getOrientation(), true);
+            setPointOrientation = rampOrientation.filter(cmdRobot.getVitesse().getOrientation(), cmdRobot.getConsigne().getOrientation(), true);
             outputOrientation = pidOrientation.compute(setPointOrientation, encoders.getOrientation());
         } else {
             outputOrientation = 0;

@@ -4,22 +4,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.influxdb.dto.Point;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.concurrent.TimeUnit;
 
 /**
- * The Class SimplePID.
+ * The Class SimplePidFilter.
  * 
  * @author mythril
  */
 @Slf4j
-public class SimplePID implements IPidFilter {
-
-    @Autowired
-    private IMonitoringWrapper monitoringWrapper;
+public class SimplePidFilter extends AbstractPidFilter {
 
     /** The kp. */
     private double kp;
@@ -45,13 +37,12 @@ public class SimplePID implements IPidFilter {
     /** The last error. */
     private double lastError = 0;
 
-    private final String name;
 
     /**
      * Instantiates a new arig pid.
      */
-    public SimplePID(String name) {
-        this.name = name;
+    public SimplePidFilter(String name) {
+        super(name);
     }
 
     @Override
@@ -90,17 +81,4 @@ public class SimplePID implements IPidFilter {
         return lastError;
     }
 
-    private void sendMonitoring() {
-        // Construction du monitoring
-        Point serie = Point.measurement(name)
-                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                .addField("setPoint", getSetPoint())
-                .addField("input", getInput())
-                .addField("error", getError())
-                .addField("errorSum", getErrorSum())
-                .addField("output", getOutput())
-                .build();
-
-        monitoringWrapper.write(serie);
-    }
 }

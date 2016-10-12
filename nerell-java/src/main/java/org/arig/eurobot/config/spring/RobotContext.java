@@ -6,10 +6,10 @@ import org.arig.eurobot.constants.IConstantesRobot;
 import org.arig.eurobot.model.RobotStatus;
 import org.arig.eurobot.services.avoiding.BasicAvoidingService;
 import org.arig.eurobot.services.avoiding.CompleteAvoidingService;
-import org.arig.robot.filters.pid.CompletePID;
+import org.arig.robot.filters.pid.CompletePidFilter;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.IRampFilter;
-import org.arig.robot.filters.ramp.Ramp;
+import org.arig.robot.filters.ramp.RampFilter;
 import org.arig.robot.system.MouvementManager;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.motion.AsservissementPolaire;
@@ -30,7 +30,7 @@ import org.springframework.core.env.Environment;
 import java.io.File;
 
 /**
- * Created by gdepuille on 23/12/14.
+ * @author gdepuille on 23/12/14.
  */
 @Slf4j
 @Configuration
@@ -81,7 +81,7 @@ public class RobotContext {
     @Bean(name = "pidDistance")
     public IPidFilter pidDistance() {
         log.info("Configuration PID Distance");
-        CompletePID pid = new CompletePID("pid_distance");
+        CompletePidFilter pid = new CompletePidFilter("pid_distance");
         pid.setSampleTime((int) IConstantesRobot.asservTimeMs);
         pid.setMode(IPidFilter.PidMode.AUTOMATIC);
 
@@ -92,7 +92,7 @@ public class RobotContext {
     @Bean(name = "pidOrientation")
     public IPidFilter pidOrientation() {
         log.info("Configuration PID Orientation");
-        CompletePID pid = new CompletePID("pid_orientation");
+        CompletePidFilter pid = new CompletePidFilter("pid_orientation");
         pid.setSampleTime((int) IConstantesRobot.asservTimeMs);
         pid.setMode(IPidFilter.PidMode.AUTOMATIC);
 
@@ -102,14 +102,14 @@ public class RobotContext {
 
     @Bean(name = "rampDistance")
     public IRampFilter rampDistance() {
-        log.info("Configuration Ramp Distance");
-        return new Ramp(IConstantesRobot.asservTimeMs, IConstantesRobot.rampAccDistance, IConstantesRobot.rampDecDistance);
+        log.info("Configuration RampFilter Distance");
+        return new RampFilter("ramp_distance", IConstantesRobot.asservTimeMs, IConstantesRobot.rampAccDistance, IConstantesRobot.rampDecDistance);
     }
 
     @Bean(name = "rampOrientation")
     public IRampFilter rampOrientation() {
-        log.info("Configuration Ramp Orientation");
-        return new Ramp(IConstantesRobot.asservTimeMs, IConstantesRobot.rampAccOrientation, IConstantesRobot.rampDecOrientation);
+        log.info("Configuration RampFilter Orientation");
+        return new RampFilter("ramp_orientation", IConstantesRobot.asservTimeMs, IConstantesRobot.rampAccOrientation, IConstantesRobot.rampDecOrientation);
     }
 
     @Bean

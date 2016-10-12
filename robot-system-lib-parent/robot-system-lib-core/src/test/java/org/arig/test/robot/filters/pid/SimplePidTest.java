@@ -2,13 +2,10 @@ package org.arig.test.robot.filters.pid;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.filters.pid.IPidFilter;
-import org.arig.robot.filters.pid.SimplePID;
+import org.arig.robot.filters.pid.SimplePidFilter;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -22,7 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class SimplePidTest {
 
     @Autowired
-    private SimplePID pid;
+    private SimplePidFilter pid;
 
     @Test
     @SneakyThrows

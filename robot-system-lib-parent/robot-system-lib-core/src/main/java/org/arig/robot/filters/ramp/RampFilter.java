@@ -1,63 +1,74 @@
 package org.arig.robot.filters.ramp;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.utils.ConvertionRobotUnit;
+import org.influxdb.dto.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.TimeUnit;
 
 /**
- * The Class Ramp.
+ * The Class RampFilter.
  * 
  * @author mythril
  */
 @Slf4j
-public class Ramp implements IRampFilter {
+public class RampFilter implements IRampFilter {
 
-    /** The conv. */
     @Autowired
     private ConvertionRobotUnit conv;
 
-    /** The sample time. */
+    @Autowired
+    private IMonitoringWrapper monitoringWrapper;
+
+    private String name;
+
     private double sampleTimeS;
-
-    /** The ramp acc. */
     private double rampAcc;
-
-    /** The ramp dec. */
     private double rampDec;
-
-    /** The step vitesse accel. */
     private double stepVitesseAccel;
-
-    /** The step vitesse decel. */
     private double stepVitesseDecel;
 
-    /** The vitesse courante. */
-    private double vitesseCourante;
+    @Getter
+    private double distanceRestante;
 
-    /** The distance decel. */
+    @Getter
     private double distanceDecel;
 
+    @Getter
+    private double vitesseCourante;
+
+    @Getter
+    private double vitesseDemande;
+
+    @Getter
+    private double output;
+
+    @Getter
+    private boolean frein;
+
     /**
-     * Instantiates a new quad ramp.
+     * Instantiates a new ramp.
+     *
+     * @param name the filter name for monitoring
      */
-    public Ramp() {
-        this(10, 100, 100);
+    public RampFilter(final String name) {
+        this(name, 10, 100, 100);
     }
 
     /**
-     * Instantiates a new quad ramp.
-     * 
-     * @param sampleTimeMs
-     *            the sample time in ms
-     * @param rampAcc
-     *            the ramp acc
-     * @param rampDec
-     *            the ramp dec
+     * Instantiates a new ramp.
+     *
+     * @param name the filter name for monitoring
+     * @param sampleTimeMs the sample time in ms
+     * @param rampAcc the ramp acc
+     * @param rampDec the ramp dec
      */
-    public Ramp(final double sampleTimeMs, final double rampAcc,
-                final double rampDec) {
+    public RampFilter(final String name, final double sampleTimeMs, final double rampAcc,
+                      final double rampDec) {
+        this.name = name;
         this.sampleTimeS = sampleTimeMs / 1000;
         this.rampAcc = rampAcc;
         this.rampDec = rampDec;
@@ -71,8 +82,7 @@ public class Ramp implements IRampFilter {
     /**
      * Sets the sample time ms.
      * 
-     * @param value
-     *            the new sample time ms
+     * @param value the new sample time ms
      */
     @Override
     public void setSampleTime(final double value) {
@@ -130,40 +140,57 @@ public class Ramp implements IRampFilter {
      * Application du filtre. Cette méthode est appelé depuis la sub routine
      * d'asservissement
      * 
-     * @param vitesse
+     * @param vitesseDemande
      *            the vitesse
-     * @param consigne
+     * @param distanceRestante
      *            the consigne
      * @param frein
      *            the frein
      * @return the double
      */
     @Override
-    public double filter(final double vitesse, final double consigne,
-            final double mesure, final boolean frein) {
+    public double filter(final double vitesseDemande, final double distanceRestante, final boolean frein) {
+
+        this.vitesseDemande = vitesseDemande;
+        this.distanceRestante = distanceRestante;
+        this.frein = frein;
+
         // Calcul de la distance de décéleration en fonction des parametres
         distanceDecel = conv.mmToPulse(vitesseCourante * vitesseCourante / (2 * rampDec));
-        if (vitesseCourante > vitesse || (Math.abs(consigne) <= distanceDecel && frein)) {
+        if (vitesseCourante > vitesseDemande || (Math.abs(distanceRestante) <= distanceDecel && frein)) {
             vitesseCourante -= stepVitesseDecel;
-        } else if (vitesseCourante < vitesse) {
+        } else if (vitesseCourante < vitesseDemande) {
             vitesseCourante += stepVitesseAccel;
         }
 
         // Valeur max (evite les oscilations en régime établie)
-        vitesseCourante = Math.min(vitesseCourante, vitesse);
+        vitesseCourante = Math.min(vitesseCourante, vitesseDemande);
 
         // Controle pour interdire les valeurs négatives
         vitesseCourante = Math.max(vitesseCourante, 0);
 
         // Calcul de la valeur théorique en fonction de la vitesse.
-        final double pulseForVitesse = conv.mmToPulse(vitesseCourante) * sampleTimeS;
-
-        // Consigne théorique en fonction de la vitesse
-        double ecartTheorique = pulseForVitesse;
-        if (consigne < 0) {
+        double ecartTheorique = conv.mmToPulse(vitesseCourante) * sampleTimeS;
+        if (distanceRestante < 0) {
             ecartTheorique = -ecartTheorique;
         }
+        output = ecartTheorique;
+        sendMonitoring();
+        return output;
+    }
 
-        return ecartTheorique;
+    protected void sendMonitoring() {
+        // Construction du monitoring
+        Point serie = Point.measurement(name)
+                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                .addField("distanceDeceleration", getDistanceDecel())
+                .addField("distanceRestante", getDistanceRestante())
+                .addField("vitesseCourante", getVitesseCourante())
+                .addField("vitesseDemande", getVitesseDemande())
+                .addField("frein", isFrein())
+                .addField("output", getOutput())
+                .build();
+
+        monitoringWrapper.write(serie);
     }
 }
