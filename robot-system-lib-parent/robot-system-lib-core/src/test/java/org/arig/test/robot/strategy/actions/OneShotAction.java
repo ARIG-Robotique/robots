@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.strategy.IAction;
 
 /**
- * Created by gdepuille on 06/05/15.
+ * @author gdepuille on 06/05/15.
  */
 @Slf4j
 public class OneShotAction implements IAction {

@@ -11,7 +11,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 /**
  * The Class ConvertionRobotUnitTest.
  * 
- * @author mythril
+ * @author gdepuille
  */
 @Slf4j
 @RunWith(BlockJUnit4ClassRunner.class)

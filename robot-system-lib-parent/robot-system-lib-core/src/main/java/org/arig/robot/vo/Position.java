@@ -4,28 +4,32 @@ import lombok.Data;
 
 /**
  * The Class Position.
- *
+ * <p>
  * En vu de dessus :
- *
+ * <p>
  * y (2000) |
- *          |
- *          |
- *          |
- *          |
- *          |---------------------------------- x (3000)
- *         0,0
- *
+ * |
+ * |
+ * |
+ * |
+ * |---------------------------------- x (3000)
+ * 0,0
+ * <p>
  * angle = 0 dans le sens de X
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 @Data
 public class Position {
 
-    /** The pt. */
+    /**
+     * The pt.
+     */
     private Point pt;
 
-    /** The angle. */
+    /**
+     * The angle.
+     */
     private double angle;
 
     /**
@@ -38,13 +42,10 @@ public class Position {
 
     /**
      * Update position.
-     * 
-     * @param x
-     *            the x
-     * @param y
-     *            the y
-     * @param angle
-     *            the angle
+     *
+     * @param x     the x
+     * @param y     the y
+     * @param angle the angle
      */
     public void updatePosition(final double x, final double y, final double angle) {
         pt.setX(x);
@@ -55,8 +56,7 @@ public class Position {
     /**
      * Adds the delta x.
      *
-     * @param dX
-     *            the d x
+     * @param dX the d x
      */
     public void addDeltaX(final double dX) {
         pt.addDeltaX(dX);
@@ -65,8 +65,7 @@ public class Position {
     /**
      * Adds the delta y.
      *
-     * @param dY
-     *            the d y
+     * @param dY the d y
      */
     public void addDeltaY(final double dY) {
         pt.addDeltaY(dY);

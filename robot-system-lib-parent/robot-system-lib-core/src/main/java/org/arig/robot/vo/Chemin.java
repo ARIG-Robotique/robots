@@ -9,7 +9,7 @@ import java.util.LinkedHashSet;
 /**
  * Définition par une liste de points du chemin a parcourir pour aller d'un point A au point B.
  *
- * Created by mythril on 29/12/13.
+ * @author gdepuille on 29/12/13.
  */
 @Data
 public class Chemin {

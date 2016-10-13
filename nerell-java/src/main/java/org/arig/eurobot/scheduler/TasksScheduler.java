@@ -13,7 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by gdepuille on 23/12/14.
+ * @author gdepuille on 23/12/14.
  */
 @Slf4j
 @Component

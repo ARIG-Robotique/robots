@@ -1,7 +1,7 @@
 package org.arig.eurobot.model.servos;
 
 /**
- * Created by gdepuille on 01/05/15.
+ * @author gdepuille on 01/05/15.
  */
 
 

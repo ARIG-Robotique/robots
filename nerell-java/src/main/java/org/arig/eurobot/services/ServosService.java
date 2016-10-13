@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by gdepuille on 27/04/15.
+ * @author gdepuille on 27/04/15.
  */
 @Slf4j
 @Service

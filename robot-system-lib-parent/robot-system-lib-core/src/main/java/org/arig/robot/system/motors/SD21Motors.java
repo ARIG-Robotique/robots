@@ -5,21 +5,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The Class SD21Motors.
- * 
+ *
  * @author GregoryDepuille
  */
 public class SD21Motors extends AbstractPropulsionsMotors {
 
-    /** The motor1 register. */
+    /**
+     * The motor1 register.
+     */
     private final byte motor1Register;
 
-    /** The motor2 register. */
+    /**
+     * The motor2 register.
+     */
     private final byte motor2Register;
 
-    /** The offset value. */
+    /**
+     * The offset value.
+     */
     private final int offsetValue;
 
-    /** The sd21. */
+    /**
+     * The sd21.
+     */
     @Autowired
     private SD21Servos sd21;
 
@@ -41,11 +49,6 @@ public class SD21Motors extends AbstractPropulsionsMotors {
         offsetValue = 1500;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.motors.AbstractMotors#init()
-     */
     @Override
     public void init() {
         stopAll();
@@ -53,11 +56,6 @@ public class SD21Motors extends AbstractPropulsionsMotors {
         sd21.setSpeed(motor2Register, (byte) 0);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.motors.AbstractMotors#moteur1(int)
-     */
     @Override
     public void moteur1(final int val) {
         final int cmd = check(val + offsetValue);
@@ -69,11 +67,6 @@ public class SD21Motors extends AbstractPropulsionsMotors {
         sd21.setPosition(motor1Register, cmd);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.motors.AbstractMotors#moteur2(int)
-     */
     @Override
     public void moteur2(final int val) {
         final int cmd = check(val + offsetValue);
@@ -85,11 +78,6 @@ public class SD21Motors extends AbstractPropulsionsMotors {
         sd21.setPosition(motor2Register, cmd);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.motors.AbstractMotors#printVersion()
-     */
     @Override
     public void printVersion() {
         sd21.printVersion();

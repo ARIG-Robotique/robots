@@ -1,7 +1,7 @@
 package org.arig.eurobot.constants;
 
 /**
- * Created by gdepuille on 21/12/14.
+ * @author gdepuille on 21/12/14.
  */
 public interface IConstantesServos {
 

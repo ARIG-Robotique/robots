@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Created by gdepuille on 06/05/15.
+ * @author gdepuille on 06/05/15.
  */
 @Slf4j
 public class InvalidWhenNotRunAfter10SecondsAndCompletedAfter2ExecutionAction implements IAction {

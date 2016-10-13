@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
- * Created by gdepuille on 12/01/15.
+ * @author gdepuille on 12/01/15.
  */
 @Configuration
 @EnableScheduling

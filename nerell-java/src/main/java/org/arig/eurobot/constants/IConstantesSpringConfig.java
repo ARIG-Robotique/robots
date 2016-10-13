@@ -1,7 +1,7 @@
 package org.arig.eurobot.constants;
 
 /**
- * Created by gdepuille on 29/04/15.
+ * @author gdepuille on 29/04/15.
  */
 public interface IConstantesSpringConfig {
 

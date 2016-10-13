@@ -20,7 +20,7 @@ import java.net.URL;
 import java.time.LocalDateTime;
 
 /**
- * Created by mythril on 30/12/13.
+ * @author gdepuille on 30/12/13.
  */
 @Slf4j
 @RunWith(BlockJUnit4ClassRunner.class)

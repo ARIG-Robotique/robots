@@ -5,16 +5,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Created by mythril on 29/12/13.
+ * @author gdepuille on 29/12/13.
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConsigneAsservissementPolaire {
 
-    /** The consigne distance. */
+    /**
+     * The consigne distance.
+     */
     private long distance;
 
-    /** The consigne orientation. */
+    /**
+     * The consigne orientation.
+     */
     private long orientation;
 }

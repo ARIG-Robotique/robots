@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 /**
- * Created by gdepuille on 10/05/15.
+ * @author gdepuille on 10/05/15.
  */
 @Slf4j
 @Component

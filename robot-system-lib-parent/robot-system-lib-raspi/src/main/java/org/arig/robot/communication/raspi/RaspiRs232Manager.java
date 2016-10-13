@@ -5,7 +5,7 @@ import org.arig.robot.exception.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Created by mythril on 20/12/13.
+ * @author gdepuille on 20/12/13.
  */
 public class RaspiRs232Manager {
 

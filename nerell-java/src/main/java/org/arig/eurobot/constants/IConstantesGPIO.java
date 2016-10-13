@@ -5,7 +5,7 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 
 /**
- * Created by mythril on 21/12/13.
+ * @author gdepuille on 21/12/13.
  */
 public interface IConstantesGPIO {
 

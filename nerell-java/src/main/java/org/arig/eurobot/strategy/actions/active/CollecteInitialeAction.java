@@ -19,7 +19,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by gdepuille on 06/05/15.
+ * @author gdepuille on 06/05/15.
  */
 @Slf4j
 @Component

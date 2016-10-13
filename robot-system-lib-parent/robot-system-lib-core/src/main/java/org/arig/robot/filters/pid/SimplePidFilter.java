@@ -7,34 +7,46 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * The Class SimplePidFilter.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 @Slf4j
 public class SimplePidFilter extends AbstractPidFilter {
 
-    /** The kp. */
+    /**
+     * The kp.
+     */
     private double kp;
 
-    /** The ki. */
+    /**
+     * The ki.
+     */
     private double ki;
 
-    /** The kd. */
+    /**
+     * The kd.
+     */
     private double kd;
 
     @Getter
     @Setter(AccessLevel.PRIVATE)
     private double setPoint, input;
 
-    /** The error sum. */
+    /**
+     * The error sum.
+     */
     @Getter
     private double errorSum = 0;
 
-    /** The output */
+    /**
+     * The output
+     */
     @Getter
     private double output = 0;
 
-    /** The last error. */
+    /**
+     * The last error.
+     */
     private double lastError = 0;
 
 

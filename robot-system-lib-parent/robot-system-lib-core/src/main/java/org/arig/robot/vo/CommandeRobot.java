@@ -13,28 +13,40 @@ import java.util.function.Function;
 
 /**
  * The Class CommandeRobot.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 @Data
 public class CommandeRobot {
 
-    /** Position a atteindre pour cette commande */
+    /**
+     * Position a atteindre pour cette commande
+     */
     private Position position;
 
-    /** Commande moteur a appliquer */
+    /**
+     * Commande moteur a appliquer
+     */
     private CommandeMoteurPropulsion2Roue moteur;
 
-    /** Vitesse a appliquer */
+    /**
+     * Vitesse a appliquer
+     */
     private VitesseAsservissementPolaire vitesse;
 
-    /** Consigne de déplacement pour l'asservissement */
+    /**
+     * Consigne de déplacement pour l'asservissement
+     */
     private ConsigneAsservissementPolaire consigne;
 
-    /** The frein. */
+    /**
+     * The frein.
+     */
     private boolean frein;
 
-    /** The type. */
+    /**
+     * The type.
+     */
     @Getter(AccessLevel.NONE)
     private final List<TypeConsigne> types = new ArrayList<>();
 
@@ -52,9 +64,8 @@ public class CommandeRobot {
 
     /**
      * Sets the types.
-     * 
-     * @param values
-     *            the new types
+     *
+     * @param values the new types
      */
     public void setTypes(final TypeConsigne... values) {
         types.clear();
@@ -65,9 +76,9 @@ public class CommandeRobot {
 
     /**
      * Checks if is type.
-     * 
-     * @param t
-     *            the type
+     *
+     * @param t the type
+     *
      * @return true, if is type
      */
     public boolean isType(final TypeConsigne t) {
@@ -76,9 +87,9 @@ public class CommandeRobot {
 
     /**
      * Checks if is all types.
-     * 
-     * @param types
-     *            the types
+     *
+     * @param types the types
+     *
      * @return true, if is all types
      */
     public boolean isAllTypes(final TypeConsigne... types) {
@@ -91,8 +102,7 @@ public class CommandeRobot {
     }
 
     public String typeAsserv() {
-        Function<TypeConsigne, String> f = (input) -> input.name();
-
+        Function<TypeConsigne, String> f = TypeConsigne::name;
         Optional<String> res = types.stream().map(f).reduce((a1, a2) -> a1 + "," + a2);
         return res.isPresent() ? res.get() : StringUtils.EMPTY;
     }

@@ -3,7 +3,7 @@ package org.arig.eurobot.constants;
 import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 
 /**
- * Created by gdepuille on 23/12/14.
+ * @author gdepuille on 23/12/14.
  */
 public interface IConstantesRobot {
 

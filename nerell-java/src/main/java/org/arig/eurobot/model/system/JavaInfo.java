@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.pi4j.system.SystemInfo;
 
 /**
- * Created by gdepuille on 29/04/15.
+ * @author gdepuille on 29/04/15.
  */
 public class JavaInfo {
 

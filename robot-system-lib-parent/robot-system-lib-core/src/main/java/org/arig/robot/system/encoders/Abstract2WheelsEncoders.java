@@ -2,20 +2,32 @@ package org.arig.robot.system.encoders;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.influxdb.dto.Point;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Class Abstract2WheelsEncoders.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 @Slf4j
 public abstract class Abstract2WheelsEncoders {
 
-    /** The distance. */
+    @Autowired
+    private IMonitoringWrapper monitoringWrapper;
+
+    /**
+     * The distance.
+     */
     @Getter
     private double distance;
 
-    /** The orientation. */
+    /**
+     * The orientation.
+     */
     @Getter
     private double orientation;
 
@@ -25,19 +37,28 @@ public abstract class Abstract2WheelsEncoders {
     @Getter
     private double droit;
 
-    /** The coef gauche. */
+    /**
+     * The coef gauche.
+     */
     private double coefGauche;
 
-    /** The coef droit. */
+    /**
+     * The coef droit.
+     */
     private double coefDroit;
 
-    /** The alternate. */
+    /**
+     * The alternate.
+     */
     private boolean alternate;
+
+    private final String name;
 
     /**
      * Instantiates a new abstract encoders.
      */
-    protected Abstract2WheelsEncoders() {
+    protected Abstract2WheelsEncoders(final String name) {
+        this.name = name;
         distance = orientation = 0;
         coefDroit = coefGauche = 1.0;
         alternate = false;
@@ -58,23 +79,14 @@ public abstract class Abstract2WheelsEncoders {
         alternate = !alternate;
 
         calculPolarValues();
-
-//        if (csvCollector != null) {
-//            CsvData c = csvCollector.getCurrent();
-//            c.setCodeurGauche(gauche);
-//            c.setCodeurDroit(droit);
-//            c.setCodeurDistance(distance);
-//            c.setCodeurOrient(orientation);
-//        }
+        sendMonitoring();
     }
 
     /**
      * Sets the coefs.
-     * 
-     * @param coefGauche
-     *            the coef gauche
-     * @param coefDroit
-     *            the coef droit
+     *
+     * @param coefGauche the coef gauche
+     * @param coefDroit  the coef droit
      */
     public void setCoefs(final double coefGauche, final double coefDroit) {
         this.coefGauche = coefGauche;
@@ -95,7 +107,7 @@ public abstract class Abstract2WheelsEncoders {
 
     /**
      * Lecture droit.
-     * 
+     *
      * @return the double
      */
     protected abstract double lectureDroit();
@@ -106,5 +118,18 @@ public abstract class Abstract2WheelsEncoders {
     private void calculPolarValues() {
         distance = (droit + gauche) / 2;
         orientation = droit - gauche;
+    }
+
+    private void sendMonitoring() {
+        // Construction du monitoring
+        Point serie = Point.measurement(name)
+                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                .addField("gauche", getGauche())
+                .addField("droit", getDroit())
+                .addField("distance", getDistance())
+                .addField("orientation", getOrientation())
+                .build();
+
+        monitoringWrapper.write(serie);
     }
 }

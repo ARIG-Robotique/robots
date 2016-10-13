@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by mythril on 29/12/13.
+ * @author gdepuille on 29/12/13.
  */
 @Slf4j
 public class MultiPathFinderImpl extends AbstractPathFinder {
@@ -40,17 +40,25 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
     @Getter(AccessLevel.PROTECTED)
     private PathFinderAlgorithm algorithm;
 
-    /** The PathFinder */
+    /**
+     * The PathFinder
+     */
     private IGraphSearch pf = null;
 
-    /** Facteur pour le calcul du cout des noeuds avec le A* */
+    /**
+     * Facteur pour le calcul du cout des noeuds avec le A*
+     */
     private double aStarCostFactor = 1.0;
 
-    /** The mainGraph */
+    /**
+     * The mainGraph
+     */
     private Graph mainGraph;
     private BufferedImage mainImage;
 
-    /** The obstacleGraph */
+    /**
+     * The obstacleGraph
+     */
     private Graph obstacleGraph;
     private BufferedImage obstacleImage;
 
@@ -91,6 +99,8 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         sw.start();
 
         GraphNode startNode, endNode;
+        // TODO : Supprimer ce cas d'erreur par une detection du noeud valide le plus proche
+        // Choisir dans le quadrant vers la destination pour eviter de reculer.
         if ((startNode = getCurrentGraph().getNodeAt(from.getX(), from.getY(), 0, maxDistance)) == null) {
             log.error("Impossible de trouver le noeud de départ");
             throw new NoPathFoundException(NoPathFoundException.ErrorType.START_NODE_DOES_NOT_EXIST);
@@ -120,7 +130,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         // On exclus le dernier point qui est le "to"
         Chemin c = new Chemin();
         Double anglePrecedent = null;
-        for (int i = 1 ; i < points.size() - 1 ; i++) {
+        for (int i = 1; i < points.size() - 1; i++) {
             Point ptPrec = points.get(i - 1);
             Point pt = points.get(i);
             // Calcul de l'angle avec le point précédent
@@ -232,35 +242,35 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         Graph graph = new Graph(getNbTileX() * getNbTileY());
 
         py = sy;
-        for(int y = 0; y < getNbTileY() ; y++){
+        for (int y = 0; y < getNbTileY(); y++) {
             nodeID = deltaX * y + deltaX;
             px = sx;
-            for(int x = 0; x < getNbTileX(); x++){
+            for (int x = 0; x < getNbTileX(); x++) {
                 // Calculate the cost
                 color = img.getRGB(px, py) & 0xFF;
                 cost = 1;
 
                 // Si la couleur n'est pas noir, on ajoute les noeuds et les liens.
-                if(color != 0){
+                if (color != 0) {
                     aNode = new GraphNode(nodeID, px, py);
                     graph.addNode(aNode);
-                    if(x > 0){
+                    if (x > 0) {
                         graph.addEdge(nodeID, nodeID - 1, hCost * cost);
-                        if(isAllowDiagonal()){
+                        if (isAllowDiagonal()) {
                             graph.addEdge(nodeID, nodeID - deltaX - 1, dCost * cost);
                             graph.addEdge(nodeID, nodeID + deltaX - 1, dCost * cost);
                         }
                     }
-                    if(x < getNbTileX() -1){
+                    if (x < getNbTileX() - 1) {
                         graph.addEdge(nodeID, nodeID + 1, hCost * cost);
-                        if(isAllowDiagonal()){
+                        if (isAllowDiagonal()) {
                             graph.addEdge(nodeID, nodeID - deltaX + 1, dCost * cost);
                             graph.addEdge(nodeID, nodeID + deltaX + 1, dCost * cost);
                         }
                     }
-                    if(y > 0)
+                    if (y > 0)
                         graph.addEdge(nodeID, nodeID - deltaX, vCost * cost);
-                    if(y < getNbTileY() - 1)
+                    if (y < getNbTileY() - 1)
                         graph.addEdge(nodeID, nodeID + deltaX, vCost * cost);
                 }
                 px += dx;

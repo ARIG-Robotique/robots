@@ -3,7 +3,7 @@ package org.arig.robot.filters.values;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
 /**
- * Created by gdepuille on 08/05/15.
+ * @author gdepuille on 08/05/15.
  */
 public class MovingIntegerValueAverage implements IAverage<Integer> {
 

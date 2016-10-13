@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Created by mythril on 21/12/13.
+ * @author gdepuille on 21/12/13.
  */
 @Slf4j
 @Profile(IConstantesSpringConfig.profileMonitoring)

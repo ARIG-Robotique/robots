@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Created by gdepuille on 19/03/15.
+ * @author gdepuille on 19/03/15.
  */
 @Slf4j
 @Configuration

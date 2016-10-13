@@ -5,28 +5,40 @@ import lombok.Getter;
 
 /**
  * The Enum TypeConsigne.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 @AllArgsConstructor
 public enum TypeConsigne {
 
-    /** The xy. */
+    /**
+     * The xy.
+     */
     XY(1),
 
-    /** The dist. */
+    /**
+     * The dist.
+     */
     DIST(2),
 
-    /** The angle. */
+    /**
+     * The angle.
+     */
     ANGLE(4),
 
-    /** The line. */
+    /**
+     * The line.
+     */
     LINE(8),
 
-    /** The circle. */
+    /**
+     * The circle.
+     */
     CIRCLE(16);
 
-    /** The value. */
+    /**
+     * The value.
+     */
     @Getter
     private final int value;
 }

@@ -15,7 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
 /**
- * Created by gdepuille on 12/01/15.
+ * @author gdepuille on 12/01/15.
  */
 public class MainRobotWebApplicationInitializer implements WebApplicationInitializer {
 

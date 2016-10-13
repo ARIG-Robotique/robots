@@ -6,7 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Created by gdepuille on 06/05/15.
+ * @author gdepuille on 06/05/15.
  */
 @Configuration
 @ComponentScan({"org.arig.eurobot.strategy.actions"})

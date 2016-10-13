@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
 /**
- * Created by mythril on 04/01/14.
+ * @author gdepuille on 04/01/14.
  */
 @Slf4j
 @RunWith(BlockJUnit4ClassRunner.class)

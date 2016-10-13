@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by mythril on 18/12/13.
+ * @author gdepuille on 18/12/13.
  */
 @Slf4j
 public class RaspiI2CManager extends AbstractI2CManager<I2CDevice> {

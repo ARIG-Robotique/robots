@@ -4,40 +4,60 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * The Class AbstractMotors.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 @Slf4j
 public abstract class AbstractPropulsionsMotors {
 
-    /** The Constant UNDEF_MOTOR. */
+    /**
+     * The Constant UNDEF_MOTOR.
+     */
     public static final int UNDEF_MOTOR = 0;
 
-    /** The Constant MOTOR_1. */
+    /**
+     * The Constant MOTOR_1.
+     */
     public static final int MOTOR_1 = 1;
 
-    /** The Constant MOTOR_2. */
+    /**
+     * The Constant MOTOR_2.
+     */
     public static final int MOTOR_2 = 2;
 
-    /** The num moteur gauche. */
+    /**
+     * The num moteur gauche.
+     */
     private int numMoteurGauche;
 
-    /** The num moteur droit. */
+    /**
+     * The num moteur droit.
+     */
     private int numMoteurDroit;
 
-    /** The alternate. */
+    /**
+     * The alternate.
+     */
     private boolean alternate;
 
-    /** The min val. */
+    /**
+     * The min val.
+     */
     protected int minVal;
 
-    /** The max val. */
+    /**
+     * The max val.
+     */
     protected int maxVal;
 
-    /** The prev m1. */
+    /**
+     * The prev m1.
+     */
     protected int prevM1;
 
-    /** The prev m2. */
+    /**
+     * The prev m2.
+     */
     protected int prevM2;
 
     /**
@@ -50,11 +70,9 @@ public abstract class AbstractPropulsionsMotors {
 
     /**
      * Méthode pour assigner le numéro du moteur pour la commande gauche / droite
-     * 
-     * @param numMoteurGauche
-     *            the num moteur gauche
-     * @param numMoteurDroit
-     *            the num moteur droit
+     *
+     * @param numMoteurGauche the num moteur gauche
+     * @param numMoteurDroit  the num moteur droit
      */
     public final void assignMotors(final int numMoteurGauche, final int numMoteurDroit) {
         this.numMoteurGauche = numMoteurGauche;
@@ -63,11 +81,9 @@ public abstract class AbstractPropulsionsMotors {
 
     /**
      * Méthode de génération groupé de la commande droite / gauche
-     * 
-     * @param gauche
-     *            the gauche
-     * @param droit
-     *            the droit
+     *
+     * @param gauche the gauche
+     * @param droit  the droit
      */
     public final void generateMouvement(final int gauche, final int droit) {
         alternate = !alternate;
@@ -82,11 +98,10 @@ public abstract class AbstractPropulsionsMotors {
 
     /**
      * Méthode de commande du moteur gauche (doit être assigné).
-     * 
-     * @param cmd
-     *            the cmd
-     * @throws IllegalStateException
-     *             the illegal state exception
+     *
+     * @param cmd the cmd
+     *
+     * @throws IllegalStateException the illegal state exception
      */
     public final void moteurGauche(final int cmd) throws IllegalStateException {
         if (numMoteurGauche == AbstractPropulsionsMotors.MOTOR_1) {
@@ -100,11 +115,10 @@ public abstract class AbstractPropulsionsMotors {
 
     /**
      * Méthode de commande du moteur droit (doit être assigné).
-     * 
-     * @param cmd
-     *            the cmd
-     * @throws IllegalStateException
-     *             the illegal state exception
+     *
+     * @param cmd the cmd
+     *
+     * @throws IllegalStateException the illegal state exception
      */
     public final void moteurDroit(final int cmd) throws IllegalStateException {
         if (numMoteurDroit == AbstractPropulsionsMotors.MOTOR_1) {
@@ -126,9 +140,8 @@ public abstract class AbstractPropulsionsMotors {
 
     /**
      * Méthode d'arrêt du moteur gauche (doit être assigné).
-     * 
-     * @throws IllegalStateException
-     *             the illegal state exception
+     *
+     * @throws IllegalStateException the illegal state exception
      */
     public final void stopGauche() throws IllegalStateException {
         if (numMoteurGauche == AbstractPropulsionsMotors.MOTOR_1) {
@@ -142,9 +155,8 @@ public abstract class AbstractPropulsionsMotors {
 
     /**
      * Méthode d'arret du moteur droit (doit être assigné).
-     * 
-     * @throws IllegalStateException
-     *             the illegal state exception
+     *
+     * @throws IllegalStateException the illegal state exception
      */
     public final void stopDroit() throws IllegalStateException {
         if (numMoteurDroit == AbstractPropulsionsMotors.MOTOR_1) {
@@ -177,14 +189,14 @@ public abstract class AbstractPropulsionsMotors {
 
     /**
      * Moteur1.
-     * 
+     *
      * @param val the cmd
      */
     public abstract void moteur1(final int val);
 
     /**
      * Moteur2.
-     * 
+     *
      * @param val the cmd
      */
     public abstract void moteur2(final int val);
@@ -196,9 +208,9 @@ public abstract class AbstractPropulsionsMotors {
 
     /**
      * Méthode de contrôle du bornage des commandes moteurs.
-     * 
-     * @param val
-     *            the val
+     *
+     * @param val the val
+     *
      * @return the int
      */
     protected int check(final int val) {

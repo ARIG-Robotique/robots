@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
 /**
- * Created by gdepuille on 08/05/15.
+ * @author gdepuille on 08/05/15.
  */
 @RunWith(BlockJUnit4ClassRunner.class)
 public class MovingIntegerValueAverageTest {

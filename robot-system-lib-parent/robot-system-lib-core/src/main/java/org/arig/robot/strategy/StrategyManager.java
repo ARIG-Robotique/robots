@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * Ordonancement des actions a réaliser.
  *
- * Created by gdepuille on 06/05/15.
+ * @author gdepuille on 06/05/15.
  */
 @Slf4j
 public class StrategyManager {

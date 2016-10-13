@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by gdepuille on 07/05/15.
+ * @author gdepuille on 07/05/15.
  */
 @Slf4j
 public class CompleteAvoidingService extends AbstractAvoidingService {

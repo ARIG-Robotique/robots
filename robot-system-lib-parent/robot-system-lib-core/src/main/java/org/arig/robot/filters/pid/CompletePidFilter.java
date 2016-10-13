@@ -4,16 +4,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.influxdb.dto.Point;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * source http://brettbeauregard.com/blog/2011/04/improving-the-beginners-pid-introduction/
  *
- * Created by gdepuille on 10/03/15.
+ * @author gdepuille on 10/03/15.
  */
 @Slf4j
 public class CompletePidFilter extends AbstractPidFilter {
@@ -44,7 +39,7 @@ public class CompletePidFilter extends AbstractPidFilter {
     public void setMode(PidMode mode) {
         log.info("Set mode {}", mode.name());
         boolean newAuto = (mode == PidMode.AUTOMATIC);
-        if(newAuto == !inAuto) {
+        if (newAuto == !inAuto) {
             /* we just went from manual to auto*/
             initialise();
         }
@@ -64,7 +59,7 @@ public class CompletePidFilter extends AbstractPidFilter {
         this.ki = ki * SampleTimeInSec;
         this.kd = kd / SampleTimeInSec;
 
-        if(controllerDirection == PidType.REVERSE) {
+        if (controllerDirection == PidType.REVERSE) {
             this.kp = (0 - this.kp);
             this.ki = (0 - this.ki);
             this.kd = (0 - this.kd);
@@ -76,8 +71,8 @@ public class CompletePidFilter extends AbstractPidFilter {
     public void initialise() {
         lastInput = input;
         iTerm = output;
-        if(iTerm > outMax) iTerm = outMax;
-        else if(iTerm < outMin) iTerm = outMin;
+        if (iTerm > outMax) iTerm = outMax;
+        else if (iTerm < outMin) iTerm = outMin;
     }
 
     @Override
@@ -101,14 +96,14 @@ public class CompletePidFilter extends AbstractPidFilter {
         /* Compute all the working error variables */
         error = setPoint - input;
         iTerm += (ki * error);
-        if(iTerm > outMax) iTerm = outMax;
-        else if(iTerm < outMin) iTerm = outMin;
+        if (iTerm > outMax) iTerm = outMax;
+        else if (iTerm < outMin) iTerm = outMin;
         double dInput = (input - lastInput);
 
         /* Compute PID output */
         output = kp * error + iTerm - kd * dInput;
-        if(output > outMax) output = outMax;
-        else if(output < outMin) output = outMin;
+        if (output > outMax) output = outMax;
+        else if (output < outMin) output = outMin;
 
         /* Remember some variables for next time */
         lastInput = input;
@@ -120,7 +115,7 @@ public class CompletePidFilter extends AbstractPidFilter {
     public void setSampleTime(int newSampleTime) {
         if (newSampleTime > 0) {
             log.info("Configuration du pas temporel {} ms", newSampleTime);
-            double ratio  = (double)newSampleTime / (double) sampleTime;
+            double ratio = (double) newSampleTime / (double) sampleTime;
             ki *= ratio;
             kd /= ratio;
             sampleTime = newSampleTime;
@@ -128,7 +123,7 @@ public class CompletePidFilter extends AbstractPidFilter {
     }
 
     public void setOutputLimits(double min, double max) {
-        if(min > max) {
+        if (min > max) {
             return;
         }
 
@@ -136,15 +131,15 @@ public class CompletePidFilter extends AbstractPidFilter {
         outMin = min;
         outMax = max;
 
-        if(output > outMax) {
+        if (output > outMax) {
             output = outMax;
-        } else if(output < outMin) {
+        } else if (output < outMin) {
             output = outMin;
         }
 
-        if(iTerm > outMax) {
+        if (iTerm > outMax) {
             iTerm = outMax;
-        } else if(iTerm < outMin) {
+        } else if (iTerm < outMin) {
             iTerm = outMin;
         }
     }

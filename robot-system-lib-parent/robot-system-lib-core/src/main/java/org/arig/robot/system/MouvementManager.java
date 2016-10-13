@@ -25,29 +25,39 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * The Class MouvementManager.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 @Slf4j
 public class MouvementManager implements InitializingBean {
 
-    /** The odom. */
+    /**
+     * The odom.
+     */
     @Autowired
     private IOdometrie odom;
 
-    /** The asservPolaire. */
+    /**
+     * The asservPolaire.
+     */
     @Autowired
     private IAsservissementPolaire asservPolaire;
 
-    /** The encoders. */
+    /**
+     * The encoders.
+     */
     @Autowired
     private Abstract2WheelsEncoders encoders;
 
-    /** The motors. */
+    /**
+     * The motors.
+     */
     @Autowired
     private AbstractPropulsionsMotors motors;
 
-    /** The conv. */
+    /**
+     * The conv.
+     */
     @Autowired
     private ConvertionRobotUnit conv;
 
@@ -57,24 +67,34 @@ public class MouvementManager implements InitializingBean {
     @Autowired
     private AbstractRobotStatus rs;
 
-    /** The position. */
+    /**
+     * The position.
+     */
     @Autowired
     @Qualifier("currentPosition")
     private Position position;
 
-    /** Consigne du robot sur la table */
+    /**
+     * Consigne du robot sur la table
+     */
     @Autowired
     private CommandeRobot cmdRobot;
 
-    /** The trajet atteint. */
+    /**
+     * The trajet atteint.
+     */
     @Getter
     private boolean trajetAtteint, trajetEnApproche = false;
 
-    /** Boolean si un obstacle est rencontré **/
+    /**
+     * Boolean si un obstacle est rencontré
+     **/
     @Setter
     private boolean obstacleFound = false;
 
-    /** Boolean pour relancer l'asserv après un obstacle */
+    /**
+     * Boolean pour relancer l'asserv après un obstacle
+     */
     @Setter
     private boolean restartAfterObstacle = false;
 
@@ -90,11 +110,15 @@ public class MouvementManager implements InitializingBean {
     private final double arretOrientDeg;
     private final double approcheOrientDeg;
 
-    /** The start angle. */
+    /**
+     * The start angle.
+     */
     private final double coefAngle;
     private long startAngle;
 
-    /** Valeur de distance minimale entre deux points pour faire 1 seul mouvement */
+    /**
+     * Valeur de distance minimale entre deux points pour faire 1 seul mouvement
+     */
     @Setter
     private double distanceMiniEntrePointMm = 400;
 
@@ -106,13 +130,10 @@ public class MouvementManager implements InitializingBean {
 
     /**
      * Instantiates a new robot manager.
-     * 
-     * @param arretDistanceMm
-     *            the arret distance mm
-     * @param arretOrientDeg
-     *            the arret orient deg
-     * @param coefAngle
-     *            the coef angle
+     *
+     * @param arretDistanceMm the arret distance mm
+     * @param arretOrientDeg  the arret orient deg
+     * @param coefAngle       the coef angle
      */
     public MouvementManager(final double arretDistanceMm, final double approcheDistanceMm,
                             final double arretOrientDeg, final double approcheOrientDeg,
@@ -135,7 +156,7 @@ public class MouvementManager implements InitializingBean {
         fenetreArretOrientation = conv.degToPulse(arretOrientDeg);
         fenetreApprocheOrientation = conv.degToPulse(approcheOrientDeg);
 
-        // Angle de départ pour les déplacement.
+        // Angle de départ pour les déplacements.
         // Si l'angle est supérieur en absolu, on annule la distance
         // afin de naviguer en priorité en marche avant.
         startAngle = (long) (coefAngle * conv.getPiPulse());
@@ -232,7 +253,7 @@ public class MouvementManager implements InitializingBean {
             cmdRobot.getConsigne().setOrientation(consOrient);
 
         } else if (!trajetAtteint && cmdRobot.isType(TypeConsigne.LINE)) {
-            // TODO : Consigne de suivi de ligne (gérer les clothoïde pour la liaisons)
+            // TODO : Consigne de suivi de ligne (gérer les clothoïde pour la liaison)
 
         } else if (!trajetAtteint && cmdRobot.isType(TypeConsigne.CIRCLE)) {
             // TODO : Consigne de rotation autour d'un point.
@@ -259,9 +280,10 @@ public class MouvementManager implements InitializingBean {
     /**
      * Méthode de calcul de la consigne d'angle en fonction de dX et dY.
      *
-     * @param dX
-     * @param dY
-     * @return
+     * @param dX delta X
+     * @param dY delta Y
+     *
+     * @return valeur en pulse de l'angle ajusté à PI
      */
     private long calculAngleConsigne(long dX, long dY) {
         double alpha = conv.radToPulse(Math.atan2(conv.pulseToRad(dY), conv.pulseToRad(dX)));
@@ -273,8 +295,9 @@ public class MouvementManager implements InitializingBean {
     /**
      * Méthode permettant d'ajuster l'angle en fonction du bornage +Pi .. -Pi
      *
-     * @param angle
-     * @return
+     * @param angle angle a ajusté
+     *
+     * @return Angle ajusté dans les borne -Pi .. +Pi
      */
     private double ajusteAngle(double angle) {
         if (angle > conv.getPiPulse()) {
@@ -290,9 +313,10 @@ public class MouvementManager implements InitializingBean {
     /**
      * Méthode de calcul de la consigne de distance en fonction de dX et dY.
      *
-     * @param dX
-     * @param dY
-     * @return
+     * @param dX delta X
+     * @param dY delta Y
+     *
+     * @return valeur de la consigne de distance
      */
     private long calculDistanceConsigne(long dX, long dY) {
         return (long) Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
@@ -350,13 +374,15 @@ public class MouvementManager implements InitializingBean {
     /**
      * Génération d'un déplacement avec le Path Finding
      *
-     * @param x
-     * @param y
+     * @param x position sur l'axe X
+     * @param y position sur l'axe Y
+     *
      * @throws NoPathFoundException
      */
     public void pathTo(final double x, final double y) throws NoPathFoundException, AvoidingException {
         boolean trajetOk = false;
         long backupVitesse = cmdRobot.getVitesse().getDistance();
+
         mainBoucle: do {
             Point ptFrom = new Point(conv.pulseToMm(position.getPt().getX()) / 10, conv.pulseToMm(position.getPt().getY()) / 10);
             Point ptTo = new Point(x / 10, y / 10);
@@ -381,16 +407,18 @@ public class MouvementManager implements InitializingBean {
             } catch (ObstacleFoundException e) {
                 log.info("Obstacle trouvé, on tente un autre chemin");
                 cmdRobot.getVitesse().setDistance(backupVitesse);
-                avoidanceBoucle : for (Point echappementPoint : rs.echappementPointsCm()) {
+                for (Point echappementPoint : rs.echappementPointsCm()) {
                     try {
                         ptFrom.setX(conv.pulseToMm(position.getPt().getX()) / 10);
                         ptFrom.setY(conv.pulseToMm(position.getPt().getY()) / 10);
                         Chemin c = pathFinder.findPath(ptFrom, echappementPoint);
                         Point p = c.next();
                         Point pRobot = new Point(p.getX() * 10, p.getY() * 10);
-                        rs.enableAvoidance();
                         alignFrontTo(pRobot.getX(), pRobot.getY());
 
+                        // Une fois aligné et normalement plus en face de l'obstacle, on réactive
+                        // l'évittement pour réaliser le chemin d'évittement
+                        rs.enableAvoidance();
                         while (c.hasNext()) {
                             p = c.next();
                             pRobot = new Point(p.getX() * 10, p.getY() * 10);
@@ -421,7 +449,7 @@ public class MouvementManager implements InitializingBean {
                 rs.enableAvoidance();
                 cmdRobot.getVitesse().setDistance(backupVitesse);
             }
-        } while(!trajetOk);
+        } while (!trajetOk);
     }
 
     private void processPath(double dist, Point pRobot, long backupVitesse) throws ObstacleFoundException {
@@ -445,10 +473,10 @@ public class MouvementManager implements InitializingBean {
     }
 
     /**
-     * Méthode permettant de donner une consigne de position sur un point
+     * Méthode permettant de donner une consigne de position sur un point avec arret sur celui-ci.
      *
-     * @param x
-     * @param y
+     * @param x position sur l'axe X
+     * @param y position sur l'axe Y
      */
     public void gotoPointMM(final double x, final double y) throws ObstacleFoundException {
         gotoPointMM(x, y, true);
@@ -456,10 +484,10 @@ public class MouvementManager implements InitializingBean {
 
     /**
      * Méthode permettant de donner une consigne de position sur un point
-     * 
-     * @param x
-     * @param y
-     * @param avecArret
+     *
+     * @param x position sur l'axe X
+     * @param y position sur l'axe Y
+     * @param avecArret demande d'arret sur le point
      */
     public void gotoPointMM(final double x, final double y, final boolean avecArret) throws ObstacleFoundException {
         log.info("Va au point X = {}mm ; Y = {}mm {}", x, y, avecArret ? "et arrete toi" : "sans arret");
@@ -475,9 +503,8 @@ public class MouvementManager implements InitializingBean {
 
     /**
      * Méthode permettant d'aligner le robot sur un angle en fonction du repere
-     * 
-     * @param angle
-     *            the angle
+     *
+     * @param angle the angle
      */
     public void gotoOrientationDeg(final double angle) throws ObstacleFoundException {
         log.info("Aligne toi sur l'angle {}° du repère", angle);
@@ -487,11 +514,9 @@ public class MouvementManager implements InitializingBean {
 
     /**
      * Méthode permettant d'aligner le robot face a un point
-     * 
-     * @param x
-     *            the x
-     * @param y
-     *            the y
+     *
+     * @param x the x
+     * @param y the y
      */
     public void alignFrontTo(final double x, final double y) throws ObstacleFoundException {
         log.info("Aligne ton avant sur le point X = {}mm ; Y = {}mm", x, y);
@@ -501,9 +526,10 @@ public class MouvementManager implements InitializingBean {
     /**
      * Alignement sur un point avec un décalage en degré (dans le sens trigo)
      *
-     * @param x
-     * @param y
-     * @param decalageDeg
+     * @param x position sur l'axe X
+     * @param y position sur l'axe Y
+     * @param decalageDeg valeur du déclage angulaire par rapport au point X,Y
+     *
      * @throws ObstacleFoundException
      */
     public void alignFrontToAvecDecalage(final double x, final double y, final double decalageDeg) throws ObstacleFoundException {
@@ -525,11 +551,9 @@ public class MouvementManager implements InitializingBean {
 
     /**
      * Méthode permettant d'aligner le robot dos a un point
-     * 
-     * @param x
-     *            the x
-     * @param y
-     *            the y
+     *
+     * @param x the x
+     * @param y the y
      */
     public void alignBackTo(final double x, final double y) throws ObstacleFoundException {
         log.info("Aligne ton cul sur le point X = {}mm ; Y = {}mm", x, y);
@@ -555,9 +579,8 @@ public class MouvementManager implements InitializingBean {
 
     /**
      * Méthode permettant d'effectuer un déplacement en avant de distance fixe.
-     * 
-     * @param distance
-     *            the distance
+     *
+     * @param distance the distance
      */
     public void avanceMM(final double distance) throws ObstacleFoundException {
         cmdAvanceMMByType(distance, TypeConsigne.DIST, TypeConsigne.ANGLE);
@@ -567,7 +590,7 @@ public class MouvementManager implements InitializingBean {
         cmdAvanceMMByType(distance, TypeConsigne.DIST);
     }
 
-    private void cmdAvanceMMByType(final double distance, TypeConsigne ... types) throws ObstacleFoundException {
+    private void cmdAvanceMMByType(final double distance, TypeConsigne... types) throws ObstacleFoundException {
         if (distance > 0) {
             log.info("{} de {}mm en mode : {}", distance > 0 ? "Avance" : "Recul", distance, types.toString());
         }
@@ -583,9 +606,8 @@ public class MouvementManager implements InitializingBean {
 
     /**
      * Méthode permettant d'effectuer un déplacement en arriere de distance fixe
-     * 
-     * @param distance
-     *            the distance
+     *
+     * @param distance the distance
      */
     public void reculeMM(final double distance) throws ObstacleFoundException {
         log.info("Recul de {}mm", Math.abs(distance));
@@ -599,9 +621,8 @@ public class MouvementManager implements InitializingBean {
 
     /**
      * Méthode permettant d'effectuer une rotation d'angle fixe
-     * 
-     * @param angle
-     *            the angle
+     *
+     * @param angle the angle
      */
     public void tourneDeg(final double angle) throws ObstacleFoundException {
         log.info("Tourne de {}°", angle);
@@ -625,15 +646,11 @@ public class MouvementManager implements InitializingBean {
 
     /**
      * Follow line.
-     * 
-     * @param x1
-     *            the x1
-     * @param y1
-     *            the y1
-     * @param x2
-     *            the x2
-     * @param y2
-     *            the y2
+     *
+     * @param x1 the x1
+     * @param y1 the y1
+     * @param x2 the x2
+     * @param y2 the y2
      */
     public void followLine(final double x1, final double y1, final double x2, final double y2) throws ObstacleFoundException {
         // TODO : A implémenter la commande
@@ -642,13 +659,10 @@ public class MouvementManager implements InitializingBean {
 
     /**
      * Turn around.
-     * 
-     * @param x
-     *            the x
-     * @param y
-     *            the y
-     * @param r
-     *            the r
+     *
+     * @param x the x
+     * @param y the y
+     * @param r the r
      */
     public void turnAround(final double x, final double y, final double r) throws ObstacleFoundException {
         // TODO : A implémenter la commande
@@ -675,8 +689,8 @@ public class MouvementManager implements InitializingBean {
     /**
      * Définition des vitesses de déplacement sur les deux axes du robot.
      *
-     * @param vDistance
-     * @param vOrientation
+     * @param vDistance vitesse pour la boucle distance
+     * @param vOrientation vitesse pour la boucle orientation
      */
     public void setVitesse(long vDistance, long vOrientation) {
         cmdRobot.getVitesse().setDistance(vDistance);
@@ -689,7 +703,7 @@ public class MouvementManager implements InitializingBean {
     public void waitMouvement() throws ObstacleFoundException {
         if (cmdRobot.isFrein()) {
             log.info("Attente fin de trajet");
-            while(!isTrajetAtteint()){
+            while (!isTrajetAtteint()) {
                 try {
                     checkRestartAfterObstacle();
                     Thread.currentThread().sleep(1);
@@ -700,7 +714,7 @@ public class MouvementManager implements InitializingBean {
             log.info("Trajet atteint");
         } else {
             log.info("Attente approche du point de passage");
-            while(!isTrajetEnApproche()){
+            while (!isTrajetEnApproche()) {
                 try {
                     checkRestartAfterObstacle();
                     Thread.currentThread().sleep(1);

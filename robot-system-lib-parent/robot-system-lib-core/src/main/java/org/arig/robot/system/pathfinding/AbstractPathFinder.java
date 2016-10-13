@@ -22,12 +22,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
- * Created by mythril on 30/12/13.
+ * @author gdepuille on 30/12/13.
  */
 @Slf4j
 public abstract class AbstractPathFinder implements IPathFinder, InitializingBean {
 
-    /** The position. */
+    /**
+     * The position.
+     */
     @Autowired
     @Qualifier("currentPosition")
     private Position position;
@@ -92,7 +94,7 @@ public abstract class AbstractPathFinder implements IPathFinder, InitializingBea
             g.setBackground(Color.WHITE);
             org.arig.robot.vo.Point currentPoint = null;
             org.arig.robot.vo.Point precedencePoint = null;
-            for (int i = 0 ; i < pts.size() ; i++) {
+            for (int i = 0; i < pts.size(); i++) {
                 // Couleur du premier et des autres points
                 g.setColor((currentPoint == null) ? Color.GREEN : Color.BLACK);
                 currentPoint = pts.get(i);
@@ -124,7 +126,7 @@ public abstract class AbstractPathFinder implements IPathFinder, InitializingBea
             g.dispose();
 
             if (!pathDir.exists()) {
-                pathDir.mkdirs();
+                log.info("Création du répertoire {} : {}", pathDir.getAbsolutePath(), pathDir.mkdirs());
             }
             ImageIO.write(ImageUtils.mirrorX(img), "png", new File(pathDir, dteFormat.format(LocalDateTime.now()) + suffixResultImageName() + ".png"));
         } catch (Exception e) {

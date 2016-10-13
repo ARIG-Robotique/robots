@@ -7,16 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The Class Odometrie.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 public class OdometrieLineaire extends AbstractOdometrie {
 
-    /** The encoders. */
+    /**
+     * The encoders.
+     */
     @Autowired
     private Abstract2WheelsEncoders encoders;
 
-    /** The conv. */
+    /**
+     * The conv.
+     */
     @Autowired
     private ConvertionRobotUnit conv;
 

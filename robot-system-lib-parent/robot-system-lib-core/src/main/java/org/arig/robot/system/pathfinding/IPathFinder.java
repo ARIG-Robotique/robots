@@ -8,7 +8,7 @@ import java.awt.*;
 import java.io.File;
 
 /**
- * Created by mythril on 29/12/13.
+ * @author gdepuille on 29/12/13.
  */
 public interface IPathFinder {
 
@@ -16,7 +16,8 @@ public interface IPathFinder {
      * Méthode pour réaliser une detection de chemin a emprunter.
      *
      * @param from Point d'origine
-     * @param to Point a atteindre
+     * @param to   Point a atteindre
+     *
      * @return Le chemin a emprunter pour atteindre la cible en evitant les obtacles.
      */
     Chemin findPath(Point from, Point to) throws NoPathFoundException;
@@ -24,9 +25,10 @@ public interface IPathFinder {
     /**
      * Méthode pour réaliser une detection de chemin a emprunter.
      *
-     * @param from Point d'origine
-     * @param to Point a atteindre
+     * @param from        Point d'origine
+     * @param to          Point a atteindre
      * @param maxDistance Distance max pour trouver un noeud.
+     *
      * @return Le chemin a emprunter pour atteindre la cible en evitant les obtacles.
      */
     Chemin findPath(Point from, Point to, double maxDistance) throws NoPathFoundException;
@@ -34,35 +36,35 @@ public interface IPathFinder {
     /**
      * Nombre de tuiles sur l'axe X
      *
-     * @param nbTileX
+     * @param nbTileX nombre de tuile sur l'axe X pour constuire le maillage
      */
     void setNbTileX(int nbTileX);
 
     /**
      * Nombre de tuiles sur l'axe Y
      *
-     * @param nbTileY
+     * @param nbTileY nombre de tuile sur l'axe Y pour constuire le maillage
      */
     void setNbTileY(int nbTileY);
 
     /**
      * Setter pour authorisé les déplacement en diagonale dans le graph
      *
-     * @param allowDiagonal
+     * @param allowDiagonal true pour autorisé les déplacement sur le maillage diagonal
      */
     void setAllowDiagonal(boolean allowDiagonal);
 
     /**
      * Initialisation du graph par une image en noir et blanc. Le noir représente les zones inaccessible.
      *
-     * @param filePath
+     * @param filePath Chemin de l'image source
      */
     void construitGraphDepuisImageNoirEtBlanc(String filePath);
 
     /**
      * Intialisation du graph par une image en noir et blanc. Le noir représente les zones inaccessible
      *
-     * @param file
+     * @param file Fichier image source
      */
     void construitGraphDepuisImageNoirEtBlanc(File file);
 

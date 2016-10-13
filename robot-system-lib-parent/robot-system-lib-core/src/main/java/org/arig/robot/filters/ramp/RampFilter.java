@@ -11,8 +11,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * The Class RampFilter.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 @Slf4j
 public class RampFilter implements IRampFilter {
@@ -61,10 +61,10 @@ public class RampFilter implements IRampFilter {
     /**
      * Instantiates a new ramp.
      *
-     * @param name the filter name for monitoring
+     * @param name         the filter name for monitoring
      * @param sampleTimeMs the sample time in ms
-     * @param rampAcc the ramp acc
-     * @param rampDec the ramp dec
+     * @param rampAcc      the ramp acc
+     * @param rampDec      the ramp dec
      */
     public RampFilter(final String name, final double sampleTimeMs, final double rampAcc,
                       final double rampDec) {
@@ -81,7 +81,7 @@ public class RampFilter implements IRampFilter {
 
     /**
      * Sets the sample time ms.
-     * 
+     *
      * @param value the new sample time ms
      */
     @Override
@@ -97,9 +97,8 @@ public class RampFilter implements IRampFilter {
 
     /**
      * Sets the ramp acc.
-     * 
-     * @param value
-     *            the new ramp acc
+     *
+     * @param value the new ramp acc
      */
     @Override
     public void setRampAcc(final double value) {
@@ -109,9 +108,8 @@ public class RampFilter implements IRampFilter {
 
     /**
      * Sets the ramp dec.
-     * 
-     * @param value
-     *            the new ramp dec
+     *
+     * @param value the new ramp dec
      */
     @Override
     public void setRampDec(final double value) {
@@ -139,13 +137,11 @@ public class RampFilter implements IRampFilter {
     /**
      * Application du filtre. Cette méthode est appelé depuis la sub routine
      * d'asservissement
-     * 
-     * @param vitesseDemande
-     *            the vitesse
-     * @param distanceRestante
-     *            the consigne
-     * @param frein
-     *            the frein
+     *
+     * @param vitesseDemande   the vitesse
+     * @param distanceRestante the consigne
+     * @param frein            the frein
+     *
      * @return the double
      */
     @Override

@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import java.util.*;
 
 /**
- * Created by gdepuille on 13/05/15.
+ * @author gdepuille on 13/05/15.
  */
 @Slf4j
 public abstract class AbstractAvoidingService implements IAvoidingService, InitializingBean {

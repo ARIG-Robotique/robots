@@ -3,7 +3,7 @@ package org.arig.eurobot.constants;
 import com.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 
 /**
- * Created by mythril on 21/12/13.
+ * @author gdepuille on 21/12/13.
  */
 public interface IConstantesI2C {
 

@@ -5,16 +5,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Created by mythril on 29/12/13.
+ * @author gdepuille on 29/12/13.
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class VitesseAsservissementPolaire {
 
-    /** The vitesse distance. */
+    /**
+     * The vitesse distance.
+     */
     private long distance;
 
-    /** The vitesse orientation. */
+    /**
+     * The vitesse orientation.
+     */
     private long orientation;
 }

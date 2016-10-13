@@ -9,7 +9,7 @@ import org.arig.robot.vo.Point;
 import java.util.List;
 
 /**
- * Created by gdepuille on 08/05/15.
+ * @author gdepuille on 08/05/15.
  */
 @Slf4j
 @Data
@@ -22,6 +22,7 @@ public abstract class AbstractRobotStatus {
         log.info("Activation asservissement");
         asservEnabled = true;
     }
+
     public void disableAsserv() {
         log.info("Désactivation asservissement");
         asservEnabled = false;
@@ -34,6 +35,7 @@ public abstract class AbstractRobotStatus {
         log.info("Activation evittement");
         avoidanceEnabled = true;
     }
+
     public void disableAvoidance() {
         log.info("Désactivation evittement");
         avoidanceEnabled = false;
@@ -42,8 +44,13 @@ public abstract class AbstractRobotStatus {
     @Setter(AccessLevel.NONE)
     private boolean matchEnabled = false;
 
-    public void enableMatch() { matchEnabled = true; }
-    public void disableMatch() { matchEnabled = false; }
+    public void enableMatch() {
+        matchEnabled = true;
+    }
+
+    public void disableMatch() {
+        matchEnabled = false;
+    }
 
     public abstract List<Point> echappementPointsCm();
 }

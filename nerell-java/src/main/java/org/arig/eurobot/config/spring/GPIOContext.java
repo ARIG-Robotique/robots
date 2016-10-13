@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import java.io.IOException;
 
 /**
- * Created by mythril on 21/12/13.
+ * @author gdepuille on 21/12/13.
  */
 @Configuration
 public class GPIOContext {

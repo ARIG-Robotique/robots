@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 
 /**
- * Created by mythril on 30/12/13.
+ * @author gdepuille on 30/12/13.
  */
 @Slf4j
 @RunWith(BlockJUnit4ClassRunner.class)

@@ -13,7 +13,7 @@ import org.springframework.util.Assert;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author gregorydepuille@sglk.local on 11/10/16.
+ * @author gdepuille on 11/10/16.
  */
 @Slf4j
 public class InfluxDbWrapper implements IMonitoringWrapper, InitializingBean {

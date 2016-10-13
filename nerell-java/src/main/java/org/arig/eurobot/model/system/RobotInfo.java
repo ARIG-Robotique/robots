@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Created by gdepuille on 29/04/15.
+ * @author gdepuille on 29/04/15.
  */
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

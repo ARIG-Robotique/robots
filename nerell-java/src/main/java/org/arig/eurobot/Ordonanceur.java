@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import java.io.File;
 
 /**
- * Created by gdepuille on 08/03/15.
+ * @author gdepuille on 08/03/15.
  */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

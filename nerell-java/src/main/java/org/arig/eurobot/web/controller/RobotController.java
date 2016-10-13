@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Created by gdepuille on 13/01/15.
+ * @author gdepuille on 13/01/15.
  */
 @Slf4j
 @Profile(IConstantesSpringConfig.profileMonitoring)
@@ -22,7 +22,7 @@ public class RobotController {
     @RequestMapping("/name")
     public Map<String, String> name() {
         Map<String, String> v = new LinkedHashMap<>();
-        v.put("nom", "Elfa : Robomovies 2015");
+        v.put("nom", "Nerell : Robomovies 2015");
         v.put("version", "1.0.0");
 
         return v;

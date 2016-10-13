@@ -5,7 +5,7 @@
 	<!-- Appender général sur la console -->	
 	<appender name="Console" class="org.apache.log4j.ConsoleAppender">
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{ABSOLUTE} [%t] %-5p [%X{principal} %X{ip}] [%c] %M : (ligne %L) - %m %n"/>
+			<param name="ConversionPattern" value="%d{ISO8601} %-5p [%t] [%x %c] - %m%n"/>
 		</layout>
 	</appender>
 

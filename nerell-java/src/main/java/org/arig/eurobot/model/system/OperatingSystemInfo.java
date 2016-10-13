@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.text.ParseException;
 
 /**
- * Created by gdepuille on 29/04/15.
+ * @author gdepuille on 29/04/15.
  */
 public class OperatingSystemInfo {
 

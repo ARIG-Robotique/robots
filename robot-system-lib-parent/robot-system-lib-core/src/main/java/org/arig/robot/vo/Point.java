@@ -5,24 +5,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Created by mythril on 29/12/13.
+ * @author gdepuille on 29/12/13.
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Point {
 
-    /** The x. */
+    /**
+     * The x.
+     */
     private double x;
 
-    /** The y. */
+    /**
+     * The y.
+     */
     private double y;
 
     /**
      * Adds the delta x.
      *
-     * @param dX
-     *            the d x
+     * @param dX the d x
      */
     public void addDeltaX(final double dX) {
         x += dX;
@@ -31,8 +34,7 @@ public class Point {
     /**
      * Adds the delta y.
      *
-     * @param dY
-     *            the d y
+     * @param dY the d y
      */
     public void addDeltaY(final double dY) {
         y += dY;

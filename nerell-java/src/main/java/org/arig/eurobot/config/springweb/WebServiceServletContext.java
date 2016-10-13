@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
- * Created by gdepuille on 12/01/15.
+ * @author gdepuille on 12/01/15.
  */
 @Configuration
 @Profile(IConstantesSpringConfig.profileMonitoring)

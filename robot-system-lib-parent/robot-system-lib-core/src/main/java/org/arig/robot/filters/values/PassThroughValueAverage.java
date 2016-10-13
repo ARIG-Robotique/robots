@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * Implementation qui ne calcul rien
  *
- * Created by gdepuille on 08/05/15.
+ * @author gdepuille on 08/05/15.
  */
 @Data
 public class PassThroughValueAverage<T> implements IAverage<T> {
@@ -13,7 +13,8 @@ public class PassThroughValueAverage<T> implements IAverage<T> {
     private int limit;
 
     @Override
-    public void reset() { }
+    public void reset() {
+    }
 
     @Override
     public T average(T newValue) {

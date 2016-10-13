@@ -5,8 +5,8 @@ import org.arig.robot.vo.enums.TypeOdometrie;
 
 /**
  * The Class Odometrie.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 public class OdometrieCirculaire extends AbstractOdometrie {
 

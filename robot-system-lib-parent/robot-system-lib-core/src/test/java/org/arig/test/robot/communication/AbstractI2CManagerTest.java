@@ -13,7 +13,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 /**
  * The Class AbstractI2CManagerTest.
  * 
- * @author mythril
+ * @author gdepuille
  */
 @Slf4j
 @RunWith(BlockJUnit4ClassRunner.class)

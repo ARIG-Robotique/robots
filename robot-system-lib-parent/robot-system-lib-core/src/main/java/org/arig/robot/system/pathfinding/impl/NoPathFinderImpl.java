@@ -11,10 +11,10 @@ import java.io.File;
 import java.util.List;
 
 /**
- * /!\ Faux PathFinder
+ * /!\ Faux PathFinder pour des test de mouvement lors de la phase de réglage
  * Cette implémentation ne calcul aucun chemin. La destination est tout de suite a atteindre.
  *
- * Created by mythril on 30/12/13.
+ * @author gdepuille on 30/12/13.
  */
 public class NoPathFinderImpl extends AbstractPathFinder {
 

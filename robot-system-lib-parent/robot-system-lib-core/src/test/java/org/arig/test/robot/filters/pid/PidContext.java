@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Created by gregorydepuille@sglk.local on 11/10/16.
+ * @author gdepuille on 11/10/16.
  */
 @Configuration
 public class PidContext {

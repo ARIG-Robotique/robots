@@ -1,7 +1,7 @@
 package org.arig.robot.exception;
 
 /**
- * Created by mythril on 18/12/13.
+ * @author gdepuille on 18/12/13.
  */
 public class NotYetImplementedException extends RuntimeException {
 

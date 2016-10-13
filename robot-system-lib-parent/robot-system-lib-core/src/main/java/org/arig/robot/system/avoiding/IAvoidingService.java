@@ -1,7 +1,7 @@
 package org.arig.robot.system.avoiding;
 
 /**
- * Created by gdepuille on 13/05/15.
+ * @author gdepuille on 13/05/15.
  */
 public interface IAvoidingService {
 

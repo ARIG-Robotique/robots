@@ -11,19 +11,18 @@ import java.util.Map;
 
 /**
  * The Class AbstractI2CManager.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 @Slf4j
 public abstract class AbstractI2CManager<D> implements II2CManager {
 
-    /** The board map. */
     @Getter(value = AccessLevel.PROTECTED)
     private final Map<String, D> deviceMap = new HashMap<>();
 
     /**
-     * Nb board registered.
-     * 
+     * Nb device registered.
+     *
      * @return the int
      */
     public int nbDeviceRegistered() {
@@ -32,9 +31,8 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
 
     /**
      * Execute scan.
-     * 
-     * @throws I2CException
-     *             the i2 c exception
+     *
+     * @throws I2CException the i2 c exception
      */
     public final void executeScan() throws I2CException {
         Assert.notEmpty(deviceMap, "Le mapping des cartes est obligatoire");
@@ -50,18 +48,15 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
     /**
      * Scan.
      *
-     * @throws I2CException
-     *             the i2 c exception
+     * @throws I2CException the i2 c exception
      */
     protected abstract void scan() throws I2CException;
 
     /**
-     * Register board.
-     * 
-     * @param deviceName
-     *            the board name
-     * @param device
-     *            the address
+     * Register device.
+     *
+     * @param deviceName the device name
+     * @param device     the address
      */
     public void registerDevice(final String deviceName, D device) {
         Assert.notNull(device, "Le device doit être précisé");
@@ -72,11 +67,12 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
     }
 
     /**
-     * Gets the board.
-     * 
-     * @param deviceName
-     *            the board name
+     * Gets the device.
+     *
+     * @param deviceName the device name
+     *
      * @return the device
+     *
      * @throws I2CException
      */
     public D getDevice(final String deviceName) throws I2CException {

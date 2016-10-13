@@ -9,7 +9,7 @@ import org.arig.robot.vo.Point3D;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Created by mythril on 04/01/14.
+ * @author mythril on 04/01/14.
  */
 @Slf4j
 @ToString(callSuper = true)

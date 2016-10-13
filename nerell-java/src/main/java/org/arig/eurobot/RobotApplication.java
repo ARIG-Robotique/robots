@@ -3,7 +3,7 @@ package org.arig.eurobot;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author mythril on 20/12/13.
+ * @author gdepuille on 20/12/13.
  */
 @Slf4j
 public class RobotApplication {

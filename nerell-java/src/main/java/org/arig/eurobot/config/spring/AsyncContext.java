@@ -12,7 +12,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.concurrent.Executor;
 
 /**
- * Created by gdepuille on 29/04/15.
+ * @author gdepuille on 29/04/15.
  */
 @Slf4j
 @Configuration

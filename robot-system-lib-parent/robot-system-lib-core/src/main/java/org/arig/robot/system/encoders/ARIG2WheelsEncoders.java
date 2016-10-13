@@ -7,40 +7,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The Class ARIG2WheelsEncoders.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 @Slf4j
 public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
 
-    /** The address droit. */
+    /**
+     * The address droit.
+     */
     private final String deviceNameDroit;
 
-    /** The address gauche. */
+    /**
+     * The address gauche.
+     */
     private final String deviceNameGauche;
 
-    /** The i2c manager. */
+    /**
+     * The i2c manager.
+     */
     @Autowired
     private II2CManager i2cManager;
 
     /**
      * Instantiates a new aRIG encoders.
-     * 
-     * @param deviceNameGauche
-     *            the address gauche
-     * @param deviceNameDroit
-     *            the address droit
+     *
+     * @param deviceNameGauche the address gauche
+     * @param deviceNameDroit  the address droit
      */
     public ARIG2WheelsEncoders(final String deviceNameGauche, final String deviceNameDroit) {
+        super("two_wheels_encoders");
         this.deviceNameGauche = deviceNameGauche;
         this.deviceNameDroit = deviceNameDroit;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.encoders.AbstractEncoders#reset()
-     */
     @Override
     public void reset() {
         log.info("Reset carte codeur droit");
@@ -50,11 +50,6 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
         lectureGauche();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.encoders.AbstractEncoders#lectureGauche()
-     */
     @Override
     protected double lectureGauche() {
         try {
@@ -69,11 +64,6 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.encoders.AbstractEncoders#lectureDroit()
-     */
     @Override
     protected double lectureDroit() {
         try {
@@ -90,15 +80,16 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
 
     /**
      * Lecture data depuis nos cartes codeur.
-     * 
+     * <p>
      * 1) On envoi la commande de lecture.
      * 2) On récupère un short (2 octets car int sur 2 octet avec un AVR 8 bits)
      *
-     * @see <a href="https://www.github.com/ARIG-ssociation/quadratic-reader/">GitHub Quadratic Reader</a>
-     *
      * @param deviceName the deviceName
+     *
      * @return the int
+     *
      * @throws I2CException
+     * @see <a href="https://www.github.com/ARIG-ssociation/quadratic-reader/">GitHub Quadratic Reader</a>
      */
     private int lectureData(final String deviceName) throws I2CException {
         try {

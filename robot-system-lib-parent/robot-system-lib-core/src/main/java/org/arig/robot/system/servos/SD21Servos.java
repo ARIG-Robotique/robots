@@ -11,21 +11,27 @@ import java.util.Map;
 
 /**
  * The Class SD21Servos.
- * 
+ *
  * @author GregoryDepuille
  */
 @Slf4j
 public class SD21Servos implements InitializingBean {
 
-    /** The Constant VERSION_REGISTER. */
+    /**
+     * The Constant VERSION_REGISTER.
+     */
     public static final byte VERSION_REGISTER = 0x40;
 
     private static final int NB_SERVOS = 21;
 
-    /** The address. */
+    /**
+     * The address.
+     */
     protected String deviceName;
 
-    /** The i2c manager. */
+    /**
+     * The i2c manager.
+     */
     @Autowired
     private II2CManager i2cManager;
 
@@ -34,7 +40,7 @@ public class SD21Servos implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        for (byte i = 1 ; i <= NB_SERVOS ; i++) {
+        for (byte i = 1; i <= NB_SERVOS; i++) {
             lastPositions.put(i, 1500);
             lastSpeed.put(i, (byte) 0);
         }
@@ -42,9 +48,8 @@ public class SD21Servos implements InitializingBean {
 
     /**
      * Instantiates a new s d21 servos.
-     * 
-     * @param deviceName
-     *            the address
+     *
+     * @param deviceName the address
      */
     public SD21Servos(final String deviceName) {
         this.deviceName = deviceName;
@@ -54,9 +59,9 @@ public class SD21Servos implements InitializingBean {
      * Gets the base register. Renvoi le registre de base pour un servo. Par éxemple pour le servo 1 : 0 : SPEED
      * REGISTER 1 : LOW BYTE POSITION
      * REGISTER 2 : HIGH BYTE POSITION REGISTER
-     * 
-     * @param servoNb
-     *            the servo nb
+     *
+     * @param servoNb the servo nb
+     *
      * @return the base register
      */
     public static byte getBaseRegister(final byte servoNb) {
@@ -65,11 +70,9 @@ public class SD21Servos implements InitializingBean {
 
     /**
      * Sets the position.
-     * 
-     * @param servoNb
-     *            the servo nb
-     * @param position
-     *            the position
+     *
+     * @param servoNb  the servo nb
+     * @param position the position
      */
     public void setPosition(final byte servoNb, final int position) {
         if (!checkServo(servoNb)) {
@@ -95,7 +98,7 @@ public class SD21Servos implements InitializingBean {
     /**
      * Demande de mouvement avec attente théorique du déplacement
      *
-     * @param servoNb Numéro du servo moteur
+     * @param servoNb     Numéro du servo moteur
      * @param newPosition Nouvelle position
      */
     public void setPositionAndWait(final byte servoNb, final int newPosition) {
@@ -120,11 +123,9 @@ public class SD21Servos implements InitializingBean {
 
     /**
      * Sets the speed.
-     * 
-     * @param servoNb
-     *            the servo nb
-     * @param speed
-     *            the speed
+     *
+     * @param servoNb the servo nb
+     * @param speed   the speed
      */
     public void setSpeed(final byte servoNb, final byte speed) {
         if (!checkServo(servoNb)) {
@@ -147,13 +148,10 @@ public class SD21Servos implements InitializingBean {
 
     /**
      * Sets the position and speed.
-     * 
-     * @param servoNb
-     *            the servo nb
-     * @param speed
-     *            the speed
-     * @param position
-     *            the position
+     *
+     * @param servoNb  the servo nb
+     * @param speed    the speed
+     * @param position the position
      */
     public void setPositionAndSpeed(final byte servoNb, final int position, final byte speed) {
         if (!checkServo(servoNb)) {
@@ -180,9 +178,9 @@ public class SD21Servos implements InitializingBean {
     /**
      * Demande de mouvement et vitesse avec attente théorique du déplacement
      *
-     * @param servoNb Numéro du servo moteur
+     * @param servoNb     Numéro du servo moteur
      * @param newPosition Nouvelle position
-     * @param newSpeed Nouvelle vitesse de déplacement
+     * @param newSpeed    Nouvelle vitesse de déplacement
      */
     public void setPositionAndSpeedAndWait(final byte servoNb, final int newPosition, final byte newSpeed) {
         int oldSpeed = getSpeed(servoNb);
@@ -207,7 +205,8 @@ public class SD21Servos implements InitializingBean {
     /**
      * Get the last position of servo
      *
-     * @param servoNb
+     * @param servoNb Numero du servo
+     *
      * @return La dernière position du servo
      */
     public int getPosition(final byte servoNb) {
@@ -221,7 +220,8 @@ public class SD21Servos implements InitializingBean {
     /**
      * Get the last speed of servo
      *
-     * @param servoNb
+     * @param servoNb Numero du servo
+     *
      * @return La dernière vitesse du servo
      */
     public int getSpeed(final byte servoNb) {
@@ -247,9 +247,9 @@ public class SD21Servos implements InitializingBean {
 
     /**
      * Check servo.
-     * 
-     * @param servoNb
-     *            the servo nb
+     *
+     * @param servoNb the servo nb
+     *
      * @return true, if servo number are between 1 and 21. False otherwise
      */
     private boolean checkServo(final byte servoNb) {
@@ -263,10 +263,11 @@ public class SD21Servos implements InitializingBean {
     /**
      * Calcul du temps d'attente théorique pour le mouvement.
      *
-     * @param start Position de départ
+     * @param start  Position de départ
      * @param target Position d'arrivé
-     * @param speed Valeur de vitesse configuré
-     * @return
+     * @param speed  Valeur de vitesse configuré
+     *
+     * @return Le temps d'attente théorique en ms
      */
     private int calculWaitTimeMs(int start, int target, int speed) {
         try {

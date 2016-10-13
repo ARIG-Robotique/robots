@@ -18,8 +18,8 @@ import java.util.concurrent.Future;
 /**
  * Classe d'interface avec le composant I2C SRF02 (Sonar ultrason)
  *
- * @see <a href="http://www.robot-electronics.co.uk/htm/srf02techI2C.htm">SRF02 documentation</a>
  * @author gdepuille
+ * @see <a href="http://www.robot-electronics.co.uk/htm/srf02techI2C.htm">SRF02 documentation</a>
  */
 @Slf4j
 public class SRF02I2CSonar {
@@ -57,7 +57,9 @@ public class SRF02I2CSonar {
         private byte value;
     }
 
-    /** The i2c manager. */
+    /**
+     * The i2c manager.
+     */
     @Autowired
     private II2CManager i2cManager;
 
@@ -121,9 +123,15 @@ public class SRF02I2CSonar {
             if (log.isDebugEnabled()) {
                 String unit = null;
                 switch (rangeUnit) {
-                    case CENTIMETERS: unit = "cm"; break;
-                    case INCHES: unit = "inches"; break;
-                    case MICRO_SECONDS: unit = "µs"; break;
+                    case CENTIMETERS:
+                        unit = "cm";
+                        break;
+                    case INCHES:
+                        unit = "inches";
+                        break;
+                    case MICRO_SECONDS:
+                        unit = "µs";
+                        break;
                 }
                 log.debug("Résultat de la lecture du sonar {} = {} {}", deviceName, res, unit);
             }

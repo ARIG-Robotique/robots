@@ -6,7 +6,7 @@ import com.pi4j.system.SystemInfo;
 import java.io.IOException;
 
 /**
- * Created by gdepuille on 29/04/15.
+ * @author gdepuille on 29/04/15.
  */
 public class CodecInfo {
 

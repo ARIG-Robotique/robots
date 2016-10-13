@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by gdepuille on 23/04/15.
+ * @author gdepuille on 23/04/15.
  */
 @Slf4j
 @Service

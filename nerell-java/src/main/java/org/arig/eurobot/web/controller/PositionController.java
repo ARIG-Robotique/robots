@@ -19,7 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Created by gdepuille on 22/12/14.
+ * @author gdepuille on 22/12/14.
  */
 @Slf4j
 @Profile(IConstantesSpringConfig.profileMonitoring)

@@ -17,7 +17,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.WebApplicationInitializer;
 
 /**
- * Created by gdepuille on 12/01/15.
+ * @author gdepuille on 12/01/15.
  */
 @Slf4j
 public class JettyEmbeddedRunner {

@@ -2,14 +2,18 @@ package org.arig.robot.vo.enums;
 
 /**
  * The Enum TypeOdometrie.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 public enum TypeOdometrie {
 
-    /** The lineaire. */
+    /**
+     * The lineaire.
+     */
     LINEAIRE,
 
-    /** The circulaire. */
+    /**
+     * The circulaire.
+     */
     CIRCULAIRE;
 }

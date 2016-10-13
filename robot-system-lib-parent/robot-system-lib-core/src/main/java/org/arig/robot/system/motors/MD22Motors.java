@@ -7,78 +7,117 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The Class MD22Motors.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 @Slf4j
 public class MD22Motors extends AbstractPropulsionsMotors {
 
-    /** The Constant MODE_REGISTER. */
+    /**
+     * The Constant MODE_REGISTER.
+     */
     public static final byte MODE_REGISTER = 0x00;
 
-    /** The Constant MOTOR1_REGISTER. */
+    /**
+     * The Constant MOTOR1_REGISTER.
+     */
     public static final byte MOTOR1_REGISTER = 0x01;
 
-    /** The Constant MOTOR2_REGISTER. */
+    /**
+     * The Constant MOTOR2_REGISTER.
+     */
     public static final byte MOTOR2_REGISTER = 0x02;
 
-    /** The Constant ACCEL_REGISTER. */
+    /**
+     * The Constant ACCEL_REGISTER.
+     */
     public static final byte ACCEL_REGISTER = 0x03;
 
-    /** The Constant VERSION_REGISTER. */
+    /**
+     * The Constant VERSION_REGISTER.
+     */
     public static final byte VERSION_REGISTER = 0x07;
 
-    /** The Constant MODE_0. */
+    /**
+     * The Constant MODE_0.
+     */
     private static final byte MODE_0 = 0; // 0 (Reverse) - 128 (Stop) - 255 (Forward)
 
-    /** The Constant MODE_1. */
+    /**
+     * The Constant MODE_1.
+     */
     private static final byte MODE_1 = 1; // -128 (Reverse) - 0 (Stop) - 127 (Forward)
 
-    /** The Constant DEFAULT_MODE_VALUE. */
+    /**
+     * The Constant DEFAULT_MODE_VALUE.
+     */
     private static final byte DEFAULT_MODE_VALUE = MD22Motors.MODE_0;
 
-    /** The Constant DEFAULT_ACCEL_VALUE. */
+    /**
+     * The Constant DEFAULT_ACCEL_VALUE.
+     */
     private static final short DEFAULT_ACCEL_VALUE = 20;
 
-    /** The Constant MIN_VAL_MODE_0. */
+    /**
+     * The Constant MIN_VAL_MODE_0.
+     */
     private static final byte MIN_VAL_MODE_0 = 0;
 
-    /** The Constant STOP_VAL_MODE_0. */
+    /**
+     * The Constant STOP_VAL_MODE_0.
+     */
     private static final byte STOP_VAL_MODE_0 = (byte) 128;
 
-    /** The Constant MAX_VAL_MODE_0. */
+    /**
+     * The Constant MAX_VAL_MODE_0.
+     */
     private static final byte MAX_VAL_MODE_0 = (byte) 255;
 
-    /** The Constant MIN_VAL_MODE_1. */
+    /**
+     * The Constant MIN_VAL_MODE_1.
+     */
     private static final byte MIN_VAL_MODE_1 = -128;
 
-    /** The Constant STOP_VAL_MODE_1. */
+    /**
+     * The Constant STOP_VAL_MODE_1.
+     */
     private static final byte STOP_VAL_MODE_1 = 0;
 
-    /** The Constant MAX_VAL_MODE_1. */
+    /**
+     * The Constant MAX_VAL_MODE_1.
+     */
     private static final byte MAX_VAL_MODE_1 = 127;
 
-    /** The i2c manager. */
+    /**
+     * The i2c manager.
+     */
     @Autowired
     private II2CManager i2cManager;
 
-    /** The address. */
+    /**
+     * The address.
+     */
     private final String deviceName;
 
-    /** The mode value. */
+    /**
+     * The mode value.
+     */
     private byte modeValue;
 
-    /** The accel value. */
+    /**
+     * The accel value.
+     */
     private short accelValue;
 
-    /** The stop val. */
+    /**
+     * The stop val.
+     */
     private int offsetVal;
 
     /**
      * Instantiates a new m d22 motors.
-     * 
-     * @param deviceName
-     *            the address
+     *
+     * @param deviceName the address
      */
     public MD22Motors(final String deviceName) {
         this(deviceName, MD22Motors.DEFAULT_MODE_VALUE, MD22Motors.DEFAULT_ACCEL_VALUE);
@@ -86,13 +125,10 @@ public class MD22Motors extends AbstractPropulsionsMotors {
 
     /**
      * Instantiates a new m d22 motors.
-     * 
-     * @param deviceName
-     *            the address
-     * @param mode
-     *            the mode
-     * @param accel
-     *            the accel
+     *
+     * @param deviceName the address
+     * @param mode       the mode
+     * @param accel      the accel
      */
     public MD22Motors(final String deviceName, final byte mode, final short accel) {
         super();
@@ -104,11 +140,6 @@ public class MD22Motors extends AbstractPropulsionsMotors {
         init(false);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.motors.AbstractMotors#init()
-     */
     @Override
     public void init() {
         init(true);
@@ -116,9 +147,8 @@ public class MD22Motors extends AbstractPropulsionsMotors {
 
     /**
      * Inits the.
-     * 
-     * @param transmit
-     *            the transmit
+     *
+     * @param transmit the transmit
      */
     private void init(final boolean transmit) {
         prevM1 = 300;
@@ -137,11 +167,6 @@ public class MD22Motors extends AbstractPropulsionsMotors {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.motors.AbstractMotors#moteur1(int)
-     */
     @Override
     public void moteur1(final int val) {
         final byte cmd = (byte) check(val + offsetVal);
@@ -160,11 +185,6 @@ public class MD22Motors extends AbstractPropulsionsMotors {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.motors.AbstractMotors#moteur2(int)
-     */
     @Override
     public void moteur2(final int val) {
         final byte cmd = (byte) check(val + offsetVal);
@@ -185,9 +205,8 @@ public class MD22Motors extends AbstractPropulsionsMotors {
 
     /**
      * Configuration du mode de la carte MD22. Les modes 0 et 1 sont géré uniquement.
-     * 
-     * @param value
-     *            the new mode
+     *
+     * @param value the new mode
      */
     public void setMode(final byte value) {
         setMode(value, true);
@@ -195,11 +214,9 @@ public class MD22Motors extends AbstractPropulsionsMotors {
 
     /**
      * Sets the mode.
-     * 
-     * @param value
-     *            the value
-     * @param transmit
-     *            the transmit
+     *
+     * @param value    the value
+     * @param transmit the transmit
      */
     private void setMode(final byte value, final boolean transmit) {
         modeValue = value;
@@ -231,20 +248,20 @@ public class MD22Motors extends AbstractPropulsionsMotors {
 
     /**
      * Configuration de la valeur d'accéleration des moteurs. L'accéleration fonctionne comme suit :
-     * 
+     * <p>
      * If you require a controlled acceleration period for the attached motors to reach there ultimate speed, the MD22
      * has a register to provide this. It works by inputting a value into the acceleration register which acts as a
      * delay in the power stepping. The amount of steps is the difference between the current speed of the motors and
      * the new speed (from speed 1 and 2 registers). So if the motors were traveling at full speed in the forward
      * direction (255) and were instructed to move at full speed in reverse (0), there would be 255 steps.
-     * 
+     * <p>
      * The acceleration register contains the rate at which the motor board moves through the steps. At 0 (default) the
      * board changes the power (accelerates) at its fastest rate, each step taking 64us. When the acceleration register
      * is loaded with the Slowest setting of 255, the board will change the power output every 16.4ms.
-     * 
+     * <p>
      * So to calculate the time (in seconds) for the acceleration to complete : time = accel reg value * 64us * steps.
      * For example :
-     * 
+     * <p>
      * ---------------------------------------------------------------------------------
      * | Accel reg | Time/step | Current speed | New speed | Steps | Acceleration time |
      * ---------------------------------------------------------------------------------
@@ -262,9 +279,8 @@ public class MD22Motors extends AbstractPropulsionsMotors {
      * ---------------------------------------------------------------------------------
      * | 255       | 16.32ms   | 65            | 150       | 85    | 1.39s             |
      * ---------------------------------------------------------------------------------
-     * 
-     * @param value
-     *            the new accel
+     *
+     * @param value the new accel
      */
     public void setAccel(final short value) {
         setAccel(value, true);
@@ -272,11 +288,9 @@ public class MD22Motors extends AbstractPropulsionsMotors {
 
     /**
      * Sets the accel.
-     * 
-     * @param value
-     *            the value
-     * @param transmit
-     *            the transmit
+     *
+     * @param value    the value
+     * @param transmit the transmit
      */
     private void setAccel(short value, final boolean transmit) {
         if (value < 0) {
@@ -298,11 +312,6 @@ public class MD22Motors extends AbstractPropulsionsMotors {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.motors.AbstractMotors#printVersion()
-     */
     @Override
     public void printVersion() {
         try {

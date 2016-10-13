@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author gregorydepuille@sglk.local on 12/10/16.
+ * @author gdepuille on 12/10/16.
  */
 public abstract class AbstractPidFilter implements IPidFilter {
 
