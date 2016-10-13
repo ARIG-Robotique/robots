@@ -1,6 +1,5 @@
 package org.arig.robot.monitoring;
 
-import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +9,8 @@ import org.influxdb.dto.Point;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,27 +34,37 @@ public class InfluxDbWrapper implements IMonitoringWrapper, InitializingBean {
     @Setter
     private String retentionPolicy;
 
-    @Setter(AccessLevel.NONE)
-    private InfluxDB influxDB;
+    private final List<Point> points = new ArrayList<>();
 
     @Override
     public void afterPropertiesSet() throws Exception {
         Assert.hasText(url, "L'URL de connexion est obligatoire");
         Assert.hasText(dbName, "Le nom de la BDD est obligatoire");
         Assert.hasText(retentionPolicy, "La politique de retention est obligatoire");
+    }
 
-        influxDB = InfluxDBFactory.connect(url, username, password);
-        influxDB.createDatabase(dbName);
+    @Override
+    public void addPoint(Point point) {
+        points.add(point);
+    }
+
+    @Override
+    public void sendToDb() {
+        final InfluxDB influxDB = InfluxDBFactory.connect(url, username, password);
+        log.info("Connecté avec InfluxDB {}", influxDB.version());
+
+        final List<String> databases = influxDB.describeDatabases();
+        log.info("Database disponible : {}", StringUtils.join(databases, ", "));
+
+        if (!databases.contains(dbName)) {
+            log.info("Database {} non présente, on la crée", dbName);
+            influxDB.createDatabase(dbName);
+        }
 
         // Flush every 2000 Points, at least every 100ms
         influxDB.enableBatch(2000, 100, TimeUnit.MILLISECONDS);
 
-        log.info("Connecté avec InfluxDB {}", influxDB.version());
-        log.info("Database disponible : {}", StringUtils.join(influxDB.describeDatabases(), ", "));
-    }
-
-    @Override
-    public void write(Point point) {
-        influxDB.write(dbName, retentionPolicy, point);
+        log.info("Enregistrement de {} point en base", points.size());
+        points.forEach((p) -> influxDB.write(dbName, retentionPolicy, p));
     }
 }

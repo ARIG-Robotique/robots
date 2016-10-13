@@ -89,6 +89,26 @@ public class ArigLMD18200Motors extends AbstractPropulsionsMotors {
     }
 
     @Override
+    public int getMinSpeed() {
+        return 0;
+    }
+
+    @Override
+    public int getMaxSpeed() {
+        return 0;
+    }
+
+    @Override
+    protected int currentSpeedMoteur1() {
+        return 0;
+    }
+
+    @Override
+    protected int currentSpeedMoteur2() {
+        return 0;
+    }
+
+    @Override
     public void printVersion() {
         // TODO : Injecter la version du projet
         log.info("ARIG carte LMD18200 4 moteurs version 1.0.0");

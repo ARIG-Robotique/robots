@@ -1,7 +1,7 @@
 package org.arig.test.robot.vo;
 
-import org.arig.robot.vo.CommandeRobot;
-import org.arig.robot.vo.enums.TypeConsigne;
+import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.enums.TypeConsigne;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

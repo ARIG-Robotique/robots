@@ -1,8 +1,8 @@
 package org.arig.robot.system.pathfinding;
 
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.vo.Chemin;
-import org.arig.robot.vo.Point;
+import org.arig.robot.model.Chemin;
+import org.arig.robot.model.Point;
 
 import java.awt.*;
 import java.io.File;

@@ -31,6 +31,6 @@ public abstract class AbstractPidFilter implements IPidFilter {
                 .addField("output", getOutput())
                 .build();
 
-        monitoringWrapper.write(serie);
+        monitoringWrapper.addPoint(serie);
     }
 }

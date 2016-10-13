@@ -187,6 +187,6 @@ public class RampFilter implements IRampFilter {
                 .addField("output", getOutput())
                 .build();
 
-        monitoringWrapper.write(serie);
+        monitoringWrapper.addPoint(serie);
     }
 }

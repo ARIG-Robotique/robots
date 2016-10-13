@@ -7,5 +7,7 @@ import org.influxdb.dto.Point;
  */
 public interface IMonitoringWrapper {
 
-    void write(Point point);
+    void addPoint(Point point);
+
+    void sendToDb();
 }

@@ -1,9 +1,9 @@
 package org.arig.robot.system.pathfinding.impl;
 
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.Chemin;
+import org.arig.robot.model.Point;
 import org.arig.robot.system.pathfinding.AbstractPathFinder;
-import org.arig.robot.vo.Chemin;
-import org.arig.robot.vo.Point;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

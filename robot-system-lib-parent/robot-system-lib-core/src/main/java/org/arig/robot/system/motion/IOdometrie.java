@@ -1,6 +1,6 @@
 package org.arig.robot.system.motion;
 
-import org.arig.robot.vo.enums.TypeOdometrie;
+import org.arig.robot.model.enums.TypeOdometrie;
 
 /**
  * The Interface IOdometrie.

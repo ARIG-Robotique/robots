@@ -183,6 +183,39 @@ public abstract class AbstractPropulsionsMotors {
     }
 
     /**
+     * Vitesse courante du moteur droit
+     */
+    public Integer currentSpeedDroit() {
+        if (numMoteurDroit == AbstractPropulsionsMotors.MOTOR_1) {
+            return currentSpeedMoteur1();
+        } else if (numMoteurDroit == AbstractPropulsionsMotors.MOTOR_2) {
+            return currentSpeedMoteur2();
+        }
+
+        return null;
+    }
+
+    /**
+     * Vitesse courante du moteur gauche
+     */
+    public Integer currentSpeedGauche() {
+        if (numMoteurGauche == AbstractPropulsionsMotors.MOTOR_1) {
+            return currentSpeedMoteur1();
+        } else if (numMoteurGauche == AbstractPropulsionsMotors.MOTOR_2) {
+            return currentSpeedMoteur2();
+        }
+
+        return null;
+    }
+
+    /**
+     * Récupération de la valeur pour le stop.
+     */
+    public int getStopSpeed() {
+        return 0;
+    }
+
+    /**
      * Inits the.
      */
     public abstract void init();
@@ -205,6 +238,26 @@ public abstract class AbstractPropulsionsMotors {
      * Prints the version.
      */
     public abstract void printVersion();
+
+    /**
+     * Valeur minimal pour la vitesse du moteur.
+     */
+    public abstract int getMinSpeed();
+
+    /**
+     * Valeur maximal pour la vitesse du moteur
+     */
+    public abstract int getMaxSpeed();
+
+    /**
+     * Vitesse courante du moteur 1
+     */
+    protected abstract int currentSpeedMoteur1();
+
+    /**
+     * Vitesse courante du moteur 2
+     */
+    protected abstract int currentSpeedMoteur2();
 
     /**
      * Méthode de contrôle du bornage des commandes moteurs.

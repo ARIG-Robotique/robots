@@ -313,6 +313,26 @@ public class MD22Motors extends AbstractPropulsionsMotors {
     }
 
     @Override
+    public int getMinSpeed() {
+        return MIN_VAL_MODE_1;
+    }
+
+    @Override
+    public int getMaxSpeed() {
+        return MAX_VAL_MODE_1;
+    }
+
+    @Override
+    protected int currentSpeedMoteur1() {
+        return prevM1 - offsetVal;
+    }
+
+    @Override
+    protected int currentSpeedMoteur2() {
+        return prevM2 - offsetVal;
+    }
+
+    @Override
     public void printVersion() {
         try {
             i2cManager.sendData(deviceName, MD22Motors.VERSION_REGISTER);
