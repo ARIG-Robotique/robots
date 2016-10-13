@@ -1,8 +1,8 @@
 package org.arig.robot.system.motion;
 
+import org.arig.robot.model.enums.TypeOdometrie;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.vo.enums.TypeOdometrie;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

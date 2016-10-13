@@ -2,7 +2,7 @@ package org.arig.test.robot.system.motion;
 
 import lombok.SneakyThrows;
 import org.arig.robot.system.motion.IAsservissementPolaire;
-import org.arig.robot.vo.CommandeRobot;
+import org.arig.robot.model.CommandeRobot;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

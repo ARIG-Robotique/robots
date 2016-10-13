@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import org.arig.robot.vo.Point3D;
+import org.arig.robot.model.Point3D;
 
 /**
  * Gestion des bras robotisé a n segment.

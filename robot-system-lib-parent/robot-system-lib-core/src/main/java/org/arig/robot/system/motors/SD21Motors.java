@@ -79,6 +79,26 @@ public class SD21Motors extends AbstractPropulsionsMotors {
     }
 
     @Override
+    public int getMinSpeed() {
+        return minVal - offsetValue;
+    }
+
+    @Override
+    public int getMaxSpeed() {
+        return maxVal - offsetValue;
+    }
+
+    @Override
+    protected int currentSpeedMoteur1() {
+        return prevM1 - offsetValue;
+    }
+
+    @Override
+    protected int currentSpeedMoteur2() {
+        return prevM2 - offsetValue;
+    }
+
+    @Override
     public void printVersion() {
         sd21.printVersion();
     }

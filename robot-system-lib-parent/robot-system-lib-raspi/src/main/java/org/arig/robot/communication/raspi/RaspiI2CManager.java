@@ -25,7 +25,7 @@ public class RaspiI2CManager extends AbstractI2CManager<I2CDevice> {
     }
 
     /**
-     * Enregistrement d'un de
+     * Enregistrement d'un device I2C
      *
      * @param deviceName Nom du device
      * @param address address du device.

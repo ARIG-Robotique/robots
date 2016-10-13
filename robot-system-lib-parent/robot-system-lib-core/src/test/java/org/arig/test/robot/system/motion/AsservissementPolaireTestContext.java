@@ -11,7 +11,7 @@ import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.AsservissementPolaire;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.vo.CommandeRobot;
+import org.arig.robot.model.CommandeRobot;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

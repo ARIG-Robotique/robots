@@ -2,7 +2,7 @@ package org.arig.test.robot.system.bras;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.system.bras.impl.Bras2SegmentImpl;
-import org.arig.robot.vo.Point3D;
+import org.arig.robot.model.Point3D;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;

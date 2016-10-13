@@ -5,9 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.arig.robot.model.Point;
+import org.arig.robot.model.Position;
 import org.arig.robot.utils.ImageUtils;
-import org.arig.robot.vo.Point;
-import org.arig.robot.vo.Position;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -92,8 +92,8 @@ public abstract class AbstractPathFinder implements IPathFinder, InitializingBea
             g.drawImage(current, 0, 0, null);
 
             g.setBackground(Color.WHITE);
-            org.arig.robot.vo.Point currentPoint = null;
-            org.arig.robot.vo.Point precedencePoint = null;
+            Point currentPoint = null;
+            Point precedencePoint = null;
             for (int i = 0; i < pts.size(); i++) {
                 // Couleur du premier et des autres points
                 g.setColor((currentPoint == null) ? Color.GREEN : Color.BLACK);

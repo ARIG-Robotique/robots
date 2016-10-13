@@ -8,17 +8,17 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.exception.ObstacleFoundException;
 import org.arig.robot.model.AbstractRobotStatus;
+import org.arig.robot.model.Chemin;
+import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.Point;
+import org.arig.robot.model.Position;
+import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.vo.Chemin;
-import org.arig.robot.vo.CommandeRobot;
-import org.arig.robot.vo.Point;
-import org.arig.robot.vo.Position;
-import org.arig.robot.vo.enums.TypeConsigne;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -50,10 +50,10 @@ public class MouvementManager implements InitializingBean {
     private Abstract2WheelsEncoders encoders;
 
     /**
-     * The motors.
+     * The propulsionsMotors.
      */
     @Autowired
-    private AbstractPropulsionsMotors motors;
+    private AbstractPropulsionsMotors propulsionsMotors;
 
     /**
      * The conv.
@@ -171,8 +171,8 @@ public class MouvementManager implements InitializingBean {
         resetEncodeurs();
 
         // Initialisation du contrôle moteurs
-        motors.init();
-        motors.printVersion();
+        propulsionsMotors.init();
+        propulsionsMotors.printVersion();
 
         // Arret
         stop();
@@ -189,8 +189,8 @@ public class MouvementManager implements InitializingBean {
      * Stop.
      */
     public void stop() {
-        motors.stopDroit();
-        motors.stopGauche();
+        propulsionsMotors.stopDroit();
+        propulsionsMotors.stopGauche();
         asservPolaire.reset(true);
     }
 
@@ -220,7 +220,7 @@ public class MouvementManager implements InitializingBean {
         }
 
         // 3. Envoi aux moteurs
-        motors.generateMouvement(cmdRobot.getMoteur().getGauche(), cmdRobot.getMoteur().getDroit());
+        propulsionsMotors.generateMouvement(cmdRobot.getMoteur().getGauche(), cmdRobot.getMoteur().getDroit());
 
         // 4. Gestion des flags pour indiquer l'approche et l'atteinte sur l'objectif
         gestionFlags();

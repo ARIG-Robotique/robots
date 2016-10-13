@@ -2,10 +2,10 @@ package org.arig.robot.system.motion;
 
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.IRampFilter;
+import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
-import org.arig.robot.vo.CommandeRobot;
-import org.arig.robot.vo.enums.TypeConsigne;
 import org.influxdb.dto.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -130,6 +130,6 @@ public class AsservissementPolaire implements IAsservissementPolaire {
                 .addField("cmdMotD", cmdRobot.getMoteur().getDroit())
                 .build();
 
-        monitoringWrapper.write(serie);
+        monitoringWrapper.addPoint(serie);
     }
 }

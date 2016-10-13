@@ -130,6 +130,6 @@ public abstract class Abstract2WheelsEncoders {
                 .addField("orientation", getOrientation())
                 .build();
 
-        monitoringWrapper.write(serie);
+        monitoringWrapper.addPoint(serie);
     }
 }

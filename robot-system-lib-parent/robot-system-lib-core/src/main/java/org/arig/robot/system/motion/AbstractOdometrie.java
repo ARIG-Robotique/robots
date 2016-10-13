@@ -2,10 +2,10 @@ package org.arig.robot.system.motion;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.arig.robot.model.Position;
+import org.arig.robot.model.enums.TypeOdometrie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.vo.Position;
-import org.arig.robot.vo.enums.TypeOdometrie;
 import org.influxdb.dto.Point;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +92,6 @@ public abstract class AbstractOdometrie implements IOdometrie, InitializingBean 
                 .addField("type", type.ordinal())
                 .build();
 
-        monitoringWrapper.write(serie);
+        monitoringWrapper.addPoint(serie);
     }
 }
