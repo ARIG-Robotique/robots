@@ -19,15 +19,9 @@ public abstract class Abstract2WheelsEncoders {
     @Autowired
     private IMonitoringWrapper monitoringWrapper;
 
-    /**
-     * The distance.
-     */
     @Getter
     private double distance;
 
-    /**
-     * The orientation.
-     */
     @Getter
     private double orientation;
 

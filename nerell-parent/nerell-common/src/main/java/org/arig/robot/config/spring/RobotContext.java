@@ -17,6 +17,7 @@ import org.arig.robot.system.motion.AsservissementPolaire;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motion.OdometrieLineaire;
+import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -33,11 +34,6 @@ import java.io.File;
 @Configuration
 @PropertySource({"classpath:application.properties"})
 public class RobotContext {
-
-    @Bean
-    public IMonitoringWrapper monitoringWrapper() {
-        return new MonitoringJsonWrapper("logs/timeDatas");
-    }
 
     @Bean
     public ConvertionRobotUnit convertisseur() {
@@ -86,6 +82,30 @@ public class RobotContext {
         pid.setMode(IPidFilter.PidMode.AUTOMATIC);
 
         pid.setTunings(IConstantesNerellConfig.kpOrientation, IConstantesNerellConfig.kiOrientation, IConstantesNerellConfig.kdOrientation);
+        return pid;
+    }
+
+    @Bean(name = "pidMoteurDroit")
+    public IPidFilter pidMoteurDroit(AbstractPropulsionsMotors motors) {
+        log.info("Configuration PID moteur droit");
+        CompletePidFilter pid = new CompletePidFilter("pid_mot_droit");
+        pid.setSampleTime((int) IConstantesNerellConfig.asservTimeMs);
+        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
+        pid.setOutputLimits(motors.getMinSpeed(), motors.getMaxSpeed());
+
+        pid.setTunings(IConstantesNerellConfig.kpMotDroit, IConstantesNerellConfig.kiMotDroit, IConstantesNerellConfig.kdMotDroit);
+        return pid;
+    }
+
+    @Bean(name = "pidMoteurGauche")
+    public IPidFilter pidMoteurGauche(AbstractPropulsionsMotors motors) {
+        log.info("Configuration PID moteur gauche");
+        CompletePidFilter pid = new CompletePidFilter("pid_mot_gauche");
+        pid.setSampleTime((int) IConstantesNerellConfig.asservTimeMs);
+        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
+        pid.setOutputLimits(motors.getMinSpeed(), motors.getMaxSpeed());
+
+        pid.setTunings(IConstantesNerellConfig.kpMotGauche, IConstantesNerellConfig.kiMotGauche, IConstantesNerellConfig.kdMotGauche);
         return pid;
     }
 
