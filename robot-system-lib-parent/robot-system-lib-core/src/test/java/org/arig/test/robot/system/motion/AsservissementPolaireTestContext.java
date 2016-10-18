@@ -80,6 +80,26 @@ public class AsservissementPolaireTestContext {
         return pid;
     }
 
+    @Bean(name = "pidMoteurDroit")
+    public IPidFilter pidMoteurDroit() {
+        log.info("Configuration PID moteur droit");
+        CompletePidFilter pid = new CompletePidFilter("pid_mot_droit");
+        pid.setSampleTime(SAMPLE_TIME_MS);
+        pid.setTunings(KP, KI, KD);
+        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
+        return pid;
+    }
+
+    @Bean(name = "pidMoteurGauche")
+    public IPidFilter pidMoteurGauche() {
+        log.info("Configuration PID moteur gauche");
+        CompletePidFilter pid = new CompletePidFilter("pid_mot_gauche");
+        pid.setSampleTime(SAMPLE_TIME_MS);
+        pid.setTunings(KP, KI, KD);
+        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
+        return pid;
+    }
+
     @Bean(name = "rampDistance")
     public IRampFilter rampDistance() {
         log.info("Configuration RampFilter Distance");

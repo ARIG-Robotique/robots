@@ -89,7 +89,7 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
      * @return the int
      *
      * @throws I2CException
-     * @see <a href="https://www.github.com/ARIG-ssociation/quadratic-reader/">GitHub Quadratic Reader</a>
+     * @see <a href="https://github.com/ARIG-Robotique/quadratic-reader">GitHub Quadratic Reader</a>
      */
     private int lectureData(final String deviceName) throws I2CException {
         try {

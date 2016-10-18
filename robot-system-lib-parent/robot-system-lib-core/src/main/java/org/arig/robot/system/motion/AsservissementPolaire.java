@@ -22,55 +22,40 @@ public class AsservissementPolaire implements IAsservissementPolaire {
     @Autowired
     private IMonitoringWrapper monitoringWrapper;
 
-    /**
-     * The commande robot.
-     */
     @Autowired
     private CommandeRobot cmdRobot;
 
-    /**
-     * The encoders.
-     */
     @Autowired
     private Abstract2WheelsEncoders encoders;
 
-    /**
-     * The pid distance.
-     */
     @Autowired
     @Qualifier("pidDistance")
     private IPidFilter pidDistance;
 
-    /**
-     * The pid orientation.
-     */
     @Autowired
     @Qualifier("pidOrientation")
     private IPidFilter pidOrientation;
 
-    /**
-     * The filter distance.
-     */
+    @Autowired
+    @Qualifier("pidMoteurDroit")
+    private IPidFilter pidMoteurDroit;
+
+    @Autowired
+    @Qualifier("pidMoteurGauche")
+    private IPidFilter pidMoteurGauche;
+
     @Autowired
     @Qualifier("rampDistance")
     private IRampFilter rampDistance;
 
-    /**
-     * The filter orientation.
-     */
     @Autowired
     @Qualifier("rampOrientation")
     private IRampFilter rampOrientation;
 
-    /**
-     * The output distance.
-     */
     private double outputDistance;
-
-    /**
-     * The output orientation.
-     */
     private double outputOrientation;
+    private double vitesseDistance;
+    private double vitesseOrientation;
 
     /**
      * Instantiates a new asservissement polaire.
@@ -88,6 +73,8 @@ public class AsservissementPolaire implements IAsservissementPolaire {
     public void reset(final boolean resetFilters) {
         pidDistance.reset();
         pidOrientation.reset();
+        pidMoteurDroit.reset();
+        pidMoteurGauche.reset();
 
         if (resetFilters) {
             rampDistance.reset();
@@ -100,22 +87,25 @@ public class AsservissementPolaire implements IAsservissementPolaire {
         // Application du filtre pour la génération du profil trapézoidale et définition des consignes
         // de distance pour le mode DIST ou XY
         if (cmdRobot.isType(TypeConsigne.DIST) || cmdRobot.isType(TypeConsigne.XY)) {
-            double setPointDistance = rampDistance.filter(cmdRobot.getVitesse().getDistance(), cmdRobot.getConsigne().getDistance(), cmdRobot.isFrein());
-            outputDistance = pidDistance.compute(setPointDistance, encoders.getDistance());
+            outputDistance = pidDistance.compute(cmdRobot.getConsigne().getDistance(), encoders.getDistance());
+            vitesseDistance = rampDistance.filter(cmdRobot.getVitesse().getDistance(), outputDistance, cmdRobot.isFrein());
         } else {
-            outputDistance = 0;
+            outputDistance = vitesseDistance = 0;
         }
-        // Toujours le frein pour l'orientation
+        // Génération consigne pour l'orientation
         if (cmdRobot.isType(TypeConsigne.ANGLE) || cmdRobot.isType(TypeConsigne.XY)) {
-            double setPointOrientation = rampOrientation.filter(cmdRobot.getVitesse().getOrientation(), cmdRobot.getConsigne().getOrientation(), true);
-            outputOrientation = pidOrientation.compute(setPointOrientation, encoders.getOrientation());
+            outputOrientation = pidOrientation.compute(cmdRobot.getConsigne().getOrientation(), encoders.getOrientation());
+            // FIXME : Bypass ramp orientation en mode XY
+            vitesseOrientation = rampOrientation.filter(cmdRobot.getVitesse().getOrientation(), outputOrientation, cmdRobot.isFrein());
         } else {
-            outputOrientation = 0;
+            outputOrientation = vitesseOrientation = 0;
         }
 
         // Consigne moteurs
-        cmdRobot.getMoteur().setDroit((int) (outputDistance + outputOrientation));
-        cmdRobot.getMoteur().setGauche((int) (outputDistance - outputOrientation));
+        double cmdMotDroit = pidMoteurDroit.compute(vitesseDistance + vitesseOrientation, encoders.getDroit());
+        double cmdMotGauche = pidMoteurGauche.compute(vitesseDistance - vitesseOrientation, encoders.getGauche());
+        cmdRobot.getMoteur().setDroit((int) cmdMotDroit);
+        cmdRobot.getMoteur().setGauche((int) cmdMotGauche);
 
         sendMonitoring();
     }
@@ -125,10 +115,12 @@ public class AsservissementPolaire implements IAsservissementPolaire {
         MonitorPoint serie = new MonitorPoint()
                 .tableName("asserv_polaire")
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                .addField("outDistance", outputDistance)
-                .addField("outOrientation", outputOrientation)
-                .addField("cmdMotG", cmdRobot.getMoteur().getGauche())
-                .addField("cmdMotD", cmdRobot.getMoteur().getDroit());
+                .addField("outputDistance", outputDistance)
+                .addField("outputOrientation", outputOrientation)
+                .addField("vitesseDistance", vitesseDistance)
+                .addField("vitesseOrientation", vitesseOrientation)
+                .addField("cmdMotD", cmdRobot.getMoteur().getDroit())
+                .addField("cmdMotG", cmdRobot.getMoteur().getGauche());
 
         monitoringWrapper.addPoint(serie);
     }
