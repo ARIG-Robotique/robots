@@ -3,6 +3,8 @@ package org.arig.robot.system;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.NotYetImplementedException;
@@ -22,6 +24,8 @@ import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+
+import java.util.Arrays;
 
 /**
  * The Class MouvementManager.
@@ -267,14 +271,6 @@ public class MouvementManager implements InitializingBean {
                 cmdRobot.getConsigne().setOrientation((long) (cmdRobot.getConsigne().getOrientation() - encoders.getOrientation()));
             }
         }
-
-//        if (csvCollector != null) {
-//            CsvData c = csvCollector.getCurrent();
-//            c.setConsigneDistance(cmdRobot.getConsigne().getDistance());
-//            c.setConsigneOrient(cmdRobot.getConsigne().getOrientation());
-//            c.setVitesseDistance(cmdRobot.getVitesse().getDistance());
-//            c.setVitesseOrient(cmdRobot.getVitesse().getOrientation());
-//        }
     }
 
     /**
@@ -362,13 +358,6 @@ public class MouvementManager implements InitializingBean {
                 trajetEnApproche = true;
             }
         }
-
-//        if (csvCollector != null) {
-//            CsvData c = csvCollector.getCurrent();
-//            c.setModeAsserv(cmdRobot.typeAsserv());
-//            c.setTrajetAtteint(trajetAtteint);
-//            c.setTrajetEnApproche(trajetEnApproche);
-//        }
     }
 
     /**
@@ -592,7 +581,7 @@ public class MouvementManager implements InitializingBean {
 
     private void cmdAvanceMMByType(final double distance, TypeConsigne... types) throws ObstacleFoundException {
         if (distance > 0) {
-            log.info("{} de {}mm en mode : {}", distance > 0 ? "Avance" : "Recul", distance, types.toString());
+            log.info("{} de {}mm en mode : {}", distance > 0 ? "Avance" : "Recul", distance, StringUtils.join(types, ", "));
         }
 
         cmdRobot.setTypes(types);
