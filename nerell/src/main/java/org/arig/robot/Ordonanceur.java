@@ -191,6 +191,6 @@ public class Ordonanceur {
         ioService.clearTeamColor();
 
         // On envoi les datas collecté
-        monitoringWrapper.sendToDb();
+        monitoringWrapper.writeToDirectory();
     }
 }

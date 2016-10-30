@@ -1,8 +1,11 @@
 package org.arig.test.robot.system.motion;
 
 import lombok.SneakyThrows;
-import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.system.motion.IAsservissementPolaire;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,19 @@ public class AsservissementPolaireTest {
     @Autowired
     private CommandeRobot cmdRobot;
 
+    @Autowired
+    private IMonitoringWrapper monitoringWrapper;
+
+    @Before
+    public void before() {
+        monitoringWrapper.clean();
+    }
+
+    @After
+    public void after() {
+        monitoringWrapper.writeToDirectory();
+    }
+
     @Test
     @SneakyThrows
     public void testAsserv() {
@@ -29,7 +45,7 @@ public class AsservissementPolaireTest {
 
         for (int i = 2000 ; i >= 0 ; i--) {
             asserv.process();
-            Thread.currentThread().sleep(10);
+            Thread.currentThread().sleep(1);
         }
     }
 }

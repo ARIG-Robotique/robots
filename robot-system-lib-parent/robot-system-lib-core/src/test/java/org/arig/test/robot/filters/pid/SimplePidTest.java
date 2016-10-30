@@ -3,7 +3,10 @@ package org.arig.test.robot.filters.pid;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.pid.SimplePidFilter;
+import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +18,31 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { PidContext.class })
+@ContextConfiguration(classes = { PidTestContext.class })
 public class SimplePidTest {
 
     @Autowired
     private SimplePidFilter pid;
 
+    @Autowired
+    private IMonitoringWrapper monitoringWrapper;
+
+    @Before
+    public void before() {
+        monitoringWrapper.clean();
+        pid.reset();
+    }
+
+    @After
+    public void after() {
+        monitoringWrapper.writeToDirectory();
+    }
+
     @Test
     @SneakyThrows
     public void testP() {
         double consigne = 100;
-        double input = 0, output = 0;
+        double input = 0, output;
         for (int i = 0 ; i < 100 ; i++) {
             if (i > 10) {
                 input = (i * consigne) / 100;
@@ -34,7 +51,7 @@ public class SimplePidTest {
             log.info("Test P : consigne {}, input {}, output {}", consigne, input, output);
             Assert.assertEquals(consigne - input, output, 1);
 
-            Thread.currentThread().sleep(10);
+            Thread.currentThread().sleep(1);
         }
     }
 }

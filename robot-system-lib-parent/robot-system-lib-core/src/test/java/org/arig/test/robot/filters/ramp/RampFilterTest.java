@@ -2,6 +2,9 @@ package org.arig.test.robot.filters.ramp;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.ramp.IRampFilter;
+import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,19 @@ public class RampFilterTest {
 
     @Autowired
     private IRampFilter filter;
+
+    @Autowired
+    private IMonitoringWrapper monitoringWrapper;
+
+    @Before
+    public void before() {
+        monitoringWrapper.clean();
+    }
+
+    @After
+    public void after() {
+        monitoringWrapper.writeToDirectory();
+    }
 
     @Test
     public void testFilter() throws Exception {

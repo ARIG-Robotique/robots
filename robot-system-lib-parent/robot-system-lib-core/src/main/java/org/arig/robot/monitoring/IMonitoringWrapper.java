@@ -1,13 +1,15 @@
 package org.arig.robot.monitoring;
 
-import org.influxdb.dto.Point;
+import org.arig.robot.model.MonitorPoint;
 
 /**
  * @author gdepuille on 11/10/16.
  */
 public interface IMonitoringWrapper {
 
-    void addPoint(Point point);
+    void clean();
 
-    void sendToDb();
+    void addPoint(MonitorPoint point);
+
+    void writeToDirectory();
 }

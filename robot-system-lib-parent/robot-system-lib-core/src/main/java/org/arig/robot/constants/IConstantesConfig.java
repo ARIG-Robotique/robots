@@ -1,7 +1,7 @@
 package org.arig.robot.constants;
 
 /**
- * Created by gregorydepuille@sglk.local on 13/10/16.
+ * @author gdepuille on 13/10/16.
  */
 public interface IConstantesConfig {
 

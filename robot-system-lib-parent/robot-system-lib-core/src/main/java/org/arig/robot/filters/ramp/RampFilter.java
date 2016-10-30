@@ -2,6 +2,7 @@ package org.arig.robot.filters.ramp;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.MonitorPoint;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.influxdb.dto.Point;
@@ -177,15 +178,15 @@ public class RampFilter implements IRampFilter {
 
     protected void sendMonitoring() {
         // Construction du monitoring
-        Point serie = Point.measurement(name)
+        MonitorPoint serie = new MonitorPoint()
+                .tableName(name)
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .addField("distanceDeceleration", getDistanceDecel())
                 .addField("distanceRestante", getDistanceRestante())
                 .addField("vitesseCourante", getVitesseCourante())
                 .addField("vitesseDemande", getVitesseDemande())
                 .addField("frein", isFrein())
-                .addField("output", getOutput())
-                .build();
+                .addField("output", getOutput());
 
         monitoringWrapper.addPoint(serie);
     }

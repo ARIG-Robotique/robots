@@ -5,16 +5,20 @@ import org.arig.robot.filters.pid.CompletePidFilter;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.IRampFilter;
 import org.arig.robot.filters.ramp.RampFilter;
+import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.arig.robot.monitoring.InfluxDbWrapper;
+import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.AsservissementPolaire;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.model.CommandeRobot;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+
+import java.io.File;
 
 /**
  * @author gdepuille on 19/03/15.
@@ -28,6 +32,9 @@ public class AsservissementPolaireTestContext {
     private static final double KP = 0.1;
     private static final double KI = 0.1;
     private static final double KD = 0.1;
+
+    @Autowired
+    private Environment env;
 
     @Bean
     public ConvertionRobotUnit convertisseur() {
@@ -87,13 +94,7 @@ public class AsservissementPolaireTestContext {
 
     @Bean
     public IMonitoringWrapper monitoringWrapper() {
-        InfluxDbWrapper w = new InfluxDbWrapper();
-        w.setUrl("http://localhost:8086");
-        w.setUsername("xx");
-        w.setPassword("xx");
-        w.setDbName("tua");
-        w.setRetentionPolicy("autogen");
-
-        return w;
+        String directory = String.format("%s%s%s", env.getRequiredProperty("java.io.tmpdir"), File.separator, "arig/robot/asservPolaireTest");
+        return new MonitoringJsonWrapper(directory);
     }
 }
