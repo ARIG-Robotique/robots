@@ -1,0 +1,14 @@
+description = "ARIG Association - Nerell Robot"
+
+dependencies {
+	compile(
+		[project(':nerell-parent:nerell-common')],
+		[project(':robot-system-lib-parent:robot-system-lib-raspi')]
+	)
+}
+
+// Tâche de copy des dépendances
+task copyDependencies(type: Copy) {
+  into "$buildDir/dependencies"
+  from configurations.runtime
+}
