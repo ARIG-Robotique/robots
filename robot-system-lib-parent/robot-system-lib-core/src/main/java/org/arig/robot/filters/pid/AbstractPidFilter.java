@@ -1,5 +1,6 @@
 package org.arig.robot.filters.pid;
 
+import org.arig.robot.model.MonitorPoint;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.influxdb.dto.Point;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +23,14 @@ public abstract class AbstractPidFilter implements IPidFilter {
 
     protected void sendMonitoring() {
         // Construction du monitoring
-        Point serie = Point.measurement(name)
+        MonitorPoint serie = new MonitorPoint()
+                .tableName(name)
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .addField("setPoint", getSetPoint())
                 .addField("input", getInput())
                 .addField("error", getError())
                 .addField("errorSum", getErrorSum())
-                .addField("output", getOutput())
-                .build();
+                .addField("output", getOutput());
 
         monitoringWrapper.addPoint(serie);
     }

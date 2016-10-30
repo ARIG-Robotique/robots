@@ -8,18 +8,20 @@ import org.arig.robot.constants.IConstantesGPIO;
 import org.arig.robot.constants.IConstantesRobot;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.filters.values.MovingIntegerValueAverage;
+import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.MonitorPoint;
+import org.arig.robot.model.Point;
+import org.arig.robot.model.Position;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.model.CommandeRobot;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,13 +36,9 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
     @Autowired
     private IMonitoringWrapper monitoringWrapper;
 
-    /** The position. */
     @Autowired
     @Qualifier("currentPosition")
     private Position position;
-
-    @Autowired
-    private CommandeRobot cmdRobot;
 
     @Autowired
     private I2CAdcAnalogInput analogInput;
@@ -79,21 +77,20 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             int avgLateralAvantDroit = gpAvantLateralDroit.average(rawLateralAvantDroit);
 
             // Construction du monitoring
-            monitoringWrapper.addPoint(
-                org.influxdb.dto.Point.measurement("avoiding")
-                    .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                    .addField("seuilAvant", seuilAvant)
-                    .addField("seuilLateralAvant", seuilLateralAvant)
-                    .addField("rawAvantGauche", rawAvantGauche)
-                    .addField("avgAvantGauche", avgAvantGauche)
-                    .addField("rawAvantDroit", rawAvantDroit)
-                    .addField("avgAvantDroit", avgAvantDroit)
-                    .addField("rawLateralAvantGauche", rawLateralAvantGauche)
-                    .addField("avgLateralAvantGauche", avgLateralAvantGauche)
-                    .addField("rawLateralAvantDroit", rawLateralAvantDroit)
-                    .addField("avgLateralAvantDroit", avgLateralAvantDroit)
-                    .build()
-            );
+            MonitorPoint serie = new MonitorPoint()
+                .tableName("avoiding")
+                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                .addField("seuilAvant", seuilAvant)
+                .addField("seuilLateralAvant", seuilLateralAvant)
+                .addField("rawAvantGauche", rawAvantGauche)
+                .addField("avgAvantGauche", avgAvantGauche)
+                .addField("rawAvantDroit", rawAvantDroit)
+                .addField("avgAvantDroit", avgAvantDroit)
+                .addField("rawLateralAvantGauche", rawLateralAvantGauche)
+                .addField("avgLateralAvantGauche", avgLateralAvantGauche)
+                .addField("rawLateralAvantDroit", rawLateralAvantDroit)
+                .addField("avgLateralAvantDroit", avgLateralAvantDroit);
+            monitoringWrapper.addPoint(serie);
 
             if (avgAvantGauche > seuilAvant) {
                 Point p = getPointFromAngle(distanceDetectionObstacleMm, 15);

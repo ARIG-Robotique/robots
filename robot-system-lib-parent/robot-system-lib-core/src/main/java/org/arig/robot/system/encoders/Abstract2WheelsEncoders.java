@@ -2,8 +2,8 @@ package org.arig.robot.system.encoders;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.MonitorPoint;
 import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.influxdb.dto.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.TimeUnit;
@@ -122,13 +122,12 @@ public abstract class Abstract2WheelsEncoders {
 
     private void sendMonitoring() {
         // Construction du monitoring
-        Point serie = Point.measurement(name)
+        MonitorPoint serie = new MonitorPoint().tableName(name)
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .addField("gauche", getGauche())
                 .addField("droit", getDroit())
                 .addField("distance", getDistance())
-                .addField("orientation", getOrientation())
-                .build();
+                .addField("orientation", getOrientation());
 
         monitoringWrapper.addPoint(serie);
     }

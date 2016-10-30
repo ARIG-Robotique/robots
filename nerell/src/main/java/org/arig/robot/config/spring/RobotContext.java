@@ -11,7 +11,7 @@ import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.IRampFilter;
 import org.arig.robot.filters.ramp.RampFilter;
 import org.arig.robot.model.RobotName;
-import org.arig.robot.monitoring.InfluxDbWrapper;
+import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.system.MouvementManager;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.motion.AsservissementPolaire;
@@ -48,15 +48,8 @@ public class RobotContext {
     }
 
     @Bean
-    public InfluxDbWrapper influxDbWrapper() {
-        final InfluxDbWrapper w = new InfluxDbWrapper();
-        w.setUrl(env.getRequiredProperty("monitoring.influxdb.url"));
-        w.setUsername(env.getRequiredProperty("monitoring.influxdb.username"));
-        w.setPassword(env.getRequiredProperty("monitoring.influxdb.password"));
-        w.setDbName(env.getRequiredProperty("monitoring.influxdb.dbname"));
-        w.setRetentionPolicy(env.getRequiredProperty("monitoring.influxdb.retentionPolicy"));
-
-        return w;
+    public MonitoringJsonWrapper monitoringWrapper() {
+        return new MonitoringJsonWrapper("./logs/influx");
     }
 
     @Bean

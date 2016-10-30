@@ -3,6 +3,7 @@ package org.arig.robot.system.motion;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.IRampFilter;
 import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.MonitorPoint;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
@@ -122,13 +123,13 @@ public class AsservissementPolaire implements IAsservissementPolaire {
 
     private void sendMonitoring() {
         // Construction du monitoring
-        Point serie = Point.measurement("asserv_polaire")
+        MonitorPoint serie = new MonitorPoint()
+                .tableName("asserv_polaire")
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .addField("outDistance", outputDistance)
                 .addField("outOrientation", outputOrientation)
                 .addField("cmdMotG", cmdRobot.getMoteur().getGauche())
-                .addField("cmdMotD", cmdRobot.getMoteur().getDroit())
-                .build();
+                .addField("cmdMotD", cmdRobot.getMoteur().getDroit());
 
         monitoringWrapper.addPoint(serie);
     }
