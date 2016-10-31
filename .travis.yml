@@ -4,10 +4,10 @@ sudo: required
 jdk:
   - oraclejdk8
 
-services:
-  - docker
+#services:
+#  - docker
 
-before_install:
-  - docker pull influxdb:1.0.2-alpine
-  - docker run -d -p 8083:8083 -p 8086:8086 influxdb:1.0.2-alpine
-  - docker ps -a
+#before_install:
+#  - docker pull influxdb:1.0.2-alpine
+#  - docker run -d -p 8083:8083 -p 8086:8086 influxdb:1.0.2-alpine
+#  - docker ps -a
