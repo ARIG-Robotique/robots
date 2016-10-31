@@ -1,9 +1,9 @@
-package robot.communication.bouchon;
+package org.arig.robot.communication.bouchon;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.AbstractI2CManager;
 import org.arig.robot.exception.I2CException;
-import robot.model.bouchon.BouchonI2CDevice;
+import org.arig.robot.model.bouchon.BouchonI2CDevice;
 
 import java.util.Set;
 

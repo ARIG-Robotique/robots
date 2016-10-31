@@ -1,4 +1,4 @@
-package robot.model.bouchon;
+package org.arig.robot.model.bouchon;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

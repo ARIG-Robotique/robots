@@ -25,6 +25,7 @@ configure(allprojects) {
 		springVersion = '4.3.3.RELEASE'
 		apacheCommonsLangVersion = '3.4'
 		apacheCommonsCollectionsVersion = '4.1'
+		apacheCommonsIOVersion = '2.5'
 		googleGuavaVersion = '19.0'
 		jacksonVersion = '2.8.3'
 		pi4jVersion = '1.1'

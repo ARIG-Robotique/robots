@@ -1,7 +1,9 @@
 package org.arig.robot.services;
 
 import lombok.Setter;
+import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,6 +11,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class IOServiceBouchon implements IIOService {
+
+    @Autowired
+    private RobotStatus rs;
 
     @Setter
     private boolean tirette = false;
@@ -20,7 +25,8 @@ public class IOServiceBouchon implements IIOService {
 
     @Override
     public Team equipe() {
-        return Team.JAUNE;
+        rs.setTeam(Team.JAUNE);
+        return rs.getTeam();
     }
 
     @Override
