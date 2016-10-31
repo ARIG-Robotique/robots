@@ -35,7 +35,7 @@ public class RobotContext {
 
     @Bean
     public MonitoringJsonWrapper monitoringWrapper() {
-        return new MonitoringJsonWrapper("./logs/influx");
+        return new MonitoringJsonWrapper("logs/timeDatas");
     }
 
     @Bean

@@ -7,7 +7,6 @@ import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.TypeOdometrie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.influxdb.dto.Point;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

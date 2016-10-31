@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.MonitorPoint;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.influxdb.dto.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.TimeUnit;

@@ -2,21 +2,14 @@ package org.arig.robot.monitoring;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.arig.robot.web.controller.AbstractCapteursController;
-import org.influxdb.dto.Point;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author gdepuille on 11/10/16.
