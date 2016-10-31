@@ -47,7 +47,7 @@ public class MonitoringJsonWrapper extends AbstractMonitoringWrapper {
             final String fileName = date.format(formatter) + ".json";
             final File f = new File(saveDirectory, fileName);
             final ObjectMapper om = new ObjectMapper();
-            log.info("Enregistrement de {} points dans le fichier ");
+            log.info("Enregistrement de {} points dans le fichier {}", getPoints().size(), f.getAbsolutePath());
             om.writeValue(new BufferedOutputStream(new FileOutputStream(f)), getPoints());
 
             clean();
