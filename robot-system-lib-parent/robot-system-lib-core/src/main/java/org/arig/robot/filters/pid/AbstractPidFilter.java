@@ -2,7 +2,6 @@ package org.arig.robot.filters.pid;
 
 import org.arig.robot.model.MonitorPoint;
 import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.influxdb.dto.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.TimeUnit;

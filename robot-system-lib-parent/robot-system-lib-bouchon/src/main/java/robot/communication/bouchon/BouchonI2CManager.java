@@ -5,7 +5,6 @@ import org.arig.robot.communication.AbstractI2CManager;
 import org.arig.robot.exception.I2CException;
 import robot.model.bouchon.BouchonI2CDevice;
 
-import java.io.IOException;
 import java.util.Set;
 
 /**

@@ -10,7 +10,6 @@ dependencies {
         [group: 'org.apache.commons', name: 'commons-collections4', version: apacheCommonsCollectionsVersion],
         [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion],
         [group: 'com.google.guava', name: 'guava', version: googleGuavaVersion],
-        [group: 'org.influxdb', name: 'influxdb-java', version: influxdbVersion],
         [group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion]
     )
 }

@@ -2,10 +2,10 @@ package org.arig.test.robot.system.pathfinding;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
-import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.model.Chemin;
 import org.arig.robot.model.Point;
+import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
+import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;

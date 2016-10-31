@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.arig.robot.model.MonitorPoint;
-import org.influxdb.dto.Point;
 
 import java.util.ArrayList;
 import java.util.List;
