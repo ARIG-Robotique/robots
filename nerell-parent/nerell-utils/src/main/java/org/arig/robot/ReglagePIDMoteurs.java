@@ -19,6 +19,7 @@ public class ReglagePIDMoteurs {
 
     @SneakyThrows
     public static void main(String ... args) {
+        log.info("Demarrage de Nerell en mode reglage PID vitesse des roues ...");
 
         AnnotationConfigApplicationContext rootContext = new AnnotationConfigApplicationContext();
         rootContext.register(ReglagePIDContext.class);
@@ -62,7 +63,7 @@ public class ReglagePIDMoteurs {
         motors.stopAll();
         monitor.save();
 
-        log.info("FIN");
         rootContext.close();
+        System.exit(0);
     }
 }
