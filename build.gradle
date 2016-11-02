@@ -28,6 +28,7 @@ configure(allprojects) {
 		apacheCommonsIOVersion = '2.5'
 		googleGuavaVersion = '19.0'
 		jacksonVersion = '2.8.3'
+		influxdbVersion = '2.3'
 		pi4jVersion = '1.1'
 		slf4jVersion = '1.7.21'
 

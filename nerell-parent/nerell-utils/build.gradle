@@ -1,0 +1,16 @@
+description = "ARIG Association - Nerell utils"
+
+dependencies {
+	compile(
+		[project(':nerell-parent:nerell-common')],
+		[project(':robot-system-lib-parent:robot-system-lib-raspi')],
+		[group: 'org.influxdb', name: 'influxdb-java', version: influxdbVersion],
+	)
+}
+
+// Tâche de copy des dépendances
+task copyDependencies(type: Copy) {
+	into "$buildDir/dependencies"
+	from configurations.runtime
+}
+
