@@ -35,7 +35,7 @@ public class AsservissementPolaireTest {
 
     @After
     public void after() {
-        monitoringWrapper.writeToDirectory();
+        monitoringWrapper.save();
     }
 
     @Test

@@ -203,6 +203,6 @@ public class Ordonanceur {
         ioService.clearTeamColor();
 
         // On envoi les datas collecté
-        monitoringWrapper.writeToDirectory();
+        monitoringWrapper.save();
     }
 }

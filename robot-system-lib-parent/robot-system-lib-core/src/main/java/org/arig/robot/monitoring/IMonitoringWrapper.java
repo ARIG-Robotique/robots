@@ -11,5 +11,5 @@ public interface IMonitoringWrapper {
 
     void addPoint(MonitorPoint point);
 
-    void writeToDirectory();
+    void save();
 }

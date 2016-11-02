@@ -35,7 +35,7 @@ public class SimplePidTest {
 
     @After
     public void after() {
-        monitoringWrapper.writeToDirectory();
+        monitoringWrapper.save();
     }
 
     @Test

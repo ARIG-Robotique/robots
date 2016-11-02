@@ -184,7 +184,7 @@ public class RampFilter implements IRampFilter {
                 .addField("distanceRestante", getDistanceRestante())
                 .addField("vitesseCourante", getVitesseCourante())
                 .addField("vitesseDemande", getVitesseDemande())
-                .addField("frein", isFrein())
+                .addField("frein", isFrein() ? 1 : 0)
                 .addField("output", getOutput());
 
         monitoringWrapper.addPoint(serie);

@@ -16,7 +16,7 @@ public class MonitorPoint implements Serializable {
     private String tableName;
     private Long time;
     private TimeUnit precision = TimeUnit.MILLISECONDS;
-    private Map<String, Object> fields = new LinkedHashMap<>();
+    private Map<String, Number> fields = new LinkedHashMap<>();
 
     public MonitorPoint tableName(String tableName) {
         setTableName(tableName);
@@ -29,7 +29,7 @@ public class MonitorPoint implements Serializable {
         return this;
     }
 
-    public MonitorPoint addField(String name, Object value) {
+    public MonitorPoint addField(String name, Number value) {
         fields.put(name, value);
         return this;
     }

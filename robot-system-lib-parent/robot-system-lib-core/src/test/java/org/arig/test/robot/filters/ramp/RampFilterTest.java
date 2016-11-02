@@ -32,7 +32,7 @@ public class RampFilterTest {
 
     @After
     public void after() {
-        monitoringWrapper.writeToDirectory();
+        monitoringWrapper.save();
     }
 
     @Test

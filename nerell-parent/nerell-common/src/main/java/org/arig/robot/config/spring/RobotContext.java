@@ -10,6 +10,7 @@ import org.arig.robot.filters.ramp.RampFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
+import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.system.MouvementManager;
 import org.arig.robot.system.motion.AsservissementPolaire;
@@ -34,7 +35,7 @@ import java.io.File;
 public class RobotContext {
 
     @Bean
-    public MonitoringJsonWrapper monitoringWrapper() {
+    public IMonitoringWrapper monitoringWrapper() {
         return new MonitoringJsonWrapper("logs/timeDatas");
     }
 

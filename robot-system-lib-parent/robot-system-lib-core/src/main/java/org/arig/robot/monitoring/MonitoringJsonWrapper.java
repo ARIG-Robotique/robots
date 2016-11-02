@@ -28,7 +28,7 @@ public class MonitoringJsonWrapper extends AbstractMonitoringWrapper {
     }
 
     @Override
-    public void writeToDirectory() {
+    public void save() {
         if (!hasPoints()) {
             log.info("Aucun point de monitoring a enregistrer");
             return;
