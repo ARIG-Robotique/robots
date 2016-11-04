@@ -5,6 +5,7 @@ import org.arig.robot.filters.pid.CompletePidFilter;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringInfluxDBWrapper;
+import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,13 +18,13 @@ import org.springframework.context.annotation.Import;
 @Import({ I2CContext.class })
 public class ReglagePIDContext {
 
-    private double kpMotG = 1.0;
-    private double kiMotG = 0.0;
-    private double kdMotG = 0.0;
+    private double kpMotG = 0.08;
+    private double kiMotG = 30.0;
+    private double kdMotG = 0.008;
 
-    private double kpMotD = 0.1;
-    private double kiMotD = 0.0;
-    private double kdMotD = 0.0;
+    private double kpMotD = 0.08;
+    private double kiMotD = 30.0;
+    private double kdMotD = 0.008;
 
     @Bean
     public IMonitoringWrapper monitoringWrapper() {
@@ -43,20 +44,22 @@ public class ReglagePIDContext {
     }
 
     @Bean(name = "pidMoteurGauche")
-    public IPidFilter pidMoteurGauche() {
+    public IPidFilter pidMoteurGauche(AbstractPropulsionsMotors motors) {
         CompletePidFilter pid = new CompletePidFilter("pid_mot_g");
         pid.setSampleTime((int) IConstantesNerellConfig.asservTimeMs);
         pid.setMode(IPidFilter.PidMode.AUTOMATIC);
+        pid.setOutputLimits(motors.getMinSpeed(), motors.getMaxSpeed());
 
         pid.setTunings(kpMotG, kiMotG, kdMotG);
         return pid;
     }
 
     @Bean(name = "pidMoteurDroit")
-    public IPidFilter pidMoteurDroit() {
+    public IPidFilter pidMoteurDroit(AbstractPropulsionsMotors motors) {
         CompletePidFilter pid = new CompletePidFilter("pid_mot_d");
         pid.setSampleTime((int) IConstantesNerellConfig.asservTimeMs);
         pid.setMode(IPidFilter.PidMode.AUTOMATIC);
+        pid.setOutputLimits(motors.getMinSpeed(), motors.getMaxSpeed());
 
         pid.setTunings(kpMotD, kiMotD, kdMotD);
         return pid;
