@@ -25,7 +25,9 @@ public class RampFilter implements IRampFilter {
 
     private String name;
 
+    @Getter
     private double sampleTimeS;
+
     private double rampAcc;
     private double rampDec;
     private double stepVitesseAccel;
@@ -48,6 +50,9 @@ public class RampFilter implements IRampFilter {
 
     @Getter
     private boolean frein;
+
+    @Getter
+    private boolean bypass;
 
     /**
      * Instantiates a new ramp.
@@ -146,24 +151,34 @@ public class RampFilter implements IRampFilter {
      */
     @Override
     public double filter(final double vitesseDemande, final double distanceRestante, final boolean frein) {
+        return filter(vitesseDemande, distanceRestante, frein, false);
+    }
 
+    @Override
+    public double filter(double vitesseDemande, double distanceRestante, boolean frein, boolean bypass) {
         this.vitesseDemande = vitesseDemande;
         this.distanceRestante = distanceRestante;
         this.frein = frein;
+        this.bypass = bypass;
 
         // Calcul de la distance de décéleration en fonction des parametres
         distanceDecel = conv.mmToPulse(vitesseCourante * vitesseCourante / (2 * rampDec));
-        if (vitesseCourante > vitesseDemande || (Math.abs(distanceRestante) <= distanceDecel && frein)) {
-            vitesseCourante -= stepVitesseDecel;
-        } else if (vitesseCourante < vitesseDemande) {
-            vitesseCourante += stepVitesseAccel;
+        if (!bypass) {
+            if (vitesseCourante > vitesseDemande || (Math.abs(distanceRestante) <= distanceDecel && frein)) {
+                vitesseCourante -= stepVitesseDecel;
+            } else if (vitesseCourante < vitesseDemande) {
+                vitesseCourante += stepVitesseAccel;
+            }
+
+            // Valeur max (evite les oscilations en régime établie)
+            vitesseCourante = Math.min(vitesseCourante, vitesseDemande);
+
+            // Controle pour interdire les valeurs négatives
+            vitesseCourante = Math.max(vitesseCourante, 0);
+
+        } else {
+            vitesseCourante = Math.abs(vitesseDemande);
         }
-
-        // Valeur max (evite les oscilations en régime établie)
-        vitesseCourante = Math.min(vitesseCourante, vitesseDemande);
-
-        // Controle pour interdire les valeurs négatives
-        vitesseCourante = Math.max(vitesseCourante, 0);
 
         // Calcul de la valeur théorique en fonction de la vitesse.
         double ecartTheorique = conv.mmToPulse(vitesseCourante) * sampleTimeS;
@@ -173,9 +188,10 @@ public class RampFilter implements IRampFilter {
         output = ecartTheorique;
         sendMonitoring();
         return output;
+
     }
 
-    protected void sendMonitoring() {
+    private void sendMonitoring() {
         // Construction du monitoring
         MonitorPoint serie = new MonitorPoint()
                 .tableName(name)
@@ -185,6 +201,7 @@ public class RampFilter implements IRampFilter {
                 .addField("vitesseCourante", getVitesseCourante())
                 .addField("vitesseDemande", getVitesseDemande())
                 .addField("frein", isFrein() ? 1 : 0)
+                .addField("bypass", isBypass() ? 1 : 0)
                 .addField("output", getOutput());
 
         monitoringWrapper.addPoint(serie);

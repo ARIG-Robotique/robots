@@ -5,19 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.exception.ObstacleFoundException;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.model.Team;
-import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.IAction;
 import org.arig.robot.system.MouvementManager;
-import org.arig.robot.utils.ConvertionRobotUnit;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
@@ -67,8 +58,8 @@ public class BalladeSurTableTestAction implements IAction {
             mv.pathTo(590, 1550);
             mv.pathTo(590, 260);*/
 
-            mv.pathTo(590, 1550);
-            mv.pathTo(590, 300);
+            mv.pathTo(590, 1250);
+            mv.pathTo(590, 600);
 
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());

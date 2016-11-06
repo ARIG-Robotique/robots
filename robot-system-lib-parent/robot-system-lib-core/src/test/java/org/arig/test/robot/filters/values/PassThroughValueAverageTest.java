@@ -14,11 +14,23 @@ public class PassThroughValueAverageTest {
 
     @Test
     public void testAverage() {
-        PassThroughValueAverage<Integer> avg = new PassThroughValueAverage();
+        PassThroughValueAverage<Integer> avg = new PassThroughValueAverage<>();
 
         for (int i = 0 ; i < 20 ; i++) {
             int res = avg.average(i);
             Assert.assertEquals(i, res);
         }
+    }
+
+    @Test
+    public void testChangeLimitNoEffect() {
+        PassThroughValueAverage<Integer> avg = new PassThroughValueAverage<>();
+        Assert.assertEquals(0, avg.size());
+
+        avg.setLimit(10);
+        Assert.assertEquals(0, avg.size());
+
+        avg.reset();
+        Assert.assertEquals(0, avg.size());
     }
 }

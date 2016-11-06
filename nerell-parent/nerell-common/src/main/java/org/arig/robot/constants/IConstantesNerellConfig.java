@@ -49,11 +49,11 @@ public interface IConstantesNerellConfig {
     // ------------------------ //
     // Configuration des rampes //
     // ------------------------ //
-    double rampAccDistance = 500.0; // en mm/s2
-    double rampDecDistance = 500.0; // en mm/s2
+    double rampAccDistance = 1000.0; // en mm/s2
+    double rampDecDistance = 800.0; // en mm/s2
 
-    double rampAccOrientation = 800.0; // en mm/s2
-    double rampDecOrientation = 800.0; // en mm/s2
+    double rampAccOrientation = 1000.0; // en mm/s2
+    double rampDecOrientation = 1000.0; // en mm/s2
 
     // -------------------------- //
     // Configuration des vitesses //
@@ -77,28 +77,26 @@ public interface IConstantesNerellConfig {
 
     double kpDistance = 0.5;
     double kiDistance = 0.0;
-    double kdDistance = 0.00050;
+    double kdDistance = 0.05;
 
     double kpOrientation = 0.5;
     double kiOrientation = 0.0;
-    double kdOrientation = 0.0050;
+    double kdOrientation = 0.05;
 
-    double kpMotDroit = 0.08;
-    double kiMotDroit = 30.0;
-    double kdMotDroit = 0.008;
+    double kpMotDroit = 0.9;
+    double kiMotDroit = 0.5;
+    double kdMotDroit = 0.0009;
 
-    double kpMotGauche = 0.08;
-    double kiMotGauche = 30.0;
-    double kdMotGauche = 0.008;
+    double kpMotGauche = 0.9;
+    double kiMotGauche = 0.5;
+    double kdMotGauche = 0.0009;
 
     // --------------------------- //
     // Paramètre mouvement manager //
     // --------------------------- //
-    double distanceMiniEntrePointMm = 400;
-    double distanceChangementVitesse = 700;
     double arretDistanceMm = 1;
     double arretOrientDeg = 1;
-    double approcheDistanceMm = 10;
+    double approcheDistanceMm = 50;
     double approcheOrientationDeg = 5;
     double angleReculDeg = 0.45;
 

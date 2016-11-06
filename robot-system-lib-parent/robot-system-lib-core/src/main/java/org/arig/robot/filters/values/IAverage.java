@@ -18,6 +18,13 @@ public interface IAverage<T> {
     void reset();
 
     /**
+     * Nombre d'élement courant pour le filtrage
+     *
+     * @return Le nombre d'élement utilisé pour le filtrage
+     */
+    int size();
+
+    /**
      * Réalise le calcul avec la nouvelle valeur.
      *
      * @param newValue Nouvelle valeur lu pour le calcul

@@ -25,8 +25,16 @@ public class RampTestContext {
     }
 
     @Bean
-    public IRampFilter filter() {
-        RampFilter f = new RampFilter("ramp_test");
+    public IRampFilter filter1() {
+        RampFilter f = new RampFilter("ramp_test1");
+        f.setRampAcc(1000);
+        f.setRampDec(1000);
+        return f;
+    }
+
+    @Bean
+    public IRampFilter filter2() {
+        RampFilter f = new RampFilter("ramp_test2");
         f.setRampAcc(1000);
         f.setRampDec(1000);
         return f;

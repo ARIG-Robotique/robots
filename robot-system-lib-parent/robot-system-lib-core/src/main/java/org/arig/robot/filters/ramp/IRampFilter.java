@@ -24,6 +24,8 @@ public interface IRampFilter {
      */
     void setSampleTime(final double value, TimeUnit unit);
 
+    double getSampleTimeS();
+
     /**
      * Sets the ramp acc.
      *
@@ -53,4 +55,16 @@ public interface IRampFilter {
      * @return the double
      */
     double filter(final double vitesseDemande, final double distanceRestante, final boolean frein);
+
+    /**
+     * Filter.
+     *
+     * @param vitesseDemande   the vitesse
+     * @param distanceRestante the consigne
+     * @param frein            the frein
+     * @param bypass           the bypass
+     *
+     * @return the double
+     */
+    double filter(final double vitesseDemande, final double distanceRestante, final boolean frein, final boolean bypass);
 }

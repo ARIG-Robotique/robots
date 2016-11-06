@@ -18,13 +18,13 @@ import org.springframework.context.annotation.Import;
 @Import({ NerellUtilsI2CContext.class })
 public class NerellUtilsReglagePIDContext {
 
-    private double kpMotG = 0.08;
-    private double kiMotG = 30.0;
-    private double kdMotG = 0.008;
+    private double kpMotG = 0.9;
+    private double kiMotG = 12.0;
+    private double kdMotG = 0.0009;
 
-    private double kpMotD = 0.08;
-    private double kiMotD = 30.0;
-    private double kdMotD = 0.008;
+    private double kpMotD = 0.9;
+    private double kiMotD = 12.0;
+    private double kdMotD = 0.0009;
 
     @Bean
     public IMonitoringWrapper monitoringWrapper() {

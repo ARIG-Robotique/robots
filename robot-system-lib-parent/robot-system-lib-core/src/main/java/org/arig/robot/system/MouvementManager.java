@@ -87,18 +87,6 @@ public class MouvementManager implements InitializingBean {
     private long startAngle;
 
     /**
-     * Valeur de distance minimale entre deux points pour faire 1 seul mouvement
-     */
-    @Setter
-    private double distanceMiniEntrePointMm = 400;
-
-    @Setter
-    private double distanceChangementVitesse = 800;
-
-    @Setter
-    private long vitesseLente = 200;
-
-    /**
      * Instantiates a new robot manager.
      *
      * @param arretDistanceMm the arret distance mm
@@ -337,7 +325,6 @@ public class MouvementManager implements InitializingBean {
      */
     public void pathTo(final double x, final double y) throws NoPathFoundException, AvoidingException {
         boolean trajetOk = false;
-        long backupVitesse = cmdRobot.getVitesse().getDistance();
 
         mainBoucle: do {
             Point ptFrom = new Point(conv.pulseToMm(position.getPt().getX()) / 10, conv.pulseToMm(position.getPt().getY()) / 10);
@@ -347,11 +334,9 @@ public class MouvementManager implements InitializingBean {
                 Chemin c = pathFinder.findPath(ptFrom, ptTo);
                 while (c.hasNext()) {
                     Point p = c.next();
-                    Point pRobot = new Point(p.getX() * 10, p.getY() * 10);
-                    double dist = 10 * (Math.sqrt(Math.pow(p.getX() - ptFrom.getX(), 2) + Math.pow(p.getY() - ptFrom.getY(), 2)));
 
                     // Processing du path
-                    processPath(dist, pRobot, backupVitesse);
+                    gotoPointMM(p.getX() * 10, p.getY() * 10, !c.hasNext());
 
                     // Mise à jour de la position From après le mouvement
                     ptFrom.setX(conv.pulseToMm(position.getPt().getX()) / 10);
@@ -362,26 +347,22 @@ public class MouvementManager implements InitializingBean {
                 trajetOk = true;
             } catch (ObstacleFoundException e) {
                 log.info("Obstacle trouvé, on tente un autre chemin");
-                cmdRobot.getVitesse().setDistance(backupVitesse);
                 for (Point echappementPoint : rs.echappementPointsCm()) {
                     try {
                         ptFrom.setX(conv.pulseToMm(position.getPt().getX()) / 10);
                         ptFrom.setY(conv.pulseToMm(position.getPt().getY()) / 10);
                         Chemin c = pathFinder.findPath(ptFrom, echappementPoint);
                         Point p = c.next();
-                        Point pRobot = new Point(p.getX() * 10, p.getY() * 10);
-                        alignFrontTo(pRobot.getX(), pRobot.getY());
+                        alignFrontTo(p.getX() * 10, p.getY() * 10);
 
                         // Une fois aligné et normalement plus en face de l'obstacle, on réactive
                         // l'évittement pour réaliser le chemin d'évittement
                         rs.enableAvoidance();
                         while (c.hasNext()) {
                             p = c.next();
-                            pRobot = new Point(p.getX() * 10, p.getY() * 10);
-                            double dist = 10 * (Math.sqrt(Math.pow(p.getX() - ptFrom.getX(), 2) + Math.pow(p.getY() - ptFrom.getY(), 2)));
 
                             // Processing du path
-                            processPath(dist, pRobot, backupVitesse);
+                            gotoPointMM(p.getX() * 10, p.getY() * 10);
 
                             // Mise à jour de la position From après le mouvement
                             ptFrom.setX(conv.pulseToMm(position.getPt().getX()) / 10);
@@ -394,38 +375,16 @@ public class MouvementManager implements InitializingBean {
                         log.warn("Point de passage impossible. On passe au suivant");
                     } finally {
                         rs.enableAvoidance();
-                        cmdRobot.getVitesse().setDistance(backupVitesse);
                     }
                 }
 
                 log.error("Erreur lors de l'évittement on tente autre chose.");
                 throw new AvoidingException();
             } finally {
-                // Restauration de la vitesse d'origine
+                // Restauration de
                 rs.enableAvoidance();
-                cmdRobot.getVitesse().setDistance(backupVitesse);
             }
         } while (!trajetOk);
-    }
-
-    private void processPath(double dist, Point pRobot, long backupVitesse) throws ObstacleFoundException {
-        log.info("Distance avec le prochain point {}mm (seuil distance 2 mvt {}mm, seuil distance vitesse {}mm)", dist, distanceMiniEntrePointMm, distanceChangementVitesse);
-        if (dist < distanceMiniEntrePointMm) {
-            // La distance est inférieur à X mm, on fait deux mouvements.
-            log.info("On y va en deux fois. Alignement front");
-            alignFrontTo(pRobot.getX(), pRobot.getY());
-            log.info("Puis ligne droite");
-            avanceMM(dist);
-        } else if (dist < distanceChangementVitesse) {
-            // La distance est inférieur on réduit la vitesse de déplacement
-            log.info("Distance trop faible on réduit la vitesse de {} à {}", cmdRobot.getVitesse().getDistance(), vitesseLente);
-            cmdRobot.getVitesse().setDistance(vitesseLente);
-            gotoPointMM(pRobot.getX(), pRobot.getY());
-        } else {
-            log.info("Ecart entre point suffisant, positionnement XY à la vitesse de {}", backupVitesse);
-            cmdRobot.getVitesse().setDistance(backupVitesse);
-            gotoPointMM(pRobot.getX(), pRobot.getY());
-        }
     }
 
     /**

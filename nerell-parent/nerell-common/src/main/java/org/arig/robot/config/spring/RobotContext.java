@@ -41,9 +41,9 @@ public class RobotContext {
         MouvementManager mv = new MouvementManager(IConstantesNerellConfig.arretDistanceMm, IConstantesNerellConfig.approcheDistanceMm,
                 IConstantesNerellConfig.arretOrientDeg, IConstantesNerellConfig.approcheOrientationDeg,
                 IConstantesNerellConfig.angleReculDeg);
-        mv.setDistanceMiniEntrePointMm(IConstantesNerellConfig.distanceMiniEntrePointMm);
-        mv.setDistanceChangementVitesse(IConstantesNerellConfig.distanceChangementVitesse);
-        mv.setVitesseLente(IConstantesNerellConfig.vitesseLente);
+        //mv.setDistanceMiniEntrePointMm(IConstantesNerellConfig.distanceMiniEntrePointMm);
+        //mv.setDistanceChangementVitesse(IConstantesNerellConfig.distanceChangementVitesse);
+        //mv.setVitesseLente(IConstantesNerellConfig.vitesseLente);
         return mv;
     }
 

@@ -24,6 +24,11 @@ public class MovingIntegerValueAverage implements IAverage<Integer> {
     }
 
     @Override
+    public int size() {
+        return queue.size();
+    }
+
+    @Override
     public void reset() {
         queue.clear();
     }

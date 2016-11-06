@@ -68,12 +68,12 @@ public class DeposeSpotTableTestAction implements IAction {
         boolean gauche = false;
         try {
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-            mv.pathTo(300, 800);
+            mv.pathTo(500, 800);
             mv.gotoOrientationDeg(90);
 
             // Dépose normal
             rs.disableAvoidance();
-            mv.gotoPointMM(300, rs.getYZoneDeposePrincipale());
+            mv.gotoPointMM(500, rs.getYZoneDeposePrincipale());
 
             rs.disableAscenseur();
             if (rs.getNbPied() > 0) {
