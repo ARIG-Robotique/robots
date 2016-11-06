@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 @Component
-public class CollectePied2Action implements IAction {
+public class CollectePied1Action implements IAction {
 
     @Autowired
     private MouvementManager mv;
@@ -32,7 +32,7 @@ public class CollectePied2Action implements IAction {
 
     @Override
     public String name() {
-        return "Collecte du pied 2";
+        return "Collecte du pied 1";
     }
 
     @Override
@@ -47,7 +47,7 @@ public class CollectePied2Action implements IAction {
         if (validTime.isAfter(LocalDateTime.now())) {
             return false;
         }
-        return !rs.isPied2Recupere() && rs.getNbPied() < IConstantesNerellConfig.nbPiedMax;
+        return !rs.isPied1Recupere() && rs.getNbPied() < IConstantesNerellConfig.nbPiedMax;
     }
 
     @Override
@@ -55,11 +55,11 @@ public class CollectePied2Action implements IAction {
         try {
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
             if (rs.getTeam() == Team.JAUNE) {
-                mv.pathTo(1400, 1300);
+                mv.pathTo(1355, 870);
             } else {
-                mv.pathTo(1400, 3000 - 1300);
+                mv.pathTo(1355, 3000 - 870);
             }
-            rs.setPied2Recupere(true);
+            rs.setPied1Recupere(true);
             completed = true;
         } catch (AvoidingException | NoPathFoundException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());

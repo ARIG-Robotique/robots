@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,10 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 @Component
-public class PriseGobeletEscalierJauneAction implements IAction {
+public class PriseGobeletClapVertAction implements IAction {
+
+    @Autowired
+    private Environment env;
 
     @Autowired
     private MouvementManager mv;
@@ -37,9 +40,6 @@ public class PriseGobeletEscalierJauneAction implements IAction {
     @Autowired
     private RobotStatus rs;
 
-    @Autowired
-    private Environment env;
-
     @Getter
     private boolean completed = false;
 
@@ -47,18 +47,18 @@ public class PriseGobeletEscalierJauneAction implements IAction {
 
     @Override
     public String name() {
-        return "Prise gobelet escalier jaune";
+        return "Prise gobelet clap vert";
     }
 
     @Override
     public int order() {
-        return (rs.getTeam() == Team.JAUNE) ? 600 : -4;
+        return (rs.getTeam() == Team.VERT) ? 4 : 0;
     }
 
     @Override
     public boolean isValid() {
         boolean adverseZoneEnabled = env.getProperty("strategy.collect.zone.adverse", Boolean.class);
-        if (rs.getTeam() == Team.VERT && !adverseZoneEnabled) {
+        if (rs.getTeam() == Team.JAUNE && !adverseZoneEnabled) {
             return false;
         }
 
@@ -73,26 +73,26 @@ public class PriseGobeletEscalierJauneAction implements IAction {
         boolean droite = false;
         try {
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-            mv.pathTo(1200, 910);
+            mv.pathTo(1500, 2500);
 
-            double r = Math.sqrt(Math.pow(830 - 1200, 2));
+            double r = Math.sqrt(Math.pow(1750 - 1500, 2) + Math.pow(2750 - 2500, 2));
             double alpha = Math.asin(115 / r);
 
             if (!ioService.produitGauche()) {
-                mv.alignFrontToAvecDecalage(830, 910, Math.toDegrees(-alpha));
+                mv.alignFrontToAvecDecalage(1750, 2750, Math.toDegrees(-alpha));
                 servosService.ouvrePriseGauche();
             } else {
-                mv.alignFrontToAvecDecalage(830, 910, Math.toDegrees(alpha));
+                mv.alignFrontToAvecDecalage(1750, 2750, Math.toDegrees(alpha));
                 servosService.ouvrePriseDroite();
                 droite = true;
             }
             mv.avanceMM(r * Math.cos(alpha) - 110);
-            rs.setGobeletEscalierJauneRecupere(true);
+            rs.setGobeletClapVertRecupere(true);
             completed = true;
         } catch (ObstacleFoundException | AvoidingException | NoPathFoundException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
-            validTime = LocalDateTime.now().plusSeconds(IConstantesNerellConfig.invalidActionTimeSecond);;
-            rs.setGobeletEscalierJauneRecupere(false);
+            validTime = LocalDateTime.now().plusSeconds(IConstantesNerellConfig.invalidActionTimeSecond);
+            rs.setGobeletClapVertRecupere(false);
         } finally {
             if (droite) {
                 servosService.priseProduitDroit();

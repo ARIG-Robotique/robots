@@ -26,6 +26,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -196,18 +197,12 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
     }
 
     @Override
-    public void construitGraphDepuisImageNoirEtBlanc(File file) {
-        if (!file.exists() && !file.canRead()) {
-            String errorMessage = String.format("Impossible d'acceder au fichier %s (Existe : %s ; Readable : %s)", file.getAbsolutePath(), file.exists(), file.canRead());
-            log.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
-        }
-
+    public void construitGraphDepuisImageNoirEtBlanc(final InputStream is) {
         StopWatch sw = new StopWatch();
         sw.start();
 
         try {
-            mainImage = ImageUtils.mirrorX(ImageIO.read(file));
+            mainImage = ImageUtils.mirrorX(ImageIO.read(is));
         } catch (IOException e) {
             log.error("Impossible de lire l'image : " + e.toString());
             throw new RuntimeException(e);

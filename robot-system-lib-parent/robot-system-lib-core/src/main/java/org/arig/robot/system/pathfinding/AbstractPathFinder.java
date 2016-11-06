@@ -17,6 +17,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -60,14 +62,21 @@ public abstract class AbstractPathFinder implements IPathFinder, InitializingBea
 
     @Override
     public void construitGraphDepuisImageNoirEtBlanc(String filePath) {
-        File f = new File(filePath);
-        if (!f.exists() && !f.canRead()) {
-            String errorMessage = String.format("Impossible d'acceder au fichier %s (Existe : %s ; Readable : %s)", filePath, f.exists(), f.canRead());
+        construitGraphDepuisImageNoirEtBlanc(new File(filePath));
+    }
+
+    @Override
+    public void construitGraphDepuisImageNoirEtBlanc(final File file) {
+        if (!file.exists() && !file.canRead()) {
+            String errorMessage = String.format("Impossible d'acceder au fichier %s (Existe : %s ; Readable : %s)", file.getAbsolutePath(), file.exists(), file.canRead());
             log.error(errorMessage);
             throw new IllegalArgumentException(errorMessage);
         }
-
-        construitGraphDepuisImageNoirEtBlanc(f);
+        try {
+            construitGraphDepuisImageNoirEtBlanc(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            log.error("Fichier introuvable.", e);
+        }
     }
 
     /**

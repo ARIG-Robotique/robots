@@ -151,10 +151,8 @@ public class Ordonanceur {
 
         log.info("Chargement de la carte");
 
-        InputStream imgMap = patternResolver.getResource("classpath:maps/" + robotStatus.getTeam().name().toLowerCase() + ".png").getInputStream();
-        File map = new File("/tmp/map.png");
-        FileCopyUtils.copy(imgMap, new FileOutputStream(map));
-        pathFinder.construitGraphDepuisImageNoirEtBlanc(map);
+        final InputStream imgMap = patternResolver.getResource("classpath:maps/autres/table-test.png").getInputStream();
+        pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
 
         // Attente tirette.
         log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");

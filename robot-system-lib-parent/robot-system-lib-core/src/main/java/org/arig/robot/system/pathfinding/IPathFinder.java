@@ -6,6 +6,7 @@ import org.arig.robot.model.Point;
 
 import java.awt.*;
 import java.io.File;
+import java.io.InputStream;
 
 /**
  * @author gdepuille on 29/12/13.
@@ -67,6 +68,13 @@ public interface IPathFinder {
      * @param file Fichier image source
      */
     void construitGraphDepuisImageNoirEtBlanc(File file);
+
+    /**
+     * Intialisation du graph par une image en noir et blanc. Le noir représente les zones inaccessible
+     *
+     * @param is InputStream image source
+     */
+    void construitGraphDepuisImageNoirEtBlanc(InputStream is);
 
     /**
      * Ajout d'un obstacle sur la map.

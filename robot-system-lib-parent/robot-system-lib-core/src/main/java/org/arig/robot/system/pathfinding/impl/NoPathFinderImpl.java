@@ -8,6 +8,7 @@ import org.arig.robot.system.pathfinding.AbstractPathFinder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -40,7 +41,11 @@ public class NoPathFinderImpl extends AbstractPathFinder {
     }
 
     @Override
-    public void construitGraphDepuisImageNoirEtBlanc(File file) {
+    public void construitGraphDepuisImageNoirEtBlanc(final File file) {
+    }
+
+    @Override
+    public void construitGraphDepuisImageNoirEtBlanc(final InputStream is) {
     }
 
     @Override

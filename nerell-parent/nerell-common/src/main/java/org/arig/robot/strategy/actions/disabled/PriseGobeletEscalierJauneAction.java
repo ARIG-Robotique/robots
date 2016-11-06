@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +23,7 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 @Component
-public class PriseGobeletClapJauneAction implements IAction {
-
-    @Autowired
-    private Environment env;
+public class PriseGobeletEscalierJauneAction implements IAction {
 
     @Autowired
     private MouvementManager mv;
@@ -40,6 +37,9 @@ public class PriseGobeletClapJauneAction implements IAction {
     @Autowired
     private RobotStatus rs;
 
+    @Autowired
+    private Environment env;
+
     @Getter
     private boolean completed = false;
 
@@ -47,12 +47,12 @@ public class PriseGobeletClapJauneAction implements IAction {
 
     @Override
     public String name() {
-        return "Prise gobelet clap jaune";
+        return "Prise gobelet escalier jaune";
     }
 
     @Override
     public int order() {
-        return (rs.getTeam() == Team.JAUNE) ? 4 : 0;
+        return (rs.getTeam() == Team.JAUNE) ? 600 : -4;
     }
 
     @Override
@@ -73,26 +73,26 @@ public class PriseGobeletClapJauneAction implements IAction {
         boolean droite = false;
         try {
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-            mv.pathTo(1500, 500);
+            mv.pathTo(1200, 910);
 
-            double r = Math.sqrt(Math.pow(1750 - 1500, 2) + Math.pow(250 - 500, 2));
+            double r = Math.sqrt(Math.pow(830 - 1200, 2));
             double alpha = Math.asin(115 / r);
 
             if (!ioService.produitGauche()) {
-                mv.alignFrontToAvecDecalage(1750, 250, Math.toDegrees(-alpha));
+                mv.alignFrontToAvecDecalage(830, 910, Math.toDegrees(-alpha));
                 servosService.ouvrePriseGauche();
             } else {
-                mv.alignFrontToAvecDecalage(1750, 250, Math.toDegrees(alpha));
+                mv.alignFrontToAvecDecalage(830, 910, Math.toDegrees(alpha));
                 servosService.ouvrePriseDroite();
                 droite = true;
             }
             mv.avanceMM(r * Math.cos(alpha) - 110);
-            rs.setGobeletClapJauneRecupere(true);
+            rs.setGobeletEscalierJauneRecupere(true);
             completed = true;
         } catch (ObstacleFoundException | AvoidingException | NoPathFoundException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
-            validTime = LocalDateTime.now().plusSeconds(IConstantesNerellConfig.invalidActionTimeSecond);
-            rs.setGobeletClapJauneRecupere(false);
+            validTime = LocalDateTime.now().plusSeconds(IConstantesNerellConfig.invalidActionTimeSecond);;
+            rs.setGobeletEscalierJauneRecupere(false);
         } finally {
             if (droite) {
                 servosService.priseProduitDroit();
