@@ -13,6 +13,7 @@ import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.IAction;
 import org.arig.robot.system.MouvementManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
@@ -20,7 +21,7 @@ import java.time.LocalDateTime;
  * @author gdepuille on 14/05/15.
  */
 @Slf4j
-//@Component
+@Component
 public class CollectePied7Action implements IAction {
 
     @Autowired
