@@ -21,5 +21,7 @@ public class RobotApplication {
 
         log.info("Fin du programme");
         jetty.stop();
+
+        System.exit(0);
     }
 }

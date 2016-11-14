@@ -20,13 +20,6 @@ public class NerellContext {
 
     @Bean
     public IMonitoringWrapper monitoringWrapper() {
-        MonitoringInfluxDBWrapper w = new MonitoringInfluxDBWrapper();
-        w.setUrl("http://sglk-dxf5xy1-lnx:8086");
-        w.setUsername("root");
-        w.setPassword("root");
-        w.setDbName("nerell_simulator");
-        w.setRetentionPolicy("autogen");
-
-        return w;
+        return new MonitoringJsonWrapper("logs/timeDatas");
     }
 }

@@ -22,14 +22,13 @@ public interface IConstantesNerellConfig {
     // Valeurs min / max en mm des axes du repères
     int minX = 170;
     int minY = 100;
-    int maxX = 2000 - 100;
-    int maxY = 3000 - 100;
-    //int maxY = 1500;
+    int maxX = 1180 - 100;
+    int maxY = 1800 - 100;
 
-    int minXEscalier = 0;
-    int maxXEscalier = 450;
-    int minYEscalier = 950;
-    int maxYEscalier = 2050;
+//    int minXEscalier = 0;
+//    int maxXEscalier = 450;
+//    int minYEscalier = 950;
+//    int maxYEscalier = 2050;
 
     // -------------------------------- //
     // Configuration moteurs propulsion //

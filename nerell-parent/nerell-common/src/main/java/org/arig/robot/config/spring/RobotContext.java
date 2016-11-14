@@ -128,8 +128,8 @@ public class RobotContext {
         pf.setAlgorithm(IConstantesNerellConfig.pathFindingAlgo);
         File pathDir = new File("./logs/paths");
         pf.setPathDir(pathDir);
-        pf.setNbTileX(200);
-        pf.setNbTileY(300);
+        pf.setNbTileX(118);
+        pf.setNbTileY(180);
 
         return pf;
     }

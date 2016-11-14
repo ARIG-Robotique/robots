@@ -159,9 +159,11 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
         boolean inTable = pt.getX() > IConstantesNerellConfig.minX && pt.getX() < IConstantesNerellConfig.maxX
                 && pt.getY() > IConstantesNerellConfig.minY && pt.getY() < IConstantesNerellConfig.maxY;
 
-        boolean inEscalier = pt.getX() > IConstantesNerellConfig.minXEscalier && pt.getX() < IConstantesNerellConfig.maxXEscalier
-                && pt.getY() > IConstantesNerellConfig.minYEscalier && pt.getY() < IConstantesNerellConfig.maxYEscalier;
+//        boolean inEscalier = pt.getX() > IConstantesNerellConfig.minXEscalier && pt.getX() < IConstantesNerellConfig.maxXEscalier
+//                && pt.getY() > IConstantesNerellConfig.minYEscalier && pt.getY() < IConstantesNerellConfig.maxYEscalier;
+//
+//        return inTable && !inEscalier;
 
-        return inTable && !inEscalier;
+        return inTable;
     }
 }

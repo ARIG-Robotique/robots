@@ -130,29 +130,20 @@ public class Ordonanceur {
         servos.setPosition(IConstantesServos.PRODUIT_DROIT, IConstantesServos.PRODUIT_DROIT_INIT);
         servos.setPosition(IConstantesServos.PRODUIT_GAUCHE, IConstantesServos.PRODUIT_GAUCHE_INIT);
 
-        mouvementManager.resetEncodeurs();
-        robotStatus.enableAsserv();
-        mouvementManager.setVitesse(100L, 800L);
-        if (robotStatus.getTeam() == Team.JAUNE) {
-            position.setPt(new Point(conv.mmToPulse(1000), conv.mmToPulse(460)));
-            position.setAngle(conv.degToPulse(90));
-        } else {
-            position.setPt(new Point(conv.mmToPulse(1000), conv.mmToPulse(3000 - 460)));
-            position.setAngle(conv.degToPulse(-90));
-        }
-
-        mouvementManager.avanceMM(200);
-        mouvementManager.reculeMM(200);
-        if (robotStatus.getTeam() == Team.JAUNE) {
-            mouvementManager.gotoOrientationDeg(45);
-        } else {
-            mouvementManager.gotoOrientationDeg(-45);
-        }
-
         log.info("Chargement de la carte");
-
         final InputStream imgMap = patternResolver.getResource("classpath:maps/autres/table-test.png").getInputStream();
         pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
+
+        mouvementManager.resetEncodeurs();
+        robotStatus.disableAvoidance();
+        robotStatus.enableAsserv();
+
+        mouvementManager.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseSuperLente);
+        position.setPt(new Point(conv.mmToPulse(165), conv.mmToPulse(165)));
+        position.setAngle(conv.degToPulse(90));
+
+        mouvementManager.gotoPointMM(590, 300);
+        mouvementManager.gotoOrientationDeg(90);
 
         // Attente tirette.
         log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");

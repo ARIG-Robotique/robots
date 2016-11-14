@@ -18,21 +18,28 @@ public class RobotStatus extends AbstractRobotStatus {
 
     private Team team;
 
-    private static List<Point> echappementJaune = new LinkedList<>();
-    private static List<Point> echappementVert = new LinkedList<>();
+//    private static List<Point> echappementJaune = new LinkedList<>();
+//    private static List<Point> echappementVert = new LinkedList<>();
+    private static List<Point> echappementTest = new LinkedList<>();
     static {
-        echappementJaune.add(new Point(110, 80));
-        echappementJaune.add(new Point(160, 70));
-        echappementJaune.add(new Point(130, 150));
+//        echappementJaune.add(new Point(110, 80));
+//        echappementJaune.add(new Point(160, 70));
+//        echappementJaune.add(new Point(130, 150));
+//        for (Point p : echappementJaune) {
+//            echappementVert.add(new Point(p.getX(), 300 - p.getY()));
+//        }
 
-        for (Point p : echappementJaune) {
-            echappementVert.add(new Point(p.getX(), 300 - p.getY()));
-        }
+        // Les 4 coins
+        echappementTest.add(new Point(300, 300));
+        echappementTest.add(new Point(1180 - 300, 300));
+        echappementTest.add(new Point(1180 - 300, 1800 - 300));
+        echappementTest.add(new Point(300, 1800 - 300));
     }
 
     @Override
     public List<Point> echappementPointsCm() {
-        return team == Team.JAUNE ? echappementJaune : echappementVert;
+        //return team == Team.JAUNE ? echappementJaune : echappementVert;
+        return echappementTest;
     }
 
     @Getter(AccessLevel.NONE)
@@ -117,16 +124,21 @@ public class RobotStatus extends AbstractRobotStatus {
     @Setter(AccessLevel.NONE)
     private int indexZoneDeposeSallePrincipale = 0;
 
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    private double [] zonesDeposeSallePrincipalJaune = {300, 400, 500};
+//    @Getter(AccessLevel.NONE)
+//    @Setter(AccessLevel.NONE)
+//    private double [] zonesDeposeSallePrincipalJaune = {300, 400, 500};
+//
+//    @Getter(AccessLevel.NONE)
+//    @Setter(AccessLevel.NONE)
+//    private double [] zonesDeposeSallePrincipalVert = {2700, 2600, 2500};
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    private double [] zonesDeposeSallePrincipalVert = {2700, 2600, 2500};
+    private double [] zonesDeposeSallePrincipalTest = {1500, 1400, 1300};
 
     public double getYZoneDeposePrincipale() {
-        double [] tmp = (team == Team.JAUNE) ? zonesDeposeSallePrincipalJaune : zonesDeposeSallePrincipalVert;
+        //double [] tmp = (team == Team.JAUNE) ? zonesDeposeSallePrincipalJaune : zonesDeposeSallePrincipalVert;
+        double [] tmp = zonesDeposeSallePrincipalTest;
         if (indexZoneDeposeSallePrincipale >= tmp.length) {
             indexZoneDeposeSallePrincipale = tmp.length - 1;
         }

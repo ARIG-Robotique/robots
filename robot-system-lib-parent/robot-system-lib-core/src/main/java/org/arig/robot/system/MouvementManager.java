@@ -32,33 +32,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 @Slf4j
 public class MouvementManager implements InitializingBean {
 
-    /**
-     * The odom.
-     */
     @Autowired
     private IOdometrie odom;
 
-    /**
-     * The asservPolaire.
-     */
     @Autowired
     private IAsservissementPolaire asservPolaire;
 
-    /**
-     * The encoders.
-     */
     @Autowired
     private Abstract2WheelsEncoders encoders;
 
-    /**
-     * The propulsionsMotors.
-     */
     @Autowired
     private AbstractPropulsionsMotors propulsionsMotors;
 
-    /**
-     * The conv.
-     */
     @Autowired
     private ConvertionRobotUnit conv;
 
@@ -68,34 +53,21 @@ public class MouvementManager implements InitializingBean {
     @Autowired
     private AbstractRobotStatus rs;
 
-    /**
-     * The position.
-     */
     @Autowired
     @Qualifier("currentPosition")
     private Position position;
 
-    /**
-     * Consigne du robot sur la table
-     */
     @Autowired
     private CommandeRobot cmdRobot;
 
-    /**
-     * The trajet atteint.
-     */
     @Getter
     private boolean trajetAtteint, trajetEnApproche = false;
 
-    /**
-     * Boolean si un obstacle est rencontré
-     **/
+    /** Boolean si un obstacle est rencontré (stop le robot sur place) **/
     @Setter
     private boolean obstacleFound = false;
 
-    /**
-     * Boolean pour relancer l'asserv après un obstacle
-     */
+    /** Boolean pour relancer après un obstacle (gestion de l'évittement) */
     @Setter
     private boolean restartAfterObstacle = false;
 
@@ -111,9 +83,6 @@ public class MouvementManager implements InitializingBean {
     private final double arretOrientDeg;
     private final double approcheOrientDeg;
 
-    /**
-     * The start angle.
-     */
     private final double coefAngle;
     private long startAngle;
 
@@ -160,6 +129,7 @@ public class MouvementManager implements InitializingBean {
         // Angle de départ pour les déplacements.
         // Si l'angle est supérieur en absolu, on annule la distance
         // afin de naviguer en priorité en marche avant.
+        // Cela a pour effet de tourner sur place en reculant avant de partir en avant.
         startAngle = (long) (coefAngle * conv.getPiPulse());
         log.info("Angle pour le demi tour {}°", conv.pulseToDeg(startAngle));
     }
