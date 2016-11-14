@@ -20,6 +20,6 @@ public class NerellContext {
 
     @Bean
     public IMonitoringWrapper monitoringWrapper() {
-        return new MonitoringJsonWrapper("logs/timeDatas");
+        return new MonitoringJsonWrapper();
     }
 }

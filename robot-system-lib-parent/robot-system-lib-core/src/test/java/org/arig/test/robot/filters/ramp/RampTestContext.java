@@ -5,21 +5,14 @@ import org.arig.robot.filters.ramp.RampFilter;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-
-import java.io.File;
 
 /**
  * @author gdepuille on 15/03/15.
  */
 @Configuration
 public class RampTestContext {
-
-    @Autowired
-    private Environment env;
 
     @Bean
     public ConvertionRobotUnit convertisseur() {
@@ -28,8 +21,7 @@ public class RampTestContext {
 
     @Bean
     public IMonitoringWrapper monitoringWrapper() {
-        String directory = String.format("%s%s%s", env.getRequiredProperty("java.io.tmpdir"), File.separator, "arig/robot/rampTest");
-        return new MonitoringJsonWrapper(directory);
+        return new MonitoringJsonWrapper();
     }
 
     @Bean

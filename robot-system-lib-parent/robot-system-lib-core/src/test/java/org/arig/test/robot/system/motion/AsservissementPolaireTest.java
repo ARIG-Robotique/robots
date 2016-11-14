@@ -1,6 +1,7 @@
 package org.arig.test.robot.system.motion;
 
 import lombok.SneakyThrows;
+import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.model.CommandeRobot;
@@ -11,6 +12,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.UUID;
 
 /**
  * @author gdepuille on 19/03/15.
@@ -30,6 +33,7 @@ public class AsservissementPolaireTest {
 
     @Before
     public void before() {
+        System.setProperty(IConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
         monitoringWrapper.clean();
     }
 

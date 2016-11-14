@@ -2,6 +2,7 @@ package org.arig.test.robot.filters.pid;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.filters.pid.CompletePidFilter;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.junit.After;
@@ -12,6 +13,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.UUID;
 
 /**
  * @author gdepuille on 15/03/15.
@@ -29,6 +32,7 @@ public class CompletePidTest {
 
     @Before
     public void before() {
+        System.setProperty(IConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
         monitoringWrapper.clean();
         pid.reset();
     }

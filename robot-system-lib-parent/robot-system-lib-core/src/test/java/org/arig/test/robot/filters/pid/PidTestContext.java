@@ -5,21 +5,14 @@ import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-
-import java.io.File;
 
 /**
  * @author gdepuille on 11/10/16.
  */
 @Configuration
 public class PidTestContext {
-
-    @Autowired
-    private Environment env;
 
     @Bean
     public SimplePidFilter simplePID() {
@@ -43,7 +36,6 @@ public class PidTestContext {
 
     @Bean
     public IMonitoringWrapper monitoringWrapper() {
-        String directory = String.format("%s%s%s", env.getRequiredProperty("java.io.tmpdir"), File.separator, "arig/robot/pidTest");
-        return new MonitoringJsonWrapper(directory);
+        return new MonitoringJsonWrapper();
     }
 }

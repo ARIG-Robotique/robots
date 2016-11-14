@@ -13,12 +13,8 @@ import org.arig.robot.system.motion.AsservissementPolaire;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-
-import java.io.File;
 
 /**
  * @author gdepuille on 19/03/15.
@@ -32,9 +28,6 @@ public class AsservissementPolaireTestContext {
     private static final double KP = 0.1;
     private static final double KI = 0.1;
     private static final double KD = 0.1;
-
-    @Autowired
-    private Environment env;
 
     @Bean
     public ConvertionRobotUnit convertisseur() {
@@ -114,7 +107,6 @@ public class AsservissementPolaireTestContext {
 
     @Bean
     public IMonitoringWrapper monitoringWrapper() {
-        String directory = String.format("%s%s%s", env.getRequiredProperty("java.io.tmpdir"), File.separator, "arig/robot/asservPolaireTest");
-        return new MonitoringJsonWrapper(directory);
+        return new MonitoringJsonWrapper();
     }
 }

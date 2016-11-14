@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<!DOCTYPE log4j:configuration SYSTEM
+		"/home/gregorydepuille@sglk.local/workspaces/arig-wksp/java/robots/nerell-parent/nerell-common/src/main/resources/log4j.dtd">
 <log4j:configuration>
 
 	<!-- Appender fichier (async) -->
 	<appender name="File" class="org.apache.log4j.FileAppender">
-		<param name="File" value="logs/nerell.log" />
+		<param name="File" value="./logs/${execution.id}-traces.log" />
 		<param name="Append" value="true" />
 		<param name="Encoding" value="UTF-8" />
 		<layout class="org.apache.log4j.PatternLayout">

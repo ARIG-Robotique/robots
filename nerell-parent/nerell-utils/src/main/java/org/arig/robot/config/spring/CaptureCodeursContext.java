@@ -15,6 +15,6 @@ public class CaptureCodeursContext {
 
     @Bean
     public IMonitoringWrapper monitoringWrapper() {
-        return new MonitoringJsonWrapper("/tmp");
+        return new MonitoringJsonWrapper();
     }
 }

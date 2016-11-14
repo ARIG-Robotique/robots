@@ -2,14 +2,14 @@ package org.arig.robot.monitoring;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.Assert;
+import org.arig.robot.constants.IConstantesConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * @author gdepuille on 11/10/16.
@@ -17,11 +17,13 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 public class MonitoringJsonWrapper extends AbstractMonitoringWrapper {
 
+    @Autowired
+    private Environment env;
+
     private File saveDirectory;
 
-    public MonitoringJsonWrapper(final String saveDirectoryPath) {
-        Assert.hasText(saveDirectoryPath, "Le chemin d'enregistrement des points ne peut pas être vide");
-        saveDirectory = new File(saveDirectoryPath);
+    public MonitoringJsonWrapper() {
+        saveDirectory = new File("./logs");
         if (!saveDirectory.exists()) {
             log.info("Création du répertoire {} : {}", saveDirectory.getAbsolutePath(), saveDirectory.mkdirs());
         }
@@ -35,9 +37,7 @@ public class MonitoringJsonWrapper extends AbstractMonitoringWrapper {
         }
 
         try {
-            final LocalDateTime date = LocalDateTime.now();
-            final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-            final String fileName = date.format(formatter) + ".json";
+            final String fileName = env.getRequiredProperty(IConstantesConfig.keyExecutionId) + "-timeseries.json";
             final File f = new File(saveDirectory, fileName);
             final ObjectMapper om = new ObjectMapper();
             log.info("Enregistrement de {} points dans le fichier {}", getPoints().size(), f.getAbsolutePath());
