@@ -8,9 +8,9 @@ import org.arig.robot.constants.IConstantesI2CAdc;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.filters.values.MovingIntegerValueAverage;
-import org.arig.robot.model.MonitorPoint;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
+import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author gdepuille on 13/05/15.
@@ -76,9 +75,8 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             int avgLateralAvantDroit = gpAvantLateralDroit.average(rawLateralAvantDroit);
 
             // Construction du monitoring
-            MonitorPoint serie = new MonitorPoint()
+            MonitorTimeSerie serie = new MonitorTimeSerie()
                 .tableName("avoiding")
-                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .addField("seuilAvant", seuilAvant)
                 .addField("seuilLateralAvant", seuilLateralAvant)
                 .addField("rawAvantGauche", rawAvantGauche)
@@ -89,7 +87,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
                 .addField("avgLateralAvantGauche", avgLateralAvantGauche)
                 .addField("rawLateralAvantDroit", rawLateralAvantDroit)
                 .addField("avgLateralAvantDroit", avgLateralAvantDroit);
-            monitoringWrapper.addPoint(serie);
+            monitoringWrapper.addTimeSeriePoint(serie);
 
             if (avgAvantGauche > seuilAvant) {
                 Point p = getPointFromAngle(distanceDetectionObstacleMm, 15);

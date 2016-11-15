@@ -7,9 +7,12 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Chemin;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.monitor.MonitorMouvementPath;
+import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.pathfinding.AbstractPathFinder;
 import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 import org.arig.robot.utils.ImageUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import pathfinder.AshCrowFlight;
 import pathfinder.AshManhattan;
@@ -37,6 +40,9 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class MultiPathFinderImpl extends AbstractPathFinder {
+
+    @Autowired
+    private IMonitoringWrapper monitoringWrapper;
 
     @Getter(AccessLevel.PROTECTED)
     private PathFinderAlgorithm algorithm;
@@ -147,6 +153,12 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
 
         // Ajout du dernier point.
         c.addPoint(to);
+
+        MonitorMouvementPath monitorPoint = new MonitorMouvementPath();
+        monitorPoint.setFrom(from);
+        monitorPoint.setTo(to);
+        monitorPoint.setPath(c.getPoints());
+        monitoringWrapper.addMouvementPoint(monitorPoint);
 
         sw.split();
         log.info("Chemin de {} point(s) de passage filtré en {}", c.nbPoints() - 1, sw.toSplitString());
