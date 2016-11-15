@@ -33,7 +33,7 @@ public class SimplePidTest {
     @Before
     public void before() {
         System.setProperty(IConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
-        monitoringWrapper.clean();
+        monitoringWrapper.cleanAllPoints();
         pid.reset();
     }
 

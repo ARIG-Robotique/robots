@@ -2,7 +2,7 @@ package org.arig.robot.filters.ramp;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.MonitorPoint;
+import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -177,9 +177,8 @@ public class RampFilter implements IRampFilter {
 
     protected void sendMonitoring() {
         // Construction du monitoring
-        MonitorPoint serie = new MonitorPoint()
+        MonitorTimeSerie serie = new MonitorTimeSerie()
                 .tableName(name)
-                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .addField("distanceDeceleration", getDistanceDecel())
                 .addField("distanceRestante", getDistanceRestante())
                 .addField("vitesseCourante", getVitesseCourante())
@@ -187,6 +186,6 @@ public class RampFilter implements IRampFilter {
                 .addField("frein", isFrein() ? 1 : 0)
                 .addField("output", getOutput());
 
-        monitoringWrapper.addPoint(serie);
+        monitoringWrapper.addTimeSeriePoint(serie);
     }
 }

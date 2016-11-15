@@ -2,9 +2,9 @@ package org.arig.test.robot.system.motion;
 
 import lombok.SneakyThrows;
 import org.arig.robot.constants.IConstantesConfig;
+import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.motion.IAsservissementPolaire;
-import org.arig.robot.model.CommandeRobot;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class AsservissementPolaireTest {
     @Before
     public void before() {
         System.setProperty(IConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
-        monitoringWrapper.clean();
+        monitoringWrapper.cleanAllPoints();
     }
 
     @After

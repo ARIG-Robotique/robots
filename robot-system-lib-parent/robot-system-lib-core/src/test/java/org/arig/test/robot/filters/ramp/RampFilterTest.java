@@ -31,7 +31,7 @@ public class RampFilterTest {
     @Before
     public void before() {
         System.setProperty(IConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
-        monitoringWrapper.clean();
+        monitoringWrapper.cleanAllPoints();
     }
 
     @After
