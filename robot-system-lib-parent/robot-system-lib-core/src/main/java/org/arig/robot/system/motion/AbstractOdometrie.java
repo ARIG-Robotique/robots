@@ -2,16 +2,14 @@ package org.arig.robot.system.motion;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import org.arig.robot.model.MonitorPoint;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.TypeOdometrie;
+import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * The Class AbstractOdometrie.
@@ -63,14 +61,13 @@ public abstract class AbstractOdometrie implements IOdometrie, InitializingBean 
 
     private void sendMonitoring() {
         // Construction du monitoring
-        MonitorPoint serie = new MonitorPoint()
+        MonitorTimeSerie serie = new MonitorTimeSerie()
                 .tableName("odometrie")
-                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .addField("X", conv.pulseToMm(getPosition().getPt().getX()))
                 .addField("Y", conv.pulseToMm(getPosition().getPt().getY()))
                 .addField("angle", conv.pulseToDeg(getPosition().getAngle()))
                 .addField("type", type.ordinal());
 
-        monitoringWrapper.addPoint(serie);
+        monitoringWrapper.addTimeSeriePoint(serie);
     }
 }

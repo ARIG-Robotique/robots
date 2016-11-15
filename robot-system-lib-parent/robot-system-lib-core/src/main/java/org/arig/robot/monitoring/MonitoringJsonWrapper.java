@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.model.AbstractRobotStatus;
-import org.arig.robot.model.MonitorPoint;
+import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
@@ -22,9 +22,6 @@ public class MonitoringJsonWrapper extends AbstractMonitoringWrapper {
     @Autowired
     private Environment env;
 
-    @Autowired(required = false)
-    private AbstractRobotStatus robotStatus = null;
-
     private File saveDirectory;
 
     public MonitoringJsonWrapper() {
@@ -35,16 +32,28 @@ public class MonitoringJsonWrapper extends AbstractMonitoringWrapper {
     }
 
     @Override
-    public void addPoint(MonitorPoint point) {
-        if (robotStatus == null || robotStatus.isMatchEnabled()) {
-            forceAddPoint(point);
+    protected void saveMouvementPoints() {
+        if (!hasMouvementPoints()) {
+            log.info("Aucun point de monitoring de mouvement a enregistrer");
+            return;
+        }
+
+        try {
+            final String fileName = env.getRequiredProperty(IConstantesConfig.keyExecutionId) + "-mouvement.json";
+            final File f = new File(saveDirectory, fileName);
+            final ObjectMapper om = new ObjectMapper();
+            log.info("Enregistrement de {} points de mouvement dans le fichier {}", getMonitorMouvementPoints().size(), f.getAbsolutePath());
+            om.writeValue(new BufferedOutputStream(new FileOutputStream(f)), getMonitorMouvementPoints());
+        } catch (IOException e) {
+            log.error("Impossible d'enregistrer le JSON des points de monitoring", e);
+            throw new RuntimeException("Erreur d'enregistrement du monitoring", e);
         }
     }
 
     @Override
-    public void save() {
-        if (!hasPoints()) {
-            log.info("Aucun point de monitoring a enregistrer");
+    protected void saveTimeSeriePoints() {
+        if (!hasTimeSeriePoints()) {
+            log.info("Aucun point de monitoring time series a enregistrer");
             return;
         }
 
@@ -52,10 +61,8 @@ public class MonitoringJsonWrapper extends AbstractMonitoringWrapper {
             final String fileName = env.getRequiredProperty(IConstantesConfig.keyExecutionId) + "-timeseries.json";
             final File f = new File(saveDirectory, fileName);
             final ObjectMapper om = new ObjectMapper();
-            log.info("Enregistrement de {} points dans le fichier {}", getPoints().size(), f.getAbsolutePath());
-            om.writeValue(new BufferedOutputStream(new FileOutputStream(f)), getPoints());
-
-            clean();
+            log.info("Enregistrement de {} points time serie dans le fichier {}", getMonitorTimeSeriePoints().size(), f.getAbsolutePath());
+            om.writeValue(new BufferedOutputStream(new FileOutputStream(f)), getMonitorTimeSeriePoints());
         } catch (IOException e) {
             log.error("Impossible d'enregistrer le JSON des points de monitoring", e);
             throw new RuntimeException("Erreur d'enregistrement du monitoring", e);

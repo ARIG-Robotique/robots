@@ -3,11 +3,11 @@ package org.arig.robot.services.avoiding;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.values.DoubleValueAverage;
-import org.arig.robot.model.MonitorPoint;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.Rectangle;
 import org.arig.robot.model.lidar.ScanInfos;
+import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.GP2D12;
@@ -238,9 +238,8 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
         }
 
         // Construction du monitoring
-        MonitorPoint serie = new MonitorPoint()
+        MonitorTimeSerie serie = new MonitorTimeSerie()
                 .tableName("avoiding")
-                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .addField("nbPointCapteursDetecte", detectedPointsMmCapteurs.size())
                 .addField("nbPointLidarDetecte", detectedPointsMmLidar.size())
                 .addField("rawGpGauche", rawGpGauche)
@@ -257,7 +256,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
                 .addField("avgUsDroit", avgUsDroit)
                 .addField("rawUsLatDroit", rawUsLatDroit)
                 .addField("avgUsLatDroit", avgUsLatDroit);*/
-        monitoringWrapper.addPoint(serie);
+        monitoringWrapper.addTimeSeriePoint(serie);
 
         // 3. On delegue à l'implémentation d'évittement
         synchronized (this.detectedPointsMmCapteurs) {

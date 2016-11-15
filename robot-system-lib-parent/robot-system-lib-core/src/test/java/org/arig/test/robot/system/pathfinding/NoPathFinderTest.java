@@ -25,6 +25,7 @@ public class NoPathFinderTest {
         Point to = new Point(20, 20);
 
         Chemin c = pf.findPath(from, to);
+        Assert.assertNotNull(c);
         Assert.assertEquals(1, c.nbPoints());
         Assert.assertTrue(c.hasNext());
 

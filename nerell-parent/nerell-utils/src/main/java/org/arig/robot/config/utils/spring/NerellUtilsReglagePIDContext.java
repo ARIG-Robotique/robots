@@ -5,7 +5,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.filters.pid.CompletePidFilter;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.arig.robot.monitoring.MonitoringInfluxDBWrapper;
+import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.context.annotation.Bean;
@@ -29,14 +29,7 @@ public class NerellUtilsReglagePIDContext {
 
     @Bean
     public IMonitoringWrapper monitoringWrapper() {
-        MonitoringInfluxDBWrapper w = new MonitoringInfluxDBWrapper();
-        w.setUrl("http://sglk-dxf5xy1-lnx:8086");
-        w.setUsername("root");
-        w.setPassword("root");
-        w.setDbName("nerell_utils");
-        w.setRetentionPolicy("autogen");
-
-        return w;
+        return new MonitoringJsonWrapper();
     }
 
     @Bean

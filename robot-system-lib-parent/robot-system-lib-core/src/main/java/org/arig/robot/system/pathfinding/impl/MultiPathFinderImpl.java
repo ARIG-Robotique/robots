@@ -1,7 +1,5 @@
 package org.arig.robot.system.pathfinding.impl;
 
-import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
@@ -30,7 +28,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class MultiPathFinderImpl extends AbstractPathFinder {
 
-    @Getter(AccessLevel.PROTECTED)
     private PathFinderAlgorithm algorithm;
 
     @Setter
@@ -71,7 +68,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
             definePathFinder();
         }
 
-        log.info("Recherche de chemin de {} a {} avec l'algorithme {}", from.toString(), to.toString(), getAlgorithm().toString());
+        log.info("Recherche de chemin de {} a {} avec l'algorithme {}", from.toString(), to.toString(), algorithm.toString());
 
         // Pour les stats de temps
         StopWatch sw = new StopWatch();
@@ -251,7 +248,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
 
     private void definePathFinder() {
         if (pf == null) {
-            switch (getAlgorithm()) {
+            switch (algorithm) {
                 case A_STAR_EUCLIDIAN:
                     pf = new GraphSearch_Astar(workGraph, new AshCrowFlight(aStarCostFactor));
                     break;
