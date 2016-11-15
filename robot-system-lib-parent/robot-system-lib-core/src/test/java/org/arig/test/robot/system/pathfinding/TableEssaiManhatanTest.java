@@ -27,8 +27,6 @@ import java.time.LocalDateTime;
 public class TableEssaiManhatanTest {
 
     private static MultiPathFinderImpl pf;
-
-    private static File dir;
     private static File imgSource;
 
     @BeforeClass
@@ -41,13 +39,6 @@ public class TableEssaiManhatanTest {
         URL url = TableEssaiManhatanTest.class.getClass().getResource("/assets/table-test-obstacle.png");
         imgSource = new File(url.getPath());
         pf.setAlgorithm(PathFinderAlgorithm.DIJKSTRA);
-
-        String tmpDir = System.getProperty("java.io.tmpdir");
-        dir = new File(tmpDir + "/arig/robot/pathTableEssai");
-        if (dir.exists()) {
-            dir.delete();
-        }
-        pf.setPathDir(dir);
     }
 
     @Before
@@ -115,6 +106,6 @@ public class TableEssaiManhatanTest {
         Assert.assertTrue(c.hasNext());
 
         LocalDateTime waitTime = LocalDateTime.now().plusSeconds(6);
-        while (LocalDateTime.now().isBefore(waitTime)) ;
+        while (LocalDateTime.now().isBefore(waitTime));
     }
 }

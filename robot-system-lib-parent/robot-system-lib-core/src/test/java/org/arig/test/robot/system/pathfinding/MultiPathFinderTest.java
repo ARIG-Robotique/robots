@@ -26,8 +26,6 @@ public class MultiPathFinderTest {
 
     private static MultiPathFinderImpl pf;
 
-    private static File dir;
-
     private Point from;
     private Point to;
 
@@ -37,14 +35,6 @@ public class MultiPathFinderTest {
         pf.setNbTileX(40);
         pf.setNbTileY(40);
         pf.setAllowDiagonal(true);
-
-        String tmpDir = System.getProperty("java.io.tmpdir");
-        dir = new File(tmpDir + "/arig/robot/path");
-        if (dir.exists()) {
-            dir.delete();
-        }
-        dir.mkdirs();
-        pf.setPathDir(dir);
     }
 
     @Before

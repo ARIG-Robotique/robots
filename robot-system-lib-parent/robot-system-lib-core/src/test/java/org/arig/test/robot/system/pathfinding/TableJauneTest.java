@@ -25,8 +25,6 @@ import java.net.URL;
 public class TableJauneTest {
 
     private static MultiPathFinderImpl pf;
-
-    private static File dir;
     private static File imgSource;
 
     @BeforeClass
@@ -39,13 +37,6 @@ public class TableJauneTest {
         URL url = TableJauneTest.class.getClass().getResource("/assets/jaune.png");
         imgSource = new File(url.getPath());
         pf.setAlgorithm(PathFinderAlgorithm.A_STAR_MANHATTAN);
-
-        String tmpDir = System.getProperty("java.io.tmpdir");
-        dir = new File(tmpDir + "/arig/robot/pathTableJaune");
-        if (dir.exists()) {
-            dir.delete();
-        }
-        pf.setPathDir(dir);
     }
 
     @Before

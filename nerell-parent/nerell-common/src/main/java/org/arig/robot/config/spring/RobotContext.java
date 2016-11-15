@@ -10,8 +10,6 @@ import org.arig.robot.filters.ramp.RampFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.system.MouvementManager;
 import org.arig.robot.system.motion.AsservissementPolaire;
 import org.arig.robot.system.motion.IAsservissementPolaire;
@@ -24,8 +22,6 @@ import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-
-import java.io.File;
 
 /**
  * @author gdepuille on 23/12/14.
@@ -126,8 +122,6 @@ public class RobotContext {
         MultiPathFinderImpl pf = new MultiPathFinderImpl();
         pf.setAllowDiagonal(true);
         pf.setAlgorithm(IConstantesNerellConfig.pathFindingAlgo);
-        File pathDir = new File("./logs/paths");
-        pf.setPathDir(pathDir);
         pf.setNbTileX(118);
         pf.setNbTileY(180);
 
