@@ -152,12 +152,6 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         log.info("Chemin de {} point(s) de passage filtré en {}", c.nbPoints() - 1, sw.toSplitString());
         sw.stop();
 
-        // Ecriture d'une image pour le path finding
-        LinkedList<Point> pts = new LinkedList<>();
-        pts.add(from);
-        pts.addAll(c.getPoints());
-        saveImagePath(pts);
-
         return c;
     }
 
@@ -179,17 +173,9 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         for (Polygon p : obstacles) {
             g.fillPolygon(p);
         }
-        //g.drawRect((int) obstacle.getX() - (obstacleSize / 2), (int) obstacle.getY() - (obstacleSize / 2), obstacleSize, obstacleSize);
 
         // On termine le machin
         g.dispose();
-
-        // On stock l'image
-        try {
-            ImageIO.write(ImageUtils.mirrorX(obstacleImage), "png", new File(pathDir, dteFormat.format(LocalDateTime.now()) + "-obstacle.png"));
-        } catch (IOException e) {
-            log.warn("Impossible d'ecrire l'image de l'obstacle sur disque : {}", e.toString());
-        }
 
         // On reconstruit le graph
         obstacleGraph = makeGraphFromBufferedImage(obstacleImage);
@@ -317,20 +303,6 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         }
 
         return mainGraph;
-    }
-
-    @Override
-    protected BufferedImage getCurrentBufferedImage() {
-        if (LocalDateTime.now().isBefore(expirationObstacleMap)) {
-            return obstacleImage;
-        }
-
-        return mainImage;
-    }
-
-    @Override
-    protected String suffixResultImageName() {
-        return "-" + algorithm.name();
     }
 
     public void setAlgorithm(PathFinderAlgorithm algorithm) {

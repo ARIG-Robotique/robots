@@ -6,10 +6,7 @@ import org.arig.robot.model.Point;
 import org.arig.robot.system.pathfinding.AbstractPathFinder;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * /!\ Faux PathFinder pour des test de mouvement lors de la phase de réglage
@@ -36,19 +33,6 @@ public class NoPathFinderImpl extends AbstractPathFinder {
     }
 
     @Override
-    protected BufferedImage getCurrentBufferedImage() {
-        return null;
-    }
-
-    @Override
-    public void construitGraphDepuisImageNoirEtBlanc(final File file) {
-    }
-
-    @Override
     public void construitGraphDepuisImageNoirEtBlanc(final InputStream is) {
-    }
-
-    @Override
-    public void saveImagePath(List<Point> pts) {
     }
 }
