@@ -21,23 +21,23 @@ configure(allprojects) {
 		javaTestVersion = javaVersion
 
 		// Dependencies versions
-		lombokVersion = '1.16.10'
-		springVersion = '4.3.3.RELEASE'
-		apacheCommonsLangVersion = '3.4'
+		lombokVersion = '1.16.14'
+		springVersion = '4.3.6.RELEASE'
+		apacheCommonsLangVersion = '3.5'
 		apacheCommonsCollectionsVersion = '4.1'
 		apacheCommonsIOVersion = '2.5'
-		googleGuavaVersion = '19.0'
-		jacksonVersion = '2.8.3'
-		influxdbVersion = '2.3'
+		googleGuavaVersion = '21.0'
+		jacksonVersion = '2.8.6'
+		influxdbVersion = '2.5'
 		pi4jVersion = '1.1'
-		slf4jVersion = '1.7.21'
+		slf4jVersion = '1.7.23'
 
 		// Container dependencies
-    	jettyVersion = '9.3.12.v20160915'
+    	jettyVersion = '9.4.1.v20170120'
 
 		// Test dependencies versions
 		junitVersion = '4.12'
-		mockitoVersion = '2.2.0'
+		mockitoVersion = '2.7.9'
 
 	}
 
