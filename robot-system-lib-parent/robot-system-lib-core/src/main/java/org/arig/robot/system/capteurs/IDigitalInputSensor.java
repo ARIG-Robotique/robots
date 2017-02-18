@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author gdepuille
  */
-public interface IDigitalInputCapteurs<P> {
+public interface IDigitalInputSensor<P> {
 
     /**
      * Sets the pin for capteur.

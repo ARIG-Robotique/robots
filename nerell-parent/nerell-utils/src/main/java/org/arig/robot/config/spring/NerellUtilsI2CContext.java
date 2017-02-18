@@ -10,6 +10,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.SD21Motors;
@@ -36,6 +37,10 @@ public class NerellUtilsI2CContext {
         manager.registerDevice(IConstantesI2C.SERVO_DEVICE_NAME, IConstantesI2C.SD21_ADDRESS);
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_DROIT, IConstantesI2C.CODEUR_DROIT_ADDRESS);
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_GAUCHE, IConstantesI2C.CODEUR_GAUCHE_ADDRESS);
+        manager.registerDevice(IConstantesI2C.TCS34725_DEVICE_NAME, IConstantesI2C.TCS34725_ADDRESS);
+
+        // Enregistrement juste pour le scan.
+        manager.registerDevice(IConstantesI2C.PCF_ALIM_DEVICE_NAME, IConstantesI2C.PCF_ALIM_ADDRESS);
 
         return manager;
     }
@@ -56,5 +61,10 @@ public class NerellUtilsI2CContext {
     @Bean
     public ARIG2WheelsEncoders encoders() {
         return new ARIG2WheelsEncoders(IConstantesI2C.CODEUR_MOTEUR_GAUCHE, IConstantesI2C.CODEUR_MOTEUR_DROIT);
+    }
+
+    @Bean
+    public TCS34725ColorSensor frontColorSensor() {
+        return new TCS34725ColorSensor(IConstantesI2C.TCS34725_DEVICE_NAME);
     }
 }

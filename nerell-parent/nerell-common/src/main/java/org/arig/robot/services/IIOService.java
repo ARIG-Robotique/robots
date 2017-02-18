@@ -1,6 +1,7 @@
 package org.arig.robot.services;
 
 import org.arig.robot.model.Team;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 
 /**
  * @author gdepuille on 23/04/15.
@@ -29,6 +30,8 @@ public interface IIOService {
     boolean piedDroit();
 
     boolean piedCentre();
+
+    ColorData frontColor();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

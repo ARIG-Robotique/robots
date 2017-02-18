@@ -22,7 +22,7 @@ import java.util.concurrent.Future;
  * @see <a href="http://www.robot-electronics.co.uk/htm/srf02techI2C.htm">SRF02 documentation</a>
  */
 @Slf4j
-public class SRF02I2CSonar {
+public class SRF02Sonar {
 
     // Write Registers
     private static final byte COMMAND_REGISTER = 0;
@@ -45,6 +45,7 @@ public class SRF02I2CSonar {
     private static final byte ADD_CHANGE_THIRD_COMMAND = (byte) 0xA5;
 
     private static final int INVALID_VALUE = -1;
+    private static final int READ_TIMEOUT_VALID = 70;
 
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public enum RangeUnit {
@@ -76,7 +77,7 @@ public class SRF02I2CSonar {
     @Setter
     private IAverage<Integer> avg = new PassThroughValueAverage<>();
 
-    public SRF02I2CSonar(String deviceName) {
+    public SRF02Sonar(String deviceName) {
         this.deviceName = deviceName;
     }
 
@@ -112,7 +113,7 @@ public class SRF02I2CSonar {
             i2cManager.sendData(deviceName, COMMAND_REGISTER, (byte) (((fakeMode) ? FAKE_RANGE_BASE_COMMAND : REAL_RANGE_BASE_COMMAND) + rangeUnit.getValue()));
 
             // Step 2 : Attente avant de pouvoir lire (la doc dit 66 ms, mais que au bout de 70 c'est toujours bon)
-            Thread.currentThread().sleep(70);
+            Thread.currentThread().sleep(READ_TIMEOUT_VALID);
 
             // Step 3 : On indique au sonar de se positionner sur la bit de point fort de la valeur voulu
             i2cManager.sendData(deviceName, RANGE_HIGH_BYTE_REGISTER);

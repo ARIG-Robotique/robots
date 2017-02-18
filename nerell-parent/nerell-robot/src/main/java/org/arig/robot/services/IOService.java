@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesIORaspi;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,6 +42,10 @@ public class IOService implements IIOService, InitializingBean {
     @Autowired
     @Qualifier("pcfPresence")
     private PCF8574GpioProvider pcfPresence;
+
+    @Autowired
+    @Qualifier("frontColorSensor")
+    private TCS34725ColorSensor frontColorSensor;
 
     // Référence sur les PIN Input
     private GpioPinDigitalInput pinEquipe;
@@ -97,7 +103,7 @@ public class IOService implements IIOService, InitializingBean {
         gpio.provisionDigitalInputPin(IConstantesIORaspi.IRQ_6);
 
         // Output
-        pinCmdLedCapteurRGB = gpio.provisionDigitalOutputPin(IConstantesIORaspi.CMD_LED_RGB, PinState.LOW);
+        pinCmdLedCapteurRGB = gpio.provisionDigitalOutputPin(IConstantesIORaspi.CMD_LED_CAPTEUR_RGB, PinState.LOW);
         pinLedRGB_R = gpio.provisionDigitalOutputPin(IConstantesIORaspi.PWM_R);
         pinLedRGB_G = gpio.provisionDigitalOutputPin(IConstantesIORaspi.PWM_G);
         pinLedRGB_B = gpio.provisionDigitalOutputPin(IConstantesIORaspi.PWM_B);
@@ -211,6 +217,11 @@ public class IOService implements IIOService, InitializingBean {
     @Override
     public boolean piedCentre() {
         return pcfPresence.getState(IConstantesIORaspi.N2_PRESENCE_CENTRE) == PinState.LOW;
+    }
+
+    @Override
+    public ColorData frontColor() {
+        return frontColorSensor.getColorData();
     }
 
     // --------------------------------------------------------- //

@@ -67,6 +67,7 @@ public class CapteursController extends AbstractCapteursController implements In
         
         // Capteurs informations Text
         textInfos.put("Equipe", () -> ioService.equipe().name());
+        textInfos.put("Front color", () -> ioService.frontColor().hexColor());
     }
 
     private Double readI2CAnalogValue(byte capteurId) {
