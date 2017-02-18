@@ -9,7 +9,7 @@
 		<param name="Append" value="true" />
 		<param name="Encoding" value="UTF-8" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{ISO8601} %-5p [%t] [%x %c] - %m%n" />
+			<param name="ConversionPattern" value="%d{ISO8601};%p;%t;%c;%m%n" />
 		</layout>
 	</appender>
 	<appender name="AsyncFile" class="org.apache.log4j.AsyncAppender">
