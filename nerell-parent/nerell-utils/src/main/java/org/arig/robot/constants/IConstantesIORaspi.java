@@ -13,21 +13,6 @@ public interface IConstantesIORaspi {
     // Expander PCF8574 //
     // ---------------- //
 
-    // Numérique Switch
-    Pin N1_TIRETTE = PCF8574Pin.GPIO_06;
-    Pin N1_BTN_TAPIS = PCF8574Pin.GPIO_07;
-    Pin N1_SW_AVANT_GAUCHE = PCF8574Pin.GPIO_05;
-    Pin N1_SW_AVANT_DROIT = PCF8574Pin.GPIO_04;
-    Pin N1_SW_ARRIERE_GAUCHE = PCF8574Pin.GPIO_01;
-    Pin N1_SW_ARRIERE_DROIT = PCF8574Pin.GPIO_00;
-    Pin N1_SW_GB_GAUCHE = PCF8574Pin.GPIO_02;
-    Pin N1_SW_GB_DROIT = PCF8574Pin.GPIO_03;
-
-    // Numérique Présence
-    Pin N2_PRESENCE_GAUCHE = PCF8574Pin.GPIO_00;
-    Pin N2_PRESENCE_CENTRE = PCF8574Pin.GPIO_02;
-    Pin N2_PRESENCE_DROITE = PCF8574Pin.GPIO_01;
-
     // Alimentation
     Pin ALIM_PUISSANCE_SERVO = PCF8574Pin.GPIO_00;
     Pin ALIM_PUISSANCE_MOTEUR = PCF8574Pin.GPIO_01;
@@ -43,13 +28,6 @@ public interface IConstantesIORaspi {
 
     // Inputs
     Pin IRQ_ALIM = RaspiPin.GPIO_07;
-    Pin IRQ_1 = RaspiPin.GPIO_00;
-    Pin IRQ_2 = RaspiPin.GPIO_04;
-    Pin IRQ_3 = RaspiPin.GPIO_01;
-    Pin IRQ_4 = RaspiPin.GPIO_16;
-    Pin IRQ_5 = RaspiPin.GPIO_15;
-    Pin IRQ_6 = RaspiPin.GPIO_06;
-    Pin EQUIPE = RaspiPin.GPIO_02;
 
     // Outputs
     Pin CMD_LED_CAPTEUR_RGB = RaspiPin.GPIO_05;

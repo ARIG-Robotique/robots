@@ -3,7 +3,10 @@ package org.arig.robot.services;
 import lombok.Setter;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,6 +17,10 @@ public class IOServiceBouchon implements IIOService {
 
     @Autowired
     private RobotStatus rs;
+
+    @Autowired
+    @Qualifier("frontColorSensor")
+    private TCS34725ColorSensor frontColorSensor;
 
     @Setter
     private boolean tirette = false;
@@ -102,6 +109,15 @@ public class IOServiceBouchon implements IIOService {
     @Override
     public boolean piedCentre() {
         return false;
+    }
+
+    @Override
+    public ColorData frontColor() {
+        return frontColorSensor.new ColorData()
+                .r((int) (Math.random() * 256))
+                .g((int) (Math.random() * 256))
+                .b((int) (Math.random() * 256))
+                .c((int) (Math.random() * 256));
     }
 
     @Override

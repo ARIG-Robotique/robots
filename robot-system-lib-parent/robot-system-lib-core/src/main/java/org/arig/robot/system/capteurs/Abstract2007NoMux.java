@@ -19,7 +19,7 @@ import java.util.Map;
  * @author gdepuille
  */
 @Slf4j
-public abstract class Abstract2007NoMux<P> implements IDigitalInputCapteurs<P> {
+public abstract class Abstract2007NoMux<P> implements IDigitalInputSensor<P> {
 
     /**
      * The Constant NB_CAPTEUR.

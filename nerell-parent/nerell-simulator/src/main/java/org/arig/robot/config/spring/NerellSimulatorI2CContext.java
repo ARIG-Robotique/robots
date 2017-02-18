@@ -10,6 +10,7 @@ import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.bouchon.BouchonEncoderValues;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
@@ -77,5 +78,10 @@ public class NerellSimulatorI2CContext {
     @Bean
     public I2CAdcAnalogInput analogInput() {
         return new I2CAdcAnalogInput(IConstantesI2C.I2C_ADC_DEVICE_NAME);
+    }
+
+    @Bean
+    public TCS34725ColorSensor frontColorSensor() {
+        return new TCS34725ColorSensor(IConstantesI2C.TCS34725_DEVICE_NAME);
     }
 }
