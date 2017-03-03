@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  * @author gdepuille on 21/12/13.
  */
 @Configuration
-public class I2CContext {
+public class NerellSimulatorI2CContext {
 
     @Autowired
     private ResourcePatternResolver patternResolver;

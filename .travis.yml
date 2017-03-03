@@ -11,3 +11,13 @@ jdk:
 #  - docker pull influxdb:1.0.2-alpine
 #  - docker run -d -p 8083:8083 -p 8086:8086 influxdb:1.0.2-alpine
 #  - docker ps -a
+
+before_script:
+  - chmod +x gradlew
+
+script:
+  - ./gradlew check
+  - ./gradlew codeCoverageReport
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

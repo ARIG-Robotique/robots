@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * @author gdepuille on 30/10/16.
  */
 @Configuration
-public class NerellContext {
+public class NerellAppContext {
 
     @Bean
     public RobotName robotName() {

@@ -15,7 +15,7 @@ import org.springframework.core.env.Environment;
  */
 @Slf4j
 @Configuration
-public class AvoidingContext {
+public class NerellAvoidingContext {
 
     @Autowired
     private Environment env;

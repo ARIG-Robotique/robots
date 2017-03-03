@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.arig.robot.config.spring.CaptureCodeursContext;
+import org.arig.robot.config.spring.NerellUtilsCaptureCodeursContext;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -29,7 +29,7 @@ public class CaptureCodeursValues {
         log.info("Demarrage de Nerell en mode capture valeur codeurs ...");
 
         final AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-        rootContext.register(CaptureCodeursContext.class);
+        rootContext.register(NerellUtilsCaptureCodeursContext.class);
         rootContext.refresh();
 
         CaptureCodeursValues rccv = new CaptureCodeursValues();

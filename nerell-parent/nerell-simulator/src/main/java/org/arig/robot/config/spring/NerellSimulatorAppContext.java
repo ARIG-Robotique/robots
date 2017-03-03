@@ -1,17 +1,22 @@
 package org.arig.robot.config.spring;
 
+import org.arig.robot.model.RobotName;
 import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringInfluxDBWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 /**
- * @author gdepuille on 02/11/16.
+ * @author gdepuille on 30/10/16.
  */
 @Configuration
-@Import({ I2CContext.class })
-public class CaptureCodeursContext {
+public class NerellSimulatorAppContext {
+
+    @Bean
+    public RobotName robotName() {
+        return new RobotName().name("Nerell (simulator)").version("latest");
+    }
 
     @Bean
     public IMonitoringWrapper monitoringWrapper() {

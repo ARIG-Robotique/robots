@@ -43,6 +43,7 @@ configure(allprojects) {
 	// Plugin de build
 	apply plugin: 'java'
 	apply plugin: 'maven'
+	apply plugin: 'jacoco'
 
 	// Plugin pour les IDE
   	apply plugin: 'idea'
@@ -106,6 +107,14 @@ configure(allprojects) {
 			downloadSources = true
 		}
 	}
+
+	// JAvaCOCOverage
+	jacocoTestReport {
+		reports {
+			xml.enabled = true // coveralls plugin depends on xml format report
+			html.enabled = true
+		}
+	}
 }
 
 // Configuration communes des sous projets
@@ -161,6 +170,25 @@ configure(rootProject) {
 
 	// Suppression des artéfact par défaut sur le rootProject (jar, etc...)
 	configurations.archives.artifacts.clear()
+
+	task codeCoverageReport(type: JacocoReport) {
+		executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+
+		subprojects.each {
+			sourceSets it.sourceSets.main
+		}
+
+		reports {
+			xml.enabled true
+			xml.destination "${buildDir}/reports/jacoco/report.xml"
+			html.enabled false
+			csv.enabled false
+		}
+	}
+
+	codeCoverageReport.dependsOn {
+		subprojects*.test
+	}
 
 	task wrapper(type: Wrapper) {
 		description = "Generates gradlew[.bat] scripts"

@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Import;
  * @author gdepuille on 30/10/16.
  */
 @Configuration
-@Import({ I2CContext.class })
-public class ReglagePIDContext {
+@Import({ NerellUtilsI2CContext.class })
+public class NerellUtilsReglagePIDContext {
 
     private double kpMotG = 0.08;
     private double kiMotG = 30.0;

@@ -23,7 +23,7 @@ import java.io.IOException;
  * @author gdepuille on 21/12/13.
  */
 @Configuration
-public class I2CContext {
+public class NerellUtilsI2CContext {
 
     @Bean(destroyMethod = "close")
     public I2CBus i2cBus() throws IOException, UnsupportedBusNumberException {

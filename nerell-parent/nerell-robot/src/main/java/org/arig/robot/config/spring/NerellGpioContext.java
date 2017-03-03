@@ -14,7 +14,7 @@ import java.io.IOException;
  * @author gdepuille on 21/12/13.
  */
 @Configuration
-public class GPIOContext {
+public class NerellGpioContext {
 
     @Bean(name = "ioRaspi", destroyMethod = "shutdown")
     public GpioController gpioController() {
