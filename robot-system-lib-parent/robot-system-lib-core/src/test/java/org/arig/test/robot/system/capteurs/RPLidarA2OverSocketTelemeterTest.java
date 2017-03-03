@@ -1,0 +1,84 @@
+package org.arig.test.robot.system.capteurs;
+
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.arig.robot.model.lidar.DeviceInfos;
+import org.arig.robot.model.lidar.HealthInfos;
+import org.arig.robot.model.lidar.ScanInfos;
+import org.arig.robot.model.lidar.enums.HealthState;
+import org.arig.robot.system.capteurs.RPLidarA2OverSocketTelemeter;
+import org.junit.*;
+import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
+
+import java.io.File;
+
+/**
+ * @author gdepuille on 03/03/17.
+ */
+@Slf4j
+@RunWith(BlockJUnit4ClassRunner.class)
+public class RPLidarA2OverSocketTelemeterTest {
+
+    private static RPLidarA2OverSocketTelemeter rpLidar;
+
+    @BeforeClass
+    @SneakyThrows
+    public static void initTest() {
+        final File socketFile = new File("/tmp/lidar.sock");
+        Assume.assumeTrue("Contrôle initialisation RPLidar par la présence de la socket", socketFile.exists());
+
+        rpLidar = new RPLidarA2OverSocketTelemeter(socketFile);
+        rpLidar.afterPropertiesSet();
+        rpLidar.printDeviceInfo();
+    }
+
+    @AfterClass
+    public static void stopTest() {
+        if (rpLidar != null) {
+            rpLidar.end();
+        }
+    }
+
+    @Test
+    public void testDeviceInfos() {
+        DeviceInfos infos = rpLidar.deviceInfo();
+        Assert.assertNotNull(infos);
+        Assert.assertEquals("1.20", infos.getFirmwareVersion());
+        Assert.assertEquals(2, (long) infos.getHardwareVersion());
+        Assert.assertEquals("CCD2FFC1E8839EF2C0E69EF714655405", infos.getSerialNumber());
+    }
+
+    @Test
+    public void testHealthInfo() {
+        HealthInfos infos = rpLidar.healthInfo();
+        Assert.assertNotNull(infos);
+        Assert.assertEquals(HealthState.OK, infos.getLibelle());
+    }
+
+    @Test
+    public void testGrabData() {
+        HealthInfos health = rpLidar.healthInfo();
+        if (health.getLibelle() != HealthState.OK) {
+            Assert.fail("Erreur de santé du RPLidar " + health.getLibelle());
+        }
+
+        rpLidar.startScan();
+
+        int nb = 1;
+        do {
+            log.info("Récupération scan {} / 100", nb);
+
+            ScanInfos scans = rpLidar.grabDatas();
+            Assert.assertNotNull(scans);
+            Assert.assertNotNull(scans.getIgnored());
+            Assert.assertNotNull(scans.getScan());
+            Assert.assertTrue(CollectionUtils.isNotEmpty(scans.getScan()));
+
+            nb++;
+        } while(nb <= 100);
+
+        rpLidar.stopScan();
+    }
+}
