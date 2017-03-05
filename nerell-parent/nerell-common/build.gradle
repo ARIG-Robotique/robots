@@ -1,10 +1,11 @@
 description = "ARIG Association - Nerell Common"
 
 dependencies {
-	compile(
-		[project(':robot-system-lib-parent:robot-system-lib-core')],
-		[group: 'org.eclipse.jetty', name: 'jetty-server', version: jettyVersion],
-		[group: 'org.eclipse.jetty', name: 'jetty-webapp', version: jettyVersion],
-		[group: 'org.eclipse.jetty', name: 'jetty-annotations', version: jettyVersion]
-	)
+    compile(
+        [project(':robot-system-lib-parent:robot-system-lib-core')],
+        [group: 'org.eclipse.jetty', name: 'jetty-server', version: jettyVersion],
+        [group: 'org.eclipse.jetty', name: 'jetty-webapp', version: jettyVersion],
+        [group: 'org.eclipse.jetty', name: 'jetty-annotations', version: jettyVersion],
+        [group: 'org.eclipse.jetty', name: 'jetty-servlets', version: jettyVersion]
+    )
 }

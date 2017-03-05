@@ -8,6 +8,8 @@ import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.FilterHolder;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.util.thread.ScheduledExecutorScheduler;
@@ -15,6 +17,9 @@ import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.springframework.util.Assert;
 import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.filter.CorsFilter;
+
+import javax.servlet.DispatcherType;
 
 /**
  * @author gdepuille on 12/01/15.
@@ -72,10 +77,17 @@ public class JettyEmbeddedRunner {
             }
         };
 
+        FilterHolder corsFilterHolder = new FilterHolder(CrossOriginFilter.class);
+        corsFilterHolder.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
+        corsFilterHolder.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*");
+        corsFilterHolder.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,POST,HEAD");
+        corsFilterHolder.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "X-Requested-With,Content-Type,Accept,Origin");
+
         final WebAppContext webAppCtx = new WebAppContext();
         webAppCtx.setConfigurations(new Configuration[] { myConfig });
         webAppCtx.setContextPath("/");
         webAppCtx.setParentLoaderPriority(true);
+        webAppCtx.addFilter(corsFilterHolder, "/", null);
 
         srv.setHandler(webAppCtx);
 
