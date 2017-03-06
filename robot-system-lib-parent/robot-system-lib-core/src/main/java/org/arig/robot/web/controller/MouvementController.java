@@ -47,37 +47,37 @@ public class MouvementController {
         return pos;
     }
 
-    @RequestMapping(value = "/path", method = RequestMethod.GET)
+    @RequestMapping(value = "/path", method = RequestMethod.POST)
     public void cheminVersPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws NoPathFoundException, ObstacleFoundException, AvoidingException {
         mouvementManager.pathTo(x, y);
     }
 
-    @RequestMapping(value = "/position", method = RequestMethod.GET)
+    @RequestMapping(value = "/position", method = RequestMethod.POST)
     public void allerEnPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws ObstacleFoundException {
         mouvementManager.gotoPointMM(x, y, true);
     }
 
-    @RequestMapping(value = "/face", method = RequestMethod.GET)
+    @RequestMapping(value = "/face", method = RequestMethod.POST)
     public void alignFace(@RequestParam("x") final double x, @RequestParam("y") final double y) throws ObstacleFoundException {
         mouvementManager.alignFrontTo(x, y);
     }
 
-    @RequestMapping(value = "/dos", method = RequestMethod.GET)
+    @RequestMapping(value = "/dos", method = RequestMethod.POST)
     public void alignDos(@RequestParam("x") final double x, @RequestParam("y") final double y) throws ObstacleFoundException {
         mouvementManager.alignBackTo(x, y);
     }
 
-    @RequestMapping(value = "/tourne", method = RequestMethod.GET)
+    @RequestMapping(value = "/tourne", method = RequestMethod.POST)
     public void tourne(@RequestParam("angle") final double angle) throws ObstacleFoundException {
         mouvementManager.tourneDeg(angle);
     }
 
-    @RequestMapping(value = "/avance", method = RequestMethod.GET)
+    @RequestMapping(value = "/avance", method = RequestMethod.POST)
     public void avance(@RequestParam("distance") final double distance) throws ObstacleFoundException {
         mouvementManager.avanceMM(distance);
     }
 
-    @RequestMapping(value = "/recule", method = RequestMethod.GET)
+    @RequestMapping(value = "/recule", method = RequestMethod.POST)
     public void recule(@RequestParam("distance") final double distance) throws ObstacleFoundException {
         mouvementManager.reculeMM(distance);
     }
