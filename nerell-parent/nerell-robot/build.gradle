@@ -1,10 +1,8 @@
 description = "ARIG Association - Nerell Robot"
 
 dependencies {
-	compile(
-		[project(':nerell-parent:nerell-common')],
-		[project(':robot-system-lib-parent:robot-system-lib-raspi')]
-	)
+	compile project(':nerell-parent:nerell-common')
+	compile project(':robot-system-lib-parent:robot-system-lib-raspi')
 }
 
 // Tâche de copy des dépendances

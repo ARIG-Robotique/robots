@@ -1,9 +1,7 @@
 description = "ARIG Association - Robot System Librairie - Bouchon : Implémentation bouchon pour tester sans devices."
 
 dependencies {
-    compile(
-        [project(':robot-system-lib-parent:robot-system-lib-core')],
-        [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion],
-        [group: 'commons-io', name: 'commons-io', version: apacheCommonsIOVersion]
-    )
+    compile project(':robot-system-lib-parent:robot-system-lib-core')
+    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    compile "commons-io:commons-io:${apacheCommonsIOVersion}"
 }

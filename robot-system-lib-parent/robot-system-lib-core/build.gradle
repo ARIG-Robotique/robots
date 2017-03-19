@@ -3,15 +3,15 @@ description = "ARIG Association - Robot System Librairie - Core : Librairie coeu
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 
-    compile(
-        [group: 'org.springframework', name: 'spring-context', version: springVersion],
-        [group: 'org.springframework', name: 'spring-webmvc', version: springVersion],
-        [group: 'org.apache.commons', name: 'commons-lang3', version: apacheCommonsLangVersion],
-        [group: 'org.apache.commons', name: 'commons-collections4', version: apacheCommonsCollectionsVersion],
-        [group: 'commons-io', name: 'commons-io', version: apacheCommonsIOVersion],
-        [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion],
-        [group: 'com.google.guava', name: 'guava', version: googleGuavaVersion],
-        [group: 'org.influxdb', name: 'influxdb-java', version: influxdbVersion],
-        [group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion]
-    )
+    compile "org.springframework:spring-context:${springVersion}"
+    compile "org.springframework:spring-webmvc:${springVersion}"
+    compile "org.apache.commons:commons-lang3:${apacheCommonsLangVersion}"
+    compile "org.apache.commons:commons-collections4:${apacheCommonsCollectionsVersion}"
+    compile "commons-io:commons-io:${apacheCommonsIOVersion}"
+    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    compile "com.google.guava:guava:${googleGuavaVersion}"
+    compile "org.influxdb:influxdb-java:${influxdbVersion}"
+    compile "com.kohlschutter.junixsocket:junixsocket-native-common:${junixsocketVersion}"
+    compile "com.kohlschutter.junixsocket:junixsocket-common:${junixsocketVersion}"
+    compile "org.slf4j:slf4j-log4j12:${slf4jVersion}"
 }

@@ -30,6 +30,7 @@ configure(allprojects) {
 		jacksonVersion = '2.8.6'
 		influxdbVersion = '2.5'
 		pi4jVersion = '1.1'
+		junixsocketVersion = '2.0.5-SNAPSHOT'
 		slf4jVersion = '1.7.23'
 
 		// Container dependencies
@@ -83,15 +84,11 @@ configure(allprojects) {
 
 	// Dependence commune pour tous les projets
 	dependencies {
-		provided(
-			[group: 'org.projectlombok', name: 'lombok', version: lombokVersion]
-		)
+		provided "org.projectlombok:lombok:${lombokVersion}"
 
-		testCompile(
-			[group: 'org.springframework', name: 'spring-test', version: springVersion],
-			[group: 'junit', name: 'junit', version: junitVersion],
-			[group: 'org.mockito', name: 'mockito-core', version: mockitoVersion]
-		)
+		testCompile "org.springframework:spring-test:${springVersion}"
+		testCompile "junit:junit:${junitVersion}"
+		testCompile "org.mockito:mockito-core:${mockitoVersion}"
 	}
 
 	// Intégration avec IntellijIDEA
