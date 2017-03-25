@@ -67,6 +67,11 @@ public class MouvementController {
         mouvementManager.alignBackTo(x, y);
     }
 
+    @RequestMapping(value = "/orientation", method = RequestMethod.POST)
+    public void orientation(@RequestParam("angle") final double angle) throws ObstacleFoundException {
+        mouvementManager.gotoOrientationDeg(angle);
+    }
+
     @RequestMapping(value = "/tourne", method = RequestMethod.POST)
     public void tourne(@RequestParam("angle") final double angle) throws ObstacleFoundException {
         mouvementManager.tourneDeg(angle);

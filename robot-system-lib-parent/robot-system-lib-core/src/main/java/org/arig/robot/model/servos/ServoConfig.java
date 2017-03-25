@@ -16,6 +16,9 @@ import java.util.List;
 @Accessors(chain = true)
 public class ServoConfig extends ServoInfo {
 
+    private int minPosition;
+    private int maxPosition;
+
     private List<ServoPosition> positions;
 
     public ServoConfig addPosition(ServoPosition pos) {
@@ -32,9 +35,5 @@ public class ServoConfig extends ServoInfo {
             positions.clear();
         }
         return this;
-    }
-
-    public ServoInfo toServoInfo() {
-        return new ServoInfo().setId(getId()).setName(getName());
     }
 }

@@ -37,10 +37,14 @@ public interface IConstantesServos {
     byte GUIDE = 21;
 
     // Constantes de position
+    int BRAS_DROIT_MIN = 860;
+    int BRAS_DROIT_MAX = 1930;
     int BRAS_DROIT_HAUT = 1930;
     int BRAS_DROIT_CLAP = 1250;
     int BRAS_DROIT_BAS = 860;
 
+    int BRAS_GAUCHE_MIN = 700;
+    int BRAS_GAUCHE_MAX = 1910;
     int BRAS_GAUCHE_HAUT = 700;
     int BRAS_GAUCHE_CLAP = 1450;
     int BRAS_GAUCHE_BAS = 1910;
@@ -65,11 +69,15 @@ public interface IConstantesServos {
     int PRODUIT_GAUCHE_FERME = 1160;
     int PRODUIT_GAUCHE_INIT = 750;
 
+    int PINCE_MIN = 1150;
+    int PINCE_MAX = 1935;
     int PINCE_OUVERTE = 1150;
     int PINCE_COULEUR = 1600;
     int PINCE_PRISE_BALLE = 1710;
     int PINCE_PRISE_PIED = 1935;
 
+    int ASCENSEUR_MIN = 970;
+    int ASCENSEUR_MAX = 2210;
     int ASCENSEUR_HAUT_PIED = 2210;
     int ASCENSEUR_HAUT_BALLE = 1700;
     int ASCENSEUR_PLEIN = 970;

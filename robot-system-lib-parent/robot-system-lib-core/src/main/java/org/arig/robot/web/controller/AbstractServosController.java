@@ -33,15 +33,11 @@ public abstract class AbstractServosController {
     }
 
     @RequestMapping(value = "/{idServo}", method = RequestMethod.GET)
-    public final ServoInfo getServoPositionAndSpeed(@PathVariable("idServo") final Byte idServo) {
-        ServoConfig sc = servosConfig().stream()
+    public final ServoConfig getServoPositionAndSpeed(@PathVariable("idServo") final Byte idServo) {
+        return servosConfig().stream()
                 .filter(s -> s.getId() == idServo)
                 .findFirst()
                 .get();
-
-        return sc.toServoInfo()
-                .setCurrentPosition(sd21Servos.getPosition(idServo))
-                .setCurrentSpeed(sd21Servos.getSpeed(idServo));
     }
 
     @RequestMapping(value = "/{idServo}", method = RequestMethod.POST)

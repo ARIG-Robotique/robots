@@ -19,6 +19,7 @@ public class ServosController extends AbstractServosController {
     static {
         ServoConfig brasDroit = new ServoConfig();
         brasDroit.setId(IConstantesServos.BRAS_DROIT).setName("Bras droit");
+        brasDroit.setMinPosition(IConstantesServos.BRAS_DROIT_MIN).setMaxPosition(IConstantesServos.BRAS_DROIT_MAX);
         brasDroit.addPosition(new ServoPosition("Haut", IConstantesServos.BRAS_DROIT_HAUT))
                 .addPosition(new ServoPosition("Clap", IConstantesServos.BRAS_DROIT_CLAP))
                 .addPosition(new ServoPosition("Bas", IConstantesServos.BRAS_DROIT_BAS));
@@ -26,6 +27,7 @@ public class ServosController extends AbstractServosController {
 
         ServoConfig brasGauche = new ServoConfig();
         brasGauche.setId(IConstantesServos.BRAS_GAUCHE).setName("Bras gauche");
+        brasGauche.setMinPosition(IConstantesServos.BRAS_GAUCHE_MIN).setMaxPosition(IConstantesServos.BRAS_GAUCHE_MAX);
         brasGauche.addPosition(new ServoPosition("Haut", IConstantesServos.BRAS_GAUCHE_HAUT))
                 .addPosition(new ServoPosition("Clap", IConstantesServos.BRAS_GAUCHE_CLAP))
                 .addPosition(new ServoPosition("Bas", IConstantesServos.BRAS_GAUCHE_BAS));
@@ -71,6 +73,7 @@ public class ServosController extends AbstractServosController {
 
         ServoConfig ascenseur = new ServoConfig();
         ascenseur.setId(IConstantesServos.ASCENSEUR).setName("Ascenseur");
+        ascenseur.setMinPosition(IConstantesServos.ASCENSEUR_MIN).setMaxPosition(IConstantesServos.ASCENSEUR_MAX);
         ascenseur.addPosition(new ServoPosition("Haut pied", IConstantesServos.ASCENSEUR_HAUT_PIED))
                 .addPosition(new ServoPosition("Haut balle", IConstantesServos.ASCENSEUR_HAUT_BALLE))
                 .addPosition(new ServoPosition("Plein", IConstantesServos.ASCENSEUR_PLEIN))
@@ -80,6 +83,7 @@ public class ServosController extends AbstractServosController {
 
         ServoConfig pince = new ServoConfig();
         pince.setId(IConstantesServos.PINCE).setName("Pince");
+        pince.setMinPosition(IConstantesServos.PINCE_MIN).setMaxPosition(IConstantesServos.PINCE_MAX);
         pince.addPosition(new ServoPosition("Ouverte", IConstantesServos.PINCE_OUVERTE))
                 .addPosition(new ServoPosition("Check couleur", IConstantesServos.PINCE_COULEUR))
                 .addPosition(new ServoPosition("Prise balle", IConstantesServos.PINCE_PRISE_BALLE))
