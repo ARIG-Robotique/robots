@@ -87,7 +87,7 @@ public class JettyEmbeddedRunner {
         webAppCtx.setConfigurations(new Configuration[] { myConfig });
         webAppCtx.setContextPath("/");
         webAppCtx.setParentLoaderPriority(true);
-        webAppCtx.addFilter(corsFilterHolder, "/", null);
+        webAppCtx.addFilter(corsFilterHolder, "/*", null);
 
         srv.setHandler(webAppCtx);
 
