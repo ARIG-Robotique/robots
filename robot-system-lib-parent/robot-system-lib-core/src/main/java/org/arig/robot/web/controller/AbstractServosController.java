@@ -23,7 +23,7 @@ import java.util.List;
 public abstract class AbstractServosController {
 
     @Autowired
-    private SD21Servos sd21Servos;
+    protected SD21Servos sd21Servos;
 
     protected abstract List<ServoConfig> servosConfig();
 

@@ -95,6 +95,11 @@ public class ServosController extends AbstractServosController {
 
     @Override
     protected List<ServoConfig> servosConfig() {
+        servoConfigs.forEach(sc -> {
+            sc.setCurrentPosition(sd21Servos.getPosition(sc.getId()));
+            sc.setCurrentSpeed(sd21Servos.getSpeed(sc.getId()));
+        });
+
         return servoConfigs;
     }
 }
