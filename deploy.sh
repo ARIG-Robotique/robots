@@ -1,4 +1,6 @@
 #!/bin/sh
+ssh $1 "mkdir -p /home/pi/$1/libs"
+
 if [ "$2" == "deps" ] ; then
     echo "Déploiement dépendences ..."
     ./gradlew clean copyDependencies
