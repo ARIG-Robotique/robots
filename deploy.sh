@@ -4,6 +4,7 @@ ssh $1 "mkdir -p /home/pi/$1/libs"
 if [ "$2" == "deps" ] ; then
     echo "Déploiement dépendences ..."
     ./gradlew clean copyDependencies
+    ssh $1 rm -vf /home/pi/$1/libs/*
     scp ./$1-parent/$1-robot/build/dependencies/*.jar $1:/home/pi/$1/libs/
     scp ./$1-parent/$1-utils/build/dependencies/*.jar $1:/home/pi/$1/libs/
 fi
