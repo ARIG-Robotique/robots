@@ -25,6 +25,10 @@ import java.util.Collections;
 @Slf4j
 public class RPLidarA2OverSocketTelemeter implements InitializingBean {
 
+    public static short LOW_MORTOR_PWM = 300;
+    public static short MAX_MOTOR_PWM = 1023;
+    public static short DEFAULT_MOTOR_PWM = 660;
+
     private final boolean unixSocket;
 
     private Socket socket;
