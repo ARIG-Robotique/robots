@@ -28,19 +28,19 @@ public class CheckLidar {
 
         log.info("Start SCAN");
         rplidar.startScan();
-        Thread.sleep(3000);
+        Thread.sleep(10000);
 
         log.info("LOW speed");
         rplidar.setSpeed(RPLidarA2OverSocketTelemeter.LOW_MORTOR_PWM);
-        Thread.sleep(3000);
+        Thread.sleep(10000);
 
         log.info("MAX speed");
         rplidar.setSpeed(RPLidarA2OverSocketTelemeter.MAX_MOTOR_PWM);
-        Thread.sleep(3000);
+        Thread.sleep(10000);
 
         log.info("Default speed");
         rplidar.setSpeed(RPLidarA2OverSocketTelemeter.DEFAULT_MOTOR_PWM);
-        Thread.sleep(3000);
+        Thread.sleep(10000);
 
         int cpt = 0;
         do {
@@ -58,11 +58,13 @@ public class CheckLidar {
                 res.append(" mm");
             }
             log.info("{} datas ignoré, {} datas acquise (sample : {})", scanInfos.getIgnored(), scanInfos.getScan().size(), res.toString());
-
-        } while(++cpt < 60);
+            Thread.sleep(50);
+        } while(++cpt < 100);
 
         log.info("Fin");
+        rplidar.stopScan();
         rplidar.end();
+        Thread.sleep(50);
 
         rootContext.close();
     }
