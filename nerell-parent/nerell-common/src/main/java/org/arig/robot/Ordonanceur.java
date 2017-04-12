@@ -16,6 +16,7 @@ import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.system.MouvementManager;
+import org.arig.robot.system.capteurs.RPLidarA2OverSocketTelemeter;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.system.servos.SD21Servos;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -69,6 +70,9 @@ public class Ordonanceur {
     private IMonitoringWrapper monitoringWrapper;
 
     @Autowired
+    private RPLidarA2OverSocketTelemeter rplidar;
+
+    @Autowired
     @Qualifier("currentPosition")
     private Position position;
 
@@ -100,6 +104,9 @@ public class Ordonanceur {
         log.info("Initialisation du contrôleur de mouvement");
         mouvementManager.init();
 
+        // Infos du lidar
+        rplidar.printDeviceInfo();
+
         // FIXME : Activation de la puissance
         //ioServices.enableAlimMoteur();
         //ioServices.enableAlimServoMoteur();
@@ -116,6 +123,9 @@ public class Ordonanceur {
             while(!ioService.alimMoteurOk() && !ioService.alimServoOk());
         }
         log.info("Alimentation puissance OK (Moteur : {} ; Servos : {})", ioService.alimMoteurOk(), ioService.alimServoOk());
+
+        log.info("Mise en route du lidar");
+        rplidar.startScan();
 
         if (!ioService.tirette()) {
             log.warn("La tirette n'est pas la. Phase de préparation Nerell");
@@ -190,6 +200,10 @@ public class Ordonanceur {
 
         // On éteint la couleur de la team.
         ioService.clearTeamColor();
+
+        // On arrette le lidar
+        rplidar.stopScan();
+        rplidar.end();
 
         // On envoi les datas collecté
         monitoringWrapper.save();
