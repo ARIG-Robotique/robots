@@ -16,6 +16,7 @@ import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.system.MouvementManager;
+import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.RPLidarA2OverSocketTelemeter;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.system.servos.SD21Servos;
@@ -70,7 +71,7 @@ public class Ordonanceur {
     private IMonitoringWrapper monitoringWrapper;
 
     @Autowired
-    private RPLidarA2OverSocketTelemeter rplidar;
+    private ILidarTelemeter rplidar;
 
     @Autowired
     @Qualifier("currentPosition")

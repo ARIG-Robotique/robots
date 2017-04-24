@@ -1,0 +1,95 @@
+package org.arig.robot.system.capteurs;
+
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.arig.robot.model.lidar.DeviceInfos;
+import org.arig.robot.model.lidar.HealthInfos;
+import org.arig.robot.model.lidar.Scan;
+import org.arig.robot.model.lidar.ScanInfos;
+import org.arig.robot.model.lidar.communication.*;
+import org.arig.robot.model.lidar.enums.HealthState;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
+/**
+ * @author gdepuille on 24/04/17.
+ */
+@Slf4j
+@NoArgsConstructor
+public class LidarTelemeterBouchon implements ILidarTelemeter {
+
+    private final Random random = new Random();
+
+    @Override
+    public void printDeviceInfo() {
+        DeviceInfos d = deviceInfo();
+        log.info("Lidar Bouchon version [Firmware : {} ; Hardware {} ; Serial number : {}",
+                d.getFirmwareVersion(), d.getHardwareVersion(), d.getSerialNumber());
+    }
+
+    @Override
+    public void end() {
+        // NOOP
+    }
+
+    @Override
+    public DeviceInfos deviceInfo() {
+        DeviceInfos r = new DeviceInfos();
+        r.setHardwareVersion((short) -1);
+        r.setSerialNumber("1234567890");
+        r.setFirmwareVersion("BOUCHON");
+
+        return r;
+    }
+
+    @Override
+    public HealthInfos healthInfo() {
+        HealthInfos r = new HealthInfos();
+        r.setLibelle(HealthState.OK);
+
+        return r;
+    }
+
+    @Override
+    public void startScan() {
+        startScan((short) -1);
+    }
+
+    @Override
+    public void startScan(Short speed) {
+        // NOOP
+    }
+
+    @Override
+    public void stopScan() {
+        // NOOP
+    }
+
+    @Override
+    public void setSpeed(Short speed) {
+        // NOOP
+    }
+
+    @Override
+    public ScanInfos grabDatas() {
+        ScanInfos r = new ScanInfos();
+        r.setIgnored((short) 359);
+
+        List<Scan> scans = new ArrayList<>();
+        r.setScan(scans);
+
+        Scan s = new Scan();
+        scans.add(s);
+
+        s.setQuality((short) 47);
+        s.setDistanceMm(random.nextInt(3000) + 500);
+        s.setAngleDeg(random.nextInt(360));
+
+        return r;
+    }
+}

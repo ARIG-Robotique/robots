@@ -5,6 +5,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.services.avoiding.BasicAvoidingService;
 import org.arig.robot.services.avoiding.CompleteAvoidingService;
 import org.arig.robot.system.avoiding.IAvoidingService;
+import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.RPLidarA2OverSocketTelemeter;
 import org.arig.robot.system.process.RPLidarBridgeProcess;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class NerellAvoidingContext {
 
     @Bean
     @DependsOn("rplidarBridgeProcess")
-    public RPLidarA2OverSocketTelemeter rplidar() {
+    public ILidarTelemeter rplidar() {
         final File socketFile = new File(RPLidarBridgeProcess.socketPath);
         return new RPLidarA2OverSocketTelemeter(socketFile);
     }

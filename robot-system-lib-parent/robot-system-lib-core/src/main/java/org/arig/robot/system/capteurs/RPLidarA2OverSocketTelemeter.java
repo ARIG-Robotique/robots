@@ -23,7 +23,7 @@ import java.util.Collections;
  * @author gdepuille on 03/03/17.
  */
 @Slf4j
-public class RPLidarA2OverSocketTelemeter implements InitializingBean {
+public class RPLidarA2OverSocketTelemeter implements ILidarTelemeter, InitializingBean {
 
     public static short LOW_MORTOR_PWM = 250;
     public static short MAX_MOTOR_PWM = 1023;
@@ -73,12 +73,14 @@ public class RPLidarA2OverSocketTelemeter implements InitializingBean {
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
 
+    @Override
     public void printDeviceInfo() {
         DeviceInfos d = deviceInfo();
         log.info("RPLidar A2 version [Firmware : {} ; Hardware {} ; Serial number : {}",
                 d.getFirmwareVersion(), d.getHardwareVersion(), d.getSerialNumber());
     }
 
+    @Override
     public void end() {
         if (socket != null) {
             try {
@@ -93,6 +95,7 @@ public class RPLidarA2OverSocketTelemeter implements InitializingBean {
         }
     }
 
+    @Override
     public DeviceInfos deviceInfo() {
         DeviceInfos r;
         try {
@@ -109,6 +112,7 @@ public class RPLidarA2OverSocketTelemeter implements InitializingBean {
         return r;
     }
 
+    @Override
     public HealthInfos healthInfo() {
         HealthInfos r;
         try {
@@ -125,10 +129,12 @@ public class RPLidarA2OverSocketTelemeter implements InitializingBean {
         return r;
     }
 
+    @Override
     public void startScan() {
         startScan((short) -1);
     }
 
+    @Override
     public void startScan(Short speed) {
         try {
             StartScanQuery query = new StartScanQuery();
@@ -141,6 +147,7 @@ public class RPLidarA2OverSocketTelemeter implements InitializingBean {
         }
     }
 
+    @Override
     public void stopScan() {
         try {
             sendToSocketAndGet(new StopScanQuery(), StopScanResponse.class);
@@ -149,6 +156,7 @@ public class RPLidarA2OverSocketTelemeter implements InitializingBean {
         }
     }
 
+    @Override
     public void setSpeed(Short speed) {
         try {
             sendToSocketAndGet(new SetSpeedQuery(speed), SetSpeedResponse.class);
@@ -157,6 +165,7 @@ public class RPLidarA2OverSocketTelemeter implements InitializingBean {
         }
     }
 
+    @Override
     public ScanInfos grabDatas() {
         ScanInfos r;
         try {
