@@ -2,7 +2,6 @@ package org.arig.robot.config.spring;
 
 import org.arig.robot.model.RobotName;
 import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.arig.robot.monitoring.MonitoringInfluxDBWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

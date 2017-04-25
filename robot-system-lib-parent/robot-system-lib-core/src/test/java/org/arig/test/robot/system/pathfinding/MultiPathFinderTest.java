@@ -7,44 +7,29 @@ import org.arig.robot.model.Point;
 import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * @author gdepuille on 30/12/13.
  */
 @Slf4j
-@RunWith(BlockJUnit4ClassRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = { PathFindingTestContext.class })
 public class MultiPathFinderTest {
 
-    private static MultiPathFinderImpl pf;
+    @Autowired
+    @Qualifier("multiPathLabyrinthe")
+    private MultiPathFinderImpl pf;
 
-    private Point from;
-    private Point to;
-
-    @BeforeClass
-    public static void initClass() {
-        pf = new MultiPathFinderImpl();
-        pf.setNbTileX(40);
-        pf.setNbTileY(40);
-        pf.setAllowDiagonal(true);
-    }
-
-    @Before
-    public void beforeTest() {
-        URL url = getClass().getResource("/assets/labyrinthe.png");
-        pf.construitGraphDepuisImageNoirEtBlanc(new File(url.getPath()));
-
-        from = new Point(25, 25);
-        to = new Point(365, 305);
-    }
+    private Point from = new Point(25, 25);
+    private Point to = new Point(365, 305);
 
     @Test
     public void testStartNodeDoesntExist() {
@@ -73,7 +58,7 @@ public class MultiPathFinderTest {
         pf.setAlgorithm(PathFinderAlgorithm.A_STAR_MANHATTAN);
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
-        Assert.assertTrue(c.hasNext());
+        Assert.assertEquals(20, c.nbPoints());
     }
 
     @Test
@@ -81,7 +66,7 @@ public class MultiPathFinderTest {
         pf.setAlgorithm(PathFinderAlgorithm.A_STAR_EUCLIDIAN);
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
-        Assert.assertTrue(c.hasNext());
+        Assert.assertEquals(22, c.nbPoints());
     }
 
     @Test
@@ -89,7 +74,7 @@ public class MultiPathFinderTest {
         pf.setAlgorithm(PathFinderAlgorithm.DIJKSTRA);
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
-        Assert.assertTrue(c.hasNext());
+        Assert.assertEquals(19, c.nbPoints());
     }
 
     @Test
@@ -97,7 +82,7 @@ public class MultiPathFinderTest {
         pf.setAlgorithm(PathFinderAlgorithm.BREADTH_FIRST_SEARCH);
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
-        Assert.assertTrue(c.hasNext());
+        Assert.assertEquals(21, c.nbPoints());
     }
 
     @Test
@@ -105,6 +90,6 @@ public class MultiPathFinderTest {
         pf.setAlgorithm(PathFinderAlgorithm.DEPTH_FIRST_SEARCH);
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
-        Assert.assertTrue(c.hasNext());
+        Assert.assertEquals(35, c.nbPoints());
     }
 }

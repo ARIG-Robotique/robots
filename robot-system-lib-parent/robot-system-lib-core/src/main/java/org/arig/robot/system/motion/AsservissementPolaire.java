@@ -3,14 +3,12 @@ package org.arig.robot.system.motion;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.IRampFilter;
 import org.arig.robot.model.CommandeRobot;
-import org.arig.robot.model.MonitorPoint;
 import org.arig.robot.model.enums.TypeConsigne;
+import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * The Class AsservissementPolaire.
@@ -112,9 +110,8 @@ public class AsservissementPolaire implements IAsservissementPolaire {
 
     private void sendMonitoring() {
         // Construction du monitoring
-        MonitorPoint serie = new MonitorPoint()
+        MonitorTimeSerie serie = new MonitorTimeSerie()
                 .tableName("asserv_polaire")
-                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .addField("outputDistance", outputDistance)
                 .addField("outputOrientation", outputOrientation)
                 .addField("vitesseDistance", vitesseDistance)
@@ -122,6 +119,6 @@ public class AsservissementPolaire implements IAsservissementPolaire {
                 .addField("cmdMotD", cmdRobot.getMoteur().getDroit())
                 .addField("cmdMotG", cmdRobot.getMoteur().getGauche());
 
-        monitoringWrapper.addPoint(serie);
+        monitoringWrapper.addTimeSeriePoint(serie);
     }
 }

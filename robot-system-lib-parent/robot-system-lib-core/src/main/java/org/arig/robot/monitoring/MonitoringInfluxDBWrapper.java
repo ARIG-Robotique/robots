@@ -3,7 +3,7 @@ package org.arig.robot.monitoring;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.arig.robot.model.MonitorPoint;
+import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Point;
@@ -17,9 +17,12 @@ import java.util.stream.Collectors;
 
 /**
  * @author gdepuille on 01/11/16.
+ *
+ * @deprecated En attendant le superviseur / reader
  */
 @Slf4j
-public class MonitoringInfluxDBWrapper extends AbstractMonitoringWrapper implements InitializingBean {
+@Deprecated
+public class MonitoringInfluxDBWrapper extends MonitoringJsonWrapper implements InitializingBean {
 
     @Setter
     private String url;
@@ -40,9 +43,11 @@ public class MonitoringInfluxDBWrapper extends AbstractMonitoringWrapper impleme
     }
 
     @Override
-    public void save() {
-        if (!hasPoints()) {
-            log.info("Aucun point de monitoring a enregistrer");
+    protected void saveTimeSeriePoints() {
+        super.saveTimeSeriePoints();
+
+        if (!hasTimeSeriePoints()) {
+            log.info("Aucun point de monitoring time serie a enregistrer");
             return;
         }
 
@@ -60,16 +65,15 @@ public class MonitoringInfluxDBWrapper extends AbstractMonitoringWrapper impleme
         // Flush every 2000 Points, at least every 100ms
         influxDB.enableBatch(2000, 100, TimeUnit.MILLISECONDS);
 
-        List<Point> points = getPoints().parallelStream()
+        List<Point> points = getMonitorTimeSeriePoints().parallelStream()
                 .map(this::transform)
                 .collect(Collectors.toList());
 
         log.info("Enregistrement de {} point en base", points.size());
         points.forEach((p) -> influxDB.write(dbName, retentionPolicy, p));
-
     }
 
-    private Point transform(MonitorPoint mp) {
+    private Point transform(MonitorTimeSerie mp) {
         Builder b = Point.measurement(mp.getTableName())
                         .time(mp.getTime(), mp.getPrecision());
 
