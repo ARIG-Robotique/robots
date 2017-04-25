@@ -113,7 +113,7 @@ public class SRF02Sonar {
             i2cManager.sendData(deviceName, COMMAND_REGISTER, (byte) (((fakeMode) ? FAKE_RANGE_BASE_COMMAND : REAL_RANGE_BASE_COMMAND) + rangeUnit.getValue()));
 
             // Step 2 : Attente avant de pouvoir lire (la doc dit 66 ms, mais que au bout de 70 c'est toujours bon)
-            Thread.currentThread().sleep(READ_TIMEOUT_VALID);
+            Thread.sleep(READ_TIMEOUT_VALID);
 
             // Step 3 : On indique au sonar de se positionner sur la bit de point fort de la valeur voulu
             i2cManager.sendData(deviceName, RANGE_HIGH_BYTE_REGISTER);

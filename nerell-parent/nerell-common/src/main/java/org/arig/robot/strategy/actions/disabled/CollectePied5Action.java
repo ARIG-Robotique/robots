@@ -77,7 +77,7 @@ public class CollectePied5Action implements IAction {
             }
             mv.avanceMM(220);
             try {
-                Thread.currentThread().sleep(500);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 log.warn("Erreur d'attente dans la prise du pied : {}", e.toString());
             }

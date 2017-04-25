@@ -57,9 +57,9 @@ public class ServosService {
     public void deposeProduitDroit() {
         log.info("Dépose gobelet droit");
         servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_BAS);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_MONTE_GB); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_MONTE_GB); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
         servos.setPosition(IConstantesServos.PRODUIT_DROIT, IConstantesServos.PRODUIT_DROIT_OUVERT);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
     }
 
     @Async
@@ -87,9 +87,9 @@ public class ServosService {
     public void deposeProduitGauche() {
         log.info("Dépose gobelet gauche");
         servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_BAS);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_MONTE_GB); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_MONTE_GB); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
         servos.setPosition(IConstantesServos.PRODUIT_GAUCHE, IConstantesServos.PRODUIT_GAUCHE_OUVERT);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
     }
 
     @Async
@@ -97,7 +97,7 @@ public class ServosService {
         log.info("Dépose de la colonne en fin de match");
         if (robotStatus.getNbPied() > 0) {
             servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
-            try { Thread.currentThread().sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { }
+            try { Thread.sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
             servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
             servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
         }
@@ -106,21 +106,21 @@ public class ServosService {
     public void deposeColonneAuSol() {
         log.info("Dépose de la colonne au sol");
         servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
         servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PINCE); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_PINCE); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
         servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_GUIDE); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_GUIDE); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
     }
 
     public void deposeColonneSurTablette() {
         log.info("Dépose de la colonne sur la tablette");
         servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_DEPOSE_BORDURE);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
         servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PINCE); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_PINCE); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
         servos.setPosition(IConstantesServos.GUIDE, IConstantesServos.GUIDE_OUVERT);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_GUIDE); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_GUIDE); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
     }
 
     public void leveGobelets() {
@@ -161,18 +161,18 @@ public class ServosService {
         log.info("{} pied{} dans l'ascenseur", robotStatus.getNbPied(), robotStatus.getNbPied() > 1 ? "s" : "");
         servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_OUVERTE);
         servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_BAS);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
         servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_PRISE_PIED);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PINCE); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_PINCE); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
         servos.setPosition(IConstantesServos.ASCENSEUR, robotStatus.getNbPied() == IConstantesNerellConfig.nbPiedMax ? IConstantesServos.ASCENSEUR_PLEIN : IConstantesServos.ASCENSEUR_HAUT_PIED);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
     }
 
     public void priseBalleDansAscenseur() {
         servos.setPosition(IConstantesServos.PINCE, IConstantesServos.PINCE_PRISE_BALLE);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PINCE); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_PINCE); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
         servos.setPosition(IConstantesServos.ASCENSEUR, IConstantesServos.ASCENSEUR_HAUT_BALLE);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_ASCENSEUR); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
     }
 
     public void ouvrePince() {
@@ -188,7 +188,7 @@ public class ServosService {
     public void priseProduitGauche() {
         log.info("Produit disponible à gauche");
         servos.setPosition(IConstantesServos.PRODUIT_GAUCHE, IConstantesServos.PRODUIT_GAUCHE_FERME);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
         if (ioService.gobeletGauche()) {
             servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_HAUT);
         }
@@ -207,13 +207,13 @@ public class ServosService {
     public void ouvrePriseGauche() {
         log.info("Ouverture prise produit gauche");
         servos.setPosition(IConstantesServos.PRODUIT_GAUCHE, IConstantesServos.PRODUIT_GAUCHE_OUVERT);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
         servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_BAS);
     }
 
     public void initProduitGauche() {
         servos.setPosition(IConstantesServos.MONTE_GOBELET_GAUCHE, IConstantesServos.MONTE_GB_GAUCHE_HAUT);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_MONTE_GB); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_MONTE_GB); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
         servos.setPosition(IConstantesServos.PRODUIT_GAUCHE, IConstantesServos.PRODUIT_GAUCHE_INIT);
     }
 
@@ -225,7 +225,7 @@ public class ServosService {
     public void priseProduitDroit() {
         log.info("Produit disponible à droite");
         servos.setPosition(IConstantesServos.PRODUIT_DROIT, IConstantesServos.PRODUIT_DROIT_FERME);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
         if (ioService.gobeletDroit()) {
             servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_HAUT);
         }
@@ -244,13 +244,13 @@ public class ServosService {
     public void ouvrePriseDroite() {
         log.info("Ouverture prise produit droit");
         servos.setPosition(IConstantesServos.PRODUIT_DROIT, IConstantesServos.PRODUIT_DROIT_OUVERT);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_PRODUIT); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
         servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_BAS);
     }
 
     public void initProduitDroit() {
         servos.setPosition(IConstantesServos.MONTE_GOBELET_DROIT, IConstantesServos.MONTE_GB_DROIT_HAUT);
-        try { Thread.currentThread().sleep(IConstantesServos.WAIT_MONTE_GB); } catch (InterruptedException e) { }
+        try { Thread.sleep(IConstantesServos.WAIT_MONTE_GB); } catch (InterruptedException e) { log.warn("Problème d'attente", e); }
         servos.setPosition(IConstantesServos.PRODUIT_DROIT, IConstantesServos.PRODUIT_DROIT_INIT);
     }
 

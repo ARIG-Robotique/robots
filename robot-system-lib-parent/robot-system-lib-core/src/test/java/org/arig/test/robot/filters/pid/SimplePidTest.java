@@ -55,7 +55,7 @@ public class SimplePidTest {
             log.info("Test P : consigne {}, input {}, output {}", consigne, input, output);
             Assert.assertEquals(consigne - input, output, 1);
 
-            Thread.currentThread().sleep(1);
+            Thread.sleep(1);
         }
     }
 }

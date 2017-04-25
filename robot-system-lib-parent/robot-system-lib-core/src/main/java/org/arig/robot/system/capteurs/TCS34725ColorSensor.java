@@ -200,7 +200,7 @@ public class TCS34725ColorSensor {
 
         /* Set a delay for the integration time */
         try  {
-            Thread.currentThread().sleep(this.integrationTime.getDelay());
+            Thread.sleep(this.integrationTime.getDelay());
         } catch (InterruptedException e) {
             log.warn("Erreur d'attente pour l'intégration.", e);
         }
@@ -298,7 +298,7 @@ public class TCS34725ColorSensor {
     public void enable() {
         try {
             write8(TCS34725_ENABLE, TCS34725_ENABLE_PON);
-            Thread.currentThread().sleep(10);
+            Thread.sleep(10);
             write8(TCS34725_ENABLE, TCS34725_ENABLE_PON | TCS34725_ENABLE_AEN);
         } catch (InterruptedException e) {
             log.warn("Enable du capteur de couleur en erreur", e);
