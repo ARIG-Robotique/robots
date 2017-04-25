@@ -115,7 +115,7 @@ public class SD21Servos implements InitializingBean {
             if (log.isDebugEnabled()) {
                 log.debug("Attente pour le mouvement servo {} {} -> {} à la vitesse de {} pendant {} ms", servoNb, oldPosition, newPosition, currentSpeed, waitTime);
             }
-            Thread.currentThread().sleep(waitTime);
+            Thread.sleep(waitTime);
         } catch (InterruptedException e) {
             log.warn("Erreur d'attente pour le mouvement servo {} {} -> {} à la vitesse {}", servoNb, oldPosition, newPosition, currentSpeed);
         }
@@ -196,7 +196,7 @@ public class SD21Servos implements InitializingBean {
             if (log.isDebugEnabled()) {
                 log.debug("Attente pour le mouvement servo {} {} -> {} à la vitesse de {} pendant {} ms", servoNb, oldPosition, newPosition, newSpeed, waitTime);
             }
-            Thread.currentThread().sleep(waitTime);
+            Thread.sleep(waitTime);
         } catch (InterruptedException e) {
             log.warn("Erreur d'attente pour le mouvement servo {} {} -> {} à la vitesse {}", servoNb, oldPosition, newPosition, newSpeed);
         }

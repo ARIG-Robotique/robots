@@ -79,7 +79,7 @@ public class CollectePied7Action implements IAction {
                 mv.gotoPointMM(1650, 3000 - 190);
             }
             try {
-                Thread.currentThread().sleep(500);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 log.warn("Erreur d'attente dans la prise du pied : {}", e.toString());
             }

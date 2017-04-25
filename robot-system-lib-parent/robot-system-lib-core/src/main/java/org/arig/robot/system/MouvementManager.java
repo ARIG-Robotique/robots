@@ -662,7 +662,7 @@ public class MouvementManager implements InitializingBean {
             while (!isTrajetAtteint()) {
                 try {
                     checkRestartAfterObstacle();
-                    Thread.currentThread().sleep(1);
+                    Thread.sleep(1);
                 } catch (InterruptedException e) {
                     log.error("Problème dans l'attente d'atteinte du point : {}", e.toString());
                 }
@@ -673,7 +673,7 @@ public class MouvementManager implements InitializingBean {
             while (!isTrajetEnApproche()) {
                 try {
                     checkRestartAfterObstacle();
-                    Thread.currentThread().sleep(1);
+                    Thread.sleep(1);
                 } catch (InterruptedException e) {
                     log.error("Problème dans l'approche du point : {}", e.toString());
                 }

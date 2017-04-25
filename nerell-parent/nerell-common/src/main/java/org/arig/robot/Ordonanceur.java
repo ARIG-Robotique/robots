@@ -176,7 +176,7 @@ public class Ordonanceur {
                 if (robotStatus.getElapsedTime() > 45000) {
                     System.setProperty("strategy.collect.zone.adverse", "true");
                 }
-                Thread.currentThread().sleep(200);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 log.error("Interruption du Thread", e);
             }

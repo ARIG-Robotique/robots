@@ -57,7 +57,7 @@ public class CompletePidTest {
             log.info("Test P : consigne {}, input {}, output {}", consigne, input, output);
             Assert.assertEquals(consigne - input, output, 1);
 
-            Thread.currentThread().sleep(1);
+            Thread.sleep(1);
         }
     }
 
@@ -75,7 +75,7 @@ public class CompletePidTest {
             output = pid.compute(consigne, input);
             log.info("Test P : consigne {}, input {}, output {}", consigne, input, output);
 
-            Thread.currentThread().sleep(1);
+            Thread.sleep(1);
         }
     }
 
@@ -93,7 +93,7 @@ public class CompletePidTest {
             output = pid.compute(consigne, input);
             log.info("Test P : consigne {}, input {}, output {}", consigne, input, output);
 
-            Thread.currentThread().sleep(1);
+            Thread.sleep(1);
         }
     }
 }

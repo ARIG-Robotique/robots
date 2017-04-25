@@ -49,7 +49,7 @@ public class AsservissementPolaireTest {
 
         for (int i = 2000 ; i >= 0 ; i--) {
             asserv.process();
-            Thread.currentThread().sleep(1);
+            Thread.sleep(1);
         }
     }
 }
