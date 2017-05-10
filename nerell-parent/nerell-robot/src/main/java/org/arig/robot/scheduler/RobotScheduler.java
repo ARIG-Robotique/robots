@@ -18,9 +18,6 @@ public class RobotScheduler {
     private RobotStatus rs;
 
     @Autowired
-    private ServosService servosService;
-
-    @Autowired
     private IAvoidingService avoidingService;
 
     @Autowired
@@ -37,12 +34,6 @@ public class RobotScheduler {
     public void calageBordureTask() {
         if (rs.isCalageBordureEnabled()) {
             calageBordure.process();
-        }
-    }
-    @Scheduled(fixedDelay = 100)
-    public void ascenseurTask() {
-        if (rs.isAscenseurEnabled()) {
-            servosService.checkAscenseur();
         }
     }
 }

@@ -34,7 +34,7 @@ public class TasksScheduler {
         }
     }
 
-    @Scheduled(fixedDelay = 100)
+    @Scheduled(fixedDelay = 1)
     public void strategyTask() {
         if (rs.isMatchEnabled()) {
             strategyManager.execute();

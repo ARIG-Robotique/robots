@@ -5,6 +5,7 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesI2CAdc;
 import org.arig.robot.exception.I2CException;
+import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
 import org.springframework.beans.factory.InitializingBean;
@@ -20,6 +21,9 @@ import java.util.Map;
 @Slf4j
 @RestController
 public class CapteursController extends AbstractCapteursController implements InitializingBean {
+
+    @Autowired
+    private RobotStatus rs;
 
     @Autowired
     private IIOService ioService;
@@ -43,31 +47,19 @@ public class CapteursController extends AbstractCapteursController implements In
     public void afterPropertiesSet() throws Exception {
         // Capteurs informations numérique
         numeriqueInfos.put("AU", ioService::auOk);
-        numeriqueInfos.put("Puissance Moteur", ioService::alimMoteurOk);
-        numeriqueInfos.put("Puissance Servo", ioService::alimServoOk);
+        numeriqueInfos.put("Puissance 5V", ioService::alimPuissance5VOk);
+        numeriqueInfos.put("Puissance 8V", ioService::alimPuissance8VOk);
+        numeriqueInfos.put("Puissance 12V", ioService::alimPuissance12VOk);
         numeriqueInfos.put("Tirette", ioService::tirette);
-        numeriqueInfos.put("Bouton tapis", ioService::btnTapis);
-        numeriqueInfos.put("Butée avant gauche", ioService::buteeAvantGauche);
-        numeriqueInfos.put("Butée avant droite", ioService::buteeAvantDroit);
-        numeriqueInfos.put("Butée arrière gauche", ioService::buteeArriereGauche);
-        numeriqueInfos.put("Butée arrière droite", ioService::buteeArriereDroit);
-        numeriqueInfos.put("Pied ascenseur", ioService::piedCentre);
-        numeriqueInfos.put("Pied gauche", ioService::piedGauche);
-        numeriqueInfos.put("Pied droit", ioService::piedDroit);
-        numeriqueInfos.put("Produit gauche", ioService::produitGauche);
-        numeriqueInfos.put("Produit droit", ioService::produitDroit);
-        numeriqueInfos.put("Gobelet gauche", ioService::gobeletGauche);
-        numeriqueInfos.put("Gobelet droit", ioService::gobeletDroit);
 
         // Capteurs informations analogique
-        analogiqueInfos.put("GP2D lateral avant Gauche", () -> readI2CAnalogValue(IConstantesI2CAdc.GP2D_AVANT_LATERAL_GAUCHE));
         analogiqueInfos.put("GP2D avant Gauche", () -> readI2CAnalogValue(IConstantesI2CAdc.GP2D_AVANT_GAUCHE));
+        analogiqueInfos.put("GP2D avant Centre", () -> readI2CAnalogValue(IConstantesI2CAdc.GP2D_AVANT_CENTRE));
         analogiqueInfos.put("GP2D avant Droit", () -> readI2CAnalogValue(IConstantesI2CAdc.GP2D_AVANT_DROIT));
-        analogiqueInfos.put("GP2D lateral avant Droit", () -> readI2CAnalogValue(IConstantesI2CAdc.GP2D_AVANT_LATERAL_DROIT));
-        
+
         // Capteurs informations Text
-        textInfos.put("Equipe", () -> ioService.equipe().name());
-        textInfos.put("Front color", () -> ioService.frontColor().hexColor());
+        textInfos.put("Equipe", () -> rs.getTeam().name());
+        textInfos.put("Front color hex", () -> ioService.frontColor().hexColor());
     }
 
     private Double readI2CAnalogValue(byte capteurId) {

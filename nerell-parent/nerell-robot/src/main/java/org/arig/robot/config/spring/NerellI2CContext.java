@@ -42,8 +42,9 @@ public class NerellI2CContext {
 
         // Enregistrement juste pour le scan.
         manager.registerDevice(IConstantesI2C.PCF_ALIM_DEVICE_NAME, IConstantesI2C.PCF_ALIM_ADDRESS);
-        manager.registerDevice(IConstantesI2C.PCF_NUM1_DEVICE_NAME, IConstantesI2C.PCF_NUM1_ADDRESS);
-        manager.registerDevice(IConstantesI2C.PCF_NUM2_DEVICE_NAME, IConstantesI2C.PCF_NUM2_ADDRESS);
+        manager.registerDevice(IConstantesI2C.PCF1_DEVICE_NAME, IConstantesI2C.PCF1_ADDRESS);
+        manager.registerDevice(IConstantesI2C.PCF2_DEVICE_NAME, IConstantesI2C.PCF2_ADDRESS);
+        manager.registerDevice(IConstantesI2C.PCF3_DEVICE_NAME, IConstantesI2C.PCF3_ADDRESS);
 
         return manager;
     }
@@ -51,7 +52,7 @@ public class NerellI2CContext {
     @Bean
     public AbstractPropulsionsMotors motors() {
         // Configuration de la carte moteur propulsion.
-        final SD21Motors motors = new SD21Motors(IConstantesServos.MOTOR_1, IConstantesServos.MOTOR_2);
+        final SD21Motors motors = new SD21Motors(IConstantesServos.MOTOR_DROIT, IConstantesServos.MOTOR_GAUCHE);
         motors.assignMotors(IConstantesNerellConfig.numeroMoteurGauche, IConstantesNerellConfig.numeroMoteurDroit);
         return motors;
     }

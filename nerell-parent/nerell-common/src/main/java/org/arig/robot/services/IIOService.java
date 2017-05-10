@@ -8,40 +8,38 @@ import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
  */
 public interface IIOService {
 
-    boolean btnTapis();
     Team equipe();
 
     boolean auOk();
-    boolean alimServoOk();
-    boolean alimMoteurOk();
+    boolean alimPuissance5VOk();
+    boolean alimPuissance12VOk();
+    boolean alimPuissance8VOk();
     boolean tirette();
 
-    boolean buteeAvantGauche();
-    boolean buteeAvantDroit();
-    boolean buteeArriereGauche();
-    boolean buteeArriereDroit();
-
-    boolean produitGauche();
-    boolean gobeletGauche();
-    boolean piedGauche();
-
-    boolean produitDroit();
-    boolean gobeletDroit();
-    boolean piedDroit();
-
-    boolean piedCentre();
-
+    boolean ledCapteurCouleur();
     ColorData frontColor();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
 
-    void colorAUKo();
-    void clearTeamColor();
+    void colorLedRGBKo();
+    void colorLedRGBOk();
+    void teamColorLedRGB();
+    void clearColorLedRGB();
 
-    void enableAlimMoteur();
-    void disableAlimMoteur();
-    void enableAlimServoMoteur();
-    void disableAlimServoMoteur();
+    void enableLedCapteurCouleur();
+    void disableLedCapteurCouleur();
+
+    void enableAlim5VPuissance();
+    void disableAlim5VPuissance();
+    void enableAlim8VPuissance();
+    void disableAlim8VPuissance();
+    void enableAlim12VPuissance();
+    void disableAlim12VPuissance();
+
+    void enableElectroVanne();
+    void disableElectroVanne();
+    void enablePompeAVide();
+    void disablePompeAVide();
 }

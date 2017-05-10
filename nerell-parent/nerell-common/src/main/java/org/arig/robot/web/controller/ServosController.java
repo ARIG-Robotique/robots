@@ -2,7 +2,6 @@ package org.arig.robot.web.controller;
 
 import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.model.servos.ServoConfig;
-import org.arig.robot.model.servos.ServoPosition;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedList;
@@ -17,84 +16,102 @@ public class ServosController extends AbstractServosController {
     private static List<ServoConfig> servoConfigs = new LinkedList<>();
 
     static {
-        ServoConfig brasDroit = new ServoConfig();
-        brasDroit.setId(IConstantesServos.BRAS_DROIT).setName("Bras droit");
-        brasDroit.setMinPosition(IConstantesServos.BRAS_DROIT_MIN).setMaxPosition(IConstantesServos.BRAS_DROIT_MAX);
-        brasDroit.addPosition(new ServoPosition("Haut", IConstantesServos.BRAS_DROIT_HAUT))
-                .addPosition(new ServoPosition("Clap", IConstantesServos.BRAS_DROIT_CLAP))
-                .addPosition(new ServoPosition("Bas", IConstantesServos.BRAS_DROIT_BAS));
-        servoConfigs.add(brasDroit);
+        ServoConfig pinceModuleDroit = new ServoConfig();
+        pinceModuleDroit.setId(IConstantesServos.PINCE_MODULE_DROIT).setName("Pince module droit");
+        pinceModuleDroit
+                .addPosition("Ouvert", IConstantesServos.PINCE_MODULE_DROIT_OUVERT)
+                .addPosition("Prise produit", IConstantesServos.PINCE_MODULE_DROIT_PRISE_PRODUIT)
+                .addPosition("Ventouse", IConstantesServos.PINCE_MODULE_DROIT_CHARGEMENT_VENTOUSE)
+                .addPosition("Fermé", IConstantesServos.PINCE_MODULE_DROIT_FERME);
+        servoConfigs.add(pinceModuleDroit);
 
-        ServoConfig brasGauche = new ServoConfig();
-        brasGauche.setId(IConstantesServos.BRAS_GAUCHE).setName("Bras gauche");
-        brasGauche.setMinPosition(IConstantesServos.BRAS_GAUCHE_MIN).setMaxPosition(IConstantesServos.BRAS_GAUCHE_MAX);
-        brasGauche.addPosition(new ServoPosition("Haut", IConstantesServos.BRAS_GAUCHE_HAUT))
-                .addPosition(new ServoPosition("Clap", IConstantesServos.BRAS_GAUCHE_CLAP))
-                .addPosition(new ServoPosition("Bas", IConstantesServos.BRAS_GAUCHE_BAS));
-        servoConfigs.add(brasGauche);
+        ServoConfig pinceModuleCentre = new ServoConfig();
+        pinceModuleCentre.setId(IConstantesServos.PINCE_MODULE_CENTRE).setName("Pince module centre");
+        pinceModuleCentre
+                .addPosition("Ouvert dans droit", IConstantesServos.PINCE_MODULE_CENTRE_OUVERT_DANS_DROIT)
+                .addPosition("Ouvert", IConstantesServos.PINCE_MODULE_CENTRE_OUVERT)
+                .addPosition("Ferme", IConstantesServos.PINCE_MODULE_CENTRE_FERME);
 
-        ServoConfig tapisDroit = new ServoConfig();
-        tapisDroit.setId(IConstantesServos.TAPIS_DROIT).setName("Tapis droit");
-        tapisDroit.addPosition(new ServoPosition("Ouvert", IConstantesServos.TAPIS_DROIT_OUVERT))
-                .addPosition(new ServoPosition("Ferme", IConstantesServos.TAPIS_DROIT_FERME));
-        servoConfigs.add(tapisDroit);
+        servoConfigs.add(pinceModuleCentre);
 
-        ServoConfig tapisGauche = new ServoConfig();
-        tapisGauche.setId(IConstantesServos.TAPIS_GAUCHE).setName("Tapis gauche");
-        tapisGauche.addPosition(new ServoPosition("Ouvert", IConstantesServos.TAPIS_GAUCHE_OUVERT))
-                .addPosition(new ServoPosition("Ferme", IConstantesServos.TAPIS_GAUCHE_FERME));
-        servoConfigs.add(tapisGauche);
+        ServoConfig inclinaisonBras = new ServoConfig();
+        inclinaisonBras.setId(IConstantesServos.INCLINAISON_BRAS).setName("Inclinaison bras");
+        inclinaisonBras
+                .addPosition("Prise robot", IConstantesServos.INCLINAISON_BRAS_PRISE_ROBOT)
+                .addPosition("Prise fusée", IConstantesServos.INCLINAISON_BRAS_PRISE_FUSEE)
+                .addPosition("Attente", IConstantesServos.INCLINAISON_BRAS_ATTENTE)
+                .addPosition("Depose", IConstantesServos.INCLINAISON_BRAS_DEPOSE)
+                .addPosition("Vertical", IConstantesServos.INCLINAISON_BRAS_VERTICAL);
+        servoConfigs.add(inclinaisonBras);
 
-        ServoConfig gobeletDroit = new ServoConfig();
-        gobeletDroit.setId(IConstantesServos.PRODUIT_DROIT).setName("Pince produit droit");
-        gobeletDroit.addPosition(new ServoPosition("Ouvert", IConstantesServos.PRODUIT_DROIT_OUVERT))
-                .addPosition(new ServoPosition("Produit", IConstantesServos.PRODUIT_DROIT_FERME))
-                .addPosition(new ServoPosition("Init", IConstantesServos.PRODUIT_DROIT_INIT));
-        servoConfigs.add(gobeletDroit);
+        ServoConfig rotationVentouse = new ServoConfig();
+        rotationVentouse.setId(IConstantesServos.ROTATION_VENTOUSE).setName("Rotation ventouse");
+        rotationVentouse
+                .addPosition("Prise robot", IConstantesServos.ROTATION_VENTOUSE_PRISE_ROBOT)
+                .addPosition("Prise fusée", IConstantesServos.ROTATION_VENTOUSE_PRISE_FUSEE)
+                .addPosition("Dépose", IConstantesServos.ROTATION_VENTOUSE_DEPOSE_MAGASIN);
+        servoConfigs.add(rotationVentouse);
 
-        ServoConfig gobeletGauche = new ServoConfig();
-        gobeletGauche.setId(IConstantesServos.PRODUIT_GAUCHE).setName("Pince produit gauche");
-        gobeletGauche.addPosition(new ServoPosition("Ouvert", IConstantesServos.PRODUIT_GAUCHE_OUVERT))
-                .addPosition(new ServoPosition("Produit", IConstantesServos.PRODUIT_GAUCHE_FERME))
-                .addPosition(new ServoPosition("Init", IConstantesServos.PRODUIT_GAUCHE_INIT));
-        servoConfigs.add(gobeletGauche);
+        ServoConfig porteMagasinDroit = new ServoConfig();
+        porteMagasinDroit.setId(IConstantesServos.PORTE_MAGASIN_DROIT).setName("Porte magasin droit");
+        porteMagasinDroit
+                .addPosition("Ouvert", IConstantesServos.PORTE_DROITE_OUVERT)
+                .addPosition("Fermé", IConstantesServos.PORTE_DROITE_FERME);
+        servoConfigs.add(porteMagasinDroit);
 
-        ServoConfig monteGobeletDroit = new ServoConfig();
-        monteGobeletDroit.setId(IConstantesServos.MONTE_GOBELET_DROIT).setName("Monte gobelet droit");
-        monteGobeletDroit.addPosition(new ServoPosition("Haut", IConstantesServos.MONTE_GB_DROIT_HAUT))
-                .addPosition(new ServoPosition("Bas", IConstantesServos.MONTE_GB_DROIT_BAS));
-        servoConfigs.add(monteGobeletDroit);
+        ServoConfig porteMagasinGauche = new ServoConfig();
+        porteMagasinGauche.setId(IConstantesServos.PORTE_MAGASIN_GAUCHE).setName("Porte magasin gauche");
+        porteMagasinGauche
+                .addPosition("Ouvert", IConstantesServos.PORTE_GAUCHE_OUVERT)
+                .addPosition("Fermé", IConstantesServos.PORTE_GAUCHE_FERME);
+        servoConfigs.add(porteMagasinGauche);
 
-        ServoConfig monteGobeletGauche = new ServoConfig();
-        monteGobeletGauche.setId(IConstantesServos.MONTE_GOBELET_GAUCHE).setName("Monte gobelet gauche");
-        monteGobeletGauche.addPosition(new ServoPosition("Haut", IConstantesServos.MONTE_GB_GAUCHE_HAUT))
-                .addPosition(new ServoPosition("Bas", IConstantesServos.MONTE_GB_GAUCHE_BAS));
-        servoConfigs.add(monteGobeletGauche);
+        ServoConfig blocageEntreeMagasin = new ServoConfig();
+        blocageEntreeMagasin.setId(IConstantesServos.BLOCAGE_ENTREE_MAG).setName("Blocage entrée magasin");
+        blocageEntreeMagasin
+                .addPosition("Ouvert", IConstantesServos.BLOCAGE_OUVERT)
+                .addPosition("Ferme", IConstantesServos.BLOCAGE_FERME);
+        servoConfigs.add(blocageEntreeMagasin);
 
-        ServoConfig ascenseur = new ServoConfig();
-        ascenseur.setId(IConstantesServos.ASCENSEUR).setName("Ascenseur");
-        ascenseur.setMinPosition(IConstantesServos.ASCENSEUR_MIN).setMaxPosition(IConstantesServos.ASCENSEUR_MAX);
-        ascenseur.addPosition(new ServoPosition("Haut pied", IConstantesServos.ASCENSEUR_HAUT_PIED))
-                .addPosition(new ServoPosition("Haut balle", IConstantesServos.ASCENSEUR_HAUT_BALLE))
-                .addPosition(new ServoPosition("Plein", IConstantesServos.ASCENSEUR_PLEIN))
-                .addPosition(new ServoPosition("Bordure depose", IConstantesServos.ASCENSEUR_DEPOSE_BORDURE))
-                .addPosition(new ServoPosition("Bas", IConstantesServos.ASCENSEUR_BAS));
-        servoConfigs.add(ascenseur);
+        ServoConfig devidoirMagasin = new ServoConfig();
+        devidoirMagasin.setId(IConstantesServos.DEVIDOIR).setName("Devidoir magasin");
+        devidoirMagasin
+                .addPosition("Chargement", IConstantesServos.DEVIDOIR_CHARGEMENT)
+                .addPosition("Déchargement", IConstantesServos.DEVIDOIR_DECHARGEMENT)
+                .addPosition("Lecture couleur", IConstantesServos.DEVIDOIR_LECTURE_COULEUR);
+        servoConfigs.add(devidoirMagasin);
 
-        ServoConfig pince = new ServoConfig();
-        pince.setId(IConstantesServos.PINCE).setName("Pince");
-        pince.setMinPosition(IConstantesServos.PINCE_MIN).setMaxPosition(IConstantesServos.PINCE_MAX);
-        pince.addPosition(new ServoPosition("Ouverte", IConstantesServos.PINCE_OUVERTE))
-                .addPosition(new ServoPosition("Check couleur", IConstantesServos.PINCE_COULEUR))
-                .addPosition(new ServoPosition("Prise balle", IConstantesServos.PINCE_PRISE_BALLE))
-                .addPosition(new ServoPosition("Prise pied", IConstantesServos.PINCE_PRISE_PIED));
-        servoConfigs.add(pince);
+        ServoConfig orientationAspiration = new ServoConfig();
+        orientationAspiration.setId(IConstantesServos.INCLINAISON_ASPIRATION).setName("Inclinaison aspiration");
+        orientationAspiration
+                .addPosition("Ouvert", IConstantesServos.INCLINAISON_ASPI_OUVERT)
+                .addPosition("Fermé", IConstantesServos.INCLINAISON_ASPI_FERME);
+        servoConfigs.add(orientationAspiration);
 
-        ServoConfig guide = new ServoConfig();
-        guide.setId(IConstantesServos.GUIDE).setName("Guide");
-        guide.addPosition(new ServoPosition("Ouvert", IConstantesServos.GUIDE_OUVERT))
-                .addPosition(new ServoPosition("Ferme", IConstantesServos.GUIDE_FERME));
-        servoConfigs.add(guide);
+        // Temp
+        ServoConfig moteurRouleaux = new ServoConfig();
+        moteurRouleaux.setId(IConstantesServos.MOTOR_ROULEAUX).setName("TMP Moteur rouleaux");
+        moteurRouleaux
+                .addPosition("Reverse", 1400)
+                .addPosition("Stop", 1500)
+                .addPosition("Forward", 1600);
+
+        servoConfigs.add(moteurRouleaux);
+
+        ServoConfig moteurEjection = new ServoConfig();
+        moteurEjection.setId(IConstantesServos.MOTOR_EJECTION).setName("TMP Moteur ejection");
+        moteurEjection
+                .addPosition("Reverse", 1400)
+                .addPosition("Stop", 1500)
+                .addPosition("Forward", 1600);
+        servoConfigs.add(moteurEjection);
+
+        ServoConfig moteurAspiration = new ServoConfig();
+        moteurAspiration.setId(IConstantesServos.MOTOR_ASPIRATION).setName("TMP Moteur aspiration");
+        moteurAspiration
+                .addPosition("Stop", 1000)
+                .addPosition("A Fond", 2000);
+        servoConfigs.add(moteurAspiration);
     }
 
     @Override

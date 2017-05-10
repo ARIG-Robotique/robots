@@ -14,6 +14,7 @@ import org.arig.robot.model.Position;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
+import org.arig.robot.system.capteurs.SRF02Sonar;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,6 +45,22 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
     @Autowired
     private I2CAdcAnalogInput analogInput;
 
+//    @Autowired
+//    @Qualifier("usLatGauche")
+//    private SRF02Sonar usLatGauche;
+//
+//    @Autowired
+//    @Qualifier("usGauche")
+//    private SRF02Sonar usGauche;
+//
+//    @Autowired
+//    @Qualifier("usDroit")
+//    private SRF02Sonar usDroit;
+//
+//    @Autowired
+//    @Qualifier("usLatDroit")
+//    private SRF02Sonar usLatDroit;
+
     @Setter
     @Getter(AccessLevel.PROTECTED)
     private int distanceCentreObstacle = 500;
@@ -50,14 +69,22 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
     private static final int seuilLateralAvant = 1780;
     private static final int seuilAvant = 1550;
 
-    private MovingIntegerValueAverage gpAvantGauche = new MovingIntegerValueAverage();
-    private MovingIntegerValueAverage gpAvantDroit = new MovingIntegerValueAverage();
-    private MovingIntegerValueAverage gpAvantLateralGauche = new MovingIntegerValueAverage();
-    private MovingIntegerValueAverage gpAvantLateralDroit = new MovingIntegerValueAverage();
+    private MovingIntegerValueAverage calcAvgGpGauche = new MovingIntegerValueAverage();
+    private MovingIntegerValueAverage calcAvgGpCentre = new MovingIntegerValueAverage();
+    private MovingIntegerValueAverage calcAvgGpDroit = new MovingIntegerValueAverage();
+
+    private MovingIntegerValueAverage calcAvgUsLatGauche = new MovingIntegerValueAverage();
+    private MovingIntegerValueAverage calcAvgUsGauche = new MovingIntegerValueAverage();
+    private MovingIntegerValueAverage calcAvgUsDroit = new MovingIntegerValueAverage();
+    private MovingIntegerValueAverage calcAvgUsLatDroit = new MovingIntegerValueAverage();
 
     @Override
     public void afterPropertiesSet() throws Exception {
         log.info("Initialisation du service d'évittement d'obstacle");
+//        usLatGauche.printVersion();
+//        usGauche.printVersion();
+//        usDroit.printVersion();
+//        usLatDroit.printVersion();
     }
 
     public void process() {
@@ -65,56 +92,88 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             // Stockages des points d'obstacles
             List<Point> detectedPoints = new ArrayList<>();
 
-            int rawAvantGauche = analogInput.readCapteurValue(IConstantesI2CAdc.GP2D_AVANT_GAUCHE);
-            int rawAvantDroit = analogInput.readCapteurValue(IConstantesI2CAdc.GP2D_AVANT_DROIT);
-            int rawLateralAvantGauche = analogInput.readCapteurValue(IConstantesI2CAdc.GP2D_AVANT_LATERAL_GAUCHE);
-            int rawLateralAvantDroit = analogInput.readCapteurValue(IConstantesI2CAdc.GP2D_AVANT_LATERAL_DROIT);
+            // Lecture US
+//            Future<Integer> fUsLatGauche = usLatGauche.readValue();
+//            Future<Integer> fUsGauche = usGauche.readValue();
+//            Future<Integer> fUsDroit = usDroit.readValue();
+//            Future<Integer> fUsLatDroit = usLatDroit.readValue();
 
-            int avgAvantGauche = gpAvantGauche.average(rawAvantGauche);
-            int avgAvantDroit = gpAvantDroit.average(rawAvantDroit);
-            int avgLateralAvantGauche = gpAvantLateralGauche.average(rawLateralAvantGauche);
-            int avgLateralAvantDroit = gpAvantLateralDroit.average(rawLateralAvantDroit);
+            // Lecture GP2D
+            // FIXME GP2D12 Class a faire pour renvoyer une valeur en cm ISO avec les SRF02
+            int rawGpGauche = analogInput.readCapteurValue(IConstantesI2CAdc.GP2D_AVANT_GAUCHE);
+            int rawGpCentre = analogInput.readCapteurValue(IConstantesI2CAdc.GP2D_AVANT_CENTRE);
+            int rawGpDroit = analogInput.readCapteurValue(IConstantesI2CAdc.GP2D_AVANT_DROIT);
+
+//            while(!fUsLatGauche.isDone() && !fUsGauche.isDone() && !fUsDroit.isDone() && !fUsLatDroit.isDone());
+//            int rawUsLatGauche = -1, rawUsGauche = -1, rawUsDroit = -1, rawUsLatDroit = -1;
+//            try {
+//                rawUsLatGauche = fUsLatGauche.get();
+//            } catch (InterruptedException | ExecutionException e) {
+//                log.warn("Erreur de récupération US lat Gauche", e);
+//            }
+//            try {
+//                rawUsGauche = fUsGauche.get();
+//            } catch (InterruptedException | ExecutionException e) {
+//                log.warn("Erreur de récupération US Gauche", e);
+//            }
+//            try {
+//                rawUsDroit = fUsDroit.get();
+//            } catch (InterruptedException | ExecutionException e) {
+//                log.warn("Erreur de récupération US Droit", e);
+//            }
+//            try {
+//                rawUsLatDroit = fUsLatDroit.get();
+//            } catch (InterruptedException | ExecutionException e) {
+//                log.warn("Erreur de récupération US lat Droit", e);
+//            }
+
+            // Filtrage des valeurs
+            int avgGpGauche = calcAvgGpGauche.average(rawGpGauche);
+            int avgGpCentre = calcAvgGpCentre.average(rawGpCentre);
+            int avgGpDroit = calcAvgGpDroit.average(rawGpDroit);
+//            int avgUsLatGauche = calcAvgUsLatGauche.average(rawUsLatGauche);
+//            int avgUsGauche = calcAvgUsLatGauche.average(rawUsGauche);
+//            int avgUsDroit = calcAvgUsLatGauche.average(rawUsDroit);
+//            int avgUsLatDroit = calcAvgUsLatGauche.average(rawUsLatDroit);
 
             // Construction du monitoring
             MonitorPoint serie = new MonitorPoint()
                 .tableName("avoiding")
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                .addField("seuilAvant", seuilAvant)
-                .addField("seuilLateralAvant", seuilLateralAvant)
-                .addField("rawAvantGauche", rawAvantGauche)
-                .addField("avgAvantGauche", avgAvantGauche)
-                .addField("rawAvantDroit", rawAvantDroit)
-                .addField("avgAvantDroit", avgAvantDroit)
-                .addField("rawLateralAvantGauche", rawLateralAvantGauche)
-                .addField("avgLateralAvantGauche", avgLateralAvantGauche)
-                .addField("rawLateralAvantDroit", rawLateralAvantDroit)
-                .addField("avgLateralAvantDroit", avgLateralAvantDroit);
+                .addField("rawGpGauche", rawGpGauche)
+                .addField("avgGpGauche", avgGpGauche)
+                .addField("rawGpCentre", rawGpCentre)
+                .addField("avgGpCentre", avgGpCentre)
+                .addField("rawGpDroit", rawGpDroit)
+                .addField("avgGpDroit", avgGpDroit);
+//                .addField("rawUsLatGauche", rawUsLatGauche)
+//                .addField("avgUsLatGauche", avgUsLatGauche)
+//                .addField("rawUsGauche", rawUsGauche)
+//                .addField("avgUsGauche", avgUsGauche)
+//                .addField("rawUsDroit", rawUsDroit)
+//                .addField("avgUsDroit", avgUsDroit)
+//                .addField("rawUsLatDroit", rawUsLatDroit)
+//                .addField("avgUsLatDroit", avgUsLatDroit);
             monitoringWrapper.addPoint(serie);
 
-            if (avgAvantGauche > seuilAvant) {
+            if (avgGpCentre > seuilAvant) {
                 Point p = getPointFromAngle(distanceDetectionObstacleMm, 15);
                 if (checkPointInTable(p)) {
                     detectedPoints.add(getPointFromAngle(distanceCentreObstacle, 15));
                 }
             }
 
-            if (avgAvantDroit > seuilAvant) {
+            if (avgGpDroit > seuilAvant) {
                 Point p = getPointFromAngle(distanceDetectionObstacleMm, -15);
                 if (checkPointInTable(p)) {
                     detectedPoints.add(getPointFromAngle(distanceCentreObstacle, -15));
                 }
             }
 
-            if (avgLateralAvantGauche > seuilLateralAvant) {
+            if (avgGpGauche > seuilLateralAvant) {
                 Point p = getPointFromAngle(distanceDetectionObstacleMm, 45);
                 if (checkPointInTable(p)) {
                     detectedPoints.add(getPointFromAngle(distanceCentreObstacle, 45));
-                }
-            }
-            if (avgLateralAvantDroit > seuilLateralAvant) {
-                Point p = getPointFromAngle(distanceDetectionObstacleMm, -45);
-                if (checkPointInTable(p)) {
-                    detectedPoints.add(getPointFromAngle(distanceCentreObstacle, -45));
                 }
             }
 

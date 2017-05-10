@@ -110,15 +110,7 @@ public class SD21Servos implements InitializingBean {
         }
 
         setPosition(servoNb, newPosition);
-        try {
-            int waitTime = calculWaitTimeMs(oldPosition, newPosition, currentSpeed);
-            if (log.isDebugEnabled()) {
-                log.debug("Attente pour le mouvement servo {} {} -> {} à la vitesse de {} pendant {} ms", servoNb, oldPosition, newPosition, currentSpeed, waitTime);
-            }
-            Thread.sleep(waitTime);
-        } catch (InterruptedException e) {
-            log.warn("Erreur d'attente pour le mouvement servo {} {} -> {} à la vitesse {}", servoNb, oldPosition, newPosition, currentSpeed);
-        }
+        waitPosition(servoNb, oldPosition, newPosition, currentSpeed);
     }
 
     /**
@@ -191,15 +183,7 @@ public class SD21Servos implements InitializingBean {
         }
 
         setPositionAndSpeed(servoNb, newPosition, newSpeed);
-        try {
-            int waitTime = calculWaitTimeMs(oldPosition, newPosition, newSpeed);
-            if (log.isDebugEnabled()) {
-                log.debug("Attente pour le mouvement servo {} {} -> {} à la vitesse de {} pendant {} ms", servoNb, oldPosition, newPosition, newSpeed, waitTime);
-            }
-            Thread.sleep(waitTime);
-        } catch (InterruptedException e) {
-            log.warn("Erreur d'attente pour le mouvement servo {} {} -> {} à la vitesse {}", servoNb, oldPosition, newPosition, newSpeed);
-        }
+        waitPosition(servoNb, newPosition, oldPosition, newSpeed);
     }
 
     /**
@@ -245,6 +229,13 @@ public class SD21Servos implements InitializingBean {
         }
     }
 
+    public void waitTime(long waitTime) {
+        try {
+            Thread.sleep(waitTime);
+        } catch (InterruptedException e) {
+        }
+    }
+
     /**
      * Check servo.
      *
@@ -258,6 +249,14 @@ public class SD21Servos implements InitializingBean {
             log.warn("Numéro de servo moteur invalide : {}", servoNb);
         }
         return result;
+    }
+
+    private void waitPosition(byte servoNb, int oldP, int newP, int speed) {
+        int waitTime = calculWaitTimeMs(oldP, newP, speed);
+        if (log.isDebugEnabled()) {
+            log.debug("Attente pour le mouvement servo {} {} -> {} à la vitesse de {} pendant {} ms", servoNb, oldP, newP, speed, waitTime);
+        }
+        waitTime(waitTime);
     }
 
     /**

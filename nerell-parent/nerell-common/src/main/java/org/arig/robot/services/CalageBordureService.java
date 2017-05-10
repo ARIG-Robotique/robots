@@ -19,9 +19,9 @@ public class CalageBordureService {
     private IIOService ioService;
 
     public void process() {
-        if (ioService.buteeAvantDroit() && ioService.buteeAvantGauche()) {
-            mouvementManager.setObstacleFound(true);
-            mouvementManager.setRestartAfterObstacle(true);
-        }
+//        if (ioService.buteeAvantDroit() && ioService.buteeAvantGauche()) {
+//            mouvementManager.setObstacleFound(true);
+//            mouvementManager.setRestartAfterObstacle(true);
+//        }
     }
 }

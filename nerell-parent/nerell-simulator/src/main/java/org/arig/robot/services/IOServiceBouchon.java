@@ -26,11 +26,6 @@ public class IOServiceBouchon implements IIOService {
     private boolean tirette = false;
 
     @Override
-    public boolean btnTapis() {
-        return false;
-    }
-
-    @Override
     public Team equipe() {
         rs.setTeam(Team.JAUNE);
         return rs.getTeam();
@@ -42,12 +37,17 @@ public class IOServiceBouchon implements IIOService {
     }
 
     @Override
-    public boolean alimServoOk() {
+    public boolean alimPuissance5VOk() {
         return true;
     }
 
     @Override
-    public boolean alimMoteurOk() {
+    public boolean alimPuissance8VOk() {
+        return true;
+    }
+
+    @Override
+    public boolean alimPuissance12VOk() {
         return true;
     }
 
@@ -57,58 +57,8 @@ public class IOServiceBouchon implements IIOService {
     }
 
     @Override
-    public boolean buteeAvantGauche() {
-        return false;
-    }
-
-    @Override
-    public boolean buteeAvantDroit() {
-        return false;
-    }
-
-    @Override
-    public boolean buteeArriereGauche() {
-        return false;
-    }
-
-    @Override
-    public boolean buteeArriereDroit() {
-        return false;
-    }
-
-    @Override
-    public boolean produitGauche() {
-        return false;
-    }
-
-    @Override
-    public boolean gobeletGauche() {
-        return false;
-    }
-
-    @Override
-    public boolean piedGauche() {
-        return false;
-    }
-
-    @Override
-    public boolean produitDroit() {
-        return false;
-    }
-
-    @Override
-    public boolean gobeletDroit() {
-        return false;
-    }
-
-    @Override
-    public boolean piedDroit() {
-        return false;
-    }
-
-    @Override
-    public boolean piedCentre() {
-        return false;
+    public boolean ledCapteurCouleur() {
+        return true;
     }
 
     @Override
@@ -121,32 +71,82 @@ public class IOServiceBouchon implements IIOService {
     }
 
     @Override
-    public void colorAUKo() {
+    public void colorLedRGBKo() {
 
     }
 
     @Override
-    public void clearTeamColor() {
+    public void colorLedRGBOk() {
 
     }
 
     @Override
-    public void enableAlimMoteur() {
+    public void clearColorLedRGB() {
 
     }
 
     @Override
-    public void disableAlimMoteur() {
+    public void teamColorLedRGB() {
 
     }
 
     @Override
-    public void enableAlimServoMoteur() {
+    public void enableLedCapteurCouleur() {
 
     }
 
     @Override
-    public void disableAlimServoMoteur() {
+    public void disableLedCapteurCouleur() {
+
+    }
+
+    @Override
+    public void enableAlim5VPuissance() {
+
+    }
+
+    @Override
+    public void disableAlim5VPuissance() {
+
+    }
+
+    @Override
+    public void enableAlim8VPuissance() {
+
+    }
+
+    @Override
+    public void disableAlim8VPuissance() {
+
+    }
+
+    @Override
+    public void enableAlim12VPuissance() {
+
+    }
+
+    @Override
+    public void disableAlim12VPuissance() {
+
+    }
+
+    @Override
+    public void enableElectroVanne() {
+
+    }
+
+    @Override
+    public void disableElectroVanne() {
+
+    }
+
+    @Override
+    public void enablePompeAVide() {
+
+    }
+
+    @Override
+    public void disablePompeAVide() {
 
     }
 }

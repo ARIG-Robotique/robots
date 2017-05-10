@@ -1,118 +1,164 @@
 package org.arig.robot.services;
 
 import com.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
-import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.GpioPinDigitalInput;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.PinMode;
-import com.pi4j.io.gpio.PinState;
+import com.pi4j.gpio.extension.pcf.PCF8574Pin;
+import com.pi4j.io.gpio.*;
+import com.pi4j.io.i2c.I2CBus;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesIORaspi;
+import org.arig.robot.constants.IConstantesI2C;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 
 /**
  * @author gdepuille on 23/04/15.
  */
 @Slf4j
 @Service
-public class IOService implements IIOService, InitializingBean {
+public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Autowired
     private RobotStatus rs;
 
     @Autowired
-    @Qualifier("ioRaspi")
-    private GpioController gpio;
-
-    @Autowired
-    @Qualifier("pcfAlim")
-    private PCF8574GpioProvider pcfAlim;
-
-    @Autowired
-    @Qualifier("pcfSwitch")
-    private PCF8574GpioProvider pcfSwitch;
-
-    @Autowired
-    @Qualifier("pcfPresence")
-    private PCF8574GpioProvider pcfPresence;
+    private I2CBus bus;
 
     @Autowired
     @Qualifier("frontColorSensor")
     private TCS34725ColorSensor frontColorSensor;
 
+    private GpioController gpio;
+    private PCF8574GpioProvider pcfAlim;
+    private PCF8574GpioProvider pcf1;
+    private PCF8574GpioProvider pcf2;
+    private PCF8574GpioProvider pcf3;
+
     // Référence sur les PIN Input
-    private GpioPinDigitalInput pinEquipe;
+    private GpioPinDigitalInput inIrqAlim;
+    private GpioPinDigitalInput inIrqPcf1;
+    private GpioPinDigitalInput inIrq1;
+    private GpioPinDigitalInput inIrq3;
+    private GpioPinDigitalInput inIrq4;
+    private GpioPinDigitalInput inIrq5;
+    private GpioPinDigitalInput inIrq6;
+    private GpioPinDigitalInput inAlimPuissance5V;
+    private GpioPinDigitalInput inAlimPuissance8V;
+    private GpioPinDigitalInput inAlimPuissance12V;
+    private GpioPinDigitalInput inAu;
+    private GpioPinDigitalInput inEquipe;
+    private GpioPinDigitalInput inTirette;
+    private GpioPinDigitalInput inPresencePinceCentre;
+    private GpioPinDigitalInput inPresencePinceDroite;
+    private GpioPinDigitalInput inPresenceFusee;
+    private GpioPinDigitalInput inBordureAvant;
+    private GpioPinDigitalInput inComptageMagasin;
+    private GpioPinDigitalInput inPresenceDevidoir;
+    private GpioPinDigitalInput inPresenceRouleaux;
+    private GpioPinDigitalInput inFinCourseGlissiereGauche;
+    private GpioPinDigitalInput inFinCourseGlissiereDroite;
+    private GpioPinDigitalInput inPresenceBalleAspiration;
+    private GpioPinDigitalInput inBordureArriereDroite;
+    private GpioPinDigitalInput inBordureArriereGauche;
+    private GpioPinDigitalInput inPresenceBaseLunaireDroite;
+    private GpioPinDigitalInput inPresenceBaseLunaireGauche;
 
     // Référence sur les PIN Output
-    private GpioPinDigitalOutput pinAlimPuissanceMoteur;
-    private GpioPinDigitalOutput pinAlimPuissanceServosMoteur;
-    private GpioPinDigitalOutput pinAlimPuissance3;
-    private GpioPinDigitalOutput pinCmdLedCapteurRGB;
-    private GpioPinDigitalOutput pinLedRGB_R;
-    private GpioPinDigitalOutput pinLedRGB_G;
-    private GpioPinDigitalOutput pinLedRGB_B;
+    private GpioPinDigitalOutput outAlimPuissance5V;
+    private GpioPinDigitalOutput outAlimPuissance8V;
+    private GpioPinDigitalOutput outAlimPuissance12V;
+    private GpioPinDigitalOutput outCmdLedCapteurRGB;
+    private GpioPinDigitalOutput outLedRGB_R;
+    private GpioPinDigitalOutput outLedRGB_G;
+    private GpioPinDigitalOutput outLedRGB_B;
+    private GpioPinDigitalOutput outElectroVanne;
+    private GpioPinDigitalOutput outPompeAVide;
+
+    @Override
+    public void destroy() throws Exception {
+        pcfAlim.shutdown();
+        pcf1.shutdown();
+        pcf2.shutdown();
+        pcf3.shutdown();
+        gpio.shutdown();
+    }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        // Config PCF8574 //
-        // -------------- //
-
-        // Switch
-        pcfSwitch.setMode(IConstantesIORaspi.N1_BTN_TAPIS, PinMode.DIGITAL_INPUT);
-        pcfSwitch.setMode(IConstantesIORaspi.N1_TIRETTE, PinMode.DIGITAL_INPUT);
-        pcfSwitch.setMode(IConstantesIORaspi.N1_SW_ARRIERE_DROIT, PinMode.DIGITAL_INPUT);
-        pcfSwitch.setMode(IConstantesIORaspi.N1_SW_ARRIERE_GAUCHE, PinMode.DIGITAL_INPUT);
-        pcfSwitch.setMode(IConstantesIORaspi.N1_SW_AVANT_DROIT, PinMode.DIGITAL_INPUT);
-        pcfSwitch.setMode(IConstantesIORaspi.N1_SW_AVANT_GAUCHE, PinMode.DIGITAL_INPUT);
-        pcfSwitch.setMode(IConstantesIORaspi.N1_SW_GB_DROIT, PinMode.DIGITAL_INPUT);
-        pcfSwitch.setMode(IConstantesIORaspi.N1_SW_GB_GAUCHE, PinMode.DIGITAL_INPUT);
-
-        // Présence
-        pcfPresence.setMode(IConstantesIORaspi.N2_PRESENCE_CENTRE, PinMode.DIGITAL_INPUT);
-        pcfPresence.setMode(IConstantesIORaspi.N2_PRESENCE_DROITE, PinMode.DIGITAL_INPUT);
-        pcfPresence.setMode(IConstantesIORaspi.N2_PRESENCE_GAUCHE, PinMode.DIGITAL_INPUT);
-
-        // Alim
-        pcfAlim.setMode(IConstantesIORaspi.ALIM_AU, PinMode.DIGITAL_INPUT);
-        pcfAlim.setMode(IConstantesIORaspi.ALIM_EN_PUISSANCE_MOTEUR, PinMode.DIGITAL_INPUT);
-        pcfAlim.setMode(IConstantesIORaspi.ALIM_EN_PUISSANCE_SERVO, PinMode.DIGITAL_INPUT);
-        pcfAlim.setMode(IConstantesIORaspi.ALIM_EN_PUISSANCE_3, PinMode.DIGITAL_INPUT);
-
-        pinAlimPuissanceMoteur = gpio.provisionDigitalOutputPin(pcfAlim, IConstantesIORaspi.ALIM_PUISSANCE_MOTEUR);
-        pinAlimPuissanceServosMoteur = gpio.provisionDigitalOutputPin(pcfAlim, IConstantesIORaspi.ALIM_PUISSANCE_SERVO);
-        pinAlimPuissance3 = gpio.provisionDigitalOutputPin(pcfAlim, IConstantesIORaspi.ALIM_PUISSANCE_3);
 
         // Config des IO raspi //
         // ------------------- //
+        gpio = GpioFactory.getInstance();
 
         // Inputs
-        pinEquipe = gpio.provisionDigitalInputPin(IConstantesIORaspi.EQUIPE);
-        gpio.provisionDigitalInputPin(IConstantesIORaspi.IRQ_ALIM);
-        gpio.provisionDigitalInputPin(IConstantesIORaspi.IRQ_1);
-        gpio.provisionDigitalInputPin(IConstantesIORaspi.IRQ_2);
-        gpio.provisionDigitalInputPin(IConstantesIORaspi.IRQ_3);
-        gpio.provisionDigitalInputPin(IConstantesIORaspi.IRQ_4);
-        gpio.provisionDigitalInputPin(IConstantesIORaspi.IRQ_5);
-        gpio.provisionDigitalInputPin(IConstantesIORaspi.IRQ_6);
+        inEquipe = gpio.provisionDigitalInputPin(RaspiPin.GPIO_02);
+        inIrqAlim = gpio.provisionDigitalInputPin(RaspiPin.GPIO_07);
+        inIrqPcf1 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_04);
+        inIrq1 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
+        inIrq3 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_01);
+        inIrq4 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_16);
+        inIrq5 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_15);
+        inIrq6 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_06);
 
         // Output
-        pinCmdLedCapteurRGB = gpio.provisionDigitalOutputPin(IConstantesIORaspi.CMD_LED_CAPTEUR_RGB, PinState.LOW);
-        pinLedRGB_R = gpio.provisionDigitalOutputPin(IConstantesIORaspi.PWM_R);
-        pinLedRGB_G = gpio.provisionDigitalOutputPin(IConstantesIORaspi.PWM_G);
-        pinLedRGB_B = gpio.provisionDigitalOutputPin(IConstantesIORaspi.PWM_B);
+        outCmdLedCapteurRGB = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, PinState.LOW);
+        outLedRGB_R = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_12, PinState.LOW);
+        outLedRGB_G = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_13, PinState.LOW);
+        outLedRGB_B = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_14, PinState.LOW);
 
-        // On éteint la led du capteur, elle pique les yeux.
-        pinCmdLedCapteurRGB.low();
-        pinLedRGB_R.low();
-        pinLedRGB_G.low();
-        pinLedRGB_B.low();
+        // Config PCF8574 //
+        // -------------- //
+        pcfAlim = new PCF8574GpioProvider(bus, IConstantesI2C.PCF_ALIM_ADDRESS, inIrqAlim);
+        pcf1 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF1_ADDRESS, inIrqPcf1);
+        pcf2 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF2_ADDRESS); // TODO Config IRQ
+        pcf3 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF3_ADDRESS, true);
+
+        // Alim
+        inAlimPuissance5V = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_05);
+        inAlimPuissance8V = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_07);
+        inAlimPuissance12V = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_06);
+        inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_04);
+
+        outAlimPuissance5V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_00);
+        outAlimPuissance8V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_02);
+        outAlimPuissance12V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
+
+        // PCF1
+        inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
+        inBordureAvant = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
+        inComptageMagasin = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
+        inPresenceDevidoir = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
+        inFinCourseGlissiereDroite = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
+        inFinCourseGlissiereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
+        inPresencePinceCentre = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
+        inPresencePinceDroite = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
+
+        // PCF2
+        inPresenceBaseLunaireDroite= gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
+        inPresenceBaseLunaireGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
+        inPresenceBalleAspiration = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
+        inBordureArriereDroite = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
+        inPresenceRouleaux = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
+        inPresenceFusee = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
+        inBordureArriereGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
+
+        // PCF3
+        outElectroVanne = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_00);
+        outPompeAVide = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_01);
+
+        // Etat initial des IOs
+        disableLedCapteurCouleur();
+        clearColorLedRGB();
+        disableElectroVanne();
+        disablePompeAVide();
     }
 
     // --------------------------------------------------------- //
@@ -120,23 +166,8 @@ public class IOService implements IIOService, InitializingBean {
     // --------------------------------------------------------- //
 
     @Override
-    public boolean btnTapis() {
-        return pcfSwitch.getState(IConstantesIORaspi.N1_BTN_TAPIS) == PinState.LOW;
-    }
-
-    @Override
     public Team equipe() {
-        rs.setTeam(pinEquipe.isHigh() ? Team.JAUNE : Team.VERT);
-        if (rs.getTeam() == Team.JAUNE) {
-            pinLedRGB_R.high();
-            pinLedRGB_G.high();
-            pinLedRGB_B.low();
-        } else {
-            pinLedRGB_R.low();
-            pinLedRGB_G.high();
-            pinLedRGB_B.low();
-        }
-
+        rs.setTeam(inEquipe.isHigh() ? Team.BLEU : Team.JAUNE);
         return rs.getTeam();
     }
 
@@ -146,77 +177,32 @@ public class IOService implements IIOService, InitializingBean {
 
     @Override
     public boolean auOk() {
-        return pcfAlim.getState(IConstantesIORaspi.ALIM_AU) == PinState.LOW;
+        return inAu.isLow();
     }
 
     @Override
-    public boolean alimServoOk() {
-        return pcfAlim.getState(IConstantesIORaspi.ALIM_EN_PUISSANCE_SERVO) == PinState.HIGH;
+    public boolean alimPuissance5VOk() {
+        return inAlimPuissance5V.isHigh();
     }
 
     @Override
-    public boolean alimMoteurOk() {
-        return pcfAlim.getState(IConstantesIORaspi.ALIM_EN_PUISSANCE_MOTEUR) == PinState.HIGH;
+    public boolean alimPuissance8VOk() {
+        return inAlimPuissance8V.isHigh();
+    }
+
+    @Override
+    public boolean alimPuissance12VOk() {
+        return inAlimPuissance12V.isHigh();
     }
 
     @Override
     public boolean tirette() {
-        return pcfSwitch.getState(IConstantesIORaspi.N1_TIRETTE) == PinState.LOW;
+        return inTirette.isLow();
     }
 
     @Override
-    public boolean buteeAvantGauche() {
-        return pcfSwitch.getState(IConstantesIORaspi.N1_SW_AVANT_GAUCHE) == PinState.LOW;
-    }
-
-    @Override
-    public boolean buteeAvantDroit() {
-        return pcfSwitch.getState(IConstantesIORaspi.N1_SW_AVANT_DROIT) == PinState.LOW;
-    }
-
-    @Override
-    public boolean buteeArriereGauche() {
-        return pcfSwitch.getState(IConstantesIORaspi.N1_SW_ARRIERE_GAUCHE) == PinState.LOW;
-    }
-
-    @Override
-    public boolean buteeArriereDroit() {
-        return pcfSwitch.getState(IConstantesIORaspi.N1_SW_ARRIERE_DROIT) == PinState.LOW;
-    }
-
-    @Override
-    public boolean produitGauche() {
-        return piedGauche() || gobeletGauche();
-    }
-
-    @Override
-    public boolean gobeletGauche() {
-        return pcfSwitch.getState(IConstantesIORaspi.N1_SW_GB_GAUCHE) == PinState.LOW;
-    }
-
-    @Override
-    public boolean piedGauche() {
-        return pcfPresence.getState(IConstantesIORaspi.N2_PRESENCE_GAUCHE) == PinState.LOW && !gobeletGauche();
-    }
-
-    @Override
-    public boolean produitDroit() {
-        return piedDroit() || gobeletDroit();
-    }
-
-    @Override
-    public boolean gobeletDroit() {
-        return pcfSwitch.getState(IConstantesIORaspi.N1_SW_GB_DROIT) == PinState.LOW;
-    }
-
-    @Override
-    public boolean piedDroit() {
-        return pcfPresence.getState(IConstantesIORaspi.N2_PRESENCE_DROITE) == PinState.LOW && !gobeletDroit();
-    }
-
-    @Override
-    public boolean piedCentre() {
-        return pcfPresence.getState(IConstantesIORaspi.N2_PRESENCE_CENTRE) == PinState.LOW;
+    public boolean ledCapteurCouleur() {
+        return outCmdLedCapteurRGB.isHigh();
     }
 
     @Override
@@ -229,40 +215,104 @@ public class IOService implements IIOService, InitializingBean {
     // --------------------------------------------------------- //
 
     @Override
-    public void colorAUKo() {
-        pinLedRGB_R.high();
-        pinLedRGB_G.low();
-        pinLedRGB_B.low();
+    public void colorLedRGBKo() {
+        outLedRGB_R.high();
+        outLedRGB_G.low();
+        outLedRGB_B.low();
     }
 
     @Override
-    public void clearTeamColor() {
-        pinLedRGB_R.low();
-        pinLedRGB_G.low();
-        pinLedRGB_B.low();
+    public void colorLedRGBOk() {
+        outLedRGB_R.low();
+        outLedRGB_G.high();
+        outLedRGB_B.low();
     }
 
     @Override
-    public void enableAlimMoteur() {
-        log.info("Activation puissance moteur");
-        pinAlimPuissanceMoteur.low();
+    public void teamColorLedRGB() {
+        if (rs.getTeam() == Team.BLEU) {
+            outLedRGB_R.low();
+            outLedRGB_G.low();
+            outLedRGB_B.high();
+        } else if (rs.getTeam() == Team.JAUNE) {
+            outLedRGB_R.high();
+            outLedRGB_G.high();
+            outLedRGB_B.low();
+        } else {
+            clearColorLedRGB();
+        }
     }
 
     @Override
-    public void disableAlimMoteur() {
-        log.info("Desactivation puissance moteur");
-        pinAlimPuissanceMoteur.high();
+    public void clearColorLedRGB() {
+        outLedRGB_R.low();
+        outLedRGB_G.low();
+        outLedRGB_B.low();
     }
 
     @Override
-    public void enableAlimServoMoteur() {
-        log.info("Activation puissance servos-moteur");
-        pinAlimPuissanceServosMoteur.low();
+    public void enableLedCapteurCouleur() {
+        outCmdLedCapteurRGB.high();
     }
 
     @Override
-    public void disableAlimServoMoteur() {
-        log.info("Desactivation puissance servos-moteur");
-        pinAlimPuissanceServosMoteur.high();
+    public void disableLedCapteurCouleur() {
+        outCmdLedCapteurRGB.low();
+    }
+
+    @Override
+    public void enableAlim5VPuissance() {
+        log.info("Activation puissance 5V");
+        outAlimPuissance5V.low();
+    }
+
+    @Override
+    public void disableAlim5VPuissance() {
+        log.info("Desactivation puissance 5V");
+        outAlimPuissance5V.high();
+    }
+
+    @Override
+    public void enableAlim8VPuissance() {
+        log.info("Activation puissance 8V");
+        outAlimPuissance8V.low();
+    }
+
+    @Override
+    public void disableAlim8VPuissance() {
+        log.info("Desactivation puissance 8V");
+        outAlimPuissance8V.high();
+    }
+
+    @Override
+    public void enableAlim12VPuissance() {
+        log.info("Activation puissance 12V");
+        outAlimPuissance12V.low();
+    }
+
+    @Override
+    public void disableAlim12VPuissance() {
+        log.info("Desactivation puissance 12V");
+        outAlimPuissance12V.high();
+    }
+
+    @Override
+    public void enableElectroVanne() {
+        outElectroVanne.high();
+    }
+
+    @Override
+    public void disableElectroVanne() {
+        outElectroVanne.low();
+    }
+
+    @Override
+    public void enablePompeAVide() {
+        outPompeAVide.high();
+    }
+
+    @Override
+    public void disablePompeAVide() {
+        outPompeAVide.low();
     }
 }

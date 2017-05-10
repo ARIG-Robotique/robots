@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
  * @author gdepuille on 02/11/16.
  */
 @Configuration
-@Import({ NerellUtilsI2CContext.class })
+@Import({ NerellI2CContext.class })
 public class NerellUtilsCaptureCodeursContext {
 
     @Bean

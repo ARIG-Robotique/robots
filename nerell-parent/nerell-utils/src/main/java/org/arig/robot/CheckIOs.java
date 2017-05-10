@@ -22,7 +22,7 @@ public class CheckIOs {
         rootContext.refresh();
 
         IOService ioService = rootContext.getBean(IOService.class);
-        ioService.clearTeamColor();
+        ioService.clearColorLedRGB();
 
         TCS34725ColorSensor colorSensor = rootContext.getBean(TCS34725ColorSensor.class);
 

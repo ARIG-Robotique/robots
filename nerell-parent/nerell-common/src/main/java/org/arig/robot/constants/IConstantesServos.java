@@ -6,84 +6,76 @@ package org.arig.robot.constants;
 public interface IConstantesServos {
 
     // Constantes de vitesse
-    byte SPEED_BRAS = 50;
-    byte SPEED_TAPIS = 25;
-    byte SPEED_GOBELET = 0;
-    byte SPEED_MONTE_GOBELET = 0;
-    byte SPEED_ASCENSEUR = 0;
     byte SPEED_PINCE = 0;
-    byte SPEED_GUIDE = 0;
+    byte SPEED_INC_BRAS = 0;
+    byte SPEED_ROT_VENTOUSE = 0;
+    byte SPEED_PORTE_MAG = 0;
+    byte SPEED_BLOCAGE_MAG = 0;
+    byte SPEED_DEVIDOIR = 0;
+    byte SPEED_INC_ASPI = 0;
 
     // Tempo servos
     long WAIT_PINCE = 400;
-    long WAIT_ASCENSEUR = 500;
-    long WAIT_GUIDE = 500;
-    long WAIT_MONTE_GB = 500;
-    long WAIT_PRODUIT = 400;
+    long WAIT_INC_BRAS = 400;
+    long WAIT_ROT_VENTOUSE = 400;
+    long WAIT_PORTE_MAG = 200;
+    long WAIT_BLOCAGE_MAG = 200;
+    long WAIT_DEVIDOIR = 400;
+    long WAIT_INC_ASPI = 400;
 
     // Constantes d'identification Servo
-    byte MOTOR_1 = 4;
-    byte MOTOR_2 = 5;
-    byte BRAS_DROIT = 15;
-    byte BRAS_GAUCHE = 10;
-    byte TAPIS_DROIT = 11;
-    byte TAPIS_GAUCHE = 14;
-    byte PRODUIT_DROIT = 12;
-    byte PRODUIT_GAUCHE = 13;
-    byte MONTE_GOBELET_DROIT = 20;
-    byte MONTE_GOBELET_GAUCHE = 19;
-    byte ASCENSEUR = 18;
-    byte PINCE = 17;
-    byte GUIDE = 21;
+    byte MOTOR_ROULEAUX = 1;
+    byte MOTOR_EJECTION = 3;
+    byte MOTOR_DROIT = 2;
+    byte MOTOR_GAUCHE = 4;
+    byte MOTOR_ASPIRATION = 16;
+
+    byte PINCE_MODULE_DROIT = 7;
+    byte PINCE_MODULE_CENTRE = 6;
+    byte INCLINAISON_BRAS = 13;
+    byte ROTATION_VENTOUSE = 12;
+    byte INCLINAISON_ASPIRATION = 11;
+    byte DEVIDOIR = 18;
+    byte BLOCAGE_ENTREE_MAG = 19;
+    byte PORTE_MAGASIN_DROIT = 20;
+    byte PORTE_MAGASIN_GAUCHE = 21;
 
     // Constantes de position
-    int BRAS_DROIT_MIN = 860;
-    int BRAS_DROIT_MAX = 1930;
-    int BRAS_DROIT_HAUT = 1930;
-    int BRAS_DROIT_CLAP = 1250;
-    int BRAS_DROIT_BAS = 860;
+    // int XXX_POS_1
+    // int XXX_POS_2
 
-    int BRAS_GAUCHE_MIN = 700;
-    int BRAS_GAUCHE_MAX = 1910;
-    int BRAS_GAUCHE_HAUT = 700;
-    int BRAS_GAUCHE_CLAP = 1450;
-    int BRAS_GAUCHE_BAS = 1910;
+    int PINCE_MODULE_DROIT_OUVERT = 1870;
+    int PINCE_MODULE_DROIT_PRISE_PRODUIT = 1775;
+    int PINCE_MODULE_DROIT_CHARGEMENT_VENTOUSE = 1295;
+    int PINCE_MODULE_DROIT_FERME = 795;
 
-    int TAPIS_DROIT_OUVERT = 1200;
-    int TAPIS_DROIT_FERME = 2110;
+    int PINCE_MODULE_CENTRE_OUVERT_DANS_DROIT = 1860;
+    int PINCE_MODULE_CENTRE_OUVERT = 1635;
+    int PINCE_MODULE_CENTRE_FERME = 490;
 
-    int TAPIS_GAUCHE_OUVERT = 1500;
-    int TAPIS_GAUCHE_FERME = 670;
+    int ROTATION_VENTOUSE_PRISE_ROBOT = 640;
+    int ROTATION_VENTOUSE_PRISE_FUSEE = 2160;
+    int ROTATION_VENTOUSE_DEPOSE_MAGASIN = 1405;
 
-    int MONTE_GB_DROIT_HAUT = 1010;
-    int MONTE_GB_DROIT_BAS = 2360;
+    int INCLINAISON_BRAS_PRISE_ROBOT = 1070;
+    int INCLINAISON_BRAS_PRISE_FUSEE = 640;
+    int INCLINAISON_BRAS_ATTENTE = 980;
+    int INCLINAISON_BRAS_DEPOSE = 2140;
+    int INCLINAISON_BRAS_VERTICAL = 800;
 
-    int MONTE_GB_GAUCHE_HAUT = 1790;
-    int MONTE_GB_GAUCHE_BAS = 530;
+    int PORTE_DROITE_OUVERT = 830;
+    int PORTE_DROITE_FERME = 2020;
 
-    int PRODUIT_DROIT_OUVERT = 1400;
-    int PRODUIT_DROIT_FERME = 1890;
-    int PRODUIT_DROIT_INIT = 2290;
+    int PORTE_GAUCHE_OUVERT = 1800;
+    int PORTE_GAUCHE_FERME = 830;
 
-    int PRODUIT_GAUCHE_OUVERT = 1650;
-    int PRODUIT_GAUCHE_FERME = 1160;
-    int PRODUIT_GAUCHE_INIT = 750;
+    int BLOCAGE_OUVERT = 650;
+    int BLOCAGE_FERME = 1500;
 
-    int PINCE_MIN = 1150;
-    int PINCE_MAX = 1935;
-    int PINCE_OUVERTE = 1150;
-    int PINCE_COULEUR = 1600;
-    int PINCE_PRISE_BALLE = 1710;
-    int PINCE_PRISE_PIED = 1935;
+    int INCLINAISON_ASPI_FERME = 500;
+    int INCLINAISON_ASPI_OUVERT = 2400;
 
-    int ASCENSEUR_MIN = 970;
-    int ASCENSEUR_MAX = 2210;
-    int ASCENSEUR_HAUT_PIED = 2210;
-    int ASCENSEUR_HAUT_BALLE = 1700;
-    int ASCENSEUR_PLEIN = 970;
-    int ASCENSEUR_DEPOSE_BORDURE = 1300;
-    int ASCENSEUR_BAS = 790;
-
-    int GUIDE_OUVERT = 1240;
-    int GUIDE_FERME = 1470;
+    int DEVIDOIR_CHARGEMENT = 950;
+    int DEVIDOIR_DECHARGEMENT = 1680;
+    int DEVIDOIR_LECTURE_COULEUR = 1350;
 }

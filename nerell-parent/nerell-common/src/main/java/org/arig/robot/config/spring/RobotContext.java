@@ -11,6 +11,8 @@ import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.system.MouvementManager;
+import org.arig.robot.system.capteurs.ILidarTelemeter;
+import org.arig.robot.system.capteurs.RPLidarA2OverSocketTelemeter;
 import org.arig.robot.system.motion.AsservissementPolaire;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
@@ -18,10 +20,15 @@ import org.arig.robot.system.motion.OdometrieLineaire;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
+import org.arig.robot.system.process.RPLidarBridgeProcess;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.PropertySource;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author gdepuille on 23/12/14.
