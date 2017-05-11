@@ -11,14 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConsigneAsservissementPolaire {
-
-    /**
-     * The consigne distance.
-     */
     private long distance;
-
-    /**
-     * The consigne orientation.
-     */
     private long orientation;
 }

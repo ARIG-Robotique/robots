@@ -1,10 +1,6 @@
 package org.arig.robot.model;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
@@ -48,17 +44,6 @@ public class RobotStatus extends AbstractRobotStatus {
     }
     public long getElapsedTime() {
         return matchTime.getTime();
-    }
-
-    @Setter(AccessLevel.NONE)
-    private boolean ascenseurEnabled = false;
-    public void enableAscenseur() {
-        log.info("Activation ascenseur");
-        ascenseurEnabled = true;
-    }
-    public void disableAscenseur() {
-        log.info("Désactivation ascenseur");
-        ascenseurEnabled = false;
     }
 
     @Setter(AccessLevel.NONE)

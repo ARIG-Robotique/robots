@@ -13,10 +13,9 @@ import org.arig.robot.model.RobotStatus;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
-import org.arig.robot.system.MouvementManager;
+import org.arig.robot.system.TrajectoryManager;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.pathfinding.IPathFinder;
-import org.arig.robot.system.servos.SD21Servos;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -50,7 +49,7 @@ public class Ordonanceur {
     private ServosService servosService;
 
     @Autowired
-    private MouvementManager mouvementManager;
+    private TrajectoryManager trajectoryManager;
 
     @Autowired
     private IPathFinder pathFinder;
@@ -88,17 +87,6 @@ public class Ordonanceur {
             return;
         }
 
-        // Init servos
-        log.info("Position initiale des servos moteurs");
-        servosService.homes();
-
-        // Initialisation Mouvement Manager
-        log.info("Initialisation du contrôleur de mouvement");
-        mouvementManager.init();
-
-        // Infos du lidar
-        rplidar.printDeviceInfo();
-
         if (!ioService.auOk()) {
             log.warn("L'arrêt d'urgence est coupé.");
             ioService.colorLedRGBKo();
@@ -107,11 +95,11 @@ public class Ordonanceur {
         ioService.colorLedRGBOk();
         log.info("Arrêt d'urgence OK");
 
-        // Calibration moteur brushless
-        servosService.calibrationAspiration();
+        log.info("Position initiale des servos moteurs");
+        servosService.homes();
 
-        // Activation de la puissance
-        log.info("Activation puissances 5V et 12V");
+        // Activation des puissances
+        log.info("Activation puissances 5V, 8V et 12V");
         ioService.enableAlim5VPuissance();
         ioService.enableAlim8VPuissance();
         ioService.enableAlim12VPuissance();
@@ -123,9 +111,6 @@ public class Ordonanceur {
         }
         ioService.colorLedRGBOk();
         log.info("Alimentation puissance OK (12V : {} ; 8V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk(), ioService.alimPuissance5VOk());
-
-        log.info("Mise en route du lidar");
-        rplidar.startScan();
 
         if (!ioService.tirette()) {
             log.warn("La tirette n'est pas la. Phase de préparation Nerell");
@@ -140,16 +125,19 @@ public class Ordonanceur {
         final InputStream imgMap = patternResolver.getResource("classpath:maps/autres/table-test.png").getInputStream();
         pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
 
-        mouvementManager.resetEncodeurs();
+        // Initialisation Mouvement Manager
+        log.info("Initialisation du contrôleur de mouvement");
+        trajectoryManager.init();
+
         robotStatus.disableAvoidance();
         robotStatus.enableAsserv();
 
-        mouvementManager.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseSuperLente);
+        trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseSuperLente);
         position.setPt(new Point(conv.mmToPulse(165), conv.mmToPulse(165)));
         position.setAngle(conv.degToPulse(90));
 
-        mouvementManager.gotoPointMM(590, 300);
-        mouvementManager.gotoOrientationDeg(90);
+        trajectoryManager.gotoPointMM(590, 300);
+        trajectoryManager.gotoOrientationDeg(90);
 
         // Attente tirette.
         log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
@@ -163,12 +151,13 @@ public class Ordonanceur {
         // Activation
         robotStatus.enableMatch();
         robotStatus.enableAvoidance();
-        robotStatus.enableAscenseur();
 
         // Match de XX secondes.
+        boolean activateCollecteAdverse = false;
         while(robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
             try {
-                if (robotStatus.getElapsedTime() > 45000) {
+                if (robotStatus.getElapsedTime() > 45000 && !activateCollecteAdverse) {
+                    activateCollecteAdverse = true;
                     log.info("Activation par le temps de la collecte dans la zone adverse");
                     System.setProperty("strategy.collect.zone.adverse", "true");
                 }
@@ -184,7 +173,6 @@ public class Ordonanceur {
         robotStatus.disableAsserv();
         robotStatus.disableAvoidance();
         robotStatus.disableMatch();
-        robotStatus.disableAscenseur();
 
         // Désactivation de la puissance moteur pour être sur de ne plus rouler
         ioService.disableAlim5VPuissance();
@@ -192,7 +180,7 @@ public class Ordonanceur {
         ioService.disableAlim12VPuissance();
 
         // On éteint la couleur de la team.
-        ioService.clearTeamColor();
+        ioService.colorLedRGBOk();
 
         // On arrette le lidar
         rplidar.stopScan();

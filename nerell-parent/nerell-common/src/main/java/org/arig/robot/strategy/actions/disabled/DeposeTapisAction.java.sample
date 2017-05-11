@@ -12,7 +12,7 @@ import org.arig.robot.model.Team;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.IAction;
-import org.arig.robot.system.MouvementManager;
+import org.arig.robot.system.TrajectoryManager;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

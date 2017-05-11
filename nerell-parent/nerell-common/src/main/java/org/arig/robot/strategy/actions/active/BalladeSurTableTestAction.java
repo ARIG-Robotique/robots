@@ -7,7 +7,7 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.strategy.IAction;
-import org.arig.robot.system.MouvementManager;
+import org.arig.robot.system.TrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class BalladeSurTableTestAction implements IAction {
 
     @Autowired
-    private MouvementManager mv;
+    private TrajectoryManager mv;
 
     @Autowired
     private RobotStatus rs;
@@ -45,7 +45,6 @@ public class BalladeSurTableTestAction implements IAction {
     @Override
     public void execute() {
         try {
-            rs.enableAscenseur();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
             /*mv.pathTo(900, 1550);
             mv.pathTo(300, 1400);

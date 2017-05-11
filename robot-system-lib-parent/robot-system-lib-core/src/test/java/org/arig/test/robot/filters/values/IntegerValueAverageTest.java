@@ -1,6 +1,6 @@
 package org.arig.test.robot.filters.values;
 
-import org.arig.robot.filters.values.MovingIntegerValueAverage;
+import org.arig.robot.filters.values.IntegerValueAverage;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,11 +10,11 @@ import org.junit.runners.BlockJUnit4ClassRunner;
  * @author gdepuille on 08/05/15.
  */
 @RunWith(BlockJUnit4ClassRunner.class)
-public class MovingIntegerValueAverageTest {
+public class IntegerValueAverageTest {
 
     @Test
     public void testAverage() {
-        MovingIntegerValueAverage avg = new MovingIntegerValueAverage();
+        IntegerValueAverage avg = new IntegerValueAverage();
 
         int calc = 0;
         for (int i = 0 ; i < 20 ; i++) {
@@ -35,7 +35,7 @@ public class MovingIntegerValueAverageTest {
     @Test
     public void testChangeLimit() {
         int limit = 5;
-        MovingIntegerValueAverage avg = new MovingIntegerValueAverage(limit);
+        IntegerValueAverage avg = new IntegerValueAverage(limit);
         for (int i = 0 ; i < limit * 2 ; i++) {
             avg.average(i);
             Assert.assertEquals(Math.min(i + 1, limit), avg.size());
@@ -54,7 +54,7 @@ public class MovingIntegerValueAverageTest {
     @Test
     public void testReset() {
         int limit = 5, nbExec = 0;
-        MovingIntegerValueAverage avg = new MovingIntegerValueAverage(limit);
+        IntegerValueAverage avg = new IntegerValueAverage(limit);
         do {
             for (int i = 0; i < limit * 2; i++) {
                 avg.average(i);

@@ -10,7 +10,11 @@ import org.arig.robot.model.lidar.enums.HealthState;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HealthInfos {
-    private HealthState libelle;
+    private HealthState state;
     private Short value;
     private Short errorCode;
+
+    public boolean isOk() {
+        return state != null && state == HealthState.OK;
+    }
 }

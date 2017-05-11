@@ -1,7 +1,7 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.system.MouvementManager;
+import org.arig.robot.system.TrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,15 +13,15 @@ import org.springframework.stereotype.Service;
 public class CalageBordureService {
 
     @Autowired
-    private MouvementManager mouvementManager;
+    private TrajectoryManager trajectoryManager;
 
     @Autowired
     private IIOService ioService;
 
     public void process() {
 //        if (ioService.buteeAvantDroit() && ioService.buteeAvantGauche()) {
-//            mouvementManager.setObstacleFound(true);
-//            mouvementManager.setRestartAfterObstacle(true);
+//            trajectoryManager.setObstacleFound(true);
+//            trajectoryManager.setRestartAfterObstacle(true);
 //        }
     }
 }

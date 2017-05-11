@@ -9,10 +9,10 @@ import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 public interface IConstantesI2C {
 
     String CODEUR_MOTEUR_DROIT = "Codeur Moteur Droit";
-    int CODEUR_DROIT_ADDRESS = 0x32;
+    int CODEUR_DROIT_ADDRESS = 0x30;
 
     String CODEUR_MOTEUR_GAUCHE = "Codeur Moteur Gauche";
-    int CODEUR_GAUCHE_ADDRESS = 0x30;
+    int CODEUR_GAUCHE_ADDRESS = 0x32;
 
     String PCF_ALIM_DEVICE_NAME = "Carte alimentation";
     int PCF_ALIM_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3D;

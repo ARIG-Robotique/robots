@@ -50,9 +50,6 @@ public class I2CAdcAnalogInput {
         private byte value;
     }
 
-    /**
-     * The i2c manager.
-     */
     @Autowired
     private II2CManager i2cManager;
 

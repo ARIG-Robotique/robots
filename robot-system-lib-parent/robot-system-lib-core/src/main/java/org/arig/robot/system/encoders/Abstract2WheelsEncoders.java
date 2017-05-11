@@ -31,26 +31,11 @@ public abstract class Abstract2WheelsEncoders {
     @Getter
     private double droit;
 
-    /**
-     * The coef gauche.
-     */
     private double coefGauche;
-
-    /**
-     * The coef droit.
-     */
     private double coefDroit;
-
-    /**
-     * The alternate.
-     */
     private boolean alternate;
-
     private final String name;
 
-    /**
-     * Instantiates a new abstract encoders.
-     */
     protected Abstract2WheelsEncoders(final String name) {
         this.name = name;
         distance = orientation = 0;
@@ -58,9 +43,6 @@ public abstract class Abstract2WheelsEncoders {
         alternate = false;
     }
 
-    /**
-     * Lecture valeurs.
-     */
     public void lectureValeurs() {
 
         if (alternate) {
@@ -76,39 +58,17 @@ public abstract class Abstract2WheelsEncoders {
         sendMonitoring();
     }
 
-    /**
-     * Sets the coefs.
-     *
-     * @param coefGauche the coef gauche
-     * @param coefDroit  the coef droit
-     */
     public void setCoefs(final double coefGauche, final double coefDroit) {
         this.coefGauche = coefGauche;
         this.coefDroit = coefDroit;
     }
 
-    /**
-     * Reset.
-     */
     public abstract void reset();
 
-    /**
-     * Lecture gauche.
-     *
-     * @return the double
-     */
     protected abstract double lectureGauche();
 
-    /**
-     * Lecture droit.
-     *
-     * @return the double
-     */
     protected abstract double lectureDroit();
 
-    /**
-     * Calcul des valeurs polaires.
-     */
     private void calculPolarValues() {
         distance = (droit + gauche) / 2;
         orientation = droit - gauche;

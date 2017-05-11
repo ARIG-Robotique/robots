@@ -103,6 +103,8 @@ public class AsservissementPolaire implements IAsservissementPolaire {
         // Consigne moteurs
         double cmdMotDroit = pidMoteurDroit.compute(vitesseDistance + vitesseOrientation, encoders.getDroit());
         double cmdMotGauche = pidMoteurGauche.compute(vitesseDistance - vitesseOrientation, encoders.getGauche());
+        //double cmdMotDroit = outputDistance + outputOrientation;
+        //double cmdMotGauche = outputDistance - outputOrientation;
         cmdRobot.getMoteur().setDroit((int) cmdMotDroit);
         cmdRobot.getMoteur().setGauche((int) cmdMotGauche);
 

@@ -123,7 +123,7 @@ public class RPLidarA2OverSocketTelemeter implements ILidarTelemeter, Initializi
             r = new HealthInfos();
             r.setErrorCode((short) -99);
             r.setValue((short) -99);
-            r.setLibelle(HealthState.UNKNOWN);
+            r.setState(HealthState.UNKNOWN);
         }
 
         return r;

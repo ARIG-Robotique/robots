@@ -13,123 +13,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public class MD22Motors extends AbstractPropulsionsMotors {
 
-    /**
-     * The Constant MODE_REGISTER.
-     */
-    public static final byte MODE_REGISTER = 0x00;
-
-    /**
-     * The Constant MOTOR1_REGISTER.
-     */
-    public static final byte MOTOR1_REGISTER = 0x01;
-
-    /**
-     * The Constant MOTOR2_REGISTER.
-     */
-    public static final byte MOTOR2_REGISTER = 0x02;
-
-    /**
-     * The Constant ACCEL_REGISTER.
-     */
-    public static final byte ACCEL_REGISTER = 0x03;
-
-    /**
-     * The Constant VERSION_REGISTER.
-     */
-    public static final byte VERSION_REGISTER = 0x07;
-
-    /**
-     * The Constant MODE_0.
-     */
+    private static final byte MODE_REGISTER = 0x00;
+    private static final byte MOTOR1_REGISTER = 0x01;
+    private static final byte MOTOR2_REGISTER = 0x02;
+    private static final byte ACCEL_REGISTER = 0x03;
+    private static final byte VERSION_REGISTER = 0x07;
     private static final byte MODE_0 = 0; // 0 (Reverse) - 128 (Stop) - 255 (Forward)
-
-    /**
-     * The Constant MODE_1.
-     */
     private static final byte MODE_1 = 1; // -128 (Reverse) - 0 (Stop) - 127 (Forward)
-
-    /**
-     * The Constant DEFAULT_MODE_VALUE.
-     */
     private static final byte DEFAULT_MODE_VALUE = MD22Motors.MODE_0;
-
-    /**
-     * The Constant DEFAULT_ACCEL_VALUE.
-     */
     private static final short DEFAULT_ACCEL_VALUE = 20;
 
-    /**
-     * The Constant MIN_VAL_MODE_0.
-     */
     private static final byte MIN_VAL_MODE_0 = 0;
-
-    /**
-     * The Constant STOP_VAL_MODE_0.
-     */
     private static final byte STOP_VAL_MODE_0 = (byte) 128;
-
-    /**
-     * The Constant MAX_VAL_MODE_0.
-     */
     private static final byte MAX_VAL_MODE_0 = (byte) 255;
-
-    /**
-     * The Constant MIN_VAL_MODE_1.
-     */
     private static final byte MIN_VAL_MODE_1 = -128;
-
-    /**
-     * The Constant STOP_VAL_MODE_1.
-     */
     private static final byte STOP_VAL_MODE_1 = 0;
-
-    /**
-     * The Constant MAX_VAL_MODE_1.
-     */
     private static final byte MAX_VAL_MODE_1 = 127;
 
-    /**
-     * The i2c manager.
-     */
     @Autowired
     private II2CManager i2cManager;
 
-    /**
-     * The address.
-     */
     private final String deviceName;
-
-    /**
-     * The mode value.
-     */
     private byte modeValue;
-
-    /**
-     * The accel value.
-     */
     private short accelValue;
-
-    /**
-     * The stop val.
-     */
     private int offsetVal;
 
-    /**
-     * Instantiates a new m d22 motors.
-     *
-     * @param deviceName the address
-     */
     public MD22Motors(final String deviceName) {
         this(deviceName, MD22Motors.DEFAULT_MODE_VALUE, MD22Motors.DEFAULT_ACCEL_VALUE);
     }
 
-    /**
-     * Instantiates a new m d22 motors.
-     *
-     * @param deviceName the address
-     * @param mode       the mode
-     * @param accel      the accel
-     */
     public MD22Motors(final String deviceName, final byte mode, final short accel) {
         super();
 
@@ -145,11 +57,6 @@ public class MD22Motors extends AbstractPropulsionsMotors {
         init(true);
     }
 
-    /**
-     * Inits the.
-     *
-     * @param transmit the transmit
-     */
     private void init(final boolean transmit) {
         prevM1 = 300;
         prevM2 = 300;

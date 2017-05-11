@@ -44,7 +44,9 @@ public class SRF02Sonar {
     private static final byte ADD_CHANGE_SECOND_COMMAND = (byte) 0xAA;
     private static final byte ADD_CHANGE_THIRD_COMMAND = (byte) 0xA5;
 
-    private static final int INVALID_VALUE = -1;
+    public static final int INVALID_VALUE = -1;
+    private static final int MAX_RAW_VALUE = 100; // A plus de 1m avec l'US, pas grand interet
+    private static final int MIN_RAW_VALUE = 18; // Normalement le min c'est 15cm, mais bon.
     private static final int READ_TIMEOUT_VALID = 70;
 
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -58,9 +60,6 @@ public class SRF02Sonar {
         private byte value;
     }
 
-    /**
-     * The i2c manager.
-     */
     @Autowired
     private II2CManager i2cManager;
 
@@ -136,7 +135,12 @@ public class SRF02Sonar {
                 }
                 log.debug("Résultat de la lecture du sonar {} = {} {}", deviceName, res, unit);
             }
-            return new AsyncResult<>(avg.average(res));
+
+            if (res < MIN_RAW_VALUE || res > MAX_RAW_VALUE) {
+                return new AsyncResult<>(INVALID_VALUE);
+            } else {
+                return new AsyncResult<>(avg.average(res));
+            }
         } catch (I2CException | InterruptedException e) {
             log.error("Erreur de lecture du Sonar {} : {}", deviceName, e.toString());
             return new AsyncResult<>(INVALID_VALUE);

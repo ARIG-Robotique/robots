@@ -10,7 +10,7 @@ import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.IAction;
-import org.arig.robot.system.MouvementManager;
+import org.arig.robot.system.TrajectoryManager;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +34,9 @@ public class CollecteInitialeAction implements IAction, InitializingBean {
     @Autowired
     private RobotStatus rs;
 
-    /** The conv. */
     @Autowired
     private ConvertionRobotUnit conv;
 
-    /** The position. */
     @Autowired
     @Qualifier("currentPosition")
     private Position position;

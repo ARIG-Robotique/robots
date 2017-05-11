@@ -10,59 +10,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class AbstractPropulsionsMotors {
 
-    /**
-     * The Constant UNDEF_MOTOR.
-     */
     public static final int UNDEF_MOTOR = 0;
-
-    /**
-     * The Constant MOTOR_1.
-     */
     public static final int MOTOR_1 = 1;
-
-    /**
-     * The Constant MOTOR_2.
-     */
     public static final int MOTOR_2 = 2;
 
-    /**
-     * The num moteur gauche.
-     */
     private int numMoteurGauche;
-
-    /**
-     * The num moteur droit.
-     */
     private int numMoteurDroit;
-
-    /**
-     * The alternate.
-     */
     private boolean alternate;
 
-    /**
-     * The min val.
-     */
     protected int minVal;
-
-    /**
-     * The max val.
-     */
     protected int maxVal;
-
-    /**
-     * The prev m1.
-     */
     protected int prevM1;
-
-    /**
-     * The prev m2.
-     */
     protected int prevM2;
 
-    /**
-     * Instantiates a new abstract motors.
-     */
     public AbstractPropulsionsMotors() {
         assignMotors(AbstractPropulsionsMotors.UNDEF_MOTOR, AbstractPropulsionsMotors.UNDEF_MOTOR);
         alternate = false;
@@ -215,28 +175,10 @@ public abstract class AbstractPropulsionsMotors {
         return 0;
     }
 
-    /**
-     * Inits the.
-     */
     public abstract void init();
-
-    /**
-     * Moteur1.
-     *
-     * @param val the cmd
-     */
     public abstract void moteur1(final int val);
-
-    /**
-     * Moteur2.
-     *
-     * @param val the cmd
-     */
     public abstract void moteur2(final int val);
 
-    /**
-     * Prints the version.
-     */
     public abstract void printVersion();
 
     /**

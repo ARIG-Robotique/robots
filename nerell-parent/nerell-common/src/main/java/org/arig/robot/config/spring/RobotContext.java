@@ -10,9 +10,7 @@ import org.arig.robot.filters.ramp.RampFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.system.MouvementManager;
-import org.arig.robot.system.capteurs.ILidarTelemeter;
-import org.arig.robot.system.capteurs.RPLidarA2OverSocketTelemeter;
+import org.arig.robot.system.TrajectoryManager;
 import org.arig.robot.system.motion.AsservissementPolaire;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
@@ -20,15 +18,11 @@ import org.arig.robot.system.motion.OdometrieLineaire;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
-import org.arig.robot.system.process.RPLidarBridgeProcess;
 import org.arig.robot.utils.ConvertionRobotUnit;
+import org.arig.robot.utils.TableUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.PropertySource;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * @author gdepuille on 23/12/14.
@@ -44,8 +38,14 @@ public class RobotContext {
     }
 
     @Bean
-    public MouvementManager mouvementManager() {
-        MouvementManager mv = new MouvementManager(IConstantesNerellConfig.arretDistanceMm, IConstantesNerellConfig.approcheDistanceMm,
+    public TableUtils tableUtils() {
+        return new TableUtils(IConstantesNerellConfig.minX, IConstantesNerellConfig.maxX,
+                IConstantesNerellConfig.minY, IConstantesNerellConfig.maxY);
+    }
+
+    @Bean
+    public TrajectoryManager mouvementManager() {
+        TrajectoryManager mv = new TrajectoryManager(IConstantesNerellConfig.arretDistanceMm, IConstantesNerellConfig.approcheDistanceMm,
                 IConstantesNerellConfig.arretOrientDeg, IConstantesNerellConfig.approcheOrientationDeg,
                 IConstantesNerellConfig.angleReculDeg);
         //mv.setDistanceMiniEntrePointMm(IConstantesNerellConfig.distanceMiniEntrePointMm);

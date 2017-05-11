@@ -10,14 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ArigLMD18200Motors extends AbstractPropulsionsMotors {
 
-    /**
-     * The prev m3.
-     */
     private int prevM3;
-
-    /**
-     * The prev m4.
-     */
     private int prevM4;
 
     @Override
@@ -110,7 +103,6 @@ public class ArigLMD18200Motors extends AbstractPropulsionsMotors {
 
     @Override
     public void printVersion() {
-        // TODO : Injecter la version du projet
-        log.info("ARIG carte LMD18200 4 moteurs version 1.0.0");
+        log.info("ARIG carte LMD18200 4 moteurs");
     }
 }

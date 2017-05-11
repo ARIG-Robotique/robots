@@ -14,10 +14,7 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 /**
  * @author gdepuille on 23/04/15.
@@ -116,9 +113,10 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
         // Config PCF8574 //
         // -------------- //
-        pcfAlim = new PCF8574GpioProvider(bus, IConstantesI2C.PCF_ALIM_ADDRESS, inIrqAlim);
-        pcf1 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF1_ADDRESS, inIrqPcf1);
-        pcf2 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF2_ADDRESS); // TODO Config IRQ
+        // TODO Config IRQ
+        pcfAlim = new PCF8574GpioProvider(bus, IConstantesI2C.PCF_ALIM_ADDRESS);
+        pcf1 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF1_ADDRESS);
+        pcf2 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF2_ADDRESS);
         pcf3 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF3_ADDRESS, true);
 
         // Alim

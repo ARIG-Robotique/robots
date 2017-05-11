@@ -8,11 +8,7 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.exception.ObstacleFoundException;
-import org.arig.robot.model.AbstractRobotStatus;
-import org.arig.robot.model.Chemin;
-import org.arig.robot.model.CommandeRobot;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
+import org.arig.robot.model.*;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.IAsservissementPolaire;
@@ -25,12 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
- * The Class MouvementManager.
+ * The Class TrajectoryManager.
  *
  * @author gdepuille
  */
 @Slf4j
-public class MouvementManager implements InitializingBean {
+public class TrajectoryManager implements InitializingBean {
 
     @Autowired
     private IOdometrie odom;
@@ -93,9 +89,9 @@ public class MouvementManager implements InitializingBean {
      * @param arretOrientDeg  the arret orient deg
      * @param coefAngle       the coef angle
      */
-    public MouvementManager(final double arretDistanceMm, final double approcheDistanceMm,
-                            final double arretOrientDeg, final double approcheOrientDeg,
-                            final double coefAngle) {
+    public TrajectoryManager(final double arretDistanceMm, final double approcheDistanceMm,
+                             final double arretOrientDeg, final double approcheOrientDeg,
+                             final double coefAngle) {
         super();
 
         // On stock les valeurs brut, le calcul sera fait sur le afterPropertiesSet.

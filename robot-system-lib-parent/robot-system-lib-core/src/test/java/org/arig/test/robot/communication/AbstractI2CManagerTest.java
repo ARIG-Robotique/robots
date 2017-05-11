@@ -19,20 +19,13 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 @RunWith(BlockJUnit4ClassRunner.class)
 public class AbstractI2CManagerTest {
 
-    /** The impl. */
     private static AbstractI2CManager<Byte> impl;
 
-    /**
-     * Inits the class.
-     */
     @BeforeClass
     public static void initClass() {
         AbstractI2CManagerTest.impl = new DummyI2CManager();
     }
 
-    /**
-     * Inits the test.
-     */
     @Before
     public void initTest() {
         for (byte b = 1; b < 4; b++) {
@@ -40,33 +33,21 @@ public class AbstractI2CManagerTest {
         }
     }
 
-    /**
-     * Test register board1.
-     */
     @Test(expected = IllegalArgumentException.class)
     public void testRegisterBoard1() {
         AbstractI2CManagerTest.impl.registerDevice(null, null);
     }
 
-    /**
-     * Test register board2.
-     */
     @Test(expected = IllegalArgumentException.class)
     public void testRegisterBoard2() {
         AbstractI2CManagerTest.impl.registerDevice(null, (byte) 1);
     }
 
-    /**
-     * Test register board3.
-     */
     @Test(expected = IllegalArgumentException.class)
     public void testRegisterBoard3() {
         AbstractI2CManagerTest.impl.registerDevice("", (byte) -1);
     }
 
-    /**
-     * Test register board.
-     */
     @Test
     public void testRegisterBoard() {
         final int init = AbstractI2CManagerTest.impl.nbDeviceRegistered();
@@ -78,9 +59,6 @@ public class AbstractI2CManagerTest {
         Assert.assertEquals(init + 3, AbstractI2CManagerTest.impl.nbDeviceRegistered());
     }
 
-    /**
-     * Test execute scan without mapping.
-     */
     @Test(expected = IllegalArgumentException.class)
     public void testExecuteScanWithoutMapping() {
         try {
@@ -91,34 +69,16 @@ public class AbstractI2CManagerTest {
         }
     }
 
-    /**
-     * Text execute scan.
-     * 
-     * @throws I2CException
-     *             the i2 c exception
-     */
     @Test
     public void textExecuteScan() throws I2CException {
         AbstractI2CManagerTest.impl.executeScan();
     }
 
-    /**
-     * Test get unknown board.
-     * 
-     * @throws I2CException
-     *             the i2 c exception
-     */
     @Test(expected = I2CException.class)
     public void testGetUnknownBoard() throws I2CException {
         AbstractI2CManagerTest.impl.getDevice("Unknown Board");
     }
 
-    /**
-     * Test get known board.
-     * 
-     * @throws I2CException
-     *             the i2 c exception
-     */
     @Test
     public void testGetKnownBoard() throws I2CException {
         Assert.assertEquals(2, AbstractI2CManagerTest.impl.getDevice("Board 2"), 0);

@@ -17,9 +17,6 @@ import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.springframework.util.Assert;
 import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.filter.CorsFilter;
-
-import javax.servlet.DispatcherType;
 
 /**
  * @author gdepuille on 12/01/15.

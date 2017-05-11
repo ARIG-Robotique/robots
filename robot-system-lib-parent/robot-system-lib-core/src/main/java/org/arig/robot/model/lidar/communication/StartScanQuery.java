@@ -6,7 +6,7 @@ import org.arig.robot.model.lidar.SpeedInfos;
 import org.arig.robot.model.lidar.communication.enums.LidarAction;
 
 /**
- * @author gregorydepuille@sglk.local on 03/03/17.
+ * @author gdepuille on 03/03/17.
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

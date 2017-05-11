@@ -10,30 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class SD21Motors extends AbstractPropulsionsMotors {
 
-    /**
-     * The motor1 register.
-     */
     private final byte motor1Register;
-
-    /**
-     * The motor2 register.
-     */
     private final byte motor2Register;
-
-    /**
-     * The offset value.
-     */
     private final int offsetValue;
 
-    /**
-     * The sd21.
-     */
     @Autowired
     private SD21Servos sd21;
 
-    /**
-     * Instantiates a new s d21 motors.
-     */
     public SD21Motors(final byte motor1Register, final byte motor2Register) {
         super();
 

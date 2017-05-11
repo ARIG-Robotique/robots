@@ -3,7 +3,6 @@ package org.arig.robot.web.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.model.servos.ServoConfig;
-import org.arig.robot.model.servos.ServoInfo;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;

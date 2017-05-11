@@ -1,8 +1,9 @@
 package org.arig.robot.services.avoiding;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.arig.robot.model.Point;
-import org.arig.robot.system.MouvementManager;
+import org.arig.robot.system.TrajectoryManager;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,22 +18,22 @@ import java.util.List;
 public class CompleteAvoidingService extends AbstractAvoidingService {
 
     @Autowired
-    private MouvementManager mouvementManager;
+    private TrajectoryManager trajectoryManager;
 
     @Autowired
     private IPathFinder pathFinder;
 
     @Override
-    protected void processWithPoints(List<Point> points) {
-        if (points.isEmpty()) {
+    protected void processAvoiding() {
+        if (CollectionUtils.isEmpty(getDetectedPoints())) {
             return;
         }
 
         // 3.1 Stop du robot
-        mouvementManager.setObstacleFound(true);
+        trajectoryManager.setObstacleFound(true);
 
         List<Polygon> polygons = new ArrayList<>();
-        for (Point pt : points) {
+        for (Point pt : getDetectedPoints()) {
             // 3.2 Définition de l'obstacle (autour de nous)
             int r1 = (int) (Math.cos(Math.toRadians(22.5)) * getDistanceCentreObstacle() / 10);
             int r2 = (int) (Math.sin(Math.toRadians(22.5)) * getDistanceCentreObstacle() / 10);
@@ -53,6 +54,6 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
         pathFinder.addObstacles(polygons.toArray(new Polygon[polygons.size()]));
 
         // 3.4 On relance le bouzin
-        mouvementManager.setRestartAfterObstacle(true);
+        trajectoryManager.setRestartAfterObstacle(true);
     }
 }

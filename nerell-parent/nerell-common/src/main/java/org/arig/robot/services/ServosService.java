@@ -31,6 +31,9 @@ public class ServosService {
         log.info("Servos en position initiale");
         servos.printVersion();
 
+        ioService.enableAlim5VPuissance();
+        while(!ioService.alimPuissance5VOk());
+
         // Ordre précis car blocage mécanique dans certains cas
         servos.setPositionAndSpeed(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_VERTICAL, IConstantesServos.SPEED_INC_BRAS);
         servos.waitTime(IConstantesServos.WAIT_INC_BRAS);
@@ -47,7 +50,7 @@ public class ServosService {
         servos.setPositionAndSpeed(IConstantesServos.DEVIDOIR, IConstantesServos.DEVIDOIR_CHARGEMENT, IConstantesServos.SPEED_DEVIDOIR);
         servos.setPositionAndSpeed(IConstantesServos.INCLINAISON_ASPIRATION, IConstantesServos.INCLINAISON_ASPI_FERME, IConstantesServos.SPEED_INC_ASPI);
 
-        // TMP
+        // Moteurs (hors propulsions)
         servos.setPositionAndSpeed(IConstantesServos.MOTOR_EJECTION, 1500, (byte) 0);
         servos.setPositionAndSpeed(IConstantesServos.MOTOR_ROULEAUX, 1500, (byte) 0);
         servos.setPositionAndSpeed(IConstantesServos.MOTOR_ASPIRATION, 1500, (byte) 0);
@@ -60,11 +63,12 @@ public class ServosService {
     public void calibrationAspiration() {
         log.info("Calibration moteur aspiration");
         aspirationMax();
+        servos.waitTime(1000);
         ioService.enableAlim8VPuissance();
         while(!ioService.alimPuissance8VOk());
-        servos.waitTime(3000);
+        servos.waitTime(4000);
         aspirationStop();
-        servos.waitTime(3000);
+        servos.waitTime(4000);
     }
 
     public void aspirationMax() {

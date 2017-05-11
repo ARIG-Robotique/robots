@@ -17,24 +17,15 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 @RunWith(BlockJUnit4ClassRunner.class)
 public class ConvertionRobotUnitTest {
 
-    /** The conv1. */
     private static ConvertionRobotUnit conv1;
-
-    /** The conv0_5. */
     private static ConvertionRobotUnit conv0_5;
 
-    /**
-     * Inits the class.
-     */
     @BeforeClass
     public static void initClass() {
         ConvertionRobotUnitTest.conv1 = new ConvertionRobotUnit(1, 1);
         ConvertionRobotUnitTest.conv0_5 = new ConvertionRobotUnit(0.5, 0.5);
     }
 
-    /**
-     * Test pi value.
-     */
     @Test
     public void testPiValue() {
         log.info("Test des valeurs de PI en pulse");
@@ -43,9 +34,6 @@ public class ConvertionRobotUnitTest {
         Assert.assertEquals(360, ConvertionRobotUnitTest.conv1.getPi2Pulse(), 0);
     }
 
-    /**
-     * Test mm convertion.
-     */
     @Test
     public void testMmConvertion() {
         log.info("Test des convertions en millimètres");
@@ -57,9 +45,6 @@ public class ConvertionRobotUnitTest {
         Assert.assertEquals(2, ConvertionRobotUnitTest.conv0_5.pulseToMm(1), 0);
     }
 
-    /**
-     * Test deg convertion.
-     */
     @Test
     public void testDegConvertion() {
         log.info("Test des convertions en degrées");
@@ -71,9 +56,6 @@ public class ConvertionRobotUnitTest {
         Assert.assertEquals(2, ConvertionRobotUnitTest.conv0_5.pulseToDeg(1), 0);
     }
 
-    /**
-     * Test rad convertion.
-     */
     @Test
     public void testRadConvertion() {
         log.info("Test des convertions en radians");

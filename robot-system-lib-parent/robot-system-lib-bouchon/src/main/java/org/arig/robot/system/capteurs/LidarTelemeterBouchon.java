@@ -2,17 +2,13 @@ package org.arig.robot.system.capteurs;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.Scan;
 import org.arig.robot.model.lidar.ScanInfos;
-import org.arig.robot.model.lidar.communication.*;
 import org.arig.robot.model.lidar.enums.HealthState;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -50,7 +46,7 @@ public class LidarTelemeterBouchon implements ILidarTelemeter {
     @Override
     public HealthInfos healthInfo() {
         HealthInfos r = new HealthInfos();
-        r.setLibelle(HealthState.OK);
+        r.setState(HealthState.OK);
 
         return r;
     }

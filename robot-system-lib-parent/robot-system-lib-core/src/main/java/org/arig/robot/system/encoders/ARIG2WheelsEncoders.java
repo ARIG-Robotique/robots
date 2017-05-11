@@ -13,28 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
 
-    /**
-     * The address droit.
-     */
     private final String deviceNameDroit;
-
-    /**
-     * The address gauche.
-     */
     private final String deviceNameGauche;
 
-    /**
-     * The i2c manager.
-     */
     @Autowired
     private II2CManager i2cManager;
 
-    /**
-     * Instantiates a new aRIG encoders.
-     *
-     * @param deviceNameGauche the address gauche
-     * @param deviceNameDroit  the address droit
-     */
     public ARIG2WheelsEncoders(final String deviceNameGauche, final String deviceNameDroit) {
         super("two_wheels_encoders");
         this.deviceNameGauche = deviceNameGauche;

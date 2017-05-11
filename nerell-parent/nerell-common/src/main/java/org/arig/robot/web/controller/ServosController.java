@@ -89,6 +89,22 @@ public class ServosController extends AbstractServosController {
         servoConfigs.add(orientationAspiration);
 
         // Temp
+        ServoConfig moteurDroit = new ServoConfig();
+        moteurDroit.setId(IConstantesServos.MOTOR_DROIT).setName("TMP Moteur droit");
+        moteurDroit
+                .addPosition("Reverse", 1450)
+                .addPosition("Stop", 1500)
+                .addPosition("Forward", 1650);
+        servoConfigs.add(moteurDroit);
+
+        ServoConfig moteurGauche = new ServoConfig();
+        moteurGauche.setId(IConstantesServos.MOTOR_GAUCHE).setName("TMP Moteur gauche");
+        moteurGauche
+                .addPosition("Reverse", 1450)
+                .addPosition("Stop", 1500)
+                .addPosition("Forward", 1650);
+        servoConfigs.add(moteurGauche);
+
         ServoConfig moteurRouleaux = new ServoConfig();
         moteurRouleaux.setId(IConstantesServos.MOTOR_ROULEAUX).setName("TMP Moteur rouleaux");
         moteurRouleaux

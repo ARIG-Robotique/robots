@@ -4,18 +4,18 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesI2CAdc;
-import org.arig.robot.constants.IConstantesNerellConfig;
-import org.arig.robot.exception.I2CException;
-import org.arig.robot.filters.values.MovingIntegerValueAverage;
+import org.arig.robot.filters.values.DoubleValueAverage;
+import org.arig.robot.filters.values.IntegerValueAverage;
 import org.arig.robot.model.MonitorPoint;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
+import org.arig.robot.model.lidar.HealthInfos;
+import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.avoiding.IAvoidingService;
-import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
+import org.arig.robot.system.capteurs.GP2D12;
+import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.SRF02Sonar;
-import org.arig.robot.utils.ConvertionRobotUnit;
+import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author gdepuille on 13/05/15.
@@ -33,196 +34,219 @@ import java.util.concurrent.TimeUnit;
 public abstract class AbstractAvoidingService implements IAvoidingService, InitializingBean {
 
     @Autowired
-    private ConvertionRobotUnit conv;
-
-    @Autowired
     private IMonitoringWrapper monitoringWrapper;
 
     @Autowired
-    @Qualifier("currentPosition")
-    private Position position;
+    private TableUtils tableUtils;
 
     @Autowired
-    private I2CAdcAnalogInput analogInput;
+    @Qualifier("gp2dGauche")
+    private GP2D12 gp2dGauche;
 
-//    @Autowired
-//    @Qualifier("usLatGauche")
-//    private SRF02Sonar usLatGauche;
-//
-//    @Autowired
-//    @Qualifier("usGauche")
-//    private SRF02Sonar usGauche;
-//
-//    @Autowired
-//    @Qualifier("usDroit")
-//    private SRF02Sonar usDroit;
-//
-//    @Autowired
-//    @Qualifier("usLatDroit")
-//    private SRF02Sonar usLatDroit;
+    @Autowired
+    @Qualifier("gp2dCentre")
+    private GP2D12 gp2dCentre;
+
+    @Autowired
+    @Qualifier("gp2dDroit")
+    private GP2D12 gp2dDroit;
+
+    @Autowired
+    @Qualifier("usLatGauche")
+    private SRF02Sonar usLatGauche;
+
+    @Autowired
+    @Qualifier("usGauche")
+    private SRF02Sonar usGauche;
+
+    @Autowired
+    @Qualifier("usDroit")
+    private SRF02Sonar usDroit;
+
+    @Autowired
+    @Qualifier("usLatDroit")
+    private SRF02Sonar usLatDroit;
+
+    @Autowired
+    private ILidarTelemeter lidar;
+
+    // Stockages des points d'obstacles
+    @Getter
+    private List<Point> detectedPoints = new ArrayList<>();
 
     @Setter
     @Getter(AccessLevel.PROTECTED)
     private int distanceCentreObstacle = 500;
 
-    private static final int distanceDetectionObstacleMm = 300;
-    private static final int seuilLateralAvant = 1780;
-    private static final int seuilAvant = 1550;
+    private DoubleValueAverage calcAvgGpGauche = new DoubleValueAverage();
+    private DoubleValueAverage calcAvgGpCentre = new DoubleValueAverage();
+    private DoubleValueAverage calcAvgGpDroit = new DoubleValueAverage();
 
-    private MovingIntegerValueAverage calcAvgGpGauche = new MovingIntegerValueAverage();
-    private MovingIntegerValueAverage calcAvgGpCentre = new MovingIntegerValueAverage();
-    private MovingIntegerValueAverage calcAvgGpDroit = new MovingIntegerValueAverage();
-
-    private MovingIntegerValueAverage calcAvgUsLatGauche = new MovingIntegerValueAverage();
-    private MovingIntegerValueAverage calcAvgUsGauche = new MovingIntegerValueAverage();
-    private MovingIntegerValueAverage calcAvgUsDroit = new MovingIntegerValueAverage();
-    private MovingIntegerValueAverage calcAvgUsLatDroit = new MovingIntegerValueAverage();
+    private IntegerValueAverage calcAvgUsLatGauche = new IntegerValueAverage();
+    private IntegerValueAverage calcAvgUsGauche = new IntegerValueAverage();
+    private IntegerValueAverage calcAvgUsDroit = new IntegerValueAverage();
+    private IntegerValueAverage calcAvgUsLatDroit = new IntegerValueAverage();
 
     @Override
     public void afterPropertiesSet() throws Exception {
         log.info("Initialisation du service d'évittement d'obstacle");
-//        usLatGauche.printVersion();
-//        usGauche.printVersion();
-//        usDroit.printVersion();
-//        usLatDroit.printVersion();
+        usLatGauche.printVersion();
+        usGauche.printVersion();
+        usDroit.printVersion();
+        usLatDroit.printVersion();
+        lidar.deviceInfo();
     }
 
-    public void process() {
-        try {
-            // Stockages des points d'obstacles
-            List<Point> detectedPoints = new ArrayList<>();
+    protected abstract void processAvoiding();
 
-            // Lecture US
-//            Future<Integer> fUsLatGauche = usLatGauche.readValue();
-//            Future<Integer> fUsGauche = usGauche.readValue();
-//            Future<Integer> fUsDroit = usDroit.readValue();
-//            Future<Integer> fUsLatDroit = usLatDroit.readValue();
+    public final void process() {
+        // Lecture GP2D
+        Future<GP2D12.GP2D12Values> fGpGauche = gp2dGauche.readValue();
+        Future<GP2D12.GP2D12Values> fGpCentre = gp2dCentre.readValue();
+        Future<GP2D12.GP2D12Values> fGpDroit = gp2dDroit.readValue();
 
-            // Lecture GP2D
-            // FIXME GP2D12 Class a faire pour renvoyer une valeur en cm ISO avec les SRF02
-            int rawGpGauche = analogInput.readCapteurValue(IConstantesI2CAdc.GP2D_AVANT_GAUCHE);
-            int rawGpCentre = analogInput.readCapteurValue(IConstantesI2CAdc.GP2D_AVANT_CENTRE);
-            int rawGpDroit = analogInput.readCapteurValue(IConstantesI2CAdc.GP2D_AVANT_DROIT);
+        // Lecture US
+        Future<Integer> fUsLatGauche = usLatGauche.readValue();
+        Future<Integer> fUsGauche = usGauche.readValue();
+        Future<Integer> fUsDroit = usDroit.readValue();
+        Future<Integer> fUsLatDroit = usLatDroit.readValue();
 
-//            while(!fUsLatGauche.isDone() && !fUsGauche.isDone() && !fUsDroit.isDone() && !fUsLatDroit.isDone());
-//            int rawUsLatGauche = -1, rawUsGauche = -1, rawUsDroit = -1, rawUsLatDroit = -1;
-//            try {
-//                rawUsLatGauche = fUsLatGauche.get();
-//            } catch (InterruptedException | ExecutionException e) {
-//                log.warn("Erreur de récupération US lat Gauche", e);
-//            }
-//            try {
-//                rawUsGauche = fUsGauche.get();
-//            } catch (InterruptedException | ExecutionException e) {
-//                log.warn("Erreur de récupération US Gauche", e);
-//            }
-//            try {
-//                rawUsDroit = fUsDroit.get();
-//            } catch (InterruptedException | ExecutionException e) {
-//                log.warn("Erreur de récupération US Droit", e);
-//            }
-//            try {
-//                rawUsLatDroit = fUsLatDroit.get();
-//            } catch (InterruptedException | ExecutionException e) {
-//                log.warn("Erreur de récupération US lat Droit", e);
-//            }
-
-            // Filtrage des valeurs
-            int avgGpGauche = calcAvgGpGauche.average(rawGpGauche);
-            int avgGpCentre = calcAvgGpCentre.average(rawGpCentre);
-            int avgGpDroit = calcAvgGpDroit.average(rawGpDroit);
-//            int avgUsLatGauche = calcAvgUsLatGauche.average(rawUsLatGauche);
-//            int avgUsGauche = calcAvgUsLatGauche.average(rawUsGauche);
-//            int avgUsDroit = calcAvgUsLatGauche.average(rawUsDroit);
-//            int avgUsLatDroit = calcAvgUsLatGauche.average(rawUsLatDroit);
-
-            // Construction du monitoring
-            MonitorPoint serie = new MonitorPoint()
-                .tableName("avoiding")
-                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                .addField("rawGpGauche", rawGpGauche)
-                .addField("avgGpGauche", avgGpGauche)
-                .addField("rawGpCentre", rawGpCentre)
-                .addField("avgGpCentre", avgGpCentre)
-                .addField("rawGpDroit", rawGpDroit)
-                .addField("avgGpDroit", avgGpDroit);
-//                .addField("rawUsLatGauche", rawUsLatGauche)
-//                .addField("avgUsLatGauche", avgUsLatGauche)
-//                .addField("rawUsGauche", rawUsGauche)
-//                .addField("avgUsGauche", avgUsGauche)
-//                .addField("rawUsDroit", rawUsDroit)
-//                .addField("avgUsDroit", avgUsDroit)
-//                .addField("rawUsLatDroit", rawUsLatDroit)
-//                .addField("avgUsLatDroit", avgUsLatDroit);
-            monitoringWrapper.addPoint(serie);
-
-            if (avgGpCentre > seuilAvant) {
-                Point p = getPointFromAngle(distanceDetectionObstacleMm, 15);
-                if (checkPointInTable(p)) {
-                    detectedPoints.add(getPointFromAngle(distanceCentreObstacle, 15));
-                }
-            }
-
-            if (avgGpDroit > seuilAvant) {
-                Point p = getPointFromAngle(distanceDetectionObstacleMm, -15);
-                if (checkPointInTable(p)) {
-                    detectedPoints.add(getPointFromAngle(distanceCentreObstacle, -15));
-                }
-            }
-
-            if (avgGpGauche > seuilLateralAvant) {
-                Point p = getPointFromAngle(distanceDetectionObstacleMm, 45);
-                if (checkPointInTable(p)) {
-                    detectedPoints.add(getPointFromAngle(distanceCentreObstacle, 45));
-                }
-            }
-
-            // 3. Si inclus, on stop et on met a jour le path
-            processWithPoints(detectedPoints);
-
-        } catch (I2CException e) {
-            log.error("Erreur lors de la récupération des distances : {}", e.toString());
+        HealthInfos lidarHealth = lidar.healthInfo();
+        ScanInfos lidarScan = null;
+        if (lidarHealth.isOk()) {
+            lidarScan = lidar.grabDatas();
         }
-    }
 
-    protected abstract void processWithPoints(List<Point> points);
+        // TODO : Ajouter un delai pour ne pas rester bloqué.
+        while(!fUsLatGauche.isDone() && !fUsGauche.isDone() && !fUsDroit.isDone() && !fUsLatDroit.isDone()
+                && !fGpGauche.isDone() && !fGpCentre.isDone() && !fGpDroit.isDone());
 
-    /**
-     * Définition d'un point pour l'obstacle autour du robot.
-     *
-     * @param angleDeg Valeur en degré sur le robot.
-     * @return Le point si présent sur la table, null sinon
-     */
-    private Point getPointFromAngle(int distanceObstacleMm, double angleDeg) {
-        // 1.A Récupération du point dans le repère cartésien de la table par
-        double theta = conv.pulseToRad(position.getAngle()) + Math.toRadians(angleDeg); // On calcul la position sur l'angle du repère pour n'avoir que la translation a faire
-        Point ptObstacle = new Point();
-        ptObstacle.setX(distanceObstacleMm * Math.cos(theta));
-        ptObstacle.setY(distanceObstacleMm * Math.sin(theta));
+        // On efface les anciens points
+        detectedPoints.clear();
 
-        // 1.B Translation du point de la position du robot
-        ptObstacle.addDeltaX(conv.pulseToMm(position.getPt().getX()));
-        ptObstacle.addDeltaY(conv.pulseToMm(position.getPt().getY()));
+        double rawGpGauche = GP2D12.INVALID_VALUE, rawGpCentre = GP2D12.INVALID_VALUE, rawGpDroit = GP2D12.INVALID_VALUE;
+        double avgGpGauche = 0, avgGpCentre = 0, avgGpDroit = 0;
 
-        // 2. Controles inclus sur la table
-        return ptObstacle;
-    }
+        int rawUsLatGauche = SRF02Sonar.INVALID_VALUE, rawUsGauche = SRF02Sonar.INVALID_VALUE,
+                rawUsDroit = SRF02Sonar.INVALID_VALUE, rawUsLatDroit = SRF02Sonar.INVALID_VALUE;
+        int avgUsLatGauche = 0, avgUsGauche = 0, avgUsDroit = 0, avgUsLatDroit = 0;
 
-    /**
-     * Controle que les coordonnées du point sont sur la table.
-     *
-     * @param pt Point correspont à l'obstacle détécté
-     * @return true si le point est sur la table
-     */
-    private boolean checkPointInTable(Point pt) {
-        boolean inTable = pt.getX() > IConstantesNerellConfig.minX && pt.getX() < IConstantesNerellConfig.maxX
-                && pt.getY() > IConstantesNerellConfig.minY && pt.getY() < IConstantesNerellConfig.maxY;
+        try {
+            rawGpGauche = fGpGauche.get().getCmValue();
+            if (rawGpGauche != GP2D12.INVALID_VALUE) {
+                avgGpGauche = calcAvgGpGauche.average(rawGpGauche);
+                Point pt = tableUtils.getPointFromAngle(avgGpGauche * 10, 0);
+                if (tableUtils.isInTable(pt)) {
+                    detectedPoints.add(pt);
+                }
+            }
+        } catch (InterruptedException | ExecutionException | NullPointerException e) {
+            log.warn("Erreur de récupération GP2D Gauche", e);
+        }
+        try {
+            rawGpCentre = fGpCentre.get().getCmValue();
+            if (rawGpCentre != GP2D12.INVALID_VALUE) {
+                avgGpCentre = calcAvgGpCentre.average(rawGpCentre);
+                Point pt = tableUtils.getPointFromAngle(avgGpCentre * 10, 0);
+                if (tableUtils.isInTable(pt)) {
+                    detectedPoints.add(pt);
+                }
+            }
+        } catch (InterruptedException | ExecutionException | NullPointerException e) {
+            log.warn("Erreur de récupération GP2D Centre", e);
+        }
+        try {
+            rawGpDroit = fGpDroit.get().getCmValue();
+            if (rawGpDroit != GP2D12.INVALID_VALUE) {
+                avgGpDroit = calcAvgGpDroit.average(rawGpDroit);
+                Point pt = tableUtils.getPointFromAngle(avgGpDroit * 10, 0);
+                if (tableUtils.isInTable(pt)) {
+                    detectedPoints.add(pt);
+                }
+            }
+        } catch (InterruptedException | ExecutionException | NullPointerException e) {
+            log.warn("Erreur de récupération GP2D Droit", e);
+        }
 
-//        boolean inEscalier = pt.getX() > IConstantesNerellConfig.minXEscalier && pt.getX() < IConstantesNerellConfig.maxXEscalier
-//                && pt.getY() > IConstantesNerellConfig.minYEscalier && pt.getY() < IConstantesNerellConfig.maxYEscalier;
-//
-//        return inTable && !inEscalier;
+        try {
+            rawUsLatGauche = fUsLatGauche.get();
+            if (rawUsLatGauche != SRF02Sonar.INVALID_VALUE) {
+                avgUsLatGauche = calcAvgUsLatGauche.average(rawUsLatGauche);
+                Point pt = tableUtils.getPointFromAngle(avgUsLatGauche * 10, 0);
+                if (tableUtils.isInTable(pt)) {
+                    detectedPoints.add(pt);
+                }
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            log.warn("Erreur de récupération US lat Gauche", e);
+        }
+        try {
+            rawUsGauche = fUsGauche.get();
+            if (rawUsGauche != SRF02Sonar.INVALID_VALUE) {
+                avgUsGauche = calcAvgUsGauche.average(rawUsGauche);
+                Point pt = tableUtils.getPointFromAngle(avgUsGauche * 10, 0);
+                if (tableUtils.isInTable(pt)) {
+                    detectedPoints.add(pt);
+                }
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            log.warn("Erreur de récupération US Gauche", e);
+        }
+        try {
+            rawUsDroit = fUsDroit.get();
+            if (rawUsDroit != SRF02Sonar.INVALID_VALUE) {
+                avgUsDroit = calcAvgUsDroit.average(rawUsDroit);
+                Point pt = tableUtils.getPointFromAngle(avgUsDroit * 10, 0);
+                if (tableUtils.isInTable(pt)) {
+                    detectedPoints.add(pt);
+                }
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            log.warn("Erreur de récupération US Droit", e);
+        }
+        try {
+            rawUsLatDroit = fUsLatDroit.get();
+            if (rawUsLatDroit != SRF02Sonar.INVALID_VALUE) {
+                avgUsLatDroit = calcAvgUsLatDroit.average(rawUsLatDroit);
+                Point pt = tableUtils.getPointFromAngle(avgUsLatDroit * 10, 0);
+                if (tableUtils.isInTable(pt)) {
+                    detectedPoints.add(pt);
+                }
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            log.warn("Erreur de récupération US lat Droit", e);
+        }
 
-        return inTable;
+        // Construction du monitoring
+        MonitorPoint serie = new MonitorPoint()
+            .tableName("avoiding")
+            .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+            .addField("rawGpGauche", rawGpGauche)
+            .addField("avgGpGauche", avgGpGauche)
+            .addField("rawGpCentre", rawGpCentre)
+            .addField("avgGpCentre", avgGpCentre)
+            .addField("rawGpDroit", rawGpDroit)
+            .addField("avgGpDroit", avgGpDroit)
+            .addField("rawUsLatGauche", rawUsLatGauche)
+            .addField("avgUsLatGauche", avgUsLatGauche)
+            .addField("rawUsGauche", rawUsGauche)
+            .addField("avgUsGauche", avgUsGauche)
+            .addField("rawUsDroit", rawUsDroit)
+            .addField("avgUsDroit", avgUsDroit)
+            .addField("rawUsLatDroit", rawUsLatDroit)
+            .addField("avgUsLatDroit", avgUsLatDroit);
+        monitoringWrapper.addPoint(serie);
+
+        if (lidarScan != null) {
+            detectedPoints.addAll(
+                lidarScan.getScan().parallelStream()
+                    .map(scan -> tableUtils.getPointFromAngle(scan.getDistanceMm(), scan.getAngleDeg()))
+                    .filter(pt -> tableUtils.isInTable(pt))
+                    .collect(Collectors.toList())
+            );
+        }
+
+        // 3. Si inclus, on stop et on met a jour le path
+        processAvoiding();
     }
 }

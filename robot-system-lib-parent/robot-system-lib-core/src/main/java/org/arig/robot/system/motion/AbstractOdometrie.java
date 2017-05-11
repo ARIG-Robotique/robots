@@ -23,9 +23,6 @@ public abstract class AbstractOdometrie implements IOdometrie, InitializingBean 
     @Autowired
     private IMonitoringWrapper monitoringWrapper;
 
-    /**
-     * The position.
-     */
     @Autowired
     @Qualifier("currentPosition")
     @Getter(AccessLevel.PROTECTED)
@@ -34,17 +31,9 @@ public abstract class AbstractOdometrie implements IOdometrie, InitializingBean 
     @Autowired
     private ConvertionRobotUnit conv;
 
-    /**
-     * The type.
-     */
     @Getter
     private final TypeOdometrie type;
 
-    /**
-     * Instantiates a new odometrie.
-     *
-     * @param type the type
-     */
     protected AbstractOdometrie(final TypeOdometrie type) {
         this.type = type;
     }
@@ -54,21 +43,11 @@ public abstract class AbstractOdometrie implements IOdometrie, InitializingBean 
         initOdometrie(0, 0, 0);
     }
 
-    /**
-     * Inits the odometrie.
-     *
-     * @param x     the x
-     * @param y     the y
-     * @param angle the angle
-     */
     @Override
     public void initOdometrie(final double x, final double y, final int angle) {
         position.updatePosition(x, y, angle);
     }
 
-    /**
-     * Process.
-     */
     protected abstract void process();
 
     /**

@@ -17,21 +17,11 @@ import java.util.Map;
 @Slf4j
 public class SD21Servos implements InitializingBean {
 
-    /**
-     * The Constant VERSION_REGISTER.
-     */
-    public static final byte VERSION_REGISTER = 0x40;
-
+    private static final byte VERSION_REGISTER = 0x40;
     private static final int NB_SERVOS = 21;
 
-    /**
-     * The address.
-     */
     protected String deviceName;
 
-    /**
-     * The i2c manager.
-     */
     @Autowired
     private II2CManager i2cManager;
 

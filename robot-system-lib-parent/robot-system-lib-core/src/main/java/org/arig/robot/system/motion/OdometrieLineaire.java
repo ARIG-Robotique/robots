@@ -12,27 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class OdometrieLineaire extends AbstractOdometrie {
 
-    /**
-     * The encoders.
-     */
     @Autowired
     private Abstract2WheelsEncoders encoders;
 
-    /**
-     * The conv.
-     */
     @Autowired
     private ConvertionRobotUnit conv;
 
-    /**
-     * Instantiates a new linear odometrie.
-     */
     public OdometrieLineaire() {
         super(TypeOdometrie.LINEAIRE);
     }
 
     /**
-     * Ce calcul est effectué avec le postulat que durant le labs de temps écoulé le robot a roulé droit (pas en
+     * Ce calcul est effectué avec le postulat que durant le laps de temps ecoulé le robot a roulé droit (pas en
      * courbe). On parle donc d'approximation linéaire.
      */
     @Override

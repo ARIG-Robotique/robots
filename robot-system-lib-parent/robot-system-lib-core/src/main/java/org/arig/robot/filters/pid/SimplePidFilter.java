@@ -13,46 +13,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SimplePidFilter extends AbstractPidFilter {
 
-    /**
-     * The kp.
-     */
     private double kp;
-
-    /**
-     * The ki.
-     */
     private double ki;
-
-    /**
-     * The kd.
-     */
     private double kd;
 
     @Getter
     @Setter(AccessLevel.PRIVATE)
     private double setPoint, input;
 
-    /**
-     * The error sum.
-     */
     @Getter
     private double errorSum = 0;
-
-    /**
-     * The output
-     */
     @Getter
     private double output = 0;
-
-    /**
-     * The last error.
-     */
     private double lastError = 0;
 
 
-    /**
-     * Instantiates a new arig pid.
-     */
     public SimplePidFilter(String name) {
         super(name);
     }

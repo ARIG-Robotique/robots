@@ -14,9 +14,6 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class Point3D extends Point {
 
-    /**
-     * The z.
-     */
     private double z;
 
     public Point3D(double x, double y, double z) {
@@ -25,11 +22,6 @@ public class Point3D extends Point {
 
     }
 
-    /**
-     * Adds the delta z.
-     *
-     * @param dZ the d z
-     */
     public void addDeltaZ(final double dZ) {
         z += dZ;
     }

@@ -11,20 +11,11 @@ import org.arig.robot.system.pathfinding.AbstractPathFinder;
 import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 import org.arig.robot.utils.ImageUtils;
 import org.springframework.util.Assert;
-import pathfinder.AshCrowFlight;
-import pathfinder.AshManhattan;
-import pathfinder.Graph;
-import pathfinder.GraphNode;
-import pathfinder.GraphSearch_Astar;
-import pathfinder.GraphSearch_BFS;
-import pathfinder.GraphSearch_DFS;
-import pathfinder.GraphSearch_Dijkstra;
-import pathfinder.IGraphSearch;
+import pathfinder.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -41,9 +32,6 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
     @Getter(AccessLevel.PROTECTED)
     private PathFinderAlgorithm algorithm;
 
-    /**
-     * The PathFinder
-     */
     private IGraphSearch pf = null;
 
     /**
@@ -51,15 +39,9 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
      */
     private double aStarCostFactor = 1.0;
 
-    /**
-     * The mainGraph
-     */
     private Graph mainGraph;
     private BufferedImage mainImage;
 
-    /**
-     * The obstacleGraph
-     */
     private Graph obstacleGraph;
     private BufferedImage obstacleImage;
 

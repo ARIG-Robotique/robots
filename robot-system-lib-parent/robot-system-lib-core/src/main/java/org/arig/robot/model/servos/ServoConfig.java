@@ -1,12 +1,10 @@
 package org.arig.robot.model.servos;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.arig.robot.constants.IConstantesConfig;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Comparator;

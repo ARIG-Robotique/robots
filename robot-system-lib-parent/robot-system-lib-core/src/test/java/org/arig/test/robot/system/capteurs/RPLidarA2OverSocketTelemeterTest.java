@@ -54,14 +54,14 @@ public class RPLidarA2OverSocketTelemeterTest {
     public void testHealthInfo() {
         HealthInfos infos = rpLidar.healthInfo();
         Assert.assertNotNull(infos);
-        Assert.assertEquals(HealthState.OK, infos.getLibelle());
+        Assert.assertEquals(HealthState.OK, infos.getState());
     }
 
     @Test
     public void testGrabData() {
         HealthInfos health = rpLidar.healthInfo();
-        if (health.getLibelle() != HealthState.OK) {
-            Assert.fail("Erreur de santé du RPLidar " + health.getLibelle());
+        if (health.getState() != HealthState.OK) {
+            Assert.fail("Erreur de santé du RPLidar " + health.getState());
         }
 
         rpLidar.startScan();

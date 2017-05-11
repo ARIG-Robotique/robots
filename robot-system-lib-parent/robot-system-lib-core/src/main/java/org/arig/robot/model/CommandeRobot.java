@@ -39,14 +39,8 @@ public class CommandeRobot {
      */
     private ConsigneAsservissementPolaire consigne;
 
-    /**
-     * The frein.
-     */
     private boolean frein;
 
-    /**
-     * The type.
-     */
     @Getter(AccessLevel.NONE)
     private final List<TypeConsigne> types = new ArrayList<>();
 
@@ -62,11 +56,6 @@ public class CommandeRobot {
         setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
     }
 
-    /**
-     * Sets the types.
-     *
-     * @param values the new types
-     */
     public void setTypes(final TypeConsigne... values) {
         types.clear();
         for (final TypeConsigne tc : values) {
@@ -74,24 +63,10 @@ public class CommandeRobot {
         }
     }
 
-    /**
-     * Checks if is type.
-     *
-     * @param t the type
-     *
-     * @return true, if is type
-     */
     public boolean isType(final TypeConsigne t) {
         return types.contains(t);
     }
 
-    /**
-     * Checks if is all types.
-     *
-     * @param types the types
-     *
-     * @return true, if is all types
-     */
     public boolean isAllTypes(final TypeConsigne... types) {
         boolean result = true;
         for (final TypeConsigne t : types) {

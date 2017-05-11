@@ -89,7 +89,14 @@ public class RaspiI2CManager extends AbstractI2CManager<I2CDevice> {
     @Override
     public byte getData(String deviceName) throws I2CException {
         try {
-            return (byte) getDevice(deviceName).read();
+            int res = getDevice(deviceName).read();
+            if (res >= 0) {
+                return (byte) (res & 0xFF);
+            }
+            String message = String.format("Erreur de lecture de la carte %s. Code erreur %d", deviceName, res);
+            log.error(message);
+            throw new I2CException(message);
+
         } catch (IOException e) {
             String message = String.format("Erreur de lecture de la carte %s : %s", deviceName, e.toString());
             log.error(message);
@@ -101,10 +108,13 @@ public class RaspiI2CManager extends AbstractI2CManager<I2CDevice> {
     public byte[] getDatas(String deviceName, int size) throws I2CException {
         try {
             byte [] result = new byte[size];
-            getDevice(deviceName).read(result, 0, size);
+            int res = getDevice(deviceName).read(result, 0, size);
+            if (log.isDebugEnabled()) {
+                log.debug("Nombre de byte lu : {}", res);
+            }
             return result;
         } catch (IOException e) {
-            log.error("Erreur de lecture de la carte " + deviceName + " : " + e.toString());
+            log.error("Erreur de lecture de la carte {} : {}", deviceName, e.toString());
             throw new I2CException("Erreur de lecture de la carte " + deviceName, e);
         }
     }

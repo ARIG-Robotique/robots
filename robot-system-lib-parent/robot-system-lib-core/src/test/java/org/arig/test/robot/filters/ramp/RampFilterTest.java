@@ -3,7 +3,6 @@ package org.arig.test.robot.filters.ramp;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.filters.ramp.IRampFilter;
-import org.arig.robot.filters.ramp.RampFilter;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.junit.After;
 import org.junit.Assert;
