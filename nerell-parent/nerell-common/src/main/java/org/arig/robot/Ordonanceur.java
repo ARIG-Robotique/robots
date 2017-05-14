@@ -10,6 +10,7 @@ import org.arig.robot.exception.ObstacleFoundException;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
@@ -61,7 +62,7 @@ public class Ordonanceur {
     private IMonitoringWrapper monitoringWrapper;
 
     @Autowired
-    private ILidarTelemeter rplidar;
+    private ILidarTelemeter lidar;
 
     @Autowired
     @Qualifier("currentPosition")
@@ -86,6 +87,13 @@ public class Ordonanceur {
             log.error("Erreur lors du scan I2C", e);
             return;
         }
+
+        HealthInfos lidarHealth = lidar.healthInfo();
+        if (!lidarHealth.isOk()) {
+            log.error("Status du Lidar KO : {} - {} - Code {}", lidarHealth.getState(), lidarHealth.getValue(), lidarHealth.getErrorCode());
+            return;
+        }
+        lidar.startScan();
 
         if (!ioService.auOk()) {
             log.warn("L'arrêt d'urgence est coupé.");
@@ -112,6 +120,7 @@ public class Ordonanceur {
         ioService.colorLedRGBOk();
         log.info("Alimentation puissance OK (12V : {} ; 8V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk(), ioService.alimPuissance5VOk());
 
+        robotStatus.enableAvoidance();
         if (!ioService.tirette()) {
             log.warn("La tirette n'est pas la. Phase de préparation Nerell");
             while(!ioService.tirette()) {
@@ -183,8 +192,8 @@ public class Ordonanceur {
         ioService.colorLedRGBOk();
 
         // On arrette le lidar
-        rplidar.stopScan();
-        rplidar.end();
+        lidar.stopScan();
+        lidar.end();
 
         // On envoi les datas collecté
         monitoringWrapper.save();

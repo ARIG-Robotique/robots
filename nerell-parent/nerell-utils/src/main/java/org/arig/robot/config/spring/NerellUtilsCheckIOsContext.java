@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Import;
  * @author gdepuille on 11/04/17.
  */
 @Configuration
-@Import({ NerellI2CContext.class })
+@Import({ NerellI2CContext.class, NerellAvoidingContext.class })
 public class NerellUtilsCheckIOsContext {
 
     @Bean

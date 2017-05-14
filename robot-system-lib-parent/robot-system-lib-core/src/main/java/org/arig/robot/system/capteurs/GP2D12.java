@@ -23,8 +23,8 @@ import java.util.concurrent.Future;
 public class GP2D12 {
 
     public static final int INVALID_VALUE = -1;
-    private static final short MAX_RAW_VALUE = 300; // Valeur sur 10bits (env 18 cm)
-    private static final short MIN_RAW_VALUE = 90; // Valeurs sur 10 bits (env 72 cm)
+    private static final short MAX_RAW_VALUE = 300; // Valeur sur 10 bits (env 18 cm)
+    private static final short MIN_RAW_VALUE = 90;  // Valeur sur 10 bits (env 72 cm)
 
     @Autowired
     private I2CAdcAnalogInput analogReader;
@@ -58,11 +58,13 @@ public class GP2D12 {
         result.setRaw10BitValue(INVALID_VALUE);
         result.setCmValue(INVALID_VALUE);
         try {
-            int read = analogReader.readCapteurValue(capteurId);
-            if (read >= MIN_RAW_VALUE && read <= MAX_RAW_VALUE) {
-                int avgRaw12Bit = this.avgRaw12Bit.average(read);
-                int avgRaw10Bit = this.avgRaw10Bit.average(convertTo10BitValue(avgRaw12Bit));
-                double avgCm = this.avgCm.average(convertToCmFrom10Bit(avgRaw10Bit));
+            int raw12bit = analogReader.readCapteurValue(capteurId);
+            int raw10bit = convertTo10BitValue(raw12bit);
+            double rawCm = convertToCmFrom10Bit(raw10bit);
+            if (raw10bit >= MIN_RAW_VALUE && raw10bit <= MAX_RAW_VALUE) {
+                int avgRaw12Bit = this.avgRaw12Bit.average(raw12bit);
+                int avgRaw10Bit = this.avgRaw10Bit.average(raw10bit);
+                double avgCm = this.avgCm.average(rawCm);
                 result.setRaw12BitValue(avgRaw12Bit);
                 result.setRaw10BitValue(avgRaw10Bit);
                 result.setCmValue(avgCm);

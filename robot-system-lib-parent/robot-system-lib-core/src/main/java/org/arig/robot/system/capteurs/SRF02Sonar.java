@@ -45,7 +45,7 @@ public class SRF02Sonar {
     private static final byte ADD_CHANGE_THIRD_COMMAND = (byte) 0xA5;
 
     public static final int INVALID_VALUE = -1;
-    private static final int MAX_RAW_VALUE = 100; // A plus de 1m avec l'US, pas grand interet
+    private static final int MAX_RAW_VALUE = 70; // A plus de 70cm avec l'US, pas grand interet
     private static final int MIN_RAW_VALUE = 18; // Normalement le min c'est 15cm, mais bon.
     private static final int READ_TIMEOUT_VALID = 70;
 

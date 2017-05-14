@@ -28,7 +28,6 @@ public class RobotNerell {
         jetty.config();
         log.info("Robot principal configuré.");
 
-        log.info("Demarrage de l'ordonancement");
         Ordonanceur.getInstance().run();
 
         log.info("Fin du programme");

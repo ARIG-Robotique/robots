@@ -81,8 +81,8 @@ public class TableUtils {
         ptObstacle.setY(distanceMm * Math.sin(theta));
 
         // 2. Translation du point de la position du robot
-        ptObstacle.addDeltaX(conv.pulseToMm(position.getPt().getX() + offsetXRobotMm));
-        ptObstacle.addDeltaY(conv.pulseToMm(position.getPt().getY() + offsetYRobotMm));
+        ptObstacle.addDeltaX(conv.pulseToMm(position.getPt().getX()) + offsetXRobotMm);
+        ptObstacle.addDeltaY(conv.pulseToMm(position.getPt().getY()) + offsetYRobotMm);
 
         return ptObstacle;
     }

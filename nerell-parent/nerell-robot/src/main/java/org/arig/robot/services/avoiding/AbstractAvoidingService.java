@@ -8,7 +8,6 @@ import org.arig.robot.filters.values.DoubleValueAverage;
 import org.arig.robot.filters.values.IntegerValueAverage;
 import org.arig.robot.model.MonitorPoint;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.avoiding.IAvoidingService;
@@ -111,11 +110,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
         Future<Integer> fUsDroit = usDroit.readValue();
         Future<Integer> fUsLatDroit = usLatDroit.readValue();
 
-        HealthInfos lidarHealth = lidar.healthInfo();
-        ScanInfos lidarScan = null;
-        if (lidarHealth.isOk()) {
-            lidarScan = lidar.grabDatas();
-        }
+        ScanInfos lidarScan = lidar.grabDatas();
 
         // TODO : Ajouter un delai pour ne pas rester bloqué.
         while(!fUsLatGauche.isDone() && !fUsGauche.isDone() && !fUsDroit.isDone() && !fUsLatDroit.isDone()
@@ -137,7 +132,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
                 avgGpGauche = calcAvgGpGauche.average(rawGpGauche);
                 Point pt = tableUtils.getPointFromAngle(avgGpGauche * 10, 0);
                 if (tableUtils.isInTable(pt)) {
-                    detectedPoints.add(pt);
+                    //detectedPoints.add(pt);
                 }
             }
         } catch (InterruptedException | ExecutionException | NullPointerException e) {
@@ -161,7 +156,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
                 avgGpDroit = calcAvgGpDroit.average(rawGpDroit);
                 Point pt = tableUtils.getPointFromAngle(avgGpDroit * 10, 0);
                 if (tableUtils.isInTable(pt)) {
-                    detectedPoints.add(pt);
+                    //detectedPoints.add(pt);
                 }
             }
         } catch (InterruptedException | ExecutionException | NullPointerException e) {
@@ -217,26 +212,6 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             log.warn("Erreur de récupération US lat Droit", e);
         }
 
-        // Construction du monitoring
-        MonitorPoint serie = new MonitorPoint()
-            .tableName("avoiding")
-            .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-            .addField("rawGpGauche", rawGpGauche)
-            .addField("avgGpGauche", avgGpGauche)
-            .addField("rawGpCentre", rawGpCentre)
-            .addField("avgGpCentre", avgGpCentre)
-            .addField("rawGpDroit", rawGpDroit)
-            .addField("avgGpDroit", avgGpDroit)
-            .addField("rawUsLatGauche", rawUsLatGauche)
-            .addField("avgUsLatGauche", avgUsLatGauche)
-            .addField("rawUsGauche", rawUsGauche)
-            .addField("avgUsGauche", avgUsGauche)
-            .addField("rawUsDroit", rawUsDroit)
-            .addField("avgUsDroit", avgUsDroit)
-            .addField("rawUsLatDroit", rawUsLatDroit)
-            .addField("avgUsLatDroit", avgUsLatDroit);
-        monitoringWrapper.addPoint(serie);
-
         if (lidarScan != null) {
             detectedPoints.addAll(
                 lidarScan.getScan().parallelStream()
@@ -245,6 +220,27 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
                     .collect(Collectors.toList())
             );
         }
+
+        // Construction du monitoring
+        MonitorPoint serie = new MonitorPoint()
+                .tableName("avoiding")
+                .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                .addField("nbPointDetecte", detectedPoints.size())
+                .addField("rawGpGauche", rawGpGauche)
+                .addField("avgGpGauche", avgGpGauche)
+                .addField("rawGpCentre", rawGpCentre)
+                .addField("avgGpCentre", avgGpCentre)
+                .addField("rawGpDroit", rawGpDroit)
+                .addField("avgGpDroit", avgGpDroit)
+                .addField("rawUsLatGauche", rawUsLatGauche)
+                .addField("avgUsLatGauche", avgUsLatGauche)
+                .addField("rawUsGauche", rawUsGauche)
+                .addField("avgUsGauche", avgUsGauche)
+                .addField("rawUsDroit", rawUsDroit)
+                .addField("avgUsDroit", avgUsDroit)
+                .addField("rawUsLatDroit", rawUsLatDroit)
+                .addField("avgUsLatDroit", avgUsLatDroit);
+        monitoringWrapper.addPoint(serie);
 
         // 3. Si inclus, on stop et on met a jour le path
         processAvoiding();
