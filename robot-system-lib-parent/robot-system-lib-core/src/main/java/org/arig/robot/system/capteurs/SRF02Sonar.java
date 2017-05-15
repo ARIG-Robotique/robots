@@ -139,7 +139,8 @@ public class SRF02Sonar {
             if (res < MIN_RAW_VALUE || res > MAX_RAW_VALUE) {
                 return new AsyncResult<>(INVALID_VALUE);
             } else {
-                return new AsyncResult<>(avg.average(res));
+                // De partout on parle en pulse ou en mm
+                return new AsyncResult<>(avg.average(res * 10));
             }
         } catch (I2CException | InterruptedException e) {
             log.error("Erreur de lecture du Sonar {} : {}", deviceName, e.toString());

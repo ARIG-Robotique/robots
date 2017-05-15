@@ -17,6 +17,8 @@ import java.util.List;
 @Slf4j
 public class CompleteAvoidingService extends AbstractAvoidingService {
 
+    private static final int DISTANCE_CENTRE_OBSTACLE = 500;
+
     @Autowired
     private TrajectoryManager trajectoryManager;
 
@@ -25,18 +27,18 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
 
     @Override
     protected void processAvoiding() {
-        if (CollectionUtils.isEmpty(getDetectedPoints())) {
+        if (CollectionUtils.isEmpty(getDetectedPointsMmCapteurs())) {
             return;
         }
 
         // 3.1 Stop du robot
-        trajectoryManager.setObstacleFound(true);
+        //trajectoryManager.setObstacleFound(true);
 
         List<Polygon> polygons = new ArrayList<>();
-        for (Point pt : getDetectedPoints()) {
+        for (Point pt : getDetectedPointsMmCapteurs()) {
             // 3.2 Définition de l'obstacle (autour de nous)
-            int r1 = (int) (Math.cos(Math.toRadians(22.5)) * getDistanceCentreObstacle() / 10);
-            int r2 = (int) (Math.sin(Math.toRadians(22.5)) * getDistanceCentreObstacle() / 10);
+            int r1 = (int) (Math.cos(Math.toRadians(22.5)) * DISTANCE_CENTRE_OBSTACLE / 10);
+            int r2 = (int) (Math.sin(Math.toRadians(22.5)) * DISTANCE_CENTRE_OBSTACLE / 10);
 
             Polygon polygonObstacle = new Polygon();
             polygonObstacle.addPoint(r2, r1);

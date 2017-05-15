@@ -56,18 +56,18 @@ public class GP2D12 {
         final GP2D12Values result = new GP2D12Values();
         result.setRaw12BitValue(INVALID_VALUE);
         result.setRaw10BitValue(INVALID_VALUE);
-        result.setCmValue(INVALID_VALUE);
+        result.setMmValue(INVALID_VALUE);
         try {
             int raw12bit = analogReader.readCapteurValue(capteurId);
             int raw10bit = convertTo10BitValue(raw12bit);
-            double rawCm = convertToCmFrom10Bit(raw10bit);
+            double rawMm = convertToCmFrom10Bit(raw10bit) * 10;
             if (raw10bit >= MIN_RAW_VALUE && raw10bit <= MAX_RAW_VALUE) {
                 int avgRaw12Bit = this.avgRaw12Bit.average(raw12bit);
                 int avgRaw10Bit = this.avgRaw10Bit.average(raw10bit);
-                double avgCm = this.avgCm.average(rawCm);
+                double avgMm = this.avgCm.average(rawMm);
                 result.setRaw12BitValue(avgRaw12Bit);
                 result.setRaw10BitValue(avgRaw10Bit);
-                result.setCmValue(avgCm);
+                result.setMmValue(avgMm);
             }
         } catch (I2CException e) {
             log.error("Erreur de lecture du Sonar du GP2D {} : #{} - {}", name, capteurId, e.toString());
@@ -94,6 +94,6 @@ public class GP2D12 {
     public class GP2D12Values {
         private int raw12BitValue;
         private int raw10BitValue;
-        private double cmValue;
+        private double mmValue;
     }
 }
