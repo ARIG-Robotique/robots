@@ -1,21 +1,31 @@
 #!/bin/sh
-ssh $1 "mkdir -p /home/pi/$1/libs"
 
-if [ "$2" == "deps" ] ; then
-    echo "Déploiement dépendences ..."
-    ./gradlew clean copyDependencies
-    ssh $1 rm -vf /home/pi/$1/libs/*
-    scp ./$1-parent/$1-robot/build/dependencies/*.jar $1:/home/pi/$1/libs/
-    scp ./$1-parent/$1-utils/build/dependencies/*.jar $1:/home/pi/$1/libs/
+if [ -z $1 ] ; then
+    echo "Il faut préciser le nom du robot à déployé"
+    exit 1
 fi
+
+ROBOT_NAME=$1
+INSTALL_DIR=/home/pi/$ROBOT_NAME
+ssh $ROBOT_NAME "mkdir -p $INSTALL_DIR/libs"
+
+echo "Déploiement dépendences ..."
+./gradlew clean copyDependencies
+ssh $ROBOT_NAME rm -vf /home/pi/$ROBOT_NAME/libs/*
+scp ./$ROBOT_NAME-parent/$ROBOT_NAME-robot/build/dependencies/*.jar $ROBOT_NAME:$INSTALL_DIR/libs/
+scp ./$ROBOT_NAME-parent/$ROBOT_NAME-utils/build/dependencies/*.jar $ROBOT_NAME:$INSTALL_DIR/libs/
 
 echo "Compilation ..."
 ./gradlew assemble
 
 echo "Déploiement Applicatif ..."
-scp ./$1-parent/$1-robot/build/libs/$1-*-SNAPSHOT.jar $1:/home/pi/$1/
-scp -r ./$1-parent/$1-robot/src/main/scripts/* $1:/home/pi/$1/
+scp ./$ROBOT_NAME-parent/$ROBOT_NAME-robot/build/libs/$ROBOT_NAME-*-SNAPSHOT.jar $ROBOT_NAME:$INSTALL_DIR/
+scp -r ./$ROBOT_NAME-parent/$ROBOT_NAME-robot/src/main/scripts/* $ROBOT_NAME:$INSTALL_DIR/
+
+echo "Déploiement service ..."
+ssh $ROBOT_NAME sudo mv $INSTALL_DIR/$ROBOT_NAME.service /lib/systemd/system/
+ssh $ROBOT_NAME sudo systemctl daemon-reload
 
 echo "Déploiement Utils ..."
-scp ./$1-parent/$1-utils/build/libs/$1-*-SNAPSHOT.jar $1:/home/pi/$1/
-scp -r ./$1-parent/$1-utils/src/main/scripts/* $1:/home/pi/$1/
+scp ./$ROBOT_NAME-parent/$ROBOT_NAME-utils/build/libs/$ROBOT_NAME-*-SNAPSHOT.jar $ROBOT_NAME:$INSTALL_DIR/
+scp -r ./$ROBOT_NAME-parent/$ROBOT_NAME-utils/src/main/scripts/*.sh $ROBOT_NAME:$INSTALL_DIR/

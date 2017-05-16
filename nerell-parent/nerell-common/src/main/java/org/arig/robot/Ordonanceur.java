@@ -88,18 +88,19 @@ public class Ordonanceur {
             return;
         }
 
-        HealthInfos lidarHealth = lidar.healthInfo();
-        if (!lidarHealth.isOk()) {
-            log.error("Status du Lidar KO : {} - {} - Code {}", lidarHealth.getState(), lidarHealth.getValue(), lidarHealth.getErrorCode());
-            return;
-        }
-        lidar.startScan();
-
         if (!ioService.auOk()) {
             log.warn("L'arrêt d'urgence est coupé.");
             ioService.colorLedRGBKo();
             while(!ioService.auOk());
         }
+
+        HealthInfos lidarHealth = lidar.healthInfo();
+        if (!lidarHealth.isOk()) {
+            log.error("Status du Lidar KO : {} - {} - Code {}", lidarHealth.getState(), lidarHealth.getValue(), lidarHealth.getErrorCode());
+            ioService.colorLedRGBKo();
+            return;
+        }
+
         ioService.colorLedRGBOk();
         log.info("Arrêt d'urgence OK");
 
@@ -120,7 +121,9 @@ public class Ordonanceur {
         ioService.colorLedRGBOk();
         log.info("Alimentation puissance OK (12V : {} ; 8V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk(), ioService.alimPuissance5VOk());
 
-        robotStatus.enableAvoidance();
+        log.info("Démarrage du lidar");
+        lidar.startScan();
+
         if (!ioService.tirette()) {
             log.warn("La tirette n'est pas la. Phase de préparation Nerell");
             while(!ioService.tirette()) {
