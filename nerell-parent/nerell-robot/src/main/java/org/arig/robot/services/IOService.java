@@ -296,21 +296,21 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public void enableElectroVanne() {
-        outElectroVanne.high();
-    }
-
-    @Override
-    public void disableElectroVanne() {
         outElectroVanne.low();
     }
 
     @Override
+    public void disableElectroVanne() {
+        outElectroVanne.high();
+    }
+
+    @Override
     public void enablePompeAVide() {
-        outPompeAVide.high();
+        outPompeAVide.low();
     }
 
     @Override
     public void disablePompeAVide() {
-        outPompeAVide.low();
+        outPompeAVide.high();
     }
 }
