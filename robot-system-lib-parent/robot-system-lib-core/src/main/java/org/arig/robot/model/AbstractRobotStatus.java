@@ -5,8 +5,6 @@ import lombok.Data;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
-
 /**
  * @author gdepuille on 08/05/15.
  */
@@ -50,6 +48,4 @@ public abstract class AbstractRobotStatus {
     public void disableMatch() {
         matchEnabled = false;
     }
-
-    public abstract List<Point> echappementPointsCm();
 }

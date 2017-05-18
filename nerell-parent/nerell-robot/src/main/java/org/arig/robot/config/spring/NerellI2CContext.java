@@ -10,7 +10,6 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
-import org.arig.robot.system.capteurs.SRF02Sonar;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;

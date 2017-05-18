@@ -3,10 +3,12 @@ package org.arig.robot.web.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.exception.CollisionFoundException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.exception.ObstacleFoundException;
+import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
 import org.arig.robot.system.TrajectoryManager;
+import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -31,7 +33,13 @@ public class MouvementController {
     private Position position;
 
     @Autowired
+    private CommandeRobot cmdRobot;
+
+    @Autowired
     private ConvertionRobotUnit conv;
+
+    @Autowired
+    private IAvoidingService avoidingService;
 
     @Autowired
     private TrajectoryManager trajectoryManager;
@@ -42,48 +50,54 @@ public class MouvementController {
         pos.put("x", conv.pulseToMm(position.getPt().getX()));
         pos.put("y", conv.pulseToMm(position.getPt().getY()));
         pos.put("angle", conv.pulseToDeg(position.getAngle()));
+        pos.put("targetX", conv.pulseToMm(cmdRobot.getPosition().getPt().getX()));
+        pos.put("targetY", conv.pulseToMm(cmdRobot.getPosition().getPt().getY()));
+        pos.put("targetAngle", conv.pulseToDeg(cmdRobot.getPosition().getAngle()));
         pos.put("trajetAtteint", trajectoryManager.isTrajetAtteint());
         pos.put("trajetEnApproche", trajectoryManager.isTrajetEnApproche());
+        pos.put("typeAsserv", cmdRobot.typeAsserv());
+        //pos.put("pointsLidar", avoidingService.getDetectedPointsMmLidar());
+        //pos.put("pointsCapteurs", avoidingService.getDetectedPointsMmCapteurs());
         return pos;
     }
 
     @RequestMapping(value = "/path", method = RequestMethod.POST)
-    public void cheminVersPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws NoPathFoundException, ObstacleFoundException, AvoidingException {
+    public void cheminVersPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws NoPathFoundException, CollisionFoundException, AvoidingException {
         trajectoryManager.pathTo(x, y);
     }
 
     @RequestMapping(value = "/position", method = RequestMethod.POST)
-    public void allerEnPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws ObstacleFoundException {
+    public void allerEnPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws CollisionFoundException {
         trajectoryManager.gotoPointMM(x, y, true);
     }
 
     @RequestMapping(value = "/face", method = RequestMethod.POST)
-    public void alignFace(@RequestParam("x") final double x, @RequestParam("y") final double y) throws ObstacleFoundException {
+    public void alignFace(@RequestParam("x") final double x, @RequestParam("y") final double y) throws CollisionFoundException {
         trajectoryManager.alignFrontTo(x, y);
     }
 
     @RequestMapping(value = "/dos", method = RequestMethod.POST)
-    public void alignDos(@RequestParam("x") final double x, @RequestParam("y") final double y) throws ObstacleFoundException {
+    public void alignDos(@RequestParam("x") final double x, @RequestParam("y") final double y) throws CollisionFoundException {
         trajectoryManager.alignBackTo(x, y);
     }
 
     @RequestMapping(value = "/orientation", method = RequestMethod.POST)
-    public void orientation(@RequestParam("angle") final double angle) throws ObstacleFoundException {
+    public void orientation(@RequestParam("angle") final double angle) throws CollisionFoundException {
         trajectoryManager.gotoOrientationDeg(angle);
     }
 
     @RequestMapping(value = "/tourne", method = RequestMethod.POST)
-    public void tourne(@RequestParam("angle") final double angle) throws ObstacleFoundException {
+    public void tourne(@RequestParam("angle") final double angle) throws CollisionFoundException {
         trajectoryManager.tourneDeg(angle);
     }
 
     @RequestMapping(value = "/avance", method = RequestMethod.POST)
-    public void avance(@RequestParam("distance") final double distance) throws ObstacleFoundException {
+    public void avance(@RequestParam("distance") final double distance) throws CollisionFoundException {
         trajectoryManager.avanceMM(distance);
     }
 
     @RequestMapping(value = "/recule", method = RequestMethod.POST)
-    public void recule(@RequestParam("distance") final double distance) throws ObstacleFoundException {
+    public void recule(@RequestParam("distance") final double distance) throws CollisionFoundException {
         trajectoryManager.reculeMM(distance);
     }
 }

@@ -79,8 +79,8 @@ public interface IPathFinder {
     /**
      * Ajout d'un obstacle sur la map.
      *
-     * @param obstacles Les polygones représentant les obstacles détecté.
+     * @param obstacles Une forme représentant les obstacles détecté.
      */
-    void addObstacles(Polygon... obstacles);
+    void addObstacles(Shape... obstacles);
 
 }

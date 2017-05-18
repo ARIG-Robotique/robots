@@ -70,7 +70,7 @@ public class GP2D12 {
                 result.setMmValue(avgMm);
             }
         } catch (I2CException e) {
-            log.error("Erreur de lecture du Sonar du GP2D {} : #{} - {}", name, capteurId, e.toString());
+            log.error("Erreur de lecture du GP2D {} : #{} - {}", name, capteurId, e.toString());
         }
 
         return new AsyncResult<>(result);

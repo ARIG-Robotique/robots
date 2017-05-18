@@ -5,8 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.exception.CollisionFoundException;
 import org.arig.robot.exception.I2CException;
-import org.arig.robot.exception.ObstacleFoundException;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
@@ -76,7 +76,7 @@ public class Ordonanceur {
         return INSTANCE;
     }
 
-    public void run() throws ObstacleFoundException, IOException {
+    public void run() throws CollisionFoundException, IOException {
         log.info("Demarrage de l'ordonancement du match ...");
 
         try {

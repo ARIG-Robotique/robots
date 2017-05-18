@@ -79,8 +79,9 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
         try {
             i2cManager.sendData(deviceName, 2);
         } catch (I2CException e) {
-            log.error("Impossible de lire la valeur codeur pour la carte " + deviceName);
-            throw new I2CException("Impossible de lire la valeur codeur pour la carte " + deviceName, e);
+            String message = "Impossible de lire la valeur codeur pour la carte " + deviceName;
+            log.error(message);
+            throw new I2CException(message, e);
         }
 
         final byte[] datas = i2cManager.getDatas(deviceName, 2);

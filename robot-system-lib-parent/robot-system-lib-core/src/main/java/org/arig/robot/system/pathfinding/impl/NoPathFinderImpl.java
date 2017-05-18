@@ -17,7 +17,7 @@ import java.io.InputStream;
 public class NoPathFinderImpl extends AbstractPathFinder {
 
     @Override
-    public void addObstacles(Polygon... obstacles) {
+    public void addObstacles(Shape... obstacles) {
     }
 
     @Override

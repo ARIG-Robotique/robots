@@ -138,7 +138,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
     }
 
     @Override
-    public void addObstacles(Polygon... obstacles) {
+    public void addObstacles(Shape... obstacles) {
         log.info("Ajout de {} obstacles", obstacles.length);
 
         // Définition de la durée de validité de cet obstacle.
@@ -152,8 +152,8 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
 
         // On ajoute l'obstacle
         g.setColor(Color.BLACK);
-        for (Polygon p : obstacles) {
-            g.fillPolygon(p);
+        for (Shape p : obstacles) {
+            g.fill(p);
         }
 
         // On termine le machin

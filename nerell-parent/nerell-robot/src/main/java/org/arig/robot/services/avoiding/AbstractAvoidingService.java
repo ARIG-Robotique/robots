@@ -6,12 +6,14 @@ import org.arig.robot.filters.values.DoubleValueAverage;
 import org.arig.robot.filters.values.IntegerValueAverage;
 import org.arig.robot.model.MonitorPoint;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.Position;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.GP2D12;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.SRF02Sonar;
+import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +32,21 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class AbstractAvoidingService implements IAvoidingService, InitializingBean {
 
+    protected static final int SEUIL_DISTANCE_CAPTEURS_MM = 200;
+    protected static final int SEUIL_DISTANCE_LIDAR_MM = 400;
+
     @Autowired
     private IMonitoringWrapper monitoringWrapper;
 
     @Autowired
     private TableUtils tableUtils;
+
+    @Autowired
+    private ConvertionRobotUnit conv;
+
+    @Autowired
+    @Qualifier("currentPosition")
+    private Position position;
 
     @Autowired
     @Qualifier("gp2dGauche")
@@ -242,5 +254,37 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
 
         // 3. Si inclus, on stop et on met a jour le path
         processAvoiding();
+    }
+
+    protected boolean hasProximiteCapteurs() {
+        return getDetectedPointsMmCapteurs().parallelStream()
+                .anyMatch(pt -> {
+                    long dX = (long) (pt.getX() - conv.pulseToMm(position.getPt().getX()));
+                    long dY = (long) (pt.getY() - conv.pulseToMm(position.getPt().getY()));
+                    double distanceMm = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
+                    return distanceMm < SEUIL_DISTANCE_CAPTEURS_MM;
+                });
+    }
+
+    protected boolean hasProximiteLidar() {
+        return getDetectedPointsMmCapteurs().parallelStream()
+                .anyMatch(pt -> {
+                    long dX = (long) (pt.getX() - conv.pulseToMm(position.getPt().getX()));
+                    long dY = (long) (pt.getY() - conv.pulseToMm(position.getPt().getY()));
+                    double distanceMm = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
+                    if (distanceMm > SEUIL_DISTANCE_LIDAR_MM) {
+                        return false;
+                    }
+
+                    double alpha = Math.toDegrees(Math.atan2(Math.toRadians(dY), Math.toRadians(dX)));
+                    double dA = alpha - conv.pulseToDeg(position.getAngle());
+                    if (dA > 180) {
+                        dA -= 360;
+                    } else if (dA < -180) {
+                        dA += 360;
+                    }
+
+                    return dA > -45 && dA < 45;
+                });
     }
 }

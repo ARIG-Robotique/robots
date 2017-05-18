@@ -7,7 +7,6 @@ import org.apache.commons.lang3.time.StopWatch;
 
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.List;
 
 @Slf4j
 @Data
@@ -15,22 +14,6 @@ import java.util.List;
 public class RobotStatus extends AbstractRobotStatus {
 
     private Team team = Team.UNKNOWN;
-
-    private static List<Point> echappementJaune = new LinkedList<>();
-    private static List<Point> echappementBleu = new LinkedList<>();
-    static {
-        echappementJaune.add(new Point(110, 80));
-        echappementJaune.add(new Point(160, 70));
-        echappementJaune.add(new Point(130, 150));
-        for (Point p : echappementJaune) {
-            echappementBleu.add(new Point(p.getX(), 300 - p.getY()));
-        }
-    }
-
-    @Override
-    public List<Point> echappementPointsCm() {
-        return team == Team.JAUNE ? echappementJaune : echappementBleu;
-    }
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
