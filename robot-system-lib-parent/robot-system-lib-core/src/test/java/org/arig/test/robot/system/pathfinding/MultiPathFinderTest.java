@@ -1,5 +1,6 @@
 package org.arig.test.robot.system.pathfinding;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Chemin;
@@ -32,6 +33,8 @@ public class MultiPathFinderTest {
     @BeforeClass
     public static void initClass() {
         pf = new MultiPathFinderImpl();
+        pf.setMaxDistanceArrivee(1);
+        pf.setMaxDistanceDepart(29);
         pf.setNbTileX(40);
         pf.setNbTileY(40);
         pf.setAllowDiagonal(true);
@@ -47,14 +50,12 @@ public class MultiPathFinderTest {
     }
 
     @Test
+    @SneakyThrows
     public void testStartNodeDoesntExist() {
         pf.setAlgorithm(PathFinderAlgorithm.A_STAR_EUCLIDIAN);
-        try {
-            pf.findPath(new Point(5, 5), to);
-            Assert.fail();
-        } catch (NoPathFoundException npfe) {
-            Assert.assertEquals(NoPathFoundException.ErrorType.START_NODE_DOES_NOT_EXIST, npfe.getErrorType());
-        }
+        Chemin c = pf.findPath(new Point(5, 5), to);
+        Assert.assertNotNull(c);
+        Assert.assertTrue(c.hasNext());
     }
 
     @Test

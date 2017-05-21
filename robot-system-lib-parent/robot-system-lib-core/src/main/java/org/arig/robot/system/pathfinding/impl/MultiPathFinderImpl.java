@@ -2,6 +2,7 @@ package org.arig.robot.system.pathfinding.impl;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.exception.NoPathFoundException;
@@ -31,6 +32,12 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
 
     @Getter(AccessLevel.PROTECTED)
     private PathFinderAlgorithm algorithm;
+
+    @Setter
+    private double maxDistanceDepart = 1.0;
+
+    @Setter
+    private double maxDistanceArrivee = 1.0;
 
     private IGraphSearch pf = null;
 
@@ -64,11 +71,6 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
 
     @Override
     public Chemin findPath(Point from, Point to) throws NoPathFoundException {
-        return findPath(from, to, 1.0);
-    }
-
-    @Override
-    public Chemin findPath(Point from, Point to, double maxDistance) throws NoPathFoundException {
         Assert.notNull(getCurrentGraph(), "Le graph de la carte doit être initialisé");
 
         if (pf == null) {
@@ -82,14 +84,13 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         sw.start();
 
         GraphNode startNode, endNode;
-        // TODO : Supprimer ce cas d'erreur par une detection du noeud valide le plus proche
         // Choisir dans le quadrant vers la destination pour eviter de reculer.
-        if ((startNode = getCurrentGraph().getNodeAt(from.getX(), from.getY(), 0, maxDistance)) == null) {
+        if ((startNode = getCurrentGraph().getNodeAt(from.getX(), from.getY(), 0, maxDistanceDepart)) == null) {
             log.error("Impossible de trouver le noeud de départ");
             throw new NoPathFoundException(NoPathFoundException.ErrorType.START_NODE_DOES_NOT_EXIST);
         }
-        if ((endNode = getCurrentGraph().getNodeAt(to.getX(), to.getY(), 0, maxDistance)) == null) {
-            log.error("Impossible de trouver le noeud d'arrivé");
+        if ((endNode = getCurrentGraph().getNodeAt(to.getX(), to.getY(), 0, maxDistanceArrivee)) == null) {
+            log.error("Impossible de trouver le noeud d'arrivée");
             throw new NoPathFoundException(NoPathFoundException.ErrorType.END_NODE_DOES_NOT_EXIST);
         }
         sw.split();

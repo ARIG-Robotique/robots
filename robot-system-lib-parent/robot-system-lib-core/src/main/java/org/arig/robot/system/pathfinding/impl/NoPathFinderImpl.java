@@ -22,11 +22,6 @@ public class NoPathFinderImpl extends AbstractPathFinder {
 
     @Override
     public Chemin findPath(Point from, Point to) throws NoPathFoundException {
-        return findPath(from, to, 0.0f);
-    }
-
-    @Override
-    public Chemin findPath(Point from, Point to, double maxDistance) throws NoPathFoundException {
         Chemin c = new Chemin();
         c.addPoint(to);
         return c;

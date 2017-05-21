@@ -24,17 +24,6 @@ public interface IPathFinder {
     Chemin findPath(Point from, Point to) throws NoPathFoundException;
 
     /**
-     * Méthode pour réaliser une detection de chemin a emprunter.
-     *
-     * @param from        Point d'origine
-     * @param to          Point a atteindre
-     * @param maxDistance Distance max pour trouver un noeud.
-     *
-     * @return Le chemin a emprunter pour atteindre la cible en evitant les obtacles.
-     */
-    Chemin findPath(Point from, Point to, double maxDistance) throws NoPathFoundException;
-
-    /**
      * Nombre de tuiles sur l'axe X
      *
      * @param nbTileX nombre de tuile sur l'axe X pour constuire le maillage

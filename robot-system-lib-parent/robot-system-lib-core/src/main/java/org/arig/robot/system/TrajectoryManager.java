@@ -326,7 +326,10 @@ public class TrajectoryManager implements InitializingBean {
         // Toujours activer l'évittement en Path
         rs.enableAvoidance();
         do {
-            Point ptFrom = new Point(conv.pulseToMm(currentPosition.getPt().getX()) / 10, conv.pulseToMm(currentPosition.getPt().getY()) / 10);
+            Point ptFrom = new Point(
+                    conv.pulseToMm(currentPosition.getPt().getX()) / 10,
+                    conv.pulseToMm(currentPosition.getPt().getY()) / 10
+            );
             Point ptTo = new Point(x / 10, y / 10);
             try {
                 log.info("Demande de chemin vers X = {}mm ; Y = {}mm", x, y);

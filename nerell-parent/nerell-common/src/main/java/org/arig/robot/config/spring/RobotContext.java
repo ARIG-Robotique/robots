@@ -127,6 +127,8 @@ public class RobotContext {
     @Bean
     public IPathFinder pathFinder() {
         MultiPathFinderImpl pf = new MultiPathFinderImpl();
+        pf.setMaxDistanceDepart(36.0);
+        pf.setMaxDistanceArrivee(1.0);
         pf.setAllowDiagonal(true);
         pf.setAlgorithm(IConstantesNerellConfig.pathFindingAlgo);
         pf.setNbTileX(300);
