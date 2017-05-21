@@ -57,8 +57,9 @@ public class BalladeSurTableTestAction implements IAction {
             mv.pathTo(590, 1550);
             mv.pathTo(590, 260);*/
 
-            mv.pathTo(590, 1250);
-            mv.pathTo(590, 600);
+            mv.pathTo(1500, 700);
+            mv.pathTo(500, 1000);
+            mv.pathTo(2500, 700);
 
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());

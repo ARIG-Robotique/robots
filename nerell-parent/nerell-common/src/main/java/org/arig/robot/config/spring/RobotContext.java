@@ -129,8 +129,8 @@ public class RobotContext {
         MultiPathFinderImpl pf = new MultiPathFinderImpl();
         pf.setAllowDiagonal(true);
         pf.setAlgorithm(IConstantesNerellConfig.pathFindingAlgo);
-        pf.setNbTileX(118);
-        pf.setNbTileY(180);
+        pf.setNbTileX(300);
+        pf.setNbTileY(200);
 
         return pf;
     }

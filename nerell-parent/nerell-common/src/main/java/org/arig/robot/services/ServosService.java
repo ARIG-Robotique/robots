@@ -27,37 +27,75 @@ public class ServosService {
     /* Méthode pour le positionnement d'origine */
     /* **************************************** */
 
-    public void homes() {
+    public void cyclePreparation() {
         log.info("Servos en position initiale");
         servos.printVersion();
 
+        // Moteurs
+        servos.setPositionAndSpeed(IConstantesServos.MOTOR_DROIT, 1500, (byte) 0);
+        servos.setPositionAndSpeed(IConstantesServos.MOTOR_GAUCHE, 1500, (byte) 0);
+        servos.setPositionAndSpeed(IConstantesServos.MOTOR_EJECTION, 1500, (byte) 0);
+        servos.setPositionAndSpeed(IConstantesServos.MOTOR_ROULEAUX, 1500, (byte) 0);
+        servos.setSpeed(IConstantesServos.MOTOR_ASPIRATION, (byte) 0);
+        aspirationStop();
+
         ioService.enableAlim5VPuissance();
         while(!ioService.alimPuissance5VOk());
-
-        // Ordre précis car blocage mécanique dans certains cas
-        servos.setPositionAndSpeed(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_VERTICAL, IConstantesServos.SPEED_INC_BRAS);
-        servos.waitTime(IConstantesServos.WAIT_INC_BRAS);
-        servos.setPositionAndSpeed(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_DEPOSE_MAGASIN, IConstantesServos.SPEED_ROT_VENTOUSE);
-        servos.waitTime(IConstantesServos.WAIT_ROT_VENTOUSE);
-        servos.setPositionAndSpeed(IConstantesServos.PINCE_MODULE_CENTRE, IConstantesServos.PINCE_MODULE_CENTRE_FERME, IConstantesServos.SPEED_PINCE);
-        servos.waitTime(IConstantesServos.WAIT_PINCE);
-        servos.setPositionAndSpeed(IConstantesServos.PINCE_MODULE_DROIT, IConstantesServos.PINCE_MODULE_DROIT_FERME, IConstantesServos.SPEED_PINCE);
 
         // Tous en même temps
         servos.setPositionAndSpeed(IConstantesServos.PORTE_MAGASIN_DROIT, IConstantesServos.PORTE_DROITE_OUVERT, IConstantesServos.SPEED_PORTE_MAG);
         servos.setPositionAndSpeed(IConstantesServos.PORTE_MAGASIN_GAUCHE, IConstantesServos.PORTE_GAUCHE_OUVERT, IConstantesServos.SPEED_PORTE_MAG);
         servos.setPositionAndSpeed(IConstantesServos.BLOCAGE_ENTREE_MAG, IConstantesServos.BLOCAGE_OUVERT, IConstantesServos.SPEED_BLOCAGE_MAG);
         servos.setPositionAndSpeed(IConstantesServos.DEVIDOIR, IConstantesServos.DEVIDOIR_CHARGEMENT, IConstantesServos.SPEED_DEVIDOIR);
-        servos.setPositionAndSpeed(IConstantesServos.INCLINAISON_ASPIRATION, IConstantesServos.INCLINAISON_ASPI_FERME, IConstantesServos.SPEED_INC_ASPI);
+        servos.setPositionAndSpeed(IConstantesServos.INCLINAISON_ASPIRATION, IConstantesServos.INCLINAISON_ASPI_OUVERT, IConstantesServos.SPEED_INC_ASPI);
 
-        // Moteurs (hors propulsions)
-        servos.setPositionAndSpeed(IConstantesServos.MOTOR_EJECTION, 1500, (byte) 0);
-        servos.setPositionAndSpeed(IConstantesServos.MOTOR_ROULEAUX, 1500, (byte) 0);
-        servos.setPositionAndSpeed(IConstantesServos.MOTOR_ASPIRATION, 1500, (byte) 0);
+        // Ordre précis car blocage mécanique dans certains cas
+        servos.setPositionAndSpeed(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_DEPOSE_MAGASIN, IConstantesServos.SPEED_ROT_VENTOUSE);
+        servos.waitTime(IConstantesServos.WAIT_ROT_VENTOUSE);
+        servos.setPositionAndSpeed(IConstantesServos.PINCE_MODULE_CENTRE, IConstantesServos.PINCE_MODULE_CENTRE_FERME, IConstantesServos.SPEED_PINCE);
+        servos.waitTime(IConstantesServos.WAIT_PINCE);
+        servos.setPositionAndSpeed(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_DEPOSE, IConstantesServos.SPEED_INC_BRAS);
+        servos.waitTime(IConstantesServos.WAIT_INC_BRAS);
+        servos.setPositionAndSpeed(IConstantesServos.PINCE_MODULE_DROIT, IConstantesServos.PINCE_MODULE_DROIT_FERME, IConstantesServos.SPEED_PINCE);
+    }
+
+    public void homes() {
+        ouvrePinceDroite();
+        ouvrePinceCentre();
+        brasAttentePriseRobot();
     }
 
     public void ouvrePinceDroite() {
         servos.setPosition(IConstantesServos.PINCE_MODULE_DROIT, IConstantesServos.PINCE_MODULE_DROIT_OUVERT);
+    }
+
+    public void ouvrePinceCentre() {
+        if (servos.getPosition(IConstantesServos.PINCE_MODULE_DROIT) != IConstantesServos.PINCE_MODULE_DROIT_CHARGEMENT_VENTOUSE
+                && servos.getPosition(IConstantesServos.PINCE_MODULE_DROIT) != IConstantesServos.PINCE_MODULE_DROIT_PRISE_PRODUIT) {
+            servos.setPosition(IConstantesServos.PINCE_MODULE_CENTRE, IConstantesServos.PINCE_MODULE_CENTRE_OUVERT);
+        }
+    }
+
+    public void brasAttentePriseRobot() {
+        if (servos.getPosition(IConstantesServos.PINCE_MODULE_DROIT) != IConstantesServos.PINCE_MODULE_DROIT_FERME) {
+            servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_ATTENTE);
+            servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_ROBOT);
+        }
+    }
+    
+    public void brasAttentePriseFusee() {
+        if (servos.getPosition(IConstantesServos.PINCE_MODULE_DROIT) != IConstantesServos.PINCE_MODULE_DROIT_FERME) {
+            servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_ATTENTE);
+            servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_FUSEE);
+        }
+    }
+
+    public void ouvreAspiration() {
+        servos.setPosition(IConstantesServos.INCLINAISON_ASPIRATION, IConstantesServos.INCLINAISON_ASPI_OUVERT);
+    }
+
+    public void fermeAspiration() {
+        servos.setPosition(IConstantesServos.INCLINAISON_ASPIRATION, IConstantesServos.INCLINAISON_ASPI_FERME);
     }
 
     public void calibrationAspiration() {

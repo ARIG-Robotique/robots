@@ -10,6 +10,7 @@ import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.Team;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.IIOService;
@@ -79,6 +80,9 @@ public class Ordonanceur {
     public void run() throws CollisionFoundException, IOException {
         log.info("Demarrage de l'ordonancement du match ...");
 
+        // Equipe au démarrage
+        Team initTeam = ioService.equipe();
+
         try {
             // Bus I2C
             log.info("Scan I2C ...");
@@ -104,8 +108,8 @@ public class Ordonanceur {
         ioService.colorLedRGBOk();
         log.info("Arrêt d'urgence OK");
 
-        log.info("Position initiale des servos moteurs");
-        servosService.homes();
+        log.info("Position de préparation des servos moteurs");
+        servosService.cyclePreparation();
 
         // Activation des puissances
         log.info("Activation puissances 5V, 8V et 12V");
@@ -124,17 +128,25 @@ public class Ordonanceur {
         log.info("Démarrage du lidar");
         lidar.startScan();
 
-        if (!ioService.tirette()) {
-            log.warn("La tirette n'est pas la. Phase de préparation Nerell");
-            while(!ioService.tirette()) {
-                ioService.equipe();
+        log.warn("La tirette n'est pas la et la selection couleur n'as pas eu lieu. Phase de préparation Nerell");
+        boolean selectionCouleur = false;
+        while(!ioService.tirette() || !selectionCouleur) {
+            Team selectedTeam = ioService.equipe();
+            if (selectedTeam != initTeam && !selectionCouleur && !ioService.tirette()) {
+                log.info("Couleur selectionné une fois");
+                selectionCouleur = true;
+            }
+
+            if (selectionCouleur) {
+                // Affichage de la couleur selectione
                 ioService.teamColorLedRGB();
             }
         }
         log.info("Phase de préparation terminé");
 
         log.info("Chargement de la carte");
-        final InputStream imgMap = patternResolver.getResource("classpath:maps/autres/table-test.png").getInputStream();
+        String fileResourcePath = String.format("classpath:maps/%s.png", robotStatus.getTeam().name().toLowerCase());
+        final InputStream imgMap = patternResolver.getResource(fileResourcePath).getInputStream();
         pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
 
         // Initialisation Mouvement Manager
@@ -145,11 +157,27 @@ public class Ordonanceur {
         robotStatus.enableAsserv();
 
         trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseSuperLente);
-        position.setPt(new Point(conv.mmToPulse(165), conv.mmToPulse(165)));
         position.setAngle(conv.degToPulse(90));
+        if (robotStatus.getTeam() == Team.JAUNE) {
+            position.setPt(new Point(conv.mmToPulse(320), conv.mmToPulse(772)));
+            trajectoryManager.avanceMM(200);
+            trajectoryManager.gotoPointMM(1100, 772);
+            trajectoryManager.gotoPointMM(890, 300);
+            trajectoryManager.gotoOrientationDeg(90);
+            trajectoryManager.reculeMM(135);
+            servosService.fermeAspiration();
+        } else {
+            position.setPt(new Point(conv.mmToPulse(2680), conv.mmToPulse(772)));
+            trajectoryManager.avanceMM(300);
+            servosService.fermeAspiration();
+            trajectoryManager.gotoPointMM(3000 - 1100, 772);
+            trajectoryManager.gotoPointMM(3000 - 890, 300);
+            trajectoryManager.gotoOrientationDeg(90);
+            trajectoryManager.reculeMM(135);
+        }
 
-        trajectoryManager.gotoPointMM(590, 300);
-        trajectoryManager.gotoOrientationDeg(90);
+        log.info("Position initiale avant match des servos");
+        servosService.homes();
 
         // Attente tirette.
         log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");

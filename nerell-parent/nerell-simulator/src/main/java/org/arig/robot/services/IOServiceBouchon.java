@@ -62,6 +62,76 @@ public class IOServiceBouchon implements IIOService {
     }
 
     @Override
+    public boolean bordureAvant() {
+        return false;
+    }
+
+    @Override
+    public boolean bordureArriereDroite() {
+        return false;
+    }
+
+    @Override
+    public boolean bordureArriereGauche() {
+        return false;
+    }
+
+    @Override
+    public boolean presenceEntreeMagasin() {
+        return false;
+    }
+
+    @Override
+    public boolean presenceDevidoir() {
+        return false;
+    }
+
+    @Override
+    public boolean presencePinceDroite() {
+        return false;
+    }
+
+    @Override
+    public boolean presencePinceCentre() {
+        return false;
+    }
+
+    @Override
+    public boolean presenceBaseLunaireDroite() {
+        return false;
+    }
+
+    @Override
+    public boolean presenceBaseLunaireGauche() {
+        return false;
+    }
+
+    @Override
+    public boolean presenceBallesAspiration() {
+        return false;
+    }
+
+    @Override
+    public boolean presenceRouleaux() {
+        return false;
+    }
+
+    @Override
+    public boolean presenceFusee() {
+        return false;
+    }
+
+    @Override
+    public boolean finCourseGlissiereDroite() {
+        return false;
+    }
+
+    @Override
+    public boolean finCourseGlissiereGauche() {
+        return false;
+    }
+
+    @Override
     public ColorData frontColor() {
         return frontColorSensor.new ColorData()
                 .r((int) (Math.random() * 256))

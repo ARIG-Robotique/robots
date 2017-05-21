@@ -20,10 +20,10 @@ public interface IConstantesNerellConfig {
     int matchTimeMs = 89800;
 
     // Valeurs min / max en mm des axes du repères
-    int minX = 170;
+    int minX = 100;
     int minY = 100;
-    int maxX = 1180 - 100;
-    int maxY = 1800 - 100;
+    int maxX = 3000 - 100;
+    int maxY = 2000 - 100;
 
     // -------------------------------- //
     // Configuration moteurs propulsion //
@@ -45,7 +45,7 @@ public interface IConstantesNerellConfig {
     // Configuration des rampes //
     // ------------------------ //
     double rampAccDistance = 1000.0; // en mm/s2
-    double rampDecDistance = 800.0; // en mm/s2
+    double rampDecDistance = 500.0; // en mm/s2
 
     double rampAccOrientation = 1000.0; // en mm/s2
     double rampDecOrientation = 1000.0; // en mm/s2

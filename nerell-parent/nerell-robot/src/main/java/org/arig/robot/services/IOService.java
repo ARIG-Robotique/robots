@@ -204,6 +204,76 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     }
 
     @Override
+    public boolean bordureAvant() {
+        return inBordureAvant.isLow();
+    }
+
+    @Override
+    public boolean bordureArriereDroite() {
+        return inBordureArriereDroite.isLow();
+    }
+
+    @Override
+    public boolean bordureArriereGauche() {
+        return inBordureArriereGauche.isLow();
+    }
+
+    @Override
+    public boolean presenceEntreeMagasin() {
+        return inComptageMagasin.isLow();
+    }
+
+    @Override
+    public boolean presenceDevidoir() {
+        return inPresenceDevidoir.isLow();
+    }
+
+    @Override
+    public boolean presencePinceDroite() {
+        return inPresencePinceDroite.isLow();
+    }
+
+    @Override
+    public boolean presencePinceCentre() {
+        return inPresencePinceCentre.isLow();
+    }
+
+    @Override
+    public boolean presenceBaseLunaireDroite() {
+        return inPresenceBaseLunaireDroite.isLow();
+    }
+
+    @Override
+    public boolean presenceBaseLunaireGauche() {
+        return inPresenceBaseLunaireGauche.isLow();
+    }
+
+    @Override
+    public boolean presenceBallesAspiration() {
+        return inPresenceBalleAspiration.isLow();
+    }
+
+    @Override
+    public boolean presenceRouleaux() {
+        return inPresenceRouleaux.isLow();
+    }
+
+    @Override
+    public boolean presenceFusee() {
+        return inPresenceFusee.isLow();
+    }
+
+    @Override
+    public boolean finCourseGlissiereDroite() {
+        return inFinCourseGlissiereDroite.isLow();
+    }
+
+    @Override
+    public boolean finCourseGlissiereGauche() {
+        return inFinCourseGlissiereGauche.isLow();
+    }
+
+    @Override
     public ColorData frontColor() {
         return frontColorSensor.getColorData();
     }

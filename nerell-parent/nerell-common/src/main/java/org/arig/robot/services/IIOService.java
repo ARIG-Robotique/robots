@@ -15,6 +15,20 @@ public interface IIOService {
     boolean alimPuissance12VOk();
     boolean alimPuissance8VOk();
     boolean tirette();
+    boolean bordureAvant();
+    boolean bordureArriereDroite();
+    boolean bordureArriereGauche();
+    boolean presenceEntreeMagasin();
+    boolean presenceDevidoir();
+    boolean presencePinceDroite();
+    boolean presencePinceCentre();
+    boolean presenceBaseLunaireDroite();
+    boolean presenceBaseLunaireGauche();
+    boolean presenceBallesAspiration();
+    boolean presenceRouleaux();
+    boolean presenceFusee();
+    boolean finCourseGlissiereDroite();
+    boolean finCourseGlissiereGauche();
 
     boolean ledCapteurCouleur();
     ColorData frontColor();
