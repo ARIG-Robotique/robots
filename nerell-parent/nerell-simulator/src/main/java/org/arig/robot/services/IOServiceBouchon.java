@@ -23,17 +23,23 @@ public class IOServiceBouchon implements IIOService {
     private TCS34725ColorSensor frontColorSensor;
 
     @Setter
+    private boolean au = false;
+
+    @Setter
     private boolean tirette = false;
+
+    @Setter
+    private Team team = Team.UNKNOWN;
 
     @Override
     public Team equipe() {
-        rs.setTeam(Team.JAUNE);
+        rs.setTeam(team);
         return rs.getTeam();
     }
 
     @Override
     public boolean auOk() {
-        return true;
+        return au;
     }
 
     @Override

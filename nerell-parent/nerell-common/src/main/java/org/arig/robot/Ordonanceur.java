@@ -95,7 +95,9 @@ public class Ordonanceur {
         if (!ioService.auOk()) {
             log.warn("L'arrêt d'urgence est coupé.");
             ioService.colorLedRGBKo();
-            while(!ioService.auOk());
+            while(!ioService.auOk()) {
+                waitTimeMs(500);
+            }
         }
 
         HealthInfos lidarHealth = lidar.healthInfo();
@@ -120,7 +122,9 @@ public class Ordonanceur {
         if (!ioService.alimPuissance12VOk() || !ioService.alimPuissance8VOk() || !ioService.alimPuissance5VOk()) {
             log.warn("Alimentation puissance NOK (12V : {} ; 8V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance8VOk(), ioService.alimPuissance5VOk());
             ioService.colorLedRGBKo();
-            while(!ioService.alimPuissance12VOk() && !ioService.alimPuissance8VOk() && !ioService.alimPuissance5VOk());
+            while(!ioService.alimPuissance12VOk() && !ioService.alimPuissance8VOk() && !ioService.alimPuissance5VOk()) {
+                waitTimeMs(500);
+            }
         }
         ioService.colorLedRGBOk();
         log.info("Alimentation puissance OK (12V : {} ; 8V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk(), ioService.alimPuissance5VOk());
@@ -133,7 +137,7 @@ public class Ordonanceur {
         while(!ioService.tirette() || !selectionCouleur) {
             Team selectedTeam = ioService.equipe();
             if (selectedTeam != initTeam && !selectionCouleur && !ioService.tirette()) {
-                log.info("Couleur selectionné une fois");
+                log.info("Couleur selectionné une première fois");
                 selectionCouleur = true;
             }
 
@@ -141,6 +145,8 @@ public class Ordonanceur {
                 // Affichage de la couleur selectione
                 ioService.teamColorLedRGB();
             }
+
+            waitTimeMs(100);
         }
         log.info("Phase de préparation terminé");
 
@@ -181,7 +187,9 @@ public class Ordonanceur {
 
         // Attente tirette.
         log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
-        while(ioService.tirette());
+        while(ioService.tirette()) {
+            waitTimeMs(1);
+        }
 
         // Début du compteur de temps pour le match
         robotStatus.startMatch();
@@ -195,16 +203,12 @@ public class Ordonanceur {
         // Match de XX secondes.
         boolean activateCollecteAdverse = false;
         while(robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
-            try {
-                if (robotStatus.getElapsedTime() > 45000 && !activateCollecteAdverse) {
-                    activateCollecteAdverse = true;
-                    log.info("Activation par le temps de la collecte dans la zone adverse");
-                    System.setProperty("strategy.collect.zone.adverse", "true");
-                }
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                log.error("Interruption du Thread", e);
+            if (robotStatus.getElapsedTime() > 45000 && !activateCollecteAdverse) {
+                activateCollecteAdverse = true;
+                log.info("Activation par le temps de la collecte dans la zone adverse");
+                System.setProperty("strategy.collect.zone.adverse", "true");
             }
+            waitTimeMs(200);
         }
         robotStatus.stopMatch();
         log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
@@ -231,5 +235,13 @@ public class Ordonanceur {
 
         // TODO : Attente remise de la tirette pour ejecter les modules et les balles en stocks
 
+    }
+
+    private void waitTimeMs(long ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            log.error("Interruption du Thread", e);
+        }
     }
 }
