@@ -139,7 +139,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             rawGpGauche = fGpGauche.get().getMmValue();
             if (rawGpGauche != GP2D12.INVALID_VALUE) {
                 avgGpGauche = calcAvgGpGauche.average(rawGpGauche);
-                Point pt = tableUtils.getPointFromAngle(avgGpGauche, 0);
+                Point pt = tableUtils.getPointFromAngle(avgGpGauche, 10, 68, 158);
                 if (tableUtils.isInTable(pt)) {
                     detectedPointsMmCapteurs.add(pt);
                 }
@@ -151,7 +151,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             rawGpCentre = fGpCentre.get().getMmValue();
             if (rawGpCentre != GP2D12.INVALID_VALUE) {
                 avgGpCentre = calcAvgGpCentre.average(rawGpCentre);
-                Point pt = tableUtils.getPointFromAngle(avgGpCentre, 0);
+                Point pt = tableUtils.getPointFromAngle(avgGpCentre, 0, 125, 0);
                 if (tableUtils.isInTable(pt)) {
                     detectedPointsMmCapteurs.add(pt);
                 }
@@ -163,7 +163,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             rawGpDroit = fGpDroit.get().getMmValue();
             if (rawGpDroit != GP2D12.INVALID_VALUE) {
                 avgGpDroit = calcAvgGpDroit.average(rawGpDroit);
-                Point pt = tableUtils.getPointFromAngle(avgGpDroit, 0);
+                Point pt = tableUtils.getPointFromAngle(avgGpDroit, -10, 68, -158);
                 if (tableUtils.isInTable(pt)) {
                     detectedPointsMmCapteurs.add(pt);
                 }
@@ -176,7 +176,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             rawUsLatGauche = fUsLatGauche.get();
             if (rawUsLatGauche != SRF02Sonar.INVALID_VALUE) {
                 avgUsLatGauche = calcAvgUsLatGauche.average(rawUsLatGauche);
-                Point pt = tableUtils.getPointFromAngle(avgUsLatGauche, 0);
+                Point pt = tableUtils.getPointFromAngle(avgUsLatGauche, 15, 115,120);
                 if (tableUtils.isInTable(pt)) {
                     detectedPointsMmCapteurs.add(pt);
                 }
@@ -188,7 +188,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             rawUsGauche = fUsGauche.get();
             if (rawUsGauche != SRF02Sonar.INVALID_VALUE) {
                 avgUsGauche = calcAvgUsGauche.average(rawUsGauche);
-                Point pt = tableUtils.getPointFromAngle(avgUsGauche, 0);
+                Point pt = tableUtils.getPointFromAngle(avgUsGauche, -7, 155, 70);
                 if (tableUtils.isInTable(pt)) {
                     detectedPointsMmCapteurs.add(pt);
                 }
@@ -200,7 +200,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             rawUsDroit = fUsDroit.get();
             if (rawUsDroit != SRF02Sonar.INVALID_VALUE) {
                 avgUsDroit = calcAvgUsDroit.average(rawUsDroit);
-                Point pt = tableUtils.getPointFromAngle(avgUsDroit, 0);
+                Point pt = tableUtils.getPointFromAngle(avgUsDroit, 2, 155, -70);
                 if (tableUtils.isInTable(pt)) {
                     detectedPointsMmCapteurs.add(pt);
                 }
@@ -212,7 +212,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             rawUsLatDroit = fUsLatDroit.get();
             if (rawUsLatDroit != SRF02Sonar.INVALID_VALUE) {
                 avgUsLatDroit = calcAvgUsLatDroit.average(rawUsLatDroit);
-                Point pt = tableUtils.getPointFromAngle(avgUsLatDroit, 0);
+                Point pt = tableUtils.getPointFromAngle(avgUsLatDroit, -15, 115, 120);
                 if (tableUtils.isInTable(pt)) {
                     detectedPointsMmCapteurs.add(pt);
                 }
