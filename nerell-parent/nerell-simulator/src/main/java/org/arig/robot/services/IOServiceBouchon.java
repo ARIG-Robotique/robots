@@ -48,11 +48,6 @@ public class IOServiceBouchon implements IIOService {
     }
 
     @Override
-    public boolean alimPuissance8VOk() {
-        return true;
-    }
-
-    @Override
     public boolean alimPuissance12VOk() {
         return true;
     }
@@ -183,16 +178,6 @@ public class IOServiceBouchon implements IIOService {
 
     @Override
     public void disableAlim5VPuissance() {
-
-    }
-
-    @Override
-    public void enableAlim8VPuissance() {
-
-    }
-
-    @Override
-    public void disableAlim8VPuissance() {
 
     }
 

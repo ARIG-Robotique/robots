@@ -16,7 +16,6 @@ import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.system.TrajectoryManager;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -117,18 +116,17 @@ public class Ordonanceur {
         // Activation des puissances
         log.info("Activation puissances 5V, 8V et 12V");
         ioService.enableAlim5VPuissance();
-        ioService.enableAlim8VPuissance();
         ioService.enableAlim12VPuissance();
 
-        if (!ioService.alimPuissance12VOk() || !ioService.alimPuissance8VOk() || !ioService.alimPuissance5VOk()) {
-            log.warn("Alimentation puissance NOK (12V : {} ; 8V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance8VOk(), ioService.alimPuissance5VOk());
+        if (!ioService.alimPuissance12VOk() || !ioService.alimPuissance5VOk()) {
+            log.warn("Alimentation puissance NOK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
             ioService.colorLedRGBKo();
-            while(!ioService.alimPuissance12VOk() && !ioService.alimPuissance8VOk() && !ioService.alimPuissance5VOk()) {
+            while(!ioService.alimPuissance12VOk() && !ioService.alimPuissance5VOk()) {
                 waitTimeMs(500);
             }
         }
         ioService.colorLedRGBOk();
-        log.info("Alimentation puissance OK (12V : {} ; 8V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk(), ioService.alimPuissance5VOk());
+        log.info("Alimentation puissance OK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
 
         log.info("Démarrage du lidar");
         lidar.startScan();
@@ -223,7 +221,6 @@ public class Ordonanceur {
 
         // Désactivation de la puissance moteur pour être sur de ne plus rouler
         ioService.disableAlim5VPuissance();
-        ioService.disableAlim8VPuissance();
         ioService.disableAlim12VPuissance();
 
         // On arrette le lidar

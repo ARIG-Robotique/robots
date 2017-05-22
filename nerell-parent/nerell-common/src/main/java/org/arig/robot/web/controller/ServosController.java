@@ -84,7 +84,8 @@ public class ServosController extends AbstractServosController {
         ServoConfig orientationAspiration = new ServoConfig();
         orientationAspiration.setId(IConstantesServos.INCLINAISON_ASPIRATION).setName("Inclinaison aspiration");
         orientationAspiration
-                .addPosition("Ouvert", IConstantesServos.INCLINAISON_ASPI_OUVERT)
+                .addPosition("Transfert", IConstantesServos.INCLINAISON_ASPI_TRANSFERT)
+                .addPosition("Cratère", IConstantesServos.INCLINAISON_ASPI_CRATERE)
                 .addPosition("Fermé", IConstantesServos.INCLINAISON_ASPI_FERME);
         servoConfigs.add(orientationAspiration);
 

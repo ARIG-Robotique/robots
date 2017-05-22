@@ -13,7 +13,6 @@ public interface IIOService {
     boolean auOk();
     boolean alimPuissance5VOk();
     boolean alimPuissance12VOk();
-    boolean alimPuissance8VOk();
     boolean tirette();
     boolean bordureAvant();
     boolean bordureArriereDroite();
@@ -47,8 +46,6 @@ public interface IIOService {
 
     void enableAlim5VPuissance();
     void disableAlim5VPuissance();
-    void enableAlim8VPuissance();
-    void disableAlim8VPuissance();
     void enableAlim12VPuissance();
     void disableAlim12VPuissance();
 

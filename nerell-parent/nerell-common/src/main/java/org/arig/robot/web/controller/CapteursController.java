@@ -48,7 +48,6 @@ public class CapteursController extends AbstractCapteursController implements In
         // Capteurs informations numérique
         numeriqueInfos.put("AU", ioService::auOk);
         numeriqueInfos.put("Puissance 5V", ioService::alimPuissance5VOk);
-        numeriqueInfos.put("Puissance 8V", ioService::alimPuissance8VOk);
         numeriqueInfos.put("Puissance 12V", ioService::alimPuissance12VOk);
         numeriqueInfos.put("Tirette", ioService::tirette);
         numeriqueInfos.put("Bordure avant", ioService::bordureAvant);

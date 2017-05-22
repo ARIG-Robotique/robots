@@ -153,6 +153,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         outPompeAVide = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_01);
 
         // Etat initial des IOs
+        outAlimPuissance8V.high(); // Désactivé
         disableLedCapteurCouleur();
         clearColorLedRGB();
         disableElectroVanne();
@@ -181,11 +182,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     @Override
     public boolean alimPuissance5VOk() {
         return inAlimPuissance5V.isHigh();
-    }
-
-    @Override
-    public boolean alimPuissance8VOk() {
-        return inAlimPuissance8V.isHigh();
     }
 
     @Override
@@ -338,18 +334,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     public void disableAlim5VPuissance() {
         log.info("Desactivation puissance 5V");
         outAlimPuissance5V.high();
-    }
-
-    @Override
-    public void enableAlim8VPuissance() {
-        log.info("Activation puissance 8V");
-        outAlimPuissance8V.low();
-    }
-
-    @Override
-    public void disableAlim8VPuissance() {
-        log.info("Desactivation puissance 8V");
-        outAlimPuissance8V.high();
     }
 
     @Override

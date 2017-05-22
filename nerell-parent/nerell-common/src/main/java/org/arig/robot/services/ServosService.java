@@ -47,7 +47,7 @@ public class ServosService {
         servos.setPositionAndSpeed(IConstantesServos.PORTE_MAGASIN_GAUCHE, IConstantesServos.PORTE_GAUCHE_OUVERT, IConstantesServos.SPEED_PORTE_MAG);
         servos.setPositionAndSpeed(IConstantesServos.BLOCAGE_ENTREE_MAG, IConstantesServos.BLOCAGE_OUVERT, IConstantesServos.SPEED_BLOCAGE_MAG);
         servos.setPositionAndSpeed(IConstantesServos.DEVIDOIR, IConstantesServos.DEVIDOIR_CHARGEMENT, IConstantesServos.SPEED_DEVIDOIR);
-        servos.setPositionAndSpeed(IConstantesServos.INCLINAISON_ASPIRATION, IConstantesServos.INCLINAISON_ASPI_OUVERT, IConstantesServos.SPEED_INC_ASPI);
+        servos.setPositionAndSpeed(IConstantesServos.INCLINAISON_ASPIRATION, IConstantesServos.INCLINAISON_ASPI_TRANSFERT, IConstantesServos.SPEED_INC_ASPI);
 
         // Ordre précis car blocage mécanique dans certains cas
         servos.setPositionAndSpeed(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_DEPOSE_MAGASIN, IConstantesServos.SPEED_ROT_VENTOUSE);
@@ -90,23 +90,16 @@ public class ServosService {
         }
     }
 
-    public void ouvreAspiration() {
-        servos.setPosition(IConstantesServos.INCLINAISON_ASPIRATION, IConstantesServos.INCLINAISON_ASPI_OUVERT);
+    public void transfertAspiration() {
+        servos.setPosition(IConstantesServos.INCLINAISON_ASPIRATION, IConstantesServos.INCLINAISON_ASPI_TRANSFERT);
+    }
+
+    public void priseCratereAspiration() {
+        servos.setPosition(IConstantesServos.INCLINAISON_ASPIRATION, IConstantesServos.INCLINAISON_ASPI_CRATERE);
     }
 
     public void fermeAspiration() {
         servos.setPosition(IConstantesServos.INCLINAISON_ASPIRATION, IConstantesServos.INCLINAISON_ASPI_FERME);
-    }
-
-    public void calibrationAspiration() {
-        log.info("Calibration moteur aspiration");
-        aspirationMax();
-        servos.waitTime(1000);
-        ioService.enableAlim8VPuissance();
-        while(!ioService.alimPuissance8VOk());
-        servos.waitTime(4000);
-        aspirationStop();
-        servos.waitTime(4000);
     }
 
     public void aspirationMax() {
