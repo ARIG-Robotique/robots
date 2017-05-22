@@ -45,21 +45,12 @@ public class BalladeSurTableTestAction implements IAction {
     @Override
     public void execute() {
         try {
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-            /*mv.pathTo(900, 1550);
-            mv.pathTo(300, 1400);
-            mv.pathTo(400, 1200);
-            mv.pathTo(680, 1300);
-            mv.pathTo(780, 1200);
-            mv.pathTo(900, 260);
-            mv.pathTo(300, 260);
-            mv.pathTo(300, 300);
-            mv.pathTo(590, 1550);
-            mv.pathTo(590, 260);*/
+            rs.enableAvoidance();
 
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
             mv.pathTo(1500, 700);
             mv.pathTo(500, 1000);
-            mv.pathTo(2500, 700);
+            mv.pathTo(2500, 1000);
 
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
