@@ -9,6 +9,7 @@ import org.arig.robot.filters.ramp.IRampFilter;
 import org.arig.robot.filters.ramp.RampFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
+import org.arig.robot.model.Rectangle;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.TrajectoryManager;
@@ -42,8 +43,14 @@ public class RobotContext {
 
     @Bean
     public TableUtils tableUtils() {
-        return new TableUtils(IConstantesNerellConfig.minX, IConstantesNerellConfig.maxX,
+        TableUtils t = new TableUtils(IConstantesNerellConfig.minX, IConstantesNerellConfig.maxX,
                 IConstantesNerellConfig.minY, IConstantesNerellConfig.maxY);
+
+        // Ajout des zones de départ secondaire
+        t.addDeadZone(new Rectangle(0, 0, 710, 360)); // Jaune
+        t.addDeadZone(new Rectangle(2290, 0, 710, 360)); // Bleu
+
+        return t;
     }
 
     @Bean
