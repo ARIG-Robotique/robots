@@ -81,9 +81,9 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
 
     // Stockages des points d'obstacles
     @Getter
-    private List<Point> detectedPointsMmCapteurs = new ArrayList<>();
+    private final List<Point> detectedPointsMmCapteurs = new ArrayList<>();
     @Getter
-    private List<Point> detectedPointsMmLidar = new ArrayList<>();
+    private final List<Point> detectedPointsMmLidar = new ArrayList<>();
 
     private DoubleValueAverage calcAvgGpGauche = new DoubleValueAverage();
     private DoubleValueAverage calcAvgGpCentre = new DoubleValueAverage();
@@ -124,9 +124,9 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
         while(!fUsLatGauche.isDone() && !fUsGauche.isDone() && !fUsDroit.isDone() && !fUsLatDroit.isDone()
                 && !fGpGauche.isDone() && !fGpCentre.isDone() && !fGpDroit.isDone());
 
-        // On efface les anciens points
-        detectedPointsMmCapteurs.clear();
-        detectedPointsMmLidar.clear();
+        // Stockage local des points
+        List<Point> detectedPointsMmCapteurs = new ArrayList<>();
+        List<Point> detectedPointsMmLidar = new ArrayList<>();
 
         double rawGpGauche = GP2D12.INVALID_VALUE, rawGpCentre = GP2D12.INVALID_VALUE, rawGpDroit = GP2D12.INVALID_VALUE;
         double avgGpGauche = 0, avgGpCentre = 0, avgGpDroit = 0;
@@ -141,7 +141,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
                 avgGpGauche = calcAvgGpGauche.average(rawGpGauche);
                 Point pt = tableUtils.getPointFromAngle(avgGpGauche, 0);
                 if (tableUtils.isInTable(pt)) {
-                    //detectedPointsMmCapteurs.add(pt);
+                    detectedPointsMmCapteurs.add(pt);
                 }
             }
         } catch (InterruptedException | ExecutionException | NullPointerException e) {
@@ -165,7 +165,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
                 avgGpDroit = calcAvgGpDroit.average(rawGpDroit);
                 Point pt = tableUtils.getPointFromAngle(avgGpDroit, 0);
                 if (tableUtils.isInTable(pt)) {
-                    //detectedPointsMmCapteurs.add(pt);
+                    detectedPointsMmCapteurs.add(pt);
                 }
             }
         } catch (InterruptedException | ExecutionException | NullPointerException e) {
@@ -252,7 +252,15 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
                 .addField("avgUsLatDroit", avgUsLatDroit);
         monitoringWrapper.addPoint(serie);
 
-        // 3. Si inclus, on stop et on met a jour le path
+        // 3. On delegue à l'implémentation d'évittement
+        synchronized (this.detectedPointsMmCapteurs) {
+            this.detectedPointsMmCapteurs.clear();
+            this.detectedPointsMmCapteurs.addAll(detectedPointsMmCapteurs);
+        }
+        synchronized (this.detectedPointsMmLidar) {
+            this.detectedPointsMmLidar.clear();
+            this.detectedPointsMmLidar.addAll(detectedPointsMmLidar);
+        }
         processAvoiding();
     }
 
