@@ -131,6 +131,11 @@ public class IOServiceBouchon implements IIOService {
     }
 
     @Override
+    public boolean presenceModuleDansBras() {
+        return false;
+    }
+
+    @Override
     public boolean finCourseGlissiereDroite() {
         return false;
     }
@@ -147,6 +152,12 @@ public class IOServiceBouchon implements IIOService {
                 .g((int) (Math.random() * 256))
                 .b((int) (Math.random() * 256))
                 .c((int) (Math.random() * 256));
+    }
+
+    @Override
+    public Team getTeamColorFromSensor() {
+        double r = Math.random();
+        return r > 0.75 ? Team.BLEU : r > 0.5  ? Team.JAUNE : Team.UNKNOWN;
     }
 
     @Override

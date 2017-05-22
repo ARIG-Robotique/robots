@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class EjectionModuleService {
 
+    private static final int TEMPS_MAX_PRESENCE_ROULEAUX = 1000;
+    private static final int TEMPS_MAX_TROUVER_COULEUR = 3000;
+
     @Autowired
     private IIOService ioService;
 
@@ -28,7 +31,7 @@ public class EjectionModuleService {
 
             if (ioService.glissiereFerme()) {
                 servosService.ouvreGlissiere();
-                while(!ioService.finCourseGlissiereDroite()) {
+                while (!ioService.finCourseGlissiereDroite()) {
                     waitTimeMs(1);
                 }
                 servosService.stopGlissiere();
@@ -36,7 +39,7 @@ public class EjectionModuleService {
 
             // Dans une position ouverte quelque part
             servosService.fermeGlissiere();
-            while(ioService.finCourseGlissiereDroite()) {
+            while (ioService.finCourseGlissiereDroite()) {
                 waitTimeMs(1);
             }
             servosService.stopGlissiere();
@@ -50,28 +53,58 @@ public class EjectionModuleService {
             ejectionModule(ModuleLunaire.monochrome());
         }
 
-        while(ioService.presenceDevidoir()) {
+        while (ioService.presenceDevidoir()) {
             servosService.devidoirDechargement();
-            while(!ioService.presenceRouleaux()) {
+
+            int remaining = TEMPS_MAX_PRESENCE_ROULEAUX;
+            while (!ioService.presenceRouleaux() && remaining > 0) {
+                remaining -= 10;
                 waitTimeMs(10);
             }
-            ejectionModule(ModuleLunaire.monochrome());
+
+            if (ioService.presenceRouleaux()) {
+                ejectionModule(ModuleLunaire.monochrome());
+            } else {
+                log.warn("Le dévidoir à dit qu'il était plein mais il a rien rendu !");
+                servosService.devidoirChargement();
+                servosService.waitDevidoire();
+            }
         }
     }
 
     public void ejectionModule(ModuleLunaire module) {
         log.info("Ejection module {}", module.type().name());
+
         if (module.isPolychrome()) {
-            // TODO
+            servosService.devidoirLectureCouleur();
+            servosService.waitDevidoire();
+
+            // TODO - Ya des grandes chances que ca marche pas !
+            ioService.enableLedCapteurCouleur();
+            servosService.tourneModuleRouleauxFF();
+
+            int remaining = TEMPS_MAX_TROUVER_COULEUR;
+            while (ioService.getTeamColorFromSensor() != robotStatus.getTeam() && remaining > 0) {
+                remaining -= 10;
+                waitTimeMs(10);
+            }
+
+            if (ioService.getTeamColorFromSensor() != robotStatus.getTeam()) {
+                log.warn("Imposible de trouver la couleur du module");
+            }
+
+            servosService.tourneModuleRouleauxStop();
+            ioService.disableLedCapteurCouleur();
         }
 
         servosService.devidoirChargement();
+
         servosService.ouvreGlissiere();
-        while(ioService.finCourseGlissiereGauche()) {
+        while (ioService.finCourseGlissiereGauche()) {
             waitTimeMs(1);
         }
         servosService.fermeGlissiere();
-        while(ioService.finCourseGlissiereDroite()) {
+        while (ioService.finCourseGlissiereDroite()) {
             waitTimeMs(1);
         }
         servosService.stopGlissiere();

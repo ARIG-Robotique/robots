@@ -28,9 +28,11 @@ public interface IIOService {
     boolean presenceFusee();
     boolean finCourseGlissiereDroite();
     boolean finCourseGlissiereGauche();
+    boolean presenceModuleDansBras();
 
     boolean ledCapteurCouleur();
     ColorData frontColor();
+    Team getTeamColorFromSensor();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

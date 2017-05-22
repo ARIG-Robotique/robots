@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
+import org.arig.robot.constants.IConstantesNerellConfig;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -64,6 +65,7 @@ public class RobotStatus extends AbstractRobotStatus {
     public boolean hasModuleDansMagasin() {
         return CollectionUtils.isNotEmpty(magasinModule);
     }
+    public boolean canAddModuleMagasin() { return  magasinModule.size() < IConstantesNerellConfig.nbModuleMax; }
 
     // Fusées
     private boolean fuseeMonochromeJauneRecupere = false;

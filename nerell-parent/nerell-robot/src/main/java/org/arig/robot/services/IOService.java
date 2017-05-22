@@ -6,8 +6,11 @@ import com.pi4j.io.gpio.*;
 import com.pi4j.io.i2c.I2CBus;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesI2C;
+import org.arig.robot.constants.IConstantesI2CAdc;
+import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
+import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 import org.springframework.beans.factory.DisposableBean;
@@ -28,6 +31,9 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Autowired
     private I2CBus bus;
+
+    @Autowired
+    private I2CAdcAnalogInput i2cAdc;
 
     @Autowired
     @Qualifier("frontColorSensor")
@@ -260,6 +266,15 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     }
 
     @Override
+    public boolean presenceModuleDansBras() {
+        try {
+            return i2cAdc.readCapteurValue(IConstantesI2CAdc.VACUOSTAT) > IConstantesI2CAdc.VACUOSTAT_SEUIL;
+        } catch (I2CException e) {
+            return false;
+        }
+    }
+
+    @Override
     public boolean finCourseGlissiereDroite() {
         return inFinCourseGlissiereDroite.isLow();
     }
@@ -272,6 +287,24 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     @Override
     public ColorData frontColor() {
         return frontColorSensor.getColorData();
+    }
+
+    @Override
+    public Team getTeamColorFromSensor() {
+        ColorData colorData = frontColorSensor.getColorData();
+
+        int bleu = colorData.b();
+        int jaune = colorData.g() + colorData.r();
+
+        // Si c'est 42 le delta, je me coupe une couille
+        int delta = 42;
+        if (bleu - jaune > delta) {
+            return Team.BLEU;
+        } else if (jaune - bleu > delta) {
+            return Team.JAUNE;
+        } else {
+            return Team.UNKNOWN;
+        }
     }
 
     // --------------------------------------------------------- //
