@@ -245,7 +245,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
         return conv.degToPulse(calculAngleDelta(
                 conv.pulseToDeg(currentPosition.getAngle()),
-                Math.atan2(conv.pulseToRad(dY), conv.pulseToRad(dX)) / Math.PI * 180
+                Math.toDegrees(Math.atan2(conv.pulseToRad(dY), conv.pulseToRad(dX)))
         ));
     }
 

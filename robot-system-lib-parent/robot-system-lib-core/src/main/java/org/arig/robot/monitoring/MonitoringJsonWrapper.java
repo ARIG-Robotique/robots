@@ -3,6 +3,8 @@ package org.arig.robot.monitoring;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
+import org.arig.robot.model.AbstractRobotStatus;
+import org.arig.robot.model.MonitorPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
@@ -20,12 +22,22 @@ public class MonitoringJsonWrapper extends AbstractMonitoringWrapper {
     @Autowired
     private Environment env;
 
+    @Autowired(required = false)
+    private AbstractRobotStatus robotStatus = null;
+
     private File saveDirectory;
 
     public MonitoringJsonWrapper() {
         saveDirectory = new File("./logs");
         if (!saveDirectory.exists()) {
             log.info("Création du répertoire {} : {}", saveDirectory.getAbsolutePath(), saveDirectory.mkdirs());
+        }
+    }
+
+    @Override
+    public void addPoint(MonitorPoint point) {
+        if (robotStatus == null || robotStatus.isMatchEnabled()) {
+            forceAddPoint(point);
         }
     }
 

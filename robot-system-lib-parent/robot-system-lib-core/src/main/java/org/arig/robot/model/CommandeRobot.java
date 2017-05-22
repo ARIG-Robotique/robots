@@ -76,7 +76,7 @@ public class CommandeRobot {
         return result;
     }
 
-    public String typeAsserv() {
+    public synchronized String typeAsserv() {
         Function<TypeConsigne, String> f = TypeConsigne::name;
         Optional<String> res = types.stream().map(f).reduce((a1, a2) -> a1 + "," + a2);
         return res.isPresent() ? res.get() : StringUtils.EMPTY;

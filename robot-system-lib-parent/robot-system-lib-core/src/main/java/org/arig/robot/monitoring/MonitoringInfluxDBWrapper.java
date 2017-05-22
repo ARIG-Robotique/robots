@@ -40,6 +40,11 @@ public class MonitoringInfluxDBWrapper extends AbstractMonitoringWrapper impleme
     }
 
     @Override
+    public void addPoint(MonitorPoint point) {
+        forceAddPoint(point);
+    }
+
+    @Override
     public void save() {
         if (!hasPoints()) {
             log.info("Aucun point de monitoring a enregistrer");

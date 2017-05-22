@@ -25,7 +25,7 @@ public abstract class AbstractMonitoringWrapper implements IMonitoringWrapper {
     }
 
     @Override
-    public void addPoint(MonitorPoint point) {
+    public void forceAddPoint(MonitorPoint point) {
         points.add(point);
     }
 
