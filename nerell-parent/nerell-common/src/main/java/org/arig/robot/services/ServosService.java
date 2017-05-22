@@ -103,9 +103,39 @@ public class ServosService {
     }
 
     public void aspirationMax() {
-        servos.setPosition(IConstantesServos.MOTOR_ASPIRATION, 2000);
+        servos.setPosition(IConstantesServos.MOTOR_ASPIRATION, IConstantesServos.MOTOR_ASPIRATION_FULL);
     }
     public void aspirationStop() {
-        servos.setPosition(IConstantesServos.MOTOR_ASPIRATION, 1000);
+        servos.setPosition(IConstantesServos.MOTOR_ASPIRATION, IConstantesServos.MOTOR_ASPIRATION_STOP);
+    }
+
+    public void stopGlissiere() {
+        servos.setPosition(IConstantesServos.MOTOR_EJECTION, IConstantesServos.MOTOR_STOP);
+    }
+
+    public void ouvreGlissiere() {
+        // Ouverture si pas complètement sorti
+        if (ioService.finCourseGlissiereGauche()) {
+            servos.setPosition(IConstantesServos.MOTOR_EJECTION, IConstantesServos.MOTOR_FORWARD_FULL);
+        }
+    }
+
+    public void fermeGlissiere() {
+        // Fermeture si pas complètement fermé
+        if (ioService.finCourseGlissiereDroite()) {
+            servos.setPosition(IConstantesServos.MOTOR_EJECTION, IConstantesServos.MOTOR_REVERSE_FULL);
+        }
+    }
+
+    public void devidoirChargement() {
+        servos.setPosition(IConstantesServos.DEVIDOIR, IConstantesServos.DEVIDOIR_CHARGEMENT);
+    }
+
+    public void devidoirLectureCouleur() {
+        servos.setPosition(IConstantesServos.DEVIDOIR, IConstantesServos.DEVIDOIR_LECTURE_COULEUR);
+    }
+
+    public void devidoirDechargement() {
+        servos.setPosition(IConstantesServos.DEVIDOIR, IConstantesServos.DEVIDOIR_DECHARGEMENT);
     }
 }

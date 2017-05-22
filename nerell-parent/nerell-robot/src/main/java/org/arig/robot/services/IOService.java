@@ -367,4 +367,18 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     public void disablePompeAVide() {
         outPompeAVide.high();
     }
+
+    // ----------------------------------------------------------- //
+    // -------------------------- BUSINESS ----------------------- //
+    // ----------------------------------------------------------- //
+
+    @Override
+    public boolean glissiereOuverte() {
+        return finCourseGlissiereDroite() && !finCourseGlissiereGauche();
+    }
+
+    @Override
+    public boolean glissiereFerme() {
+        return !finCourseGlissiereDroite() && finCourseGlissiereGauche();
+    }
 }

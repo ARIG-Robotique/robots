@@ -23,4 +23,12 @@ public class ModuleLunaire {
     public static ModuleLunaire polychrome() {
         return new ModuleLunaire().type(Type.POLYCHROME);
     }
+
+    public boolean isMonochrome() {
+        return type == Type.MONOCHROME;
+    }
+
+    public boolean isPolychrome() {
+        return !isMonochrome();
+    }
 }

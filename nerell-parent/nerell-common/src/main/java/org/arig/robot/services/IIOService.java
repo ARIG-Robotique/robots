@@ -53,4 +53,11 @@ public interface IIOService {
     void disableElectroVanne();
     void enablePompeAVide();
     void disablePompeAVide();
+
+    // ----------------------------------------------------------- //
+    // -------------------------- BUSINESS ----------------------- //
+    // ----------------------------------------------------------- //
+
+    boolean glissiereOuverte();
+    boolean glissiereFerme();
 }

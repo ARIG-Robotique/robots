@@ -80,4 +80,14 @@ public interface IConstantesServos {
     int DEVIDOIR_CHARGEMENT = 950;
     int DEVIDOIR_DECHARGEMENT = 1680;
     int DEVIDOIR_LECTURE_COULEUR = 1350;
+
+    // Constantes moteurs
+    int MOTOR_ASPIRATION_STOP = 1000;
+    int MOTOR_ASPIRATION_FULL = 2000;
+
+    int MOTOR_REVERSE_FULL = 1000;
+    int MOTOR_REVERSE_MEDIUM = 1250;
+    int MOTOR_STOP = 1500;
+    int MOTOR_FORWARD_MEDIUM = 1750;
+    int MOTOR_FORWARD_FULL = 2000;
 }

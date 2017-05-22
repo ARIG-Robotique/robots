@@ -210,4 +210,14 @@ public class IOServiceBouchon implements IIOService {
     public void disablePompeAVide() {
 
     }
+
+    @Override
+    public boolean glissiereOuverte() {
+        return false;
+    }
+
+    @Override
+    public boolean glissiereFerme() {
+        return true;
+    }
 }

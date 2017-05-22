@@ -91,8 +91,37 @@ public class ServosController extends AbstractServosController {
         servoConfigs.add(orientationAspiration);
 
         // Temp
+        ServoConfig moteurRouleaux = new ServoConfig();
+        moteurRouleaux.setId(IConstantesServos.MOTOR_ROULEAUX).setName("Moteur rouleaux");
+        moteurRouleaux
+                .addPosition("Reverse Full", IConstantesServos.MOTOR_REVERSE_FULL)
+                .addPosition("Reverse Medium", IConstantesServos.MOTOR_REVERSE_MEDIUM)
+                .addPosition("Stop", IConstantesServos.MOTOR_STOP)
+                .addPosition("Forward Medium", IConstantesServos.MOTOR_FORWARD_MEDIUM)
+                .addPosition("Forward Full", IConstantesServos.MOTOR_FORWARD_FULL);
+
+        servoConfigs.add(moteurRouleaux);
+
+        ServoConfig moteurEjection = new ServoConfig();
+        moteurEjection.setId(IConstantesServos.MOTOR_EJECTION).setName("Moteur ejection");
+        moteurEjection
+                .addPosition("Reverse Full", IConstantesServos.MOTOR_REVERSE_FULL)
+                .addPosition("Reverse Medium", IConstantesServos.MOTOR_REVERSE_MEDIUM)
+                .addPosition("Stop", IConstantesServos.MOTOR_STOP)
+                .addPosition("Forward Medium", IConstantesServos.MOTOR_FORWARD_MEDIUM)
+                .addPosition("Forward Full", IConstantesServos.MOTOR_FORWARD_FULL);
+        servoConfigs.add(moteurEjection);
+
+        ServoConfig moteurAspiration = new ServoConfig();
+        moteurAspiration.setId(IConstantesServos.MOTOR_ASPIRATION).setName("Moteur aspiration");
+        moteurAspiration
+                .addPosition("Stop", IConstantesServos.MOTOR_ASPIRATION_STOP)
+                .addPosition("A Fond", IConstantesServos.MOTOR_ASPIRATION_FULL);
+        servoConfigs.add(moteurAspiration);
+
+        /*
         ServoConfig moteurDroit = new ServoConfig();
-        moteurDroit.setId(IConstantesServos.MOTOR_DROIT).setName("TMP Moteur droit");
+        moteurDroit.setId(IConstantesServos.MOTOR_DROIT).setName("/!\\ Moteur droit");
         moteurDroit
                 .addPosition("Reverse", 1450)
                 .addPosition("Stop", 1500)
@@ -100,36 +129,13 @@ public class ServosController extends AbstractServosController {
         servoConfigs.add(moteurDroit);
 
         ServoConfig moteurGauche = new ServoConfig();
-        moteurGauche.setId(IConstantesServos.MOTOR_GAUCHE).setName("TMP Moteur gauche");
+        moteurGauche.setId(IConstantesServos.MOTOR_GAUCHE).setName("/!\\ Moteur gauche");
         moteurGauche
                 .addPosition("Reverse", 1450)
                 .addPosition("Stop", 1500)
                 .addPosition("Forward", 1650);
         servoConfigs.add(moteurGauche);
-
-        ServoConfig moteurRouleaux = new ServoConfig();
-        moteurRouleaux.setId(IConstantesServos.MOTOR_ROULEAUX).setName("TMP Moteur rouleaux");
-        moteurRouleaux
-                .addPosition("Reverse", 1400)
-                .addPosition("Stop", 1500)
-                .addPosition("Forward", 1600);
-
-        servoConfigs.add(moteurRouleaux);
-
-        ServoConfig moteurEjection = new ServoConfig();
-        moteurEjection.setId(IConstantesServos.MOTOR_EJECTION).setName("TMP Moteur ejection");
-        moteurEjection
-                .addPosition("Reverse", 1400)
-                .addPosition("Stop", 1500)
-                .addPosition("Forward", 1600);
-        servoConfigs.add(moteurEjection);
-
-        ServoConfig moteurAspiration = new ServoConfig();
-        moteurAspiration.setId(IConstantesServos.MOTOR_ASPIRATION).setName("TMP Moteur aspiration");
-        moteurAspiration
-                .addPosition("Stop", 1000)
-                .addPosition("A Fond", 2000);
-        servoConfigs.add(moteurAspiration);
+        */
     }
 
     @Override
