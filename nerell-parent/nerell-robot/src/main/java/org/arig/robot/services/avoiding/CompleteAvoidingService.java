@@ -57,29 +57,37 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
         boolean hasProx = proxCapteurs || proxLidar;
         if (hasProx) {
             // Stop, et ensuite on recalcul le path
+            log.info("Obstacle a proximité détecté, capteurs : {}, lidar : {}", proxCapteurs, proxLidar);
             trajectoryManager.setObstacleFound(true);
         }
 
         // 2 Detection de collision (ici on est tous en cm)
-        Point2D ptFrom = new Point2D.Double(conv.pulseToMm(position.getPt().getX()) / 10, conv.pulseToMm(position.getPt().getY()) / 10);
-        Point2D ptTo = new Point2D.Double(conv.pulseToMm(cmdRobot.getPosition().getPt().getX()) / 10, conv.pulseToMm(cmdRobot.getPosition().getPt().getY()) / 10);
+        Point2D ptFrom = new Point2D.Double(
+                conv.pulseToMm(position.getPt().getX()) / 10,
+                conv.pulseToMm(position.getPt().getY()) / 10
+        );
+        Point2D ptTo = new Point2D.Double(
+                conv.pulseToMm(cmdRobot.getPosition().getPt().getX()) / 10,
+                conv.pulseToMm(cmdRobot.getPosition().getPt().getY()) / 10
+        );
         Line2D trajectoryLine = new Line2D.Double(ptFrom, ptTo);
 
         List<Shape> obstacles = new ArrayList<>();
         for (Point pt : getDetectedPointsMmLidar()) {
             // Définition de l'obstacle
-            double wh = 2 * DISTANCE_CENTRE_OBSTACLE;
-            double x = (ptFrom.getX() + pt.getX()) - (wh / 2);
-            double y = (ptFrom.getY() + pt.getY()) - (wh / 2);
+            double wh = 2 * DISTANCE_CENTRE_OBSTACLE / 10;
+            double x = pt.getX() / 10 - (wh / 2);
+            double y = pt.getY() / 10 - (wh / 2);
 
             Rectangle2D obs = new Rectangle2D.Double(x, y, wh, wh);
             if (obs.intersectsLine(trajectoryLine)) {
+                log.info("Collision détectée : {} {}", pt, obs);
                 obstacles.add(obs);
             }
         }
 
         // 3 Une collision est détecté
-        if(CollectionUtils.isNotEmpty(obstacles)) {
+        if (CollectionUtils.isNotEmpty(obstacles)) {
             pathFinder.addObstacles(obstacles.toArray(new Shape[obstacles.size()]));
 
             // On recalcul le path
