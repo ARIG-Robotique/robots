@@ -56,13 +56,9 @@ public class RobotContext {
     @Bean
     @Primary
     public ITrajectoryManager mouvementManager() {
-        TrajectoryManager mv = new TrajectoryManager(IConstantesNerellConfig.arretDistanceMm, IConstantesNerellConfig.approcheDistanceMm,
+        return new TrajectoryManager(IConstantesNerellConfig.arretDistanceMm, IConstantesNerellConfig.approcheDistanceMm,
                 IConstantesNerellConfig.arretOrientDeg, IConstantesNerellConfig.approcheOrientationDeg,
                 IConstantesNerellConfig.angleReculDeg);
-        //mv.setDistanceMiniEntrePointMm(IConstantesNerellConfig.distanceMiniEntrePointMm);
-        //mv.setDistanceChangementVitesse(IConstantesNerellConfig.distanceChangementVitesse);
-        //mv.setVitesseLente(IConstantesNerellConfig.vitesseLente);
-        return mv;
     }
 
     @Bean(value = "mouvementManagerAsync")
