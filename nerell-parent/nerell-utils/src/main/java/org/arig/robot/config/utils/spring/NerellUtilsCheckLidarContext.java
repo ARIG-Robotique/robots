@@ -1,4 +1,4 @@
-package org.arig.robot.config.spring;
+package org.arig.robot.config.utils.spring;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.system.capteurs.ILidarTelemeter;

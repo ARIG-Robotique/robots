@@ -2,7 +2,7 @@ package org.arig.robot;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.config.spring.NerellUtilsReglagePIDContext;
+import org.arig.robot.config.utils.spring.NerellUtilsReglagePIDContext;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.monitoring.IMonitoringWrapper;

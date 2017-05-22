@@ -2,7 +2,7 @@ package org.arig.robot;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.config.spring.NerellUtilsCheckLidarContext;
+import org.arig.robot.config.utils.spring.NerellUtilsCheckLidarContext;
 import org.arig.robot.model.lidar.Scan;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.system.capteurs.RPLidarA2OverSocketTelemeter;

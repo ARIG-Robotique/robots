@@ -1,5 +1,6 @@
-package org.arig.robot.config.spring;
+package org.arig.robot.config.utils.spring;
 
+import org.arig.robot.config.spring.NerellI2CContext;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.filters.pid.CompletePidFilter;
 import org.arig.robot.filters.pid.IPidFilter;

@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.arig.robot.config.spring.NerellUtilsCaptureCodeursContext;
+import org.arig.robot.config.utils.spring.NerellUtilsCaptureCodeursContext;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
