@@ -7,10 +7,11 @@ import org.arig.robot.exception.CollisionFoundException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
-import org.arig.robot.system.TrajectoryManager;
+import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,7 +43,8 @@ public class MouvementController {
     private IAvoidingService avoidingService;
 
     @Autowired
-    private TrajectoryManager trajectoryManager;
+    @Qualifier("mouvementManagerAsync")
+    private ITrajectoryManager trajectoryManager;
 
     @RequestMapping(method = RequestMethod.GET)
     public Map<String, Object> showPosition() {

@@ -28,7 +28,7 @@ import java.util.stream.Stream;
  * @author gdepuille
  */
 @Slf4j
-public class TrajectoryManager implements InitializingBean {
+public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
     @Autowired
     private IOdometrie odom;
@@ -127,6 +127,7 @@ public class TrajectoryManager implements InitializingBean {
     /**
      * Fonction permettant d'initialiser les composants externe pour le fonctionnement
      */
+    @Override
     public void init() {
         // Initialisation des cartes codeurs
         resetEncodeurs();
@@ -142,6 +143,7 @@ public class TrajectoryManager implements InitializingBean {
     /**
      * Reset encodeurs.
      */
+    @Override
     public void resetEncodeurs() {
         encoders.reset();
     }
@@ -149,6 +151,7 @@ public class TrajectoryManager implements InitializingBean {
     /**
      * Stop.
      */
+    @Override
     public void stop() {
         propulsionsMotors.stopDroit();
         propulsionsMotors.stopGauche();
@@ -158,6 +161,7 @@ public class TrajectoryManager implements InitializingBean {
     /**
      * Process. Cette méthode permet de réaliser les fonctions lié aux déplacements.
      */
+    @Override
     public void process() {
         // 1. Calcul de la position du robot
         encoders.lectureValeurs();
@@ -341,6 +345,7 @@ public class TrajectoryManager implements InitializingBean {
      * @param y position sur l'axe Y
      * @throws NoPathFoundException
      */
+    @Override
     public void pathTo(final double x, final double y) throws NoPathFoundException, AvoidingException {
         boolean trajetOk = false;
         int nbCollisionDetected = 0;
@@ -386,6 +391,7 @@ public class TrajectoryManager implements InitializingBean {
      * @param x position sur l'axe X
      * @param y position sur l'axe Y
      */
+    @Override
     public void gotoPointMM(final double x, final double y) throws CollisionFoundException {
         gotoPointMM(x, y, true);
     }
@@ -397,6 +403,7 @@ public class TrajectoryManager implements InitializingBean {
      * @param y         position sur l'axe Y
      * @param avecArret demande d'arret sur le point
      */
+    @Override
     public void gotoPointMM(final double x, final double y, final boolean avecArret) throws CollisionFoundException {
         log.info("Va au point X = {}mm ; Y = {}mm {}", x, y, avecArret ? "et arrete toi" : "sans arret");
         cmdRobot.getPosition().setAngle(0);
@@ -414,6 +421,7 @@ public class TrajectoryManager implements InitializingBean {
      *
      * @param angle the angle
      */
+    @Override
     public void gotoOrientationDeg(final double angle) throws CollisionFoundException {
         log.info("Aligne toi sur l'angle {}° du repère", angle);
 
@@ -428,6 +436,7 @@ public class TrajectoryManager implements InitializingBean {
      * @param x the x
      * @param y the y
      */
+    @Override
     public void alignFrontTo(final double x, final double y) throws CollisionFoundException {
         log.info("Aligne ton avant sur le point X = {}mm ; Y = {}mm", x, y);
         alignFrontToAvecDecalage(x, y, 0);
@@ -441,6 +450,7 @@ public class TrajectoryManager implements InitializingBean {
      * @param decalageDeg valeur du déclage angulaire par rapport au point X,Y
      * @throws CollisionFoundException
      */
+    @Override
     public void alignFrontToAvecDecalage(final double x, final double y, final double decalageDeg) throws CollisionFoundException {
         if (decalageDeg != 0) {
             log.info("Décalage de {}° par rapport au point X = {}mm ; Y = {}mm", decalageDeg, x, y);
@@ -464,6 +474,7 @@ public class TrajectoryManager implements InitializingBean {
      * @param x the x
      * @param y the y
      */
+    @Override
     public void alignBackTo(final double x, final double y) throws CollisionFoundException {
         log.info("Aligne ton cul sur le point X = {}mm ; Y = {}mm", x, y);
 
@@ -491,10 +502,12 @@ public class TrajectoryManager implements InitializingBean {
      *
      * @param distance the distance
      */
+    @Override
     public void avanceMM(final double distance) throws CollisionFoundException {
         cmdAvanceMMByType(distance, TypeConsigne.DIST, TypeConsigne.ANGLE);
     }
 
+    @Override
     public void avanceMMSansAngle(final double distance) throws CollisionFoundException {
         cmdAvanceMMByType(distance, TypeConsigne.DIST);
     }
@@ -518,11 +531,13 @@ public class TrajectoryManager implements InitializingBean {
      *
      * @param distance the distance
      */
+    @Override
     public void reculeMM(final double distance) throws CollisionFoundException {
         log.info("Recul de {}mm", Math.abs(distance));
         avanceMM(-distance);
     }
 
+    @Override
     public void reculeMMSansAngle(final double distance) throws CollisionFoundException {
         log.info("Recul de {}mm sans angle", Math.abs(distance));
         avanceMMSansAngle(-distance);
@@ -533,6 +548,7 @@ public class TrajectoryManager implements InitializingBean {
      *
      * @param angle the angle
      */
+    @Override
     public void tourneDeg(final double angle) throws CollisionFoundException {
         log.info("Tourne de {}°", angle);
 
@@ -561,6 +577,7 @@ public class TrajectoryManager implements InitializingBean {
      * @param x2 the x2
      * @param y2 the y2
      */
+    @Override
     public void followLine(final double x1, final double y1, final double x2, final double y2) throws CollisionFoundException {
         // TODO : A implémenter la commande
         throw new NotYetImplementedException();
@@ -573,6 +590,7 @@ public class TrajectoryManager implements InitializingBean {
      * @param y the y
      * @param r the r
      */
+    @Override
     public void turnAround(final double x, final double y, final double r) throws CollisionFoundException {
         // TODO : A implémenter la commande
         throw new NotYetImplementedException();
@@ -601,6 +619,7 @@ public class TrajectoryManager implements InitializingBean {
      * @param vDistance    vitesse pour la boucle distance
      * @param vOrientation vitesse pour la boucle orientation
      */
+    @Override
     public void setVitesse(long vDistance, long vOrientation) {
         cmdRobot.getVitesse().setDistance(vDistance);
         cmdRobot.getVitesse().setOrientation(vOrientation);
@@ -609,6 +628,7 @@ public class TrajectoryManager implements InitializingBean {
     /**
      * Permet d'attendre le passage au point suivant
      */
+    @Override
     public void waitMouvement() throws CollisionFoundException {
         if (cmdRobot.isFrein()) {
             log.info("Attente fin de trajet");

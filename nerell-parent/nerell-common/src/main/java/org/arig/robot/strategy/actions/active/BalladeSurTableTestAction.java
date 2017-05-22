@@ -7,6 +7,7 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.strategy.IAction;
+import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.TrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class BalladeSurTableTestAction implements IAction {
 
     @Autowired
-    private TrajectoryManager mv;
+    private ITrajectoryManager mv;
 
     @Autowired
     private RobotStatus rs;

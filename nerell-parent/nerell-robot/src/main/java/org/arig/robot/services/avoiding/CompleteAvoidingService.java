@@ -5,6 +5,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
+import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.TrajectoryManager;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -27,7 +28,7 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
     private static final int DISTANCE_CENTRE_OBSTACLE = 500;
 
     @Autowired
-    private TrajectoryManager trajectoryManager;
+    private ITrajectoryManager trajectoryManager;
 
     @Autowired
     private ConvertionRobotUnit conv;

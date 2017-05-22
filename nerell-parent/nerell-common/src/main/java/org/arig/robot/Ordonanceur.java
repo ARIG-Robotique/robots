@@ -15,6 +15,7 @@ import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
+import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.TrajectoryManager;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.pathfinding.IPathFinder;
@@ -51,7 +52,7 @@ public class Ordonanceur {
     private ServosService servosService;
 
     @Autowired
-    private TrajectoryManager trajectoryManager;
+    private ITrajectoryManager trajectoryManager;
 
     @Autowired
     private IPathFinder pathFinder;

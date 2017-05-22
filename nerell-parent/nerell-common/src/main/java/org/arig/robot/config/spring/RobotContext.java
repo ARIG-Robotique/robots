@@ -10,7 +10,9 @@ import org.arig.robot.filters.ramp.RampFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
+import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.TrajectoryManager;
+import org.arig.robot.system.TrajectoryManagerAsync;
 import org.arig.robot.system.motion.AsservissementPolaire;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
@@ -22,6 +24,7 @@ import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 
 /**
@@ -44,7 +47,8 @@ public class RobotContext {
     }
 
     @Bean
-    public TrajectoryManager mouvementManager() {
+    @Primary
+    public ITrajectoryManager mouvementManager() {
         TrajectoryManager mv = new TrajectoryManager(IConstantesNerellConfig.arretDistanceMm, IConstantesNerellConfig.approcheDistanceMm,
                 IConstantesNerellConfig.arretOrientDeg, IConstantesNerellConfig.approcheOrientationDeg,
                 IConstantesNerellConfig.angleReculDeg);
@@ -52,6 +56,11 @@ public class RobotContext {
         //mv.setDistanceChangementVitesse(IConstantesNerellConfig.distanceChangementVitesse);
         //mv.setVitesseLente(IConstantesNerellConfig.vitesseLente);
         return mv;
+    }
+
+    @Bean(value = "mouvementManagerAsync")
+    public ITrajectoryManager mouvementManagerAsync() {
+        return new TrajectoryManagerAsync(mouvementManager());
     }
 
     @Bean
