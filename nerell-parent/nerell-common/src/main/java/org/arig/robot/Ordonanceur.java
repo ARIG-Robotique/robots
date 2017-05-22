@@ -13,6 +13,7 @@ import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.services.EjectionModuleService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.system.ITrajectoryManager;
@@ -46,6 +47,9 @@ public class Ordonanceur {
 
     @Autowired
     private II2CManager i2CManager;
+
+    @Autowired
+    private EjectionModuleService ejectionModuleService;
 
     @Autowired
     private ServosService servosService;
@@ -130,6 +134,9 @@ public class Ordonanceur {
 
         log.info("Démarrage du lidar");
         lidar.startScan();
+
+        log.info("Position initiale de l'ejection module");
+        ejectionModuleService.init();
 
         log.warn("La tirette n'est pas la et la selection couleur n'as pas eu lieu. Phase de préparation Nerell");
         boolean selectionCouleur = false;
@@ -231,7 +238,7 @@ public class Ordonanceur {
         monitoringWrapper.save();
 
         // TODO : Attente remise de la tirette pour ejecter les modules et les balles en stocks
-        while(!ioService.tirette()) {
+        while(!ioService.tirette() || !ioService.auOk()) {
             ioService.colorLedRGBOk();
             waitTimeMs(500);
             ioService.clearColorLedRGB();
@@ -239,7 +246,15 @@ public class Ordonanceur {
         }
 
         // Ejection du stock
+        ioService.colorLedRGBKo();
+        ioService.enableAlim5VPuissance();
+        ioService.enableAlim12VPuissance();
 
+        ejectionModuleService.ejectionAvantRetourStand();
+
+        ioService.disableAlim5VPuissance();
+        ioService.disableAlim12VPuissance();
+        ioService.clearColorLedRGB();
     }
 
     private void waitTimeMs(long ms) {

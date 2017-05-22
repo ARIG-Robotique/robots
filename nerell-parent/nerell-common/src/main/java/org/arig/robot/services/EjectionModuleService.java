@@ -2,7 +2,6 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.ModuleLunaire;
-import org.arig.robot.model.RobotStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +13,6 @@ import org.springframework.stereotype.Service;
 public class EjectionModuleService {
 
     @Autowired
-    private RobotStatus robotStatus;
-
-    @Autowired
     private IIOService ioService;
 
     @Autowired
@@ -26,13 +22,17 @@ public class EjectionModuleService {
         log.info("Initialisation de l'ejection des modules");
         if (ioService.glissiereFerme()) {
             servosService.ouvreGlissiere();
-            while(!ioService.finCourseGlissiereDroite());
+            while(!ioService.finCourseGlissiereDroite()) {
+                waitTimeMs(1);
+            }
             servosService.stopGlissiere();
         }
 
         // Dans une position ouverte quelque part
         servosService.fermeGlissiere();
-        while(ioService.finCourseGlissiereDroite());
+        while(ioService.finCourseGlissiereDroite()) {
+            waitTimeMs(1);
+        }
         servosService.stopGlissiere();
     }
 
@@ -42,21 +42,29 @@ public class EjectionModuleService {
         }
 
         while(ioService.presenceDevidoir()) {
-
+            servosService.devidoirDechargement();
+            while(!ioService.presenceRouleaux()) {
+                waitTimeMs(10);
+            }
+            ejectionModule(ModuleLunaire.monochrome());
         }
     }
 
     public void ejectionModule(ModuleLunaire module) {
         log.info("Ejection module {}", module.type().name());
-
-        servosService.devidoirChargement();
         if (module.isPolychrome()) {
             // TODO
         }
+
+        servosService.devidoirChargement();
         servosService.ouvreGlissiere();
-        while(ioService.finCourseGlissiereGauche());
+        while(ioService.finCourseGlissiereGauche()) {
+            waitTimeMs(1);
+        }
         servosService.fermeGlissiere();
-        while(ioService.finCourseGlissiereDroite());
+        while(ioService.finCourseGlissiereDroite()) {
+            waitTimeMs(1);
+        }
         servosService.stopGlissiere();
     }
 
