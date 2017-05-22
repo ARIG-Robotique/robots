@@ -223,9 +223,6 @@ public class Ordonanceur {
         ioService.disableAlim8VPuissance();
         ioService.disableAlim12VPuissance();
 
-        // On éteint la couleur de la team.
-        ioService.colorLedRGBOk();
-
         // On arrette le lidar
         lidar.stopScan();
         lidar.end();
@@ -234,6 +231,14 @@ public class Ordonanceur {
         monitoringWrapper.save();
 
         // TODO : Attente remise de la tirette pour ejecter les modules et les balles en stocks
+        while(!ioService.tirette()) {
+            ioService.colorLedRGBOk();
+            waitTimeMs(500);
+            ioService.clearColorLedRGB();
+            waitTimeMs(500);
+        }
+
+        // Ejection du stock
 
     }
 
