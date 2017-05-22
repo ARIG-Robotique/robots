@@ -20,6 +20,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.util.stream.Stream;
+
 /**
  * The Class TrajectoryManager.
  *
@@ -59,11 +61,15 @@ public class TrajectoryManager implements InitializingBean {
     @Getter
     private boolean trajetAtteint, trajetEnApproche = false;
 
-    /** Boolean si un obstacle est rencontré (stop le robot sur place) **/
+    /**
+     * Boolean si un obstacle est rencontré (stop le robot sur place)
+     **/
     @Setter
     private boolean obstacleFound = false;
 
-    /** Boolean pour relancer après un obstacle (gestion de l'évittement) */
+    /**
+     * Boolean pour relancer après un obstacle (gestion de l'évittement)
+     */
     @Setter
     private boolean collisionDetected = false;
 
@@ -190,12 +196,12 @@ public class TrajectoryManager implements InitializingBean {
 
         if (!trajetAtteint && cmdRobot.isType(TypeConsigne.XY)) {
             // Calcul en fonction de l'odométrie
-            long dX = (long) (cmdRobot.getPosition().getPt().getX() - currentPosition.getPt().getX());
-            long dY = (long) (cmdRobot.getPosition().getPt().getY() - currentPosition.getPt().getY());
+            double dX = (cmdRobot.getPosition().getPt().getX() - currentPosition.getPt().getX());
+            double dY = (cmdRobot.getPosition().getPt().getY() - currentPosition.getPt().getY());
 
             // Calcul des consignes
-            long consDist = calculDistanceConsigne(dX, dY);
-            long consOrient = calculAngleConsigne(dX, dY);
+            double consDist = calculDistanceConsigne(dX, dY);
+            double consOrient = calculAngleConsigne(dX, dY);
 
             // Calcul du coef d'annulation de la distance
             // Permet d'effectuer un demi tour en 3 temps.
@@ -204,8 +210,8 @@ public class TrajectoryManager implements InitializingBean {
             }
 
             // Sauvegarde des consignes
-            cmdRobot.getConsigne().setDistance(consDist);
-            cmdRobot.getConsigne().setOrientation(consOrient);
+            cmdRobot.getConsigne().setDistance((long) consDist);
+            cmdRobot.getConsigne().setOrientation((long) consOrient);
 
         } else if (!trajetAtteint && cmdRobot.isType(TypeConsigne.LINE)) {
             // TODO : Consigne de suivi de ligne (gérer les clothoïde pour la liaison)
@@ -229,28 +235,27 @@ public class TrajectoryManager implements InitializingBean {
      *
      * @param dX delta X
      * @param dY delta Y
-     *
      * @return valeur en pulse de l'angle ajusté à PI
      */
-    private long calculAngleConsigne(long dX, long dY) {
-        double alpha = conv.radToPulse(Math.atan2(conv.pulseToRad(dY), conv.pulseToRad(dX)));
+    private double calculAngleConsigne(double dX, double dY) {
 
-        // Ajustement a PI
-        return (long) ajusteAngle(alpha - currentPosition.getAngle());
+        return conv.degToPulse(calculAngleDelta(
+                conv.pulseToDeg(currentPosition.getAngle()),
+                Math.atan2(conv.pulseToRad(dY), conv.pulseToRad(dX)) / Math.PI * 180
+        ));
     }
 
     /**
-     * Méthode permettant d'ajuster l'angle en fonction du bornage +Pi .. -Pi
+     * Méthode permettant d'ajuster l'angle en fonction du bornage -180 .. 180
      *
      * @param angle angle a ajusté
-     *
-     * @return Angle ajusté dans les borne -Pi .. +Pi
+     * @return Angle ajusté dans les borne -180 .. 180
      */
     private double ajusteAngle(double angle) {
-        if (angle > conv.getPiPulse()) {
-            return ajusteAngle(angle - conv.getPi2Pulse());
-        } else if (angle < -conv.getPiPulse()) {
-            return ajusteAngle(angle + conv.getPi2Pulse());
+        if (angle > 180) {
+            return ajusteAngle(angle - 360);
+        } else if (angle < -180) {
+            return ajusteAngle(angle + 360);
         }
 
         // L'angle est dans les borne.
@@ -258,15 +263,33 @@ public class TrajectoryManager implements InitializingBean {
     }
 
     /**
+     * Calcule de l'angle de déplacement le plus court entre deux angles
+     *
+     * @param angleOrig angle courant
+     * @param angle angle désiré
+     * @return
+     */
+    private double calculAngleDelta(double angleOrig, double angle) {
+        angle = ajusteAngle(angle);
+
+        return Stream.of(
+                angle - angleOrig,
+                angle - angleOrig - 360.0,
+                angle - angleOrig + 360.0
+        )
+                .min((a, b) -> new Double(Math.abs(a) - Math.abs(b)).intValue())
+                .get();
+    }
+
+    /**
      * Méthode de calcul de la consigne de distance en fonction de dX et dY.
      *
      * @param dX delta X
      * @param dY delta Y
-     *
      * @return valeur de la consigne de distance
      */
-    private long calculDistanceConsigne(long dX, long dY) {
-        return (long) Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
+    private double calculDistanceConsigne(double dX, double dY) {
+        return Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
     }
 
     private void gestionFlags() {
@@ -316,7 +339,6 @@ public class TrajectoryManager implements InitializingBean {
      *
      * @param x position sur l'axe X
      * @param y position sur l'axe Y
-     *
      * @throws NoPathFoundException
      */
     public void pathTo(final double x, final double y) throws NoPathFoundException, AvoidingException {
@@ -371,8 +393,8 @@ public class TrajectoryManager implements InitializingBean {
     /**
      * Méthode permettant de donner une consigne de position sur un point
      *
-     * @param x position sur l'axe X
-     * @param y position sur l'axe Y
+     * @param x         position sur l'axe X
+     * @param y         position sur l'axe Y
      * @param avecArret demande d'arret sur le point
      */
     public void gotoPointMM(final double x, final double y, final boolean avecArret) throws CollisionFoundException {
@@ -394,7 +416,9 @@ public class TrajectoryManager implements InitializingBean {
      */
     public void gotoOrientationDeg(final double angle) throws CollisionFoundException {
         log.info("Aligne toi sur l'angle {}° du repère", angle);
-        double newOrient = angle - conv.pulseToDeg(currentPosition.getAngle());
+
+        double newOrient = calculAngleDelta(conv.pulseToDeg(currentPosition.getAngle()), angle);
+
         tourneDeg(newOrient);
     }
 
@@ -412,10 +436,9 @@ public class TrajectoryManager implements InitializingBean {
     /**
      * Alignement sur un point avec un décalage en degré (dans le sens trigo)
      *
-     * @param x position sur l'axe X
-     * @param y position sur l'axe Y
+     * @param x           position sur l'axe X
+     * @param y           position sur l'axe Y
      * @param decalageDeg valeur du déclage angulaire par rapport au point X,Y
-     *
      * @throws CollisionFoundException
      */
     public void alignFrontToAvecDecalage(final double x, final double y, final double decalageDeg) throws CollisionFoundException {
@@ -423,12 +446,12 @@ public class TrajectoryManager implements InitializingBean {
             log.info("Décalage de {}° par rapport au point X = {}mm ; Y = {}mm", decalageDeg, x, y);
         }
 
-        long dX = (long) (conv.mmToPulse(x) - currentPosition.getPt().getX());
-        long dY = (long) (conv.mmToPulse(y) - currentPosition.getPt().getY());
+        double dX = conv.mmToPulse(x) - currentPosition.getPt().getX();
+        double dY = conv.mmToPulse(y) - currentPosition.getPt().getY();
 
         cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
         cmdRobot.getConsigne().setDistance(0);
-        cmdRobot.getConsigne().setOrientation(calculAngleConsigne(dX, dY) + (long) conv.degToPulse(decalageDeg));
+        cmdRobot.getConsigne().setOrientation((long) (calculAngleConsigne(dX, dY) + conv.degToPulse(decalageDeg)));
         cmdRobot.setFrein(true);
 
         prepareNextMouvement();
@@ -444,10 +467,10 @@ public class TrajectoryManager implements InitializingBean {
     public void alignBackTo(final double x, final double y) throws CollisionFoundException {
         log.info("Aligne ton cul sur le point X = {}mm ; Y = {}mm", x, y);
 
-        long dX = (long) (conv.mmToPulse(x) - currentPosition.getPt().getX());
-        long dY = (long) (conv.mmToPulse(y) - currentPosition.getPt().getY());
+        double dX = conv.mmToPulse(x) - currentPosition.getPt().getX();
+        double dY = conv.mmToPulse(y) - currentPosition.getPt().getY();
 
-        long consOrient = calculAngleConsigne(dX, dY);
+        double consOrient = calculAngleConsigne(dX, dY);
         if (consOrient > 0) {
             consOrient -= conv.getPiPulse();
         } else {
@@ -456,7 +479,7 @@ public class TrajectoryManager implements InitializingBean {
 
         cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
         cmdRobot.getConsigne().setDistance(0);
-        cmdRobot.getConsigne().setOrientation(consOrient);
+        cmdRobot.getConsigne().setOrientation((long) consOrient);
         cmdRobot.setFrein(true);
 
         prepareNextMouvement();
@@ -575,7 +598,7 @@ public class TrajectoryManager implements InitializingBean {
     /**
      * Définition des vitesses de déplacement sur les deux axes du robot.
      *
-     * @param vDistance vitesse pour la boucle distance
+     * @param vDistance    vitesse pour la boucle distance
      * @param vOrientation vitesse pour la boucle orientation
      */
     public void setVitesse(long vDistance, long vOrientation) {
