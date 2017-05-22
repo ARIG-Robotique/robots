@@ -72,6 +72,7 @@ public class CapteursController extends AbstractCapteursController implements In
         analogiqueInfos.put("GP2D avant Droit", () -> readI2CAnalogValue(IConstantesI2CAdc.GP2D_AVANT_DROIT));
         analogiqueInfos.put("GP2D Scan haut", () -> readI2CAnalogValue(IConstantesI2CAdc.GP2D_SCAN_HAUT));
         analogiqueInfos.put("GP2D Scan bas", () -> readI2CAnalogValue(IConstantesI2CAdc.GP2D_SCAN_BAS));
+        analogiqueInfos.put("Vaccum", () -> readI2CAnalogValue(IConstantesI2CAdc.VACUOSTAT));
 
         // Capteurs informations Text
         textInfos.put("Equipe", () -> rs.getTeam().name());
