@@ -3,6 +3,7 @@ package org.arig.robot.system;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.CollisionFoundException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.monitor.AbstractMonitor;
 
 /**
  * Created by dsorel on 22/05/17.
@@ -20,7 +21,7 @@ public interface ITrajectoryManager {
 
     void gotoPointMM(double x, double y) throws CollisionFoundException;
 
-    void gotoPointMM(double x, double y, boolean avecArret) throws CollisionFoundException;
+    void gotoPointMM(double x, double y, boolean avecArret, boolean disableMonitor) throws CollisionFoundException;
 
     void gotoOrientationDeg(double angle) throws CollisionFoundException;
 
@@ -51,6 +52,8 @@ public interface ITrajectoryManager {
     boolean isTrajetAtteint();
 
     boolean isTrajetEnApproche();
+
+    AbstractMonitor getCurrentMouvement();
 
     void setObstacleFound(boolean obstacleFound);
 

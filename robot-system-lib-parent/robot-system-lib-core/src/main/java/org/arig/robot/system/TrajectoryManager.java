@@ -10,6 +10,11 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.model.*;
 import org.arig.robot.model.enums.TypeConsigne;
+import org.arig.robot.model.monitor.AbstractMonitorMouvement;
+import org.arig.robot.model.monitor.MonitorMouvementPath;
+import org.arig.robot.model.monitor.MonitorMouvementRotation;
+import org.arig.robot.model.monitor.MonitorMouvementTranslation;
+import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
@@ -32,6 +37,9 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
     @Autowired
     private IOdometrie odom;
+
+    @Autowired
+    private IMonitoringWrapper monitoring;
 
     @Autowired
     private IAsservissementPolaire asservPolaire;
@@ -60,6 +68,9 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
     @Getter
     private boolean trajetAtteint, trajetEnApproche = false;
+
+    @Getter
+    private AbstractMonitorMouvement currentMouvement = null;
 
     /**
      * Boolean si un obstacle est rencontré (stop le robot sur place)
@@ -353,21 +364,27 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
         // Toujours activer l'évittement en Path
         rs.enableAvoidance();
         do {
-            Point ptFrom = new Point(
+            Point ptFromCm = new Point(
                     conv.pulseToMm(currentPosition.getPt().getX()) / 10,
                     conv.pulseToMm(currentPosition.getPt().getY()) / 10
             );
-            Point ptTo = new Point(x / 10, y / 10);
+            Point ptToCm = new Point(x / 10, y / 10);
             try {
                 log.info("Demande de chemin vers X = {}mm ; Y = {}mm", x, y);
-                Chemin c = pathFinder.findPath(ptFrom, ptTo);
+                Chemin c = pathFinder.findPath(ptFromCm, ptToCm);
+
+                MonitorMouvementPath mPath = new MonitorMouvementPath();
+                mPath.setPath(c.getPoints());
+                currentMouvement = mPath;
+                monitoring.addMouvementPoint(mPath);
+
                 while (c.hasNext()) {
                     Point p = c.next();
                     Point targetPoint = new Point(p.getX() * 10, p.getY() * 10);
 
                     // Processing du path
                     //gotoPointMM(targetPoint.getX(), targetPoint.getY(), !c.hasNext());
-                    gotoPointMM(targetPoint.getX(), targetPoint.getY(), true);
+                    gotoPointMM(targetPoint.getX(), targetPoint.getY(), true, true);
                 }
 
                 // Condition de sortie de la boucle.
@@ -393,7 +410,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      */
     @Override
     public void gotoPointMM(final double x, final double y) throws CollisionFoundException {
-        gotoPointMM(x, y, true);
+        gotoPointMM(x, y, true, false);
     }
 
     /**
@@ -404,13 +421,24 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param avecArret demande d'arret sur le point
      */
     @Override
-    public void gotoPointMM(final double x, final double y, final boolean avecArret) throws CollisionFoundException {
+    public void gotoPointMM(final double x, final double y, final boolean avecArret, boolean disableMonitor) throws CollisionFoundException {
         log.info("Va au point X = {}mm ; Y = {}mm {}", x, y, avecArret ? "et arrete toi" : "sans arret");
         cmdRobot.getPosition().setAngle(0);
         cmdRobot.getPosition().getPt().setX(conv.mmToPulse(x));
         cmdRobot.getPosition().getPt().setY(conv.mmToPulse(y));
         cmdRobot.setFrein(avecArret);
         cmdRobot.setTypes(TypeConsigne.XY);
+
+        if (!disableMonitor) {
+            double dX = (cmdRobot.getPosition().getPt().getX() - currentPosition.getPt().getX());
+            double dY = (cmdRobot.getPosition().getPt().getY() - currentPosition.getPt().getY());
+            double distance = calculDistanceConsigne(dX, dY);
+
+            MonitorMouvementTranslation mTr = new MonitorMouvementTranslation();
+            mTr.setDistance(conv.pulseToMm(distance));
+            currentMouvement = mTr;
+            monitoring.addMouvementPoint(mTr);
+        }
 
         prepareNextMouvement();
         waitMouvement();
@@ -522,6 +550,11 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
         cmdRobot.getConsigne().setOrientation(0);
         cmdRobot.setFrein(true);
 
+        MonitorMouvementTranslation mTr = new MonitorMouvementTranslation();
+        mTr.setDistance(distance);
+        currentMouvement = mTr;
+        monitoring.addMouvementPoint(mTr);
+
         prepareNextMouvement();
         waitMouvement();
     }
@@ -559,6 +592,11 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             cmdRobot.getConsigne().setDistance(0);
             cmdRobot.getConsigne().setOrientation((long) conv.degToPulse(angle));
             cmdRobot.setFrein(true);
+
+            MonitorMouvementRotation mRot = new MonitorMouvementRotation();
+            mRot.setAngle(angle);
+            currentMouvement = mRot;
+            monitoring.addMouvementPoint(mRot);
 
             prepareNextMouvement();
             waitMouvement();

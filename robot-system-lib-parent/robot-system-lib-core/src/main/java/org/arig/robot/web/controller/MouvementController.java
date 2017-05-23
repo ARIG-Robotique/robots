@@ -52,9 +52,7 @@ public class MouvementController {
         pos.put("x", conv.pulseToMm(position.getPt().getX()));
         pos.put("y", conv.pulseToMm(position.getPt().getY()));
         pos.put("angle", conv.pulseToDeg(position.getAngle()));
-        pos.put("targetX", conv.pulseToMm(cmdRobot.getPosition().getPt().getX()));
-        pos.put("targetY", conv.pulseToMm(cmdRobot.getPosition().getPt().getY()));
-        pos.put("targetAngle", conv.pulseToDeg(cmdRobot.getPosition().getAngle()));
+        pos.put("targetMvt", trajectoryManager.getCurrentMouvement());
         pos.put("trajetAtteint", trajectoryManager.isTrajetAtteint());
         pos.put("trajetEnApproche", trajectoryManager.isTrajetEnApproche());
         pos.put("typeAsserv", cmdRobot.typeAsserv());
@@ -71,7 +69,7 @@ public class MouvementController {
 
     @RequestMapping(value = "/position", method = RequestMethod.POST)
     public void allerEnPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws CollisionFoundException {
-        trajectoryManager.gotoPointMM(x, y, true);
+        trajectoryManager.gotoPointMM(x, y);
     }
 
     @RequestMapping(value = "/face", method = RequestMethod.POST)

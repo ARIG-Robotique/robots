@@ -2,7 +2,6 @@ package org.arig.robot.model.monitor;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.TypeMouvement;
 
 /**
@@ -11,9 +10,6 @@ import org.arig.robot.model.enums.TypeMouvement;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public abstract class AbstractMonitorMouvement extends AbstractMonitor {
-
-    private Point from;
-    private Point to;
 
     public abstract TypeMouvement getType();
 }

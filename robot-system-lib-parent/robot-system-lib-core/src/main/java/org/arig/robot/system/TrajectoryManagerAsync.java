@@ -3,6 +3,7 @@ package org.arig.robot.system;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.CollisionFoundException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.monitor.AbstractMonitor;
 import org.springframework.scheduling.annotation.Async;
 
 public class TrajectoryManagerAsync implements ITrajectoryManager {
@@ -48,8 +49,8 @@ public class TrajectoryManagerAsync implements ITrajectoryManager {
 
     @Override
     @Async
-    public void gotoPointMM(double x, double y, boolean avecArret) throws CollisionFoundException {
-        decorated.gotoPointMM(x, y, avecArret);
+    public void gotoPointMM(double x, double y, boolean avecArret, boolean disableMonitor) throws CollisionFoundException {
+        decorated.gotoPointMM(x, y, avecArret, disableMonitor);
     }
 
     @Override
@@ -137,6 +138,11 @@ public class TrajectoryManagerAsync implements ITrajectoryManager {
     @Override
     public boolean isTrajetEnApproche() {
         return decorated.isTrajetEnApproche();
+    }
+
+    @Override
+    public AbstractMonitor getCurrentMouvement() {
+        return decorated.getCurrentMouvement();
     }
 
     @Override
