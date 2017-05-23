@@ -54,36 +54,50 @@ public class EjectionModuleService {
         }
 
         while (ioService.presenceDevidoir()) {
-            servosService.devidoirDechargement();
-
-            int remaining = TEMPS_MAX_PRESENCE_ROULEAUX;
-            while (!ioService.presenceRouleaux() && remaining > 0) {
-                remaining -= 10;
-                waitTimeMs(10);
-            }
-
-            if (ioService.presenceRouleaux()) {
-                ejectionModule(ModuleLunaire.monochrome());
-            } else {
-                log.warn("Le dévidoir à dit qu'il était plein mais il a rien rendu !");
-                servosService.devidoirChargement();
-                servosService.waitDevidoire();
-            }
+            ejectionModule(ModuleLunaire.monochrome());
         }
     }
 
     public void ejectionModule(ModuleLunaire module) {
         log.info("Ejection module {}", module.type().name());
 
+        if (!ioService.presenceDevidoir()) {
+            log.warn("Le dévidoir est vide !");
+            return;
+        }
+
+        servosService.devidoirDechargement();
+        int remaining = TEMPS_MAX_PRESENCE_ROULEAUX;
+        while (!ioService.presenceRouleaux() && remaining > 0) {
+            remaining -= 10;
+            waitTimeMs(10);
+        }
+
+        if (!ioService.presenceRouleaux()) {
+            log.warn("Le dévidoir à dit qu'il était plein mais il a rien rendu !");
+            servosService.devidoirChargement();
+            servosService.waitDevidoire();
+            return;
+        }
+
         if (module.isPolychrome()) {
+            ioService.enableLedCapteurCouleur();
             servosService.devidoirLectureCouleur();
             servosService.waitDevidoire();
 
-            // TODO - Ya des grandes chances que ca marche pas !
-            ioService.enableLedCapteurCouleur();
+            if (ioService.getTeamColorFromSensor() == robotStatus.getTeam()) {
+                servosService.tourneModuleRouleauxRF();
+
+                remaining = TEMPS_MAX_TROUVER_COULEUR;
+                while (ioService.getTeamColorFromSensor() == robotStatus.getTeam() && remaining > 0) {
+                    remaining -= 10;
+                    waitTimeMs(10);
+                }
+            }
+
             servosService.tourneModuleRouleauxFF();
 
-            int remaining = TEMPS_MAX_TROUVER_COULEUR;
+            remaining = TEMPS_MAX_TROUVER_COULEUR;
             while (ioService.getTeamColorFromSensor() != robotStatus.getTeam() && remaining > 0) {
                 remaining -= 10;
                 waitTimeMs(10);

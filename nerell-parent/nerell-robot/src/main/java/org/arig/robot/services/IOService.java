@@ -10,6 +10,8 @@ import org.arig.robot.constants.IConstantesI2CAdc;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.monitor.MonitorTimeSerie;
+import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
@@ -34,6 +36,9 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Autowired
     private I2CAdcAnalogInput i2cAdc;
+
+    @Autowired
+    private IMonitoringWrapper monitoring;
 
     @Autowired
     @Qualifier("frontColorSensor")
@@ -146,7 +151,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         inPresencePinceDroite = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
 
         // PCF2
-        inPresenceBaseLunaireDroite= gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
+        inPresenceBaseLunaireDroite = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
         inPresenceBaseLunaireGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
         inPresenceBalleAspiration = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
         inBordureArriereDroite = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
@@ -291,16 +296,20 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public Team getTeamColorFromSensor() {
-        ColorData colorData = frontColorSensor.getColorData();
+        ColorData c = frontColorSensor.getColorData();
 
-        int bleu = colorData.b();
-        int jaune = colorData.g() + colorData.r();
+        MonitorTimeSerie mts = new MonitorTimeSerie();
+        mts.tableName("couleur");
+        mts.addField("r", c.r());
+        mts.addField("g", c.g());
+        mts.addField("b", c.b());
+        monitoring.addTimeSeriePoint(mts);
 
-        // Si c'est 42 le delta, je me coupe une couille
         int delta = 42;
-        if (bleu - jaune > delta) {
+
+        if (c.b() - c.r() > delta && c.b() - c.g() > delta / 2) {
             return Team.BLEU;
-        } else if (jaune - bleu > delta) {
+        } else if (c.r() - c.b() > delta && c.g() - c.b() > delta && Math.abs(c.r() - c.g()) < delta) {
             return Team.JAUNE;
         } else {
             return Team.UNKNOWN;

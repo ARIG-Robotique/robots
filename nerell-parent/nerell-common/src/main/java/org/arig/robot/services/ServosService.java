@@ -390,6 +390,14 @@ public class ServosService {
         servos.setPosition(IConstantesServos.MOTOR_ROULEAUX, IConstantesServos.MOTOR_FORWARD_FULL);
     }
 
+    public void tourneModuleRouleauxRF() {
+        servos.setPosition(IConstantesServos.MOTOR_ROULEAUX, IConstantesServos.MOTOR_REVERSE_FULL);
+    }
+
+    public void tourneModuleRouleauxFM() {
+        servos.setPosition(IConstantesServos.MOTOR_ROULEAUX, IConstantesServos.MOTOR_FORWARD_MEDIUM);
+    }
+
     public void tourneModuleRouleauxRM() {
         servos.setPosition(IConstantesServos.MOTOR_ROULEAUX, IConstantesServos.MOTOR_REVERSE_MEDIUM);
     }

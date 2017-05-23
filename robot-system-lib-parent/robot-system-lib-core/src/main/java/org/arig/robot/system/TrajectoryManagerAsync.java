@@ -5,6 +5,7 @@ import org.arig.robot.exception.CollisionFoundException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.model.monitor.AbstractMonitor;
+import org.arig.robot.model.monitor.AbstractMonitorMouvement;
 import org.springframework.scheduling.annotation.Async;
 
 public class TrajectoryManagerAsync implements ITrajectoryManager {
@@ -148,7 +149,7 @@ public class TrajectoryManagerAsync implements ITrajectoryManager {
     }
 
     @Override
-    public AbstractMonitor getCurrentMouvement() {
+    public AbstractMonitorMouvement getCurrentMouvement() {
         return decorated.getCurrentMouvement();
     }
 

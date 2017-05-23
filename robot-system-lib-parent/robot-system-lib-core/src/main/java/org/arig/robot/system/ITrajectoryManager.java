@@ -5,6 +5,7 @@ import org.arig.robot.exception.CollisionFoundException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.model.monitor.AbstractMonitor;
+import org.arig.robot.model.monitor.AbstractMonitorMouvement;
 
 /**
  * Created by dsorel on 22/05/17.
@@ -56,7 +57,7 @@ public interface ITrajectoryManager {
 
     boolean isTrajetEnApproche();
 
-    AbstractMonitor getCurrentMouvement();
+    AbstractMonitorMouvement getCurrentMouvement();
 
     void setObstacleFound(boolean obstacleFound);
 
