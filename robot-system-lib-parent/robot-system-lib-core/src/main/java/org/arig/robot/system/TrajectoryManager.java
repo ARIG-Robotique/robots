@@ -9,6 +9,7 @@ import org.arig.robot.exception.CollisionFoundException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.model.*;
+import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.model.monitor.AbstractMonitorMouvement;
 import org.arig.robot.model.monitor.MonitorMouvementPath;
@@ -262,7 +263,8 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
         return conv.degToPulse(calculAngleDelta(
                 conv.pulseToDeg(currentPosition.getAngle()),
-                Math.toDegrees(Math.atan2(conv.pulseToRad(dY), conv.pulseToRad(dX)))
+                Math.toDegrees(Math.atan2(conv.pulseToRad(dY), conv.pulseToRad(dX))),
+                SensRotation.AUTO
         ));
     }
 
@@ -286,20 +288,41 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     /**
      * Calcule de l'angle de déplacement le plus court entre deux angles
      *
-     * @param angleOrig angle courant
-     * @param angle     angle désiré
+     * @param angleOrig    angle courant
+     * @param angle        angle désiré
+     * @param sensRotation
      * @return
      */
-    private double calculAngleDelta(double angleOrig, double angle) {
+    private double calculAngleDelta(double angleOrig, double angle, SensRotation sensRotation) {
         angle = ajusteAngle(angle);
 
-        return Stream.of(
-                angle - angleOrig,
-                angle - angleOrig - 360.0,
-                angle - angleOrig + 360.0
-        )
-                .min((a, b) -> new Double(Math.abs(a) - Math.abs(b)).intValue())
-                .get();
+        switch (sensRotation) {
+            case TRIGO:
+                if (angle > angleOrig) {
+                    return angle - angleOrig;
+                } else {
+                    return angle - angleOrig + 360;
+                }
+
+            case HORAIRE:
+                if (angle < angleOrig) {
+                    return angle - angleOrig;
+                } else {
+                    return angle - angleOrig - 360;
+                }
+
+            case AUTO:
+                return Stream.of(
+                        angle - angleOrig,
+                        angle - angleOrig - 360.0,
+                        angle - angleOrig + 360.0
+                )
+                        .min((a, b) -> new Double(Math.abs(a) - Math.abs(b)).intValue())
+                        .get();
+
+            default:
+                return 0;
+        }
     }
 
     /**
@@ -470,9 +493,14 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      */
     @Override
     public void gotoOrientationDeg(final double angle) throws CollisionFoundException {
-        log.info("Aligne toi sur l'angle {}° du repère", angle);
+        gotoOrientationDeg(angle, SensRotation.AUTO);
+    }
 
-        double newOrient = calculAngleDelta(conv.pulseToDeg(currentPosition.getAngle()), angle);
+    @Override
+    public void gotoOrientationDeg(double angle, SensRotation sensRotation) throws CollisionFoundException {
+        log.info("Aligne toi sur l'angle {}° du repère dans le sens {}", angle, sensRotation.name());
+
+        double newOrient = calculAngleDelta(conv.pulseToDeg(currentPosition.getAngle()), angle, sensRotation);
 
         tourneDeg(newOrient);
     }

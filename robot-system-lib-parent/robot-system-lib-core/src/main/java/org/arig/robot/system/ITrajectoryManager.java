@@ -3,6 +3,7 @@ package org.arig.robot.system;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.CollisionFoundException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.model.monitor.AbstractMonitor;
 
 /**
@@ -24,6 +25,8 @@ public interface ITrajectoryManager {
     void gotoPointMM(double x, double y, boolean avecArret, boolean disableMonitor) throws CollisionFoundException;
 
     void gotoOrientationDeg(double angle) throws CollisionFoundException;
+
+    void gotoOrientationDeg(double angle, SensRotation sensRotation) throws CollisionFoundException;
 
     void alignFrontTo(double x, double y) throws CollisionFoundException;
 

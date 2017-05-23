@@ -3,6 +3,7 @@ package org.arig.robot.system;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.CollisionFoundException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.model.monitor.AbstractMonitor;
 import org.springframework.scheduling.annotation.Async;
 
@@ -57,6 +58,12 @@ public class TrajectoryManagerAsync implements ITrajectoryManager {
     @Async
     public void gotoOrientationDeg(double angle) throws CollisionFoundException {
         decorated.gotoOrientationDeg(angle);
+    }
+
+    @Override
+    @Async
+    public void gotoOrientationDeg(double angle, SensRotation sensRotation) throws CollisionFoundException {
+        decorated.gotoOrientationDeg(angle, sensRotation);
     }
 
     @Override

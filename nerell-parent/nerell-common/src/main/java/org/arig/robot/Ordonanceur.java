@@ -11,6 +11,7 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.EjectionModuleService;
@@ -175,7 +176,7 @@ public class Ordonanceur {
             trajectoryManager.avanceMM(200);
             trajectoryManager.gotoPointMM(1100, 772);
             trajectoryManager.gotoPointMM(890, 300);
-            trajectoryManager.gotoOrientationDeg(90);
+            trajectoryManager.gotoOrientationDeg(90, SensRotation.TRIGO);
             trajectoryManager.reculeMM(135);
             servosService.fermeAspiration();
         } else {
@@ -184,7 +185,7 @@ public class Ordonanceur {
             servosService.fermeAspiration();
             trajectoryManager.gotoPointMM(3000 - 1100, 772);
             trajectoryManager.gotoPointMM(3000 - 890, 300);
-            trajectoryManager.gotoOrientationDeg(90);
+            trajectoryManager.gotoOrientationDeg(90, SensRotation.TRIGO);
             trajectoryManager.reculeMM(135);
         }
 
