@@ -32,8 +32,8 @@ public class StrategyController {
         return strategyManager.getActions();
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public void execute(@RequestParam String uid) {
+    @RequestMapping(path = "/execute", method = RequestMethod.POST)
+    public void execute(@RequestParam("uid") String uid) {
         Optional<IAction> action = strategyManager.getActions().stream()
                 .filter(a -> StringUtils.equalsIgnoreCase(a.getUUID(), uid))
                 .findFirst();
