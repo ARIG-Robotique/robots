@@ -3,10 +3,10 @@ package org.arig.robot.services.avoiding;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.values.DoubleValueAverage;
-import org.arig.robot.filters.values.IntegerValueAverage;
 import org.arig.robot.model.MonitorPoint;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
+import org.arig.robot.model.Rectangle;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.avoiding.IAvoidingService;
@@ -84,15 +84,17 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
     private final List<Point> detectedPointsMmCapteurs = new ArrayList<>();
     @Getter
     private final List<Point> detectedPointsMmLidar = new ArrayList<>();
+    @Getter
+    protected final List<Rectangle> colisionShape = new ArrayList<>();
 
     private DoubleValueAverage calcAvgGpGauche = new DoubleValueAverage();
     private DoubleValueAverage calcAvgGpCentre = new DoubleValueAverage();
     private DoubleValueAverage calcAvgGpDroit = new DoubleValueAverage();
 
-    private IntegerValueAverage calcAvgUsLatGauche = new IntegerValueAverage();
+    /*private IntegerValueAverage calcAvgUsLatGauche = new IntegerValueAverage();
     private IntegerValueAverage calcAvgUsGauche = new IntegerValueAverage();
     private IntegerValueAverage calcAvgUsDroit = new IntegerValueAverage();
-    private IntegerValueAverage calcAvgUsLatDroit = new IntegerValueAverage();
+    private IntegerValueAverage calcAvgUsLatDroit = new IntegerValueAverage();*/
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -113,16 +115,19 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
         Future<GP2D12.GP2D12Values> fGpDroit = gp2dDroit.readValue();
 
         // Lecture US
+        /*
         Future<Integer> fUsLatGauche = usLatGauche.readValue();
         Future<Integer> fUsGauche = usGauche.readValue();
         Future<Integer> fUsDroit = usDroit.readValue();
         Future<Integer> fUsLatDroit = usLatDroit.readValue();
+        */
 
         ScanInfos lidarScan = lidar.grabDatas();
 
         // TODO : Ajouter un delai pour ne pas rester bloqué.
-        while(!fUsLatGauche.isDone() && !fUsGauche.isDone() && !fUsDroit.isDone() && !fUsLatDroit.isDone()
-                && !fGpGauche.isDone() && !fGpCentre.isDone() && !fGpDroit.isDone());
+        /*while(!fUsLatGauche.isDone() && !fUsGauche.isDone() && !fUsDroit.isDone() && !fUsLatDroit.isDone()
+                && !fGpGauche.isDone() && !fGpCentre.isDone() && !fGpDroit.isDone());*/
+        while(!fGpGauche.isDone() && !fGpCentre.isDone() && !fGpDroit.isDone());
 
         // Stockage local des points
         List<Point> detectedPointsMmCapteurs = new ArrayList<>();
@@ -172,6 +177,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             log.warn("Erreur de récupération GP2D Droit", e);
         }
 
+        /*
         try {
             rawUsLatGauche = fUsLatGauche.get();
             if (rawUsLatGauche != SRF02Sonar.INVALID_VALUE) {
@@ -220,6 +226,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
         } catch (InterruptedException | ExecutionException e) {
             log.warn("Erreur de récupération US lat Droit", e);
         }
+        */
 
         if (lidarScan != null) {
             detectedPointsMmLidar.addAll(
@@ -241,15 +248,15 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
                 .addField("rawGpCentre", rawGpCentre)
                 .addField("avgGpCentre", avgGpCentre)
                 .addField("rawGpDroit", rawGpDroit)
-                .addField("avgGpDroit", avgGpDroit)
-                .addField("rawUsLatGauche", rawUsLatGauche)
+                .addField("avgGpDroit", avgGpDroit);
+                /*.addField("rawUsLatGauche", rawUsLatGauche)
                 .addField("avgUsLatGauche", avgUsLatGauche)
                 .addField("rawUsGauche", rawUsGauche)
                 .addField("avgUsGauche", avgUsGauche)
                 .addField("rawUsDroit", rawUsDroit)
                 .addField("avgUsDroit", avgUsDroit)
                 .addField("rawUsLatDroit", rawUsLatDroit)
-                .addField("avgUsLatDroit", avgUsLatDroit);
+                .addField("avgUsLatDroit", avgUsLatDroit);*/
         monitoringWrapper.addPoint(serie);
 
         // 3. On delegue à l'implémentation d'évittement

@@ -14,8 +14,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
+import java.awt.geom.Rectangle2D;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -59,6 +59,7 @@ public class MultiPathFinderTest {
     }
 
     @Test
+    @SneakyThrows
     public void testEndNodeDoesntExist() {
         pf.setAlgorithm(PathFinderAlgorithm.A_STAR_EUCLIDIAN);
         try {
@@ -70,7 +71,8 @@ public class MultiPathFinderTest {
     }
 
     @Test
-    public void testFindPathAStarManhattan() throws IOException, NoPathFoundException  {
+    @SneakyThrows
+    public void testFindPathAStarManhattan() {
         pf.setAlgorithm(PathFinderAlgorithm.A_STAR_MANHATTAN);
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
@@ -78,7 +80,8 @@ public class MultiPathFinderTest {
     }
 
     @Test
-    public void testFindPathAStarEuclidian() throws IOException, NoPathFoundException {
+    @SneakyThrows
+    public void testFindPathAStarEuclidian() {
         pf.setAlgorithm(PathFinderAlgorithm.A_STAR_EUCLIDIAN);
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
@@ -86,7 +89,8 @@ public class MultiPathFinderTest {
     }
 
     @Test
-    public void testFindPathDijkstra() throws IOException, NoPathFoundException {
+    @SneakyThrows
+    public void testFindPathDijkstra() {
         pf.setAlgorithm(PathFinderAlgorithm.DIJKSTRA);
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
@@ -94,7 +98,8 @@ public class MultiPathFinderTest {
     }
 
     @Test
-    public void testFindPathBreadthFirstSearch() throws IOException, NoPathFoundException {
+    @SneakyThrows
+    public void testFindPathBreadthFirstSearch() {
         pf.setAlgorithm(PathFinderAlgorithm.BREADTH_FIRST_SEARCH);
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
@@ -102,10 +107,27 @@ public class MultiPathFinderTest {
     }
 
     @Test
-    public void testFindPathDepthFirstSearch() throws IOException, NoPathFoundException {
+    @SneakyThrows
+    public void testFindPathDepthFirstSearch() {
         pf.setAlgorithm(PathFinderAlgorithm.DEPTH_FIRST_SEARCH);
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
         Assert.assertTrue(c.hasNext());
+    }
+
+    @Test
+    @SneakyThrows
+    public void testFindPathDijkstraAvecObstacle () {
+        pf.setAlgorithm(PathFinderAlgorithm.DIJKSTRA);
+        Chemin cheminSansObstacles = pf.findPath(from, to);
+        Assert.assertNotNull(cheminSansObstacles);
+        Assert.assertTrue(cheminSansObstacles.hasNext());
+
+        pf.addObstacles(new Rectangle2D.Double(100, 100, 200, 100));
+        Chemin cheminAvecObstacles = pf.findPath(from, to);
+        Assert.assertNotNull(cheminAvecObstacles);
+        Assert.assertTrue(cheminAvecObstacles.hasNext());
+
+        Assert.assertNotEquals(cheminSansObstacles.nbPoints(), cheminAvecObstacles.nbPoints());
     }
 }

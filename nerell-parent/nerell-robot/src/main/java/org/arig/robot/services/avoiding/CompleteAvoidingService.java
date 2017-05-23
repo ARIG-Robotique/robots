@@ -5,8 +5,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
+import org.arig.robot.model.Rectangle;
 import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.system.TrajectoryManager;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,14 +52,14 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
         }
 
         // 1 Stop du robot si obstacle trop proche.
-        boolean proxCapteurs = hasProximiteCapteurs();
+        /*boolean proxCapteurs = hasProximiteCapteurs();
         boolean proxLidar = hasProximiteLidar();
         boolean hasProx = proxCapteurs || proxLidar;
         if (hasProx) {
             // Stop, et ensuite on recalcul le path
             log.info("Obstacle a proximité détecté, capteurs : {}, lidar : {}", proxCapteurs, proxLidar);
             trajectoryManager.setObstacleFound(true);
-        }
+        }*/
 
         // 2 Detection de collision (ici on est tous en cm)
         Point2D ptFrom = new Point2D.Double(
@@ -73,6 +73,7 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
         Line2D trajectoryLine = new Line2D.Double(ptFrom, ptTo);
 
         List<Shape> obstacles = new ArrayList<>();
+        List<org.arig.robot.model.Rectangle> colisionShape = new ArrayList<>();
         for (Point pt : getDetectedPointsMmLidar()) {
             // Définition de l'obstacle
             double wh = 2 * DISTANCE_CENTRE_OBSTACLE / 10;
@@ -83,6 +84,7 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
             if (obs.intersectsLine(trajectoryLine)) {
                 log.info("Collision détectée : {} {}", pt, obs);
                 obstacles.add(obs);
+                colisionShape.add(new Rectangle(x * 10, y * 10, wh * 10, wh * 10));
             }
         }
 
@@ -90,8 +92,20 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
         if (CollectionUtils.isNotEmpty(obstacles)) {
             pathFinder.addObstacles(obstacles.toArray(new Shape[obstacles.size()]));
 
+            synchronized (this.colisionShape) {
+                this.colisionShape.clear();
+                this.colisionShape.addAll(colisionShape);
+            }
+
             // On recalcul le path
             trajectoryManager.setCollisionDetected(true);
+        } else {
+
+            // Pas de colision
+            synchronized (this.colisionShape) {
+                this.colisionShape.clear();
+            }
+            pathFinder.addObstacles();
         }
     }
 }
