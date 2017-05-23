@@ -15,5 +15,6 @@ import java.util.Collection;
 public class MonitorMouvementPath extends AbstractMonitorMouvement {
 
     private final TypeMouvement type = TypeMouvement.PATH;
+
     private Collection<Point> path;
 }

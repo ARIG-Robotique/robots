@@ -21,10 +21,13 @@ import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
+import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -65,6 +68,9 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
     @Autowired
     private CommandeRobot cmdRobot;
+
+    @Autowired
+    private TableUtils tableUtils;
 
     @Getter
     private boolean trajetAtteint, trajetEnApproche = false;
@@ -281,7 +287,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * Calcule de l'angle de déplacement le plus court entre deux angles
      *
      * @param angleOrig angle courant
-     * @param angle angle désiré
+     * @param angle     angle désiré
      * @return
      */
     private double calculAngleDelta(double angleOrig, double angle) {
@@ -360,27 +366,35 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     public void pathTo(final double x, final double y) throws NoPathFoundException, AvoidingException {
         boolean trajetOk = false;
         int nbCollisionDetected = 0;
+        int divisor = 10;
 
         // Toujours activer l'évittement en Path
         rs.enableAvoidance();
         do {
             Point ptFromCm = new Point(
-                    conv.pulseToMm(currentPosition.getPt().getX()) / 10,
-                    conv.pulseToMm(currentPosition.getPt().getY()) / 10
+                    conv.pulseToMm(currentPosition.getPt().getX()) / divisor,
+                    conv.pulseToMm(currentPosition.getPt().getY()) / divisor
             );
-            Point ptToCm = new Point(x / 10, y / 10);
+            Point ptToCm = new Point(x / divisor, y / divisor);
             try {
                 log.info("Demande de chemin vers X = {}mm ; Y = {}mm", x, y);
                 Chemin c = pathFinder.findPath(ptFromCm, ptToCm);
 
                 MonitorMouvementPath mPath = new MonitorMouvementPath();
-                mPath.setPath(c.getPoints());
+                mPath.setPath(new ArrayList<>(c.getPoints().size() + 1));
+                mPath.getPath().add(new Point(
+                        conv.pulseToMm(currentPosition.getPt().getX()),
+                        conv.pulseToMm(currentPosition.getPt().getY())
+                ));
+                mPath.getPath().addAll(c.getPoints().stream()
+                        .map(point -> point.multiplied(divisor))
+                        .collect(Collectors.toList()));
                 currentMouvement = mPath;
                 monitoring.addMouvementPoint(mPath);
 
                 while (c.hasNext()) {
                     Point p = c.next();
-                    Point targetPoint = new Point(p.getX() * 10, p.getY() * 10);
+                    Point targetPoint = new Point(p.getX() * divisor, p.getY() * divisor);
 
                     // Processing du path
                     //gotoPointMM(targetPoint.getX(), targetPoint.getY(), !c.hasNext());
@@ -435,6 +449,11 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             double distance = calculDistanceConsigne(dX, dY);
 
             MonitorMouvementTranslation mTr = new MonitorMouvementTranslation();
+            mTr.setFromPoint(new Point(
+                    conv.pulseToMm(currentPosition.getPt().getX()),
+                    conv.pulseToMm(currentPosition.getPt().getY())
+            ));
+            mTr.setToPoint(new Point(x, y));
             mTr.setDistance(conv.pulseToMm(distance));
             currentMouvement = mTr;
             monitoring.addMouvementPoint(mTr);
@@ -552,6 +571,11 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
         MonitorMouvementTranslation mTr = new MonitorMouvementTranslation();
         mTr.setDistance(distance);
+        mTr.setFromPoint(new Point(
+                conv.pulseToMm(currentPosition.getPt().getX()),
+                conv.pulseToMm(currentPosition.getPt().getY())
+        ));
+        mTr.setToPoint(tableUtils.getPointFromAngle(distance, 0));
         currentMouvement = mTr;
         monitoring.addMouvementPoint(mTr);
 
@@ -595,6 +619,8 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
             MonitorMouvementRotation mRot = new MonitorMouvementRotation();
             mRot.setAngle(angle);
+            mRot.setFromAngle(conv.pulseToDeg(currentPosition.getAngle()));
+            mRot.setToAngle(angle + mRot.getFromAngle());
             currentMouvement = mRot;
             monitoring.addMouvementPoint(mRot);
 

@@ -20,4 +20,8 @@ public class Point {
     public void addDeltaY(final double dY) {
         y += dY;
     }
+
+    public Point multiplied(double f) {
+        return new Point(x*f, y*f);
+    }
 }

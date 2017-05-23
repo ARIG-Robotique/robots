@@ -14,4 +14,6 @@ public class MonitorMouvementRotation extends AbstractMonitorMouvement {
     private final TypeMouvement type = TypeMouvement.ROTATION;
 
     private Double angle;
+    private Double fromAngle;
+    private Double toAngle;
 }
