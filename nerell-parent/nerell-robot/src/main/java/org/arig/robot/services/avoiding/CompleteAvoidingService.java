@@ -107,14 +107,13 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
 
             // 3 Une collision est détecté
             if (CollectionUtils.isNotEmpty(obstacles)) {
+                hasObstacle = true;
                 pathFinder.addObstacles(obstacles.toArray(new Shape[obstacles.size()]));
 
                 synchronized (this.collisionsShape) {
                     this.collisionsShape.clear();
                     this.collisionsShape.addAll(collisionShape);
                 }
-
-                hasObstacle = true;
 
                 // On recalcul le path
                 trajectoryManager.setCollisionDetected(true);

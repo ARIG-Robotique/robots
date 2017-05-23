@@ -76,8 +76,13 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     @Getter
     private boolean trajetAtteint, trajetEnApproche = false;
 
-    @Getter
     private AbstractMonitorMouvement currentMouvement = null;
+
+    // FIXME : A comlprendre plus tard pourquoi Lombok plugin chie dans la colle
+    @Override
+    public AbstractMonitorMouvement getCurrentMouvement() {
+        return currentMouvement;
+    }
 
     /**
      * Boolean si un obstacle est rencontré (stop le robot sur place)
@@ -391,8 +396,6 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
         int nbCollisionDetected = 0;
         int divisor = 10;
 
-        // Toujours activer l'évittement en Path
-        rs.enableAvoidance();
         do {
             Point ptFromCm = new Point(
                     conv.pulseToMm(currentPosition.getPt().getX()) / divisor,
@@ -419,22 +422,21 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                     Point p = c.next();
                     Point targetPoint = new Point(p.getX() * divisor, p.getY() * divisor);
 
+                    // Toujours activer l'évittement en Path
+                    rs.enableAvoidance();
+
                     // Processing du path
-                    //gotoPointMM(targetPoint.getX(), targetPoint.getY(), !c.hasNext());
-                    gotoPointMM(targetPoint.getX(), targetPoint.getY(), true, true);
+                    gotoPointMM(targetPoint.getX(), targetPoint.getY(), !c.hasNext(), true);
+                    //gotoPointMM(targetPoint.getX(), targetPoint.getY(), true, true);
                 }
 
                 // Condition de sortie de la boucle.
                 trajetOk = true;
             } catch (CollisionFoundException e) {
-                log.info("Collision detectée, on recalcul un autre chemin");
                 nbCollisionDetected++;
-                if (nbCollisionDetected < 3) {
-                    continue;
-                }
+                log.info("Collision detectée n° {}, on recalcul un autre chemin", nbCollisionDetected);
 
-                log.error("Trop de collision pour l'action en cours, on tente une autre action.");
-                throw new AvoidingException();
+                //throw new AvoidingException();
             }
         } while (!trajetOk);
     }
@@ -750,6 +752,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     private void checkCollisionDetected() throws CollisionFoundException {
         if (collisionDetected) {
             collisionDetected = false;
+            rs.disableAvoidance();
             throw new CollisionFoundException();
         }
     }
