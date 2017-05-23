@@ -197,8 +197,7 @@ public class ServosService {
     public void pinceDroiteVentouse() {
         if (isPinceCentreFerme() && (isPinceDroiteOuvert() || isPinceDroitePriseProduit())) {
             servos.setPosition(IConstantesServos.PINCE_MODULE_DROIT, IConstantesServos.PINCE_MODULE_DROIT_CHARGEMENT_VENTOUSE);
-        }
-        else {
+        } else {
             throw new ServoException("pinceDroite");
         }
     }
@@ -206,8 +205,7 @@ public class ServosService {
     public void pinceDroiteFerme() {
         if (isPinceCentreFerme() && !isBrasPriseRobot() && !isBrasAttente()) {
             servos.setPosition(IConstantesServos.PINCE_MODULE_DROIT, IConstantesServos.PINCE_MODULE_DROIT_FERME);
-        }
-        else {
+        } else {
             throw new ServoException("pinceDroite");
         }
     }
@@ -215,8 +213,7 @@ public class ServosService {
     public void pinceCentreOuvertDansDroit() {
         if ((isPinceDroiteOuvert() || isPinceDroitePriseProduit()) && (isPinceCentreOuvert() || (!isBrasPriseRobot() && !isBrasAttente()))) {
             servos.setPosition(IConstantesServos.PINCE_MODULE_CENTRE, IConstantesServos.PINCE_MODULE_CENTRE_OUVERT_DANS_DROIT);
-        }
-        else {
+        } else {
             throw new ServoException("pinceCentre");
         }
     }
@@ -224,8 +221,7 @@ public class ServosService {
     public void pinceCentreOuvert() {
         if ((isPinceDroiteOuvert() || isPinceDroitePriseProduit()) && (isPinceCentreOuvertDansDroit() || (!isBrasAttente() && !isBrasPriseRobot()))) {
             servos.setPosition(IConstantesServos.PINCE_MODULE_CENTRE, IConstantesServos.PINCE_MODULE_CENTRE_OUVERT);
-        }
-        else {
+        } else {
             throw new ServoException("pinceCentre");
         }
     }
@@ -233,85 +229,90 @@ public class ServosService {
     public void pinceCentreFerme() {
         if (isBrasVertical() && isVentouseDepose() || isBrasPriseFusee()) {
             servos.setPosition(IConstantesServos.PINCE_MODULE_CENTRE, IConstantesServos.PINCE_MODULE_DROIT_FERME);
-        }
-        else {
+        } else {
             throw new ServoException("pinceCentre");
         }
     }
 
     public void brasAttentePriseRobot() {
-        if (checkDescenteBras() && !isPinceDroiteFerme() && (isBrasAttente() || isBrasVertical() || isBrasPriseFusee() || isPinceCentreFerme() || isPinceCentreOuvertDansDroit())) {
-            servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_ATTENTE);
+        if (checkDescenteBras()) {
             servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_ROBOT);
+            servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_ATTENTE);
+        } else {
+            throw new ServoException("bras");
         }
     }
 
     public void brasAttentePriseFusee() {
-        if (checkDescenteBras() && !isPinceDroiteFerme() && (isBrasAttente() || isBrasVertical() || isBrasPriseRobot() || isPinceCentreFerme() || isPinceCentreOuvertDansDroit())) {
-            servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_ATTENTE);
+        if (checkDescenteBras()) {
             servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_FUSEE);
-        }
-        else {
+            servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_ATTENTE);
+        } else {
             throw new ServoException("bras");
         }
     }
 
     public void brasAttenteDepose() {
-        if (checkDescenteBras() && !isPinceDroiteFerme() && (isBrasAttente() || isBrasVertical() || isBrasPriseRobot() || isPinceCentreFerme() || isPinceCentreOuvertDansDroit())) {
+        if (checkDescenteBras()) {
             servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_FUSEE);
             servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_ATTENTE);
-        }
-        else {
+        } else {
             throw new ServoException("bras");
         }
     }
 
     public void brasDepose() {
-        if (!isPinceDroiteFerme() && (isPinceCentreFerme() || isPinceCentreOuvertDansDroit())) {
+        if (!isPinceDroiteFerme() && (
+                isBrasDepose() ||
+                        isPinceCentreFerme() ||
+                        isPinceCentreOuvertDansDroit() ||
+                        isPinceCentreOuvert() && !ioService.presenceModuleDansBras()
+        )) {
             servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_DEPOSE);
             servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_DEPOSE_MAGASIN);
-        }
-        else {
+        } else {
             throw new ServoException("bras");
         }
     }
 
     public void brasPriseFusee() {
-        if (checkDescenteBras() && !isPinceDroiteFerme() && (isBrasAttente() || isBrasPriseRobot() || isBrasVertical() || isPinceCentreFerme() || isPinceCentreOuvertDansDroit())) {
+        if (checkDescenteBras()) {
             servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_PRISE_FUSEE);
             servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_FUSEE);
-        }
-        else {
+        } else {
             throw new ServoException("bras");
         }
     }
 
     public void brasPriseRobot() {
-        if (checkDescenteBras() && !isPinceDroiteFerme() && (isBrasAttente() || isBrasPriseFusee() || isBrasVertical() || isPinceCentreFerme() || isPinceCentreOuvertDansDroit())) {
+        if (checkDescenteBras()) {
             servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_PRISE_FUSEE);
             servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_FUSEE);
-        }
-        else {
+        } else {
             throw new ServoException("bras");
         }
     }
 
     public void brasVertical() {
-        if (checkDescenteBras() && (isBrasAttente() || isBrasPriseFusee() || isBrasPriseRobot() || isPinceCentreFerme() || isPinceCentreOuvertDansDroit())) {
+        if (checkDescenteBras()) {
             servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_PRISE_FUSEE);
             servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_FUSEE);
-        }
-        else {
+        } else {
             throw new ServoException("bras");
         }
     }
 
     private boolean checkDescenteBras() {
-        if (isBrasDepose() && isPorteFerme() && ioService.presenceModuleDansBras()) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(isBrasDepose() && isPorteFerme() && ioService.presenceModuleDansBras())
+                && !isPinceDroiteFerme()
+                && (isBrasAttente() ||
+                        isBrasVertical() ||
+                        isBrasPriseRobot() ||
+                        isBrasPriseFusee() ||
+                        isPinceCentreFerme() ||
+                        isPinceCentreOuvertDansDroit() ||
+                        isPinceCentreOuvert() && !ioService.presenceModuleDansBras()
+        );
     }
 
     public void aspirationInitCallage() {
