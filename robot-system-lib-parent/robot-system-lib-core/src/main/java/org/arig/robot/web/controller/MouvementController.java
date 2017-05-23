@@ -3,8 +3,8 @@ package org.arig.robot.web.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
-import org.arig.robot.exception.CollisionFoundException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
 import org.arig.robot.system.ITrajectoryManager;
@@ -63,42 +63,42 @@ public class MouvementController {
     }
 
     @RequestMapping(value = "/path", method = RequestMethod.POST)
-    public void cheminVersPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws NoPathFoundException, CollisionFoundException, AvoidingException {
+    public void cheminVersPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws NoPathFoundException, RefreshPathFindingException, AvoidingException {
         trajectoryManager.pathTo(x, y);
     }
 
     @RequestMapping(value = "/position", method = RequestMethod.POST)
-    public void allerEnPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws CollisionFoundException {
+    public void allerEnPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws RefreshPathFindingException {
         trajectoryManager.gotoPointMM(x, y);
     }
 
     @RequestMapping(value = "/face", method = RequestMethod.POST)
-    public void alignFace(@RequestParam("x") final double x, @RequestParam("y") final double y) throws CollisionFoundException {
+    public void alignFace(@RequestParam("x") final double x, @RequestParam("y") final double y) throws RefreshPathFindingException {
         trajectoryManager.alignFrontTo(x, y);
     }
 
     @RequestMapping(value = "/dos", method = RequestMethod.POST)
-    public void alignDos(@RequestParam("x") final double x, @RequestParam("y") final double y) throws CollisionFoundException {
+    public void alignDos(@RequestParam("x") final double x, @RequestParam("y") final double y) throws RefreshPathFindingException {
         trajectoryManager.alignBackTo(x, y);
     }
 
     @RequestMapping(value = "/orientation", method = RequestMethod.POST)
-    public void orientation(@RequestParam("angle") final double angle) throws CollisionFoundException {
+    public void orientation(@RequestParam("angle") final double angle) throws RefreshPathFindingException {
         trajectoryManager.gotoOrientationDeg(angle);
     }
 
     @RequestMapping(value = "/tourne", method = RequestMethod.POST)
-    public void tourne(@RequestParam("angle") final double angle) throws CollisionFoundException {
+    public void tourne(@RequestParam("angle") final double angle) throws RefreshPathFindingException {
         trajectoryManager.tourneDeg(angle);
     }
 
     @RequestMapping(value = "/avance", method = RequestMethod.POST)
-    public void avance(@RequestParam("distance") final double distance) throws CollisionFoundException {
+    public void avance(@RequestParam("distance") final double distance) throws RefreshPathFindingException {
         trajectoryManager.avanceMM(distance);
     }
 
     @RequestMapping(value = "/recule", method = RequestMethod.POST)
-    public void recule(@RequestParam("distance") final double distance) throws CollisionFoundException {
+    public void recule(@RequestParam("distance") final double distance) throws RefreshPathFindingException {
         trajectoryManager.reculeMM(distance);
     }
 }

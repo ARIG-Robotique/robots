@@ -115,16 +115,18 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
                     this.collisionsShape.addAll(collisionShape);
                 }
 
-                // On recalcul le path
-                trajectoryManager.setCollisionDetected(true);
+                // On rafraichit le path
+                trajectoryManager.refreshPathFinding();
             } else if (hasObstacle) {
                 hasObstacle = false;
+                pathFinder.addObstacles();
 
-                // Pas de colision
                 synchronized (this.collisionsShape) {
                     this.collisionsShape.clear();
                 }
-                pathFinder.addObstacles();
+
+                // On rafraichit le path
+                trajectoryManager.refreshPathFinding();
             }
         }
     }

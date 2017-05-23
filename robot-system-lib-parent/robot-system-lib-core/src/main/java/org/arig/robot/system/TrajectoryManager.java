@@ -5,9 +5,9 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.exception.AvoidingException;
-import org.arig.robot.exception.CollisionFoundException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.NotYetImplementedException;
+import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.*;
 import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.model.enums.TypeConsigne;
@@ -93,8 +93,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     /**
      * Boolean pour relancer après un obstacle (gestion de l'évittement)
      */
-    @Setter
-    private boolean collisionDetected = false;
+    private boolean refreshPath = false;
 
     /* Fenetre d'arret / approche distance */
     private double fenetreApprocheDistance;
@@ -432,7 +431,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
                 // Condition de sortie de la boucle.
                 trajetOk = true;
-            } catch (CollisionFoundException e) {
+            } catch (RefreshPathFindingException e) {
                 nbCollisionDetected++;
                 log.info("Collision detectée n° {}, on recalcul un autre chemin", nbCollisionDetected);
 
@@ -448,7 +447,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param y position sur l'axe Y
      */
     @Override
-    public void gotoPointMM(final double x, final double y) throws CollisionFoundException {
+    public void gotoPointMM(final double x, final double y) throws RefreshPathFindingException {
         gotoPointMM(x, y, true, false);
     }
 
@@ -460,7 +459,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param avecArret demande d'arret sur le point
      */
     @Override
-    public void gotoPointMM(final double x, final double y, final boolean avecArret, boolean disableMonitor) throws CollisionFoundException {
+    public void gotoPointMM(final double x, final double y, final boolean avecArret, boolean disableMonitor) throws RefreshPathFindingException {
         log.info("Va au point X = {}mm ; Y = {}mm {}", x, y, avecArret ? "et arrete toi" : "sans arret");
         cmdRobot.getPosition().setAngle(0);
         cmdRobot.getPosition().getPt().setX(conv.mmToPulse(x));
@@ -494,12 +493,12 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param angle the angle
      */
     @Override
-    public void gotoOrientationDeg(final double angle) throws CollisionFoundException {
+    public void gotoOrientationDeg(final double angle) throws RefreshPathFindingException {
         gotoOrientationDeg(angle, SensRotation.AUTO);
     }
 
     @Override
-    public void gotoOrientationDeg(double angle, SensRotation sensRotation) throws CollisionFoundException {
+    public void gotoOrientationDeg(double angle, SensRotation sensRotation) throws RefreshPathFindingException {
         log.info("Aligne toi sur l'angle {}° du repère dans le sens {}", angle, sensRotation.name());
 
         double newOrient = calculAngleDelta(conv.pulseToDeg(currentPosition.getAngle()), angle, sensRotation);
@@ -514,7 +513,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param y the y
      */
     @Override
-    public void alignFrontTo(final double x, final double y) throws CollisionFoundException {
+    public void alignFrontTo(final double x, final double y) throws RefreshPathFindingException {
         log.info("Aligne ton avant sur le point X = {}mm ; Y = {}mm", x, y);
         alignFrontToAvecDecalage(x, y, 0);
     }
@@ -525,10 +524,10 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param x           position sur l'axe X
      * @param y           position sur l'axe Y
      * @param decalageDeg valeur du déclage angulaire par rapport au point X,Y
-     * @throws CollisionFoundException
+     * @throws RefreshPathFindingException
      */
     @Override
-    public void alignFrontToAvecDecalage(final double x, final double y, final double decalageDeg) throws CollisionFoundException {
+    public void alignFrontToAvecDecalage(final double x, final double y, final double decalageDeg) throws RefreshPathFindingException {
         if (decalageDeg != 0) {
             log.info("Décalage de {}° par rapport au point X = {}mm ; Y = {}mm", decalageDeg, x, y);
         }
@@ -552,7 +551,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param y the y
      */
     @Override
-    public void alignBackTo(final double x, final double y) throws CollisionFoundException {
+    public void alignBackTo(final double x, final double y) throws RefreshPathFindingException {
         log.info("Aligne ton cul sur le point X = {}mm ; Y = {}mm", x, y);
 
         double dX = conv.mmToPulse(x) - currentPosition.getPt().getX();
@@ -580,16 +579,16 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param distance the distance
      */
     @Override
-    public void avanceMM(final double distance) throws CollisionFoundException {
+    public void avanceMM(final double distance) throws RefreshPathFindingException {
         cmdAvanceMMByType(distance, TypeConsigne.DIST, TypeConsigne.ANGLE);
     }
 
     @Override
-    public void avanceMMSansAngle(final double distance) throws CollisionFoundException {
+    public void avanceMMSansAngle(final double distance) throws RefreshPathFindingException {
         cmdAvanceMMByType(distance, TypeConsigne.DIST);
     }
 
-    private void cmdAvanceMMByType(final double distance, TypeConsigne... types) throws CollisionFoundException {
+    private void cmdAvanceMMByType(final double distance, TypeConsigne... types) throws RefreshPathFindingException {
         if (distance > 0) {
             log.info("{} de {}mm en mode : {}", distance > 0 ? "Avance" : "Recul", distance, StringUtils.join(types, ", "));
         }
@@ -619,13 +618,13 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param distance the distance
      */
     @Override
-    public void reculeMM(final double distance) throws CollisionFoundException {
+    public void reculeMM(final double distance) throws RefreshPathFindingException {
         log.info("Recul de {}mm", Math.abs(distance));
         avanceMM(-distance);
     }
 
     @Override
-    public void reculeMMSansAngle(final double distance) throws CollisionFoundException {
+    public void reculeMMSansAngle(final double distance) throws RefreshPathFindingException {
         log.info("Recul de {}mm sans angle", Math.abs(distance));
         avanceMMSansAngle(-distance);
     }
@@ -636,7 +635,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param angle the angle
      */
     @Override
-    public void tourneDeg(final double angle) throws CollisionFoundException {
+    public void tourneDeg(final double angle) throws RefreshPathFindingException {
         log.info("Tourne de {}°", angle);
 
         boolean isAvoidance = rs.isAvoidanceEnabled();
@@ -672,7 +671,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param y2 the y2
      */
     @Override
-    public void followLine(final double x1, final double y1, final double x2, final double y2) throws CollisionFoundException {
+    public void followLine(final double x1, final double y1, final double x2, final double y2) throws RefreshPathFindingException {
         // TODO : A implémenter la commande
         throw new NotYetImplementedException();
     }
@@ -685,7 +684,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param r the r
      */
     @Override
-    public void turnAround(final double x, final double y, final double r) throws CollisionFoundException {
+    public void turnAround(final double x, final double y, final double r) throws RefreshPathFindingException {
         // TODO : A implémenter la commande
         throw new NotYetImplementedException();
     }
@@ -703,7 +702,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
         // Réinitialisation des infos de trajet.
         trajetAtteint = false;
         trajetEnApproche = false;
-        collisionDetected = false;
+        refreshPath = false;
         obstacleFound = false;
     }
 
@@ -723,12 +722,12 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * Permet d'attendre le passage au point suivant
      */
     @Override
-    public void waitMouvement() throws CollisionFoundException {
+    public void waitMouvement() throws RefreshPathFindingException {
         if (cmdRobot.isFrein()) {
             log.info("Attente fin de trajet");
             while (!isTrajetAtteint()) {
                 try {
-                    checkCollisionDetected();
+                    checkRefreshPath();
                     Thread.sleep(1);
                 } catch (InterruptedException e) {
                     log.error("Problème dans l'attente d'atteinte du point : {}", e.toString());
@@ -739,7 +738,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             log.info("Attente approche du point de passage");
             while (!isTrajetEnApproche()) {
                 try {
-                    checkCollisionDetected();
+                    checkRefreshPath();
                     Thread.sleep(1);
                 } catch (InterruptedException e) {
                     log.error("Problème dans l'approche du point : {}", e.toString());
@@ -749,11 +748,16 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
         }
     }
 
-    private void checkCollisionDetected() throws CollisionFoundException {
-        if (collisionDetected) {
-            collisionDetected = false;
+    @Override
+    public void refreshPathFinding() {
+        refreshPath = true;
+    }
+
+    private void checkRefreshPath() throws RefreshPathFindingException {
+        if (refreshPath) {
+            refreshPath = false;
             rs.disableAvoidance();
-            throw new CollisionFoundException();
+            throw new RefreshPathFindingException();
         }
     }
 }
