@@ -12,6 +12,8 @@ import org.arig.robot.system.TrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 /**
  * @author gdepuille on 06/11/16.
  */
@@ -24,6 +26,9 @@ public class BalladeSurTableTestAction implements IAction {
 
     @Autowired
     private RobotStatus rs;
+
+    @Getter
+    private String UUID = java.util.UUID.randomUUID().toString();
 
     @Getter
     private boolean completed = false; // Jamais terminé quoi qu'il se passe
