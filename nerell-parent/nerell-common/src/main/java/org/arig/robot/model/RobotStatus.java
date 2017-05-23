@@ -13,6 +13,13 @@ import java.util.LinkedList;
 @EqualsAndHashCode(callSuper = true)
 public class RobotStatus extends AbstractRobotStatus {
 
+    @Setter(AccessLevel.NONE)
+    private boolean simulateur = false;
+
+    public void setSimulateur() {
+        simulateur = true;
+    }
+
     private Team team = Team.UNKNOWN;
 
     @Getter(AccessLevel.NONE)

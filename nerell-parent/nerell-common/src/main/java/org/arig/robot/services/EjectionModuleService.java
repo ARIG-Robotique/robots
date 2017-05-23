@@ -2,6 +2,7 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.ModuleLunaire;
+import org.arig.robot.model.RobotStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,22 +19,30 @@ public class EjectionModuleService {
     @Autowired
     private ServosService servosService;
 
+    @Autowired
+    private RobotStatus robotStatus;
+
     public void init() {
-        log.info("Initialisation de l'ejection des modules");
-        if (ioService.glissiereFerme()) {
-            servosService.ouvreGlissiere();
-            while(!ioService.finCourseGlissiereDroite()) {
+        if (!robotStatus.isSimulateur()) {
+            log.info("Initialisation de l'ejection des modules");
+
+            if (ioService.glissiereFerme()) {
+                servosService.ouvreGlissiere();
+                while(!ioService.finCourseGlissiereDroite()) {
+                    waitTimeMs(1);
+                }
+                servosService.stopGlissiere();
+            }
+
+            // Dans une position ouverte quelque part
+            servosService.fermeGlissiere();
+            while(ioService.finCourseGlissiereDroite()) {
                 waitTimeMs(1);
             }
             servosService.stopGlissiere();
-        }
 
-        // Dans une position ouverte quelque part
-        servosService.fermeGlissiere();
-        while(ioService.finCourseGlissiereDroite()) {
-            waitTimeMs(1);
+            log.info("Fin d'initialisation de l'ejection des modules");
         }
-        servosService.stopGlissiere();
     }
 
     public void ejectionAvantRetourStand() {

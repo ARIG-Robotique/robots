@@ -5,9 +5,12 @@ import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 
 /**
  * @author gdepuille on 30/10/16.
@@ -30,6 +33,11 @@ public class IOServiceBouchon implements IIOService {
 
     @Setter
     private Team team = Team.UNKNOWN;
+
+    @PostConstruct
+    public void init() {
+        rs.setSimulateur();
+    }
 
     @Override
     public Team equipe() {
