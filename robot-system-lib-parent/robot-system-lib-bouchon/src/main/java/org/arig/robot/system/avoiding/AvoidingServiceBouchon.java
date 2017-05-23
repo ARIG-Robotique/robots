@@ -27,7 +27,7 @@ public class AvoidingServiceBouchon implements IAvoidingService {
     }
 
     @Override
-    public List<Rectangle> getColisionShape() {
+    public List<Rectangle> getCollisionsShape() {
         return Collections.emptyList();
     }
 }

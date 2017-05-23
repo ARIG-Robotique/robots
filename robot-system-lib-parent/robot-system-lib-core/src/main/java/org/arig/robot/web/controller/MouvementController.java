@@ -60,7 +60,7 @@ public class MouvementController {
         pos.put("typeAsserv", cmdRobot.typeAsserv());
         pos.put("pointsLidar", avoidingService.getDetectedPointsMmLidar());
         pos.put("pointsCapteurs", avoidingService.getDetectedPointsMmCapteurs());
-        pos.put("colisions", avoidingService.getColisionShape());
+        pos.put("collisions", avoidingService.getCollisionsShape());
         return pos;
     }
 

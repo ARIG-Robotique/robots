@@ -92,9 +92,9 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
         if (CollectionUtils.isNotEmpty(obstacles)) {
             pathFinder.addObstacles(obstacles.toArray(new Shape[obstacles.size()]));
 
-            synchronized (this.colisionShape) {
-                this.colisionShape.clear();
-                this.colisionShape.addAll(colisionShape);
+            synchronized (this.collisionsShape) {
+                this.collisionsShape.clear();
+                this.collisionsShape.addAll(colisionShape);
             }
 
             // On recalcul le path
@@ -102,8 +102,8 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
         } else {
 
             // Pas de colision
-            synchronized (this.colisionShape) {
-                this.colisionShape.clear();
+            synchronized (this.collisionsShape) {
+                this.collisionsShape.clear();
             }
             pathFinder.addObstacles();
         }

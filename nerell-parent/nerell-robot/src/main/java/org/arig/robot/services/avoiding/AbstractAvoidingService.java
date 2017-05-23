@@ -85,7 +85,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
     @Getter
     private final List<Point> detectedPointsMmLidar = new ArrayList<>();
     @Getter
-    protected final List<Rectangle> colisionShape = new ArrayList<>();
+    protected final List<Rectangle> collisionsShape = new ArrayList<>();
 
     private DoubleValueAverage calcAvgGpGauche = new DoubleValueAverage();
     private DoubleValueAverage calcAvgGpCentre = new DoubleValueAverage();
