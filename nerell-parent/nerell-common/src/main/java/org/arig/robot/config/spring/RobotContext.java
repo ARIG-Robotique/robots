@@ -50,6 +50,13 @@ public class RobotContext {
         t.addDeadZone(new Rectangle(0, 0, 710, 360)); // Jaune
         t.addDeadZone(new Rectangle(2290, 0, 710, 360)); // Bleu
 
+        // Ajout des fusées
+        t.addDeadZone(new Rectangle(0, 1270, 120,160)); // Polychrome Jaune
+        t.addDeadZone(new Rectangle(1070, 0, 160, 120)); // Monochrome Jaune
+        t.addDeadZone(new Rectangle(2880, 1270, 120, 160)); // Polychrome Bleu
+        t.addDeadZone(new Rectangle(1770, 0, 160, 120)); // Monochrome Bleu
+
+
         return t;
     }
 

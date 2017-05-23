@@ -6,6 +6,9 @@ import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.Rectangle;
+import org.arig.robot.model.enums.TypeMouvement;
+import org.arig.robot.model.monitor.AbstractMonitorMouvement;
+import org.arig.robot.model.monitor.MonitorMouvementPath;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -25,7 +28,7 @@ import java.util.List;
 @Slf4j
 public class CompleteAvoidingService extends AbstractAvoidingService {
 
-    private static final int DISTANCE_CENTRE_OBSTACLE = 500;
+    private static final int DISTANCE_CENTRE_OBSTACLE = 200;
 
     @Autowired
     private ITrajectoryManager trajectoryManager;
@@ -35,13 +38,15 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
 
     @Autowired
     @Qualifier("currentPosition")
-    private Position position;
+    private Position currentPosition;
 
     @Autowired
     private CommandeRobot cmdRobot;
 
     @Autowired
     private IPathFinder pathFinder;
+
+    boolean hasObstacle = false;
 
     @Override
     protected void processAvoiding() {
@@ -62,50 +67,66 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
         }*/
 
         // 2 Detection de collision (ici on est tous en cm)
-        Point2D ptFrom = new Point2D.Double(
-                conv.pulseToMm(position.getPt().getX()) / 10,
-                conv.pulseToMm(position.getPt().getY()) / 10
-        );
-        Point2D ptTo = new Point2D.Double(
-                conv.pulseToMm(cmdRobot.getPosition().getPt().getX()) / 10,
-                conv.pulseToMm(cmdRobot.getPosition().getPt().getY()) / 10
-        );
-        Line2D trajectoryLine = new Line2D.Double(ptFrom, ptTo);
+        AbstractMonitorMouvement currentMvt = trajectoryManager.getCurrentMouvement();
+        if (currentMvt.getType() == TypeMouvement.PATH) {
+            MonitorMouvementPath mp = (MonitorMouvementPath) currentMvt;
 
-        List<Shape> obstacles = new ArrayList<>();
-        List<org.arig.robot.model.Rectangle> colisionShape = new ArrayList<>();
-        for (Point pt : getDetectedPointsMmLidar()) {
-            // Définition de l'obstacle
-            double wh = 2 * DISTANCE_CENTRE_OBSTACLE / 10;
-            double x = pt.getX() / 10 - (wh / 2);
-            double y = pt.getY() / 10 - (wh / 2);
+            List<Line2D> lines = new ArrayList<>();
+            Point2D ptFrom = new Point2D.Double(
+                    conv.pulseToMm(currentPosition.getPt().getX()) / 10,
+                    conv.pulseToMm(currentPosition.getPt().getY()) / 10
+            );
+            Point2D ptTo;
+            for (Point pt : mp.getPath()) {
+                ptTo = new Point2D.Double(
+                        pt.getX() / 10,
+                        pt.getY() / 10
+                );
 
-            Rectangle2D obs = new Rectangle2D.Double(x, y, wh, wh);
-            if (obs.intersectsLine(trajectoryLine)) {
-                log.info("Collision détectée : {} {}", pt, obs);
-                obstacles.add(obs);
-                colisionShape.add(new Rectangle(x * 10, y * 10, wh * 10, wh * 10));
-            }
-        }
-
-        // 3 Une collision est détecté
-        if (CollectionUtils.isNotEmpty(obstacles)) {
-            pathFinder.addObstacles(obstacles.toArray(new Shape[obstacles.size()]));
-
-            synchronized (this.collisionsShape) {
-                this.collisionsShape.clear();
-                this.collisionsShape.addAll(colisionShape);
+                lines.add(new Line2D.Double(ptFrom, ptTo));
+                ptFrom = new Point2D.Double(ptTo.getX(), ptTo.getY());
             }
 
-            // On recalcul le path
-            trajectoryManager.setCollisionDetected(true);
-        } else {
+            List<Shape> obstacles = new ArrayList<>();
+            List<org.arig.robot.model.Rectangle> collisionShape = new ArrayList<>();
+            for (Point pt : getDetectedPointsMmLidar()) {
+                // Définition de l'obstacle
+                double wh = 2 * DISTANCE_CENTRE_OBSTACLE / 10;
+                double x = pt.getX() / 10 - (wh / 2);
+                double y = pt.getY() / 10 - (wh / 2);
 
-            // Pas de colision
-            synchronized (this.collisionsShape) {
-                this.collisionsShape.clear();
+                Rectangle2D obs = new Rectangle2D.Double(x, y, wh, wh);
+                for (Line2D l : lines) {
+                    if (obs.intersectsLine(l)) {
+                        log.info("Collision détectée : {} {}", pt, obs);
+                        obstacles.add(obs);
+                        collisionShape.add(new Rectangle(x * 10, y * 10, wh * 10, wh * 10));
+                    }
+                }
             }
-            pathFinder.addObstacles();
+
+            // 3 Une collision est détecté
+            if (CollectionUtils.isNotEmpty(obstacles)) {
+                pathFinder.addObstacles(obstacles.toArray(new Shape[obstacles.size()]));
+
+                synchronized (this.collisionsShape) {
+                    this.collisionsShape.clear();
+                    this.collisionsShape.addAll(collisionShape);
+                }
+
+                hasObstacle = true;
+
+                // On recalcul le path
+                trajectoryManager.setCollisionDetected(true);
+            } else if (hasObstacle) {
+                hasObstacle = false;
+
+                // Pas de colision
+                synchronized (this.collisionsShape) {
+                    this.collisionsShape.clear();
+                }
+                pathFinder.addObstacles();
+            }
         }
     }
 }

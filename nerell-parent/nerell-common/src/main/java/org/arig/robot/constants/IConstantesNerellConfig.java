@@ -17,13 +17,13 @@ public interface IConstantesNerellConfig {
     double asservTimeMs = 10;
 
     // Durée du match //
-    int matchTimeMs = 89800;
+    int matchTimeMs = 89950;
 
     // Valeurs min / max en mm des axes du repères
-    int minX = 100;
-    int minY = 100;
-    int maxX = 3000 - 100;
-    int maxY = 2000 - 100;
+    int minX = 50;
+    int minY = 50;
+    int maxX = 3000 - 50;
+    int maxY = 2000 - 50;
 
     // -------------------------------- //
     // Configuration moteurs propulsion //
