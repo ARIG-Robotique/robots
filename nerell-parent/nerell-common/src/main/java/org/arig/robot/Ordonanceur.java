@@ -169,7 +169,7 @@ public class Ordonanceur {
         robotStatus.disableAvoidance();
         robotStatus.enableAsserv();
 
-        trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseSuperLente);
+        trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
         position.setAngle(conv.degToPulse(90));
         if (robotStatus.getTeam() == Team.JAUNE) {
             position.setPt(new Point(conv.mmToPulse(320), conv.mmToPulse(772)));

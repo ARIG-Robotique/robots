@@ -28,7 +28,7 @@ import java.util.List;
 @Slf4j
 public class CompleteAvoidingService extends AbstractAvoidingService {
 
-    private static final int DISTANCE_CENTRE_OBSTACLE = 200;
+    private static final int DISTANCE_CENTRE_OBSTACLE = 250;
 
     @Autowired
     private ITrajectoryManager trajectoryManager;
