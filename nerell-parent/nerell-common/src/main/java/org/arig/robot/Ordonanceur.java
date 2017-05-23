@@ -171,22 +171,32 @@ public class Ordonanceur {
 
         trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
         position.setAngle(conv.degToPulse(90));
-        if (robotStatus.getTeam() == Team.JAUNE) {
-            position.setPt(new Point(conv.mmToPulse(320), conv.mmToPulse(772)));
-            trajectoryManager.avanceMM(200);
-            trajectoryManager.gotoPointMM(1100, 772);
-            trajectoryManager.gotoPointMM(890, 300);
-            trajectoryManager.gotoOrientationDeg(90, SensRotation.TRIGO);
-            trajectoryManager.reculeMM(135);
-            servosService.aspirationFerme();
+
+        if (!robotStatus.isSimulateur()) {
+            if (robotStatus.getTeam() == Team.JAUNE) {
+                position.setPt(new Point(conv.mmToPulse(320), conv.mmToPulse(772)));
+                trajectoryManager.avanceMM(200);
+                trajectoryManager.gotoPointMM(1100, 772);
+                trajectoryManager.gotoPointMM(890, 300);
+                trajectoryManager.gotoOrientationDeg(90, SensRotation.TRIGO);
+                trajectoryManager.reculeMM(135);
+                servosService.aspirationFerme();
+            } else {
+                position.setPt(new Point(conv.mmToPulse(2680), conv.mmToPulse(772)));
+                trajectoryManager.avanceMM(300);
+                servosService.aspirationFerme();
+                trajectoryManager.gotoPointMM(3000 - 1100, 772);
+                trajectoryManager.gotoPointMM(3000 - 890, 300);
+                trajectoryManager.gotoOrientationDeg(90, SensRotation.TRIGO);
+                trajectoryManager.reculeMM(135);
+            }
+
         } else {
-            position.setPt(new Point(conv.mmToPulse(2680), conv.mmToPulse(772)));
-            trajectoryManager.avanceMM(300);
-            servosService.aspirationFerme();
-            trajectoryManager.gotoPointMM(3000 - 1100, 772);
-            trajectoryManager.gotoPointMM(3000 - 890, 300);
-            trajectoryManager.gotoOrientationDeg(90, SensRotation.TRIGO);
-            trajectoryManager.reculeMM(135);
+            if (robotStatus.getTeam() == Team.JAUNE) {
+                position.setPt(new Point(conv.mmToPulse(890), conv.mmToPulse(165)));
+            } else {
+                position.setPt(new Point(conv.mmToPulse(3000 - 890), conv.mmToPulse(165)));
+            }
         }
 
         log.info("Position initiale avant match des servos");

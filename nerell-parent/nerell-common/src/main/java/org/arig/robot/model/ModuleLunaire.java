@@ -1,6 +1,8 @@
 package org.arig.robot.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -8,11 +10,15 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true, fluent = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class ModuleLunaire {
 
     public enum Type {
         MONOCHROME, POLYCHROME
     }
+
+    private Integer numero;
 
     private Type type;
 

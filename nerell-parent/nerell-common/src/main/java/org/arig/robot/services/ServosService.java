@@ -1,6 +1,7 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.exception.ServoException;
 import org.arig.robot.model.RobotStatus;
@@ -84,6 +85,10 @@ public class ServosService {
 
     public void waitBlocageMagasin() {
         servos.waitTime(IConstantesServos.WAIT_BLOCAGE_MAG);
+    }
+
+    public void waitAspiration() {
+        servos.waitTime(IConstantesServos.WAIT_INC_ASPI);
     }
 
     //*******************************************//
@@ -305,7 +310,8 @@ public class ServosService {
     private boolean checkDescenteBras() {
         return !(isBrasDepose() && isPorteFerme() && ioService.presenceModuleDansBras())
                 && !isPinceDroiteFerme()
-                && (isBrasAttente() ||
+                && (
+                isBrasAttente() ||
                         isBrasVertical() ||
                         isBrasPriseRobot() ||
                         isBrasPriseFusee() ||

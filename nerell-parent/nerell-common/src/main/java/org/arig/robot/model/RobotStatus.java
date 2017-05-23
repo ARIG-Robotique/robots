@@ -5,14 +5,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 @Slf4j
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RobotStatus extends AbstractRobotStatus {
+public class RobotStatus extends AbstractRobotStatus implements InitializingBean {
 
     @Setter(AccessLevel.NONE)
     private boolean simulateur = false;
@@ -48,6 +51,11 @@ public class RobotStatus extends AbstractRobotStatus {
         calageBordureEnabled = false;
     }
 
+    // Pinces
+    private ModuleLunaire moduleLunaireExpected;
+    private ModuleLunaire moduleLunaireDroite;
+    private ModuleLunaire moduleLunaireCentre;
+
     // Magasin module lunaire
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
@@ -74,19 +82,7 @@ public class RobotStatus extends AbstractRobotStatus {
     private boolean fuseePolychromeBleuRecupere = false;
 
     // Modules sur table
-    private boolean module0BleuRecupere = false; // Monochrome zone depart bleu
-    private boolean module1BleuRecupere = false; // Polychrome proche cratère et zone départ bleu
-    private boolean module2BleuRecupere = false; // Monochrome dépose fusée polychrome bleu
-    private boolean module3BleuRecupere = false; // Polychrome centrale bleu
-    private boolean module4BleuRecupere = false; // Polychrome base lunaire bleu
-    private boolean module5BleuRecupere = false; // Monochrome entre gros et petit cratère bleu
-
-    private boolean module0JauneRecupere = false; // Monochrome zone depart jaune
-    private boolean module1JauneRecupere = false; // Polychrome proche cratère et zone départ jaune
-    private boolean module2JauneRecupere = false; // Monochrome dépose fusée polychrome jaune
-    private boolean module3JauneRecupere = false; // Polychrome centrale jaune
-    private boolean module4JauneRecupere = false; // Polychrome base lunaire jaune
-    private boolean module5JauneRecupere = false; // Monochrome entre gros et petit cratère jaune
+    private Map<Integer, Boolean> modulesRecuperes = new HashMap<>();
 
     // Cratères
     private boolean cratereZoneDepartBleuRecupere = false;
@@ -97,4 +93,25 @@ public class RobotStatus extends AbstractRobotStatus {
     private boolean cratereBaseLunaireJauneRecupere = false;
     private boolean cratereImmenseJauneRecupere = false;
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        modulesRecuperes.put(1, false);
+        modulesRecuperes.put(2, false);
+        modulesRecuperes.put(3, false);
+        modulesRecuperes.put(4, false);
+        modulesRecuperes.put(5, false);
+        modulesRecuperes.put(6, false);
+        modulesRecuperes.put(7, false);
+        modulesRecuperes.put(8, false);
+        modulesRecuperes.put(9, false);
+        modulesRecuperes.put(10, false);
+    }
+
+    public void setModuleRecupere(Integer numero) {
+        modulesRecuperes.put(numero, true);
+    }
+
+    public Boolean isModuleRecupere(Integer numero) {
+        return modulesRecuperes.get(numero);
+    }
 }
