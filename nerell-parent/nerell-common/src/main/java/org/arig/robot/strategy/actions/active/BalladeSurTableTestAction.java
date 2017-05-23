@@ -6,29 +6,23 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.strategy.IAction;
+import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.system.TrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 /**
  * @author gdepuille on 06/11/16.
  */
 @Slf4j
 @Component
-public class BalladeSurTableTestAction implements IAction {
+public class BalladeSurTableTestAction extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
 
     @Autowired
     private RobotStatus rs;
-
-    @Getter
-    private String UUID = java.util.UUID.randomUUID().toString();
 
     @Getter
     private boolean completed = false; // Jamais terminé quoi qu'il se passe

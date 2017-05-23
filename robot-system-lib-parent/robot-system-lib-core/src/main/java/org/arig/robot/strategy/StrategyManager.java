@@ -1,5 +1,6 @@
 package org.arig.robot.strategy;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,6 +17,7 @@ import java.util.Optional;
 @Slf4j
 public class StrategyManager {
 
+    @Getter
     @Autowired
     private List<IAction> actions;
 
