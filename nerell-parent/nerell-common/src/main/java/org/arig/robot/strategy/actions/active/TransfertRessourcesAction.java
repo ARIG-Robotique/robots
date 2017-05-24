@@ -85,7 +85,7 @@ public class TransfertRessourcesAction extends AbstractAction {
                 mv.avanceMM(90);
             }
 
-            rs.incNbTransfertsElfa();
+            rs.addTransfertElfa();
 
         } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());

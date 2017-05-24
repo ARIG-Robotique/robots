@@ -1,11 +1,9 @@
 package org.arig.robot.model;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
-import org.apache.commons.lang3.tuple.Pair;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -117,10 +115,18 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     private boolean cratereBaseLunaireJauneRecupere = false;
     private boolean cratereImmenseJauneRecupere = false;
 
+    @Setter(AccessLevel.NONE)
     private int nbTransfertsElfa = 0;
 
-    public int incNbTransfertsElfa() {
+    public int addTransfertElfa() {
         return ++nbTransfertsElfa;
+    }
+
+    @Setter(AccessLevel.NONE)
+    private int nbDeposesDepart = 0;
+
+    public int addDeposeDepart() {
+        return ++nbDeposesDepart;
     }
 
     @Setter(AccessLevel.NONE)

@@ -46,7 +46,7 @@ public class CratereZoneDepartBleuAction extends AbstractAction {
         if (Team.BLEU == rs.getTeam()) {
             val += 500;
         } else {
-            val /= 10;
+            val /= 20;
         }
 
         return val;

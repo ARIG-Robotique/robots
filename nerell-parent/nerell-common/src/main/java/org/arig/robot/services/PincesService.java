@@ -23,6 +23,7 @@ public class PincesService {
 
     public void enable() {
         if (!enabled && !ioService.presencePinceCentre() && !ioService.presencePinceDroite()) {
+            log.info("Ouverture du bras suite à activation du service pinces");
             servosService.homes();
             enabled = true;
         }
@@ -30,6 +31,7 @@ public class PincesService {
 
     public void disable() {
         if (enabled && !ioService.presencePinceCentre() && !ioService.presencePinceDroite()) {
+            log.info("Rangement du bras suite à désactivation du service pinces");
             servosService.brasPincesFermes();
             enabled = false;
         }

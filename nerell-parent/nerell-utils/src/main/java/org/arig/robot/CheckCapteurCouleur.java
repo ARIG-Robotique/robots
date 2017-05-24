@@ -41,15 +41,14 @@ public class CheckCapteurCouleur {
         servosService.cyclePreparation();
         ejectionModuleService.init();
 
-        Deque<ModuleLunaire> modules = new LinkedList<>();
-        modules.add(ModuleLunaire.polychrome());
-        modules.add(ModuleLunaire.polychrome());
-        modules.add(ModuleLunaire.polychrome());
-        modules.add(ModuleLunaire.polychrome());
-        modules.add(ModuleLunaire.polychrome());
+        robotStatus.addModuleDansMagasin(ModuleLunaire.polychrome());
+        robotStatus.addModuleDansMagasin(ModuleLunaire.polychrome());
+        robotStatus.addModuleDansMagasin(ModuleLunaire.polychrome());
+        robotStatus.addModuleDansMagasin(ModuleLunaire.polychrome());
+        robotStatus.addModuleDansMagasin(ModuleLunaire.polychrome());
 
-        while (!modules.isEmpty()) {
-            ejectionModuleService.ejectionModule(modules.poll());
+        while (robotStatus.hasModuleDansMagasin()) {
+            ejectionModuleService.ejectionModule();
         }
 
         //ioService.disableLedCapteurCouleur();

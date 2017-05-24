@@ -58,21 +58,25 @@ public class DeposeModulesPincesAction extends AbstractAction {
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
+            int offset = rs.getNbDeposesDepart() * 100;
+
             if (Team.JAUNE == rs.getTeam()) {
-                mv.pathTo(960, 260);
+                mv.pathTo(1170, 460);
+                mv.gotoOrientationDeg(-135);
 
             } else {
-                mv.pathTo(3000 - 960, 260);
+                mv.pathTo(1830, 460);
+                mv.gotoOrientationDeg(-45);
             }
 
-            mv.gotoOrientationDeg(-90);
+            mv.avanceMM(300 - offset);
 
             servosService.brasAttentePriseRobot();
             servosService.pinceDroiteOuvert();
             servosService.waitBras();
 
-            mv.reculeMM(300);
-            mv.gotoOrientationDeg(90);
+            mv.reculeMM(300 - offset);
+            mv.alignFrontTo(1500, 1000);
 
             if (rs.getModuleLunaireDroite() != null && !ioService.presencePinceDroite()) {
                 rs.setModuleLunaireDroite(null);
@@ -81,6 +85,8 @@ public class DeposeModulesPincesAction extends AbstractAction {
             if (rs.getModuleLunaireCentre() != null && !ioService.presencePinceCentre()) {
                 rs.setModuleLunaireCentre(null);
             }
+
+            rs.addDeposeDepart();
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());

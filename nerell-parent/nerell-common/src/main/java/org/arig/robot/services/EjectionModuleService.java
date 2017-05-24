@@ -49,16 +49,18 @@ public class EjectionModuleService {
     }
 
     public void ejectionAvantRetourStand() {
-        while (rs.hasNextModule()) {
-            ejectionModule(true);
+        if (ioService.presenceRouleaux()) {
+            doEject();
+        }
+
+        while (ioService.presenceDevidoir()) {
+            servosService.devidoirDechargement();
+            servosService.waitDevidoire();
+            doEject();
         }
     }
 
     public void ejectionModule() {
-        ejectionModule(false);
-    }
-
-    public void ejectionModule(Boolean disableLectureCouleur) {
         log.info("Ejection module");
 
         ModuleLunaire module = rs.nextModule();
@@ -81,7 +83,7 @@ public class EjectionModuleService {
 
         rs.disableMagasin();
 
-        if (!disableLectureCouleur && module.isPolychrome()) {
+        if (module.isPolychrome()) {
 
             ioService.enableLedCapteurCouleur();
             servosService.devidoirLectureCouleur();
@@ -114,6 +116,12 @@ public class EjectionModuleService {
 
         }
 
+        doEject();
+
+        rs.enableMagasin();
+    }
+
+    private void doEject() {
         servosService.devidoirChargement();
 
         servosService.ouvreGlissiere();
@@ -125,8 +133,6 @@ public class EjectionModuleService {
             waitTimeMs(1);
         }
         servosService.stopGlissiere();
-
-        rs.enableMagasin();
     }
 
     private void waitTimeMs(long ms) {
