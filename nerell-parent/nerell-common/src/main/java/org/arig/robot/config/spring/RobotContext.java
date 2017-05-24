@@ -23,10 +23,12 @@ import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 
 /**
  * @author gdepuille on 23/12/14.
@@ -35,6 +37,9 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @PropertySource({"classpath:application.properties"})
 public class RobotContext {
+
+    @Autowired
+    private Environment env;
 
     @Bean
     public ConvertionRobotUnit convertisseur() {
@@ -152,6 +157,7 @@ public class RobotContext {
         pf.setAlgorithm(IConstantesNerellConfig.pathFindingAlgo);
         pf.setNbTileX(300);
         pf.setNbTileY(200);
+        pf.setSaveImages(env.getProperty("pathfinding.save.images", Boolean.class, true));
 
         return pf;
     }

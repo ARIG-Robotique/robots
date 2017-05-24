@@ -38,6 +38,10 @@ public abstract class AbstractPathFinder implements IPathFinder {
     @Getter(AccessLevel.PROTECTED)
     private boolean allowDiagonal = true;
 
+    @Setter
+    @Getter(AccessLevel.PROTECTED)
+    private boolean saveImages = true;
+
     private BufferedImage workImage;
     private File pathDir = new File("./logs/path");
     private final DateTimeFormatter dteFormat = DateTimeFormatter.ISO_DATE_TIME;

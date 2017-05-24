@@ -10,6 +10,7 @@ import org.arig.robot.model.Point;
 import org.arig.robot.system.pathfinding.AbstractPathFinder;
 import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 import org.arig.robot.utils.ImageUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import pathfinder.*;
 
@@ -140,7 +141,9 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         log.info("Chemin de {} point(s) de passage filtré en {}", c.nbPoints() - 1, sw.toSplitString());
         sw.stop();
 
-        saveImageForPath(from, c);
+        if (isSaveImages()) {
+            saveImageForPath(from, c);
+        }
 
         return c;
     }
@@ -196,7 +199,9 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         Assert.notNull(img, "L'image ne peut pas être null");
 
         // Ecriture sur disque de la map de path
-        saveImageForWork(img);
+        if (isSaveImages()) {
+            saveImageForWork(img);
+        }
 
         StopWatch sw = new StopWatch();
         sw.start();

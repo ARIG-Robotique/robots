@@ -111,6 +111,6 @@ public interface IConstantesNerellConfig {
     // ----------------- //
     // Paramètres métier //
     // ----------------- //
-    int nbModuleMax = 4;
+    int nbModuleMax = 6;
 
 }

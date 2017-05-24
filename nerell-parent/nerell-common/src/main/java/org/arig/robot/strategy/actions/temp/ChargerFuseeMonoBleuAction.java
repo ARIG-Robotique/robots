@@ -6,7 +6,10 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
+import org.arig.robot.model.ModuleLunaire;
 import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.Team;
+import org.arig.robot.services.BrasService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
@@ -16,13 +19,16 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class DechargerBaseCentreDroiteAction extends AbstractAction {
+public class ChargerFuseeMonoBleuAction extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
 
     @Autowired
     private RobotStatus rs;
+
+    @Autowired
+    private BrasService brasService;
 
     @Autowired
     private IIOService ioService;
@@ -35,36 +41,48 @@ public class DechargerBaseCentreDroiteAction extends AbstractAction {
 
     @Override
     public String name() {
-        return "Déchargement des modules dans la fusée centrale";
+        return "Chargement des modules de la fusée monochrome bleue";
     }
 
     @Override
     public int order() {
-        return 1500000;
+        return 400;
     }
 
     @Override
     public boolean isValid() {
-        return true;
+        return Team.BLEU == rs.getTeam() &&
+                rs.nbModulesMagasin() <= IConstantesNerellConfig.nbModuleMax - 4 &&
+                !ioService.presencePinceCentre() &&
+                !rs.isFuseeMonochromeBleuRecupere();
     }
 
     @Override
     public void execute() {
         try {
             rs.enableAvoidance();
+            rs.enablePinces();
+
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            double x = 1500 + 890 * Math.cos(-3 * Math.PI / 4) + 298 * Math.cos(3 * Math.PI / 4);
-            double y = 2000 + 890 * Math.sin(-3 * Math.PI / 4) + 298 * Math.sin(3 * Math.PI / 4);
+            mv.pathTo(2000, 250);
+            mv.gotoOrientationDeg(180);
 
-            mv.pathTo(x, y);
-            mv.gotoOrientationDeg(135);
-            mv.reculeMM(165);
+            while (ioService.presenceFusee()) {
+                brasService.stockerModuleFusee();
+                rs.addModuleDansMagasin(ModuleLunaire.monochrome());
+            }
 
-            Thread.sleep(10000);
+            servosService.brasPincesFermes();
 
-        } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
+            mv.gotoOrientationDeg(90);
+
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+        } finally {
+            completed = true;
+            rs.disablePinces();
+            rs.setFuseeMonochromeBleuRecupere(true);
         }
     }
 }

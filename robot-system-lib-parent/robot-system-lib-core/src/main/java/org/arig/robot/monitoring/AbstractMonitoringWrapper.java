@@ -2,6 +2,7 @@ package org.arig.robot.monitoring;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.arig.robot.model.AbstractRobotStatus;
@@ -26,6 +27,10 @@ public abstract class AbstractMonitoringWrapper implements IMonitoringWrapper {
 
     @Getter(AccessLevel.PROTECTED)
     private final List<AbstractMonitorMouvement> monitorMouvementPoints = new ArrayList<>();
+
+    @Setter
+    @Getter(AccessLevel.PROTECTED)
+    private boolean enabled = true;
 
     @Override
     public final void save() {
@@ -66,7 +71,9 @@ public abstract class AbstractMonitoringWrapper implements IMonitoringWrapper {
 
     @Override
     public void forceAddTimeSeriePoint(MonitorTimeSerie point) {
-        monitorTimeSeriePoints.add(point);
+        if (enabled) {
+            monitorTimeSeriePoints.add(point);
+        }
     }
 
     @Override
@@ -78,7 +85,9 @@ public abstract class AbstractMonitoringWrapper implements IMonitoringWrapper {
 
     @Override
     public void forceAddMouvementPoint(AbstractMonitorMouvement point) {
-        monitorMouvementPoints.add(point);
+        if (enabled) {
+            monitorMouvementPoints.add(point);
+        }
     }
 
     protected boolean hasTimeSeriePoints() {

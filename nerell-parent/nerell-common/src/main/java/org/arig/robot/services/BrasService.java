@@ -150,6 +150,9 @@ public class BrasService {
             servosService.brasPriseFusee();
             servosService.waitBras();
 
+            servosService.pinceCentreFerme();
+            servosService.waitPince();
+
             ioService.enablePompeAVide();
 
             if (!tentativeAspirationFusee(2)) {

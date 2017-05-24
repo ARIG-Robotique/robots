@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class EjectionModuleService {
 
-    private static final int TEMPS_MAX_PRESENCE_ROULEAUX = 1000;
+    private static final int TEMPS_MAX_PRESENCE_ROULEAUX = 2000;
     private static final int TEMPS_MAX_TROUVER_COULEUR = 3000;
 
     @Autowired
@@ -23,10 +23,10 @@ public class EjectionModuleService {
     private ServosService servosService;
 
     @Autowired
-    private RobotStatus robotStatus;
+    private RobotStatus rs;
 
     public void init() {
-        if (!robotStatus.isSimulateur()) {
+        if (!rs.isSimulateur()) {
             log.info("Initialisation de l'ejection des modules");
 
             if (ioService.glissiereFerme()) {
@@ -49,24 +49,25 @@ public class EjectionModuleService {
     }
 
     public void ejectionAvantRetourStand() {
-        if (ioService.presenceRouleaux()) {
-            ejectionModule(ModuleLunaire.monochrome());
-        }
-
-        while (ioService.presenceDevidoir()) {
-            ejectionModule(ModuleLunaire.monochrome());
+        while (rs.hasNextModule()) {
+            ejectionModule(true);
         }
     }
 
-    public void ejectionModule(ModuleLunaire module) {
-        log.info("Ejection module {}", module.type().name());
+    public void ejectionModule() {
+        ejectionModule(false);
+    }
 
-        if (!ioService.presenceDevidoir()) {
-            log.warn("Le dévidoir est vide !");
+    public void ejectionModule(Boolean disableLectureCouleur) {
+        log.info("Ejection module");
+
+        ModuleLunaire module = rs.nextModule();
+
+        if (module == null) {
+            log.info("Pas de module present dans le magasin");
             return;
         }
 
-        servosService.devidoirDechargement();
         int remaining = TEMPS_MAX_PRESENCE_ROULEAUX;
         while (!ioService.presenceRouleaux() && remaining > 0) {
             remaining -= 10;
@@ -75,21 +76,22 @@ public class EjectionModuleService {
 
         if (!ioService.presenceRouleaux()) {
             log.warn("Le dévidoir à dit qu'il était plein mais il a rien rendu !");
-            servosService.devidoirChargement();
-            servosService.waitDevidoire();
             return;
         }
 
-        if (module.isPolychrome()) {
+        rs.disableMagasin();
+
+        if (!disableLectureCouleur && module.isPolychrome()) {
+
             ioService.enableLedCapteurCouleur();
             servosService.devidoirLectureCouleur();
             servosService.waitDevidoire();
 
-            if (ioService.getTeamColorFromSensor() == robotStatus.getTeam()) {
+            if (ioService.getTeamColorFromSensor() == rs.getTeam()) {
                 servosService.tourneModuleRouleauxRF();
 
                 remaining = TEMPS_MAX_TROUVER_COULEUR;
-                while (ioService.getTeamColorFromSensor() == robotStatus.getTeam() && remaining > 0) {
+                while (ioService.getTeamColorFromSensor() == rs.getTeam() && remaining > 0) {
                     remaining -= 10;
                     waitTimeMs(10);
                 }
@@ -98,17 +100,18 @@ public class EjectionModuleService {
             servosService.tourneModuleRouleauxFF();
 
             remaining = TEMPS_MAX_TROUVER_COULEUR;
-            while (ioService.getTeamColorFromSensor() != robotStatus.getTeam() && remaining > 0) {
+            while (ioService.getTeamColorFromSensor() != rs.getTeam() && remaining > 0) {
                 remaining -= 10;
                 waitTimeMs(10);
             }
 
-            if (ioService.getTeamColorFromSensor() != robotStatus.getTeam()) {
+            if (ioService.getTeamColorFromSensor() != rs.getTeam()) {
                 log.warn("Imposible de trouver la couleur du module");
             }
 
             servosService.tourneModuleRouleauxStop();
             ioService.disableLedCapteurCouleur();
+
         }
 
         servosService.devidoirChargement();
@@ -122,6 +125,8 @@ public class EjectionModuleService {
             waitTimeMs(1);
         }
         servosService.stopGlissiere();
+
+        rs.enableMagasin();
     }
 
     private void waitTimeMs(long ms) {

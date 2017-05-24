@@ -2,6 +2,7 @@ package org.arig.robot.scheduler;
 
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.CalageBordureService;
+import org.arig.robot.services.MagasinService;
 import org.arig.robot.services.PincesService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.system.avoiding.IAvoidingService;
@@ -28,7 +29,9 @@ public class RobotScheduler {
     private PincesService pincesService;
 
     @Autowired
-    private ServosService servosService;
+    private MagasinService magasinService;
+
+
 
     @Scheduled(fixedDelay = 100)
     public void obstacleAvoidanceTask() {
@@ -52,6 +55,13 @@ public class RobotScheduler {
         }
         else {
             pincesService.disable();
+        }
+    }
+
+    @Scheduled(fixedDelay = 1000)
+    public void magasinServiceTask() {
+        if (rs.isMagasinServiceEnable()) {
+            magasinService.process();
         }
     }
 }

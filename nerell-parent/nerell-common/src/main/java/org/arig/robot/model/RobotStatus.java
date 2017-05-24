@@ -1,9 +1,11 @@
 package org.arig.robot.model;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
+import org.apache.commons.lang3.tuple.Pair;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -33,19 +35,23 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     public void startMatch() {
         matchTime.start();
     }
+
     public void stopMatch() {
         matchTime.stop();
     }
+
     public long getElapsedTime() {
         return matchTime.getTime();
     }
 
     @Setter(AccessLevel.NONE)
     private boolean calageBordureEnabled = false;
+
     public void enableCalageBordure() {
         log.info("Activation calage bordure");
         calageBordureEnabled = true;
     }
+
     public void disableCalageBordure() {
         log.info("Désactivation calage bordure");
         calageBordureEnabled = false;
@@ -64,16 +70,26 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     public void addModuleDansMagasin(ModuleLunaire m) {
         magasinModule.add(m);
     }
-    public ModuleLunaire nextModule() {
-        return magasinModule.peek();
+
+    public boolean hasNextModule() {
+        return magasinModule.peek() != null;
     }
-    public ModuleLunaire extractModule() {
+
+    public ModuleLunaire nextModule() {
         return magasinModule.poll();
     }
+
     public boolean hasModuleDansMagasin() {
         return CollectionUtils.isNotEmpty(magasinModule);
     }
-    public boolean canAddModuleMagasin() { return  magasinModule.size() < IConstantesNerellConfig.nbModuleMax; }
+
+    public boolean canAddModuleMagasin() {
+        return magasinModule.size() < IConstantesNerellConfig.nbModuleMax;
+    }
+
+    public Integer nbModulesMagasin() {
+        return magasinModule.size();
+    }
 
     // Fusées
     private boolean fuseeMonochromeJauneRecupere = false;
@@ -83,6 +99,14 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     // Modules sur table
     private Map<Integer, Boolean> modulesRecuperes = new HashMap<>();
+
+    public void setModuleRecupere(Integer numero) {
+        modulesRecuperes.put(numero, true);
+    }
+
+    public Boolean isModuleRecupere(Integer numero) {
+        return modulesRecuperes.get(numero);
+    }
 
     // Cratères
     private boolean cratereZoneDepartBleuRecupere = false;
@@ -99,6 +123,54 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         return ++nbTransfertsElfa;
     }
 
+    @Setter(AccessLevel.NONE)
+    private boolean pincesEnabled = false;
+
+    public void enablePinces() {
+        log.info("Activation des pinces");
+        pincesEnabled = true;
+    }
+
+    public void disablePinces() {
+        log.info("Désactivation des pinces");
+        pincesEnabled = false;
+    }
+
+    @Setter(AccessLevel.NONE)
+    private boolean magasinServiceEnable = false;
+
+    public void disableMagasin() {
+        magasinServiceEnable = false;
+    }
+
+    public void enableMagasin() {
+        magasinServiceEnable = true;
+    }
+
+    // Base Lunaires
+    private Map<Integer, Integer[]> nbModulesDansBase = new HashMap<>();
+
+    public Integer getNbModulesDansBase(Integer numBase) {
+        return nbModulesDansBase.get(numBase)[0];
+    }
+
+    public Integer nbPlacesDansBase(Integer numBase) {
+        return nbModulesDansBase.get(numBase)[1] - nbModulesDansBase.get(numBase)[0];
+    }
+
+    public void addModuleDansBase(Integer numBase) {
+        nbModulesDansBase.get(numBase)[0]++;
+    }
+
+    public boolean canAddModuleDansBase(Integer numBase) {
+        return nbModulesDansBase.get(numBase)[0] < nbModulesDansBase.get(numBase)[1];
+    }
+
+    /**
+     * INIT
+     *
+     * @throws Exception
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
         modulesRecuperes.put(1, false);
@@ -111,13 +183,11 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         modulesRecuperes.put(8, false);
         modulesRecuperes.put(9, false);
         modulesRecuperes.put(10, false);
-    }
 
-    public void setModuleRecupere(Integer numero) {
-        modulesRecuperes.put(numero, true);
-    }
-
-    public Boolean isModuleRecupere(Integer numero) {
-        return modulesRecuperes.get(numero);
+        nbModulesDansBase.put(1, new Integer[]{0, 4});
+        nbModulesDansBase.put(3, new Integer[]{0, 6});
+        nbModulesDansBase.put(2, new Integer[]{0, 6});
+        nbModulesDansBase.put(4, new Integer[]{0, 6});
+        nbModulesDansBase.put(5, new Integer[]{0, 4});
     }
 }

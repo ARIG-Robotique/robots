@@ -7,7 +7,7 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.model.Team;
+import org.arig.robot.services.EjectionModuleService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class DechargerBaseCentreAction extends AbstractAction {
+public class DechargerBase2Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -26,27 +26,24 @@ public class DechargerBaseCentreAction extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private IIOService ioService;
-
-    @Autowired
-    private ServosService servosService;
+    private EjectionModuleService ejectionModuleService;
 
     @Getter
     private boolean completed = false;
 
     @Override
     public String name() {
-        return "Déchargement des modules dans la fusée centrale";
+        return "Déchargement des modules dans la base 2";
     }
 
     @Override
     public int order() {
-        return 150;
+        return Math.max(rs.nbPlacesDansBase(2), rs.nbModulesMagasin()) * 100;
     }
 
     @Override
     public boolean isValid() {
-        return false;
+        return rs.hasModuleDansMagasin();
     }
 
     @Override
@@ -55,14 +52,25 @@ public class DechargerBaseCentreAction extends AbstractAction {
             rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            mv.pathTo(1200, 1100);
-            mv.gotoOrientationDeg(180);
-            mv.reculeMM(167);
+            double x = 1500 + 890 * Math.cos(-3 * Math.PI / 4) + 298 * Math.cos(3 * Math.PI / 4);
+            double y = 2000 + 890 * Math.sin(-3 * Math.PI / 4) + 298 * Math.sin(3 * Math.PI / 4);
 
-            // TODO
+            mv.pathTo(x, y);
+            mv.gotoOrientationDeg(135);
+            mv.reculeMM(165);
+
+            while (rs.hasNextModule() && rs.canAddModuleDansBase(2)) {
+                ejectionModuleService.ejectionModule();
+                rs.addModuleDansBase(2);
+            }
+
+            mv.avanceMM(165);
+            mv.gotoOrientationDeg(-135);
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+        } finally {
+            completed = !rs.canAddModuleDansBase(2);
         }
     }
 }
