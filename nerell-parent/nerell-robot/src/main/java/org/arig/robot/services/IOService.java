@@ -221,28 +221,28 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     @Override
     public boolean bordureAvant() {
         boolean result = inBordureAvant.isLow();
-        log.info("Bordure avant presente : {}", result);
+        log.info("Présence bordure avant : {}", result);
         return result;
     }
 
     @Override
     public boolean bordureArriereDroite() {
         boolean result = inBordureArriereDroite.isLow();
-        log.info("Bordure arrière droite presente : {}", result);
+        log.info("Présence bordure arrière droite : {}", result);
         return result;
     }
 
     @Override
     public boolean bordureArriereGauche() {
         boolean result = inBordureArriereGauche.isLow();
-        log.info("Bordure arrière gauche presente : {}", result);
+        log.info("Présence bordure arrière gauche : {}", result);
         return result;
     }
 
     @Override
     public boolean presenceEntreeMagasin() {
         boolean result = inComptageMagasin.isLow();
-        log.info("Comptage magasin : {}", result);
+        log.info("Présence comptage magasin : {}", result);
         return result;
     }
 
@@ -269,46 +269,63 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public boolean presenceBaseLunaireDroite() {
-        return inPresenceBaseLunaireDroite.isLow();
+        boolean result = inPresenceBaseLunaireDroite.isLow();
+        log.info("Presence base lunaire droite : {}", result);
+        return result;
     }
 
     @Override
     public boolean presenceBaseLunaireGauche() {
-        return inPresenceBaseLunaireGauche.isLow();
+        boolean result = inPresenceBaseLunaireGauche.isLow();
+        log.info("Presence base lunaire gauche : {}", result);
+        return result;
     }
 
     @Override
     public boolean presenceBallesAspiration() {
-        return inPresenceBalleAspiration.isLow();
+        boolean result = inPresenceBalleAspiration.isLow();
+        log.info("Presence balle aspiration : {}", result);
+        return result;
     }
 
     @Override
     public boolean presenceRouleaux() {
-        return inPresenceRouleaux.isLow();
+        boolean result = inPresenceRouleaux.isLow();
+        log.info("Présence rouleaux : {}", result);
+        return result;
     }
 
     @Override
     public boolean presenceFusee() {
-        return inPresenceFusee.isLow();
+        boolean result = inPresenceFusee.isLow();
+        log.info("Presence fusée : {}", result);
+        return result;
     }
 
     @Override
     public boolean presenceModuleDansBras() {
+        boolean result;
         try {
-            return i2cAdc.readCapteurValue(IConstantesI2CAdc.VACUOSTAT) > IConstantesI2CAdc.VACUOSTAT_SEUIL;
+            result = i2cAdc.readCapteurValue(IConstantesI2CAdc.VACUOSTAT) > IConstantesI2CAdc.VACUOSTAT_SEUIL;
         } catch (I2CException e) {
-            return false;
+            result = false;
         }
+        log.info("Présence module dans bras : {}", result);
+        return result;
     }
 
     @Override
     public boolean finCourseGlissiereDroite() {
-        return inFinCourseGlissiereDroite.isLow();
+        boolean result = inFinCourseGlissiereDroite.isLow();
+        log.info("Fin de course glissiere droite : {}", result);
+        return result;
     }
 
     @Override
     public boolean finCourseGlissiereGauche() {
-        return inFinCourseGlissiereGauche.isLow();
+        boolean result = inFinCourseGlissiereGauche.isLow();
+        log.info("Fin de course glissiere gauche : {}", result);
+        return result;
     }
 
     @Override
