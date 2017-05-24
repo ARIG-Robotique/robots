@@ -187,17 +187,23 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public boolean auOk() {
-        return inAu.isLow();
+        boolean result = inAu.isLow();
+        log.info("AU present : {}", result);
+        return result;
     }
 
     @Override
     public boolean alimPuissance5VOk() {
-        return inAlimPuissance5V.isHigh();
+        boolean result = inAlimPuissance5V.isHigh();
+        log.info("Puissance 5V present : {}", result);
+        return result;
     }
 
     @Override
     public boolean alimPuissance12VOk() {
-        return inAlimPuissance12V.isHigh();
+        boolean result = inAlimPuissance12V.isHigh();
+        log.info("Puisance 12V present : {}", result);
+        return result;
     }
 
     @Override
@@ -207,42 +213,58 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public boolean ledCapteurCouleur() {
-        return outCmdLedCapteurRGB.isHigh();
+        boolean result = outCmdLedCapteurRGB.isHigh();
+        log.info("LED capteur couleur allumé : {}", result);
+        return result;
     }
 
     @Override
     public boolean bordureAvant() {
-        return inBordureAvant.isLow();
+        boolean result = inBordureAvant.isLow();
+        log.info("Bordure avant presente : {}", result);
+        return result;
     }
 
     @Override
     public boolean bordureArriereDroite() {
-        return inBordureArriereDroite.isLow();
+        boolean result = inBordureArriereDroite.isLow();
+        log.info("Bordure arrière droite presente : {}", result);
+        return result;
     }
 
     @Override
     public boolean bordureArriereGauche() {
-        return inBordureArriereGauche.isLow();
+        boolean result = inBordureArriereGauche.isLow();
+        log.info("Bordure arrière gauche presente : {}", result);
+        return result;
     }
 
     @Override
     public boolean presenceEntreeMagasin() {
-        return inComptageMagasin.isLow();
+        boolean result = inComptageMagasin.isLow();
+        log.info("Comptage magasin : {}", result);
+        return result;
     }
 
     @Override
     public boolean presenceDevidoir() {
-        return inPresenceDevidoir.isLow();
+        boolean result = inPresenceDevidoir.isLow();
+        log.info("Présence dévidoir : {}", result);
+        return result;
     }
 
     @Override
     public boolean presencePinceDroite() {
-        return inPresencePinceDroite.isLow();
+        boolean result = inPresencePinceDroite.isLow();
+        log.info("Presence pince droite : {}", result);
+        return result;
     }
 
     @Override
     public boolean presencePinceCentre() {
-        return inPresencePinceCentre.isLow();
+        boolean result = inPresencePinceCentre.isLow();
+        log.info("Presence pince centre : {}", result);
+        return result;
     }
 
     @Override
@@ -307,13 +329,16 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
         int delta = 42;
 
+        Team result;
         if (c.b() - c.r() > delta && c.b() - c.g() > delta / 2) {
-            return Team.BLEU;
+            result = Team.BLEU;
         } else if (c.r() - c.b() > delta && c.g() - c.b() > delta && Math.abs(c.r() - c.g()) < delta) {
-            return Team.JAUNE;
+            result = Team.JAUNE;
         } else {
-            return Team.UNKNOWN;
+            result = Team.UNKNOWN;
         }
+        log.info("Lecture capteur couleur R: {}, G: {}, B: {}, Team: {}", c.r(), c.g(), c.b(), result.name());
+        return result;
     }
 
     // --------------------------------------------------------- //
@@ -322,6 +347,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public void colorLedRGBKo() {
+        log.info("Led RGB couleur KO");
         outLedRGB_R.high();
         outLedRGB_G.low();
         outLedRGB_B.low();
@@ -329,6 +355,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public void colorLedRGBOk() {
+        log.info("Led RGB couleur OK");
         outLedRGB_R.low();
         outLedRGB_G.high();
         outLedRGB_B.low();
@@ -337,10 +364,12 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     @Override
     public void teamColorLedRGB() {
         if (rs.getTeam() == Team.BLEU) {
+            log.info("Led RGB couleur Team BLEU");
             outLedRGB_R.low();
             outLedRGB_G.low();
             outLedRGB_B.high();
         } else if (rs.getTeam() == Team.JAUNE) {
+            log.info("Led RGB couleur Team JAUNE");
             outLedRGB_R.high();
             outLedRGB_G.high();
             outLedRGB_B.low();
@@ -351,6 +380,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public void clearColorLedRGB() {
+        log.info("Led RGB eteinte");
         outLedRGB_R.low();
         outLedRGB_G.low();
         outLedRGB_B.low();
@@ -358,11 +388,13 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public void enableLedCapteurCouleur() {
+        log.info("Led blanche capteur couleur allumé");
         outCmdLedCapteurRGB.high();
     }
 
     @Override
     public void disableLedCapteurCouleur() {
+        log.info("Led blanche capteur couleur eteinte");
         outCmdLedCapteurRGB.low();
     }
 
@@ -392,21 +424,25 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public void enableElectroVanne() {
+        log.info("Activation electrovanne");
         outElectroVanne.low();
     }
 
     @Override
     public void disableElectroVanne() {
+        log.info("Desactivation electrovanne");
         outElectroVanne.high();
     }
 
     @Override
     public void enablePompeAVide() {
+        log.info("Activation pompe a vide");
         outPompeAVide.low();
     }
 
     @Override
     public void disablePompeAVide() {
+        log.info("Desactivation pompe a vide");
         outPompeAVide.high();
     }
 
@@ -416,11 +452,15 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public boolean glissiereOuverte() {
-        return finCourseGlissiereDroite() && !finCourseGlissiereGauche();
+        boolean result = finCourseGlissiereDroite() && !finCourseGlissiereGauche();
+        log.info("Glissière ouverte : {}", result);
+        return result;
     }
 
     @Override
     public boolean glissiereFerme() {
-        return !finCourseGlissiereDroite() && finCourseGlissiereGauche();
+        boolean result = !finCourseGlissiereDroite() && finCourseGlissiereGauche();
+        log.info("Glissière fermé : {}", result);
+        return result;
     }
 }
