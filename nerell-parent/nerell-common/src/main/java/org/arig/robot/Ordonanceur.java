@@ -7,7 +7,10 @@ import org.arig.robot.communication.II2CManager;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.exception.RefreshPathFindingException;
-import org.arig.robot.model.*;
+import org.arig.robot.model.Point;
+import org.arig.robot.model.Position;
+import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
@@ -258,6 +261,10 @@ public class Ordonanceur {
         ioService.enableAlim12VPuissance();
 
         ejectionModuleService.ejectionAvantRetourStand();
+        if (ioService.presenceBallesAspiration()) {
+            servosService.aspirationTransfert();
+            servosService.waitAspiration();
+        }
 
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();
