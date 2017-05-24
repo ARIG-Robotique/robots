@@ -1,7 +1,6 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.exception.ServoException;
 import org.arig.robot.model.RobotStatus;
@@ -233,7 +232,7 @@ public class ServosService {
 
     public void pinceCentreFerme() {
         if (isBrasVertical() && isVentouseDepose() || isBrasPriseFusee()) {
-            servos.setPosition(IConstantesServos.PINCE_MODULE_CENTRE, IConstantesServos.PINCE_MODULE_DROIT_FERME);
+            servos.setPosition(IConstantesServos.PINCE_MODULE_CENTRE, IConstantesServos.PINCE_MODULE_CENTRE_FERME);
         } else {
             throw new ServoException("pinceCentre");
         }
@@ -241,8 +240,9 @@ public class ServosService {
 
     public void brasAttentePriseRobot() {
         if (checkDescenteBras()) {
-            servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_ROBOT);
             servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_ATTENTE);
+            waitBras();
+            servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_ROBOT);
         } else {
             throw new ServoException("bras");
         }
@@ -250,8 +250,9 @@ public class ServosService {
 
     public void brasAttentePriseFusee() {
         if (checkDescenteBras()) {
-            servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_FUSEE);
             servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_ATTENTE);
+            waitBras();
+            servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_FUSEE);
         } else {
             throw new ServoException("bras");
         }
@@ -259,7 +260,7 @@ public class ServosService {
 
     public void brasAttenteDepose() {
         if (checkDescenteBras()) {
-            servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_FUSEE);
+            servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_DEPOSE_MAGASIN);
             servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_ATTENTE);
         } else {
             throw new ServoException("bras");
@@ -273,8 +274,8 @@ public class ServosService {
                         isPinceCentreOuvertDansDroit() ||
                         isPinceCentreOuvert() && !ioService.presenceModuleDansBras()
         )) {
-            servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_DEPOSE);
             servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_DEPOSE_MAGASIN);
+            servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_DEPOSE);
         } else {
             throw new ServoException("bras");
         }
@@ -291,8 +292,9 @@ public class ServosService {
 
     public void brasPriseRobot() {
         if (checkDescenteBras()) {
-            servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_PRISE_FUSEE);
-            servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_FUSEE);
+            servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_ROBOT);
+            servos.waitTime(IConstantesServos.WAIT_ROT_VENTOUSE);
+            servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_PRISE_ROBOT);
         } else {
             throw new ServoException("bras");
         }
@@ -300,8 +302,8 @@ public class ServosService {
 
     public void brasVertical() {
         if (checkDescenteBras()) {
-            servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_PRISE_FUSEE);
-            servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_FUSEE);
+            servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_VERTICAL);
+            servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_DEPOSE_MAGASIN);
         } else {
             throw new ServoException("bras");
         }

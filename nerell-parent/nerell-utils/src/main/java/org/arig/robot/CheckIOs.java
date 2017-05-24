@@ -2,10 +2,11 @@ package org.arig.robot;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.RobotStatus;
+import org.arig.robot.services.BrasService;
 import org.arig.robot.services.EjectionModuleService;
 import org.arig.robot.services.IOService;
 import org.arig.robot.services.ServosService;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
@@ -15,7 +16,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class CheckIOs {
 
     @SneakyThrows
-    public static void main(String ... args) {
+    public static void main(String... args) {
         log.info("Demarrage de Nerell en mode contrôle des IOs ...");
 
         AnnotationConfigApplicationContext rootContext = new AnnotationConfigApplicationContext();
@@ -23,31 +24,26 @@ public class CheckIOs {
         rootContext.refresh();
 
         IOService ioService = rootContext.getBean(IOService.class);
+        RobotStatus rs = rootContext.getBean(RobotStatus.class);
         EjectionModuleService ejectionModuleService = rootContext.getBean(EjectionModuleService.class);
+        BrasService brasService = rootContext.getBean(BrasService.class);
         ServosService servosService = rootContext.getBean(ServosService.class);
-        TCS34725ColorSensor colorSensor = rootContext.getBean(TCS34725ColorSensor.class);
 
         ioService.clearColorLedRGB();
-
-        // Contrôle couleur
-        /*
-        for (int i = 0 ; i < 60 ; i++) {
-            TCS34725ColorSensor.ColorData color = ioService.frontColor();
-            log.info("Couleur R: {} ; G: {} ; B: {} : C: {} ; HEX: {}", color.r(), color.g(), color.b(), color.c(), color.hexColor());
-            log.info("Couleur temp: {} K", colorSensor.calculateColorTemperature(color));
-            log.info("Luminosité: {} lux", colorSensor.calculateLux(color));
-
-            Thread.sleep(1000);
-        }
-        */
 
         // Check init et ejection module lunaire
         ioService.enableAlim12VPuissance();
         ioService.enableAlim5VPuissance();
         servosService.cyclePreparation();
         ejectionModuleService.init();
-        ejectionModuleService.ejectionAvantRetourStand();
+        servosService.homes();
 
+        do {
+            brasService.stockerModuleRobot();
+            brasService.sleep(2000);
+        } while (rs.canAddModuleMagasin());
+
+        ejectionModuleService.ejectionAvantRetourStand();
 
         ioService.disableAlim12VPuissance();
         ioService.disableAlim5VPuissance();
