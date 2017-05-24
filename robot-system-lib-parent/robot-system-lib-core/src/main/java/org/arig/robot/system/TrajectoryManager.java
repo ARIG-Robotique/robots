@@ -418,8 +418,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                 monitoring.addMouvementPoint(mPath);
 
                 while (c.hasNext()) {
-                    Point p = c.next();
-                    Point targetPoint = new Point(p.getX() * divisor, p.getY() * divisor);
+                    Point targetPoint = c.next().multiplied(divisor);
 
                     // Toujours activer l'évittement en Path
                     rs.enableAvoidance();

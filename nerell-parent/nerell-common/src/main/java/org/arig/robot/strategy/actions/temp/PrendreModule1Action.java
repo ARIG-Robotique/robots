@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PrendreModule2Action extends AbstractAction {
+public class PrendreModule1Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -33,47 +33,44 @@ public class PrendreModule2Action extends AbstractAction {
 
     @Override
     public String name() {
-        return "Récuperation du Module 2";
+        return "Récuperation du Module 1";
     }
 
     @Override
     public int order() {
-        int val = 20;
-
-        if (Team.JAUNE.equals(rs.getTeam())) {
-            val += 500;
-        }
-
-        return val;
+        return 20;
     }
 
     @Override
     public boolean isValid() {
-        return !rs.isModuleRecupere(2) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
+        return Team.JAUNE == rs.getTeam() && !rs.isModuleRecupere(1) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
     }
 
     @Override
     public void execute() {
         try {
             rs.enableAvoidance();
+            rs.enablePinces();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(2, ModuleLunaire.Type.POLYCHROME));
+            rs.setModuleLunaireExpected(new ModuleLunaire(1, ModuleLunaire.Type.MONOCHROME));
+
+            mv.pathTo(200 + 280 * Math.cos(Math.PI / 4), 600 + 280 * Math.sin(Math.PI / 4));
 
             if (ioService.presencePinceCentre()) {
-                mv.pathTo(500+180+100, 1015);
+                mv.alignFrontTo(200 + 85 * Math.cos(-Math.PI / 4), 600 + 85 * Math.sin(-Math.PI / 4));
             } else {
-                mv.pathTo(500+180+100, 1100);
+                mv.alignFrontTo(200, 600);
             }
-            mv.gotoOrientationDeg(180);
-            mv.avanceMM(150);
 
-            if (rs.getModuleLunaireExpected() == null) {
-                completed = true;
-            }
+            mv.avanceMM(150);
+            mv.reculeMM(150);
+            mv.gotoOrientationDeg(45);
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+        } finally {
+            completed = true;
         }
     }
 }

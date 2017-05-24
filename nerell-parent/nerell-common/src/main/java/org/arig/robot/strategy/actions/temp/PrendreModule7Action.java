@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PrendreModule6Action extends AbstractAction {
+public class PrendreModule7Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -33,15 +33,15 @@ public class PrendreModule6Action extends AbstractAction {
 
     @Override
     public String name() {
-        return "Récuperation du Module 6";
+        return "Récuperation du Module 7";
     }
 
     @Override
     public int order() {
-        int val = 20;
+        int val = 100;
 
-        if (Team.BLEU.equals(rs.getTeam())) {
-            val += 1000;
+        if (Team.JAUNE == rs.getTeam()) {
+            val /= 10;
         }
 
         return val;
@@ -49,39 +49,44 @@ public class PrendreModule6Action extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return !rs.isModuleRecupere(6) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
+        return !rs.isModuleRecupere(7) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
     }
 
     @Override
     public void execute() {
         try {
             rs.enableAvoidance();
+            rs.enablePinces();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(6, ModuleLunaire.Type.POLYCHROME));
+            rs.setModuleLunaireExpected(new ModuleLunaire(7, ModuleLunaire.Type.POLYCHROME));
 
-            if (Team.BLEU == rs.getTeam()) {
-                mv.gotoOrientationDeg(Math.toDegrees(Math.atan2(600 - 165, 2000 - 2110)));
-                mv.avanceMM(500);
+            double offsetX = 0, offsetY = 0;
 
-            } else {
-                // TODO
-                if (!ioService.presencePinceDroite()) {
-                    // alignement pour prendre dans la pince droite depuis la gauche
-                    mv.pathTo(1700, 680);
-                    mv.gotoOrientationDeg(0);
-                    mv.avanceMM(300);
-                } else {
-                    mv.pathTo(2000, 600);
-                }
+            if (!ioService.presencePinceCentre()) {
+                offsetX = 85 * Math.cos(-3 * Math.PI / 4);
+                offsetY = 85 * Math.sin(-3 * Math.PI / 4);
             }
 
-            if (rs.getModuleLunaireExpected() == null) {
-                completed = true;
-            }
+            mv.pathTo(
+                    2100 + 280 * Math.cos(-Math.PI / 4) + offsetX,
+                    1400 + 280 * Math.sin(-Math.PI / 4) + offsetY
+            );
+            mv.alignFrontTo(2100 + offsetX, 1400 + offsetY);
+            mv.gotoPointMM(
+                    2100 - 150 * Math.cos(3 * Math.PI / 4) + offsetX,
+                    1400 - 150 * Math.sin(3 * Math.PI / 4) + offsetY
+            );
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
+            Thread.sleep(400);
+
+            mv.reculeMM(100);
+            mv.gotoOrientationDeg(-90);
+
+        } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+        } finally {
+            completed = true;
         }
     }
 }

@@ -74,11 +74,20 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         StopWatch sw = new StopWatch();
         sw.start();
 
+        Point fromCorrige = null;
         GraphNode startNode, endNode;
         // Choisir dans le quadrant vers la destination pour eviter de reculer.
         if ((startNode = workGraph.getNodeAt(from.getX(), from.getY(), 0, maxDistanceDepart)) == null) {
-            log.error("Impossible de trouver le noeud de départ");
-            throw new NoPathFoundException(NoPathFoundException.ErrorType.START_NODE_DOES_NOT_EXIST);
+            log.error("Impossible de trouver le noeud de départ, tentative de trouver un autre point proche");
+
+            fromCorrige = getNearestPoint(from);
+
+            if (fromCorrige == null) {
+                throw new NoPathFoundException(NoPathFoundException.ErrorType.START_NODE_DOES_NOT_EXIST);
+            }
+            else {
+                startNode = workGraph.getNodeAt(fromCorrige.getX(), fromCorrige.getY(), 0, maxDistanceDepart);
+            }
         }
         if ((endNode = workGraph.getNodeAt(to.getX(), to.getY(), 0, maxDistanceArrivee)) == null) {
             log.error("Impossible de trouver le noeud d'arrivée");
@@ -104,6 +113,11 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         // Le point 0 est le "from".
         // On exclus le dernier point qui est le "to"
         Chemin c = new Chemin();
+
+        if (fromCorrige != null) {
+            c.addPoint(fromCorrige);
+        }
+
         Double anglePrecedent = null;
         for (int i = 1; i < points.size() - 1; i++) {
             Point ptPrec = points.get(i - 1);
@@ -278,5 +292,34 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
     public void setAStartCostFactor(double factor) {
         this.aStarCostFactor = factor;
         pf = null;
+    }
+
+    private Point getNearestPoint(Point from) {
+        Point point;
+
+        int seuil = 9;
+        int maxSeuil = seuil*2;
+
+        do {
+            point = from.offsettedX(seuil);
+            if (workGraph.getNodeAt(point.getX(), point.getY(), 0, 1.0) != null) {
+                return point;
+            }
+            point = from.offsettedY(-seuil);
+            if (workGraph.getNodeAt(point.getX(), point.getY(), 0, 1.0) != null) {
+                return point;
+            }
+            point = from.offsettedY(seuil);
+            if (workGraph.getNodeAt(point.getX(), point.getY(), 0, 1.0) != null) {
+                return point;
+            }
+            point = from.offsettedX(-seuil);
+            if (workGraph.getNodeAt(point.getX(), point.getY(), 0, 1.0) != null) {
+                return point;
+            }
+            seuil+=seuil;
+        } while(seuil < maxSeuil);
+
+        return null;
     }
 }

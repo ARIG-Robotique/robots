@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.temp;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +54,8 @@ public class DeposeModulesPincesAction extends AbstractAction {
     public void execute() {
         try {
             rs.enableAvoidance();
+            rs.disablePinces();
+
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             if (Team.JAUNE == rs.getTeam()) {
@@ -70,6 +72,7 @@ public class DeposeModulesPincesAction extends AbstractAction {
             servosService.waitBras();
 
             mv.reculeMM(300);
+            mv.gotoOrientationDeg(90);
 
             if (rs.getModuleLunaireDroite() != null && !ioService.presencePinceDroite()) {
                 rs.setModuleLunaireDroite(null);
@@ -78,8 +81,6 @@ public class DeposeModulesPincesAction extends AbstractAction {
             if (rs.getModuleLunaireCentre() != null && !ioService.presencePinceCentre()) {
                 rs.setModuleLunaireCentre(null);
             }
-
-            completed = !ioService.presencePinceDroite() && !ioService.presencePinceCentre();
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());

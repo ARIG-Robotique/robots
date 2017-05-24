@@ -39,6 +39,19 @@ public abstract class AbstractRobotStatus {
     }
 
     @Setter(AccessLevel.NONE)
+    private boolean pincesEnabled = false;
+
+    public void enablePinces() {
+        log.info("Activation des pinces");
+        pincesEnabled = true;
+    }
+
+    public void disablePinces() {
+        log.info("Désactivation des pinces");
+        pincesEnabled = false;
+    }
+
+    @Setter(AccessLevel.NONE)
     private boolean matchEnabled = false;
 
     public void enableMatch() {

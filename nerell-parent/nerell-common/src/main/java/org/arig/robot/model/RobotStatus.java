@@ -93,6 +93,12 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     private boolean cratereBaseLunaireJauneRecupere = false;
     private boolean cratereImmenseJauneRecupere = false;
 
+    private int nbTransfertsElfa = 0;
+
+    public int incNbTransfertsElfa() {
+        return ++nbTransfertsElfa;
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception {
         modulesRecuperes.put(1, false);

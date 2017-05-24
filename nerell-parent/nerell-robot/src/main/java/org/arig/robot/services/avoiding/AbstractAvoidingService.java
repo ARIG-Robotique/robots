@@ -3,6 +3,7 @@ package org.arig.robot.services.avoiding;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.values.DoubleValueAverage;
+import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.Rectangle;
@@ -79,6 +80,9 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
     @Autowired
     private ILidarTelemeter lidar;
 
+    @Autowired
+    private CommandeRobot cmdRobot;
+
     // Stockages des points d'obstacles
     @Getter
     private final List<Point> detectedPointsMmCapteurs = new ArrayList<>();
@@ -127,13 +131,13 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
         // TODO : Ajouter un delai pour ne pas rester bloqué.
         /*while(!fUsLatGauche.isDone() && !fUsGauche.isDone() && !fUsDroit.isDone() && !fUsLatDroit.isDone()
                 && !fGpGauche.isDone() && !fGpCentre.isDone() && !fGpDroit.isDone());*/
-        while(!fGpGauche.isDone() && !fGpCentre.isDone() && !fGpDroit.isDone());
+        while (!fGpGauche.isDone() && !fGpCentre.isDone() && !fGpDroit.isDone()) ;
 
         // Stockage local des points
         List<Point> detectedPointsMmCapteurs = new ArrayList<>();
         List<Point> detectedPointsMmLidar = new ArrayList<>();
 
-        double rawGpGauche = GP2D12.INVALID_VALUE, rawGpCentre = GP2D12.INVALID_VALUE, rawGpDroit = GP2D12.INVALID_VALUE;
+        /*double rawGpGauche = GP2D12.INVALID_VALUE, rawGpCentre = GP2D12.INVALID_VALUE, rawGpDroit = GP2D12.INVALID_VALUE;
         double avgGpGauche = 0, avgGpCentre = 0, avgGpDroit = 0;
 
         int rawUsLatGauche = SRF02Sonar.INVALID_VALUE, rawUsGauche = SRF02Sonar.INVALID_VALUE,
@@ -175,7 +179,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             }
         } catch (InterruptedException | ExecutionException | NullPointerException e) {
             log.warn("Erreur de récupération GP2D Droit", e);
-        }
+        }*/
 
         /*
         try {
@@ -230,10 +234,10 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
 
         if (lidarScan != null) {
             detectedPointsMmLidar.addAll(
-                lidarScan.getScan().parallelStream()
-                    .map(scan -> tableUtils.getPointFromAngle(scan.getDistanceMm(), scan.getAngleDeg()))
-                    .filter(pt -> tableUtils.isInTable(pt))
-                    .collect(Collectors.toList())
+                    lidarScan.getScan().parallelStream()
+                            .map(scan -> tableUtils.getPointFromAngle(scan.getDistanceMm(), scan.getAngleDeg()))
+                            .filter(pt -> tableUtils.isInTable(pt))
+                            .collect(Collectors.toList())
             );
         }
 
@@ -241,13 +245,13 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
         MonitorTimeSerie serie = new MonitorTimeSerie()
                 .tableName("avoiding")
                 .addField("nbPointCapteursDetecte", detectedPointsMmCapteurs.size())
-                .addField("nbPointLidarDetecte", detectedPointsMmLidar.size())
-                .addField("rawGpGauche", rawGpGauche)
+                .addField("nbPointLidarDetecte", detectedPointsMmLidar.size());
+                /*.addField("rawGpGauche", rawGpGauche)
                 .addField("avgGpGauche", avgGpGauche)
                 .addField("rawGpCentre", rawGpCentre)
                 .addField("avgGpCentre", avgGpCentre)
                 .addField("rawGpDroit", rawGpDroit)
-                .addField("avgGpDroit", avgGpDroit);
+                .addField("avgGpDroit", avgGpDroit);*/
                 /*.addField("rawUsLatGauche", rawUsLatGauche)
                 .addField("avgUsLatGauche", avgUsLatGauche)
                 .addField("rawUsGauche", rawUsGauche)
@@ -281,7 +285,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
     }
 
     protected boolean hasProximiteLidar() {
-        return getDetectedPointsMmCapteurs().parallelStream()
+        return getDetectedPointsMmLidar().parallelStream()
                 .anyMatch(pt -> {
                     long dX = (long) (pt.getX() - conv.pulseToMm(position.getPt().getX()));
                     long dY = (long) (pt.getY() - conv.pulseToMm(position.getPt().getY()));
@@ -298,7 +302,11 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
                         dA += 360;
                     }
 
-                    return dA > -45 && dA < 45;
+                    if (cmdRobot.getConsigne().getDistance() > 0) {
+                        return dA > -45 && dA < 45;
+                    } else {
+                        return Math.abs(dA) < 180 && Math.abs(dA) > 135;
+                    }
                 });
     }
 }

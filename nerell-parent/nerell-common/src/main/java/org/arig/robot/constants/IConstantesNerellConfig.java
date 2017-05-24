@@ -63,7 +63,7 @@ public interface IConstantesNerellConfig {
     long vitesseLente = 300;
     long vitesseSuperLente = 200;
 
-    long vitessePath = vitesseSuperHaute;
+    long vitessePath = vitesseMoyenneBasse;
     long vitesseMouvement = vitesseLente;
 
     // -------------- //
@@ -91,7 +91,7 @@ public interface IConstantesNerellConfig {
     // --------------------------- //
     double arretDistanceMm = 1;
     double arretOrientDeg = 1;
-    double approcheDistanceMm = 50;
+    double approcheDistanceMm = 100;
     double approcheOrientationDeg = 5;
     double angleReculDeg = 0.45;
 

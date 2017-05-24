@@ -19,6 +19,22 @@ public class PincesService {
     @Autowired
     private IIOService ioService;
 
+    private boolean enabled = false;
+
+    public void enable() {
+        if (!enabled && !ioService.presencePinceCentre() && !ioService.presencePinceDroite()) {
+            servosService.homes();
+            enabled = true;
+        }
+    }
+
+    public void disable() {
+        if (enabled && !ioService.presencePinceCentre() && !ioService.presencePinceDroite()) {
+            servosService.brasPincesFermes();
+            enabled = false;
+        }
+    }
+
     public void process() {
         if (ioService.presencePinceDroite() && !servosService.isPinceDroitePriseProduit()) {
             servosService.pinceDroitePriseProduit();

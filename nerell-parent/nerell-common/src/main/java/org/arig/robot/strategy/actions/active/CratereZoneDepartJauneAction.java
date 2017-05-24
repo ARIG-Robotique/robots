@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.temp;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class CratereZoneDepartBleuAction extends AbstractAction {
+public class CratereZoneDepartJauneAction extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -36,23 +36,25 @@ public class CratereZoneDepartBleuAction extends AbstractAction {
 
     @Override
     public String name() {
-        return "Récupération des ressources dans le petit cratère proche de la zone de départ bleue";
+        return "Récupération des ressources dans le petit cratère proche de la zone de départ jaune";
     }
 
     @Override
     public int order() {
-        int value = 15;
+        int val = 150;
 
-        if (Team.BLEU == rs.getTeam()) {
-            value += 500;
+        if (Team.JAUNE == rs.getTeam()) {
+            val += 500;
+        } else {
+            val /= 10;
         }
 
-        return value;
+        return val;
     }
 
     @Override
     public boolean isValid() {
-        return !rs.isCratereZoneDepartBleuRecupere() && !ioService.presenceBallesAspiration();
+        return !rs.isCratereZoneDepartJauneRecupere() && !ioService.presenceBallesAspiration();
     }
 
     @Override
@@ -61,28 +63,34 @@ public class CratereZoneDepartBleuAction extends AbstractAction {
             rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            mv.pathTo(2000, 680);
+            // tangeante au centre du cratère à une distance de 2*180 et un angle de PI/3 avec un recul de 100
+            //double x = 650 + (90 + 180) * Math.cos(Math.PI / 3) + 100 * Math.cos(Math.PI / 3 - Math.PI / 2);
+            //double y = 540 + (90 + 180) * Math.sin(Math.PI / 3) + 100 * Math.sin(Math.PI / 3 - Math.PI / 2);
+
+            mv.pathTo(940, 737);
 
             servosService.aspirationMax();
 
-            mv.gotoOrientationDeg(Math.toDegrees(2 * Math.PI / 3) - 270);
+            mv.gotoOrientationDeg(Math.toDegrees(Math.PI / 3) + 90);
+
+            Thread.sleep(1500);
 
             servosService.aspirationCratere();
 
-            mv.reculeMM(300);
-            mv.avanceMM(300);
+            mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
+            mv.avanceMM(350);
+            mv.reculeMM(400);
 
             servosService.aspirationFerme();
+            servosService.waitAspiration();
+
             servosService.aspirationStop();
 
-            if (ioService.presenceBallesAspiration()) {
-                rs.setCratereZoneDepartBleuRecupere(true);
-                completed = true;
-            }
-
-
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
+        } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+        } finally {
+            rs.setCratereZoneDepartJauneRecupere(true);
+            completed = true;
         }
     }
 }

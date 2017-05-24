@@ -50,6 +50,16 @@ public class ServosService {
         servos.setPositionAndSpeed(IConstantesServos.DEVIDOIR, IConstantesServos.DEVIDOIR_CHARGEMENT, IConstantesServos.SPEED_DEVIDOIR);
         servos.setPositionAndSpeed(IConstantesServos.INCLINAISON_ASPIRATION, IConstantesServos.INCLINAISON_ASPI_TRANSFERT, IConstantesServos.SPEED_INC_ASPI);
 
+        brasPincesFermes();
+    }
+
+    public void homes() {
+        pinceDroiteOuvert();
+        pinceCentreOuvert();
+        brasAttentePriseRobot();
+    }
+
+    public void brasPincesFermes() {
         // Ordre précis car blocage mécanique dans certains cas
         servos.setPositionAndSpeed(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_DEPOSE_MAGASIN, IConstantesServos.SPEED_ROT_VENTOUSE);
         servos.waitTime(IConstantesServos.WAIT_ROT_VENTOUSE);
@@ -58,12 +68,6 @@ public class ServosService {
         servos.setPositionAndSpeed(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_DEPOSE, IConstantesServos.SPEED_INC_BRAS);
         servos.waitTime(IConstantesServos.WAIT_INC_BRAS);
         servos.setPositionAndSpeed(IConstantesServos.PINCE_MODULE_DROIT, IConstantesServos.PINCE_MODULE_DROIT_FERME, IConstantesServos.SPEED_PINCE);
-    }
-
-    public void homes() {
-        pinceDroiteOuvert();
-        pinceCentreOuvert();
-        brasAttentePriseRobot();
     }
 
     public void waitPince() {

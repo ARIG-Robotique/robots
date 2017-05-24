@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PrendreModule5Action extends AbstractAction {
+public class PrendreModule3Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -33,55 +33,44 @@ public class PrendreModule5Action extends AbstractAction {
 
     @Override
     public String name() {
-        return "Récuperation du Module 5";
+        return "Récuperation du Module 3";
     }
 
     @Override
     public int order() {
-        int val = 20;
-
-        if (Team.JAUNE.equals(rs.getTeam())) {
-            val += 1000;
-        }
-
-        return val;
+        return 20;
     }
 
     @Override
     public boolean isValid() {
-        return !rs.isModuleRecupere(5) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
+        return Team.JAUNE == rs.getTeam() && !rs.isModuleRecupere(3) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
     }
 
     @Override
     public void execute() {
         try {
             rs.enableAvoidance();
+            rs.enablePinces();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(5, ModuleLunaire.Type.POLYCHROME));
+            rs.setModuleLunaireExpected(new ModuleLunaire(3, ModuleLunaire.Type.MONOCHROME));
 
-            if (Team.JAUNE == rs.getTeam()) {
-                mv.gotoOrientationDeg(Math.toDegrees(Math.atan2(600-165, 1000-890)));
-                mv.avanceMM(500);
-            }
-            else {
-                // TODO
-                if (!ioService.presencePinceDroite()) {
-                    // alignement pour prendre dans la pince droite depuis la droite
-                    mv.pathTo(1300, 580);
-                    mv.gotoOrientationDeg(180);
-                    mv.avanceMM(300);
-                } else {
-                    mv.pathTo(1000, 600);
-                }
+            mv.pathTo(700, 1640);
+
+            if (ioService.presencePinceCentre()) {
+                mv.gotoOrientationDeg(90);
+            } else {
+                mv.alignFrontTo(800, 1850);
             }
 
-            if (rs.getModuleLunaireExpected() == null) {
-                completed = true;
-            }
+            mv.avanceMM(100);
+            mv.reculeMM(100);
+            mv.gotoOrientationDeg(-120);
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+        } finally {
+            completed = true;
         }
     }
 }

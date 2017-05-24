@@ -17,11 +17,20 @@ public class Point {
     public void addDeltaX(final double dX) {
         x += dX;
     }
+
     public void addDeltaY(final double dY) {
         y += dY;
     }
 
     public Point multiplied(double f) {
-        return new Point(x*f, y*f);
+        return new Point(x * f, y * f);
+    }
+
+    public Point offsettedX(double dX) {
+        return new Point(x + dX, y);
+    }
+
+    public Point offsettedY(double dY) {
+        return new Point(x, y + dY);
     }
 }

@@ -6,10 +6,10 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
+import org.arig.robot.model.ModuleLunaire;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.services.IIOService;
-import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class TransfertRessourcesAction extends AbstractAction {
+public class PrendreModule4Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -28,60 +28,65 @@ public class TransfertRessourcesAction extends AbstractAction {
     @Autowired
     private IIOService ioService;
 
-    @Autowired
-    private ServosService servosService;
-
     @Getter
     private boolean completed = false;
 
     @Override
     public String name() {
-        return "Transfert des balles à Elfa";
+        return "Récuperation du Module 4";
     }
 
     @Override
     public int order() {
-        return 15;
+        int val = 100;
+
+        if (Team.BLEU == rs.getTeam()) {
+            val/= 10;
+        }
+
+        return val;
     }
 
     @Override
     public boolean isValid() {
-        return ioService.presenceBallesAspiration();
+        return !rs.isModuleRecupere(4) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
     }
 
     @Override
     public void execute() {
         try {
             rs.enableAvoidance();
-
+            rs.enablePinces();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            if (Team.JAUNE == rs.getTeam()) {
-                mv.pathTo(320, 690);
-                mv.gotoPointMM(335, 690);
-                mv.gotoOrientationDeg(180 - 16);
+            rs.setModuleLunaireExpected(new ModuleLunaire(4, ModuleLunaire.Type.POLYCHROME));
 
-            } else {
-                mv.pathTo(2670, 690);
-                mv.gotoPointMM(2663, 690);
-                mv.gotoOrientationDeg(180);
+            double offsetX = 0, offsetY = 0;
+
+            if (ioService.presencePinceCentre()) {
+                offsetX = 85 * Math.cos(3 * Math.PI / 4);
+                offsetY = 85 * Math.sin(3 * Math.PI / 4);
             }
 
-            servosService.aspirationMax();
-            while (ioService.presenceBallesAspiration()) {
-                Thread.sleep(1);
-            }
+            mv.pathTo(
+                    900 + 280 * Math.cos(-3 * Math.PI / 4) + offsetX,
+                    1400 + 280 * Math.sin(-3 * Math.PI / 4) + offsetY
+            );
+            mv.alignFrontTo(900 + offsetX, 1400 + offsetY);
+            mv.gotoPointMM(
+                    900 - 150 * Math.cos(Math.PI / 4) + offsetX,
+                    1400 - 150 * Math.sin(Math.PI / 4) + offsetY
+            );
 
-            servosService.aspirationTransfert();
-            servosService.waitAspiration();
+            Thread.sleep(400);
 
-            servosService.aspirationStop();
-            Thread.sleep(1000);
-
-            servosService.aspirationFerme();
+            mv.reculeMM(100);
+            mv.gotoOrientationDeg(-90);
 
         } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+        } finally {
+            completed = true;
         }
     }
 }
