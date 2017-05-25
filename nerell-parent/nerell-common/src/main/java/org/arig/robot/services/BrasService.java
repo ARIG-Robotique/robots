@@ -1,7 +1,6 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.ModuleLunaire;
 import org.arig.robot.model.RobotStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,13 +70,6 @@ public class BrasService {
             servosService.pinceDroiteOuvert();
             servosService.waitPince();
 
-        } else if (ioService.presencePinceCentre() && servosService.isPinceCentreFerme()
-                && !ioService.presencePinceDroite() && (servosService.isPinceDroiteOuvert() || servosService.isPinceDroitePriseProduit())) {
-
-            log.info("Module centre alors que pince centre ferme. La pince droite est vide, un petit mercato");
-            servosService.brasVertical();
-            servosService.pinceCentreOuvert();
-
         } else if (ioService.presencePinceCentre()) {
             if (!robotStatus.canAddModuleMagasin()) {
                 log.warn("Pas de place dans la magasin");
@@ -138,7 +130,6 @@ public class BrasService {
 
         servosService.entreeMagasinOuvert();
         sleep(TEMPS_ROULAGE_MODULE);
-        robotStatus.addModuleDansMagasin(ModuleLunaire.monochrome());
 
         ioService.disableElectroVanne();
 
