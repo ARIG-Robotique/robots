@@ -160,8 +160,8 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         inBordureArriereGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
 
         // PCF3
-        outElectroVanne = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_00);
-        outPompeAVide = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_01);
+        outElectroVanne = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_01);
+        outPompeAVide = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_02);
 
         // Etat initial des IOs
         outAlimPuissance8V.high(); // Désactivé
@@ -454,13 +454,13 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     @Override
     public void enablePompeAVide() {
         log.info("Activation pompe a vide");
-        outPompeAVide.low();
+        outPompeAVide.high();
     }
 
     @Override
     public void disablePompeAVide() {
         log.info("Desactivation pompe a vide");
-        outPompeAVide.high();
+        outPompeAVide.low();
     }
 
     // ----------------------------------------------------------- //
