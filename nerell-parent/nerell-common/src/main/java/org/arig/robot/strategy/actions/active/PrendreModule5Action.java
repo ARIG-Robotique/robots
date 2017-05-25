@@ -55,6 +55,10 @@ public class PrendreModule5Action extends AbstractAction {
 
     @Override
     public boolean isValid() {
+        if (!isTimeValid()) {
+            return false;
+        }
+
         return Team.JAUNE == rs.getTeam() && !rs.isModuleRecupere(5) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
     }
 
@@ -74,6 +78,7 @@ public class PrendreModule5Action extends AbstractAction {
 
         } catch (RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+            updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
         } finally {
             rs.enableAvoidance();
             rs.setModuleRecupere(5);

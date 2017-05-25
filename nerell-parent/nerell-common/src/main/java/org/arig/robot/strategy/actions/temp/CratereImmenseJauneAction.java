@@ -52,6 +52,10 @@ public class CratereImmenseJauneAction extends AbstractAction {
 
     @Override
     public boolean isValid() {
+        if (!isTimeValid()) {
+            return false;
+        }
+
         return !rs.isCratereImmenseJauneRecupere() && !ioService.presenceBallesAspiration() && rs.isModuleRecupere(3);
     }
 
@@ -89,6 +93,7 @@ public class CratereImmenseJauneAction extends AbstractAction {
 
         } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+            updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
         } finally {
             rs.setCratereImmenseJauneRecupere(true);
             rs.setHasPetitesBalles(true);

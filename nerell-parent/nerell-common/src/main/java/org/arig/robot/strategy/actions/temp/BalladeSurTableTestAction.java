@@ -26,9 +26,6 @@ public class BalladeSurTableTestAction extends AbstractAction {
     @Autowired
     private RobotStatus rs;
 
-    @Autowired
-    private IIOService ioService;
-
     @Getter
     private boolean completed = false; // Jamais terminé quoi qu'il se passe
 
@@ -44,23 +41,7 @@ public class BalladeSurTableTestAction extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return (
-                Team.JAUNE == rs.getTeam() &&
-                        rs.isModuleRecupere(5) &&
-                        rs.isModuleRecupere(2) &&
-                        rs.isCratereZoneDepartJauneRecupere() &&
-                        rs.getNbTransfertsElfa() > 0 &&
-                        !ioService.presencePinceCentre() &&
-                        !ioService.presencePinceDroite()
-        ) || (
-                Team.BLEU == rs.getTeam() &&
-                        rs.isModuleRecupere(6) &&
-                        rs.isModuleRecupere(9) &&
-                        rs.isCratereZoneDepartBleuRecupere() &&
-                        rs.getNbTransfertsElfa() > 0 &&
-                        !ioService.presencePinceCentre() &&
-                        !ioService.presencePinceDroite()
-        );
+        return true;
     }
 
     @Override

@@ -54,6 +54,10 @@ public class CratereZoneDepartBleuAction extends AbstractAction {
 
     @Override
     public boolean isValid() {
+        if (!isTimeValid()) {
+            return false;
+        }
+
         return !rs.isCratereZoneDepartBleuRecupere() && !ioService.presenceBallesAspiration();
     }
 
@@ -84,6 +88,7 @@ public class CratereZoneDepartBleuAction extends AbstractAction {
 
         } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+            updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
         } finally {
             rs.setCratereZoneDepartBleuRecupere(true);
             rs.setHasPetitesBalles(false);

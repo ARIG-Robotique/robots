@@ -38,7 +38,7 @@ public class PrendreModule7Action extends AbstractAction {
 
     @Override
     public int order() {
-        int val = 100;
+        int val = 100-1;
 
         if (Team.JAUNE == rs.getTeam()) {
             val /= 10;
@@ -49,6 +49,10 @@ public class PrendreModule7Action extends AbstractAction {
 
     @Override
     public boolean isValid() {
+        if (!isTimeValid()) {
+            return false;
+        }
+
         return !rs.isModuleRecupere(7) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
     }
 
@@ -85,6 +89,7 @@ public class PrendreModule7Action extends AbstractAction {
 
         } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+            updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
         } finally {
             completed = true;
             rs.setModuleRecupere(7);

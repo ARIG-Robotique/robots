@@ -46,6 +46,10 @@ public class TransfertRessourcesAction extends AbstractAction {
 
     @Override
     public boolean isValid() {
+        if (!isTimeValid()) {
+            return false;
+        }
+
         return ioService.presenceBallesAspiration() && (
                 Team.BLEU == rs.getTeam() && rs.isModuleRecupere(10) ||
                         Team.JAUNE == rs.getTeam() && rs.isModuleRecupere(1) ||
@@ -108,6 +112,7 @@ public class TransfertRessourcesAction extends AbstractAction {
 
         } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+            updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
         }
     }
 }

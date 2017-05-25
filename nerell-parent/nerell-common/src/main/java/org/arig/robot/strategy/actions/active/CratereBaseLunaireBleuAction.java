@@ -15,6 +15,8 @@ import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Component
 public class CratereBaseLunaireBleuAction extends AbstractAction {
@@ -52,7 +54,14 @@ public class CratereBaseLunaireBleuAction extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return !rs.isCratereBaseLunaireBleuRecupere() && !ioService.presenceBallesAspiration() && rs.isModuleRecupere(8);
+        if (!isTimeValid()) {
+            return false;
+        }
+
+        return !rs.isCratereBaseLunaireBleuRecupere() &&
+                !ioService.presenceBallesAspiration() &&
+                rs.isModuleRecupere(8) &&
+                rs.getElapsedTime() < 60000;
     }
 
     @Override
@@ -61,7 +70,7 @@ public class CratereBaseLunaireBleuAction extends AbstractAction {
             rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            mv.pathTo(3000-730, 1770);
+            mv.pathTo(3000 - 730, 1770);
 
             servosService.aspirationMax();
 
@@ -87,6 +96,7 @@ public class CratereBaseLunaireBleuAction extends AbstractAction {
 
         } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+            updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
         } finally {
             rs.setCratereBaseLunaireJauneRecupere(true);
             rs.setHasPetitesBalles(true);
