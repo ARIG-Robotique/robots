@@ -1,6 +1,7 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.exceptions.EjectionModuleException;
 import org.arig.robot.model.ModuleLunaire;
 import org.arig.robot.model.RobotStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ public class EjectionModuleService {
 
     private static final int TEMPS_MAX_PRESENCE_ROULEAUX = 2000;
     private static final int TEMPS_MAX_TROUVER_COULEUR = 3000;
+    private static final int TEMPS_MAX_EJECTION = 3000;
 
     @Autowired
     private IIOService ioService;
@@ -50,17 +52,25 @@ public class EjectionModuleService {
 
     public void ejectionAvantRetourStand() {
         if (ioService.presenceRouleaux()) {
-            doEject();
+            try {
+                doEject();
+            } catch (EjectionModuleException e) {
+                e.printStackTrace();
+            }
         }
 
         while (ioService.presenceDevidoir()) {
             servosService.devidoirDechargement();
             servosService.waitDevidoire();
-            doEject();
+            try {
+                doEject();
+            } catch (EjectionModuleException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public void ejectionModule() {
+    public void ejectionModule() throws EjectionModuleException {
         log.info("Ejection module");
 
         ModuleLunaire module = rs.nextModule();
@@ -121,18 +131,33 @@ public class EjectionModuleService {
         rs.enableMagasin();
     }
 
-    private void doEject() {
+    private void doEject() throws EjectionModuleException {
+        boolean error = false;
+
         servosService.devidoirChargement();
 
         servosService.ouvreGlissiere();
-        while (ioService.finCourseGlissiereGauche()) {
+
+        int remaining = TEMPS_MAX_EJECTION;
+        while (ioService.finCourseGlissiereGauche() && remaining > 0) {
             waitTimeMs(1);
+            remaining -= 1;
         }
+
+        if (remaining == 0) {
+            log.warn("Injection de module impossible");
+            error = true;
+        }
+
         servosService.fermeGlissiere();
         while (ioService.finCourseGlissiereDroite()) {
             waitTimeMs(1);
         }
         servosService.stopGlissiere();
+
+        if (error) {
+            throw new EjectionModuleException();
+        }
     }
 
     private void waitTimeMs(long ms) {

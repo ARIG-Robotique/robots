@@ -6,7 +6,9 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
+import org.arig.robot.exceptions.EjectionModuleException;
 import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.Team;
 import org.arig.robot.services.EjectionModuleService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
@@ -45,7 +47,7 @@ public class DechargerBase5Action extends AbstractAction {
             return false;
         }
 
-        return rs.hasModuleDansMagasin();
+        return Team.BLEU == rs.getTeam() && rs.hasModuleDansMagasin();
     }
 
     @Override
@@ -54,30 +56,37 @@ public class DechargerBase5Action extends AbstractAction {
             rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            double x = 1500 + 890 * Math.cos(-Math.PI / 4) + 298 * Math.cos(-3 * Math.PI / 4);
-            double y = 2000 + 890 * Math.sin(-Math.PI / 4) + 298 * Math.sin(-3 * Math.PI / 4);
-
-            mv.pathTo(x, y);
-            mv.gotoOrientationDeg(-135);
+            mv.pathTo(2660, 730, false);
+            mv.gotoPointMM(2920 - 298, 700 - 90);
+            mv.gotoOrientationDeg(180);
 
             mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
             rs.enableCalageBordure();
             mv.reculeMM(180);
 
-            while (rs.hasNextModule() && rs.canAddModuleDansBase(4)) {
+            while (rs.hasNextModule() && rs.canAddModuleDansBase(5)) {
                 ejectionModuleService.ejectionModule();
-                rs.addModuleDansBase(4);
+                rs.addModuleDansBase(5);
             }
-
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-
-            mv.avanceMM(165);
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
+
+        } catch (EjectionModuleException e) {
+            rs.setBaseFull(5);
+
         } finally {
-            completed = !rs.canAddModuleDansBase(4);
+            completed = !rs.canAddModuleDansBase(5);
+
+            try {
+                mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+
+                mv.avanceMM(180);
+
+            } catch (RefreshPathFindingException e) {
+                log.error(e.getMessage());
+            }
         }
     }
 }

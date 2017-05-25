@@ -6,7 +6,9 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
+import org.arig.robot.exceptions.EjectionModuleException;
 import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.Team;
 import org.arig.robot.services.EjectionModuleService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
@@ -36,7 +38,13 @@ public class DechargerBase4Action extends AbstractAction {
 
     @Override
     public int order() {
-        return Math.max(rs.nbPlacesDansBase(4), rs.nbModulesMagasin()) * 100;
+        int val = Math.max(rs.nbPlacesDansBase(4), rs.nbModulesMagasin()) * 100;
+
+        if (Team.JAUNE == rs.getTeam()) {
+            val /= 10;
+        }
+
+        return val;
     }
 
     @Override
@@ -69,15 +77,24 @@ public class DechargerBase4Action extends AbstractAction {
                 rs.addModuleDansBase(4);
             }
 
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-
-            mv.avanceMM(165);
-
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
+
+        } catch (EjectionModuleException e) {
+            rs.setBaseFull(4);
+
         } finally {
             completed = !rs.canAddModuleDansBase(4);
+
+            try {
+                mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+
+                mv.avanceMM(165);
+
+            } catch (RefreshPathFindingException e) {
+                log.error(e.getMessage());
+            }
         }
     }
 }

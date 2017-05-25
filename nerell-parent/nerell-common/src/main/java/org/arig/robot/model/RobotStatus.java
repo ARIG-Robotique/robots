@@ -156,6 +156,7 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     }
 
     // Base Lunaires
+    @Setter(AccessLevel.NONE)
     private Map<Integer, Integer[]> nbModulesDansBase = new HashMap<>();
 
     public Integer getNbModulesDansBase(Integer numBase) {
@@ -172,6 +173,10 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     public boolean canAddModuleDansBase(Integer numBase) {
         return nbModulesDansBase.get(numBase)[0] < nbModulesDansBase.get(numBase)[1];
+    }
+
+    public void setBaseFull(Integer numBase) {
+        nbModulesDansBase.get(numBase)[0] = nbModulesDansBase.get(numBase)[1];
     }
 
     /**

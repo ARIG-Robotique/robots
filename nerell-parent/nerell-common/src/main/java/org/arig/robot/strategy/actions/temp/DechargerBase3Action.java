@@ -6,6 +6,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
+import org.arig.robot.exceptions.EjectionModuleException;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.EjectionModuleService;
 import org.arig.robot.strategy.AbstractAction;
@@ -66,16 +67,25 @@ public class DechargerBase3Action extends AbstractAction {
                 rs.addModuleDansBase(3);
             }
 
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-
-            mv.avanceMM(170);
-            mv.gotoOrientationDeg(-90);
-
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
+
+        } catch (EjectionModuleException e) {
+            rs.setBaseFull(3);
+
         } finally {
-            completed = !rs.canAddModuleDansBase(2);
+            completed = !rs.canAddModuleDansBase(3);
+
+            try {
+                mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+
+                mv.avanceMM(170);
+                mv.gotoOrientationDeg(-90);
+
+            } catch (RefreshPathFindingException e) {
+                log.error(e.getMessage());
+            }
         }
     }
 }
