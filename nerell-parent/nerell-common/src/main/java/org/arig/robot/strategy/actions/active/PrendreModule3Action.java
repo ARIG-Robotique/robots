@@ -38,13 +38,7 @@ public class PrendreModule3Action extends AbstractAction {
 
     @Override
     public int order() {
-        int val = 100;
-
-        if (Team.JAUNE == rs.getTeam()) {
-            val += 400;
-        }
-
-        return val;
+        return 100;
     }
 
     @Override

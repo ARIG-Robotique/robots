@@ -175,7 +175,8 @@ public class Ordonanceur {
         if (!robotStatus.isSimulateur()) {
             if (robotStatus.getTeam() == Team.JAUNE) {
                 position.setPt(new Point(conv.mmToPulse(320), conv.mmToPulse(772)));
-                trajectoryManager.avanceMM(200);
+                trajectoryManager.avanceMM(50);
+                trajectoryManager.gotoPointMM(650, 980);
                 trajectoryManager.gotoPointMM(1100, 772);
                 trajectoryManager.gotoPointMM(890, 300);
                 trajectoryManager.gotoOrientationDeg(90, SensRotation.TRIGO);

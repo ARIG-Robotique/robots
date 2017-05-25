@@ -41,7 +41,7 @@ public class DeposeModulesPincesAction extends AbstractAction {
 
     @Override
     public int order() {
-        return 20;
+        return 200;
     }
 
     @Override
@@ -62,25 +62,41 @@ public class DeposeModulesPincesAction extends AbstractAction {
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            int offset = rs.getNbDeposesDepart() * 100;
+            if (rs.getElapsedTime() > 70000) {
+                if (Team.BLEU == rs.getTeam()) {
+                    mv.pathTo(2050, 290);
+                }
+                else {
+                    mv.pathTo(950, 290);
+                }
 
-            if (Team.JAUNE == rs.getTeam()) {
-                mv.pathTo(1170, 460);
-                mv.gotoOrientationDeg(-135);
+                servosService.brasAttentePriseRobot();
+                servosService.pinceDroiteOuvert();
+                servosService.waitBras();
 
-            } else {
-                mv.pathTo(1830, 460);
-                mv.gotoOrientationDeg(-45);
+                mv.reculeMM(100);
             }
+            else {
+                int offset = rs.getNbDeposesDepart() * 100;
 
-            mv.avanceMM(300 - offset);
+                if (Team.JAUNE == rs.getTeam()) {
+                    mv.pathTo(1170, 460);
+                    mv.gotoOrientationDeg(-135);
 
-            servosService.brasAttentePriseRobot();
-            servosService.pinceDroiteOuvert();
-            servosService.waitBras();
+                } else {
+                    mv.pathTo(1830, 460);
+                    mv.gotoOrientationDeg(-45);
+                }
 
-            mv.reculeMM(300 - offset);
-            mv.alignFrontTo(1500, 1000);
+                mv.avanceMM(300 - offset);
+
+                servosService.brasAttentePriseRobot();
+                servosService.pinceDroiteOuvert();
+                servosService.waitBras();
+
+                mv.reculeMM(300 - offset);
+                mv.gotoOrientationDeg(90);
+            }
 
             if (rs.getModuleLunaireDroite() != null && !ioService.presencePinceDroite()) {
                 rs.setModuleLunaireDroite(null);
