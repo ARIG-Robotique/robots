@@ -3,13 +3,12 @@ package org.arig.robot.strategy.actions.active;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
-import org.arig.robot.exception.AvoidingException;
-import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.ModuleLunaire;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.services.IIOService;
+import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PrendreModule3Action extends AbstractAction {
+public class PrendreModules6Et9Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -28,20 +27,25 @@ public class PrendreModule3Action extends AbstractAction {
     @Autowired
     private IIOService ioService;
 
+    @Autowired
+    private ServosService servosService;
+
     @Getter
     private boolean completed = false;
 
     @Override
     public String name() {
-        return "Récuperation du Module 3";
+        return "Récuperation du Module 6 ET du module 9";
     }
 
     @Override
     public int order() {
-        int val = 100;
+        int val = 200;
 
-        if (Team.JAUNE == rs.getTeam()) {
-            val += 400;
+        if (Team.BLEU.equals(rs.getTeam())) {
+            val += 1000;
+        } else {
+            val /= 10;
         }
 
         return val;
@@ -53,7 +57,10 @@ public class PrendreModule3Action extends AbstractAction {
             return false;
         }
 
-        return Team.JAUNE == rs.getTeam() && !rs.isModuleRecupere(3) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
+        return Team.BLEU == rs.getTeam() &&
+                !rs.isModuleRecupere(6) &&
+                !rs.isModuleRecupere(9) &&
+                (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
     }
 
     @Override
@@ -61,28 +68,30 @@ public class PrendreModule3Action extends AbstractAction {
         try {
             rs.enableAvoidance();
             rs.enablePinces();
+
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(3, ModuleLunaire.Type.MONOCHROME));
+            rs.setModuleLunaireExpected(new ModuleLunaire(6, ModuleLunaire.Type.POLYCHROME));
 
-            mv.pathTo(700, 1640);
+            rs.disableAvoidance();
 
-            if (ioService.presencePinceCentre()) {
-                mv.gotoOrientationDeg(85);
-            } else {
-                mv.alignFrontTo(800, 1850);
-            }
+            mv.gotoPointMM(2000, 600, false, true);
 
-            mv.avanceMM(100);
-            mv.reculeMM(100);
-            mv.gotoOrientationDeg(-120);
+            rs.setModuleLunaireExpected(new ModuleLunaire(9, ModuleLunaire.Type.POLYCHROME));
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
+            mv.gotoPointMM(2500+85*Math.cos(3*Math.PI/4), 1100+85*Math.sin(3*Math.PI/4));
+
+//            mv.gotoOrientationDeg(-45);
+
+
+        } catch (RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
         } finally {
+            rs.enableAvoidance();
+            rs.setModuleRecupere(6);
+            rs.setModuleRecupere(9);
             completed = true;
-            rs.setModuleRecupere(3);
         }
     }
 }
