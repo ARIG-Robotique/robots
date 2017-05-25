@@ -55,6 +55,7 @@ public interface IConstantesNerellConfig {
     // -------------------------- //
 
     long vitesseOrientation = 800;
+    long vitesseOrientationBasse = 500;
 
     long vitesseSuperHaute = 750;
     long vitesseHaute = 600;

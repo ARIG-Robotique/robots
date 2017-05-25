@@ -41,12 +41,16 @@ public class TransfertRessourcesAction extends AbstractAction {
 
     @Override
     public int order() {
-        return 150;
+        return rs.isHasPetitesBalles() ? 100 : 150;
     }
 
     @Override
     public boolean isValid() {
-        return ioService.presenceBallesAspiration();
+        return ioService.presenceBallesAspiration() && (
+                Team.BLEU == rs.getTeam() && rs.isModuleRecupere(10) ||
+                        Team.JAUNE == rs.getTeam() && rs.isModuleRecupere(1) ||
+                        rs.getElapsedTime() > 65000
+        );
     }
 
     @Override
@@ -59,14 +63,29 @@ public class TransfertRessourcesAction extends AbstractAction {
             if (Team.JAUNE == rs.getTeam()) {
                 mv.pathTo(320, 690);
                 servosService.aspirationMax();
-                mv.gotoOrientationDeg(180 - 16);
+
+                if (rs.isHasPetitesBalles()) {
+                    mv.gotoOrientationDeg(145);
+                } else {
+                    mv.gotoOrientationDeg(180 - 16);
+                }
 
             } else {
                 mv.pathTo(2650, 750);
                 mv.gotoOrientationDeg(-90);
-                mv.avanceMM(90);
-                servosService.aspirationMax();
-                mv.gotoOrientationDeg(180);
+
+                if (rs.isHasPetitesBalles()) {
+                    mv.avanceMM(130);
+
+                    servosService.aspirationMax();
+                    mv.gotoOrientationDeg(-155);
+
+                } else {
+                    mv.avanceMM(90);
+
+                    servosService.aspirationMax();
+                    mv.gotoOrientationDeg(180);
+                }
             }
 
             Thread.sleep(1500);

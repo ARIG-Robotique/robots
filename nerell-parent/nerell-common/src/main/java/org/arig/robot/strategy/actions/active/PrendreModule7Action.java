@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.temp;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PrendreModule4Action extends AbstractAction {
+public class PrendreModule7Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -33,15 +33,15 @@ public class PrendreModule4Action extends AbstractAction {
 
     @Override
     public String name() {
-        return "Récuperation du Module 4";
+        return "Récuperation du Module 7";
     }
 
     @Override
     public int order() {
         int val = 100;
 
-        if (Team.BLEU == rs.getTeam()) {
-            val/= 10;
+        if (Team.JAUNE == rs.getTeam()) {
+            val /= 10;
         }
 
         return val;
@@ -49,7 +49,7 @@ public class PrendreModule4Action extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return !rs.isModuleRecupere(4) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
+        return !rs.isModuleRecupere(7) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
     }
 
     @Override
@@ -59,23 +59,23 @@ public class PrendreModule4Action extends AbstractAction {
             rs.enablePinces();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(4, ModuleLunaire.Type.POLYCHROME));
+            rs.setModuleLunaireExpected(new ModuleLunaire(7, ModuleLunaire.Type.POLYCHROME));
 
             double offsetX = 0, offsetY = 0;
 
             if (ioService.presencePinceCentre()) {
-                offsetX = 85 * Math.cos(3 * Math.PI / 4);
-                offsetY = 85 * Math.sin(3 * Math.PI / 4);
+                offsetX = 85 * Math.cos(-3 * Math.PI / 4);
+                offsetY = 85 * Math.sin(-3 * Math.PI / 4);
             }
 
             mv.pathTo(
-                    900 + 280 * Math.cos(-3 * Math.PI / 4) + offsetX,
-                    1400 + 280 * Math.sin(-3 * Math.PI / 4) + offsetY
+                    2100 + 280 * Math.cos(-Math.PI / 4) + offsetX,
+                    1400 + 280 * Math.sin(-Math.PI / 4) + offsetY
             );
-            mv.alignFrontTo(900 + offsetX, 1400 + offsetY);
+            mv.alignFrontTo(2100 + offsetX, 1400 + offsetY);
             mv.gotoPointMM(
-                    900 - 150 * Math.cos(Math.PI / 4) + offsetX,
-                    1400 - 150 * Math.sin(Math.PI / 4) + offsetY
+                    2100 - 150 * Math.cos(3 * Math.PI / 4) + offsetX,
+                    1400 - 150 * Math.sin(3 * Math.PI / 4) + offsetY
             );
 
             Thread.sleep(400);
@@ -87,6 +87,7 @@ public class PrendreModule4Action extends AbstractAction {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         } finally {
             completed = true;
+            rs.setModuleRecupere(7);
         }
     }
 }

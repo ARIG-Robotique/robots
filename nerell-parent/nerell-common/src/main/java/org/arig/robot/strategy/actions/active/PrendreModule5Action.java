@@ -55,7 +55,7 @@ public class PrendreModule5Action extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return !rs.isModuleRecupere(5) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
+        return Team.JAUNE == rs.getTeam() && !rs.isModuleRecupere(5) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
     }
 
     @Override
@@ -68,36 +68,15 @@ public class PrendreModule5Action extends AbstractAction {
 
             rs.setModuleLunaireExpected(new ModuleLunaire(5, ModuleLunaire.Type.POLYCHROME));
 
-            // prise directe depuis la zone de départ jaune
-            if (Team.JAUNE == rs.getTeam()) {
-                rs.disableAvoidance();
+            rs.disableAvoidance();
 
-                mv.gotoPointMM(1000, 600);
-            }
-            // alignement pour prendre dans la pince droite depuis la droite
-            else if (ioService.presencePinceCentre()) {
-                mv.pathTo(1300, 580);
+            mv.gotoPointMM(1000, 600);
 
-                // on révérifie que la pince centre est pas libre
-                if (ioService.presencePinceCentre() || !servosService.isBrasAttente()) {
-                    mv.gotoOrientationDeg(180);
-                }
-                // ou on passe en prise au centre
-                else {
-                    mv.alignFrontTo(1000, 600);
-                }
-
-                mv.gotoPointMM(1000, 600);
-            }
-            // prise directe au centre
-            else {
-                mv.pathTo(1000, 600);
-            }
-
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
+        } catch (RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         } finally {
             rs.enableAvoidance();
+            rs.setModuleRecupere(5);
             completed = true;
         }
     }

@@ -55,6 +55,8 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         calageBordureEnabled = false;
     }
 
+    private boolean hasPetitesBalles = false;
+
     // Pinces
     private ModuleLunaire moduleLunaireExpected;
     private ModuleLunaire moduleLunaireDroite;

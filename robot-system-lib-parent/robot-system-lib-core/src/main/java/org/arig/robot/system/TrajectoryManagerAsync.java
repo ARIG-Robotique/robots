@@ -44,6 +44,12 @@ public class TrajectoryManagerAsync implements ITrajectoryManager {
 
     @Override
     @Async
+    public void pathTo(double x, double y, boolean avecArret) throws NoPathFoundException, AvoidingException {
+        decorated.pathTo(x, y, avecArret);
+    }
+
+    @Override
+    @Async
     public void gotoPointMM(double x, double y) throws RefreshPathFindingException {
         decorated.gotoPointMM(x, y);
     }

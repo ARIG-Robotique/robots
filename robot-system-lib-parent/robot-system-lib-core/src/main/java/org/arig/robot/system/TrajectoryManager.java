@@ -401,6 +401,20 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      */
     @Override
     public void pathTo(final double x, final double y) throws NoPathFoundException, AvoidingException {
+        pathTo(x, y, true);
+    }
+
+
+    /**
+     * Génération d'un déplacement avec le Path Finding
+     *
+     * @param x         position sur l'axe X
+     * @param y         position sur l'axe Y
+     * @param avecArret
+     * @throws NoPathFoundException
+     */
+    @Override
+    public void pathTo(final double x, final double y, final boolean avecArret) throws NoPathFoundException, AvoidingException {
         boolean trajetOk = false;
         int nbCollisionDetected = 0;
         int divisor = 10;
@@ -434,7 +448,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                     rs.enableAvoidance();
 
                     // Processing du path
-                    gotoPointMM(targetPoint.getX(), targetPoint.getY(), !c.hasNext(), true);
+                    gotoPointMM(targetPoint.getX(), targetPoint.getY(), !c.hasNext() && avecArret, true);
                     //gotoPointMM(targetPoint.getX(), targetPoint.getY(), true, true);
                 }
 

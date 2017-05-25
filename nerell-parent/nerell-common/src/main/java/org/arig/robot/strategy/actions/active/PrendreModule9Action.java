@@ -78,6 +78,7 @@ public class PrendreModule9Action extends AbstractAction {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         } finally {
             completed = true;
+            rs.setModuleRecupere(9);
         }
     }
 }

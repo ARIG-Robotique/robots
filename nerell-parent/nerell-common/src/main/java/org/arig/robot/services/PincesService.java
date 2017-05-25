@@ -43,9 +43,9 @@ public class PincesService {
 
             if (rs.getModuleLunaireExpected() != null) {
                 rs.setModuleLunaireDroite(rs.getModuleLunaireExpected());
-                if (rs.getModuleLunaireExpected().numero() != null) {
+                /*if (rs.getModuleLunaireExpected().numero() != null) {
                     rs.setModuleRecupere(rs.getModuleLunaireExpected().numero());
-                }
+                }*/
             } else {
                 rs.setModuleLunaireDroite(ModuleLunaire.polychrome());
             }
@@ -57,9 +57,9 @@ public class PincesService {
 
             if (rs.getModuleLunaireExpected() != null) {
                 rs.setModuleLunaireCentre(rs.getModuleLunaireExpected());
-                if (rs.getModuleLunaireExpected().numero() != null) {
+                /*if (rs.getModuleLunaireExpected().numero() != null) {
                     rs.setModuleRecupere(rs.getModuleLunaireExpected().numero());
-                }
+                }*/
             } else {
                 rs.setModuleLunaireCentre(ModuleLunaire.polychrome());
             }

@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.temp;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PrendreModule10Action extends AbstractAction {
+public class PrendreModule1Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -33,17 +33,17 @@ public class PrendreModule10Action extends AbstractAction {
 
     @Override
     public String name() {
-        return "Récuperation du Module 10";
+        return "Récuperation du Module 1";
     }
 
     @Override
     public int order() {
-        return 20;
+        return 100;
     }
 
     @Override
     public boolean isValid() {
-        return Team.BLEU == rs.getTeam() && !rs.isModuleRecupere(10) && !ioService.presencePinceCentre();
+        return Team.JAUNE == rs.getTeam() && !rs.isModuleRecupere(1) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
     }
 
     @Override
@@ -53,18 +53,25 @@ public class PrendreModule10Action extends AbstractAction {
             rs.enablePinces();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(10, ModuleLunaire.Type.MONOCHROME));
+            rs.setModuleLunaireExpected(new ModuleLunaire(1, ModuleLunaire.Type.MONOCHROME));
 
-            mv.pathTo(2800 + 280 * Math.cos(3 * Math.PI / 4), 600 + 280 * Math.sin(3 * Math.PI / 4));
-            mv.alignFrontTo(2800, 600);
+            mv.pathTo(200 + 280 * Math.cos(Math.PI / 4), 600 + 280 * Math.sin(Math.PI / 4));
+
+            if (ioService.presencePinceCentre()) {
+                mv.alignFrontTo(200 + 85 * Math.cos(-Math.PI / 4), 600 + 85 * Math.sin(-Math.PI / 4));
+            } else {
+                mv.alignFrontTo(200, 600);
+            }
+
             mv.avanceMM(150);
             mv.reculeMM(150);
-            mv.gotoOrientationDeg(135);
+            mv.gotoOrientationDeg(45);
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         } finally {
             completed = true;
+            rs.setModuleRecupere(1);
         }
     }
 }

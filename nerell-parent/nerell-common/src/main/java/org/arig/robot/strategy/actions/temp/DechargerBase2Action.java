@@ -57,12 +57,17 @@ public class DechargerBase2Action extends AbstractAction {
 
             mv.pathTo(x, y);
             mv.gotoOrientationDeg(135);
-            mv.reculeMM(165);
+
+            mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
+            rs.enableCalageBordure();
+            mv.reculeMM(180);
 
             while (rs.hasNextModule() && rs.canAddModuleDansBase(2)) {
                 ejectionModuleService.ejectionModule();
                 rs.addModuleDansBase(2);
             }
+
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             mv.avanceMM(165);
             mv.gotoOrientationDeg(-135);

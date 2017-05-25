@@ -79,11 +79,12 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         GraphNode startNode, endNode;
         // Choisir dans le quadrant vers la destination pour eviter de reculer.
         if ((startNode = workGraph.getNodeAt(from.getX(), from.getY(), 0, maxDistanceDepart)) == null) {
-            log.error("Impossible de trouver le noeud de départ, tentative de trouver un autre point proche");
+            log.warn("Impossible de trouver le noeud de départ, tentative de trouver un autre point proche");
 
             fromCorrige = getNearestPoint(from);
 
             if (fromCorrige == null) {
+                log.error("Toujours impossible de trouver le point départ");
                 throw new NoPathFoundException(NoPathFoundException.ErrorType.START_NODE_DOES_NOT_EXIST);
             }
             else {
@@ -323,7 +324,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
                 return point;
             }
             seuil+=seuil;
-        } while(seuil < maxSeuil);
+        } while(seuil <= maxSeuil);
 
         return null;
     }

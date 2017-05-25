@@ -102,7 +102,7 @@ public class IOServiceBouchon implements IIOService {
 
     @Override
     public boolean presencePinceCentre() {
-        return false;
+        return true;
     }
 
     @Override

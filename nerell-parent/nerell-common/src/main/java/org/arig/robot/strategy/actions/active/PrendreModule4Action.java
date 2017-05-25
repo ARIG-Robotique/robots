@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.temp;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PrendreModule3Action extends AbstractAction {
+public class PrendreModule4Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -33,17 +33,23 @@ public class PrendreModule3Action extends AbstractAction {
 
     @Override
     public String name() {
-        return "Récuperation du Module 3";
+        return "Récuperation du Module 4";
     }
 
     @Override
     public int order() {
-        return 20;
+        int val = 100;
+
+        if (Team.BLEU == rs.getTeam()) {
+            val/= 10;
+        }
+
+        return val;
     }
 
     @Override
     public boolean isValid() {
-        return Team.JAUNE == rs.getTeam() && !rs.isModuleRecupere(3) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
+        return !rs.isModuleRecupere(4) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
     }
 
     @Override
@@ -53,24 +59,35 @@ public class PrendreModule3Action extends AbstractAction {
             rs.enablePinces();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(3, ModuleLunaire.Type.MONOCHROME));
+            rs.setModuleLunaireExpected(new ModuleLunaire(4, ModuleLunaire.Type.POLYCHROME));
 
-            mv.pathTo(700, 1640);
+            double offsetX = 0, offsetY = 0;
 
             if (ioService.presencePinceCentre()) {
-                mv.gotoOrientationDeg(90);
-            } else {
-                mv.alignFrontTo(800, 1850);
+                offsetX = 85 * Math.cos(3 * Math.PI / 4);
+                offsetY = 85 * Math.sin(3 * Math.PI / 4);
             }
 
-            mv.avanceMM(100);
-            mv.reculeMM(100);
-            mv.gotoOrientationDeg(-120);
+            mv.pathTo(
+                    900 + 280 * Math.cos(-3 * Math.PI / 4) + offsetX,
+                    1400 + 280 * Math.sin(-3 * Math.PI / 4) + offsetY
+            );
+            mv.alignFrontTo(900 + offsetX, 1400 + offsetY);
+            mv.gotoPointMM(
+                    900 - 150 * Math.cos(Math.PI / 4) + offsetX,
+                    1400 - 150 * Math.sin(Math.PI / 4) + offsetY
+            );
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
+            Thread.sleep(400);
+
+            mv.reculeMM(100);
+            mv.gotoOrientationDeg(-90);
+
+        } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         } finally {
             completed = true;
+            rs.setModuleRecupere(4);
         }
     }
 }

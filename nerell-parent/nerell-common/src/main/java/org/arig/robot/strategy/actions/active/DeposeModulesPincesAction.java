@@ -47,7 +47,7 @@ public class DeposeModulesPincesAction extends AbstractAction {
     @Override
     public boolean isValid() {
         return rs.getModuleLunaireCentre() != null && rs.getModuleLunaireDroite() != null ||
-                rs.getElapsedTime() > IConstantesNerellConfig.matchTimeMs / 2 && (rs.getModuleLunaireCentre() != null || rs.getModuleLunaireDroite() != null);
+                rs.getElapsedTime() > 65000 && (rs.getModuleLunaireCentre() != null || rs.getModuleLunaireDroite() != null);
     }
 
     @Override

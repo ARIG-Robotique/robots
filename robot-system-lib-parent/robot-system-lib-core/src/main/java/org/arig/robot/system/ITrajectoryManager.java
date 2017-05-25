@@ -20,6 +20,8 @@ public interface ITrajectoryManager {
 
     void pathTo(double x, double y) throws NoPathFoundException, AvoidingException;
 
+    void pathTo(double x, double y, boolean avecArret) throws NoPathFoundException, AvoidingException;
+
     void gotoPointMM(double x, double y) throws RefreshPathFindingException;
 
     void gotoPointMM(double x, double y, boolean avecArret, boolean disableMonitor) throws RefreshPathFindingException;

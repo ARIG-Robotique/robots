@@ -6,10 +6,8 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
-import org.arig.robot.model.ModuleLunaire;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.model.Team;
-import org.arig.robot.services.IIOService;
+import org.arig.robot.services.EjectionModuleService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PrendreModule1Action extends AbstractAction {
+public class DechargerBase4Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -26,51 +24,55 @@ public class PrendreModule1Action extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private IIOService ioService;
+    private EjectionModuleService ejectionModuleService;
 
     @Getter
     private boolean completed = false;
 
     @Override
     public String name() {
-        return "Récuperation du Module 1";
+        return "Déchargement des modules dans la base 4";
     }
 
     @Override
     public int order() {
-        return 20;
+        return Math.max(rs.nbPlacesDansBase(4), rs.nbModulesMagasin()) * 100;
     }
 
     @Override
     public boolean isValid() {
-        return Team.JAUNE == rs.getTeam() && !rs.isModuleRecupere(1) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
+        return rs.hasModuleDansMagasin();
     }
 
     @Override
     public void execute() {
         try {
             rs.enableAvoidance();
-            rs.enablePinces();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(1, ModuleLunaire.Type.MONOCHROME));
+            double x = 1500 + 890 * Math.cos(-Math.PI / 4) + 298 * Math.cos(-3 * Math.PI / 4);
+            double y = 2000 + 890 * Math.sin(-Math.PI / 4) + 298 * Math.sin(-3 * Math.PI / 4);
 
-            mv.pathTo(200 + 280 * Math.cos(Math.PI / 4), 600 + 280 * Math.sin(Math.PI / 4));
+            mv.pathTo(x, y);
+            mv.gotoOrientationDeg(-135);
 
-            if (ioService.presencePinceCentre()) {
-                mv.alignFrontTo(200 + 85 * Math.cos(-Math.PI / 4), 600 + 85 * Math.sin(-Math.PI / 4));
-            } else {
-                mv.alignFrontTo(200, 600);
+            mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
+            rs.enableCalageBordure();
+            mv.reculeMM(180);
+
+            while (rs.hasNextModule() && rs.canAddModuleDansBase(4)) {
+                ejectionModuleService.ejectionModule();
+                rs.addModuleDansBase(4);
             }
 
-            mv.avanceMM(150);
-            mv.reculeMM(150);
-            mv.gotoOrientationDeg(45);
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+
+            mv.avanceMM(165);
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         } finally {
-            completed = true;
+            completed = !rs.canAddModuleDansBase(4);
         }
     }
 }

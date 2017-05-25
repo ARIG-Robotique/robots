@@ -46,7 +46,7 @@ public class CratereZoneDepartBleuAction extends AbstractAction {
         if (Team.BLEU == rs.getTeam()) {
             val += 500;
         } else {
-            val /= 20;
+            val /= 10;
         }
 
         return val;
@@ -73,7 +73,7 @@ public class CratereZoneDepartBleuAction extends AbstractAction {
 
             servosService.aspirationCratere();
 
-            mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
             mv.reculeMM(300);
             mv.avanceMM(350);
 
@@ -86,6 +86,7 @@ public class CratereZoneDepartBleuAction extends AbstractAction {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         } finally {
             rs.setCratereZoneDepartBleuRecupere(true);
+            rs.setHasPetitesBalles(false);
             completed = true;
         }
     }
