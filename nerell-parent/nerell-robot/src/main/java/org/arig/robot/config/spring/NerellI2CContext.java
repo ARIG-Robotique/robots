@@ -41,7 +41,7 @@ public class NerellI2CContext {
         manager.registerDevice(IConstantesI2C.TCS34725_DEVICE_NAME, IConstantesI2C.TCS34725_ADDRESS);
         manager.registerDevice(IConstantesI2C.US_LAT_GAUCHE_NAME, IConstantesI2C.US_LAT_GAUCHE_ADDRESS);
         manager.registerDevice(IConstantesI2C.US_GAUCHE_NAME, IConstantesI2C.US_GAUCHE_ADDRESS);
-        manager.registerDevice(IConstantesI2C.US_DROIT_NAME, IConstantesI2C.US_DROIT_ADDRESS);
+        //manager.registerDevice(IConstantesI2C.US_DROIT_NAME, IConstantesI2C.US_DROIT_ADDRESS);
         manager.registerDevice(IConstantesI2C.US_LAT_DROIT_NAME, IConstantesI2C.US_LAT_DROIT_ADDRESS);
 
         // Enregistrement juste pour le scan.
@@ -74,7 +74,7 @@ public class NerellI2CContext {
     @Bean
     public I2CAdcAnalogInput analogInput() {
         I2CAdcAnalogInput adc = new I2CAdcAnalogInput(IConstantesI2C.I2C_ADC_DEVICE_NAME);
-        adc.setPowerMode(I2CAdcAnalogInput.PowerMode.INTERNAL_REF_OFF_AD_ON);
+        adc.setPowerMode(I2CAdcAnalogInput.PowerMode.POWER_DOWN_BETWEEN_AD);
         return adc;
     }
 

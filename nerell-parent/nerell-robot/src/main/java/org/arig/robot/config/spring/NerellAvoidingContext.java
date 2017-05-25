@@ -78,10 +78,10 @@ public class NerellAvoidingContext {
         return new SRF02Sonar(IConstantesI2C.US_GAUCHE_NAME);
     }
 
-    @Bean(name = "usDroit")
+    /*@Bean(name = "usDroit")
     public SRF02Sonar usDroit() {
         return new SRF02Sonar(IConstantesI2C.US_DROIT_NAME);
-    }
+    }*/
 
     @Bean(name = "usLatDroit")
     public SRF02Sonar usLatDroit() {
