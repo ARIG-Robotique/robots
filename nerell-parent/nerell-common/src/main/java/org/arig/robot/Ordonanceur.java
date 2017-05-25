@@ -237,10 +237,8 @@ public class Ordonanceur {
         robotStatus.stopMatch();
         log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
 
-        // Arrêt de l'asservissement et des moteurs
-        robotStatus.disableAsserv();
-        robotStatus.disableAvoidance();
-        robotStatus.disableMatch();
+        servosService.brasAttentePriseRobot();
+        servosService.pinceDroiteOuvert();
 
         // Désactivation de la puissance moteur pour être sur de ne plus rouler
         ioService.disableAlim5VPuissance();

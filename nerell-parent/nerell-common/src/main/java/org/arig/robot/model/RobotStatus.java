@@ -36,6 +36,14 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     public void stopMatch() {
         matchTime.stop();
+
+        // Arrêt de l'asservissement et des moteurs, et tout et tout
+        this.disableAsserv();
+        this.disableAvoidance();
+        this.disableMatch();
+        this.disableCalageBordure();
+        this.disableMagasin();
+        this.disablePinces();
     }
 
     public long getElapsedTime() {
