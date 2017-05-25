@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.temp;
+package org.arig.robot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,6 @@ import org.arig.robot.model.ModuleLunaire;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.services.BrasService;
-import org.arig.robot.services.EjectionModuleService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
@@ -20,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ChargerFuseeMonoJauneAction extends AbstractAction {
+public class ChargerFuseeMonoBleuAction extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -42,7 +41,7 @@ public class ChargerFuseeMonoJauneAction extends AbstractAction {
 
     @Override
     public String name() {
-        return "Chargement des modules de la fusée monochrome jaune";
+        return "Chargement des modules de la fusée monochrome bleue";
     }
 
     @Override
@@ -56,10 +55,10 @@ public class ChargerFuseeMonoJauneAction extends AbstractAction {
             return false;
         }
 
-        return Team.JAUNE == rs.getTeam() &&
+        return Team.BLEU == rs.getTeam() &&
                 rs.nbModulesMagasin() <= IConstantesNerellConfig.nbModuleMax - 4 &&
                 !ioService.presencePinceCentre() &&
-                !rs.isFuseeMonochromeJauneRecupere();
+                !rs.isFuseeMonochromeBleuRecupere();
     }
 
     @Override
@@ -70,7 +69,7 @@ public class ChargerFuseeMonoJauneAction extends AbstractAction {
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            mv.pathTo(1300, 250);
+            mv.pathTo(2000, 250);
             mv.gotoOrientationDeg(180);
 
             while (ioService.presenceFusee()) {
@@ -88,7 +87,7 @@ public class ChargerFuseeMonoJauneAction extends AbstractAction {
         } finally {
             completed = true;
             rs.disablePinces();
-            rs.setFuseeMonochromeJauneRecupere(true);
+            rs.setFuseeMonochromeBleuRecupere(true);
         }
     }
 }

@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.temp;
+package org.arig.robot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +8,6 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.exceptions.EjectionModuleException;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.model.Team;
 import org.arig.robot.services.EjectionModuleService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class DechargerBase5Action extends AbstractAction {
+public class DechargerBase3Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -33,12 +32,12 @@ public class DechargerBase5Action extends AbstractAction {
 
     @Override
     public String name() {
-        return "Déchargement des modules dans la base 5";
+        return "Déchargement des modules dans la base 3";
     }
 
     @Override
     public int order() {
-        return Math.max(rs.nbPlacesDansBase(5), rs.nbModulesMagasin()) * 100;
+        return Math.max(rs.nbPlacesDansBase(3), rs.nbModulesMagasin()) * 100;
     }
 
     @Override
@@ -47,7 +46,7 @@ public class DechargerBase5Action extends AbstractAction {
             return false;
         }
 
-        return Team.BLEU == rs.getTeam() && rs.hasModuleDansMagasin();
+        return rs.hasModuleDansMagasin();
     }
 
     @Override
@@ -56,17 +55,16 @@ public class DechargerBase5Action extends AbstractAction {
             rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            mv.pathTo(2660, 730, false);
-            mv.gotoPointMM(2920 - 298, 700 - 90);
+            mv.pathTo(1200, 1100);
             mv.gotoOrientationDeg(180);
 
             mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
             rs.enableCalageBordure();
-            mv.reculeMM(180);
+            mv.reculeMMSansAngle(180);
 
-            while (rs.hasNextModule() && rs.canAddModuleDansBase(5)) {
+            while (rs.hasNextModule() && rs.canAddModuleDansBase(3)) {
                 ejectionModuleService.ejectionModule();
-                rs.addModuleDansBase(5);
+                rs.addModuleDansBase(3);
             }
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
@@ -74,15 +72,16 @@ public class DechargerBase5Action extends AbstractAction {
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
 
         } catch (EjectionModuleException e) {
-            rs.setBaseFull(5);
+            rs.setBaseFull(3);
 
         } finally {
-            completed = !rs.canAddModuleDansBase(5);
+            completed = !rs.canAddModuleDansBase(3);
 
             try {
                 mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-                mv.avanceMM(180);
+                mv.avanceMM(170);
+                mv.gotoOrientationDeg(-90);
 
             } catch (RefreshPathFindingException e) {
                 log.error(e.getMessage());

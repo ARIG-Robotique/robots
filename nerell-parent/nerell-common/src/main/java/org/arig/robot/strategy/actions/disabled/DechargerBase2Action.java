@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.temp;
+package org.arig.robot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class DechargerBase4Action extends AbstractAction {
+public class DechargerBase2Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -33,14 +33,14 @@ public class DechargerBase4Action extends AbstractAction {
 
     @Override
     public String name() {
-        return "Déchargement des modules dans la base 4";
+        return "Déchargement des modules dans la base 2";
     }
 
     @Override
     public int order() {
-        int val = Math.max(rs.nbPlacesDansBase(4), rs.nbModulesMagasin()) * 100;
+        int val = Math.max(rs.nbPlacesDansBase(2), rs.nbModulesMagasin()) * 100;
 
-        if (Team.JAUNE == rs.getTeam()) {
+        if (Team.BLEU == rs.getTeam()) {
             val /= 10;
         }
 
@@ -62,19 +62,19 @@ public class DechargerBase4Action extends AbstractAction {
             rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            double x = 1500 + 890 * Math.cos(-Math.PI / 4) + 298 * Math.cos(-3 * Math.PI / 4);
-            double y = 2000 + 890 * Math.sin(-Math.PI / 4) + 298 * Math.sin(-3 * Math.PI / 4);
+            double x = 1500 + 890 * Math.cos(-3 * Math.PI / 4) + 298 * Math.cos(3 * Math.PI / 4);
+            double y = 2000 + 890 * Math.sin(-3 * Math.PI / 4) + 298 * Math.sin(3 * Math.PI / 4);
 
             mv.pathTo(x, y);
-            mv.gotoOrientationDeg(-135);
+            mv.gotoOrientationDeg(135);
 
             mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
             rs.enableCalageBordure();
             mv.reculeMM(180);
 
-            while (rs.hasNextModule() && rs.canAddModuleDansBase(4)) {
+            while (rs.hasNextModule() && rs.canAddModuleDansBase(2)) {
                 ejectionModuleService.ejectionModule();
-                rs.addModuleDansBase(4);
+                rs.addModuleDansBase(2);
             }
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
@@ -82,15 +82,16 @@ public class DechargerBase4Action extends AbstractAction {
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
 
         } catch (EjectionModuleException e) {
-            rs.setBaseFull(4);
+            rs.setBaseFull(2);
 
         } finally {
-            completed = !rs.canAddModuleDansBase(4);
+            completed = !rs.canAddModuleDansBase(2);
 
             try {
                 mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
                 mv.avanceMM(165);
+                mv.gotoOrientationDeg(-135);
 
             } catch (RefreshPathFindingException e) {
                 log.error(e.getMessage());

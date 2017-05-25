@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.temp;
+package org.arig.robot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ChargerFuseeMonoBleuAction extends AbstractAction {
+public class ChargerFuseeMonoJauneAction extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -41,7 +41,7 @@ public class ChargerFuseeMonoBleuAction extends AbstractAction {
 
     @Override
     public String name() {
-        return "Chargement des modules de la fusée monochrome bleue";
+        return "Chargement des modules de la fusée monochrome jaune";
     }
 
     @Override
@@ -55,10 +55,10 @@ public class ChargerFuseeMonoBleuAction extends AbstractAction {
             return false;
         }
 
-        return Team.BLEU == rs.getTeam() &&
+        return Team.JAUNE == rs.getTeam() &&
                 rs.nbModulesMagasin() <= IConstantesNerellConfig.nbModuleMax - 4 &&
                 !ioService.presencePinceCentre() &&
-                !rs.isFuseeMonochromeBleuRecupere();
+                !rs.isFuseeMonochromeJauneRecupere();
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ChargerFuseeMonoBleuAction extends AbstractAction {
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            mv.pathTo(2000, 250);
+            mv.pathTo(1300, 250);
             mv.gotoOrientationDeg(180);
 
             while (ioService.presenceFusee()) {
@@ -87,7 +87,7 @@ public class ChargerFuseeMonoBleuAction extends AbstractAction {
         } finally {
             completed = true;
             rs.disablePinces();
-            rs.setFuseeMonochromeBleuRecupere(true);
+            rs.setFuseeMonochromeJauneRecupere(true);
         }
     }
 }
