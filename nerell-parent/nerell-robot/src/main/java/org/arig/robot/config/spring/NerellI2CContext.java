@@ -73,7 +73,9 @@ public class NerellI2CContext {
 
     @Bean
     public I2CAdcAnalogInput analogInput() {
-        return new I2CAdcAnalogInput(IConstantesI2C.I2C_ADC_DEVICE_NAME);
+        I2CAdcAnalogInput adc = new I2CAdcAnalogInput(IConstantesI2C.I2C_ADC_DEVICE_NAME);
+        adc.setPowerMode(I2CAdcAnalogInput.PowerMode.INTERNAL_REF_OFF_AD_ON);
+        return adc;
     }
 
     @Bean

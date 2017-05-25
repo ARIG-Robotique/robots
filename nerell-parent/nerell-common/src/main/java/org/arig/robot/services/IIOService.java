@@ -51,8 +51,6 @@ public interface IIOService {
     void enableAlim12VPuissance();
     void disableAlim12VPuissance();
 
-    void enableElectroVanne();
-    void disableElectroVanne();
     void enablePompeAVide();
     void disablePompeAVide();
 

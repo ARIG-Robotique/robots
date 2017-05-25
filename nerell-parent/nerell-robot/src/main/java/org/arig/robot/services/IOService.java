@@ -306,7 +306,9 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     public boolean presenceModuleDansBras() {
         boolean result;
         try {
-            result = i2cAdc.readCapteurValue(IConstantesI2CAdc.VACUOSTAT) > IConstantesI2CAdc.VACUOSTAT_SEUIL;
+            int analogValue = i2cAdc.readCapteurValue(IConstantesI2CAdc.VACUOSTAT);
+            result = analogValue > IConstantesI2CAdc.VACUOSTAT_SEUIL;
+            log.info("Lecture capteur de vide {}", analogValue);
         } catch (I2CException e) {
             result = false;
         }
@@ -439,20 +441,19 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         outAlimPuissance12V.high();
     }
 
-    @Override
-    public void enableElectroVanne() {
+    private void enableElectroVanne() {
         log.info("Activation electrovanne");
         outElectroVanne.low();
     }
 
-    @Override
-    public void disableElectroVanne() {
+    private void disableElectroVanne() {
         log.info("Desactivation electrovanne");
         outElectroVanne.high();
     }
 
     @Override
     public void enablePompeAVide() {
+        disableElectroVanne();
         log.info("Activation pompe a vide");
         outPompeAVide.high();
     }
@@ -461,6 +462,9 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     public void disablePompeAVide() {
         log.info("Desactivation pompe a vide");
         outPompeAVide.low();
+        enableElectroVanne();
+        sleep(100);
+        disableElectroVanne();
     }
 
     // ----------------------------------------------------------- //
@@ -479,5 +483,12 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         boolean result = !finCourseGlissiereDroite() && finCourseGlissiereGauche();
         log.info("Glissière fermé : {}", result);
         return result;
+    }
+
+    private void sleep(int time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+        }
     }
 }

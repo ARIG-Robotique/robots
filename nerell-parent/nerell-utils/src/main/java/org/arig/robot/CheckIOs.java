@@ -38,6 +38,8 @@ public class CheckIOs {
         ejectionModuleService.init();
         servosService.homes();
 
+        ejectionModuleService.ejectionAvantRetourStand();
+
         do {
             brasService.stockerModuleRobot();
             brasService.sleep(2000);

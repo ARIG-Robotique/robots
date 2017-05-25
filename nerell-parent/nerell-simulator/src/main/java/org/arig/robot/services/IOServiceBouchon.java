@@ -5,7 +5,6 @@ import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -207,16 +206,6 @@ public class IOServiceBouchon implements IIOService {
 
     @Override
     public void disableAlim12VPuissance() {
-
-    }
-
-    @Override
-    public void enableElectroVanne() {
-
-    }
-
-    @Override
-    public void disableElectroVanne() {
 
     }
 

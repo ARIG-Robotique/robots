@@ -11,7 +11,7 @@ public class BrasService {
 
     private static final int NB_TENTATIVES_ASPIRATION = 2;
     private static final int TEMPS_TENTATIVE_ASPIRATION = 1000;
-    private static final int TEMPS_ROULAGE_MODULE = 500;
+    private static final int TEMPS_ROULAGE_MODULE = 1000;
 
     @Autowired
     private RobotStatus robotStatus;
@@ -45,13 +45,18 @@ public class BrasService {
                 servosService.waitPince();
             }
 
-            servosService.pinceDroiteVentouse();
             servosService.brasPriseRobot();
             servosService.waitBras();
+            servosService.pinceDroiteVentouse();
+            servosService.waitPince();
 
             if (!ioService.presencePinceCentre()) {
                 log.warn("Tentative de stockage de module sans module !");
                 servosService.pinceDroiteOuvert();
+                servosService.brasVertical();
+                servosService.waitBras();
+                servosService.pinceCentreOuvert();
+                servosService.waitPince();
                 servosService.brasAttentePriseRobot();
                 return false;
             }
@@ -62,6 +67,10 @@ public class BrasService {
                 log.warn("Impossible d'aspirer le module !");
                 ioService.disablePompeAVide();
                 servosService.pinceDroiteOuvert();
+                servosService.brasVertical();
+                servosService.waitBras();
+                servosService.pinceCentreOuvert();
+                servosService.waitPince();
                 servosService.brasAttentePriseRobot();
                 return false;
             }
@@ -109,7 +118,6 @@ public class BrasService {
         servosService.waitBras();
 
         servosService.pinceCentreOuvert();
-
         servosService.porteMagasinFerme();
         servosService.waitPorteMagasin();
 
@@ -124,15 +132,10 @@ public class BrasService {
         }
 
         ioService.disablePompeAVide();
-        ioService.enableElectroVanne();
-
         servosService.brasAttentePriseRobot();
 
         servosService.entreeMagasinOuvert();
         sleep(TEMPS_ROULAGE_MODULE);
-
-        ioService.disableElectroVanne();
-
         servosService.entreeMagasinFerme();
         servosService.porteMagasinOuvert();
 
@@ -178,14 +181,10 @@ public class BrasService {
             }
 
             ioService.disablePompeAVide();
-            ioService.enableElectroVanne();
-
             servosService.brasAttentePriseFusee();
 
             servosService.entreeMagasinOuvert();
             sleep(500);
-
-            ioService.disableElectroVanne();
 
             servosService.entreeMagasinFerme();
             servosService.porteMagasinOuvert();
@@ -201,7 +200,7 @@ public class BrasService {
     private boolean tentativeAspirationRobot(int nb) {
         long remaining = TEMPS_TENTATIVE_ASPIRATION;
 
-        while (!ioService.presenceModuleDansBras() && remaining > 0) {
+        while (/*!ioService.presenceModuleDansBras() &&*/ remaining > 0) {
             remaining -= 100;
             sleep(100);
         }

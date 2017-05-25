@@ -13,5 +13,5 @@ public interface IConstantesI2CAdc {
     byte GP2D_SCAN_BAS = 1;
 
     byte VACUOSTAT = 4;
-    int VACUOSTAT_SEUIL = 2222;
+    int VACUOSTAT_SEUIL = 1750;
 }
