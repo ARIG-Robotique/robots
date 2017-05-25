@@ -200,7 +200,7 @@ public class BrasService {
     private boolean tentativeAspirationRobot(int nb) {
         long remaining = TEMPS_TENTATIVE_ASPIRATION;
 
-        while (/*!ioService.presenceModuleDansBras() &&*/ remaining > 0) {
+        while (!ioService.presenceModuleDansBras() && remaining > 0) {
             remaining -= 100;
             sleep(100);
         }
