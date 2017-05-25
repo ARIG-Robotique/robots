@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Rectangle {
+public class Rectangle extends Shape {
+
+    private final ShapeType type = ShapeType.RECTANGLE;
 
     private double x;
     private double y;

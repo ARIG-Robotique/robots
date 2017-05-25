@@ -1,7 +1,7 @@
 package org.arig.robot.system.avoiding;
 
 import org.arig.robot.model.Point;
-import org.arig.robot.model.Rectangle;
+import org.arig.robot.model.Shape;
 
 import java.util.List;
 
@@ -18,5 +18,5 @@ public interface IAvoidingService {
     List<Point> getDetectedPointsMmCapteurs();
     List<Point> getDetectedPointsMmLidar();
 
-    List<Rectangle> getCollisionsShape();
+    List<Shape> getCollisionsShape();
 }

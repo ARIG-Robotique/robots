@@ -179,7 +179,7 @@ public class Ordonanceur {
                 trajectoryManager.gotoPointMM(1100, 772);
                 trajectoryManager.gotoPointMM(890, 300);
                 trajectoryManager.gotoOrientationDeg(90, SensRotation.TRIGO);
-                trajectoryManager.reculeMM(135);
+                trajectoryManager.reculeMM(125);
                 servosService.aspirationFerme();
             } else {
                 position.setPt(new Point(conv.mmToPulse(2680), conv.mmToPulse(772)));
@@ -188,8 +188,12 @@ public class Ordonanceur {
                 trajectoryManager.gotoPointMM(3000 - 1100, 772);
                 trajectoryManager.gotoPointMM(3000 - 890, 300);
                 trajectoryManager.gotoOrientationDeg(90, SensRotation.TRIGO);
-                trajectoryManager.reculeMM(135);
+                trajectoryManager.reculeMM(125);
             }
+
+            // Calage sur la bordure de départ
+            robotStatus.enableCalageBordure();
+            trajectoryManager.reculeMMSansAngle(20);
 
         } else {
             if (robotStatus.getTeam() == Team.JAUNE) {
@@ -219,13 +223,15 @@ public class Ordonanceur {
         robotStatus.enableAvoidance();
 
         // Match de XX secondes.
-        boolean activateCollecteAdverse = false;
+//        boolean activateCollecteAdverse = false;
         while(robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
+/*
             if (robotStatus.getElapsedTime() > 45000 && !activateCollecteAdverse) {
                 activateCollecteAdverse = true;
                 log.info("Activation par le temps de la collecte dans la zone adverse");
                 System.setProperty("strategy.collect.zone.adverse", "true");
             }
+*/
             waitTimeMs(200);
         }
         robotStatus.stopMatch();

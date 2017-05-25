@@ -2,11 +2,10 @@ package org.arig.robot.services.avoiding;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.filters.values.DoubleValueAverage;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
-import org.arig.robot.model.Rectangle;
+import org.arig.robot.model.Shape;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
@@ -22,9 +21,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -33,8 +29,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class AbstractAvoidingService implements IAvoidingService, InitializingBean {
 
-    protected static final int SEUIL_DISTANCE_CAPTEURS_MM = 200;
-    protected static final int SEUIL_DISTANCE_LIDAR_MM = 400;
+    protected static final int SEUIL_DISTANCE_PROX_CAPTEURS_MM = 200;
+    protected static final int SEUIL_DISTANCE_PROX_LIDAR_MM = 400;
+    protected static final int SEUIL_DISTANCE_AVOID_LIDAR_MM = 600;
 
     @Autowired
     private IMonitoringWrapper monitoringWrapper;
@@ -89,11 +86,11 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
     @Getter
     private final List<Point> detectedPointsMmLidar = new ArrayList<>();
     @Getter
-    protected final List<Rectangle> collisionsShape = new ArrayList<>();
+    protected final List<Shape> collisionsShape = new ArrayList<>();
 
-    private DoubleValueAverage calcAvgGpGauche = new DoubleValueAverage();
+    /*private DoubleValueAverage calcAvgGpGauche = new DoubleValueAverage();
     private DoubleValueAverage calcAvgGpCentre = new DoubleValueAverage();
-    private DoubleValueAverage calcAvgGpDroit = new DoubleValueAverage();
+    private DoubleValueAverage calcAvgGpDroit = new DoubleValueAverage();*/
 
     /*private IntegerValueAverage calcAvgUsLatGauche = new IntegerValueAverage();
     private IntegerValueAverage calcAvgUsGauche = new IntegerValueAverage();
@@ -114,9 +111,9 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
 
     public final void process() {
         // Lecture GP2D
-        Future<GP2D12.GP2D12Values> fGpGauche = gp2dGauche.readValue();
+        /*Future<GP2D12.GP2D12Values> fGpGauche = gp2dGauche.readValue();
         Future<GP2D12.GP2D12Values> fGpCentre = gp2dCentre.readValue();
-        Future<GP2D12.GP2D12Values> fGpDroit = gp2dDroit.readValue();
+        Future<GP2D12.GP2D12Values> fGpDroit = gp2dDroit.readValue();*/
 
         // Lecture US
         /*
@@ -131,7 +128,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
         // TODO : Ajouter un delai pour ne pas rester bloqué.
         /*while(!fUsLatGauche.isDone() && !fUsGauche.isDone() && !fUsDroit.isDone() && !fUsLatDroit.isDone()
                 && !fGpGauche.isDone() && !fGpCentre.isDone() && !fGpDroit.isDone());*/
-        while (!fGpGauche.isDone() && !fGpCentre.isDone() && !fGpDroit.isDone()) ;
+        //while (!fGpGauche.isDone() && !fGpCentre.isDone() && !fGpDroit.isDone()) ;
 
         // Stockage local des points
         List<Point> detectedPointsMmCapteurs = new ArrayList<>();
@@ -236,7 +233,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             detectedPointsMmLidar.addAll(
                     lidarScan.getScan().parallelStream()
                             .map(scan -> tableUtils.getPointFromAngle(scan.getDistanceMm(), scan.getAngleDeg()))
-                            .filter(pt -> tableUtils.isInTable(pt))
+                            .filter(pt -> tableUtils.isInTable(pt) && checkValidLidarPointForSeuil(pt, SEUIL_DISTANCE_AVOID_LIDAR_MM))
                             .collect(Collectors.toList())
             );
         }
@@ -244,7 +241,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
         // Construction du monitoring
         MonitorTimeSerie serie = new MonitorTimeSerie()
                 .tableName("avoiding")
-                .addField("nbPointCapteursDetecte", detectedPointsMmCapteurs.size())
+                //.addField("nbPointCapteursDetecte", detectedPointsMmCapteurs.size())
                 .addField("nbPointLidarDetecte", detectedPointsMmLidar.size());
                 /*.addField("rawGpGauche", rawGpGauche)
                 .addField("avgGpGauche", avgGpGauche)
@@ -276,37 +273,48 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
 
     protected boolean hasProximiteCapteurs() {
         return getDetectedPointsMmCapteurs().parallelStream()
-                .anyMatch(pt -> {
-                    long dX = (long) (pt.getX() - conv.pulseToMm(position.getPt().getX()));
-                    long dY = (long) (pt.getY() - conv.pulseToMm(position.getPt().getY()));
-                    double distanceMm = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
-                    return distanceMm < SEUIL_DISTANCE_CAPTEURS_MM;
-                });
+                .anyMatch(pt -> checkValidCapteursPointForSeuil(pt, SEUIL_DISTANCE_PROX_CAPTEURS_MM));
     }
 
     protected boolean hasProximiteLidar() {
         return getDetectedPointsMmLidar().parallelStream()
-                .anyMatch(pt -> {
-                    long dX = (long) (pt.getX() - conv.pulseToMm(position.getPt().getX()));
-                    long dY = (long) (pt.getY() - conv.pulseToMm(position.getPt().getY()));
-                    double distanceMm = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
-                    if (distanceMm > SEUIL_DISTANCE_LIDAR_MM) {
-                        return false;
-                    }
+                .anyMatch(pt -> checkValidLidarPointForSeuil(pt, SEUIL_DISTANCE_PROX_LIDAR_MM));
+    }
 
-                    double alpha = Math.toDegrees(Math.atan2(Math.toRadians(dY), Math.toRadians(dX)));
-                    double dA = alpha - conv.pulseToDeg(position.getAngle());
-                    if (dA > 180) {
-                        dA -= 360;
-                    } else if (dA < -180) {
-                        dA += 360;
-                    }
+    /*
+    protected boolean hasAvoidLidar() {
+        return getDetectedPointsMmLidar().parallelStream()
+                .anyMatch(pt -> checkValidLidarPointForSeuil(pt, SEUIL_DISTANCE_AVOID_LIDAR_MM));
+    }
+    */
 
-                    if (cmdRobot.getConsigne().getDistance() > 0) {
-                        return dA > -45 && dA < 45;
-                    } else {
-                        return Math.abs(dA) < 180 && Math.abs(dA) > 135;
-                    }
-                });
+    private boolean checkValidCapteursPointForSeuil(Point pt, int seuilMm) {
+        long dX = (long) (pt.getX() - conv.pulseToMm(position.getPt().getX()));
+        long dY = (long) (pt.getY() - conv.pulseToMm(position.getPt().getY()));
+        double distanceMm = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
+        return distanceMm < seuilMm;
+    }
+
+    private boolean checkValidLidarPointForSeuil(Point pt, int seuilMm) {
+        long dX = (long) (pt.getX() - conv.pulseToMm(position.getPt().getX()));
+        long dY = (long) (pt.getY() - conv.pulseToMm(position.getPt().getY()));
+        double distanceMm = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
+        if (distanceMm > seuilMm) {
+            return false;
+        }
+
+        double alpha = Math.toDegrees(Math.atan2(Math.toRadians(dY), Math.toRadians(dX)));
+        double dA = alpha - conv.pulseToDeg(position.getAngle());
+        if (dA > 180) {
+            dA -= 360;
+        } else if (dA < -180) {
+            dA += 360;
+        }
+
+        if (cmdRobot.getConsigne().getDistance() > 0) {
+            return dA > -45 && dA < 45;
+        } else {
+            return Math.abs(dA) < 180 && Math.abs(dA) > 135;
+        }
     }
 }

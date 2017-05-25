@@ -1,7 +1,7 @@
 package org.arig.robot.system.avoiding;
 
 import org.arig.robot.model.Point;
-import org.arig.robot.model.Rectangle;
+import org.arig.robot.model.Shape;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +27,7 @@ public class AvoidingServiceBouchon implements IAvoidingService {
     }
 
     @Override
-    public List<Rectangle> getCollisionsShape() {
+    public List<Shape> getCollisionsShape() {
         return Collections.emptyList();
     }
 }

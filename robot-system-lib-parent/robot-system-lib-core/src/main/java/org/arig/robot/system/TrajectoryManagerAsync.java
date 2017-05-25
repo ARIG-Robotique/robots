@@ -153,8 +153,18 @@ public class TrajectoryManagerAsync implements ITrajectoryManager {
     }
 
     @Override
-    public void setObstacleFound(boolean obstacleFound) {
-        decorated.setObstacleFound(obstacleFound);
+    public void obstacleFound() {
+        decorated.obstacleFound();
+    }
+
+    @Override
+    public void obstacleNotFound() {
+        decorated.obstacleNotFound();
+    }
+
+    @Override
+    public void calageBordureDone() {
+        decorated.calageBordureDone();
     }
 
     @Override

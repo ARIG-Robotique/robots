@@ -4,7 +4,7 @@ import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.CalageBordureService;
 import org.arig.robot.services.MagasinService;
 import org.arig.robot.services.PincesService;
-import org.arig.robot.services.ServosService;
+import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,6 +26,9 @@ public class RobotScheduler {
     private CalageBordureService calageBordure;
 
     @Autowired
+    private ITrajectoryManager trajectoryManager;
+
+    @Autowired
     private PincesService pincesService;
 
     @Autowired
@@ -43,7 +46,10 @@ public class RobotScheduler {
     @Scheduled(fixedDelay = 200)
     public void calageBordureTask() {
         if (rs.isCalageBordureEnabled()) {
-            calageBordure.process();
+            if (calageBordure.process() || trajectoryManager.isTrajetAtteint() || trajectoryManager.isTrajetEnApproche()) {
+                // Calage effectué, on arrete
+                rs.disableCalageBordure();
+            }
         }
     }
 

@@ -1,7 +1,6 @@
 package org.arig.robot.system;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.exception.AvoidingException;
@@ -87,8 +86,12 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     /**
      * Boolean si un obstacle est rencontré (stop le robot sur place)
      **/
-    @Setter
     private boolean obstacleFound = false;
+
+    /**
+     * Boolean si un calage bordure est demandé (consigne distance angle = 0)
+     */
+    private boolean calageBordure = false;
 
     /**
      * Boolean pour relancer après un obstacle (gestion de l'évittement)
@@ -219,6 +222,13 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * -> b : Si dans fenêtre d'approche : consigne(n) = consigne(n - 1) - d(position)
      */
     private void calculConsigne() {
+        if (calageBordure) {
+            // Un calage sur bordure est fait. On asservi sur place jusqu'au prochain mouvement
+            cmdRobot.getConsigne().setDistance(0);
+            cmdRobot.getConsigne().setOrientation(0);
+            cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+            calageBordure = false;
+        }
 
         if (!trajetAtteint && cmdRobot.isType(TypeConsigne.XY)) {
             // Calcul en fonction de l'odométrie
@@ -703,6 +713,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
         trajetEnApproche = false;
         refreshPath = false;
         obstacleFound = false;
+        calageBordure = false;
     }
 
     /**
@@ -745,6 +756,21 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             }
             log.info("Point de passage atteint");
         }
+    }
+
+    @Override
+    public void obstacleFound() {
+        obstacleFound = true;
+    }
+
+    @Override
+    public void obstacleNotFound() {
+        obstacleFound = false;
+    }
+
+    @Override
+    public void calageBordureDone() {
+        calageBordure = true;
     }
 
     @Override

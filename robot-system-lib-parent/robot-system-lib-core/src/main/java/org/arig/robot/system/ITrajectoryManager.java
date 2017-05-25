@@ -58,7 +58,11 @@ public interface ITrajectoryManager {
 
     AbstractMonitorMouvement getCurrentMouvement();
 
-    void setObstacleFound(boolean obstacleFound);
+    void obstacleFound();
+
+    void obstacleNotFound();
+
+    void calageBordureDone();
 
     void refreshPathFinding();
 }

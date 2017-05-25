@@ -2,7 +2,6 @@ package org.arig.robot.services.avoiding;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.system.TrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -28,7 +27,7 @@ public class BasicAvoidingService extends AbstractAvoidingService {
             currentObstacle = true;
         }
         if (hasObstacle) {
-            trajectoryManager.setObstacleFound(true);
+            trajectoryManager.obstacleFound();
         }
 
         if (!hasObstacle && currentObstacle) {
@@ -37,7 +36,7 @@ public class BasicAvoidingService extends AbstractAvoidingService {
 
         if (!hasObstacle) {
             // 3.4 On relance le bouzin
-            trajectoryManager.setObstacleFound(false);
+            trajectoryManager.obstacleNotFound();
             currentObstacle = false;
         }
     }

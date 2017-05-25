@@ -2,9 +2,8 @@ package org.arig.robot.services.avoiding;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.*;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
 import org.arig.robot.model.Rectangle;
 import org.arig.robot.model.enums.TypeMouvement;
 import org.arig.robot.model.monitor.AbstractMonitorMouvement;
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.awt.*;
+import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -48,6 +48,12 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
 
     boolean hasObstacle = false;
 
+    private final TypeObstacle typeObstacle = TypeObstacle.POLYGON;
+
+    private enum TypeObstacle {
+        RECTANGULAR, POLYGON, ELIPSE
+    }
+
     @Override
     protected void processAvoiding() {
         // Pas de bras, pas de chocolat
@@ -57,16 +63,16 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
         }
 
         // 1 Stop du robot si obstacle trop proche.
-        /*boolean proxCapteurs = hasProximiteCapteurs();
+        //boolean proxCapteurs = hasProximiteCapteurs();
         boolean proxLidar = hasProximiteLidar();
-        boolean hasProx = proxCapteurs || proxLidar;
+        boolean hasProx = /*proxCapteurs ||*/ proxLidar;
         if (hasProx) {
             // Stop, et ensuite on recalcul le path
-            log.info("Obstacle a proximité détecté, capteurs : {}, lidar : {}", proxCapteurs, proxLidar);
-            trajectoryManager.setObstacleFound(true);
-        }*/
+            log.info("Obstacle a proximité détecté, capteurs : {}, lidar : {}", /*proxCapteurs*/ false, proxLidar);
+            trajectoryManager.obstacleFound();
+        }
 
-        // 2 Detection de collision (ici on est tous en cm)
+        // 2. Detection de collision (ici on est tous en cm) et déja filtré.
         AbstractMonitorMouvement currentMvt = trajectoryManager.getCurrentMouvement();
         if (currentMvt.getType() == TypeMouvement.PATH) {
             MonitorMouvementPath mp = (MonitorMouvementPath) currentMvt;
@@ -88,20 +94,50 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
             }
 
             List<Shape> obstacles = new ArrayList<>();
-            List<org.arig.robot.model.Rectangle> collisionShape = new ArrayList<>();
+            List<org.arig.robot.model.Shape> collisionShape = new ArrayList<>();
             for (Point pt : getDetectedPointsMmLidar()) {
-                // Définition de l'obstacle
-                double wh = 2 * DISTANCE_CENTRE_OBSTACLE / 10;
-                double x = pt.getX() / 10 - (wh / 2);
-                double y = pt.getY() / 10 - (wh / 2);
+                switch (typeObstacle) {
+                    case POLYGON:
+                        // Définition de l'obstacle polygone (autour de nous)
+                        int r1 = (int) (Math.cos(Math.toRadians(22.5)) * DISTANCE_CENTRE_OBSTACLE / 10);
+                        int r2 = (int) (Math.sin(Math.toRadians(22.5)) * DISTANCE_CENTRE_OBSTACLE / 10);
 
-                Rectangle2D obs = new Rectangle2D.Double(x, y, wh, wh);
-                for (Line2D l : lines) {
-                    if (obs.intersectsLine(l)) {
-                        log.info("Collision détectée : {} {}", pt, obs);
-                        obstacles.add(obs);
-                        collisionShape.add(new Rectangle(x * 10, y * 10, wh * 10, wh * 10));
-                    }
+                        Polygon obsPoly = new Polygon();
+                        obsPoly.addPoint(r2, r1);
+                        obsPoly.addPoint(r1, r2);
+                        obsPoly.addPoint(r1, -r2);
+                        obsPoly.addPoint(r2, -r1);
+                        obsPoly.addPoint(-r2, -r1);
+                        obsPoly.addPoint(-r1, -r2);
+                        obsPoly.addPoint(-r1, r2);
+                        obsPoly.addPoint(-r2, r1);
+                        obsPoly.translate((int) pt.getX() / 10, (int) pt.getY() / 10);
+
+                        for (Line2D l : lines) {
+                            if (l.intersects(obsPoly.getBounds())) {
+                                log.info("Collision détectée, ajout polygon : {} {}", pt, obsPoly);
+                                obstacles.add(obsPoly);
+                                collisionShape.add(new Cercle(pt, DISTANCE_CENTRE_OBSTACLE));
+                            }
+                        }
+
+                        break;
+
+                    case RECTANGULAR:
+                    default:
+                        // Définition de l'obstacle rectangulaire
+                        double wh = 2 * DISTANCE_CENTRE_OBSTACLE / 10;
+                        double x = pt.getX() / 10 - (wh / 2);
+                        double y = pt.getY() / 10 - (wh / 2);
+                        Rectangle2D obsRect = new Rectangle2D.Double(x, y, wh, wh);
+                        for (Line2D l : lines) {
+                            if (obsRect.intersectsLine(l)) {
+                                log.info("Collision détectée, ajout rectangle : {} {}", pt, obsRect);
+                                obstacles.add(obsRect);
+                                collisionShape.add(new Rectangle(x * 10, y * 10, wh * 10, wh * 10));
+                            }
+                        }
+                        break;
                 }
             }
 
@@ -126,7 +162,7 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
                 }
 
                 // On rafraichit le path
-                trajectoryManager.refreshPathFinding();
+                //trajectoryManager.refreshPathFinding();
             }
         }
     }
