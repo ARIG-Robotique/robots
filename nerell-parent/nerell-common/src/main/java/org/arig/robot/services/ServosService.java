@@ -314,7 +314,7 @@ public class ServosService {
     }
 
     private boolean checkDescenteBras() {
-        return !(isBrasDepose() && isPorteFerme() && ioService.presenceModuleDansBras())
+        return !(isBrasDepose() && isPorteFerme() && false)
                 && !isPinceDroiteFerme()
                 && (
                 isBrasAttente() ||
@@ -323,7 +323,7 @@ public class ServosService {
                         isBrasPriseFusee() ||
                         isPinceCentreFerme() ||
                         isPinceCentreOuvertDansDroit() ||
-                        isPinceCentreOuvert() && !ioService.presenceModuleDansBras()
+                        isPinceCentreOuvert() && true
         );
     }
 
