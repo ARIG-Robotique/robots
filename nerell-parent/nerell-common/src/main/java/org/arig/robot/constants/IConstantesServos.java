@@ -16,9 +16,10 @@ public interface IConstantesServos {
 
     // Tempo servos
     long WAIT_PINCE = 400;
-    long WAIT_INC_BRAS = 400;
+    long WAIT_INC_BRAS_COURT = 200;
+    long WAIT_INC_BRAS_LONG = 800;
     long WAIT_ROT_VENTOUSE = 400;
-    long WAIT_PORTE_MAG = 200;
+    long WAIT_PORTE_MAG = 600;
     long WAIT_BLOCAGE_MAG = 200;
     long WAIT_DEVIDOIR = 400;
     long WAIT_INC_ASPI = 400;

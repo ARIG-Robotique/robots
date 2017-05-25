@@ -66,7 +66,7 @@ public class ServosService {
         servos.setPositionAndSpeed(IConstantesServos.PINCE_MODULE_CENTRE, IConstantesServos.PINCE_MODULE_CENTRE_FERME, IConstantesServos.SPEED_PINCE);
         servos.waitTime(IConstantesServos.WAIT_PINCE);
         servos.setPositionAndSpeed(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_DEPOSE, IConstantesServos.SPEED_INC_BRAS);
-        servos.waitTime(IConstantesServos.WAIT_INC_BRAS);
+        servos.waitTime(IConstantesServos.WAIT_INC_BRAS_LONG);
         servos.setPositionAndSpeed(IConstantesServos.PINCE_MODULE_DROIT, IConstantesServos.PINCE_MODULE_DROIT_FERME, IConstantesServos.SPEED_PINCE);
     }
 
@@ -74,8 +74,12 @@ public class ServosService {
         servos.waitTime(IConstantesServos.WAIT_PINCE);
     }
 
-    public void waitBras() {
-        servos.waitTime(IConstantesServos.WAIT_INC_BRAS);
+    public void waitBrasCourt() {
+        servos.waitTime(IConstantesServos.WAIT_INC_BRAS_COURT);
+    }
+
+    public void waitBrasLong() {
+        servos.waitTime(IConstantesServos.WAIT_INC_BRAS_LONG);
     }
 
     public void waitPorteMagasin() {
@@ -245,7 +249,7 @@ public class ServosService {
     public void brasAttentePriseRobot() {
         if (checkDescenteBras()) {
             servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_ATTENTE);
-            waitBras();
+            waitBrasCourt();
             servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_ROBOT);
         } else {
             throw new ServoException("bras");
@@ -255,7 +259,7 @@ public class ServosService {
     public void brasAttentePriseFusee() {
         if (checkDescenteBras()) {
             servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_ATTENTE);
-            waitBras();
+            waitBrasCourt();
             servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_FUSEE);
         } else {
             throw new ServoException("bras");
@@ -276,7 +280,7 @@ public class ServosService {
                 isBrasDepose() ||
                         isPinceCentreFerme() ||
                         isPinceCentreOuvertDansDroit() ||
-                        isPinceCentreOuvert() && !ioService.presenceModuleDansBras()
+                        isPinceCentreOuvert() && (!ioService.presenceModuleDansBras() || isVentouseDepose())
         )) {
             servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_DEPOSE_MAGASIN);
             servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_DEPOSE);

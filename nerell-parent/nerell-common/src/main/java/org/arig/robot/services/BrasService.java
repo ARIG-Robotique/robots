@@ -39,14 +39,13 @@ public class BrasService {
             if (!servosService.isPinceCentreFerme()) {
                 if (servosService.isBrasPriseRobot() || servosService.isBrasAttente()) {
                     servosService.brasVertical();
-                    servosService.waitBras();
+                    servosService.waitBrasCourt();
                 }
                 servosService.pinceCentreFerme();
                 servosService.waitPince();
             }
 
             servosService.brasPriseRobot();
-            servosService.waitBras();
             servosService.pinceDroiteVentouse();
             servosService.waitPince();
 
@@ -54,21 +53,25 @@ public class BrasService {
                 log.warn("Tentative de stockage de module sans module !");
                 servosService.pinceDroiteOuvert();
                 servosService.brasVertical();
-                servosService.waitBras();
+                servosService.waitBrasCourt();
                 servosService.pinceCentreOuvert();
                 servosService.waitPince();
                 servosService.brasAttentePriseRobot();
                 return false;
             }
 
+            servosService.brasAttentePriseRobot();
+            servosService.waitBrasCourt();
             ioService.enablePompeAVide();
+            servosService.brasPriseRobot();
+            servosService.waitBrasCourt();
 
             if (!tentativeAspirationRobot(NB_TENTATIVES_ASPIRATION)) {
                 log.warn("Impossible d'aspirer le module !");
                 ioService.disablePompeAVide();
                 servosService.pinceDroiteOuvert();
                 servosService.brasVertical();
-                servosService.waitBras();
+                servosService.waitBrasCourt();
                 servosService.pinceCentreOuvert();
                 servosService.waitPince();
                 servosService.brasAttentePriseRobot();
@@ -85,10 +88,9 @@ public class BrasService {
                 return false;
             }
 
-            servosService.brasPriseRobot();
-            servosService.waitBras();
-
             ioService.enablePompeAVide();
+            servosService.brasPriseRobot();
+            servosService.waitBrasCourt();
 
             if (!tentativeAspirationRobot(NB_TENTATIVES_ASPIRATION)) {
                 log.warn("Impossible d'aspirer le module !");
@@ -102,7 +104,7 @@ public class BrasService {
 
             if (ioService.presencePinceDroite()) {
                 servosService.brasAttenteDepose();
-                servosService.waitBras();
+                servosService.waitBrasCourt();
             } else {
                 servosService.pinceDroiteOuvert();
                 servosService.pinceCentreOuvertDansDroit();
@@ -115,7 +117,7 @@ public class BrasService {
         }
 
         servosService.brasDepose();
-        servosService.waitBras();
+        servosService.waitBrasLong();
 
         servosService.pinceCentreOuvert();
         servosService.porteMagasinFerme();
@@ -150,7 +152,7 @@ public class BrasService {
             }
 
             servosService.brasPriseFusee();
-            servosService.waitBras();
+            servosService.waitBrasCourt();
 
             servosService.pinceCentreFerme();
             servosService.waitPince();
@@ -165,7 +167,7 @@ public class BrasService {
             }
 
             servosService.brasDepose();
-            servosService.waitBras();
+            servosService.waitBrasCourt();
 
             servosService.porteMagasinFerme();
             servosService.waitPorteMagasin();
@@ -208,10 +210,10 @@ public class BrasService {
         if (!ioService.presenceModuleDansBras()) {
             if (nb > 0) {
                 servosService.brasAttentePriseRobot();
-                servosService.waitBras();
+                servosService.waitBrasCourt();
 
                 servosService.brasPriseRobot();
-                servosService.waitBras();
+                servosService.waitBrasCourt();
 
                 return tentativeAspirationRobot(nb - 1);
             } else {
@@ -233,10 +235,10 @@ public class BrasService {
         if (!ioService.presenceModuleDansBras()) {
             if (nb > 0) {
                 servosService.brasAttentePriseFusee();
-                servosService.waitBras();
+                servosService.waitBrasCourt();
 
                 servosService.brasPriseFusee();
-                servosService.waitBras();
+                servosService.waitBrasCourt();
 
                 return tentativeAspirationFusee(nb - 1);
             } else {

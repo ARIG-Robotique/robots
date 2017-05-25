@@ -72,7 +72,7 @@ public class DeposeModulesPincesAction extends AbstractAction {
 
                 servosService.brasAttentePriseRobot();
                 servosService.pinceDroiteOuvert();
-                servosService.waitBras();
+                servosService.waitBrasCourt();
 
                 mv.reculeMM(100);
             }
@@ -92,7 +92,7 @@ public class DeposeModulesPincesAction extends AbstractAction {
 
                 servosService.brasAttentePriseRobot();
                 servosService.pinceDroiteOuvert();
-                servosService.waitBras();
+                servosService.waitBrasCourt();
 
                 mv.reculeMM(300 - offset);
                 mv.gotoOrientationDeg(90);

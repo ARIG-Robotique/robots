@@ -10,7 +10,6 @@ import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.avoiding.IAvoidingService;
-import org.arig.robot.system.capteurs.GP2D12;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.SRF02Sonar;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -46,6 +45,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
     @Qualifier("currentPosition")
     private Position position;
 
+    /*
     @Autowired
     @Qualifier("gp2dGauche")
     private GP2D12 gp2dGauche;
@@ -57,6 +57,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
     @Autowired
     @Qualifier("gp2dDroit")
     private GP2D12 gp2dDroit;
+*/
 
     @Autowired
     @Qualifier("usLatGauche")
@@ -66,9 +67,11 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
     @Qualifier("usGauche")
     private SRF02Sonar usGauche;
 
+    /*
     @Autowired
     @Qualifier("usDroit")
     private SRF02Sonar usDroit;
+    */
 
     @Autowired
     @Qualifier("usLatDroit")
@@ -102,7 +105,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
         log.info("Initialisation du service d'évittement d'obstacle");
         usLatGauche.printVersion();
         usGauche.printVersion();
-        usDroit.printVersion();
+        //usDroit.printVersion();
         usLatDroit.printVersion();
         lidar.deviceInfo();
     }
