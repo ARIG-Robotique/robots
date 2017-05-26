@@ -78,8 +78,8 @@ public class PrendreModule7Action extends AbstractAction {
             );
             mv.alignFrontTo(2100 + offsetX, 1400 + offsetY);
             mv.gotoPointMM(
-                    2100 - 150 * Math.cos(3 * Math.PI / 4) + offsetX,
-                    1400 - 150 * Math.sin(3 * Math.PI / 4) + offsetY
+                    2100 - 140 * Math.cos(3 * Math.PI / 4) + offsetX,
+                    1400 - 140 * Math.sin(3 * Math.PI / 4) + offsetY
             );
 
             Thread.sleep(400);

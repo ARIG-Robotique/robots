@@ -38,7 +38,7 @@ public class DechargerBase4Action extends AbstractAction {
 
     @Override
     public int order() {
-        int val = Math.max(rs.nbPlacesDansBase(4), rs.nbModulesMagasin()) * 100;
+        int val = Math.min(rs.nbPlacesDansBase(4), rs.nbModulesMagasin()) * 100;
 
         if (Team.JAUNE == rs.getTeam()) {
             val /= 10;
@@ -63,8 +63,8 @@ public class DechargerBase4Action extends AbstractAction {
             rs.disableMagasin();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            double x = 1500 + 890 * Math.cos(-Math.PI / 4) + 298 * Math.cos(-3 * Math.PI / 4);
-            double y = 2000 + 890 * Math.sin(-Math.PI / 4) + 298 * Math.sin(-3 * Math.PI / 4);
+            double x = 1500 + 900 * Math.cos(-Math.PI / 4) + 300 * Math.cos(-3 * Math.PI / 4);
+            double y = 2000 + 900 * Math.sin(-Math.PI / 4) + 300 * Math.sin(-3 * Math.PI / 4);
 
             mv.pathTo(x, y);
             mv.gotoOrientationDeg(-135);
