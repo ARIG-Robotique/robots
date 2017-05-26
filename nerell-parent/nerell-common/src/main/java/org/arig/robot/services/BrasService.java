@@ -138,6 +138,7 @@ public class BrasService {
 
         servosService.entreeMagasinOuvert();
         sleep(TEMPS_ROULAGE_MODULE);
+
         servosService.entreeMagasinFerme();
         servosService.porteMagasinOuvert();
 
@@ -145,19 +146,19 @@ public class BrasService {
     }
 
     public boolean stockerModuleFusee() {
-        if (ioService.presenceFusee()) {
+//        if (ioService.presenceFusee()) {
             if (!robotStatus.canAddModuleMagasin()) {
                 log.warn("Pas de place dans la magasin");
                 return false;
             }
+
+            ioService.enablePompeAVide();
 
             servosService.brasPriseFusee();
             servosService.waitBrasCourt();
 
             servosService.pinceCentreFerme();
             servosService.waitPince();
-
-            ioService.enablePompeAVide();
 
             if (!tentativeAspirationFusee(2)) {
                 log.warn("Impossible d'aspirer le module !");
@@ -186,17 +187,16 @@ public class BrasService {
             servosService.brasAttentePriseFusee();
 
             servosService.entreeMagasinOuvert();
-            sleep(500);
+            sleep(TEMPS_ROULAGE_MODULE);
 
             servosService.entreeMagasinFerme();
             servosService.porteMagasinOuvert();
 
             return true;
-
-        } else {
-            log.info("Aucun module à récupérer");
-            return false;
-        }
+//        } else {
+//            log.info("Aucun module à récupérer");
+//            return false;
+//        }
     }
 
     private boolean tentativeAspirationRobot(int nb) {

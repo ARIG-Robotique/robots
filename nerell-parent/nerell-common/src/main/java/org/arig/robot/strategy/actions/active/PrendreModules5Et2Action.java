@@ -83,13 +83,15 @@ public class PrendreModules5Et2Action extends AbstractAction {
 
             mv.gotoPointMM(500+85*Math.cos(-3*Math.PI/4), 1100+85*Math.sin(-3*Math.PI/4));
 
+            Thread.sleep(500);
+
 //            mv.gotoOrientationDeg(-45);
 
 
-        } catch (RefreshPathFindingException e) {
+        } catch (InterruptedException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
-        } finally {
+        }finally {
             rs.enableAvoidance();
             rs.setModuleRecupere(5);
             rs.setModuleRecupere(2);

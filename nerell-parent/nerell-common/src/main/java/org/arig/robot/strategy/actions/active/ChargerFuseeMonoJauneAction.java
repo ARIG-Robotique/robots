@@ -3,10 +3,13 @@ package org.arig.robot.strategy.actions.active;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.ModuleLunaire;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
+import org.arig.robot.services.BrasService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
@@ -16,13 +19,16 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PrendreModules6Et9Action extends AbstractAction {
+public class ChargerFuseeMonoJauneAction extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
 
     @Autowired
     private RobotStatus rs;
+
+    @Autowired
+    private BrasService brasService;
 
     @Autowired
     private IIOService ioService;
@@ -35,20 +41,12 @@ public class PrendreModules6Et9Action extends AbstractAction {
 
     @Override
     public String name() {
-        return "Récuperation du Module 6 ET du module 9";
+        return "Chargement des modules de la fusée monochrome jaune";
     }
 
     @Override
     public int order() {
-        int val = 200;
-
-        if (Team.BLEU.equals(rs.getTeam())) {
-            val += 1000;
-        } else {
-            val /= 10;
-        }
-
-        return val;
+        return 400;
     }
 
     @Override
@@ -57,10 +55,10 @@ public class PrendreModules6Et9Action extends AbstractAction {
             return false;
         }
 
-        return Team.BLEU == rs.getTeam() &&
-                !rs.isModuleRecupere(6) &&
-                !rs.isModuleRecupere(9) &&
-                (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
+        return Team.JAUNE == rs.getTeam() &&
+                rs.nbModulesMagasin() <= IConstantesNerellConfig.nbModuleMax - 4 &&
+                !ioService.presencePinceCentre() &&
+                !rs.isFuseeMonochromeJauneRecupere();
     }
 
     @Override
@@ -71,29 +69,28 @@ public class PrendreModules6Et9Action extends AbstractAction {
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(6, ModuleLunaire.Type.POLYCHROME));
+            mv.pathTo(1265, 275);
+            mv.gotoOrientationDeg(-170);
 
-            rs.disableAvoidance();
+            for (int i = 0; i < 4; i++) {
+                if (brasService.stockerModuleFusee()) {
+                    rs.addModuleDansMagasin(ModuleLunaire.monochrome());
+                } else {
+                    break;
+                }
+            }
 
-            mv.gotoPointMM(2000, 600, false, true);
+            servosService.homes();
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(9, ModuleLunaire.Type.POLYCHROME));
+            mv.gotoOrientationDeg(90);
 
-            mv.gotoPointMM(2500+85*Math.cos(3*Math.PI/4), 1100+85*Math.sin(3*Math.PI/4));
-
-            Thread.sleep(500);
-
-//            mv.gotoOrientationDeg(-45);
-
-
-        } catch (InterruptedException | RefreshPathFindingException e) {
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
         } finally {
-            rs.enableAvoidance();
-            rs.setModuleRecupere(6);
-            rs.setModuleRecupere(9);
             completed = true;
+            rs.disablePinces();
+            rs.setFuseeMonochromeJauneRecupere(true);
         }
     }
 }

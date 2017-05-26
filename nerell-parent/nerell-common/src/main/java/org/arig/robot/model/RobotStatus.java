@@ -153,7 +153,7 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     }
 
     @Setter(AccessLevel.NONE)
-    private boolean magasinServiceEnable = false;
+    private boolean magasinServiceEnable = true;
 
     public void disableMagasin() {
         magasinServiceEnable = false;

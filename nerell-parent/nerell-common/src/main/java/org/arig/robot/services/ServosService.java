@@ -258,7 +258,7 @@ public class ServosService {
 
     public void brasAttentePriseFusee() {
         if (checkDescenteBras()) {
-            servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_ATTENTE);
+            servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_VERTICAL);
             waitBrasCourt();
             servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_FUSEE);
         } else {

@@ -9,7 +9,6 @@ import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.ModuleLunaire;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
-import org.arig.robot.services.BrasService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
@@ -19,16 +18,13 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ChargerFuseeMonoBleuAction extends AbstractAction {
+public class PrendreModule6Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
 
     @Autowired
     private RobotStatus rs;
-
-    @Autowired
-    private BrasService brasService;
 
     @Autowired
     private IIOService ioService;
@@ -41,12 +37,20 @@ public class ChargerFuseeMonoBleuAction extends AbstractAction {
 
     @Override
     public String name() {
-        return "Chargement des modules de la fusée monochrome bleue";
+        return "Récuperation du Module 6";
     }
 
     @Override
     public int order() {
-        return 400;
+        int val = 100;
+
+        if (Team.BLEU.equals(rs.getTeam())) {
+            val += 1000;
+        } else {
+            val /= 10;
+        }
+
+        return val;
     }
 
     @Override
@@ -55,10 +59,7 @@ public class ChargerFuseeMonoBleuAction extends AbstractAction {
             return false;
         }
 
-        return Team.BLEU == rs.getTeam() &&
-                rs.nbModulesMagasin() <= IConstantesNerellConfig.nbModuleMax - 4 &&
-                !ioService.presencePinceCentre() &&
-                !rs.isFuseeMonochromeBleuRecupere();
+        return Team.BLEU == rs.getTeam() && !rs.isModuleRecupere(6) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
     }
 
     @Override
@@ -69,25 +70,19 @@ public class ChargerFuseeMonoBleuAction extends AbstractAction {
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            mv.pathTo(2000, 250);
-            mv.gotoOrientationDeg(180);
+            rs.setModuleLunaireExpected(new ModuleLunaire(6, ModuleLunaire.Type.POLYCHROME));
 
-            while (ioService.presenceFusee()) {
-                brasService.stockerModuleFusee();
-                rs.addModuleDansMagasin(ModuleLunaire.monochrome());
-            }
+            rs.disableAvoidance();
 
-            servosService.brasPincesFermes();
+            mv.gotoPointMM(2000, 600);
 
-            mv.gotoOrientationDeg(90);
-
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
+        } catch (RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
         } finally {
+            rs.enableAvoidance();
+            rs.setModuleRecupere(6);
             completed = true;
-            rs.disablePinces();
-            rs.setFuseeMonochromeBleuRecupere(true);
         }
     }
 }

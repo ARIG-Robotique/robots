@@ -6,8 +6,10 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
+import org.arig.robot.model.ModuleLunaire;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
+import org.arig.robot.services.BrasService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
@@ -17,13 +19,16 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class CratereBaseLunaireJauneAction extends AbstractAction {
+public class ChargerFuseeMonoBleuAction extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
 
     @Autowired
     private RobotStatus rs;
+
+    @Autowired
+    private BrasService brasService;
 
     @Autowired
     private IIOService ioService;
@@ -36,18 +41,12 @@ public class CratereBaseLunaireJauneAction extends AbstractAction {
 
     @Override
     public String name() {
-        return "Récupération des ressources dans le petit cratère proche de la base lunaire jaune";
+        return "Chargement des modules de la fusée monochrome bleue";
     }
 
     @Override
     public int order() {
-        int val = 100;
-
-        if (Team.BLEU == rs.getTeam()) {
-            val /= 10;
-        }
-
-        return val;
+        return 400;
     }
 
     @Override
@@ -56,48 +55,42 @@ public class CratereBaseLunaireJauneAction extends AbstractAction {
             return false;
         }
 
-        return !rs.isCratereBaseLunaireJauneRecupere() &&
-                !ioService.presenceBallesAspiration() &&
-                rs.isModuleRecupere(3) &&
-                rs.getElapsedTime() < 60000;
+        return Team.BLEU == rs.getTeam() &&
+                rs.nbModulesMagasin() <= IConstantesNerellConfig.nbModuleMax - 4 &&
+                !ioService.presencePinceCentre() &&
+                !rs.isFuseeMonochromeBleuRecupere();
     }
 
     @Override
     public void execute() {
         try {
             rs.enableAvoidance();
+            rs.enablePinces();
+
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            mv.pathTo(730, 1770);
+            mv.pathTo(1965, 275);
+            mv.gotoOrientationDeg(-170);
 
-            servosService.aspirationMax();
+            for (int i = 0; i < 4; i++) {
+                if (brasService.stockerModuleFusee()) {
+                    rs.addModuleDansMagasin(ModuleLunaire.monochrome());
+                } else {
+                    break;
+                }
+            }
 
-            mv.gotoOrientationDeg(-90);
-            mv.reculeMM(20);
+            servosService.homes();
 
-            Thread.sleep(1500);
+            mv.gotoOrientationDeg(90);
 
-            servosService.aspirationCratere();
-
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientationBasse);
-
-            mv.gotoOrientationDeg(-120);
-            mv.gotoOrientationDeg(-90);
-
-            servosService.aspirationFerme();
-            servosService.waitAspiration();
-
-            servosService.aspirationStop();
-
-            mv.avanceMM(30);
-
-        } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
         } finally {
-            rs.setCratereBaseLunaireJauneRecupere(true);
-            rs.setHasPetitesBalles(true);
             completed = true;
+            rs.disablePinces();
+            rs.setFuseeMonochromeBleuRecupere(true);
         }
     }
 }

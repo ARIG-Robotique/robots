@@ -176,8 +176,8 @@ public class Ordonanceur {
             if (robotStatus.getTeam() == Team.JAUNE) {
                 position.setPt(new Point(conv.mmToPulse(320), conv.mmToPulse(772)));
                 trajectoryManager.avanceMM(50);
-                trajectoryManager.gotoPointMM(650, 980, false, false);
-                trajectoryManager.gotoPointMM(1100, 772, false, false);
+                trajectoryManager.gotoPointMM(650, 980);
+                trajectoryManager.gotoPointMM(1100, 772);
                 trajectoryManager.gotoPointMM(890, 300);
                 trajectoryManager.gotoOrientationDeg(90, SensRotation.TRIGO);
                 trajectoryManager.reculeMM(125);
@@ -186,7 +186,7 @@ public class Ordonanceur {
                 position.setPt(new Point(conv.mmToPulse(2680), conv.mmToPulse(772)));
                 trajectoryManager.avanceMM(300);
                 servosService.aspirationFerme();
-                trajectoryManager.gotoPointMM(3000 - 1100, 772, false, false);
+                trajectoryManager.gotoPointMM(3000 - 1100, 772);
                 trajectoryManager.gotoPointMM(3000 - 890, 300);
                 trajectoryManager.gotoOrientationDeg(90, SensRotation.TRIGO);
                 trajectoryManager.reculeMM(125);

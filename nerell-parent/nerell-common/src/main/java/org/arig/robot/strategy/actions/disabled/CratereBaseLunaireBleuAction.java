@@ -6,10 +6,8 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
-import org.arig.robot.model.ModuleLunaire;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
-import org.arig.robot.services.BrasService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
@@ -17,18 +15,17 @@ import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Component
-public class ChargerFuseeMonoJauneAction extends AbstractAction {
+public class CratereBaseLunaireBleuAction extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
 
     @Autowired
     private RobotStatus rs;
-
-    @Autowired
-    private BrasService brasService;
 
     @Autowired
     private IIOService ioService;
@@ -41,12 +38,18 @@ public class ChargerFuseeMonoJauneAction extends AbstractAction {
 
     @Override
     public String name() {
-        return "Chargement des modules de la fusée monochrome jaune";
+        return "Récupération des ressources dans le petit cratère proche de la base lunaire bleue";
     }
 
     @Override
     public int order() {
-        return 400;
+        int val = 100;
+
+        if (Team.JAUNE == rs.getTeam()) {
+            val /= 10;
+        }
+
+        return val;
     }
 
     @Override
@@ -55,39 +58,49 @@ public class ChargerFuseeMonoJauneAction extends AbstractAction {
             return false;
         }
 
-        return Team.JAUNE == rs.getTeam() &&
-                rs.nbModulesMagasin() <= IConstantesNerellConfig.nbModuleMax - 4 &&
-                !ioService.presencePinceCentre() &&
-                !rs.isFuseeMonochromeJauneRecupere();
+        return !rs.isCratereBaseLunaireBleuRecupere() &&
+                !ioService.presenceBallesAspiration() &&
+                rs.isModuleRecupere(8) &&
+                rs.getElapsedTime() < 60000;
     }
 
     @Override
     public void execute() {
         try {
             rs.enableAvoidance();
-            rs.enablePinces();
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+
+            mv.pathTo(3000 - 730, 1770);
+
+            servosService.aspirationMax();
+
+            mv.gotoOrientationDeg(65);
+
+            Thread.sleep(1500);
+
+            servosService.aspirationCratere();
+
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientationBasse);
+
+            mv.gotoOrientationDeg(35);
+            mv.gotoOrientationDeg(65);
+
+            servosService.aspirationFerme();
+            servosService.waitAspiration();
+
+            servosService.aspirationStop();
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            mv.pathTo(1300, 250);
-            mv.gotoOrientationDeg(180);
+            mv.gotoOrientationDeg(-60);
 
-            while (ioService.presenceFusee()) {
-                brasService.stockerModuleFusee();
-                rs.addModuleDansMagasin(ModuleLunaire.monochrome());
-            }
-
-            servosService.brasPincesFermes();
-
-            mv.gotoOrientationDeg(90);
-
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
+        } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
         } finally {
+            rs.setCratereBaseLunaireJauneRecupere(true);
+            rs.setHasPetitesBalles(true);
             completed = true;
-            rs.disablePinces();
-            rs.setFuseeMonochromeJauneRecupere(true);
         }
     }
 }

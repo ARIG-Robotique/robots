@@ -6,10 +6,9 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
-import org.arig.robot.model.ModuleLunaire;
+import org.arig.robot.exceptions.EjectionModuleException;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.model.Team;
-import org.arig.robot.services.IIOService;
+import org.arig.robot.services.EjectionModuleService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PrendreModule9Action extends AbstractAction {
+public class DechargerBase3Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -26,27 +25,19 @@ public class PrendreModule9Action extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private IIOService ioService;
+    private EjectionModuleService ejectionModuleService;
 
     @Getter
     private boolean completed = false;
 
     @Override
     public String name() {
-        return "Récuperation du Module 9";
+        return "Déchargement des modules dans la base 3";
     }
 
     @Override
     public int order() {
-        int val = 100;
-
-        if (Team.BLEU.equals(rs.getTeam())) {
-            val += 500;
-        } else {
-            val /= 10;
-        }
-
-        return val;
+        return Math.max(rs.nbPlacesDansBase(3), rs.nbModulesMagasin()) * 100 - 1;
     }
 
     @Override
@@ -55,35 +46,46 @@ public class PrendreModule9Action extends AbstractAction {
             return false;
         }
 
-        return !rs.isModuleRecupere(9) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
+        return rs.hasModuleDansMagasin();
     }
 
     @Override
     public void execute() {
         try {
             rs.enableAvoidance();
-            rs.enablePinces();
-
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(9, ModuleLunaire.Type.POLYCHROME));
+            mv.pathTo(1200, 1100);
+            mv.gotoOrientationDeg(180);
 
-            if (ioService.presencePinceCentre()) {
-                log.info("Récupération du module 9 dans la pince droite");
-                mv.pathTo(2500 - 180 - 100, 1185);
-            } else {
-                log.info("Récupération du module 9 dans la pince centre");
-                mv.pathTo(2500 - 180 - 100, 1100);
+            mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
+            rs.enableCalageBordure();
+            mv.reculeMMSansAngle(180);
+
+            while (rs.hasNextModule() && rs.canAddModuleDansBase(3)) {
+                ejectionModuleService.ejectionModule();
+                rs.addModuleDansBase(3);
             }
-            mv.gotoOrientationDeg(0);
-            mv.avanceMM(150);
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
+
+        } catch (EjectionModuleException e) {
+            rs.setBaseFull(3);
+
         } finally {
-            completed = true;
-            rs.setModuleRecupere(9);
+            completed = !rs.canAddModuleDansBase(3);
+
+            try {
+                mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+
+                mv.avanceMM(180);
+                mv.gotoOrientationDeg(-90);
+
+            } catch (RefreshPathFindingException e) {
+                log.error(e.getMessage());
+            }
         }
     }
 }

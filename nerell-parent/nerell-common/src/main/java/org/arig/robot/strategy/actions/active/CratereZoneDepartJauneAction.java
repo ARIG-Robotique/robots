@@ -71,6 +71,7 @@ public class CratereZoneDepartJauneAction extends AbstractAction {
             //double x = 650 + (90 + 180) * Math.cos(Math.PI / 3) + 100 * Math.cos(Math.PI / 3 - Math.PI / 2);
             //double y = 540 + (90 + 180) * Math.sin(Math.PI / 3) + 100 * Math.sin(Math.PI / 3 - Math.PI / 2);
 
+            /* version aller-retour
             mv.pathTo(940, 720);
 
             servosService.aspirationMax();
@@ -84,6 +85,27 @@ public class CratereZoneDepartJauneAction extends AbstractAction {
             mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
             mv.avanceMM(350);
             mv.reculeMM(400);
+
+            servosService.aspirationFerme();
+            servosService.waitAspiration();
+
+            servosService.aspirationStop();*/
+
+            // version association
+            mv.pathTo(940, 720);
+
+            servosService.aspirationMax();
+
+            mv.gotoOrientationDeg(70);
+
+            Thread.sleep(1500);
+
+            servosService.aspirationCratere();
+
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientationBasse);
+
+            mv.tourneDeg(40);
+            mv.tourneDeg(-40);
 
             servosService.aspirationFerme();
             servosService.waitAspiration();

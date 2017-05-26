@@ -19,6 +19,9 @@ public class PincesService {
     @Autowired
     private IIOService ioService;
 
+    @Autowired
+    private BrasService brasService;
+
     private boolean enabled = false;
 
     public void enable() {
@@ -38,30 +41,22 @@ public class PincesService {
     }
 
     public void process() {
-        if (ioService.presencePinceDroite() && !servosService.isPinceDroitePriseProduit()) {
-            servosService.pinceDroitePriseProduit();
-
-            if (rs.getModuleLunaireExpected() != null) {
-                rs.setModuleLunaireDroite(rs.getModuleLunaireExpected());
-                /*if (rs.getModuleLunaireExpected().numero() != null) {
-                    rs.setModuleRecupere(rs.getModuleLunaireExpected().numero());
-                }*/
-            } else {
-                rs.setModuleLunaireDroite(ModuleLunaire.polychrome());
+        if (ioService.presencePinceDroite()) {
+            if (servosService.isBrasDepose()) {
+                servosService.pinceCentreOuvert();
+                servosService.pinceDroitePriseProduit();
             }
-            rs.setModuleLunaireExpected(null);
+            else {
+                if (brasService.stockerModuleRobot()) {
+                    rs.addModuleDansMagasin(rs.getModuleLunaireExpected());
+                }
+                rs.setModuleLunaireExpected(null);
+            }
         }
 
-        if (ioService.presencePinceCentre() && !servosService.isBrasPriseRobot()) {
-            servosService.brasPriseRobot();
-
-            if (rs.getModuleLunaireExpected() != null) {
-                rs.setModuleLunaireCentre(rs.getModuleLunaireExpected());
-                /*if (rs.getModuleLunaireExpected().numero() != null) {
-                    rs.setModuleRecupere(rs.getModuleLunaireExpected().numero());
-                }*/
-            } else {
-                rs.setModuleLunaireCentre(ModuleLunaire.polychrome());
+        if (ioService.presencePinceCentre()) {
+            if (brasService.stockerModuleRobot()) {
+                rs.addModuleDansMagasin(rs.getModuleLunaireExpected());
             }
             rs.setModuleLunaireExpected(null);
         }
