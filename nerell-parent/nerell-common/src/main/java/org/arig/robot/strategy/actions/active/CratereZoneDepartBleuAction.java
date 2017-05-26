@@ -67,6 +67,8 @@ public class CratereZoneDepartBleuAction extends AbstractAction {
             rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
+            // version aller-retour
+            /*
             mv.pathTo(2000, 680);
 
             servosService.aspirationMax();
@@ -80,6 +82,28 @@ public class CratereZoneDepartBleuAction extends AbstractAction {
             mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
             mv.reculeMM(300);
             mv.avanceMM(350);
+
+            servosService.aspirationFerme();
+            servosService.waitAspiration();
+
+            servosService.aspirationStop();
+            */
+
+            // version rotation
+            mv.pathTo(2000, 680);
+
+            servosService.aspirationMax();
+
+            mv.gotoOrientationDeg(-150);
+
+            Thread.sleep(1500);
+
+            servosService.aspirationCratere();
+
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientationBasse);
+
+            mv.tourneDeg(40);
+            mv.tourneDeg(-40);
 
             servosService.aspirationFerme();
             servosService.waitAspiration();

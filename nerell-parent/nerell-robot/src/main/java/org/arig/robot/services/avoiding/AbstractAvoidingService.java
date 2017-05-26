@@ -30,7 +30,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
 
     protected static final int SEUIL_DISTANCE_PROX_CAPTEURS_MM = 200;
     protected static final int SEUIL_DISTANCE_PROX_LIDAR_MM = 450;
-    protected static final int SEUIL_DISTANCE_AVOID_LIDAR_MM = 700;
+    protected static final int SEUIL_DISTANCE_AVOID_LIDAR_MM = 600;
 
     @Autowired
     private IMonitoringWrapper monitoringWrapper;

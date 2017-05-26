@@ -91,7 +91,7 @@ public class CratereZoneDepartJauneAction extends AbstractAction {
 
             servosService.aspirationStop();*/
 
-            // version association
+            // version rotation
             mv.pathTo(940, 720);
 
             servosService.aspirationMax();
