@@ -74,13 +74,15 @@ public class DechargerBase4Action extends AbstractAction {
             mv.reculeMM(180);
 
             while (rs.hasModuleDansMagasin() && rs.canAddModuleDansBase(4)) {
-                log.info("Ejection module dans base 4");
                 ejectionModuleService.ejectionModule();
                 rs.addModuleDansBase(4);
                 Thread.sleep(10);
             }
 
-            log.info("has module {} can add module {}", rs.hasModuleDansMagasin(), rs.canAddModuleDansBase(4));
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+
+            mv.avanceMM(180);
+            mv.gotoOrientationDeg(-45);
 
         } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
@@ -91,18 +93,7 @@ public class DechargerBase4Action extends AbstractAction {
 
         } finally {
             completed = !rs.canAddModuleDansBase(4);
-
             rs.enableMagasin();
-
-            try {
-                mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-
-                mv.avanceMM(180);
-                mv.gotoOrientationDeg(-45);
-
-            } catch (RefreshPathFindingException e) {
-                log.error(e.getMessage());
-            }
         }
     }
 }

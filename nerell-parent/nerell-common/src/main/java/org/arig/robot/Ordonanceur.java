@@ -206,7 +206,6 @@ public class Ordonanceur {
 
         log.info("Position initiale avant match des servos");
         servosService.homes();
-        robotStatus.enablePinces();
 
         // Attente tirette.
         log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
@@ -221,7 +220,8 @@ public class Ordonanceur {
 
         // Activation
         robotStatus.enableMatch();
-        robotStatus.enableAvoidance();
+//        robotStatus.enableAvoidance();
+        robotStatus.enablePinces();
 
         // Match de XX secondes.
 //        boolean activateCollecteAdverse = false;

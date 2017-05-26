@@ -79,6 +79,11 @@ public class DechargerBase2Action extends AbstractAction {
                 Thread.sleep(10);
             }
 
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+
+            mv.avanceMM(180);
+            mv.gotoOrientationDeg(-135);
+
         } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
@@ -88,18 +93,7 @@ public class DechargerBase2Action extends AbstractAction {
 
         } finally {
             completed = !rs.canAddModuleDansBase(2);
-
             rs.enableMagasin();
-
-            try {
-                mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-
-                mv.avanceMM(180);
-                mv.gotoOrientationDeg(-135);
-
-            } catch (RefreshPathFindingException e) {
-                log.error(e.getMessage());
-            }
         }
     }
 }

@@ -68,16 +68,16 @@ public class PrendreModules5Et2Action extends AbstractAction {
     @Override
     public void execute() {
         try {
-            rs.enableAvoidance();
+            rs.disableAvoidance();
             rs.enablePinces();
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             rs.addModuleLunaireExpected(new ModuleLunaire(5, ModuleLunaire.Type.POLYCHROME));
 
-            rs.disableAvoidance();
-
             mv.gotoPointMM(1000, 600, false, true);
+
+            rs.enableAvoidance();
 
             rs.addModuleLunaireExpected(new ModuleLunaire(2, ModuleLunaire.Type.POLYCHROME));
 

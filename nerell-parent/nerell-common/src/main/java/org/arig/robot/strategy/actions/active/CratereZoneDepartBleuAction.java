@@ -86,13 +86,13 @@ public class CratereZoneDepartBleuAction extends AbstractAction {
 
             servosService.aspirationStop();
 
+            completed = true;
+            rs.setCratereZoneDepartBleuRecupere(true);
+            rs.setHasPetitesBalles(false);
+
         } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
-        } finally {
-            rs.setCratereZoneDepartBleuRecupere(true);
-            rs.setHasPetitesBalles(false);
-            completed = true;
         }
     }
 }

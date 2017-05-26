@@ -71,7 +71,8 @@ public class PrendreModule10EtTransfertRessourcesAction extends AbstractAction {
             mv.avanceMM(150);
             mv.reculeMM(100);
 
-            // là on a attrappé le module
+            // là on a attrapé le module
+            rs.setModuleRecupere(10);
 
             mv.alignFrontTo(2650, 660);
             mv.gotoPointMM(2650, 660);
@@ -100,13 +101,12 @@ public class PrendreModule10EtTransfertRessourcesAction extends AbstractAction {
             mv.avanceMM(90);
 
             rs.addTransfertElfa();
+            completed = true;
 
         } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
-        } finally {
-            completed = true;
-            rs.setModuleRecupere(10);
+
         }
     }
 }

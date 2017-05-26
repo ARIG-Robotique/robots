@@ -59,6 +59,9 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
         // Pas de bras, pas de chocolat
         if (CollectionUtils.isEmpty(getDetectedPointsMmCapteurs())
                 && CollectionUtils.isEmpty(getDetectedPointsMmLidar())) {
+            if (hasObstacle) {
+                clearOstacles();
+            }
             return;
         }
 
@@ -154,16 +157,20 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
                 // On rafraichit le path
                 trajectoryManager.refreshPathFinding();
             } else if (hasObstacle) {
-                hasObstacle = false;
-                pathFinder.addObstacles();
-
-                synchronized (this.collisionsShape) {
-                    this.collisionsShape.clear();
-                }
-
-                // On rafraichit le path
-                //trajectoryManager.refreshPathFinding();
+                clearOstacles();
             }
         }
+    }
+
+    private void clearOstacles() {
+        hasObstacle = false;
+        pathFinder.addObstacles();
+
+        synchronized (this.collisionsShape) {
+            this.collisionsShape.clear();
+        }
+
+        // On rafraichit le path
+        //trajectoryManager.refreshPathFinding();
     }
 }

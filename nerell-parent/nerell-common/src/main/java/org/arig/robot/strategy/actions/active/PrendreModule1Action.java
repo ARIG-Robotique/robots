@@ -47,7 +47,9 @@ public class PrendreModule1Action extends AbstractAction {
             return false;
         }
 
-        return Team.JAUNE == rs.getTeam() && !rs.isModuleRecupere(1) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
+        return Team.JAUNE == rs.getTeam() &&
+                !rs.isModuleRecupere(1) &&
+                (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
     }
 
     @Override
@@ -71,12 +73,13 @@ public class PrendreModule1Action extends AbstractAction {
             mv.reculeMM(150);
             mv.gotoOrientationDeg(45);
 
+            completed = true;
+            rs.setModuleRecupere(1);
+
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
-        } finally {
-            completed = true;
-            rs.setModuleRecupere(1);
+
         }
     }
 }

@@ -65,12 +65,13 @@ public class PrendreModule10Action extends AbstractAction {
             mv.reculeMM(150);
             mv.gotoOrientationDeg(135);
 
+            completed = true;
+            rs.setModuleRecupere(10);
+
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
-        } finally {
-            completed = true;
-            rs.setModuleRecupere(10);
+
         }
     }
 }

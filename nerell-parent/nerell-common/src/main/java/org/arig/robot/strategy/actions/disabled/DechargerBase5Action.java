@@ -54,6 +54,7 @@ public class DechargerBase5Action extends AbstractAction {
     public void execute() {
         try {
             rs.enableAvoidance();
+            rs.disableMagasin();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             mv.pathTo(2660, 730, false);
@@ -69,6 +70,10 @@ public class DechargerBase5Action extends AbstractAction {
                 rs.addModuleDansBase(5);
             }
 
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+
+            mv.avanceMM(180);
+
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
@@ -78,15 +83,7 @@ public class DechargerBase5Action extends AbstractAction {
 
         } finally {
             completed = !rs.canAddModuleDansBase(5);
-
-            try {
-                mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-
-                mv.avanceMM(180);
-
-            } catch (RefreshPathFindingException e) {
-                log.error(e.getMessage());
-            }
+            rs.enableMagasin();
         }
     }
 }
