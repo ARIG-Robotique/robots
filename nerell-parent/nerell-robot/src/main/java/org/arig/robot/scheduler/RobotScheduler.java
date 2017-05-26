@@ -34,8 +34,6 @@ public class RobotScheduler {
     @Autowired
     private MagasinService magasinService;
 
-
-
     @Scheduled(fixedDelay = 100)
     public void obstacleAvoidanceTask() {
         if (rs.isAvoidanceEnabled()) {
