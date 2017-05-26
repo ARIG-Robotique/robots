@@ -70,7 +70,7 @@ public class PrendreModule6Action extends AbstractAction {
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(6, ModuleLunaire.Type.POLYCHROME));
+            rs.addModuleLunaireExpected(new ModuleLunaire(6, ModuleLunaire.Type.POLYCHROME));
 
             rs.disableAvoidance();
 

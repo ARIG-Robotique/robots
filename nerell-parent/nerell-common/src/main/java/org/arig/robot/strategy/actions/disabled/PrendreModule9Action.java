@@ -66,7 +66,7 @@ public class PrendreModule9Action extends AbstractAction {
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(9, ModuleLunaire.Type.POLYCHROME));
+            rs.addModuleLunaireExpected(new ModuleLunaire(9, ModuleLunaire.Type.POLYCHROME));
 
             if (ioService.presencePinceCentre()) {
                 log.info("Récupération du module 9 dans la pince droite");

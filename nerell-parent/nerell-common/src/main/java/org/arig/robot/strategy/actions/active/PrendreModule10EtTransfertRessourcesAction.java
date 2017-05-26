@@ -64,7 +64,7 @@ public class PrendreModule10EtTransfertRessourcesAction extends AbstractAction {
             rs.enablePinces();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(10, ModuleLunaire.Type.MONOCHROME));
+            rs.addModuleLunaireExpected(new ModuleLunaire(10, ModuleLunaire.Type.MONOCHROME));
 
             mv.pathTo(2800 + 280 * Math.cos(3 * Math.PI / 4), 600 + 280 * Math.sin(3 * Math.PI / 4));
             mv.alignFrontTo(2800, 600);

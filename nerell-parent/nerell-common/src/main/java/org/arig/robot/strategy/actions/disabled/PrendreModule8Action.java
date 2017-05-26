@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +57,7 @@ public class PrendreModule8Action extends AbstractAction {
             rs.enablePinces();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(8, ModuleLunaire.Type.MONOCHROME));
+            rs.addModuleLunaireExpected(new ModuleLunaire(8, ModuleLunaire.Type.MONOCHROME));
 
             mv.pathTo(2300, 1640);
 

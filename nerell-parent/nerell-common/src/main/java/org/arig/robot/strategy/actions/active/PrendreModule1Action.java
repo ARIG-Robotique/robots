@@ -38,13 +38,7 @@ public class PrendreModule1Action extends AbstractAction {
 
     @Override
     public int order() {
-        int val = 100;
-
-        if (Team.JAUNE == rs.getTeam()) {
-            val += 300;
-        }
-
-        return val;
+        return 100;
     }
 
     @Override
@@ -63,7 +57,7 @@ public class PrendreModule1Action extends AbstractAction {
             rs.enablePinces();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(1, ModuleLunaire.Type.MONOCHROME));
+            rs.addModuleLunaireExpected(new ModuleLunaire(1, ModuleLunaire.Type.MONOCHROME));
 
             mv.pathTo(200 + 280 * Math.cos(Math.PI / 4), 600 + 280 * Math.sin(Math.PI / 4));
 

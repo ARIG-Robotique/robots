@@ -80,6 +80,10 @@ public class EjectionModuleService {
             return;
         }
 
+        if (!ioService.presenceRouleaux()) {
+            servosService.devidoirDechargement();
+        }
+
         int remaining = TEMPS_MAX_PRESENCE_ROULEAUX;
         while (!ioService.presenceRouleaux() && remaining > 0) {
             remaining -= 10;
@@ -91,9 +95,8 @@ public class EjectionModuleService {
             return;
         }
 
-        rs.disableMagasin();
-
         if (module.isPolychrome()) {
+            log.info("Rotation de module poly");
 
             ioService.enableLedCapteurCouleur();
             servosService.devidoirLectureCouleur();
@@ -127,12 +130,12 @@ public class EjectionModuleService {
         }
 
         doEject();
-
-        rs.enableMagasin();
     }
 
     private void doEject() throws EjectionModuleException {
         boolean error = false;
+
+        log.info("Vraie ejection");
 
         servosService.devidoirChargement();
 

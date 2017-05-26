@@ -64,7 +64,7 @@ public class DechargerBase5Action extends AbstractAction {
             rs.enableCalageBordure();
             mv.reculeMM(180);
 
-            while (rs.hasNextModule() && rs.canAddModuleDansBase(5)) {
+            while (rs.hasModuleDansMagasin() && rs.canAddModuleDansBase(5)) {
                 ejectionModuleService.ejectionModule();
                 rs.addModuleDansBase(5);
             }

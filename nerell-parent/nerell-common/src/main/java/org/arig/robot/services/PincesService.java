@@ -48,17 +48,15 @@ public class PincesService {
             }
             else {
                 if (brasService.stockerModuleRobot()) {
-                    rs.addModuleDansMagasin(rs.getModuleLunaireExpected());
+                    rs.addModuleDansMagasin(rs.nextModuleLunaireExpected());
                 }
-                rs.setModuleLunaireExpected(null);
             }
         }
 
         if (ioService.presencePinceCentre()) {
             if (brasService.stockerModuleRobot()) {
-                rs.addModuleDansMagasin(rs.getModuleLunaireExpected());
+                rs.addModuleDansMagasin(rs.nextModuleLunaireExpected());
             }
-            rs.setModuleLunaireExpected(null);
         }
     }
 }

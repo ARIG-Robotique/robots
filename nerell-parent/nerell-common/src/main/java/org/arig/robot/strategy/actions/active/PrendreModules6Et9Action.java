@@ -71,13 +71,13 @@ public class PrendreModules6Et9Action extends AbstractAction {
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(6, ModuleLunaire.Type.POLYCHROME));
+            rs.addModuleLunaireExpected(new ModuleLunaire(6, ModuleLunaire.Type.POLYCHROME));
 
             rs.disableAvoidance();
 
             mv.gotoPointMM(2000, 600, false, true);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(9, ModuleLunaire.Type.POLYCHROME));
+            rs.addModuleLunaireExpected(new ModuleLunaire(9, ModuleLunaire.Type.POLYCHROME));
 
             mv.gotoPointMM(2500+85*Math.cos(3*Math.PI/4), 1100+85*Math.sin(3*Math.PI/4));
 

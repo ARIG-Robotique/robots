@@ -2,14 +2,13 @@ package org.arig.robot.model;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.springframework.beans.factory.InitializingBean;
 
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -66,37 +65,73 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     private boolean hasPetitesBalles = false;
 
     // Pinces
-    private ModuleLunaire moduleLunaireExpected;
+    private final List<ModuleLunaire> moduleLunaireExpected = new LinkedList<>();
+
+    public void addModuleLunaireExpected(ModuleLunaire m) {
+        synchronized (moduleLunaireExpected) {
+            moduleLunaireExpected.add(m);
+        }
+    }
+
+    public boolean hasModuleLunaireExpected() {
+        synchronized (moduleLunaireExpected) {
+            return !moduleLunaireExpected.isEmpty();
+        }
+    }
+
+    public ModuleLunaire nextModuleLunaireExpected() {
+        synchronized (moduleLunaireExpected) {
+            ModuleLunaire m = moduleLunaireExpected.get(0);
+            moduleLunaireExpected.remove(0);
+            return m;
+        }
+    }
+
     private ModuleLunaire moduleLunaireDroite;
     private ModuleLunaire moduleLunaireCentre;
 
     // Magasin module lunaire
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    private Deque<ModuleLunaire> magasinModule = new LinkedList<>();
+    private final List<ModuleLunaire> magasinModule = new LinkedList<>();
 
     public void addModuleDansMagasin(ModuleLunaire m) {
-        magasinModule.add(m);
-    }
-
-    public boolean hasNextModule() {
-        return magasinModule.peek() != null;
+        synchronized (magasinModule) {
+            log.info("RS : ajout module magasin");
+            magasinModule.add(m);
+        }
     }
 
     public ModuleLunaire nextModule() {
-        return magasinModule.poll();
+        synchronized (magasinModule) {
+            ModuleLunaire mod = magasinModule.get(0);
+
+            log.info("RS : max extract module {}", mod);
+
+            magasinModule.remove(0);
+
+            return mod;
+        }
     }
 
     public boolean hasModuleDansMagasin() {
-        return CollectionUtils.isNotEmpty(magasinModule);
+        synchronized (magasinModule) {
+            int size = magasinModule.size();
+            log.info("RS : taille magasin {}", size);
+            return size > 0;
+        }
     }
 
     public boolean canAddModuleMagasin() {
-        return magasinModule.size() < IConstantesNerellConfig.nbModuleMax;
+        synchronized (magasinModule) {
+            return magasinModule.size() < IConstantesNerellConfig.nbModuleMax;
+        }
     }
 
     public Integer nbModulesMagasin() {
-        return magasinModule.size();
+        synchronized (magasinModule) {
+            return magasinModule.size();
+        }
     }
 
     // Fusées

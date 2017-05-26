@@ -53,13 +53,14 @@ public class DechargerBase2Action extends AbstractAction {
             return false;
         }
 
-        return rs.hasModuleDansMagasin();
+        return rs.hasModuleDansMagasin() && rs.getElapsedTime() > 45000;
     }
 
     @Override
     public void execute() {
         try {
             rs.enableAvoidance();
+            rs.disableMagasin();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             double x = 1500 + 890 * Math.cos(-3 * Math.PI / 4) + 298 * Math.cos(3 * Math.PI / 4);
@@ -72,12 +73,13 @@ public class DechargerBase2Action extends AbstractAction {
             rs.enableCalageBordure();
             mv.reculeMM(180);
 
-            while (rs.hasNextModule() && rs.canAddModuleDansBase(2)) {
+            while (rs.hasModuleDansMagasin() && rs.canAddModuleDansBase(2)) {
                 ejectionModuleService.ejectionModule();
                 rs.addModuleDansBase(2);
+                Thread.sleep(10);
             }
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
+        } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
 
@@ -86,6 +88,8 @@ public class DechargerBase2Action extends AbstractAction {
 
         } finally {
             completed = !rs.canAddModuleDansBase(2);
+
+            rs.enableMagasin();
 
             try {
                 mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);

@@ -38,7 +38,7 @@ public class PrendreModule7Action extends AbstractAction {
 
     @Override
     public int order() {
-        int val = 100-1;
+        int val = 100+1;
 
         if (Team.JAUNE == rs.getTeam()) {
             val /= 10;
@@ -63,7 +63,7 @@ public class PrendreModule7Action extends AbstractAction {
             rs.enablePinces();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.setModuleLunaireExpected(new ModuleLunaire(7, ModuleLunaire.Type.POLYCHROME));
+            rs.addModuleLunaireExpected(new ModuleLunaire(7, ModuleLunaire.Type.POLYCHROME));
 
             double offsetX = 0, offsetY = 0;
 
