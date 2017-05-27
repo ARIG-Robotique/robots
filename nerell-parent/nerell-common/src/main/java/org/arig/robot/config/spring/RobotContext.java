@@ -9,7 +9,6 @@ import org.arig.robot.filters.ramp.IRampFilter;
 import org.arig.robot.filters.ramp.RampFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
-import org.arig.robot.model.Rectangle;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.TrajectoryManager;
@@ -29,6 +28,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+
+import java.awt.*;
 
 /**
  * @author gdepuille on 23/12/14.
@@ -52,14 +53,14 @@ public class RobotContext {
                 IConstantesNerellConfig.minY, IConstantesNerellConfig.maxY);
 
         // Ajout des zones de départ secondaire
-        t.addDeadZone(new Rectangle(0, 0, 710, 360)); // Jaune
-        t.addDeadZone(new Rectangle(2290, 0, 710, 360)); // Bleu
+        t.addDeadZone(new Rectangle.Double(0, 0, 710, 360)); // Jaune
+        t.addDeadZone(new Rectangle.Double(2290, 0, 710, 360)); // Bleu
 
         // Ajout des fusées
-        t.addDeadZone(new Rectangle(0, 1250, 150, 200)); // Polychrome Jaune
-        t.addDeadZone(new Rectangle(1050, 0, 200, 150)); // Monochrome Jaune
-        t.addDeadZone(new Rectangle(2870, 1250, 150, 200)); // Polychrome Bleu
-        t.addDeadZone(new Rectangle(1750, 0, 200, 150)); // Monochrome Bleu
+        t.addDeadZone(new Rectangle.Double(0, 1250, 150, 200)); // Polychrome Jaune
+        t.addDeadZone(new Rectangle.Double(1050, 0, 200, 150)); // Monochrome Jaune
+        t.addDeadZone(new Rectangle.Double(2870, 1250, 150, 200)); // Polychrome Bleu
+        t.addDeadZone(new Rectangle.Double(1750, 0, 200, 150)); // Monochrome Bleu
 
 
         return t;

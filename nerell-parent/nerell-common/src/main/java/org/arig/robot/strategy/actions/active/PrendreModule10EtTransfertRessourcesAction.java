@@ -105,7 +105,7 @@ public class PrendreModule10EtTransfertRessourcesAction extends AbstractAction {
 
         } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
-            updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
+            updateValidTime();
 
         }
     }

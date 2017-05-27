@@ -90,7 +90,7 @@ public class PrendreModules5Et2Action extends AbstractAction {
 
         } catch (InterruptedException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
-            updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
+            updateValidTime();
         } finally {
             rs.enableAvoidance();
             rs.setModuleRecupere(5);
