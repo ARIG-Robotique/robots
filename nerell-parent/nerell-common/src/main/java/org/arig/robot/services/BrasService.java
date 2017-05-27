@@ -136,7 +136,13 @@ public class BrasService {
         ioService.disablePompeAVide();
         servosService.brasAttentePriseRobot();
 
-        int remaining = TEMPS_ROULAGE_MODULE;
+        double remaining = TEMPS_ROULAGE_MODULE / 2;
+        while (!ioService.presenceEntreeMagasin() && remaining > 0) {
+            sleep(10);
+            remaining -= 10;
+        }
+
+        remaining = TEMPS_ROULAGE_MODULE / 2;
         while (ioService.presenceEntreeMagasin() && remaining > 0) {
             sleep(10);
             remaining -= 10;
@@ -188,7 +194,13 @@ public class BrasService {
         ioService.disablePompeAVide();
         servosService.brasAttentePriseFusee();
 
-        int remaining = TEMPS_ROULAGE_MODULE;
+        double remaining = TEMPS_ROULAGE_MODULE / 2;
+        while (!ioService.presenceEntreeMagasin() && remaining > 0) {
+            sleep(10);
+            remaining -= 10;
+        }
+
+        remaining = TEMPS_ROULAGE_MODULE / 2;
         while (ioService.presenceEntreeMagasin() && remaining > 0) {
             sleep(10);
             remaining -= 10;

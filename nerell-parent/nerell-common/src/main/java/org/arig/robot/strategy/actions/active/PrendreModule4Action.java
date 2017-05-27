@@ -61,7 +61,7 @@ public class PrendreModule4Action extends AbstractAction {
     @Override
     public void execute() {
         try {
-            rs.enableAvoidance();
+            rs.disableAvoidance();
             rs.enablePinces();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
@@ -87,7 +87,6 @@ public class PrendreModule4Action extends AbstractAction {
             Thread.sleep(400);
 
             mv.reculeMM(100);
-            mv.gotoOrientationDeg(-90);
 
             completed = true;
             rs.setModuleRecupere(4);

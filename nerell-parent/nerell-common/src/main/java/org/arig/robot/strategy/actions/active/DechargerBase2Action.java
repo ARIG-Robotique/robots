@@ -55,7 +55,6 @@ public class DechargerBase2Action extends AbstractAction {
 
         return rs.getTeam() == Team.JAUNE &&
                 rs.hasModuleDansMagasin() &&
-                rs.isModuleRecupere(1) &&
                 rs.isModuleRecupere(2) &&
                 rs.isModuleRecupere(4) &&
                 rs.isModuleRecupere(5);
@@ -64,7 +63,7 @@ public class DechargerBase2Action extends AbstractAction {
     @Override
     public void execute() {
         try {
-            rs.enableAvoidance();
+            rs.disableAvoidance();
             rs.disableMagasin();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
@@ -87,7 +86,6 @@ public class DechargerBase2Action extends AbstractAction {
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             mv.avanceMM(180);
-            mv.gotoOrientationDeg(-135);
 
         } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());

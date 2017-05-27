@@ -59,7 +59,6 @@ public class ChargerFuseeMonoJauneAction extends AbstractAction {
                 rs.nbModulesMagasin() <= IConstantesNerellConfig.nbModuleMax - 4 &&
                 !ioService.presencePinceCentre() &&
                 !rs.isFuseeMonochromeJauneRecupere() &&
-                rs.isModuleRecupere(1) &&
                 rs.isModuleRecupere(2) &&
                 rs.isModuleRecupere(4) &&
                 rs.isModuleRecupere(5);

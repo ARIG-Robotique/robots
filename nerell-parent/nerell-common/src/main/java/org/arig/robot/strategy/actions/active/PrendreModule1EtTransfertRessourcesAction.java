@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -6,6 +6,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
+import org.arig.robot.model.ModuleLunaire;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.services.IIOService;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class TransfertRessourcesAction extends AbstractAction {
+public class PrendreModule1EtTransfertRessourcesAction extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -36,12 +37,12 @@ public class TransfertRessourcesAction extends AbstractAction {
 
     @Override
     public String name() {
-        return "Transfert des balles à Elfa";
+        return "Récuperation du Module 1 et transfert des ressources dans Elfa";
     }
 
     @Override
     public int order() {
-        return rs.isHasPetitesBalles() ? 100 : 150;
+        return 1;
     }
 
     @Override
@@ -50,46 +51,40 @@ public class TransfertRessourcesAction extends AbstractAction {
             return false;
         }
 
-        return ioService.presenceBallesAspiration() && (
-                Team.BLEU == rs.getTeam() && rs.isModuleRecupere(10) ||
-                        Team.JAUNE == rs.getTeam() && rs.isModuleRecupere(1) ||
-                        rs.getElapsedTime() > 65000
-        );
+        return Team.JAUNE == rs.getTeam() &&
+                !rs.isModuleRecupere(1) &&
+                !ioService.presencePinceCentre() &&
+                ioService.presenceBallesAspiration();
     }
 
     @Override
     public void execute() {
         try {
             rs.enableAvoidance();
-
+            rs.enablePinces();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            if (Team.JAUNE == rs.getTeam()) {
-                mv.pathTo(320, 690);
-                servosService.aspirationMax();
+            rs.addModuleLunaireExpected(new ModuleLunaire(1, ModuleLunaire.Type.MONOCHROME));
 
-                if (rs.isHasPetitesBalles()) {
-                    mv.gotoOrientationDeg(145);
-                } else {
-                    mv.gotoOrientationDeg(180 - 16);
-                }
+            mv.pathTo(200 + 280 * Math.cos(Math.PI / 4), 600 + 280 * Math.sin(Math.PI / 4));
 
+            mv.alignFrontTo(200, 600);
+
+            mv.avanceMM(150);
+            mv.reculeMM(100);
+
+            // là on a pris le module 1
+            rs.setModuleRecupere(1);
+
+            mv.alignFrontTo(320, 690);
+            mv.gotoPointMM(320, 690);
+
+            servosService.aspirationMax();
+
+            if (rs.isHasPetitesBalles()) {
+                mv.gotoOrientationDeg(145);
             } else {
-                mv.pathTo(2650, 750);
-                mv.gotoOrientationDeg(-90);
-
-                if (rs.isHasPetitesBalles()) {
-                    mv.avanceMM(130);
-
-                    servosService.aspirationMax();
-                    mv.gotoOrientationDeg(-155);
-
-                } else {
-                    mv.avanceMM(90);
-
-                    servosService.aspirationMax();
-                    mv.gotoOrientationDeg(180);
-                }
+                mv.gotoOrientationDeg(180 - 16);
             }
 
             Thread.sleep(1500);
@@ -103,16 +98,14 @@ public class TransfertRessourcesAction extends AbstractAction {
             servosService.aspirationFerme();
             servosService.waitAspiration();
 
-            if (Team.BLEU == rs.getTeam()) {
-                mv.gotoOrientationDeg(90);
-                mv.avanceMM(90);
-            }
-
             rs.addTransfertElfa();
+
+            completed = true;
 
         } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
+
         }
     }
 }

@@ -61,7 +61,7 @@ public class PrendreModule7Action extends AbstractAction {
     @Override
     public void execute() {
         try {
-            rs.enableAvoidance();
+            rs.disableAvoidance();
             rs.enablePinces();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 

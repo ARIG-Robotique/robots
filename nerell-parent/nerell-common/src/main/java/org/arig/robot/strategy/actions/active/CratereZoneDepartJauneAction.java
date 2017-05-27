@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -41,15 +41,7 @@ public class CratereZoneDepartJauneAction extends AbstractAction {
 
     @Override
     public int order() {
-        int val = 150;
-
-        if (Team.JAUNE == rs.getTeam()) {
-            val += 500;
-        } else {
-            val /= 10;
-        }
-
-        return val;
+        return 0;
     }
 
     @Override
@@ -58,7 +50,8 @@ public class CratereZoneDepartJauneAction extends AbstractAction {
             return false;
         }
 
-        return !rs.isCratereZoneDepartJauneRecupere() && !ioService.presenceBallesAspiration();
+        return Team.JAUNE == rs.getTeam() &&
+                !rs.isCratereZoneDepartJauneRecupere() && !ioService.presenceBallesAspiration();
     }
 
     @Override
