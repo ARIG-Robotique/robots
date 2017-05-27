@@ -70,7 +70,7 @@ public class PrendreModule1Action extends AbstractAction {
             }
 
             mv.avanceMM(150);
-            mv.reculeMM(150);
+            mv.reculeMM(100);
             mv.gotoOrientationDeg(45);
 
             completed = true;

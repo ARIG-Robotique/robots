@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ChargerFuseeMonoBleuAction extends AbstractAction {
+public class ChargerFuseeMonoJauneAction extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -41,7 +41,7 @@ public class ChargerFuseeMonoBleuAction extends AbstractAction {
 
     @Override
     public String name() {
-        return "Chargement des modules de la fusée monochrome bleue";
+        return "Chargement des modules de la fusée monochrome jaune";
     }
 
     @Override
@@ -55,22 +55,30 @@ public class ChargerFuseeMonoBleuAction extends AbstractAction {
             return false;
         }
 
-        return Team.BLEU == rs.getTeam() &&
+        return Team.JAUNE == rs.getTeam() &&
                 rs.nbModulesMagasin() <= IConstantesNerellConfig.nbModuleMax - 4 &&
                 !ioService.presencePinceCentre() &&
-                !rs.isFuseeMonochromeBleuRecupere();
+                !rs.isFuseeMonochromeJauneRecupere() &&
+                rs.isModuleRecupere(1) &&
+                rs.isModuleRecupere(2) &&
+                rs.isModuleRecupere(4) &&
+                rs.isModuleRecupere(5);
     }
 
     @Override
     public void execute() {
         try {
             rs.enableAvoidance();
-            rs.enablePinces();
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            mv.pathTo(1965, 275);
-            mv.gotoOrientationDeg(-170);
+            mv.pathTo(1295, 255);
+
+//            rs.disablePinces();
+
+            servosService.brasArracheFusee();
+
+            mv.gotoOrientationDeg(180);
 
             for (int i = 0; i < 4; i++) {
                 if (brasService.stockerModuleFusee()) {
@@ -80,17 +88,16 @@ public class ChargerFuseeMonoBleuAction extends AbstractAction {
                 }
             }
 
-            servosService.homes();
+            servosService.brasAttentePriseRobot();
 
             mv.gotoOrientationDeg(90);
+
+            completed = true;
+            rs.setFuseeMonochromeBleuRecupere(true);
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
-        } finally {
-            completed = true;
-            rs.disablePinces();
-            rs.setFuseeMonochromeBleuRecupere(true);
         }
     }
 }

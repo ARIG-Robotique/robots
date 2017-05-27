@@ -38,7 +38,7 @@ public class PrendreModule4Action extends AbstractAction {
 
     @Override
     public int order() {
-        int val = 100+1;
+        int val = 100-1;
 
         if (Team.BLEU == rs.getTeam()) {
             val/= 10;
@@ -53,7 +53,9 @@ public class PrendreModule4Action extends AbstractAction {
             return false;
         }
 
-        return !rs.isModuleRecupere(4) && (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
+        return Team.JAUNE == rs.getTeam() &&
+                !rs.isModuleRecupere(4) &&
+                (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
     }
 
     @Override

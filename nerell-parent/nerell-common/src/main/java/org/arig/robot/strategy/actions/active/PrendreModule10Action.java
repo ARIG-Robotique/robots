@@ -47,7 +47,7 @@ public class PrendreModule10Action extends AbstractAction {
             return false;
         }
 
-        return Team.BLEU == rs.getTeam() && !rs.isModuleRecupere(10) && !ioService.presencePinceCentre();
+        return Team.BLEU == rs.getTeam() && !rs.isModuleRecupere(10)/* && !ioService.presencePinceCentre()*/;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class PrendreModule10Action extends AbstractAction {
             mv.pathTo(2800 + 280 * Math.cos(3 * Math.PI / 4), 600 + 280 * Math.sin(3 * Math.PI / 4));
             mv.alignFrontTo(2800, 600);
             mv.avanceMM(150);
-            mv.reculeMM(150);
+            mv.reculeMM(100);
             mv.gotoOrientationDeg(135);
 
             completed = true;

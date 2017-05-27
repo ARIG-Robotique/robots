@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ public class DechargerBase3Action extends AbstractAction {
 
     @Override
     public int order() {
-        return Math.max(rs.nbPlacesDansBase(3), rs.nbModulesMagasin()) * 100 - 1;
+        return Math.min(rs.nbPlacesDansBase(3), rs.nbModulesMagasin()) * 100 - 1;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class DechargerBase3Action extends AbstractAction {
             return false;
         }
 
-        return rs.hasModuleDansMagasin();
+        return rs.hasModuleDansMagasin() && (rs.getElapsedTime() > 45000 || rs.nbModulesMagasin() >= 4);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class DechargerBase3Action extends AbstractAction {
             rs.disableMagasin();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            mv.pathTo(1200, 1100);
+            mv.pathTo(1200, 1090);
             mv.gotoOrientationDeg(180);
 
             mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
@@ -66,6 +66,7 @@ public class DechargerBase3Action extends AbstractAction {
             while (rs.hasModuleDansMagasin() && rs.canAddModuleDansBase(3)) {
                 ejectionModuleService.ejectionModule();
                 rs.addModuleDansBase(3);
+                Thread.sleep(10);
             }
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
@@ -73,7 +74,7 @@ public class DechargerBase3Action extends AbstractAction {
             mv.avanceMM(180);
             mv.gotoOrientationDeg(-90);
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
+        } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime(IConstantesNerellConfig.invalidActionTimeSecond);
 

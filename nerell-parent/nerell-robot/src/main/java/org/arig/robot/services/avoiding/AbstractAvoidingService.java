@@ -315,9 +315,9 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
         }
 
         if (cmdRobot.getConsigne().getDistance() > 0) {
-            return dA > -45 && dA < 45;
+            return dA > -60 && dA < 60;
         } else {
-            return Math.abs(dA) < 180 && Math.abs(dA) > 135;
+            return Math.abs(dA) < 180 && Math.abs(dA) > 120;
         }
     }
 }

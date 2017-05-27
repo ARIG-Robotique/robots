@@ -56,7 +56,7 @@ public class TableUtils {
         if (CollectionUtils.isNotEmpty(deadZones)) {
             inDeadZones = deadZones.parallelStream().anyMatch(
                 r -> pt.getX() >= r.getX() && pt.getX() <= r.getX() + r.getW()
-                    && pt.getY() >= r.getY() && pt.getY() <= r.getY() + r.getW()
+                    && pt.getY() >= r.getY() && pt.getY() <= r.getY() + r.getH()
             );
         }
 

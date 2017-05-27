@@ -75,7 +75,7 @@ public class PrendreModules5Et2Action extends AbstractAction {
 
             rs.addModuleLunaireExpected(new ModuleLunaire(5, ModuleLunaire.Type.POLYCHROME));
 
-            mv.gotoPointMM(1000, 600, false, true);
+            mv.gotoPointMM(1000, 600, false, false);
 
             rs.enableAvoidance();
 

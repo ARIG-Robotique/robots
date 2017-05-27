@@ -136,10 +136,12 @@ public class BrasService {
         ioService.disablePompeAVide();
         servosService.brasAttentePriseRobot();
 
-        servosService.entreeMagasinOuvert();
-        sleep(TEMPS_ROULAGE_MODULE);
+        int remaining = TEMPS_ROULAGE_MODULE;
+        while (ioService.presenceEntreeMagasin() && remaining > 0) {
+            sleep(10);
+            remaining -= 10;
+        }
 
-        servosService.entreeMagasinFerme();
         servosService.porteMagasinOuvert();
 
         return true;
@@ -147,52 +149,54 @@ public class BrasService {
 
     public boolean stockerModuleFusee() {
 //        if (ioService.presenceFusee()) {
-            if (!robotStatus.canAddModuleMagasin()) {
-                log.warn("Pas de place dans la magasin");
-                return false;
-            }
+        if (!robotStatus.canAddModuleMagasin()) {
+            log.warn("Pas de place dans la magasin");
+            return false;
+        }
 
-            ioService.enablePompeAVide();
+        ioService.enablePompeAVide();
 
-            servosService.brasPriseFusee();
-            servosService.waitBrasCourt();
+        servosService.brasPriseFusee();
+        servosService.waitBrasCourt();
 
-            servosService.pinceCentreFerme();
-            servosService.waitPince();
+        if (!tentativeAspirationFusee(2)) {
+            log.warn("Impossible d'aspirer le module !");
+            ioService.disablePompeAVide();
+            servosService.brasAttentePriseFusee();
+            return false;
+        }
 
-            if (!tentativeAspirationFusee(2)) {
-                log.warn("Impossible d'aspirer le module !");
-                ioService.disablePompeAVide();
-                servosService.brasAttentePriseFusee();
-                return false;
-            }
+        servosService.brasArracheFusee();
+        servosService.waitBrasCourt();
 
-            servosService.brasDepose();
-            servosService.waitBrasCourt();
+        servosService.brasDeposeFromFusee();
+        servosService.waitBrasLong();
 
-            servosService.porteMagasinFerme();
-            servosService.waitPorteMagasin();
+        servosService.porteMagasinFerme();
+        servosService.waitPorteMagasin();
 
-            if (!ioService.presenceModuleDansBras()) {
-                log.warn("Pas de module dans le bras, pas de chocolat :'(");
-
-                ioService.disablePompeAVide();
-                servosService.brasAttentePriseFusee();
-                servosService.porteMagasinOuvert();
-
-                return false;
-            }
+        if (!ioService.presenceModuleDansBras()) {
+            log.warn("Pas de module dans le bras, pas de chocolat :'(");
 
             ioService.disablePompeAVide();
             servosService.brasAttentePriseFusee();
-
-            servosService.entreeMagasinOuvert();
-            sleep(TEMPS_ROULAGE_MODULE);
-
-            servosService.entreeMagasinFerme();
             servosService.porteMagasinOuvert();
 
-            return true;
+            return false;
+        }
+
+        ioService.disablePompeAVide();
+        servosService.brasAttentePriseFusee();
+
+        int remaining = TEMPS_ROULAGE_MODULE;
+        while (ioService.presenceEntreeMagasin() && remaining > 0) {
+            sleep(10);
+            remaining -= 10;
+        }
+
+        servosService.porteMagasinOuvert();
+
+        return true;
 //        } else {
 //            log.info("Aucun module à récupérer");
 //            return false;

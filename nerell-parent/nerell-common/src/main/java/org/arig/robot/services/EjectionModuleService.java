@@ -148,7 +148,7 @@ public class EjectionModuleService {
         }
 
         if (remaining == 0) {
-            log.warn("Injection de module impossible");
+            log.warn("Ejection de module impossible");
             error = true;
         }
 
@@ -156,7 +156,8 @@ public class EjectionModuleService {
         while (ioService.finCourseGlissiereDroite()) {
             waitTimeMs(1);
         }
-        servosService.stopGlissiere();
+
+        init();
 
         if (error) {
             throw new EjectionModuleException();

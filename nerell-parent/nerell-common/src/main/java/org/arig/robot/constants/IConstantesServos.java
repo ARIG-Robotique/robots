@@ -17,8 +17,8 @@ public interface IConstantesServos {
     // Tempo servos
     long WAIT_PINCE = 400;
     long WAIT_INC_BRAS_COURT = 200;
-    long WAIT_INC_BRAS_LONG = 800;
-    long WAIT_ROT_VENTOUSE = 400;
+    long WAIT_INC_BRAS_LONG = 700;
+    long WAIT_ROT_VENTOUSE = 150;
     long WAIT_PORTE_MAG = 600;
     long WAIT_BLOCAGE_MAG = 200;
     long WAIT_DEVIDOIR = 400;
@@ -59,6 +59,7 @@ public interface IConstantesServos {
     int ROTATION_VENTOUSE_DEPOSE_MAGASIN = 1390;
 
     int INCLINAISON_BRAS_DEPOSE = 2350;
+    int INCLINAISON_BRAS_ARRACHE_FUSEE = 1250;
     int INCLINAISON_BRAS_PRISE_ROBOT = 1150;
     int INCLINAISON_BRAS_ATTENTE = 1010;
     int INCLINAISON_BRAS_VERTICAL = 750;

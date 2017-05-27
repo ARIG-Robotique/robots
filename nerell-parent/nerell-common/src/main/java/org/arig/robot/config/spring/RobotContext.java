@@ -56,10 +56,10 @@ public class RobotContext {
         t.addDeadZone(new Rectangle(2290, 0, 710, 360)); // Bleu
 
         // Ajout des fusées
-        t.addDeadZone(new Rectangle(0, 1270, 120,160)); // Polychrome Jaune
-        t.addDeadZone(new Rectangle(1070, 0, 160, 120)); // Monochrome Jaune
-        t.addDeadZone(new Rectangle(2880, 1270, 120, 160)); // Polychrome Bleu
-        t.addDeadZone(new Rectangle(1770, 0, 160, 120)); // Monochrome Bleu
+        t.addDeadZone(new Rectangle(0, 1250, 150, 200)); // Polychrome Jaune
+        t.addDeadZone(new Rectangle(1050, 0, 200, 150)); // Monochrome Jaune
+        t.addDeadZone(new Rectangle(2870, 1250, 150, 200)); // Polychrome Bleu
+        t.addDeadZone(new Rectangle(1750, 0, 200, 150)); // Monochrome Bleu
 
 
         return t;
@@ -79,16 +79,24 @@ public class RobotContext {
     }
 
     @Bean
-    public IAsservissementPolaire asservissement() { return new AsservissementPolaire(); }
+    public IAsservissementPolaire asservissement() {
+        return new AsservissementPolaire();
+    }
 
     @Bean
-    public IOdometrie odometrie() { return new OdometrieLineaire(); }
+    public IOdometrie odometrie() {
+        return new OdometrieLineaire();
+    }
 
     @Bean
-    public CommandeRobot cmdRobot() { return new CommandeRobot(); }
+    public CommandeRobot cmdRobot() {
+        return new CommandeRobot();
+    }
 
     @Bean(name = "currentPosition")
-    public Position currentPosition() { return new Position(); }
+    public Position currentPosition() {
+        return new Position();
+    }
 
     @Bean(name = "pidDistance")
     public IPidFilter pidDistance() {
@@ -163,8 +171,12 @@ public class RobotContext {
     }
 
     @Bean
-    public RobotStatus robotStatus() { return new RobotStatus(); }
+    public RobotStatus robotStatus() {
+        return new RobotStatus();
+    }
 
     @Bean
-    public Ordonanceur ordonanceur() { return Ordonanceur.getInstance(); }
+    public Ordonanceur ordonanceur() {
+        return Ordonanceur.getInstance();
+    }
 }

@@ -53,7 +53,12 @@ public class DechargerBase2Action extends AbstractAction {
             return false;
         }
 
-        return rs.hasModuleDansMagasin() && rs.getElapsedTime() > 45000;
+        return rs.getTeam() == Team.JAUNE &&
+                rs.hasModuleDansMagasin() &&
+                rs.isModuleRecupere(1) &&
+                rs.isModuleRecupere(2) &&
+                rs.isModuleRecupere(4) &&
+                rs.isModuleRecupere(5);
     }
 
     @Override

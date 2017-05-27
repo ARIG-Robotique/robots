@@ -1,6 +1,7 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.exception.ServoException;
 import org.arig.robot.model.RobotStatus;
@@ -98,6 +99,10 @@ public class ServosService {
         servos.waitTime(IConstantesServos.WAIT_INC_ASPI);
     }
 
+    public void waitVentouse() {
+        servos.waitTime(IConstantesServos.WAIT_ROT_VENTOUSE);
+    }
+
     //*******************************************//
     //* Lecture des positions                   *//
     //*******************************************//
@@ -135,6 +140,10 @@ public class ServosService {
 
     public boolean isBrasPriseFusee() {
         return servos.getPosition(IConstantesServos.INCLINAISON_BRAS) == IConstantesServos.INCLINAISON_BRAS_PRISE_FUSEE;
+    }
+
+    public boolean isBrasArracheFusee() {
+        return servos.getPosition(IConstantesServos.INCLINAISON_BRAS) == IConstantesServos.INCLINAISON_BRAS_ARRACHE_FUSEE;
     }
 
     public boolean isBrasAttente() {
@@ -266,6 +275,15 @@ public class ServosService {
         }
     }
 
+    public void brasArracheFusee() {
+        if (checkDescenteBras()) {
+            servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_ARRACHE_FUSEE);
+            servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_PRISE_FUSEE);
+        } else {
+            throw new ServoException("bras");
+        }
+    }
+
     public void brasAttenteDepose() {
         if (checkDescenteBras()) {
             servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_DEPOSE_MAGASIN);
@@ -278,11 +296,22 @@ public class ServosService {
     public void brasDepose() {
         if (!isPinceDroiteFerme() && (
                 isBrasDepose() ||
+                        isBrasArracheFusee() ||
                         isPinceCentreFerme() ||
                         isPinceCentreOuvertDansDroit() ||
                         isPinceCentreOuvert() && (!ioService.presenceModuleDansBras() || isVentouseDepose())
         )) {
             servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_DEPOSE_MAGASIN);
+            servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_DEPOSE);
+        } else {
+            throw new ServoException("bras");
+        }
+    }
+
+    public void brasDeposeFromFusee() {
+        if (isBrasArracheFusee()) {
+            servos.setPosition(IConstantesServos.ROTATION_VENTOUSE, IConstantesServos.ROTATION_VENTOUSE_DEPOSE_MAGASIN);
+            waitVentouse();
             servos.setPosition(IConstantesServos.INCLINAISON_BRAS, IConstantesServos.INCLINAISON_BRAS_DEPOSE);
         } else {
             throw new ServoException("bras");
@@ -357,13 +386,13 @@ public class ServosService {
         servos.setPosition(IConstantesServos.PORTE_MAGASIN_DROIT, IConstantesServos.PORTE_DROITE_OUVERT);
     }
 
-    public void entreeMagasinOuvert() {
+    /*public void entreeMagasinOuvert() {
         servos.setPosition(IConstantesServos.BLOCAGE_ENTREE_MAG, IConstantesServos.BLOCAGE_OUVERT);
     }
 
     public void entreeMagasinFerme() {
         servos.setPosition(IConstantesServos.BLOCAGE_ENTREE_MAG, IConstantesServos.BLOCAGE_FERME);
-    }
+    }*/
 
     public void devidoirChargement() {
         servos.setPosition(IConstantesServos.DEVIDOIR, IConstantesServos.DEVIDOIR_CHARGEMENT);

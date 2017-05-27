@@ -38,7 +38,7 @@ public class PrendreModule7Action extends AbstractAction {
 
     @Override
     public int order() {
-        int val = 100+1;
+        int val = 100 - 1;
 
         if (Team.JAUNE == rs.getTeam()) {
             val /= 10;
@@ -53,7 +53,8 @@ public class PrendreModule7Action extends AbstractAction {
             return false;
         }
 
-        return !rs.isModuleRecupere(7) &&
+        return Team.BLEU == rs.getTeam() &&
+                !rs.isModuleRecupere(7) &&
                 (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
     }
 
@@ -69,8 +70,8 @@ public class PrendreModule7Action extends AbstractAction {
             double offsetX = 0, offsetY = 0;
 
             if (ioService.presencePinceCentre()) {
-                offsetX = 85 * Math.cos(-3 * Math.PI / 4);
-                offsetY = 85 * Math.sin(-3 * Math.PI / 4);
+                offsetX = 80 * Math.cos(-3 * Math.PI / 4);
+                offsetY = 80 * Math.sin(-3 * Math.PI / 4);
             }
 
             mv.pathTo(
@@ -79,8 +80,8 @@ public class PrendreModule7Action extends AbstractAction {
             );
             mv.alignFrontTo(2100 + offsetX, 1400 + offsetY);
             mv.gotoPointMM(
-                    2100 - 140 * Math.cos(3 * Math.PI / 4) + offsetX,
-                    1400 - 140 * Math.sin(3 * Math.PI / 4) + offsetY
+                    2100 + 140 * Math.cos(-Math.PI / 4) + offsetX,
+                    1400 + 140 * Math.sin(-Math.PI / 4) + offsetY
             );
 
             Thread.sleep(400);
