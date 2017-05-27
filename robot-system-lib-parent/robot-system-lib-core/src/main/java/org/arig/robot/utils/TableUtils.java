@@ -3,10 +3,11 @@ package org.arig.robot.utils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
-import org.arig.robot.model.Rectangle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class TableUtils {
     private Position position;
 
     private final int minXmm, maxXmm, minYmm, maxYmm;
-    private List<Rectangle> deadZones = new ArrayList<>();
+    private List<Rectangle.Double> deadZones = new ArrayList<>();
 
     public TableUtils(int minXmm, int maxXmm, int minYmm, int maxYmm) {
         this.minXmm = minXmm;
@@ -36,7 +37,7 @@ public class TableUtils {
         deadZones.clear();
     }
 
-    public void addDeadZone(Rectangle r) {
+    public void addDeadZone(Rectangle.Double r) {
         if (r != null) {
             deadZones.add(r);
         }
@@ -55,8 +56,7 @@ public class TableUtils {
         boolean inDeadZones = false;
         if (CollectionUtils.isNotEmpty(deadZones)) {
             inDeadZones = deadZones.parallelStream().anyMatch(
-                r -> pt.getX() >= r.getX() && pt.getX() <= r.getX() + r.getW()
-                    && pt.getY() >= r.getY() && pt.getY() <= r.getY() + r.getH()
+                r -> r.contains(new Point2D.Double(pt.getX(), pt.getY()))
             );
         }
 
