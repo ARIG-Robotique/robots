@@ -1,65 +1,59 @@
 package org.arig.robot.system.motion;
 
-import lombok.Setter;
-import org.arig.robot.csv.CsvCollector;
-import org.arig.robot.csv.CsvData;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.IRampFilter;
+import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.enums.TypeConsigne;
+import org.arig.robot.model.monitor.MonitorTimeSerie;
+import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
-import org.arig.robot.vo.CommandeRobot;
-import org.arig.robot.vo.enums.TypeConsigne;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * The Class AsservissementPolaire.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 public class AsservissementPolaire implements IAsservissementPolaire {
 
-    @Autowired(required = false)
-    private CsvCollector csvCollector;
+    @Autowired
+    private IMonitoringWrapper monitoringWrapper;
 
-    /** The commande robot. */
     @Autowired
     private CommandeRobot cmdRobot;
 
-    /** The encoders. */
     @Autowired
     private Abstract2WheelsEncoders encoders;
 
-    /** The pid distance. */
     @Autowired
     @Qualifier("pidDistance")
     private IPidFilter pidDistance;
 
-    /** The pid orientation. */
     @Autowired
     @Qualifier("pidOrientation")
     private IPidFilter pidOrientation;
 
-    /** The filter distance. */
+    @Autowired
+    @Qualifier("pidMoteurDroit")
+    private IPidFilter pidMoteurDroit;
+
+    @Autowired
+    @Qualifier("pidMoteurGauche")
+    private IPidFilter pidMoteurGauche;
+
     @Autowired
     @Qualifier("rampDistance")
     private IRampFilter rampDistance;
 
-    /** The filter orientation. */
     @Autowired
     @Qualifier("rampOrientation")
     private IRampFilter rampOrientation;
 
-    /** The set point distance. */
-    private double setPointDistance;
-
-    /** The set point orientation. */
-    private double setPointOrientation;
-
-    /** The output distance. */
     private double outputDistance;
-
-    /** The output orientation. */
     private double outputOrientation;
+    private double vitesseDistance;
+    private double vitesseOrientation;
 
     /**
      * Instantiates a new asservissement polaire.
@@ -68,25 +62,17 @@ public class AsservissementPolaire implements IAsservissementPolaire {
         super();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.motion.IAsservissement#reset()
-     */
     @Override
     public void reset() {
         reset(false);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.motion.IAsservissement#reset(boolean)
-     */
     @Override
     public void reset(final boolean resetFilters) {
         pidDistance.reset();
         pidOrientation.reset();
+        pidMoteurDroit.reset();
+        pidMoteurGauche.reset();
 
         if (resetFilters) {
             rampDistance.reset();
@@ -94,49 +80,46 @@ public class AsservissementPolaire implements IAsservissementPolaire {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.motion.IAsservissement#process()
-     */
     @Override
     public void process() {
         // Application du filtre pour la génération du profil trapézoidale et définition des consignes
         // de distance pour le mode DIST ou XY
         if (cmdRobot.isType(TypeConsigne.DIST) || cmdRobot.isType(TypeConsigne.XY)) {
-            setPointDistance = rampDistance.filter(cmdRobot.getVitesse().getDistance(), cmdRobot.getConsigne().getDistance(), encoders.getDistance(), cmdRobot.isFrein());
-            outputDistance = pidDistance.compute(setPointDistance, encoders.getDistance());
+            vitesseDistance = rampDistance.filter(cmdRobot.getVitesse().getDistance(), cmdRobot.getConsigne().getDistance(), cmdRobot.isFrein());
+            //outputDistance = pidDistance.compute(vitesseDistance, encoders.getDistance());
         } else {
-            outputDistance = 0;
+            outputDistance = vitesseDistance = 0;
         }
-        // Toujours le frein pour l'orientation
+        // Génération consigne pour l'orientation
         if (cmdRobot.isType(TypeConsigne.ANGLE) || cmdRobot.isType(TypeConsigne.XY)) {
-            setPointOrientation = rampOrientation.filter(cmdRobot.getVitesse().getOrientation(), cmdRobot.getConsigne().getOrientation(), encoders.getOrientation(), true);
-            outputOrientation = pidOrientation.compute(setPointOrientation, encoders.getOrientation());
+            vitesseOrientation = rampOrientation.filter(cmdRobot.getVitesse().getOrientation(), cmdRobot.getConsigne().getOrientation(), true);
+            //outputOrientation = pidOrientation.compute(vitesseOrientation, encoders.getOrientation());
         } else {
-            outputOrientation = 0;
+            outputOrientation = vitesseOrientation = 0;
         }
 
         // Consigne moteurs
-        cmdRobot.getMoteur().setDroit((int) (outputDistance + outputOrientation));
-        cmdRobot.getMoteur().setGauche((int) (outputDistance - outputOrientation));
+        double cmdMotDroit = pidMoteurDroit.compute(vitesseDistance + vitesseOrientation, encoders.getDroit());
+        double cmdMotGauche = pidMoteurGauche.compute(vitesseDistance - vitesseOrientation, encoders.getGauche());
+        //double cmdMotDroit = outputDistance + outputOrientation;
+        //double cmdMotGauche = outputDistance - outputOrientation;
+        cmdRobot.getMoteur().setDroit((int) cmdMotDroit);
+        cmdRobot.getMoteur().setGauche((int) cmdMotGauche);
 
-        if (csvCollector != null) {
-            CsvData c = csvCollector.getCurrent();
-            c.setSetPointDistance(pidDistance.getSetPoint());
-            c.setInputDistance(pidDistance.getInput());
-            c.setErreurDistance(pidDistance.getError());
-            c.setSumErreurDistance(pidDistance.getErrorSum());
-            c.setOutputPidDistance(pidDistance.getOutput());
+        sendMonitoring();
+    }
 
-            c.setSetPointOrient(pidOrientation.getSetPoint());
-            c.setInputOrient(pidOrientation.getInput());
-            c.setErreurOrient(pidOrientation.getError());
-            c.setSumErreurOrient(pidOrientation.getErrorSum());
-            c.setOutputPidOrient(pidOrientation.getOutput());
+    private void sendMonitoring() {
+        // Construction du monitoring
+        MonitorTimeSerie serie = new MonitorTimeSerie()
+                .tableName("asserv_polaire")
+                .addField("outputDistance", outputDistance)
+                .addField("outputOrientation", outputOrientation)
+                .addField("vitesseDistance", vitesseDistance)
+                .addField("vitesseOrientation", vitesseOrientation)
+                .addField("cmdMotD", cmdRobot.getMoteur().getDroit())
+                .addField("cmdMotG", cmdRobot.getMoteur().getGauche());
 
-            c.setCmdMoteurGauche(cmdRobot.getMoteur().getGauche());
-            c.setCmdMoteurDroit(cmdRobot.getMoteur().getDroit());
-        }
+        monitoringWrapper.addTimeSeriePoint(serie);
     }
 }

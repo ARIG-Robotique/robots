@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by mythril on 21/12/13.
+ * @author gdepuille on 21/12/13.
  */
 public class Raspi2007NoMux extends Abstract2007NoMux<Pin> {
 

@@ -1,73 +1,49 @@
 package org.arig.test.robot.system.pathfinding;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.Chemin;
+import org.arig.robot.model.Point;
 import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
-import org.arig.robot.vo.Chemin;
-import org.arig.robot.vo.Point;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
+import java.awt.geom.Rectangle2D;
 
 /**
- * Created by mythril on 30/12/13.
+ * @author gdepuille on 30/12/13.
  */
 @Slf4j
-@RunWith(BlockJUnit4ClassRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = { PathFindingTestContext.class })
 public class MultiPathFinderTest {
 
-    private static MultiPathFinderImpl pf;
+    @Autowired
+    @Qualifier("multiPathLabyrinthe")
+    private MultiPathFinderImpl pf;
 
-    private static File dir;
-
-    private Point from;
-    private Point to;
-
-    @BeforeClass
-    public static void initClass() {
-        pf = new MultiPathFinderImpl();
-        pf.setNbTileX(40);
-        pf.setNbTileY(40);
-        pf.setAllowDiagonal(true);
-
-        String tmpDir = System.getProperty("java.io.tmpdir");
-        dir = new File(tmpDir + "/arig/robot/path");
-        if (dir.exists()) {
-            dir.delete();
-        }
-        dir.mkdirs();
-        pf.setPathDir(dir);
-    }
-
-    @Before
-    public void beforeTest() {
-        URL url = getClass().getResource("/assets/labyrinthe.png");
-        pf.construitGraphDepuisImageNoirEtBlanc(new File(url.getPath()));
-
-        from = new Point(25, 25);
-        to = new Point(365, 305);
-    }
+    private Point from = new Point(25, 25);
+    private Point to = new Point(365, 305);
 
     @Test
+    @SneakyThrows
     public void testStartNodeDoesntExist() {
         pf.setAlgorithm(PathFinderAlgorithm.A_STAR_EUCLIDIAN);
-        try {
-            pf.findPath(new Point(5, 5), to);
-            Assert.fail();
-        } catch (NoPathFoundException npfe) {
-            Assert.assertEquals(NoPathFoundException.ErrorType.START_NODE_DOES_NOT_EXIST, npfe.getErrorType());
-        }
+        Chemin c = pf.findPath(new Point(5, 5), to);
+        Assert.assertNotNull(c);
+        Assert.assertTrue(c.hasNext());
     }
 
     @Test
+    @SneakyThrows
     public void testEndNodeDoesntExist() {
         pf.setAlgorithm(PathFinderAlgorithm.A_STAR_EUCLIDIAN);
         try {
@@ -79,42 +55,64 @@ public class MultiPathFinderTest {
     }
 
     @Test
-    public void testFindPathAStarManhattan() throws IOException, NoPathFoundException  {
+    @SneakyThrows
+    public void testFindPathAStarManhattan() {
         pf.setAlgorithm(PathFinderAlgorithm.A_STAR_MANHATTAN);
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
-        Assert.assertTrue(c.hasNext());
+        Assert.assertEquals(20, c.nbPoints());
     }
 
     @Test
-    public void testFindPathAStarEuclidian() throws IOException, NoPathFoundException {
+    @SneakyThrows
+    public void testFindPathAStarEuclidian() {
         pf.setAlgorithm(PathFinderAlgorithm.A_STAR_EUCLIDIAN);
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
-        Assert.assertTrue(c.hasNext());
+        Assert.assertEquals(22, c.nbPoints());
     }
 
     @Test
-    public void testFindPathDijkstra() throws IOException, NoPathFoundException {
+    @SneakyThrows
+    public void testFindPathDijkstra() {
         pf.setAlgorithm(PathFinderAlgorithm.DIJKSTRA);
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
-        Assert.assertTrue(c.hasNext());
+        Assert.assertEquals(19, c.nbPoints());
     }
 
     @Test
-    public void testFindPathBreadthFirstSearch() throws IOException, NoPathFoundException {
+    @SneakyThrows
+    public void testFindPathBreadthFirstSearch() {
         pf.setAlgorithm(PathFinderAlgorithm.BREADTH_FIRST_SEARCH);
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
-        Assert.assertTrue(c.hasNext());
+        Assert.assertEquals(21, c.nbPoints());
     }
 
     @Test
-    public void testFindPathDepthFirstSearch() throws IOException, NoPathFoundException {
+    @SneakyThrows
+    public void testFindPathDepthFirstSearch() {
         pf.setAlgorithm(PathFinderAlgorithm.DEPTH_FIRST_SEARCH);
         Chemin c = pf.findPath(from, to);
         Assert.assertNotNull(c);
-        Assert.assertTrue(c.hasNext());
+        Assert.assertEquals(35, c.nbPoints());
+    }
+
+    @Test
+    @SneakyThrows
+    @DirtiesContext
+    public void testFindPathDijkstraAvecObstacle () {
+        pf.setAlgorithm(PathFinderAlgorithm.DIJKSTRA);
+        Chemin cheminSansObstacles = pf.findPath(from, to);
+        Assert.assertNotNull(cheminSansObstacles);
+        Assert.assertTrue(cheminSansObstacles.hasNext());
+
+        pf.addObstacles(new Rectangle2D.Double(100, 100, 200, 100));
+        Chemin cheminAvecObstacles = pf.findPath(from, to);
+        Assert.assertNotNull(cheminAvecObstacles);
+        Assert.assertTrue(cheminAvecObstacles.hasNext());
+
+        Assert.assertNotEquals(cheminSansObstacles.nbPoints(), cheminAvecObstacles.nbPoints());
     }
 }

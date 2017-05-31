@@ -1,34 +1,29 @@
 package org.arig.robot.system.motion;
 
+import org.arig.robot.model.enums.TypeOdometrie;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.vo.enums.TypeOdometrie;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The Class Odometrie.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 public class OdometrieLineaire extends AbstractOdometrie {
 
-    /** The encoders. */
     @Autowired
     private Abstract2WheelsEncoders encoders;
 
-    /** The conv. */
     @Autowired
     private ConvertionRobotUnit conv;
 
-    /**
-     * Instantiates a new linear odometrie.
-     */
     public OdometrieLineaire() {
         super(TypeOdometrie.LINEAIRE);
     }
 
     /**
-     * Ce calcul est effectué avec le postulat que durant le labs de temps écoulé le robot a roulé droit (pas en
+     * Ce calcul est effectué avec le postulat que durant le laps de temps ecoulé le robot a roulé droit (pas en
      * courbe). On parle donc d'approximation linéaire.
      */
     @Override

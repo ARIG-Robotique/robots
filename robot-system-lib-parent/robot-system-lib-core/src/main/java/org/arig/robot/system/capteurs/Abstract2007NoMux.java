@@ -13,16 +13,14 @@ import java.util.Map;
 
 /**
  * The Class AbstractBoard2007NoMux.
- * 
- * @param <P>
- *            the generic type
- * 
- * @author mythril
+ *
+ * @param <P> the generic type
+ *
+ * @author gdepuille
  */
 @Slf4j
-public abstract class Abstract2007NoMux<P> implements IDigitalInputCapteurs<P> {
+public abstract class Abstract2007NoMux<P> implements IDigitalInputSensor<P> {
 
-    /** The Constant NB_CAPTEUR. */
     protected static final int NB_CAPTEUR = 23;
 
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -75,58 +73,22 @@ public abstract class Abstract2007NoMux<P> implements IDigitalInputCapteurs<P> {
         return null;
     };
 
-    /** The capteur pins. */
     protected final Map<Integer, P> capteurPins = new HashMap<>();
-
-    /** The capteur reverse. */
     protected final Map<Integer, Boolean> capteurReverse = new HashMap<>();
 
-    /**
-     * Instantiates a new board2007 no mux.
-     */
     public Abstract2007NoMux() {
     }
 
-    /**
-     * Sets the pin for capteur.
-     * 
-     * @param capteurId
-     *            the capteur id
-     * @param pin
-     *            the pin
-     */
     @Override
     public void setInputPinForCapteur(final int capteurId, final P pin) {
         setInputPinForCapteur(capteurId, pin, false, false);
     }
 
-    /**
-     * Sets the pin for capteur.
-     * 
-     * @param capteurId
-     *            the capteur id
-     * @param pin
-     *            the pin
-     * @param reverse
-     *            the reverse
-     */
     @Override
     public void setInputPinForCapteur(final int capteurId, final P pin, final boolean reverse) {
         setInputPinForCapteur(capteurId, pin, reverse, false);
     }
 
-    /**
-     * Sets the pin for capteur.
-     * 
-     * @param capteurId
-     *            the capteur id
-     * @param pin
-     *            the pin
-     * @param reverse
-     *            the reverse
-     * @param pullUp
-     *            the pull up
-     */
     @Override
     public void setInputPinForCapteur(final int capteurId, final P pin, final boolean reverse, final boolean pullUp) {
         if (check(capteurId)) {
@@ -138,11 +100,6 @@ public abstract class Abstract2007NoMux<P> implements IDigitalInputCapteurs<P> {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.arig.robot.system.capteurs.ICapteurs#readCapteurValue(int)
-     */
     @Override
     public boolean readCapteurValue(final int capteurId) {
         if (check(capteurId) && capteurPins.containsKey(capteurId)) {
@@ -170,11 +127,9 @@ public abstract class Abstract2007NoMux<P> implements IDigitalInputCapteurs<P> {
 
     /**
      * Register capteur.
-     * 
-     * @param pin
-     *            the pin
-     * @param pullUp
-     *            the pull up
+     *
+     * @param pin    the pin
+     * @param pullUp the pull up
      */
     protected abstract void registerInputCapteur(final int capteurId, final P pin, final boolean pullUp);
 
@@ -190,9 +145,9 @@ public abstract class Abstract2007NoMux<P> implements IDigitalInputCapteurs<P> {
     /**
      * Check. Contrôle que l'ID du capteur est bien dans les bornes pour eviter une erreur de lecture du tableau des
      * pins des capteurs
-     * 
-     * @param capteurId
-     *            the capteur id
+     *
+     * @param capteurId the capteur id
+     *
      * @return true, if successful
      */
     protected boolean check(final int capteurId) {

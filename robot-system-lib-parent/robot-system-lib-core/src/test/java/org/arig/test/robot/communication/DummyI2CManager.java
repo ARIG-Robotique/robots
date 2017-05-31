@@ -5,7 +5,7 @@ import org.arig.robot.communication.AbstractI2CManager;
 import org.arig.robot.exception.I2CException;
 
 /**
- * Created by gdepuille on 15/03/15.
+ * @author gdepuille on 15/03/15.
  */
 @Slf4j
 public class DummyI2CManager extends AbstractI2CManager<Byte> {

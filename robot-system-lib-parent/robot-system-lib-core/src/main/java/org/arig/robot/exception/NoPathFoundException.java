@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Created by mythril on 01/01/14.
+ * @author gdepuille on 01/01/14.
  */
 public class NoPathFoundException extends Exception {
 

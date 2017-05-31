@@ -1,58 +1,54 @@
 package org.arig.robot.system.pathfinding.impl;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.Chemin;
+import org.arig.robot.model.Point;
 import org.arig.robot.system.pathfinding.AbstractPathFinder;
 import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 import org.arig.robot.utils.ImageUtils;
-import org.arig.robot.vo.Chemin;
-import org.arig.robot.vo.Point;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import pathfinder.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.nio.Buffer;
-import java.time.LocalDateTime;
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by mythril on 29/12/13.
+ * @author gdepuille on 29/12/13.
  */
 @Slf4j
 public class MultiPathFinderImpl extends AbstractPathFinder {
 
-    @Getter(AccessLevel.PROTECTED)
     private PathFinderAlgorithm algorithm;
 
-    /** The PathFinder */
+    @Setter
+    private double maxDistanceDepart = 1.0;
+
+    @Setter
+    private double maxDistanceArrivee = 1.0;
+
     private IGraphSearch pf = null;
 
-    /** Facteur pour le calcul du cout des noeuds avec le A* */
+    /**
+     * Facteur pour le calcul du cout des noeuds avec le A*
+     */
     private double aStarCostFactor = 1.0;
 
-    /** The mainGraph */
-    private Graph mainGraph;
-    private BufferedImage mainImage;
-
-    /** The obstacleGraph */
-    private Graph obstacleGraph;
-    private BufferedImage obstacleImage;
-
-    private LocalDateTime expirationObstacleMap;
+    private BufferedImage tableImage;
+    private Graph workGraph;
 
     public MultiPathFinderImpl() {
         super();
-        expirationObstacleMap = LocalDateTime.now().minusMinutes(10);
     }
 
     public MultiPathFinderImpl(PathFinderAlgorithm algorithm) {
@@ -67,30 +63,36 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
 
     @Override
     public Chemin findPath(Point from, Point to) throws NoPathFoundException {
-        return findPath(from, to, 1.0);
-    }
-
-    @Override
-    public Chemin findPath(Point from, Point to, double maxDistance) throws NoPathFoundException {
-        Assert.notNull(getCurrentGraph(), "Le graph de la carte doit être initialisé");
+        Assert.notNull(workGraph, "Le graph de la carte doit être initialisé");
 
         if (pf == null) {
             definePathFinder();
         }
 
-        log.info("Recherche de chemin de {} a {} avec l'algorithme {}", from.toString(), to.toString(), getAlgorithm().toString());
+        log.info("Recherche de chemin de {} a {} avec l'algorithme {}", from.toString(), to.toString(), algorithm.toString());
 
         // Pour les stats de temps
         StopWatch sw = new StopWatch();
         sw.start();
 
+        Point fromCorrige = null;
         GraphNode startNode, endNode;
-        if ((startNode = getCurrentGraph().getNodeAt(from.getX(), from.getY(), 0, maxDistance)) == null) {
-            log.error("Impossible de trouver le noeud de départ");
-            throw new NoPathFoundException(NoPathFoundException.ErrorType.START_NODE_DOES_NOT_EXIST);
+        // Choisir dans le quadrant vers la destination pour eviter de reculer.
+        if ((startNode = workGraph.getNodeAt(from.getX(), from.getY(), 0, maxDistanceDepart)) == null) {
+            log.warn("Impossible de trouver le noeud de départ, tentative de trouver un autre point proche");
+
+            fromCorrige = getNearestPoint(from);
+
+            if (fromCorrige == null) {
+                log.error("Toujours impossible de trouver le point départ");
+                throw new NoPathFoundException(NoPathFoundException.ErrorType.START_NODE_DOES_NOT_EXIST);
+            }
+            else {
+                startNode = workGraph.getNodeAt(fromCorrige.getX(), fromCorrige.getY(), 0, maxDistanceDepart);
+            }
         }
-        if ((endNode = getCurrentGraph().getNodeAt(to.getX(), to.getY(), 0, maxDistance)) == null) {
-            log.error("Impossible de trouver le noeud d'arrivé");
+        if ((endNode = workGraph.getNodeAt(to.getX(), to.getY(), 0, maxDistanceArrivee)) == null) {
+            log.error("Impossible de trouver le noeud d'arrivée");
             throw new NoPathFoundException(NoPathFoundException.ErrorType.END_NODE_DOES_NOT_EXIST);
         }
         sw.split();
@@ -113,8 +115,13 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         // Le point 0 est le "from".
         // On exclus le dernier point qui est le "to"
         Chemin c = new Chemin();
+
+        if (fromCorrige != null) {
+            c.addPoint(fromCorrige);
+        }
+
         Double anglePrecedent = null;
-        for (int i = 1 ; i < points.size() - 1 ; i++) {
+        for (int i = 1; i < points.size() - 1; i++) {
             Point ptPrec = points.get(i - 1);
             Point pt = points.get(i);
             // Calcul de l'angle avec le point précédent
@@ -135,63 +142,48 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         log.info("Chemin de {} point(s) de passage filtré en {}", c.nbPoints() - 1, sw.toSplitString());
         sw.stop();
 
-        // Ecriture d'une image pour le path finding
-        LinkedList<Point> pts = new LinkedList<>();
-        pts.add(from);
-        pts.addAll(c.getPoints());
-        saveImagePath(pts);
+        if (isSaveImages()) {
+            saveImageForPath(from, c);
+        }
 
         return c;
     }
 
     @Override
-    public void addObstacles(Polygon... obstacles) {
+    public void addObstacles(Shape... obstacles) {
         log.info("Ajout de {} obstacles", obstacles.length);
 
-        // Définition de la durée de validité de cet obstacle.
-        expirationObstacleMap = LocalDateTime.now().plusSeconds(5);
+        if (ArrayUtils.isEmpty(obstacles)) {
+            makeGraphFromBufferedImage(tableImage);
+            return;
+        }
 
         // Construction d'une image avec l'obstacle.
-        obstacleImage = new BufferedImage(mainImage.getWidth(), mainImage.getHeight(), mainImage.getType());
+        BufferedImage obstacleImage = new BufferedImage(tableImage.getWidth(), tableImage.getHeight(), tableImage.getType());
         Graphics2D g = obstacleImage.createGraphics();
         g.setBackground(Color.WHITE);
-        g.drawImage(mainImage, 0, 0, null);
+        g.drawImage(tableImage, 0, 0, null);
 
         // On ajoute l'obstacle
         g.setColor(Color.BLACK);
-        for (Polygon p : obstacles) {
-            g.fillPolygon(p);
+        for (Shape p : obstacles) {
+            g.fill(p);
         }
-        //g.drawRect((int) obstacle.getX() - (obstacleSize / 2), (int) obstacle.getY() - (obstacleSize / 2), obstacleSize, obstacleSize);
 
         // On termine le machin
         g.dispose();
 
-        // On stock l'image
-        try {
-            ImageIO.write(ImageUtils.mirrorX(obstacleImage), "png", new File(pathDir, dteFormat.format(LocalDateTime.now()) + "-obstacle.png"));
-        } catch (IOException e) {
-            log.warn("Impossible d'ecrire l'image de l'obstacle sur disque : {}", e.toString());
-        }
-
         // On reconstruit le graph
-        obstacleGraph = makeGraphFromBufferedImage(obstacleImage);
-        pf = null;
+        makeGraphFromBufferedImage(obstacleImage);
     }
 
     @Override
-    public void construitGraphDepuisImageNoirEtBlanc(File file) {
-        if (!file.exists() && !file.canRead()) {
-            String errorMessage = String.format("Impossible d'acceder au fichier %s (Existe : %s ; Readable : %s)", file.getAbsolutePath(), file.exists(), file.canRead());
-            log.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
-        }
-
+    public void construitGraphDepuisImageNoirEtBlanc(final InputStream is) {
         StopWatch sw = new StopWatch();
         sw.start();
 
         try {
-            mainImage = ImageUtils.mirrorX(ImageIO.read(file));
+            tableImage = ImageUtils.mirrorX(ImageIO.read(is));
         } catch (IOException e) {
             log.error("Impossible de lire l'image : " + e.toString());
             throw new RuntimeException(e);
@@ -201,11 +193,16 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         sw.stop();
 
         // Construction du graph
-        mainGraph = makeGraphFromBufferedImage(mainImage);
+        makeGraphFromBufferedImage(tableImage);
     }
 
-    private Graph makeGraphFromBufferedImage(BufferedImage img) {
+    private void makeGraphFromBufferedImage(BufferedImage img) {
         Assert.notNull(img, "L'image ne peut pas être null");
+
+        // Ecriture sur disque de la map de path
+        if (isSaveImages()) {
+            saveImageForWork(img);
+        }
 
         StopWatch sw = new StopWatch();
         sw.start();
@@ -223,103 +220,74 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         GraphNode aNode;
 
         // On initialise à 50 % du maillage pour gagner du temps sur les allocations mémoires.
-        Graph graph = new Graph(getNbTileX() * getNbTileY());
+        workGraph = new Graph(getNbTileX() * getNbTileY());
 
         py = sy;
-        for(int y = 0; y < getNbTileY() ; y++){
+        for (int y = 0; y < getNbTileY(); y++) {
             nodeID = deltaX * y + deltaX;
             px = sx;
-            for(int x = 0; x < getNbTileX(); x++){
+            for (int x = 0; x < getNbTileX(); x++) {
                 // Calculate the cost
                 color = img.getRGB(px, py) & 0xFF;
                 cost = 1;
 
                 // Si la couleur n'est pas noir, on ajoute les noeuds et les liens.
-                if(color != 0){
+                if (color != 0) {
                     aNode = new GraphNode(nodeID, px, py);
-                    graph.addNode(aNode);
-                    if(x > 0){
-                        graph.addEdge(nodeID, nodeID - 1, hCost * cost);
-                        if(isAllowDiagonal()){
-                            graph.addEdge(nodeID, nodeID - deltaX - 1, dCost * cost);
-                            graph.addEdge(nodeID, nodeID + deltaX - 1, dCost * cost);
+                    workGraph.addNode(aNode);
+                    if (x > 0) {
+                        workGraph.addEdge(nodeID, nodeID - 1, hCost * cost);
+                        if (isAllowDiagonal()) {
+                            workGraph.addEdge(nodeID, nodeID - deltaX - 1, dCost * cost);
+                            workGraph.addEdge(nodeID, nodeID + deltaX - 1, dCost * cost);
                         }
                     }
-                    if(x < getNbTileX() -1){
-                        graph.addEdge(nodeID, nodeID + 1, hCost * cost);
-                        if(isAllowDiagonal()){
-                            graph.addEdge(nodeID, nodeID - deltaX + 1, dCost * cost);
-                            graph.addEdge(nodeID, nodeID + deltaX + 1, dCost * cost);
+                    if (x < getNbTileX() - 1) {
+                        workGraph.addEdge(nodeID, nodeID + 1, hCost * cost);
+                        if (isAllowDiagonal()) {
+                            workGraph.addEdge(nodeID, nodeID - deltaX + 1, dCost * cost);
+                            workGraph.addEdge(nodeID, nodeID + deltaX + 1, dCost * cost);
                         }
                     }
-                    if(y > 0)
-                        graph.addEdge(nodeID, nodeID - deltaX, vCost * cost);
-                    if(y < getNbTileY() - 1)
-                        graph.addEdge(nodeID, nodeID + deltaX, vCost * cost);
+                    if (y > 0)
+                        workGraph.addEdge(nodeID, nodeID - deltaX, vCost * cost);
+                    if (y < getNbTileY() - 1)
+                        workGraph.addEdge(nodeID, nodeID + deltaX, vCost * cost);
                 }
                 px += dx;
                 nodeID++;
             }
             py += dy;
         }
+        pf = null; // Reset path finder pour forcer a la prochaine demande la reconstruction par rapport au dernier graph
 
         sw.split();
         log.info("Construction du graph en {}", sw.toSplitString());
         sw.stop();
-
-        return graph;
     }
 
     private void definePathFinder() {
         if (pf == null) {
-            switch (getAlgorithm()) {
+            switch (algorithm) {
                 case A_STAR_EUCLIDIAN:
-                    pf = new GraphSearch_Astar(getCurrentGraph(), new AshCrowFlight(aStarCostFactor));
+                    pf = new GraphSearch_Astar(workGraph, new AshCrowFlight(aStarCostFactor));
                     break;
                 case A_STAR_MANHATTAN:
-                    pf = new GraphSearch_Astar(getCurrentGraph(), new AshManhattan(aStarCostFactor));
+                    pf = new GraphSearch_Astar(workGraph, new AshManhattan(aStarCostFactor));
                     break;
                 case BREADTH_FIRST_SEARCH:
-                    pf = new GraphSearch_BFS(getCurrentGraph());
+                    pf = new GraphSearch_BFS(workGraph);
                     break;
                 case DEPTH_FIRST_SEARCH:
-                    pf = new GraphSearch_DFS(getCurrentGraph());
+                    pf = new GraphSearch_DFS(workGraph);
                     break;
                 case DIJKSTRA:
-                    pf = new GraphSearch_Dijkstra(getCurrentGraph());
+                    pf = new GraphSearch_Dijkstra(workGraph);
                     break;
             }
         }
 
         Assert.notNull(pf, "Le path finding ne peut être null après sa définition.");
-    }
-
-    private Graph getCurrentGraph() {
-        if (LocalDateTime.now().isBefore(expirationObstacleMap)) {
-            return obstacleGraph;
-        }
-
-        // Après un obstacle on réinitialise
-        if (obstacleGraph != null) {
-            obstacleGraph = null;
-            pf = null;
-        }
-
-        return mainGraph;
-    }
-
-    @Override
-    protected BufferedImage getCurrentBufferedImage() {
-        if (LocalDateTime.now().isBefore(expirationObstacleMap)) {
-            return obstacleImage;
-        }
-
-        return mainImage;
-    }
-
-    @Override
-    protected String suffixResultImageName() {
-        return "-" + algorithm.name();
     }
 
     public void setAlgorithm(PathFinderAlgorithm algorithm) {
@@ -330,5 +298,34 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
     public void setAStartCostFactor(double factor) {
         this.aStarCostFactor = factor;
         pf = null;
+    }
+
+    private Point getNearestPoint(Point from) {
+        Point point;
+
+        int seuil = 9;
+        int maxSeuil = seuil*2;
+
+        do {
+            point = from.offsettedX(seuil);
+            if (workGraph.getNodeAt(point.getX(), point.getY(), 0, 1.0) != null) {
+                return point;
+            }
+            point = from.offsettedY(-seuil);
+            if (workGraph.getNodeAt(point.getX(), point.getY(), 0, 1.0) != null) {
+                return point;
+            }
+            point = from.offsettedY(seuil);
+            if (workGraph.getNodeAt(point.getX(), point.getY(), 0, 1.0) != null) {
+                return point;
+            }
+            point = from.offsettedX(-seuil);
+            if (workGraph.getNodeAt(point.getX(), point.getY(), 0, 1.0) != null) {
+                return point;
+            }
+            seuil+=seuil;
+        } while(seuil <= maxSeuil);
+
+        return null;
     }
 }

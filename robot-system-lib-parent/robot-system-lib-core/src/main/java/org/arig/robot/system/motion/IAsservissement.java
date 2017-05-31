@@ -2,8 +2,8 @@ package org.arig.robot.system.motion;
 
 /**
  * The Interface IAsservissement.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 public interface IAsservissement {
 
@@ -19,9 +19,8 @@ public interface IAsservissement {
 
     /**
      * Reset.
-     * 
-     * @param resetFilters
-     *            the reset filters
+     *
+     * @param resetFilters the reset filters
      */
     void reset(final boolean resetFilters);
 }

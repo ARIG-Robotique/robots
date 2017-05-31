@@ -1,7 +1,12 @@
 package org.arig.robot.system.avoiding;
 
+import org.arig.robot.model.Point;
+import org.arig.robot.model.Shape;
+
+import java.util.List;
+
 /**
- * Created by gdepuille on 13/05/15.
+ * @author gdepuille on 13/05/15.
  */
 public interface IAvoidingService {
 
@@ -9,4 +14,9 @@ public interface IAvoidingService {
      * Execution du système d'évittement
      */
     void process();
+
+    List<Point> getDetectedPointsMmCapteurs();
+    List<Point> getDetectedPointsMmLidar();
+
+    List<Shape> getCollisionsShape();
 }

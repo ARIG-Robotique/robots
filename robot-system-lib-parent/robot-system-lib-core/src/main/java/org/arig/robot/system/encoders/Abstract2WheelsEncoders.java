@@ -2,27 +2,24 @@ package org.arig.robot.system.encoders;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.csv.CsvCollector;
-import org.arig.robot.csv.CsvData;
+import org.arig.robot.model.monitor.MonitorTimeSerie;
+import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The Class Abstract2WheelsEncoders.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 @Slf4j
 public abstract class Abstract2WheelsEncoders {
 
-    /** Collector CSV */
-    @Autowired(required = false)
-    private CsvCollector csvCollector;
+    @Autowired
+    private IMonitoringWrapper monitoringWrapper;
 
-    /** The distance. */
     @Getter
     private double distance;
 
-    /** The orientation. */
     @Getter
     private double orientation;
 
@@ -32,27 +29,18 @@ public abstract class Abstract2WheelsEncoders {
     @Getter
     private double droit;
 
-    /** The coef gauche. */
     private double coefGauche;
-
-    /** The coef droit. */
     private double coefDroit;
-
-    /** The alternate. */
     private boolean alternate;
+    private final String name;
 
-    /**
-     * Instantiates a new abstract encoders.
-     */
-    protected Abstract2WheelsEncoders() {
+    protected Abstract2WheelsEncoders(final String name) {
+        this.name = name;
         distance = orientation = 0;
         coefDroit = coefGauche = 1.0;
         alternate = false;
     }
 
-    /**
-     * Lecture valeurs.
-     */
     public void lectureValeurs() {
 
         if (alternate) {
@@ -65,53 +53,33 @@ public abstract class Abstract2WheelsEncoders {
         alternate = !alternate;
 
         calculPolarValues();
-
-        if (csvCollector != null) {
-            CsvData c = csvCollector.getCurrent();
-            c.setCodeurGauche(gauche);
-            c.setCodeurDroit(droit);
-            c.setCodeurDistance(distance);
-            c.setCodeurOrient(orientation);
-        }
+        sendMonitoring();
     }
 
-    /**
-     * Sets the coefs.
-     * 
-     * @param coefGauche
-     *            the coef gauche
-     * @param coefDroit
-     *            the coef droit
-     */
     public void setCoefs(final double coefGauche, final double coefDroit) {
         this.coefGauche = coefGauche;
         this.coefDroit = coefDroit;
     }
 
-    /**
-     * Reset.
-     */
     public abstract void reset();
 
-    /**
-     * Lecture gauche.
-     *
-     * @return the double
-     */
     protected abstract double lectureGauche();
 
-    /**
-     * Lecture droit.
-     * 
-     * @return the double
-     */
     protected abstract double lectureDroit();
 
-    /**
-     * Calcul des valeurs polaires.
-     */
     private void calculPolarValues() {
         distance = (droit + gauche) / 2;
         orientation = droit - gauche;
+    }
+
+    private void sendMonitoring() {
+        // Construction du monitoring
+        MonitorTimeSerie serie = new MonitorTimeSerie().tableName(name)
+                .addField("gauche", getGauche())
+                .addField("droit", getDroit())
+                .addField("distance", getDistance())
+                .addField("orientation", getOrientation());
+
+        monitoringWrapper.addTimeSeriePoint(serie);
     }
 }

@@ -4,60 +4,67 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * The Interface IRampFilter.
- * 
- * @author mythril
+ *
+ * @author gdepuille
  */
 public interface IRampFilter {
 
     /**
      * Sets the sample time in ms.
-     * 
+     *
      * @param value the new sample time ms
      */
-    public void setSampleTime(final double value);
+    void setSampleTime(final double value);
 
     /**
      * Sets the sample time with a specific unit.
      *
-     * @param value
-     * @param unit
+     * @param value the value
+     * @param unit value unit
      */
-    public void setSampleTime(final double value, TimeUnit unit);
+    void setSampleTime(final double value, TimeUnit unit);
+
+    double getSampleTimeS();
 
     /**
      * Sets the ramp acc.
-     * 
-     * @param value
-     *            the new ramp acc
+     *
+     * @param value the new ramp acc
      */
-    public void setRampAcc(final double value);
+    void setRampAcc(final double value);
 
     /**
      * Sets the ramp dec.
-     * 
-     * @param value
-     *            the new ramp dec
+     *
+     * @param value the new ramp dec
      */
-    public void setRampDec(final double value);
+    void setRampDec(final double value);
 
     /**
      * Reset.
      */
-    public void reset();
+    void reset();
 
     /**
      * Filter.
-     * 
-     * @param vitesse
-     *            the vitesse
-     * @param consigne
-     *            the consigne
-     * @param mesure
-     *            the mesure
-     * @param frein
-     *            the frein
+     *
+     * @param vitesseDemande   the vitesse
+     * @param distanceRestante the consigne
+     * @param frein            the frein
+     *
      * @return the double
      */
-    public double filter(final double vitesse, final double consigne,
-            final double mesure, final boolean frein);
+    double filter(final double vitesseDemande, final double distanceRestante, final boolean frein);
+
+    /**
+     * Filter.
+     *
+     * @param vitesseDemande   the vitesse
+     * @param distanceRestante the consigne
+     * @param frein            the frein
+     * @param bypass           the bypass
+     *
+     * @return the double
+     */
+    double filter(final double vitesseDemande, final double distanceRestante, final boolean frein, final boolean bypass);
 }

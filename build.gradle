@@ -1,0 +1,194 @@
+// Configuration pour le build
+buildscript {
+	repositories {
+		mavenLocal()
+		mavenCentral()
+	}
+	dependencies {
+		// Add build plugins here
+	}
+}
+
+// Configuration de tous les projets
+configure(allprojects) {
+	group = 'org.arig.robot'
+	version = '1.1.0-SNAPSHOT'
+
+	// Variable de configuration
+	ext {
+		// Project dependencies
+		javaVersion = '1.8'
+		javaTestVersion = javaVersion
+
+		// Dependencies versions
+		lombokVersion = '1.16.14'
+		springVersion = '4.3.7.RELEASE'
+		apacheCommonsLangVersion = '3.5'
+		apacheCommonsCollectionsVersion = '4.1'
+		apacheCommonsIOVersion = '2.5'
+		googleGuavaVersion = '21.0'
+		jacksonVersion = '2.8.6'
+		influxdbVersion = '2.5'
+		pi4jVersion = '1.2-arig-SNAPSHOT'
+		junixsocketVersion = '2.0.5-SNAPSHOT'
+		slf4jVersion = '1.7.23'
+
+		// Container dependencies
+    	jettyVersion = '9.4.1.v20170120'
+
+		// Test dependencies versions
+		junitVersion = '4.12'
+		mockitoVersion = '2.7.9'
+	}
+
+	// Plugin de build
+	apply plugin: 'java'
+	apply plugin: 'maven'
+	apply plugin: 'jacoco'
+
+	// Plugin pour les IDE
+  	apply plugin: 'idea'
+
+	// Définition de configurations supplémentaire (non standard
+	configurations {
+        provided
+  	}
+
+	// Version pour la compilation
+	compileJava {
+		sourceCompatibility = javaVersion
+		targetCompatibility = javaVersion
+	}
+
+	compileTestJava {
+		sourceCompatibility = javaTestVersion
+		targetCompatibility = javaTestVersion
+	}
+
+	// Classpath de compilation
+	sourceSets {
+		main {
+			compileClasspath += configurations.provided
+		}
+		test {
+			compileClasspath += configurations.provided
+			runtimeClasspath += configurations.provided
+		}
+	}
+
+	// Configuration des repository de dépendences
+	repositories {
+		mavenLocal()
+		mavenCentral()
+	}
+
+	// Dependence commune pour tous les projets
+	dependencies {
+		provided "org.projectlombok:lombok:${lombokVersion}"
+
+		testCompile "org.springframework:spring-test:${springVersion}"
+		testCompile "junit:junit:${junitVersion}"
+		testCompile "org.mockito:mockito-core:${mockitoVersion}"
+	}
+
+	// Intégration avec IntellijIDEA
+	idea {
+		targetVersion = "14"
+
+		module {
+			jdkName = javaVersion
+
+			scopes.PROVIDED.plus += [ configurations.provided ]
+
+			downloadJavadoc = true
+			downloadSources = true
+		}
+	}
+
+	// JAvaCOCOverage
+	jacocoTestReport {
+		reports {
+			xml.enabled = true // coveralls plugin depends on xml format report
+			html.enabled = true
+		}
+	}
+}
+
+// Configuration communes des sous projets
+configure(subprojects) { subproject ->
+
+	// Configuration de la construction des Jars
+	jar {
+		manifest.attributes["Implementation-Title"] = subproject.name
+		manifest.attributes["Implementation-Version"] = subproject.version
+		manifest.attributes["Created-By"] = "Gradle " + gradle.gradleVersion
+		manifest.attributes["Build-Jdk"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
+	}
+
+	// Configuration pour la Javadoc
+	javadoc {
+		classpath = project.sourceSets.main.compileClasspath + configurations.provided
+
+		options {
+			memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+			author = true
+			header = project.name
+		}
+
+		// Désactivation de la Javadoc strict avec le JDK 8
+		if (org.gradle.api.JavaVersion.current().isJava8Compatible()) {
+			options.addStringOption('Xdoclint:none', '-quiet')
+		}
+	}
+
+	// Construction du jar de source
+	task sourcesJar(type: Jar, dependsOn:classes) {
+		classifier = "sources"
+		from sourceSets.main.allJava.srcDirs
+		include "**/*.java"
+	}
+
+	// Construction du jar de javadoc
+	task javadocJar(type: Jar) {
+		classifier = "javadoc"
+		from javadoc
+	}
+
+	// Liste des artéfact
+	artifacts {
+		archives sourcesJar
+		archives javadocJar
+	}
+}
+
+// Configuration du projet racine
+configure(rootProject) {
+	description = "ARIG Association - Robots"
+
+	// Suppression des artéfact par défaut sur le rootProject (jar, etc...)
+	configurations.archives.artifacts.clear()
+
+	task codeCoverageReport(type: JacocoReport) {
+		executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+
+		subprojects.each {
+			sourceSets it.sourceSets.main
+		}
+
+		reports {
+			xml.enabled true
+			xml.destination "${buildDir}/reports/jacoco/report.xml"
+			html.enabled false
+			csv.enabled false
+		}
+	}
+
+	codeCoverageReport.dependsOn {
+		subprojects*.test
+	}
+
+	task wrapper(type: Wrapper) {
+		description = "Generates gradlew[.bat] scripts"
+		gradleVersion = "3.4.1"
+	}
+}

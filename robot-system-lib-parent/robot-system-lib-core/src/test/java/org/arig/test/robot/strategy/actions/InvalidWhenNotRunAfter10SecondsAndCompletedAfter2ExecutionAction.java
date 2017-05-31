@@ -1,17 +1,17 @@
 package org.arig.test.robot.strategy.actions;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.strategy.IAction;
+import org.arig.robot.strategy.AbstractAction;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Created by gdepuille on 06/05/15.
+ * @author gdepuille on 06/05/15.
  */
 @Slf4j
-public class InvalidWhenNotRunAfter10SecondsAndCompletedAfter2ExecutionAction implements IAction {
+public class InvalidWhenNotRunAfter10SecondsAndCompletedAfter2ExecutionAction extends AbstractAction {
 
     private LocalDateTime ldt;
 

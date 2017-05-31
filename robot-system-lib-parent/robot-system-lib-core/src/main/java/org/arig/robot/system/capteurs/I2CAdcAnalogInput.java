@@ -1,6 +1,5 @@
 package org.arig.robot.system.capteurs;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -12,15 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Classe d'interface avec le composant I2C ADC de Gravitech
  *
- * @see <a href="http://www.gravitech.us/i2c128anco.html">I2C ADC documentation</a>
  * @author gregorydepuille
+ * @see <a href="http://www.gravitech.us/i2c128anco.html">I2C ADC documentation</a>
  */
 @Slf4j
 @Data
 @AllArgsConstructor
 public class I2CAdcAnalogInput {
 
-    private static final byte[] channels = new byte[] {0, 4, 1, 5, 2, 6, 3, 7};
+    private static final byte[] channels = new byte[]{0, 4, 1, 5, 2, 6, 3, 7};
 
     public static final byte ADC_1 = (byte) 0;
     public static final byte ADC_2 = (byte) 1;
@@ -51,7 +50,6 @@ public class I2CAdcAnalogInput {
         private byte value;
     }
 
-    /** The i2c manager. */
     @Autowired
     private II2CManager i2cManager;
 
@@ -76,8 +74,9 @@ public class I2CAdcAnalogInput {
         try {
             i2cManager.sendData(deviceName, getRegistre(capteurId));
         } catch (I2CException e) {
-            log.error("Impossible de lire la valeur du capteur analogique pour la carte " + deviceName);
-            throw new I2CException("Impossible de lire la valeur codeur pour la carte " + deviceName, e);
+            String message = "Impossible de lire la valeur du capteur analogique pour la carte " + deviceName;
+            log.error(message);
+            throw new I2CException(message, e);
         }
 
         final byte[] datas = i2cManager.getDatas(deviceName, 2);

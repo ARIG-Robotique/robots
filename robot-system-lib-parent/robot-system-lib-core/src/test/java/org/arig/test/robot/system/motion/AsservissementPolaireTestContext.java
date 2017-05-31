@@ -1,21 +1,23 @@
 package org.arig.test.robot.system.motion;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.filters.pid.CompletePID;
+import org.arig.robot.filters.pid.CompletePidFilter;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.IRampFilter;
-import org.arig.robot.filters.ramp.Ramp;
+import org.arig.robot.filters.ramp.RampFilter;
+import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.AsservissementPolaire;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.vo.CommandeRobot;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Created by gdepuille on 19/03/15.
+ * @author gdepuille on 19/03/15.
  */
 @Slf4j
 @Configuration
@@ -54,7 +56,7 @@ public class AsservissementPolaireTestContext {
     @Bean(name = "pidDistance")
     public IPidFilter pidDistance() {
         log.info("Configuration PID Distance");
-        CompletePID pid = new CompletePID();
+        CompletePidFilter pid = new CompletePidFilter("pid_distance");
         pid.setSampleTime(SAMPLE_TIME_MS);
         pid.setTunings(KP, KI, KD);
         pid.setMode(IPidFilter.PidMode.AUTOMATIC);
@@ -64,7 +66,27 @@ public class AsservissementPolaireTestContext {
     @Bean(name = "pidOrientation")
     public IPidFilter pidOrientation() {
         log.info("Configuration PID Orientation");
-        CompletePID pid = new CompletePID();
+        CompletePidFilter pid = new CompletePidFilter("pid_orientation");
+        pid.setSampleTime(SAMPLE_TIME_MS);
+        pid.setTunings(KP, KI, KD);
+        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
+        return pid;
+    }
+
+    @Bean(name = "pidMoteurDroit")
+    public IPidFilter pidMoteurDroit() {
+        log.info("Configuration PID moteur droit");
+        CompletePidFilter pid = new CompletePidFilter("pid_mot_droit");
+        pid.setSampleTime(SAMPLE_TIME_MS);
+        pid.setTunings(KP, KI, KD);
+        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
+        return pid;
+    }
+
+    @Bean(name = "pidMoteurGauche")
+    public IPidFilter pidMoteurGauche() {
+        log.info("Configuration PID moteur gauche");
+        CompletePidFilter pid = new CompletePidFilter("pid_mot_gauche");
         pid.setSampleTime(SAMPLE_TIME_MS);
         pid.setTunings(KP, KI, KD);
         pid.setMode(IPidFilter.PidMode.AUTOMATIC);
@@ -73,13 +95,18 @@ public class AsservissementPolaireTestContext {
 
     @Bean(name = "rampDistance")
     public IRampFilter rampDistance() {
-        log.info("Configuration Ramp Distance");
-        return new Ramp(SAMPLE_TIME_MS, 50, 50);
+        log.info("Configuration RampFilter Distance");
+        return new RampFilter("ramp_distance", SAMPLE_TIME_MS, 50, 50);
     }
 
     @Bean(name = "rampOrientation")
     public IRampFilter rampOrientation() {
-        log.info("Configuration Ramp Orientation");
-        return new Ramp(SAMPLE_TIME_MS, 50, 50);
+        log.info("Configuration RampFilter Orientation");
+        return new RampFilter("ramp_orientation", SAMPLE_TIME_MS, 50, 50);
+    }
+
+    @Bean
+    public IMonitoringWrapper monitoringWrapper() {
+        return new MonitoringJsonWrapper();
     }
 }
