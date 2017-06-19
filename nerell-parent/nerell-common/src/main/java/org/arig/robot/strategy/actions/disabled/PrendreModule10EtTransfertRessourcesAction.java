@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -6,6 +6,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
+import org.arig.robot.model.ModuleLunaire;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.services.IIOService;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class CratereZoneDepartBleuAction extends AbstractAction {
+public class PrendreModule10EtTransfertRessourcesAction extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -36,12 +37,12 @@ public class CratereZoneDepartBleuAction extends AbstractAction {
 
     @Override
     public String name() {
-        return "Récupération des ressources dans le petit cratère proche de la zone de départ bleue";
+        return "Récuperation du Module 10 suivi du transfert des ressources dans Elfa";
     }
 
     @Override
     public int order() {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -51,65 +52,61 @@ public class CratereZoneDepartBleuAction extends AbstractAction {
         }
 
         return Team.BLEU == rs.getTeam() &&
-                !rs.isCratereZoneDepartBleuRecupere() && !ioService.presenceBallesAspiration();
+                !rs.isModuleRecupere(10) &&
+                !ioService.presencePinceCentre() &&
+                ioService.presenceBallesAspiration();
     }
 
     @Override
     public void execute() {
         try {
             rs.enableAvoidance();
+            rs.enablePinces();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            // version aller-retour
-            /*
-            mv.pathTo(2000, 680);
+            rs.addModuleLunaireExpected(new ModuleLunaire(10, ModuleLunaire.Type.MONOCHROME));
+
+            mv.pathTo(2800 + 280 * Math.cos(3 * Math.PI / 4), 600 + 280 * Math.sin(3 * Math.PI / 4));
+            mv.alignFrontTo(2800, 600);
+            mv.avanceMM(150);
+            mv.reculeMM(100);
+
+            // là on a attrapé le module
+            rs.setModuleRecupere(10);
+
+            mv.alignFrontTo(2650, 660);
+            mv.gotoPointMM(2650, 660);
 
             servosService.aspirationMax();
 
-            mv.gotoOrientationDeg(Math.toDegrees(2 * Math.PI / 3) - 270);
+            if (rs.isHasPetitesBalles()) {
+                mv.gotoOrientationDeg(-155);
+
+            } else {
+                mv.gotoOrientationDeg(-180);
+            }
 
             Thread.sleep(1500);
 
-            servosService.aspirationCratere();
+            servosService.aspirationTransfert();
+            servosService.waitAspiration();
 
-            mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
-            mv.reculeMM(300);
-            mv.avanceMM(350);
+            servosService.aspirationStop();
+            Thread.sleep(2000);
 
             servosService.aspirationFerme();
             servosService.waitAspiration();
 
-            servosService.aspirationStop();
-            */
+            mv.gotoOrientationDeg(90);
+            mv.avanceMM(90);
 
-            // version rotation
-            mv.pathTo(2000, 680);
-
-            servosService.aspirationMax();
-
-            mv.gotoOrientationDeg(-150);
-
-            Thread.sleep(1500);
-
-            servosService.aspirationCratere();
-
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientationBasse);
-
-            mv.tourneDeg(40);
-            mv.tourneDeg(-40);
-
-            servosService.aspirationFerme();
-            servosService.waitAspiration();
-
-            servosService.aspirationStop();
-
+            rs.addTransfertElfa();
             completed = true;
-            rs.setCratereZoneDepartBleuRecupere(true);
-            rs.setHasPetitesBalles(false);
 
         } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
+
         }
     }
 }

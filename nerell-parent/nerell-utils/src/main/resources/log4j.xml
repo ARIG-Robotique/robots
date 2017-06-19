@@ -34,6 +34,10 @@
 	<logger name="org.arig">
 		<level value="INFO" />
 	</logger>
+
+	<logger name="org.arig.robot.strategy.StrategyManager">
+		<level value="ERROR" />
+	</logger>
 	
 	<!-- *********** -->
 	<!-- Root Logger -->

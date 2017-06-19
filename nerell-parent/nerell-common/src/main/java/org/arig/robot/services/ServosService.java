@@ -421,14 +421,14 @@ public class ServosService {
     public void ouvreGlissiere() {
         // Ouverture si pas complètement sorti
         if (ioService.finCourseGlissiereGauche()) {
-            servos.setPosition(IConstantesServos.MOTOR_EJECTION, IConstantesServos.MOTOR_FORWARD_FULL);
+            servos.setPosition(IConstantesServos.MOTOR_EJECTION, IConstantesServos.MOTOR_FORWARD_MEDIUM);
         }
     }
 
     public void fermeGlissiere() {
         // Fermeture si pas complètement fermé
         if (ioService.finCourseGlissiereDroite()) {
-            servos.setPosition(IConstantesServos.MOTOR_EJECTION, IConstantesServos.MOTOR_REVERSE_FULL);
+            servos.setPosition(IConstantesServos.MOTOR_EJECTION, IConstantesServos.MOTOR_REVERSE_MEDIUM);
         }
     }
 

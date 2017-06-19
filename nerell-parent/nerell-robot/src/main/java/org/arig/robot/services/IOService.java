@@ -393,7 +393,10 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
             outLedRGB_G.high();
             outLedRGB_B.low();
         } else {
-            clearColorLedRGB();
+            log.info("Led RGB couleur Team UNKNOWN");
+            outLedRGB_R.high();
+            outLedRGB_G.high();
+            outLedRGB_B.high();
         }
     }
 

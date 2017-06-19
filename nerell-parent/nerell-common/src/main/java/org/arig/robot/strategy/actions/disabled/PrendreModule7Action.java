@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -9,9 +9,7 @@ import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.ModuleLunaire;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
-import org.arig.robot.services.BrasService;
 import org.arig.robot.services.IIOService;
-import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ChargerFuseeMonoBleuAction extends AbstractAction {
+public class PrendreModule7Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -28,25 +26,25 @@ public class ChargerFuseeMonoBleuAction extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private BrasService brasService;
-
-    @Autowired
     private IIOService ioService;
-
-    @Autowired
-    private ServosService servosService;
 
     @Getter
     private boolean completed = false;
 
     @Override
     public String name() {
-        return "Chargement des modules de la fusée monochrome bleue";
+        return "Récuperation du Module 7";
     }
 
     @Override
     public int order() {
-        return 400-1;
+        int val = 100 - 1;
+
+        if (Team.JAUNE == rs.getTeam()) {
+            val /= 10;
+        }
+
+        return val;
     }
 
     @Override
@@ -56,48 +54,48 @@ public class ChargerFuseeMonoBleuAction extends AbstractAction {
         }
 
         return Team.BLEU == rs.getTeam() &&
-                rs.nbModulesMagasin() <= IConstantesNerellConfig.nbModuleMax - 4 &&
-                !ioService.presencePinceCentre() &&
-                !rs.isFuseeMonochromeBleuRecupere() &&
-                rs.isModuleRecupere(6) &&
-                rs.isModuleRecupere(7) &&
-                rs.isModuleRecupere(9) &&
-                rs.isModuleRecupere(10);
+                !rs.isModuleRecupere(7) &&
+                (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
     }
 
     @Override
     public void execute() {
         try {
-            rs.enableAvoidance();
-
+            rs.disableAvoidance();
+            rs.enablePinces();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            mv.pathTo(1995, 255);
+            rs.addModuleLunaireExpected(new ModuleLunaire(7, ModuleLunaire.Type.POLYCHROME));
 
-//            rs.disablePinces();
+            double offsetX = 0, offsetY = 0;
 
-            servosService.brasArracheFusee();
-
-            mv.gotoOrientationDeg(180);
-
-            for (int i = 0; i < 4; i++) {
-                if (brasService.stockerModuleFusee()) {
-                    rs.addModuleDansMagasin(ModuleLunaire.monochrome());
-                } else {
-                    break;
-                }
+            if (ioService.presencePinceCentre()) {
+                offsetX = 80 * Math.cos(-3 * Math.PI / 4);
+                offsetY = 80 * Math.sin(-3 * Math.PI / 4);
             }
 
-            servosService.brasAttentePriseRobot();
+            mv.pathTo(
+                    2100 + 280 * Math.cos(-Math.PI / 4) + offsetX,
+                    1400 + 280 * Math.sin(-Math.PI / 4) + offsetY
+            );
+            mv.alignFrontTo(2100 + offsetX, 1400 + offsetY);
+            mv.gotoPointMM(
+                    2100 + 140 * Math.cos(-Math.PI / 4) + offsetX,
+                    1400 + 140 * Math.sin(-Math.PI / 4) + offsetY
+            );
 
-            mv.gotoOrientationDeg(90);
+            Thread.sleep(400);
+
+            mv.reculeMM(100);
+            mv.gotoOrientationDeg(-90);
 
             completed = true;
-            rs.setFuseeMonochromeBleuRecupere(true);
+            rs.setModuleRecupere(7);
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
+        } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
+
         }
     }
 }

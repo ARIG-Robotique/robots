@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +10,7 @@ import org.arig.robot.model.ModuleLunaire;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.services.IIOService;
+import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PrendreModule7Action extends AbstractAction {
+public class PrendreModules5Et2Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -28,19 +29,24 @@ public class PrendreModule7Action extends AbstractAction {
     @Autowired
     private IIOService ioService;
 
+    @Autowired
+    private ServosService servosService;
+
     @Getter
     private boolean completed = false;
 
     @Override
     public String name() {
-        return "Récuperation du Module 7";
+        return "Récuperation du Module 5 ET du module 2";
     }
 
     @Override
     public int order() {
-        int val = 100 - 1;
+        int val = 200;
 
-        if (Team.JAUNE == rs.getTeam()) {
+        if (Team.JAUNE.equals(rs.getTeam())) {
+            val += 1000;
+        } else {
             val /= 10;
         }
 
@@ -53,8 +59,9 @@ public class PrendreModule7Action extends AbstractAction {
             return false;
         }
 
-        return Team.BLEU == rs.getTeam() &&
-                !rs.isModuleRecupere(7) &&
+        return Team.JAUNE == rs.getTeam() &&
+                !rs.isModuleRecupere(5) &&
+                !rs.isModuleRecupere(2) &&
                 (!ioService.presencePinceCentre() || !ioService.presencePinceDroite());
     }
 
@@ -63,39 +70,32 @@ public class PrendreModule7Action extends AbstractAction {
         try {
             rs.disableAvoidance();
             rs.enablePinces();
+
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.addModuleLunaireExpected(new ModuleLunaire(7, ModuleLunaire.Type.POLYCHROME));
+            rs.addModuleLunaireExpected(new ModuleLunaire(5, ModuleLunaire.Type.POLYCHROME));
 
-            double offsetX = 0, offsetY = 0;
+            mv.gotoPointMM(1000, 600, false, false);
 
-            if (ioService.presencePinceCentre()) {
-                offsetX = 80 * Math.cos(-3 * Math.PI / 4);
-                offsetY = 80 * Math.sin(-3 * Math.PI / 4);
-            }
+//            rs.enableAvoidance();
 
-            mv.pathTo(
-                    2100 + 280 * Math.cos(-Math.PI / 4) + offsetX,
-                    1400 + 280 * Math.sin(-Math.PI / 4) + offsetY
-            );
-            mv.alignFrontTo(2100 + offsetX, 1400 + offsetY);
-            mv.gotoPointMM(
-                    2100 + 140 * Math.cos(-Math.PI / 4) + offsetX,
-                    1400 + 140 * Math.sin(-Math.PI / 4) + offsetY
-            );
+            rs.addModuleLunaireExpected(new ModuleLunaire(2, ModuleLunaire.Type.POLYCHROME));
 
-            Thread.sleep(400);
+            mv.gotoPointMM(500 + 85 * Math.cos(-3 * Math.PI / 4), 1100 + 85 * Math.sin(-3 * Math.PI / 4));
 
-            mv.reculeMM(100);
-            mv.gotoOrientationDeg(-90);
+            Thread.sleep(500);
 
-            completed = true;
-            rs.setModuleRecupere(7);
+//            mv.gotoOrientationDeg(-45);
 
-        } catch (InterruptedException | NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
+
+        } catch (InterruptedException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
-
+        } finally {
+            rs.enableAvoidance();
+            rs.setModuleRecupere(5);
+            rs.setModuleRecupere(2);
+            completed = true;
         }
     }
 }
