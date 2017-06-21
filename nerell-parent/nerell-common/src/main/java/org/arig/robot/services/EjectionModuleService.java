@@ -144,7 +144,7 @@ public class EjectionModuleService {
         int remaining = TEMPS_MAX_EJECTION;
         while (ioService.finCourseGlissiereGauche() && remaining > 0) {
             waitTimeMs(1);
-            remaining -= 1;
+            //remaining -= 1;
         }
 
         if (remaining == 0) {

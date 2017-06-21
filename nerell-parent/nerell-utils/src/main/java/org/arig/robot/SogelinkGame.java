@@ -36,14 +36,12 @@ public class SogelinkGame {
         ioService.enableAlim12VPuissance();
         ioService.enableAlim5VPuissance();
         servosService.cyclePreparation();
-        ejectionModuleService.init();
         servosService.homes();
         servosService.aspirationFerme();
 
         ejectionModuleService.ejectionAvantRetourStand();
 
         log.info("Activation des tâches planifé");
-        rs.enableMagasin();
         rs.enablePinces();
         rs.enableMatch();
 

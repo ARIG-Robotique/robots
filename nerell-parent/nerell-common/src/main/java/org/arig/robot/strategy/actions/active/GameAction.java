@@ -2,20 +2,12 @@ package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesNerellConfig;
-import org.arig.robot.exception.AvoidingException;
-import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.exceptions.EjectionModuleException;
-import org.arig.robot.model.ModuleLunaire;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
-import org.arig.robot.services.BrasService;
 import org.arig.robot.services.EjectionModuleService;
 import org.arig.robot.services.IIOService;
-import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
-import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -71,7 +63,7 @@ public class GameAction extends AbstractAction {
             updateValidTime();
 
         } finally {
-            rs.enableMagasin();
+            //rs.enableMagasin();
             ioService.clearColorLedRGB();
         }
     }
