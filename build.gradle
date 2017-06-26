@@ -21,16 +21,16 @@ configure(allprojects) {
 		javaTestVersion = javaVersion
 
 		// Dependencies versions
-		lombokVersion = '1.16.14'
-		springVersion = '4.3.7.RELEASE'
-		apacheCommonsLangVersion = '3.5'
+		lombokVersion = '1.16.16'
+		springVersion = '4.3.9.RELEASE'
+		apacheCommonsLangVersion = '3.6'
 		apacheCommonsCollectionsVersion = '4.1'
 		apacheCommonsIOVersion = '2.5'
-		googleGuavaVersion = '21.0'
-		jacksonVersion = '2.8.6'
-		influxdbVersion = '2.5'
+		googleGuavaVersion = '22.0'
+		jacksonVersion = '2.8.9'
+		influxdbVersion = '2.6'
 		pi4jVersion = '1.2-arig-SNAPSHOT'
-		junixsocketVersion = '2.0.5-SNAPSHOT'
+		junixsocketVersion = '2.0.5-arig-SNAPSHOT'
 		slf4jVersion = '1.7.23'
 
 		// Container dependencies
@@ -177,7 +177,7 @@ configure(rootProject) {
 
 		reports {
 			xml.enabled true
-			xml.destination "${buildDir}/reports/jacoco/report.xml"
+			xml.destination file("${buildDir}/reports/jacoco/report.xml")
 			html.enabled false
 			csv.enabled false
 		}
@@ -189,6 +189,7 @@ configure(rootProject) {
 
 	task wrapper(type: Wrapper) {
 		description = "Generates gradlew[.bat] scripts"
-		gradleVersion = "3.4.1"
+		gradleVersion = "4.0"
+		distributionType = "all"
 	}
 }
