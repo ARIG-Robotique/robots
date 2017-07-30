@@ -34,19 +34,19 @@ public class RampFilter implements IRampFilter {
     private double stepVitesseDecel;
 
     @Getter
-    private double distanceRestante;
-
-    @Getter
-    private double distanceDecel;
-
-    @Getter
-    private double vitesseCourante;
-
-    @Getter
-    private double vitesseDemande;
+    private double input;
 
     @Getter
     private double output;
+
+    @Getter
+    private double posToDecel;
+
+    @Getter
+    private double inputVitesse;
+
+    @Getter
+    private double currentVitesse;
 
     @Getter
     private boolean frein;
@@ -135,8 +135,10 @@ public class RampFilter implements IRampFilter {
      */
     @Override
     public void reset() {
-        distanceDecel = 0;
-        vitesseCourante = 0;
+        input = 0;
+        output = 0;
+        posToDecel = 0;
+        currentVitesse = 0;
     }
 
     /**
@@ -151,41 +153,41 @@ public class RampFilter implements IRampFilter {
      */
     @Override
     public double filter(final double vitesseDemande, final double distanceRestante, final boolean frein) {
-        return filter(vitesseDemande, distanceRestante, frein, false);
+        return filter(vitesseDemande, distanceRestante, true, false);
     }
 
     @Override
-    public double filter(double vitesseDemande, double distanceRestante, boolean frein, boolean bypass) {
-        this.vitesseDemande = vitesseDemande;
-        this.distanceRestante = distanceRestante;
+    public double filter(double inputVitesse, double inputPos, boolean frein, boolean bypass) {
+        this.inputVitesse = inputVitesse;
+        this.input = inputPos;
         this.frein = frein;
         this.bypass = bypass;
 
         // Calcul de la distance de décéleration en fonction des parametres
-        distanceDecel = conv.mmToPulse(vitesseCourante * vitesseCourante / (2 * rampDec));
+        posToDecel = conv.mmToPulse(Math.pow(inputVitesse, 2) / (2 * rampDec));
         if (!bypass) {
-            if (vitesseCourante > vitesseDemande || (Math.abs(distanceRestante) <= distanceDecel && frein)) {
-                vitesseCourante -= stepVitesseDecel;
-            } else if (vitesseCourante < vitesseDemande) {
-                vitesseCourante += stepVitesseAccel;
+            if ((Math.abs(input) <= posToDecel && frein) || currentVitesse > inputVitesse) {
+                currentVitesse -= stepVitesseDecel;
+            } else if (currentVitesse < inputVitesse) {
+                currentVitesse += stepVitesseAccel;
             }
 
             // Valeur max (evite les oscilations en régime établie)
-            vitesseCourante = Math.min(vitesseCourante, vitesseDemande);
+            currentVitesse = Math.min(currentVitesse, inputVitesse);
 
             // Controle pour interdire les valeurs négatives
-            vitesseCourante = Math.max(vitesseCourante, 0);
+            currentVitesse = Math.max(currentVitesse, 0);
 
         } else {
-            vitesseCourante = Math.abs(vitesseDemande);
+            currentVitesse = inputVitesse;
         }
 
-        // Calcul de la valeur théorique en fonction de la vitesse.
-        double ecartTheorique = conv.mmToPulse(vitesseCourante) * sampleTimeS;
-        if (distanceRestante < 0) {
-            ecartTheorique = -ecartTheorique;
+        // Calcul de la valeur filtré de position en fonction de la vitesse calculé sur la rampe.
+        double outPosition = conv.mmToPulse(currentVitesse) * sampleTimeS;
+        if (inputPos < 0) {
+            outPosition = -outPosition;
         }
-        output = ecartTheorique;
+        output = outPosition;
         sendMonitoring();
         return output;
 
@@ -195,10 +197,10 @@ public class RampFilter implements IRampFilter {
         // Construction du monitoring
         MonitorTimeSerie serie = new MonitorTimeSerie()
                 .tableName(name)
-                .addField("distanceDeceleration", getDistanceDecel())
-                .addField("distanceRestante", getDistanceRestante())
-                .addField("vitesseCourante", getVitesseCourante())
-                .addField("vitesseDemande", getVitesseDemande())
+                .addField("distanceDeceleration", getPosToDecel())
+                .addField("input", getInput())
+                .addField("currentVitesse", getCurrentVitesse())
+                .addField("inputVitesse", getInputVitesse())
                 .addField("frein", isFrein() ? 1 : 0)
                 .addField("bypass", isBypass() ? 1 : 0)
                 .addField("output", getOutput());
