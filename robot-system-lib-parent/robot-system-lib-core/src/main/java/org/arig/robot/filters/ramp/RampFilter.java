@@ -51,9 +51,6 @@ public class RampFilter implements IRampFilter {
     @Getter
     private boolean frein;
 
-    @Getter
-    private boolean bypass;
-
     /**
      * Instantiates a new ramp.
      *
@@ -145,42 +142,36 @@ public class RampFilter implements IRampFilter {
      * Application du filtre. Cette méthode est appelé depuis la sub routine
      * d'asservissement
      *
-     * @param vitesseDemande   the vitesse
-     * @param distanceRestante the consigne
-     * @param frein            the frein
-     *
+     * @param inputVitesse the vitesse
+     * @param inputPos     the consigne
+     * @param frein        the frein
      * @return the double
      */
     @Override
-    public double filter(final double vitesseDemande, final double distanceRestante, final boolean frein) {
-        return filter(vitesseDemande, distanceRestante, true, false);
-    }
+    public double filter(final double inputVitesse, final double inputPos, final double distanceReelle, final boolean frein) {
 
-    @Override
-    public double filter(double inputVitesse, double inputPos, boolean frein, boolean bypass) {
+        double currentVitesseReele = conv.pulseToMm(distanceReelle / sampleTimeS);
+
         this.inputVitesse = inputVitesse;
         this.input = inputPos;
         this.frein = frein;
-        this.bypass = bypass;
+
+        double targetVitesse = name.contains("orientation") ? currentVitesse : inputVitesse;
 
         // Calcul de la distance de décéleration en fonction des parametres
-        posToDecel = conv.mmToPulse(Math.pow(inputVitesse, 2) / (2 * rampDec));
-        if (!bypass) {
-            if ((Math.abs(input) <= posToDecel && frein) || currentVitesse > inputVitesse) {
-                currentVitesse -= stepVitesseDecel;
-            } else if (currentVitesse < inputVitesse) {
-                currentVitesse += stepVitesseAccel;
-            }
+        posToDecel = conv.mmToPulse(Math.pow(targetVitesse, 2) / (2 * rampDec));
 
-            // Valeur max (evite les oscilations en régime établie)
-            currentVitesse = Math.min(currentVitesse, inputVitesse);
-
-            // Controle pour interdire les valeurs négatives
-            currentVitesse = Math.max(currentVitesse, 0);
-
-        } else {
-            currentVitesse = inputVitesse;
+        if ((Math.abs(input) <= posToDecel && frein) || currentVitesse > inputVitesse) {
+            currentVitesse -= stepVitesseDecel;
+        } else if (currentVitesse < inputVitesse) {
+            currentVitesse += stepVitesseAccel;
         }
+
+        // Valeur max (evite les oscilations en régime établie)
+        currentVitesse = Math.min(currentVitesse, inputVitesse);
+
+        // Controle pour interdire les valeurs négatives
+        currentVitesse = Math.max(currentVitesse, 0);
 
         // Calcul de la valeur filtré de position en fonction de la vitesse calculé sur la rampe.
         double outPosition = conv.mmToPulse(currentVitesse) * sampleTimeS;
@@ -202,7 +193,6 @@ public class RampFilter implements IRampFilter {
                 .addField("currentVitesse", getCurrentVitesse())
                 .addField("inputVitesse", getInputVitesse())
                 .addField("frein", isFrein() ? 1 : 0)
-                .addField("bypass", isBypass() ? 1 : 0)
                 .addField("output", getOutput());
 
         monitoringWrapper.addTimeSeriePoint(serie);

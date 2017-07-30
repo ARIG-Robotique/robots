@@ -66,26 +66,16 @@ public class RampFilterTest {
 
     @Test
     public void testFilterWithFrein() {
-        testFilter(true, false);
+        testFilter(true);
     }
 
     @Test
     public void testFilterWithoutFrein() {
-        testFilter(false, false);
+        testFilter(false);
     }
 
-    @Test
-    public void testSurchargeFilterHasSameProcess() {
-        for (int i = 200 ; i >= 0 ; i--) {
-            Assert.assertEquals(
-                    filter1.filter(100, i, true),
-                    filter2.filter(100, i, true, false),
-                    0
-            );
-        }
-    }
 
-    private void testFilter(boolean frein, boolean bypass) {
+    private void testFilter(boolean frein) {
         double vitesse = 100;
         double output;
         for (int i = 200 ; i >= -200 ; i--) {
@@ -95,8 +85,8 @@ public class RampFilterTest {
             if (i == -100) {
                 vitesse = 100;
             }
-            output = filter1.filter(vitesse, i, frein, bypass);
-            log.info("Frein {}, Bypass {}, Vitesse {}, consigne {}, output {}", frein, bypass, vitesse, i, output);
+            output = filter1.filter(vitesse, i, vitesse * filter1.getSampleTimeS(), frein);
+            log.info("Frein {}, Vitesse {}, consigne {}, output {}", frein, vitesse, i, output);
         }
     }
 }

@@ -43,7 +43,6 @@ public class SimplePidFilter extends AbstractPidFilter {
 
     @Override
     public void reset() {
-        log.info("Reset des paramètres du PID");
 
         errorSum = 0;
         lastError = 0;

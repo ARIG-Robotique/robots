@@ -54,17 +54,5 @@ public interface IRampFilter {
      *
      * @return the double
      */
-    double filter(final double vitesseDemande, final double distanceRestante, final boolean frein);
-
-    /**
-     * Filter.
-     *
-     * @param vitesseDemande   the vitesse
-     * @param distanceRestante the consigne
-     * @param frein            the frein
-     * @param bypass           the bypass
-     *
-     * @return the double
-     */
-    double filter(final double vitesseDemande, final double distanceRestante, final boolean frein, final boolean bypass);
+    double filter(final double vitesseDemande, final double distanceRestante, final double distanceReelle, final boolean frein);
 }

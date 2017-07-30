@@ -15,6 +15,7 @@ public class MonitorTimeSerie extends AbstractMonitor {
 
     private String tableName;
     private Map<String, Number> fields = new LinkedHashMap<>();
+    private Map<String, String> tags = new LinkedHashMap<>();
 
     public MonitorTimeSerie tableName(String tableName) {
         setTableName(tableName);
@@ -23,6 +24,11 @@ public class MonitorTimeSerie extends AbstractMonitor {
 
     public MonitorTimeSerie addField(String name, Number value) {
         fields.put(name, value);
+        return this;
+    }
+
+    public MonitorTimeSerie addTag(String name, String value) {
+        tags.put(name, value);
         return this;
     }
 }

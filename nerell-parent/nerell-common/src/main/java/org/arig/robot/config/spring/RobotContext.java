@@ -5,6 +5,7 @@ import org.arig.robot.Ordonanceur;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.filters.pid.CompletePidFilter;
 import org.arig.robot.filters.pid.IPidFilter;
+import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.filters.ramp.IRampFilter;
 import org.arig.robot.filters.ramp.RampFilter;
 import org.arig.robot.model.CommandeRobot;
@@ -102,9 +103,9 @@ public class RobotContext {
     @Bean(name = "pidDistance")
     public IPidFilter pidDistance() {
         log.info("Configuration PID Distance");
-        CompletePidFilter pid = new CompletePidFilter("pid_distance");
-        pid.setSampleTime((int) IConstantesNerellConfig.asservTimeMs);
-        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
+        SimplePidFilter pid = new SimplePidFilter("pid_distance");
+//        pid.setSampleTime((int) IConstantesNerellConfig.asservTimeMs);
+//        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
 
         pid.setTunings(IConstantesNerellConfig.kpDistance, IConstantesNerellConfig.kiDistance, IConstantesNerellConfig.kdDistance);
         return pid;
@@ -113,9 +114,9 @@ public class RobotContext {
     @Bean(name = "pidOrientation")
     public IPidFilter pidOrientation() {
         log.info("Configuration PID Orientation");
-        CompletePidFilter pid = new CompletePidFilter("pid_orientation");
-        pid.setSampleTime((int) IConstantesNerellConfig.asservTimeMs);
-        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
+        SimplePidFilter pid = new SimplePidFilter("pid_orientation");
+//        pid.setSampleTime((int) IConstantesNerellConfig.asservTimeMs);
+//        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
 
         pid.setTunings(IConstantesNerellConfig.kpOrientation, IConstantesNerellConfig.kiOrientation, IConstantesNerellConfig.kdOrientation);
         return pid;
