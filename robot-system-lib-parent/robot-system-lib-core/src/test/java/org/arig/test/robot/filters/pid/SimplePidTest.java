@@ -52,7 +52,7 @@ public class SimplePidTest {
                 input = (i * consigne) / 100;
             }
             output = pid.compute(consigne, input);
-            log.info("Test P : consigne {}, input {}, output {}", consigne, input, output);
+            log.info("Test P : consigne {}, mesure {}, output {}", consigne, input, output);
             Assert.assertEquals(consigne - input, output, 1);
 
             Thread.sleep(1);

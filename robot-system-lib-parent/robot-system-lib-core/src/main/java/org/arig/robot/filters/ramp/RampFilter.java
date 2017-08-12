@@ -63,7 +63,7 @@ public class RampFilter implements IRampFilter {
     /**
      * Instantiates a new ramp.
      *
-     * @param name         the filter name for monitoring
+     * @param name      the filter tag name for monitoring
      * @param sampleTimeMs the sample time in ms
      * @param rampAcc      the ramp acc
      * @param rampDec      the ramp dec
@@ -187,9 +187,10 @@ public class RampFilter implements IRampFilter {
     private void sendMonitoring() {
         // Construction du monitoring
         MonitorTimeSerie serie = new MonitorTimeSerie()
-                .tableName(name)
+                .measurementName("ramp_vitesse")
+                .addTag(MonitorTimeSerie.TAG_NAME, name)
                 .addField("distanceDeceleration", getPosToDecel())
-                .addField("input", getInput())
+                .addField("mesure", getInput())
                 .addField("currentVitesse", getCurrentVitesse())
                 .addField("inputVitesse", getInputVitesse())
                 .addField("frein", isFrein() ? 1 : 0)

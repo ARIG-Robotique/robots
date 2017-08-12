@@ -43,7 +43,7 @@ public class MouvementController {
     private IAvoidingService avoidingService;
 
     @Autowired
-    @Qualifier("mouvementManagerAsync")
+    @Qualifier("trajectoryManagerAsync")
     private ITrajectoryManager trajectoryManager;
 
     @RequestMapping(method = RequestMethod.GET)

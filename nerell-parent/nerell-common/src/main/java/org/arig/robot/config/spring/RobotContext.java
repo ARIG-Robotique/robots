@@ -69,15 +69,15 @@ public class RobotContext {
 
     @Bean
     @Primary
-    public ITrajectoryManager mouvementManager() {
+    public ITrajectoryManager trajectoryManager() {
         return new TrajectoryManager(IConstantesNerellConfig.arretDistanceMm, IConstantesNerellConfig.approcheDistanceMm,
                 IConstantesNerellConfig.arretOrientDeg, IConstantesNerellConfig.approcheOrientationDeg,
                 IConstantesNerellConfig.angleReculDeg);
     }
 
-    @Bean(value = "mouvementManagerAsync")
-    public ITrajectoryManager mouvementManagerAsync() {
-        return new TrajectoryManagerAsync(mouvementManager());
+    @Bean(value = "trajectoryManagerAsync")
+    public ITrajectoryManager trajectoryManagerAsync() {
+        return new TrajectoryManagerAsync(trajectoryManager());
     }
 
     @Bean
@@ -103,10 +103,7 @@ public class RobotContext {
     @Bean(name = "pidDistance")
     public IPidFilter pidDistance() {
         log.info("Configuration PID Distance");
-        SimplePidFilter pid = new SimplePidFilter("pid_distance");
-//        pid.setSampleTime((int) IConstantesNerellConfig.asservTimeMs);
-//        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
-
+        SimplePidFilter pid = new SimplePidFilter("distance");
         pid.setTunings(IConstantesNerellConfig.kpDistance, IConstantesNerellConfig.kiDistance, IConstantesNerellConfig.kdDistance);
         return pid;
     }
@@ -114,48 +111,21 @@ public class RobotContext {
     @Bean(name = "pidOrientation")
     public IPidFilter pidOrientation() {
         log.info("Configuration PID Orientation");
-        SimplePidFilter pid = new SimplePidFilter("pid_orientation");
-//        pid.setSampleTime((int) IConstantesNerellConfig.asservTimeMs);
-//        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
-
+        SimplePidFilter pid = new SimplePidFilter("orientation");
         pid.setTunings(IConstantesNerellConfig.kpOrientation, IConstantesNerellConfig.kiOrientation, IConstantesNerellConfig.kdOrientation);
-        return pid;
-    }
-
-    @Bean(name = "pidMoteurDroit")
-    public IPidFilter pidMoteurDroit(AbstractPropulsionsMotors motors) {
-        log.info("Configuration PID moteur droit");
-        CompletePidFilter pid = new CompletePidFilter("pid_mot_droit");
-        pid.setSampleTime((int) IConstantesNerellConfig.asservTimeMs);
-        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
-        pid.setOutputLimits(motors.getMinSpeed(), motors.getMaxSpeed());
-
-        pid.setTunings(IConstantesNerellConfig.kpMotDroit, IConstantesNerellConfig.kiMotDroit, IConstantesNerellConfig.kdMotDroit);
-        return pid;
-    }
-
-    @Bean(name = "pidMoteurGauche")
-    public IPidFilter pidMoteurGauche(AbstractPropulsionsMotors motors) {
-        log.info("Configuration PID moteur gauche");
-        CompletePidFilter pid = new CompletePidFilter("pid_mot_gauche");
-        pid.setSampleTime((int) IConstantesNerellConfig.asservTimeMs);
-        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
-        pid.setOutputLimits(motors.getMinSpeed(), motors.getMaxSpeed());
-
-        pid.setTunings(IConstantesNerellConfig.kpMotGauche, IConstantesNerellConfig.kiMotGauche, IConstantesNerellConfig.kdMotGauche);
         return pid;
     }
 
     @Bean(name = "rampDistance")
     public IRampFilter rampDistance() {
         log.info("Configuration RampFilter Distance");
-        return new RampFilter("ramp_distance", IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccDistance, IConstantesNerellConfig.rampDecDistance);
+        return new RampFilter("distance", IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccDistance, IConstantesNerellConfig.rampDecDistance);
     }
 
     @Bean(name = "rampOrientation")
     public IRampFilter rampOrientation() {
         log.info("Configuration RampFilter Orientation");
-        return new RampFilter("ramp_orientation", IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccOrientation, IConstantesNerellConfig.rampDecOrientation);
+        return new RampFilter("orientation", IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccOrientation, IConstantesNerellConfig.rampDecOrientation);
     }
 
     @Bean

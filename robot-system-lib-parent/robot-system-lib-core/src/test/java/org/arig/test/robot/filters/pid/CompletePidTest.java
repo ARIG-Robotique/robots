@@ -54,7 +54,7 @@ public class CompletePidTest {
                 input = (i * consigne) / 100;
             }
             output = pid.compute(consigne, input);
-            log.info("Test P : consigne {}, input {}, output {}", consigne, input, output);
+            log.info("Test P : consigne {}, mesure {}, output {}", consigne, input, output);
             Assert.assertEquals(consigne - input, output, 1);
 
             Thread.sleep(1);
@@ -73,7 +73,7 @@ public class CompletePidTest {
                 input = (i * consigne) / 100;
             }
             output = pid.compute(consigne, input);
-            log.info("Test P : consigne {}, input {}, output {}", consigne, input, output);
+            log.info("Test P : consigne {}, mesure {}, output {}", consigne, input, output);
 
             Thread.sleep(1);
         }
@@ -91,7 +91,7 @@ public class CompletePidTest {
                 input = (i * consigne) / 100;
             }
             output = pid.compute(consigne, input);
-            log.info("Test P : consigne {}, input {}, output {}", consigne, input, output);
+            log.info("Test P : consigne {}, mesure {}, output {}", consigne, input, output);
 
             Thread.sleep(1);
         }

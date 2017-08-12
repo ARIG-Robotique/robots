@@ -56,7 +56,7 @@ public class AsservissementPolaireTestContext {
     @Bean(name = "pidDistance")
     public IPidFilter pidDistance() {
         log.info("Configuration PID Distance");
-        CompletePidFilter pid = new CompletePidFilter("pid_distance");
+        CompletePidFilter pid = new CompletePidFilter("distance");
         pid.setSampleTime(SAMPLE_TIME_MS);
         pid.setTunings(KP, KI, KD);
         pid.setMode(IPidFilter.PidMode.AUTOMATIC);
@@ -66,27 +66,7 @@ public class AsservissementPolaireTestContext {
     @Bean(name = "pidOrientation")
     public IPidFilter pidOrientation() {
         log.info("Configuration PID Orientation");
-        CompletePidFilter pid = new CompletePidFilter("pid_orientation");
-        pid.setSampleTime(SAMPLE_TIME_MS);
-        pid.setTunings(KP, KI, KD);
-        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
-        return pid;
-    }
-
-    @Bean(name = "pidMoteurDroit")
-    public IPidFilter pidMoteurDroit() {
-        log.info("Configuration PID moteur droit");
-        CompletePidFilter pid = new CompletePidFilter("pid_mot_droit");
-        pid.setSampleTime(SAMPLE_TIME_MS);
-        pid.setTunings(KP, KI, KD);
-        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
-        return pid;
-    }
-
-    @Bean(name = "pidMoteurGauche")
-    public IPidFilter pidMoteurGauche() {
-        log.info("Configuration PID moteur gauche");
-        CompletePidFilter pid = new CompletePidFilter("pid_mot_gauche");
+        CompletePidFilter pid = new CompletePidFilter("orientation");
         pid.setSampleTime(SAMPLE_TIME_MS);
         pid.setTunings(KP, KI, KD);
         pid.setMode(IPidFilter.PidMode.AUTOMATIC);
@@ -96,13 +76,13 @@ public class AsservissementPolaireTestContext {
     @Bean(name = "rampDistance")
     public IRampFilter rampDistance() {
         log.info("Configuration RampFilter Distance");
-        return new RampFilter("ramp_distance", SAMPLE_TIME_MS, 50, 50);
+        return new RampFilter("distance", SAMPLE_TIME_MS, 50, 50);
     }
 
     @Bean(name = "rampOrientation")
     public IRampFilter rampOrientation() {
         log.info("Configuration RampFilter Orientation");
-        return new RampFilter("ramp_orientation", SAMPLE_TIME_MS, 50, 50);
+        return new RampFilter("orientation", SAMPLE_TIME_MS, 50, 50);
     }
 
     @Bean

@@ -16,7 +16,7 @@ public class PidTestContext {
 
     @Bean
     public SimplePidFilter simplePID() {
-        SimplePidFilter pid = new SimplePidFilter("simple_pid_test");
+        SimplePidFilter pid = new SimplePidFilter("test");
         pid.setTunings(1, 0, 0);
 
         return pid;
@@ -24,7 +24,7 @@ public class PidTestContext {
 
     @Bean
     public CompletePidFilter completePID() {
-        CompletePidFilter pid = new CompletePidFilter("complete_pid_test");
+        CompletePidFilter pid = new CompletePidFilter("test");
         pid.setControllerDirection(IPidFilter.PidType.DIRECT);
         pid.setMode(IPidFilter.PidMode.AUTOMATIC);
         pid.setSampleTime(1);

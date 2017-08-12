@@ -243,7 +243,8 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
 
         // Construction du monitoring
         MonitorTimeSerie serie = new MonitorTimeSerie()
-                .tableName("avoiding")
+                .measurementName("avoiding")
+                .addTag(MonitorTimeSerie.TAG_NAME, "lidar_top")
                 //.addField("nbPointCapteursDetecte", detectedPointsMmCapteurs.size())
                 .addField("nbPointLidarDetecte", detectedPointsMmLidar.size());
                 /*.addField("rawGpGauche", rawGpGauche)

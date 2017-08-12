@@ -340,10 +340,11 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         ColorData c = frontColorSensor.getColorData();
 
         MonitorTimeSerie mts = new MonitorTimeSerie();
-        mts.tableName("couleur");
-        mts.addField("r", c.r());
-        mts.addField("g", c.g());
-        mts.addField("b", c.b());
+        mts.measurementName("couleur")
+                .addTag(MonitorTimeSerie.TAG_NAME, "devidoir")
+                .addField("r", c.r())
+                .addField("g", c.g())
+                .addField("b", c.b());
         monitoring.addTimeSeriePoint(mts);
 
         int delta = 42;

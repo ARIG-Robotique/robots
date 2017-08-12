@@ -1,7 +1,9 @@
 package org.arig.robot.model.monitor;
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Setter;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -13,12 +15,16 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 public class MonitorTimeSerie extends AbstractMonitor {
 
-    private String tableName;
+    public static final String TAG_NAME = "name";
+
+    @Setter(AccessLevel.PROTECTED)
+    private String measurementName;
+
     private Map<String, Number> fields = new LinkedHashMap<>();
     private Map<String, String> tags = new LinkedHashMap<>();
 
-    public MonitorTimeSerie tableName(String tableName) {
-        setTableName(tableName);
+    public MonitorTimeSerie measurementName(String measurementName) {
+        setMeasurementName(measurementName);
         return this;
     }
 

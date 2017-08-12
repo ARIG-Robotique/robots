@@ -46,14 +46,14 @@ public interface IPidFilter {
      *
      * @return la mesure d'entrée
      */
-    double getInput();
+    double getMesure();
 
     /**
      * Valeur de la consigne
      *
      * @return la consigne
      */
-    double getSetPoint();
+    double getConsigne();
 
     /**
      * Sortie en fonction de la consigne, de la mesure et de la configuration

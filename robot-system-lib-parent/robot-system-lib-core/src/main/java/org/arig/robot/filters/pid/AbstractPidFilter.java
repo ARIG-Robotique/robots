@@ -21,13 +21,17 @@ public abstract class AbstractPidFilter implements IPidFilter {
     protected void sendMonitoring() {
         // Construction du monitoring
         MonitorTimeSerie serie = new MonitorTimeSerie()
-                .tableName(name)
-                .addField("setPoint", getSetPoint())
-                .addField("input", getInput())
+                .measurementName("correcteur_pid")
+                .addTag(MonitorTimeSerie.TAG_NAME, name)
+                .addTag("implementation", pidImpl())
+                .addField("consigne", getConsigne())
+                .addField("mesure", getMesure())
                 .addField("error", getError())
                 .addField("errorSum", getErrorSum())
                 .addField("output", getOutput());
 
         monitoringWrapper.addTimeSeriePoint(serie);
     }
+
+    protected abstract String pidImpl();
 }

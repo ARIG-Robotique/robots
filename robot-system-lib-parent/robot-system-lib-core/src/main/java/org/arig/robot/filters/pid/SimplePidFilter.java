@@ -19,7 +19,7 @@ public class SimplePidFilter extends AbstractPidFilter {
 
     @Getter
     @Setter(AccessLevel.PRIVATE)
-    private double setPoint, input;
+    private double consigne, mesure;
 
     @Getter
     private double errorSum = 0;
@@ -27,9 +27,13 @@ public class SimplePidFilter extends AbstractPidFilter {
     private double output = 0;
     private double lastError = 0;
 
-
     public SimplePidFilter(String name) {
         super(name);
+    }
+
+    @Override
+    protected String pidImpl() {
+        return "simple";
     }
 
     @Override
@@ -50,8 +54,8 @@ public class SimplePidFilter extends AbstractPidFilter {
 
     @Override
     public double compute(final double consigne, final double mesure) {
-        setSetPoint(consigne);
-        setInput(mesure);
+        setConsigne(consigne);
+        setMesure(mesure);
 
         final double error = consigne - mesure;
         final double deltaError = error - lastError;

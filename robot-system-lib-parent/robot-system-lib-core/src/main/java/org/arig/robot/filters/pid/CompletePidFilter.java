@@ -15,13 +15,13 @@ public class CompletePidFilter extends AbstractPidFilter {
 
     @Getter
     @Setter(AccessLevel.PRIVATE)
-    private double input, output, setPoint, error;
+    private double mesure, output, consigne, error;
 
-    private double iTerm, lastInput;
+    private double iTerm, lastMesure;
 
     private double kp, ki, kd;
 
-    private int sampleTime = 1000; //1 sec
+    private int sampleTime = 1000; // 1 sec
 
     private double outMin, outMax;
 
@@ -34,6 +34,11 @@ public class CompletePidFilter extends AbstractPidFilter {
         super(name);
         outMax = Double.MAX_VALUE;
         outMin = -Double.MAX_VALUE;
+    }
+
+    @Override
+    protected String pidImpl() {
+        return "complete";
     }
 
     public void setMode(PidMode mode) {
@@ -69,7 +74,7 @@ public class CompletePidFilter extends AbstractPidFilter {
     }
 
     public void initialise() {
-        lastInput = input;
+        lastMesure = mesure;
         iTerm = output;
         if (iTerm > outMax) iTerm = outMax;
         else if (iTerm < outMin) iTerm = outMin;
@@ -77,7 +82,7 @@ public class CompletePidFilter extends AbstractPidFilter {
 
     @Override
     public void reset() {
-        input = 0;
+        mesure = 0;
         error = 0;
         output = 0;
         initialise();
@@ -85,8 +90,8 @@ public class CompletePidFilter extends AbstractPidFilter {
 
     @Override
     public double compute(double consigne, double mesure) {
-        setSetPoint(consigne);
-        setInput(mesure);
+        setConsigne(consigne);
+        setMesure(mesure);
 
         if (!inAuto) {
             sendMonitoring();
@@ -94,11 +99,11 @@ public class CompletePidFilter extends AbstractPidFilter {
         }
 
         /* Compute all the working error variables */
-        error = setPoint - input;
+        error = consigne - this.mesure;
         iTerm += (ki * error);
         if (iTerm > outMax) iTerm = outMax;
         else if (iTerm < outMin) iTerm = outMin;
-        double dInput = (input - lastInput);
+        double dInput = (this.mesure - lastMesure);
 
         /* Compute PID output */
         output = kp * error + iTerm - kd * dInput;
@@ -106,7 +111,7 @@ public class CompletePidFilter extends AbstractPidFilter {
         else if (output < outMin) output = outMin;
 
         /* Remember some variables for next time */
-        lastInput = input;
+        lastMesure = this.mesure;
 
         sendMonitoring();
         return output;
