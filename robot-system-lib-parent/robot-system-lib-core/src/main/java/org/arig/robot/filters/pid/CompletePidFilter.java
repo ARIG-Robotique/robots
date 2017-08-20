@@ -19,6 +19,7 @@ public class CompletePidFilter extends AbstractPidFilter {
 
     private double iTerm, lastMesure;
 
+    @Getter
     private double kp, ki, kd;
 
     private int sampleTime = 1000; // 1 sec

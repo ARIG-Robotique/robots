@@ -13,9 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SimplePidFilter extends AbstractPidFilter {
 
-    private double kp;
-    private double ki;
-    private double kd;
+    @Getter
+    private double kp, ki, kd;
 
     @Getter
     @Setter(AccessLevel.PRIVATE)

@@ -26,6 +26,10 @@ public interface IPidFilter {
      */
     void setTunings(final double kp, final double ki, final double kd);
 
+    double getKp();
+    double getKi();
+    double getKd();
+
     /**
      * Reset.
      */
