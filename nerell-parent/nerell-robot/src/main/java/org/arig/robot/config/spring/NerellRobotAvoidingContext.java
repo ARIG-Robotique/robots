@@ -26,7 +26,7 @@ import java.io.IOException;
  */
 @Slf4j
 @Configuration
-public class NerellAvoidingContext {
+public class NerellRobotAvoidingContext {
 
     @Autowired
     private Environment env;

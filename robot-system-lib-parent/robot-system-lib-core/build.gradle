@@ -8,7 +8,6 @@ dependencies {
     compile "commons-io:commons-io:${apacheCommonsIOVersion}"
     compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     compile "com.google.guava:guava:${googleGuavaVersion}"
-    compile "org.influxdb:influxdb-java:${influxdbVersion}"
     compile "com.kohlschutter.junixsocket:junixsocket-native-common:${junixsocketVersion}"
     compile "com.kohlschutter.junixsocket:junixsocket-common:${junixsocketVersion}"
     compile "org.slf4j:slf4j-log4j12:${slf4jVersion}"

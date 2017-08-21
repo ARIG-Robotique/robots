@@ -1,4 +1,4 @@
-package org.arig.robot.filters.values;
+package org.arig.robot.filters.average;
 
 import java.util.function.BinaryOperator;
 

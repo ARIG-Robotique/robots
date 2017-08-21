@@ -72,12 +72,12 @@ public interface IConstantesNerellConfig {
     // -------------- //
 
     double kpDistance = 1.5;
-    double kiDistance = 4.0;
-    double kdDistance = 0.00050;
+    double kiDistance = 6.0;
+    double kdDistance = 0.0050;
 
     double kpOrientation = 0.5;
-    double kiOrientation = 3.5;
-    double kdOrientation = 0.0050;
+    double kiOrientation = 5.5;
+    double kdOrientation = 0.050;
 
     // --------------------------- //
     // Paramètre mouvement manager //

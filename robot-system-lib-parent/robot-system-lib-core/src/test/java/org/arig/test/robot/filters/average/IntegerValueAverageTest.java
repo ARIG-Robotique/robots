@@ -1,6 +1,6 @@
-package org.arig.test.robot.filters.values;
+package org.arig.test.robot.filters.average;
 
-import org.arig.robot.filters.values.IntegerValueAverage;
+import org.arig.robot.filters.average.IntegerValueAverage;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,19 +16,19 @@ public class IntegerValueAverageTest {
     public void testAverage() {
         IntegerValueAverage avg = new IntegerValueAverage();
 
-        int calc = 0;
+        int expected = 0;
         for (int i = 0 ; i < 20 ; i++) {
-            int res = avg.average(i);
-            calc = (calc + i) / 2;
-            Assert.assertEquals(calc, res);
+            int res = avg.filter(i);
+            expected = (expected + i) / 2;
+            Assert.assertEquals(expected, res);
         }
 
         avg.reset();
-        avg.average(calc = 0);
+        avg.filter(expected = 0);
         for (int i = 20 ; i > 0 ; i--) {
-            int res = avg.average(i);
-            calc = (calc + i) / 2;
-            Assert.assertTrue(calc - res <= 1);
+            int res = avg.filter(i);
+            expected = (expected + i) / 2;
+            Assert.assertTrue(expected - res <= 1);
         }
     }
 
@@ -37,15 +37,15 @@ public class IntegerValueAverageTest {
         int limit = 5;
         IntegerValueAverage avg = new IntegerValueAverage(limit);
         for (int i = 0 ; i < limit * 2 ; i++) {
-            avg.average(i);
+            avg.filter(i);
             Assert.assertEquals(Math.min(i + 1, limit), avg.size());
         }
         Assert.assertEquals(limit, avg.size());
 
         int limit2 = 10;
-        avg.setLimit(limit2);
+        avg.setNbValues(limit2);
         for (int i = 0 ; i < limit2 * 2 ; i++) {
-            avg.average(i);
+            avg.filter(i);
             Assert.assertEquals(Math.min(i + limit + 1, limit2), avg.size());
         }
         Assert.assertEquals(limit2, avg.size());
@@ -57,7 +57,7 @@ public class IntegerValueAverageTest {
         IntegerValueAverage avg = new IntegerValueAverage(limit);
         do {
             for (int i = 0; i < limit * 2; i++) {
-                avg.average(i);
+                avg.filter(i);
                 Assert.assertEquals(Math.min(i + 1, limit), avg.size());
             }
             Assert.assertEquals(limit, avg.size());

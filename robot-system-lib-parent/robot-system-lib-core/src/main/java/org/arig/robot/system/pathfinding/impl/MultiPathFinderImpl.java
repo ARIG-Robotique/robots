@@ -1,7 +1,6 @@
 package org.arig.robot.system.pathfinding.impl;
 
 import algorithms.AStar;
-import algorithms.BreadthFirstSearch;
 import algorithms.LazyThetaStar;
 import algorithms.PathFindingAlgorithm;
 import algorithms.anya16.Anya16;

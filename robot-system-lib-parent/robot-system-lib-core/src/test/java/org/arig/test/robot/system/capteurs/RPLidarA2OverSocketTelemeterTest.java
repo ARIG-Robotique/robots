@@ -8,7 +8,11 @@ import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.model.lidar.enums.HealthState;
 import org.arig.robot.system.capteurs.RPLidarA2OverSocketTelemeter;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 

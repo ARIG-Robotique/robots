@@ -16,6 +16,7 @@ import java.util.Map;
 public class MonitorTimeSerie extends AbstractMonitor {
 
     public static final String TAG_NAME = "name";
+    public static final String TAG_IMPLEMENTATION = "implementation";
 
     @Setter(AccessLevel.PROTECTED)
     private String measurementName;

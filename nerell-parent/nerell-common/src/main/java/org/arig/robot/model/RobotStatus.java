@@ -1,6 +1,10 @@
 package org.arig.robot.model;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.constants.IConstantesNerellConfig;

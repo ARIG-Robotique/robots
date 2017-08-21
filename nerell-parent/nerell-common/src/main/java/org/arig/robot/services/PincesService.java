@@ -1,7 +1,6 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.ModuleLunaire;
 import org.arig.robot.model.RobotStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -2,8 +2,10 @@ package org.arig.robot.services.avoiding;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.arig.robot.model.*;
+import org.arig.robot.model.Cercle;
+import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.Position;
 import org.arig.robot.model.Rectangle;
 import org.arig.robot.model.enums.TypeMouvement;
 import org.arig.robot.model.monitor.AbstractMonitorMouvement;
@@ -15,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.awt.*;
-import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;

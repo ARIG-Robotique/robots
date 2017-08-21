@@ -8,11 +8,7 @@ import org.arig.robot.model.Team;
 import org.arig.robot.services.EjectionModuleService;
 import org.arig.robot.services.IOService;
 import org.arig.robot.services.ServosService;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-import java.util.Deque;
-import java.util.LinkedList;
 
 /**
  * @author gdepuille on 11/04/17.

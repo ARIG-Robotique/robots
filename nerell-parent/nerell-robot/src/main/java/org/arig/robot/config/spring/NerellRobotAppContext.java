@@ -12,7 +12,7 @@ import org.springframework.core.env.Environment;
  * @author gdepuille on 30/10/16.
  */
 @Configuration
-public class NerellAppContext {
+public class NerellRobotAppContext {
 
     @Autowired
     private Environment env;

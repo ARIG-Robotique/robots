@@ -15,8 +15,6 @@ import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 @Slf4j
 @Component
 public class CratereBaseLunaireBleuAction extends AbstractAction {

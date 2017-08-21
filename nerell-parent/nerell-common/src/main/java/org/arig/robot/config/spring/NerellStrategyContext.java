@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan({"org.arig.robot.strategy.actions.active"})
-public class StrategyContext {
+public class NerellStrategyContext {
 
     @Bean
     public StrategyManager strategyManager() {

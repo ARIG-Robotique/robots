@@ -8,4 +8,4 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan({"org.arig.robot.services"})
-public class ServicesContext { }
+public class NerellServicesContext { }

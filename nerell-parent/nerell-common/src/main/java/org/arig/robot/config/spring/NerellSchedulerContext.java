@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 @Configuration
 @EnableScheduling
 @ComponentScan({"org.arig.robot.scheduler"})
-public class SchedulerContext implements SchedulingConfigurer {
+public class NerellSchedulerContext implements SchedulingConfigurer {
 
     @Bean(destroyMethod="shutdown")
     public Executor taskExecutor() {

@@ -1,10 +1,10 @@
 package org.arig.test.robot.system.motion;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.filters.pid.CompletePidFilter;
 import org.arig.robot.filters.pid.IPidFilter;
-import org.arig.robot.filters.ramp.IRampFilter;
-import org.arig.robot.filters.ramp.RampFilter;
+import org.arig.robot.filters.pid.SimplePidFilter;
+import org.arig.robot.filters.ramp.IRampFilter.RampType;
+import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
@@ -56,33 +56,29 @@ public class AsservissementPolaireTestContext {
     @Bean(name = "pidDistance")
     public IPidFilter pidDistance() {
         log.info("Configuration PID Distance");
-        CompletePidFilter pid = new CompletePidFilter("distance");
-        pid.setSampleTime(SAMPLE_TIME_MS);
+        SimplePidFilter pid = new SimplePidFilter("distance");
         pid.setTunings(KP, KI, KD);
-        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
         return pid;
     }
 
     @Bean(name = "pidOrientation")
     public IPidFilter pidOrientation() {
         log.info("Configuration PID Orientation");
-        CompletePidFilter pid = new CompletePidFilter("orientation");
-        pid.setSampleTime(SAMPLE_TIME_MS);
+        SimplePidFilter pid = new SimplePidFilter("orientation");
         pid.setTunings(KP, KI, KD);
-        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
         return pid;
     }
 
     @Bean(name = "rampDistance")
-    public IRampFilter rampDistance() {
-        log.info("Configuration RampFilter Distance");
-        return new RampFilter("distance", SAMPLE_TIME_MS, 50, 50);
+    public TrapezoidalRampFilter rampDistance() {
+        log.info("Configuration TrapezoidalRampFilter Distance");
+        return new TrapezoidalRampFilter("distance", RampType.LINEAR, SAMPLE_TIME_MS, 50, 50);
     }
 
     @Bean(name = "rampOrientation")
-    public IRampFilter rampOrientation() {
-        log.info("Configuration RampFilter Orientation");
-        return new RampFilter("orientation", SAMPLE_TIME_MS, 50, 50);
+    public TrapezoidalRampFilter rampOrientation() {
+        log.info("Configuration TrapezoidalRampFilter Orientation");
+        return new TrapezoidalRampFilter("orientation", RampType.ANGULAR, SAMPLE_TIME_MS, 50, 50);
     }
 
     @Bean

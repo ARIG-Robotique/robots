@@ -1,11 +1,12 @@
-package org.arig.robot.filters.values;
+package org.arig.robot.filters.average;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
+import org.springframework.util.Assert;
 
 import java.util.function.BinaryOperator;
 
 /**
- * Classe de base pour les calcul de moyenne en utilisant un FIFO circulaire.
+ * Classe de base pour les calcul de moyenne en utilisant une FIFO circulaire.
  *
  * @author gdepuille on 14/05/17.
  */
@@ -13,12 +14,12 @@ public abstract class AbstractCircularFifoValueAverage<T> implements IAverage<T>
 
     private CircularFifoQueue<T> queue;
 
-    AbstractCircularFifoValueAverage(int limit) {
-        queue = new CircularFifoQueue<>(limit);
+    AbstractCircularFifoValueAverage(int nbValues) {
+        queue = new CircularFifoQueue<>(nbValues);
     }
 
-    public final void setLimit(int newLimit) {
-        CircularFifoQueue<T> tmp = new CircularFifoQueue<>(newLimit);
+    public final void setNbValues(int newNbValues) {
+        CircularFifoQueue<T> tmp = new CircularFifoQueue<>(newNbValues);
         tmp.addAll(queue);
         queue = tmp;
     }
@@ -34,7 +35,8 @@ public abstract class AbstractCircularFifoValueAverage<T> implements IAverage<T>
     }
 
     @Override
-    public final T average(T newValue) {
+    public final T filter(T newValue) {
+        Assert.notNull(newValue, FILTER_VALUE_NULL_MESSAGE);
         queue.offer(newValue);
         T res = queue.parallelStream().reduce(identityValue(), reduceFunction());
         return effectiveAverage(res, queue.size());

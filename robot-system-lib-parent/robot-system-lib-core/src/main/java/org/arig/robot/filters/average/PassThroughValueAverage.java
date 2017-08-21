@@ -1,4 +1,4 @@
-package org.arig.robot.filters.values;
+package org.arig.robot.filters.average;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -15,13 +15,10 @@ public class PassThroughValueAverage<T> implements IAverage<T> {
     private final int size = 0;
 
     @Override
-    public void reset() { }
+    public void setNbValues(int nbValues) { }
 
     @Override
-    public void setLimit(int limit) { }
-
-    @Override
-    public T average(T newValue) {
+    public T filter(T newValue) {
         return newValue;
     }
 }

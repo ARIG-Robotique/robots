@@ -17,7 +17,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 
 /**
  * @author gdepuille on 30/12/13.

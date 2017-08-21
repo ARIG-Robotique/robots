@@ -1,6 +1,6 @@
-package org.arig.test.robot.filters.values;
+package org.arig.test.robot.filters.average;
 
-import org.arig.robot.filters.values.PassThroughValueAverage;
+import org.arig.robot.filters.average.PassThroughValueAverage;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +17,7 @@ public class PassThroughValueAverageTest {
         PassThroughValueAverage<Integer> avg = new PassThroughValueAverage<>();
 
         for (int i = 0 ; i < 20 ; i++) {
-            int res = avg.average(i);
+            int res = avg.filter(i);
             Assert.assertEquals(i, res);
         }
     }
@@ -27,7 +27,7 @@ public class PassThroughValueAverageTest {
         PassThroughValueAverage<Integer> avg = new PassThroughValueAverage<>();
         Assert.assertEquals(0, avg.size());
 
-        avg.setLimit(10);
+        avg.setNbValues(10);
         Assert.assertEquals(0, avg.size());
 
         avg.reset();

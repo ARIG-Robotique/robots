@@ -5,7 +5,6 @@ import org.arig.robot.model.Chemin;
 import org.arig.robot.model.Point;
 
 import java.awt.*;
-import java.io.File;
 import java.io.InputStream;
 
 /**

@@ -1,6 +1,10 @@
 package org.arig.robot.system.bras;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import org.arig.robot.model.Point3D;
 
 /**

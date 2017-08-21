@@ -3,12 +3,14 @@ package org.arig.test.robot.filters.pid;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
-import org.arig.robot.filters.pid.CompletePidFilter;
+import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,25 +18,24 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.UUID;
 
-/**
- * @author gdepuille on 15/03/15.
- */
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { PidTestContext.class })
-public class CompletePidTest {
+public abstract class AbstractPidTest {
 
-    @Autowired
-    private CompletePidFilter pid;
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Autowired
     private IMonitoringWrapper monitoringWrapper;
+
+    abstract IPidFilter pid();
 
     @Before
     public void before() {
         System.setProperty(IConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
         monitoringWrapper.cleanAllPoints();
-        pid.reset();
+        pid().reset();
     }
 
     @After
@@ -45,7 +46,7 @@ public class CompletePidTest {
     @Test
     @SneakyThrows
     public void testP() {
-        pid.setTunings(1, 0, 0);
+        pid().setTunings(1, 0, 0);
 
         double consigne = 100;
         double input = 0, output = 0;
@@ -53,18 +54,17 @@ public class CompletePidTest {
             if (i > 10) {
                 input = (i * consigne) / 100;
             }
-            output = pid.compute(consigne, input);
+            pid().setConsigne(consigne);
+            output = pid().filter(input);
             log.info("Test P : consigne {}, mesure {}, output {}", consigne, input, output);
             Assert.assertEquals(consigne - input, output, 1);
-
-            Thread.sleep(1);
         }
     }
 
     @Test
     @SneakyThrows
     public void testPI() {
-        pid.setTunings(1, 1, 0);
+        pid().setTunings(1, 1, 0);
 
         double consigne = 100;
         double input = 0, output = 0;
@@ -72,17 +72,16 @@ public class CompletePidTest {
             if (i > 10) {
                 input = (i * consigne) / 100;
             }
-            output = pid.compute(consigne, input);
-            log.info("Test P : consigne {}, mesure {}, output {}", consigne, input, output);
-
-            Thread.sleep(1);
+            pid().setConsigne(consigne);
+            output = pid().filter(input);
+            log.info("Test PI : consigne {}, mesure {}, output {}", consigne, input, output);
         }
     }
 
     @Test
     @SneakyThrows
     public void testPID() {
-        pid.setTunings(1, 1, 1);
+        pid().setTunings(1, 1, 1);
 
         double consigne = 100;
         double input = 0, output;
@@ -90,10 +89,9 @@ public class CompletePidTest {
             if (i > 10) {
                 input = (i * consigne) / 100;
             }
-            output = pid.compute(consigne, input);
-            log.info("Test P : consigne {}, mesure {}, output {}", consigne, input, output);
-
-            Thread.sleep(1);
+            pid().setConsigne(consigne);
+            output = pid().filter(input);
+            log.info("Test PID : consigne {}, mesure {}, output {}", consigne, input, output);
         }
     }
 }

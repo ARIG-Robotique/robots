@@ -28,7 +28,6 @@ configure(allprojects) {
 		apacheCommonsIOVersion = '2.5'
 		googleGuavaVersion = '22.0'
 		jacksonVersion = '2.8.9'
-		influxdbVersion = '2.6'
 		pi4jVersion = '1.2-arig-SNAPSHOT'
 		junixsocketVersion = '2.0.5-arig-SNAPSHOT'
 		slf4jVersion = '1.7.23'
@@ -146,13 +145,13 @@ configure(subprojects) { subproject ->
 		classpath = project.sourceSets.main.compileClasspath + configurations.provided
 
 		options {
-			memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+			memberLevel = JavadocMemberLevel.PROTECTED
 			author = true
 			header = project.name
 		}
 
 		// Désactivation de la Javadoc strict avec le JDK 8
-		if (org.gradle.api.JavaVersion.current().isJava8Compatible()) {
+		if (JavaVersion.current().isJava8Compatible()) {
 			options.addStringOption('Xdoclint:none', '-quiet')
 		}
 	}
@@ -205,7 +204,7 @@ configure(rootProject) {
 
 	task wrapper(type: Wrapper) {
 		description = "Generates gradlew[.bat] scripts"
-		gradleVersion = "4.2"
+		gradleVersion = "4.3.1"
 		distributionType = "all"
 	}
 }

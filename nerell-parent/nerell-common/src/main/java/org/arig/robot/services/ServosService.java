@@ -1,7 +1,6 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.exception.ServoException;
 import org.arig.robot.model.RobotStatus;

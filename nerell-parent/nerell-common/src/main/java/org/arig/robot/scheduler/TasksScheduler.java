@@ -5,7 +5,6 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.system.TrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

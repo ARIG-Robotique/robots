@@ -3,11 +3,10 @@ package org.arig.robot.config.spring;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.Ordonanceur;
 import org.arig.robot.constants.IConstantesNerellConfig;
-import org.arig.robot.filters.pid.CompletePidFilter;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
-import org.arig.robot.filters.ramp.IRampFilter;
-import org.arig.robot.filters.ramp.RampFilter;
+import org.arig.robot.filters.ramp.IRampFilter.RampType;
+import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
@@ -18,7 +17,6 @@ import org.arig.robot.system.motion.AsservissementPolaire;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motion.OdometrieLineaire;
-import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -38,7 +36,7 @@ import java.awt.*;
 @Slf4j
 @Configuration
 @PropertySource({"classpath:application.properties"})
-public class RobotContext {
+public class NerellContext {
 
     @Autowired
     private Environment env;
@@ -117,15 +115,15 @@ public class RobotContext {
     }
 
     @Bean(name = "rampDistance")
-    public IRampFilter rampDistance() {
-        log.info("Configuration RampFilter Distance");
-        return new RampFilter("distance", IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccDistance, IConstantesNerellConfig.rampDecDistance);
+    public TrapezoidalRampFilter rampDistance() {
+        log.info("Configuration TrapezoidalRampFilter Distance");
+        return new TrapezoidalRampFilter("distance", RampType.LINEAR, IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccDistance, IConstantesNerellConfig.rampDecDistance);
     }
 
     @Bean(name = "rampOrientation")
-    public IRampFilter rampOrientation() {
-        log.info("Configuration RampFilter Orientation");
-        return new RampFilter("orientation", IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccOrientation, IConstantesNerellConfig.rampDecOrientation);
+    public TrapezoidalRampFilter rampOrientation() {
+        log.info("Configuration TrapezoidalRampFilter Orientation");
+        return new TrapezoidalRampFilter("orientation", RampType.ANGULAR, IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccOrientation, IConstantesNerellConfig.rampDecOrientation);
     }
 
     @Bean

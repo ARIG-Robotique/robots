@@ -1,6 +1,5 @@
 package org.arig.test.robot.filters.pid;
 
-import org.arig.robot.filters.pid.CompletePidFilter;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.monitoring.IMonitoringWrapper;
@@ -18,18 +17,6 @@ public class PidTestContext {
     public SimplePidFilter simplePID() {
         SimplePidFilter pid = new SimplePidFilter("test");
         pid.setTunings(1, 0, 0);
-
-        return pid;
-    }
-
-    @Bean
-    public CompletePidFilter completePID() {
-        CompletePidFilter pid = new CompletePidFilter("test");
-        pid.setControllerDirection(IPidFilter.PidType.DIRECT);
-        pid.setMode(IPidFilter.PidMode.AUTOMATIC);
-        pid.setSampleTime(1);
-        pid.reset();
-        pid.initialise();
 
         return pid;
     }
