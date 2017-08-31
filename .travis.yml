@@ -13,8 +13,8 @@ jdk:
 #  - docker ps -a
 
 before_script:
-  - pip install pre-commit
-  - pre-commit intall
+  - sudo pip install pre-commit
+  - pre-commit install
 
 script:
   - pre-commit run --all-files
