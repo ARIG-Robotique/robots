@@ -13,9 +13,11 @@ jdk:
 #  - docker ps -a
 
 before_script:
-  - chmod +x gradlew
+  - pip install pre-commit
+  - pre-commit intall
 
 script:
+  - pre-commit run --all-files
   - ./gradlew check
   - ./gradlew codeCoverageReport
 

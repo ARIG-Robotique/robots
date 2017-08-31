@@ -29,6 +29,7 @@ configure(allprojects) {
 		googleGuavaVersion = '22.0'
 		jacksonVersion = '2.8.9'
 		influxdbVersion = '2.6'
+		pathFinderVersion = '1.0'
 		pi4jVersion = '1.2-arig-SNAPSHOT'
 		junixsocketVersion = '2.0.5-arig-SNAPSHOT'
 		slf4jVersion = '1.7.23'
@@ -80,6 +81,12 @@ configure(allprojects) {
 	repositories {
 		mavenLocal()
 		mavenCentral()
+		maven {
+			url "http://archiva.picotteland.dtdns.net/repository/internal"
+		}
+		maven {
+			url "http://archiva.picotteland.dtdns.net/repository/snapshots"
+		}
 	}
 
 	// Dependence commune pour tous les projets
@@ -189,7 +196,7 @@ configure(rootProject) {
 
 	task wrapper(type: Wrapper) {
 		description = "Generates gradlew[.bat] scripts"
-		gradleVersion = "4.0"
+		gradleVersion = "4.1"
 		distributionType = "all"
 	}
 }

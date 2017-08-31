@@ -9,4 +9,3 @@ task copyDependencies(type: Copy) {
 	into "$buildDir/dependencies"
 	from configurations.runtime
 }
-
