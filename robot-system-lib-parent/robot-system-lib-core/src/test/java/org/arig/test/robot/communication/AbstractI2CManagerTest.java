@@ -12,7 +12,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 
 /**
  * The Class AbstractI2CManagerTest.
- * 
+ *
  * @author gdepuille
  */
 @Slf4j

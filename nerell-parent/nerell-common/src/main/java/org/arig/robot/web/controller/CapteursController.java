@@ -34,11 +34,11 @@ public class CapteursController extends AbstractCapteursController implements In
     @Getter
     @Accessors(fluent = true)
     private final Map<String, BooleanValue> numeriqueInfos = new LinkedHashMap<>();
-    
+
     @Getter
     @Accessors(fluent = true)
     private final Map<String, DoubleValue> analogiqueInfos = new LinkedHashMap<>();
-    
+
     @Getter
     @Accessors(fluent = true)
     private final Map<String, StringValue> textInfos = new LinkedHashMap<>();

@@ -10,7 +10,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 
 /**
  * The Class ConvertionRobotUnitTest.
- * 
+ *
  * @author gdepuille
  */
 @Slf4j
