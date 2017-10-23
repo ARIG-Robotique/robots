@@ -33,6 +33,7 @@ configure(allprojects) {
 		pi4jVersion = '1.2-arig-SNAPSHOT'
 		junixsocketVersion = '2.0.5-arig-SNAPSHOT'
 		slf4jVersion = '1.7.23'
+		anyAnglePathFindingGitVersion = 'master-7b196baf6b-1'
 
 		// Container dependencies
     	jettyVersion = '9.4.1.v20170120'
@@ -81,6 +82,7 @@ configure(allprojects) {
 	repositories {
 		mavenLocal()
 		mavenCentral()
+		maven { url 'https://jitpack.io' }
 		maven {
 			url "http://archiva.picotteland.dtdns.net/repository/internal"
 			credentials {

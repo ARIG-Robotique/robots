@@ -14,6 +14,10 @@ public class Point {
     private double x;
     private double y;
 
+    public Point(final Point point) {
+        this(point.x, point.y);
+    }
+
     public void addDeltaX(final double dX) {
         x += dX;
     }
