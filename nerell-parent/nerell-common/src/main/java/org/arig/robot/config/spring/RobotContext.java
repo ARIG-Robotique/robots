@@ -131,12 +131,8 @@ public class RobotContext {
     @Bean
     public IPathFinder pathFinder() {
         MultiPathFinderImpl pf = new MultiPathFinderImpl();
-        pf.setMaxDistanceDepart(1.0);
-        pf.setMaxDistanceArrivee(1.0);
-        pf.setAllowDiagonal(true);
+
         pf.setAlgorithm(IConstantesNerellConfig.pathFindingAlgo);
-        pf.setNbTileX(300);
-        pf.setNbTileY(200);
         pf.setSaveImages(env.getProperty("pathfinding.save.images", Boolean.class, true));
 
         return pf;

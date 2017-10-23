@@ -29,8 +29,8 @@ public class NoPathFoundException extends Exception {
     @AllArgsConstructor
     public enum ErrorType {
         NO_PATH_FOUND("Aucun chemin disponible"),
-        START_NODE_DOES_NOT_EXIST("Le noeud de départ n'éxiste pas"),
-        END_NODE_DOES_NOT_EXIST("Le noeud d'arrivé n'éxiste pas");
+        START_NODE_DOES_NOT_EXIST("Le noeud de départ n'existe pas"),
+        END_NODE_DOES_NOT_EXIST("Le noeud d'arrivée n'existe pas");
 
         @Getter
         private String message;

@@ -28,42 +28,11 @@ public abstract class AbstractPathFinder implements IPathFinder {
 
     @Setter
     @Getter(AccessLevel.PROTECTED)
-    private int nbTileX = 20;
-
-    @Setter
-    @Getter(AccessLevel.PROTECTED)
-    private int nbTileY = 20;
-
-    @Setter
-    @Getter(AccessLevel.PROTECTED)
-    private boolean allowDiagonal = true;
-
-    @Setter
-    @Getter(AccessLevel.PROTECTED)
     private boolean saveImages = true;
 
     private BufferedImage workImage;
     private File pathDir = new File("./logs/path");
     private final DateTimeFormatter dteFormat = DateTimeFormatter.ISO_DATE_TIME;
-
-    @Override
-    public void construitGraphDepuisImageNoirEtBlanc(final String filePath) {
-        construitGraphDepuisImageNoirEtBlanc(new File(filePath));
-    }
-
-    @Override
-    public void construitGraphDepuisImageNoirEtBlanc(final File file) {
-        if (!file.exists() && !file.canRead()) {
-            String errorMessage = String.format("Impossible d'acceder au fichier %s (Existe : %s ; Readable : %s)", file.getAbsolutePath(), file.exists(), file.canRead());
-            log.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
-        }
-        try {
-            construitGraphDepuisImageNoirEtBlanc(new FileInputStream(file));
-        } catch (FileNotFoundException e) {
-            log.error("Fichier introuvable.", e);
-        }
-    }
 
     @Async
     public void saveImageForWork(BufferedImage workImage) {
@@ -87,7 +56,7 @@ public abstract class AbstractPathFinder implements IPathFinder {
 
             g.setBackground(Color.WHITE);
             Point currentPoint = null;
-            Point precedencePoint = null;
+            Point precedentPoint = null;
             List<Point> pts = new ArrayList<>();
             pts.add(from);
             pts.addAll(c.getPoints());
@@ -100,11 +69,11 @@ public abstract class AbstractPathFinder implements IPathFinder {
                 if (i == pts.size() - 1) {
                     g.setColor(Color.RED);
                 }
-                if (precedencePoint != null) {
+                if (precedentPoint != null) {
                     Color back = g.getColor();
 
                     g.setColor(Color.BLUE);
-                    g.drawLine((int) precedencePoint.getX(), (int) precedencePoint.getY(),
+                    g.drawLine((int) precedentPoint.getX(), (int) precedentPoint.getY(),
                             (int) currentPoint.getX(), (int) currentPoint.getY());
 
                     g.setColor(back);
@@ -112,7 +81,7 @@ public abstract class AbstractPathFinder implements IPathFinder {
 
                 g.fillOval((int) currentPoint.getX() - 5, (int) currentPoint.getY() - 5, 10, 10);
 
-                precedencePoint = currentPoint;
+                precedentPoint = currentPoint;
             }
             g.dispose();
 

@@ -98,7 +98,7 @@ public interface IConstantesNerellConfig {
     // ---------------------- //
     // Paramètre path finding //
     // ---------------------- //
-    PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.A_STAR_MANHATTAN;
+    PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.LAZY_THETA_STAR;
 
     // ----------------- //
     // Paramètres métier //
