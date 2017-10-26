@@ -5,6 +5,7 @@ import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
@@ -12,6 +13,7 @@ import org.springframework.core.env.Environment;
  * @author gdepuille on 30/10/16.
  */
 @Configuration
+@ComponentScan("org.arig.robot.clr")
 public class NerellSimulatorAppContext {
 
     @Autowired
