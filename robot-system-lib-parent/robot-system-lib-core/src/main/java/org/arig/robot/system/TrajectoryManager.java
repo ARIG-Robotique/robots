@@ -429,6 +429,8 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                 log.info("Demande de chemin vers X = {}mm ; Y = {}mm", x, y);
                 Chemin c = pathFinder.findPath(ptFromCm, ptToCm);
 
+                boolean first = true;
+
                 MonitorMouvementPath mPath = new MonitorMouvementPath();
                 mPath.setPath(new ArrayList<>(c.getPoints().size() + 1));
                 mPath.getPath().add(new Point(
@@ -448,6 +450,10 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                     rs.enableAvoidance();
 
                     // Processing du path
+                    if (first) {
+                        first = false;
+                        alignFrontTo(targetPoint.getX(), targetPoint.getY());
+                    }
                     gotoPointMM(targetPoint.getX(), targetPoint.getY(), !c.hasNext() && avecArret, true);
                     //gotoPointMM(targetPoint.getX(), targetPoint.getY(), true, true);
                 }
