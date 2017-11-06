@@ -5,7 +5,6 @@ dependencies {
     compile "org.springframework:spring-webmvc:${springVersion}"
     compile "org.apache.commons:commons-lang3:${apacheCommonsLangVersion}"
     compile "org.apache.commons:commons-collections4:${apacheCommonsCollectionsVersion}"
-    compile "org.lagers:path-finder:${pathFinderVersion}"
     compile "commons-io:commons-io:${apacheCommonsIOVersion}"
     compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     compile "com.google.guava:guava:${googleGuavaVersion}"
