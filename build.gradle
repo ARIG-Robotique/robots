@@ -29,7 +29,6 @@ configure(allprojects) {
 		googleGuavaVersion = '22.0'
 		jacksonVersion = '2.8.9'
 		influxdbVersion = '2.6'
-		pathFinderVersion = '1.0'
 		pi4jVersion = '1.2-arig-SNAPSHOT'
 		junixsocketVersion = '2.0.5-arig-SNAPSHOT'
 		slf4jVersion = '1.7.23'
