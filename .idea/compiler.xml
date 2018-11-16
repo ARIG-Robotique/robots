@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="elfa-common_main" target="1.8" />
+      <module name="elfa-common_test" target="1.8" />
+      <module name="elfa-parent_main" target="1.8" />
+      <module name="elfa-parent_test" target="1.8" />
+      <module name="elfa-robot_main" target="1.8" />
+      <module name="elfa-robot_test" target="1.8" />
+      <module name="elfa-simulator_main" target="1.8" />
+      <module name="elfa-simulator_test" target="1.8" />
+      <module name="nerell-common_main" target="1.8" />
+      <module name="nerell-common_test" target="1.8" />
+      <module name="nerell-parent_main" target="1.8" />
+      <module name="nerell-parent_test" target="1.8" />
+      <module name="nerell-robot_main" target="1.8" />
+      <module name="nerell-robot_test" target="1.8" />
+      <module name="nerell-simulator_main" target="1.8" />
+      <module name="nerell-simulator_test" target="1.8" />
+      <module name="nerell-utils_main" target="1.8" />
+      <module name="nerell-utils_test" target="1.8" />
+      <module name="robot-system-lib-bouchon_main" target="1.8" />
+      <module name="robot-system-lib-bouchon_test" target="1.8" />
+      <module name="robot-system-lib-core_main" target="1.8" />
+      <module name="robot-system-lib-core_test" target="1.8" />
+      <module name="robot-system-lib-parent_main" target="1.8" />
+      <module name="robot-system-lib-parent_test" target="1.8" />
+      <module name="robot-system-lib-raspi_main" target="1.8" />
+      <module name="robot-system-lib-raspi_test" target="1.8" />
+      <module name="robots_main" target="1.8" />
+      <module name="robots_test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
