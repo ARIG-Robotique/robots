@@ -13,8 +13,9 @@ import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,9 +26,9 @@ import java.util.Map;
  * @author gdepuille on 22/12/14.
  */
 @Slf4j
-@Profile(IConstantesConfig.profileMonitoring)
 @RestController
 @RequestMapping("/mouvement")
+@Profile(IConstantesConfig.profileMonitoring)
 public class MouvementController {
 
     @Autowired
@@ -46,7 +47,7 @@ public class MouvementController {
     @Qualifier("trajectoryManagerAsync")
     private ITrajectoryManager trajectoryManager;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public Map<String, Object> showPosition() {
         Map<String, Object> pos = new LinkedHashMap<>();
         pos.put("x", conv.pulseToMm(position.getPt().getX()));
@@ -62,42 +63,42 @@ public class MouvementController {
         return pos;
     }
 
-    @RequestMapping(value = "/path", method = RequestMethod.POST)
+    @PostMapping(value = "/path")
     public void cheminVersPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws NoPathFoundException, RefreshPathFindingException, AvoidingException {
         trajectoryManager.pathTo(x, y);
     }
 
-    @RequestMapping(value = "/position", method = RequestMethod.POST)
+    @PostMapping(value = "/position")
     public void allerEnPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws RefreshPathFindingException {
         trajectoryManager.gotoPointMM(x, y);
     }
 
-    @RequestMapping(value = "/face", method = RequestMethod.POST)
+    @PostMapping(value = "/face")
     public void alignFace(@RequestParam("x") final double x, @RequestParam("y") final double y) throws RefreshPathFindingException {
         trajectoryManager.alignFrontTo(x, y);
     }
 
-    @RequestMapping(value = "/dos", method = RequestMethod.POST)
+    @PostMapping(value = "/dos")
     public void alignDos(@RequestParam("x") final double x, @RequestParam("y") final double y) throws RefreshPathFindingException {
         trajectoryManager.alignBackTo(x, y);
     }
 
-    @RequestMapping(value = "/orientation", method = RequestMethod.POST)
+    @PostMapping(value = "/orientation")
     public void orientation(@RequestParam("angle") final double angle) throws RefreshPathFindingException {
         trajectoryManager.gotoOrientationDeg(angle);
     }
 
-    @RequestMapping(value = "/tourne", method = RequestMethod.POST)
+    @PostMapping(value = "/tourne")
     public void tourne(@RequestParam("angle") final double angle) throws RefreshPathFindingException {
         trajectoryManager.tourneDeg(angle);
     }
 
-    @RequestMapping(value = "/avance", method = RequestMethod.POST)
+    @PostMapping(value = "/avance")
     public void avance(@RequestParam("distance") final double distance) throws RefreshPathFindingException {
         trajectoryManager.avanceMM(distance);
     }
 
-    @RequestMapping(value = "/recule", method = RequestMethod.POST)
+    @PostMapping(value = "/recule")
     public void recule(@RequestParam("distance") final double distance) throws RefreshPathFindingException {
         trajectoryManager.reculeMM(distance);
     }

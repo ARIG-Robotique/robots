@@ -2,6 +2,5 @@ description = "ARIG Association - Robot System Librairie - Bouchon : Implémenta
 
 dependencies {
     compile project(':robot-system-lib-parent:robot-system-lib-core')
-    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     compile "commons-io:commons-io:${apacheCommonsIOVersion}"
 }

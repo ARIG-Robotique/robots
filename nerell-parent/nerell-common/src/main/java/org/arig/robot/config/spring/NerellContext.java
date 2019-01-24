@@ -23,9 +23,9 @@ import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 import java.awt.*;
@@ -35,7 +35,7 @@ import java.awt.*;
  */
 @Slf4j
 @Configuration
-@PropertySource({"classpath:application.properties"})
+@ComponentScan("org.arig.robot.clr")
 public class NerellContext {
 
     @Autowired
@@ -60,7 +60,6 @@ public class NerellContext {
         t.addDeadZone(new Rectangle.Double(1050, 0, 200, 150)); // Monochrome Jaune
         t.addDeadZone(new Rectangle.Double(2870, 1250, 150, 200)); // Polychrome Bleu
         t.addDeadZone(new Rectangle.Double(1750, 0, 200, 150)); // Monochrome Bleu
-
 
         return t;
     }

@@ -1,0 +1,40 @@
+---
+# Spring properties
+spring:
+  main:
+    web-application-type: NONE
+
+# Système d'évittement
+#avoidance.service.implementation = BASIC
+avoidance:
+  service:
+    implementation: FULL
+
+# Récupération objet zone adverse
+strategy:
+  collect:
+    zone:
+      adverse: False
+
+# Config
+pathfinding:
+  save:
+    images: True
+
+# Monitoring
+monitoring:
+  points:
+    enable: True
+
+---
+
+# Spring properties
+spring:
+  profiles: monitoring
+
+  main:
+    web-application-type: REACTIVE
+
+# Server config
+server:
+  port: 8080

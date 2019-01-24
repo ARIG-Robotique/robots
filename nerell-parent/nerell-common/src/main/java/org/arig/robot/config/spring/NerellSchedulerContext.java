@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 public class NerellSchedulerContext implements SchedulingConfigurer {
 
     @Bean(destroyMethod="shutdown")
-    public Executor taskExecutor() {
+    public ExecutorService taskExecutor() {
         return Executors.newScheduledThreadPool(IConstantesNerellConfig.nbThreadScheduledExecutor);
     }
 

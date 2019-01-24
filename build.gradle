@@ -1,16 +1,20 @@
 // Configuration pour le build
 buildscript {
+	ext {
+		springBootVersion = '2.1.2.RELEASE'
+	}
+
 	repositories {
 		mavenLocal()
 		mavenCentral()
 	}
 	dependencies {
-		// Add build plugins here
+		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
 	}
 }
 
 // Configuration de tous les projets
-configure(allprojects) {
+configure(allprojects) { project ->
 	group = 'org.arig.robot'
 	version = '1.1.0-SNAPSHOT'
 
@@ -21,38 +25,19 @@ configure(allprojects) {
 		javaTestVersion = javaVersion
 
 		// Dependencies versions
-		lombokVersion = '1.16.16'
-		springVersion = '4.3.9.RELEASE'
-		apacheCommonsLangVersion = '3.6'
 		apacheCommonsCollectionsVersion = '4.1'
 		apacheCommonsIOVersion = '2.5'
-		googleGuavaVersion = '22.0'
-		jacksonVersion = '2.8.9'
+		googleGuavaVersion = '27.0.1-jre'
 		pi4jVersion = '1.2-arig-SNAPSHOT'
 		junixsocketVersion = '2.0.5-arig-SNAPSHOT'
-		slf4jVersion = '1.7.23'
 		anyAnglePathFindingGitVersion = 'master-7b196baf6b-1'
-
-		// Container dependencies
-    	jettyVersion = '9.4.1.v20170120'
-
-		// Test dependencies versions
-		junitVersion = '4.12'
-		mockitoVersion = '2.7.9'
 	}
 
 	// Plugin de build
 	apply plugin: 'java'
-	apply plugin: 'maven'
 	apply plugin: 'jacoco'
-
-	// Plugin pour les IDE
-  	apply plugin: 'idea'
-
-	// Définition de configurations supplémentaire (non standard
-	configurations {
-        provided
-  	}
+	apply plugin: 'io.spring.dependency-management'
+	apply plugin: 'org.springframework.boot'
 
 	// Version pour la compilation
 	compileJava {
@@ -63,17 +48,6 @@ configure(allprojects) {
 	compileTestJava {
 		sourceCompatibility = javaTestVersion
 		targetCompatibility = javaTestVersion
-	}
-
-	// Classpath de compilation
-	sourceSets {
-		main {
-			compileClasspath += configurations.provided
-		}
-		test {
-			compileClasspath += configurations.provided
-			runtimeClasspath += configurations.provided
-		}
 	}
 
 	// Configuration des repository de dépendences
@@ -99,25 +73,12 @@ configure(allprojects) {
 
 	// Dependence commune pour tous les projets
 	dependencies {
-		provided "org.projectlombok:lombok:${lombokVersion}"
+		compileOnly "org.projectlombok:lombok"
 
-		testCompile "org.springframework:spring-test:${springVersion}"
-		testCompile "junit:junit:${junitVersion}"
-		testCompile "org.mockito:mockito-core:${mockitoVersion}"
-	}
+		compile 'org.springframework.boot:spring-boot-starter-webflux'
 
-	// Intégration avec IntellijIDEA
-	idea {
-		targetVersion = "14"
-
-		module {
-			jdkName = javaVersion
-
-			scopes.PROVIDED.plus += [ configurations.provided ]
-
-			downloadJavadoc = true
-			downloadSources = true
-		}
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testImplementation 'io.projectreactor:reactor-test'
 	}
 
 	// JAvaCOCOverage
@@ -142,8 +103,6 @@ configure(subprojects) { subproject ->
 
 	// Configuration pour la Javadoc
 	javadoc {
-		classpath = project.sourceSets.main.compileClasspath + configurations.provided
-
 		options {
 			memberLevel = JavadocMemberLevel.PROTECTED
 			author = true
@@ -202,9 +161,9 @@ configure(rootProject) {
 		subprojects*.test
 	}
 
-	task wrapper(type: Wrapper) {
+	wrapper {
 		description = "Generates gradlew[.bat] scripts"
-		gradleVersion = "4.3.1"
+		gradleVersion = "4.10.2"
 		distributionType = "all"
 	}
 }

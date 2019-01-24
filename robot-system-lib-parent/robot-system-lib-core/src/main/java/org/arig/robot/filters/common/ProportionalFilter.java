@@ -1,7 +1,6 @@
 package org.arig.robot.filters.common;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.arig.robot.filters.IFilter;
 import org.springframework.util.Assert;
 

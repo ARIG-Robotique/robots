@@ -6,9 +6,10 @@ import org.arig.robot.model.servos.ServoConfig;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -26,12 +27,12 @@ public abstract class AbstractServosController {
 
     protected abstract List<ServoConfig> servosConfig();
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public final List<ServoConfig> config() {
         return servosConfig();
     }
 
-    @RequestMapping(value = "/{idServo}", method = RequestMethod.GET)
+    @GetMapping(value = "/{idServo}")
     public final ServoConfig getServoPositionAndSpeed(@PathVariable("idServo") final Byte idServo) {
         return servosConfig().stream()
                 .filter(s -> s.getId() == idServo)
@@ -39,7 +40,7 @@ public abstract class AbstractServosController {
                 .get();
     }
 
-    @RequestMapping(value = "/{idServo}", method = RequestMethod.POST)
+    @PostMapping(value = "/{idServo}")
     public final void servoPositionAndSpeed(
             @PathVariable("idServo") final Byte idServo,
             @RequestParam("position") final Integer position,

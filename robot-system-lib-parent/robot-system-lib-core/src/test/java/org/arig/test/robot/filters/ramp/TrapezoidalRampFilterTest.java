@@ -1,6 +1,5 @@
 package org.arig.test.robot.filters.ramp;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.common.DerivateFilter;
 import org.arig.robot.filters.ramp.AbstractRampFilter;

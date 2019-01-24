@@ -1,8 +1,6 @@
 package org.arig.robot.filters.pid;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.filters.chain.ParallelChainFilter;
-import org.arig.robot.filters.chain.SerialChainFilter;
 
 /**
  * The Class SimplePidFilter.

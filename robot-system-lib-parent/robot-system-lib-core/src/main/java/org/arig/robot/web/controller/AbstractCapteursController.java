@@ -3,8 +3,8 @@ package org.arig.robot.web.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +22,7 @@ public abstract class AbstractCapteursController {
     protected abstract Map<String, DoubleValue> analogiqueInfos();
     protected abstract Map<String, StringValue> textInfos();
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public final Map<String, Map<String, ?>> all() {
         Map<String, Map<String, ?>> all = new HashMap<>();
         all.put("numerique", numerique());
@@ -31,17 +31,17 @@ public abstract class AbstractCapteursController {
         return all;
     }
 
-    @RequestMapping(value = "/numerique", method = RequestMethod.GET)
+    @GetMapping(value = "/numerique")
     public final Map<String, Boolean> numerique() {
         return extractValue(numeriqueInfos());
     }
 
-    @RequestMapping(value = "/analogique", method = RequestMethod.GET)
+    @GetMapping(value = "/analogique")
     public final Map<String, Double> analogique() {
         return extractValue(analogiqueInfos());
     }
 
-    @RequestMapping(value = "/text", method = RequestMethod.GET)
+    @GetMapping(value = "/text")
     public final Map<String, String> text() {
         return extractValue(textInfos());
     }

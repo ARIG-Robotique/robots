@@ -7,8 +7,9 @@ import org.arig.robot.strategy.IAction;
 import org.arig.robot.strategy.StrategyManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,20 +20,20 @@ import java.util.Optional;
  * @author gdepuille on 22/12/14.
  */
 @Slf4j
-@Profile(IConstantesConfig.profileMonitoring)
 @RestController
 @RequestMapping("/strategy")
+@Profile(IConstantesConfig.profileMonitoring)
 public class StrategyController {
 
     @Autowired
     private StrategyManager strategyManager;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public List<IAction> listStrategy() {
         return strategyManager.getActions();
     }
 
-    @RequestMapping(path = "/execute", method = RequestMethod.POST)
+    @PostMapping(path = "/execute")
     public void execute(@RequestParam("uid") String uid) {
         Optional<IAction> action = strategyManager.getActions().stream()
                 .filter(a -> StringUtils.equalsIgnoreCase(a.getUUID(), uid))

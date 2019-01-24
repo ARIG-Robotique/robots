@@ -14,6 +14,8 @@ repos:
       stages: ['commit']
     - id: check-yaml
       stages: ['commit']
+      args:
+        - "--allow-multiple-documents"
     - id: check-merge-conflict
       stages: ['commit']
     - id: end-of-file-fixer

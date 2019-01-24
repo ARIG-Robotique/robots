@@ -1,7 +1,7 @@
 package org.arig.test.robot.filters.ramp;
 
-import org.arig.robot.filters.ramp.experimental.ExperimentalRampFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
+import org.arig.robot.filters.ramp.experimental.ExperimentalRampFilter;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.utils.ConvertionRobotUnit;

@@ -1,7 +1,5 @@
 package org.arig.robot.filters.chain;
 
-import org.springframework.util.Assert;
-
 public class ParallelChainFilter extends AbstractChainFilter<Double> {
 
     @Override
