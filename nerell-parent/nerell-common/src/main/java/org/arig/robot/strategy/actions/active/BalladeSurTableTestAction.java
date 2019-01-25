@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.Team;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class DuyAction extends AbstractAction {
+public class BalladeSurTableTestAction extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -30,7 +30,7 @@ public class DuyAction extends AbstractAction {
 
     @Override
     public String name() {
-        return "Duy Action";
+        return "Ballade sur table";
     }
 
     @Override
@@ -49,12 +49,17 @@ public class DuyAction extends AbstractAction {
             rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            mv.gotoPointMM(2000, 600, false, false);
-            mv.pathTo(2500, 1100);
-            mv.gotoPointMM(1000, 600, true, false);
+            if (rs.getTeam() == Team.JAUNE) {
+                mv.pathTo(500, 1200);
+                mv.pathTo(1500, 500);
+                mv.pathTo(2500, 1200);
+            } else {
+                mv.pathTo(2500, 1200);
+                mv.pathTo(1500, 500);
+                mv.pathTo(500, 1200);
+            }
 
-            completed = true;
-        } catch (RefreshPathFindingException | NoPathFoundException | AvoidingException e) {
+        } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         }
