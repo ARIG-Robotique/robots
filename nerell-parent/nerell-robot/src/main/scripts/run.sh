@@ -1,4 +1,3 @@
 #!/bin/sh
 ./stopAll
-sudo java -cp "nerell.jar:./libs/*" org.arig.robot.RobotNerell
-sudo poweroff
+sudo java -jar nerell.jar -Dspring.profiles.active=default,ui

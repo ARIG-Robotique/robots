@@ -10,11 +10,11 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../../elfa-parent/elfa-common/src/main">
       <sourceFolder url="file://$MODULE_DIR$/../../../../elfa-parent/elfa-common/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../../elfa-parent/elfa-common/src/main/resources" type="java-resource" />
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="robot-system-lib-core_main" />
+    <orderEntry type="library" name="Gradle: org.projectlombok:lombok:1.18.4" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-webflux:2.1.2.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-json:2.1.2.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter:2.1.2.RELEASE" level="project" />
@@ -24,12 +24,16 @@
     <orderEntry type="library" name="Gradle: org.springframework:spring-web:5.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.synchronoss.cloud:nio-multipart-parser:1.1.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.8.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.commons:commons-collections4:4.1" level="project" />
-    <orderEntry type="library" name="Gradle: commons-io:commons-io:2.5" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.commons:commons-collections4:4.2" level="project" />
+    <orderEntry type="library" name="Gradle: commons-io:commons-io:2.6" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:guava:27.0.1-jre" level="project" />
     <orderEntry type="library" name="Gradle: com.kohlschutter.junixsocket:junixsocket-native-common:2.0.5-arig-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: com.kohlschutter.junixsocket:junixsocket-common:2.0.5-arig-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: com.github.Ohohcakester:Any-Angle-Pathfinding:master-7b196baf6b-1" level="project" />
+    <orderEntry type="library" name="Gradle: com.jfoenix:jfoenix:8.0.8" level="project" />
+    <orderEntry type="library" name="Gradle: io.datafx:datafx:8.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.datafx:flow:8.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: de.jensd:fontawesomefx-fontawesome:4.7.0-5" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-autoconfigure:2.1.2.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot:2.1.2.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-logging:2.1.2.RELEASE" level="project" />
@@ -62,6 +66,8 @@
     <orderEntry type="library" name="Gradle: com.google.j2objc:j2objc-annotations:1.1" level="project" />
     <orderEntry type="library" name="Gradle: org.codehaus.mojo:animal-sniffer-annotations:1.17" level="project" />
     <orderEntry type="library" name="Gradle: org.scijava:native-lib-loader:2.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: io.datafx:core:8.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: de.jensd:fontawesomefx-commons:8.15" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-jcl:5.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.9.8" level="project" />
@@ -78,7 +84,6 @@
     <orderEntry type="library" name="Gradle: io.netty:netty-transport-native-unix-common:4.1.31.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-transport:4.1.31.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-buffer:4.1.31.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.projectlombok:lombok:1.18.4" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-resolver:4.1.31.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-common:4.1.31.Final" level="project" />
   </component>

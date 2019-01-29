@@ -1,9 +1,5 @@
 description = "ARIG Association - Elfa Common"
 
 dependencies {
-	implementation project(':robot-system-lib-parent:robot-system-lib-core')
-//	implementation "org.eclipse.jetty:jetty-server:${jettyVersion}"
-//	implementation "org.eclipse.jetty:jetty-webapp:${jettyVersion}"
-//	implementation "org.eclipse.jetty:jetty-annotations:${jettyVersion}"
-//	implementation "org.eclipse.jetty:jetty-servlets:${jettyVersion}"
+	compile project(':robot-system-lib-parent:robot-system-lib-core')
 }

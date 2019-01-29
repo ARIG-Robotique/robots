@@ -14,28 +14,9 @@ import java.time.format.DateTimeFormatter;
 /**
  * @author gdepuille on 20/12/13.
  */
-@SpringBootApplication
-public class RobotNerell {
+public class RobotNerell extends BootifullApplication {
 
     public static void main(final String [] args) {
-        // Définition d'un ID unique pour le nommage des fichiers
-        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        System.setProperty(IConstantesConfig.keyExecutionId, execId);
-
-        // Initialisation du logger après définition de la property pour prise en compte
-        // lors de la création du fichier de log.
-        final Logger log = LoggerFactory.getLogger(RobotNerell.class);
-        log.info("Demarrage de Nerell {} ...", execId);
-
-        // Demmarage de SpringBoot
-        SpringApplication.run(RobotNerell.class, args);
-    }
-
-    public void onExit() throws IOException {
-        // Ecriture d'un fichier identifiant une execution termine.
-        final String execId = System.getProperty(IConstantesConfig.keyExecutionId);
-        final File execFile = new File("./logs/" + execId + ".exec");
-        final Logger log = LoggerFactory.getLogger(RobotNerell.class);
-        log.info("Création du fichier de fin d'éxécution {} : {}", execFile.getAbsolutePath(), execFile.createNewFile());
+        boot(args);
     }
 }

@@ -1,3 +1,3 @@
 #!/bin/sh
 ./stopAll
-sudo java -cp "nerell.jar:./libs/*" -Dspring.profiles.active=monitoring org.arig.robot.RobotNerell
+sudo java -jar nerell.jar -Dspring.profiles.active=default,ui,monitoring

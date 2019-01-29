@@ -29,6 +29,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -106,9 +107,9 @@ public class RPLidarA2OverSocketTelemeter implements ILidarTelemeter, Initializi
             } catch (IOException e) {
                 log.warn("Erreur de shutdown sur la socket", e);
             }
-            IOUtils.closeQuietly(in);
-            IOUtils.closeQuietly(out);
-            IOUtils.closeQuietly(socket);
+            closeQuietly(in);
+            closeQuietly(out);
+            closeQuietly(socket);
         }
     }
 
@@ -213,5 +214,14 @@ public class RPLidarA2OverSocketTelemeter implements ILidarTelemeter, Initializi
 
     private boolean isResponseError(AbstractResponse response) {
         return response.getStatus() == LidarStatusResponse.ERROR;
+    }
+
+    private void closeQuietly(Closeable closeable) {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
+        } catch (IOException e) {
+        }
     }
 }

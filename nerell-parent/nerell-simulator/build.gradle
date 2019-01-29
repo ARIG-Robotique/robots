@@ -1,6 +1,13 @@
 description = "ARIG Association - Nerell Simulator"
 
+apply plugin: 'org.springframework.boot'
+
 dependencies {
 	compile project(':nerell-parent:nerell-common')
 	compile project(':robot-system-lib-parent:robot-system-lib-bouchon')
+
+	compile 'org.openjfx:javafx-controls:11'
+	compile 'org.openjfx:javafx-fxml:11'
+	compile 'org.openjfx:javafx-graphics:11'
+	compile 'org.openjfx:javafx-base:11'
 }

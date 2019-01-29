@@ -4,27 +4,26 @@ spring:
   main:
     web-application-type: NONE
 
-# Système d'évittement
-#avoidance.service.implementation = BASIC
-avoidance:
-  service:
-    implementation: FULL
+robot:
+  ui:
+    title: Nerell Robot
 
-# Récupération objet zone adverse
-strategy:
-  collect:
-    zone:
-      adverse: False
+  # Système d'évittement
+  avoidance:
+      implementation: FULL # FULL ou BASIC
 
-# Config
-pathfinding:
-  save:
-    images: True
+  # Récupération objet zone adverse
+  strategy:
+    collectZoneAdverse: False
 
-# Monitoring
-monitoring:
-  points:
-    enable: True
+  # Config
+  pathfinding:
+    saveImages: True
+
+  # Monitoring
+  monitoring:
+    points:
+      enable: True
 
 ---
 
@@ -38,3 +37,13 @@ spring:
 # Server config
 server:
   port: 8080
+
+---
+
+# Spring properties
+spring:
+  profiles: simulateur
+
+robot:
+  ui:
+    title: Nerell Simulateur

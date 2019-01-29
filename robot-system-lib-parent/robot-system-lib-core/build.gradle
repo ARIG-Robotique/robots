@@ -8,4 +8,8 @@ dependencies {
     compile "com.kohlschutter.junixsocket:junixsocket-native-common:${junixsocketVersion}"
     compile "com.kohlschutter.junixsocket:junixsocket-common:${junixsocketVersion}"
     compile "com.github.Ohohcakester:Any-Angle-Pathfinding:${anyAnglePathFindingGitVersion}"
+    compile "com.jfoenix:jfoenix:${jFoenixVersion}"
+    compile "io.datafx:datafx:${dataFxVersion}"
+    compile "io.datafx:flow:${dataFxVersion}"
+    compile "de.jensd:fontawesomefx-fontawesome:${fontAwesomeFxVersion}" // FontAwesome (Bintray)
 }

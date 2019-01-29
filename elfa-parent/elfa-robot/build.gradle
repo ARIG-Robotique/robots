@@ -1,8 +1,8 @@
 description = "ARIG Association - Elfa Robot"
 
 dependencies {
-    implementation project(':elfa-parent:elfa-common')
-    implementation project(':robot-system-lib-parent:robot-system-lib-raspi')
+    compile project(':elfa-parent:elfa-common')
+    compile project(':robot-system-lib-parent:robot-system-lib-raspi')
 }
 
 // Tâche de copy des dépendances

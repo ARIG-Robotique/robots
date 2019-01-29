@@ -25,7 +25,7 @@ public class CaptureCodeursValues {
     private AbstractPropulsionsMotors motors;
     private List<InfoCapture> infos = new ArrayList<>();
 
-    public static void main(final String [] args) throws Exception {
+    public static void boot(final String [] args) throws Exception {
         log.info("Demarrage de Nerell en mode capture valeur codeurs ...");
 
         final AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();

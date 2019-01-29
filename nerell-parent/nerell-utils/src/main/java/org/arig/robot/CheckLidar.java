@@ -15,7 +15,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class CheckLidar {
 
     @SneakyThrows
-    public static void main(String ... args) {
+    public static void boot(String ... args) {
         log.info("Demarrage de Nerell en mode contrôle du fonctionnement du Lidar ...");
 
         AnnotationConfigApplicationContext rootContext = new AnnotationConfigApplicationContext();

@@ -6,11 +6,16 @@ buildscript {
 
 	repositories {
 		mavenLocal()
+		jcenter()
 		mavenCentral()
 	}
 	dependencies {
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
 	}
+}
+
+plugins {
+	id 'com.jfrog.bintray' version '1.7.3' apply false
 }
 
 // Configuration de tous les projets
@@ -25,19 +30,27 @@ configure(allprojects) { project ->
 		javaTestVersion = javaVersion
 
 		// Dependencies versions
-		apacheCommonsCollectionsVersion = '4.1'
-		apacheCommonsIOVersion = '2.5'
+		apacheCommonsCollectionsVersion = '4.2'
+		apacheCommonsIOVersion = '2.6'
 		googleGuavaVersion = '27.0.1-jre'
 		pi4jVersion = '1.2-arig-SNAPSHOT'
 		junixsocketVersion = '2.0.5-arig-SNAPSHOT'
 		anyAnglePathFindingGitVersion = 'master-7b196baf6b-1'
+		jFoenixVersion = '8.0.8'
+		dataFxVersion = '8.0.1'
+		fontAwesomeFxVersion = '4.7.0-5'
 	}
 
 	// Plugin de build
 	apply plugin: 'java'
 	apply plugin: 'jacoco'
 	apply plugin: 'io.spring.dependency-management'
-	apply plugin: 'org.springframework.boot'
+
+	dependencyManagement {
+		imports {
+			mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+		}
+	}
 
 	// Version pour la compilation
 	compileJava {
@@ -53,6 +66,7 @@ configure(allprojects) { project ->
 	// Configuration des repository de dépendences
 	repositories {
 		mavenLocal()
+		jcenter()
 		mavenCentral()
 		maven { url 'https://jitpack.io' }
 		maven {
@@ -73,12 +87,12 @@ configure(allprojects) { project ->
 
 	// Dependence commune pour tous les projets
 	dependencies {
-		compileOnly "org.projectlombok:lombok"
+		compile "org.projectlombok:lombok"
 
 		compile 'org.springframework.boot:spring-boot-starter-webflux'
 
-		testImplementation 'org.springframework.boot:spring-boot-starter-test'
-		testImplementation 'io.projectreactor:reactor-test'
+		testCompile 'org.springframework.boot:spring-boot-starter-test'
+		testCompile 'io.projectreactor:reactor-test'
 	}
 
 	// JAvaCOCOverage

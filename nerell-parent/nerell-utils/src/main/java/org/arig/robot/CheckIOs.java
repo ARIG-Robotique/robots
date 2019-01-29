@@ -16,7 +16,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class CheckIOs {
 
     @SneakyThrows
-    public static void main(String... args) {
+    public static void boot(String... args) {
         log.info("Demarrage de Nerell en mode contrôle des IOs ...");
 
         AnnotationConfigApplicationContext rootContext = new AnnotationConfigApplicationContext();

@@ -2,8 +2,10 @@
   <configuration default="false" name="SimulatorNerell" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <module name="nerell-simulator_main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="org.arig.robot.config.spring.SimulatorNerell" />
-    <option name="ACTIVE_PROFILES" value="default,monitoring" />
-    <option name="ALTERNATIVE_JRE_PATH" />
+    <option name="ACTIVE_PROFILES" value="default,monitoring,simulateur,ui" />
+    <option name="WORKING_DIRECTORY" value="file://$MODULE_WORKING_DIR$" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="ALTERNATIVE_JRE_PATH" value="Oracle 1.8" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
