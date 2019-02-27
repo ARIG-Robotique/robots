@@ -3,27 +3,27 @@
 <?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
+<?import com.jfoenix.svg.SVGGlyph?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
            xmlns="http://javafx.com/javafx/2.2">
     <VBox maxWidth="400" maxHeight="400" spacing="10">
         <Label styleClass="title-label">Network</Label>
         <HBox spacing="20" style="-fx-padding: 0 0 0 50;">
-            <JFXButton prefWidth="100" prefHeight="40" buttonType="FLAT" text="BUTTON"
-                       style="-fx-font-size:14px;"/>
-            <JFXButton prefWidth="100" prefHeight="40" buttonType="FLAT" text="COLORED"
-                       style="-fx-text-fill:#5264AE;-fx-font-size:14px;"/>
-            <JFXButton prefWidth="100" prefHeight="40" buttonType="FLAT" text="DISABLED"
-                       style="-fx-font-size:14px;" disable="true"/>
+            <Label fx:id="lblIp" text="IP : " />
         </HBox>
 
         <Label styleClass="title-label">I2C</Label>
         <HBox spacing="40" style="-fx-padding: 0 0 0 50;">
-            <JFXButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="BUTTON"
-                       style="-fx-font-size:14px;-fx-background-color:WHITE;"/>
-            <JFXButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="COLORED"
-                       style="-fx-text-fill:WHITE;-fx-background-color:#5264AE;-fx-font-size:14px;"/>
-            <JFXButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="DISABLED"
-                       style="-fx-background-color:WHITE;-fx-font-size:14px;" disable="true"/>
+            <Label fx:id="lblCodeurDroit" text="Codeur droit" />
+            <GridPane fx:id="glyphCodeurDroit" />
+        </HBox>
+        <HBox spacing="40" style="-fx-padding: 0 0 0 50;">
+            <Label fx:id="lblCodeurGauche" text="Codeur gauche" />
+            <SVGGlyph fx:id="glyphCodeurGauche" />
+        </HBox>
+        <HBox spacing="40" style="-fx-padding: 0 0 0 50;">
+            <Label fx:id="lblSD21" text="SD21 " />
+            <SVGGlyph fx:id="glyphSD21" />
         </HBox>
 
         <Label styleClass="title-label">I/O</Label>

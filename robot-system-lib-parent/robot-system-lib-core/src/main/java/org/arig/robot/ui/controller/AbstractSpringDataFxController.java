@@ -21,7 +21,9 @@ public abstract class AbstractSpringDataFxController {
     @PostConstruct
     public void init() throws Exception {
         springCtx = (ApplicationContext) viewFlowContext.getRegisteredObject(IConstantesConfig.keySpringContext);
-        springCtx.getAutowireCapableBeanFactory().autowireBean(this);
+        if (springCtx != null) {
+            springCtx.getAutowireCapableBeanFactory().autowireBean(this);
+        }
     }
 
     protected Resource getResource(String location) {
