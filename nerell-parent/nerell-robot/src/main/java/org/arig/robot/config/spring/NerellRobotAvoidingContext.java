@@ -7,10 +7,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.services.avoiding.BasicAvoidingService;
 import org.arig.robot.services.avoiding.CompleteAvoidingService;
 import org.arig.robot.system.avoiding.IAvoidingService;
-import org.arig.robot.system.capteurs.GP2D12;
-import org.arig.robot.system.capteurs.ILidarTelemeter;
-import org.arig.robot.system.capteurs.RPLidarA2OverSocketTelemeter;
-import org.arig.robot.system.capteurs.SRF02Sonar;
+import org.arig.robot.system.capteurs.*;
 import org.arig.robot.system.process.RPLidarBridgeProcess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -38,9 +35,16 @@ public class NerellRobotAvoidingContext {
 
     @Bean
     @DependsOn("rplidarBridgeProcess")
-    public ILidarTelemeter rplidar() {
+    public ILidarTelemeter rplidar() throws Exception {
         final File socketFile = new File(RPLidarBridgeProcess.socketPath);
         return new RPLidarA2OverSocketTelemeter(socketFile);
+    }
+
+    @Bean
+    public IVisionBalise visionBalise() throws Exception {
+        final String host = env.getRequiredProperty("balise.socket.host");
+        final Integer port = env.getRequiredProperty("balise.socket.port", Integer.class);
+        return new VisionBaliseOverSocket(host, port);
     }
 
     @Bean

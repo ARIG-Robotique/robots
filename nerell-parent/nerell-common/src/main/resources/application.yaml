@@ -25,6 +25,12 @@ robot:
     points:
       enable: True
 
+# Balise de vision
+balise:
+  socket:
+    host: 192.168.1.15
+    port: 8080
+
 ---
 
 # Spring properties

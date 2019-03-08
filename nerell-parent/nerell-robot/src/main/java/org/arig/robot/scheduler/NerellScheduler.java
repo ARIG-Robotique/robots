@@ -1,6 +1,7 @@
 package org.arig.robot.scheduler;
 
 import org.arig.robot.model.RobotStatus;
+import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.CalageBordureService;
 import org.arig.robot.services.MagasinService;
 import org.arig.robot.services.PincesService;
@@ -34,6 +35,9 @@ public class NerellScheduler {
     @Autowired
     private MagasinService magasinService;
 
+    @Autowired
+    private BaliseService baliseService;
+
     @Scheduled(fixedDelay = 100)
     public void obstacleAvoidanceTask() {
         if (rs.isAvoidanceEnabled()) {
@@ -66,6 +70,13 @@ public class NerellScheduler {
     public void magasinServiceTask() {
         if (rs.isMagasinServiceEnable()) {
             magasinService.process();
+        }
+    }
+
+    @Scheduled(fixedDelay = 2000)
+    public void updateBaliseStatus() {
+        if (baliseService.isConnected()) {
+            baliseService.updateStatus();
         }
     }
 }

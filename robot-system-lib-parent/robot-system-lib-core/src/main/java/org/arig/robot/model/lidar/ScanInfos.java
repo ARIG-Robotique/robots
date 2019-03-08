@@ -3,6 +3,7 @@ package org.arig.robot.model.lidar;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ScanInfos {
+public class ScanInfos implements Serializable {
     private List<Scan> scan;
     private Short ignored;
 }
