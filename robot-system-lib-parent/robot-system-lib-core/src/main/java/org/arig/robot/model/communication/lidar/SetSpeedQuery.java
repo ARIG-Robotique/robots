@@ -1,12 +1,9 @@
-package org.arig.robot.model.lidar.communication;
+package org.arig.robot.model.communication.lidar;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.arig.robot.model.lidar.communication.enums.LidarAction;
+import org.arig.robot.model.communication.lidar.enums.LidarAction;
 
-/**
- * @author gdepuille on 03/03/17.
- */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class SetSpeedQuery extends StartScanQuery {

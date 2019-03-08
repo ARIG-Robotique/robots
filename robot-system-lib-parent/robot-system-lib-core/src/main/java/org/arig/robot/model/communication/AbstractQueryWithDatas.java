@@ -1,22 +1,20 @@
-package org.arig.robot.model.lidar.communication;
+package org.arig.robot.model.communication;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.arig.robot.model.lidar.communication.enums.LidarAction;
 
-/**
- * @author gdepuille
- */
+import java.io.Serializable;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
-public abstract class AbstractQueryWithDatas<D> extends AbstractQuery {
+public abstract class AbstractQueryWithDatas<T extends Enum, D extends Serializable> extends AbstractQuery<T> {
 
     @JsonInclude(content = JsonInclude.Include.NON_NULL)
     private D datas;
 
-    protected AbstractQueryWithDatas(LidarAction action) {
+    protected AbstractQueryWithDatas(T action) {
         super(action);
     }
 

@@ -1,16 +1,14 @@
-package org.arig.robot.model.lidar.communication;
+package org.arig.robot.model.communication.lidar;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.arig.robot.model.communication.AbstractQueryWithDatas;
+import org.arig.robot.model.communication.lidar.enums.LidarAction;
 import org.arig.robot.model.lidar.SpeedInfos;
-import org.arig.robot.model.lidar.communication.enums.LidarAction;
 
-/**
- * @author gdepuille on 03/03/17.
- */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class StartScanQuery extends AbstractQueryWithDatas<SpeedInfos> {
+public class StartScanQuery extends AbstractQueryWithDatas<LidarAction, SpeedInfos> {
 
     public StartScanQuery() {
         this(LidarAction.START_SCAN);

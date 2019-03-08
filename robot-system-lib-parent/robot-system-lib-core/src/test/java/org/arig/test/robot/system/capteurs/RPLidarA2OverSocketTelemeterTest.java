@@ -34,7 +34,6 @@ public class RPLidarA2OverSocketTelemeterTest {
         Assume.assumeTrue("Contrôle initialisation RPLidar par la présence de la socket", socketFile.exists());
 
         rpLidar = new RPLidarA2OverSocketTelemeter(socketFile);
-        rpLidar.afterPropertiesSet();
         rpLidar.printDeviceInfo();
     }
 
