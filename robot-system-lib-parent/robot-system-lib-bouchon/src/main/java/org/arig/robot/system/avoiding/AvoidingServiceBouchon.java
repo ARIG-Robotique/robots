@@ -30,7 +30,7 @@ import java.util.List;
 @Slf4j
 public class AvoidingServiceBouchon implements IAvoidingService, InitializingBean {
 
-    private static final int DISTANCE_CENTRE_OBSTACLE = 250;
+    private static final int DISTANCE_CENTRE_OBSTACLE = 400;
 
     private static final int DISTANCE_FILTRAGE_OBSTACLES = 300;
 
@@ -64,22 +64,38 @@ public class AvoidingServiceBouchon implements IAvoidingService, InitializingBea
     @Override
     public void afterPropertiesSet() throws Exception {
         new Thread(() -> {
-            double y = 1000;
-            int inc = 1;
+            double y = 1000, y2 = 300, y3 = 1800;
+            int inc = 1, inc2 = 2, inc3 = 3;
             while (true) {
                 if (!detectedPointsMmLidar.isEmpty()) {
-                    if (inc > 0 && y >= 1000) {
+                    if (inc > 0 && y >= 1800) {
                         inc = -1;
-                    } else if (inc < 0 && y <= 300) {
+                    } else if (inc < 0 && y <= 200) {
                         inc = 1;
                     }
                     y = detectedPointsMmLidar.get(0).getY() + inc;
+
+                    if (inc2 > 0 && y2 >= 1800) {
+                        inc2 = -2;
+                    } else if (inc2 < 0 && y2 <= 200) {
+                        inc2 = 2;
+                    }
+                    y2 = detectedPointsMmLidar.get(1).getY() + inc2;
+
+                    if (inc3 > 0 && y3 >= 1800) {
+                        inc3 = -3;
+                    } else if (inc3 < 0 && y3 <= 200) {
+                        inc3 = 3;
+                    }
+                    y3 = detectedPointsMmLidar.get(2).getY() + inc3;
                 }
 
                 detectedPointsMmLidar.clear();
                 detectedPointsMmLidar.add(new Point(1500, y));
+                detectedPointsMmLidar.add(new Point(700, y2));
+                detectedPointsMmLidar.add(new Point(2300, y3));
                 try {
-                    Thread.sleep(5);
+                    Thread.sleep(20);
                 } catch (InterruptedException e) {
                     // NOP
                 }
@@ -93,15 +109,16 @@ public class AvoidingServiceBouchon implements IAvoidingService, InitializingBea
         checkMouvement();
         checkObstacles();
 
+        // Affichage des zones d'ombre sur le superviseur
+        synchronized (this.collisionsShape) {
+            this.collisionsShape.clear();
+            this.collisionsShape.addAll(tmpCollisionsShape);
+        }
+
         // Une collision est détecté
         if (CollectionUtils.isNotEmpty(tmpObstacles)) {
             hasObstacle = true;
             pathFinder.addObstacles(tmpObstacles.toArray(new java.awt.Shape[tmpObstacles.size()]));
-
-            synchronized (this.collisionsShape) {
-                this.collisionsShape.clear();
-                this.collisionsShape.addAll(tmpCollisionsShape);
-            }
 
             // On rafraichit le path
             trajectoryManager.refreshPathFinding();
@@ -162,15 +179,19 @@ public class AvoidingServiceBouchon implements IAvoidingService, InitializingBea
             tmpCollisionsShape.clear();
 
             pointLidar : for (Point pt : getDetectedPointsMmLidar()) {
+                tmpCollisionsShape.add(new Cercle(pt, DISTANCE_CENTRE_OBSTACLE));
 
-                // Si l'angle absolu du point est supérieur à 100°, le point est dérrière nous.
+                // Si l'angle absolu du point est supérieur à 50°, le point est dérrière nous.
                 // Comme on va principalement en avant on exclu.
                 double dX = conv.mmToPulse(pt.getX()) - currentPosition.getPt().getX();
                 double dY = conv.mmToPulse(pt.getY()) - currentPosition.getPt().getY();
                 double angle = Math.toDegrees(Math.atan2(conv.pulseToRad(dY), conv.pulseToRad(dX)));
-                if (Math.abs(angle) >= 100) {
+/*
+                if (Math.abs(angle) >= 50) {
                     continue;
                 }
+*/
+
 
                 // Définition de l'obstacle polygone (autour de nous)
                 int r1 = (int) (Math.cos(Math.toRadians(22.5)) * DISTANCE_CENTRE_OBSTACLE / 10);
@@ -191,7 +212,6 @@ public class AvoidingServiceBouchon implements IAvoidingService, InitializingBea
                     if (l.intersects(obsPoly.getBounds())) {
                         log.info("Collision détectée, ajout polygon : {} {}", pt, obsPoly);
                         tmpObstacles.add(obsPoly);
-                        tmpCollisionsShape.add(new Cercle(pt, DISTANCE_CENTRE_OBSTACLE));
                         continue pointLidar;
                     }
                 }
@@ -206,10 +226,6 @@ public class AvoidingServiceBouchon implements IAvoidingService, InitializingBea
         log.info("Nettoyage des obstacles");
         hasObstacle = false;
         pathFinder.addObstacles();
-
-        synchronized (this.collisionsShape) {
-            this.collisionsShape.clear();
-        }
 
         // On rafraichit le path
         trajectoryManager.refreshPathFinding();

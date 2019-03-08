@@ -419,7 +419,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      */
     @Override
     public void pathTo(final double x, final double y, final boolean avecArret) throws NoPathFoundException, AvoidingException {
-        boolean trajetOk = false;
+        boolean trajetOk = false, first = true;
         int nbCollisionDetected = 0;
         int divisor = 10;
 
@@ -432,8 +432,6 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             try {
                 log.info("Demande de chemin vers X = {}mm ; Y = {}mm", x, y);
                 Chemin c = pathFinder.findPath(ptFromCm, ptToCm);
-
-                boolean first = true;
 
                 MonitorMouvementPath mPath = new MonitorMouvementPath();
                 mPath.setPath(new ArrayList<>(c.getPoints().size() + 1));
@@ -450,16 +448,18 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                 while (c.hasNext()) {
                     Point targetPoint = c.next().multiplied(divisor);
 
-                    // Toujours activer l'évittement en Path
-                    rs.enableAvoidance();
-
                     // Processing du path
                     if (first) {
                         first = false;
+                        rs.disableAvoidance();
                         alignFrontTo(targetPoint.getX(), targetPoint.getY());
                     }
+
+                    // Toujours activer l'évittement en Path
+                    rs.enableAvoidance();
+
+                    // Va au premier point
                     gotoPointMM(targetPoint.getX(), targetPoint.getY(), !c.hasNext() && avecArret, true);
-                    //gotoPointMM(targetPoint.getX(), targetPoint.getY(), true, true);
                 }
 
                 // Condition de sortie de la boucle.
@@ -468,7 +468,10 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                 nbCollisionDetected++;
                 log.info("Collision detectée n° {}, on recalcul un autre chemin", nbCollisionDetected);
 
-                //throw new AvoidingException();
+                if (nbCollisionDetected > 100) {
+                    log.warn("Trop de collision ({}), on passe à la suite", nbCollisionDetected);
+                    throw new AvoidingException();
+                }
             }
         } while (!trajetOk);
     }
@@ -805,7 +808,6 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     private void checkRefreshPath() throws RefreshPathFindingException {
         if (refreshPath) {
             refreshPath = false;
-            rs.disableAvoidance();
             throw new RefreshPathFindingException();
         }
     }

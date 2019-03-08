@@ -159,6 +159,7 @@ public class Ordonanceur {
 
         log.info("Chargement de la carte");
         String fileResourcePath = String.format("classpath:maps/%s.png", robotStatus.getTeam().name().toLowerCase());
+        fileResourcePath = fileResourcePath.replace(robotStatus.getTeam().name().toLowerCase(), "test");
         final InputStream imgMap = patternResolver.getResource(fileResourcePath).getInputStream();
         pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
 
