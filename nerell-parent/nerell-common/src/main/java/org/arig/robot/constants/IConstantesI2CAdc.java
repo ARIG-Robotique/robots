@@ -5,13 +5,9 @@ package org.arig.robot.constants;
  */
 public interface IConstantesI2CAdc {
 
-    byte GP2D_AVANT_CENTRE = 2;
-    byte GP2D_AVANT_DROIT = 7;
-    byte GP2D_AVANT_GAUCHE = 3;
+    byte VACUOSTAT_DROIT = 0;
+    int VACUOSTAT_DROIT_SEUIL = 1750;
 
-    byte GP2D_SCAN_HAUT = 0;
-    byte GP2D_SCAN_BAS = 1;
-
-    byte VACUOSTAT = 4;
-    int VACUOSTAT_SEUIL = 1750;
+    byte VACUOSTAT_GAUCHE = 1;
+    int VACUOSTAT_GAUCHE_SEUIL = 1750;
 }

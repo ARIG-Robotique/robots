@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesI2C;
 import org.arig.robot.constants.IConstantesI2CAdc;
 import org.arig.robot.exception.I2CException;
+import org.arig.robot.model.Palet.Couleur;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
@@ -23,7 +24,6 @@ import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -46,16 +46,18 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     private IMonitoringWrapper monitoring;
 
     @Autowired
-    @Qualifier("frontColorSensor")
-    private TCS34725ColorSensor frontColorSensor;
+    private TCS34725ColorSensor colorSensor;
 
+    // Controlleur GPIO
     private GpioController gpio;
     private PCF8574GpioProvider pcfAlim;
     private PCF8574GpioProvider pcf1;
     private PCF8574GpioProvider pcf2;
     private PCF8574GpioProvider pcf3;
 
-    // Référence sur les PIN Input
+    // Référence sur les PIN Input //
+
+    // IRQ
     private GpioPinDigitalInput inIrqAlim;
     private GpioPinDigitalInput inIrqPcf1;
     private GpioPinDigitalInput inIrq1;
@@ -63,26 +65,28 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     private GpioPinDigitalInput inIrq4;
     private GpioPinDigitalInput inIrq5;
     private GpioPinDigitalInput inIrq6;
+
+    // Technique
+    private GpioPinDigitalInput inEquipe;
+    private GpioPinDigitalInput inAu;
     private GpioPinDigitalInput inAlimPuissance5V;
     private GpioPinDigitalInput inAlimPuissance8V;
     private GpioPinDigitalInput inAlimPuissance12V;
-    private GpioPinDigitalInput inAu;
-    private GpioPinDigitalInput inEquipe;
     private GpioPinDigitalInput inTirette;
-    private GpioPinDigitalInput inPresencePinceCentre;
-    private GpioPinDigitalInput inPresencePinceDroite;
-    private GpioPinDigitalInput inPresenceFusee;
-    private GpioPinDigitalInput inBordureAvant;
-    private GpioPinDigitalInput inComptageMagasin;
-    private GpioPinDigitalInput inPresenceDevidoir;
-    private GpioPinDigitalInput inPresenceRouleaux;
-    private GpioPinDigitalInput inFinCourseGlissiereGauche;
-    private GpioPinDigitalInput inFinCourseGlissiereDroite;
-    private GpioPinDigitalInput inPresenceBalleAspiration;
-    private GpioPinDigitalInput inBordureArriereDroite;
-    private GpioPinDigitalInput inBordureArriereGauche;
-    private GpioPinDigitalInput inPresenceBaseLunaireDroite;
-    private GpioPinDigitalInput inPresenceBaseLunaireGauche;
+
+    // Input : Numerique
+    private GpioPinDigitalInput inPresencePaletDansRobotDroit;
+    private GpioPinDigitalInput inPresencePaletDansRobotGauche;
+    private GpioPinDigitalInput inButeePaletDroit;
+    private GpioPinDigitalInput inButeePaletGauche;
+    private GpioPinDigitalInput inPresencePaletVentouseDroit;
+    private GpioPinDigitalInput inPresencePaletVentouseGauche;
+    private GpioPinDigitalInput inCalageBordureDroit;
+    private GpioPinDigitalInput inCalageBordureGauche;
+    private GpioPinDigitalInput inTrappeMagasinDroitFerme;
+    private GpioPinDigitalInput inTrappeMagasinGaucheFerme;
+    private GpioPinDigitalInput inIndexBarillet;
+    private GpioPinDigitalInput inPresenceLectureCouleur;
 
     // Référence sur les PIN Output
     private GpioPinDigitalOutput outAlimPuissance5V;
@@ -92,8 +96,10 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     private GpioPinDigitalOutput outLedRGB_R;
     private GpioPinDigitalOutput outLedRGB_G;
     private GpioPinDigitalOutput outLedRGB_B;
-    private GpioPinDigitalOutput outElectroVanne;
-    private GpioPinDigitalOutput outPompeAVide;
+    private GpioPinDigitalOutput outElectroVanneDroit;
+    private GpioPinDigitalOutput outElectroVanneGauche;
+    private GpioPinDigitalOutput outPompeAVideDroite;
+    private GpioPinDigitalOutput outPompeAVideGauche;
 
     @Override
     public void destroy() throws Exception {
@@ -136,10 +142,10 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         pcf3 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF3_ADDRESS, true);
 
         // Alim
+        inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_04);
         inAlimPuissance5V = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_05);
         inAlimPuissance8V = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_07);
         inAlimPuissance12V = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_06);
-        inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_04);
 
         outAlimPuissance5V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_00);
         outAlimPuissance8V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_02);
@@ -147,48 +153,46 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
         // PCF1
         inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
-        inBordureAvant = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
-        inComptageMagasin = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
-        inPresenceDevidoir = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
-        inFinCourseGlissiereDroite = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
-        inFinCourseGlissiereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
-        inPresencePinceCentre = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
-        inPresencePinceDroite = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
+        inPresencePaletDansRobotDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
+        inPresencePaletDansRobotGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
+        inButeePaletDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
+        inButeePaletGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
+        inPresencePaletVentouseDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
+        inPresencePaletVentouseGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
+        inIndexBarillet = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
 
         // PCF2
-        inPresenceBaseLunaireDroite = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
-        inPresenceBaseLunaireGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
-        inPresenceBalleAspiration = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
-        inBordureArriereDroite = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
-        inPresenceRouleaux = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
-        inPresenceFusee = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
-        inBordureArriereGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
+        inPresenceLectureCouleur = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
+        inTrappeMagasinDroitFerme = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
+        inTrappeMagasinGaucheFerme = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
+        inCalageBordureDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
+        inCalageBordureGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
 
         // PCF3
-        outElectroVanne = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_01);
-        outPompeAVide = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_02);
+        outElectroVanneDroit = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_00);
+        outPompeAVideDroite = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_01);
+        outElectroVanneGauche = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_02);
+        outPompeAVideGauche = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_03);
 
         // Etat initial des IOs
         outAlimPuissance8V.high(); // Désactivé
         disableLedCapteurCouleur();
         clearColorLedRGB();
-        disableElectroVanne();
-        disablePompeAVide();
+        disableElectroVanneDroite();
+        disableElectroVanneGauche();
+        disablePompeAVideDroite();
+        disablePompeAVideGauche();
     }
 
     // --------------------------------------------------------- //
-    // --------------------- CHECK PREPARATION ----------------- //
+    // --------------------- INFOS TECHNIQUE ------------------- //
     // --------------------------------------------------------- //
 
     @Override
     public Team equipe() {
-        rs.setTeam(inEquipe.isHigh() ? Team.BLEU : Team.JAUNE);
+        rs.setTeam(inEquipe.isHigh() ? Team.VIOLET : Team.JAUNE);
         return rs.getTeam();
     }
-
-    // --------------------------------------------------------- //
-    // -------------------------- INPUT ------------------------ //
-    // --------------------------------------------------------- //
 
     @Override
     public boolean auOk() {
@@ -216,6 +220,12 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         return inTirette.isLow();
     }
 
+    // --------------------------------------------------------- //
+    // -------------------------- INPUT ------------------------ //
+    // --------------------------------------------------------- //
+
+    // Numerique
+
     @Override
     public boolean ledCapteurCouleur() {
         boolean result = outCmdLedCapteurRGB.isHigh();
@@ -224,96 +234,98 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     }
 
     @Override
-    public boolean bordureAvant() {
-        boolean result = inBordureAvant.isLow();
-        log.info("Présence bordure avant : {}", result);
-        return result;
-    }
-
-    @Override
-    public boolean bordureArriereDroite() {
-        boolean result = inBordureArriereDroite.isLow();
-        log.info("Présence bordure arrière droite : {}", result);
-        return result;
-    }
-
-    @Override
-    public boolean bordureArriereGauche() {
-        boolean result = inBordureArriereGauche.isLow();
-        log.info("Présence bordure arrière gauche : {}", result);
-        return result;
-    }
-
-    @Override
-    public boolean presenceEntreeMagasin() {
-        boolean result = inComptageMagasin.isLow();
-        log.info("Présence comptage magasin : {}", result);
-        return result;
-    }
-
-    @Override
-    public boolean presenceDevidoir() {
-        boolean result = inPresenceDevidoir.isLow();
-        log.info("Présence dévidoir : {}", result);
-        return result;
-    }
-
-    @Override
-    public boolean presencePinceDroite() {
-        boolean result = inPresencePinceDroite.isLow();
-        log.info("Presence pince droite : {}", result);
-        return result;
-    }
-
-    @Override
-    public boolean presencePinceCentre() {
-        boolean result = inPresencePinceCentre.isLow();
+    public boolean presencePaletDansRobotDroit() {
+        boolean result = inPresencePaletDansRobotDroit.isLow();
         log.info("Presence pince centre : {}", result);
         return result;
     }
 
     @Override
-    public boolean presenceBaseLunaireDroite() {
-        boolean result = inPresenceBaseLunaireDroite.isLow();
-        log.info("Presence base lunaire droite : {}", result);
+    public boolean presencePaletDansRobotGauche() {
+        boolean result = inPresencePaletDansRobotGauche.isLow();
+        log.info("Presence pince droite : {}", result);
         return result;
     }
 
     @Override
-    public boolean presenceBaseLunaireGauche() {
-        boolean result = inPresenceBaseLunaireGauche.isLow();
-        log.info("Presence base lunaire gauche : {}", result);
-        return result;
-    }
-
-    @Override
-    public boolean presenceBallesAspiration() {
-        boolean result = inPresenceBalleAspiration.isLow();
-        log.info("Presence balle aspiration : {}", result);
-        return result;
-    }
-
-    @Override
-    public boolean presenceRouleaux() {
-        boolean result = inPresenceRouleaux.isLow();
-        log.info("Présence rouleaux : {}", result);
-        return result;
-    }
-
-    @Override
-    public boolean presenceFusee() {
-        boolean result = inPresenceFusee.isLow();
+    public boolean buteePaletDroit() {
+        boolean result = inButeePaletDroit.isLow();
         log.info("Presence fusée : {}", result);
         return result;
     }
 
     @Override
-    public boolean presenceModuleDansBras() {
+    public boolean buteePaletGauche() {
+        boolean result = inButeePaletGauche.isLow();
+        log.info("Présence bordure avant : {}", result);
+        return result;
+    }
+
+    @Override
+    public boolean presencePaletVentouseDroit() {
+        boolean result = inPresencePaletVentouseDroit.isLow();
+        log.info("Présence comptage magasin : {}", result);
+        return result;
+    }
+
+    @Override
+    public boolean presencePaletVentouseGauche() {
+        boolean result = inPresencePaletVentouseGauche.isLow();
+        log.info("Présence dévidoir : {}", result);
+        return result;
+    }
+
+    @Override
+    public boolean calageBordureArriereDroit() {
+        boolean result = inCalageBordureDroit.isLow();
+        log.info("Présence rouleaux : {}", result);
+        return result;
+    }
+
+    @Override
+    public boolean calageBordureArriereGauche() {
+        boolean result = inCalageBordureGauche.isLow();
+        log.info("Présence rouleaux : {}", result);
+        return result;
+    }
+
+    @Override
+    public boolean trappeMagasinDroitFerme() {
+        boolean result = inTrappeMagasinDroitFerme.isLow();
+        log.info("Presence balle aspiration : {}", result);
+        return result;
+    }
+
+    @Override
+    public boolean trappeMagasinGaucheFerme() {
+        boolean result = inTrappeMagasinGaucheFerme.isLow();
+        log.info("Presence balle aspiration : {}", result);
+        return result;
+    }
+
+    @Override
+    public boolean indexBarillet() {
+        boolean result = inIndexBarillet.isLow();
+        log.info("Présence bordure arrière droite : {}", result);
+        return result;
+    }
+
+    @Override
+    public boolean presenceLectureCouleur() {
+        boolean result = inPresenceLectureCouleur.isLow();
+        log.info("Presence base lunaire droite : {}", result);
+        return result;
+    }
+
+    // Analogique
+
+    @Override
+    public boolean paletPrisDansVentouseDroit() {
         boolean result;
         try {
-            int analogValue = i2cAdc.readCapteurValue(IConstantesI2CAdc.VACUOSTAT);
-            result = analogValue > IConstantesI2CAdc.VACUOSTAT_SEUIL;
-            log.info("Lecture capteur de vide {}", analogValue);
+            int analogValue = i2cAdc.readCapteurValue(IConstantesI2CAdc.VACUOSTAT_DROIT);
+            result = analogValue > IConstantesI2CAdc.VACUOSTAT_DROIT_SEUIL;
+            log.info("Lecture capteur de vide droit {}", analogValue);
         } catch (I2CException e) {
             result = false;
         }
@@ -322,31 +334,52 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     }
 
     @Override
-    public boolean finCourseGlissiereDroite() {
-        boolean result = inFinCourseGlissiereDroite.isLow();
-        log.info("Fin de course glissiere droite : {}", result);
+    public boolean paletPrisDansVentouseGauche() {
+        boolean result;
+        try {
+            int analogValue = i2cAdc.readCapteurValue(IConstantesI2CAdc.VACUOSTAT_GAUCHE);
+            result = analogValue > IConstantesI2CAdc.VACUOSTAT_GAUCHE_SEUIL;
+            log.info("Lecture capteur de vide gauche {}", analogValue);
+        } catch (I2CException e) {
+            result = false;
+        }
+        log.info("Présence module dans bras : {}", result);
         return result;
     }
 
     @Override
-    public boolean finCourseGlissiereGauche() {
-        boolean result = inFinCourseGlissiereGauche.isLow();
-        log.info("Fin de course glissiere gauche : {}", result);
-        return result;
+    public byte nbPaletDansMagasinDroit() {
+        // TODO
+        return 0;
     }
 
     @Override
-    public ColorData frontColor() {
-        return frontColorSensor.getColorData();
+    public byte nbPaletDansMagasinGauche() {
+        // TODO
+        return 0;
     }
 
     @Override
-    public Team getTeamColorFromSensor() {
-        ColorData c = frontColorSensor.getColorData();
+    public int distanceTelemetreAvantDroit() {
+        // TODO
+        return 0;
+    }
+
+    @Override
+    public int distanceTelemetreAvantGauche() {
+        // TODO
+        return 0;
+    }
+
+    // Couleur
+
+    @Override
+    public Couleur couleurPalet() {
+        ColorData c = colorSensor.getColorData();
 
         MonitorTimeSerie mts = new MonitorTimeSerie();
         mts.measurementName("couleur")
-                .addTag(MonitorTimeSerie.TAG_NAME, "devidoir")
+                .addTag(MonitorTimeSerie.TAG_NAME, "palet")
                 .addField("r", c.r())
                 .addField("g", c.g())
                 .addField("b", c.b());
@@ -354,15 +387,16 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
         int delta = 42;
 
-        Team result;
+        // TODO : Mettre les bon seuils
+        Couleur result;
         if (c.b() - c.r() > delta && c.b() - c.g() > delta / 2) {
-            result = Team.BLEU;
+            result = Couleur.BLEU;
         } else if (c.r() - c.b() > delta && c.g() - c.b() > delta && Math.abs(c.r() - c.g()) < delta) {
-            result = Team.JAUNE;
+            result = Couleur.GOLD; //Couleur.JAUNE;
         } else {
-            result = Team.UNKNOWN;
+            result = Couleur.INCONNU;
         }
-        log.info("Lecture capteur couleur R: {}, G: {}, B: {}, Team: {}", c.r(), c.g(), c.b(), result.name());
+        log.info("Lecture capteur couleur R: {}, G: {}, B: {}, Palet: {}", c.r(), c.g(), c.b(), result.name());
         return result;
     }
 
@@ -388,9 +422,9 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public void teamColorLedRGB() {
-        if (rs.getTeam() == Team.BLEU) {
-            log.info("Led RGB couleur Team BLEU");
-            outLedRGB_R.low();
+        if (rs.getTeam() == Team.VIOLET) {
+            log.info("Led RGB couleur Team VIOLET");
+            outLedRGB_R.high();
             outLedRGB_G.low();
             outLedRGB_B.high();
         } else if (rs.getTeam() == Team.JAUNE) {
@@ -447,49 +481,64 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         outAlimPuissance12V.high();
     }
 
-    private void enableElectroVanne() {
-        log.info("Activation electrovanne");
-        outElectroVanne.low();
+    private void enableElectroVanneDroite() {
+        log.info("Activation electrovanne droite");
+        outElectroVanneDroit.low();
     }
 
-    private void disableElectroVanne() {
-        log.info("Desactivation electrovanne");
-        outElectroVanne.high();
+    private void disableElectroVanneDroite() {
+        log.info("Desactivation electrovanne droite");
+        outElectroVanneDroit.high();
+    }
+
+    private void enableElectroVanneGauche() {
+        log.info("Activation electrovanne gauche");
+        outElectroVanneGauche.low();
+    }
+
+    private void disableElectroVanneGauche() {
+        log.info("Desactivation electrovanne gauche");
+        outElectroVanneGauche.high();
     }
 
     @Override
-    public void enablePompeAVide() {
-        disableElectroVanne();
-        log.info("Activation pompe a vide");
-        outPompeAVide.high();
+    public void enablePompeAVideDroite() {
+        disableElectroVanneDroite();
+        log.info("Activation pompe a vide droite");
+        outPompeAVideDroite.high();
     }
 
     @Override
-    public void disablePompeAVide() {
-        log.info("Desactivation pompe a vide");
-        outPompeAVide.low();
-        enableElectroVanne();
+    public void disablePompeAVideDroite() {
+        log.info("Desactivation pompe a vide droite");
+        outPompeAVideDroite.low();
+        enableElectroVanneDroite();
         sleep(100);
-        disableElectroVanne();
+        disableElectroVanneDroite();
+    }
+
+    @Override
+    public void enablePompeAVideGauche() {
+        disableElectroVanneGauche();
+        log.info("Activation pompe a vide gauche");
+        outPompeAVideGauche.high();
+    }
+
+    @Override
+    public void disablePompeAVideGauche() {
+        log.info("Desactivation pompe a vide gauche");
+        outPompeAVideGauche.low();
+        enableElectroVanneGauche();
+        sleep(100);
+        disableElectroVanneGauche();
     }
 
     // ----------------------------------------------------------- //
     // -------------------------- BUSINESS ----------------------- //
     // ----------------------------------------------------------- //
 
-    @Override
-    public boolean glissiereOuverte() {
-        boolean result = finCourseGlissiereDroite() && !finCourseGlissiereGauche();
-        log.info("Glissière ouverte : {}", result);
-        return result;
-    }
 
-    @Override
-    public boolean glissiereFerme() {
-        boolean result = !finCourseGlissiereDroite() && finCourseGlissiereGauche();
-        log.info("Glissière fermé : {}", result);
-        return result;
-    }
+    // ----------------------------------------------------------- //
 
     private void sleep(int time) {
         try {

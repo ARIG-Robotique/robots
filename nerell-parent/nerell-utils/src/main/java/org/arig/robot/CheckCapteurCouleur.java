@@ -29,7 +29,7 @@ public class CheckCapteurCouleur {
         ServosService servosService = rootContext.getBean(ServosService.class);
         RobotStatus robotStatus = rootContext.getBean(RobotStatus.class);
 
-        robotStatus.setTeam(Team.BLEU);
+        robotStatus.setTeam(Team.VIOLET);
 
         // Check init et ejection module lunaire
         ioService.enableAlim12VPuissance();

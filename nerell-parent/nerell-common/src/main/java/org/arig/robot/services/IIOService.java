@@ -1,38 +1,52 @@
 package org.arig.robot.services;
 
+import org.arig.robot.model.Palet.Couleur;
 import org.arig.robot.model.Team;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 
 /**
  * @author gdepuille on 23/04/15.
  */
 public interface IIOService {
 
+    // --------------------------------------------------------- //
+    // --------------------- INFOS TECHNIQUE ------------------- //
+    // --------------------------------------------------------- //
     Team equipe();
 
     boolean auOk();
     boolean alimPuissance5VOk();
     boolean alimPuissance12VOk();
     boolean tirette();
-    boolean bordureAvant();
-    boolean bordureArriereDroite();
-    boolean bordureArriereGauche();
-    boolean presenceEntreeMagasin();
-    boolean presenceDevidoir();
-    boolean presencePinceDroite();
-    boolean presencePinceCentre();
-    boolean presenceBaseLunaireDroite();
-    boolean presenceBaseLunaireGauche();
-    boolean presenceBallesAspiration();
-    boolean presenceRouleaux();
-    boolean presenceFusee();
-    boolean finCourseGlissiereDroite();
-    boolean finCourseGlissiereGauche();
-    boolean presenceModuleDansBras();
 
+    // --------------------------------------------------------- //
+    // -------------------------- INPUT ------------------------ //
+    // --------------------------------------------------------- //
+
+    // Numerique
     boolean ledCapteurCouleur();
-    ColorData frontColor();
-    Team getTeamColorFromSensor();
+    boolean presencePaletDansRobotDroit();
+    boolean presencePaletDansRobotGauche();
+    boolean buteePaletDroit();
+    boolean buteePaletGauche();
+    boolean presencePaletVentouseDroit();
+    boolean presencePaletVentouseGauche();
+    boolean calageBordureArriereDroit();
+    boolean calageBordureArriereGauche();
+    boolean trappeMagasinDroitFerme();
+    boolean trappeMagasinGaucheFerme();
+    boolean indexBarillet();
+    boolean presenceLectureCouleur();
+
+    // Analogique
+    boolean paletPrisDansVentouseDroit();
+    boolean paletPrisDansVentouseGauche();
+    byte nbPaletDansMagasinDroit();
+    byte nbPaletDansMagasinGauche();
+    int distanceTelemetreAvantDroit();
+    int distanceTelemetreAvantGauche();
+
+    // Couleur
+    Couleur couleurPalet();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
@@ -40,6 +54,7 @@ public interface IIOService {
 
     void colorLedRGBKo();
     void colorLedRGBOk();
+
     void teamColorLedRGB();
     void clearColorLedRGB();
 
@@ -51,13 +66,13 @@ public interface IIOService {
     void enableAlim12VPuissance();
     void disableAlim12VPuissance();
 
-    void enablePompeAVide();
-    void disablePompeAVide();
+    void enablePompeAVideDroite();
+    void disablePompeAVideDroite();
+    void enablePompeAVideGauche();
+    void disablePompeAVideGauche();
 
     // ----------------------------------------------------------- //
     // -------------------------- BUSINESS ----------------------- //
     // ----------------------------------------------------------- //
 
-    boolean glissiereOuverte();
-    boolean glissiereFerme();
 }

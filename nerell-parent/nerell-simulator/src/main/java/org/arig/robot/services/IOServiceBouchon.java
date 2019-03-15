@@ -1,15 +1,12 @@
 package org.arig.robot.services;
 
 import lombok.Setter;
+import org.arig.robot.model.Palet.Couleur;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
 
 /**
  * @author gdepuille on 30/10/16.
@@ -17,26 +14,18 @@ import javax.annotation.PostConstruct;
 @Service
 public class IOServiceBouchon implements IIOService {
 
-    @Autowired
-    private RobotStatus rs;
+    @Autowired private RobotStatus rs;
 
-    @Autowired
-    @Qualifier("frontColorSensor")
-    private TCS34725ColorSensor frontColorSensor;
+    @Setter private Team team = Team.UNKNOWN;
+    @Setter private boolean au = false;
+    @Setter private boolean tirette = false;
+    private boolean ledCapteurCouleur = false;
+    private boolean alim5V = false;
+    private boolean alim12V = false;
 
-    @Setter
-    private boolean au = false;
-
-    @Setter
-    private boolean tirette = false;
-
-    @Setter
-    private Team team = Team.UNKNOWN;
-
-    @PostConstruct
-    public void init() {
-        rs.setSimulateur();
-    }
+    // --------------------------------------------------------- //
+    // --------------------- INFOS TECHNIQUE ------------------- //
+    // --------------------------------------------------------- //
 
     @Override
     public Team equipe() {
@@ -51,12 +40,12 @@ public class IOServiceBouchon implements IIOService {
 
     @Override
     public boolean alimPuissance5VOk() {
-        return true;
+        return alim5V;
     }
 
     @Override
     public boolean alimPuissance12VOk() {
-        return true;
+        return alim12V;
     }
 
     @Override
@@ -64,168 +53,177 @@ public class IOServiceBouchon implements IIOService {
         return tirette;
     }
 
+    // --------------------------------------------------------- //
+    // -------------------------- INPUT ------------------------ //
+    // --------------------------------------------------------- //
+
+    // Numerique
+
     @Override
     public boolean ledCapteurCouleur() {
-        return true;
+        return ledCapteurCouleur;
     }
 
     @Override
-    public boolean bordureAvant() {
+    public boolean presencePaletDansRobotDroit() {
         return false;
     }
 
     @Override
-    public boolean bordureArriereDroite() {
+    public boolean presencePaletDansRobotGauche() {
         return false;
     }
 
     @Override
-    public boolean bordureArriereGauche() {
+    public boolean buteePaletDroit() {
         return false;
     }
 
     @Override
-    public boolean presenceEntreeMagasin() {
+    public boolean buteePaletGauche() {
         return false;
     }
 
     @Override
-    public boolean presenceDevidoir() {
+    public boolean presencePaletVentouseDroit() {
         return false;
     }
 
     @Override
-    public boolean presencePinceDroite() {
+    public boolean presencePaletVentouseGauche() {
         return false;
     }
 
     @Override
-    public boolean presencePinceCentre() {
-        return true;
-    }
-
-    @Override
-    public boolean presenceBaseLunaireDroite() {
+    public boolean calageBordureArriereDroit() {
         return false;
     }
 
     @Override
-    public boolean presenceBaseLunaireGauche() {
+    public boolean calageBordureArriereGauche() {
         return false;
     }
 
     @Override
-    public boolean presenceBallesAspiration() {
+    public boolean trappeMagasinDroitFerme() {
         return false;
     }
 
     @Override
-    public boolean presenceRouleaux() {
+    public boolean trappeMagasinGaucheFerme() {
         return false;
     }
 
     @Override
-    public boolean presenceFusee() {
+    public boolean indexBarillet() {
         return false;
     }
 
     @Override
-    public boolean presenceModuleDansBras() {
+    public boolean presenceLectureCouleur() {
+        return false;
+    }
+
+    // Analogique
+
+    @Override
+    public boolean paletPrisDansVentouseDroit() {
         return false;
     }
 
     @Override
-    public boolean finCourseGlissiereDroite() {
+    public boolean paletPrisDansVentouseGauche() {
         return false;
     }
 
     @Override
-    public boolean finCourseGlissiereGauche() {
-        return false;
+    public byte nbPaletDansMagasinDroit() {
+        return 0;
     }
 
     @Override
-    public ColorData frontColor() {
-        return frontColorSensor.new ColorData()
-                .r((int) (Math.random() * 256))
-                .g((int) (Math.random() * 256))
-                .b((int) (Math.random() * 256))
-                .c((int) (Math.random() * 256));
+    public byte nbPaletDansMagasinGauche() {
+        return 0;
     }
 
     @Override
-    public Team getTeamColorFromSensor() {
-        double r = Math.random();
-        return r > 0.75 ? Team.BLEU : r > 0.5  ? Team.JAUNE : Team.UNKNOWN;
+    public int distanceTelemetreAvantDroit() {
+        return 0;
     }
 
     @Override
-    public void colorLedRGBKo() {
-
+    public int distanceTelemetreAvantGauche() {
+        return 0;
     }
+
+
+    // Couleur
 
     @Override
-    public void colorLedRGBOk() {
-
+    public Couleur couleurPalet() {
+        return Couleur.INCONNU;
     }
+
+    // --------------------------------------------------------- //
+    // -------------------------- OUTPUT ----------------------- //
+    // --------------------------------------------------------- //
 
     @Override
-    public void clearColorLedRGB() {
-
-    }
+    public void colorLedRGBKo() { }
 
     @Override
-    public void teamColorLedRGB() {
+    public void colorLedRGBOk() { }
 
-    }
+    @Override
+    public void teamColorLedRGB() { }
+
+    @Override
+    public void clearColorLedRGB() { }
 
     @Override
     public void enableLedCapteurCouleur() {
-
+        ledCapteurCouleur = true;
     }
 
     @Override
     public void disableLedCapteurCouleur() {
-
+        ledCapteurCouleur = false;
     }
 
     @Override
     public void enableAlim5VPuissance() {
-
+        alim5V = true;
     }
 
     @Override
     public void disableAlim5VPuissance() {
-
+        alim5V = false;
     }
 
     @Override
     public void enableAlim12VPuissance() {
-
+        alim12V = true;
     }
 
     @Override
     public void disableAlim12VPuissance() {
-
+        alim12V = false;
     }
 
     @Override
-    public void enablePompeAVide() {
-
-    }
+    public void enablePompeAVideDroite() { }
 
     @Override
-    public void disablePompeAVide() {
-
-    }
+    public void disablePompeAVideDroite() { }
 
     @Override
-    public boolean glissiereOuverte() {
-        return false;
-    }
+    public void enablePompeAVideGauche() { }
 
     @Override
-    public boolean glissiereFerme() {
-        return true;
-    }
+    public void disablePompeAVideGauche() { }
+
+    // ----------------------------------------------------------- //
+    // -------------------------- BUSINESS ----------------------- //
+    // ----------------------------------------------------------- //
+
 }

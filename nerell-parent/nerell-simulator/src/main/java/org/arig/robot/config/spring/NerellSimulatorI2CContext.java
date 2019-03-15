@@ -81,7 +81,7 @@ public class NerellSimulatorI2CContext {
     }
 
     @Bean
-    public TCS34725ColorSensor frontColorSensor() {
+    public TCS34725ColorSensor colorSensor() {
         return new TCS34725ColorSensor(IConstantesI2C.TCS34725_DEVICE_NAME);
     }
 }

@@ -28,7 +28,7 @@ public class BouchonCapteursController {
 
     @PostMapping(value = "/team")
     public void setTeam(@RequestBody Boolean value) {
-        Team team = value ? Team.JAUNE : Team.BLEU;
+        Team team = value ? Team.JAUNE : Team.VIOLET;
         log.info("Définition de la valeur de l'équipe : {}", team.name());
         ioServiceBouchon.setTeam(team);
     }
