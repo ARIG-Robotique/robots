@@ -3,10 +3,12 @@ package org.arig.robot.clr;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.Ordonanceur;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
+@Order(100)
 public class OrdonanceurRunner implements CommandLineRunner {
 
     @Override
