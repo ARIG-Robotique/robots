@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled.robotcities;
+package org.arig.robot.strategy.actions.disabled.atomfactory;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
