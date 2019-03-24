@@ -18,8 +18,8 @@ before_script:
 
 script:
   - pre-commit run --all-files
-  - ./gradlew check
-  - ./gradlew codeCoverageReport
+  - ./gradlew check --warning-mode all
+  - ./gradlew codeCoverageReport --warning-mode all
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
