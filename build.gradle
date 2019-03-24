@@ -79,12 +79,17 @@ configure(allprojects) { project ->
 
 	// Dependence commune pour tous les projets
 	dependencies {
-		compile "org.projectlombok:lombok"
+		annotationProcessor "org.projectlombok:lombok"
+		testAnnotationProcessor "org.projectlombok:lombok"
 
-		compile 'org.springframework.boot:spring-boot-starter-webflux'
+		compileOnly "org.projectlombok:lombok"
 
-		testCompile 'org.springframework.boot:spring-boot-starter-test'
-		testCompile 'io.projectreactor:reactor-test'
+		compile "org.springframework.boot:spring-boot-starter-webflux"
+
+		testCompileOnly "org.projectlombok:lombok"
+
+		testCompile "org.springframework.boot:spring-boot-starter-test"
+		testCompile "io.projectreactor:reactor-test"
 	}
 
 	// JAvaCOCOverage
