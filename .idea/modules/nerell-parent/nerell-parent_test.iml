@@ -12,7 +12,6 @@
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="nerell-parent_main" />
-    <orderEntry type="library" name="Gradle: org.projectlombok:lombok:1.18.4" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-webflux:2.1.2.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-test:2.1.2.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: io.projectreactor:reactor-test:3.2.5.RELEASE" level="project" />
@@ -81,6 +80,7 @@
     <orderEntry type="library" name="Gradle: io.netty:netty-transport:4.1.31.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-buffer:4.1.31.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-resolver:4.1.31.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.projectlombok:lombok:1.18.4" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-common:4.1.31.Final" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm:5.0.4" level="project" />
   </component>

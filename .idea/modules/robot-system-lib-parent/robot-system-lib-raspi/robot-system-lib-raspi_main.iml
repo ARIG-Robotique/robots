@@ -14,7 +14,6 @@
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="robot-system-lib-core_main" />
-    <orderEntry type="library" name="Gradle: org.projectlombok:lombok:1.18.4" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-webflux:2.1.2.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: com.pi4j:pi4j-gpio-extension:1.2-arig-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: com.pi4j:pi4j-core:1.2-arig-SNAPSHOT" level="project" />
@@ -86,6 +85,7 @@
     <orderEntry type="library" name="Gradle: io.netty:netty-transport-native-unix-common:4.1.31.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-transport:4.1.31.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-buffer:4.1.31.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.projectlombok:lombok:1.18.4" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-resolver:4.1.31.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-common:4.1.31.Final" level="project" />
   </component>
