@@ -70,7 +70,10 @@ configure(allprojects) { project ->
 		mavenCentral()
 		maven { url 'https://jitpack.io' }
 		maven {
-			url "s3://arig-artefacts.eu-west-3/maven/snapshots"
+			url "s3://arig-artefacts.s3.eu-west-3.amazonaws.com/maven/snapshots"
+			authentication {
+				awsIm(AwsImAuthentication)
+			}
 		}
 	}
 
