@@ -70,18 +70,7 @@ configure(allprojects) { project ->
 		mavenCentral()
 		maven { url 'https://jitpack.io' }
 		maven {
-			url "http://archiva.picotteland.dtdns.net/repository/internal"
-			credentials {
-				username "guest"
-				password "guest1"
-			}
-		}
-		maven {
-			url "http://archiva.picotteland.dtdns.net/repository/snapshots"
-			credentials {
-				username "guest"
-				password "guest1"
-			}
+			url "s3://arig-artefacts.eu-west-3/maven/snapshots"
 		}
 	}
 
