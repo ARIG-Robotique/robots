@@ -16,6 +16,7 @@ public class ServosController extends AbstractServosController {
     private static List<ServoConfig> servoConfigs = new LinkedList<>();
 
     static {
+        /*
         ServoConfig pinceModuleDroit = new ServoConfig();
         pinceModuleDroit.setId(IConstantesServos.PINCE_MODULE_DROIT).setName("Pince module droit");
         pinceModuleDroit
@@ -89,8 +90,10 @@ public class ServosController extends AbstractServosController {
                 .addPosition("Cratère", IConstantesServos.INCLINAISON_ASPI_CRATERE)
                 .addPosition("Fermé", IConstantesServos.INCLINAISON_ASPI_FERME);
         servoConfigs.add(orientationAspiration);
+        */
 
         // Temp
+        /*
         ServoConfig moteurRouleaux = new ServoConfig();
         moteurRouleaux.setId(IConstantesServos.MOTOR_ROULEAUX).setName("Moteur rouleaux");
         moteurRouleaux
@@ -118,6 +121,7 @@ public class ServosController extends AbstractServosController {
                 .addPosition("Stop", IConstantesServos.MOTOR_ASPIRATION_STOP)
                 .addPosition("A Fond", IConstantesServos.MOTOR_ASPIRATION_FULL);
         servoConfigs.add(moteurAspiration);
+        */
 
         /*
         ServoConfig moteurDroit = new ServoConfig();

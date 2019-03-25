@@ -57,6 +57,7 @@ public class NerellRobotAvoidingContext {
         }
     }
 
+    /*
     @Bean(name = "gp2dGauche")
     public GP2D12 gp2dGauche() {
         return new GP2D12(IConstantesI2CAdc.GP2D_AVANT_GAUCHE, "GP2D Gauche");
@@ -81,6 +82,7 @@ public class NerellRobotAvoidingContext {
     public SRF02Sonar usGauche() {
         return new SRF02Sonar(IConstantesI2C.US_GAUCHE_NAME);
     }
+    */
 
     /*@Bean(name = "usDroit")
     public SRF02Sonar usDroit() {

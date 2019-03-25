@@ -40,6 +40,7 @@ public class PincesService {
     }
 
     public void process() {
+        /*
         if (ioService.presencePinceDroite()) {
             if (servosService.isBrasDepose()) {
                 servosService.pinceCentreOuvert();
@@ -57,5 +58,6 @@ public class PincesService {
                 rs.addModuleDansMagasin(rs.nextModuleLunaireExpected());
             }
         }
+        */
     }
 }

@@ -19,9 +19,7 @@ public class CalageBordureService {
     private IIOService ioService;
 
     public boolean process() {
-        if ((ioService.bordureArriereDroite() && ioService.bordureArriereGauche())
-                || ioService.bordureAvant()
-                || ioService.presenceBaseLunaireDroite() || ioService.presenceBaseLunaireGauche()) {
+        if (ioService.calageBordureArriereDroit() && ioService.calageBordureArriereGauche()) {
             trajectoryManager.calageBordureDone();
             return true;
         }

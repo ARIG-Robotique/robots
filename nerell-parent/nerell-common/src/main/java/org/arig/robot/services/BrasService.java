@@ -30,7 +30,7 @@ public class BrasService {
     }
 
     public boolean stockerModuleRobot() {
-        if (ioService.presencePinceDroite() && !ioService.presencePinceCentre()) {
+        /*if (ioService.presencePinceDroite() && !ioService.presencePinceCentre()) {
             if (!robotStatus.canAddModuleMagasin()) {
                 log.warn("Pas de place dans la magasin");
                 return false;
@@ -149,12 +149,14 @@ public class BrasService {
         }
 
         servosService.porteMagasinOuvert();
-
+        */
         return true;
     }
 
     public boolean stockerModuleFusee() {
 //        if (ioService.presenceFusee()) {
+
+        /*
         if (!robotStatus.canAddModuleMagasin()) {
             log.warn("Pas de place dans la magasin");
             return false;
@@ -207,7 +209,7 @@ public class BrasService {
         }
 
         servosService.porteMagasinOuvert();
-
+*/
         return true;
 //        } else {
 //            log.info("Aucun module à récupérer");
@@ -216,6 +218,7 @@ public class BrasService {
     }
 
     private boolean tentativeAspirationRobot(int nb) {
+        /*
         long remaining = TEMPS_TENTATIVE_ASPIRATION;
 
         while (!ioService.presenceModuleDansBras() && remaining > 0) {
@@ -238,9 +241,12 @@ public class BrasService {
         } else {
             return true;
         }
+        */
+        return true;
     }
 
     private boolean tentativeAspirationFusee(int nb) {
+        /*
         long remaining = TEMPS_TENTATIVE_ASPIRATION;
 
         while (!ioService.presenceModuleDansBras() && remaining > 0) {
@@ -263,5 +269,7 @@ public class BrasService {
         } else {
             return true;
         }
+        */
+        return true;
     }
 }

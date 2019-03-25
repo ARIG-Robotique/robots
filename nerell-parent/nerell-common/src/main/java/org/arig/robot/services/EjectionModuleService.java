@@ -31,6 +31,7 @@ public class EjectionModuleService {
         if (!rs.isSimulateur()) {
             log.info("Initialisation de l'ejection des modules");
 
+            /*
             if (ioService.glissiereFerme()) {
                 servosService.ouvreGlissiere();
                 while (!ioService.finCourseGlissiereDroite()) {
@@ -38,19 +39,23 @@ public class EjectionModuleService {
                 }
                 servosService.stopGlissiere();
             }
+            */
 
             // Dans une position ouverte quelque part
+            /*
             servosService.fermeGlissiere();
             while (ioService.finCourseGlissiereDroite()) {
                 waitTimeMs(1);
             }
             servosService.stopGlissiere();
+            */
 
             log.info("Fin d'initialisation de l'ejection des modules");
         }
     }
 
     public void ejectionAvantRetourStand() {
+       /*
         if (ioService.presenceRouleaux()) {
             try {
                 doEject();
@@ -68,6 +73,7 @@ public class EjectionModuleService {
                 e.printStackTrace();
             }
         }
+        */
     }
 
     public void ejectionModule() throws EjectionModuleException {
@@ -80,6 +86,7 @@ public class EjectionModuleService {
             return;
         }
 
+        /*
         if (!ioService.presenceRouleaux()) {
             servosService.devidoirDechargement();
         }
@@ -128,6 +135,7 @@ public class EjectionModuleService {
             ioService.disableLedCapteurCouleur();
 
         }
+        */
 
         doEject();
     }
@@ -137,25 +145,25 @@ public class EjectionModuleService {
 
         log.info("Vraie ejection");
 
-        servosService.devidoirChargement();
+//        servosService.devidoirChargement();
 
-        servosService.ouvreGlissiere();
+//        servosService.ouvreGlissiere();
 
         int remaining = TEMPS_MAX_EJECTION;
-        while (ioService.finCourseGlissiereGauche() && remaining > 0) {
-            waitTimeMs(1);
-            remaining -= 1;
-        }
+//        while (ioService.finCourseGlissiereGauche() && remaining > 0) {
+//            waitTimeMs(1);
+//            remaining -= 1;
+//        }
 
         if (remaining == 0) {
             log.warn("Ejection de module impossible");
             error = true;
         }
 
-        servosService.fermeGlissiere();
-        while (ioService.finCourseGlissiereDroite()) {
-            waitTimeMs(1);
-        }
+//        servosService.fermeGlissiere();
+//        while (ioService.finCourseGlissiereDroite()) {
+//            waitTimeMs(1);
+//        }
 
         init();
 

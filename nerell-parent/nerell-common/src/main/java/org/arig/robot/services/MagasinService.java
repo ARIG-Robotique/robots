@@ -19,24 +19,24 @@ public class MagasinService {
     private boolean inProgress = false;
 
     public void process() {
-
-        if (!inProgress && rs.hasModuleDansMagasin()) {
-            if (!ioService.presenceDevidoir()) {
-                inProgress = true;
-                servosService.devidoirChargement();
-                servosService.waitDevidoire();
-            }
-
-            if (!ioService.presenceRouleaux()) {
-                inProgress = true;
-                servosService.devidoirDechargement();
-                servosService.waitDevidoire();
-
-                servosService.devidoirChargement();
-            }
-
-            inProgress = false;
-        }
+//
+//        if (!inProgress && rs.hasModuleDansMagasin()) {
+//            if (!ioService.presenceDevidoir()) {
+//                inProgress = true;
+//                servosService.devidoirChargement();
+//                servosService.waitDevidoire();
+//            }
+//
+//            if (!ioService.presenceRouleaux()) {
+//                inProgress = true;
+//                servosService.devidoirDechargement();
+//                servosService.waitDevidoire();
+//
+//                servosService.devidoirChargement();
+//            }
+//
+//            inProgress = false;
+//        }
     }
 
 }

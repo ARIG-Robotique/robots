@@ -182,11 +182,11 @@ public class Ordonanceur {
                 trajectoryManager.gotoPointMM(890, 300);
                 trajectoryManager.gotoOrientationDeg(90, SensRotation.TRIGO);
                 trajectoryManager.reculeMM(125);
-                servosService.aspirationFerme();
+                //servosService.aspirationFerme();
             } else {
                 position.setPt(new Point(conv.mmToPulse(2680), conv.mmToPulse(772)));
                 trajectoryManager.avanceMM(300);
-                servosService.aspirationFerme();
+                //servosService.aspirationFerme();
                 trajectoryManager.gotoPointMM(3000 - 1100, 772);
                 trajectoryManager.gotoPointMM(3000 - 890, 300);
                 trajectoryManager.gotoOrientationDeg(90, SensRotation.TRIGO);
@@ -239,8 +239,10 @@ public class Ordonanceur {
         robotStatus.stopMatch();
         log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
 
+        /*
         servosService.brasAttentePriseRobot();
         servosService.pinceDroiteOuvert();
+        */
 
         // Désactivation de la puissance moteur pour être sur de ne plus rouler
         ioService.disableAlim5VPuissance();
@@ -267,10 +269,12 @@ public class Ordonanceur {
         ioService.enableAlim12VPuissance();
 
         ejectionModuleService.ejectionAvantRetourStand();
+        /*
         if (ioService.presenceBallesAspiration()) {
             servosService.aspirationTransfert();
             servosService.waitAspiration();
         }
+        */
 
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();
