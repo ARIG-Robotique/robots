@@ -392,15 +392,20 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
         int delta = 42;
 
-        // TODO : Mettre les bon seuils
         Couleur result;
-        if (c.b() - c.r() > delta && c.b() - c.g() > delta / 2) {
+        if (c.b() > c.r() + delta && c.b() > c.g() + delta) {
             result = Couleur.BLEU;
-        } else if (c.r() - c.b() > delta && c.g() - c.b() > delta && Math.abs(c.r() - c.g()) < delta) {
-            result = Couleur.GOLD; //Couleur.JAUNE;
+
+        } else if (c.g() > c.r() + delta && c.g() > c.b() + delta) {
+            result = Couleur.VERT;
+
+        } else if (c.r() > c.b() + delta && c.r() > c.g() + delta) {
+            result = Couleur.ROUGE;
+
         } else {
             result = Couleur.INCONNU;
         }
+
         log.info("Lecture capteur couleur R: {}, G: {}, B: {}, Palet: {}", c.r(), c.g(), c.b(), result.name());
         return result;
     }

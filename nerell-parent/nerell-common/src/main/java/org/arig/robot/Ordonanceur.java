@@ -14,8 +14,9 @@ import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.arig.robot.services.EjectionModuleService;
+import org.arig.robot.services.CarouselService;
 import org.arig.robot.services.IIOService;
+import org.arig.robot.services.MagasinService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
@@ -50,10 +51,13 @@ public class Ordonanceur {
     private II2CManager i2CManager;
 
     @Autowired
-    private EjectionModuleService ejectionModuleService;
+    private ServosService servosService;
 
     @Autowired
-    private ServosService servosService;
+    private MagasinService magasinService;
+
+    @Autowired
+    private CarouselService carouselService;
 
     @Autowired
     private ITrajectoryManager trajectoryManager;
@@ -136,9 +140,6 @@ public class Ordonanceur {
         log.info("Démarrage du lidar");
         lidar.startScan();
 
-        log.info("Position initiale de l'ejection module");
-        ejectionModuleService.init();
-
         log.warn("La tirette n'est pas la et la selection couleur n'as pas eu lieu. Phase de préparation Nerell");
         boolean selectionCouleur = false;
         while(!ioService.tirette() || !selectionCouleur) {
@@ -220,7 +221,6 @@ public class Ordonanceur {
         // Activation
         robotStatus.enableMatch();
 //        robotStatus.enableAvoidance();
-        robotStatus.enablePinces();
 
         // Match de XX secondes.
 //        boolean activateCollecteAdverse = false;
@@ -253,7 +253,7 @@ public class Ordonanceur {
         // On envoi les datas collecté
         monitoringWrapper.save();
 
-        // Attente remise de la tirette pour ejecter les modules et les balles en stocks
+        // Attente remise de la tirette pour ejecter les palets en stock
         while(!ioService.tirette() || !ioService.auOk()) {
             ioService.colorLedRGBOk();
             waitTimeMs(500);
@@ -266,13 +266,8 @@ public class Ordonanceur {
         ioService.enableAlim5VPuissance();
         ioService.enableAlim12VPuissance();
 
-        ejectionModuleService.ejectionAvantRetourStand();
-        /*
-        if (ioService.presenceBallesAspiration()) {
-            servosService.aspirationTransfert();
-            servosService.waitAspiration();
-        }
-        */
+        magasinService.ejectionAvantRetourStand();
+        carouselService.ejectionAvantRetourStand();
 
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();

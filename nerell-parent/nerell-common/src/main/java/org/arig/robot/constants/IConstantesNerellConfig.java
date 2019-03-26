@@ -103,6 +103,7 @@ public interface IConstantesNerellConfig {
     // ----------------- //
     // Paramètres métier //
     // ----------------- //
-    int nbModuleMax = 6;
+    int nbPaletsBalanceMax = 6;
+    int nbPaletsAccelerateurMax = 9; // TODO à valider
 
 }

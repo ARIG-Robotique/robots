@@ -1,10 +1,7 @@
 package org.arig.robot.scheduler;
 
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.services.BaliseService;
-import org.arig.robot.services.CalageBordureService;
-import org.arig.robot.services.MagasinService;
-import org.arig.robot.services.PincesService;
+import org.arig.robot.services.*;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +30,12 @@ public class NerellScheduler {
     private PincesService pincesService;
 
     @Autowired
+    private CarouselService carouselService;
+
+    @Autowired
+    private SerrageService serrageService;
+
+    @Autowired
     private MagasinService magasinService;
 
     @Autowired
@@ -55,22 +58,14 @@ public class NerellScheduler {
         }
     }
 
-    @Scheduled(fixedDelay = 200)
+    @Scheduled(fixedDelay = 500)
     public void prisePinceTask() {
-        if (rs.isPincesEnabled()) {
-            pincesService.enable();
-            pincesService.process();
-        }
-        else {
-            pincesService.disable();
-        }
+        pincesService.process();
     }
 
-    @Scheduled(fixedDelay = 1000)
-    public void magasinServiceTask() {
-        if (rs.isMagasinServiceEnable()) {
-            magasinService.process();
-        }
+    @Scheduled(fixedDelay = 500)
+    public void serrageTask() {
+        serrageService.process();
     }
 
     @Scheduled(fixedDelay = 2000)
@@ -79,4 +74,10 @@ public class NerellScheduler {
             baliseService.updateStatus();
         }
     }
+
+    @Scheduled(fixedDelay = 500)
+    public void magasinTask() {
+        magasinService.process();
+    }
+
 }

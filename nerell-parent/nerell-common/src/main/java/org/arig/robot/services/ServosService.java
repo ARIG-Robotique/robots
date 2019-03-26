@@ -91,6 +91,10 @@ public class ServosService {
         servos.waitTime(IConstantesServos.WAIT_POUSSE_ACCELERATEUR);
     }
 
+    public void waitAscenseurAndPivotVentouse() {
+        servos.waitTime(Math.max(IConstantesServos.WAIT_PIVOT_VENTOUSE, IConstantesServos.WAIT_ASCENSEUR_VENTOUSE));
+    }
+
     //*******************************************//
     //* Lecture des positions                   *//
     //*******************************************//

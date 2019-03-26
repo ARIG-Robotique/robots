@@ -1,5 +1,6 @@
 package org.arig.robot.services;
 
+import org.arig.robot.model.Carousel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +20,12 @@ public class LeftSideService implements IRobotSide {
 
     @Override
     public int positionCarouselPince() {
-        return -1;
+        return Carousel.PINCE_GAUCHE;
     }
 
     @Override
     public int positionCarouselMagasin() {
-        return -1;
+        return Carousel.MAGASIN_GAUCHE;
     }
 
     @Override
