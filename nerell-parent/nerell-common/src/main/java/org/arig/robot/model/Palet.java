@@ -12,32 +12,27 @@ import lombok.experimental.Accessors;
 public class Palet {
 
     public enum Couleur {
-        INCONNU, ROUGE, VERT, BLEU, GOLD
+        ANY, INCONNU, ROUGE, VERT, BLEU, GOLD
     }
 
     private Integer numero;
 
-    /**
-     * Indique si la couleur a été validée avec le lecteur couleur
-     */
-    private boolean valide;
-
     private Couleur couleur;
 
     public static Palet rouge() {
-        return new Palet().couleur(Couleur.ROUGE).valide(true);
+        return new Palet().couleur(Couleur.ROUGE);
     }
 
     public static Palet vert() {
-        return new Palet().couleur(Couleur.VERT).valide(true);
+        return new Palet().couleur(Couleur.VERT);
     }
 
     public static Palet bleu() {
-        return new Palet().couleur(Couleur.BLEU).valide(true);
+        return new Palet().couleur(Couleur.BLEU);
     }
 
     public static Palet gold() {
-        return new Palet().couleur(Couleur.GOLD).valide(true);
+        return new Palet().couleur(Couleur.GOLD);
     }
 
 }

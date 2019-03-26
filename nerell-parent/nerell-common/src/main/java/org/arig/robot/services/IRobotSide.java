@@ -29,6 +29,11 @@ public interface IRobotSide {
 
     // SERVOS
 
+    default void ascenseurAndVentouseHome() {
+        ascenseurDistributeur();
+        pivotVentouseTable();
+    }
+
     void ascenseurTable();
 
     void ascenseurDistributeur();
