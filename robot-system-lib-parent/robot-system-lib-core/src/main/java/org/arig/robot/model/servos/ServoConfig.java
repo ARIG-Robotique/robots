@@ -16,13 +16,17 @@ import java.util.Optional;
  * @author gdepuille on 01/05/15.
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-@Accessors(chain = true)
-public class ServoConfig extends ServoInfo {
+@Accessors(chain = true, fluent = true)
+public class ServoConfig {
 
     private static final int DEFAULT_MIN = 500;
     private static final int DEFAULT_MAX = 2500;
     private static final int OFFSET = 20;
+
+    private byte id;
+    private String name;
+    private int currentSpeed;
+    private int currentPosition;
 
     @Setter(AccessLevel.NONE)
     private int minPosition = DEFAULT_MIN;
@@ -31,11 +35,11 @@ public class ServoConfig extends ServoInfo {
 
     private List<ServoPosition> positions;
 
-    public ServoConfig addPosition(String name, int value) {
-        return addPosition(new ServoPosition(name, value));
+    public ServoConfig position(String name, int value) {
+        return position(new ServoPosition(name, value));
     }
 
-    public ServoConfig addPosition(ServoPosition pos) {
+    public ServoConfig position(ServoPosition pos) {
         if (positions == null) {
             positions = new LinkedList<>();
         }

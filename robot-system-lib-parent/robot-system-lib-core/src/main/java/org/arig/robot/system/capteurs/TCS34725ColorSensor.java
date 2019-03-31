@@ -107,7 +107,7 @@ public class TCS34725ColorSensor {
     @Accessors(fluent = true, chain = true)
     @NoArgsConstructor
     @AllArgsConstructor
-    public class ColorData {
+    public static class ColorData {
         private int r;
         private int g;
         private int b;

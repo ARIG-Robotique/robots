@@ -2,6 +2,7 @@ package org.arig.robot.services;
 
 import org.arig.robot.model.Palet.Couleur;
 import org.arig.robot.model.Team;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 
 /**
  * @author gdepuille on 23/04/15.
@@ -24,8 +25,8 @@ public interface IIOService {
 
     // Numerique
     boolean ledCapteurCouleur();
-    boolean presencePaletDansRobotDroit();
-    boolean presencePaletDansRobotGauche();
+    boolean presencePaletDroit();
+    boolean presencePaletGauche();
     boolean buteePaletDroit();
     boolean buteePaletGauche();
     boolean presencePaletVentouseDroit();
@@ -46,6 +47,7 @@ public interface IIOService {
     int distanceTelemetreAvantGauche();
 
     // Couleur
+    TCS34725ColorSensor.ColorData couleurPaletRaw();
     Couleur couleurPalet();
 
     // --------------------------------------------------------- //

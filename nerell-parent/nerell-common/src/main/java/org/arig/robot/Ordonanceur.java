@@ -182,11 +182,9 @@ public class Ordonanceur {
                 trajectoryManager.gotoPointMM(890, 300);
                 trajectoryManager.gotoOrientationDeg(90, SensRotation.TRIGO);
                 trajectoryManager.reculeMM(125);
-                //servosService.aspirationFerme();
             } else {
                 position.setPt(new Point(conv.mmToPulse(2680), conv.mmToPulse(772)));
                 trajectoryManager.avanceMM(300);
-                //servosService.aspirationFerme();
                 trajectoryManager.gotoPointMM(3000 - 1100, 772);
                 trajectoryManager.gotoPointMM(3000 - 890, 300);
                 trajectoryManager.gotoOrientationDeg(90, SensRotation.TRIGO);

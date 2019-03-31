@@ -3,7 +3,6 @@ package org.arig.robot.web.controller;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesI2CAdc;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.IIOService;
@@ -50,20 +49,18 @@ public class CapteursController extends AbstractCapteursController implements In
         numeriqueInfos.put("Puissance 5V", ioService::alimPuissance5VOk);
         numeriqueInfos.put("Puissance 12V", ioService::alimPuissance12VOk);
         numeriqueInfos.put("Tirette", ioService::tirette);
-//        numeriqueInfos.put("Bordure avant", ioService::bordureAvant);
-//        numeriqueInfos.put("Bordure arrière droite", ioService::bordureArriereDroite);
-//        numeriqueInfos.put("Bordure arrière gauche", ioService::bordureArriereGauche);
-//        numeriqueInfos.put("Presence entrée magasin", ioService::presenceEntreeMagasin);
-//        numeriqueInfos.put("Presence dévidoir", ioService::presenceDevidoir);
-//        numeriqueInfos.put("Présence rouleaux", ioService::presenceRouleaux);
-//        numeriqueInfos.put("Présence pince droite", ioService::presencePinceDroite);
-//        numeriqueInfos.put("Présence pince centre", ioService::presencePinceCentre);
-//        numeriqueInfos.put("Présence fusée", ioService::presenceFusee);
-//        numeriqueInfos.put("Présence balles aspiration", ioService::presenceBallesAspiration);
-//        numeriqueInfos.put("Présence base lunaire droite", ioService::presenceBaseLunaireDroite);
-//        numeriqueInfos.put("Présence base lunaire gauche", ioService::presenceBaseLunaireGauche);
-//        numeriqueInfos.put("Fin course glissière droite", ioService::finCourseGlissiereDroite);
-//        numeriqueInfos.put("Fin course glissière gauche", ioService::finCourseGlissiereGauche);
+        numeriqueInfos.put("Index barillet", ioService::indexBarillet);
+        numeriqueInfos.put("Presence lecture culeur", ioService::presenceLectureCouleur);
+        numeriqueInfos.put("Bordure arrière droite", ioService::calageBordureArriereDroit);
+        numeriqueInfos.put("Bordure arrière gauche", ioService::calageBordureArriereGauche);
+        numeriqueInfos.put("Presence palet droit", ioService::presencePaletDroit);
+        numeriqueInfos.put("Presence palet gauche", ioService::presencePaletGauche);
+        numeriqueInfos.put("Butée palet droit", ioService::buteePaletDroit);
+        numeriqueInfos.put("Butée palet gauche", ioService::buteePaletGauche);
+        numeriqueInfos.put("Présence palet ventouse droit", ioService::presencePaletVentouseDroit);
+        numeriqueInfos.put("Présence palet ventouse gauche", ioService::presencePaletVentouseGauche);
+        numeriqueInfos.put("TRappe magasin droit ferme", ioService::trappeMagasinDroitFerme);
+        numeriqueInfos.put("TRappe magasin gauche ferme", ioService::trappeMagasinGaucheFerme);
 
         // Capteurs informations analogique
 //        analogiqueInfos.put("GP2D avant Gauche", () -> readI2CAnalogValue(IConstantesI2CAdc.GP2D_AVANT_GAUCHE));
@@ -72,10 +69,11 @@ public class CapteursController extends AbstractCapteursController implements In
 //        analogiqueInfos.put("GP2D Scan haut", () -> readI2CAnalogValue(IConstantesI2CAdc.GP2D_SCAN_HAUT));
 //        analogiqueInfos.put("GP2D Scan bas", () -> readI2CAnalogValue(IConstantesI2CAdc.GP2D_SCAN_BAS));
 //        analogiqueInfos.put("Vaccum", () -> readI2CAnalogValue(IConstantesI2CAdc.VACUOSTAT));
-
+//
         // Capteurs informations Text
         textInfos.put("Equipe", () -> rs.getTeam().name());
-//        textInfos.put("Front color hex", () -> ioService.frontColor().hexColor());
+        textInfos.put("Couleur palet (hex)", () -> ioService.couleurPaletRaw().hexColor());
+        textInfos.put("Couleur palet", () -> ioService.couleurPalet().name());
     }
 
     private Double readI2CAnalogValue(byte capteurId) {

@@ -16,137 +16,143 @@ public class ServosController extends AbstractServosController {
     private static List<ServoConfig> servoConfigs = new LinkedList<>();
 
     static {
-        /*
-        ServoConfig pinceModuleDroit = new ServoConfig();
-        pinceModuleDroit.setId(IConstantesServos.PINCE_MODULE_DROIT).setName("Pince module droit");
-        pinceModuleDroit
-                .addPosition("Ouvert", IConstantesServos.PINCE_MODULE_DROIT_OUVERT)
-                .addPosition("Prise produit", IConstantesServos.PINCE_MODULE_DROIT_PRISE_PRODUIT)
-                .addPosition("Ventouse", IConstantesServos.PINCE_MODULE_DROIT_CHARGEMENT_VENTOUSE)
-                .addPosition("Fermé", IConstantesServos.PINCE_MODULE_DROIT_FERME);
-        servoConfigs.add(pinceModuleDroit);
+        servoConfigs.add(new ServoConfig()
+                .id(IConstantesServos.PINCE_SERRAGE_PALET_DROIT)
+                .name("Pince serrage droit")
+                .position("Ferme", IConstantesServos.PINCE_SERRAGE_PALET_DROIT_FERME)
+                .position("Lock", IConstantesServos.PINCE_SERRAGE_PALET_DROIT_LOCK)
+                .position("Ouvert", IConstantesServos.PINCE_SERRAGE_PALET_DROIT_OUVERT)
+        );
 
-        ServoConfig pinceModuleCentre = new ServoConfig();
-        pinceModuleCentre.setId(IConstantesServos.PINCE_MODULE_CENTRE).setName("Pince module centre");
-        pinceModuleCentre
-                .addPosition("Ouvert dans droit", IConstantesServos.PINCE_MODULE_CENTRE_OUVERT_DANS_DROIT)
-                .addPosition("Ouvert", IConstantesServos.PINCE_MODULE_CENTRE_OUVERT)
-                .addPosition("Ferme", IConstantesServos.PINCE_MODULE_CENTRE_FERME);
+        servoConfigs.add(new ServoConfig()
+                .id(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE)
+                .name("Pince serrage gauche")
+                .position("Ferme", IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_FERME)
+                .position("Lock", IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_LOCK)
+                .position("Ouvert", IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_OUVERT)
+        );
 
-        servoConfigs.add(pinceModuleCentre);
+        servoConfigs.add(new ServoConfig()
+                .id(IConstantesServos.PIVOT_VENTOUSE_DROIT)
+                .name("Pivot ventouse droit")
+                .position("Carousel", IConstantesServos.PIVOT_VENTOUSE_DROIT_CAROUSEL)
+                .position("Facade", IConstantesServos.PIVOT_VENTOUSE_DROIT_FACADE)
+                .position("Table", IConstantesServos.PIVOT_VENTOUSE_DROIT_TABLE)
+        );
 
-        ServoConfig inclinaisonBras = new ServoConfig();
-        inclinaisonBras.setId(IConstantesServos.INCLINAISON_BRAS).setName("Inclinaison bras");
-        inclinaisonBras
-                .addPosition("Prise robot", IConstantesServos.INCLINAISON_BRAS_PRISE_ROBOT)
-                .addPosition("Prise fusée", IConstantesServos.INCLINAISON_BRAS_PRISE_FUSEE)
-                .addPosition("Attente", IConstantesServos.INCLINAISON_BRAS_ATTENTE)
-                .addPosition("Depose", IConstantesServos.INCLINAISON_BRAS_DEPOSE)
-                .addPosition("Vertical", IConstantesServos.INCLINAISON_BRAS_VERTICAL);
-        servoConfigs.add(inclinaisonBras);
+        servoConfigs.add(new ServoConfig()
+                .id(IConstantesServos.PIVOT_VENTOUSE_GAUCHE)
+                .name("Pivot ventouse gauche")
+                .position("Carousel", IConstantesServos.PIVOT_VENTOUSE_GAUCHE_CAROUSEL)
+                .position("Facade", IConstantesServos.PIVOT_VENTOUSE_GAUCHE_FACADE)
+                .position("Table", IConstantesServos.PIVOT_VENTOUSE_GAUCHE_TABLE)
+        );
 
-        ServoConfig rotationVentouse = new ServoConfig();
-        rotationVentouse.setId(IConstantesServos.ROTATION_VENTOUSE).setName("Rotation ventouse");
-        rotationVentouse
-                .addPosition("Prise robot", IConstantesServos.ROTATION_VENTOUSE_PRISE_ROBOT)
-                .addPosition("Prise fusée", IConstantesServos.ROTATION_VENTOUSE_PRISE_FUSEE)
-                .addPosition("Dépose", IConstantesServos.ROTATION_VENTOUSE_DEPOSE_MAGASIN);
-        servoConfigs.add(rotationVentouse);
+        servoConfigs.add(new ServoConfig()
+                .id(IConstantesServos.ASCENSEUR_VENTOUSE_DROIT)
+                .name("Ascenseur droit")
+                .position("Carousel", IConstantesServos.ASCENSEUR_DROIT_CAROUSEL)
+                .position("Accelerateur", IConstantesServos.ASCENSEUR_DROIT_ACCELERATEUR)
+                .position("Distributeur", IConstantesServos.ASCENSEUR_DROIT_DISTRIBUTEUR)
+                .position("Table", IConstantesServos.ASCENSEUR_DROIT_TABLE)
+        );
 
-        ServoConfig porteMagasinDroit = new ServoConfig();
-        porteMagasinDroit.setId(IConstantesServos.PORTE_MAGASIN_DROIT).setName("Porte magasin droit");
-        porteMagasinDroit
-                .addPosition("Ouvert", IConstantesServos.PORTE_DROITE_OUVERT)
-                .addPosition("Fermé", IConstantesServos.PORTE_DROITE_FERME);
-        servoConfigs.add(porteMagasinDroit);
+        servoConfigs.add(new ServoConfig()
+                .id(IConstantesServos.ASCENSEUR_VENTOUSE_GAUCHE)
+                .name("Ascenseur gauche")
+                .position("Carousel", IConstantesServos.ASCENSEUR_GAUCHE_CAROUSEL)
+                .position("Accelerateur", IConstantesServos.ASCENSEUR_GAUCHE_ACCELERATEUR)
+                .position("Distributeur", IConstantesServos.ASCENSEUR_GAUCHE_DISTRIBUTEUR)
+                .position("Table", IConstantesServos.ASCENSEUR_GAUCHE_TABLE)
+        );
 
-        ServoConfig porteMagasinGauche = new ServoConfig();
-        porteMagasinGauche.setId(IConstantesServos.PORTE_MAGASIN_GAUCHE).setName("Porte magasin gauche");
-        porteMagasinGauche
-                .addPosition("Ouvert", IConstantesServos.PORTE_GAUCHE_OUVERT)
-                .addPosition("Fermé", IConstantesServos.PORTE_GAUCHE_FERME);
-        servoConfigs.add(porteMagasinGauche);
+        servoConfigs.add(new ServoConfig()
+                .id(IConstantesServos.PORTE_BARILLET_DROIT)
+                .name("Porte barillet droit")
+                .position("Ferme", IConstantesServos.PORTE_BARILLET_DROIT_FERME)
+                .position("Ouvert", IConstantesServos.PORTE_BARILLET_DROIT_OUVERT)
+        );
 
-        ServoConfig blocageEntreeMagasin = new ServoConfig();
-        blocageEntreeMagasin.setId(IConstantesServos.BLOCAGE_ENTREE_MAG).setName("Blocage entrée magasin");
-        blocageEntreeMagasin
-                .addPosition("Ouvert", IConstantesServos.BLOCAGE_OUVERT)
-                .addPosition("Ferme", IConstantesServos.BLOCAGE_FERME);
-        servoConfigs.add(blocageEntreeMagasin);
+        servoConfigs.add(new ServoConfig()
+                .id(IConstantesServos.PORTE_BARILLET_GAUCHE)
+                .name("Porte barillet gauche")
+                .position("Ferme", IConstantesServos.PORTE_BARILLET_GAUCHE_FERME)
+                .position("Ouvert", IConstantesServos.PORTE_BARILLET_GAUCHE_OUVERT)
+        );
 
-        ServoConfig devidoirMagasin = new ServoConfig();
-        devidoirMagasin.setId(IConstantesServos.DEVIDOIR).setName("Devidoir magasin");
-        devidoirMagasin
-                .addPosition("Chargement", IConstantesServos.DEVIDOIR_CHARGEMENT)
-                .addPosition("Déchargement", IConstantesServos.DEVIDOIR_DECHARGEMENT)
-                .addPosition("Lecture couleur", IConstantesServos.DEVIDOIR_LECTURE_COULEUR);
-        servoConfigs.add(devidoirMagasin);
+        servoConfigs.add(new ServoConfig()
+                .id(IConstantesServos.TRAPPE_MAGASIN_DROIT)
+                .name("Trappe magasin gauche")
+                .position("Ferme", IConstantesServos.TRAPPE_MAGASIN_DROIT_FERME)
+                .position("Ouvert", IConstantesServos.TRAPPE_MAGASIN_DROIT_OUVERT)
+        );
 
-        ServoConfig orientationAspiration = new ServoConfig();
-        orientationAspiration.setId(IConstantesServos.INCLINAISON_ASPIRATION).setName("Inclinaison aspiration");
-        orientationAspiration
-                .addPosition("Init calage", IConstantesServos.INCLINAISON_ASPI_INIT_CALAGE)
-                .addPosition("Transfert", IConstantesServos.INCLINAISON_ASPI_TRANSFERT)
-                .addPosition("Cratère", IConstantesServos.INCLINAISON_ASPI_CRATERE)
-                .addPosition("Fermé", IConstantesServos.INCLINAISON_ASPI_FERME);
-        servoConfigs.add(orientationAspiration);
-        */
+        servoConfigs.add(new ServoConfig()
+                .id(IConstantesServos.TRAPPE_MAGASIN_GAUCHE)
+                .name("Trappe magasin gauche")
+                .position("Ferme", IConstantesServos.TRAPPE_MAGASIN_GAUCHE_FERME)
+                .position("Ouvert", IConstantesServos.TRAPPE_MAGASIN_GAUCHE_OUVERT)
+        );
 
-        // Temp
-        /*
-        ServoConfig moteurRouleaux = new ServoConfig();
-        moteurRouleaux.setId(IConstantesServos.MOTOR_ROULEAUX).setName("Moteur rouleaux");
-        moteurRouleaux
-                .addPosition("Reverse Full", IConstantesServos.MOTOR_REVERSE_FULL)
-                .addPosition("Reverse Medium", IConstantesServos.MOTOR_REVERSE_MEDIUM)
-                .addPosition("Stop", IConstantesServos.MOTOR_STOP)
-                .addPosition("Forward Medium", IConstantesServos.MOTOR_FORWARD_MEDIUM)
-                .addPosition("Forward Full", IConstantesServos.MOTOR_FORWARD_FULL);
+        servoConfigs.add(new ServoConfig()
+                .id(IConstantesServos.EJECTION_MAGASIN_DROIT)
+                .name("Ejection magasin gauche")
+                .position("Ferme", IConstantesServos.EJECTION_MAGASIN_DROIT_FERME)
+                .position("Ouvert", IConstantesServos.EJECTION_MAGASIN_DROIT_OUVERT)
+        );
 
-        servoConfigs.add(moteurRouleaux);
+        servoConfigs.add(new ServoConfig()
+                .id(IConstantesServos.EJECTION_MAGASIN_GAUCHE)
+                .name("Ejection magasin gauche")
+                .position("Ferme", IConstantesServos.EJECTION_MAGASIN_GAUCHE_FERME)
+                .position("Ouvert", IConstantesServos.EJECTION_MAGASIN_GAUCHE_OUVERT)
+        );
 
-        ServoConfig moteurEjection = new ServoConfig();
-        moteurEjection.setId(IConstantesServos.MOTOR_EJECTION).setName("Moteur ejection");
-        moteurEjection
-                .addPosition("Reverse Full", IConstantesServos.MOTOR_REVERSE_FULL)
-                .addPosition("Reverse Medium", IConstantesServos.MOTOR_REVERSE_MEDIUM)
-                .addPosition("Stop", IConstantesServos.MOTOR_STOP)
-                .addPosition("Forward Medium", IConstantesServos.MOTOR_FORWARD_MEDIUM)
-                .addPosition("Forward Full", IConstantesServos.MOTOR_FORWARD_FULL);
-        servoConfigs.add(moteurEjection);
+        servoConfigs.add(new ServoConfig()
+                .id(IConstantesServos.POUSSE_ACCELERATEUR_DROIT)
+                .name("Pousse accelerateur droit")
+                .position("Ferme", IConstantesServos.POUSSE_ACCELERATEUR_DROIT_FERME)
+                .position("Standby", IConstantesServos.POUSSE_ACCELERATEUR_DROIT_STANDBY)
+                .position("Action", IConstantesServos.POUSSE_ACCELERATEUR_DROIT_ACTION)
+        );
 
-        ServoConfig moteurAspiration = new ServoConfig();
-        moteurAspiration.setId(IConstantesServos.MOTOR_ASPIRATION).setName("Moteur aspiration");
-        moteurAspiration
-                .addPosition("Stop", IConstantesServos.MOTOR_ASPIRATION_STOP)
-                .addPosition("A Fond", IConstantesServos.MOTOR_ASPIRATION_FULL);
-        servoConfigs.add(moteurAspiration);
-        */
+        servoConfigs.add(new ServoConfig()
+                .id(IConstantesServos.POUSSE_ACCELERATEUR_GAUCHE)
+                .name("Pousse accelerateur gauche")
+                .position("Ferme", IConstantesServos.POUSSE_ACCELERATEUR_GAUCHE_FERME)
+                .position("Standby", IConstantesServos.POUSSE_ACCELERATEUR_GAUCHE_STANDBY)
+                .position("Action", IConstantesServos.POUSSE_ACCELERATEUR_GAUCHE_ACTION)
+        );
 
-        /*
-        ServoConfig moteurDroit = new ServoConfig();
-        moteurDroit.setId(IConstantesServos.MOTOR_DROIT).setName("/!\\ Moteur droit");
-        moteurDroit
-                .addPosition("Reverse", 1450)
-                .addPosition("Stop", 1500)
-                .addPosition("Forward", 1650);
-        servoConfigs.add(moteurDroit);
+        servoConfigs.add(new ServoConfig()
+                .id(IConstantesServos.MOTOR_BARILLET)
+                .name("Moteur barillet")
+                .position("Stop", IConstantesServos.MOTOR_BARILLET_STOP)
+                .position("Full", IConstantesServos.MOTOR_BARILLET_FULL)
+        );
 
-        ServoConfig moteurGauche = new ServoConfig();
-        moteurGauche.setId(IConstantesServos.MOTOR_GAUCHE).setName("/!\\ Moteur gauche");
-        moteurGauche
-                .addPosition("Reverse", 1450)
-                .addPosition("Stop", 1500)
-                .addPosition("Forward", 1650);
-        servoConfigs.add(moteurGauche);
-        */
+        servoConfigs.add(new ServoConfig()
+                .id(IConstantesServos.MOTOR_DROIT)
+                .name("/!\\ Moteur droit")
+                .position("Reverse", 1450)
+                .position("Stop", 1500)
+                .position("Forward", 1650)
+        );
+
+        servoConfigs.add(new ServoConfig()
+                .id(IConstantesServos.MOTOR_GAUCHE)
+                .name("/!\\ Moteur gauche")
+                .position("Reverse", 1450)
+                .position("Stop", 1500)
+                .position("Forward", 1650)
+        );
     }
 
     @Override
     protected List<ServoConfig> servosConfig() {
         servoConfigs.forEach(sc -> {
-            sc.setCurrentPosition(sd21Servos.getPosition(sc.getId()));
-            sc.setCurrentSpeed(sd21Servos.getSpeed(sc.getId()));
+            sc.currentPosition(sd21Servos.getPosition(sc.id()));
+            sc.currentSpeed(sd21Servos.getSpeed(sc.id()));
         });
 
         return servoConfigs;

@@ -75,8 +75,8 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     private GpioPinDigitalInput inTirette;
 
     // Input : Numerique
-    private GpioPinDigitalInput inPresencePaletDansRobotDroit;
-    private GpioPinDigitalInput inPresencePaletDansRobotGauche;
+    private GpioPinDigitalInput inPresencePaletDroit;
+    private GpioPinDigitalInput inPresencePaletGauche;
     private GpioPinDigitalInput inButeePaletDroit;
     private GpioPinDigitalInput inButeePaletGauche;
     private GpioPinDigitalInput inPresencePaletVentouseDroit;
@@ -153,8 +153,8 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
         // PCF1
         inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
-        inPresencePaletDansRobotDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
-        inPresencePaletDansRobotGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
+        inPresencePaletDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
+        inPresencePaletGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
         inButeePaletDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
         inButeePaletGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
         inPresencePaletVentouseDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
@@ -234,15 +234,15 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     }
 
     @Override
-    public boolean presencePaletDansRobotDroit() {
-        boolean result = inPresencePaletDansRobotDroit.isLow();
+    public boolean presencePaletDroit() {
+        boolean result = inPresencePaletDroit.isLow();
         log.info("Presence pince centre : {}", result);
         return result;
     }
 
     @Override
-    public boolean presencePaletDansRobotGauche() {
-        boolean result = inPresencePaletDansRobotGauche.isLow();
+    public boolean presencePaletGauche() {
+        boolean result = inPresencePaletGauche.isLow();
         log.info("Presence pince droite : {}", result);
         return result;
     }
@@ -374,8 +374,13 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     // Couleur
 
     @Override
+    public ColorData couleurPaletRaw() {
+        return colorSensor.getColorData();
+    }
+
+    @Override
     public Couleur couleurPalet() {
-        ColorData c = colorSensor.getColorData();
+        ColorData c = couleurPaletRaw();
 
         MonitorTimeSerie mts = new MonitorTimeSerie();
         mts.measurementName("couleur")

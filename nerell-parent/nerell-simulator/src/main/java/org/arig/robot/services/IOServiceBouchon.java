@@ -65,12 +65,12 @@ public class IOServiceBouchon implements IIOService {
     }
 
     @Override
-    public boolean presencePaletDansRobotDroit() {
+    public boolean presencePaletDroit() {
         return false;
     }
 
     @Override
-    public boolean presencePaletDansRobotGauche() {
+    public boolean presencePaletGauche() {
         return false;
     }
 
@@ -158,6 +158,12 @@ public class IOServiceBouchon implements IIOService {
 
 
     // Couleur
+
+
+    @Override
+    public TCS34725ColorSensor.ColorData couleurPaletRaw() {
+        return new TCS34725ColorSensor.ColorData().r(0).g(0).b(0);
+    }
 
     @Override
     public Couleur couleurPalet() {
