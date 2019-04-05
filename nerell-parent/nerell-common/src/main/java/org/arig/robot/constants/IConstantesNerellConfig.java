@@ -105,5 +105,6 @@ public interface IConstantesNerellConfig {
     // ----------------- //
     int nbPaletsBalanceMax = 6;
     int nbPaletsAccelerateurMax = 9; // TODO à valider
+    int nbPaletsMagasinMax = 3;
 
 }
