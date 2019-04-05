@@ -2,6 +2,7 @@ package org.arig.robot.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
@@ -11,8 +12,17 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 public class Palet {
 
+    @AllArgsConstructor
     public enum Couleur {
-        ANY, INCONNU, ROUGE, VERT, BLEU, GOLD
+        ANY(0),
+        INCONNU(0),
+        ROUGE(1),
+        VERT(2),
+        BLEU(3),
+        GOLD(4);
+
+        @Getter
+        private int importance;
     }
 
     private Integer numero;
