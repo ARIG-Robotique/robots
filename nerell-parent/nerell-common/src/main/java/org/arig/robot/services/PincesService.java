@@ -3,6 +3,7 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.RefreshPathFindingException;
+import org.arig.robot.exceptions.PinceNotAvailableException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.Palet;
 import org.arig.robot.model.RobotStatus;
@@ -22,13 +23,14 @@ import java.util.Map;
  * Gère en automatique le stockage du sol vers la carousel quand il y a de la place
  * <p>
  * Méthodes pour stocker depuis les distributeurs et déposer dans l'accelerateur
- * /!\ Attendre `!isWorkingDroit()` ou `!isWorkingGauche()`
+ * /!\ Attendre `waitAvailable()`
  */
 @Slf4j
 @Service
 public class PincesService implements InitializingBean {
 
     private static final int NB_TENTATIVES_ASPIRATION = 2;
+    private static final int TEMPS_MAX_AVAILABLE = 3000;
     private static final int TEMPS_TENTATIVE_ASPIRATION = 500;
     private static final int DISTANCE_DISTRIBUTEUR = 50; // distance à laquelle on se place du distributeur avant l'action
     private static final int DISTANCE_BALANCE = 50; // distance à laquelle on se place de balance avant l'action
@@ -65,10 +67,10 @@ public class PincesService implements InitializingBean {
      */
     public void process() {
         if (!isWorkingDroite()) {
-            stockageTable(null, ESide.DROITE);
+            stockageTable(Palet.Couleur.INCONNU, ESide.DROITE);
         }
         if (!isWorkingGauche()) {
-            stockageTable(null, ESide.GAUCHE);
+            stockageTable(Palet.Couleur.INCONNU, ESide.GAUCHE);
         }
     }
 
@@ -86,6 +88,18 @@ public class PincesService implements InitializingBean {
 
     public void setExpected(ESide side, Palet.Couleur couleur) {
         expected.put(side, couleur);
+    }
+
+    public void waitAvailable(ESide side) throws PinceNotAvailableException {
+        long remaining = TEMPS_MAX_AVAILABLE;
+        while (isWorking(side) && remaining > 0) {
+            remaining -= 100;
+            ThreadUtils.sleep(100);
+        }
+
+        if (isWorking(side)) {
+            throw new PinceNotAvailableException();
+        }
     }
 
     /**
@@ -109,12 +123,9 @@ public class PincesService implements InitializingBean {
             return false;
         }
 
-        if (couleur == null) {
-            couleur = Palet.Couleur.INCONNU;
-            if (expected.containsKey(side)) {
-                couleur = expected.get(side);
-                setExpected(side, null);
-            }
+        if (couleur == Palet.Couleur.INCONNU && expected.containsKey(side)) {
+            couleur = expected.get(side);
+            setExpected(side, null);
         }
 
         working.put(side, true);
@@ -207,7 +218,10 @@ public class PincesService implements InitializingBean {
         service.ascenseurAndVentouseHome();
 
         robotStatus.getCarousel().store(service.positionCarouselPince(), new Palet().couleur(couleur));
-        carouselService.lectureCouleur(service.positionCarouselPince());
+
+        if (couleur == Palet.Couleur.INCONNU) {
+            carouselService.lectureCouleur(service.positionCarouselPince());
+        }
 
         return true;
     }
@@ -550,4 +564,5 @@ public class PincesService implements InitializingBean {
             return true;
         }
     }
+
 }

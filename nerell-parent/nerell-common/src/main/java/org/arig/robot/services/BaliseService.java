@@ -1,6 +1,7 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.balise.DetectionResult;
 import org.arig.robot.model.balise.StatutBalise;
 import org.arig.robot.system.capteurs.IVisionBalise;
@@ -14,7 +15,8 @@ public class BaliseService {
     @Autowired
     private IVisionBalise balise;
 
-    private StatutBalise lastStatus = new StatutBalise();
+    @Autowired
+    private RobotStatus rs;
 
     public boolean isConnected() {
         return balise.isOpen();
@@ -31,24 +33,17 @@ public class BaliseService {
     }
 
     public void updateStatus() {
-        lastStatus = balise.getStatut();
+        StatutBalise statut = balise.getStatut();
+        rs.setStatutBalise(statut);
+        rs.setBaliseOk(statut != null);
     }
 
     public void startEtallonage() {
         balise.startEtallonage();
     }
 
-    public boolean isEtallonageOk() {
-        return lastStatus.isEtallonageOk();
-    }
-
     public void startDetection() {
         balise.startDetection();
-    }
-
-    // TODO méthodes plus spécialisées
-    public DetectionResult getDetectionResult() {
-        return lastStatus.getDetection();
     }
 
     public byte[] getPhoto() {
