@@ -1,11 +1,13 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.ESide;
 import org.arig.robot.model.Palet;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,10 +23,8 @@ public class MagasinService implements InitializingBean {
     private static final int NB_MAX_MAGASIN = 3; // TODO à valider
 
     @Autowired
-    private RightSideService rightSideService;
-
-    @Autowired
-    private LeftSideService leftSideService;
+    @Qualifier("sideServices")
+    private Map<ESide, IRobotSide> sideServices;
 
     @Autowired
     private ServosService servosService;
@@ -35,42 +35,46 @@ public class MagasinService implements InitializingBean {
     @Autowired
     private RobotStatus robotStatus;
 
-    private Map<Integer, Boolean> ejection = new HashMap<>();
+    private Map<ESide, Boolean> ejection = new HashMap<>();
 
     @Override
     public void afterPropertiesSet() {
-        ejection.put(rightSideService.id(), false);
-        ejection.put(leftSideService.id(), false);
+        ejection.put(ESide.DROITE, false);
+        ejection.put(ESide.GAUCHE, false);
     }
 
     /**
      * Fermeture automatique du magasin quand il est vide
      */
     public void process() {
-        endEjection(rightSideService);
-        endEjection(leftSideService);
+        endEjection(ESide.GAUCHE);
+        endEjection(ESide.DROITE);
     }
 
     /**
      * Ouverture du magasin
      */
-    public void startEjection(IRobotSide side) {
-        ejection.put(side.id(), true);
-        side.ejectionMagasinOuvert();
+    public void startEjection(ESide side) {
+        IRobotSide service = sideServices.get(side);
+        ejection.put(side, true);
+        service.ejectionMagasinOuvert();
     }
 
-    private void endEjection(IRobotSide side) {
-        if (ejection.get(side.id()) && side.nbPaletDansMagasin() == 0) {
-            side.ejectionMagasinFerme();
-            ejection.put(side.id(), false);
+    private void endEjection(ESide side) {
+        IRobotSide service = sideServices.get(side);
+        if (ejection.get(service.id()) && service.nbPaletDansMagasin() == 0) {
+            service.ejectionMagasinFerme();
+            ejection.put(service.id(), false);
         }
     }
 
     /**
      * Stockage d'un palet dans le magasin depuis le carousel
      */
-    public boolean stockage(Palet.Couleur couleur, IRobotSide side) {
-        if (side.nbPaletDansMagasin() >= NB_MAX_MAGASIN) {
+    public boolean stockage(Palet.Couleur couleur, ESide side) {
+        IRobotSide service = sideServices.get(side);
+
+        if (service.nbPaletDansMagasin() >= NB_MAX_MAGASIN) {
             log.warn("Le magasin est déjà plein");
             return false;
         }
@@ -80,18 +84,18 @@ public class MagasinService implements InitializingBean {
             return false;
         }
 
-        int nbPaletInit = side.nbPaletDansMagasin();
+        int nbPaletInit = service.nbPaletDansMagasin();
 
-        carouselService.tourner(side.positionCarouselMagasin(), couleur);
+        carouselService.tourner(service.positionCarouselMagasin(), couleur);
 
-        side.trappeMagasinOuvert();
+        service.trappeMagasinOuvert();
         servosService.waitTrappeMagasin();
 
-        side.trappeMagasinFerme();
+        service.trappeMagasinFerme();
         servosService.waitTrappeMagasin();
 
-        if (side.nbPaletDansMagasin() > nbPaletInit) {
-            robotStatus.getCarousel().unstore(side.positionCarouselMagasin());
+        if (service.nbPaletDansMagasin() > nbPaletInit) {
+            robotStatus.getCarousel().unstore(service.positionCarouselMagasin());
             return true;
         } else {
             log.warn("Un problème est survenu pendant le stockage");
@@ -100,6 +104,9 @@ public class MagasinService implements InitializingBean {
     }
 
     public void ejectionAvantRetourStand() {
+        IRobotSide rightSideService = sideServices.get(ESide.DROITE);
+        IRobotSide leftSideService = sideServices.get(ESide.GAUCHE);
+
         if (rightSideService.nbPaletDansMagasin() > 0 || leftSideService.nbPaletDansMagasin() > 0) {
             rightSideService.ejectionMagasinOuvert();
             leftSideService.ejectionMagasinOuvert();

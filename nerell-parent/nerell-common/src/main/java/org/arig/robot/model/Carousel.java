@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.utils.SimpleCircularList;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 @Slf4j
 public class Carousel {
@@ -35,32 +36,25 @@ public class Carousel {
      */
     public boolean has(Palet.Couleur couleur) {
         return list.stream()
-                .anyMatch(p -> {
-                    if (p == null && couleur == null) {
-                        return true;
-                    }
-                    if (p != null && couleur != null && couleur == Palet.Couleur.ANY) {
-                        return true;
-                    }
-                    if (p != null && couleur != null && couleur == p.couleur()) {
-                        return true;
-                    }
-                    return false;
-                });
+                .anyMatch(getPaletCouleurPredicate(couleur));
+    }
+
+    public long count(Palet.Couleur couleur) {
+        return list.stream()
+                .filter(getPaletCouleurPredicate(couleur))
+                .count();
     }
 
     /**
      * Renvoie la premier position de la couleur, la plus proche d'une autre position
      */
     public int firstIndexOf(Palet.Couleur couleur, int ref) {
+        Predicate<Palet> predicate = getPaletCouleurPredicate(couleur);
         for (int i = ref; i < ref + 6; i++) {
             int realIndex = i < 6 ? i : i - 6;
             Palet palet = get(realIndex);
 
-            if (couleur == null && palet == null) {
-                return realIndex;
-            }
-            if (couleur != null && palet != null && palet.couleur().equals(couleur)) {
+            if (predicate.test(palet)) {
                 return realIndex;
             }
         }
@@ -119,4 +113,18 @@ public class Carousel {
         list.rotate(nb);
     }
 
+    private Predicate<Palet> getPaletCouleurPredicate(Palet.Couleur couleur) {
+        return p -> {
+            if (p == null && couleur == null) {
+                return true;
+            }
+            if (p != null && couleur != null && couleur == Palet.Couleur.ANY) {
+                return true;
+            }
+            if (p != null && couleur != null && couleur == p.couleur()) {
+                return true;
+            }
+            return false;
+        };
+    }
 }

@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Gestion auto du serrage et desserage des palets au sol
  */
@@ -17,9 +19,21 @@ public class SerrageService {
     @Autowired
     private LeftSideService leftSideService;
 
+    private AtomicBoolean enabled = new AtomicBoolean();
+
+    public void disable() {
+        enabled.set(false);
+    }
+
+    public void enable() {
+        enabled.set(true);
+    }
+
     public void process() {
-        lockPalet(rightSideService);
-        lockPalet(leftSideService);
+        if (enabled.get()) {
+            lockPalet(rightSideService);
+            lockPalet(leftSideService);
+        }
     }
 
     private void lockPalet(IRobotSide side) {

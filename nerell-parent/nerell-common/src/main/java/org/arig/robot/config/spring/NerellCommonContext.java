@@ -8,8 +8,12 @@ import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.filters.ramp.IRampFilter.RampType;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.ESide;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
+import org.arig.robot.services.IRobotSide;
+import org.arig.robot.services.LeftSideService;
+import org.arig.robot.services.RightSideService;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.TrajectoryManager;
 import org.arig.robot.system.TrajectoryManagerAsync;
@@ -29,6 +33,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author gdepuille on 23/12/14.
@@ -142,5 +148,13 @@ public class NerellCommonContext {
     @Bean
     public Ordonanceur ordonanceur() {
         return Ordonanceur.getInstance();
+    }
+
+    @Bean(name = "sideServices")
+    public Map<ESide, IRobotSide> sideServices(RightSideService rightSideService, LeftSideService leftSideService) {
+        final Map<ESide, IRobotSide> services = new HashMap<>();
+        services.put(ESide.DROITE, rightSideService);
+        services.put(ESide.GAUCHE, leftSideService);
+        return services;
     }
 }
