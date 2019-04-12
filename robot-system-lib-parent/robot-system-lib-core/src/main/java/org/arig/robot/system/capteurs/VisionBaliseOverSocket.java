@@ -47,7 +47,7 @@ public class VisionBaliseOverSocket extends AbstractSocketClient<BaliseAction> i
 
         } catch (Exception e) {
             log.warn("Erreur de lecture", e);
-            return new StatutBalise();
+            return null;
         }
     }
 

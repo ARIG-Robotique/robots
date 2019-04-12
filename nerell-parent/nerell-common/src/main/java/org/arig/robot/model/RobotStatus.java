@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.model.balise.StatutBalise;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.util.*;
@@ -59,7 +60,9 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         calageBordureEnabled = false;
     }
 
-    // Carousel
+    private boolean baliseOk = false;
+    private StatutBalise statutBalise = null;
+
     @Setter(AccessLevel.NONE)
     private Carousel carousel = new Carousel();
 
@@ -78,11 +81,11 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     private List<Palet.Couleur> paletsInBalance = new ArrayList<>();
 
     @Setter(AccessLevel.NONE)
-    private Map<Integer, Palet.Couleur> paletsInDistributeurTeam = new HashMap<>();
+    private Map<Integer, Palet.Couleur> paletsPetitDistributeur = new HashMap<>();
     @Setter(AccessLevel.NONE)
-    private Map<Integer, Palet.Couleur> paletsInDistributeurJaune = new HashMap<>();
+    private Map<Integer, Palet.Couleur> paletsGrandDistributeurEquipe = new HashMap<>();
     @Setter(AccessLevel.NONE)
-    private Map<Integer, Palet.Couleur> paletsInDistributeurViolet = new HashMap<>();
+    private Map<Integer, Palet.Couleur> paletsGrandDistributeurAdverse = new HashMap<>();
 
     @Setter(AccessLevel.NONE)
     private List<Palet.Couleur> paletsInTableauRouge = new ArrayList<>();
@@ -102,23 +105,23 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
      */
     @Override
     public void afterPropertiesSet() {
-        paletsInDistributeurViolet.put(0, Palet.Couleur.ROUGE);
-        paletsInDistributeurViolet.put(1, Palet.Couleur.VERT);
-        paletsInDistributeurViolet.put(2, Palet.Couleur.ROUGE);
-        paletsInDistributeurViolet.put(3, Palet.Couleur.BLEU);
-        paletsInDistributeurViolet.put(4, Palet.Couleur.ROUGE);
-        paletsInDistributeurViolet.put(5, Palet.Couleur.VERT);
+        paletsGrandDistributeurAdverse.put(0, Palet.Couleur.ROUGE);
+        paletsGrandDistributeurAdverse.put(1, Palet.Couleur.VERT);
+        paletsGrandDistributeurAdverse.put(2, Palet.Couleur.ROUGE);
+        paletsGrandDistributeurAdverse.put(3, Palet.Couleur.BLEU);
+        paletsGrandDistributeurAdverse.put(4, Palet.Couleur.ROUGE);
+        paletsGrandDistributeurAdverse.put(5, Palet.Couleur.VERT);
 
-        paletsInDistributeurJaune.put(0, Palet.Couleur.ROUGE);
-        paletsInDistributeurJaune.put(1, Palet.Couleur.VERT);
-        paletsInDistributeurJaune.put(2, Palet.Couleur.ROUGE);
-        paletsInDistributeurJaune.put(3, Palet.Couleur.BLEU);
-        paletsInDistributeurJaune.put(4, Palet.Couleur.ROUGE);
-        paletsInDistributeurJaune.put(5, Palet.Couleur.VERT);
+        paletsGrandDistributeurEquipe.put(0, Palet.Couleur.ROUGE);
+        paletsGrandDistributeurEquipe.put(1, Palet.Couleur.VERT);
+        paletsGrandDistributeurEquipe.put(2, Palet.Couleur.ROUGE);
+        paletsGrandDistributeurEquipe.put(3, Palet.Couleur.BLEU);
+        paletsGrandDistributeurEquipe.put(4, Palet.Couleur.ROUGE);
+        paletsGrandDistributeurEquipe.put(5, Palet.Couleur.VERT);
 
-        paletsInDistributeurTeam.put(0, Palet.Couleur.BLEU);
-        paletsInDistributeurTeam.put(1, Palet.Couleur.VERT);
-        paletsInDistributeurTeam.put(2, Palet.Couleur.ROUGE);
+        paletsPetitDistributeur.put(0, Palet.Couleur.BLEU);
+        paletsPetitDistributeur.put(1, Palet.Couleur.VERT);
+        paletsPetitDistributeur.put(2, Palet.Couleur.ROUGE);
     }
 
     /**
@@ -127,9 +130,9 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     public void init() {
         // la palets extrème côté adverse ne peut pas être prit
         if (team == Team.VIOLET) {
-            paletsInDistributeurJaune.put(0, null);
+            paletsGrandDistributeurEquipe.put(0, null);
         } else {
-            paletsInDistributeurViolet.put(0, null);
+            paletsGrandDistributeurAdverse.put(0, null);
         }
     }
 
