@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author gdepuille on 13/10/16.
@@ -35,9 +36,9 @@ public abstract class AbstractServosController {
     @GetMapping(value = "/{idServo}")
     public final ServoConfig getServoPositionAndSpeed(@PathVariable("idServo") final Byte idServo) {
         return servosConfig().stream()
-                .filter(s -> s.getId() == idServo)
+                .filter(s -> s.id() == idServo)
                 .findFirst()
-                .get();
+                .orElse(null);
     }
 
     @PostMapping(value = "/{idServo}")
