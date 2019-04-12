@@ -35,8 +35,7 @@ import java.awt.*;
  */
 @Slf4j
 @Configuration
-@ComponentScan("org.arig.robot.clr")
-public class NerellContext {
+public class NerellCommonContext {
 
     @Autowired
     private Environment env;

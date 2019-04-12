@@ -15,8 +15,7 @@ import java.util.concurrent.Executor;
  */
 @Slf4j
 @Configuration
-//@EnableAsync
-public class NerellAsyncContext implements AsyncConfigurer {
+public class NerellCommonAsyncContext implements AsyncConfigurer {
 
     @Override
     public Executor getAsyncExecutor() {

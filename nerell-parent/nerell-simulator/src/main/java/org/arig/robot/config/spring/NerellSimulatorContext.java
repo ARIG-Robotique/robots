@@ -4,40 +4,59 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.communication.bouchon.BouchonI2CManager;
-import org.arig.robot.constants.IConstantesI2C;
+import org.arig.robot.constants.IConstantesI2CSimulator;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.exception.I2CException;
+import org.arig.robot.model.RobotName;
 import org.arig.robot.model.bouchon.BouchonEncoderValues;
+import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringJsonWrapper;
+import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
+import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
+import org.arig.robot.system.capteurs.ILidarTelemeter;
+import org.arig.robot.system.capteurs.IVisionBalise;
+import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
+import org.arig.robot.system.capteurs.VisionBaliseBouchon;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.SD21Motors;
 import org.arig.robot.system.servos.SD21Servos;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author gdepuille on 21/12/13.
+ * @author gdepuille on 30/10/16.
  */
 @Configuration
-public class NerellSimulatorI2CContext {
-
-    @Autowired
-    private ResourcePatternResolver patternResolver;
+@ComponentScan("org.arig.robot.clr")
+public class NerellSimulatorContext {
 
     @Bean
-    public II2CManager i2cManager() throws I2CException, IOException {
+    public RobotName robotName() {
+        return new RobotName().name("Nerell (simulator)").version("latest");
+    }
+
+    @Bean
+    public IMonitoringWrapper monitoringWrapper(Environment env) {
+        MonitoringJsonWrapper mjw = new MonitoringJsonWrapper();
+        mjw.setEnabled(env.getProperty("monitoring.points.enable", Boolean.class, true));
+        return mjw;
+    }
+
+    @Bean
+    public II2CManager i2cManager() throws I2CException {
         final BouchonI2CManager manager = new BouchonI2CManager();
         manager.registerDevice("DUMMY I2C", 0x00);
         return manager;
@@ -53,12 +72,12 @@ public class NerellSimulatorI2CContext {
 
     @Bean
     public SD21Servos servos() {
-        return new SD21Servos(IConstantesI2C.SERVO_DEVICE_NAME);
+        return new SD21Servos(IConstantesI2CSimulator.SERVO_DEVICE_NAME);
     }
 
     @Bean
     @SneakyThrows
-    public ARIG2WheelsEncoders encoders() {
+    public ARIG2WheelsEncoders encoders(ResourcePatternResolver patternResolver) {
         InputStream is = patternResolver.getResource("classpath:nerell-capture.csv").getInputStream();
         List<String> lines = IOUtils.readLines(is, Charset.defaultCharset());
         List<BouchonEncoderValues> values = lines.parallelStream()
@@ -72,16 +91,31 @@ public class NerellSimulatorI2CContext {
                 })
                 .collect(Collectors.toList());
 
-        return new BouchonARIG2WheelsEncoders(IConstantesI2C.CODEUR_MOTEUR_GAUCHE, IConstantesI2C.CODEUR_MOTEUR_DROIT, values);
+        return new BouchonARIG2WheelsEncoders(IConstantesI2CSimulator.CODEUR_MOTEUR_GAUCHE, IConstantesI2CSimulator.CODEUR_MOTEUR_DROIT, values);
     }
 
     @Bean
     public I2CAdcAnalogInput analogInput() {
-        return new I2CAdcAnalogInput(IConstantesI2C.I2C_ADC_DEVICE_NAME);
+        return new I2CAdcAnalogInput(IConstantesI2CSimulator.I2C_ADC_DEVICE_NAME);
     }
 
     @Bean
     public TCS34725ColorSensor colorSensor() {
-        return new TCS34725ColorSensor(IConstantesI2C.TCS34725_DEVICE_NAME);
+        return new TCS34725ColorSensor(IConstantesI2CSimulator.TCS34725_DEVICE_NAME);
+    }
+
+    @Bean
+    public ILidarTelemeter rplidar() {
+        return new LidarTelemeterBouchon();
+    }
+
+    @Bean
+    public IVisionBalise visionBalise() {
+        return new VisionBaliseBouchon();
+    }
+
+    @Bean
+    public IAvoidingService avoidingService() {
+        return new AvoidingServiceBouchon();
     }
 }

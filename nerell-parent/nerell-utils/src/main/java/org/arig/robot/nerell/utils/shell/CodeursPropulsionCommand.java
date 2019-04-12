@@ -1,13 +1,18 @@
-package org.arig.robot;
+package org.arig.robot.nerell.utils.shell;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.arig.robot.config.utils.spring.NerellUtilsCaptureCodeursContext;
+import org.arig.robot.services.IIOService;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.shell.Availability;
+import org.springframework.shell.standard.ShellCommandGroup;
+import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellMethodAvailability;
 
 import java.io.FileOutputStream;
 import java.nio.charset.Charset;
@@ -15,34 +20,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @author gdepuille on 20/12/13.
- */
 @Slf4j
-public class CaptureCodeursValues {
+@ShellComponent
+@AllArgsConstructor
+@ShellCommandGroup("Codeurs Propulsion")
+public class CodeursPropulsionCommand {
 
-    private Abstract2WheelsEncoders encoders;
-    private AbstractPropulsionsMotors motors;
-    private List<InfoCapture> infos = new ArrayList<>();
+    private final Abstract2WheelsEncoders encoders;
+    private final AbstractPropulsionsMotors motors;
+    private final IIOService ioService;
 
-    public static void boot(final String [] args) throws Exception {
-        log.info("Demarrage de Nerell en mode capture valeur codeurs ...");
+    private final List<InfoCapture> infos = new ArrayList<>();
 
-        final AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-        rootContext.register(NerellUtilsCaptureCodeursContext.class);
-        rootContext.refresh();
-
-        CaptureCodeursValues rccv = new CaptureCodeursValues();
-        rccv.encoders = rootContext.getBean(Abstract2WheelsEncoders.class);
-        rccv.motors = rootContext.getBean(AbstractPropulsionsMotors.class);
-        rccv.execute();
-
-        rootContext.close();
-        System.exit(0);
+    @ShellMethodAvailability
+    public Availability alimentationOk() {
+        return ioService.auOk() && ioService.alimPuissance5VOk() && ioService.alimPuissance12VOk()
+                ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
     }
 
     @SneakyThrows
-    private void execute() {
+    @ShellMethod("Capture des valeurs de codeurs des roues de propulsions")
+    public void captureCodeursRoues() {
         // Vitesse positive
         log.info("Reset codeurs");
         encoders.reset();
@@ -82,7 +80,7 @@ public class CaptureCodeursValues {
     }
 
     @Data
-    public class InfoCapture {
+    class InfoCapture {
         private final int vitesse;
         private final double gauche, droit;
     }

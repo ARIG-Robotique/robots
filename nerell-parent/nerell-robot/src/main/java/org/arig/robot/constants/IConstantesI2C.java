@@ -35,15 +35,4 @@ public interface IConstantesI2C {
     String TCS34725_DEVICE_NAME = "Front color sensor";
     int TCS34725_ADDRESS = TCS34725ColorSensor.TCS34725_ADDRESS;
 
-    String US_LAT_GAUCHE_NAME = "US Lat Gauche";
-    int US_LAT_GAUCHE_ADDRESS = 0x71;
-
-    String US_GAUCHE_NAME = "US Gauche";
-    int US_GAUCHE_ADDRESS = 0x72;
-
-    String US_DROIT_NAME = "US Droit";
-    int US_DROIT_ADDRESS = 0x73;
-
-    String US_LAT_DROIT_NAME = "US Lat Droit";
-    int US_LAT_DROIT_ADDRESS = 0x70;
 }

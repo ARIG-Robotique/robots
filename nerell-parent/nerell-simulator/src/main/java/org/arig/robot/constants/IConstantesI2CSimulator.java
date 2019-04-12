@@ -5,7 +5,7 @@ import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 /**
  * @author gdepuille on 21/12/13.
  */
-public interface IConstantesI2C {
+public interface IConstantesI2CSimulator {
 
     String CODEUR_MOTEUR_DROIT = "Codeur Moteur Droit";
     int CODEUR_DROIT_ADDRESS = 0x30;

@@ -1,10 +1,6 @@
 package org.arig.robot.scheduler;
 
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.services.CalageBordureService;
-import org.arig.robot.services.MagasinService;
-import org.arig.robot.services.PincesService;
-import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;

@@ -17,7 +17,7 @@ public interface IConstantesNerellConfig {
     double asservTimeMs = 10;
 
     // Durée du match //
-    int matchTimeMs = 89950;
+    int matchTimeMs = 99950;
 
     // Valeurs min / max en mm des axes du repères
     int minX = 50;

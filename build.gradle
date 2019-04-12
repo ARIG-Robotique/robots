@@ -6,8 +6,8 @@ buildscript {
 
 	repositories {
 		mavenLocal()
-		jcenter()
 		mavenCentral()
+		jcenter()
 	}
 	dependencies {
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
@@ -30,6 +30,7 @@ configure(allprojects) { project ->
 		javaTestVersion = javaVersion
 
 		// Dependencies versions
+		springShellVersion = '2.0.1.BUILD-SNAPSHOT'
 		apacheCommonsCollectionsVersion = '4.2'
 		apacheCommonsIOVersion = '2.6'
 		googleGuavaVersion = '27.0.1-jre'
@@ -66,8 +67,10 @@ configure(allprojects) { project ->
 	// Configuration des repository de dépendences
 	repositories {
 		mavenLocal()
-		jcenter()
 		mavenCentral()
+		jcenter()
+		maven { url 'https://repo.spring.io/milestone' }
+		maven { url 'https://repo.spring.io/libs-snapshot' }
 		maven { url 'https://jitpack.io' }
 		maven {
 			url "s3://arig-artefacts.s3.eu-west-3.amazonaws.com/maven/snapshots"

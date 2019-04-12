@@ -2,10 +2,6 @@ description = "ARIG Association - Nerell utils"
 
 dependencies {
 	compile project(':nerell-parent:nerell-robot')
-}
 
-// Tâche de copy des dépendances
-task copyDependencies(type: Copy) {
-	into "$buildDir/dependencies"
-	from configurations.runtime
+	compile "org.springframework.shell:spring-shell-starter:${springShellVersion}"
 }

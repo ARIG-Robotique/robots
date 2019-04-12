@@ -6,7 +6,7 @@
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
-    <output url="file://$MODULE_DIR$/../../../../robot-system-lib-parent/robot-system-lib-bouchon/out/production/classes" />
+    <output url="file://$MODULE_DIR$/../../../../robot-system-lib-parent/robot-system-lib-bouchon/build/classes/java/main" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../../robot-system-lib-parent/robot-system-lib-bouchon/src/main">
       <sourceFolder url="file://$MODULE_DIR$/../../../../robot-system-lib-parent/robot-system-lib-bouchon/src/main/java" isTestSource="false" />
