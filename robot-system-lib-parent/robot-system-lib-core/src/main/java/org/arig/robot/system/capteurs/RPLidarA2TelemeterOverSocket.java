@@ -15,18 +15,18 @@ import java.util.Collections;
  * @author gdepuille on 03/03/17.
  */
 @Slf4j
-public class RPLidarA2OverSocketTelemeter extends AbstractSocketClient<LidarAction> implements ILidarTelemeter {
+public class RPLidarA2TelemeterOverSocket extends AbstractSocketClient<LidarAction> implements ILidarTelemeter {
 
     public static short LOW_MORTOR_PWM = 250;
     public static short MAX_MOTOR_PWM = 1023;
     public static short DEFAULT_MOTOR_PWM = 660;
 
-    public RPLidarA2OverSocketTelemeter(String hostname, Integer port) throws Exception {
+    public RPLidarA2TelemeterOverSocket(String hostname, Integer port) throws Exception {
         super(hostname, port);
         openSocket();
     }
 
-    public RPLidarA2OverSocketTelemeter(File socketFile) throws Exception {
+    public RPLidarA2TelemeterOverSocket(File socketFile) throws Exception {
         super(socketFile);
         openSocket();
     }

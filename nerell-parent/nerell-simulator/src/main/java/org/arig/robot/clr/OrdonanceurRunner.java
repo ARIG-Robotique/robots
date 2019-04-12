@@ -13,7 +13,7 @@ public class OrdonanceurRunner implements CommandLineRunner {
     public void run(final String... args) throws Exception {
         new Thread(() -> {
             try {
-                Ordonanceur.getInstance().run();
+                //Ordonanceur.getInstance().run();
             } catch (Exception e) {
                 log.error("Problème d'ordonancement", e);
             }

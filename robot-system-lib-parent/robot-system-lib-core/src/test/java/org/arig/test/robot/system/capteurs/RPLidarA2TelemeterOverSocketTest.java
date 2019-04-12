@@ -7,7 +7,7 @@ import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.model.lidar.enums.HealthState;
-import org.arig.robot.system.capteurs.RPLidarA2OverSocketTelemeter;
+import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -23,9 +23,9 @@ import java.io.File;
  */
 @Slf4j
 @RunWith(BlockJUnit4ClassRunner.class)
-public class RPLidarA2OverSocketTelemeterTest {
+public class RPLidarA2TelemeterOverSocketTest {
 
-    private static RPLidarA2OverSocketTelemeter rpLidar;
+    private static RPLidarA2TelemeterOverSocket rpLidar;
 
     @BeforeClass
     @SneakyThrows
@@ -33,7 +33,7 @@ public class RPLidarA2OverSocketTelemeterTest {
         final File socketFile = new File("/tmp/lidar.sock");
         Assume.assumeTrue("Contrôle initialisation RPLidar par la présence de la socket", socketFile.exists());
 
-        rpLidar = new RPLidarA2OverSocketTelemeter(socketFile);
+        rpLidar = new RPLidarA2TelemeterOverSocket(socketFile);
         rpLidar.printDeviceInfo();
     }
 

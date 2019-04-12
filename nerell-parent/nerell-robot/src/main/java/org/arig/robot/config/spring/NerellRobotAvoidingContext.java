@@ -37,7 +37,7 @@ public class NerellRobotAvoidingContext {
     @DependsOn("rplidarBridgeProcess")
     public ILidarTelemeter rplidar() throws Exception {
         final File socketFile = new File(RPLidarBridgeProcess.socketPath);
-        return new RPLidarA2OverSocketTelemeter(socketFile);
+        return new RPLidarA2TelemeterOverSocket(socketFile);
     }
 
     @Bean
