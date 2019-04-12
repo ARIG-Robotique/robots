@@ -1,11 +1,13 @@
 package org.arig.robot.services;
 
+import org.arig.robot.model.ESide;
+
 /**
  * Interface représentant les IO et Servos d'un côté du robot
  */
 public interface IRobotSide {
 
-    int id();
+    ESide id();
 
     int positionCarouselPince();
 
@@ -36,17 +38,23 @@ public interface IRobotSide {
 
     void ascenseurTable();
 
+    void ascenseurTableGold();
+
     void ascenseurDistributeur();
 
     void ascenseurAccelerateur();
 
     void ascenseurCarousel();
 
+    void ascenseurPreAccelerateur();
+
     void pivotVentouseTable();
 
     void pivotVentouseFacade();
 
     void pivotVentouseCarousel();
+
+    void pivotPinceSortieCarousel();
 
     void pinceSerrageOuvert();
 

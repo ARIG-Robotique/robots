@@ -1,6 +1,7 @@
 package org.arig.robot.services;
 
 import org.arig.robot.model.Carousel;
+import org.arig.robot.model.ESide;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +15,8 @@ public class LeftSideService implements IRobotSide {
     private ServosService servosService;
 
     @Override
-    public int id() {
-        return 1;
+    public ESide id() {
+        return ESide.GAUCHE;
     }
 
     @Override
@@ -69,6 +70,11 @@ public class LeftSideService implements IRobotSide {
     }
 
     @Override
+    public void ascenseurTableGold() {
+        servosService.ascenseurGaucheTableGold();
+    }
+
+    @Override
     public void ascenseurDistributeur() {
         servosService.ascenseurGaucheDistributeur();
     }
@@ -84,6 +90,11 @@ public class LeftSideService implements IRobotSide {
     }
 
     @Override
+    public void ascenseurPreAccelerateur() {
+        servosService.ascenseurGauchePreAccelerateur();
+    }
+
+    @Override
     public void pivotVentouseTable() {
         servosService.pivotVentouseGaucheTable();
     }
@@ -96,6 +107,11 @@ public class LeftSideService implements IRobotSide {
     @Override
     public void pivotVentouseCarousel() {
         servosService.pivotVentouseGaucheCarousel();
+    }
+
+    @Override
+    public void pivotPinceSortieCarousel() {
+        servosService.pivotVentouseGaucheSortieCarousel();
     }
 
     @Override

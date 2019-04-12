@@ -36,6 +36,7 @@ public class ServosController extends AbstractServosController {
                 .id(IConstantesServos.PIVOT_VENTOUSE_DROIT)
                 .name("Pivot ventouse droit")
                 .position("Carousel", IConstantesServos.PIVOT_VENTOUSE_DROIT_CAROUSEL)
+                .position("Sortie carousel", IConstantesServos.PIVOT_VENTOUSE_DROIT_SORTIE_CAROUSEL)
                 .position("Facade", IConstantesServos.PIVOT_VENTOUSE_DROIT_FACADE)
                 .position("Table", IConstantesServos.PIVOT_VENTOUSE_DROIT_TABLE)
         );
@@ -44,6 +45,7 @@ public class ServosController extends AbstractServosController {
                 .id(IConstantesServos.PIVOT_VENTOUSE_GAUCHE)
                 .name("Pivot ventouse gauche")
                 .position("Carousel", IConstantesServos.PIVOT_VENTOUSE_GAUCHE_CAROUSEL)
+                .position("Sortie carousel", IConstantesServos.PIVOT_VENTOUSE_GAUCHE_SORTIE_CAROUSEL)
                 .position("Facade", IConstantesServos.PIVOT_VENTOUSE_GAUCHE_FACADE)
                 .position("Table", IConstantesServos.PIVOT_VENTOUSE_GAUCHE_TABLE)
         );
@@ -51,19 +53,23 @@ public class ServosController extends AbstractServosController {
         servoConfigs.add(new ServoConfig()
                 .id(IConstantesServos.ASCENSEUR_VENTOUSE_DROIT)
                 .name("Ascenseur droit")
+                .position("Pre accelerateur", IConstantesServos.ASCENSEUR_DROIT_PRE_ACCELERATEUR)
                 .position("Carousel", IConstantesServos.ASCENSEUR_DROIT_CAROUSEL)
                 .position("Accelerateur", IConstantesServos.ASCENSEUR_DROIT_ACCELERATEUR)
                 .position("Distributeur", IConstantesServos.ASCENSEUR_DROIT_DISTRIBUTEUR)
                 .position("Table", IConstantesServos.ASCENSEUR_DROIT_TABLE)
+                .position("Table pour gold", IConstantesServos.ASCENSEUR_DROIT_TABLE_GOLD)
         );
 
         servoConfigs.add(new ServoConfig()
                 .id(IConstantesServos.ASCENSEUR_VENTOUSE_GAUCHE)
                 .name("Ascenseur gauche")
+                .position("Pre accelerateur", IConstantesServos.ASCENSEUR_GAUCHE_PRE_ACCELERATEUR)
                 .position("Carousel", IConstantesServos.ASCENSEUR_GAUCHE_CAROUSEL)
                 .position("Accelerateur", IConstantesServos.ASCENSEUR_GAUCHE_ACCELERATEUR)
                 .position("Distributeur", IConstantesServos.ASCENSEUR_GAUCHE_DISTRIBUTEUR)
                 .position("Table", IConstantesServos.ASCENSEUR_GAUCHE_TABLE)
+                .position("Table pour gold", IConstantesServos.ASCENSEUR_GAUCHE_TABLE_GOLD)
         );
 
         servoConfigs.add(new ServoConfig()

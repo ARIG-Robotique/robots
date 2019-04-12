@@ -66,8 +66,7 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     @Setter(AccessLevel.NONE)
     private Magasin magasin = new Magasin();
 
-    // Pince stockant le goldenium utiliser IRobotSide#id
-    private int goldeniumInPince = 0;
+    private ESide goldeniumInPince = null;
 
     private boolean trouNoirVioletVisite = false;
     private boolean trouNoirJauneVisite = false;
@@ -122,12 +121,23 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         paletsInDistributeurTeam.put(2, Palet.Couleur.ROUGE);
     }
 
+    /**
+     * Dernière préparations avant le départ
+     */
+    public void init() {
+        // la palets extrème côté adverse ne peut pas être prit
+        if (team == Team.VIOLET) {
+            paletsInDistributeurJaune.put(0, null);
+        } else {
+            paletsInDistributeurViolet.put(0, null);
+        }
+    }
+
     public int calculerPoints() {
         int points = 5; // experience placée
         points += pointsTableau(paletsInTableauRouge, Palet.Couleur.ROUGE);
         points += pointsTableau(paletsInTableauVert, Palet.Couleur.VERT);
         points += pointsTableau(paletsInTableauBleu, Palet.Couleur.BLEU);
-        // + points goldenium dans le tableau, on ne le fait jamais
         points += pointsBalance();
         points += 10 * paletsInAccelerateur.size();
         points += accelerateurOuvert ? 10 : 0;
@@ -147,12 +157,14 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     private int pointsTableau(final List<Palet.Couleur> tableau, Palet.Couleur couleur) {
         return tableau.stream()
-                .mapToInt(c -> 1 + (c.equals(couleur) ? 5 : 0))
+                .filter(Objects::nonNull)
+                .mapToInt(c -> 1 + (Palet.Couleur.GOLD == c ? 6 : couleur == c ? 5 : 0))
                 .sum();
     }
 
     private int pointsBalance() {
         return paletsInBalance.stream()
+                .filter(Objects::nonNull)
                 .sorted(Comparator.comparingInt(Palet.Couleur::importance))
                 .limit(IConstantesNerellConfig.nbPaletsBalanceMax)
                 .mapToInt(c -> {

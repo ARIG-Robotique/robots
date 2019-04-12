@@ -283,6 +283,10 @@ public class ServosService {
         servos.setPosition(IConstantesServos.PIVOT_VENTOUSE_DROIT, IConstantesServos.PIVOT_VENTOUSE_DROIT_CAROUSEL);
     }
 
+    public void pivotVentouseDroitSortieCarousel() {
+        servos.setPosition(IConstantesServos.PIVOT_VENTOUSE_DROIT, IConstantesServos.PIVOT_VENTOUSE_DROIT_SORTIE_CAROUSEL);
+    }
+
     public void pivotVentouseDroitFacade() {
         servos.setPosition(IConstantesServos.PIVOT_VENTOUSE_DROIT, IConstantesServos.PIVOT_VENTOUSE_DROIT_FACADE);
     }
@@ -295,12 +299,20 @@ public class ServosService {
         servos.setPosition(IConstantesServos.PIVOT_VENTOUSE_GAUCHE, IConstantesServos.PIVOT_VENTOUSE_GAUCHE_CAROUSEL);
     }
 
+    public void pivotVentouseGaucheSortieCarousel() {
+        servos.setPosition(IConstantesServos.PIVOT_VENTOUSE_GAUCHE, IConstantesServos.PIVOT_VENTOUSE_GAUCHE_SORTIE_CAROUSEL);
+    }
+
     public void pivotVentouseGaucheFacade() {
         servos.setPosition(IConstantesServos.PIVOT_VENTOUSE_GAUCHE, IConstantesServos.PIVOT_VENTOUSE_GAUCHE_FACADE);
     }
 
     public void pivotVentouseGaucheTable() {
         servos.setPosition(IConstantesServos.PIVOT_VENTOUSE_GAUCHE, IConstantesServos.PIVOT_VENTOUSE_GAUCHE_TABLE);
+    }
+
+    public void ascenseurDroitPreAccelerateur() {
+        servos.setPosition(IConstantesServos.ASCENSEUR_VENTOUSE_DROIT, IConstantesServos.ASCENSEUR_DROIT_PRE_ACCELERATEUR);
     }
 
     public void ascenseurDroitCarousel() {
@@ -315,8 +327,16 @@ public class ServosService {
         servos.setPosition(IConstantesServos.ASCENSEUR_VENTOUSE_DROIT, IConstantesServos.ASCENSEUR_DROIT_ACCELERATEUR);
     }
 
+    public void ascenseurDroitTableGold() {
+        servos.setPosition(IConstantesServos.ASCENSEUR_VENTOUSE_DROIT, IConstantesServos.ASCENSEUR_DROIT_TABLE_GOLD);
+    }
+
     public void ascenseurDroitTable() {
         servos.setPosition(IConstantesServos.ASCENSEUR_VENTOUSE_DROIT, IConstantesServos.ASCENSEUR_DROIT_TABLE);
+    }
+
+    public void ascenseurGauchePreAccelerateur() {
+        servos.setPosition(IConstantesServos.ASCENSEUR_VENTOUSE_GAUCHE, IConstantesServos.ASCENSEUR_GAUCHE_PRE_ACCELERATEUR);
     }
 
     public void ascenseurGaucheCarousel() {
@@ -329,6 +349,10 @@ public class ServosService {
 
     public void ascenseurGaucheAccelerateur() {
         servos.setPosition(IConstantesServos.ASCENSEUR_VENTOUSE_GAUCHE, IConstantesServos.ASCENSEUR_GAUCHE_ACCELERATEUR);
+    }
+
+    public void ascenseurGaucheTableGold() {
+        servos.setPosition(IConstantesServos.ASCENSEUR_VENTOUSE_GAUCHE, IConstantesServos.ASCENSEUR_GAUCHE_TABLE_GOLD);
     }
 
     public void ascenseurGaucheTable() {
