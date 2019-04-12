@@ -71,9 +71,9 @@ public class AbstractSocketClient<T extends Enum> {
             } catch (IOException e) {
                 log.warn("Erreur de shutdown sur la socket", e);
             }
-            IOUtils.closeQuietly(in);
-            IOUtils.closeQuietly(out);
-            IOUtils.closeQuietly(socket);
+            closeQuietly(in);
+            closeQuietly(out);
+            closeQuietly(socket);
         }
     }
 
@@ -92,6 +92,15 @@ public class AbstractSocketClient<T extends Enum> {
         }
         else {
             throw new IllegalStateException("Socket non ouvert");
+        }
+    }
+
+    private void closeQuietly(Closeable closeable) {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
+        } catch (IOException var2) {
         }
     }
 }
