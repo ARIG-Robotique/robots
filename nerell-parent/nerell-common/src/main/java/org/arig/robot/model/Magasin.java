@@ -35,5 +35,4 @@ public class Magasin {
     void emptyGauche() {
         gauche.clear();
     }
-
 }
