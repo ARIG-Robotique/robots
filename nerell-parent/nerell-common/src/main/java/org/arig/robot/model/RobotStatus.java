@@ -128,7 +128,8 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
      * Dernière préparations avant le départ
      */
     public void init() {
-        // la palets extrème côté adverse ne peut pas être prit
+        // le palet extrème côté adverse ne peut pas être prit
+        // sinon on rentre dans la zone de départ adverse
         if (team == Team.VIOLET) {
             paletsGrandDistributeurEquipe.put(0, null);
         } else {
@@ -186,5 +187,4 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
                 })
                 .sum();
     }
-
 }
