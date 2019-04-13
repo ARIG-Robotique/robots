@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Gestion automatique de la lecture couleur quand el carousel est dispo
+ * Gestion automatique de la lecture couleur quand le carousel est dispo
  */
 @Slf4j
 @Service
