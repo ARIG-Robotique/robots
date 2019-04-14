@@ -18,14 +18,16 @@ public abstract class AbstractPropulsionsMotors {
     private int numMoteurDroit;
     private boolean alternate;
 
+    protected int offsetValue;
     protected int minVal;
     protected int maxVal;
     protected int prevM1;
     protected int prevM2;
 
-    public AbstractPropulsionsMotors() {
+    public AbstractPropulsionsMotors(int offsetValue) {
         assignMotors(AbstractPropulsionsMotors.UNDEF_MOTOR, AbstractPropulsionsMotors.UNDEF_MOTOR);
         alternate = false;
+        this.offsetValue = offsetValue;
     }
 
     /**
@@ -65,9 +67,9 @@ public abstract class AbstractPropulsionsMotors {
      */
     public final void moteurGauche(final int cmd) throws IllegalStateException {
         if (numMoteurGauche == AbstractPropulsionsMotors.MOTOR_1) {
-            moteur1(cmd);
+            speedMoteur1(cmd);
         } else if (numMoteurGauche == AbstractPropulsionsMotors.MOTOR_2) {
-            moteur2(cmd);
+            speedMoteur2(cmd);
         }
 
         exceptionAssignationMoteurGauche();
@@ -82,9 +84,9 @@ public abstract class AbstractPropulsionsMotors {
      */
     public final void moteurDroit(final int cmd) throws IllegalStateException {
         if (numMoteurDroit == AbstractPropulsionsMotors.MOTOR_1) {
-            moteur1(cmd);
+            speedMoteur1(cmd);
         } else if (numMoteurDroit == AbstractPropulsionsMotors.MOTOR_2) {
-            moteur2(cmd);
+            speedMoteur2(cmd);
         }
 
         exceptionAssignationMoteurDroit();
@@ -132,14 +134,21 @@ public abstract class AbstractPropulsionsMotors {
      * Méthode d'arrêt du moteur 1
      */
     public void stop1() {
-        moteur1(0);
+        speedMoteur1(getStopSpeed());
     }
 
     /**
      * Méthode d'arrêt du moteur 2
      */
     public void stop2() {
-        moteur2(0);
+        speedMoteur2(getStopSpeed());
+    }
+
+    /**
+     * Récupération de la valeur pour le stop.
+     */
+    public int getStopSpeed() {
+        return 0;
     }
 
     /**
@@ -169,37 +178,38 @@ public abstract class AbstractPropulsionsMotors {
     }
 
     /**
-     * Récupération de la valeur pour le stop.
-     */
-    public int getStopSpeed() {
-        return 0;
-    }
-
-    public abstract void init();
-    public abstract void moteur1(final int val);
-    public abstract void moteur2(final int val);
-
-    public abstract void printVersion();
-
-    /**
      * Valeur minimal pour la vitesse du moteur.
      */
-    public abstract int getMinSpeed();
+    public int getMinSpeed() {
+        return minVal - offsetValue;
+    }
 
     /**
      * Valeur maximal pour la vitesse du moteur
      */
-    public abstract int getMaxSpeed();
+    public int getMaxSpeed() {
+        return maxVal - offsetValue;
+    }
 
     /**
      * Vitesse courante du moteur 1
      */
-    protected abstract int currentSpeedMoteur1();
+    protected int currentSpeedMoteur1() {
+        return prevM1 - offsetValue;
+    }
 
     /**
      * Vitesse courante du moteur 2
      */
-    protected abstract int currentSpeedMoteur2();
+    protected int currentSpeedMoteur2() {
+        return prevM2 - offsetValue;
+    }
+
+    public abstract void init();
+    public abstract void speedMoteur1(final int val);
+    public abstract void speedMoteur2(final int val);
+
+    public abstract void printVersion();
 
     /**
      * Méthode de contrôle du bornage des commandes moteurs.

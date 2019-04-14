@@ -1,5 +1,6 @@
 package org.arig.robot.clr;
 
+import org.arig.robot.Ordonanceur;
 import org.arig.robot.model.RobotStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -14,5 +15,7 @@ public class SimulateurRunner implements CommandLineRunner {
     @Override
     public void run(final String... args) throws Exception {
         rs.setSimulateur();
+
+        Ordonanceur.getInstance().run();
     }
 }

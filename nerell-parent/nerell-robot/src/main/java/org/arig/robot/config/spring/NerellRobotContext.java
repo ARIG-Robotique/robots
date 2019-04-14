@@ -23,7 +23,7 @@ import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
-import org.arig.robot.system.motors.SD21Motors;
+import org.arig.robot.system.motors.PropulsionsSD21Motors;
 import org.arig.robot.system.process.RPLidarBridgeProcess;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.context.annotation.Bean;
@@ -78,7 +78,7 @@ public class NerellRobotContext {
     @Bean
     public AbstractPropulsionsMotors motors() {
         // Configuration de la carte moteur propulsion.
-        final SD21Motors motors = new SD21Motors(IConstantesServos.MOTOR_DROIT, IConstantesServos.MOTOR_GAUCHE);
+        final PropulsionsSD21Motors motors = new PropulsionsSD21Motors(IConstantesServos.MOTOR_DROIT, IConstantesServos.MOTOR_GAUCHE);
         motors.assignMotors(IConstantesNerellConfig.numeroMoteurGauche, IConstantesNerellConfig.numeroMoteurDroit);
         return motors;
     }
