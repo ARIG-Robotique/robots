@@ -1,18 +1,36 @@
 package org.arig.robot.system.motors;
 
+import lombok.Setter;
 import org.arig.robot.system.servos.SD21Servos;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
-public class PropulsionsSD21Motors extends AbstractPropulsionsMotors {
+public class PropulsionsSD21Motors extends AbstractPropulsionsMotors implements ApplicationContextAware, InitializingBean {
 
-    private final SD21Motor motor1;
-    private final SD21Motor motor2;
+    private final byte motor1Register, motor2Register;
+
+    private SD21Motor motor1;
+    private SD21Motor motor2;
+
+    @Setter
+    private ApplicationContext applicationContext;
 
 
     public PropulsionsSD21Motors(final byte motor1Register, final byte motor2Register) {
         super(1500);
+        this.motor1Register = motor1Register;
+        this.motor2Register = motor2Register;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
         motor1 = new SD21Motor(motor1Register);
         motor2 = new SD21Motor(motor2Register);
+
+        applicationContext.getAutowireCapableBeanFactory().autowireBean(motor1);
+        applicationContext.getAutowireCapableBeanFactory().autowireBean(motor2);
     }
 
     @Override
