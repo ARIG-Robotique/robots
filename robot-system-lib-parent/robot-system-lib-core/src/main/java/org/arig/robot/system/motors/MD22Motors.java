@@ -36,14 +36,13 @@ public class MD22Motors extends AbstractPropulsionsMotors {
     private final String deviceName;
     private byte modeValue;
     private short accelValue;
-    private int offsetVal;
 
     public MD22Motors(final String deviceName) {
         this(deviceName, MD22Motors.DEFAULT_MODE_VALUE, MD22Motors.DEFAULT_ACCEL_VALUE);
     }
 
     public MD22Motors(final String deviceName, final byte mode, final short accel) {
-        super();
+        super(0);
 
         this.deviceName = deviceName;
         modeValue = mode;
@@ -75,8 +74,8 @@ public class MD22Motors extends AbstractPropulsionsMotors {
     }
 
     @Override
-    public void moteur1(final int val) {
-        final byte cmd = (byte) check(val + offsetVal);
+    public void speedMoteur1(final int val) {
+        final byte cmd = (byte) check(val + offsetValue);
         if (cmd == prevM1) {
             return;
         }
@@ -93,8 +92,8 @@ public class MD22Motors extends AbstractPropulsionsMotors {
     }
 
     @Override
-    public void moteur2(final int val) {
-        final byte cmd = (byte) check(val + offsetVal);
+    public void speedMoteur2(final int val) {
+        final byte cmd = (byte) check(val + offsetValue);
         if (cmd == prevM2) {
             return;
         }
@@ -131,20 +130,20 @@ public class MD22Motors extends AbstractPropulsionsMotors {
             case MODE_0:
                 minVal = MD22Motors.MIN_VAL_MODE_0;
                 maxVal = MD22Motors.MAX_VAL_MODE_0;
-                offsetVal = MD22Motors.STOP_VAL_MODE_0;
+                offsetValue = MD22Motors.STOP_VAL_MODE_0;
                 break;
 
             case MODE_1:
             default:
                 minVal = MD22Motors.MIN_VAL_MODE_1;
                 maxVal = MD22Motors.MAX_VAL_MODE_1;
-                offsetVal = MD22Motors.STOP_VAL_MODE_1;
+                offsetValue = MD22Motors.STOP_VAL_MODE_1;
                 break;
         }
 
         // Set mode
         if (transmit) {
-            log.info("Configuration dans le mode {} (Min = {}, Max = {}, Offset = {})", modeValue, minVal, maxVal, offsetVal);
+            log.info("Configuration dans le mode {} (Min = {}, Max = {}, Offset = {})", modeValue, minVal, maxVal, offsetValue);
             try {
                 i2cManager.sendData(deviceName, MD22Motors.MODE_REGISTER, modeValue);
             } catch (I2CException e) {
@@ -217,26 +216,6 @@ public class MD22Motors extends AbstractPropulsionsMotors {
                 log.error("Impossible de configurer l'acceleration");
             }
         }
-    }
-
-    @Override
-    public int getMinSpeed() {
-        return MIN_VAL_MODE_1;
-    }
-
-    @Override
-    public int getMaxSpeed() {
-        return MAX_VAL_MODE_1;
-    }
-
-    @Override
-    protected int currentSpeedMoteur1() {
-        return prevM1 - offsetVal;
-    }
-
-    @Override
-    protected int currentSpeedMoteur2() {
-        return prevM2 - offsetVal;
     }
 
     @Override
