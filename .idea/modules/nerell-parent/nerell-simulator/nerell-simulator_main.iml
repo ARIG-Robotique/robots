@@ -18,7 +18,7 @@
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
-    <output url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-simulator/build/classes/java/main" />
+    <output url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-simulator/out/production/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-simulator/src/main">
       <sourceFolder url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-simulator/src/main/java" isTestSource="false" />

@@ -6,7 +6,7 @@
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
-    <output-test url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-common/build/classes/java/test" />
+    <output-test url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-common/out/test/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-common/src/test" />
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
