@@ -33,6 +33,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 
 import java.awt.*;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -152,7 +153,7 @@ public class NerellCommonContext {
 
     @Bean(name = "sideServices")
     public Map<ESide, IRobotSide> sideServices(RightSideService rightSideService, LeftSideService leftSideService) {
-        final Map<ESide, IRobotSide> services = new HashMap<>();
+        final Map<ESide, IRobotSide> services = new EnumMap<>(ESide.class);
         services.put(ESide.DROITE, rightSideService);
         services.put(ESide.GAUCHE, leftSideService);
         return services;
