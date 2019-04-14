@@ -15,6 +15,7 @@ public interface IConstantesNerellConfig {
 
     // Configuration asservissement //
     double asservTimeMs = 10;
+    double asservTimeCarouselMs = 50;
 
     // Durée du match //
     int matchTimeMs = 99950;
@@ -41,6 +42,9 @@ public interface IConstantesNerellConfig {
     // 51325 p => 360° : 51325 / 360 = 142,569444444
     double countPerDeg = 142.569444444;
 
+    // Carousel
+    long countPerCarouselIndex = 1;
+
     // ------------------------ //
     // Configuration des rampes //
     // ------------------------ //
@@ -49,6 +53,9 @@ public interface IConstantesNerellConfig {
 
     double rampAccOrientation = 1000.0; // en mm/s2
     double rampDecOrientation = 1000.0; // en mm/s2
+
+    double rampAccCarousel = 1000.0; // en mm/s2
+    double rampDecCarousel = 1000.0; // en mm/s2
 
     // -------------------------- //
     // Configuration des vitesses //
@@ -79,6 +86,10 @@ public interface IConstantesNerellConfig {
     double kiOrientation = 5.5;
     double kdOrientation = 0.050;
 
+    double kpCarousel = 1;
+    double kiCarousel = 0;
+    double kdCarousel = 0;
+
     // --------------------------- //
     // Paramètre mouvement manager //
     // --------------------------- //
@@ -87,6 +98,11 @@ public interface IConstantesNerellConfig {
     double approcheDistanceMm = 100;
     double approcheOrientationDeg = 5;
     double angleReculDeg = 0.45;
+
+    // -------------------------- //
+    // Paramètre Carousel manager //
+    // -------------------------- //
+    double arretCarouselPulse = 5;
 
     // -------------------------- //
     // Paramètre Avoiding service //

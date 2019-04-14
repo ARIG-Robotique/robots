@@ -37,7 +37,7 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
     @Override
     protected double lectureGauche() {
         try {
-            double v = lectureData(deviceNameGauche);
+            double v = ARIGEncoderUtils.lectureData(i2cManager, deviceNameGauche);
             if (log.isDebugEnabled()) {
                 log.debug("Lecture codeur gauche : {}", v);
             }
@@ -51,7 +51,7 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
     @Override
     protected double lectureDroit() {
         try {
-            double v = lectureData(deviceNameDroit);
+            double v = ARIGEncoderUtils.lectureData(i2cManager, deviceNameDroit);
             if (log.isDebugEnabled()) {
                 log.debug("Lecture codeur droit : {}", v);
             }
@@ -60,31 +60,5 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
             log.error("Erreur lors de la lecture du codeur droit : " + e.toString());
             return 0;
         }
-    }
-
-    /**
-     * Lecture data depuis nos cartes codeur.
-     * <p>
-     * 1) On envoi la commande de lecture.
-     * 2) On récupère un short (2 octets car int sur 2 octet avec un AVR 8 bits)
-     *
-     * @param deviceName the deviceName
-     *
-     * @return the int
-     *
-     * @throws I2CException
-     * @see <a href="https://github.com/ARIG-Robotique/quadratic-reader">GitHub Quadratic Reader</a>
-     */
-    private int lectureData(final String deviceName) throws I2CException {
-        try {
-            i2cManager.sendData(deviceName, 2);
-        } catch (I2CException e) {
-            String message = "Impossible de lire la valeur codeur pour la carte " + deviceName;
-            log.error(message);
-            throw new I2CException(message, e);
-        }
-
-        final byte[] datas = i2cManager.getDatas(deviceName, 2);
-        return ((short) ((datas[0] << 8) + (datas[1] & 0xFF)));
     }
 }

@@ -34,7 +34,7 @@ public class ServosService {
         // Moteurs
         servos.setPositionAndSpeed(IConstantesServos.MOTOR_DROIT, 1500, (byte) 0);
         servos.setPositionAndSpeed(IConstantesServos.MOTOR_GAUCHE, 1500, (byte) 0);
-        servos.setPositionAndSpeed(IConstantesServos.MOTOR_BARILLET, 1500, (byte) 0);
+        servos.setPositionAndSpeed(IConstantesServos.MOTOR_CAROUSEL, 1500, (byte) 0);
 
         ioService.enableAlim5VPuissance();
         while (!ioService.alimPuissance5VOk()) ;

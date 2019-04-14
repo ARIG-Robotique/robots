@@ -131,16 +131,17 @@ public class ServosController extends AbstractServosController {
         );
 
         servoConfigs.add(new ServoConfig()
-                .id(IConstantesServos.MOTOR_BARILLET)
-                .name("Moteur barillet")
-                .position("Stop", IConstantesServos.MOTOR_BARILLET_STOP)
-                .position("Full", IConstantesServos.MOTOR_BARILLET_FULL)
+                .id(IConstantesServos.MOTOR_CAROUSEL)
+                .name("Moteur carousel")
+                .position("Reverse", 1350)
+                .position("Stop", 1500)
+                .position("Forward", 1650)
         );
 
         servoConfigs.add(new ServoConfig()
                 .id(IConstantesServos.MOTOR_DROIT)
                 .name("/!\\ Moteur droit")
-                .position("Reverse", 1450)
+                .position("Reverse", 1350)
                 .position("Stop", 1500)
                 .position("Forward", 1650)
         );
@@ -148,7 +149,7 @@ public class ServosController extends AbstractServosController {
         servoConfigs.add(new ServoConfig()
                 .id(IConstantesServos.MOTOR_GAUCHE)
                 .name("/!\\ Moteur gauche")
-                .position("Reverse", 1450)
+                .position("Reverse", 1350)
                 .position("Stop", 1500)
                 .position("Forward", 1650)
         );

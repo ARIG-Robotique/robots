@@ -9,6 +9,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.RobotName;
+import org.arig.robot.model.bouchon.BouchonEncoderValue;
 import org.arig.robot.model.bouchon.BouchonEncoderValues;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
@@ -21,7 +22,9 @@ import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.VisionBaliseBouchon;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
+import org.arig.robot.system.encoders.ARIGEncoder;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
+import org.arig.robot.system.encoders.BouchonARIGEncoder;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.PropulsionsSD21Motors;
 import org.arig.robot.system.servos.SD21Servos;
@@ -63,14 +66,6 @@ public class NerellSimulatorContext {
     }
 
     @Bean
-    public AbstractPropulsionsMotors motors() {
-        // Configuration de la carte moteur propulsion.
-        final PropulsionsSD21Motors motors = new PropulsionsSD21Motors(IConstantesServos.MOTOR_DROIT, IConstantesServos.MOTOR_GAUCHE);
-        motors.assignMotors(IConstantesNerellConfig.numeroMoteurGauche, IConstantesNerellConfig.numeroMoteurDroit);
-        return motors;
-    }
-
-    @Bean
     public SD21Servos servos() {
         return new SD21Servos(IConstantesI2CSimulator.SERVO_DEVICE_NAME);
     }
@@ -78,7 +73,7 @@ public class NerellSimulatorContext {
     @Bean
     @SneakyThrows
     public ARIG2WheelsEncoders encoders(ResourcePatternResolver patternResolver) {
-        InputStream is = patternResolver.getResource("classpath:nerell-capture.csv").getInputStream();
+        InputStream is = patternResolver.getResource("classpath:nerell-propulsions.csv").getInputStream();
         List<String> lines = IOUtils.readLines(is, Charset.defaultCharset());
         List<BouchonEncoderValues> values = lines.parallelStream()
                 .filter(l -> !l.startsWith("#"))
@@ -92,6 +87,24 @@ public class NerellSimulatorContext {
                 .collect(Collectors.toList());
 
         return new BouchonARIG2WheelsEncoders(IConstantesI2CSimulator.CODEUR_MOTEUR_GAUCHE, IConstantesI2CSimulator.CODEUR_MOTEUR_DROIT, values);
+    }
+
+    @Bean
+    @SneakyThrows
+    public ARIGEncoder encoderCarousel(ResourcePatternResolver patternResolver) {
+        InputStream is = patternResolver.getResource("classpath:nerell-carousel.csv").getInputStream();
+        List<String> lines = IOUtils.readLines(is, Charset.defaultCharset());
+        List<BouchonEncoderValue> values = lines.parallelStream()
+                .filter(l -> !l.startsWith("#"))
+                .map(l -> {
+                    String [] v = l.split(";");
+                    return new BouchonEncoderValue()
+                            .vitesseMoteur(Integer.parseInt(v[0]))
+                            .value(Double.parseDouble(v[1]));
+                })
+                .collect(Collectors.toList());
+
+        return new BouchonARIGEncoder(IConstantesI2CSimulator.CODEUR_MOTEUR_CAROUSEL, values);
     }
 
     @Bean

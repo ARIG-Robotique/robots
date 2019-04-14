@@ -14,6 +14,9 @@ public interface IConstantesI2C {
     String CODEUR_MOTEUR_GAUCHE = "Codeur Moteur Gauche";
     int CODEUR_GAUCHE_ADDRESS = 0x32;
 
+    String CODEUR_MOTEUR_CAROUSEL = "Codeur Moteur Carousel";
+    int CODEUR_CAROUSEL_ADDRESS = 0x34;
+
     String PCF_ALIM_DEVICE_NAME = "Carte alimentation";
     int PCF_ALIM_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3D;
 
