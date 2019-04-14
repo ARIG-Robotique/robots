@@ -49,7 +49,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     private IMonitoringWrapper monitoring;
 
     @Autowired
-    private IAsservissementPolaire asservPolaire;
+    private IAsservissementPolaire asservissementPolaire;
 
     @Autowired
     private Abstract2WheelsEncoders encoders;
@@ -79,13 +79,8 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     @Getter
     private boolean trajetAtteint, trajetEnApproche = false;
 
+    @Getter
     private AbstractMonitorMouvement currentMouvement = null;
-
-    // FIXME : A comlprendre plus tard pourquoi Lombok plugin chie dans la colle
-    @Override
-    public AbstractMonitorMouvement getCurrentMouvement() {
-        return currentMouvement;
-    }
 
     /**
      * Boolean si un obstacle est rencontré (stop le robot sur place)
@@ -184,7 +179,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     public void stop() {
         propulsionsMotors.stopDroit();
         propulsionsMotors.stopGauche();
-        asservPolaire.reset(true);
+        asservissementPolaire.reset(true);
     }
 
     /**
@@ -210,7 +205,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             calculConsigne();
 
             // C.2. Asservissement sur les consignes
-            asservPolaire.process();
+            asservissementPolaire.process();
         }
 
         // 3. Envoi aux moteurs
@@ -729,10 +724,10 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * Méthode pour préparer le prochain mouvement.
      */
     private void prepareNextMouvement() {
-        // Reset de l'erreur de l'asservPolaire sur le mouvement précédent lorsqu'il
+        // Reset de l'erreur de l'asservissementPolaire sur le mouvement précédent lorsqu'il
         // s'agit d'un nouveau mouvement au départ vitesse presque nulle.
         if (trajetAtteint) {
-            asservPolaire.reset();
+            asservissementPolaire.reset();
         }
 
         // Réinitialisation des infos de trajet.

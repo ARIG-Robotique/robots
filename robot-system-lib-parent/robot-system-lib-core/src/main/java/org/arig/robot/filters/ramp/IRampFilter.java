@@ -10,7 +10,7 @@ import org.arig.robot.filters.IFilter;
 public interface IRampFilter extends IFilter<Long, Long> {
 
     enum RampType {
-        LINEAR, ANGULAR;
+        LINEAR, ANGULAR
     }
 
     /**

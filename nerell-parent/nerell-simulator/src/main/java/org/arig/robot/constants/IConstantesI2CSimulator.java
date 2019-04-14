@@ -13,6 +13,9 @@ public interface IConstantesI2CSimulator {
     String CODEUR_MOTEUR_GAUCHE = "Codeur Moteur Gauche";
     int CODEUR_GAUCHE_ADDRESS = 0x32;
 
+    String CODEUR_MOTEUR_CAROUSEL = "Codeur Moteur Carousel";
+    int CODEUR_CAROUSEL_ADDRESS = 0x34;
+
     String I2C_ADC_DEVICE_NAME = "I2C ADC";
     int I2C_ADC_ADDRESS = 0x48;
 

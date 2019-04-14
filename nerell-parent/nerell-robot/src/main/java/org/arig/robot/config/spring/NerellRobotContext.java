@@ -3,6 +3,9 @@ package org.arig.robot.config.spring;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
+import com.pi4j.system.SystemInfo;
+import com.pi4j.system.SystemInfo.BoardType;
+import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.communication.raspi.RaspiI2CManager;
 import org.arig.robot.constants.IConstantesI2C;
@@ -22,8 +25,12 @@ import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
+import org.arig.robot.system.encoders.ARIGEncoder;
+import org.arig.robot.system.encoders.ARIGEncoderUtils;
+import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.PropulsionsSD21Motors;
+import org.arig.robot.system.motors.SD21Motor;
 import org.arig.robot.system.process.RPLidarBridgeProcess;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.context.annotation.Bean;
@@ -37,11 +44,17 @@ import java.io.IOException;
 /**
  * @author gdepuille on 21/12/13.
  */
+@Slf4j
 @Configuration
 public class NerellRobotContext {
 
     @Bean
-    public RobotName robotName() {
+    public RobotName robotName() throws IOException, InterruptedException {
+        if (SystemInfo.getBoardType() == BoardType.RaspberryPi_3B) {
+            log.warn("Utilisation de la conversion encoder Raspberry PI 3");
+            ARIGEncoderUtils.isRaspi3 = true;
+        }
+
         return new RobotName().name("Nerell (The Big One)").version("latest");
     }
 
@@ -63,6 +76,7 @@ public class NerellRobotContext {
         manager.registerDevice(IConstantesI2C.SERVO_DEVICE_NAME, IConstantesI2C.SD21_ADDRESS);
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_DROIT, IConstantesI2C.CODEUR_DROIT_ADDRESS);
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_GAUCHE, IConstantesI2C.CODEUR_GAUCHE_ADDRESS);
+        manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_CAROUSEL, IConstantesI2C.CODEUR_CAROUSEL_ADDRESS);
         manager.registerDevice(IConstantesI2C.I2C_ADC_DEVICE_NAME, IConstantesI2C.I2C_ADC_ADDRESS);
         manager.registerDevice(IConstantesI2C.TCS34725_DEVICE_NAME, IConstantesI2C.TCS34725_ADDRESS);
 
@@ -76,14 +90,6 @@ public class NerellRobotContext {
     }
 
     @Bean
-    public AbstractPropulsionsMotors motors() {
-        // Configuration de la carte moteur propulsion.
-        final PropulsionsSD21Motors motors = new PropulsionsSD21Motors(IConstantesServos.MOTOR_DROIT, IConstantesServos.MOTOR_GAUCHE);
-        motors.assignMotors(IConstantesNerellConfig.numeroMoteurGauche, IConstantesNerellConfig.numeroMoteurDroit);
-        return motors;
-    }
-
-    @Bean
     public SD21Servos servos() {
         return new SD21Servos(IConstantesI2C.SERVO_DEVICE_NAME);
     }
@@ -91,6 +97,11 @@ public class NerellRobotContext {
     @Bean
     public ARIG2WheelsEncoders encoders() {
         return new ARIG2WheelsEncoders(IConstantesI2C.CODEUR_MOTEUR_GAUCHE, IConstantesI2C.CODEUR_MOTEUR_DROIT);
+    }
+
+    @Bean
+    public ARIGEncoder encoderCarousel() {
+        return new ARIGEncoder(IConstantesI2C.CODEUR_MOTEUR_CAROUSEL);
     }
 
     @Bean

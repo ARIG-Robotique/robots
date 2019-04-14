@@ -44,11 +44,6 @@ public class AsservissementPolaire implements IAsservissementPolaire {
     }
 
     @Override
-    public void reset() {
-        reset(false);
-    }
-
-    @Override
     public void reset(final boolean resetFilters) {
         pidDistance.reset();
         pidOrientation.reset();
