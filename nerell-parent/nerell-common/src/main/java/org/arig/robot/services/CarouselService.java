@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.Carousel;
 import org.arig.robot.model.Palet;
 import org.arig.robot.model.RobotStatus;
+import org.arig.robot.system.CarouselManager;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,9 @@ public class CarouselService {
 
     @Autowired
     private ServosService servosService;
+
+    @Autowired
+    private CarouselManager carouselManager;
 
     public void lectureCouleur(int index) {
         tourner(index - Carousel.LECTEUR);
@@ -52,11 +56,10 @@ public class CarouselService {
 
     /**
      * Tourner dans le sens trigo
-     * TODO dans service dédié au moteur + wait
      */
     private void tourner(int nb) {
         robotStatus.getCarousel().rotate(nb);
-        throw new UnsupportedOperationException();
+        carouselManager.tourneIndex(nb);
     }
 
     public void ejectionAvantRetourStand() {

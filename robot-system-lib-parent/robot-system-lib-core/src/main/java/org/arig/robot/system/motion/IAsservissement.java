@@ -15,7 +15,9 @@ public interface IAsservissement {
     /**
      * Reset.
      */
-    void reset();
+    default void reset() {
+        reset(false);
+    }
 
     /**
      * Reset.

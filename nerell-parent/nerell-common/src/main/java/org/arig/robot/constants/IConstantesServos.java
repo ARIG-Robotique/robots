@@ -30,7 +30,7 @@ public interface IConstantesServos {
     // Constantes d'identification Servo //
     // --------------------------------- //
 
-    byte MOTOR_BARILLET = 1;
+    byte MOTOR_CAROUSEL = 1;
     byte MOTOR_DROIT = 2;
     byte MOTOR_GAUCHE = 3;
     byte POMPE_A_VIDE_DROIT = 18;
@@ -111,11 +111,4 @@ public interface IConstantesServos {
     int POUSSE_ACCELERATEUR_GAUCHE_FERME = 1500;
     int POUSSE_ACCELERATEUR_GAUCHE_STANDBY = 1500;
     int POUSSE_ACCELERATEUR_GAUCHE_ACTION = 1500;
-
-    // Constantes moteurs //
-    // ------------------ //
-
-    int MOTOR_BARILLET_STOP = 1500;
-    int MOTOR_BARILLET_FULL = 2000;
-
 }

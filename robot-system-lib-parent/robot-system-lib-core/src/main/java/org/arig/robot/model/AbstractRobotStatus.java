@@ -5,9 +5,6 @@ import lombok.Data;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author gdepuille on 08/05/15.
- */
 @Slf4j
 @Data
 public abstract class AbstractRobotStatus {
@@ -22,6 +19,19 @@ public abstract class AbstractRobotStatus {
 
     public void disableAsserv() {
         log.info("Désactivation asservissement");
+        asservEnabled = false;
+    }
+
+    @Setter(AccessLevel.NONE)
+    private boolean asservCarouselEnabled = false;
+
+    public void enableAsservCarousel() {
+        log.info("Activation asservissement carousel");
+        asservEnabled = true;
+    }
+
+    public void disableAsservCarousel() {
+        log.info("Désactivation asservissement carousel");
         asservEnabled = false;
     }
 
