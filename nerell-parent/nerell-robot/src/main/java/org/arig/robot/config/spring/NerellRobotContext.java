@@ -23,6 +23,7 @@ import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
+import org.arig.robot.system.capteurs.TinyLidar;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.ARIGEncoder;
@@ -79,6 +80,8 @@ public class NerellRobotContext {
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_CAROUSEL, IConstantesI2C.CODEUR_CAROUSEL_ADDRESS);
         manager.registerDevice(IConstantesI2C.I2C_ADC_DEVICE_NAME, IConstantesI2C.I2C_ADC_ADDRESS);
         manager.registerDevice(IConstantesI2C.TCS34725_DEVICE_NAME, IConstantesI2C.TCS34725_ADDRESS);
+        manager.registerDevice(IConstantesI2C.TINY_LIDAR_MAGASIN_DROIT_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_MAGASIN_DROIT_ADDRESS);
+        manager.registerDevice(IConstantesI2C.TINY_LIDAR_MAGASIN_GAUCHE_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_MAGASIN_GAUCHE_ADDRESS);
 
         // Enregistrement juste pour le scan.
         manager.registerDevice(IConstantesI2C.PCF_ALIM_DEVICE_NAME, IConstantesI2C.PCF_ALIM_ADDRESS);
@@ -114,6 +117,16 @@ public class NerellRobotContext {
     @Bean
     public TCS34725ColorSensor colorSensor() {
         return new TCS34725ColorSensor(IConstantesI2C.TCS34725_DEVICE_NAME);
+    }
+
+    @Bean
+    public TinyLidar stockMagasinDroit() {
+        return new TinyLidar(IConstantesI2C.TINY_LIDAR_MAGASIN_DROIT_DEVICE_NAME);
+    }
+
+    @Bean
+    public TinyLidar stockMagasinGauche() {
+        return new TinyLidar(IConstantesI2C.TINY_LIDAR_MAGASIN_GAUCHE_DEVICE_NAME);
     }
 
     @Bean
