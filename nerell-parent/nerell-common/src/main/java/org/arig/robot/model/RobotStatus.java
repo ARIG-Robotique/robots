@@ -38,6 +38,7 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
         // Arrêt de l'asservissement et des moteurs, et tout et tout
         this.disableAsserv();
+        this.disableAsservCarousel();
         this.disableAvoidance();
         this.disableMatch();
         this.disableCalageBordure();
