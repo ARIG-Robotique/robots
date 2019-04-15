@@ -38,4 +38,10 @@ public interface IConstantesI2C {
     String TCS34725_DEVICE_NAME = "Front color sensor";
     int TCS34725_ADDRESS = TCS34725ColorSensor.TCS34725_ADDRESS;
 
+    String TINY_LIDAR_MAGASIN_DROIT_DEVICE_NAME = "tinyLidar magasin droit";
+    int TINY_LIDAR_MAGASIN_DROIT_ADDRESS = 0x20;
+
+    String TINY_LIDAR_MAGASIN_GAUCHE_DEVICE_NAME = "tinyLidar magasin gauche";
+    int TINY_LIDAR_MAGASIN_GAUCHE_ADDRESS = 0x21;
+
 }

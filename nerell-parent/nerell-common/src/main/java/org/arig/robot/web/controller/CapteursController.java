@@ -3,6 +3,7 @@ package org.arig.robot.web.controller;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IConstantesI2CAdc;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.IIOService;
@@ -63,13 +64,11 @@ public class CapteursController extends AbstractCapteursController implements In
         numeriqueInfos.put("Trappe magasin gauche ferme", ioService::trappeMagasinGaucheFerme);
 
         // Capteurs informations analogique
-//        analogiqueInfos.put("GP2D avant Gauche", () -> readI2CAnalogValue(IConstantesI2CAdc.GP2D_AVANT_GAUCHE));
-//        analogiqueInfos.put("GP2D avant Centre", () -> readI2CAnalogValue(IConstantesI2CAdc.GP2D_AVANT_CENTRE));
-//        analogiqueInfos.put("GP2D avant Droit", () -> readI2CAnalogValue(IConstantesI2CAdc.GP2D_AVANT_DROIT));
-//        analogiqueInfos.put("GP2D Scan haut", () -> readI2CAnalogValue(IConstantesI2CAdc.GP2D_SCAN_HAUT));
-//        analogiqueInfos.put("GP2D Scan bas", () -> readI2CAnalogValue(IConstantesI2CAdc.GP2D_SCAN_BAS));
-//        analogiqueInfos.put("Vaccum", () -> readI2CAnalogValue(IConstantesI2CAdc.VACUOSTAT));
-//
+        analogiqueInfos.put("Vaccum droit", () -> readI2CAnalogValue(IConstantesI2CAdc.VACUOSTAT_DROIT));
+        analogiqueInfos.put("Vaccum gauche", () -> readI2CAnalogValue(IConstantesI2CAdc.VACUOSTAT_GAUCHE));
+        analogiqueInfos.put("NB Palet magasin droit", () -> (double) ioService.nbPaletDansMagasinDroit());
+        analogiqueInfos.put("NB Palet magasin gauche", () -> (double) ioService.nbPaletDansMagasinGauche());
+
         // Capteurs informations Text
         textInfos.put("Equipe", () -> rs.getTeam().name());
         textInfos.put("Couleur palet (hex)", () -> ioService.couleurPaletRaw().hexColor());

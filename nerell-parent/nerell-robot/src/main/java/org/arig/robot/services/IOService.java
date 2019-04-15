@@ -12,6 +12,7 @@ import com.pi4j.io.i2c.I2CBus;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesI2C;
 import org.arig.robot.constants.IConstantesI2CAdc;
+import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.Palet.Couleur;
 import org.arig.robot.model.RobotStatus;
@@ -21,6 +22,7 @@ import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
+import org.arig.robot.system.capteurs.TinyLidar;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,12 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Autowired
     private TCS34725ColorSensor colorSensor;
+
+    @Autowired
+    private TinyLidar stockMagasinGauche;
+
+    @Autowired
+    private TinyLidar stockMagasinDroit;
 
     // Controlleur GPIO
     private GpioController gpio;
@@ -349,13 +357,20 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public byte nbPaletDansMagasinDroit() {
-        // TODO
-        return 0;
+        return convertDistanceToNbPaletDansStock(stockMagasinDroit.readValue());
     }
 
     @Override
     public byte nbPaletDansMagasinGauche() {
-        // TODO
+        return convertDistanceToNbPaletDansStock(stockMagasinGauche.readValue());
+    }
+
+    private byte convertDistanceToNbPaletDansStock(int distance) {
+        for (byte nb = 3, c = 1; nb >= 0 ; nb--, c++) {
+            if (distance < ((c * IConstantesNerellConfig.diametrePaletMm) + IConstantesNerellConfig.offsetDetectionPaletMagasin)) {
+                return nb;
+            }
+        }
         return 0;
     }
 

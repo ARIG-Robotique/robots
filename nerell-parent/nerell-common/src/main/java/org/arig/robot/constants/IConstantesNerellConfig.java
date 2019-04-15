@@ -119,6 +119,9 @@ public interface IConstantesNerellConfig {
     // ----------------- //
     // Paramètres métier //
     // ----------------- //
+    int offsetDetectionPaletMagasin = 0;
+    int diametrePaletMm = 76;
+
     int nbPaletsBalanceMax = 6;
     int nbPaletsAccelerateurMax = 9; // TODO à valider
     int nbPaletsMagasinMax = 3;
