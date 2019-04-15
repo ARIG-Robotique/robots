@@ -27,12 +27,12 @@ public abstract class AbstractRobotStatus {
 
     public void enableAsservCarousel() {
         log.info("Activation asservissement carousel");
-        asservEnabled = true;
+        asservCarouselEnabled = true;
     }
 
     public void disableAsservCarousel() {
         log.info("Désactivation asservissement carousel");
-        asservEnabled = false;
+        asservCarouselEnabled = false;
     }
 
     @Setter(AccessLevel.NONE)
