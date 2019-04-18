@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.*?>
 <?import com.jfoenix.svg.SVGGlyph?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
            xmlns="http://javafx.com/javafx/2.2">
     <VBox maxWidth="400" maxHeight="400" spacing="10">
@@ -22,14 +24,16 @@
             <SVGGlyph fx:id="glyphCodeurGauche" />
         </HBox>
         <HBox spacing="40" style="-fx-padding: 0 0 0 50;">
+            <Label fx:id="lblCodeurCarousel" text="Codeur carousel " />
+            <SVGGlyph fx:id="glyphCodeurCarousel" />
+        </HBox>
+        <HBox spacing="40" style="-fx-padding: 0 0 0 50;">
             <Label fx:id="lblSD21" text="SD21 " />
             <SVGGlyph fx:id="glyphSD21" />
         </HBox>
-
-        <Label styleClass="title-label">I/O</Label>
-        <HBox spacing="20" style="-fx-padding: 0 0 0 50;">
-            <JFXButton prefWidth="100" prefHeight="40" buttonType="RAISED" text="CUSTOM RIPPLER"
-                       styleClass="custom-jfx-button-raised"/>
+        <HBox spacing="40" style="-fx-padding: 0 0 0 50;">
+            <Label fx:id="lblPCFAlim" text="PCF Alim " />
+            <SVGGlyph fx:id="glyphPCFAlim" />
         </HBox>
     </VBox>
 </StackPane>
