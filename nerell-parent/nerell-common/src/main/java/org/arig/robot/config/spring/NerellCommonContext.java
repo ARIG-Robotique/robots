@@ -27,13 +27,12 @@ import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 
 import java.awt.*;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 /**
@@ -152,7 +151,7 @@ public class NerellCommonContext {
 
     @Bean(name = "sideServices")
     public Map<ESide, IRobotSide> sideServices(RightSideService rightSideService, LeftSideService leftSideService) {
-        final Map<ESide, IRobotSide> services = new HashMap<>();
+        final Map<ESide, IRobotSide> services = new EnumMap<>(ESide.class);
         services.put(ESide.DROITE, rightSideService);
         services.put(ESide.GAUCHE, leftSideService);
         return services;
