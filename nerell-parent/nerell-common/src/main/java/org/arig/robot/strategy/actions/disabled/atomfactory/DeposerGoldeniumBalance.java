@@ -6,12 +6,13 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
+import org.arig.robot.exceptions.CarouselNotAvailableException;
+import org.arig.robot.exceptions.PinceNotAvailableException;
 import org.arig.robot.model.ESide;
-import org.arig.robot.model.Palet;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.PincesService;
-import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,7 @@ public class DeposerGoldeniumBalance extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private ServosService servos;
-
-    @Autowired
-    private PincesService pincesService;
+    private PincesService pinces;
 
     @Getter
     private boolean completed = false;
@@ -48,7 +46,8 @@ public class DeposerGoldeniumBalance extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return rs.getGoldeniumInPince() != null && rs.getPaletsInBalance().size() < IConstantesNerellConfig.nbPaletsBalanceMax;
+        return pinces.couleurInPince(rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE) == CouleurPalet.GOLD
+                && rs.getPaletsInBalance().size() < IConstantesNerellConfig.nbPaletsBalanceMax;
     }
 
     @Override
@@ -68,13 +67,27 @@ public class DeposerGoldeniumBalance extends AbstractAction {
 
             rs.disableAvoidance();
 
-            pincesService.deposeBalance(Palet.Couleur.GOLD, side);
+            pinces.waitAvailable(side);
+
+            if (!pinces.deposeBalance1(CouleurPalet.GOLD, side)) {
+                completed = true;
+                return;
+            }
+
+            mv.avanceMM(150); // TODO
+
+            pinces.deposeBalance2(side);
+
+            mv.reculeMM(150); // TODO
 
             completed = true;
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | CarouselNotAvailableException | PinceNotAvailableException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
+
+        } finally {
+            pinces.finishDepose(side);
         }
     }
 

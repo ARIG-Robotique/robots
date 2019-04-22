@@ -1,9 +1,10 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.exceptions.CarouselNotAvailableException;
 import org.arig.robot.model.ESide;
-import org.arig.robot.model.Palet;
-import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.enums.CouleurPalet;
+import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,8 @@ import java.util.Map;
 @Slf4j
 public class MagasinService implements InitializingBean {
 
-    private static final int NB_MAX_MAGASIN = 3; // TODO à valider
+    private static final int NB_MAX_MAGASIN = 3;
+    private static final int TEMPS_MAX_AVAILABLE = 3000;
 
     @Autowired
     @Qualifier("sideServices")
@@ -33,7 +35,7 @@ public class MagasinService implements InitializingBean {
     private CarouselService carouselService;
 
     @Autowired
-    private RobotStatus robotStatus;
+    private ICarouselManager carousel;
 
     private Map<ESide, Boolean> ejection = new HashMap<>();
 
@@ -71,7 +73,7 @@ public class MagasinService implements InitializingBean {
     /**
      * Stockage d'un palet dans le magasin depuis le carousel
      */
-    public boolean stockage(Palet.Couleur couleur, ESide side) {
+    public boolean stockage(CouleurPalet couleur, ESide side) throws CarouselNotAvailableException {
         IRobotSide service = sideServices.get(side);
 
         if (service.nbPaletDansMagasin() >= NB_MAX_MAGASIN) {
@@ -79,12 +81,14 @@ public class MagasinService implements InitializingBean {
             return false;
         }
 
-        if (!robotStatus.getCarousel().has(couleur)) {
+        if (!carousel.has(couleur)) {
             log.warn("Pas de {} dans le carousel", couleur);
             return false;
         }
 
         int nbPaletInit = service.nbPaletDansMagasin();
+
+        carouselService.waitAvailable(TEMPS_MAX_AVAILABLE);
 
         carouselService.tourner(service.positionCarouselMagasin(), couleur);
 
@@ -95,10 +99,12 @@ public class MagasinService implements InitializingBean {
         servosService.waitTrappeMagasin();
 
         if (service.nbPaletDansMagasin() > nbPaletInit) {
-            robotStatus.getCarousel().unstore(service.positionCarouselMagasin());
+            carousel.unstore(service.positionCarouselMagasin());
+            carouselService.release();
             return true;
         } else {
             log.warn("Un problème est survenu pendant le stockage");
+            carouselService.release();
             return false;
         }
     }

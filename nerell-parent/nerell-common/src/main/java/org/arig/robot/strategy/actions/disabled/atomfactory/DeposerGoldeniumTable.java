@@ -7,12 +7,11 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.ESide;
-import org.arig.robot.model.Palet;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.PincesService;
 import org.arig.robot.services.SerrageService;
-import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +28,7 @@ public class DeposerGoldeniumTable extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private ServosService servos;
-
-    @Autowired
-    private PincesService pincesService;
+    private PincesService pinces;
 
     @Autowired
     private SerrageService serrageService;
@@ -42,7 +38,7 @@ public class DeposerGoldeniumTable extends AbstractAction {
 
     @Override
     public String name() {
-        return "Déposer le goldenium dsur la table";
+        return "Déposer le goldenium sur la table";
     }
 
     @Override
@@ -52,7 +48,8 @@ public class DeposerGoldeniumTable extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return rs.getGoldeniumInPince() != null && rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax;
+        return pinces.couleurInPince(rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE) == CouleurPalet.GOLD
+                && rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax;
     }
 
     @Override
@@ -73,11 +70,12 @@ public class DeposerGoldeniumTable extends AbstractAction {
             rs.disableAvoidance();
 
             mv.gotoOrientationDeg(rs.getTeam() == Team.VIOLET ? 0 : 180);
+
             mv.avanceMM(150); // TODO
 
             serrageService.disable();
 
-            pincesService.deposeTable(Palet.Couleur.GOLD, side);
+            pinces.deposeGoldenimTable(side);
 
             mv.reculeMM(150);
             mv.gotoOrientationDeg(rs.getTeam() == Team.VIOLET ? 180 : 0);
@@ -87,8 +85,10 @@ public class DeposerGoldeniumTable extends AbstractAction {
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
+
         } finally {
             serrageService.enable();
+            pinces.finishDepose(side);
         }
     }
 

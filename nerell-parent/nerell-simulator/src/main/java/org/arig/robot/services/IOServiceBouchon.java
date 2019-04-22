@@ -1,9 +1,9 @@
 package org.arig.robot.services;
 
 import lombok.Setter;
-import org.arig.robot.model.Palet.Couleur;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -166,8 +166,8 @@ public class IOServiceBouchon implements IIOService {
     }
 
     @Override
-    public Couleur couleurPalet() {
-        return Couleur.INCONNU;
+    public CouleurPalet couleurPalet() {
+        return CouleurPalet.INCONNU;
     }
 
     // --------------------------------------------------------- //

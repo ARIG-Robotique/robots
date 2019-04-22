@@ -1,20 +1,16 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.Carousel;
-import org.arig.robot.model.Palet;
-import org.arig.robot.model.RobotStatus;
+import org.arig.robot.exceptions.CarouselNotAvailableException;
+import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Gestion automatique de la lecture couleur quand le carousel est dispo
- */
 @Slf4j
 @Service
 public class CarouselService {
@@ -23,27 +19,62 @@ public class CarouselService {
     private IIOService ioService;
 
     @Autowired
-    private RobotStatus robotStatus;
-
-    @Autowired
     private ServosService servosService;
 
     @Autowired
     private ICarouselManager carouselManager;
 
-    public void lectureCouleur(int index) {
-        tourner(index - Carousel.LECTEUR);
+    private AtomicBoolean working = new AtomicBoolean(false);
 
-        Palet.Couleur couleur = ioService.couleurPalet();
-        robotStatus.getCarousel().setColor(Carousel.LECTEUR, couleur);
+    /**
+     * Verifie si le service est occupé
+     */
+    public boolean isWorking() {
+        return working.get();
     }
 
-    public boolean tourner(int index, Palet.Couleur couleur) {
-        return tourner(index, Collections.singletonList(couleur));
+    /**
+     * Attends que le service se libère
+     */
+    public void waitAvailable(long waitTime) throws CarouselNotAvailableException {
+        long remaining = waitTime;
+        while (isWorking() && remaining > 0) {
+            remaining -= 100;
+            ThreadUtils.sleep(100);
+        }
+
+        if (isWorking()) {
+            throw new CarouselNotAvailableException();
+        } else {
+            working.set(true);
+        }
     }
 
-    public boolean tourner(int index, List<Palet.Couleur> couleurs) {
-        int targetIndex = robotStatus.getCarousel().firstIndexOf(couleurs, index);
+    /**
+     * Libère le service
+     */
+    public void release() {
+        working.set(false);
+    }
+
+    /**
+     * Lecture asynchrone d'une couleur
+     */
+    @Async
+    public void lectureCouleurAsync(int index) {
+        working.set(true);
+        tourner(index - ICarouselManager.LECTEUR);
+
+        CouleurPalet couleur = ioService.couleurPalet();
+        carouselManager.setColor(ICarouselManager.LECTEUR, couleur);
+        working.set(false);
+    }
+
+    /**
+     * Tourne le carousel pour avoir une couleur en position
+     */
+    public boolean tourner(int index, CouleurPalet couleur) {
+        int targetIndex = carouselManager.firstIndexOf(couleur, index);
 
         if (targetIndex == -1) {
             return false;
@@ -58,12 +89,11 @@ public class CarouselService {
      * Tourner dans le sens trigo
      */
     private void tourner(int nb) {
-        robotStatus.getCarousel().rotate(nb);
         carouselManager.tourneIndex(nb);
     }
 
     public void ejectionAvantRetourStand() {
-        if (!robotStatus.getCarousel().has(Palet.Couleur.ANY)) {
+        if (!carouselManager.has(CouleurPalet.ANY)) {
             return;
         }
 
@@ -73,8 +103,8 @@ public class CarouselService {
         servosService.pivotVentouseDroitCarousel();
         servosService.porteBarilletDroitOuvert();
 
-        while (robotStatus.getCarousel().has(Palet.Couleur.ANY)) {
-            tourner(robotStatus.getCarousel().firstIndexOf(Palet.Couleur.ANY, Carousel.PINCE_DROITE));
+        while (carouselManager.has(CouleurPalet.ANY)) {
+            tourner(carouselManager.firstIndexOf(CouleurPalet.ANY, ICarouselManager.PINCE_DROITE));
 
             // on attend que la palet soit enlevé (ou tombe ?)
             while (ioService.presencePaletVentouseDroit()) {

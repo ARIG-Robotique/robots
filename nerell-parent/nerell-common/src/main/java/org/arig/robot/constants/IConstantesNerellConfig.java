@@ -2,13 +2,10 @@ package org.arig.robot.constants;
 
 import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 
-/**
- * @author gdepuille on 29/04/15.
- */
 public interface IConstantesNerellConfig {
 
     // Nb Thread Pool Scheduler
-    int nbThreadScheduledExecutor = 10;
+    int nbThreadScheduledExecutor = 11;
 
     // Nb Thread Pool Async
     int nbThreadAsyncExecutor = 10;

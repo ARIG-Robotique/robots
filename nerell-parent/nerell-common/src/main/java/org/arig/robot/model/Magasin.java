@@ -2,6 +2,7 @@ package org.arig.robot.model;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.model.enums.CouleurPalet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +10,10 @@ import java.util.List;
 @Slf4j
 public class Magasin {
 
-    private List<Palet.Couleur> droit = new ArrayList<>();
-    private List<Palet.Couleur> gauche = new ArrayList<>();
+    private List<CouleurPalet> droit = new ArrayList<>();
+    private List<CouleurPalet> gauche = new ArrayList<>();
 
-    void addDroit(Palet.Couleur couleur) {
+    void addDroit(CouleurPalet couleur) {
         if (droit.size() >= IConstantesNerellConfig.nbPaletsMagasinMax) {
             log.warn("Le magasin droit est plein");
         } else {
@@ -20,7 +21,7 @@ public class Magasin {
         }
     }
 
-    void addGauche(Palet.Couleur couleur) {
+    void addGauche(CouleurPalet couleur) {
         if (gauche.size() >= IConstantesNerellConfig.nbPaletsMagasinMax) {
             log.warn("Le magasin gauche est plein");
         } else {

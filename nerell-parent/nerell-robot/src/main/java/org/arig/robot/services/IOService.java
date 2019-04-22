@@ -14,9 +14,9 @@ import org.arig.robot.constants.IConstantesI2C;
 import org.arig.robot.constants.IConstantesI2CAdc;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.I2CException;
-import org.arig.robot.model.Palet.Couleur;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
@@ -394,7 +394,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     }
 
     @Override
-    public Couleur couleurPalet() {
+    public CouleurPalet couleurPalet() {
         ColorData c = couleurPaletRaw();
 
         MonitorTimeSerie mts = new MonitorTimeSerie();
@@ -407,18 +407,18 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
         int delta = 42;
 
-        Couleur result;
+        CouleurPalet result;
         if (c.b() > c.r() + delta && c.b() > c.g() + delta) {
-            result = Couleur.BLEU;
+            result = CouleurPalet.BLEU;
 
         } else if (c.g() > c.r() + delta && c.g() > c.b() + delta) {
-            result = Couleur.VERT;
+            result = CouleurPalet.VERT;
 
         } else if (c.r() > c.b() + delta && c.r() > c.g() + delta) {
-            result = Couleur.ROUGE;
+            result = CouleurPalet.ROUGE;
 
         } else {
-            result = Couleur.INCONNU;
+            result = CouleurPalet.INCONNU;
         }
 
         log.info("Lecture capteur couleur R: {}, G: {}, B: {}, Palet: {}", c.r(), c.g(), c.b(), result.name());

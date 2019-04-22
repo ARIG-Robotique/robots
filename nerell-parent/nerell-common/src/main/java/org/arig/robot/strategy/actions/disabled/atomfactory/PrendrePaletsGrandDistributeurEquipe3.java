@@ -1,8 +1,8 @@
 package org.arig.robot.strategy.actions.disabled.atomfactory;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.Palet;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.enums.CouleurPalet;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -22,7 +22,7 @@ public class PrendrePaletsGrandDistributeurEquipe3 extends AbstractPrendrePalets
     }
 
     @Override
-    Map<Integer, Palet.Couleur> liste() {
+    Map<Integer, CouleurPalet> liste() {
         return rs.getPaletsGrandDistributeurEquipe();
     }
 

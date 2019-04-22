@@ -7,15 +7,18 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.exceptions.PinceNotAvailableException;
-import org.arig.robot.model.*;
+import org.arig.robot.model.ESide;
+import org.arig.robot.model.Point;
+import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.Team;
+import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.PincesService;
-import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
+import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -31,7 +34,7 @@ public abstract class AbstractPrendrePaletsGrandDistributeur extends AbstractAct
 
     final int index2;
 
-    abstract Map<Integer, Palet.Couleur> liste();
+    abstract Map<Integer, CouleurPalet> liste();
 
     @Autowired
     private ITrajectoryManager mv;
@@ -40,21 +43,24 @@ public abstract class AbstractPrendrePaletsGrandDistributeur extends AbstractAct
     protected RobotStatus rs;
 
     @Autowired
-    private ServosService servos;
+    private PincesService pinces;
 
     @Autowired
-    private PincesService pincesService;
+    private ICarouselManager carousel;
 
     @Getter
     private boolean completed = false;
 
     @Override
     public boolean isValid() {
-        return rs.getCarousel().count(null) >= 2;
+        return carousel.count(null) >= 2;
     }
 
     @Override
     public void execute() {
+        ESide side1 = rs.getTeam() == Team.VIOLET ? ESide.GAUCHE : ESide.DROITE;
+        ESide side2 = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
+
         try {
             rs.enableAvoidance();
 
@@ -69,30 +75,27 @@ public abstract class AbstractPrendrePaletsGrandDistributeur extends AbstractAct
             // aligne puis avance en position
             mv.gotoOrientationDeg(-90);
 
-            pincesService.waitAvailable(ESide.GAUCHE);
-            pincesService.waitAvailable(ESide.DROITE);
+            pinces.waitAvailable(ESide.GAUCHE);
+            pinces.waitAvailable(ESide.DROITE);
 
-            // TODO process optimisé
-            // - mettre les deux ventouses en position
-            // - avancer
-            // - prendre à gauche puis à droite
-            // - reculer
+            pinces.preparePriseDistributeur(ESide.GAUCHE);
+            pinces.preparePriseDistributeur(ESide.DROITE);
 
-            // prise du 1
-            if (!pincesService.stockageDistributeur(liste().get(index1), rs.getTeam() == Team.VIOLET ? ESide.GAUCHE : ESide.DROITE)) {
-                completed = true;
-                return;
-            } else {
-                liste().put(index1, null);
-            }
+            mv.avanceMM(150); // TODO
 
-            // prise du 2
-            if (!pincesService.stockageDistributeur(liste().get(index2), rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE)) {
-                completed = true;
-                return;
-            } else {
-                liste().put(index2, null);
-            }
+            // prise du 1 et du 2
+            boolean ok1 = pinces.priseDistributeur(liste().get(index1), side1);
+            boolean ok2 = pinces.priseDistributeur(liste().get(index2), side2);
+
+            // recule
+            mv.reculeMM(150); // TODO
+
+            // stocke
+            pinces.finishPriseDistributeur(ok1, side1);
+            pinces.finishPriseDistributeur(ok2, side2);
+
+            pinces.stockageAsync(ESide.DROITE);
+            pinces.stockageAsync(ESide.GAUCHE);
 
             completed = true;
 

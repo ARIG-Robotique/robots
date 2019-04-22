@@ -30,7 +30,7 @@ public class PrendreGoldenium extends AbstractAction {
     private ServosService servos;
 
     @Autowired
-    private PincesService pincesService;
+    private PincesService pinces;
 
     @Getter
     private boolean completed = false;
@@ -47,12 +47,13 @@ public class PrendreGoldenium extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return rs.isAccelerateurOuvert();
+        return rs.isAccelerateurOuvert() && !rs.isGoldeniumPrit();
     }
 
     @Override
     public void execute() {
         ESide side = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
+        boolean ok = false;
 
         try {
             rs.enableAvoidance();
@@ -67,15 +68,28 @@ public class PrendreGoldenium extends AbstractAction {
 
             rs.disableAvoidance();
 
-            pincesService.waitAvailable(side);
+            // align, prépare la pince et avance
+            mv.gotoOrientationDeg(90);
 
-            pincesService.stockageGoldenium(side);
+            pinces.waitAvailable(side);
+            pinces.preparePriseGoldenium(side);
+
+            mv.avanceMM(150); // TODO
+
+            // prise goldenium
+            ok = pinces.priseGoldenium(side);
+
+            // recule
+            mv.reculeMM(150); // TODO
 
             completed = true;
 
         } catch (NoPathFoundException | AvoidingException | PinceNotAvailableException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
+
+        } finally {
+            pinces.finishPriseGoldenium(ok, side);
         }
     }
 

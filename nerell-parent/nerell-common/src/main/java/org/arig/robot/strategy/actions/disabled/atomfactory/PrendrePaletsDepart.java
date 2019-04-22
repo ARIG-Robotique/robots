@@ -2,7 +2,7 @@ package org.arig.robot.strategy.actions.disabled.atomfactory;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Triple;
+import org.apache.commons.lang3.tuple.Pair;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.*;
 import org.arig.robot.services.PincesService;
@@ -28,12 +28,6 @@ public class PrendrePaletsDepart extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private ServosService servos;
-
-    @Autowired
-    private PincesService pinces;
-
-    @Autowired
     @Qualifier("currentPosition")
     private Position currentPosition;
 
@@ -47,7 +41,7 @@ public class PrendrePaletsDepart extends AbstractAction {
 
     @Override
     public int order() {
-        return Integer.MAX_VALUE - 1;
+        return Integer.MAX_VALUE;
     }
 
     @Override
@@ -60,38 +54,33 @@ public class PrendrePaletsDepart extends AbstractAction {
         try {
             rs.disableAvoidance();
 
-            List<Triple<Point, Palet.Couleur, ESide>> configs = new ArrayList<>();
+            List<Pair<Point, ESide>> configs = new ArrayList<>();
 
             if (rs.getTeam().equals(Team.VIOLET)) {
-                configs.add(Triple.of(new Point(1550, 2500), Palet.Couleur.ROUGE, ESide.GAUCHE));
-                configs.add(Triple.of(new Point(1250, 2500), Palet.Couleur.ROUGE, ESide.DROITE));
-                configs.add(Triple.of(new Point(950, 2500), Palet.Couleur.VERT, ESide.GAUCHE));
+                configs.add(Pair.of(new Point(1550, 2500), ESide.GAUCHE));
+                configs.add(Pair.of(new Point(1250, 2500), ESide.DROITE));
+                configs.add(Pair.of(new Point(950, 2500), ESide.GAUCHE));
             } else {
-                configs.add(Triple.of(new Point(1550, 500), Palet.Couleur.ROUGE, ESide.DROITE));
-                configs.add(Triple.of(new Point(1250, 500), Palet.Couleur.ROUGE, ESide.GAUCHE));
-                configs.add(Triple.of(new Point(950, 500), Palet.Couleur.VERT, ESide.DROITE));
+                configs.add(Pair.of(new Point(1550, 500), ESide.DROITE));
+                configs.add(Pair.of(new Point(1250, 500), ESide.GAUCHE));
+                configs.add(Pair.of(new Point(950, 500), ESide.DROITE));
             }
 
-            for (Triple<Point, Palet.Couleur, ESide> config : configs) {
+            for (Pair<Point, ESide> config : configs) {
                 double offsetAngle = NerellUtils.getAngleDecallagePince(currentPosition.getPt(), config.getLeft(), config.getRight());
                 double distance = NerellUtils.getDistance(currentPosition.getPt(), config.getLeft());
 
                 mv.alignFrontToAvecDecalage(config.getLeft().getX(), config.getLeft().getY(), offsetAngle);
-
-                pinces.setExpected(config.getRight(), config.getMiddle());
-
                 mv.avanceMM(distance);
             }
 
 
         } catch (RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+
         } finally {
             // si ça a échoué on a surement shooté dans les palets...
             completed = true;
-
-            pinces.setExpected(ESide.DROITE, null);
-            pinces.setExpected(ESide.GAUCHE, null);
         }
     }
 

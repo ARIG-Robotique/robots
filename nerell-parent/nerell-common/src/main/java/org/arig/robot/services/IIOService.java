@@ -1,7 +1,7 @@
 package org.arig.robot.services;
 
-import org.arig.robot.model.Palet.Couleur;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 
 /**
@@ -48,7 +48,7 @@ public interface IIOService {
 
     // Couleur
     TCS34725ColorSensor.ColorData couleurPaletRaw();
-    Couleur couleurPalet();
+    CouleurPalet couleurPalet();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

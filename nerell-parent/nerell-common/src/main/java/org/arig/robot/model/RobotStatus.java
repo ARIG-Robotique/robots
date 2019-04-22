@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.balise.StatutBalise;
+import org.arig.robot.model.enums.CouleurPalet;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.util.*;
@@ -65,35 +66,30 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     private StatutBalise statutBalise = null;
 
     @Setter(AccessLevel.NONE)
-    private Carousel carousel = new Carousel();
-
-    @Setter(AccessLevel.NONE)
     private Magasin magasin = new Magasin();
-
-    private ESide goldeniumInPince = null;
 
     private boolean trouNoirVioletVisite = false;
     private boolean trouNoirJauneVisite = false;
 
     @Setter(AccessLevel.NONE)
-    private List<Palet.Couleur> paletsInAccelerateur = new ArrayList<>();
+    private List<CouleurPalet> paletsInAccelerateur = new ArrayList<>();
 
     @Setter(AccessLevel.NONE)
-    private List<Palet.Couleur> paletsInBalance = new ArrayList<>();
+    private List<CouleurPalet> paletsInBalance = new ArrayList<>();
 
     @Setter(AccessLevel.NONE)
-    private Map<Integer, Palet.Couleur> paletsPetitDistributeur = new HashMap<>();
+    private Map<Integer, CouleurPalet> paletsPetitDistributeur = new HashMap<>();
     @Setter(AccessLevel.NONE)
-    private Map<Integer, Palet.Couleur> paletsGrandDistributeurEquipe = new HashMap<>();
+    private Map<Integer, CouleurPalet> paletsGrandDistributeurEquipe = new HashMap<>();
     @Setter(AccessLevel.NONE)
-    private Map<Integer, Palet.Couleur> paletsGrandDistributeurAdverse = new HashMap<>();
+    private Map<Integer, CouleurPalet> paletsGrandDistributeurAdverse = new HashMap<>();
 
     @Setter(AccessLevel.NONE)
-    private List<Palet.Couleur> paletsInTableauRouge = new ArrayList<>();
+    private List<CouleurPalet> paletsInTableauRouge = new ArrayList<>();
     @Setter(AccessLevel.NONE)
-    private List<Palet.Couleur> paletsInTableauVert = new ArrayList<>();
+    private List<CouleurPalet> paletsInTableauVert = new ArrayList<>();
     @Setter(AccessLevel.NONE)
-    private List<Palet.Couleur> paletsInTableauBleu = new ArrayList<>();
+    private List<CouleurPalet> paletsInTableauBleu = new ArrayList<>();
 
     private boolean experienceActivee = false;
 
@@ -106,43 +102,32 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
      */
     @Override
     public void afterPropertiesSet() {
-        paletsGrandDistributeurAdverse.put(0, Palet.Couleur.ROUGE);
-        paletsGrandDistributeurAdverse.put(1, Palet.Couleur.VERT);
-        paletsGrandDistributeurAdverse.put(2, Palet.Couleur.ROUGE);
-        paletsGrandDistributeurAdverse.put(3, Palet.Couleur.BLEU);
-        paletsGrandDistributeurAdverse.put(4, Palet.Couleur.ROUGE);
-        paletsGrandDistributeurAdverse.put(5, Palet.Couleur.VERT);
-
-        paletsGrandDistributeurEquipe.put(0, Palet.Couleur.ROUGE);
-        paletsGrandDistributeurEquipe.put(1, Palet.Couleur.VERT);
-        paletsGrandDistributeurEquipe.put(2, Palet.Couleur.ROUGE);
-        paletsGrandDistributeurEquipe.put(3, Palet.Couleur.BLEU);
-        paletsGrandDistributeurEquipe.put(4, Palet.Couleur.ROUGE);
-        paletsGrandDistributeurEquipe.put(5, Palet.Couleur.VERT);
-
-        paletsPetitDistributeur.put(0, Palet.Couleur.BLEU);
-        paletsPetitDistributeur.put(1, Palet.Couleur.VERT);
-        paletsPetitDistributeur.put(2, Palet.Couleur.ROUGE);
-    }
-
-    /**
-     * Dernière préparations avant le départ
-     */
-    public void init() {
         // le palet extrème côté adverse ne peut pas être prit
         // sinon on rentre dans la zone de départ adverse
-        if (team == Team.VIOLET) {
-            paletsGrandDistributeurEquipe.put(0, null);
-        } else {
-            paletsGrandDistributeurAdverse.put(0, null);
-        }
+        paletsGrandDistributeurAdverse.put(0, null);
+        paletsGrandDistributeurAdverse.put(1, CouleurPalet.VERT);
+        paletsGrandDistributeurAdverse.put(2, CouleurPalet.ROUGE);
+        paletsGrandDistributeurAdverse.put(3, CouleurPalet.BLEU);
+        paletsGrandDistributeurAdverse.put(4, CouleurPalet.ROUGE);
+        paletsGrandDistributeurAdverse.put(5, CouleurPalet.VERT);
+
+        paletsGrandDistributeurEquipe.put(0, CouleurPalet.ROUGE);
+        paletsGrandDistributeurEquipe.put(1, CouleurPalet.VERT);
+        paletsGrandDistributeurEquipe.put(2, CouleurPalet.ROUGE);
+        paletsGrandDistributeurEquipe.put(3, CouleurPalet.BLEU);
+        paletsGrandDistributeurEquipe.put(4, CouleurPalet.ROUGE);
+        paletsGrandDistributeurEquipe.put(5, CouleurPalet.VERT);
+
+        paletsPetitDistributeur.put(0, CouleurPalet.BLEU);
+        paletsPetitDistributeur.put(1, CouleurPalet.VERT);
+        paletsPetitDistributeur.put(2, CouleurPalet.ROUGE);
     }
 
     public int calculerPoints() {
         int points = 5; // experience placée
-        points += pointsTableau(paletsInTableauRouge, Palet.Couleur.ROUGE);
-        points += pointsTableau(paletsInTableauVert, Palet.Couleur.VERT);
-        points += pointsTableau(paletsInTableauBleu, Palet.Couleur.BLEU);
+        points += pointsTableau(paletsInTableauRouge, CouleurPalet.ROUGE);
+        points += pointsTableau(paletsInTableauVert, CouleurPalet.VERT);
+        points += pointsTableau(paletsInTableauBleu, CouleurPalet.BLEU);
         points += pointsBalance();
         points += 10 * paletsInAccelerateur.size();
         points += accelerateurOuvert ? 10 : 0;
@@ -160,17 +145,17 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         return score;
     }
 
-    private int pointsTableau(final List<Palet.Couleur> tableau, Palet.Couleur couleur) {
+    private int pointsTableau(final List<CouleurPalet> tableau, CouleurPalet couleur) {
         return tableau.stream()
                 .filter(Objects::nonNull)
-                .mapToInt(c -> 1 + (Palet.Couleur.GOLD == c ? 6 : couleur == c ? 5 : 0))
+                .mapToInt(c -> 1 + (CouleurPalet.GOLD == c ? 6 : couleur == c ? 5 : 0))
                 .sum();
     }
 
     private int pointsBalance() {
         return paletsInBalance.stream()
                 .filter(Objects::nonNull)
-                .sorted(Comparator.comparingInt(Palet.Couleur::importance))
+                .sorted(Comparator.comparingInt(CouleurPalet::getImportance))
                 .limit(IConstantesNerellConfig.nbPaletsBalanceMax)
                 .mapToInt(c -> {
                     switch (c) {
