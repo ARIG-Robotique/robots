@@ -72,7 +72,7 @@ public class NerellRobotContext {
     }
 
     @Bean
-    public II2CManager i2cManager(I2CBus i2cBus) throws I2CException, IOException {
+    public II2CManager i2cManager(I2CBus i2cBus) throws I2CException {
         final RaspiI2CManager manager = new RaspiI2CManager(i2cBus);
         manager.registerDevice(IConstantesI2C.SERVO_DEVICE_NAME, IConstantesI2C.SD21_ADDRESS);
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_DROIT, IConstantesI2C.CODEUR_DROIT_ADDRESS);
@@ -82,6 +82,8 @@ public class NerellRobotContext {
         manager.registerDevice(IConstantesI2C.TCS34725_DEVICE_NAME, IConstantesI2C.TCS34725_ADDRESS);
         manager.registerDevice(IConstantesI2C.TINY_LIDAR_MAGASIN_DROIT_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_MAGASIN_DROIT_ADDRESS);
         manager.registerDevice(IConstantesI2C.TINY_LIDAR_MAGASIN_GAUCHE_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_MAGASIN_GAUCHE_ADDRESS);
+        manager.registerDevice(IConstantesI2C.TINY_LIDAR_AVANT_DROIT_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_AVANT_DROIT_ADDRESS);
+        manager.registerDevice(IConstantesI2C.TINY_LIDAR_AVANT_GAUCHE_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_AVANT_GAUCHE_ADDRESS);
 
         // Enregistrement juste pour le scan.
         manager.registerDevice(IConstantesI2C.PCF_ALIM_DEVICE_NAME, IConstantesI2C.PCF_ALIM_ADDRESS);
@@ -127,6 +129,16 @@ public class NerellRobotContext {
     @Bean
     public TinyLidar stockMagasinGauche() {
         return new TinyLidar(IConstantesI2C.TINY_LIDAR_MAGASIN_GAUCHE_DEVICE_NAME);
+    }
+
+    @Bean
+    public TinyLidar distanceAvantDroit() {
+        return new TinyLidar(IConstantesI2C.TINY_LIDAR_AVANT_DROIT_DEVICE_NAME);
+    }
+
+    @Bean
+    public TinyLidar distanceAvantGauche() {
+        return new TinyLidar(IConstantesI2C.TINY_LIDAR_AVANT_GAUCHE_DEVICE_NAME);
     }
 
     @Bean
