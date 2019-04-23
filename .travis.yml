@@ -1,25 +1,16 @@
 language: java
 sudo: required
-
 jdk:
-  - oraclejdk8
-
-#services:
-#  - docker
-
-#before_install:
-#  - docker pull influxdb:1.0.2-alpine
-#  - docker run -d -p 8083:8083 -p 8086:8086 influxdb:1.0.2-alpine
-#  - docker ps -a
-
+- oraclejdk8
 before_script:
-  - sudo pip install pre-commit
-  - pre-commit install
-
+- sudo pip install pre-commit
+- pre-commit install
 script:
-  - pre-commit run --all-files
-  - ./gradlew check --warning-mode all
-  - ./gradlew codeCoverageReport --warning-mode all
-
+- pre-commit run --all-files
+- "./gradlew check --warning-mode all"
+- "./gradlew codeCoverageReport --warning-mode all"
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+- bash <(curl -s https://codecov.io/bash)
+notifications:
+  slack:
+    secure: baPBf4G9zZQ2bNxSPa8G2XQ23a988QFKdwBZy+1ZFf6m5K8drNrU909bpFNVsAyTqy+1aOG0VI1Pky2jvURD8CjdI4Gc3d3x0X3zr9nsWBOioIrmPeJOqJgdJemdq9zLL9VaTeWoWMS0bGXGZmQHEBkppISwxGDvfzU5XeXPd1TYj+mG1IBUcAozyIeKPktRC+S3HgSCPDltiH2jSqxfedd7rO3CHzW98gV0fHr8RLSJf5QiMWS0Y4PPXo/uw4DAR3eXobFnRiLXasQdaRnqyjexeemDL7bKn97twxkWNRiR8llgeM+WWzQU4FOg37EiJKRVfs3LPQSCV57RC5Pkr+9jUPhhbeQqZgJm8kBVzWlWXkjURsihvhMiyQQLH+nwBJ1qw7UM1wBslKd4B3E8QFGHH0r3jPkSgGZhGmcP7Rz3cTGCoJqKg/km9oNCy14YizUB7+HFrlfTv7Sb+kGLHIlKGcMpRLhCBsPWxk5yEYM0/dJ5QC3BZnCtQykSZhpYotOFfx0Ls+fZ4Z8LbuNzSFefVoF+4jqiAcb8zXOuYQPO4uoC/8E/elHVGsz6mmOCuavHyIgR4Nrh47jTcGeoFI2UOdiFkW28+8KK9F9sXuzQBqpCO7uW+UrhCiNrul0X8CreuL8ANaaXYmmDrZGl6qEQtqPZerkf5EB/GwyEXrs=
