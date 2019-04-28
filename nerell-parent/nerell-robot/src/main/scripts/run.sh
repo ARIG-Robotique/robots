@@ -1,3 +1,3 @@
 #!/bin/sh
 ./stopAll
-sudo java -jar nerell.jar -Dspring.profiles.active=default,ui
+java -jar nerell-robot-1.1.0-SNAPSHOT.jar -Dspring.profiles.active=default,ui

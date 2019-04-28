@@ -1,3 +1,3 @@
 #!/bin/sh
 ./stopAll
-sudo java -jar nerell-utils.jar
+java -jar nerell-utils-1.1.0-SNAPSHOT.jar

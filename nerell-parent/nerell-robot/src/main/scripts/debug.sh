@@ -1,3 +1,3 @@
 #!/bin/sh
 ./stopAll
-sudo java -jar nerell.jar -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y -Dspring.profiles.active=default,ui,monitoring
+java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8787,suspend=y -jar nerell-robot-1.1.0-SNAPSHOT.jar -Dspring.profiles.active=default,ui,monitoring

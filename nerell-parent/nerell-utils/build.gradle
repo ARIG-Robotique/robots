@@ -1,5 +1,7 @@
 description = "ARIG Association - Nerell utils"
 
+apply plugin: 'org.springframework.boot'
+
 dependencies {
 	compile project(':nerell-parent:nerell-robot')
 
