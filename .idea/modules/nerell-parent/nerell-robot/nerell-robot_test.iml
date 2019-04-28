@@ -25,8 +25,8 @@
     <orderEntry type="library" name="Gradle: org.springframework:spring-webflux:5.1.6.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-web:5.1.6.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.synchronoss.cloud:nio-multipart-parser:1.1.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.pi4j:pi4j-gpio-extension:1.2-arig-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Gradle: com.pi4j:pi4j-core:1.2-arig-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Gradle: com.pi4j:pi4j-gpio-extension:1.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.pi4j:pi4j-core:1.2" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-test-autoconfigure:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-test:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: com.jayway.jsonpath:json-path:2.4.0" level="project" />

@@ -1,6 +1,6 @@
 package org.arig.robot.constants;
 
-import com.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
+import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 
 /**

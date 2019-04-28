@@ -58,8 +58,8 @@
     <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-to-slf4j:2.11.2" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:jul-to-slf4j:1.7.26" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.26" level="project" />
-    <orderEntry type="library" name="Gradle: com.pi4j:pi4j-gpio-extension:1.2-arig-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Gradle: com.pi4j:pi4j-core:1.2-arig-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Gradle: com.pi4j:pi4j-gpio-extension:1.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.pi4j:pi4j-core:1.2" level="project" />
     <orderEntry type="library" name="Gradle: org.jline:jline:3.4.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jline:jline-terminal-jna:3.4.0" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-jcl:5.1.6.RELEASE" level="project" />

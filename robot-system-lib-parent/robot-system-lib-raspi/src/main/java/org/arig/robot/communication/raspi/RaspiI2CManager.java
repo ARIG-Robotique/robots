@@ -30,9 +30,9 @@ public class RaspiI2CManager extends AbstractI2CManager<I2CDevice> {
      * @param deviceName Nom du device
      * @param address address du device.
      */
-    public void registerDevice(final String deviceName, final int address) throws I2CException {
+    public void registerDevice(final String deviceName, final int address, byte ... cmd) throws I2CException {
         try {
-            super.registerDevice(deviceName, busI2c.getDevice(address));
+            super.registerDevice(deviceName, busI2c.getDevice(address), cmd);
         } catch (IOException e) {
             final String errorMessage = String.format("Impossible d'enregistrer le device %s a l'adresse 0x02X", deviceName, address);
             log.error(errorMessage, e);
@@ -55,7 +55,11 @@ public class RaspiI2CManager extends AbstractI2CManager<I2CDevice> {
         for (String name : deviceNames) {
             I2CDevice device = getDevice(name);
             try {
-                device.read();
+                if (getDeviceQuery().containsKey(name)) {
+                    sendData(name, getDeviceQuery().get(name));
+                } else {
+                    device.read();
+                }
                 log.info("Scan {} [OK]", name);
             } catch (IOException e) {
                 log.warn("Impossible de communiquer avec le périphérique {} : {}", name, e.toString());
