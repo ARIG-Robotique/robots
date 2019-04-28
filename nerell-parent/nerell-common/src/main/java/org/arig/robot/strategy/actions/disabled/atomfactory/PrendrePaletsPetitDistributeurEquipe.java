@@ -48,7 +48,8 @@ public class PrendrePaletsPetitDistributeurEquipe extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return carousel.count(null) >= 3;
+        return isTimeValid() &&
+                carousel.count(null) >= 3;
     }
 
     @Override

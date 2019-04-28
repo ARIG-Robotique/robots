@@ -1,5 +1,6 @@
 package org.arig.robot.model;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.enums.CouleurPalet;
@@ -10,7 +11,10 @@ import java.util.List;
 @Slf4j
 public class Magasin {
 
+    @Getter
     private List<CouleurPalet> droit = new ArrayList<>();
+
+    @Getter
     private List<CouleurPalet> gauche = new ArrayList<>();
 
     void addDroit(CouleurPalet couleur) {

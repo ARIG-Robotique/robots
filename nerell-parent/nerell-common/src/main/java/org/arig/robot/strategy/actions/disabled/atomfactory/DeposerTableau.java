@@ -9,89 +9,79 @@ import org.arig.robot.exceptions.PinceNotAvailableException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
-import org.arig.robot.services.PincesService;
-import org.arig.robot.services.ServosService;
+import org.arig.robot.services.IIOService;
+import org.arig.robot.services.MagasinService;
 import org.arig.robot.strategy.AbstractAction;
-import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.system.TrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PrendreGoldenium extends AbstractAction {
+public class DeposerTableau extends AbstractAction {
 
     @Autowired
-    private ITrajectoryManager mv;
+    private IIOService io;
 
     @Autowired
     private RobotStatus rs;
 
     @Autowired
-    private ServosService servos;
+    private TrajectoryManager mv;
 
     @Autowired
-    private PincesService pinces;
+    private MagasinService magasin;
 
     @Getter
     private boolean completed = false;
 
     @Override
     public String name() {
-        return "Prendre le goldenium";
+        return "Depose depalets dans le tableau";
     }
 
     @Override
     public int order() {
-        return 0; // TODO
+        int points = io.nbPaletDansMagasinDroit() * 6 + io.nbPaletDansMagasinGauche() * 6;
+        return points; // TODO
     }
 
     @Override
     public boolean isValid() {
         return isTimeValid() &&
-                rs.isAccelerateurOuvert() && !rs.isGoldeniumPrit();
+                (io.nbPaletDansMagasinDroit() > 0 || io.nbPaletDansMagasinGauche() > 0);
     }
 
     @Override
     public void execute() {
-        ESide side = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
-        boolean ok = false;
 
         try {
             rs.enableAvoidance();
 
-            // va au point le plus proche
             // TODO
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(1200, 1800);
+                mv.pathTo(2500, 1800);
+                mv.gotoOrientationDeg(180);
             } else {
-                mv.pathTo(1700, 1800);
+                mv.pathTo(500, 1800);
+                mv.gotoOrientationDeg(0);
             }
 
-            rs.disableAvoidance();
+            int distance = 500 - rs.getNbDeposesTableau() * 70;
 
-            // align, prépare la pince et avance
-            mv.gotoOrientationDeg(90);
+            mv.reculeMM(distance);
 
-            pinces.waitAvailable(side);
-            pinces.preparePriseGoldenium(side);
+            magasin.startEjection(ESide.DROITE);
+            magasin.startEjection(ESide.GAUCHE);
 
-            mv.avanceMM(150); // TODO
+            mv.avanceMM(distance);
 
-            // prise goldenium
-            ok = pinces.priseGoldenium(side);
+            rs.incNbDeposesTableau();
+            rs.transfertTableau();
 
-            // recule
-            mv.reculeMM(150); // TODO
-
-            completed = true;
-
-        } catch (NoPathFoundException | AvoidingException | PinceNotAvailableException | RefreshPathFindingException e) {
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
-
-        } finally {
-            pinces.finishPriseGoldenium(ok, side);
         }
     }
-
 }

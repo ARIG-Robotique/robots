@@ -1,7 +1,9 @@
 package org.arig.robot.services;
 
+import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.ESide;
 import org.arig.robot.system.ICarouselManager;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,12 +48,20 @@ public class LeftSideService implements IRobotSide {
 
     @Override
     public void enablePompeAVide() {
+        ioService.disableElectroVanneGauche();
         ioService.enablePompeAVideGauche();
     }
 
     @Override
     public void disablePompeAVide() {
         ioService.disablePompeAVideGauche();
+    }
+
+    @Override
+    public void releaseElectroVanne() {
+        ioService.enableElectroVanneGauche();
+        ThreadUtils.sleep(IConstantesNerellConfig.tempsActivationElectrvanne);
+        ioService.disableElectroVanneGauche();
     }
 
     @Override

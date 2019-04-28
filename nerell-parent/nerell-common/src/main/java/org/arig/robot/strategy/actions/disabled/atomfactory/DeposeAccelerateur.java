@@ -2,6 +2,7 @@ package org.arig.robot.strategy.actions.disabled.atomfactory;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
@@ -13,13 +14,14 @@ import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.PincesService;
 import org.arig.robot.strategy.AbstractAction;
+import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ActiverAccelerateur extends AbstractAction {
+public class DeposeAccelerateur extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -30,12 +32,15 @@ public class ActiverAccelerateur extends AbstractAction {
     @Autowired
     private PincesService pinces;
 
+    @Autowired
+    private ICarouselManager carousel;
+
     @Getter
     private boolean completed = false;
 
     @Override
     public String name() {
-        return "Active l'accelerateur et dépose si possible";
+        return "Active l'accelerateur et dépose";
     }
 
     @Override
@@ -45,7 +50,16 @@ public class ActiverAccelerateur extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return !rs.isAccelerateurOuvert();
+        return isTimeValid() &&
+                (!rs.isAccelerateurOuvert() || canDepose());
+    }
+
+    private boolean canDepose() {
+        return rs.getPaletsInAccelerateur().size() < IConstantesNerellConfig.nbPaletsAccelerateurMax &&
+                (
+                        carousel.has(CouleurPalet.ROUGE) ||
+                                carousel.has(CouleurPalet.ANY) && rs.getRemainingTime() < 30
+                );
     }
 
     @Override
@@ -74,21 +88,26 @@ public class ActiverAccelerateur extends AbstractAction {
             mv.avanceMM(150); // TODO
 
             // pousse le bleu
-            pinces.pousseAccelerateur(side);
-            rs.setAccelerateurOuvert(true);
+            if (!rs.isAccelerateurOuvert()) {
+                pinces.pousseAccelerateur(side);
+                rs.setAccelerateurOuvert(true);
+            }
 
-            // depose du rouge
+            // dépose
             try {
-                while (pinces.deposeAccelerateur(CouleurPalet.ROUGE, side)) {
-                    // on fait confiance au service !
+                while (canDepose()) {
+                    CouleurPalet couleur = carousel.has(CouleurPalet.ROUGE) ? CouleurPalet.ROUGE : CouleurPalet.ANY;
+
+                    pinces.deposeAccelerateur(couleur, side);
                 }
+
             } catch (CarouselNotAvailableException e) {
                 // si erreur carousel on ignore l'erreur, les palets seront déposés avec une autre action
             }
 
             mv.reculeMM(150); // TODO
 
-            completed = true;
+            completed = rs.getPaletsInAccelerateur().size() >= IConstantesNerellConfig.nbPaletsAccelerateurMax;
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | PinceNotAvailableException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());

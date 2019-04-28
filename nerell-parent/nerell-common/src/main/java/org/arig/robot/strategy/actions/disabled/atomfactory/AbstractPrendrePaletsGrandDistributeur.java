@@ -53,7 +53,8 @@ public abstract class AbstractPrendrePaletsGrandDistributeur extends AbstractAct
 
     @Override
     public boolean isValid() {
-        return carousel.count(null) >= 2;
+        return isTimeValid() &&
+                carousel.count(null) >= 2;
     }
 
     @Override

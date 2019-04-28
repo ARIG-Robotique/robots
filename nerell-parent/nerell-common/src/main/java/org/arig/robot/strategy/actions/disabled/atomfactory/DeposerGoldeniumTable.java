@@ -48,8 +48,9 @@ public class DeposerGoldeniumTable extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return pinces.couleurInPince(rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE) == CouleurPalet.GOLD
-                && rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax;
+        return isTimeValid() &&
+                pinces.couleurInPince(rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE) == CouleurPalet.GOLD &&
+                rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax;
     }
 
     @Override

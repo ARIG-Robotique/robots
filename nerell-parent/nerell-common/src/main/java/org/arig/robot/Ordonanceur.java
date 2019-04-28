@@ -220,6 +220,7 @@ public class Ordonanceur {
 
         // Activation
         robotStatus.enableMatch();
+        robotStatus.enableServicesMetier();
 //        robotStatus.enableAvoidance();
 
         // Match de XX secondes.
@@ -236,6 +237,8 @@ public class Ordonanceur {
         }
         robotStatus.stopMatch();
         log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
+
+        robotStatus.disableServicesMetier();
 
         /*
         servosService.brasAttentePriseRobot();

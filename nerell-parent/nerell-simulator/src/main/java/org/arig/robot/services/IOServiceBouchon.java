@@ -217,6 +217,18 @@ public class IOServiceBouchon implements IIOService {
     }
 
     @Override
+    public void enableElectroVanneDroite() { }
+
+    @Override
+    public void disableElectroVanneDroite() { }
+
+    @Override
+    public void enableElectroVanneGauche() { }
+
+    @Override
+    public void disableElectroVanneGauche() { }
+
+    @Override
     public void enablePompeAVideDroite() { }
 
     @Override

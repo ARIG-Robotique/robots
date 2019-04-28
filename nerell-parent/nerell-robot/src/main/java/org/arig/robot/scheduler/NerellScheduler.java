@@ -12,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-/**
- * @author gdepuille on 30/10/16.
- */
 @Component
 public class NerellScheduler {
 
@@ -80,49 +77,59 @@ public class NerellScheduler {
 
     @Scheduled(fixedDelay = 1000)
     public void prisePinceDroiteTask() {
-        try {
-            if (rightSideService.buteePalet() && rightSideService.presencePalet() && !pincesService.isWorking(ESide.DROITE)) {
-                pincesService.waitAvailable(ESide.DROITE);
+        if (rs.isServicesMetierEnabled()) {
+            try {
+                if (rightSideService.buteePalet() && rightSideService.presencePalet() && !pincesService.isWorking(ESide.DROITE)) {
+                    pincesService.waitAvailable(ESide.DROITE);
 
-                if (pincesService.priseTable(CouleurPalet.INCONNU, ESide.DROITE)) {
-                    pincesService.stockageAsync(ESide.DROITE);
+                    if (pincesService.priseTable(CouleurPalet.INCONNU, ESide.DROITE)) {
+                        pincesService.stockageAsync(ESide.DROITE);
+                    }
                 }
-            }
-        } catch (PinceNotAvailableException e) {
+            } catch (PinceNotAvailableException e) {
 
+            }
         }
     }
 
     @Scheduled(fixedDelay = 1000)
     public void prisePinceGaucheTask() {
-        try {
-            if (leftSideService.buteePalet() && leftSideService.presencePalet() && !pincesService.isWorking(ESide.GAUCHE)) {
-                pincesService.waitAvailable(ESide.GAUCHE);
+        if (rs.isServicesMetierEnabled()) {
+            try {
+                if (leftSideService.buteePalet() && leftSideService.presencePalet() && !pincesService.isWorking(ESide.GAUCHE)) {
+                    pincesService.waitAvailable(ESide.GAUCHE);
 
-                if (pincesService.priseTable(CouleurPalet.INCONNU, ESide.GAUCHE)) {
-                    pincesService.stockageAsync(ESide.GAUCHE);
+                    if (pincesService.priseTable(CouleurPalet.INCONNU, ESide.GAUCHE)) {
+                        pincesService.stockageAsync(ESide.GAUCHE);
+                    }
                 }
-            }
-        } catch (PinceNotAvailableException e) {
+            } catch (PinceNotAvailableException e) {
 
+            }
         }
     }
 
     @Scheduled(fixedDelay = 500)
     public void carouselTask() {
-        if (carousel.has(CouleurPalet.INCONNU) && !carouselService.isWorking()) {
-            carouselService.lectureCouleurAsync(carousel.firstIndexOf(CouleurPalet.INCONNU, ICarouselManager.LECTEUR));
+        if (rs.isServicesMetierEnabled()) {
+            if (carousel.has(CouleurPalet.INCONNU) && !carouselService.isWorking()) {
+                carouselService.lectureCouleurAsync(carousel.firstIndexOf(CouleurPalet.INCONNU, ICarouselManager.LECTEUR));
+            }
         }
     }
 
     @Scheduled(fixedDelay = 500)
     public void serrageTask() {
-        serrageService.process();
+        if (rs.isServicesMetierEnabled()) {
+            serrageService.process();
+        }
     }
 
     @Scheduled(fixedDelay = 1000)
     public void magasinTask() {
-        magasinService.process();
+        if (rs.isServicesMetierEnabled()) {
+            magasinService.process();
+        }
     }
 
 }

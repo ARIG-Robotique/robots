@@ -49,6 +49,10 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         return matchTime.getTime();
     }
 
+    public long getRemainingTime() {
+        return Math.max(0, IConstantesNerellConfig.matchTimeMs - matchTime.getTime());
+    }
+
     @Setter(AccessLevel.NONE)
     private boolean calageBordureEnabled = false;
 
@@ -60,6 +64,19 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     public void disableCalageBordure() {
         log.info("Désactivation calage bordure");
         calageBordureEnabled = false;
+    }
+
+    @Setter(AccessLevel.NONE)
+    private boolean servicesMetierEnabled = false;
+
+    public void enableServicesMetier() {
+        log.info("Activation des services métier");
+        servicesMetierEnabled = true;
+    }
+
+    public void disableServicesMetier() {
+        log.info("Désactivation des services métier");
+        servicesMetierEnabled = false;
     }
 
     private boolean baliseOk = false;
@@ -96,6 +113,26 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     private boolean accelerateurOuvert = false;
 
     private boolean goldeniumPrit = false;
+
+    @Setter(AccessLevel.NONE)
+    private short nbDeposesTableau = 0;
+
+    public void incNbDeposesTableau() {
+        nbDeposesTableau++;
+    }
+
+    public void transfertTableau() {
+        if (team == Team.VIOLET) {
+            paletsInTableauRouge.addAll(magasin.getDroit());
+            paletsInTableauVert.addAll(magasin.getGauche());
+        } else {
+            paletsInTableauRouge.addAll(magasin.getGauche());
+            paletsInTableauVert.addAll(magasin.getDroit());
+        }
+
+        magasin.emptyGauche();
+        magasin.emptyDroit();
+    }
 
     /**
      * INIT

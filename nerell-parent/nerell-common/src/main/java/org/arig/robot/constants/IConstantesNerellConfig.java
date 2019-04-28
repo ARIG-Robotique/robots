@@ -113,6 +113,11 @@ public interface IConstantesNerellConfig {
     // ---------------------- //
     PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.LAZY_THETA_STAR;
 
+    // --------------------- //
+    // Paramètre pneumatique //
+    // --------------------- //
+    int tempsActivationElectrvanne = 100;
+
     // ----------------- //
     // Paramètres métier //
     // ----------------- //

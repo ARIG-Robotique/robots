@@ -36,10 +36,9 @@ public class PrendrePaletsTrouNoirEquipe extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return !rs.isBaliseOk() &&
-                rs.getTeam() == Team.VIOLET ?
-                !rs.isTrouNoirVioletVisite() :
-                !rs.isTrouNoirJauneVisite();
+        return isTimeValid() &&
+                !rs.isBaliseOk() &&
+                (rs.getTeam() == Team.VIOLET ? !rs.isTrouNoirVioletVisite() : !rs.isTrouNoirJauneVisite());
     }
 
     @Override

@@ -506,29 +506,32 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         outAlimPuissance12V.high();
     }
 
-    private void enableElectroVanneDroite() {
+    @Override
+    public void enableElectroVanneDroite() {
         log.info("Activation electrovanne droite");
         outElectroVanneDroit.low();
     }
 
-    private void disableElectroVanneDroite() {
+    @Override
+    public void disableElectroVanneDroite() {
         log.info("Desactivation electrovanne droite");
         outElectroVanneDroit.high();
     }
 
-    private void enableElectroVanneGauche() {
+    @Override
+    public void enableElectroVanneGauche() {
         log.info("Activation electrovanne gauche");
         outElectroVanneGauche.low();
     }
 
-    private void disableElectroVanneGauche() {
+    @Override
+    public void disableElectroVanneGauche() {
         log.info("Desactivation electrovanne gauche");
         outElectroVanneGauche.high();
     }
 
     @Override
     public void enablePompeAVideDroite() {
-        disableElectroVanneDroite();
         log.info("Activation pompe a vide droite");
         outPompeAVideDroite.high();
     }
@@ -537,14 +540,10 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     public void disablePompeAVideDroite() {
         log.info("Desactivation pompe a vide droite");
         outPompeAVideDroite.low();
-        enableElectroVanneDroite();
-        sleep(100);
-        disableElectroVanneDroite();
     }
 
     @Override
     public void enablePompeAVideGauche() {
-        disableElectroVanneGauche();
         log.info("Activation pompe a vide gauche");
         outPompeAVideGauche.high();
     }
@@ -553,22 +552,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     public void disablePompeAVideGauche() {
         log.info("Desactivation pompe a vide gauche");
         outPompeAVideGauche.low();
-        enableElectroVanneGauche();
-        sleep(100);
-        disableElectroVanneGauche();
     }
 
-    // ----------------------------------------------------------- //
-    // -------------------------- BUSINESS ----------------------- //
-    // ----------------------------------------------------------- //
-
-
-    // ----------------------------------------------------------- //
-
-    private void sleep(int time) {
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-        }
-    }
 }
