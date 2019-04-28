@@ -32,13 +32,20 @@ public class CodeursPropulsionCommand {
 
     private final List<InfoCapture> infos = new ArrayList<>();
 
-    @ShellMethodAvailability
     public Availability alimentationOk() {
         return ioService.auOk() && ioService.alimPuissance5VOk() && ioService.alimPuissance12VOk()
                 ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
     }
 
     @SneakyThrows
+    @ShellMethod("Lecture des codeurs des roues de propulsions")
+    public void readCodeursRoues() {
+        encoders.lectureValeurs();
+        log.info("Gauche : {} - Droite : {}", encoders.getGauche(), encoders.getDroit());
+    }
+
+    @SneakyThrows
+    @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Capture des valeurs de codeurs des roues de propulsions")
     public void captureCodeursRoues() {
         // Vitesse positive

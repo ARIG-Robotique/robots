@@ -1,11 +1,12 @@
 package org.arig.robot.nerell.utils.shell;
 
-import lombok.AllArgsConstructor;
+import com.pi4j.io.i2c.I2CBus;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.lidar.Scan;
 import org.arig.robot.model.lidar.ScanInfos;
-import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
+import org.arig.robot.system.capteurs.ILidarTelemeter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -18,15 +19,18 @@ import javax.validation.constraints.NotNull;
 
 @Slf4j
 @ShellComponent
-@AllArgsConstructor
 @ShellCommandGroup("Lidar")
 public class LidarCommands {
 
-    private final RPLidarA2TelemeterOverSocket lidar;
+    private final ILidarTelemeter lidar;
 
     private boolean startScanRunned;
 
-    @ShellMethodAvailability({"stopScan", "setSpeed", "grabDatas"})
+    @Autowired
+    public LidarCommands(ILidarTelemeter lidar) {
+        this.lidar = lidar;
+    }
+
     public Availability lidarCmdAvailable() {
         return startScanRunned ? Availability.available() : Availability.unavailable("Lancer le start scan avant cette méthode");
     }
@@ -42,18 +46,21 @@ public class LidarCommands {
         startScanRunned = true;
     }
 
+    @ShellMethodAvailability("lidarCmdAvailable")
     @ShellMethod("Arrete le scan")
     public void stopScan() {
         lidar.stopScan();
         startScanRunned = false;
     }
 
+    @ShellMethodAvailability("lidarCmdAvailable")
     @ShellMethod("Vitesse de rotation")
     public void setSpeed(@NotNull @Min(250) @Max(1023) short speed) {
         lidar.setSpeed(speed);
     }
 
     @SneakyThrows
+    @ShellMethodAvailability("lidarCmdAvailable")
     @ShellMethod("Grab des données")
     public void grabDatas() {
         int cpt = 0;

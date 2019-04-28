@@ -16,7 +16,7 @@ public class TeamCommand {
 
     private final RobotStatus rs;
 
-    @ShellMethod
+    @ShellMethod("Selection de l'équipe")
     public void team(@NotNull Team team) {
         rs.setTeam(team);
         log.info("Equipe slectionné : {}", team.name());

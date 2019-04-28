@@ -15,18 +15,18 @@ public class AlimentationCommand {
 
     private final IIOService ioService;
 
-    @ShellMethodAvailability({"enableAlimentation"})
     public Availability auOK() {
         return ioService.auOk() ? Availability.available() : Availability.unavailable("Arret d'urgence non OK");
     }
 
-    @ShellMethod
+    @ShellMethodAvailability("auOK")
+    @ShellMethod("Activation des alimentations")
     public void enableAlimentation() {
         ioService.enableAlim5VPuissance();
         ioService.enableAlim12VPuissance();
     }
 
-    @ShellMethod
+    @ShellMethod("Désactivation des alimentations")
     public void disableAlimentation() {
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();
