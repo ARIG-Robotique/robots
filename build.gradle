@@ -175,7 +175,7 @@ configure(rootProject) {
 
 	wrapper {
 		description = "Generates gradlew[.bat] scripts"
-		gradleVersion = "4.10.2"
+		gradleVersion = "5.4.1"
 		distributionType = "all"
 	}
 }

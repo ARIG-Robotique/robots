@@ -8,6 +8,9 @@
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-utils/out/production/classes" />
     <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-utils/build/generated/sources/annotationProcessor/java/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-utils/build/generated/sources/annotationProcessor/java/main" isTestSource="false" generated="true" />
+    </content>
     <content url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-utils/src/main">
       <sourceFolder url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-utils/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-utils/src/main/resources" type="java-resource" />
@@ -15,6 +18,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="nerell-robot_main" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.projectlombok:lombok:1.18.6" level="project" />
     <orderEntry type="module" module-name="robot-system-lib-raspi_main" />
     <orderEntry type="module" module-name="nerell-common_main" />
     <orderEntry type="module" module-name="robot-system-lib-core_main" />
@@ -43,8 +47,8 @@
     <orderEntry type="library" name="Gradle: org.springframework:spring-beans:5.1.6.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-expression:5.1.6.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-core:5.1.6.RELEASE" level="project" />
-    <orderEntry type="library" name="Gradle: org.yaml:snakeyaml:1.23" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.9.8" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.yaml:snakeyaml:1.23" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.8" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.8" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.9.8" level="project" />
@@ -61,9 +65,9 @@
     <orderEntry type="library" name="Gradle: com.pi4j:pi4j-gpio-extension:1.2" level="project" />
     <orderEntry type="library" name="Gradle: com.pi4j:pi4j-core:1.2" level="project" />
     <orderEntry type="library" name="Gradle: org.jline:jline:3.4.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.jline:jline-terminal-jna:3.4.0" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-jcl:5.1.6.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jline:jline-terminal-jna:3.4.0" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.9.8" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-codec-http2:4.1.34.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-handler-proxy:4.1.34.Final" level="project" />
@@ -83,12 +87,12 @@
     <orderEntry type="library" name="Gradle: io.datafx:flow:8.0.1" level="project" />
     <orderEntry type="library" name="Gradle: de.jensd:fontawesomefx-fontawesome:4.7.0-5" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.tomcat.embed:tomcat-embed-el:9.0.17" level="project" />
-    <orderEntry type="library" name="Gradle: net.java.dev.jna:jna:4.5.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.jline:jline-terminal:3.4.0" level="project" />
     <orderEntry type="library" name="Gradle: ch.qos.logback:logback-core:1.2.3" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-api:2.11.2" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-codec-socks:4.1.34.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-codec:4.1.34.Final" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: net.java.dev.jna:jna:4.5.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jline:jline-terminal:3.4.0" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-transport-native-unix-common:4.1.34.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-transport:4.1.34.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-buffer:4.1.34.Final" level="project" />
@@ -102,8 +106,7 @@
     <orderEntry type="library" name="Gradle: com.google.j2objc:j2objc-annotations:1.1" level="project" />
     <orderEntry type="library" name="Gradle: org.codehaus.mojo:animal-sniffer-annotations:1.17" level="project" />
     <orderEntry type="library" name="Gradle: org.scijava:native-lib-loader:2.0.2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.projectlombok:lombok:1.18.6" level="project" />
     <orderEntry type="library" name="Gradle: io.datafx:core:8.0.1" level="project" />
-    <orderEntry type="library" name="Gradle: de.jensd:fontawesomefx-commons:8.15" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: de.jensd:fontawesomefx-commons:8.15" level="project" />
   </component>
 </module>

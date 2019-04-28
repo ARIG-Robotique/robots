@@ -5,14 +5,6 @@
       <profile default="true" name="Default" enabled="true" />
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="elfa-common_main" target="1.8" />
-      <module name="elfa-common_test" target="1.8" />
-      <module name="elfa-parent_main" target="1.8" />
-      <module name="elfa-parent_test" target="1.8" />
-      <module name="elfa-robot_main" target="1.8" />
-      <module name="elfa-robot_test" target="1.8" />
-      <module name="elfa-simulator_main" target="1.8" />
-      <module name="elfa-simulator_test" target="1.8" />
       <module name="nerell-common_main" target="1.8" />
       <module name="nerell-common_test" target="1.8" />
       <module name="nerell-parent_main" target="1.8" />
