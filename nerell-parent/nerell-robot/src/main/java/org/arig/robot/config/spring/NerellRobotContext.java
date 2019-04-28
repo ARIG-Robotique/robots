@@ -44,14 +44,13 @@ import java.io.IOException;
 @Configuration
 public class NerellRobotContext {
 
-    @Bean
-    public RobotName robotName() throws IOException, InterruptedException {
-        if (SystemInfo.getBoardType() == BoardType.RaspberryPi_3B) {
-            log.warn("Utilisation de la conversion encoder Raspberry PI 3");
-            ARIGEncoderUtils.isRaspi3 = true;
-        }
-
+    protected RobotName robotName() {
         return new RobotName().name("Nerell (The Big One)").version("latest");
+    }
+
+    @Bean
+    public RobotName robotNameBean() {
+        return robotName();
     }
 
     @Bean

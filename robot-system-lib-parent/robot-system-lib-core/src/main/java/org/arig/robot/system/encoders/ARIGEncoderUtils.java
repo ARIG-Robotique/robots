@@ -10,8 +10,6 @@ import org.arig.robot.exception.I2CException;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ARIGEncoderUtils {
 
-    public static boolean isRaspi3 = false;
-
     /**
      * Lecture data depuis nos cartes codeur.
      * <p>
@@ -27,7 +25,7 @@ public final class ARIGEncoderUtils {
      */
     public static int lectureData(II2CManager i2cManager, final String deviceName) throws I2CException {
         try {
-            i2cManager.sendData(deviceName, 2);
+            i2cManager.sendData(deviceName);
         } catch (I2CException e) {
             String message = String.format("Impossible de lire la valeur codeur pour la carte %s", deviceName);
             log.error(message);
@@ -35,11 +33,7 @@ public final class ARIGEncoderUtils {
         }
 
         final byte[] datas = i2cManager.getDatas(deviceName, 2);
-        short value = ((short) ((datas[0] << 8) + (datas[1] & 0xFF)));
-        if (isRaspi3 && value > 32767) {
-            return (value - 32768) * -1;
-        } else {
-            return value;
-        }
+        int value = (datas[0] << 8) | (datas[1] & 0xFF);
+        return value;
     }
 }
