@@ -16,7 +16,7 @@ import java.util.Optional;
  * @author gdepuille on 01/05/15.
  */
 @Data
-@Accessors(chain = true, fluent = true)
+@Accessors(chain = true)
 public class ServoConfig {
 
     private static final int DEFAULT_MIN = 500;

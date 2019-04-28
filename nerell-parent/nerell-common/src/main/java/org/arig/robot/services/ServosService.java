@@ -39,8 +39,8 @@ public class ServosService {
         ioService.enableAlim5VPuissance();
         while (!ioService.alimPuissance5VOk()) ;
 
-        servos.setPositionAndSpeed(IConstantesServos.PINCE_SERRAGE_PALET_DROIT, IConstantesServos.PINCE_SERRAGE_PALET_DROIT_OUVERT, IConstantesServos.SPEED_SERRAGE_PALET);
-        servos.setPositionAndSpeed(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE, IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_OUVERT, IConstantesServos.SPEED_SERRAGE_PALET);
+        servos.setPositionAndSpeed(IConstantesServos.PINCE_SERRAGE_PALET_DROIT, IConstantesServos.PINCE_SERRAGE_PALET_DROIT_REPOS, IConstantesServos.SPEED_SERRAGE_PALET);
+        servos.setPositionAndSpeed(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE, IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_REPOS, IConstantesServos.SPEED_SERRAGE_PALET);
         servos.setPositionAndSpeed(IConstantesServos.PIVOT_VENTOUSE_DROIT, IConstantesServos.PIVOT_VENTOUSE_DROIT_TABLE, IConstantesServos.SPEED_PIVOT_VENTOUSE);
         servos.setPositionAndSpeed(IConstantesServos.PIVOT_VENTOUSE_GAUCHE, IConstantesServos.PIVOT_VENTOUSE_GAUCHE_TABLE, IConstantesServos.SPEED_PIVOT_VENTOUSE);
         servos.setPositionAndSpeed(IConstantesServos.ASCENSEUR_VENTOUSE_DROIT, IConstantesServos.ASCENSEUR_DROIT_DISTRIBUTEUR, IConstantesServos.SPEED_ASCENSEUR);
@@ -100,7 +100,7 @@ public class ServosService {
     //*******************************************//
 
     public boolean isPinceSerragePaletDroitOuvert() {
-        return servos.getPosition(IConstantesServos.PINCE_SERRAGE_PALET_DROIT) == IConstantesServos.PINCE_SERRAGE_PALET_DROIT_OUVERT;
+        return servos.getPosition(IConstantesServos.PINCE_SERRAGE_PALET_DROIT) == IConstantesServos.PINCE_SERRAGE_PALET_DROIT_REPOS;
     }
 
     public boolean isPinceSerragePaletDroitLock() {
@@ -108,11 +108,11 @@ public class ServosService {
     }
 
     public boolean isPinceSerragePaletDroitFerme() {
-        return servos.getPosition(IConstantesServos.PINCE_SERRAGE_PALET_DROIT) == IConstantesServos.PINCE_SERRAGE_PALET_DROIT_FERME;
+        return servos.getPosition(IConstantesServos.PINCE_SERRAGE_PALET_DROIT) == IConstantesServos.PINCE_SERRAGE_PALET_DROIT_STANDBY;
     }
 
     public boolean isPinceSerragePaletGaucheOuvert() {
-        return servos.getPosition(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE) == IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_OUVERT;
+        return servos.getPosition(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE) == IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_REPOS;
     }
 
     public boolean isPinceSerragePaletGaucheLock() {
@@ -120,11 +120,11 @@ public class ServosService {
     }
 
     public boolean isPinceSerragePaletGaucheFerme() {
-        return servos.getPosition(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE) == IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_FERME;
+        return servos.getPosition(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE) == IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_STANDBY;
     }
 
     public boolean isPivotVentouseDroitCarousel() {
-        return servos.getPosition(IConstantesServos.PIVOT_VENTOUSE_DROIT) == IConstantesServos.PIVOT_VENTOUSE_DROIT_CAROUSEL;
+        return servos.getPosition(IConstantesServos.PIVOT_VENTOUSE_DROIT) == IConstantesServos.PIVOT_VENTOUSE_DROIT_CAROUSEL_VERTICAL;
     }
 
     public boolean isPivotVentouseDroitFacade() {
@@ -136,7 +136,7 @@ public class ServosService {
     }
 
     public boolean isPivotVentouseGaucheCarousel() {
-        return servos.getPosition(IConstantesServos.PIVOT_VENTOUSE_GAUCHE) == IConstantesServos.PIVOT_VENTOUSE_GAUCHE_CAROUSEL;
+        return servos.getPosition(IConstantesServos.PIVOT_VENTOUSE_GAUCHE) == IConstantesServos.PIVOT_VENTOUSE_GAUCHE_CAROUSEL_VERTICAL;
     }
 
     public boolean isPivotVentouseGaucheFacade() {
@@ -256,7 +256,7 @@ public class ServosService {
     //*******************************************//
 
     public void pinceSerragePaletDroitOuvert() {
-        servos.setPosition(IConstantesServos.PINCE_SERRAGE_PALET_DROIT, IConstantesServos.PINCE_SERRAGE_PALET_DROIT_OUVERT);
+        servos.setPosition(IConstantesServos.PINCE_SERRAGE_PALET_DROIT, IConstantesServos.PINCE_SERRAGE_PALET_DROIT_REPOS);
     }
 
     public void pinceSerragePaletDroitLock() {
@@ -264,11 +264,11 @@ public class ServosService {
     }
 
     public void pinceSerragePaletDroitFerme() {
-        servos.setPosition(IConstantesServos.PINCE_SERRAGE_PALET_DROIT, IConstantesServos.PINCE_SERRAGE_PALET_DROIT_FERME);
+        servos.setPosition(IConstantesServos.PINCE_SERRAGE_PALET_DROIT, IConstantesServos.PINCE_SERRAGE_PALET_DROIT_STANDBY);
     }
 
     public void pinceSerragePaletGaucheOuvert() {
-        servos.setPosition(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE, IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_OUVERT);
+        servos.setPosition(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE, IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_REPOS);
     }
 
     public void pinceSerragePaletGaucheLock() {
@@ -276,11 +276,11 @@ public class ServosService {
     }
 
     public void pinceSerragePaletGaucheFerme() {
-        servos.setPosition(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE, IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_FERME);
+        servos.setPosition(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE, IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_STANDBY);
     }
 
     public void pivotVentouseDroitCarousel() {
-        servos.setPosition(IConstantesServos.PIVOT_VENTOUSE_DROIT, IConstantesServos.PIVOT_VENTOUSE_DROIT_CAROUSEL);
+        servos.setPosition(IConstantesServos.PIVOT_VENTOUSE_DROIT, IConstantesServos.PIVOT_VENTOUSE_DROIT_CAROUSEL_VERTICAL);
     }
 
     public void pivotVentouseDroitSortieCarousel() {
@@ -296,7 +296,7 @@ public class ServosService {
     }
 
     public void pivotVentouseGaucheCarousel() {
-        servos.setPosition(IConstantesServos.PIVOT_VENTOUSE_GAUCHE, IConstantesServos.PIVOT_VENTOUSE_GAUCHE_CAROUSEL);
+        servos.setPosition(IConstantesServos.PIVOT_VENTOUSE_GAUCHE, IConstantesServos.PIVOT_VENTOUSE_GAUCHE_CAROUSEL_VERTICAL);
     }
 
     public void pivotVentouseGaucheSortieCarousel() {
@@ -312,7 +312,7 @@ public class ServosService {
     }
 
     public void ascenseurDroitPreAccelerateur() {
-        servos.setPosition(IConstantesServos.ASCENSEUR_VENTOUSE_DROIT, IConstantesServos.ASCENSEUR_DROIT_PRE_ACCELERATEUR);
+        servos.setPosition(IConstantesServos.ASCENSEUR_VENTOUSE_DROIT, IConstantesServos.ASCENSEUR_DROIT_PRE_CAROUSEL);
     }
 
     public void ascenseurDroitCarousel() {
@@ -336,7 +336,7 @@ public class ServosService {
     }
 
     public void ascenseurGauchePreAccelerateur() {
-        servos.setPosition(IConstantesServos.ASCENSEUR_VENTOUSE_GAUCHE, IConstantesServos.ASCENSEUR_GAUCHE_PRE_ACCELERATEUR);
+        servos.setPosition(IConstantesServos.ASCENSEUR_VENTOUSE_GAUCHE, IConstantesServos.ASCENSEUR_GAUCHE_PRE_CAROUSEL);
     }
 
     public void ascenseurGaucheCarousel() {

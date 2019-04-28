@@ -36,7 +36,7 @@ public abstract class AbstractServosController {
     @GetMapping(value = "/{idServo}")
     public final ServoConfig getServoPositionAndSpeed(@PathVariable("idServo") final Byte idServo) {
         return servosConfig().stream()
-                .filter(s -> s.id() == idServo)
+                .filter(s -> s.getId() == idServo)
                 .findFirst()
                 .orElse(null);
     }
