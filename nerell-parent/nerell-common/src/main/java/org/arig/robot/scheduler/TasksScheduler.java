@@ -3,7 +3,6 @@ package org.arig.robot.scheduler;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.services.CarouselService;
 import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;

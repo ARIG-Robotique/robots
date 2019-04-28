@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.Carousel;
 import org.arig.robot.model.Palet;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.system.CarouselManager;
+import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class CarouselService {
     private ServosService servosService;
 
     @Autowired
-    private CarouselManager carouselManager;
+    private ICarouselManager carouselManager;
 
     public void lectureCouleur(int index) {
         tourner(index - Carousel.LECTEUR);

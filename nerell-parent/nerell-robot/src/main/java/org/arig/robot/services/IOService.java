@@ -258,7 +258,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     @Override
     public boolean buteePaletDroit() {
         boolean result = inButeePaletDroit.isLow();
-        log.info("Presence fusée : {}", result);
+        log.info("Presence palet droit : {}", result);
         return result;
     }
 

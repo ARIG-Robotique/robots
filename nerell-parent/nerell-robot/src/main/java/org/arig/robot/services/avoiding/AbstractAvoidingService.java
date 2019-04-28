@@ -45,37 +45,6 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
     @Qualifier("currentPosition")
     private Position position;
 
-    /*
-    @Autowired
-    @Qualifier("gp2dGauche")
-    private GP2D12 gp2dGauche;
-
-    @Autowired
-    @Qualifier("gp2dCentre")
-    private GP2D12 gp2dCentre;
-
-    @Autowired
-    @Qualifier("gp2dDroit")
-    private GP2D12 gp2dDroit;
-*/
-
-    @Autowired
-    @Qualifier("usLatGauche")
-    private SRF02Sonar usLatGauche;
-
-    @Autowired
-    @Qualifier("usGauche")
-    private SRF02Sonar usGauche;
-
-    /*
-    @Autowired
-    @Qualifier("usDroit")
-    private SRF02Sonar usDroit;
-    */
-
-    @Autowired
-    @Qualifier("usLatDroit")
-    private SRF02Sonar usLatDroit;
 
     @Autowired
     private ILidarTelemeter lidar;
@@ -103,10 +72,10 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
     @Override
     public void afterPropertiesSet() throws Exception {
         log.info("Initialisation du service d'évittement d'obstacle");
-        usLatGauche.printVersion();
-        usGauche.printVersion();
+        //usLatGauche.printVersion();
+        //usGauche.printVersion();
         //usDroit.printVersion();
-        usLatDroit.printVersion();
+        //usLatDroit.printVersion();
         lidar.deviceInfo();
     }
 
