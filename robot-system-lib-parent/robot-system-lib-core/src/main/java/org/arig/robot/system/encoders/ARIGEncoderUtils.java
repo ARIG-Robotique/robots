@@ -32,8 +32,8 @@ public final class ARIGEncoderUtils {
             throw new I2CException(message, e);
         }
 
-        final byte[] datas = i2cManager.getDatas(deviceName, 2);
-        int value = (datas[0] << 8) | (datas[1] & 0xFF);
+        final byte[] datas = i2cManager.getDatas(deviceName, 4);
+        int value =  (datas[0] << 24) | (datas[1] << 16) | (datas[2] << 8) | (datas[3] & 0xFF);
         return value;
     }
 }
