@@ -90,7 +90,7 @@ public class CarouselService {
      * Tourner dans le sens trigo
      */
     private void tourner(int nb) {
-        carouselManager.tourneIndex(nb);
+        //carouselManager.tourneIndex(nb);
     }
 
     public void ejectionAvantRetourStand() {

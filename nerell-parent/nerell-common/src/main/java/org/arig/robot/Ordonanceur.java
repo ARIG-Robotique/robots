@@ -155,7 +155,7 @@ public class Ordonanceur {
 
         log.warn("La tirette n'est pas la et la selection couleur n'as pas eu lieu. Phase de préparation Nerell");
         boolean selectionCouleur = false;
-        while(!ioService.tirette() || !selectionCouleur) {
+        /*while(!ioService.tirette() || !selectionCouleur) {
             Team selectedTeam = ioService.equipe();
             if (selectedTeam != initTeam && !selectionCouleur && !ioService.tirette()) {
                 log.info("Couleur selectionné une première fois");
@@ -168,7 +168,7 @@ public class Ordonanceur {
             }
 
             waitTimeMs(100);
-        }
+        }*/
         log.info("Phase de préparation terminé");
 
         log.info("Chargement de la carte");
@@ -187,7 +187,7 @@ public class Ordonanceur {
         trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
         position.setAngle(conv.degToPulse(90));
 
-        if (!robotStatus.isSimulateur()) {
+        /*if (!robotStatus.isSimulateur()) {
             if (robotStatus.getTeam() == Team.JAUNE) {
                 position.setPt(new Point(conv.mmToPulse(320), conv.mmToPulse(772)));
                 trajectoryManager.avanceMM(50);
@@ -209,16 +209,16 @@ public class Ordonanceur {
             robotStatus.enableCalageBordure();
             trajectoryManager.reculeMMSansAngle(20);
 
-        } else {
+        } else {*/
             if (robotStatus.getTeam() == Team.JAUNE) {
                 position.setPt(new Point(conv.mmToPulse(890), conv.mmToPulse(165)));
             } else {
                 position.setPt(new Point(conv.mmToPulse(3000 - 890), conv.mmToPulse(165)));
             }
-        }
+        //}
 
         log.info("Position initiale avant match des servos");
-        servosService.homes();
+        //servosService.homes();
 
         // Attente tirette.
         log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
@@ -233,7 +233,7 @@ public class Ordonanceur {
 
         // Activation
         robotStatus.enableMatch();
-        robotStatus.enableServicesMetier();
+        //robotStatus.enableServicesMetier();
 //        robotStatus.enableAvoidance();
 
         // Match de XX secondes.
