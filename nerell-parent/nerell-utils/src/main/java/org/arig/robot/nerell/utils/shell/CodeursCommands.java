@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @ShellComponent
 @AllArgsConstructor
-@ShellCommandGroup("Codeurs Propulsion")
-public class CodeursPropulsionCommand {
+@ShellCommandGroup("Codeurs")
+public class CodeursCommands {
 
     private final AbstractEncoder carouselEncoder;
     private final Abstract2WheelsEncoders wheelsEncoders;

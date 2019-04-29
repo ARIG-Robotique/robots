@@ -39,4 +39,10 @@ public class PinceCommands {
             log.info("Pas d'element sur la table coté {}", side.name());
         }
     }
+
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Dépose sur la balance")
+    public void deposeBalance(@NotNull ESide side) {
+        log.warn("Pas encore implémenté");
+    }
 }

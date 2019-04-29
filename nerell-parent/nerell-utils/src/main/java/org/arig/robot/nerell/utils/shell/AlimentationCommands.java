@@ -11,7 +11,7 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 @Slf4j
 @ShellComponent
 @AllArgsConstructor
-public class AlimentationCommand {
+public class AlimentationCommands {
 
     private final IIOService ioService;
 

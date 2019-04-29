@@ -28,6 +28,8 @@ public class QuitCommand implements Quit.Command {
         ioService.disableAlim5VPuissance();
 
         // Stop les pompes a vide
+        ioService.videElectroVanneDroite();
+        ioService.videElectroVanneGauche();
         ioService.disablePompeAVideDroite();
         ioService.disablePompeAVideGauche();
 
