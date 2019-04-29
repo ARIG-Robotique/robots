@@ -161,25 +161,23 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
         // PCF1
         inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
-        inPresencePaletDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
-        inPresencePaletGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
-        inButeePaletDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
-        inButeePaletGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
-        inPresencePaletVentouseDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
-        inPresencePaletVentouseGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
-        inIndexBarillet = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
+        inPresenceLectureCouleur = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
+        inPresencePaletDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
+        inCalageBordureDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
+        inPresencePaletGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
+        inPresencePaletVentouseDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
 
         // PCF2
-        inPresenceLectureCouleur = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
-        inTrappeMagasinDroitFerme = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
-        inTrappeMagasinGaucheFerme = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
-        inCalageBordureDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
-        inCalageBordureGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
+        inIndexBarillet = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
+        inButeePaletGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
+        inPresencePaletVentouseGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
+        inButeePaletDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
+        inCalageBordureGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_07);
 
         // PCF3
-        outElectroVanneDroit = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_00);
-        outPompeAVideDroite = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_01);
-        outElectroVanneGauche = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_02);
+        outElectroVanneDroit = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_01);
+        outPompeAVideDroite = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_04);
+        outElectroVanneGauche = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_00);
         outPompeAVideGauche = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_03);
 
         // Etat initial des IOs
