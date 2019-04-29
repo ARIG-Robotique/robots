@@ -100,8 +100,8 @@ public class RightSideService implements IRobotSide {
     }
 
     @Override
-    public void ascenseurPreAccelerateur() {
-        servosService.ascenseurDroitPreAccelerateur();
+    public void ascenseurCarouselDepose() {
+        servosService.ascenseurDroitCarouselDepose();
     }
 
     @Override
@@ -115,28 +115,28 @@ public class RightSideService implements IRobotSide {
     }
 
     @Override
-    public void pivotVentouseCarousel() {
-        servosService.pivotVentouseDroitCarousel();
+    public void pivotVentouseCarouselVertical() {
+        servosService.pivotVentouseDroitCarouselVertical();
     }
 
     @Override
-    public void pivotPinceSortieCarousel() {
-        servosService.pivotVentouseDroitSortieCarousel();
+    public void pivotVentouseCarouselSortie() {
+        servosService.pivotVentouseDroitCarouselSortie();
     }
 
     @Override
-    public void pinceSerrageOuvert() {
-        servosService.pinceSerragePaletDroitOuvert();
+    public void pinceSerrageRepos() {
+        servosService.pinceSerragePaletDroitRepos();
     }
 
     @Override
-    public void pinseSerrageLock() {
+    public void pinceSerrageLock() {
         servosService.pinceSerragePaletDroitLock();
     }
 
     @Override
-    public void pinceSerrageFerme() {
-        servosService.pinceSerragePaletDroitFerme();
+    public void pinceSerrageStandby() {
+        servosService.pinceSerragePaletDroitStandby();
     }
 
     @Override

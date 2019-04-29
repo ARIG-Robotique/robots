@@ -113,16 +113,24 @@ public class MagasinService implements InitializingBean {
         IRobotSide rightSideService = sideServices.get(ESide.DROITE);
         IRobotSide leftSideService = sideServices.get(ESide.GAUCHE);
 
-        if (rightSideService.nbPaletDansMagasin() > 0 || leftSideService.nbPaletDansMagasin() > 0) {
+        while (rightSideService.nbPaletDansMagasin() > 0) {
             rightSideService.ejectionMagasinOuvert();
-            leftSideService.ejectionMagasinOuvert();
-
-            while (rightSideService.nbPaletDansMagasin() > 0 || leftSideService.nbPaletDansMagasin() > 0) {
-                ThreadUtils.sleep(1000);
-            }
+            servosService.waitEjectionMagasin();
 
             rightSideService.ejectionMagasinFerme();
+            servosService.waitEjectionMagasin();
+
+            ThreadUtils.sleep(1000);
+        }
+
+        while (leftSideService.nbPaletDansMagasin() > 0) {
+            leftSideService.ejectionMagasinOuvert();
+            servosService.waitEjectionMagasin();
+
             leftSideService.ejectionMagasinFerme();
+            servosService.waitEjectionMagasin();
+
+            ThreadUtils.sleep(1000);
         }
     }
 

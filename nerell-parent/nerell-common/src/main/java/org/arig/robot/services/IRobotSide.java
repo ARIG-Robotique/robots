@@ -48,21 +48,21 @@ public interface IRobotSide {
 
     void ascenseurCarousel();
 
-    void ascenseurPreAccelerateur();
+    void ascenseurCarouselDepose();
 
     void pivotVentouseTable();
 
     void pivotVentouseFacade();
 
-    void pivotVentouseCarousel();
+    void pivotVentouseCarouselVertical();
 
-    void pivotPinceSortieCarousel();
+    void pivotVentouseCarouselSortie();
 
-    void pinceSerrageOuvert();
+    void pinceSerrageRepos();
 
-    void pinseSerrageLock();
+    void pinceSerrageLock();
 
-    void pinceSerrageFerme();
+    void pinceSerrageStandby();
 
     void porteBarilletOuvert();
 

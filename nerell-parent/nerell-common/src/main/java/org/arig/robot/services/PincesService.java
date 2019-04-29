@@ -121,7 +121,7 @@ public class PincesService implements InitializingBean {
 
         couleurInPince.put(side, couleur);
 
-        service.pinceSerrageOuvert();
+        service.pinceSerrageRepos();
 
         return true;
     }
@@ -209,11 +209,6 @@ public class PincesService implements InitializingBean {
             return false;
         }
 
-        service.pivotVentouseTable();
-        servosService.waitPivotVentouse();
-
-        service.disablePompeAVide(); // désactive la pompe à vide (mais on ne release pas)
-
         robotStatus.setGoldeniumPrit(true);
         couleurInPince.put(side, CouleurPalet.GOLD);
 
@@ -230,6 +225,13 @@ public class PincesService implements InitializingBean {
         if (!ok) {
             service.ascenseurAndVentouseHome();
             release(side);
+
+        } else {
+            service.ascenseurAccelerateur();
+            service.pivotVentouseTable();
+            servosService.waitPivotVentouse();
+
+            service.disablePompeAVide(); // désactive la pompe à vide (mais on ne release pas)
         }
     }
 
@@ -241,7 +243,7 @@ public class PincesService implements InitializingBean {
         IRobotSide service = sideServices.get(side);
 
         service.ascenseurAccelerateur();
-        service.pivotVentouseCarousel();
+        service.pivotVentouseCarouselVertical();
         service.pousseAccelerateurStandby();
         servosService.waitAscenseurAndPivotVentouse();
     }
@@ -282,8 +284,11 @@ public class PincesService implements InitializingBean {
         CouleurPalet couleurFinale = carousel.get(service.positionCarouselPince());
 
         service.ascenseurCarousel();
-        service.pivotVentouseCarousel();
+        service.pivotVentouseCarouselVertical();
         servosService.waitAscenseurAndPivotVentouse();
+
+        service.porteBarilletOuvert();
+        servosService.waitPorteBarillet();
 
         service.enablePompeAVide();
 
@@ -291,17 +296,17 @@ public class PincesService implements InitializingBean {
             log.warn("Impossible d'aspirer le palet");
             service.disablePompeAVide();
             service.releaseElectroVanne();
+            service.porteBarilletFerme();
             release(side);
             return false;
         }
 
-        service.porteBarilletOuvert();
-        servosService.waitPorteBarillet();
+        service.ascenseurCarouselDepose();
+        servosService.waitAscenseurVentouse();
 
-        service.pivotPinceSortieCarousel();
+        service.pivotVentouseCarouselSortie();
         servosService.waitPivotVentouse();
 
-        service.ascenseurPreAccelerateur();
         service.pivotVentouseFacade();
         servosService.waitAscenseurVentouse();
 
@@ -373,8 +378,11 @@ public class PincesService implements InitializingBean {
             carouselService.tourner(service.positionCarouselPince(), couleur);
 
             service.ascenseurCarousel();
-            service.pivotVentouseCarousel();
+            service.pivotVentouseCarouselVertical();
             servosService.waitAscenseurAndPivotVentouse();
+
+            service.porteBarilletOuvert();
+            servosService.waitPorteBarillet();
 
             service.enablePompeAVide();
 
@@ -382,23 +390,27 @@ public class PincesService implements InitializingBean {
                 log.warn("Impossible d'aspirer le palet");
                 service.disablePompeAVide();
                 service.releaseElectroVanne();
-                service.ascenseurAndVentouseHome();
+                service.porteBarilletFerme();
                 release(side);
                 return false;
             }
 
-            service.porteBarilletOuvert();
-            servosService.waitPorteBarillet();
+            service.ascenseurCarouselDepose();
+            servosService.waitAscenseurVentouse();
+
+            service.pivotVentouseCarouselSortie();
+            servosService.waitPivotVentouse();
 
             service.ascenseurAccelerateur();
             service.pivotVentouseFacade();
             servosService.waitAscenseurAndPivotVentouse();
 
+            service.porteBarilletFerme();
+
             couleurInPince.put(side, carousel.get(service.positionCarouselPince()));
             carousel.unstore(service.positionCarouselPince());
 
             carouselService.release();
-            service.porteBarilletFerme();
         }
 
         return true;
@@ -450,7 +462,7 @@ public class PincesService implements InitializingBean {
             return false;
         }
 
-        service.pinceSerrageOuvert();
+        service.pinceSerrageRepos();
 
         service.pivotVentouseTable();
         servosService.waitPivotVentouse();
@@ -501,9 +513,17 @@ public class PincesService implements InitializingBean {
             }
 
             service.porteBarilletOuvert();
-            service.ascenseurCarousel();
-            service.pivotVentouseCarousel();
+            servosService.waitPorteBarillet();
+
+            service.ascenseurCarouselDepose();
+            service.pivotVentouseCarouselSortie();
             servosService.waitAscenseurAndPivotVentouse();
+
+            service.pivotVentouseCarouselVertical();
+            servosService.waitPivotVentouse();
+
+            service.ascenseurCarousel();
+            servosService.waitAscenseurVentouse();
 
             service.porteBarilletFerme();
             servosService.waitPorteBarillet();
@@ -511,7 +531,10 @@ public class PincesService implements InitializingBean {
             service.disablePompeAVide();
             service.releaseElectroVanne();
 
-            service.ascenseurAndVentouseHome();
+            service.ascenseurDistributeur();
+            servosService.waitAscenseurVentouse();
+
+            service.pivotVentouseTable();
 
             carousel.store(service.positionCarouselPince(), couleurInPince.get(side));
 

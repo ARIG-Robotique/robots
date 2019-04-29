@@ -100,7 +100,7 @@ public class CarouselService {
         // ventouse en haut pour utiliser son capteur
         // barillet ouvert
         servosService.ascenseurDroitCarousel();
-        servosService.pivotVentouseDroitCarousel();
+        servosService.pivotVentouseDroitCarouselVertical();
         servosService.porteBarilletDroitOuvert();
 
         while (carouselManager.has(CouleurPalet.ANY)) {
