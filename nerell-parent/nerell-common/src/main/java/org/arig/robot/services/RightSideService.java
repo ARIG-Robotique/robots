@@ -48,7 +48,7 @@ public class RightSideService implements IRobotSide {
 
     @Override
     public void enablePompeAVide() {
-        ioService.disableElectroVanneDroite();
+        ioService.videElectroVanneDroite();
         ioService.enablePompeAVideDroite();
     }
 
@@ -59,9 +59,9 @@ public class RightSideService implements IRobotSide {
 
     @Override
     public void releaseElectroVanne() {
-        ioService.enableElectroVanneDroite();
+        ioService.airElectroVanneDroite();
         ThreadUtils.sleep(IConstantesNerellConfig.tempsActivationElectrvanne);
-        ioService.disableElectroVanneDroite();
+        ioService.videElectroVanneDroite();
     }
 
     @Override

@@ -186,8 +186,8 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         outAlimPuissance8V.high(); // Désactivé
         disableLedCapteurCouleur();
         clearColorLedRGB();
-        disableElectroVanneDroite();
-        disableElectroVanneGauche();
+        videElectroVanneDroite();
+        videElectroVanneGauche();
         disablePompeAVideDroite();
         disablePompeAVideGauche();
     }
@@ -507,27 +507,27 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     }
 
     @Override
-    public void enableElectroVanneDroite() {
-        log.info("Activation electrovanne droite");
-        outElectroVanneDroit.low();
-    }
-
-    @Override
-    public void disableElectroVanneDroite() {
-        log.info("Desactivation electrovanne droite");
+    public void airElectroVanneDroite() {
+        log.info("Air electrovanne droite");
         outElectroVanneDroit.high();
     }
 
     @Override
-    public void enableElectroVanneGauche() {
-        log.info("Activation electrovanne gauche");
-        outElectroVanneGauche.low();
+    public void videElectroVanneDroite() {
+        log.info("Vide electrovanne droite");
+        outElectroVanneDroit.low();
     }
 
     @Override
-    public void disableElectroVanneGauche() {
-        log.info("Desactivation electrovanne gauche");
+    public void airElectroVanneGauche() {
+        log.info("Air electrovanne gauche");
         outElectroVanneGauche.high();
+    }
+
+    @Override
+    public void videElectroVanneGauche() {
+        log.info("Vide electrovanne gauche");
+        outElectroVanneGauche.low();
     }
 
     @Override

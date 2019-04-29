@@ -104,9 +104,10 @@ public class PincesService implements InitializingBean {
             return false;
         }
 
-        service.ascenseurTable();
         service.pivotVentouseTable();
-        servosService.waitAscenseurAndPivotVentouse();
+        servosService.waitPivotVentouse();
+        service.ascenseurTable();
+        servosService.waitAscenseurVentouse();
 
         service.enablePompeAVide();
 
@@ -525,14 +526,14 @@ public class PincesService implements InitializingBean {
             service.ascenseurCarousel();
             servosService.waitAscenseurVentouse();
 
-            service.porteBarilletFerme();
-            servosService.waitPorteBarillet();
-
             service.disablePompeAVide();
             service.releaseElectroVanne();
 
             service.ascenseurDistributeur();
             servosService.waitAscenseurVentouse();
+
+            service.porteBarilletFerme();
+            servosService.waitPorteBarillet();
 
             service.pivotVentouseTable();
 
