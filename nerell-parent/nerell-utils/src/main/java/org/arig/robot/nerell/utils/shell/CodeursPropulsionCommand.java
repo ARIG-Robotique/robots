@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
+import org.arig.robot.system.encoders.AbstractEncoder;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -26,8 +27,9 @@ import java.util.stream.Collectors;
 @ShellCommandGroup("Codeurs Propulsion")
 public class CodeursPropulsionCommand {
 
-    private final Abstract2WheelsEncoders encoders;
-    private final AbstractPropulsionsMotors motors;
+    private final AbstractEncoder carouselEncoder;
+    private final Abstract2WheelsEncoders wheelsEncoders;
+    private final AbstractPropulsionsMotors propulsionsMotors;
     private final IIOService ioService;
 
     private final List<InfoCapture> infos = new ArrayList<>();
@@ -40,8 +42,15 @@ public class CodeursPropulsionCommand {
     @SneakyThrows
     @ShellMethod("Lecture des codeurs des roues de propulsions")
     public void readCodeursRoues() {
-        encoders.lectureValeurs();
-        log.info("Gauche : {} - Droite : {}", encoders.getGauche(), encoders.getDroit());
+        wheelsEncoders.lectureValeurs();
+        log.info("Gauche : {} - Droite : {}", wheelsEncoders.getGauche(), wheelsEncoders.getDroit());
+    }
+
+    @SneakyThrows
+    @ShellMethod("Lecture du codeur carousel")
+    public void readCodeurCarousel() {
+        carouselEncoder.lectureValeur();
+        log.info("Carousel : {}", carouselEncoder.getValue());
     }
 
     @SneakyThrows
@@ -50,22 +59,22 @@ public class CodeursPropulsionCommand {
     public void captureCodeursRoues() {
         // Vitesse positive
         log.info("Reset codeurs");
-        encoders.reset();
-        for (int vitesse = motors.getStopSpeed() ; vitesse <= motors.getMaxSpeed() ; vitesse++) {
+        wheelsEncoders.reset();
+        for (int vitesse = propulsionsMotors.getStopSpeed(); vitesse <= propulsionsMotors.getMaxSpeed() ; vitesse++) {
             captureForVitesse(vitesse);
         }
 
-        motors.stopAll();
+        propulsionsMotors.stopAll();
         Thread.sleep(5000);
 
         // Vitesse négative
         log.info("Reset codeurs");
-        encoders.reset();
-        for (int vitesse = motors.getStopSpeed() - 1 ; vitesse >= motors.getMinSpeed() ; vitesse--) {
+        wheelsEncoders.reset();
+        for (int vitesse = propulsionsMotors.getStopSpeed() - 1; vitesse >= propulsionsMotors.getMinSpeed() ; vitesse--) {
             captureForVitesse(vitesse);
         }
 
-        motors.stopAll();
+        propulsionsMotors.stopAll();
 
         // Ecriture en CSV
         List<String> lines = infos.parallelStream()
@@ -77,12 +86,12 @@ public class CodeursPropulsionCommand {
     @SneakyThrows
     private void captureForVitesse(int vitesse) {
         log.info("Vitesse moteur {}", vitesse);
-        motors.generateMouvement(vitesse, vitesse);
+        propulsionsMotors.generateMouvement(vitesse, vitesse);
         for(int mesure = 0 ; mesure < 10 ; mesure++) {
             Thread.sleep(10);
 
-            encoders.lectureValeurs();
-            infos.add(new InfoCapture(vitesse, encoders.getGauche(), encoders.getDroit()));
+            wheelsEncoders.lectureValeurs();
+            infos.add(new InfoCapture(vitesse, wheelsEncoders.getGauche(), wheelsEncoders.getDroit()));
         }
     }
 
