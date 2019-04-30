@@ -12,22 +12,26 @@ public class PropulsionsSD21Motors extends AbstractPropulsionsMotors implements 
     private final byte motor1Register, motor2Register;
 
     private SD21Motor motor1;
+    private boolean invert1;
     private SD21Motor motor2;
+    private boolean invert2;
 
     @Setter
     private ApplicationContext applicationContext;
 
 
-    public PropulsionsSD21Motors(final byte motor1Register, final byte motor2Register) {
+    public PropulsionsSD21Motors(final byte motor1Register, final boolean invert1, final byte motor2Register, final boolean invert2) {
         super(1500);
         this.motor1Register = motor1Register;
+        this.invert1 = invert1;
         this.motor2Register = motor2Register;
+        this.invert2 = invert2;
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        motor1 = new SD21Motor(motor1Register);
-        motor2 = new SD21Motor(motor2Register);
+        motor1 = new SD21Motor(motor1Register, invert1);
+        motor2 = new SD21Motor(motor2Register, invert2);
 
         applicationContext.getAutowireCapableBeanFactory().autowireBean(motor1);
         applicationContext.getAutowireCapableBeanFactory().autowireBean(motor2);

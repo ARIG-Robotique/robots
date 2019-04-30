@@ -7,13 +7,20 @@ public class SD21Motor extends AbstractMotor {
 
     private final byte motorRegister;
 
+    private final int coef;
+
     @Autowired
     private SD21Servos sd21;
 
     public SD21Motor(final byte motorRegister) {
+        this(motorRegister, false);
+    }
+
+    public SD21Motor(final byte motorRegister, final boolean invert) {
         super(1500);
 
         this.motorRegister = motorRegister;
+        this.coef = invert ? -1 : 1;
 
         minVal = 1100;
         maxVal = 1900;
@@ -34,7 +41,7 @@ public class SD21Motor extends AbstractMotor {
         }
         prev = cmd;
 
-        sd21.setPosition(motorRegister, cmd);
+        sd21.setPosition(motorRegister, cmd * coef);
     }
 
     @Override

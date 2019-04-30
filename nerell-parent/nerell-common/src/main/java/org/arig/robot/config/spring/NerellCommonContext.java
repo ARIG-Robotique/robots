@@ -88,7 +88,7 @@ public class NerellCommonContext {
     @Bean
     public AbstractPropulsionsMotors motors() {
         // Configuration de la carte moteur propulsion.
-        final PropulsionsSD21Motors motors = new PropulsionsSD21Motors(IConstantesServos.MOTOR_DROIT, IConstantesServos.MOTOR_GAUCHE);
+        final PropulsionsSD21Motors motors = new PropulsionsSD21Motors(IConstantesServos.MOTOR_DROIT, false, IConstantesServos.MOTOR_GAUCHE, true);
         motors.assignMotors(IConstantesNerellConfig.numeroMoteurGauche, IConstantesNerellConfig.numeroMoteurDroit);
         return motors;
     }
