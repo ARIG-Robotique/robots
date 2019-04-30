@@ -17,7 +17,7 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 import javax.validation.constraints.NotNull;
 
 @ShellComponent
-@ShellCommandGroup("asservissement")
+@ShellCommandGroup("Asservissement")
 @AllArgsConstructor
 public class AsservissementCommands {
 
