@@ -35,13 +35,13 @@ public class SD21Motor extends AbstractMotor {
 
     @Override
     public void speed(final int val) {
-        final int cmd = check(val + offsetValue);
+        final int cmd = check((val * coef) + offsetValue);
         if (cmd == prev) {
             return;
         }
         prev = cmd;
 
-        sd21.setPosition(motorRegister, cmd * coef);
+        sd21.setPosition(motorRegister, cmd);
     }
 
     @Override
