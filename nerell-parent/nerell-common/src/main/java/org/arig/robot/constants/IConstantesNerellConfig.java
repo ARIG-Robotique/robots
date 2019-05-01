@@ -83,7 +83,7 @@ public interface IConstantesNerellConfig {
     double kiOrientation = 5.5;
     double kdOrientation = 0.050;
 
-    double kpCarousel = 1;
+    double kpCarousel = 0.1;
     double kiCarousel = 0;
     double kdCarousel = 0;
 
