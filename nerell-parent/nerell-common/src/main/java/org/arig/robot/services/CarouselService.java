@@ -44,6 +44,7 @@ public class CarouselService {
         }
 
         if (isWorking()) {
+            log.warn("Temps d'attente trop long du carousel");
             throw new CarouselNotAvailableException();
         } else {
             working.set(true);
@@ -104,7 +105,7 @@ public class CarouselService {
         servosService.porteBarilletDroitOuvert();
 
         while (carouselManager.has(CouleurPalet.ANY)) {
-            tourner(carouselManager.firstIndexOf(CouleurPalet.ANY, ICarouselManager.PINCE_DROITE));
+            tourner(carouselManager.firstIndexOf(CouleurPalet.ANY, ICarouselManager.VENTOUSE_DROITE));
 
             // on attend que la palet soit enlevé (ou tombe ?)
             while (ioService.presencePaletVentouseDroit()) {

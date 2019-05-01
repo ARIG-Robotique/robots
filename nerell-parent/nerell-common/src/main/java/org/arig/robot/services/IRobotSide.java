@@ -9,7 +9,7 @@ public interface IRobotSide {
 
     ESide id();
 
-    int positionCarouselPince();
+    int positionCarouselVentouse();
 
     int positionCarouselMagasin();
 
@@ -30,6 +30,8 @@ public interface IRobotSide {
     boolean paletPrisDansVentouse();
 
     int nbPaletDansMagasin();
+
+    boolean presencePaletVentouse();
 
     // SERVOS
 

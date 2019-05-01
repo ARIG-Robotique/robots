@@ -10,7 +10,7 @@ import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.services.PincesService;
+import org.arig.robot.services.VentousesService;
 import org.arig.robot.services.SerrageService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
@@ -28,7 +28,7 @@ public class DeposerGoldeniumTable extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private PincesService pinces;
+    private VentousesService ventouses;
 
     @Autowired
     private SerrageService serrageService;
@@ -49,7 +49,7 @@ public class DeposerGoldeniumTable extends AbstractAction {
     @Override
     public boolean isValid() {
         return isTimeValid() &&
-                pinces.couleurInPince(rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE) == CouleurPalet.GOLD &&
+                ventouses.getCouleur(rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE) == CouleurPalet.GOLD &&
                 rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax;
     }
 
@@ -60,7 +60,7 @@ public class DeposerGoldeniumTable extends AbstractAction {
         try {
             rs.enableAvoidance();
 
-            // va au point le plus proche
+            // va au point le plus proche (zone bleu)
             // TODO
             if (rs.getTeam() == Team.VIOLET) {
                 mv.pathTo(2800, 600);
@@ -76,7 +76,7 @@ public class DeposerGoldeniumTable extends AbstractAction {
 
             serrageService.disable();
 
-            pinces.deposeGoldenimTable(side);
+            ventouses.deposeGoldenimTable(side);
 
             mv.reculeMM(150);
             mv.gotoOrientationDeg(rs.getTeam() == Team.VIOLET ? 180 : 0);
@@ -89,7 +89,7 @@ public class DeposerGoldeniumTable extends AbstractAction {
 
         } finally {
             serrageService.enable();
-            pinces.finishDepose(side);
+            ventouses.finishDeposeAsync(side);
         }
     }
 

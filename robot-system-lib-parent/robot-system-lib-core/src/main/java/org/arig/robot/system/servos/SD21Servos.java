@@ -3,6 +3,7 @@ package org.arig.robot.system.servos;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.exception.I2CException;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -219,13 +220,6 @@ public class SD21Servos implements InitializingBean {
         }
     }
 
-    public void waitTime(long waitTime) {
-        try {
-            Thread.sleep(waitTime);
-        } catch (InterruptedException e) {
-        }
-    }
-
     /**
      * Check servo.
      *
@@ -246,7 +240,7 @@ public class SD21Servos implements InitializingBean {
         if (log.isDebugEnabled()) {
             log.debug("Attente pour le mouvement servo {} {} -> {} à la vitesse de {} pendant {} ms", servoNb, oldP, newP, speed, waitTime);
         }
-        waitTime(waitTime);
+        ThreadUtils.sleep(waitTime);
     }
 
     /**

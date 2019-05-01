@@ -6,13 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
-import org.arig.robot.exceptions.PinceNotAvailableException;
+import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.services.PincesService;
+import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
@@ -43,7 +43,7 @@ public abstract class AbstractPrendrePaletsGrandDistributeur extends AbstractAct
     protected RobotStatus rs;
 
     @Autowired
-    private PincesService pinces;
+    private VentousesService ventouses;
 
     @Autowired
     private ICarouselManager carousel;
@@ -76,31 +76,28 @@ public abstract class AbstractPrendrePaletsGrandDistributeur extends AbstractAct
             // aligne puis avance en position
             mv.gotoOrientationDeg(-90);
 
-            pinces.waitAvailable(ESide.GAUCHE);
-            pinces.waitAvailable(ESide.DROITE);
+            ventouses.waitAvailable(ESide.GAUCHE);
+            ventouses.waitAvailable(ESide.DROITE);
 
-            pinces.preparePriseDistributeur(ESide.GAUCHE);
-            pinces.preparePriseDistributeur(ESide.DROITE);
+            ventouses.preparePriseDistributeur(ESide.GAUCHE);
+            ventouses.preparePriseDistributeur(ESide.DROITE);
 
             mv.avanceMM(150); // TODO
 
             // prise du 1 et du 2
-            boolean ok1 = pinces.priseDistributeur(liste().get(index1), side1);
-            boolean ok2 = pinces.priseDistributeur(liste().get(index2), side2);
+            boolean ok1 = ventouses.priseDistributeur(liste().get(index1), side1);
+            boolean ok2 = ventouses.priseDistributeur(liste().get(index2), side2);
 
             // recule
             mv.reculeMM(150); // TODO
 
             // stocke
-            pinces.finishPriseDistributeur(ok1, side1);
-            pinces.finishPriseDistributeur(ok2, side2);
-
-            pinces.stockageAsync(ESide.DROITE);
-            pinces.stockageAsync(ESide.GAUCHE);
+            ventouses.finishPriseDistributeurAsync(ok1, side1);
+            ventouses.finishPriseDistributeurAsync(ok2, side2);
 
             completed = true;
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | PinceNotAvailableException e) {
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
         }

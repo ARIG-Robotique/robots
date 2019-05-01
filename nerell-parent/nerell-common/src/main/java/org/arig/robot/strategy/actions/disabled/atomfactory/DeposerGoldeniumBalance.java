@@ -7,12 +7,12 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.exceptions.CarouselNotAvailableException;
-import org.arig.robot.exceptions.PinceNotAvailableException;
+import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.services.PincesService;
+import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class DeposerGoldeniumBalance extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private PincesService pinces;
+    private VentousesService ventouses;
 
     @Getter
     private boolean completed = false;
@@ -47,7 +47,7 @@ public class DeposerGoldeniumBalance extends AbstractAction {
     @Override
     public boolean isValid() {
         return isTimeValid() &&
-                pinces.couleurInPince(rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE) == CouleurPalet.GOLD &&
+                ventouses.getCouleur(rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE) == CouleurPalet.GOLD &&
                 rs.getPaletsInBalance().size() < IConstantesNerellConfig.nbPaletsBalanceMax;
     }
 
@@ -68,27 +68,24 @@ public class DeposerGoldeniumBalance extends AbstractAction {
 
             rs.disableAvoidance();
 
-            pinces.waitAvailable(side);
+            ventouses.waitAvailable(side);
 
-            if (!pinces.deposeBalance1(CouleurPalet.GOLD, side)) {
-                completed = true;
-                return;
-            }
+            ventouses.deposeBalance1(CouleurPalet.GOLD, side);
 
             mv.avanceMM(150); // TODO
 
-            pinces.deposeBalance2(side);
+            ventouses.deposeBalance2(side);
 
             mv.reculeMM(150); // TODO
 
             completed = true;
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | CarouselNotAvailableException | PinceNotAvailableException e) {
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | CarouselNotAvailableException | VentouseNotAvailableException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
 
         } finally {
-            pinces.finishDepose(side);
+            ventouses.finishDeposeAsync(side);
         }
     }
 

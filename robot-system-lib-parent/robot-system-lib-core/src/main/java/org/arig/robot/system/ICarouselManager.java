@@ -4,11 +4,11 @@ import org.arig.robot.model.enums.CouleurPalet;
 
 public interface ICarouselManager {
 
-    int PINCE_GAUCHE = 0;
-    int PINCE_DROITE = 1;
+    int VENTOUSE_GAUCHE = 0;
+    int VENTOUSE_DROITE = 1;
+    int LECTEUR = 2;
     int MAGASIN_DROIT = 3;
     int MAGASIN_GAUCHE = 4;
-    int LECTEUR = 5; // TODO à valider
 
     void init();
 

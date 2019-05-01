@@ -5,12 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
-import org.arig.robot.exceptions.PinceNotAvailableException;
+import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.services.PincesService;
+import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
@@ -28,7 +28,7 @@ public class PrendrePaletsPetitDistributeurEquipe extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private PincesService pinces;
+    private VentousesService ventouses;
 
     @Autowired
     private ICarouselManager carousel;
@@ -73,30 +73,27 @@ public class PrendrePaletsPetitDistributeurEquipe extends AbstractAction {
                 mv.gotoPointMM(150, 150);
             }
 
-            // aligne, prépare les pinces et avance
+            // aligne, prépare les ventouses et avance
             mv.gotoOrientationDeg(-90);
 
-            pinces.waitAvailable(ESide.GAUCHE);
-            pinces.waitAvailable(ESide.DROITE);
+            ventouses.waitAvailable(ESide.GAUCHE);
+            ventouses.waitAvailable(ESide.DROITE);
 
-            pinces.preparePriseDistributeur(ESide.GAUCHE);
-            pinces.preparePriseDistributeur(ESide.DROITE);
+            ventouses.preparePriseDistributeur(ESide.GAUCHE);
+            ventouses.preparePriseDistributeur(ESide.DROITE);
 
             mv.avanceMM(150); // TODO
 
             // prise du bleu et du vert
-            boolean bleuOk = pinces.priseDistributeur(CouleurPalet.BLEU, sideBleu);
-            boolean vertOk = pinces.priseDistributeur(CouleurPalet.VERT, sideVert);
+            boolean bleuOk = ventouses.priseDistributeur(CouleurPalet.BLEU, sideBleu);
+            boolean vertOk = ventouses.priseDistributeur(CouleurPalet.VERT, sideVert);
 
             // recule
             mv.reculeMM(150); // TODO
 
             // stocke
-            pinces.finishPriseDistributeur(bleuOk, sideBleu);
-            pinces.finishPriseDistributeur(vertOk, sideVert);
-
-            pinces.stockageAsync(sideBleu);
-            pinces.stockageAsync(sideVert);
+            ventouses.finishPriseDistributeurAsync(bleuOk, sideBleu);
+            ventouses.finishPriseDistributeurAsync(vertOk, sideVert);
 
             // avance en face du ROUGE
             // TODO
@@ -106,23 +103,22 @@ public class PrendrePaletsPetitDistributeurEquipe extends AbstractAction {
                 mv.gotoPointMM(250, 150);
             }
 
-            // aligne, prépare les pinces et avance
+            // aligne, prépare les ventouses et avance
             mv.gotoOrientationDeg(-90);
 
             mv.avanceMM(150); // TODO
 
-            pinces.waitAvailable(sideRouge);
-            pinces.preparePriseDistributeur(sideRouge);
+            ventouses.waitAvailable(sideRouge);
+            ventouses.preparePriseDistributeur(sideRouge);
 
             // prise du rouge
-            boolean rougeOk = pinces.priseDistributeur(CouleurPalet.ROUGE, sideRouge);
+            boolean rougeOk = ventouses.priseDistributeur(CouleurPalet.ROUGE, sideRouge);
 
             // recule
             mv.reculeMM(150); // TODO
 
             // stocke
-            pinces.finishPriseDistributeur(rougeOk, sideRouge);
-            pinces.stockageAsync(sideRouge);
+            ventouses.finishPriseDistributeurAsync(rougeOk, sideRouge);
 
             // TODO
             rs.enableAvoidance();
@@ -144,13 +140,9 @@ public class PrendrePaletsPetitDistributeurEquipe extends AbstractAction {
 
             completed = true;
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | PinceNotAvailableException e) {
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
-
-        } finally {
-            pinces.finishPriseDistributeur(false, ESide.GAUCHE);
-            pinces.finishPriseDistributeur(false, ESide.DROITE);
         }
     }
 }

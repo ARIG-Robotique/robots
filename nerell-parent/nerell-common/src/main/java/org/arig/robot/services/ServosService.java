@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.system.servos.SD21Servos;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,35 +65,35 @@ public class ServosService {
     //*******************************************//
 
     public void waitPinceSerragePalet() {
-        servos.waitTime(IConstantesServos.WAIT_PINCE_SERRAGE_PALET);
+        ThreadUtils.sleep(IConstantesServos.WAIT_PINCE_SERRAGE_PALET);
     }
 
     public void waitPivotVentouse() {
-        servos.waitTime(IConstantesServos.WAIT_PIVOT_VENTOUSE);
+        ThreadUtils.sleep(IConstantesServos.WAIT_PIVOT_VENTOUSE);
     }
 
-    public void waitAscenseurVentouse() {
-        servos.waitTime(IConstantesServos.WAIT_ASCENSEUR_VENTOUSE);
+    public void waitAscenseurVentouseLong() {
+        ThreadUtils.sleep(IConstantesServos.WAIT_ASCENSEUR_VENTOUSE_LONG);
+    }
+
+    public void waitAscenseurVentouseShort() {
+        ThreadUtils.sleep(IConstantesServos.WAIT_ASCENSEUR_VENTOUSE_SHORT);
     }
 
     public void waitPorteBarillet() {
-        servos.waitTime(IConstantesServos.WAIT_PORTE_BARILLET);
+        ThreadUtils.sleep(IConstantesServos.WAIT_PORTE_BARILLET);
     }
 
     public void waitTrappeMagasin() {
-        servos.waitTime(IConstantesServos.WAIT_TRAPPE_MAGASIN);
+        ThreadUtils.sleep(IConstantesServos.WAIT_TRAPPE_MAGASIN);
     }
 
     public void waitEjectionMagasin() {
-        servos.waitTime(IConstantesServos.WAIT_EJECTION_MAGASIN);
+        ThreadUtils.sleep(IConstantesServos.WAIT_EJECTION_MAGASIN);
     }
 
     public void waitPousseAccelerateur() {
-        servos.waitTime(IConstantesServos.WAIT_POUSSE_ACCELERATEUR);
-    }
-
-    public void waitAscenseurAndPivotVentouse() {
-        servos.waitTime(Math.max(IConstantesServos.WAIT_PIVOT_VENTOUSE, IConstantesServos.WAIT_ASCENSEUR_VENTOUSE));
+        ThreadUtils.sleep(IConstantesServos.WAIT_POUSSE_ACCELERATEUR);
     }
 
     //*******************************************//

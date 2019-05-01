@@ -22,8 +22,8 @@ public class RightSideService implements IRobotSide {
     }
 
     @Override
-    public int positionCarouselPince() {
-        return ICarouselManager.PINCE_DROITE;
+    public int positionCarouselVentouse() {
+        return ICarouselManager.VENTOUSE_DROITE;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class RightSideService implements IRobotSide {
     @Override
     public void releaseElectroVanne() {
         ioService.airElectroVanneDroite();
-        ThreadUtils.sleep(IConstantesNerellConfig.tempsActivationElectrvanne);
+        ThreadUtils.sleep(IConstantesNerellConfig.tempsActivationElectrovanne);
         ioService.videElectroVanneDroite();
     }
 
@@ -72,6 +72,11 @@ public class RightSideService implements IRobotSide {
     @Override
     public int nbPaletDansMagasin() {
         return ioService.nbPaletDansMagasinDroit();
+    }
+
+    @Override
+    public boolean presencePaletVentouse() {
+        return ioService.presencePaletVentouseDroit();
     }
 
     @Override

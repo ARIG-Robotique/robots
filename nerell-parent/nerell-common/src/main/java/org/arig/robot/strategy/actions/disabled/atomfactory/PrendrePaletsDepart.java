@@ -5,8 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.*;
-import org.arig.robot.services.PincesService;
-import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.NerellUtils;

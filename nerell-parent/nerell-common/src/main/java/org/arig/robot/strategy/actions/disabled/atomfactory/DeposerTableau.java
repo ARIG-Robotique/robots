@@ -2,10 +2,10 @@ package org.arig.robot.strategy.actions.disabled.atomfactory;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
-import org.arig.robot.exceptions.PinceNotAvailableException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
@@ -67,7 +67,7 @@ public class DeposerTableau extends AbstractAction {
                 mv.gotoOrientationDeg(0);
             }
 
-            int distance = 500 - rs.getNbDeposesTableau() * 70;
+            int distance = 500 - rs.getNbDeposesTableau() * IConstantesNerellConfig.offsetTableau;
 
             mv.reculeMM(distance);
 

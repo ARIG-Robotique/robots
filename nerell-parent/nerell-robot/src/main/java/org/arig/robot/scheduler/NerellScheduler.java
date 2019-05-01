@@ -1,6 +1,6 @@
 package org.arig.robot.scheduler;
 
-import org.arig.robot.exceptions.PinceNotAvailableException;
+import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.enums.CouleurPalet;
@@ -31,7 +31,7 @@ public class NerellScheduler {
     private ITrajectoryManager trajectoryManager;
 
     @Autowired
-    private PincesService pincesService;
+    private VentousesService ventousesService;
 
     @Autowired
     private CarouselService carouselService;
@@ -79,14 +79,16 @@ public class NerellScheduler {
     public void prisePinceDroiteTask() {
         if (rs.isServicesMetierEnabled()) {
             try {
-                if (rightSideService.buteePalet() && rightSideService.presencePalet() && !pincesService.isWorking(ESide.DROITE)) {
-                    pincesService.waitAvailable(ESide.DROITE);
+                if (rightSideService.buteePalet() && rightSideService.presencePalet() && !ventousesService.isWorking(ESide.DROITE)) {
+                    ventousesService.waitAvailable(ESide.DROITE);
 
-                    if (pincesService.priseTable(CouleurPalet.INCONNU, ESide.DROITE)) {
-                        pincesService.stockageAsync(ESide.DROITE);
+                    if (ventousesService.priseTable(CouleurPalet.INCONNU, ESide.DROITE)) {
+                        ventousesService.stockageAsync(ESide.DROITE);
+                    } else {
+                        ventousesService.finishDeposeAsync(ESide.DROITE);
                     }
                 }
-            } catch (PinceNotAvailableException e) {
+            } catch (VentouseNotAvailableException e) {
 
             }
         }
@@ -96,14 +98,16 @@ public class NerellScheduler {
     public void prisePinceGaucheTask() {
         if (rs.isServicesMetierEnabled()) {
             try {
-                if (leftSideService.buteePalet() && leftSideService.presencePalet() && !pincesService.isWorking(ESide.GAUCHE)) {
-                    pincesService.waitAvailable(ESide.GAUCHE);
+                if (leftSideService.buteePalet() && leftSideService.presencePalet() && !ventousesService.isWorking(ESide.GAUCHE)) {
+                    ventousesService.waitAvailable(ESide.GAUCHE);
 
-                    if (pincesService.priseTable(CouleurPalet.INCONNU, ESide.GAUCHE)) {
-                        pincesService.stockageAsync(ESide.GAUCHE);
+                    if (ventousesService.priseTable(CouleurPalet.INCONNU, ESide.GAUCHE)) {
+                        ventousesService.stockageAsync(ESide.GAUCHE);
+                    } else {
+                        ventousesService.finishDeposeAsync(ESide.GAUCHE);
                     }
                 }
-            } catch (PinceNotAvailableException e) {
+            } catch (VentouseNotAvailableException e) {
 
             }
         }

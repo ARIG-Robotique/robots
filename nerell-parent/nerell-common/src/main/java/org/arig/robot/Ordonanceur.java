@@ -240,11 +240,6 @@ public class Ordonanceur {
 
         robotStatus.disableServicesMetier();
 
-        /*
-        servosService.brasAttentePriseRobot();
-        servosService.pinceDroiteOuvert();
-        */
-
         // Désactivation de la puissance moteur pour être sur de ne plus rouler
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();

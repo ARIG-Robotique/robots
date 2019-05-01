@@ -7,12 +7,12 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.exceptions.CarouselNotAvailableException;
-import org.arig.robot.exceptions.PinceNotAvailableException;
+import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.services.PincesService;
+import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
@@ -30,7 +30,7 @@ public class DeposeAccelerateur extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private PincesService pinces;
+    private VentousesService ventouses;
 
     @Autowired
     private ICarouselManager carousel;
@@ -79,9 +79,9 @@ public class DeposeAccelerateur extends AbstractAction {
 
             rs.disableAvoidance();
 
-            pinces.waitAvailable(side);
+            ventouses.waitAvailable(side);
 
-            pinces.prepareDeposeAccelerateur(side);
+            ventouses.prepareDeposeAccelerateur(side);
 
             // oriente et avance à fond
             mv.gotoOrientationDeg(90);
@@ -89,32 +89,27 @@ public class DeposeAccelerateur extends AbstractAction {
 
             // pousse le bleu
             if (!rs.isAccelerateurOuvert()) {
-                pinces.pousseAccelerateur(side);
+                ventouses.pousseAccelerateur(side);
                 rs.setAccelerateurOuvert(true);
             }
 
             // dépose
-            try {
-                while (canDepose()) {
-                    CouleurPalet couleur = carousel.has(CouleurPalet.ROUGE) ? CouleurPalet.ROUGE : CouleurPalet.ANY;
+            while (canDepose()) {
+                CouleurPalet couleur = carousel.has(CouleurPalet.ROUGE) ? CouleurPalet.ROUGE : CouleurPalet.ANY;
 
-                    pinces.deposeAccelerateur(couleur, side);
-                }
-
-            } catch (CarouselNotAvailableException e) {
-                // si erreur carousel on ignore l'erreur, les palets seront déposés avec une autre action
+                ventouses.deposeAccelerateur(couleur, side);
             }
 
             mv.reculeMM(150); // TODO
 
             completed = rs.getPaletsInAccelerateur().size() >= IConstantesNerellConfig.nbPaletsAccelerateurMax;
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | PinceNotAvailableException e) {
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException | CarouselNotAvailableException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
 
         } finally {
-            pinces.finishDeposeAccelerateur(side);
+            ventouses.finishDeposeAccelerateurAsync(side);
         }
     }
 

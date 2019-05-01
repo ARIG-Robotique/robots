@@ -116,7 +116,7 @@ public interface IConstantesNerellConfig {
     // --------------------- //
     // Paramètre pneumatique //
     // --------------------- //
-    int tempsActivationElectrvanne = 100;
+    int tempsActivationElectrovanne = 100;
 
     // ----------------- //
     // Paramètres métier //
@@ -128,5 +128,6 @@ public interface IConstantesNerellConfig {
     int nbPaletsAccelerateurMax = 9; // TODO à valider
     int nbPaletsMagasinMax = 3;
     int dstPinceCentre = 100; // TODO à valider
+    int offsetTableau = 100; // TODO
 
 }

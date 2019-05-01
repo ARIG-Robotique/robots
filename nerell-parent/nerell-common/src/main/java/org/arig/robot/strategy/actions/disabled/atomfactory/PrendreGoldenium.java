@@ -5,11 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
-import org.arig.robot.exceptions.PinceNotAvailableException;
+import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
-import org.arig.robot.services.PincesService;
+import org.arig.robot.services.VentousesService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
@@ -30,7 +30,7 @@ public class PrendreGoldenium extends AbstractAction {
     private ServosService servos;
 
     @Autowired
-    private PincesService pinces;
+    private VentousesService ventouses;
 
     @Getter
     private boolean completed = false;
@@ -54,7 +54,6 @@ public class PrendreGoldenium extends AbstractAction {
     @Override
     public void execute() {
         ESide side = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
-        boolean ok = false;
 
         try {
             rs.enableAvoidance();
@@ -69,28 +68,27 @@ public class PrendreGoldenium extends AbstractAction {
 
             rs.disableAvoidance();
 
-            // align, prépare la pince et avance
+            // aligne, prépare la ventouse et avance
             mv.gotoOrientationDeg(90);
 
-            pinces.waitAvailable(side);
-            pinces.preparePriseGoldenium(side);
+            ventouses.waitAvailable(side);
+            ventouses.preparePriseGoldenium(side);
 
             mv.avanceMM(150); // TODO
 
             // prise goldenium
-            ok = pinces.priseGoldenium(side);
+            boolean ok = ventouses.priseGoldenium(side);
 
             // recule
             mv.reculeMM(150); // TODO
 
+            ventouses.finishPriseGoldeniumAsync(ok, side);
+
             completed = true;
 
-        } catch (NoPathFoundException | AvoidingException | PinceNotAvailableException | RefreshPathFindingException e) {
+        } catch (NoPathFoundException | AvoidingException | VentouseNotAvailableException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
-
-        } finally {
-            pinces.finishPriseGoldenium(ok, side);
         }
     }
 
