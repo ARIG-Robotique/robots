@@ -10,6 +10,19 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class AbstractRobotStatus {
 
     @Setter(AccessLevel.NONE)
+    private boolean forceMonitoring = false;
+
+    public void enableForceMonitoring() {
+        log.warn("Activation du monitoring en dehors du match");
+        forceMonitoring = true;
+    }
+
+    public void disableForceMonitoring() {
+        log.warn("Desactivation du monitoring en dehors du match");
+        forceMonitoring = false;
+    }
+
+    @Setter(AccessLevel.NONE)
     private boolean asservEnabled = false;
 
     public void enableAsserv() {
