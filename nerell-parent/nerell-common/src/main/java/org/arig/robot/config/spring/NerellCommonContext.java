@@ -43,7 +43,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 
-import java.awt.*;
 import java.util.EnumMap;
 import java.util.Map;
 
