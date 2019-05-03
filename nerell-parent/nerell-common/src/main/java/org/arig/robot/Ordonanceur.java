@@ -3,7 +3,9 @@ package org.arig.robot;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.arig.robot.communication.II2CManager;
+import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.exception.RefreshPathFindingException;
@@ -26,8 +28,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author gdepuille on 08/03/15.
@@ -87,6 +94,12 @@ public class Ordonanceur {
     }
 
     public void run() throws RefreshPathFindingException, IOException {
+        // Configuration a faire pour chaque match (gestion sans redemarrage programme)
+        // Définition d'un ID unique pour le nommage des fichiers
+        final LocalDateTime startOrdonnanceur = LocalDateTime.now();
+        final String execId = startOrdonnanceur.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        System.setProperty(IConstantesConfig.keyExecutionId, execId);
+
         log.info("Demarrage de l'ordonancement du match ...");
 
         // Equipe au démarrage
@@ -250,6 +263,14 @@ public class Ordonanceur {
 
         // On envoi les datas collecté
         monitoringWrapper.save();
+        final LocalDateTime stopOrdonnanceur = LocalDateTime.now();
+        final File execFile = new File("./logs/" + execId + ".exec");
+        DateTimeFormatter savePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        List<String> lines = new ArrayList<>();
+        lines.add(startOrdonnanceur.format(savePattern));
+        lines.add(stopOrdonnanceur.format(savePattern));
+        FileUtils.writeLines(execFile, lines);
+        log.info("Création du fichier de fin d'éxécution {}", execFile.getAbsolutePath());
 
         // Attente remise de la tirette pour ejecter les palets en stock
         while(!ioService.tirette() || !ioService.auOk()) {

@@ -37,29 +37,11 @@ public class JavaFXApplication extends Application {
     @Override
     public void start(final Stage primaryStage) throws Exception {
         this.context.publishEvent(new StageReadyEvent(primaryStage));
-
-        // Configuration a faire pour chaque match (gestion sans redemarrage programme)
-        // Définition d'un ID unique pour le nommage des fichiers
-        //final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        //System.setProperty(IConstantesConfig.keyExecutionId, execId);
-
-        // Initialisation du logger après définition de la property pour prise en compte
-        // lors de la création du fichier de log.
-        //log.info("Demarrage de Nerell {} ...", execId);
-
-        // A placer dans un thread a part
-        // Ordonanceur.getInstance().run();
     }
 
     @Override
     public void stop() throws Exception {
         super.stop();
-
-        // Ecriture d'un fichier identifiant une execution termine.
-//        final String execId = System.getProperty(IConstantesConfig.keyExecutionId);
-//        final File execFile = new File("./logs/" + execId + ".exec");
-//        log.info("Création du fichier de fin d'éxécution {} : {}", execFile.getAbsolutePath(), execFile.createNewFile());
-
         this.context.close();
         Platform.exit();
     }

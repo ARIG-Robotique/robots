@@ -21,11 +21,9 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
-import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -56,16 +54,15 @@ public class AsservissementCommands {
 
         final String execId = System.getProperty(IConstantesConfig.keyExecutionId);
 
-        final File traceFile = new File("./logs/" + execId + "-traces.log");
+        final File execFile = new File("./logs/" + execId + ".exec");
         DateTimeFormatter execIdPattern = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         DateTimeFormatter savePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         List<String> lines = new ArrayList<>();
         lines.add(LocalDateTime.parse(execId, execIdPattern).format(savePattern));
         lines.add(LocalDateTime.now().format(savePattern));
-        FileUtils.writeLines(traceFile, lines);
+        FileUtils.writeLines(execFile, lines);
 
-        final File execFile = new File("./logs/" + execId + ".exec");
-        log.info("Création du fichier de fin d'éxécution {} : {}", execFile.getAbsolutePath(), execFile.createNewFile());
+        log.info("Création du fichier de fin d'éxécution {}", execFile.getAbsolutePath());
     }
 
     public Availability alimentationOk() {
