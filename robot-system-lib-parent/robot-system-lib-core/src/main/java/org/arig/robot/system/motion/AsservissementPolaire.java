@@ -3,6 +3,7 @@ package org.arig.robot.system.motion;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
@@ -34,6 +35,14 @@ public class AsservissementPolaire implements IAsservissementPolaire {
     private IPidFilter pidOrientation;
 
     @Autowired
+    @Qualifier("pidMoteurDroit")
+    private IPidFilter pidMoteurDroit;
+
+    @Autowired
+    @Qualifier("pidMoteurGauche")
+    private IPidFilter pidMoteurGauche;
+
+    @Autowired
     @Qualifier("rampDistance")
     private TrapezoidalRampFilter rampDistance;
 
@@ -52,6 +61,8 @@ public class AsservissementPolaire implements IAsservissementPolaire {
     public void reset(final boolean resetFilters) {
         pidDistance.reset();
         pidOrientation.reset();
+        pidMoteurDroit.reset();
+        pidMoteurGauche.reset();
 
         if (resetFilters) {
             rampDistance.reset();
@@ -61,24 +72,43 @@ public class AsservissementPolaire implements IAsservissementPolaire {
 
     @Override
     public void process() {
+        final double positionDistance, distance;
+        final double positionOrientation, orientation;
 
         // Distance
-        rampDistance.setConsigneVitesse(cmdRobot.getVitesse().getDistance());
-        rampDistance.setFrein(cmdRobot.isFrein());
-        final double positionDistance = rampDistance.filter(cmdRobot.getConsigne().getDistance());
-        pidDistance.setConsigne(positionDistance);
-        final double distance = pidDistance.filter(encoders.getDistance());
+        if (cmdRobot.isType(TypeConsigne.DIST) || cmdRobot.isType(TypeConsigne.XY)) {
+            rampDistance.setConsigneVitesse(cmdRobot.getVitesse().getDistance());
+            rampDistance.setFrein(cmdRobot.isFrein());
+            positionDistance = rampDistance.filter(cmdRobot.getConsigne().getDistance());
+            //pidDistance.setConsigne(positionDistance);
+            //distance = pidDistance.filter(encoders.getDistance());
+        } else {
+            positionDistance = distance = 0;
+        }
 
         // Orientation
-        rampOrientation.setConsigneVitesse(cmdRobot.getVitesse().getOrientation());
-        rampOrientation.setFrein(true);
-        final double positionOrientation = rampOrientation.filter(cmdRobot.getConsigne().getOrientation());
-        pidOrientation.setConsigne(positionOrientation);
-        final double orientation = pidOrientation.filter(encoders.getOrientation());
+        if (cmdRobot.isType(TypeConsigne.ANGLE) || cmdRobot.isType(TypeConsigne.XY)) {
+            rampOrientation.setConsigneVitesse(cmdRobot.getVitesse().getOrientation());
+            rampOrientation.setFrein(true);
+            positionOrientation = rampOrientation.filter(cmdRobot.getConsigne().getOrientation());
+            //pidOrientation.setConsigne(positionOrientation);
+            //orientation = pidOrientation.filter(encoders.getOrientation());
+        } else {
+            positionOrientation = orientation = 0;
+        }
 
         // Consigne moteurs
-        double cmdMotDroit = distance + orientation;
-        double cmdMotGauche = distance - orientation;
+        double consigneMotDroit = positionDistance + positionOrientation;
+        //double consigneMotDroit = distance + orientation;
+        double consigneMotGauche = positionDistance - positionOrientation;
+        //double consigneMotGauche = distance - orientation;
+
+        pidMoteurDroit.setConsigne(consigneMotDroit);
+        double cmdMotDroit = pidMoteurDroit.filter(encoders.getDroit());
+
+        pidMoteurGauche.setConsigne(consigneMotGauche);
+        double cmdMotGauche = pidMoteurGauche.filter(encoders.getGauche());
+
         cmdRobot.getMoteur().setDroit((int) cmdMotDroit);
         cmdRobot.getMoteur().setGauche((int) cmdMotGauche);
 

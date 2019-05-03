@@ -161,6 +161,22 @@ public class NerellCommonContext {
         return pid;
     }
 
+    @Bean(name = "pidMoteurDroit")
+    public IPidFilter pidMoteurDroit(AbstractPropulsionsMotors motors) {
+        log.info("Configuration PID moteur droit");
+        SimplePidFilter pid = new SimplePidFilter("pid_mot_droit", motors.getMinSpeed(), motors.getMaxSpeed());
+        pid.setTunings(IConstantesNerellConfig.kpMotDroit, IConstantesNerellConfig.kiMotDroit, IConstantesNerellConfig.kdMotDroit);
+        return pid;
+    }
+
+    @Bean(name = "pidMoteurGauche")
+    public IPidFilter pidMoteurGauche(AbstractPropulsionsMotors motors) {
+        log.info("Configuration PID moteur gauche");
+        SimplePidFilter pid = new SimplePidFilter("pid_mot_gauche", motors.getMinSpeed(), motors.getMaxSpeed());
+        pid.setTunings(IConstantesNerellConfig.kpMotGauche, IConstantesNerellConfig.kiMotGauche, IConstantesNerellConfig.kdMotGauche);
+        return pid;
+    }
+
     @Bean(name = "pidCarousel")
     public IPidFilter pidCarousel(AbstractMotor motor) {
         log.info("Configuration PID Carousel");

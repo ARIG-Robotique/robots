@@ -82,10 +82,10 @@ public class TrapezoidalRampFilter extends AbstractRampFilter {
      */
     @Override
     public Long rampFilter(final Long input) {
-        double targetVitesse = getType() == RampType.ANGULAR ? currentVitesse : getConsigneVitesse();
+        //double targetVitesse = getType() == RampType.ANGULAR ? currentVitesse : getConsigneVitesse();
 
         // Calcul de la distance de décéleration en fonction des parametres
-        posToDecel = conv.mmToPulse(Math.pow(targetVitesse, 2) / (2 * getRampDec()));
+        posToDecel = conv.mmToPulse(Math.pow(currentVitesse, 2) / (2 * getRampDec()));
 
         if ((Math.abs(input) <= posToDecel && frein) || currentVitesse > getConsigneVitesse()) {
             currentVitesse -= getStepVitesseDecel();
