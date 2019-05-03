@@ -34,9 +34,6 @@ public class VentousesService implements InitializingBean {
     private RobotStatus robotStatus;
 
     @Autowired
-    private ServosService servosService;
-
-    @Autowired
     private CarouselService carouselService;
 
     @Autowired
@@ -96,11 +93,8 @@ public class VentousesService implements InitializingBean {
             return false;
         }
 
-        service.pivotVentouseTable();
-        servosService.waitPivotVentouse();
-
-        service.ascenseurTable();
-        servosService.waitAscenseurVentouseShort();
+        service.pivotVentouseTable(true);
+        service.ascenseurTable(true);
 
         if (!service.presencePaletVentouse()) {
             log.warn("Pas de palet visible");
@@ -116,7 +110,7 @@ public class VentousesService implements InitializingBean {
 
         this.couleur.put(side, couleur);
 
-        service.pinceSerrageRepos();
+        service.pinceSerrageRepos(false);
         service.disablePompeAVide();
 
         return true;
@@ -134,9 +128,8 @@ public class VentousesService implements InitializingBean {
             return false;
         }
 
-        service.ascenseurDistributeur();
-        service.pivotVentouseFacade();
-        servosService.waitAscenseurVentouseLong();
+        service.pivotVentouseFacade(false);
+        service.ascenseurDistributeur(true);
 
         return true;
     }
@@ -185,9 +178,8 @@ public class VentousesService implements InitializingBean {
     public boolean preparePriseGoldenium(ESide side) {
         IRobotSide service = sideServices.get(side);
 
-        service.ascenseurAccelerateur();
-        service.pivotVentouseFacade();
-        servosService.waitAscenseurVentouseShort();
+        service.pivotVentouseFacade(false);
+        service.ascenseurAccelerateur(true);
 
         return true;
     }
@@ -222,8 +214,8 @@ public class VentousesService implements InitializingBean {
             servosHomeAndDisablePompeAndRelease(side);
 
         } else {
-            service.ascenseurAccelerateur();
-            service.pivotVentouseTable();
+            service.pivotVentouseTable(false);
+            service.ascenseurAccelerateur(false);
         }
     }
 
@@ -234,10 +226,9 @@ public class VentousesService implements InitializingBean {
     public void prepareDeposeAccelerateur(ESide side) {
         IRobotSide service = sideServices.get(side);
 
-        service.ascenseurAccelerateur();
-        service.pivotVentouseCarouselVertical();
-        service.pousseAccelerateurStandby();
-        servosService.waitAscenseurVentouseLong();
+        service.pousseAccelerateurStandby(false);
+        service.pivotVentouseCarouselVertical(false);
+        service.ascenseurAccelerateur(true);
     }
 
     /**
@@ -246,11 +237,8 @@ public class VentousesService implements InitializingBean {
     public void pousseAccelerateur(ESide side) {
         IRobotSide service = sideServices.get(side);
 
-        service.pousseAccelerateurAction();
-        servosService.waitPousseAccelerateur();
-
-        service.pousseAccelerateurStandby();
-        servosService.waitPousseAccelerateur();
+        service.pousseAccelerateurAction(true);
+        service.pousseAccelerateurStandby(true);
     }
 
     /**
@@ -273,6 +261,8 @@ public class VentousesService implements InitializingBean {
 
         service.releaseElectroVanne();
 
+        service.pivotVentouseCarouselVertical(true);
+
         pousseAccelerateur(side);
 
         robotStatus.getPaletsInAccelerateur().add(couleurFinale);
@@ -289,34 +279,23 @@ public class VentousesService implements InitializingBean {
         carouselService.waitAvailable(TEMPS_MAX_AVAILABLE);
         carouselService.tourner(service.positionCarouselVentouse(), couleur);
 
-        service.pivotVentouseCarouselVertical();
-        servosService.waitPivotVentouse();
-
-        service.ascenseurCarousel();
-        servosService.waitAscenseurVentouseShort();
-
-        service.porteBarilletOuvert();
-        servosService.waitPorteBarillet();
+        service.pivotVentouseCarouselVertical(true);
+        service.ascenseurCarousel(true);
+        service.porteBarilletOuvert(true);
 
         service.enablePompeAVide();
         boolean ok = tentativeAspiration(service);
         service.disablePompeAVide();
 
         if (!ok) {
-            service.porteBarilletFerme();
+            service.porteBarilletFerme(false);
             return null;
         }
 
-        service.ascenseurCarouselDepose();
-        servosService.waitAscenseurVentouseShort();
-
-        service.pivotVentouseFacade();
-        servosService.waitPivotVentouse();
-
-        service.ascenseurAccelerateur();
-        servosService.waitAscenseurVentouseLong();
-
-        service.porteBarilletFerme();
+        service.ascenseurCarouselDepose(true);
+        service.pivotVentouseFacade(true);
+        service.ascenseurAccelerateur(true);
+        service.porteBarilletFerme(false);
 
         CouleurPalet couleurFinale = carousel.get(service.positionCarouselVentouse());
 
@@ -334,7 +313,7 @@ public class VentousesService implements InitializingBean {
     public void finishDeposeAccelerateurAsync(ESide side) {
         IRobotSide service = sideServices.get(side);
 
-        service.pousseAccelerateurFerme();
+        service.pousseAccelerateurFerme(false);
         servosHomeAndDisablePompeAndRelease(side);
     }
 
@@ -351,8 +330,7 @@ public class VentousesService implements InitializingBean {
                 return false;
             }
 
-            service.pivotVentouseFacade();
-            servosService.waitPivotVentouse();
+            service.pivotVentouseFacade(true);
 
         } else {
             if (isWorking(side)) {
@@ -415,15 +393,13 @@ public class VentousesService implements InitializingBean {
             return false;
         }
 
-        service.pinceSerrageRepos();
-
-        service.ascenseurTableGold();
-        servosService.waitAscenseurVentouseLong();
+        service.pinceSerrageRepos(false);
+        service.ascenseurTableGold(true);
 
         service.disablePompeAVide();
         service.releaseElectroVanne();
 
-        service.ascenseurAccelerateur();
+        service.ascenseurAccelerateur(false);
 
         robotStatus.getPaletsInTableauBleu().add(CouleurPalet.GOLD);
         couleur.put(side, null);
@@ -437,11 +413,8 @@ public class VentousesService implements InitializingBean {
         service.disablePompeAVide();
         service.releaseElectroVanne();
 
-        service.ascenseurAccelerateur();
-        servosService.waitAscenseurVentouseLong();
-
-        service.pivotVentouseTable();
-        servosService.waitPivotVentouse();
+        service.ascenseurAccelerateur(true);
+        service.pivotVentouseTable(true);
 
         couleur.put(side, null);
         working.get(side).set(false);
@@ -479,29 +452,18 @@ public class VentousesService implements InitializingBean {
                 throw new CarouselNotAvailableException();
             }
 
-            service.porteBarilletOuvert();
-            servosService.waitPorteBarillet();
-
-            service.ascenseurCarouselDepose();
-            service.pivotVentouseCarouselSortie();
-            servosService.waitAscenseurVentouseLong();
-
-            service.pivotVentouseCarouselVertical();
-            servosService.waitPivotVentouse();
-
-            service.ascenseurCarousel();
-            servosService.waitAscenseurVentouseLong();
+            service.porteBarilletOuvert(true);
+            service.pivotVentouseCarouselSortie(false);
+            service.ascenseurCarouselDepose(true);
+            service.pivotVentouseCarouselVertical(true);
+            service.ascenseurCarousel(true);
 
             service.disablePompeAVide();
             service.releaseElectroVanne();
 
-            service.ascenseurAccelerateur();
-            servosService.waitAscenseurVentouseLong();
-
-            service.porteBarilletFerme();
-            servosService.waitPorteBarillet();
-
-            service.pivotVentouseTable();
+            service.ascenseurAccelerateur(true);
+            service.porteBarilletFerme(true);
+            service.pivotVentouseTable(false);
 
             carousel.store(service.positionCarouselVentouse(), couleur.get(side));
 

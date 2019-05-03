@@ -38,9 +38,9 @@ public class SerrageService {
 
     private void lockPalet(IRobotSide side) {
         if (side.buteePalet() && side.presencePalet()) {
-            side.pinceSerrageLock();
+            side.pinceSerrageLock(false);
         } else {
-            side.pinceSerrageRepos();
+            side.pinceSerrageRepos(false);
         }
     }
 

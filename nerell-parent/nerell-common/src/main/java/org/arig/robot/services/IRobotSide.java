@@ -35,50 +35,45 @@ public interface IRobotSide {
 
     // SERVOS
 
-    default void ascenseurAndVentouseHome() {
-        ascenseurDistributeur();
-        pivotVentouseTable();
-    }
+    void ascenseurTable(boolean wait);
 
-    void ascenseurTable();
+    void ascenseurTableGold(boolean wait);
 
-    void ascenseurTableGold();
+    void ascenseurDistributeur(boolean wait);
 
-    void ascenseurDistributeur();
+    void ascenseurAccelerateur(boolean wait);
 
-    void ascenseurAccelerateur();
+    void ascenseurCarousel(boolean wait);
 
-    void ascenseurCarousel();
+    void ascenseurCarouselDepose(boolean wait);
 
-    void ascenseurCarouselDepose();
+    void pivotVentouseTable(boolean wait);
 
-    void pivotVentouseTable();
+    void pivotVentouseFacade(boolean wait);
 
-    void pivotVentouseFacade();
+    void pivotVentouseCarouselVertical(boolean wait);
 
-    void pivotVentouseCarouselVertical();
+    void pivotVentouseCarouselSortie(boolean wait);
 
-    void pivotVentouseCarouselSortie();
+    void pinceSerrageRepos(boolean wait);
 
-    void pinceSerrageRepos();
+    void pinceSerrageLock(boolean wait);
 
-    void pinceSerrageLock();
+    void porteBarilletOuvert(boolean wait);
 
-    void porteBarilletOuvert();
+    void porteBarilletFerme(boolean wait);
 
-    void porteBarilletFerme();
+    void pousseAccelerateurFerme(boolean wait);
 
-    void pousseAccelerateurFerme();
+    void pousseAccelerateurStandby(boolean wait);
 
-    void pousseAccelerateurStandby();
+    void pousseAccelerateurAction(boolean wait);
 
-    void pousseAccelerateurAction();
+    void ejectionMagasinFerme(boolean wait);
 
-    void ejectionMagasinFerme();
+    void ejectionMagasinOuvert(boolean wait);
 
-    void ejectionMagasinOuvert();
+    void trappeMagasinFerme(boolean wait);
 
-    void trappeMagasinFerme();
-
-    void trappeMagasinOuvert();
+    void trappeMagasinOuvert(boolean wait);
 }

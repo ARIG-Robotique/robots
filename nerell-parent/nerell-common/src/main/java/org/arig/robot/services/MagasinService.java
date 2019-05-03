@@ -59,13 +59,13 @@ public class MagasinService implements InitializingBean {
     public void startEjection(ESide side) {
         IRobotSide service = sideServices.get(side);
         ejection.put(side, true);
-        service.ejectionMagasinOuvert();
+        service.ejectionMagasinOuvert(true);
     }
 
     private void endEjection(ESide side) {
         IRobotSide service = sideServices.get(side);
         if (ejection.get(service.id()) && service.nbPaletDansMagasin() == 0) {
-            service.ejectionMagasinFerme();
+            service.ejectionMagasinFerme(true);
             ejection.put(service.id(), false);
         }
     }
@@ -92,11 +92,8 @@ public class MagasinService implements InitializingBean {
 
         carouselService.tourner(service.positionCarouselMagasin(), couleur);
 
-        service.trappeMagasinOuvert();
-        servosService.waitTrappeMagasin();
-
-        service.trappeMagasinFerme();
-        servosService.waitTrappeMagasin();
+        service.trappeMagasinOuvert(true);
+        service.trappeMagasinFerme(true);
 
         if (service.nbPaletDansMagasin() > nbPaletInit) {
             carousel.unstore(service.positionCarouselMagasin());
@@ -114,21 +111,15 @@ public class MagasinService implements InitializingBean {
         IRobotSide leftSideService = sideServices.get(ESide.GAUCHE);
 
         while (rightSideService.nbPaletDansMagasin() > 0) {
-            rightSideService.ejectionMagasinOuvert();
-            servosService.waitEjectionMagasin();
-
-            rightSideService.ejectionMagasinFerme();
-            servosService.waitEjectionMagasin();
+            rightSideService.ejectionMagasinOuvert(true);
+            rightSideService.ejectionMagasinFerme(true);
 
             ThreadUtils.sleep(1000);
         }
 
         while (leftSideService.nbPaletDansMagasin() > 0) {
-            leftSideService.ejectionMagasinOuvert();
-            servosService.waitEjectionMagasin();
-
-            leftSideService.ejectionMagasinFerme();
-            servosService.waitEjectionMagasin();
+            leftSideService.ejectionMagasinOuvert(true);
+            leftSideService.ejectionMagasinFerme(true);
 
             ThreadUtils.sleep(1000);
         }

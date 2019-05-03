@@ -1,6 +1,7 @@
 package org.arig.robot.services;
 
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.model.ESide;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.utils.ThreadUtils;
@@ -80,107 +81,107 @@ public class LeftSideService implements IRobotSide {
     }
 
     @Override
-    public void ascenseurTable() {
-        servosService.ascenseurGaucheTable();
+    public void ascenseurTable(boolean wait) {
+        servosService.ascenseurGauche(IConstantesServos.ASCENSEUR_GAUCHE_TABLE, wait);
     }
 
     @Override
-    public void ascenseurTableGold() {
-        servosService.ascenseurGaucheTableGold();
+    public void ascenseurTableGold(boolean wait) {
+        servosService.ascenseurGauche(IConstantesServos.ASCENSEUR_GAUCHE_TABLE_GOLD, wait);
     }
 
     @Override
-    public void ascenseurDistributeur() {
-        servosService.ascenseurGaucheDistributeur();
+    public void ascenseurDistributeur(boolean wait) {
+        servosService.ascenseurGauche(IConstantesServos.ASCENSEUR_GAUCHE_DISTRIBUTEUR, wait);
     }
 
     @Override
-    public void ascenseurAccelerateur() {
-        servosService.ascenseurGaucheAccelerateur();
+    public void ascenseurAccelerateur(boolean wait) {
+        servosService.ascenseurGauche(IConstantesServos.ASCENSEUR_GAUCHE_ACCELERATEUR, wait);
     }
 
     @Override
-    public void ascenseurCarousel() {
-        servosService.ascenseurGaucheCarousel();
+    public void ascenseurCarousel(boolean wait) {
+        servosService.ascenseurGauche(IConstantesServos.ASCENSEUR_GAUCHE_CAROUSEL, wait);
     }
 
     @Override
-    public void ascenseurCarouselDepose() {
-        servosService.ascenseurGaucheCarouselDepose();
+    public void ascenseurCarouselDepose(boolean wait) {
+        servosService.ascenseurGauche(IConstantesServos.ASCENSEUR_GAUCHE_CAROUSEL_DEPOSE, wait);
     }
 
     @Override
-    public void pivotVentouseTable() {
-        servosService.pivotVentouseGaucheTable();
+    public void pivotVentouseTable(boolean wait) {
+        servosService.pivotVentouseGauche(IConstantesServos.PIVOT_VENTOUSE_GAUCHE_TABLE, wait);
     }
 
     @Override
-    public void pivotVentouseFacade() {
-        servosService.pivotVentouseGaucheFacade();
+    public void pivotVentouseFacade(boolean wait) {
+        servosService.pivotVentouseGauche(IConstantesServos.PIVOT_VENTOUSE_GAUCHE_FACADE, wait);
     }
 
     @Override
-    public void pivotVentouseCarouselVertical() {
-        servosService.pivotVentouseGaucheCarouselVertical();
+    public void pivotVentouseCarouselVertical(boolean wait) {
+        servosService.pivotVentouseGauche(IConstantesServos.PIVOT_VENTOUSE_GAUCHE_CAROUSEL_VERTICAL, wait);
     }
 
     @Override
-    public void pivotVentouseCarouselSortie() {
-        servosService.pivotVentouseGaucheCarouselSortie();
+    public void pivotVentouseCarouselSortie(boolean wait) {
+        servosService.pivotVentouseGauche(IConstantesServos.PIVOT_VENTOUSE_GAUCHE_CAROUSEL_VERTICAL, wait);
     }
 
     @Override
-    public void pinceSerrageRepos() {
-        servosService.pinceSerragePaletGaucheRepos();
+    public void pinceSerrageRepos(boolean wait) {
+        servosService.pinceSerragePaletGauche(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_REPOS, wait);
     }
 
     @Override
-    public void pinceSerrageLock() {
-        servosService.pinceSerragePaletGaucheLock();
+    public void pinceSerrageLock(boolean wait) {
+        servosService.pinceSerragePaletGauche(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_LOCK, wait);
     }
 
     @Override
-    public void porteBarilletFerme() {
-        servosService.porteBarilletGaucheFerme();
+    public void porteBarilletFerme(boolean wait) {
+        servosService.porteBarilletGauche(IConstantesServos.PORTE_BARILLET_GAUCHE_FERME, wait);
     }
 
     @Override
-    public void porteBarilletOuvert() {
-        servosService.porteBarilletGaucheOuvert();
+    public void porteBarilletOuvert(boolean wait) {
+        servosService.porteBarilletGauche(IConstantesServos.PORTE_BARILLET_GAUCHE_OUVERT, wait);
     }
 
     @Override
-    public void pousseAccelerateurFerme() {
-        servosService.pousseAccelerateurGaucheFerme();
+    public void pousseAccelerateurFerme(boolean wait) {
+        servosService.pousseAccelerateurGauche(IConstantesServos.POUSSE_ACCELERATEUR_GAUCHE_FERME, wait);
     }
 
     @Override
-    public void pousseAccelerateurStandby() {
-        servosService.pousseAccelerateurGaucheStandby();
+    public void pousseAccelerateurStandby(boolean wait) {
+        servosService.pousseAccelerateurGauche(IConstantesServos.POUSSE_ACCELERATEUR_GAUCHE_STANDBY, wait);
     }
 
     @Override
-    public void pousseAccelerateurAction() {
-        servosService.pousseAccelerateurGaucheAction();
+    public void pousseAccelerateurAction(boolean wait) {
+        servosService.pousseAccelerateurGauche(IConstantesServos.POUSSE_ACCELERATEUR_GAUCHE_ACTION, wait);
     }
 
     @Override
-    public void ejectionMagasinFerme() {
-        servosService.ejectionMagasinGaucheFerme();
+    public void ejectionMagasinFerme(boolean wait) {
+        servosService.ejectionMagasinGauche(IConstantesServos.EJECTION_MAGASIN_GAUCHE_FERME, wait);
     }
 
     @Override
-    public void ejectionMagasinOuvert() {
-        servosService.ejectionMagasinGaucheOuvert();
+    public void ejectionMagasinOuvert(boolean wait) {
+        servosService.ejectionMagasinGauche(IConstantesServos.EJECTION_MAGASIN_GAUCHE_OUVERT, wait);
     }
 
     @Override
-    public void trappeMagasinFerme() {
-        servosService.trappeMagasinGaucheFerme();
+    public void trappeMagasinFerme(boolean wait) {
+        servosService.trappeMagasinGauche(IConstantesServos.TRAPPE_MAGASIN_GAUCHE_FERME, wait);
     }
 
     @Override
-    public void trappeMagasinOuvert() {
-        servosService.trappeMagasinGaucheOuvert();
+    public void trappeMagasinOuvert(boolean wait) {
+        servosService.trappeMagasinGauche(IConstantesServos.TRAPPE_MAGASIN_GAUCHE_OUVERT, wait);
     }
 }

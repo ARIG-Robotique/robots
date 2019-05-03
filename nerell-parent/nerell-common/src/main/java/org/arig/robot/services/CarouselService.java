@@ -19,7 +19,7 @@ public class CarouselService {
     private IIOService ioService;
 
     @Autowired
-    private ServosService servosService;
+    private RightSideService rightSideService;
 
     @Autowired
     private ICarouselManager carouselManager;
@@ -100,9 +100,9 @@ public class CarouselService {
 
         // ventouse en haut pour utiliser son capteur
         // barillet ouvert
-        servosService.ascenseurDroitCarousel();
-        servosService.pivotVentouseDroitCarouselVertical();
-        servosService.porteBarilletDroitOuvert();
+        rightSideService.ascenseurCarousel(true);
+        rightSideService.pivotVentouseCarouselVertical(true);
+        rightSideService.porteBarilletOuvert(true);
 
         while (carouselManager.has(CouleurPalet.ANY)) {
             tourner(carouselManager.firstIndexOf(CouleurPalet.ANY, ICarouselManager.VENTOUSE_DROITE));
@@ -113,6 +113,6 @@ public class CarouselService {
             }
         }
 
-        servosService.porteBarilletDroitFerme();
+        rightSideService.porteBarilletFerme(true);
     }
 }
