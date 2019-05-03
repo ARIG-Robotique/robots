@@ -5,6 +5,7 @@ import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
+import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
 import org.arig.robot.system.ITrajectoryManager;
@@ -30,6 +31,9 @@ import java.util.Map;
 @RequestMapping("/mouvement")
 @Profile(IConstantesConfig.profileMonitoring)
 public class MouvementController {
+
+    @Autowired
+    private AbstractRobotStatus rs;
 
     @Autowired
     private Position position;
@@ -60,6 +64,7 @@ public class MouvementController {
         pos.put("pointsLidar", avoidingService.getDetectedPointsMmLidar());
         pos.put("pointsCapteurs", avoidingService.getDetectedPointsMmCapteurs());
         pos.put("collisions", avoidingService.getCollisionsShape());
+        pos.put("matchTime", rs.getElapsedTime());
         return pos;
     }
 

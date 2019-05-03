@@ -71,4 +71,9 @@ public abstract class AbstractRobotStatus {
     public void disableMatch() {
         matchEnabled = false;
     }
+
+    public abstract long getElapsedTime();
+
+    public abstract long getRemainingTime();
+
 }
