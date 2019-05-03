@@ -11,7 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 public class SimplePidFilter extends AbstractPidFilter {
 
     public SimplePidFilter(String name) {
-        super(name);
+        this(name, Double.MIN_VALUE, Double.MAX_VALUE);
+    }
+
+    public SimplePidFilter(String name, double min, double max) {
+        super(name, min, max);
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.arig.robot.filters.chain.ParallelChainFilter;
 import org.arig.robot.filters.chain.SerialChainFilter;
 import org.arig.robot.filters.common.DerivateFilter;
 import org.arig.robot.filters.common.IntegralFilter;
+import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.common.ProportionalFilter;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
@@ -30,21 +31,24 @@ public abstract class AbstractPidFilter implements IPidFilter {
     final ProportionalFilter propP, propI, propD;
     private final IntegralFilter integral;
     private final DerivateFilter derivate;
+    private final LimiterFilter limiter;
 
-    private final SerialChainFilter<Double> integralChain, derivateChain;
+    private final SerialChainFilter<Double> integralChain, derivateChain, completePid;
     private final ParallelChainFilter pid;
 
-    AbstractPidFilter(final String name) {
+    AbstractPidFilter(final String name, double min, double max) {
         this.name = name;
         propP = new ProportionalFilter(0d);
         propI = new ProportionalFilter(0d);
         propD = new ProportionalFilter(0d);
         integral = new IntegralFilter(0d);
         derivate = new DerivateFilter(0d);
+        limiter = new LimiterFilter(min, max);
 
         integralChain = new SerialChainFilter<>();
         integralChain.addFilter(integral);
         integralChain.addFilter(propI);
+        integralChain.addFilter(limiter);
 
         derivateChain = new SerialChainFilter<>();
         derivateChain.addFilter(derivate);
@@ -54,6 +58,10 @@ public abstract class AbstractPidFilter implements IPidFilter {
         pid.addFilter(propP);
         pid.addFilter(integralChain);
         pid.addFilter(derivateChain);
+
+        completePid = new SerialChainFilter<>();
+        completePid.addFilter(pid);
+        completePid.addFilter(limiter);
     }
 
     protected abstract String pidImpl();
@@ -73,7 +81,7 @@ public abstract class AbstractPidFilter implements IPidFilter {
 
         this.input = input;
         double error = consigne - input;
-        this.output = pid.filter(error);
+        this.output = completePid.filter(error);
 
         // Construction du monitoring
         MonitorTimeSerie serie = new MonitorTimeSerie()

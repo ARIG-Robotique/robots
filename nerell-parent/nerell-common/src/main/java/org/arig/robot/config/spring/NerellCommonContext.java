@@ -147,25 +147,25 @@ public class NerellCommonContext {
     }
 
     @Bean(name = "pidDistance")
-    public IPidFilter pidDistance() {
+    public IPidFilter pidDistance(AbstractPropulsionsMotors motors) {
         log.info("Configuration PID Distance");
-        SimplePidFilter pid = new SimplePidFilter("distance");
+        SimplePidFilter pid = new SimplePidFilter("distance", motors.getMinSpeed(), motors.getMaxSpeed());
         pid.setTunings(IConstantesNerellConfig.kpDistance, IConstantesNerellConfig.kiDistance, IConstantesNerellConfig.kdDistance);
         return pid;
     }
 
     @Bean(name = "pidOrientation")
-    public IPidFilter pidOrientation() {
+    public IPidFilter pidOrientation(AbstractPropulsionsMotors motors) {
         log.info("Configuration PID Orientation");
-        SimplePidFilter pid = new SimplePidFilter("orientation");
+        SimplePidFilter pid = new SimplePidFilter("orientation", motors.getMinSpeed(), motors.getMaxSpeed());
         pid.setTunings(IConstantesNerellConfig.kpOrientation, IConstantesNerellConfig.kiOrientation, IConstantesNerellConfig.kdOrientation);
         return pid;
     }
 
     @Bean(name = "pidCarousel")
-    public IPidFilter pidCarousel() {
+    public IPidFilter pidCarousel(AbstractMotor motor) {
         log.info("Configuration PID Carousel");
-        SimplePidFilter pid = new SimplePidFilter("carousel");
+        SimplePidFilter pid = new SimplePidFilter("carousel", motor.getMinSpeed(), motor.getMaxSpeed());
         pid.setTunings(IConstantesNerellConfig.kpCarousel, IConstantesNerellConfig.kiCarousel, IConstantesNerellConfig.kdCarousel);
         return pid;
     }
