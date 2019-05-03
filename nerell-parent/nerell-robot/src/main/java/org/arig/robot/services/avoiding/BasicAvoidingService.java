@@ -4,9 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- * @author gdepuille on 07/05/15.
- */
 @Slf4j
 public class BasicAvoidingService extends AbstractAvoidingService {
 
@@ -17,13 +14,11 @@ public class BasicAvoidingService extends AbstractAvoidingService {
 
     @Override
     protected void processAvoiding() {
-        boolean proxCapteurs = hasProximiteCapteurs();
-        boolean proxLidar = hasProximiteLidar();
-        boolean hasObstacle = proxCapteurs || proxLidar;
+        boolean hasObstacle = hasProximite();
 
         // Log de détection avec un sémaphore
         if (hasObstacle && !currentObstacle) {
-            log.info("Attente que l'obstacle sans aille (lidar {} ; capteurs {}) ...", proxLidar, proxCapteurs);
+            log.info("Attente que l'obstacle sans aille ...");
             currentObstacle = true;
         }
         if (hasObstacle) {

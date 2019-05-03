@@ -61,15 +61,14 @@ public class MouvementController {
         pos.put("trajetAtteint", trajectoryManager.isTrajetAtteint());
         pos.put("trajetEnApproche", trajectoryManager.isTrajetEnApproche());
         pos.put("typeAsserv", cmdRobot.typeAsserv());
-        pos.put("pointsLidar", avoidingService.getDetectedPointsMmLidar());
-        pos.put("pointsCapteurs", avoidingService.getDetectedPointsMmCapteurs());
+        pos.put("pointsLidar", avoidingService.getDetectedPointsMm());
         pos.put("collisions", avoidingService.getCollisionsShape());
         pos.put("matchTime", rs.getElapsedTime());
         return pos;
     }
 
     @PostMapping(value = "/path")
-    public void cheminVersPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws NoPathFoundException, RefreshPathFindingException, AvoidingException {
+    public void cheminVersPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws NoPathFoundException, AvoidingException {
         trajectoryManager.pathTo(x, y);
     }
 

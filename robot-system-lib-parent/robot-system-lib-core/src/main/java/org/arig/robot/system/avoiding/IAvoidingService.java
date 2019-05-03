@@ -15,8 +15,7 @@ public interface IAvoidingService {
      */
     void process();
 
-    List<Point> getDetectedPointsMmCapteurs();
-    List<Point> getDetectedPointsMmLidar();
+    List<Point> getDetectedPointsMm();
 
     List<Shape> getCollisionsShape();
 }
