@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 
 @Slf4j
 @ShellComponent
-@ShellCommandGroup("Pince")
+@ShellCommandGroup("Ventouses")
 @AllArgsConstructor
 public class VentousesCommands {
 
