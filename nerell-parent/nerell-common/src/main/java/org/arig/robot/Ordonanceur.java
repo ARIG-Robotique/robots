@@ -176,6 +176,12 @@ public class Ordonanceur {
         final InputStream imgMap = patternResolver.getResource(fileResourcePath).getInputStream();
         pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
 
+        // Attente la mise de la tirette
+        log.info("Mise de la tirrette pour lancer la calibration");
+        while (!ioService.tirette()) {
+            waitTimeMs(100);
+        }
+
         // Initialisation Mouvement Manager
         log.info("Initialisation du contrôleur de mouvement");
         trajectoryManager.init();
@@ -184,11 +190,18 @@ public class Ordonanceur {
         robotStatus.enableAsserv();
 
         trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
-        position.setAngle(conv.degToPulse(90));
 
         if (!robotStatus.isSimulateur()) {
             robotStatus.enableCalageBordure();
             trajectoryManager.reculeMMSansAngle(1000);
+
+            if (robotStatus.getTeam() == Team.JAUNE) {
+                position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstDos));
+                position.setAngle(conv.degToPulse(0));
+            } else {
+                position.getPt().setX(conv.mmToPulse(3000 - IConstantesNerellConfig.dstDos));
+                position.setAngle(conv.degToPulse(180));
+            }
 
             trajectoryManager.avanceMM(150);
             trajectoryManager.gotoOrientationDeg(-90);
@@ -196,32 +209,18 @@ public class Ordonanceur {
             robotStatus.enableCalageBordure();
             trajectoryManager.reculeMMSansAngle(1000);
 
+            position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstDos));
+            position.setAngle(conv.degToPulse(-90));
+
             trajectoryManager.avanceMM(150);
 
             if (robotStatus.getTeam() == Team.JAUNE) {
-                position.setPt(new Point(
-                        conv.mmToPulse(150 + IConstantesNerellConfig.dstDos),
-                        conv.mmToPulse(2000 - 150 - IConstantesNerellConfig.dstDos))
-                );
-
                 trajectoryManager.gotoPointMM(250, 1500);
                 trajectoryManager.gotoOrientationDeg(0);
-
             } else {
-
-                position.setPt(new Point(
-                        conv.mmToPulse(3000 - 150 - IConstantesNerellConfig.dstDos),
-                        conv.mmToPulse(2000 - 150 - IConstantesNerellConfig.dstDos))
-                );
-
                 trajectoryManager.gotoPointMM(2750, 1500);
                 trajectoryManager.gotoOrientationDeg(180);
             }
-
-            // Calage sur la bordure de départ
-            robotStatus.enableCalageBordure();
-            trajectoryManager.reculeMMSansAngle(20);
-
         } else {
             if (robotStatus.getTeam() == Team.JAUNE) {
                 position.setPt(new Point(conv.mmToPulse(250), conv.mmToPulse(1500)));
