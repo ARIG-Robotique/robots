@@ -33,7 +33,7 @@ public final class ARIGEncoderUtils {
         }
 
         final byte[] datas = i2cManager.getDatas(deviceName, 2);
-        int value = (datas[0] << 8) | (datas[1] & 0xFF);
+        short value = ((short) ((datas[0] << 8) + (datas[1] & 0xFF)));
         return value;
     }
 }
