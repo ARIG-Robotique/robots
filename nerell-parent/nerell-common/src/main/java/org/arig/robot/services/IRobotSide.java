@@ -64,8 +64,6 @@ public interface IRobotSide {
 
     void pinceSerrageLock();
 
-    void pinceSerrageStandby();
-
     void porteBarilletOuvert();
 
     void porteBarilletFerme();

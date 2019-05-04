@@ -40,7 +40,7 @@ public class SerrageService {
         if (side.buteePalet() && side.presencePalet()) {
             side.pinceSerrageLock();
         } else {
-            side.pinceSerrageStandby();
+            side.pinceSerrageRepos();
         }
     }
 

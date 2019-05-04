@@ -21,7 +21,6 @@ public class ServosController extends AbstractServosController {
                 .setName("Pince serrage droit")
                 .position("Repos", IConstantesServos.PINCE_SERRAGE_PALET_DROIT_REPOS)
                 .position("Lock", IConstantesServos.PINCE_SERRAGE_PALET_DROIT_LOCK)
-                .position("Standby", IConstantesServos.PINCE_SERRAGE_PALET_DROIT_STANDBY)
         );
 
         servoConfigs.add(new ServoConfig()
@@ -29,7 +28,6 @@ public class ServosController extends AbstractServosController {
                 .setName("Pince serrage gauche")
                 .position("Repos", IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_REPOS)
                 .position("Lock", IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_LOCK)
-                .position("Standby", IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_STANDBY)
         );
 
         servoConfigs.add(new ServoConfig()

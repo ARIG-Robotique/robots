@@ -71,7 +71,7 @@ public class DemoRhone extends AbstractAction {
 
                 mv.reculeMM(100);
 
-                sideServices.get(ESide.GAUCHE).pinceSerrageStandby();
+                sideServices.get(ESide.GAUCHE).pinceSerrageRepos();
 
             } else {
                 mv.pathTo(3000 - 300, 1300);
@@ -82,7 +82,7 @@ public class DemoRhone extends AbstractAction {
 
                 mv.reculeMM(100);
 
-                sideServices.get(ESide.DROITE).pinceSerrageStandby();
+                sideServices.get(ESide.DROITE).pinceSerrageRepos();
             }
 
             serrageService.enable();

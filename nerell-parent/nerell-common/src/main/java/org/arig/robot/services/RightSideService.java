@@ -140,11 +140,6 @@ public class RightSideService implements IRobotSide {
     }
 
     @Override
-    public void pinceSerrageStandby() {
-        servosService.pinceSerragePaletDroitStandby();
-    }
-
-    @Override
     public void porteBarilletFerme() {
         servosService.porteBarilletDroitFerme();
     }
