@@ -510,25 +510,25 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     @Override
     public void airElectroVanneDroite() {
         log.info("Air electrovanne droite");
-        outElectroVanneDroit.high();
+        outElectroVanneDroit.low();
     }
 
     @Override
     public void videElectroVanneDroite() {
         log.info("Vide electrovanne droite");
-        outElectroVanneDroit.low();
+        outElectroVanneDroit.high();
     }
 
     @Override
     public void airElectroVanneGauche() {
         log.info("Air electrovanne gauche");
-        outElectroVanneGauche.high();
+        outElectroVanneGauche.low();
     }
 
     @Override
     public void videElectroVanneGauche() {
         log.info("Vide electrovanne gauche");
-        outElectroVanneGauche.low();
+        outElectroVanneGauche.high();
     }
 
     @Override
