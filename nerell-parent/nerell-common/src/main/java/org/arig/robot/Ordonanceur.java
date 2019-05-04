@@ -183,7 +183,7 @@ public class Ordonanceur {
         robotStatus.disableAvoidance();
         robotStatus.enableAsserv();
 
-        trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
+        trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
         position.setAngle(conv.degToPulse(90));
 
         if (!robotStatus.isSimulateur()) {

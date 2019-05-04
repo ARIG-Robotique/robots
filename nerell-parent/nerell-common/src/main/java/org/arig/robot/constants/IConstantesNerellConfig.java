@@ -45,8 +45,8 @@ public interface IConstantesNerellConfig {
     // ------------------------ //
     // Configuration des rampes //
     // ------------------------ //
-    double rampAccDistance = 250.0; // en mm/s2
-    double rampDecDistance = 250.0; // en mm/s2
+    double rampAccDistance = 1000.0; // en mm/s2
+    double rampDecDistance = 500.0; // en mm/s2
 
     double rampAccOrientation = 1000.0; // en mm/s2
     double rampDecOrientation = 1000.0; // en mm/s2
@@ -68,8 +68,8 @@ public interface IConstantesNerellConfig {
     long vitesseLente = 300;
     long vitesseSuperLente = 200;
 
-    long vitessePath = vitesseLente;
-    long vitesseMouvement = vitesseLente;
+    long vitessePath = vitesseMoyenneBasse;
+    long vitesseMouvement = vitesseMoyenneBasse;
 
     // -------------- //
     // Parametres PID //
