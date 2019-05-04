@@ -8,6 +8,7 @@ import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.SerrageService;
 import org.arig.robot.services.VentousesService;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -51,6 +52,7 @@ public class VentousesCommands {
     @ShellMethod("Prise sur un distributeur")
     public void priseDistributeur(@NotNull ESide side) {
         ventouses.preparePriseDistributeur(side);
+        ThreadUtils.sleep(5000);
         boolean ok = ventouses.priseDistributeur(CouleurPalet.ROUGE, side);
         ventouses.finishPriseDistributeurAsync(ok, side);
     }
@@ -58,6 +60,7 @@ public class VentousesCommands {
     @ShellMethod("Depose accelerateur")
     public void deposeAccelerateur(@NotNull ESide side) throws CarouselNotAvailableException {
         ventouses.prepareDeposeAccelerateur(side);
+        ThreadUtils.sleep(5000);
         ventouses.deposeAccelerateur(CouleurPalet.ROUGE, side);
         ventouses.finishDeposeAccelerateurAsync(side);
     }
@@ -65,6 +68,7 @@ public class VentousesCommands {
     @ShellMethod("Dépose sur la balance")
     public void deposeBalance(@NotNull ESide side) throws CarouselNotAvailableException {
         ventouses.deposeBalance1(CouleurPalet.ROUGE, side);
+        ThreadUtils.sleep(5000);
         ventouses.deposeBalance2(side);
         ventouses.finishDeposeAsync(side);
     }
@@ -72,6 +76,7 @@ public class VentousesCommands {
     @ShellMethod("Prendre goldenium")
     public void prendreGoldenium(@NotNull ESide side) {
         ventouses.preparePriseGoldenium(side);
+        ThreadUtils.sleep(5000);
         boolean ok = ventouses.priseGoldenium(side);
         ventouses.finishPriseGoldeniumAsync(ok, side);
     }
