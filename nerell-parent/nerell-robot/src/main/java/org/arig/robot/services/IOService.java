@@ -287,14 +287,14 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     @Override
     public boolean calageBordureArriereDroit() {
         boolean result = inCalageBordureDroit.isLow();
-        log.info("Présence rouleaux : {}", result);
+        log.info("Calage bordure droit : {}", result);
         return result;
     }
 
     @Override
     public boolean calageBordureArriereGauche() {
         boolean result = inCalageBordureGauche.isLow();
-        log.info("Présence rouleaux : {}", result);
+        log.info("Calage bordure gauche : {}", result);
         return result;
     }
 
