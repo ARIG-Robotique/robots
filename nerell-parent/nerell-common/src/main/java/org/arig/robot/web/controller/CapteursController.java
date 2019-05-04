@@ -66,8 +66,8 @@ public class CapteursController extends AbstractCapteursController implements In
         // Capteurs informations analogique
         analogiqueInfos.put("Vaccum droit", () -> readI2CAnalogValue(IConstantesI2CAdc.VACUOSTAT_DROIT));
         analogiqueInfos.put("Vaccum gauche", () -> readI2CAnalogValue(IConstantesI2CAdc.VACUOSTAT_GAUCHE));
-        analogiqueInfos.put("NB Palet magasin droit", () -> (double) ioService.nbPaletDansMagasinDroit());
-        analogiqueInfos.put("NB Palet magasin gauche", () -> (double) ioService.nbPaletDansMagasinGauche());
+        //analogiqueInfos.put("NB Palet magasin droit", () -> (double) ioService.nbPaletDansMagasinDroit());
+        //analogiqueInfos.put("NB Palet magasin gauche", () -> (double) ioService.nbPaletDansMagasinGauche());
 
         // Capteurs informations Text
         textInfos.put("Equipe", () -> rs.getTeam().name());
