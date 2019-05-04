@@ -106,39 +106,48 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
     }
 
     private boolean checkObstacles() {
+        boolean obstaclesHasChanged = false;
 
-        tmpObstacles.clear();
-        tmpCollisionsShape.clear();
+        // Si les points lidar on changé on check
+        int checkSumLidar = getDetectedPointsMm().hashCode();
 
-        pointLidar:
-        for (Point pt : getDetectedPointsMm()) {
-            tmpCollisionsShape.add(new Cercle(pt, DISTANCE_CENTRE_OBSTACLE));
+        if (checkSumLidar != this.checkSumLidar) {
+            this.checkSumLidar = checkSumLidar;
+            obstaclesHasChanged = true;
 
-            // Définition de l'obstacle polygone (autour de nous)
-            int r1 = (int) (Math.cos(Math.toRadians(22.5)) * DISTANCE_CENTRE_OBSTACLE / 10);
-            int r2 = (int) (Math.sin(Math.toRadians(22.5)) * DISTANCE_CENTRE_OBSTACLE / 10);
+            tmpObstacles.clear();
+            tmpCollisionsShape.clear();
 
-            Polygon obsPoly = new Polygon();
-            obsPoly.addPoint(r2, r1);
-            obsPoly.addPoint(r1, r2);
-            obsPoly.addPoint(r1, -r2);
-            obsPoly.addPoint(r2, -r1);
-            obsPoly.addPoint(-r2, -r1);
-            obsPoly.addPoint(-r1, -r2);
-            obsPoly.addPoint(-r1, r2);
-            obsPoly.addPoint(-r2, r1);
-            obsPoly.translate((int) pt.getX() / 10, (int) pt.getY() / 10);
+            pointLidar:
+            for (Point pt : getDetectedPointsMm()) {
+                tmpCollisionsShape.add(new Cercle(pt, DISTANCE_CENTRE_OBSTACLE));
 
-            for (Line2D l : lines) {
-                if (l.intersects(obsPoly.getBounds())) {
-                    log.info("Collision détectée, ajout polygon : {} {}", pt, obsPoly);
-                    tmpObstacles.add(obsPoly);
-                    continue pointLidar;
+                // Définition de l'obstacle polygone (autour de nous)
+                int r1 = (int) (Math.cos(Math.toRadians(22.5)) * DISTANCE_CENTRE_OBSTACLE / 10);
+                int r2 = (int) (Math.sin(Math.toRadians(22.5)) * DISTANCE_CENTRE_OBSTACLE / 10);
+
+                Polygon obsPoly = new Polygon();
+                obsPoly.addPoint(r2, r1);
+                obsPoly.addPoint(r1, r2);
+                obsPoly.addPoint(r1, -r2);
+                obsPoly.addPoint(r2, -r1);
+                obsPoly.addPoint(-r2, -r1);
+                obsPoly.addPoint(-r1, -r2);
+                obsPoly.addPoint(-r1, r2);
+                obsPoly.addPoint(-r2, r1);
+                obsPoly.translate((int) pt.getX() / 10, (int) pt.getY() / 10);
+
+                for (Line2D l : lines) {
+                    if (l.intersects(obsPoly.getBounds())) {
+                        log.info("Collision détectée, ajout polygon : {} {}", pt, obsPoly);
+                        tmpObstacles.add(obsPoly);
+                        continue pointLidar;
+                    }
                 }
             }
         }
 
-        return true;
+        return obstaclesHasChanged;
     }
 
     private void setObstacles(List<java.awt.Shape> ostacles) {

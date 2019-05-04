@@ -104,6 +104,9 @@ public interface IConstantesNerellConfig {
     double approcheOrientationDeg = 5;
     double angleReculDeg = 0.45;
 
+    int dstDos = 162; // distance du dos du robot au milieu des roues
+    int dstVentouseFacade = 172; // distance de la ventouse en prise facade au milieu de roues
+
     // -------------------------- //
     // Paramètre Carousel manager //
     // -------------------------- //

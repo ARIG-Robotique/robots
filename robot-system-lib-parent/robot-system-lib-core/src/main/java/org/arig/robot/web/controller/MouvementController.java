@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -61,8 +62,8 @@ public class MouvementController {
         pos.put("trajetAtteint", trajectoryManager.isTrajetAtteint());
         pos.put("trajetEnApproche", trajectoryManager.isTrajetEnApproche());
         pos.put("typeAsserv", cmdRobot.typeAsserv());
-        pos.put("pointsLidar", avoidingService.getDetectedPointsMm());
-        pos.put("collisions", avoidingService.getCollisionsShape());
+        pos.put("pointsLidar", new ArrayList<>(avoidingService.getDetectedPointsMm()));
+        pos.put("collisions", new ArrayList<>(avoidingService.getCollisionsShape()));
         pos.put("matchTime", rs.getElapsedTime());
         return pos;
     }
