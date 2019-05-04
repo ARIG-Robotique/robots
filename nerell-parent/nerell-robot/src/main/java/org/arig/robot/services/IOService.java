@@ -196,7 +196,10 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public Team equipe() {
-        rs.setTeam(inEquipe.isHigh() ? Team.VIOLET : Team.JAUNE);
+//        rs.setTeam(inEquipe.isHigh() ? Team.VIOLET : Team.JAUNE);
+
+        rs.setTeam(Team.valueOf(System.getProperty("equipe")));
+
         return rs.getTeam();
     }
 

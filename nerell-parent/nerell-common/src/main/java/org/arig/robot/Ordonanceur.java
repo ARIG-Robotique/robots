@@ -230,7 +230,7 @@ public class Ordonanceur {
                 position.setPt(new Point(conv.mmToPulse(2750), conv.mmToPulse(1500)));
                 position.setAngle(conv.degToPulse(180));
             }
-        //}
+        }
 
         log.info("Position initiale avant match des servos");
         //servosService.homes();
