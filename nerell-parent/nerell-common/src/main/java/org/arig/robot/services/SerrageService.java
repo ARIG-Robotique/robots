@@ -19,7 +19,7 @@ public class SerrageService {
     @Autowired
     private LeftSideService leftSideService;
 
-    private AtomicBoolean enabled = new AtomicBoolean();
+    private AtomicBoolean enabled = new AtomicBoolean(true);
 
     public void disable() {
         enabled.set(false);
