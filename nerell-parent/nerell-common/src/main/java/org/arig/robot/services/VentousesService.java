@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Service
 public class VentousesService implements InitializingBean {
 
-    private static final int TEMPS_TENTATIVE_ASPIRATION = 500;
+    private static final int TEMPS_TENTATIVE_ASPIRATION = 1000;
     private static final int TEMPS_MAX_AVAILABLE = 3000;
 
     @Autowired

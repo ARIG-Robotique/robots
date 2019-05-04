@@ -50,9 +50,9 @@ public class Point3Action extends AbstractAction {
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             if (rs.getTeam() == Team.JAUNE) {
-                mv.pathTo(2700, 1200);
+                mv.pathTo(250, 650);
             } else {
-                mv.pathTo(300, 1200);
+                mv.pathTo(3000-250, 650);
             }
 
         } catch (NoPathFoundException | AvoidingException e) {

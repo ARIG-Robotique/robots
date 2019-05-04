@@ -76,8 +76,8 @@ public class NerellScheduler {
     }
 
     @Scheduled(fixedDelay = 1000)
-    public void prisePinceDroiteTask() {
-        if (rs.isServicesMetierEnabled()) {
+    public void priseVentouseDroiteTask() {
+        if (rs.isVentousesEnabled()) {
             try {
                 if (rightSideService.buteePalet() && rightSideService.presencePalet() && !ventousesService.isWorking(ESide.DROITE)) {
                     ventousesService.waitAvailable(ESide.DROITE);
@@ -95,8 +95,8 @@ public class NerellScheduler {
     }
 
     @Scheduled(fixedDelay = 1000)
-    public void prisePinceGaucheTask() {
-        if (rs.isServicesMetierEnabled()) {
+    public void priseVentouseGaucheTask() {
+        if (rs.isVentousesEnabled()) {
             try {
                 if (leftSideService.buteePalet() && leftSideService.presencePalet() && !ventousesService.isWorking(ESide.GAUCHE)) {
                     ventousesService.waitAvailable(ESide.GAUCHE);

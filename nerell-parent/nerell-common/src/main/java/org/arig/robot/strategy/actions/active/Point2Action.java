@@ -47,7 +47,7 @@ public class Point2Action extends AbstractAction {
             order--;
             rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-            mv.pathTo(2000, 300);
+            mv.pathTo(1500, 1000);
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();

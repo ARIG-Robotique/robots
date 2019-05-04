@@ -2,18 +2,22 @@ package org.arig.robot.strategy.actions.disabled.atomfactory;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
+import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.services.VentousesService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -31,6 +35,13 @@ public class PrendreGoldenium extends AbstractAction {
 
     @Autowired
     private VentousesService ventouses;
+
+    @Autowired
+    @Qualifier("currentPosition")
+    private Position position;
+
+    @Autowired
+    private ConvertionRobotUnit conv;
 
     @Getter
     private boolean completed = false;
@@ -59,11 +70,10 @@ public class PrendreGoldenium extends AbstractAction {
             rs.enableAvoidance();
 
             // va au point le plus proche
-            // TODO
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(1200, 1800);
+                mv.pathTo(500 + 235 + 40 - 50, 1725);
             } else {
-                mv.pathTo(1700, 1800);
+                mv.pathTo(2500 - 235 - 40 + 50, 1725);
             }
 
             rs.disableAvoidance();
@@ -73,14 +83,13 @@ public class PrendreGoldenium extends AbstractAction {
 
             ventouses.waitAvailable(side);
             ventouses.preparePriseGoldenium(side);
-
-            mv.avanceMM(150); // TODO
+            mv.gotoPointMM(conv.pulseToMm(position.getPt().getX()), 2000 - 55 - IConstantesNerellConfig.dstVentouseFacade);
 
             // prise goldenium
             boolean ok = ventouses.priseGoldenium(side);
 
             // recule
-            mv.reculeMM(150); // TODO
+            mv.reculeMM(50);
 
             ventouses.finishPriseGoldeniumAsync(ok, side);
 

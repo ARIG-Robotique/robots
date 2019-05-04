@@ -79,6 +79,19 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         servicesMetierEnabled = false;
     }
 
+    @Setter(AccessLevel.NONE)
+    private boolean ventousesEnabled = false;
+
+    public void enableVentouses() {
+        log.info("Activation des ventouses");
+        ventousesEnabled = true;
+    }
+
+    public void disableVetouses() {
+        log.info("Désactivation des ventouses");
+        ventousesEnabled = false;
+    }
+
     private boolean baliseOk = false;
     private StatutBalise statutBalise = null;
 

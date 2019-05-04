@@ -5,9 +5,9 @@ package org.arig.robot.constants;
  */
 public interface IConstantesI2CAdc {
 
-    byte VACUOSTAT_DROIT = 0;
+    byte VACUOSTAT_DROIT = 6; // TODO
     int VACUOSTAT_DROIT_SEUIL = 1750;
 
-    byte VACUOSTAT_GAUCHE = 1;
+    byte VACUOSTAT_GAUCHE = 7; // TODO
     int VACUOSTAT_GAUCHE_SEUIL = 1750;
 }

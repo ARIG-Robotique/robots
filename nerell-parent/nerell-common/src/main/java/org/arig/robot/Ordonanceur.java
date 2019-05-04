@@ -248,7 +248,8 @@ public class Ordonanceur {
 
         // Activation
         robotStatus.enableMatch();
-        //robotStatus.enableServicesMetier();
+        robotStatus.enableServicesMetier();
+//        robotStatus.enableVentouses();
 //        robotStatus.enableAvoidance();
 
         // Match de XX secondes.

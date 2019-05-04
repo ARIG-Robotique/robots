@@ -9,6 +9,7 @@ import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.exceptions.CarouselNotAvailableException;
 import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
+import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
@@ -16,7 +17,9 @@ import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -34,6 +37,13 @@ public class DeposeAccelerateur extends AbstractAction {
 
     @Autowired
     private ICarouselManager carousel;
+
+    @Autowired
+    @Qualifier("currentPosition")
+    private Position position;
+
+    @Autowired
+    private ConvertionRobotUnit conv;
 
     @Getter
     private boolean completed = false;
@@ -70,11 +80,10 @@ public class DeposeAccelerateur extends AbstractAction {
             rs.enableAvoidance();
 
             // va au point le plus proche
-            // TODO
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(1200, 1800);
+                mv.pathTo(1340, 1740);
             } else {
-                mv.pathTo(1700, 1800);
+                mv.pathTo(1760, 1740);
             }
 
             rs.disableAvoidance();
@@ -85,7 +94,7 @@ public class DeposeAccelerateur extends AbstractAction {
 
             // oriente et avance à fond
             mv.gotoOrientationDeg(90);
-            mv.avanceMM(150); // TODO
+            mv.gotoPointMM(conv.pulseToMm(position.getPt().getX()), 2000 - IConstantesNerellConfig.dstVentouseFacade);
 
             // pousse le bleu
             if (!rs.isAccelerateurOuvert()) {
@@ -100,7 +109,7 @@ public class DeposeAccelerateur extends AbstractAction {
                 ventouses.deposeAccelerateur(couleur, side);
             }
 
-            mv.reculeMM(150); // TODO
+            mv.reculeMM(50);
 
             completed = rs.getPaletsInAccelerateur().size() >= IConstantesNerellConfig.nbPaletsAccelerateurMax;
 

@@ -9,6 +9,7 @@ import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.exceptions.CarouselNotAvailableException;
 import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
+import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
@@ -16,7 +17,9 @@ import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -34,6 +37,13 @@ public class DeposerBalance extends AbstractAction {
 
     @Autowired
     private ICarouselManager carousel;
+
+    @Autowired
+    @Qualifier("currentPosition")
+    private Position position;
+
+    @Autowired
+    private ConvertionRobotUnit conv;
 
     @Getter
     private boolean completed = false;
@@ -69,11 +79,10 @@ public class DeposerBalance extends AbstractAction {
             rs.enableAvoidance();
 
             // va au point le plus proche
-            // TODO
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(1700, 600);
+                mv.pathTo(1500 + 130 + 50, 795);
             } else {
-                mv.pathTo(1300, 600);
+                mv.pathTo(1500 - 130 - 50, 795);
             }
 
             rs.disableAvoidance();
@@ -87,7 +96,9 @@ public class DeposerBalance extends AbstractAction {
                     throw new VentouseNotAvailableException();
                 }
 
-                mv.avanceMM(150); // TODO
+                int targetY = IConstantesNerellConfig.dstVentouseFacade - 30; // TODO
+
+                mv.avanceMM(150);
 
                 ventouses.deposeBalance2(side);
 
