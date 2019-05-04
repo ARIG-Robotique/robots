@@ -60,8 +60,8 @@ public class CapteursController extends AbstractCapteursController implements In
         numeriqueInfos.put("Butée palet gauche", ioService::buteePaletGauche);
         numeriqueInfos.put("Présence palet ventouse droit", ioService::presencePaletVentouseDroit);
         numeriqueInfos.put("Présence palet ventouse gauche", ioService::presencePaletVentouseGauche);
-        numeriqueInfos.put("Trappe magasin droit ferme", ioService::trappeMagasinDroitFerme);
-        numeriqueInfos.put("Trappe magasin gauche ferme", ioService::trappeMagasinGaucheFerme);
+        //numeriqueInfos.put("Trappe magasin droit ferme", ioService::trappeMagasinDroitFerme);
+        //numeriqueInfos.put("Trappe magasin gauche ferme", ioService::trappeMagasinGaucheFerme);
 
         // Capteurs informations analogique
         analogiqueInfos.put("Vaccum droit", () -> readI2CAnalogValue(IConstantesI2CAdc.VACUOSTAT_DROIT));
