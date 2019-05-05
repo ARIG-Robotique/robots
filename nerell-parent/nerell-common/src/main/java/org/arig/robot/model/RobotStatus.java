@@ -134,6 +134,8 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     private boolean accelerateurOuvert = false;
 
+    private boolean accelerateurPrit = false;
+
     private boolean goldeniumPrit = false;
 
     @Setter(AccessLevel.NONE)

@@ -134,7 +134,7 @@ public interface IConstantesNerellConfig {
     // --------------------- //
     // Paramètre pneumatique //
     // --------------------- //
-    int tempsActivationElectrovanne = 100;
+    int tempsActivationElectrovanne = 200;
 
     // ----------------- //
     // Paramètres métier //

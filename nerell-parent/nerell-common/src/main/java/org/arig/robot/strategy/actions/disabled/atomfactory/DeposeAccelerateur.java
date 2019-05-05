@@ -48,6 +48,9 @@ public class DeposeAccelerateur extends AbstractAction {
     @Getter
     private boolean completed = false;
 
+    @Getter
+    private boolean priseBleu = false; // TODO stratégie
+
     @Override
     public String name() {
         return "Active l'accelerateur et dépose";
@@ -61,7 +64,11 @@ public class DeposeAccelerateur extends AbstractAction {
     @Override
     public boolean isValid() {
         return isTimeValid() &&
-                (!rs.isAccelerateurOuvert() || canDepose());
+                (
+                        !rs.isAccelerateurOuvert() ||
+                                canDepose() ||
+                                isPriseBleu() && !rs.isAccelerateurPrit() && carousel.has(null)
+                );
     }
 
     private boolean canDepose() {
@@ -90,14 +97,28 @@ public class DeposeAccelerateur extends AbstractAction {
 
             ventouses.waitAvailable(side);
 
-            ventouses.prepareDeposeAccelerateur(side);
+            if (isPriseBleu()) {
+                ventouses.preparePriseAccelerateur(side);
+            } else {
+                ventouses.prepareDeposeAccelerateur(side);
+            }
 
             // oriente et avance à fond
             mv.gotoOrientationDeg(90);
             mv.gotoPointMM(conv.pulseToMm(position.getPt().getX()), 2000 - IConstantesNerellConfig.dstVentouseFacade);
 
-            // pousse le bleu
-            if (!rs.isAccelerateurOuvert()) {
+            // prend ou pousse le bleu
+            if (isPriseBleu() && !rs.isAccelerateurPrit()) {
+                if (ventouses.priseAccelerateur(side)) {
+                    ventouses.stockageAsyncMaisResteEnHaut(side);
+                    rs.setAccelerateurPrit(true);
+                    ventouses.waitAvailable(side);
+
+                } else if (!rs.isAccelerateurOuvert()) {
+                    ventouses.pousseAccelerateur(side);
+                    rs.setAccelerateurOuvert(true);
+                }
+            } else if (!rs.isAccelerateurOuvert() && !rs.isAccelerateurPrit()) {
                 ventouses.pousseAccelerateur(side);
                 rs.setAccelerateurOuvert(true);
             }
@@ -107,6 +128,11 @@ public class DeposeAccelerateur extends AbstractAction {
                 CouleurPalet couleur = carousel.has(CouleurPalet.ROUGE) ? CouleurPalet.ROUGE : CouleurPalet.ANY;
 
                 ventouses.deposeAccelerateur(couleur, side);
+
+                // cas ou a prit le bleu
+                if (!rs.isAccelerateurOuvert()) {
+                    rs.setAccelerateurOuvert(true);
+                }
             }
 
             mv.reculeMM(50);

@@ -3,6 +3,7 @@ package org.arig.robot.nerell.utils.shell;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exceptions.CarouselNotAvailableException;
+import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.IIOService;
@@ -54,7 +55,19 @@ public class VentousesCommands {
         ventouses.preparePriseDistributeur(side);
         ThreadUtils.sleep(5000);
         boolean ok = ventouses.priseDistributeur(CouleurPalet.ROUGE, side);
+        ThreadUtils.sleep(5000);
         ventouses.finishPriseDistributeurAsync(ok, side);
+    }
+
+    @ShellMethod("Prise du un accelerateur")
+    public void priseAccelerateur(@NotNull ESide side) throws VentouseNotAvailableException {
+        ventouses.preparePriseAccelerateur(side);
+        ThreadUtils.sleep(5000);
+        ventouses.priseAccelerateur(side);
+        ventouses.stockageAsyncMaisResteEnHaut(side);
+        ventouses.waitAvailable(side);
+        ThreadUtils.sleep(5000);
+        ventouses.finishDeposeAccelerateurAsync(side);
     }
 
     @ShellMethod("Depose accelerateur")
@@ -62,6 +75,7 @@ public class VentousesCommands {
         ventouses.prepareDeposeAccelerateur(side);
         ThreadUtils.sleep(5000);
         ventouses.deposeAccelerateur(CouleurPalet.ROUGE, side);
+        ThreadUtils.sleep(5000);
         ventouses.finishDeposeAccelerateurAsync(side);
     }
 
@@ -70,14 +84,16 @@ public class VentousesCommands {
         ventouses.deposeBalance1(CouleurPalet.ROUGE, side);
         ThreadUtils.sleep(5000);
         ventouses.deposeBalance2(side);
+        ThreadUtils.sleep(5000);
         ventouses.finishDeposeAsync(side);
     }
 
-    @ShellMethod("Prendre goldenium")
-    public void prendreGoldenium(@NotNull ESide side) {
+    @ShellMethod("Prise du goldenium")
+    public void priseGoldenium(@NotNull ESide side) {
         ventouses.preparePriseGoldenium(side);
         ThreadUtils.sleep(5000);
         boolean ok = ventouses.priseGoldenium(side);
+        ThreadUtils.sleep(5000);
         ventouses.finishPriseGoldeniumAsync(ok, side);
     }
 
@@ -85,6 +101,7 @@ public class VentousesCommands {
     public void deposeGoldeniumTable(@NotNull ESide side) {
         serrageService.disable();
         ventouses.deposeGoldenimTable(side);
+        ThreadUtils.sleep(5000);
         serrageService.enable();
         ventouses.finishDeposeAsync(side);
     }

@@ -179,7 +179,7 @@ public class VentousesService implements InitializingBean {
         IRobotSide service = sideServices.get(side);
 
         service.pivotVentouseFacade(false);
-        service.ascenseurAccelerateur(true);
+        service.ascenseurGold(true);
 
         return true;
     }
@@ -197,6 +197,8 @@ public class VentousesService implements InitializingBean {
         if (ok) {
             robotStatus.setGoldeniumPrit(true);
             couleur.put(side, CouleurPalet.GOLD);
+
+            service.ascenseurCarousel(true);
         }
 
         return ok;
@@ -223,12 +225,32 @@ public class VentousesService implements InitializingBean {
      * Mise en place pour dépose dans l'accélérateur
      * A faire avant d'avancer
      */
-    public void prepareDeposeAccelerateur(ESide side) {
+    public boolean prepareDeposeAccelerateur(ESide side) {
         IRobotSide service = sideServices.get(side);
 
         service.pousseAccelerateurStandby(false);
         service.pivotVentouseCarouselVertical(false);
         service.ascenseurAccelerateur(true);
+
+        return true;
+    }
+
+    /**
+     * Mise en place pour la prise sur l'accélérateur
+     * A faire avant d'avancer
+     */
+    public boolean preparePriseAccelerateur(ESide side) {
+        IRobotSide service = sideServices.get(side);
+
+        if (!carousel.has(null)) {
+            log.warn("Pas de place dans le carousel");
+            return false;
+        }
+
+        service.pivotVentouseFacade(false);
+        service.ascenseurAccelerateur(true);
+
+        return true;
     }
 
     /**
@@ -239,6 +261,28 @@ public class VentousesService implements InitializingBean {
 
         service.pousseAccelerateurAction(true);
         service.pousseAccelerateurStandby(true);
+    }
+
+    /**
+     * Prise du palet dans le distributeur
+     */
+    public boolean priseAccelerateur(ESide side) {
+        IRobotSide service = sideServices.get(side);
+
+        if (!service.presencePaletVentouse()) {
+            log.warn("Pas de palet visible");
+            return false;
+        }
+
+        service.enablePompeAVide();
+        boolean ok = tentativeAspiration(service);
+        service.disablePompeAVide();
+
+        if (ok) {
+            this.couleur.put(side, CouleurPalet.BLEU);
+        }
+
+        return ok;
     }
 
     /**
@@ -330,6 +374,7 @@ public class VentousesService implements InitializingBean {
                 return false;
             }
 
+            service.ascenseurAccelerateur(false);
             service.pivotVentouseFacade(true);
 
         } else {
@@ -413,8 +458,8 @@ public class VentousesService implements InitializingBean {
         service.disablePompeAVide();
         service.releaseElectroVanne();
 
+        service.pivotVentouseTable(false);
         service.ascenseurAccelerateur(true);
-        service.pivotVentouseTable(true);
 
         couleur.put(side, null);
         working.get(side).set(false);
@@ -453,10 +498,8 @@ public class VentousesService implements InitializingBean {
             }
 
             service.porteBarilletOuvert(true);
-            service.pivotVentouseCarouselSortie(false);
-            service.ascenseurCarouselDepose(true);
-            service.pivotVentouseCarouselVertical(true);
             service.ascenseurCarousel(true);
+            service.pivotVentouseCarouselVertical(true);
 
             service.disablePompeAVide();
             service.releaseElectroVanne();
@@ -472,7 +515,58 @@ public class VentousesService implements InitializingBean {
         } catch (CarouselNotAvailableException e) {
 
         } finally {
-            servosHomeAndDisablePompeAndRelease(side);
+            service.disablePompeAVide();
+            service.releaseElectroVanne();
+
+            service.pivotVentouseTable(false);
+            service.ascenseurAccelerateur(true);
+
+            couleur.put(side, null);
+            working.get(side).set(false);
+        }
+    }
+
+    // TODO factoriset ça
+    @Async
+    public void stockageAsyncMaisResteEnHaut(ESide side) {
+        IRobotSide service = sideServices.get(side);
+
+        if (!service.presencePaletVentouse() || couleur.get(side) == null) {
+            log.info("Rien à stocker");
+            return;
+        }
+
+        try {
+            carouselService.waitAvailable(TEMPS_MAX_AVAILABLE * 2);
+
+            if (!carouselService.tourner(service.positionCarouselVentouse(), null)) {
+                log.warn("Echec du carousel, pourtant il y avait une place ?");
+                throw new CarouselNotAvailableException();
+            }
+
+            service.porteBarilletOuvert(true);
+            service.ascenseurCarousel(true);
+            service.pivotVentouseCarouselVertical(true);
+
+            service.disablePompeAVide();
+            service.releaseElectroVanne();
+
+            service.ascenseurAccelerateur(true);
+            service.porteBarilletFerme(true);
+
+            carousel.store(service.positionCarouselVentouse(), couleur.get(side));
+
+            carouselService.release();
+
+        } catch (CarouselNotAvailableException e) {
+
+        } finally {
+            service.disablePompeAVide();
+            service.releaseElectroVanne();
+
+            service.pivotVentouseCarouselVertical(false);
+            service.ascenseurAccelerateur(true);
+
             couleur.put(side, null);
             working.get(side).set(false);
         }
