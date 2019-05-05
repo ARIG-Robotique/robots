@@ -245,84 +245,72 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     @Override
     public boolean presencePaletDroit() {
         boolean result = inPresencePaletDroit.isLow();
-        log.info("Presence pince centre : {}", result);
         return result;
     }
 
     @Override
     public boolean presencePaletGauche() {
         boolean result = inPresencePaletGauche.isLow();
-        log.info("Presence pince droite : {}", result);
         return result;
     }
 
     @Override
     public boolean buteePaletDroit() {
         boolean result = inButeePaletDroit.isLow();
-        log.info("Presence palet droit : {}", result);
         return result;
     }
 
     @Override
     public boolean buteePaletGauche() {
         boolean result = inButeePaletGauche.isLow();
-        log.info("Présence bordure avant : {}", result);
         return result;
     }
 
     @Override
     public boolean presencePaletVentouseDroit() {
         boolean result = inPresencePaletVentouseDroit.isLow();
-        log.info("Présence comptage magasin : {}", result);
         return result;
     }
 
     @Override
     public boolean presencePaletVentouseGauche() {
         boolean result = inPresencePaletVentouseGauche.isLow();
-        log.info("Présence dévidoir : {}", result);
         return result;
     }
 
     @Override
     public boolean calageBordureArriereDroit() {
         boolean result = inCalageBordureDroit.isLow();
-        log.info("Calage bordure droit : {}", result);
         return result;
     }
 
     @Override
     public boolean calageBordureArriereGauche() {
         boolean result = inCalageBordureGauche.isLow();
-        log.info("Calage bordure gauche : {}", result);
         return result;
     }
 
     @Override
     public boolean trappeMagasinDroitFerme() {
         boolean result = inTrappeMagasinDroitFerme.isLow();
-        log.info("Presence balle aspiration : {}", result);
         return result;
     }
 
     @Override
     public boolean trappeMagasinGaucheFerme() {
         boolean result = inTrappeMagasinGaucheFerme.isLow();
-        log.info("Presence balle aspiration : {}", result);
         return result;
     }
 
     @Override
     public boolean indexBarillet() {
         boolean result = inIndexBarillet.isLow();
-        log.info("Présence bordure arrière droite : {}", result);
         return result;
     }
 
     @Override
     public boolean presenceLectureCouleur() {
         boolean result = inPresenceLectureCouleur.isLow();
-        log.info("Presence base lunaire droite : {}", result);
         return result;
     }
 
@@ -367,7 +355,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     }
 
     private byte convertDistanceToNbPaletDansStock(int distance) {
-        for (byte nb = 3, c = 1; nb >= 0 ; nb--, c++) {
+        for (byte nb = 3, c = 1; nb >= 0; nb--, c++) {
             if (distance < ((c * IConstantesNerellConfig.diametrePaletMm) + IConstantesNerellConfig.offsetDetectionPaletMagasin)) {
                 return nb;
             }

@@ -82,7 +82,7 @@ public class SD21Servos implements InitializingBean {
             }
             i2cManager.sendData(deviceName, (byte) (SD21Servos.getBaseRegister(servoNb) + 1), (byte) (position & 0xFF), (byte) (position >> 8));
         } catch (I2CException e) {
-            log.error("Erreur lors de l'envoi de la position");
+            log.error("Erreur lors de l'envoi de la position, servo: {}, position: {}", servoNb, position);
         }
     }
 

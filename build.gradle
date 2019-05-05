@@ -35,7 +35,7 @@ configure(allprojects) { project ->
 		apacheCommonsIOVersion = '2.6'
 		googleGuavaVersion = '27.0.1-jre'
 		pi4jVersion = '1.2'
-		junixsocketVersion = '2.0.5-arig-SNAPSHOT'
+		junixsocketVersion = '2.2.0'
 		anyAnglePathFindingGitVersion = 'master-7b196baf6b-1'
 		jFoenixVersion = '8.0.8'
 		dataFxVersion = '8.0.1'

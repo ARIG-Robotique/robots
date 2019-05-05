@@ -11,6 +11,7 @@ import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,10 +24,10 @@ public abstract class AbstractMonitoringWrapper implements IMonitoringWrapper {
     private AbstractRobotStatus robotStatus = null;
 
     @Getter(AccessLevel.PROTECTED)
-    private final List<MonitorTimeSerie> monitorTimeSeriePoints = new ArrayList<>();
+    private final List<MonitorTimeSerie> monitorTimeSeriePoints = Collections.synchronizedList(new ArrayList<>());
 
     @Getter(AccessLevel.PROTECTED)
-    private final List<AbstractMonitorMouvement> monitorMouvementPoints = new ArrayList<>();
+    private final List<AbstractMonitorMouvement> monitorMouvementPoints = Collections.synchronizedList(new ArrayList<>());
 
     @Setter
     @Getter(AccessLevel.PROTECTED)

@@ -69,6 +69,22 @@ public class AsservissementPolaireTestContext {
         return pid;
     }
 
+    @Bean(name = "pidMoteurDroit")
+    public IPidFilter pidMoteurDroit() {
+        log.info("Configuration PID moteur droit");
+        SimplePidFilter pid = new SimplePidFilter("pid_mot_droit");
+        pid.setTunings(KP, KI, KD);
+        return pid;
+    }
+
+    @Bean(name = "pidMoteurGauche")
+    public IPidFilter pidMoteurGauche() {
+        log.info("Configuration PID moteur gauche");
+        SimplePidFilter pid = new SimplePidFilter("pid_mot_gauche");
+        pid.setTunings(KP, KI, KD);
+        return pid;
+    }
+
     @Bean(name = "rampDistance")
     public TrapezoidalRampFilter rampDistance() {
         log.info("Configuration TrapezoidalRampFilter Distance");

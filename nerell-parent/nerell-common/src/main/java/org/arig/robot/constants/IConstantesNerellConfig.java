@@ -5,13 +5,14 @@ import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 public interface IConstantesNerellConfig {
 
     // Nb Thread Pool Scheduler
-    int nbThreadScheduledExecutor = 11;
+    int nbThreadScheduledExecutor = 20;
 
     // Nb Thread Pool Async
     int nbThreadAsyncExecutor = 10;
 
     // Configuration asservissement //
     double asservTimeMs = 10;
+    double asservTimeS = IConstantesNerellConfig.asservTimeMs / 1000;
     double asservTimeCarouselMs = 50;
 
     // Durée du match //
@@ -84,12 +85,12 @@ public interface IConstantesNerellConfig {
     double kdOrientation = 0.01;
 
     double kpMotDroit = 0.9;
-    double kiMotDroit = 0.005;
-    double kdMotDroit = 0.09;
+    double kiMotDroit = 0.5 * asservTimeS;
+    double kdMotDroit = 0.0009 / asservTimeS;
 
     double kpMotGauche = 0.9;
-    double kiMotGauche = 0.005;
-    double kdMotGauche = 0.09;
+    double kiMotGauche = 0.5 * asservTimeS;
+    double kdMotGauche = 0.0009 / asservTimeS;
 
     double kpCarousel = 0.1;
     double kiCarousel = 0;
@@ -106,6 +107,7 @@ public interface IConstantesNerellConfig {
 
     int dstDos = 162; // distance du dos du robot au milieu des roues
     int dstVentouseFacade = 172; // distance de la ventouse en prise facade au milieu de roues
+    int dstVentouseCentre = 50; // distance du milieu de la ventouse au milieu des pinces
 
     // -------------------------- //
     // Paramètre Carousel manager //

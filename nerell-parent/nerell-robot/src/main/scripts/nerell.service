@@ -1,9 +1,0 @@
-[Unit]
-After=multi-user.target
-
-[Service]
-ExecStart=/home/pi/nerell/run.sh
-WorkingDirectory=/home/pi/nerell
-
-[Install]
-WantedBy=default.target
