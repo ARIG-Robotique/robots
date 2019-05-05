@@ -90,25 +90,25 @@ public class TasksScheduler implements InitializingBean {
 //        monitoringWrapper.addTimeSeriePoint(serie);
 //    }
 
-//    @Scheduled(fixedRate = (long) IConstantesNerellConfig.asservTimeCarouselMs)
-//    public void asservissementCarouselTask() {
-//        StopWatch exec = new StopWatch();
-//        exec.start();
-//        if (rs.isAsservCarouselEnabled()) {
-//            carouselManager.process();
-//        } else {
-//            carouselManager.stop();
-//        }
-//        exec.stop();
-//
-//        MonitorTimeSerie serie = new MonitorTimeSerie()
-//                .measurementName("tasks")
-//                .addTag(MonitorTimeSerie.TAG_NAME, "asservissementCarousel")
-//                .addField("rate", IConstantesNerellConfig.asservTimeCarouselMs)
-//                .addField("execTime", exec.getTime());
-//
-//        monitoringWrapper.addTimeSeriePoint(serie);
-//    }
+    @Scheduled(fixedRate = (long) IConstantesNerellConfig.asservTimeCarouselMs)
+    public void asservissementCarouselTask() {
+        StopWatch exec = new StopWatch();
+        exec.start();
+        if (rs.isAsservCarouselEnabled()) {
+            carouselManager.process();
+        } else {
+            carouselManager.stop();
+        }
+        exec.stop();
+
+        MonitorTimeSerie serie = new MonitorTimeSerie()
+                .measurementName("tasks")
+                .addTag(MonitorTimeSerie.TAG_NAME, "asservissementCarousel")
+                .addField("rate", IConstantesNerellConfig.asservTimeCarouselMs)
+                .addField("execTime", exec.getTime());
+
+        monitoringWrapper.addTimeSeriePoint(serie);
+    }
 
     @Scheduled(fixedDelay = 1)
     public void strategyTask() {

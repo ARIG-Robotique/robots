@@ -10,6 +10,7 @@ import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.encoders.AbstractEncoder;
 import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -63,7 +64,7 @@ public class CodeursCommands {
         // Vitesse positive
         log.info("Reset codeurs");
         wheelsEncoders.reset();
-        for (int vitesse = propulsionsMotors.getStopSpeed(); vitesse <= propulsionsMotors.getMaxSpeed() ; vitesse++) {
+        for (int vitesse = propulsionsMotors.getStopSpeed(); vitesse <= propulsionsMotors.getMaxSpeed(); vitesse++) {
             capturePropulsionsForVitesse(vitesse);
         }
 
@@ -73,7 +74,7 @@ public class CodeursCommands {
         // Vitesse négative
         log.info("Reset codeurs");
         wheelsEncoders.reset();
-        for (int vitesse = propulsionsMotors.getStopSpeed() - 1; vitesse >= propulsionsMotors.getMinSpeed() ; vitesse--) {
+        for (int vitesse = propulsionsMotors.getStopSpeed() - 1; vitesse >= propulsionsMotors.getMinSpeed(); vitesse--) {
             capturePropulsionsForVitesse(vitesse);
         }
 
@@ -93,7 +94,7 @@ public class CodeursCommands {
         // Vitesse positive
         log.info("Reset codeurs");
         carouselEncoder.reset();
-        for (int vitesse = carouselMotor.getStopSpeed(); vitesse <= carouselMotor.getMaxSpeed() ; vitesse++) {
+        for (int vitesse = carouselMotor.getStopSpeed(); vitesse <= carouselMotor.getMaxSpeed(); vitesse++) {
             captureCarouselForVitesse(vitesse);
         }
 
@@ -103,7 +104,7 @@ public class CodeursCommands {
         // Vitesse négative
         log.info("Reset codeurs");
         carouselEncoder.reset();
-        for (int vitesse = carouselMotor.getStopSpeed() - 1; vitesse >= carouselMotor.getMinSpeed() ; vitesse--) {
+        for (int vitesse = carouselMotor.getStopSpeed() - 1; vitesse >= carouselMotor.getMinSpeed(); vitesse--) {
             captureCarouselForVitesse(vitesse);
         }
 
@@ -116,11 +117,57 @@ public class CodeursCommands {
         IOUtils.writeLines(lines, "\n", new FileOutputStream("capture-carousel.csv"), Charset.defaultCharset());
     }
 
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Calibration carousel")
+    public void calibrationCarousel() {
+
+        carouselEncoder.reset();
+
+        List<Double> values = new ArrayList<>();
+        double sum = 0;
+        int nbtours = 50;
+
+        for (int mesure = 0; mesure <= nbtours; mesure++) {
+            carouselMotor.speed(100);
+
+            ThreadUtils.sleep(2000);
+
+            while (!ioService.indexCarousel()) {
+                ThreadUtils.sleep(10);
+            }
+
+            carouselMotor.speed(-80);
+
+            while (ioService.indexCarousel()) {
+                ThreadUtils.sleep(10);
+            }
+
+            carouselMotor.speed(80);
+
+            while (!ioService.indexCarousel()) {
+                ThreadUtils.sleep(10);
+            }
+
+            carouselMotor.stop();
+            carouselEncoder.lectureValeur();
+
+            if (mesure > 0) {
+                double value = carouselEncoder.getValue();
+                log.info("Valeur : {}", value);
+                values.add(value);
+                sum += value;
+            }
+        }
+
+        log.info("Valeurs rotation : {}", values);
+        log.info("Moyenne : {}", sum / nbtours);
+    }
+
     @SneakyThrows
     private void capturePropulsionsForVitesse(int vitesse) {
         log.info("Vitesse moteurs propulsions {}", vitesse);
         propulsionsMotors.generateMouvement(vitesse, vitesse);
-        for(int mesure = 0 ; mesure < 10 ; mesure++) {
+        for (int mesure = 0; mesure < 10; mesure++) {
             Thread.sleep(10);
 
             wheelsEncoders.lectureValeurs();
@@ -132,7 +179,7 @@ public class CodeursCommands {
     private void captureCarouselForVitesse(int vitesse) {
         log.info("Vitesse moteur carousel {}", vitesse);
         carouselMotor.speed(vitesse);
-        for(int mesure = 0 ; mesure < 10 ; mesure++) {
+        for (int mesure = 0; mesure < 10; mesure++) {
             Thread.sleep(10);
 
             carouselEncoder.lectureValeur();

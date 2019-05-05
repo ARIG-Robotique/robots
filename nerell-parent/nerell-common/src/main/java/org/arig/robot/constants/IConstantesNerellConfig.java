@@ -41,7 +41,7 @@ public interface IConstantesNerellConfig {
     double countPerDeg = 142.569444444;
 
     // Carousel
-    long countPerCarouselIndex = 1;
+    long countPerCarouselIndex = 1305;
 
     // ------------------------ //
     // Configuration des rampes //
@@ -92,7 +92,7 @@ public interface IConstantesNerellConfig {
     double kiMotGauche = 0.5 * asservTimeS;
     double kdMotGauche = 0.0009 / asservTimeS;
 
-    double kpCarousel = 0.1;
+    double kpCarousel = 1;
     double kiCarousel = 0;
     double kdCarousel = 0;
 

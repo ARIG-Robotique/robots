@@ -115,7 +115,7 @@ public class IOServiceBouchon implements IIOService {
     }
 
     @Override
-    public boolean indexBarillet() {
+    public boolean indexCarousel() {
         return false;
     }
 

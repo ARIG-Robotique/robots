@@ -11,6 +11,7 @@ import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.IIOService;
+import org.arig.robot.system.CarouselManager;
 import org.arig.robot.utils.ConvertionCarouselUnit;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.shell.Availability;
@@ -39,6 +40,7 @@ public class AsservissementCommands {
     private final ConvertionCarouselUnit convCarousel;
     private final CommandeRobot cmdRobot;
     private final CommandeAsservissementPosition cmdAsservCarousel;
+    private final CarouselManager carouselManager;
 
     private void startMonitoring() {
         final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
@@ -94,6 +96,8 @@ public class AsservissementCommands {
     @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Asservissement du Carousel")
     public void asservCarousel(int index) {
+        carouselManager.resetEncodeur();
+
         startMonitoring();
 
         cmdAsservCarousel.getVitesse().setValue(100);

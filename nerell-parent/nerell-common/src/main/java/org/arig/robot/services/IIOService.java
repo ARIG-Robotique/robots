@@ -35,7 +35,7 @@ public interface IIOService {
     boolean calageBordureArriereGauche();
     boolean trappeMagasinDroitFerme();
     boolean trappeMagasinGaucheFerme();
-    boolean indexBarillet();
+    boolean indexCarousel();
     boolean presenceLectureCouleur();
 
     // Analogique

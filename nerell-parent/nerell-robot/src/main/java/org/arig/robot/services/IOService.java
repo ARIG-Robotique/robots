@@ -303,7 +303,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     }
 
     @Override
-    public boolean indexBarillet() {
+    public boolean indexCarousel() {
         boolean result = inIndexBarillet.isLow();
         return result;
     }
