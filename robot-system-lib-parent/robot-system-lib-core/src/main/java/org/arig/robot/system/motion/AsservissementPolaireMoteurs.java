@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
- * The Class AsservissementPolaire.
+ * The Class AsservissementPolaireMoteurs.
  *
  * @author gdepuille
  */
-public class AsservissementPolaire implements IAsservissementPolaire {
+public class AsservissementPolaireMoteurs implements IAsservissementPolaire {
 
     @Autowired
     protected IMonitoringWrapper monitoringWrapper;
@@ -25,14 +25,6 @@ public class AsservissementPolaire implements IAsservissementPolaire {
 
     @Autowired
     private Abstract2WheelsEncoders encoders;
-
-    @Autowired
-    @Qualifier("pidDistance")
-    private IPidFilter pidDistance;
-
-    @Autowired
-    @Qualifier("pidOrientation")
-    private IPidFilter pidOrientation;
 
     @Autowired
     @Qualifier("pidMoteurDroit")
@@ -53,14 +45,12 @@ public class AsservissementPolaire implements IAsservissementPolaire {
     /**
      * Instantiates a new asservissement polaire.
      */
-    public AsservissementPolaire() {
+    public AsservissementPolaireMoteurs() {
         super();
     }
 
     @Override
     public void reset(final boolean resetFilters) {
-        pidDistance.reset();
-        pidOrientation.reset();
         pidMoteurDroit.reset();
         pidMoteurGauche.reset();
 
@@ -72,18 +62,15 @@ public class AsservissementPolaire implements IAsservissementPolaire {
 
     @Override
     public void process() {
-        final double positionDistance, distance;
-        final double positionOrientation, orientation;
+        final double positionDistance, positionOrientation;
 
         // Distance
         if (cmdRobot.isType(TypeConsigne.DIST) || cmdRobot.isType(TypeConsigne.XY)) {
             rampDistance.setConsigneVitesse(cmdRobot.getVitesse().getDistance());
             rampDistance.setFrein(cmdRobot.isFrein());
             positionDistance = rampDistance.filter(cmdRobot.getConsigne().getDistance());
-            //pidDistance.setConsigne(positionDistance);
-            //distance = pidDistance.filter(encoders.getDistance());
         } else {
-            positionDistance = distance = 0;
+            positionDistance = 0;
         }
 
         // Orientation
@@ -91,17 +78,13 @@ public class AsservissementPolaire implements IAsservissementPolaire {
             rampOrientation.setConsigneVitesse(cmdRobot.getVitesse().getOrientation());
             rampOrientation.setFrein(true);
             positionOrientation = rampOrientation.filter(cmdRobot.getConsigne().getOrientation());
-            //pidOrientation.setConsigne(positionOrientation);
-            //orientation = pidOrientation.filter(encoders.getOrientation());
         } else {
-            positionOrientation = orientation = 0;
+            positionOrientation = 0;
         }
 
         // Consigne moteurs
         double consigneMotDroit = positionDistance + positionOrientation;
-        //double consigneMotDroit = distance + orientation;
         double consigneMotGauche = positionDistance - positionOrientation;
-        //double consigneMotGauche = distance - orientation;
 
         pidMoteurDroit.setConsigne(consigneMotDroit);
         double cmdMotDroit = pidMoteurDroit.filter(encoders.getDroit());
@@ -112,7 +95,7 @@ public class AsservissementPolaire implements IAsservissementPolaire {
         cmdRobot.getMoteur().setDroit((int) cmdMotDroit);
         cmdRobot.getMoteur().setGauche((int) cmdMotGauche);
 
-        MonitorTimeSerie serie = new MonitorTimeSerie()
+        final MonitorTimeSerie serie = new MonitorTimeSerie()
                 .measurementName("asservissement")
                 .addTag(MonitorTimeSerie.TAG_NAME, "polaire")
                 .addField("mot_d", cmdMotDroit)

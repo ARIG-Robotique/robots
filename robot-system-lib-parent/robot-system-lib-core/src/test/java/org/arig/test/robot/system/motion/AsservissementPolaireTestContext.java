@@ -9,7 +9,7 @@ import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
-import org.arig.robot.system.motion.AsservissementPolaire;
+import org.arig.robot.system.motion.AsservissementPolaireDistanceOrientation;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.mockito.Mockito;
@@ -45,7 +45,7 @@ public class AsservissementPolaireTestContext {
 
     @Bean
     public IAsservissementPolaire asservissement() {
-        return new AsservissementPolaire();
+        return new AsservissementPolaireDistanceOrientation();
     }
 
     @Bean

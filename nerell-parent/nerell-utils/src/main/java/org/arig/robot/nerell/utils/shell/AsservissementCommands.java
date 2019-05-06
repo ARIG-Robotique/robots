@@ -5,13 +5,14 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.arig.robot.constants.IConstantesConfig;
+import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.model.CommandeAsservissementPosition;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.IIOService;
-import org.arig.robot.system.CarouselManager;
 import org.arig.robot.utils.ConvertionCarouselUnit;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.shell.Availability;
@@ -20,6 +21,7 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.time.LocalDateTime;
@@ -40,7 +42,10 @@ public class AsservissementCommands {
     private final ConvertionCarouselUnit convCarousel;
     private final CommandeRobot cmdRobot;
     private final CommandeAsservissementPosition cmdAsservCarousel;
-    private final CarouselManager carouselManager;
+    private final IPidFilter pidDistance;
+    private final IPidFilter pidOrientation;
+    private final IPidFilter pidMoteurDroit;
+    private final IPidFilter pidMoteurGauche;
 
     private void startMonitoring() {
         final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
@@ -72,14 +77,34 @@ public class AsservissementCommands {
                 ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
     }
 
+    public void pidDistance(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
+        pidDistance.setTunings(kp, ki, kd);
+        pidDistance.reset();
+    }
+
+    public void pidOrientation(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
+        pidOrientation.setTunings(kp, ki, kd);
+        pidOrientation.reset();
+    }
+
+    public void pidMoteurDroit(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
+        pidMoteurDroit.setTunings(kp, ki, kd);
+        pidMoteurDroit.reset();
+    }
+
+    public void pidMoteurGauche(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
+        pidMoteurGauche.setTunings(kp, ki, kd);
+        pidMoteurGauche.reset();
+    }
+
     @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Asservissement du robot")
     public void asservRobot(@NotNull TypeConsigne[] typeConsignes, long distance, long orientation) {
         startMonitoring();
 
         cmdRobot.setTypes(typeConsignes);
-        cmdRobot.getVitesse().setDistance(100);
-        cmdRobot.getVitesse().setOrientation(100);
+        cmdRobot.getVitesse().setDistance(IConstantesNerellConfig.vitesseSuperHaute);
+        cmdRobot.getVitesse().setOrientation(IConstantesNerellConfig.vitesseOrientation);
         cmdRobot.getConsigne().setDistance((long) convRobot.mmToPulse(distance));
         cmdRobot.getConsigne().setOrientation((long) convRobot.degToPulse(orientation));
         cmdRobot.setFrein(true);
@@ -96,8 +121,6 @@ public class AsservissementCommands {
     @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Asservissement du Carousel")
     public void asservCarousel(int index) {
-        carouselManager.resetEncodeur();
-
         startMonitoring();
 
         cmdAsservCarousel.getVitesse().setValue(100);

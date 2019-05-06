@@ -121,6 +121,11 @@ public interface IConstantesNerellConfig {
         BASIC, FULL
     }
 
+    // Paramètre Asservissement //
+    enum AsservPolaireSelection {
+        DISTANCE_ORIENTATION, MOTEURS
+    }
+
     // ---------------------- //
     // Paramètre path finding //
     // ---------------------- //

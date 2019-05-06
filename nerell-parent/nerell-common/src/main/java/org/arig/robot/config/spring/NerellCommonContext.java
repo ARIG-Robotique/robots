@@ -3,6 +3,7 @@ package org.arig.robot.config.spring;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.Ordonanceur;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.IConstantesNerellConfig.AsservPolaireSelection;
 import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
@@ -22,7 +23,8 @@ import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.TrajectoryManager;
 import org.arig.robot.system.TrajectoryManagerAsync;
 import org.arig.robot.system.encoders.AbstractEncoder;
-import org.arig.robot.system.motion.AsservissementPolaire;
+import org.arig.robot.system.motion.AsservissementPolaireDistanceOrientation;
+import org.arig.robot.system.motion.AsservissementPolaireMoteurs;
 import org.arig.robot.system.motion.AsservissementPosition;
 import org.arig.robot.system.motion.IAsservissement;
 import org.arig.robot.system.motion.IAsservissementPolaire;
@@ -117,7 +119,12 @@ public class NerellCommonContext {
 
     @Bean
     public IAsservissementPolaire asservissement() {
-        return new AsservissementPolaire();
+        IConstantesNerellConfig.AsservPolaireSelection asservImplementation = env.getProperty("asservissement.polaire.implementation", IConstantesNerellConfig.AsservPolaireSelection.class);
+        if (asservImplementation == AsservPolaireSelection.DISTANCE_ORIENTATION) {
+            return new AsservissementPolaireDistanceOrientation();
+        } else {
+            return new AsservissementPolaireMoteurs();
+        }
     }
 
     @Bean
