@@ -25,7 +25,7 @@ public class ExperimentalRampFilter extends AbstractRampFilter {
     }
 
     public ExperimentalRampFilter(String name, double sampleTimeMs, double rampAcc, double rampDec) {
-        super(name, RampType.LINEAR, sampleTimeMs, rampAcc, rampDec);
+        super(name, sampleTimeMs, rampAcc, rampDec);
     }
 
     @Override

@@ -7,7 +7,6 @@ import org.arig.robot.constants.IConstantesNerellConfig.AsservPolaireSelection;
 import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
-import org.arig.robot.filters.ramp.IRampFilter.RampType;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.CommandeAsservissementPosition;
 import org.arig.robot.model.CommandeRobot;
@@ -195,19 +194,19 @@ public class NerellCommonContext {
     @Bean(name = "rampDistance")
     public TrapezoidalRampFilter rampDistance() {
         log.info("Configuration TrapezoidalRampFilter Distance");
-        return new TrapezoidalRampFilter("distance", RampType.LINEAR, IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccDistance, IConstantesNerellConfig.rampDecDistance);
+        return new TrapezoidalRampFilter("distance", IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccDistance, IConstantesNerellConfig.rampDecDistance);
     }
 
     @Bean(name = "rampOrientation")
     public TrapezoidalRampFilter rampOrientation() {
         log.info("Configuration TrapezoidalRampFilter Orientation");
-        return new TrapezoidalRampFilter("orientation", RampType.ANGULAR, IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccOrientation, IConstantesNerellConfig.rampDecOrientation);
+        return new TrapezoidalRampFilter("orientation", IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccOrientation, IConstantesNerellConfig.rampDecOrientation);
     }
 
     @Bean(name = "rampCarousel")
     public TrapezoidalRampFilter rampCarousel() {
         log.info("Configuration TrapezoidalRampFilter Carousel");
-        return new TrapezoidalRampFilter("orientation", RampType.LINEAR, IConstantesNerellConfig.asservTimeCarouselMs, IConstantesNerellConfig.rampAccCarousel, IConstantesNerellConfig.rampDecCarousel);
+        return new TrapezoidalRampFilter("orientation", IConstantesNerellConfig.asservTimeCarouselMs, IConstantesNerellConfig.rampAccCarousel, IConstantesNerellConfig.rampDecCarousel);
     }
 
     @Bean

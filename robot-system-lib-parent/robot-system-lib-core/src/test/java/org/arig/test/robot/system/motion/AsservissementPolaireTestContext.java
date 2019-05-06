@@ -3,7 +3,6 @@ package org.arig.test.robot.system.motion;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
-import org.arig.robot.filters.ramp.IRampFilter.RampType;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.monitoring.IMonitoringWrapper;
@@ -88,13 +87,13 @@ public class AsservissementPolaireTestContext {
     @Bean(name = "rampDistance")
     public TrapezoidalRampFilter rampDistance() {
         log.info("Configuration TrapezoidalRampFilter Distance");
-        return new TrapezoidalRampFilter("distance", RampType.LINEAR, SAMPLE_TIME_MS, 50, 50);
+        return new TrapezoidalRampFilter("distance", SAMPLE_TIME_MS, 50, 50);
     }
 
     @Bean(name = "rampOrientation")
     public TrapezoidalRampFilter rampOrientation() {
         log.info("Configuration TrapezoidalRampFilter Orientation");
-        return new TrapezoidalRampFilter("orientation", RampType.ANGULAR, SAMPLE_TIME_MS, 50, 50);
+        return new TrapezoidalRampFilter("orientation", SAMPLE_TIME_MS, 50, 50);
     }
 
     @Bean

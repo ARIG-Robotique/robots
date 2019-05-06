@@ -28,9 +28,6 @@ public abstract class AbstractRampFilter implements IRampFilter {
     @Getter
     private double sampleTimeS;
 
-    @Getter
-    private RampType type;
-
     private long input, output;
 
     @Getter(AccessLevel.PROTECTED)
@@ -48,10 +45,9 @@ public abstract class AbstractRampFilter implements IRampFilter {
      * @param rampAcc      the ramp acc
      * @param rampDec      the ramp dec
      */
-    protected AbstractRampFilter(final String name, final RampType type, final double sampleTimeMs,
+    protected AbstractRampFilter(final String name, final double sampleTimeMs,
                                  final double rampAcc, final double rampDec) {
         this.name = name;
-        this.type = type;
         this.sampleTimeS = sampleTimeMs / 1000;
         this.rampAcc = rampAcc;
         this.rampDec = rampDec;

@@ -16,6 +16,7 @@ public class TrapezoidalRampFilter extends AbstractRampFilter {
 
     private double posToDecel;
     private double currentVitesse;
+    private double vitesseMax;
 
     @Setter
     private boolean frein;
@@ -26,17 +27,7 @@ public class TrapezoidalRampFilter extends AbstractRampFilter {
      * @param name the filter name for monitoring
      */
     public TrapezoidalRampFilter(final String name) {
-        this(name, RampType.LINEAR);
-    }
-
-    /**
-     * Instantiates a new ramp.
-     *
-     * @param name the filter name for monitoring
-     * @param type Le type de rampe
-     */
-    public TrapezoidalRampFilter(final String name, final RampType type) {
-        this(name, type, 10, 100, 100);
+        this(name, 10, 100, 100);
     }
 
     /**
@@ -47,9 +38,8 @@ public class TrapezoidalRampFilter extends AbstractRampFilter {
      * @param rampAcc      the ramp acc
      * @param rampDec      the ramp dec
      */
-    public TrapezoidalRampFilter(final String name, final RampType type, final double sampleTimeMs, final double rampAcc,
-                                 final double rampDec) {
-        super(name, type, sampleTimeMs, rampAcc, rampDec);
+    public TrapezoidalRampFilter(final String name, final double sampleTimeMs, final double rampAcc, final double rampDec) {
+        super(name, sampleTimeMs, rampAcc, rampDec);
     }
 
     @Override
@@ -65,6 +55,7 @@ public class TrapezoidalRampFilter extends AbstractRampFilter {
         super.reset();
         posToDecel = 0;
         currentVitesse = 0;
+        vitesseMax = 0;
     }
 
     @Override
@@ -72,6 +63,7 @@ public class TrapezoidalRampFilter extends AbstractRampFilter {
         final Map<String, Number> fields = new HashMap<>();
         fields.put("distanceDeceleration", posToDecel);
         fields.put("currentVitesse", currentVitesse);
+        fields.put("vitesseMax", vitesseMax);
         fields.put("frein", frein ? 1 : 0);
 
         return fields;
@@ -82,10 +74,8 @@ public class TrapezoidalRampFilter extends AbstractRampFilter {
      */
     @Override
     public Long rampFilter(final Long input) {
-        //double targetVitesse = getType() == RampType.ANGULAR ? currentVitesse : getConsigneVitesse();
-
         // Calcul de la distance de décéleration en fonction des parametres
-        posToDecel = conv.mmToPulse(Math.pow(currentVitesse, 2) / (2 * getRampDec()));
+        posToDecel = conv.mmToPulse(Math.pow(vitesseMax, 2) / (2 * getRampDec()));
 
         if ((Math.abs(input) <= posToDecel && frein) || currentVitesse > getConsigneVitesse()) {
             currentVitesse -= getStepVitesseDecel();
@@ -99,12 +89,13 @@ public class TrapezoidalRampFilter extends AbstractRampFilter {
             // Evite les oscilations en régime établie
             currentVitesse = Math.min(currentVitesse, getConsigneVitesse());
         }
+        vitesseMax = Math.max(vitesseMax, currentVitesse);
 
         // Calcul de la valeur filtré de position en fonction de la vitesse calculé sur la rampe.
         double outPosition = conv.mmToPulse(currentVitesse) * getSampleTimeS();
         if (input < 0) {
             outPosition = -outPosition;
         }
-        return Double.valueOf(outPosition).longValue();
+        return (long) outPosition;
     }
 }
