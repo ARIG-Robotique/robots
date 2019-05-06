@@ -1,6 +1,10 @@
 package org.arig.robot.model;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.constants.IConstantesNerellConfig;
@@ -8,7 +12,12 @@ import org.arig.robot.model.balise.StatutBalise;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.springframework.beans.factory.InitializingBean;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Data

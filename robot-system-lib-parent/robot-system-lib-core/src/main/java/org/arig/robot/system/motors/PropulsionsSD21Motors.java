@@ -1,9 +1,7 @@
 package org.arig.robot.system.motors;
 
 import lombok.Setter;
-import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 

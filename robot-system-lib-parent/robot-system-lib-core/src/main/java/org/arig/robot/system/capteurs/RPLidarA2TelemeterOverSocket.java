@@ -1,7 +1,18 @@
 package org.arig.robot.system.capteurs;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.communication.lidar.*;
+import org.arig.robot.model.communication.lidar.DeviceInfosQuery;
+import org.arig.robot.model.communication.lidar.DeviceInfosResponse;
+import org.arig.robot.model.communication.lidar.GrabDataQuery;
+import org.arig.robot.model.communication.lidar.GrabDataResponse;
+import org.arig.robot.model.communication.lidar.HealthInfosQuery;
+import org.arig.robot.model.communication.lidar.HealthInfosResponse;
+import org.arig.robot.model.communication.lidar.SetSpeedQuery;
+import org.arig.robot.model.communication.lidar.SetSpeedResponse;
+import org.arig.robot.model.communication.lidar.StartScanQuery;
+import org.arig.robot.model.communication.lidar.StartScanResponse;
+import org.arig.robot.model.communication.lidar.StopScanQuery;
+import org.arig.robot.model.communication.lidar.StopScanResponse;
 import org.arig.robot.model.communication.lidar.enums.LidarAction;
 import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;

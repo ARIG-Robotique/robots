@@ -9,7 +9,6 @@ import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;

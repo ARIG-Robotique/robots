@@ -2,7 +2,6 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.model.balise.DetectionResult;
 import org.arig.robot.model.balise.StatutBalise;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.springframework.beans.factory.annotation.Autowired;

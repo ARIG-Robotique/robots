@@ -2,7 +2,6 @@ package org.arig.robot.model.servos;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.util.CollectionUtils;

@@ -1,6 +1,5 @@
 package org.arig.robot.system.capteurs;
 
-import org.arig.robot.model.balise.DetectionResult;
 import org.arig.robot.model.balise.StatutBalise;
 
 public class VisionBaliseBouchon implements IVisionBalise {

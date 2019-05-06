@@ -1,6 +1,5 @@
 package org.arig.robot.nerell.utils.shell;
 
-import com.pi4j.io.i2c.I2CBus;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.lidar.Scan;

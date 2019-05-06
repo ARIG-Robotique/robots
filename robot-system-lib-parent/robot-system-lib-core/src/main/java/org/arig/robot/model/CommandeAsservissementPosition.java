@@ -1,15 +1,6 @@
 package org.arig.robot.model;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
-import org.arig.robot.model.enums.TypeConsigne;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 
 /**
  * The Class CommandeRobot.

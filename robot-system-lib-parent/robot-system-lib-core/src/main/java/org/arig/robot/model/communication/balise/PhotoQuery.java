@@ -3,7 +3,6 @@ package org.arig.robot.model.communication.balise;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.arig.robot.model.communication.AbstractQuery;
 import org.arig.robot.model.communication.AbstractQueryWithDatas;
 import org.arig.robot.model.communication.balise.enums.BaliseAction;
 

@@ -1,23 +1,14 @@
 package org.arig.robot.nerell.utils.shell;
 
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.ESide;
-import org.arig.robot.model.lidar.Scan;
-import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.services.IIOService;
-import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.TinyLidar;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Slf4j

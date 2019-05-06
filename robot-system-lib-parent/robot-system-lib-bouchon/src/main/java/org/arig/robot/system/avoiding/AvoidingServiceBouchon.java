@@ -3,9 +3,10 @@ package org.arig.robot.system.avoiding;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.arig.robot.model.Cercle;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.Position;
 import org.arig.robot.model.Shape;
-import org.arig.robot.model.*;
 import org.arig.robot.model.enums.TypeMouvement;
 import org.arig.robot.model.monitor.AbstractMonitorMouvement;
 import org.arig.robot.model.monitor.MonitorMouvementPath;
@@ -22,7 +23,6 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class AvoidingServiceBouchon implements IAvoidingService, InitializingBean {

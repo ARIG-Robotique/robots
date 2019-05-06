@@ -1,22 +1,14 @@
 package org.arig.robot.nerell.utils.shell;
 
 import lombok.AllArgsConstructor;
-import org.arig.robot.model.CommandeAsservissementPosition;
-import org.arig.robot.model.CommandeRobot;
-import org.arig.robot.model.RobotStatus;
-import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
-import org.arig.robot.utils.ConvertionCarouselUnit;
-import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
-
-import javax.validation.constraints.NotNull;
 
 @ShellComponent
 @ShellCommandGroup("Moteurs")

@@ -6,7 +6,6 @@ import com.jfoenix.svg.SVGGlyphLoader;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.flow.container.DefaultFlowContainer;
-import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;

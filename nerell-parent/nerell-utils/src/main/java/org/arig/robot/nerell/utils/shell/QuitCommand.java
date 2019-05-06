@@ -3,7 +3,6 @@ package org.arig.robot.nerell.utils.shell;
 import lombok.AllArgsConstructor;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
-import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
 import org.springframework.shell.ExitRequest;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
