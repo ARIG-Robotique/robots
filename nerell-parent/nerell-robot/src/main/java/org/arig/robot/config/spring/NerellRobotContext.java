@@ -69,7 +69,7 @@ public class NerellRobotContext {
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_DROIT, IConstantesI2C.CODEUR_DROIT_ADDRESS);
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_GAUCHE, IConstantesI2C.CODEUR_GAUCHE_ADDRESS);
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_CAROUSEL, IConstantesI2C.CODEUR_CAROUSEL_ADDRESS);
-        manager.registerDevice(IConstantesI2C.I2C_ADC_DEVICE_NAME, IConstantesI2C.I2C_ADC_ADDRESS);
+        //manager.registerDevice(IConstantesI2C.I2C_ADC_DEVICE_NAME, IConstantesI2C.I2C_ADC_ADDRESS);
         manager.registerDevice(IConstantesI2C.TCS34725_DEVICE_NAME, IConstantesI2C.TCS34725_ADDRESS);
 //        manager.registerDevice(IConstantesI2C.TINY_LIDAR_MAGASIN_DROIT_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_MAGASIN_DROIT_ADDRESS, (byte) 0x44);
 //        manager.registerDevice(IConstantesI2C.TINY_LIDAR_MAGASIN_GAUCHE_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_MAGASIN_GAUCHE_ADDRESS, (byte) 0x44);
