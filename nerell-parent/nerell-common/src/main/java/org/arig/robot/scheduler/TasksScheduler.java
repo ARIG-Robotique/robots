@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class TasksScheduler implements InitializingBean {
+public class TasksScheduler  {
 
     @Autowired
     private IMonitoringWrapper monitoringWrapper;
@@ -38,56 +38,25 @@ public class TasksScheduler implements InitializingBean {
     @Autowired
     private ICarouselManager carouselManager;
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
+    @Scheduled(fixedRate = (long) IConstantesNerellConfig.asservTimeMs)
+    public void asservissementPropulsionsTask() {
+        StopWatch exec = new StopWatch();
+        exec.start();
+        if (rs.isAsservEnabled()) {
+            trajectoryManager.process();
+        } else {
+            trajectoryManager.stop();
+        }
+        exec.stop();
 
-        new Thread(() -> {
-            StopWatch exec = new StopWatch();
-            exec.start();
+        MonitorTimeSerie serie = new MonitorTimeSerie()
+                .measurementName("tasks")
+                .addTag(MonitorTimeSerie.TAG_NAME, "asservissementPropulsions")
+                .addField("rate", IConstantesNerellConfig.asservTimeMs)
+                .addField("execTime", exec.getTime());
 
-            while (true) { // TODO
-                long splitTime = exec.getTime(TimeUnit.MILLISECONDS);
-                if (splitTime >= IConstantesNerellConfig.asservTimeMs) {
-                    exec.reset();
-                    exec.start();
-
-                    if (rs.isAsservEnabled()) {
-                        trajectoryManager.process();
-                    } else {
-                        trajectoryManager.stop();
-                    }
-
-                    MonitorTimeSerie serie = new MonitorTimeSerie()
-                            .measurementName("tasks")
-                            .addTag(MonitorTimeSerie.TAG_NAME, "asservissementPropulsions")
-                            .addField("rate", IConstantesNerellConfig.asservTimeMs)
-                            .addField("execTime", splitTime);
-
-                    monitoringWrapper.addTimeSeriePoint(serie);
-                }
-            }
-        }).start();
+        monitoringWrapper.addTimeSeriePoint(serie);
     }
-
-    //    @Scheduled(fixedRate = (long) IConstantesNerellConfig.asservTimeMs)
-//    public void asservissementPropulsionsTask() {
-//        StopWatch exec = new StopWatch();
-//        exec.start();
-//        if (rs.isAsservEnabled()) {
-//            trajectoryManager.process();
-//        } else {
-//            trajectoryManager.stop();
-//        }
-//        exec.stop();
-//
-//        MonitorTimeSerie serie = new MonitorTimeSerie()
-//                .measurementName("tasks")
-//                .addTag(MonitorTimeSerie.TAG_NAME, "asservissementPropulsions")
-//                .addField("rate", IConstantesNerellConfig.asservTimeMs)
-//                .addField("execTime", exec.getTime());
-//
-//        monitoringWrapper.addTimeSeriePoint(serie);
-//    }
 
     @Scheduled(fixedRate = (long) IConstantesNerellConfig.asservTimeCarouselMs)
     public void asservissementCarouselTask() {
