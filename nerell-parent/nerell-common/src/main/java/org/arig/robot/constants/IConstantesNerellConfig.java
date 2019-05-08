@@ -50,7 +50,7 @@ public interface IConstantesNerellConfig {
     double rampDecDistance = 500.0; // en mm/s2
 
     double rampAccOrientation = 1000.0; // en mm/s2
-    double rampDecOrientation = 500.0; // en mm/s2
+    double rampDecOrientation = 1000.0; // en mm/s2
 
     double rampAccCarousel = 100.0; // en mm/s2
     double rampDecCarousel = 100.0; // en mm/s2
@@ -69,20 +69,20 @@ public interface IConstantesNerellConfig {
     long vitesseLente = 300;
     long vitesseSuperLente = 200;
 
-    long vitessePath = vitesseMoyenneBasse;
+    long vitessePath = vitesseSuperHaute;
     long vitesseMouvement = vitesseMoyenneBasse;
 
     // -------------- //
     // Parametres PID //
     // -------------- //
 
-    double kpDistance = 0.5;
-    double kiDistance = 0.001;
-    double kdDistance = 0.01;
+    double kpDistance = 1.5;
+    double kiDistance = 4.0 * asservTimeS;
+    double kdDistance = 0.00050 / asservTimeS;
 
     double kpOrientation = 0.5;
-    double kiOrientation = 0.001;
-    double kdOrientation = 0.01;
+    double kiOrientation = 3.5 * asservTimeS;
+    double kdOrientation = 0.0050 / asservTimeS;
 
     double kpMotDroit = 0.9;
     double kiMotDroit = 0.5 * asservTimeS;

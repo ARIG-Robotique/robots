@@ -78,33 +78,33 @@ public class AsservissementCommands {
     }
 
     public void pidDistance(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
-        pidDistance.setTunings(kp, ki, kd);
+        pidDistance.setTunings(kp, ki * IConstantesNerellConfig.asservTimeS, kd / IConstantesNerellConfig.asservTimeS);
         pidDistance.reset();
     }
 
     public void pidOrientation(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
-        pidOrientation.setTunings(kp, ki, kd);
+        pidOrientation.setTunings(kp, ki * IConstantesNerellConfig.asservTimeS, kd / IConstantesNerellConfig.asservTimeS);
         pidOrientation.reset();
     }
 
     public void pidMoteurDroit(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
-        pidMoteurDroit.setTunings(kp, ki, kd);
+        pidMoteurDroit.setTunings(kp, ki * IConstantesNerellConfig.asservTimeS, kd / IConstantesNerellConfig.asservTimeS);
         pidMoteurDroit.reset();
     }
 
     public void pidMoteurGauche(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
-        pidMoteurGauche.setTunings(kp, ki, kd);
+        pidMoteurGauche.setTunings(kp, ki * IConstantesNerellConfig.asservTimeS, kd / IConstantesNerellConfig.asservTimeS);
         pidMoteurGauche.reset();
     }
 
     @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Asservissement du robot")
-    public void asservRobot(@NotNull TypeConsigne[] typeConsignes, long distance, long orientation) {
+    public void asservRobot(@NotNull TypeConsigne[] typeConsignes, long distance, long orientation, long vitesseDistance, long vitesseOrientation) {
         startMonitoring();
 
         cmdRobot.setTypes(typeConsignes);
-        cmdRobot.getVitesse().setDistance(IConstantesNerellConfig.vitesseSuperHaute);
-        cmdRobot.getVitesse().setOrientation(IConstantesNerellConfig.vitesseOrientation);
+        cmdRobot.getVitesse().setDistance(vitesseDistance);
+        cmdRobot.getVitesse().setOrientation(vitesseOrientation);
         cmdRobot.getConsigne().setDistance((long) convRobot.mmToPulse(distance));
         cmdRobot.getConsigne().setOrientation((long) convRobot.degToPulse(orientation));
         cmdRobot.setFrein(true);
