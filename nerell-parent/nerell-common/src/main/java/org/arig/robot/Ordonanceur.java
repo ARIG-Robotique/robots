@@ -115,7 +115,7 @@ public class Ordonanceur {
 
         if (!ioService.auOk()) {
             log.warn("L'arrêt d'urgence est coupé.");
-            ioService.colorLedRGBKo();
+            //ioService.colorLedRGBKo();
             while(!ioService.auOk()) {
                 waitTimeMs(500);
             }
@@ -124,11 +124,11 @@ public class Ordonanceur {
         HealthInfos lidarHealth = lidar.healthInfo();
         if (!lidarHealth.isOk()) {
             log.error("Status du Lidar KO : {} - {} - Code {}", lidarHealth.getState(), lidarHealth.getValue(), lidarHealth.getErrorCode());
-            ioService.colorLedRGBKo();
+            //ioService.colorLedRGBKo();
             return;
         }
 
-        ioService.colorLedRGBOk();
+        //ioService.colorLedRGBOk();
         log.info("Arrêt d'urgence OK");
 
         log.info("Position de préparation des servos moteurs");
@@ -141,12 +141,12 @@ public class Ordonanceur {
 
         if (!ioService.alimPuissance12VOk() || !ioService.alimPuissance5VOk()) {
             log.warn("Alimentation puissance NOK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
-            ioService.colorLedRGBKo();
+            //ioService.colorLedRGBKo();
             while(!ioService.alimPuissance12VOk() && !ioService.alimPuissance5VOk()) {
                 waitTimeMs(500);
             }
         }
-        ioService.colorLedRGBOk();
+        //ioService.colorLedRGBOk();
         log.info("Alimentation puissance OK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
 
         log.info("Démarrage du lidar");
@@ -281,14 +281,14 @@ public class Ordonanceur {
 
         // Attente remise de la tirette pour ejecter les palets en stock
         while(!ioService.tirette() || !ioService.auOk()) {
-            ioService.colorLedRGBOk();
+            //ioService.colorLedRGBOk();
             waitTimeMs(500);
-            ioService.clearColorLedRGB();
+            //ioService.clearColorLedRGB();
             waitTimeMs(500);
         }
 
         // Ejection du stock
-        ioService.colorLedRGBKo();
+        //ioService.colorLedRGBKo();
         ioService.enableAlim5VPuissance();
         ioService.enableAlim12VPuissance();
 
@@ -297,7 +297,7 @@ public class Ordonanceur {
 
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();
-        ioService.clearColorLedRGB();
+        //ioService.clearColorLedRGB();
     }
 
     private void waitTimeMs(long ms) {

@@ -105,16 +105,6 @@ public class IOServiceBouchon implements IIOService {
     }
 
     @Override
-    public boolean trappeMagasinDroitFerme() {
-        return false;
-    }
-
-    @Override
-    public boolean trappeMagasinGaucheFerme() {
-        return false;
-    }
-
-    @Override
     public boolean indexCarousel() {
         return false;
     }
@@ -146,16 +136,6 @@ public class IOServiceBouchon implements IIOService {
         return 0;
     }
 
-    @Override
-    public int distanceTelemetreAvantDroit() {
-        return 0;
-    }
-
-    @Override
-    public int distanceTelemetreAvantGauche() {
-        return 0;
-    }
-
 
     // Couleur
 
@@ -173,18 +153,6 @@ public class IOServiceBouchon implements IIOService {
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
-
-    @Override
-    public void colorLedRGBKo() { }
-
-    @Override
-    public void colorLedRGBOk() { }
-
-    @Override
-    public void teamColorLedRGB() { }
-
-    @Override
-    public void clearColorLedRGB() { }
 
     @Override
     public void enableLedCapteurCouleur() {

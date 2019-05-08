@@ -33,8 +33,8 @@ public interface IIOService {
     boolean presencePaletVentouseGauche();
     boolean calageBordureArriereDroit();
     boolean calageBordureArriereGauche();
-    boolean trappeMagasinDroitFerme();
-    boolean trappeMagasinGaucheFerme();
+//    boolean trappeMagasinDroitFerme();
+//    boolean trappeMagasinGaucheFerme();
     boolean indexCarousel();
     boolean presenceLectureCouleur();
 
@@ -43,8 +43,8 @@ public interface IIOService {
     boolean paletPrisDansVentouseGauche();
     byte nbPaletDansMagasinDroit();
     byte nbPaletDansMagasinGauche();
-    int distanceTelemetreAvantDroit();
-    int distanceTelemetreAvantGauche();
+//    int distanceTelemetreAvantDroit();
+//    int distanceTelemetreAvantGauche();
 
     // Couleur
     TCS34725ColorSensor.ColorData couleurPaletRaw();
@@ -54,11 +54,11 @@ public interface IIOService {
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
 
-    void colorLedRGBKo();
-    void colorLedRGBOk();
+//    void colorLedRGBKo();
+//    void colorLedRGBOk();
 
-    void teamColorLedRGB();
-    void clearColorLedRGB();
+//    void teamColorLedRGB();
+//    void clearColorLedRGB();
 
     void enableLedCapteurCouleur();
     void disableLedCapteurCouleur();

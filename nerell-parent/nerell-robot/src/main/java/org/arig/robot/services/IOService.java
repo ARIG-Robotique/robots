@@ -50,11 +50,11 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     @Autowired
     private TCS34725ColorSensor colorSensor;
 
-    @Autowired
-    private TinyLidar stockMagasinGauche;
-
-    @Autowired
-    private TinyLidar stockMagasinDroit;
+//    @Autowired
+//    private TinyLidar stockMagasinGauche;
+//
+//    @Autowired
+//    private TinyLidar stockMagasinDroit;
 
     // Controlleur GPIO
     private GpioController gpio;
@@ -63,7 +63,8 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     private PCF8574GpioProvider pcf2;
     private PCF8574GpioProvider pcf3;
 
-    // Référence sur les PIN Input //
+    // Référence sur les PIN Inputs
+    // ----------------------------
 
     // IRQ
     private GpioPinDigitalInput inIrqAlim;
@@ -75,10 +76,10 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     private GpioPinDigitalInput inIrq6;
 
     // Technique
-    private GpioPinDigitalInput inEquipe;
+    //private GpioPinDigitalInput inEquipe;
     private GpioPinDigitalInput inAu;
     private GpioPinDigitalInput inAlimPuissance5V;
-    private GpioPinDigitalInput inAlimPuissance8V;
+    //private GpioPinDigitalInput inAlimPuissance8V;
     private GpioPinDigitalInput inAlimPuissance12V;
     private GpioPinDigitalInput inTirette;
 
@@ -91,19 +92,24 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     private GpioPinDigitalInput inPresencePaletVentouseGauche;
     private GpioPinDigitalInput inCalageBordureDroit;
     private GpioPinDigitalInput inCalageBordureGauche;
-    private GpioPinDigitalInput inTrappeMagasinDroitFerme;
-    private GpioPinDigitalInput inTrappeMagasinGaucheFerme;
+    //private GpioPinDigitalInput inTrappeMagasinDroitFerme;
+    //private GpioPinDigitalInput inTrappeMagasinGaucheFerme;
     private GpioPinDigitalInput inIndexBarillet;
     private GpioPinDigitalInput inPresenceLectureCouleur;
 
     // Référence sur les PIN Output
-    private GpioPinDigitalOutput outAlimPuissance5V;
-    private GpioPinDigitalOutput outAlimPuissance8V;
-    private GpioPinDigitalOutput outAlimPuissance12V;
+    // ----------------------------
+
+    // GPIO
     private GpioPinDigitalOutput outCmdLedCapteurRGB;
-    private GpioPinDigitalOutput outLedRGB_R;
-    private GpioPinDigitalOutput outLedRGB_G;
-    private GpioPinDigitalOutput outLedRGB_B;
+//    private GpioPinDigitalOutput outLedRGB_R;
+//    private GpioPinDigitalOutput outLedRGB_G;
+//    private GpioPinDigitalOutput outLedRGB_B;
+
+    // PCF
+    private GpioPinDigitalOutput outAlimPuissance5V;
+//    private GpioPinDigitalOutput outAlimPuissance8V;
+    private GpioPinDigitalOutput outAlimPuissance12V;
     private GpioPinDigitalOutput outElectroVanneDroit;
     private GpioPinDigitalOutput outElectroVanneGauche;
     private GpioPinDigitalOutput outPompeAVideDroite;
@@ -126,20 +132,20 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         gpio = GpioFactory.getInstance();
 
         // Inputs
-        inEquipe = gpio.provisionDigitalInputPin(RaspiPin.GPIO_02);
-        inIrqAlim = gpio.provisionDigitalInputPin(RaspiPin.GPIO_07);
-        inIrqPcf1 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_04);
-        inIrq1 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
-        inIrq3 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_01);
-        inIrq4 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_16);
-        inIrq5 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_15);
-        inIrq6 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_06);
+//        inEquipe = gpio.provisionDigitalInputPin(RaspiPin.GPIO_02);
+//        inIrqAlim = gpio.provisionDigitalInputPin(RaspiPin.GPIO_07);
+//        inIrqPcf1 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_04);
+//        inIrq1 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
+//        inIrq3 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_01);
+//        inIrq4 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_16);
+//        inIrq5 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_15);
+//        inIrq6 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_06);
 
         // Output
         outCmdLedCapteurRGB = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, PinState.LOW);
-        outLedRGB_R = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_12, PinState.LOW);
-        outLedRGB_G = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_13, PinState.LOW);
-        outLedRGB_B = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_14, PinState.LOW);
+//        outLedRGB_R = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_12, PinState.LOW);
+//        outLedRGB_G = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_13, PinState.LOW);
+//        outLedRGB_B = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_14, PinState.LOW);
 
         // Config PCF8574 //
         // -------------- //
@@ -152,11 +158,11 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         // Alim
         inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_04);
         inAlimPuissance5V = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_05);
-        inAlimPuissance8V = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_07);
+//        inAlimPuissance8V = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_07);
         inAlimPuissance12V = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_06);
 
         outAlimPuissance5V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_00);
-        outAlimPuissance8V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_02);
+//        outAlimPuissance8V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_02);
         outAlimPuissance12V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
 
         // PCF1
@@ -181,9 +187,9 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         outPompeAVideGauche = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_03);
 
         // Etat initial des IOs
-        outAlimPuissance8V.high(); // Désactivé
+//        outAlimPuissance8V.high(); // Désactivé
         disableLedCapteurCouleur();
-        clearColorLedRGB();
+//        clearColorLedRGB();
         videElectroVanneDroite();
         videElectroVanneGauche();
         disablePompeAVideDroite();
@@ -290,17 +296,17 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         return result;
     }
 
-    @Override
-    public boolean trappeMagasinDroitFerme() {
-        boolean result = inTrappeMagasinDroitFerme.isLow();
-        return result;
-    }
-
-    @Override
-    public boolean trappeMagasinGaucheFerme() {
-        boolean result = inTrappeMagasinGaucheFerme.isLow();
-        return result;
-    }
+//    @Override
+//    public boolean trappeMagasinDroitFerme() {
+//        boolean result = inTrappeMagasinDroitFerme.isLow();
+//        return result;
+//    }
+//
+//    @Override
+//    public boolean trappeMagasinGaucheFerme() {
+//        boolean result = inTrappeMagasinGaucheFerme.isLow();
+//        return result;
+//    }
 
     @Override
     public boolean indexCarousel() {
@@ -346,12 +352,12 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public byte nbPaletDansMagasinDroit() {
-        return convertDistanceToNbPaletDansStock(stockMagasinDroit.readValue());
+        return convertDistanceToNbPaletDansStock(76 /*stockMagasinDroit.readValue()*/);
     }
 
     @Override
     public byte nbPaletDansMagasinGauche() {
-        return convertDistanceToNbPaletDansStock(stockMagasinGauche.readValue());
+        return convertDistanceToNbPaletDansStock(76 /*stockMagasinGauche.readValue()*/);
     }
 
     private byte convertDistanceToNbPaletDansStock(int distance) {
@@ -363,20 +369,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         return 0;
     }
 
-    @Override
-    public int distanceTelemetreAvantDroit() {
-        // TODO
-        return 0;
-    }
-
-    @Override
-    public int distanceTelemetreAvantGauche() {
-        // TODO
-        return 0;
-    }
-
     // Couleur
-
     @Override
     public ColorData couleurPaletRaw() {
         return colorSensor.getColorData();
@@ -418,46 +411,46 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
 
-    @Override
-    public void colorLedRGBKo() {
-        log.info("Led RGB couleur KO");
-        outLedRGB_R.high();
-        outLedRGB_G.low();
-        outLedRGB_B.low();
-    }
+//    @Override
+//    public void colorLedRGBKo() {
+//        log.info("Led RGB couleur KO");
+//        outLedRGB_R.high();
+//        outLedRGB_G.low();
+//        outLedRGB_B.low();
+//    }
 
-    @Override
-    public void colorLedRGBOk() {
-        log.info("Led RGB couleur OK");
-        outLedRGB_R.low();
-        outLedRGB_G.high();
-        outLedRGB_B.low();
-    }
+//    @Override
+//    public void colorLedRGBOk() {
+//        log.info("Led RGB couleur OK");
+//        outLedRGB_R.low();
+//        outLedRGB_G.high();
+//        outLedRGB_B.low();
+//    }
 
-    @Override
-    public void teamColorLedRGB() {
-        if (rs.getTeam() == Team.VIOLET) {
-            log.info("Led RGB couleur Team VIOLET");
-            outLedRGB_R.high();
-            outLedRGB_G.low();
-            outLedRGB_B.high();
-        } else if (rs.getTeam() == Team.JAUNE) {
-            log.info("Led RGB couleur Team JAUNE");
-            outLedRGB_R.high();
-            outLedRGB_G.high();
-            outLedRGB_B.low();
-        } else {
-            clearColorLedRGB();
-        }
-    }
+//    @Override
+//    public void teamColorLedRGB() {
+//        if (rs.getTeam() == Team.VIOLET) {
+//            log.info("Led RGB couleur Team VIOLET");
+//            outLedRGB_R.high();
+//            outLedRGB_G.low();
+//            outLedRGB_B.high();
+//        } else if (rs.getTeam() == Team.JAUNE) {
+//            log.info("Led RGB couleur Team JAUNE");
+//            outLedRGB_R.high();
+//            outLedRGB_G.high();
+//            outLedRGB_B.low();
+//        } else {
+//            clearColorLedRGB();
+//        }
+//    }
 
-    @Override
-    public void clearColorLedRGB() {
-        log.info("Led RGB eteinte");
-        outLedRGB_R.low();
-        outLedRGB_G.low();
-        outLedRGB_B.low();
-    }
+//    @Override
+//    public void clearColorLedRGB() {
+//        log.info("Led RGB eteinte");
+//        outLedRGB_R.low();
+//        outLedRGB_G.low();
+//        outLedRGB_B.low();
+//    }
 
     @Override
     public void enableLedCapteurCouleur() {
