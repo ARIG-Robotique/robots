@@ -33,6 +33,7 @@ import org.springframework.core.env.Environment;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author gdepuille on 21/12/13.
@@ -59,7 +60,7 @@ public class NerellRobotContext {
 
     @Bean(destroyMethod = "close")
     public I2CBus i2cBus() throws IOException, UnsupportedBusNumberException {
-        return I2CFactory.getInstance(I2CBus.BUS_1);
+        return I2CFactory.getInstance(I2CBus.BUS_1, 10, TimeUnit.MILLISECONDS);
     }
 
     @Bean
