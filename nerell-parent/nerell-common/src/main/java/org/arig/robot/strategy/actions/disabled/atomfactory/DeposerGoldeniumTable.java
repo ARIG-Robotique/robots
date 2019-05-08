@@ -61,24 +61,23 @@ public class DeposerGoldeniumTable extends AbstractAction {
             rs.enableAvoidance();
 
             // va au point le plus proche (zone bleu)
-            // TODO
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(2800, 600);
+                mv.pathTo(2700, 950);
+                mv.gotoOrientationDeg(0);
             } else {
-                mv.pathTo(200, 600);
+                mv.pathTo(300, 950);
+                mv.gotoOrientationDeg(180);
             }
 
             rs.disableAvoidance();
 
-            mv.gotoOrientationDeg(rs.getTeam() == Team.VIOLET ? 0 : 180);
-
-            mv.avanceMM(150); // TODO
+            mv.avanceMM(100);
 
             serrageService.disable();
 
             ventouses.deposeGoldenimTable(side);
 
-            mv.reculeMM(150);
+            mv.reculeMM(100);
             mv.gotoOrientationDeg(rs.getTeam() == Team.VIOLET ? 180 : 0);
 
             completed = true;

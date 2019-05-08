@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PrendrePaletsTrouNoirEquipe extends AbstractAction {
+public class PrendreTrouNoirEquipe extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -31,14 +31,12 @@ public class PrendrePaletsTrouNoirEquipe extends AbstractAction {
 
     @Override
     public int order() {
-        return 0; // TODO
+        return Integer.MAX_VALUE - 1;
     }
 
     @Override
     public boolean isValid() {
-        return isTimeValid() &&
-                !rs.isBaliseOk() &&
-                (rs.getTeam() == Team.VIOLET ? !rs.isTrouNoirVioletVisite() : !rs.isTrouNoirJauneVisite());
+        return isTimeValid();
     }
 
     @Override
@@ -58,6 +56,9 @@ public class PrendrePaletsTrouNoirEquipe extends AbstractAction {
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
+
+        } finally {
+            completed = true;
         }
     }
 }

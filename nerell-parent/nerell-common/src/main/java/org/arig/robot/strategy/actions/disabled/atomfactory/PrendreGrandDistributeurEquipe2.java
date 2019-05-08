@@ -9,14 +9,14 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class PrendrePaletsGrandDistributeurEquipe2 extends AbstractPrendrePaletsGrandDistributeur {
+public class PrendreGrandDistributeurEquipe2 extends AbstractPrendreGrandDistributeur {
 
-    public PrendrePaletsGrandDistributeurEquipe2() {
+    public PrendreGrandDistributeurEquipe2() {
         super(
-                // TODO
-                new Point(2350, 800),
-                new Point(650, 800),
+                2250,
+                750,
                 2,
+                3,
                 3
         );
     }
@@ -29,11 +29,6 @@ public class PrendrePaletsGrandDistributeurEquipe2 extends AbstractPrendrePalets
     @Override
     public String name() {
         return "Prise des palets dans le grand distributeur de l'équipe";
-    }
-
-    @Override
-    public int order() {
-        return 0; // TODO
     }
 
 }

@@ -1,23 +1,24 @@
 package org.arig.robot.strategy.actions.disabled.atomfactory;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+import static org.arig.robot.model.EStrategy.PRISE_ADVERSE;
+
 @Slf4j
 @Component
-public class PrendrePaletsGrandDistributeurAdverse2 extends AbstractPrendrePaletsGrandDistributeur {
+public class PrendreGrandDistributeurAdverse1 extends AbstractPrendreGrandDistributeur {
 
-    public PrendrePaletsGrandDistributeurAdverse2() {
+    public PrendreGrandDistributeurAdverse1() {
         super(
-                // TODO
-                new Point(650, 800),
-                new Point(2350, 800),
-                3,
-                2
+                950,
+                2050,
+                5,
+                4,
+                1
         );
     }
 
@@ -32,8 +33,7 @@ public class PrendrePaletsGrandDistributeurAdverse2 extends AbstractPrendrePalet
     }
 
     @Override
-    public int order() {
-        return 0; // TODO
+    public boolean isValid() {
+        return rs.strategyActive(PRISE_ADVERSE) && super.isValid();
     }
-
 }

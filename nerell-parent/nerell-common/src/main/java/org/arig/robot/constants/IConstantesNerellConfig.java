@@ -105,9 +105,10 @@ public interface IConstantesNerellConfig {
     double approcheOrientationDeg = 5;
     double angleReculDeg = 0.45;
 
-    int dstDos = 162; // distance du dos du robot au milieu des roues
-    int dstVentouseFacade = 172; // distance de la ventouse en prise facade au milieu de roues
-    int dstVentouseCentre = 50; // distance du milieu de la ventouse au milieu des pinces
+    double dstArriere = 161.5; // distance du dos du robot au milieu des roues
+    double dstVentouseFacade = 176.5; // distance de la ventouse en prise facade au milieu de roues
+    double dstAtomeCentre = 50; // distance du milieu du palet au centre du robot (largeur)
+    double dstAtomeCentre2 = 120; // distance du milieu du palet au centre du robot (longueur)
 
     // -------------------------- //
     // Paramètre Carousel manager //
@@ -145,7 +146,6 @@ public interface IConstantesNerellConfig {
     int nbPaletsBalanceMax = 6;
     int nbPaletsAccelerateurMax = 9; // TODO à valider
     int nbPaletsMagasinMax = 3;
-    int dstPinceCentre = 100; // TODO à valider
-    int offsetTableau = 100; // TODO
+    int offsetTableau = 200;
 
 }

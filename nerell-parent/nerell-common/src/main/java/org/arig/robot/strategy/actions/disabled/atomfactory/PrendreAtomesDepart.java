@@ -21,7 +21,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class PrendrePaletsDepart extends AbstractAction {
+public class PrendreAtomesDepart extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;

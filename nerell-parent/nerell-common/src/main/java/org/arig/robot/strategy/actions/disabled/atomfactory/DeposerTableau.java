@@ -43,7 +43,7 @@ public class DeposerTableau extends AbstractAction {
     @Override
     public int order() {
         int points = io.nbPaletDansMagasinDroit() * 6 + io.nbPaletDansMagasinGauche() * 6;
-        return points; // TODO
+        return points;
     }
 
     @Override
@@ -58,16 +58,15 @@ public class DeposerTableau extends AbstractAction {
         try {
             rs.enableAvoidance();
 
-            // TODO
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(2500, 1800);
+                mv.pathTo(2550 - IConstantesNerellConfig.dstArriere, 1400);
                 mv.gotoOrientationDeg(180);
             } else {
-                mv.pathTo(500, 1800);
+                mv.pathTo(450 + IConstantesNerellConfig.dstArriere, 1400);
                 mv.gotoOrientationDeg(0);
             }
 
-            int distance = 500 - rs.getNbDeposesTableau() * IConstantesNerellConfig.offsetTableau;
+            int distance = 450 - rs.getNbDeposesTableau() * IConstantesNerellConfig.offsetTableau;
 
             mv.reculeMM(distance);
 

@@ -67,32 +67,32 @@ public class DemoRhone extends AbstractAction {
 
                 serrageService.disable();
 
-                sideServices.get(ESide.GAUCHE).pinceSerrageRepos();
+                sideServices.get(ESide.GAUCHE).pinceSerrageRepos(true);
 
                 mv.reculeMM(100);
 
-                sideServices.get(ESide.GAUCHE).pinceSerrageRepos();
+                sideServices.get(ESide.GAUCHE).pinceSerrageRepos(true);
 
             } else {
                 mv.pathTo(3000 - 300, 1300);
 
                 serrageService.disable();
 
-                sideServices.get(ESide.DROITE).pinceSerrageRepos();
+                sideServices.get(ESide.DROITE).pinceSerrageRepos(true);
 
                 mv.reculeMM(100);
 
-                sideServices.get(ESide.DROITE).pinceSerrageRepos();
+                sideServices.get(ESide.DROITE).pinceSerrageRepos(true);
             }
 
             serrageService.enable();
 
             rs.getPaletsInTableauVert().add(CouleurPalet.INCONNU);
 
-            completed = true;
-
         } catch (RefreshPathFindingException | NoPathFoundException | AvoidingException e) {
 
+        } finally {
+            completed = true;
         }
     }
 }

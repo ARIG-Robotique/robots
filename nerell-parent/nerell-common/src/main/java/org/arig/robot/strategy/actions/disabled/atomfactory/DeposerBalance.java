@@ -9,7 +9,6 @@ import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.exceptions.CarouselNotAvailableException;
 import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
-import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
@@ -17,9 +16,7 @@ import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -38,13 +35,6 @@ public class DeposerBalance extends AbstractAction {
     @Autowired
     private ICarouselManager carousel;
 
-    @Autowired
-    @Qualifier("currentPosition")
-    private Position position;
-
-    @Autowired
-    private ConvertionRobotUnit conv;
-
     @Getter
     private boolean completed = false;
 
@@ -55,7 +45,13 @@ public class DeposerBalance extends AbstractAction {
 
     @Override
     public int order() {
-        return 0; // TODO
+        // 24 pour le gold
+        int points = (ventouses.getCouleur(rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE) == CouleurPalet.GOLD ? 24 : 0) +
+                // 12 pour les bleus
+                (int) Math.min(IConstantesNerellConfig.nbPaletsBalanceMax - rs.getPaletsInBalance().size(), carousel.count(CouleurPalet.BLEU)) * 12 +
+                // 8 pour les verts
+                (int) Math.min(IConstantesNerellConfig.nbPaletsBalanceMax - rs.getPaletsInBalance().size(), carousel.count(CouleurPalet.VERT)) * 8;
+        return points;
     }
 
     @Override
@@ -66,8 +62,9 @@ public class DeposerBalance extends AbstractAction {
     private boolean canDepose() {
         return rs.getPaletsInBalance().size() < IConstantesNerellConfig.nbPaletsBalanceMax &&
                 (
-                        carousel.has(CouleurPalet.BLEU) ||
-                                carousel.has(CouleurPalet.VERT) && rs.getRemainingTime() < 30
+                        ventouses.getCouleur(rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE) == CouleurPalet.GOLD ||
+                                carousel.has(CouleurPalet.BLEU) ||
+                                carousel.has(CouleurPalet.VERT)
                 );
     }
 
@@ -78,11 +75,14 @@ public class DeposerBalance extends AbstractAction {
         try {
             rs.enableAvoidance();
 
+            int yAvantAvance = 795;
+
             // va au point le plus proche
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(1500 + 130 + 50, 795);
+                // 20 = moitié du séparateur, 110 = moitié de la balance
+                mv.pathTo(1500 + 130 + IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
             } else {
-                mv.pathTo(1500 - 130 - 50, 795);
+                mv.pathTo(1500 - 130 - IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
             }
 
             rs.disableAvoidance();
@@ -90,19 +90,22 @@ public class DeposerBalance extends AbstractAction {
             ventouses.waitAvailable(side);
 
             while (canDepose()) {
-                CouleurPalet couleur = carousel.has(CouleurPalet.BLEU) ? CouleurPalet.BLEU : CouleurPalet.VERT;
+                CouleurPalet couleur = ventouses.getCouleur(side) == CouleurPalet.GOLD ?
+                        CouleurPalet.GOLD :
+                        carousel.has(CouleurPalet.BLEU) ? CouleurPalet.BLEU : CouleurPalet.VERT;
 
                 if (!ventouses.deposeBalance1(couleur, side)) {
                     throw new VentouseNotAvailableException();
                 }
 
-                int targetY = IConstantesNerellConfig.dstVentouseFacade - 30; // TODO
+                // 400 = longueur de la balance, 30 = pour pas déposer juste au bord de la balance
+                double yOffset = -400 + yAvantAvance - IConstantesNerellConfig.dstVentouseFacade + 30;
 
-                mv.avanceMM(150);
+                mv.avanceMM(yOffset);
 
                 ventouses.deposeBalance2(side);
 
-                mv.reculeMM(150); // TODO
+                mv.reculeMM(yOffset);
             }
 
             completed = rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax;

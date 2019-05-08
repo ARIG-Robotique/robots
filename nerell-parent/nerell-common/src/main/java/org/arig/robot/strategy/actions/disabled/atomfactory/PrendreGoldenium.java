@@ -8,16 +8,12 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
-import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
-import org.arig.robot.services.ServosService;
 import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -31,17 +27,7 @@ public class PrendreGoldenium extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private ServosService servos;
-
-    @Autowired
     private VentousesService ventouses;
-
-    @Autowired
-    @Qualifier("currentPosition")
-    private Position position;
-
-    @Autowired
-    private ConvertionRobotUnit conv;
 
     @Getter
     private boolean completed = false;
@@ -53,7 +39,7 @@ public class PrendreGoldenium extends AbstractAction {
 
     @Override
     public int order() {
-        return 0; // TODO
+        return 20 + 24;
     }
 
     @Override
@@ -69,11 +55,14 @@ public class PrendreGoldenium extends AbstractAction {
         try {
             rs.enableAvoidance();
 
+            int yAvantAvance = 1725;
+
             // va au point le plus proche
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(500 + 235 + 40 - 50, 1725);
+                // 235 = distance bord accelerateur/bord support gold, 40 = moitié support gold
+                mv.pathTo(500 + 235 + 40 - 50, yAvantAvance);
             } else {
-                mv.pathTo(2500 - 235 - 40 + 50, 1725);
+                mv.pathTo(2500 - 235 - 40 + 50, yAvantAvance);
             }
 
             rs.disableAvoidance();
@@ -83,7 +72,8 @@ public class PrendreGoldenium extends AbstractAction {
 
             ventouses.waitAvailable(side);
             ventouses.preparePriseGoldenium(side);
-            mv.gotoPointMM(conv.pulseToMm(position.getPt().getX()), 2000 - 55 - IConstantesNerellConfig.dstVentouseFacade);
+
+            mv.avanceMM(2000 - 50 - yAvantAvance - IConstantesNerellConfig.dstVentouseFacade);
 
             // prise goldenium
             boolean ok = ventouses.priseGoldenium(side);

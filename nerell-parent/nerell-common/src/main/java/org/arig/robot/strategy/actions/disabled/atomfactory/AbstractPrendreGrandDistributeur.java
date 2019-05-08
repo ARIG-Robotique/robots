@@ -3,6 +3,7 @@ package org.arig.robot.strategy.actions.disabled.atomfactory;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
@@ -24,15 +25,17 @@ import java.util.Map;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public abstract class AbstractPrendrePaletsGrandDistributeur extends AbstractAction {
+public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
 
-    final Point posViolet;
+    final int xViolet;
 
-    final Point posJaune;
+    final int xJaune;
 
     final int index1;
 
     final int index2;
+
+    final int orderMux;
 
     abstract Map<Integer, CouleurPalet> liste();
 
@@ -58,6 +61,11 @@ public abstract class AbstractPrendrePaletsGrandDistributeur extends AbstractAct
     }
 
     @Override
+    public int order() {
+        return orderMux * (liste().get(index1).getImportance() + liste().get(index2).getImportance());
+    }
+
+    @Override
     public void execute() {
         ESide side1 = rs.getTeam() == Team.VIOLET ? ESide.GAUCHE : ESide.DROITE;
         ESide side2 = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
@@ -65,10 +73,12 @@ public abstract class AbstractPrendrePaletsGrandDistributeur extends AbstractAct
         try {
             rs.enableAvoidance();
 
+            int yAvantAvance = 680;
+
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(posViolet.getX(), posViolet.getY());
+                mv.pathTo(xViolet, 680);
             } else {
-                mv.pathTo(posJaune.getX(), posJaune.getY());
+                mv.pathTo(xJaune, 680);
             }
 
             rs.disableAvoidance();
@@ -82,14 +92,17 @@ public abstract class AbstractPrendrePaletsGrandDistributeur extends AbstractAct
             ventouses.preparePriseDistributeur(ESide.GAUCHE);
             ventouses.preparePriseDistributeur(ESide.DROITE);
 
-            mv.avanceMM(150); // TODO
+            // 457 = distance bord distributeur
+            double yOffset = -457 + yAvantAvance - IConstantesNerellConfig.dstVentouseFacade;
+
+            mv.avanceMM(yOffset);
 
             // prise du 1 et du 2
             boolean ok1 = ventouses.priseDistributeur(liste().get(index1), side1);
             boolean ok2 = ventouses.priseDistributeur(liste().get(index2), side2);
 
             // recule
-            mv.reculeMM(150); // TODO
+            mv.reculeMM(50);
 
             // stocke
             ventouses.finishPriseDistributeurAsync(ok1, side1);
