@@ -188,7 +188,7 @@ public class Ordonanceur {
         robotStatus.disableAvoidance();
         robotStatus.enableAsserv();
 
-        trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
+        trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientationBasse);
 
         if (!robotStatus.isSimulateur()) {
             robotStatus.enableCalageBordure();
