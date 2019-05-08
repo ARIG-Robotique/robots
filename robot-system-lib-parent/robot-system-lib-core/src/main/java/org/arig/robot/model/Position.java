@@ -1,5 +1,6 @@
 package org.arig.robot.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -20,6 +21,7 @@ import lombok.Data;
  * @author gdepuille
  */
 @Data
+@AllArgsConstructor
 public class Position {
 
     private Point pt;

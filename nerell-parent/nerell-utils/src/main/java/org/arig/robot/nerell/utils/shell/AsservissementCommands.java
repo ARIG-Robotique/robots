@@ -9,6 +9,8 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.model.CommandeAsservissementPosition;
 import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.Point;
+import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.monitoring.IMonitoringWrapper;
@@ -42,6 +44,7 @@ public class AsservissementCommands {
     private final ConvertionCarouselUnit convCarousel;
     private final CommandeRobot cmdRobot;
     private final CommandeAsservissementPosition cmdAsservCarousel;
+    private final Position currentPosition;
     private final IPidFilter pidDistance;
     private final IPidFilter pidOrientation;
     private final IPidFilter pidMoteurDroit;
@@ -102,11 +105,27 @@ public class AsservissementCommands {
     public void asservRobot(@NotNull TypeConsigne[] typeConsignes, long distance, long orientation, long vitesseDistance, long vitesseOrientation) {
         startMonitoring();
 
+
         cmdRobot.setTypes(typeConsignes);
         cmdRobot.getVitesse().setDistance(vitesseDistance);
         cmdRobot.getVitesse().setOrientation(vitesseOrientation);
         cmdRobot.getConsigne().setDistance((long) convRobot.mmToPulse(distance));
         cmdRobot.getConsigne().setOrientation((long) convRobot.degToPulse(orientation));
+        cmdRobot.setFrein(true);
+
+        rs.enableAsserv();
+    }
+
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Asservissement du robot en XY")
+    public void asservRobotXY(@NotNull double x, @NotNull double y, @NotNull double angle, long vitesseDistance, long vitesseOrientation) {
+        startMonitoring();
+
+        cmdRobot.setTypes(TypeConsigne.XY);
+        cmdRobot.getVitesse().setDistance(vitesseDistance);
+        cmdRobot.getVitesse().setOrientation(vitesseOrientation);
+        final Point pt = new Point(convRobot.mmToPulse(x), convRobot.mmToPulse(y));
+        cmdRobot.setPosition(new Position(pt, convRobot.degToPulse(angle)));
         cmdRobot.setFrein(true);
 
         rs.enableAsserv();
@@ -134,5 +153,20 @@ public class AsservissementCommands {
     public void disableAsservCarousel() {
         rs.disableAsservCarousel();
         endMonitoring();
+    }
+
+    @ShellMethod("Lecture de la position actuelle")
+    public void readPosition() {
+        log.info("X: {}", convRobot.pulseToMm(currentPosition.getPt().getX()));
+        log.info("Y: {}", convRobot.pulseToMm(currentPosition.getPt().getY()));
+        log.info("A: {}", convRobot.pulseToDeg(currentPosition.getAngle()));
+    }
+
+    @ShellMethod("Réinitialisation de la position")
+    public void resetPosition() {
+        currentPosition.getPt().setX(0);
+        currentPosition.getPt().setY(0);
+        currentPosition.setAngle(0);
+        readPosition();
     }
 }
