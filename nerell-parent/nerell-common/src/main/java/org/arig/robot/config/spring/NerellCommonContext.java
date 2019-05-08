@@ -118,7 +118,7 @@ public class NerellCommonContext {
 
     @Bean
     public IAsservissementPolaire asservissement() {
-        IConstantesNerellConfig.AsservPolaireSelection asservImplementation = env.getProperty("asservissement.polaire.implementation", IConstantesNerellConfig.AsservPolaireSelection.class);
+        IConstantesNerellConfig.AsservPolaireSelection asservImplementation = env.getProperty("robot.asservissement.polaire.implementation", IConstantesNerellConfig.AsservPolaireSelection.class);
         if (asservImplementation == AsservPolaireSelection.DISTANCE_ORIENTATION) {
             return new AsservissementPolaireDistanceOrientation();
         } else {
@@ -214,7 +214,7 @@ public class NerellCommonContext {
         MultiPathFinderImpl pf = new MultiPathFinderImpl();
 
         pf.setAlgorithm(IConstantesNerellConfig.pathFindingAlgo);
-        pf.setSaveImages(env.getProperty("pathfinding.save.images", Boolean.class, true));
+        pf.setSaveImages(env.getProperty("robot.pathfinding.saveImages", Boolean.class, true));
 
         return pf;
     }

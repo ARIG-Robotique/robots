@@ -53,7 +53,7 @@ public class NerellRobotContext {
     @Bean
     public IMonitoringWrapper monitoringWrapper(Environment env) {
         MonitoringJsonWrapper mjw = new MonitoringJsonWrapper();
-        mjw.setEnabled(env.getProperty("monitoring.points.enable", Boolean.class, true));
+        mjw.setEnabled(env.getProperty("robot.monitoring.points.enable", Boolean.class, true));
         return mjw;
     }
 
@@ -153,7 +153,7 @@ public class NerellRobotContext {
 
     @Bean
     public IAvoidingService avoidingService(Environment env) {
-        IConstantesNerellConfig.AvoidingSelection avoidingImplementation = env.getProperty("avoidance.service.implementation", IConstantesNerellConfig.AvoidingSelection.class);
+        IConstantesNerellConfig.AvoidingSelection avoidingImplementation = env.getProperty("robot.avoidance.service.implementation", IConstantesNerellConfig.AvoidingSelection.class);
         if (avoidingImplementation == IConstantesNerellConfig.AvoidingSelection.BASIC) {
             return new BasicAvoidingService();
         } else {

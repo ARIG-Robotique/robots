@@ -17,10 +17,6 @@ robot:
   avoidance:
       implementation: FULL # FULL ou BASIC
 
-  # Récupération objet zone adverse
-  strategy:
-    collectZoneAdverse: False
-
   # Config
   pathfinding:
     saveImages: True

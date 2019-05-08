@@ -253,13 +253,6 @@ public class Ordonanceur {
         // Match de XX secondes.
 //        boolean activateCollecteAdverse = false;
         while(robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
-/*
-            if (robotStatus.getElapsedTime() > 45000 && !activateCollecteAdverse) {
-                activateCollecteAdverse = true;
-                log.info("Activation par le temps de la collecte dans la zone adverse");
-                System.setProperty("strategy.collect.zone.adverse", "true");
-            }
-*/
             waitTimeMs(200);
         }
         robotStatus.stopMatch();
