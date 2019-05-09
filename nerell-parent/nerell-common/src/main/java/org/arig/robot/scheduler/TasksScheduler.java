@@ -42,14 +42,14 @@ public class TasksScheduler implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
 
         new Thread(() -> {
-            StopWatch exec = new StopWatch();
-            exec.start();
+            long lastTime = System.nanoTime();
 
             while (true) { // TODO
-                long splitTime = exec.getTime(TimeUnit.MILLISECONDS);
-                if (splitTime >= IConstantesNerellConfig.asservTimeMs) {
-                    exec.reset();
-                    exec.start();
+                long currTime = System.nanoTime();
+                long ellapsed = currTime - lastTime;
+
+                if (ellapsed >= IConstantesNerellConfig.asservTimeMs * 1000000) {
+                    lastTime = currTime;
 
                     if (rs.isAsservEnabled()) {
                         trajectoryManager.process();
@@ -61,7 +61,7 @@ public class TasksScheduler implements InitializingBean {
                             .measurementName("tasks")
                             .addTag(MonitorTimeSerie.TAG_NAME, "asservissementPropulsions")
                             .addField("rate", IConstantesNerellConfig.asservTimeMs)
-                            .addField("execTime", splitTime);
+                            .addField("execTime", ellapsed);
 
                     monitoringWrapper.addTimeSeriePoint(serie);
                 }
