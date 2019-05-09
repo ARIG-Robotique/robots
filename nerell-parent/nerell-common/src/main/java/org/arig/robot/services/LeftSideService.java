@@ -66,6 +66,16 @@ public class LeftSideService implements IRobotSide {
     }
 
     @Override
+    public void airElectroVanne() {
+        ioService.airElectroVanneGauche();
+    }
+
+    @Override
+    public void videElectroVanne() {
+        ioService.videElectroVanneGauche();
+    }
+
+    @Override
     public boolean paletPrisDansVentouse() {
         return ioService.paletPrisDansVentouseGauche();
     }

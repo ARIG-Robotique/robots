@@ -12,7 +12,7 @@ public class StatutBalise implements Serializable {
     boolean etallonageOk;
     DetectionResult detection;
 
-    boolean detectionOk() {
+    public boolean detectionOk() {
         return detection != null;
     }
 

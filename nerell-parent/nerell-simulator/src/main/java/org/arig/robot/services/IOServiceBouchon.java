@@ -1,12 +1,16 @@
 package org.arig.robot.services;
 
 import lombok.Setter;
+import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author gdepuille on 30/10/16.
@@ -17,6 +21,7 @@ public class IOServiceBouchon implements IIOService {
     @Autowired private RobotStatus rs;
 
     @Setter private Team team = Team.UNKNOWN;
+    @Setter private List<EStrategy> strategies = new ArrayList<>();
     @Setter private boolean au = false;
     @Setter private boolean tirette = false;
     private boolean ledCapteurCouleur = false;
@@ -31,6 +36,12 @@ public class IOServiceBouchon implements IIOService {
     public Team equipe() {
         rs.setTeam(team);
         return rs.getTeam();
+    }
+
+    @Override
+    public List<EStrategy> strategies() {
+        rs.setStrategies(strategies);
+        return rs.getStrategies();
     }
 
     @Override

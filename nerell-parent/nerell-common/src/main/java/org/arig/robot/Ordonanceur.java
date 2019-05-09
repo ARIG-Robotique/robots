@@ -9,10 +9,7 @@ import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.exception.RefreshPathFindingException;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
-import org.arig.robot.model.RobotStatus;
-import org.arig.robot.model.Team;
+import org.arig.robot.model.*;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.CarouselService;
@@ -168,6 +165,10 @@ public class Ordonanceur {
 
             waitTimeMs(100);
         }*/
+
+        List<EStrategy> strategies = ioService.strategies();
+        log.info("Stratégies actives : {}", strategies);
+
         log.info("Phase de préparation terminé");
 
         log.info("Chargement de la carte");
@@ -190,45 +191,7 @@ public class Ordonanceur {
 
         trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientationBasse);
 
-        if (!robotStatus.isSimulateur()) {
-            robotStatus.enableCalageBordure();
-            trajectoryManager.reculeMMSansAngle(1000);
-
-            if (robotStatus.getTeam() == Team.JAUNE) {
-                position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstArriere));
-                position.setAngle(conv.degToPulse(0));
-            } else {
-                position.getPt().setX(conv.mmToPulse(3000 - IConstantesNerellConfig.dstArriere));
-                position.setAngle(conv.degToPulse(180));
-            }
-
-            trajectoryManager.avanceMM(150);
-            trajectoryManager.gotoOrientationDeg(-90);
-
-            robotStatus.enableCalageBordure();
-            trajectoryManager.reculeMMSansAngle(1000);
-
-            position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstArriere));
-            position.setAngle(conv.degToPulse(-90));
-
-            trajectoryManager.avanceMM(150);
-
-            if (robotStatus.getTeam() == Team.JAUNE) {
-                trajectoryManager.gotoPointMM(250, 1500);
-                trajectoryManager.gotoOrientationDeg(0);
-            } else {
-                trajectoryManager.gotoPointMM(2750, 1500);
-                trajectoryManager.gotoOrientationDeg(180);
-            }
-        } else {
-            if (robotStatus.getTeam() == Team.JAUNE) {
-                position.setPt(new Point(conv.mmToPulse(250), conv.mmToPulse(1500)));
-                position.setAngle(conv.degToPulse(0));
-            } else {
-                position.setPt(new Point(conv.mmToPulse(2750), conv.mmToPulse(1500)));
-                position.setAngle(conv.degToPulse(180));
-            }
-        }
+        callageBordure();
 
         log.info("Position initiale avant match des servos");
         //servosService.homes();
@@ -298,6 +261,48 @@ public class Ordonanceur {
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();
         //ioService.clearColorLedRGB();
+    }
+
+    public void callageBordure() throws RefreshPathFindingException {
+        if (!robotStatus.isSimulateur()) {
+            robotStatus.enableCalageBordure();
+            trajectoryManager.reculeMMSansAngle(1000);
+
+            if (robotStatus.getTeam() == Team.JAUNE) {
+                position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstArriere));
+                position.setAngle(conv.degToPulse(0));
+            } else {
+                position.getPt().setX(conv.mmToPulse(3000 - IConstantesNerellConfig.dstArriere));
+                position.setAngle(conv.degToPulse(180));
+            }
+
+            trajectoryManager.avanceMM(150);
+            trajectoryManager.gotoOrientationDeg(-90);
+
+            robotStatus.enableCalageBordure();
+            trajectoryManager.reculeMMSansAngle(1000);
+
+            position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstArriere));
+            position.setAngle(conv.degToPulse(-90));
+
+            trajectoryManager.avanceMM(150);
+
+            if (robotStatus.getTeam() == Team.JAUNE) {
+                trajectoryManager.gotoPointMM(250, 1500);
+                trajectoryManager.gotoOrientationDeg(0);
+            } else {
+                trajectoryManager.gotoPointMM(2750, 1500);
+                trajectoryManager.gotoOrientationDeg(180);
+            }
+        } else {
+            if (robotStatus.getTeam() == Team.JAUNE) {
+                position.setPt(new Point(conv.mmToPulse(250), conv.mmToPulse(1500)));
+                position.setAngle(conv.degToPulse(0));
+            } else {
+                position.setPt(new Point(conv.mmToPulse(2750), conv.mmToPulse(1500)));
+                position.setAngle(conv.degToPulse(180));
+            }
+        }
     }
 
     private void waitTimeMs(long ms) {

@@ -1,8 +1,11 @@
 package org.arig.robot.services;
 
+import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
+
+import java.util.List;
 
 /**
  * @author gdepuille on 23/04/15.
@@ -13,6 +16,7 @@ public interface IIOService {
     // --------------------- INFOS TECHNIQUE ------------------- //
     // --------------------------------------------------------- //
     Team equipe();
+    List<EStrategy> strategies();
 
     boolean auOk();
     boolean alimPuissance5VOk();

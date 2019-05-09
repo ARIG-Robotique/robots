@@ -27,6 +27,10 @@ public interface IRobotSide {
 
     void releaseElectroVanne();
 
+    void airElectroVanne();
+
+    void videElectroVanne();
+
     boolean paletPrisDansVentouse();
 
     int nbPaletDansMagasin();

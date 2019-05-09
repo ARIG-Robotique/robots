@@ -35,6 +35,12 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     private Team team = Team.UNKNOWN;
 
+    private List<EStrategy> strategies = new ArrayList<>();
+
+    public boolean strategyActive(EStrategy strategy) {
+        return strategies.contains(strategy);
+    }
+
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private StopWatch matchTime = new StopWatch();

@@ -303,9 +303,11 @@ public class VentousesService implements InitializingBean {
             return false;
         }
 
-        service.releaseElectroVanne();
+        service.airElectroVanne();
 
         service.pivotVentouseCarouselVertical(true);
+
+        service.videElectroVanne();
 
         pousseAccelerateur(side);
 
@@ -408,7 +410,7 @@ public class VentousesService implements InitializingBean {
         }
 
         service.disablePompeAVide();
-        service.releaseElectroVanne();
+        service.airElectroVanne();
 
         robotStatus.getPaletsInBalance().add(couleur.get(side));
         couleur.put(side, null);
@@ -442,9 +444,11 @@ public class VentousesService implements InitializingBean {
         service.ascenseurTableGold(true);
 
         service.disablePompeAVide();
-        service.releaseElectroVanne();
+        service.airElectroVanne();
 
         service.ascenseurAccelerateur(false);
+
+        service.videElectroVanne();
 
         robotStatus.getPaletsInTableauBleu().add(CouleurPalet.GOLD);
         couleur.put(side, null);
@@ -502,10 +506,13 @@ public class VentousesService implements InitializingBean {
             service.pivotVentouseCarouselVertical(true);
 
             service.disablePompeAVide();
-            service.releaseElectroVanne();
+            service.airElectroVanne();
 
             service.ascenseurAccelerateur(true);
             service.porteBarilletFerme(true);
+
+            service.videElectroVanne();
+
             service.pivotVentouseTable(false);
 
             carousel.store(service.positionCarouselVentouse(), couleur.get(side));
@@ -513,11 +520,10 @@ public class VentousesService implements InitializingBean {
             carouselService.release();
 
         } catch (CarouselNotAvailableException e) {
-
-        } finally {
             service.disablePompeAVide();
             service.releaseElectroVanne();
 
+        } finally {
             service.pivotVentouseTable(false);
             service.ascenseurAccelerateur(true);
 
@@ -526,7 +532,7 @@ public class VentousesService implements InitializingBean {
         }
     }
 
-    // TODO factoriset ça
+    // TODO factoriser ça
     @Async
     public void stockageAsyncMaisResteEnHaut(ESide side) {
         IRobotSide service = sideServices.get(side);
@@ -549,9 +555,12 @@ public class VentousesService implements InitializingBean {
             service.pivotVentouseCarouselVertical(true);
 
             service.disablePompeAVide();
-            service.releaseElectroVanne();
+            service.airElectroVanne();
 
             service.ascenseurAccelerateur(true);
+
+            service.videElectroVanne();
+
             service.porteBarilletFerme(true);
 
             carousel.store(service.positionCarouselVentouse(), couleur.get(side));
@@ -559,10 +568,10 @@ public class VentousesService implements InitializingBean {
             carouselService.release();
 
         } catch (CarouselNotAvailableException e) {
-
-        } finally {
             service.disablePompeAVide();
             service.releaseElectroVanne();
+
+        } finally {
 
             service.pivotVentouseCarouselVertical(false);
             service.ascenseurAccelerateur(true);

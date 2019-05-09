@@ -37,4 +37,10 @@ public class Point {
     public Point offsettedY(double dY) {
         return new Point(x, y + dY);
     }
+
+    public double distance(Point other) {
+        double dX = other.getX() - x;
+        double dY = other.getY() - y;
+        return Math.sqrt(dX * dX + dY * dY);
+    }
 }

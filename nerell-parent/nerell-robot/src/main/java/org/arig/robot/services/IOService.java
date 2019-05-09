@@ -14,6 +14,7 @@ import org.arig.robot.constants.IConstantesI2C;
 import org.arig.robot.constants.IConstantesI2CAdc;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.I2CException;
+import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
@@ -27,6 +28,10 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author gdepuille on 23/04/15.
@@ -207,6 +212,17 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         rs.setTeam(Team.valueOf(System.getProperty("equipe")));
 
         return rs.getTeam();
+    }
+
+    @Override
+    public List<EStrategy> strategies() {
+        List<EStrategy> strategies = Stream.of(System.getProperty("strategies", "").split(","))
+                .map(EStrategy::valueOf)
+                .collect(Collectors.toList());
+
+        rs.setStrategies(strategies);
+
+        return strategies;
     }
 
     @Override

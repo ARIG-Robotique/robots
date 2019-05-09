@@ -14,7 +14,7 @@ public enum NerellUtils {
     public static double getAngleDecallagePince(Point from, Point to, ESide side) {
         double distance = NerellUtils.getDistance(from, to);
 
-        double angle = Math.asin(IConstantesNerellConfig.dstPinceCentre / distance);
+        double angle = Math.asin(IConstantesNerellConfig.dstAtomeCentre / distance);
 
         return ESide.DROITE.equals(side) ? -angle : angle;
     }
