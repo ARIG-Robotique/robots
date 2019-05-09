@@ -470,18 +470,22 @@ public class VentousesService implements InitializingBean {
     }
 
     private boolean tentativeAspiration(IRobotSide side) {
-        long remaining = TEMPS_TENTATIVE_ASPIRATION;
-        while (!side.paletPrisDansVentouse() && remaining > 0) {
-            remaining -= 100;
-            ThreadUtils.sleep(100);
-        }
+        ThreadUtils.sleep(TEMPS_TENTATIVE_ASPIRATION / 2);
+        return true;
 
-        if (!side.paletPrisDansVentouse()) {
-            log.warn("Impossible d'aspirer le palet");
-            return false;
-        } else {
-            return true;
-        }
+        // FIXME lecture vacuostat
+//        long remaining = TEMPS_TENTATIVE_ASPIRATION;
+//        while (!side.paletPrisDansVentouse() && remaining > 0) {
+//            remaining -= 100;
+//            ThreadUtils.sleep(100);
+//        }
+//
+//        if (!side.paletPrisDansVentouse()) {
+//            log.warn("Impossible d'aspirer le palet");
+//            return false;
+//        } else {
+//            return true;
+//        }
     }
 
     @Async
