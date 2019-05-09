@@ -154,7 +154,7 @@ public class NerellRobotContext {
 
     @Bean
     public IAvoidingService avoidingService(Environment env) {
-        IConstantesNerellConfig.AvoidingSelection avoidingImplementation = env.getProperty("robot.avoidance.service.implementation", IConstantesNerellConfig.AvoidingSelection.class);
+        IConstantesNerellConfig.AvoidingSelection avoidingImplementation = env.getProperty("robot.avoidance.implementation", IConstantesNerellConfig.AvoidingSelection.class);
         if (avoidingImplementation == IConstantesNerellConfig.AvoidingSelection.BASIC) {
             return new BasicAvoidingService();
         } else {

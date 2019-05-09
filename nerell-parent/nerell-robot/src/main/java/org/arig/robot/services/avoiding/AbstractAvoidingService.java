@@ -96,13 +96,6 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
                 .anyMatch(pt -> checkValidPointForSeuil(pt, SEUIL_DISTANCE_PROX_LIDAR_MM));
     }
 
-    /*
-    protected boolean hasAvoidLidar() {
-        return getDetectedPointsMmLidar().parallelStream()
-                .anyMatch(pt -> checkValidPointForSeuil(pt, SEUIL_DISTANCE_AVOID_LIDAR_MM));
-    }
-    */
-
     private boolean checkValidPointForSeuil(Point pt, int seuilMm) {
         long dX = (long) (pt.getX() - conv.pulseToMm(position.getPt().getX()));
         long dY = (long) (pt.getY() - conv.pulseToMm(position.getPt().getY()));
