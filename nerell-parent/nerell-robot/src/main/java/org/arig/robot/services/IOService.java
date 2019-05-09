@@ -8,6 +8,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.i2c.I2CBus;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
 import org.arig.robot.constants.IConstantesI2C;
@@ -217,6 +218,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     @Override
     public List<EStrategy> strategies() {
         List<EStrategy> strategies = Stream.of(System.getProperty("strategies", "").split(","))
+                .filter(StringUtils::isNotBlank)
                 .map(EStrategy::valueOf)
                 .collect(Collectors.toList());
 

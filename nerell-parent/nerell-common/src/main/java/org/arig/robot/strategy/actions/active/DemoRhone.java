@@ -1,7 +1,8 @@
-package org.arig.robot.strategy.actions.disabled;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
@@ -60,12 +61,13 @@ public class DemoRhone extends AbstractAction {
 
             rs.enableAvoidance();
 
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
             mv.avanceMM(500);
 
             if (rs.getTeam() == Team.JAUNE) {
                 mv.pathTo(300, 1300);
 
-                serrageService.disable();
+                rs.disableSerrage();
 
                 sideServices.get(ESide.GAUCHE).pinceSerrageRepos(true);
 
@@ -76,7 +78,7 @@ public class DemoRhone extends AbstractAction {
             } else {
                 mv.pathTo(3000 - 300, 1300);
 
-                serrageService.disable();
+                rs.disableSerrage();
 
                 sideServices.get(ESide.DROITE).pinceSerrageRepos(true);
 
@@ -85,14 +87,13 @@ public class DemoRhone extends AbstractAction {
                 sideServices.get(ESide.DROITE).pinceSerrageRepos(true);
             }
 
-            serrageService.enable();
-
             rs.getPaletsInTableauVert().add(CouleurPalet.INCONNU);
 
         } catch (RefreshPathFindingException | NoPathFoundException | AvoidingException e) {
 
         } finally {
             completed = true;
+            rs.enableSerrage();
         }
     }
 }

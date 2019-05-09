@@ -82,16 +82,29 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     }
 
     @Setter(AccessLevel.NONE)
-    private boolean servicesMetierEnabled = false;
+    private boolean carouselEnabled = false;
 
-    public void enableServicesMetier() {
-        log.info("Activation des services métier");
-        servicesMetierEnabled = true;
+    public void enableCarousel() {
+        log.info("Activation du carousel");
+        carouselEnabled = true;
     }
 
-    public void disableServicesMetier() {
-        log.info("Désactivation des services métier");
-        servicesMetierEnabled = false;
+    public void disableCarousel() {
+        log.info("Désactivation du carousel");
+        carouselEnabled = false;
+    }
+
+    @Setter(AccessLevel.NONE)
+    private boolean magasinEnabled = false;
+
+    public void enableMagasin() {
+        log.info("Activation du magasin");
+        magasinEnabled = true;
+    }
+
+    public void disableMagasin() {
+        log.info("Désactivation du magasin");
+        magasinEnabled = false;
     }
 
     @Setter(AccessLevel.NONE)
@@ -102,9 +115,22 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         ventousesEnabled = true;
     }
 
-    public void disableVetouses() {
+    public void disableVentouses() {
         log.info("Désactivation des ventouses");
         ventousesEnabled = false;
+    }
+
+    @Setter(AccessLevel.NONE)
+    private boolean serrageEnabled = false;
+
+    public void enableSerrage() {
+        log.info("Activation du serrage");
+        serrageEnabled = true;
+    }
+
+    public void disableSerrage() {
+        log.info("Désactivation du serrage");
+        serrageEnabled = false;
     }
 
     private boolean baliseOk = false;

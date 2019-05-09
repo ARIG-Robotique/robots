@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exceptions.CarouselNotAvailableException;
 import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
+import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.SerrageService;
@@ -27,6 +28,7 @@ public class VentousesCommands {
     private final VentousesService ventouses;
     private final SerrageService serrageService;
     private final IIOService ioService;
+    private final RobotStatus rs;
 
     @ShellMethodAvailability
     public Availability alimentationOk() {
@@ -99,10 +101,10 @@ public class VentousesCommands {
 
     @ShellMethod("Dépose goldenium sur table")
     public void deposeGoldeniumTable(@NotNull ESide side) {
-        serrageService.disable();
+        rs.disableSerrage();
         ventouses.deposeGoldenimTable(side);
         ThreadUtils.sleep(5000);
-        serrageService.enable();
+        rs.enableSerrage();
         ventouses.finishDeposeAsync(side);
     }
 }

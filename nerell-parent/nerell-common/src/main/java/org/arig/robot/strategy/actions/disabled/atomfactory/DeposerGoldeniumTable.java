@@ -73,7 +73,7 @@ public class DeposerGoldeniumTable extends AbstractAction {
 
             mv.avanceMM(100);
 
-            serrageService.disable();
+            rs.disableSerrage();
 
             ventouses.deposeGoldenimTable(side);
 
@@ -87,7 +87,7 @@ public class DeposerGoldeniumTable extends AbstractAction {
             updateValidTime();
 
         } finally {
-            serrageService.enable();
+            rs.enableSerrage();
             ventouses.finishDeposeAsync(side);
         }
     }

@@ -186,11 +186,6 @@ public class Ordonanceur {
         log.info("Initialisation du contrôleur de mouvement");
         trajectoryManager.init();
 
-        robotStatus.disableAvoidance();
-        robotStatus.enableAsserv();
-
-        trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientationBasse);
-
         callageBordure();
 
         log.info("Position initiale avant match des servos");
@@ -209,9 +204,9 @@ public class Ordonanceur {
 
         // Activation
         robotStatus.enableMatch();
-        robotStatus.enableServicesMetier();
+        robotStatus.enableSerrage();
+//        robotStatus.enableCarousel();
 //        robotStatus.enableVentouses();
-//        robotStatus.enableAvoidance();
 
         // Match de XX secondes.
 //        boolean activateCollecteAdverse = false;
@@ -221,7 +216,12 @@ public class Ordonanceur {
         robotStatus.stopMatch();
         log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
 
-        robotStatus.disableServicesMetier();
+        robotStatus.disableCarousel();
+        robotStatus.disableSerrage();
+        robotStatus.disableMagasin();
+        robotStatus.disableVentouses();
+        robotStatus.disableAsserv();
+        robotStatus.disableAvoidance();
 
         // Désactivation de la puissance moteur pour être sur de ne plus rouler
         ioService.disableAlim5VPuissance();
@@ -264,6 +264,11 @@ public class Ordonanceur {
     }
 
     public void callageBordure() throws RefreshPathFindingException {
+        robotStatus.disableAvoidance();
+        robotStatus.enableAsserv();
+
+        trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseUltraLente, IConstantesNerellConfig.vitesseOrientationSuperBasse);
+
         if (!robotStatus.isSimulateur()) {
             robotStatus.enableCalageBordure();
             trajectoryManager.reculeMMSansAngle(1000);

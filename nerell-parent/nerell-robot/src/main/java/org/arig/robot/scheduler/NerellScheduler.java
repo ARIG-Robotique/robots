@@ -122,7 +122,7 @@ public class NerellScheduler {
 
     @Scheduled(fixedDelay = 500)
     public void carouselTask() {
-        if (rs.isServicesMetierEnabled()) {
+        if (rs.isCarouselEnabled()) {
             if (carousel.has(CouleurPalet.INCONNU) && !carouselService.isWorking()) {
                 carouselService.lectureCouleurAsync(carousel.firstIndexOf(CouleurPalet.INCONNU, ICarouselManager.LECTEUR));
             }
@@ -131,14 +131,14 @@ public class NerellScheduler {
 
     @Scheduled(fixedDelay = 500)
     public void serrageTask() {
-        if (rs.isServicesMetierEnabled()) {
+        if (rs.isSerrageEnabled()) {
             serrageService.process();
         }
     }
 
     @Scheduled(fixedDelay = 1000)
     public void magasinTask() {
-        if (rs.isServicesMetierEnabled()) {
+        if (rs.isMagasinEnabled()) {
             magasinService.process();
         }
     }
