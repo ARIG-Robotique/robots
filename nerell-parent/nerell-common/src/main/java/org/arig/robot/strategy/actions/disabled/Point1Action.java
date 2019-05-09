@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class Point3Action extends AbstractAction {
+public class Point1Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -50,9 +50,9 @@ public class Point3Action extends AbstractAction {
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             if (rs.getTeam() == Team.JAUNE) {
-                mv.pathTo(250, 650);
+                mv.pathTo(2000, 1500);
             } else {
-                mv.pathTo(3000-250, 650);
+                mv.pathTo(1000, 1500);
             }
 
         } catch (NoPathFoundException | AvoidingException e) {

@@ -102,7 +102,7 @@ public class VentousesCommands {
     @ShellMethod("Dépose goldenium sur table")
     public void deposeGoldeniumTable(@NotNull ESide side) {
         rs.disableSerrage();
-        ventouses.deposeGoldenimTable(side);
+        ventouses.deposeGoldeniumTable(side);
         ThreadUtils.sleep(5000);
         rs.enableSerrage();
         ventouses.finishDeposeAsync(side);

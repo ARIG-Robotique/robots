@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled.atomfactory;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,6 @@ import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.exceptions.CarouselNotAvailableException;
 import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
-import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
@@ -20,11 +19,9 @@ import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 @Slf4j
 @Component
-public class DeposeAccelerateur extends AbstractAction {
+public class DeposeAccelerateurSansCarousel extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -34,9 +31,6 @@ public class DeposeAccelerateur extends AbstractAction {
 
     @Autowired
     private VentousesService ventouses;
-
-    @Autowired
-    private ICarouselManager carousel;
 
     @Getter
     private boolean completed = false;
@@ -48,33 +42,31 @@ public class DeposeAccelerateur extends AbstractAction {
 
     @Override
     public int order() {
-        // 10 pour ouvrir l'accelerateur
-        int points = (!rs.isAccelerateurOuvert() ? 10 + 20 + 24 : 0) +
-                // 10 par palet
-                (int) Math.min(IConstantesNerellConfig.nbPaletsAccelerateurMax - rs.getPaletsInAccelerateur().size(), rs.getRemainingTime() < 30 ? carousel.count(CouleurPalet.ANY) : carousel.count(CouleurPalet.ROUGE)) * 10;
-        return points;
+        if (!rs.isAccelerateurOuvert()) {
+            return Integer.MAX_VALUE - 2;
+        } else {
+            // peu d'importe de couleur de palet
+            ESide side = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
+
+            return Math.min(IConstantesNerellConfig.nbPaletsAccelerateurMax - rs.getPaletsInAccelerateur().size(), ventouses.getCouleur(side) != null ? 1 : 0) * 10;
+        }
     }
 
     @Override
     public boolean isValid() {
+        ESide side = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
+
         return isTimeValid() &&
+                ventouses.getCouleur(side) != null &&
                 (
                         !rs.isAccelerateurOuvert() ||
-                                canDepose() ||
-                                rs.strategyActive(EStrategy.PRISE_BLEU_ACCELERATEUR) && !rs.isAccelerateurPrit() && carousel.has(null)
-                );
-    }
-
-    private boolean canDepose() {
-        return rs.getPaletsInAccelerateur().size() < IConstantesNerellConfig.nbPaletsAccelerateurMax &&
-                (
-                        carousel.has(CouleurPalet.ROUGE) ||
-                                carousel.has(CouleurPalet.ANY) && rs.getRemainingTime() < 30
+                                rs.getPaletsInAccelerateur().size() < IConstantesNerellConfig.nbPaletsAccelerateurMax
                 );
     }
 
     @Override
     public void execute() {
+
         ESide side = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
 
         try {
@@ -93,11 +85,7 @@ public class DeposeAccelerateur extends AbstractAction {
 
             ventouses.waitAvailable(side);
 
-            if (rs.strategyActive(EStrategy.PRISE_BLEU_ACCELERATEUR)) {
-                ventouses.preparePriseAccelerateur(side);
-            } else {
-                ventouses.prepareDeposeAccelerateur(side);
-            }
+            ventouses.prepareDeposeAccelerateur(side);
 
             // oriente et avance à fond
             mv.gotoOrientationDeg(90);
@@ -106,32 +94,13 @@ public class DeposeAccelerateur extends AbstractAction {
             mv.avanceMM(2000 - 30 - yAvantAvance - IConstantesNerellConfig.dstVentouseFacade);
 
             // prend ou pousse le bleu
-            if (rs.strategyActive(EStrategy.PRISE_BLEU_ACCELERATEUR) && !rs.isAccelerateurPrit()) {
-                if (ventouses.priseAccelerateur(side)) {
-                    ventouses.stockageAsyncMaisResteEnHaut(side);
-                    rs.setAccelerateurPrit(true);
-                    ventouses.waitAvailable(side);
-
-                } else if (!rs.isAccelerateurOuvert()) {
-                    ventouses.pousseAccelerateur(side);
-                    rs.setAccelerateurOuvert(true);
-                }
-            } else if (!rs.isAccelerateurOuvert() && !rs.isAccelerateurPrit()) {
+            if (!rs.isAccelerateurOuvert()) {
                 ventouses.pousseAccelerateur(side);
                 rs.setAccelerateurOuvert(true);
             }
 
             // dépose
-            while (canDepose()) {
-                CouleurPalet couleur = carousel.has(CouleurPalet.ROUGE) ? CouleurPalet.ROUGE : CouleurPalet.ANY;
-
-                ventouses.deposeAccelerateur(couleur, side);
-
-                // cas ou a prit le bleu
-                if (!rs.isAccelerateurOuvert()) {
-                    rs.setAccelerateurOuvert(true);
-                }
-            }
+            ventouses.deposeAccelerateur(CouleurPalet.ANY, side);
 
             mv.reculeMM(50);
 

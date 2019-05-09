@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled.atomfactory;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -6,11 +6,10 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
+import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
-import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.services.SerrageService;
 import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
@@ -19,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class DeposerGoldeniumTable extends AbstractAction {
+public class PrendreGoldeniumSansCarousel extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -30,65 +29,67 @@ public class DeposerGoldeniumTable extends AbstractAction {
     @Autowired
     private VentousesService ventouses;
 
-    @Autowired
-    private SerrageService serrageService;
-
     @Getter
     private boolean completed = false;
 
     @Override
     public String name() {
-        return "Déposer le goldenium sur la table";
+        return "Prendre le goldenium";
     }
 
     @Override
     public int order() {
-        return Integer.MAX_VALUE;
+        return 20 + 24;
     }
 
     @Override
     public boolean isValid() {
         return isTimeValid() &&
-                ventouses.getCouleur(rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE) == CouleurPalet.GOLD &&
-                rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax;
+                rs.isAccelerateurOuvert() && !rs.isGoldeniumPrit();
     }
 
     @Override
     public void execute() {
         ESide side = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
 
+        mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+
         try {
             rs.enableAvoidance();
 
-            // va au point le plus proche (zone bleu)
+            int yAvantAvance = 1725;
+
+            // va au point le plus proche
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(2700, 950);
-                mv.gotoOrientationDeg(0);
+                // 235 = distance bord accelerateur/bord support gold, 40 = moitié support gold
+                mv.pathTo(500 + 235 + 40 - 50, yAvantAvance);
             } else {
-                mv.pathTo(300, 950);
-                mv.gotoOrientationDeg(180);
+                mv.pathTo(2500 - 235 - 40 + 50, yAvantAvance);
             }
 
             rs.disableAvoidance();
 
-            mv.avanceMM(100);
+            // aligne, prépare la ventouse et avance
+            mv.gotoOrientationDeg(90);
 
-            rs.disableSerrage();
+            ventouses.waitAvailable(side);
+            ventouses.preparePriseGoldenium(side);
 
-            ventouses.deposeGoldeniumTable(side);
+            mv.avanceMM(2000 - 50 - yAvantAvance - IConstantesNerellConfig.dstVentouseFacade);
 
-            mv.reculeMM(100);
-            mv.gotoOrientationDeg(rs.getTeam() == Team.VIOLET ? 180 : 0);
+            // prise goldenium
+            boolean ok = ventouses.priseGoldenium(side);
+
+            // recule
+            mv.reculeMM(50);
+
+            ventouses.finishPriseGoldeniumAsync(ok, side);
 
             completed = true;
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
+        } catch (NoPathFoundException | AvoidingException | VentouseNotAvailableException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
-
-        } finally {
-            rs.enableSerrage();
-            ventouses.finishDeposeAsync(side);
         }
     }
 

@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled.atomfactory;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,13 +9,11 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
-import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
-import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -48,16 +46,14 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
     @Autowired
     private VentousesService ventouses;
 
-    @Autowired
-    private ICarouselManager carousel;
-
     @Getter
     private boolean completed = false;
 
     @Override
     public boolean isValid() {
         return isTimeValid() &&
-                carousel.count(null) >= 2;
+                ventouses.getCouleur(ESide.GAUCHE) == null &&
+                ventouses.getCouleur(ESide.DROITE) == null;
     }
 
     @Override
@@ -70,7 +66,7 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
         ESide side1 = rs.getTeam() == Team.VIOLET ? ESide.GAUCHE : ESide.DROITE;
         ESide side2 = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
 
-        mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientationBasse);
+        mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
         try {
             rs.enableAvoidance();

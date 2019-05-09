@@ -31,13 +31,16 @@ public class VentousesService implements InitializingBean {
     private Map<ESide, IRobotSide> sideServices;
 
     @Autowired
-    private RobotStatus robotStatus;
+    private RobotStatus rs;
 
     @Autowired
     private CarouselService carouselService;
 
     @Autowired
     private ICarouselManager carousel;
+
+    @Autowired
+    private SerrageService serrage;
 
     private final Map<ESide, AtomicBoolean> working = new EnumMap<>(ESide.class);
     private final Map<ESide, CouleurPalet> couleur = new EnumMap<>(ESide.class);
@@ -195,10 +198,14 @@ public class VentousesService implements InitializingBean {
         service.disablePompeAVide();
 
         if (ok) {
-            robotStatus.setGoldeniumPrit(true);
+            rs.setGoldeniumPrit(true);
             couleur.put(side, CouleurPalet.GOLD);
-
-            service.ascenseurCarousel(true);
+            // TODO : à suprimmer
+            if (rs.isCarouselEnabled()) {
+                service.ascenseurCarousel(true);
+            } else {
+                service.pivotVentouseTable(true);
+            }
         }
 
         return ok;
@@ -292,12 +299,20 @@ public class VentousesService implements InitializingBean {
     public boolean deposeAccelerateur(CouleurPalet couleur, ESide side) throws CarouselNotAvailableException {
         IRobotSide service = sideServices.get(side);
 
-        if (robotStatus.getPaletsInAccelerateur().size() >= IConstantesNerellConfig.nbPaletsAccelerateurMax) {
+        if (rs.getPaletsInAccelerateur().size() >= IConstantesNerellConfig.nbPaletsAccelerateurMax) {
             log.warn("L'accelerateur est plein");
             return false;
         }
 
-        CouleurPalet couleurFinale = priseCarousel(couleur, service);
+        CouleurPalet couleurFinale = null;
+
+        if (rs.isCarouselEnabled()) {
+            couleurFinale = priseCarousel(couleur, service);
+        } else {
+            couleurFinale = this.couleur.get(side);
+            service.pivotVentouseFacade(true);
+            service.ascenseurAccelerateur(true);
+        }
 
         if (couleurFinale == null) {
             return false;
@@ -311,7 +326,11 @@ public class VentousesService implements InitializingBean {
 
         pousseAccelerateur(side);
 
-        robotStatus.getPaletsInAccelerateur().add(couleurFinale);
+        rs.getPaletsInAccelerateur().add(couleurFinale);
+
+        if (!rs.isCarouselEnabled()) {
+            this.couleur.put(side, null);
+        }
 
         return true;
     }
@@ -385,7 +404,18 @@ public class VentousesService implements InitializingBean {
                 return false;
             }
 
-            CouleurPalet couleurFinale = priseCarousel(couleur, service);
+            CouleurPalet couleurFinale;
+
+            if (rs.isCarouselEnabled()) {
+                couleurFinale = priseCarousel(couleur, service);
+            } else {
+                couleurFinale = this.couleur.get(side);
+
+                if (couleur != null) {
+                    service.pivotVentouseFacade(true);
+                    service.ascenseurAccelerateur(true);
+                }
+            }
 
             if (couleurFinale == null) {
                 return false;
@@ -412,8 +442,13 @@ public class VentousesService implements InitializingBean {
         service.disablePompeAVide();
         service.airElectroVanne();
 
-        robotStatus.getPaletsInBalance().add(couleur.get(side));
+        rs.getPaletsInBalance().add(couleur.get(side));
         couleur.put(side, null);
+
+        // TODO : suprimmer
+        if (!rs.isCarouselEnabled()) {
+            this.couleur.put(side, null);
+        }
 
         return true;
     }
@@ -432,13 +467,14 @@ public class VentousesService implements InitializingBean {
     /**
      * Depose du goldenium sur la table
      */
-    public boolean deposeGoldenimTable(ESide side) {
+    public boolean deposeGoldeniumTable(ESide side) {
         IRobotSide service = sideServices.get(side);
 
         if (couleur.get(side) != CouleurPalet.GOLD) {
             log.warn("On a pas le goldenium, ou il n'est pas dans la bonne ventouse");
             return false;
         }
+
 
         service.pinceSerrageRepos(false);
         service.ascenseurTableGold(true);
@@ -450,7 +486,35 @@ public class VentousesService implements InitializingBean {
 
         service.videElectroVanne();
 
-        robotStatus.getPaletsInTableauBleu().add(CouleurPalet.GOLD);
+        rs.getPaletsInTableauBleu().add(CouleurPalet.GOLD);
+
+        couleur.put(side, null);
+
+        return true;
+    }
+
+    public boolean deposeTable(ESide side) {
+        IRobotSide service = sideServices.get(side);
+
+        if (couleur.get(side) == null) {
+            log.info("Pas de palet à {}", side);
+            return false;
+        }
+
+        rs.disableSerrage();
+
+
+        service.pinceSerrageRepos(true);
+        service.pivotVentouseTable(true);
+        service.ascenseurTable(true);
+
+        service.airElectroVanne();
+
+        service.ascenseurDistributeur(true);
+
+        service.videElectroVanne();
+
+        rs.enableSerrage();
         couleur.put(side, null);
 
         return true;
@@ -498,30 +562,33 @@ public class VentousesService implements InitializingBean {
         }
 
         try {
-            carouselService.waitAvailable(TEMPS_MAX_AVAILABLE * 2);
+            // TODO : à suprimmer
+            if (rs.isCarouselEnabled()) {
+                carouselService.waitAvailable(TEMPS_MAX_AVAILABLE * 2);
 
-            if (!carouselService.tourner(service.positionCarouselVentouse(), null)) {
-                log.warn("Echec du carousel, pourtant il y avait une place ?");
-                throw new CarouselNotAvailableException();
+                if (!carouselService.tourner(service.positionCarouselVentouse(), null)) {
+                    log.warn("Echec du carousel, pourtant il y avait une place ?");
+                    throw new CarouselNotAvailableException();
+                }
+
+                service.porteBarilletOuvert(true);
+                service.ascenseurCarousel(true);
+
+                service.pivotVentouseCarouselVertical(true);
+
+                service.disablePompeAVide();
+                service.airElectroVanne();
+
+                service.ascenseurAccelerateur(true);
+                service.porteBarilletFerme(true);
+
+                service.videElectroVanne();
+
+                service.pivotVentouseTable(false);
+                carousel.store(service.positionCarouselVentouse(), couleur.get(side));
+
+                carouselService.release();
             }
-
-            service.porteBarilletOuvert(true);
-            service.ascenseurCarousel(true);
-            service.pivotVentouseCarouselVertical(true);
-
-            service.disablePompeAVide();
-            service.airElectroVanne();
-
-            service.ascenseurAccelerateur(true);
-            service.porteBarilletFerme(true);
-
-            service.videElectroVanne();
-
-            service.pivotVentouseTable(false);
-
-            carousel.store(service.positionCarouselVentouse(), couleur.get(side));
-
-            carouselService.release();
 
         } catch (CarouselNotAvailableException e) {
             service.disablePompeAVide();
@@ -534,6 +601,7 @@ public class VentousesService implements InitializingBean {
             couleur.put(side, null);
             working.get(side).set(false);
         }
+
     }
 
     // TODO factoriser ça
