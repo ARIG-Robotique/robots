@@ -1,8 +1,19 @@
 package org.arig.robot.config.spring;
 
-public class NerellSimulator extends BootifullApplication {
+import lombok.SneakyThrows;
+import org.arig.robot.Ordonanceur;
+import org.arig.robot.constants.IConstantesConfig;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-    public static void main(final String [] args) {
-        boot(args);
+@SpringBootApplication
+public class NerellSimulator {
+
+    @SneakyThrows
+    public static void main(final String[] args) {
+        System.setProperty(IConstantesConfig.keyExecutionId, "0");
+        SpringApplication.run(NerellSimulator.class, args);
+
+        Ordonanceur.getInstance().run();
     }
 }
