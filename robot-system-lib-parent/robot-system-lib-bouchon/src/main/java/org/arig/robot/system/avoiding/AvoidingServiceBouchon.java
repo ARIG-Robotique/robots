@@ -61,44 +61,44 @@ public class AvoidingServiceBouchon implements IAvoidingService, InitializingBea
 
     @Override
     public void afterPropertiesSet() {
-        new Thread(() -> {
-            double y = 1000, y2 = 300, y3 = 1800;
-            int inc = 1, inc2 = 2, inc3 = 3;
-            while (true) {
-                if (!detectedPointsMm.isEmpty()) {
-                    if (inc > 0 && y >= 1800) {
-                        inc = -1;
-                    } else if (inc < 0 && y <= 200) {
-                        inc = 1;
-                    }
-                    y = detectedPointsMm.get(0).getY() + inc;
-
-                    if (inc2 > 0 && y2 >= 1800) {
-                        inc2 = -2;
-                    } else if (inc2 < 0 && y2 <= 200) {
-                        inc2 = 2;
-                    }
-                    y2 = detectedPointsMm.get(1).getY() + inc2;
-
-                    if (inc3 > 0 && y3 >= 1800) {
-                        inc3 = -3;
-                    } else if (inc3 < 0 && y3 <= 200) {
-                        inc3 = 3;
-                    }
-                    y3 = detectedPointsMm.get(2).getY() + inc3;
-                }
-
-
-                synchronized (this.detectedPointsMm) {
-                    detectedPointsMm.clear();
-                    detectedPointsMm.add(new Point(1500, y));
-                    detectedPointsMm.add(new Point(700, y2));
-                    detectedPointsMm.add(new Point(2300, y3));
-                }
-
-                ThreadUtils.sleep(20);
-            }
-        }).start();
+//        new Thread(() -> {
+//            double y = 1000, y2 = 300, y3 = 1800;
+//            int inc = 1, inc2 = 2, inc3 = 3;
+//            while (true) {
+//                if (!detectedPointsMm.isEmpty()) {
+//                    if (inc > 0 && y >= 1800) {
+//                        inc = -1;
+//                    } else if (inc < 0 && y <= 200) {
+//                        inc = 1;
+//                    }
+//                    y = detectedPointsMm.get(0).getY() + inc;
+//
+//                    if (inc2 > 0 && y2 >= 1800) {
+//                        inc2 = -2;
+//                    } else if (inc2 < 0 && y2 <= 200) {
+//                        inc2 = 2;
+//                    }
+//                    y2 = detectedPointsMm.get(1).getY() + inc2;
+//
+//                    if (inc3 > 0 && y3 >= 1800) {
+//                        inc3 = -3;
+//                    } else if (inc3 < 0 && y3 <= 200) {
+//                        inc3 = 3;
+//                    }
+//                    y3 = detectedPointsMm.get(2).getY() + inc3;
+//                }
+//
+//
+//                synchronized (this.detectedPointsMm) {
+//                    detectedPointsMm.clear();
+//                    detectedPointsMm.add(new Point(1500, y));
+//                    detectedPointsMm.add(new Point(700, y2));
+//                    detectedPointsMm.add(new Point(2300, y3));
+//                }
+//
+//                ThreadUtils.sleep(20);
+//            }
+//        }).start();
     }
 
     @Override

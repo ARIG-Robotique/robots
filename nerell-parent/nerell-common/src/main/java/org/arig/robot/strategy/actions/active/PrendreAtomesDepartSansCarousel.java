@@ -7,6 +7,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.*;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.NerellUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,6 +29,9 @@ public class PrendreAtomesDepartSansCarousel extends AbstractAction {
     @Autowired
     @Qualifier("currentPosition")
     private Position currentPosition;
+
+    @Autowired
+    private ConvertionRobotUnit convertionRobotUnit;
 
     @Getter
     private boolean completed = false;
@@ -57,21 +61,26 @@ public class PrendreAtomesDepartSansCarousel extends AbstractAction {
             List<Pair<Point, ESide>> configs = new ArrayList<>();
 
             if (rs.getTeam().equals(Team.VIOLET)) {
-                configs.add(Pair.of(new Point(1550, 2500), ESide.DROITE));
-                configs.add(Pair.of(new Point(1250, 2500), ESide.GAUCHE));
+                configs.add(Pair.of(new Point(2500, 1550), ESide.DROITE));
+                configs.add(Pair.of(new Point(2500, 1250), ESide.GAUCHE));
             } else {
-                configs.add(Pair.of(new Point(1550, 500), ESide.GAUCHE));
-                configs.add(Pair.of(new Point(1250, 500), ESide.DROITE));
+                configs.add(Pair.of(new Point(500, 1550), ESide.GAUCHE));
+                configs.add(Pair.of(new Point(500, 1250), ESide.DROITE));
             }
 
+            log.info("current position (x,y,angle) ({},{},{})", convertionRobotUnit.pulseToMm(currentPosition.getPt().getX()), convertionRobotUnit.pulseToMm(currentPosition.getPt().getY()), currentPosition.getAngle());
+
             for (Pair<Point, ESide> config : configs) {
-                double offsetAngle = NerellUtils.getAngleDecallagePince(currentPosition.getPt(), config.getLeft(), config.getRight());
-                double distance = NerellUtils.getDistance(currentPosition.getPt(), config.getLeft());
+                Point currentPosInMm = new Point(convertionRobotUnit.pulseToMm(currentPosition.getPt().getX()),
+                        convertionRobotUnit.pulseToMm(currentPosition.getPt().getY()));
+
+                double offsetAngle = NerellUtils.getAngleDecallagePince(currentPosInMm, config.getLeft(), config.getRight());
+                double distance = currentPosInMm.distance(config.getLeft());
 
                 mv.alignFrontToAvecDecalage(config.getLeft().getX(), config.getLeft().getY(), offsetAngle);
                 mv.avanceMM(distance);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
 
         } finally {
             completed = true;

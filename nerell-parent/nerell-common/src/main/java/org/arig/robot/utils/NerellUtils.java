@@ -12,7 +12,7 @@ public enum NerellUtils {
      * pour qu'on point tombe dans une pince
      */
     public static double getAngleDecallagePince(Point from, Point to, ESide side) {
-        double distance = NerellUtils.getDistance(from, to);
+        double distance = from.distance(to);
 
         double angle = Math.asin(IConstantesNerellConfig.dstAtomeCentre / distance);
 
