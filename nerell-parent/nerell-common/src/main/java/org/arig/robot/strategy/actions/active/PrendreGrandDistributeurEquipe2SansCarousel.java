@@ -16,7 +16,7 @@ public class PrendreGrandDistributeurEquipe2SansCarousel extends AbstractPrendre
                 750,
                 2,
                 3,
-                3
+                2
         );
     }
 
