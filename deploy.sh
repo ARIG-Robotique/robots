@@ -6,6 +6,8 @@ if [ -z $1 ] ; then
     exit 1
 fi
 
+echo "$(date)"
+
 ROBOT_NAME=$1
 INSTALL_DIR=/home/pi/$ROBOT_NAME
 

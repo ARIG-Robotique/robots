@@ -7,11 +7,7 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.exception.RefreshPathFindingException;
-import org.arig.robot.model.AbstractRobotStatus;
-import org.arig.robot.model.Chemin;
-import org.arig.robot.model.CommandeRobot;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
+import org.arig.robot.model.*;
 import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.model.monitor.*;
@@ -28,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -77,25 +74,26 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     protected IMonitoringWrapper monitoringWrapper;
 
     @Getter
-    private boolean trajetAtteint, trajetEnApproche = false;
-
-    @Getter
     private AbstractMonitorMouvement currentMouvement = null;
+
+    private AtomicBoolean trajetAtteint = new AtomicBoolean(false);
+
+    private AtomicBoolean trajetEnApproche = new AtomicBoolean(false);
 
     /**
      * Boolean si un obstacle est rencontré (stop le robot sur place)
      **/
-    private boolean obstacleFound = false;
+    private AtomicBoolean obstacleFound = new AtomicBoolean(false);
 
     /**
      * Boolean si un calage bordure est demandé (consigne distance angle = 0)
      */
-    private boolean calageBordure = false;
+    private AtomicBoolean calageBordure = new AtomicBoolean(false);
 
     /**
      * Boolean pour relancer après un obstacle (gestion de l'évittement)
      */
-    private boolean refreshPath = false;
+    private AtomicBoolean refreshPath = new AtomicBoolean(false);
 
     /* Fenetre d'arret / approche distance */
     private double fenetreApprocheDistance;
@@ -130,6 +128,16 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
         this.arretOrientDeg = arretOrientDeg;
         this.approcheOrientDeg = approcheOrientDeg;
         this.coefAngle = coefAngle;
+    }
+
+    @Override
+    public boolean isTrajetAtteint() {
+        return trajetAtteint.get();
+    }
+
+    @Override
+    public boolean isTrajetEnApproche() {
+        return trajetEnApproche.get();
     }
 
     @Override
@@ -198,7 +206,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
         long tAsserv = tCalcul1;
 
         // 2. Gestion de l'evittement
-        if (obstacleFound) {
+        if (obstacleFound.get()) {
             // Obstacle détecté, on stop les moteurs
             stop();
 
@@ -245,21 +253,21 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * -> b : Si dans fenêtre d'approche : consigne(n) = consigne(n - 1) - d(position)
      */
     private void calculConsigne() {
-        if (calageBordure) {
+        if (calageBordure.get()) {
             // Un calage sur bordure est fait. On asservi sur place jusqu'au prochain mouvement
             cmdRobot.getConsigne().setDistance(0);
             cmdRobot.getConsigne().setOrientation(0);
             cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
-            calageBordure = false;
+            calageBordure.set(false);
         }
 
-        if (!trajetAtteint && cmdRobot.isType(TypeConsigne.XY)) {
+        if (!trajetAtteint.get() && cmdRobot.isType(TypeConsigne.XY)) {
             // Calcul en fonction de l'odométrie
             double dX = (cmdRobot.getPosition().getPt().getX() - currentPosition.getPt().getX());
             double dY = (cmdRobot.getPosition().getPt().getY() - currentPosition.getPt().getY());
 
             // Calcul des consignes
-            double consDist = calculDistanceConsigne(dX, dY);
+            double consDist = calculDistance(dX, dY);
             double consOrient = calculAngleConsigne(dX, dY);
 
             // Calcul du coef d'annulation de la distance
@@ -272,10 +280,10 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             cmdRobot.getConsigne().setDistance((long) consDist);
             cmdRobot.getConsigne().setOrientation((long) consOrient);
 
-        } else if (!trajetAtteint && cmdRobot.isType(TypeConsigne.LINE)) {
+        } else if (!trajetAtteint.get() && cmdRobot.isType(TypeConsigne.LINE)) {
             // TODO : Consigne de suivi de ligne (gérer les clothoïde pour la liaison)
 
-        } else if (!trajetAtteint && cmdRobot.isType(TypeConsigne.CIRCLE)) {
+        } else if (!trajetAtteint.get() && cmdRobot.isType(TypeConsigne.CIRCLE)) {
             // TODO : Consigne de rotation autour d'un point.
 
         } else {
@@ -369,7 +377,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param dY delta Y
      * @return valeur de la consigne de distance
      */
-    private double calculDistanceConsigne(double dX, double dY) {
+    private double calculDistance(double dX, double dY) {
         return Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
     }
 
@@ -382,7 +390,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
         distAtteint = Math.abs(cmdRobot.getConsigne().getDistance()) < fenetreArretDistance;
         orientAtteint = Math.abs(cmdRobot.getConsigne().getOrientation()) < fenetreArretOrientation;
-        trajetAtteint = cmdRobot.isFrein() && distAtteint && orientAtteint;
+        trajetAtteint.set(cmdRobot.isFrein() && distAtteint && orientAtteint);
 
         // -------------------------------------------------------------------------- //
         // Calcul des fenetres d'approche pour le passage au point suivant sans arret //
@@ -395,7 +403,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             long dY = (long) (cmdRobot.getPosition().getPt().getY() - currentPosition.getPt().getY());
 
             // On recalcul car la consigne de distance est altéré par le coeficient pour le demi tour
-            distApproche = Math.abs(calculDistanceConsigne(dX, dY)) < fenetreApprocheDistance;
+            distApproche = Math.abs(calculDistance(dX, dY)) < fenetreApprocheDistance;
             orientApproche = true;
         } else {
             distApproche = Math.abs(cmdRobot.getConsigne().getDistance()) < fenetreApprocheDistance;
@@ -410,7 +418,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
             // Notification que le point de passage est atteint uniquement lors d'un enchainement sans arret
             if (!cmdRobot.isFrein()) {
-                trajetEnApproche = true;
+                trajetEnApproche.set(true);
             }
         }
     }
@@ -484,7 +492,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                 // Contrôle que l'on est proche de la position demandée
                 double dXmm = (targetXmm - conv.pulseToMm(currentPosition.getPt().getX()));
                 double dYmm = (targetYmm - conv.pulseToMm(currentPosition.getPt().getY()));
-                double targetDistMm = calculDistanceConsigne(dXmm, dYmm);
+                double targetDistMm = calculDistance(dXmm, dYmm);
 
                 // Trajet ok si il reste moins de 2cm
                 trajetOk = targetDistMm <= 20;
@@ -544,7 +552,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
         if (!disableMonitor) {
             double dX = (cmdRobot.getPosition().getPt().getX() - currentPosition.getPt().getX());
             double dY = (cmdRobot.getPosition().getPt().getY() - currentPosition.getPt().getY());
-            double distance = calculDistanceConsigne(dX, dY);
+            double distance = calculDistance(dX, dY);
 
             MonitorMouvementTranslation mTr = new MonitorMouvementTranslation();
             mTr.setFromPoint(new Point(
@@ -769,16 +777,16 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     private void prepareNextMouvement() {
         // Reset de l'erreur de l'asservissementPolaire sur le mouvement précédent lorsqu'il
         // s'agit d'un nouveau mouvement au départ vitesse presque nulle.
-        if (trajetAtteint) {
+        if (trajetAtteint.get()) {
             asservissementPolaire.reset();
         }
 
         // Réinitialisation des infos de trajet.
-        trajetAtteint = false;
-        trajetEnApproche = false;
-        refreshPath = false;
-        obstacleFound = false;
-        calageBordure = false;
+        trajetAtteint.set(false);
+        trajetEnApproche.set(false);
+        refreshPath.set(false);
+        obstacleFound.set(false);
+        calageBordure.set(false);
     }
 
     /**
@@ -800,7 +808,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     public void waitMouvement() throws RefreshPathFindingException {
         if (cmdRobot.isFrein()) {
             log.info("Attente fin de trajet");
-            while (!isTrajetAtteint()) {
+            while (!trajetAtteint.get()) {
                 try {
                     checkRefreshPath();
                     Thread.sleep(1);
@@ -811,7 +819,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             log.info("Trajet atteint");
         } else {
             log.info("Attente approche du point de passage");
-            while (!isTrajetEnApproche()) {
+            while (!trajetEnApproche.get()) {
                 try {
                     checkRefreshPath();
                     Thread.sleep(1);
@@ -825,27 +833,27 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
     @Override
     public void obstacleFound() {
-        obstacleFound = true;
+        obstacleFound.set(true);
     }
 
     @Override
     public void obstacleNotFound() {
-        obstacleFound = false;
+        obstacleFound.set(false);
     }
 
     @Override
     public void calageBordureDone() {
-        calageBordure = true;
+        calageBordure.set(true);
     }
 
     @Override
     public void refreshPathFinding() {
-        refreshPath = true;
+        refreshPath.set(true);
     }
 
     private void checkRefreshPath() throws RefreshPathFindingException {
-        if (refreshPath) {
-            refreshPath = false;
+        if (refreshPath.get()) {
+            refreshPath.set(false);
             throw new RefreshPathFindingException();
         }
     }

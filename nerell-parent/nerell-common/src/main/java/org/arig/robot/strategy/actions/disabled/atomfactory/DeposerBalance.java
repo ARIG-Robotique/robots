@@ -80,9 +80,9 @@ public class DeposerBalance extends AbstractAction {
             // va au point le plus proche
             if (rs.getTeam() == Team.VIOLET) {
                 // 20 = moitié du séparateur, 110 = moitié de la balance
-                mv.pathTo(1500 + 130 + IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
+                mv.pathTo(1500 + 140 + IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
             } else {
-                mv.pathTo(1500 - 130 - IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
+                mv.pathTo(1500 - 140 - IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
             }
 
             rs.disableAvoidance();
