@@ -7,10 +7,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class NerellSimulator {
+public class NerellSimulator { //extends BootifullApplication {
 
     @SneakyThrows
-    public static void main(final String[] args) {
+    public static void main(final String [] args) {
+        //boot(args);
+
         System.setProperty(IConstantesConfig.keyExecutionId, "0");
         SpringApplication.run(NerellSimulator.class, args);
 
