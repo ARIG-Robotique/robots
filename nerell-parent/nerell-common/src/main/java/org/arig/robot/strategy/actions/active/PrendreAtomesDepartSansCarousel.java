@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.*;
+import org.arig.robot.model.enums.CouleurPalet;
+import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -32,6 +34,9 @@ public class PrendreAtomesDepartSansCarousel extends AbstractAction {
 
     @Autowired
     private ConvertionRobotUnit convertionRobotUnit;
+
+    @Autowired
+    private VentousesService ventouses;
 
     @Getter
     private boolean completed = false;
@@ -79,6 +84,12 @@ public class PrendreAtomesDepartSansCarousel extends AbstractAction {
 
                 mv.alignFrontToAvecDecalage(config.getLeft().getX(), config.getLeft().getY(), offsetAngle);
                 mv.avanceMM(distance);
+
+                if (ventouses.priseTable(CouleurPalet.INCONNU, config.getRight())) {
+                    ventouses.stockageAsync(config.getRight());
+                } else {
+                    ventouses.finishDeposeAsync(config.getRight());
+                }
             }
         } catch (Exception e) {
 

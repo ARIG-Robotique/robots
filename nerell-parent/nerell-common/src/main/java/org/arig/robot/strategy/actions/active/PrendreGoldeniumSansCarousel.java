@@ -45,7 +45,8 @@ public class PrendreGoldeniumSansCarousel extends AbstractAction {
     @Override
     public boolean isValid() {
         return isTimeValid() &&
-                rs.isAccelerateurOuvert() && !rs.isGoldeniumPrit();
+                rs.isAccelerateurOuvert() && !rs.isGoldeniumPrit() &&
+                ventouses.getCouleur(rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE) == null;
     }
 
     @Override

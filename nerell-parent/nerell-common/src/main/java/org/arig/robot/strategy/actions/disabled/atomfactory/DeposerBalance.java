@@ -87,7 +87,11 @@ public class DeposerBalance extends AbstractAction {
 
             rs.disableAvoidance();
 
-            ventouses.waitAvailable(side);
+            if (ventouses.getCouleur(side) != CouleurPalet.GOLD) {
+                ventouses.waitAvailable(side);
+            }
+
+            mv.gotoOrientationDeg(-90);
 
             while (canDepose()) {
                 CouleurPalet couleur = ventouses.getCouleur(side) == CouleurPalet.GOLD ?

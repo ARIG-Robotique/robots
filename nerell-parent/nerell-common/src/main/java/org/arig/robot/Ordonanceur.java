@@ -7,6 +7,7 @@ import org.apache.commons.io.FileUtils;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.*;
@@ -216,6 +217,12 @@ public class Ordonanceur {
         }
 
         robotStatus.stopMatch();
+
+        ioService.airElectroVanneDroite();
+        ioService.airElectroVanneGauche();
+        servosService.pinceSerragePaletGauche(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_REPOS, false);
+        servosService.pinceSerragePaletDroit(IConstantesServos.PINCE_SERRAGE_PALET_DROIT_REPOS, false);
+
         log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
 
         // Désactivation de la puissance moteur pour être sur de ne plus rouler
@@ -250,8 +257,8 @@ public class Ordonanceur {
         ioService.enableAlim5VPuissance();
         ioService.enableAlim12VPuissance();
 
-        magasinService.ejectionAvantRetourStand();
-        carouselService.ejectionAvantRetourStand();
+//        magasinService.ejectionAvantRetourStand();
+//        carouselService.ejectionAvantRetourStand();
 
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();

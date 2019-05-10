@@ -10,11 +10,12 @@ import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.services.IIOService;
-import org.arig.robot.services.VentousesService;
+import org.arig.robot.services.*;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.TrajectoryManager;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.datetime.joda.ReadableInstantPrinter;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,6 +25,12 @@ public class DeposerTableauSansCarousel extends AbstractAction {
 
     @Autowired
     private IIOService io;
+
+    @Autowired
+    private LeftSideService leftSideService;
+
+    @Autowired
+    private RightSideService rightSideService;
 
     @Autowired
     private RobotStatus rs;
@@ -49,7 +56,7 @@ public class DeposerTableauSansCarousel extends AbstractAction {
 
     @Override
     public int order() {
-        return (ventouses.getCouleur(ESide.GAUCHE) != null ? 5 : 0) + (ventouses.getCouleur(ESide.DROITE) != null ? 5 : 0);
+        return (ventouses.getCouleur(ESide.GAUCHE) != null ? 1 : 0) + (ventouses.getCouleur(ESide.DROITE) != null ? 1 : 0);
     }
 
     @Override
@@ -70,13 +77,41 @@ public class DeposerTableauSansCarousel extends AbstractAction {
 
             mv.avanceMM(distance);
 
+            boolean paletPinceDroit = io.presencePaletDroit() || io.buteePaletDroit();
+            boolean paletPinceGauche = io.presencePaletGauche() || io.buteePaletGauche();
+            if (paletPinceDroit || paletPinceGauche) {
+                rs.disableSerrage();
+
+                leftSideService.pinceSerrageRepos(false);
+                rightSideService.pinceSerrageRepos(false);
+
+                mv.reculeMM(IConstantesNerellConfig.diametrePaletMm + 20);
+                rs.incNbDeposesTableau();
+
+                if (rs.getTeam() == Team.JAUNE) {
+                    if (paletPinceDroit) {
+                        rs.getPaletsInTableauVert().add(CouleurPalet.INCONNU);
+                    }
+                    if (paletPinceGauche) {
+                        rs.getPaletsInTableauRouge().add(CouleurPalet.INCONNU);
+                    }
+                } else {
+                    if (paletPinceDroit) {
+                        rs.getPaletsInTableauRouge().add(CouleurPalet.INCONNU);
+                    }
+                    if (paletPinceGauche) {
+                        rs.getPaletsInTableauVert().add(CouleurPalet.INCONNU);
+                    }
+                }
+            }
+
             CouleurPalet paletGauche = ventouses.getCouleur(ESide.GAUCHE);
             CouleurPalet paletDroite = ventouses.getCouleur(ESide.DROITE);
 
             ventouses.deposeTable(ESide.DROITE);
             ventouses.deposeTable(ESide.GAUCHE);
 
-            mv.avanceMM(distance);
+            mv.reculeMM(50);
 
             rs.incNbDeposesTableau();
 
@@ -104,6 +139,9 @@ public class DeposerTableauSansCarousel extends AbstractAction {
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
+
+        } finally {
+            rs.enableSerrage();
         }
     }
 }

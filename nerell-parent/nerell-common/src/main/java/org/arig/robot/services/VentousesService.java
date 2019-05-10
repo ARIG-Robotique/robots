@@ -200,12 +200,6 @@ public class VentousesService implements InitializingBean {
         if (ok) {
             rs.setGoldeniumPrit(true);
             couleur.put(side, CouleurPalet.GOLD);
-            // TODO : à suprimmer
-            if (rs.isCarouselEnabled()) {
-                service.ascenseurCarousel(true);
-            } else {
-                service.pivotVentouseTable(true);
-            }
         }
 
         return ok;
@@ -235,9 +229,16 @@ public class VentousesService implements InitializingBean {
     public boolean prepareDeposeAccelerateur(ESide side) {
         IRobotSide service = sideServices.get(side);
 
-        service.pousseAccelerateurStandby(false);
-        service.pivotVentouseCarouselVertical(false);
-        service.ascenseurAccelerateur(true);
+        if (rs.isCarouselEnabled()) {
+            service.pivotVentouseCarouselVertical(false);
+            service.ascenseurAccelerateur(true);
+
+        } else {
+            service.porteBarilletOuvert(true);
+
+            service.ascenseurCarouselDepose(false);
+            service.pivotVentouseCarouselSortie(true);
+        }
 
         return true;
     }
@@ -267,7 +268,7 @@ public class VentousesService implements InitializingBean {
         IRobotSide service = sideServices.get(side);
 
         service.pousseAccelerateurAction(true);
-        service.pousseAccelerateurStandby(true);
+        service.pousseAccelerateurFerme(true);
     }
 
     /**
@@ -312,6 +313,8 @@ public class VentousesService implements InitializingBean {
             couleurFinale = this.couleur.get(side);
             service.pivotVentouseFacade(true);
             service.ascenseurAccelerateur(true);
+
+            service.porteBarilletFerme(false);
         }
 
         if (couleurFinale == null) {
@@ -322,9 +325,9 @@ public class VentousesService implements InitializingBean {
 
         service.pivotVentouseCarouselVertical(true);
 
-        service.videElectroVanne();
-
         pousseAccelerateur(side);
+
+        service.videElectroVanne();
 
         rs.getPaletsInAccelerateur().add(couleurFinale);
 
@@ -597,9 +600,11 @@ public class VentousesService implements InitializingBean {
         } finally {
             service.pivotVentouseTable(false);
             service.ascenseurAccelerateur(true);
-
-            couleur.put(side, null);
             working.get(side).set(false);
+
+            if (rs.isCarouselEnabled()) {
+                couleur.put(side, null);
+            }
         }
 
     }

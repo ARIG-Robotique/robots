@@ -57,10 +57,11 @@ public class DeposeAccelerateurSansCarousel extends AbstractAction {
         ESide side = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
 
         return isTimeValid() &&
-                ventouses.getCouleur(side) != null &&
                 (
-                        !rs.isAccelerateurOuvert() ||
-                                rs.getPaletsInAccelerateur().size() < IConstantesNerellConfig.nbPaletsAccelerateurMax
+                        ventouses.getCouleur(side) != null &&
+                                rs.getPaletsInAccelerateur().size() < IConstantesNerellConfig.nbPaletsAccelerateurMax ||
+
+                                !rs.isAccelerateurOuvert()
                 );
     }
 

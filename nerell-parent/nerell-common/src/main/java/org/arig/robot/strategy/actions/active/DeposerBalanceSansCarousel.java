@@ -91,9 +91,10 @@ public class DeposerBalanceSansCarousel extends AbstractAction {
 
             rs.disableAvoidance();
 
-            ventouses.waitAvailable(side);
+            mv.gotoOrientationDeg(-90);
 
-            if (!ventouses.deposeBalance1(CouleurPalet.ANY, side)) {
+            CouleurPalet couleur = ventouses.getCouleur(side) == CouleurPalet.GOLD ? CouleurPalet.GOLD : CouleurPalet.ANY;
+            if (!ventouses.deposeBalance1(couleur, side)) {
                 throw new VentouseNotAvailableException();
             }
 
