@@ -170,6 +170,7 @@ public class Ordonanceur {
         log.info("Stratégies actives : {}", strategies);
 
         log.info("Phase de préparation terminé");
+        log.info("Equipe : {}", ioService.equipe().name());
 
         log.info("Chargement de la carte");
         String fileResourcePath = String.format("classpath:maps/%s.png", robotStatus.getTeam().name().toLowerCase());

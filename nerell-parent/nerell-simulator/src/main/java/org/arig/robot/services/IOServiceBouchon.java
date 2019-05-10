@@ -40,7 +40,8 @@ public class IOServiceBouchon implements IIOService {
 
     @Override
     public Team equipe() {
-        rs.setTeam(team);
+        rs.setTeam(Team.valueOf(System.getProperty("equipe")));
+
         return rs.getTeam();
     }
 
