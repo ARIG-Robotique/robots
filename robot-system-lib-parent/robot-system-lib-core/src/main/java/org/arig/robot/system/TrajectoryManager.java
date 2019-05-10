@@ -418,28 +418,28 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     /**
      * Génération d'un déplacement avec le Path Finding
      *
-     * @param x position sur l'axe X
-     * @param y position sur l'axe Y
+     * @param targetXmm position sur l'axe X
+     * @param targetYmm position sur l'axe Y
      * @throws NoPathFoundException
      */
     @Override
-    public void pathTo(final double x, final double y) throws NoPathFoundException, AvoidingException {
-        pathTo(x, y, true);
+    public void pathTo(final double targetXmm, final double targetYmm) throws NoPathFoundException, AvoidingException {
+        pathTo(targetXmm, targetYmm, true);
     }
 
 
     /**
      * Génération d'un déplacement avec le Path Finding
      *
-     * @param x         position sur l'axe X
-     * @param y         position sur l'axe Y
+     * @param targetXmm position sur l'axe X
+     * @param targetYmm position sur l'axe Y
      * @param avecArret
      * @throws NoPathFoundException
      */
     @Override
-    public void pathTo(final double x, final double y, final boolean avecArret) throws NoPathFoundException, AvoidingException {
+    public void pathTo(final double targetXmm, final double targetYmm, final boolean avecArret) throws NoPathFoundException, AvoidingException {
         boolean trajetOk = false, first = true;
-        int nbCollisionDetected = 0;
+        int nbCollisionDetected = 0, nbTryPath = 1;
         int divisor = 10;
 
         do {
@@ -447,9 +447,9 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                     conv.pulseToMm(currentPosition.getPt().getX()) / divisor,
                     conv.pulseToMm(currentPosition.getPt().getY()) / divisor
             );
-            Point ptToCm = new Point(x / divisor, y / divisor);
+            Point ptToCm = new Point(targetXmm / divisor, targetYmm / divisor);
             try {
-                log.info("Demande de chemin vers X = {}mm ; Y = {}mm", x, y);
+                log.info("Demande de chemin vers X = {}mm ; Y = {}mm", targetXmm, targetYmm);
                 Chemin c = pathFinder.findPath(ptFromCm, ptToCm);
 
                 MonitorMouvementPath mPath = new MonitorMouvementPath();
@@ -481,8 +481,14 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                     gotoPointMM(targetPoint.getX(), targetPoint.getY(), !c.hasNext() && avecArret, true);
                 }
 
-                // Condition de sortie de la boucle.
-                trajetOk = true;
+                // Contrôle que l'on est proche de la position demandée
+                double dXmm = (targetXmm - conv.pulseToMm(currentPosition.getPt().getX()));
+                double dYmm = (targetYmm - conv.pulseToMm(currentPosition.getPt().getY()));
+                double targetDistMm = calculDistanceConsigne(dXmm, dYmm);
+
+                // Trajet ok si il reste moins de 2cm
+                trajetOk = targetDistMm <= 20;
+
             } catch (RefreshPathFindingException e) {
                 nbCollisionDetected++;
                 log.info("Collision detectée n° {}, on recalcul un autre chemin", nbCollisionDetected);
@@ -491,6 +497,19 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                     log.warn("Trop de collision ({}), on passe à la suite", nbCollisionDetected);
                     throw new AvoidingException();
                 }
+            }
+
+            if (!trajetOk) {
+                // Le trajet n'est pas OK
+                nbTryPath++;
+
+                if (nbTryPath >= 3) {
+                    log.warn("Trop de tentative de path, on passe à l'action suivante");
+                    throw new AvoidingException();
+                }
+
+                log.warn("Tentative de path non atteint, on réessai (tentative : {})", nbTryPath);
+                prepareNextMouvement();
             }
         } while (!trajetOk);
     }
