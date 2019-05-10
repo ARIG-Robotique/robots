@@ -59,13 +59,13 @@ public class PrendreAtomesDepart extends AbstractAction {
             List<Pair<Point, ESide>> configs = new ArrayList<>();
 
             if (rs.getTeam().equals(Team.VIOLET)) {
-                configs.add(Pair.of(new Point(1550, 2500), ESide.DROITE));
-                configs.add(Pair.of(new Point(1250, 2500), ESide.GAUCHE));
-                configs.add(Pair.of(new Point(950, 2500), ESide.DROITE));
+                configs.add(Pair.of(new Point(2500, 1550), ESide.DROITE));
+                configs.add(Pair.of(new Point(2500, 1250), ESide.GAUCHE));
+                configs.add(Pair.of(new Point(2500, 950), ESide.DROITE));
             } else {
-                configs.add(Pair.of(new Point(1550, 500), ESide.GAUCHE));
-                configs.add(Pair.of(new Point(1250, 500), ESide.DROITE));
-                configs.add(Pair.of(new Point(950, 500), ESide.GAUCHE));
+                configs.add(Pair.of(new Point(500, 1550), ESide.GAUCHE));
+                configs.add(Pair.of(new Point(500, 1250), ESide.DROITE));
+                configs.add(Pair.of(new Point(500, 950), ESide.GAUCHE));
             }
 
             for (Pair<Point, ESide> config : configs) {
