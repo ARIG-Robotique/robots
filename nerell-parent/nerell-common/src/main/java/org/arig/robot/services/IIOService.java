@@ -15,6 +15,9 @@ public interface IIOService {
     // --------------------------------------------------------- //
     // --------------------- INFOS TECHNIQUE ------------------- //
     // --------------------------------------------------------- //
+
+    void refreshAllPcf();
+
     Team equipe();
     List<EStrategy> strategies();
 

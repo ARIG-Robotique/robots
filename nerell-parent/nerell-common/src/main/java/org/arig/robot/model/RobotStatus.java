@@ -58,6 +58,11 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         this.disableAvoidance();
         this.disableMatch();
         this.disableCalageBordure();
+
+        this.disableCarousel();
+        this.disableSerrage();
+        this.disableMagasin();
+        this.disableVentouses();
     }
 
     public long getElapsedTime() {

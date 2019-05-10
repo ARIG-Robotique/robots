@@ -3,8 +3,6 @@ package org.arig.robot.system.motion;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.CommandeRobot;
-import org.arig.robot.model.monitor.MonitorTimeSerie;
-import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,9 +13,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * @author gdepuille
  */
 public class AsservissementPolaireDistanceOrientation implements IAsservissementPolaire {
-
-    @Autowired
-    protected IMonitoringWrapper monitoringWrapper;
 
     @Autowired
     private CommandeRobot cmdRobot;
@@ -80,13 +75,5 @@ public class AsservissementPolaireDistanceOrientation implements IAsservissement
 
         cmdRobot.getMoteur().setDroit((int) cmdMotDroit);
         cmdRobot.getMoteur().setGauche((int) cmdMotGauche);
-
-        final MonitorTimeSerie serie = new MonitorTimeSerie()
-                .measurementName("asservissement")
-                .addTag(MonitorTimeSerie.TAG_NAME, "polaire")
-                .addField("mot_d", cmdMotDroit)
-                .addField("mot_g", cmdMotGauche);
-
-        monitoringWrapper.addTimeSeriePoint(serie);
     }
 }

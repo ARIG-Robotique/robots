@@ -1,11 +1,6 @@
 package org.arig.robot.services;
 
-import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalInput;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.PinState;
-import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.io.gpio.*;
 import com.pi4j.io.i2c.I2CBus;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -24,12 +19,12 @@ import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
-import org.arig.robot.system.capteurs.TinyLidar;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -114,7 +109,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     // PCF
     private GpioPinDigitalOutput outAlimPuissance5V;
-//    private GpioPinDigitalOutput outAlimPuissance8V;
+    //    private GpioPinDigitalOutput outAlimPuissance8V;
     private GpioPinDigitalOutput outAlimPuissance12V;
     private GpioPinDigitalOutput outElectroVanneDroit;
     private GpioPinDigitalOutput outElectroVanneGauche;
@@ -156,9 +151,9 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         // Config PCF8574 //
         // -------------- //
         // TODO Config IRQ
-        pcfAlim = new PCF8574GpioProvider(bus, IConstantesI2C.PCF_ALIM_ADDRESS);
-        pcf1 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF1_ADDRESS);
-        pcf2 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF2_ADDRESS);
+        pcfAlim = new PCF8574GpioProvider(bus, IConstantesI2C.PCF_ALIM_ADDRESS, true);
+        pcf1 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF1_ADDRESS, true);
+        pcf2 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF2_ADDRESS, true);
         pcf3 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF3_ADDRESS, true);
 
         // Alim
@@ -200,6 +195,27 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         videElectroVanneGauche();
         disablePompeAVideDroite();
         disablePompeAVideGauche();
+    }
+
+    @Override
+    public void refreshAllPcf() {
+        try {
+            pcf1.readAll();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        try {
+            pcf2.readAll();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        try {
+            pcfAlim.readAll();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     // --------------------------------------------------------- //

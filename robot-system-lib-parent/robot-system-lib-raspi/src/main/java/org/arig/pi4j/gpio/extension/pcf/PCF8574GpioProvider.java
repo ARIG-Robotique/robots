@@ -208,6 +208,49 @@ public class PCF8574GpioProvider extends MonitorGpioProviderBase implements Moni
         }
     }
 
+    // FIXME : exporté à l'arrache dans la classe principal pour refresh sans thread de monitoring
+    public void readAll() throws IOException {
+        byte[] buffer = new byte[1];
+        device.read(buffer, 0, 1);
+        BitSet pinStates = BitSet.valueOf(buffer);
+
+        // determine if there is a pin state difference
+        for (int index = 0; index < PCF8574_MAX_IO_PINS; index++) {
+            if (pinStates.get(index) != currentStates.get(index)) {
+                Pin pin = PCF8574Pin.ALL[index];
+                PinState newState = (pinStates.get(index)) ? PinState.HIGH : PinState.LOW;
+
+                // cache state
+                getPinCache(pin).setState(newState);
+                currentStates.set(index, pinStates.get(index));
+
+                // only dispatch events for input pins
+                if (getMode(pin) == PinMode.DIGITAL_INPUT) {
+                    // change detected for INPUT PIN
+                    // System.out.println("<<< CHANGE >>> " + pin.getName() + " : " + state);
+                    dispatchPinChangeEvent(pin.getAddress(), newState);
+                }
+            }
+        }
+    }
+
+    private void dispatchPinChangeEvent(int pinAddress, PinState state) {
+        // iterate over the pin listeners map
+        for (Pin pin : listeners.keySet()) {
+            // System.out.println("<<< DISPATCH >>> " + pin.getName() + " : " +
+            // state.getName());
+
+            // dispatch this event to the listener
+            // if a matching pin address is found
+            if (pin.getAddress() == pinAddress) {
+                // dispatch this event to all listener handlers
+                for (PinListener listener : listeners.get(pin)) {
+                    listener.handlePinEvent(new PinDigitalStateChangeEvent(this, pin, state));
+                }
+            }
+        }
+    }
+
     /**
      * This class/thread is used to to actively monitor for GPIO interrupts
      *

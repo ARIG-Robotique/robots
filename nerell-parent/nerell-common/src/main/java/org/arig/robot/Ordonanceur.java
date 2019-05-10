@@ -213,15 +213,9 @@ public class Ordonanceur {
         while(robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
             waitTimeMs(200);
         }
+
         robotStatus.stopMatch();
         log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
-
-        robotStatus.disableCarousel();
-        robotStatus.disableSerrage();
-        robotStatus.disableMagasin();
-        robotStatus.disableVentouses();
-        robotStatus.disableAsserv();
-        robotStatus.disableAvoidance();
 
         // Désactivation de la puissance moteur pour être sur de ne plus rouler
         ioService.disableAlim5VPuissance();

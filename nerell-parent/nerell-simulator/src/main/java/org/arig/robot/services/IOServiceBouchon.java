@@ -32,6 +32,12 @@ public class IOServiceBouchon implements IIOService {
     // --------------------- INFOS TECHNIQUE ------------------- //
     // --------------------------------------------------------- //
 
+
+    @Override
+    public void refreshAllPcf() {
+
+    }
+
     @Override
     public Team equipe() {
         rs.setTeam(team);

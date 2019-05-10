@@ -60,7 +60,7 @@ public class NerellRobotContext {
 
     @Bean(destroyMethod = "close")
     public I2CBus i2cBus() throws IOException, UnsupportedBusNumberException {
-        return I2CFactory.getInstance(I2CBus.BUS_1, 10, TimeUnit.MILLISECONDS);
+        return I2CFactory.getInstance(I2CBus.BUS_1, 2, TimeUnit.MILLISECONDS);
     }
 
     @Bean

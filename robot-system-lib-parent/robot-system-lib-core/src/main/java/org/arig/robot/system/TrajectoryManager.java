@@ -14,10 +14,7 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.model.enums.TypeConsigne;
-import org.arig.robot.model.monitor.AbstractMonitorMouvement;
-import org.arig.robot.model.monitor.MonitorMouvementPath;
-import org.arig.robot.model.monitor.MonitorMouvementRotation;
-import org.arig.robot.model.monitor.MonitorMouvementTranslation;
+import org.arig.robot.model.monitor.*;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.IAsservissementPolaire;
@@ -75,6 +72,9 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
     @Autowired
     private TableUtils tableUtils;
+
+    @Autowired
+    protected IMonitoringWrapper monitoringWrapper;
 
     @Getter
     private boolean trajetAtteint, trajetEnApproche = false;
@@ -189,7 +189,13 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     public void process() {
         // 1. Calcul de la position du robot
         encoders.lectureValeurs();
+
+        long tStart = System.nanoTime();
         odom.calculPosition();
+
+        long tCalcul1 = System.nanoTime();
+        long tCalcul2 = tCalcul1;
+        long tAsserv = tCalcul1;
 
         // 2. Gestion de l'evittement
         if (obstacleFound) {
@@ -204,8 +210,12 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             // C.1. Calcul des consignes
             calculConsigne();
 
+            tCalcul2 = System.nanoTime();
+
             // C.2. Asservissement sur les consignes
             asservissementPolaire.process();
+
+            tAsserv = System.nanoTime();
         }
 
         // 3. Envoi aux moteurs
@@ -213,6 +223,20 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
         // 4. Gestion des flags pour indiquer l'approche et l'atteinte sur l'objectif
         gestionFlags();
+
+        long tEnd = System.nanoTime();
+
+        final MonitorTimeSerie serie = new MonitorTimeSerie()
+                .measurementName("asservissement")
+                .addTag(MonitorTimeSerie.TAG_NAME, "polaire")
+                .addField("t_calcul1", tCalcul1 - tStart)
+                .addField("t_calcul2", tCalcul2 - tCalcul1)
+                .addField("t_asserv", tAsserv - tCalcul2)
+                .addField("t_flags", tEnd - tAsserv)
+                .addField("mot_d", cmdRobot.getMoteur().getDroit())
+                .addField("mot_g", cmdRobot.getMoteur().getGauche());
+
+        monitoringWrapper.addTimeSeriePoint(serie);
     }
 
     /**
