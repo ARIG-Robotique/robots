@@ -32,6 +32,12 @@ balise:
     host: 192.168.1.15
     port: 8080
 
+# Logging
+logging:
+  file: ./logs/${execution.id}-traces.log
+  pattern:
+    file: "%d{ISO8601};%p;%t;%c;%m%n"
+
 ---
 
 # Spring properties
