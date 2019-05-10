@@ -16,7 +16,7 @@ public enum NerellUtils {
 
         double angle = Math.toDegrees(Math.asin(IConstantesNerellConfig.dstAtomeCentre / distance));
 
-        return ESide.DROITE.equals(side) ? -angle : angle;
+        return ESide.DROITE.equals(side) ? angle : -angle;
     }
 
     public static double getDistance(Point from, Point to) {

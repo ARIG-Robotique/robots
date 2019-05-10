@@ -73,7 +73,8 @@ public class DeposerTableauSansCarousel extends AbstractAction {
                 mv.gotoOrientationDeg(180);
             }
 
-            int distance = 450 - rs.getNbDeposesTableau() * IConstantesNerellConfig.offsetTableau;
+            // 450=point de départ, 30=marge de sécu
+            int distance = 450 - 30 - rs.getNbDeposesTableau() * IConstantesNerellConfig.offsetTableau;
 
             mv.avanceMM(distance);
 

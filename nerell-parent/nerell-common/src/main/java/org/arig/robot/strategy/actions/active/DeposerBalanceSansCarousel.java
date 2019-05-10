@@ -83,10 +83,10 @@ public class DeposerBalanceSansCarousel extends AbstractAction {
 
             // va au point le plus proche
             if (rs.getTeam() == Team.VIOLET) {
-                // 20 = moitié du séparateur, 110 = moitié de la balance
-                mv.pathTo(1500 + 130 + IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
+                // 20 = moitié du séparateur, 110 = moitié de la balance, 50 = marge de sécu
+                mv.pathTo(1500 + 130 + 50 + IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
             } else {
-                mv.pathTo(1500 - 130 - IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
+                mv.pathTo(1500 - 130 - 50 - IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
             }
 
             rs.disableAvoidance();
@@ -98,8 +98,8 @@ public class DeposerBalanceSansCarousel extends AbstractAction {
                 throw new VentouseNotAvailableException();
             }
 
-            // 400 = longueur de la balance, 30 = pour pas déposer juste au bord de la balance
-            double yOffset = -400 + yAvantAvance - IConstantesNerellConfig.dstVentouseFacade + 30;
+            // 400 = longueur de la balance
+            double yOffset = -400 + yAvantAvance - IConstantesNerellConfig.dstVentouseFacade;
 
             mv.avanceMM(yOffset);
 

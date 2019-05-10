@@ -398,7 +398,7 @@ public class VentousesService implements InitializingBean {
                 return false;
             }
 
-            service.ascenseurAccelerateur(false);
+            service.ascenseurCarousel(false);
             service.pivotVentouseFacade(true);
 
         } else {
@@ -416,7 +416,7 @@ public class VentousesService implements InitializingBean {
 
                 if (couleur != null) {
                     service.pivotVentouseFacade(true);
-                    service.ascenseurAccelerateur(true);
+                    service.ascenseurCarousel(true);
                 }
             }
 
@@ -452,6 +452,8 @@ public class VentousesService implements InitializingBean {
         if (!rs.isCarouselEnabled()) {
             this.couleur.put(side, null);
         }
+
+        ThreadUtils.sleep(500);
 
         return true;
     }
