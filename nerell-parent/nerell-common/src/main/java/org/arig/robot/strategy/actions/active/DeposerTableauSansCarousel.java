@@ -74,7 +74,7 @@ public class DeposerTableauSansCarousel extends AbstractAction {
             }
 
             // 450=point de départ, 30=marge de sécu
-            int distance = 450 - 30 - rs.getNbDeposesTableau() * IConstantesNerellConfig.offsetTableau;
+            int distance = 450 - 30 - rs.getNbDeposesTableau() * (IConstantesNerellConfig.diametrePaletMm + 20);
 
             mv.avanceMM(distance);
 
@@ -112,7 +112,7 @@ public class DeposerTableauSansCarousel extends AbstractAction {
             ventouses.deposeTable(ESide.DROITE);
             ventouses.deposeTable(ESide.GAUCHE);
 
-            mv.reculeMM(50);
+            mv.reculeMM(100);
 
             rs.incNbDeposesTableau();
 

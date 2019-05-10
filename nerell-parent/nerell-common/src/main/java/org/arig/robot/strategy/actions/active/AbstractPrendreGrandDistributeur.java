@@ -15,6 +15,7 @@ import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -94,6 +95,8 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
             double yOffset = -457 + yAvantAvance - IConstantesNerellConfig.dstVentouseFacade;
 
             mv.avanceMM(yOffset);
+
+            ThreadUtils.sleep(500);
 
             // prise du 1 et du 2
             boolean ok1 = ventouses.priseDistributeur(liste().get(index1), side1);
