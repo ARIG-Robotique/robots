@@ -20,7 +20,7 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class PrendreAtomesDepartSansCarousel extends AbstractAction {
+public class PrendreAtomesDepart2SansCarousel extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -48,12 +48,12 @@ public class PrendreAtomesDepartSansCarousel extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return true;
+        return ventouses.getCouleur(ESide.GAUCHE) == null && ventouses.getCouleur(ESide.DROITE) == null;
     }
 
     @Override
     public int order() {
-        return Integer.MAX_VALUE;
+        return Integer.MAX_VALUE - 1;
     }
 
     @Override
@@ -66,11 +66,9 @@ public class PrendreAtomesDepartSansCarousel extends AbstractAction {
             List<Pair<Point, ESide>> configs = new ArrayList<>();
 
             if (rs.getTeam().equals(Team.VIOLET)) {
-                configs.add(Pair.of(new Point(2500, 1550), ESide.DROITE));
-                configs.add(Pair.of(new Point(2500, 1250), ESide.GAUCHE));
+                configs.add(Pair.of(new Point(2500, 950), ESide.DROITE));
             } else {
-                configs.add(Pair.of(new Point(500, 1550), ESide.GAUCHE));
-                configs.add(Pair.of(new Point(500, 1250), ESide.DROITE));
+                configs.add(Pair.of(new Point(500, 950), ESide.GAUCHE));
             }
 
             for (Pair<Point, ESide> config : configs) {

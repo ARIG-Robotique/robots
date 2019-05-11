@@ -73,9 +73,9 @@ public interface IConstantesNerellConfig {
     long vitesseSuperLente = 200;
     long vitesseUltraLente = 100;
 
-    long vitessePath = vitesseSuperLente;
-    long vitesseMouvement = vitesseMoyenneBasse;
-    long vitesseOrientation = vitesseOrientationBasse;
+    long vitessePath = vitesseUltraLente;
+    long vitesseMouvement = vitesseUltraLente;
+    long vitesseOrientation = vitesseOrientationSuperBasse;
 
     // -------------- //
     // Parametres PID //
@@ -111,7 +111,7 @@ public interface IConstantesNerellConfig {
     double angleReculDeg = 0.45;
 
     double dstArriere = 161.5; // distance du dos du robot au milieu des roues
-    double dstVentouseFacade = 176.5; // distance de la ventouse en prise facade au milieu de roues
+    double dstVentouseFacade = 180; // distance de la ventouse en prise facade au milieu de roues
     double dstAtomeCentre = 50; // distance du milieu du palet au centre du robot (largeur)
     double dstAtomeCentre2 = 120; // distance du milieu du palet au centre du robot (longueur)
 

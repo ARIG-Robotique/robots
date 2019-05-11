@@ -36,7 +36,7 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
 
     final int orderMux;
 
-    abstract Map<Integer, CouleurPalet> liste();
+    public abstract Map<Integer, CouleurPalet> liste();
 
     @Autowired
     private ITrajectoryManager mv;

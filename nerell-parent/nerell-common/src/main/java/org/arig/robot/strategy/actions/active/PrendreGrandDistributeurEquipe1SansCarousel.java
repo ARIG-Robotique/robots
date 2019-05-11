@@ -21,7 +21,7 @@ public class PrendreGrandDistributeurEquipe1SansCarousel extends AbstractPrendre
     }
 
     @Override
-    Map<Integer, CouleurPalet> liste() {
+    public Map<Integer, CouleurPalet> liste() {
         return rs.getPaletsGrandDistributeurEquipe();
     }
 
