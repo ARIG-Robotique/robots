@@ -1,4 +1,3 @@
-#!/bin/sh
-./stopAll
-sudo rm -f /tmp/lidar.sock
-java -Dspring.profiles.active=default,monitoring -Dequipe=JAUNE -Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8787,suspend=y -jar nerell-robot-2019-SNAPSHOT.jar
+#!/bin/bash
+. common.sh
+java ${JVM_ARGS} ${DEBUG_ARGS} -Dspring.profiles.active=default,monitoring -Dequipe=JAUNE -Dstrategies=$1 -jar nerell-robot-2019-SNAPSHOT.jar
