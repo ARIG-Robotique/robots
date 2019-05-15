@@ -39,12 +39,8 @@ public class Raspi2007NoMux extends Abstract2007NoMux<Pin> {
         values.put(capteurId, p.getState().isHigh());
 
         // Ajout d'un listener pour capter les changements d'etats
-        p.addListener(new GpioPinListenerDigital() {
-            @Override
-            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-                values.put(capteurId, event.getState().isHigh());
-            }
-        });
+        final GpioPinListenerDigital listener = (event) -> values.put(capteurId, event.getState().isHigh());
+        p.addListener(listener);
     }
 
     @Override

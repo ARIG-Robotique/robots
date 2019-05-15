@@ -7,8 +7,6 @@ import org.springframework.context.ApplicationContextAware;
 
 public class PropulsionsSD21Motors extends AbstractPropulsionsMotors implements ApplicationContextAware, InitializingBean {
 
-    private final byte motor1Register, motor2Register;
-
     private SD21Motor motor1;
     private SD21Motor motor2;
 
@@ -18,15 +16,12 @@ public class PropulsionsSD21Motors extends AbstractPropulsionsMotors implements 
 
     public PropulsionsSD21Motors(final byte motor1Register, final byte motor2Register) {
         super(1500);
-        this.motor1Register = motor1Register;
-        this.motor2Register = motor2Register;
+        motor1 = new SD21Motor(motor1Register);
+        motor2 = new SD21Motor(motor2Register);
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        motor1 = new SD21Motor(motor1Register);
-        motor2 = new SD21Motor(motor2Register);
-
+    public void afterPropertiesSet() {
         applicationContext.getAutowireCapableBeanFactory().autowireBean(motor1);
         applicationContext.getAutowireCapableBeanFactory().autowireBean(motor2);
     }
