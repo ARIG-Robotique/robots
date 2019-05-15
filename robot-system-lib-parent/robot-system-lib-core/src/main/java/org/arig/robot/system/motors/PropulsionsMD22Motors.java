@@ -6,12 +6,12 @@ import org.arig.robot.exception.I2CException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * The Class MD22Motors.
+ * The Class PropulsionsMD22Motors.
  *
  * @author gdepuille
  */
 @Slf4j
-public class MD22Motors extends AbstractPropulsionsMotors {
+public class PropulsionsMD22Motors extends AbstractPropulsionsMotors {
 
     private static final byte MODE_REGISTER = 0x00;
     private static final byte MOTOR1_REGISTER = 0x01;
@@ -20,7 +20,7 @@ public class MD22Motors extends AbstractPropulsionsMotors {
     private static final byte VERSION_REGISTER = 0x07;
     private static final byte MODE_0 = 0; // 0 (Reverse) - 128 (Stop) - 255 (Forward)
     private static final byte MODE_1 = 1; // -128 (Reverse) - 0 (Stop) - 127 (Forward)
-    private static final byte DEFAULT_MODE_VALUE = MD22Motors.MODE_0;
+    private static final byte DEFAULT_MODE_VALUE = PropulsionsMD22Motors.MODE_0;
     private static final short DEFAULT_ACCEL_VALUE = 20;
 
     private static final byte MIN_VAL_MODE_0 = 0;
@@ -37,11 +37,11 @@ public class MD22Motors extends AbstractPropulsionsMotors {
     private byte modeValue;
     private short accelValue;
 
-    public MD22Motors(final String deviceName) {
-        this(deviceName, MD22Motors.DEFAULT_MODE_VALUE, MD22Motors.DEFAULT_ACCEL_VALUE);
+    public PropulsionsMD22Motors(final String deviceName) {
+        this(deviceName, PropulsionsMD22Motors.DEFAULT_MODE_VALUE, PropulsionsMD22Motors.DEFAULT_ACCEL_VALUE);
     }
 
-    public MD22Motors(final String deviceName, final byte mode, final short accel) {
+    public PropulsionsMD22Motors(final String deviceName, final byte mode, final short accel) {
         super(0);
 
         this.deviceName = deviceName;
@@ -85,7 +85,7 @@ public class MD22Motors extends AbstractPropulsionsMotors {
             log.debug("Commande du moteur 1 : {}", cmd);
         }
         try {
-            i2cManager.sendData(deviceName, MD22Motors.MOTOR1_REGISTER, cmd);
+            i2cManager.sendData(deviceName, PropulsionsMD22Motors.MOTOR1_REGISTER, cmd);
         } catch (I2CException e) {
             log.error("Impossible d'envoyer la commande moteur 1");
         }
@@ -103,7 +103,7 @@ public class MD22Motors extends AbstractPropulsionsMotors {
             log.debug("Commande du moteur 2 : {}", cmd);
         }
         try {
-            i2cManager.sendData(deviceName, MD22Motors.MOTOR2_REGISTER, cmd);
+            i2cManager.sendData(deviceName, PropulsionsMD22Motors.MOTOR2_REGISTER, cmd);
         } catch (I2CException e) {
             log.error("Impossible d'envoyer la commande moteur 2");
         }
@@ -128,16 +128,16 @@ public class MD22Motors extends AbstractPropulsionsMotors {
         modeValue = value;
         switch (modeValue) {
             case MODE_0:
-                minVal = MD22Motors.MIN_VAL_MODE_0;
-                maxVal = MD22Motors.MAX_VAL_MODE_0;
-                offsetValue = MD22Motors.STOP_VAL_MODE_0;
+                minVal = PropulsionsMD22Motors.MIN_VAL_MODE_0;
+                maxVal = PropulsionsMD22Motors.MAX_VAL_MODE_0;
+                offsetValue = PropulsionsMD22Motors.STOP_VAL_MODE_0;
                 break;
 
             case MODE_1:
             default:
-                minVal = MD22Motors.MIN_VAL_MODE_1;
-                maxVal = MD22Motors.MAX_VAL_MODE_1;
-                offsetValue = MD22Motors.STOP_VAL_MODE_1;
+                minVal = PropulsionsMD22Motors.MIN_VAL_MODE_1;
+                maxVal = PropulsionsMD22Motors.MAX_VAL_MODE_1;
+                offsetValue = PropulsionsMD22Motors.STOP_VAL_MODE_1;
                 break;
         }
 
@@ -145,7 +145,7 @@ public class MD22Motors extends AbstractPropulsionsMotors {
         if (transmit) {
             log.info("Configuration dans le mode {} (Min = {}, Max = {}, Offset = {})", modeValue, minVal, maxVal, offsetValue);
             try {
-                i2cManager.sendData(deviceName, MD22Motors.MODE_REGISTER, modeValue);
+                i2cManager.sendData(deviceName, PropulsionsMD22Motors.MODE_REGISTER, modeValue);
             } catch (I2CException e) {
                 log.error("Impossible d'enregistrer le mode");
             }
@@ -211,7 +211,7 @@ public class MD22Motors extends AbstractPropulsionsMotors {
         if (transmit) {
             log.info("Configuration de l'acceleration : {}", accelValue);
             try {
-                i2cManager.sendData(deviceName, MD22Motors.ACCEL_REGISTER, (byte) accelValue);
+                i2cManager.sendData(deviceName, PropulsionsMD22Motors.ACCEL_REGISTER, (byte) accelValue);
             } catch (I2CException e) {
                 log.error("Impossible de configurer l'acceleration");
             }
@@ -221,7 +221,7 @@ public class MD22Motors extends AbstractPropulsionsMotors {
     @Override
     public void printVersion() {
         try {
-            i2cManager.sendData(deviceName, MD22Motors.VERSION_REGISTER);
+            i2cManager.sendData(deviceName, PropulsionsMD22Motors.VERSION_REGISTER);
             final int version = i2cManager.getData(deviceName);
             log.info("MD22 DC Motors (V : {})", version);
         } catch (I2CException e) {
