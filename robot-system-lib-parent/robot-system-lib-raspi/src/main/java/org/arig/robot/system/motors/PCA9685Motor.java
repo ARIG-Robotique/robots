@@ -22,7 +22,7 @@ public class PCA9685Motor extends AbstractMotor {
 
         maxVal = PCA9685GpioProvider.PWM_STEPS - 1;
         minVal = -maxVal;
-        prev = 0;
+        prev = Integer.MAX_VALUE;
         prevDirection = false;
     }
 
@@ -38,8 +38,12 @@ public class PCA9685Motor extends AbstractMotor {
             return;
         }
         prev = cmd;
-
-        pca9685.setPwm(motorPin, 0, cmd);
+        int pwm = Math.abs(cmd);
+        if (pwm != 0) {
+            pca9685.setPwm(motorPin, 0, pwm);
+        } else {
+            pca9685.setAlwaysOff(motorPin);
+        }
 
         final boolean dir = cmd > 0;
         if (dir == prevDirection) {
