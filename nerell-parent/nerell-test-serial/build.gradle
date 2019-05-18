@@ -1,0 +1,15 @@
+description = "ARIG Association - Nerell test serial"
+
+apply plugin: 'org.springframework.boot'
+
+jar {
+    enabled = true
+}
+
+bootJar  {
+    classifier = 'exec'
+}
+
+dependencies {
+    compile project(':robot-system-lib-parent:robot-system-lib-raspi')
+}

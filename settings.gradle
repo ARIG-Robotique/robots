@@ -9,6 +9,7 @@ include "nerell-parent:nerell-common"
 include "nerell-parent:nerell-robot"
 include "nerell-parent:nerell-utils"
 include "nerell-parent:nerell-simulator"
+include 'nerell-parent:nerell-test-serial'
 
 // Pas de second robot pour le moment en Java
 //include "elfa-parent"
