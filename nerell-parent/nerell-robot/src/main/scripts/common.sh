@@ -1,9 +1,5 @@
 #!/bin/bash
 
-echo "* Stop all SD21 motors"
-./stopAll
-echo ""
-
 echo "* Suppression des logs ..."
 rm -vf logs/0-traces.log
 echo ""
