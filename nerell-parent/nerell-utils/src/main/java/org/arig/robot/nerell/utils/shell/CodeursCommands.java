@@ -1,7 +1,7 @@
 package org.arig.robot.nerell.utils.shell;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -11,6 +11,8 @@ import org.arig.robot.system.encoders.AbstractEncoder;
 import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.utils.ThreadUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -25,15 +27,18 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @ShellComponent
-@AllArgsConstructor
+@RequiredArgsConstructor
 @ShellCommandGroup("Codeurs")
 public class CodeursCommands {
 
     private final AbstractEncoder carouselEncoder;
     private final Abstract2WheelsEncoders wheelsEncoders;
     private final AbstractPropulsionsMotors propulsionsMotors;
-    private final AbstractMotor carouselMotor;
     private final IIOService ioService;
+
+    @Autowired
+    @Qualifier("motorCarousel")
+    private AbstractMotor carouselMotor;
 
     private final List<InfoCapturePropulsions> infosPropulsions = new ArrayList<>();
     private final List<InfoCaptureCarousel> infosCarousel = new ArrayList<>();

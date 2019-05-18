@@ -39,6 +39,7 @@ import org.arig.robot.utils.ConvertionCarouselUnit;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -83,19 +84,6 @@ public class NerellCommonContext {
 //        t.addDeadZone(new Rectangle.Double(1750, 0, 200, 150)); // Monochrome Bleu
 
         return t;
-    }
-
-    @Bean
-    public AbstractPropulsionsMotors motors() {
-        // Configuration de la carte moteur propulsion.
-        final PropulsionsSD21Motors motors = new PropulsionsSD21Motors(IConstantesServos.MOTOR_DROIT, IConstantesServos.MOTOR_GAUCHE);
-        motors.assignMotors(IConstantesNerellConfig.numeroMoteurGauche, IConstantesNerellConfig.numeroMoteurDroit);
-        return motors;
-    }
-
-    @Bean
-    public AbstractMotor motorCarousel() {
-        return new SD21Motor(IConstantesServos.MOTOR_CAROUSEL);
     }
 
     @Bean
@@ -154,7 +142,7 @@ public class NerellCommonContext {
     @Bean(name = "pidDistance")
     public IPidFilter pidDistance(AbstractPropulsionsMotors motors) {
         log.info("Configuration PID Distance");
-        SimplePidFilter pid = new SimplePidFilter("distance", motors.getMinSpeed(), motors.getMaxSpeed());
+        SimplePidFilter pid = new SimplePidFilter("distance"); //, motors.getMinSpeed(), motors.getMaxSpeed());
         pid.setTunings(IConstantesNerellConfig.kpDistance, IConstantesNerellConfig.kiDistance, IConstantesNerellConfig.kdDistance);
         return pid;
     }
@@ -162,7 +150,7 @@ public class NerellCommonContext {
     @Bean(name = "pidOrientation")
     public IPidFilter pidOrientation(AbstractPropulsionsMotors motors) {
         log.info("Configuration PID Orientation");
-        SimplePidFilter pid = new SimplePidFilter("orientation", motors.getMinSpeed(), motors.getMaxSpeed());
+        SimplePidFilter pid = new SimplePidFilter("orientation"); //, motors.getMinSpeed(), motors.getMaxSpeed());
         pid.setTunings(IConstantesNerellConfig.kpOrientation, IConstantesNerellConfig.kiOrientation, IConstantesNerellConfig.kdOrientation);
         return pid;
     }
@@ -184,9 +172,9 @@ public class NerellCommonContext {
     }
 
     @Bean(name = "pidCarousel")
-    public IPidFilter pidCarousel(AbstractMotor motor) {
+    public IPidFilter pidCarousel() {
         log.info("Configuration PID Carousel");
-        SimplePidFilter pid = new SimplePidFilter("carousel", motor.getMinSpeed(), motor.getMaxSpeed());
+        SimplePidFilter pid = new SimplePidFilter("carousel"); //, motorCarousel().getMinSpeed(), motorCarousel().getMaxSpeed());
         pid.setTunings(IConstantesNerellConfig.kpCarousel, IConstantesNerellConfig.kiCarousel, IConstantesNerellConfig.kdCarousel);
         return pid;
     }

@@ -29,6 +29,9 @@ public interface IConstantesI2C {
     String PCF3_DEVICE_NAME = "PCF 3 (Output)";
     int PCF3_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3F;
 
+    String PCA9685_DEVICE_NAME = "PCA9685";
+    int PCA9685_ADDRESS = 0x40;
+
     String I2C_ADC_DEVICE_NAME = "I2C ADC";
     int I2C_ADC_ADDRESS = 0x48;
 

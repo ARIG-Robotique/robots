@@ -1,8 +1,13 @@
 package org.arig.robot.config.spring;
 
+import com.pi4j.gpio.extension.pca.PCA9685GpioProvider;
+import com.pi4j.gpio.extension.pca.PCA9685Pin;
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.communication.raspi.RaspiI2CManager;
@@ -24,6 +29,10 @@ import org.arig.robot.system.capteurs.TinyLidar;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.ARIGEncoder;
+import org.arig.robot.system.motors.AbstractMotor;
+import org.arig.robot.system.motors.AbstractPropulsionsMotors;
+import org.arig.robot.system.motors.PCA9685Motor;
+import org.arig.robot.system.motors.PropulsionsPCA9685Motors;
 import org.arig.robot.system.process.RPLidarBridgeProcess;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +42,7 @@ import org.springframework.core.env.Environment;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -82,6 +92,7 @@ public class NerellRobotContext {
         manager.registerDevice(IConstantesI2C.PCF1_DEVICE_NAME, IConstantesI2C.PCF1_ADDRESS);
         manager.registerDevice(IConstantesI2C.PCF2_DEVICE_NAME, IConstantesI2C.PCF2_ADDRESS);
         manager.registerDevice(IConstantesI2C.PCF3_DEVICE_NAME, IConstantesI2C.PCF3_ADDRESS);
+        manager.registerDevice(IConstantesI2C.PCA9685_DEVICE_NAME, IConstantesI2C.PCA9685_ADDRESS);
 
         return manager;
     }
@@ -94,6 +105,35 @@ public class NerellRobotContext {
     @Bean
     public ARIG2WheelsEncoders encoders() {
         return new ARIG2WheelsEncoders(IConstantesI2C.CODEUR_MOTEUR_GAUCHE, IConstantesI2C.CODEUR_MOTEUR_DROIT);
+    }
+
+    @SneakyThrows
+    @Bean
+    public PCA9685GpioProvider pca9685GpioControler(I2CBus bus) {
+        final PCA9685GpioProvider gpioProvider = new PCA9685GpioProvider(bus, 0x40, new BigDecimal(200));
+
+        final GpioController gpio = GpioFactory.getInstance();
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_00);
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_01);
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_02);
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_03);
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_04);
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_05);
+
+        return gpioProvider;
+    }
+
+    @Bean
+    public AbstractMotor motorCarousel() {
+        return new PCA9685Motor(PCA9685Pin.PWM_05, PCA9685Pin.PWM_04);
+    }
+
+    @Bean
+    public AbstractPropulsionsMotors motors() {
+        // Configuration de la carte moteur propulsion.
+        final PropulsionsPCA9685Motors motors = new PropulsionsPCA9685Motors(PCA9685Pin.PWM_01, PCA9685Pin.PWM_00, PCA9685Pin.PWM_03, PCA9685Pin.PWM_02);
+        motors.assignMotors(IConstantesNerellConfig.numeroMoteurGauche, IConstantesNerellConfig.numeroMoteurDroit);
+        return motors;
     }
 
     @Bean

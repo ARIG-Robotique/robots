@@ -25,6 +25,7 @@ public class CarouselManager implements ICarouselManager {
     private AbstractEncoder encoder;
 
     @Autowired
+    @Qualifier("motorCarousel")
     private AbstractMotor motor;
 
     @Autowired
