@@ -77,25 +77,49 @@ public class TrapezoidalRampFilter extends AbstractRampFilter {
         // Calcul de la distance de décéleration en fonction des parametres
         posToDecel = conv.mmToPulse(currentVitesse * currentVitesse / (2 * getRampDec()));
 
-        if ((Math.abs(input) <= posToDecel && frein) || currentVitesse > getConsigneVitesse()) {
+        if (input > 0 && currentVitesse >= 0) {
+            // Distance a parcourir en avant
+            if (currentVitesse > getConsigneVitesse() || (input <= posToDecel && frein)) {
+                // Trop vite
+                currentVitesse -= getStepVitesseDecel();
+
+            } else if (currentVitesse < getConsigneVitesse()) {
+                // Pas assez vite
+                currentVitesse += getStepVitesseAccel();
+
+                // Evite les oscilations en régime établie
+                currentVitesse = Math.min(currentVitesse, getConsigneVitesse());
+            }
+
+        } else if (input < 0 && currentVitesse > 0) {
+            // Distance dépasser en avant
             currentVitesse -= getStepVitesseDecel();
 
-            // Controle pour interdire les valeurs négatives
-            currentVitesse = Math.max(currentVitesse, 0);
+        } else if (input < 0 && currentVitesse <= 0) {
+            // Distance a parcourir en arrière
+            if (currentVitesse < -getConsigneVitesse() || (input >= -posToDecel && frein)) {
+                // Trop vite
+                currentVitesse += getStepVitesseDecel();
 
-        } else if (currentVitesse < getConsigneVitesse()) {
-            currentVitesse += getStepVitesseAccel();
+            } else if (currentVitesse > -getConsigneVitesse()) {
+                // Pas assez vite
+                currentVitesse -= getStepVitesseAccel();
 
-            // Evite les oscilations en régime établie
-            currentVitesse = Math.min(currentVitesse, getConsigneVitesse());
+                // Evite les oscilations en régime établie
+                currentVitesse = Math.max(currentVitesse, -getConsigneVitesse());
+            }
+
+
+        } else if (input > 0 && currentVitesse < 0) {
+            // Distance dépasser en arrière
+            currentVitesse += getStepVitesseDecel();
+
+        } else {
+            // Pas de distance
+            currentVitesse = 0;
         }
-        vitesseMax = Math.max(vitesseMax, currentVitesse);
 
         // Calcul de la valeur filtré de position en fonction de la vitesse calculé sur la rampe.
-        double outPosition = conv.mmToPulse(currentVitesse) * getSampleTimeS();
-        if (input < 0) {
-            outPosition = -outPosition;
-        }
-        return (long) outPosition;
+        return (long) (conv.mmToPulse(currentVitesse) * getSampleTimeS());
     }
 }

@@ -80,24 +80,16 @@ public class AsservissementCommands {
                 ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
     }
 
+    @ShellMethod("Réglage PID Distance")
     public void pidDistance(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
         pidDistance.setTunings(kp, ki * IConstantesNerellConfig.asservTimeS, kd / IConstantesNerellConfig.asservTimeS);
         pidDistance.reset();
     }
 
+    @ShellMethod("Réglage PID Orientation")
     public void pidOrientation(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
         pidOrientation.setTunings(kp, ki * IConstantesNerellConfig.asservTimeS, kd / IConstantesNerellConfig.asservTimeS);
         pidOrientation.reset();
-    }
-
-    public void pidMoteurDroit(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
-        pidMoteurDroit.setTunings(kp, ki * IConstantesNerellConfig.asservTimeS, kd / IConstantesNerellConfig.asservTimeS);
-        pidMoteurDroit.reset();
-    }
-
-    public void pidMoteurGauche(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
-        pidMoteurGauche.setTunings(kp, ki * IConstantesNerellConfig.asservTimeS, kd / IConstantesNerellConfig.asservTimeS);
-        pidMoteurGauche.reset();
     }
 
     @ShellMethodAvailability("alimentationOk")

@@ -66,15 +66,12 @@ public class ExperimentalRampFilter extends AbstractRampFilter {
      */
     @Override
     protected Long rampFilter(Long input) {
-        // Définition de la référence sur la position restante (input)
-        DifferenceFilter diff = new DifferenceFilter(input.doubleValue());
-
         // Variable de fonctionnement
-        double position = iPos.filter(0d);
-        double currentSpeed = dSpeed.filter(position);
+        double positionParcourue = iPos.filter(0d); // Récupérer de ce qui est parcouru
+        double currentSpeed = dSpeed.filter(positionParcourue); // Dérivé de la position = vitesse courante
         double speed = 0d;
 
-        double deltaPosition = diff.filter(position);
+        double deltaPosition = input.doubleValue() - positionParcourue; // Récupération du reste à parcourir
         if (deltaPosition > 0) {
             // On n'est avant le point a atteindre
             speed = speedCommand(deltaPosition);
@@ -96,8 +93,8 @@ public class ExperimentalRampFilter extends AbstractRampFilter {
             speed = deltaPosition;
         }
 
-        position = iPos.filter(speed);
-        return Double.valueOf(conv.mmToPulse(position) * getSampleTimeS()).longValue();
+        iPos.filter(speed);
+        return (long) (conv.mmToPulse(speed) * getSampleTimeS());
     }
 
     private double speedCommand(double deltaPosition) {

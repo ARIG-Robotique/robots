@@ -31,7 +31,7 @@ public abstract class AbstractPidFilter implements IPidFilter {
     final ProportionalFilter propP, propI, propD;
     private final IntegralFilter integral;
     private final DerivateFilter derivate;
-    private final LimiterFilter limiter;
+    //private final LimiterFilter limiter;
 
     private final SerialChainFilter<Double> integralChain, derivateChain, completePid;
     private final ParallelChainFilter pid;
@@ -43,12 +43,12 @@ public abstract class AbstractPidFilter implements IPidFilter {
         propD = new ProportionalFilter(0d);
         integral = new IntegralFilter(0d);
         derivate = new DerivateFilter(0d);
-        limiter = new LimiterFilter(min, max);
+        //limiter = new LimiterFilter(min, max);
 
         integralChain = new SerialChainFilter<>();
         integralChain.addFilter(integral);
         integralChain.addFilter(propI);
-        integralChain.addFilter(limiter);
+        //integralChain.addFilter(limiter);
 
         derivateChain = new SerialChainFilter<>();
         derivateChain.addFilter(derivate);
@@ -61,7 +61,7 @@ public abstract class AbstractPidFilter implements IPidFilter {
 
         completePid = new SerialChainFilter<>();
         completePid.addFilter(pid);
-        completePid.addFilter(limiter);
+        //completePid.addFilter(limiter);
     }
 
     protected abstract String pidImpl();

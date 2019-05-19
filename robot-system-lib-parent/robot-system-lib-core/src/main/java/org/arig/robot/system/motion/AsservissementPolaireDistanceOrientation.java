@@ -2,7 +2,9 @@ package org.arig.robot.system.motion;
 
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
+import org.arig.robot.filters.ramp.experimental.ExperimentalRampFilter;
 import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -56,18 +58,30 @@ public class AsservissementPolaireDistanceOrientation implements IAsservissement
 
     @Override
     public void process() {
-        rampDistance.setConsigneVitesse(cmdRobot.getVitesse().getDistance());
-        rampDistance.setFrein(cmdRobot.isFrein());
-        final double positionDistance = rampDistance.filter(cmdRobot.getConsigne().getDistance());
-        pidDistance.setConsigne(positionDistance);
-        final double distance = pidDistance.filter(encoders.getDistance());
+        final double distance;
+        final double orientation;
+
+        // Distance
+        if (cmdRobot.isType(TypeConsigne.DIST) || cmdRobot.isType(TypeConsigne.XY)) {
+            rampDistance.setConsigneVitesse(cmdRobot.getVitesse().getDistance());
+            rampDistance.setFrein(cmdRobot.isFrein());
+            final double positionDistance = rampDistance.filter(cmdRobot.getConsigne().getDistance());
+            pidDistance.setConsigne(positionDistance);
+            distance = pidDistance.filter(encoders.getDistance());
+        } else {
+            distance = 0;
+        }
 
         // Orientation
-        rampOrientation.setConsigneVitesse(cmdRobot.getVitesse().getOrientation());
-        rampOrientation.setFrein(true);
-        final double positionOrientation = rampOrientation.filter(cmdRobot.getConsigne().getOrientation());
-        pidOrientation.setConsigne(positionOrientation);
-        final double orientation = pidOrientation.filter(encoders.getOrientation());
+        if (cmdRobot.isType(TypeConsigne.ANGLE) || cmdRobot.isType(TypeConsigne.XY)) {
+            rampOrientation.setConsigneVitesse(cmdRobot.getVitesse().getOrientation());
+            rampOrientation.setFrein(true);
+            final double positionOrientation = rampOrientation.filter(cmdRobot.getConsigne().getOrientation());
+            pidOrientation.setConsigne(positionOrientation);
+            orientation = pidOrientation.filter(encoders.getOrientation());
+        } else {
+            orientation = 0;
+        }
 
         // Consigne moteurs
         double cmdMotDroit = distance + orientation;
