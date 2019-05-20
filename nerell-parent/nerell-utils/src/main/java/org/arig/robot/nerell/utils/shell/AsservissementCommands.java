@@ -47,8 +47,7 @@ public class AsservissementCommands {
     private final Position currentPosition;
     private final IPidFilter pidDistance;
     private final IPidFilter pidOrientation;
-    private final IPidFilter pidMoteurDroit;
-    private final IPidFilter pidMoteurGauche;
+    private final IPidFilter pidCarousel;
 
     private void startMonitoring() {
         final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
@@ -92,6 +91,12 @@ public class AsservissementCommands {
         pidOrientation.reset();
     }
 
+    @ShellMethod("Réglage PID Carousel")
+    public void pidCarousel(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
+        pidCarousel.setTunings(kp, ki * IConstantesNerellConfig.asservTimeCarouselS, kd / IConstantesNerellConfig.asservTimeCarouselS);
+        pidCarousel.reset();
+    }
+
     @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Asservissement du robot")
     public void asservRobot(@NotNull TypeConsigne[] typeConsignes, long distance, long orientation, long vitesseDistance, long vitesseOrientation) {
@@ -131,10 +136,10 @@ public class AsservissementCommands {
 
     @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Asservissement du Carousel")
-    public void asservCarousel(int index) {
+    public void asservCarousel(int index, long vitesse) {
         startMonitoring();
 
-        cmdAsservCarousel.getVitesse().setValue(100);
+        cmdAsservCarousel.getVitesse().setValue(vitesse);
         cmdAsservCarousel.getConsigne().setValue(convCarousel.indexToPulse(index));
         cmdAsservCarousel.setFrein(true);
 

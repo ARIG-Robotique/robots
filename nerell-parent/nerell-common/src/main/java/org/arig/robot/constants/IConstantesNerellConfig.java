@@ -14,6 +14,7 @@ public interface IConstantesNerellConfig {
     double asservTimeMs = 10;
     double asservTimeS = IConstantesNerellConfig.asservTimeMs / 1000;
     double asservTimeCarouselMs = 50;
+    double asservTimeCarouselS = IConstantesNerellConfig.asservTimeCarouselMs / 1000;
 
     double i2cReadTimeMs = 50;
 
@@ -98,8 +99,8 @@ public interface IConstantesNerellConfig {
     double kdMotGauche = 0.0009 / asservTimeS;
 
     double kpCarousel = 1;
-    double kiCarousel = 0;
-    double kdCarousel = 0;
+    double kiCarousel = 0 * asservTimeCarouselS;
+    double kdCarousel = 0 / asservTimeCarouselS;
 
     // --------------------------- //
     // Paramètre mouvement manager //

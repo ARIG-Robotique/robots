@@ -189,7 +189,7 @@ public class NerellCommonContext {
     @Bean(name = "rampCarousel")
     public TrapezoidalRampFilter rampCarousel() {
         log.info("Configuration TrapezoidalRampFilter Carousel");
-        return new TrapezoidalRampFilter("orientation", IConstantesNerellConfig.asservTimeCarouselMs, IConstantesNerellConfig.rampAccCarousel, IConstantesNerellConfig.rampDecCarousel);
+        return new TrapezoidalRampFilter("carousel", IConstantesNerellConfig.asservTimeCarouselMs, IConstantesNerellConfig.rampAccCarousel, IConstantesNerellConfig.rampDecCarousel);
     }
 
     @Bean
