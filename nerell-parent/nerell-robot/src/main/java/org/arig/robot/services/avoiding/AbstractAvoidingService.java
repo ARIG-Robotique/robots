@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractAvoidingService implements IAvoidingService, InitializingBean {
 
     protected static final int SEUIL_DISTANCE_PROX_LIDAR_MM = 450;
-    protected static final int SEUIL_DISTANCE_AVOID_LIDAR_MM = 600;
+    protected static final int SEUIL_DISTANCE_AVOID_LIDAR_MM = 900;
 
     @Autowired
     private TableUtils tableUtils;
