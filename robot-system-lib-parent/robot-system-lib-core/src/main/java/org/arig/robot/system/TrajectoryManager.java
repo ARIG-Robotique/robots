@@ -497,6 +497,19 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                 // Trajet ok si il reste moins de 2cm
                 trajetOk = targetDistMm <= 20;
 
+                if (!trajetOk) {
+                    // Le trajet n'est pas OK
+                    nbTryPath++;
+
+                    if (nbTryPath >= 3) {
+                        log.warn("Trop de tentative de path, on passe à l'action suivante");
+                        throw new AvoidingException();
+                    }
+
+                    log.warn("Tentative de path non atteint, on réessai (tentative : {})", nbTryPath);
+                    prepareNextMouvement();
+                }
+
             } catch (RefreshPathFindingException e) {
                 nbCollisionDetected++;
                 log.info("Collision detectée n° {}, on recalcul un autre chemin", nbCollisionDetected);
@@ -505,19 +518,6 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                     log.warn("Trop de collision ({}), on passe à la suite", nbCollisionDetected);
                     throw new AvoidingException();
                 }
-            }
-
-            if (!trajetOk) {
-                // Le trajet n'est pas OK
-                nbTryPath++;
-
-                if (nbTryPath >= 3) {
-                    log.warn("Trop de tentative de path, on passe à l'action suivante");
-                    throw new AvoidingException();
-                }
-
-                log.warn("Tentative de path non atteint, on réessai (tentative : {})", nbTryPath);
-                prepareNextMouvement();
             }
         } while (!trajetOk);
     }
