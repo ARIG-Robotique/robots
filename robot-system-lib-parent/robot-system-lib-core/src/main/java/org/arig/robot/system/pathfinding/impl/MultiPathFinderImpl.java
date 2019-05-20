@@ -134,7 +134,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
     }
 
     @Override
-    public void addObstacles(Shape... obstacles) {
+    public void setObstacles(Shape... obstacles) {
         log.info("Ajout de {} obstacles", obstacles.length);
 
         if (ArrayUtils.isEmpty(obstacles)) {

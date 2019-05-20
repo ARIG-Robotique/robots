@@ -2,13 +2,10 @@ package org.arig.robot.services.avoiding;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.Shape;
 import org.arig.robot.model.lidar.ScanInfos;
-import org.arig.robot.model.monitor.MonitorTimeSerie;
-import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -18,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,9 +24,6 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
 
     protected static final int SEUIL_DISTANCE_PROX_LIDAR_MM = 450;
     protected static final int SEUIL_DISTANCE_AVOID_LIDAR_MM = 600;
-
-    @Autowired
-    private IMonitoringWrapper monitoringWrapper;
 
     @Autowired
     private TableUtils tableUtils;
@@ -43,14 +38,11 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
     @Autowired
     private ILidarTelemeter lidar;
 
-    @Autowired
-    private CommandeRobot cmdRobot;
-
     // Stockages des points d'obstacles
     @Getter
-    private final List<Point> detectedPointsMm = new ArrayList<>();
+    private final List<Point> detectedPointsMm = Collections.synchronizedList(new ArrayList<>());
     @Getter
-    protected final List<Shape> collisionsShape = new ArrayList<>();
+    protected final List<Shape> collisionsShape = Collections.synchronizedList(new ArrayList<>());
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -75,18 +67,9 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             );
         }
 
-        // Construction du monitoring
-        MonitorTimeSerie serie = new MonitorTimeSerie()
-                .measurementName("avoiding")
-                .addTag(MonitorTimeSerie.TAG_NAME, "lidar_top")
-                .addField("nbPointLidarDetecte", detectedPointsMm.size());
-        monitoringWrapper.addTimeSeriePoint(serie);
-
         // 3. On delegue à l'implémentation d'évittement
-        synchronized (this.detectedPointsMm) {
-            this.detectedPointsMm.clear();
-            this.detectedPointsMm.addAll(detectedPointsMm);
-        }
+        this.detectedPointsMm.clear();
+        this.detectedPointsMm.addAll(detectedPointsMm);
 
         processAvoiding();
     }
@@ -105,18 +88,20 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             return false;
         }
 
-        double alpha = Math.toDegrees(Math.atan2(Math.toRadians(dY), Math.toRadians(dX)));
-        double dA = alpha - conv.pulseToDeg(position.getAngle());
-        if (dA > 180) {
-            dA -= 360;
-        } else if (dA < -180) {
-            dA += 360;
-        }
+        return true;
 
-        if (cmdRobot.getConsigne().getDistance() > 0) {
-            return dA > -45 && dA < 45;
-        } else {
-            return Math.abs(dA) < 180 && Math.abs(dA) > 135;
-        }
+//        double alpha = Math.toDegrees(Math.atan2(Math.toRadians(dY), Math.toRadians(dX)));
+//        double dA = alpha - conv.pulseToDeg(position.getAngle());
+//        if (dA > 180) {
+//            dA -= 360;
+//        } else if (dA < -180) {
+//            dA += 360;
+//        }
+//
+//        if (cmdRobot.getConsigne().getDistance() > 0) {
+//            return dA > -45 && dA < 45;
+//        } else {
+//            return Math.abs(dA) < 180 && Math.abs(dA) > 135;
+//        }
     }
 }

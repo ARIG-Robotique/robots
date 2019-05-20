@@ -34,6 +34,6 @@ public interface IPathFinder {
      *
      * @param obstacles Une forme représentant les obstacles détecté.
      */
-    void addObstacles(Shape... obstacles);
+    void setObstacles(Shape... obstacles);
 
 }

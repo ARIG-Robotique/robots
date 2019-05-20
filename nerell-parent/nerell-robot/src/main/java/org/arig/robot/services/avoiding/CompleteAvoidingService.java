@@ -5,6 +5,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.arig.robot.model.Cercle;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
+import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.enums.TypeMouvement;
 import org.arig.robot.model.monitor.AbstractMonitorMouvement;
 import org.arig.robot.model.monitor.MonitorMouvementPath;
@@ -37,6 +38,9 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
 
     @Autowired
     private IPathFinder pathFinder;
+
+    @Autowired
+    private RobotStatus rs;
 
     private boolean hasObstacle = false;
 
@@ -150,17 +154,21 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
 
     private void setObstacles(List<java.awt.Shape> ostacles) {
         hasObstacle = true;
-        pathFinder.addObstacles(ostacles.toArray(new java.awt.Shape[0]));
+        pathFinder.setObstacles(ostacles.toArray(new java.awt.Shape[0]));
 
         // On rafraichit le path
-        trajectoryManager.refreshPathFinding();
+        if (rs.isAvoidanceEnabled()) {
+            trajectoryManager.refreshPathFinding();
+        }
     }
 
     private void clearOstacles() {
         hasObstacle = false;
-        pathFinder.addObstacles();
+        pathFinder.setObstacles();
 
         // On rafraichit le path
-        trajectoryManager.refreshPathFinding();
+        if (rs.isAvoidanceEnabled()) {
+            trajectoryManager.refreshPathFinding();
+        }
     }
 }

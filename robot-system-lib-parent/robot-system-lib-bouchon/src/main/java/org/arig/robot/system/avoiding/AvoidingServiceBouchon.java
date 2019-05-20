@@ -13,7 +13,6 @@ import org.arig.robot.model.monitor.MonitorMouvementPath;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -206,7 +205,7 @@ public class AvoidingServiceBouchon implements IAvoidingService, InitializingBea
 
     private void setObstacles(List<java.awt.Shape> ostacles) {
         hasObstacle = true;
-        pathFinder.addObstacles(ostacles.toArray(new java.awt.Shape[0]));
+        pathFinder.setObstacles(ostacles.toArray(new java.awt.Shape[0]));
 
         // On rafraichit le path
         trajectoryManager.refreshPathFinding();
@@ -214,7 +213,7 @@ public class AvoidingServiceBouchon implements IAvoidingService, InitializingBea
 
     private void clearOstacles() {
         hasObstacle = false;
-        pathFinder.addObstacles();
+        pathFinder.setObstacles();
 
         // On rafraichit le path
         trajectoryManager.refreshPathFinding();

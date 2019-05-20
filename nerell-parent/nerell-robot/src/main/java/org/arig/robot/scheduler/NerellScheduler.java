@@ -58,9 +58,9 @@ public class NerellScheduler {
     @Autowired
     private LeftSideService leftSideService;
 
-    @Scheduled(fixedDelay = 100)
+    @Scheduled(fixedDelay = 10)
     public void obstacleAvoidanceTask() {
-        if (rs.isAvoidanceEnabled()) {
+        if (rs.isMatchEnabled()) {
             avoidingService.process();
         }
     }

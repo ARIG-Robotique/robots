@@ -99,7 +99,7 @@ public class MultiPathFinderTest {
         Assert.assertNotNull(cheminSansObstacles);
         Assert.assertTrue(cheminSansObstacles.hasNext());
 
-        pf.addObstacles(new Ellipse2D.Double(195 - 20, 80 - 20, 40, 40));
+        pf.setObstacles(new Ellipse2D.Double(195 - 20, 80 - 20, 40, 40));
         Chemin cheminAvecObstacles = pf.findPath(from, to);
         Assert.assertNotNull(cheminAvecObstacles);
         Assert.assertTrue(cheminAvecObstacles.hasNext());
