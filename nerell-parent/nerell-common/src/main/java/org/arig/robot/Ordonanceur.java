@@ -179,7 +179,7 @@ public class Ordonanceur {
         pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
 
         // Attente la mise de la tirette
-        log.info("Mise de la tirrette pour lancer la calibration");
+        log.info("Mise de la tirette pour lancer la calibration");
         while (!ioService.tirette()) {
             waitTimeMs(100);
         }
