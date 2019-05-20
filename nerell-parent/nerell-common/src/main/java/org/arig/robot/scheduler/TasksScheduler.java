@@ -1,7 +1,6 @@
 package org.arig.robot.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
@@ -14,8 +13,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author gdepuille on 23/12/14.

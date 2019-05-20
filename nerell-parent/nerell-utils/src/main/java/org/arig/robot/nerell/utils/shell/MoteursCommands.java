@@ -1,6 +1,5 @@
 package org.arig.robot.nerell.utils.shell;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.system.motors.AbstractMotor;

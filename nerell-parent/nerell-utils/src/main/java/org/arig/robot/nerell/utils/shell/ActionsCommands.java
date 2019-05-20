@@ -1,19 +1,9 @@
 package org.arig.robot.nerell.utils.shell;
 
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.Ordonanceur;
-import org.arig.robot.services.IIOService;
-import org.arig.robot.strategy.AbstractAction;
-import org.arig.robot.strategy.actions.disabled.atomfactory.*;
-import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
-
-import javax.validation.constraints.NotNull;
 
 @Slf4j
 @ShellComponent

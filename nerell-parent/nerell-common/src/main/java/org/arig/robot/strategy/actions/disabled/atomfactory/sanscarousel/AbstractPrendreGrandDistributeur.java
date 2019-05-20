@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.disabled.atomfactory.sanscarousel;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

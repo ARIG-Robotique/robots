@@ -7,7 +7,6 @@ import org.arig.robot.filters.chain.ParallelChainFilter;
 import org.arig.robot.filters.chain.SerialChainFilter;
 import org.arig.robot.filters.common.DerivateFilter;
 import org.arig.robot.filters.common.IntegralFilter;
-import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.common.ProportionalFilter;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;

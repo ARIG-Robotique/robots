@@ -20,8 +20,6 @@ import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 @Slf4j
 @Component
 public class DeposeAccelerateur extends AbstractAction {

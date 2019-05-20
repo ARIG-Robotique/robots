@@ -2,7 +2,6 @@ package org.arig.robot.system.motion;
 
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
-import org.arig.robot.filters.ramp.experimental.ExperimentalRampFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;

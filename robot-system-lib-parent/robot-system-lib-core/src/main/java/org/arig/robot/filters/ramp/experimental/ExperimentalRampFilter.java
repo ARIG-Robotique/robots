@@ -1,7 +1,6 @@
 package org.arig.robot.filters.ramp.experimental;
 
 import org.arig.robot.filters.common.DerivateFilter;
-import org.arig.robot.filters.common.DifferenceFilter;
 import org.arig.robot.filters.common.IntegralFilter;
 import org.arig.robot.filters.ramp.AbstractRampFilter;
 

@@ -3,7 +3,6 @@ package org.arig.robot.web.controller;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesI2CAdc;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.IIOService;

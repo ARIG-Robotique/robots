@@ -3,7 +3,6 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Triple;
 import org.arig.robot.constants.IConstantesServos;
-import org.arig.robot.model.RobotStatus;
 import org.arig.robot.system.servos.SD21Servos;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;

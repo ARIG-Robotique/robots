@@ -2,7 +2,6 @@ package org.arig.robot.strategy.actions.disabled.atomfactory.sanscarousel;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.strategy.actions.active.AbstractPrendreGrandDistributeur;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

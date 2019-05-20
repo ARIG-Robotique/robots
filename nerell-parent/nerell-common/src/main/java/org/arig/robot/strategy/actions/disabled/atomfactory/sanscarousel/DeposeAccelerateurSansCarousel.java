@@ -14,7 +14,6 @@ import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
-import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
