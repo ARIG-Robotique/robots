@@ -45,6 +45,7 @@ public interface IConstantesNerellConfig {
 
     // Carousel
     long countPerCarouselIndex = 1305;
+    long countOffsetInitCarousel = 1350;
 
     // ------------------------ //
     // Configuration des rampes //

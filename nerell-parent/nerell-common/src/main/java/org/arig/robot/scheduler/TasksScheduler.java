@@ -75,9 +75,9 @@ public class TasksScheduler implements InitializingBean {
                 if (ellapsedAsservCarousel >= IConstantesNerellConfig.asservTimeCarouselMs * 1000000) {
                     lastTimeAsservCarousel = timeStartAsservCarousel;
 
-                    if (rs.isAsservCarouselEnabled()) {
+                    if (rs.isCarouselInitialized() && rs.isAsservCarouselEnabled()) {
                         carouselManager.process();
-                    } else {
+                    } else if (rs.isCarouselInitialized()) {
                         carouselManager.stop();
                     }
 

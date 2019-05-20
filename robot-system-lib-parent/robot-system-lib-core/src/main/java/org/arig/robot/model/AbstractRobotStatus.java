@@ -49,6 +49,19 @@ public abstract class AbstractRobotStatus {
     }
 
     @Setter(AccessLevel.NONE)
+    private boolean carouselInitialized = false;
+
+    public void carouselIsInitialized() {
+        log.info("Initialisation du Carousel effectué");
+        carouselInitialized = true;
+    }
+
+    public void carouselIsNotInitialized() {
+        log.info("Désinitialisation du Carousel effectué");
+        carouselInitialized = false;
+    }
+
+    @Setter(AccessLevel.NONE)
     private boolean avoidanceEnabled = false;
 
     public void enableAvoidance() {

@@ -69,6 +69,11 @@ public class CarouselManager implements ICarouselManager {
         encoder.reset();
     }
 
+    @Override
+    public void rawMotorSpeed(int speed) {
+        motor.speed(speed);
+    }
+
     /**
      * Stop.
      */

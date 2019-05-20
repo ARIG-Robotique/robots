@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.arig.robot.Ordonanceur;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.filters.pid.IPidFilter;
@@ -132,6 +133,13 @@ public class AsservissementCommands {
     public void disableAsservRobot() {
         rs.disableAsserv();
         endMonitoring();
+    }
+
+
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Initialisation carousel")
+    public void initialisationCarousel() {
+        Ordonanceur.getInstance().initialisationCarousel();
     }
 
     @ShellMethodAvailability("alimentationOk")

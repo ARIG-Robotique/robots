@@ -14,6 +14,8 @@ public interface ICarouselManager {
 
     void resetEncodeur();
 
+    void rawMotorSpeed(int speed);
+
     void stop();
 
     void process();

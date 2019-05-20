@@ -17,10 +17,12 @@ import org.arig.robot.services.CarouselService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.MagasinService;
 import org.arig.robot.services.ServosService;
+import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -58,13 +60,10 @@ public class Ordonanceur {
     private ServosService servosService;
 
     @Autowired
-    private MagasinService magasinService;
-
-    @Autowired
-    private CarouselService carouselService;
-
-    @Autowired
     private ITrajectoryManager trajectoryManager;
+
+    @Autowired
+    private ICarouselManager carouselManager;
 
     @Autowired
     private IPathFinder pathFinder;
@@ -113,22 +112,18 @@ public class Ordonanceur {
 
         if (!ioService.auOk()) {
             log.warn("L'arrêt d'urgence est coupé.");
-            //ioService.colorLedRGBKo();
             while(!ioService.auOk()) {
-                waitTimeMs(500);
+                ThreadUtils.sleep(500);
             }
         }
 
         HealthInfos lidarHealth = lidar.healthInfo();
         if (!lidarHealth.isOk()) {
             log.error("Status du Lidar KO : {} - {} - Code {}", lidarHealth.getState(), lidarHealth.getValue(), lidarHealth.getErrorCode());
-            //ioService.colorLedRGBKo();
             return;
         }
 
-        //ioService.colorLedRGBOk();
         log.info("Arrêt d'urgence OK");
-
         log.info("Position de préparation des servos moteurs");
         servosService.cyclePreparation();
 
@@ -141,14 +136,16 @@ public class Ordonanceur {
             log.warn("Alimentation puissance NOK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
             //ioService.colorLedRGBKo();
             while(!ioService.alimPuissance12VOk() && !ioService.alimPuissance5VOk()) {
-                waitTimeMs(500);
+                ThreadUtils.sleep(500);
             }
         }
-        //ioService.colorLedRGBOk();
         log.info("Alimentation puissance OK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
 
         log.info("Démarrage du lidar");
         lidar.startScan();
+
+        log.info("Initialisation du Carousel");
+        initialisationCarousel();
 
         log.warn("La tirette n'est pas la et la selection couleur n'as pas eu lieu. Phase de préparation Nerell");
         boolean selectionCouleur = false;
@@ -164,7 +161,7 @@ public class Ordonanceur {
                 ioService.teamColorLedRGB();
             }
 
-            waitTimeMs(100);
+            ThreadUtils.sleep(100);
         }*/
 
         List<EStrategy> strategies = ioService.strategies();
@@ -181,7 +178,7 @@ public class Ordonanceur {
         // Attente la mise de la tirette
         log.info("Mise de la tirette pour lancer la calibration");
         while (!ioService.tirette()) {
-            waitTimeMs(100);
+            ThreadUtils.sleep(100);
         }
 
         // Initialisation Mouvement Manager
@@ -196,7 +193,7 @@ public class Ordonanceur {
         // Attente tirette.
         log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
         while(ioService.tirette()) {
-            waitTimeMs(1);
+            ThreadUtils.sleep(1);
         }
 
         // Début du compteur de temps pour le match
@@ -213,7 +210,7 @@ public class Ordonanceur {
         // Match de XX secondes.
 //        boolean activateCollecteAdverse = false;
         while(robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
-            waitTimeMs(200);
+            ThreadUtils.sleep(200);
         }
 
         robotStatus.stopMatch();
@@ -247,13 +244,12 @@ public class Ordonanceur {
         // Attente remise de la tirette pour ejecter les palets en stock
         while(!ioService.tirette() || !ioService.auOk()) {
             //ioService.colorLedRGBOk();
-            waitTimeMs(500);
+            ThreadUtils.sleep(500);
             //ioService.clearColorLedRGB();
-            waitTimeMs(500);
+            ThreadUtils.sleep(500);
         }
 
         // Ejection du stock
-        //ioService.colorLedRGBKo();
         ioService.enableAlim5VPuissance();
         ioService.enableAlim12VPuissance();
 
@@ -262,7 +258,6 @@ public class Ordonanceur {
 
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();
-        //ioService.clearColorLedRGB();
     }
 
     public void callageBordure() throws RefreshPathFindingException {
@@ -312,11 +307,31 @@ public class Ordonanceur {
         }
     }
 
-    private void waitTimeMs(long ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            log.error("Interruption du Thread", e);
+    public void initialisationCarousel() {
+        robotStatus.carouselIsNotInitialized();
+        robotStatus.disableAsservCarousel();
+
+        carouselManager.rawMotorSpeed(500);
+        ThreadUtils.sleep(2000);
+        while (!ioService.indexCarousel()) {
+            ThreadUtils.sleep(10);
         }
+        carouselManager.rawMotorSpeed(-500);
+        while (ioService.indexCarousel()) {
+            ThreadUtils.sleep(10);
+        }
+        carouselManager.rawMotorSpeed(400);
+        while (!ioService.indexCarousel()) {
+            ThreadUtils.sleep(10);
+        }
+        carouselManager.stop();
+        carouselManager.resetEncodeur();
+
+        robotStatus.carouselIsInitialized();
+        robotStatus.enableAsservCarousel();
+
+        carouselManager.setVitesse(100);
+        carouselManager.tourne(5 * IConstantesNerellConfig.countPerCarouselIndex + IConstantesNerellConfig.countOffsetInitCarousel);
+        carouselManager.waitMouvement();
     }
 }

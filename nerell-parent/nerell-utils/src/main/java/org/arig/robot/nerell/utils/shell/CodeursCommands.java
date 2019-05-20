@@ -174,40 +174,6 @@ public class CodeursCommands {
         log.info("Moyenne : {}", sum / nbtours);
     }
 
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Initialisation carousel")
-    public void initialisationCarousel(int value) {
-
-        carouselEncoder.reset();
-        rs.disableAsservCarousel();
-
-        carouselMotor.speed(300);
-        ThreadUtils.sleep(2000);
-        while (!ioService.indexCarousel()) {
-            ThreadUtils.sleep(10);
-        }
-        carouselMotor.speed(-300);
-        while (ioService.indexCarousel()) {
-            ThreadUtils.sleep(10);
-        }
-        carouselMotor.speed(200);
-        while (!ioService.indexCarousel()) {
-            ThreadUtils.sleep(10);
-        }
-        carouselMotor.stop();
-        carouselEncoder.lectureValeur();
-
-        rs.enableAsservCarousel();
-
-        cmdAsservCarousel.getVitesse().setValue(100);
-        cmdAsservCarousel.getConsigne().setValue(value);
-        cmdAsservCarousel.setFrein(true);
-
-        cm.waitMouvement();
-
-        rs.disableAsservCarousel();
-    }
-
     @SneakyThrows
     private void capturePropulsionsForVitesse(int vitesse) {
         log.info("Vitesse moteurs propulsions {}", vitesse);
