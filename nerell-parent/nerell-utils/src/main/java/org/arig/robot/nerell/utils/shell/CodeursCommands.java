@@ -5,7 +5,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.arig.robot.model.CommandeAsservissementPosition;
+import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.IIOService;
+import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.encoders.AbstractEncoder;
 import org.arig.robot.system.motors.AbstractMotor;
@@ -35,6 +38,9 @@ public class CodeursCommands {
     private final Abstract2WheelsEncoders wheelsEncoders;
     private final AbstractPropulsionsMotors propulsionsMotors;
     private final IIOService ioService;
+    private final RobotStatus rs;
+    private final CommandeAsservissementPosition cmdAsservCarousel;
+    private final ICarouselManager cm;
 
     @Autowired
     @Qualifier("motorCarousel")
@@ -166,6 +172,40 @@ public class CodeursCommands {
 
         log.info("Valeurs rotation : {}", values);
         log.info("Moyenne : {}", sum / nbtours);
+    }
+
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Initialisation carousel")
+    public void initialisationCarousel(int value) {
+
+        carouselEncoder.reset();
+        rs.disableAsservCarousel();
+
+        carouselMotor.speed(300);
+        ThreadUtils.sleep(2000);
+        while (!ioService.indexCarousel()) {
+            ThreadUtils.sleep(10);
+        }
+        carouselMotor.speed(-300);
+        while (ioService.indexCarousel()) {
+            ThreadUtils.sleep(10);
+        }
+        carouselMotor.speed(200);
+        while (!ioService.indexCarousel()) {
+            ThreadUtils.sleep(10);
+        }
+        carouselMotor.stop();
+        carouselEncoder.lectureValeur();
+
+        rs.enableAsservCarousel();
+
+        cmdAsservCarousel.getVitesse().setValue(100);
+        cmdAsservCarousel.getConsigne().setValue(value);
+        cmdAsservCarousel.setFrein(true);
+
+        cm.waitMouvement();
+
+        rs.disableAsservCarousel();
     }
 
     @SneakyThrows

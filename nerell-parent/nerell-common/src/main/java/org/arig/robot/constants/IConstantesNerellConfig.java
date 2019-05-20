@@ -55,8 +55,8 @@ public interface IConstantesNerellConfig {
     double rampAccOrientation = 800.0; // en mm/s2
     double rampDecOrientation = 800.0; // en mm/s2
 
-    double rampAccCarousel = 100.0; // en mm/s2
-    double rampDecCarousel = 100.0; // en mm/s2
+    double rampAccCarousel = 500.0; // en mm/s2
+    double rampDecCarousel = 500.0; // en mm/s2
 
     // -------------------------- //
     // Configuration des vitesses //
@@ -98,9 +98,9 @@ public interface IConstantesNerellConfig {
     double kiMotGauche = 0.5 * asservTimeS;
     double kdMotGauche = 0.0009 / asservTimeS;
 
-    double kpCarousel = 1;
-    double kiCarousel = 0 * asservTimeCarouselS;
-    double kdCarousel = 0 / asservTimeCarouselS;
+    double kpCarousel = 15;
+    double kiCarousel = 1 * asservTimeCarouselS;
+    double kdCarousel = 0.000625 / asservTimeCarouselS;
 
     // --------------------------- //
     // Paramètre mouvement manager //
