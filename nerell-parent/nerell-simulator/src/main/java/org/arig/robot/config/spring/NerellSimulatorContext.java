@@ -13,7 +13,6 @@ import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
 import org.arig.robot.system.avoiding.IAvoidingService;
-import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
@@ -23,6 +22,10 @@ import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.ARIGEncoder;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.BouchonARIGEncoder;
+import org.arig.robot.system.motors.AbstractMotor;
+import org.arig.robot.system.motors.AbstractPropulsionsMotors;
+import org.arig.robot.system.motors.BouchonMotor;
+import org.arig.robot.system.motors.BouchonPropulsionsMotors;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -67,6 +70,18 @@ public class NerellSimulatorContext {
     }
 
     @Bean
+    public AbstractPropulsionsMotors motors() {
+        final AbstractPropulsionsMotors motors = new BouchonPropulsionsMotors();
+        motors.assignMotors(1, 2);
+        return motors;
+    }
+
+    @Bean
+    public AbstractMotor motorCarousel() {
+        return new BouchonMotor();
+    }
+
+    @Bean
     @SneakyThrows
     public ARIG2WheelsEncoders encoders(ResourcePatternResolver patternResolver) {
         InputStream is = patternResolver.getResource("classpath:nerell-propulsions.csv").getInputStream();
@@ -101,11 +116,6 @@ public class NerellSimulatorContext {
                 .collect(Collectors.toList());
 
         return new BouchonARIGEncoder(IConstantesI2CSimulator.CODEUR_MOTEUR_CAROUSEL, values);
-    }
-
-    @Bean
-    public I2CAdcAnalogInput analogInput() {
-        return new I2CAdcAnalogInput(IConstantesI2CSimulator.I2C_ADC_DEVICE_NAME);
     }
 
     @Bean

@@ -8,11 +8,6 @@ robot:
   ui:
     title: Nerell Robot
 
-  # Configuration des asservissements
-  asservissement:
-    polaire:
-      implementation: DISTANCE_ORIENTATION
-
   # Système d'évittement
   avoidance:
       implementation: FULL # FULL ou BASIC

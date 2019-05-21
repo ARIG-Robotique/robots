@@ -20,7 +20,6 @@ import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.services.avoiding.BasicAvoidingService;
 import org.arig.robot.services.avoiding.CompleteAvoidingService;
 import org.arig.robot.system.avoiding.IAvoidingService;
-import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
@@ -80,8 +79,8 @@ public class NerellRobotContext {
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_DROIT, IConstantesI2C.CODEUR_DROIT_ADDRESS);
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_GAUCHE, IConstantesI2C.CODEUR_GAUCHE_ADDRESS);
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_CAROUSEL, IConstantesI2C.CODEUR_CAROUSEL_ADDRESS);
-        //manager.registerDevice(IConstantesI2C.I2C_ADC_DEVICE_NAME, IConstantesI2C.I2C_ADC_ADDRESS);
         manager.registerDevice(IConstantesI2C.TCS34725_DEVICE_NAME, IConstantesI2C.TCS34725_ADDRESS);
+//        manager.registerDevice(IConstantesI2C.I2C_ADC_DEVICE_NAME, IConstantesI2C.I2C_ADC_ADDRESS);
 //        manager.registerDevice(IConstantesI2C.TINY_LIDAR_MAGASIN_DROIT_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_MAGASIN_DROIT_ADDRESS, (byte) 0x44);
 //        manager.registerDevice(IConstantesI2C.TINY_LIDAR_MAGASIN_GAUCHE_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_MAGASIN_GAUCHE_ADDRESS, (byte) 0x44);
 //        manager.registerDevice(IConstantesI2C.TINY_LIDAR_AVANT_DROIT_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_AVANT_DROIT_ADDRESS, (byte) 0x44);
@@ -107,10 +106,15 @@ public class NerellRobotContext {
         return new ARIG2WheelsEncoders(IConstantesI2C.CODEUR_MOTEUR_GAUCHE, IConstantesI2C.CODEUR_MOTEUR_DROIT);
     }
 
-    @SneakyThrows
     @Bean
+    public ARIGEncoder encoderCarousel() {
+        return new ARIGEncoder(IConstantesI2C.CODEUR_MOTEUR_CAROUSEL);
+    }
+
+    @Bean
+    @SneakyThrows
     public PCA9685GpioProvider pca9685GpioControler(I2CBus bus) {
-        final PCA9685GpioProvider gpioProvider = new PCA9685GpioProvider(bus, 0x40, new BigDecimal(200));
+        final PCA9685GpioProvider gpioProvider = new PCA9685GpioProvider(bus, IConstantesI2C.PCA9685_ADDRESS, new BigDecimal(200));
 
         final GpioController gpio = GpioFactory.getInstance();
         gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_00);
@@ -134,18 +138,6 @@ public class NerellRobotContext {
         final PropulsionsPCA9685Motors motors = new PropulsionsPCA9685Motors(PCA9685Pin.PWM_02, PCA9685Pin.PWM_03, PCA9685Pin.PWM_00, PCA9685Pin.PWM_01);
         motors.assignMotors(IConstantesNerellConfig.numeroMoteurGauche, IConstantesNerellConfig.numeroMoteurDroit);
         return motors;
-    }
-
-    @Bean
-    public ARIGEncoder encoderCarousel() {
-        return new ARIGEncoder(IConstantesI2C.CODEUR_MOTEUR_CAROUSEL);
-    }
-
-    @Bean
-    public I2CAdcAnalogInput analogInput() {
-        I2CAdcAnalogInput adc = new I2CAdcAnalogInput(IConstantesI2C.I2C_ADC_DEVICE_NAME);
-        adc.setPowerMode(I2CAdcAnalogInput.PowerMode.POWER_DOWN_BETWEEN_AD);
-        return adc;
     }
 
     @Bean

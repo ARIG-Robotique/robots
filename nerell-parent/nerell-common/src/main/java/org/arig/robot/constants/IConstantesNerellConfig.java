@@ -129,11 +129,6 @@ public interface IConstantesNerellConfig {
         BASIC, FULL
     }
 
-    // Paramètre Asservissement //
-    enum AsservPolaireSelection {
-        DISTANCE_ORIENTATION, MOTEURS
-    }
-
     // ---------------------- //
     // Paramètre path finding //
     // ---------------------- //
@@ -151,7 +146,7 @@ public interface IConstantesNerellConfig {
     int diametrePaletMm = 76;
 
     int nbPaletsBalanceMax = 6;
-    int nbPaletsAccelerateurMax = 9; // TODO à valider
+    int nbPaletsAccelerateurMax = 10;
     int nbPaletsMagasinMax = 3;
     int offsetTableau = 200;
 

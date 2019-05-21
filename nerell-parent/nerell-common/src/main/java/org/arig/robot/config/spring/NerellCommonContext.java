@@ -3,7 +3,6 @@ package org.arig.robot.config.spring;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.Ordonanceur;
 import org.arig.robot.constants.IConstantesNerellConfig;
-import org.arig.robot.constants.IConstantesNerellConfig.AsservPolaireSelection;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
@@ -22,13 +21,11 @@ import org.arig.robot.system.TrajectoryManager;
 import org.arig.robot.system.TrajectoryManagerAsync;
 import org.arig.robot.system.encoders.AbstractEncoder;
 import org.arig.robot.system.motion.AsservissementPolaireDistanceOrientation;
-import org.arig.robot.system.motion.AsservissementPolaireMoteurs;
 import org.arig.robot.system.motion.AsservissementPosition;
 import org.arig.robot.system.motion.IAsservissement;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motion.OdometrieLineaire;
-import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.utils.ConvertionCarouselUnit;
@@ -65,20 +62,8 @@ public class NerellCommonContext {
 
     @Bean
     public TableUtils tableUtils() {
-        TableUtils t = new TableUtils(IConstantesNerellConfig.minX, IConstantesNerellConfig.maxX,
+        return new TableUtils(IConstantesNerellConfig.minX, IConstantesNerellConfig.maxX,
                 IConstantesNerellConfig.minY, IConstantesNerellConfig.maxY);
-
-        // Ajout des zones de départ secondaire
-//        t.addDeadZone(new Rectangle.Double(0, 0, 710, 360)); // Jaune
-//        t.addDeadZone(new Rectangle.Double(2290, 0, 710, 360)); // Bleu
-
-        // Ajout des fusées
-//        t.addDeadZone(new Rectangle.Double(0, 1250, 150, 200)); // Polychrome Jaune
-//        t.addDeadZone(new Rectangle.Double(1050, 0, 200, 150)); // Monochrome Jaune
-//        t.addDeadZone(new Rectangle.Double(2870, 1250, 150, 200)); // Polychrome Bleu
-//        t.addDeadZone(new Rectangle.Double(1750, 0, 200, 150)); // Monochrome Bleu
-
-        return t;
     }
 
     @Bean
@@ -101,12 +86,7 @@ public class NerellCommonContext {
 
     @Bean
     public IAsservissementPolaire asservissement() {
-        IConstantesNerellConfig.AsservPolaireSelection asservImplementation = env.getProperty("robot.asservissement.polaire.implementation", IConstantesNerellConfig.AsservPolaireSelection.class);
-        if (asservImplementation == AsservPolaireSelection.DISTANCE_ORIENTATION) {
-            return new AsservissementPolaireDistanceOrientation();
-        } else {
-            return new AsservissementPolaireMoteurs();
-        }
+        return new AsservissementPolaireDistanceOrientation();
     }
 
     @Bean
@@ -135,41 +115,25 @@ public class NerellCommonContext {
     }
 
     @Bean(name = "pidDistance")
-    public IPidFilter pidDistance(AbstractPropulsionsMotors motors) {
+    public IPidFilter pidDistance() {
         log.info("Configuration PID Distance");
-        SimplePidFilter pid = new SimplePidFilter("distance"); //, motors.getMinSpeed(), motors.getMaxSpeed());
+        SimplePidFilter pid = new SimplePidFilter("distance");
         pid.setTunings(IConstantesNerellConfig.kpDistance, IConstantesNerellConfig.kiDistance, IConstantesNerellConfig.kdDistance);
         return pid;
     }
 
     @Bean(name = "pidOrientation")
-    public IPidFilter pidOrientation(AbstractPropulsionsMotors motors) {
+    public IPidFilter pidOrientation() {
         log.info("Configuration PID Orientation");
-        SimplePidFilter pid = new SimplePidFilter("orientation"); //, motors.getMinSpeed(), motors.getMaxSpeed());
+        SimplePidFilter pid = new SimplePidFilter("orientation");
         pid.setTunings(IConstantesNerellConfig.kpOrientation, IConstantesNerellConfig.kiOrientation, IConstantesNerellConfig.kdOrientation);
-        return pid;
-    }
-
-    @Bean(name = "pidMoteurDroit")
-    public IPidFilter pidMoteurDroit(AbstractPropulsionsMotors motors) {
-        log.info("Configuration PID moteur droit");
-        SimplePidFilter pid = new SimplePidFilter("pid_mot_droit", motors.getMinSpeed(), motors.getMaxSpeed());
-        pid.setTunings(IConstantesNerellConfig.kpMotDroit, IConstantesNerellConfig.kiMotDroit, IConstantesNerellConfig.kdMotDroit);
-        return pid;
-    }
-
-    @Bean(name = "pidMoteurGauche")
-    public IPidFilter pidMoteurGauche(AbstractPropulsionsMotors motors) {
-        log.info("Configuration PID moteur gauche");
-        SimplePidFilter pid = new SimplePidFilter("pid_mot_gauche", motors.getMinSpeed(), motors.getMaxSpeed());
-        pid.setTunings(IConstantesNerellConfig.kpMotGauche, IConstantesNerellConfig.kiMotGauche, IConstantesNerellConfig.kdMotGauche);
         return pid;
     }
 
     @Bean(name = "pidCarousel")
     public IPidFilter pidCarousel() {
         log.info("Configuration PID Carousel");
-        SimplePidFilter pid = new SimplePidFilter("carousel"); //, motorCarousel().getMinSpeed(), motorCarousel().getMaxSpeed());
+        SimplePidFilter pid = new SimplePidFilter("carousel");
         pid.setTunings(IConstantesNerellConfig.kpCarousel, IConstantesNerellConfig.kiCarousel, IConstantesNerellConfig.kdCarousel);
         return pid;
     }
@@ -195,10 +159,8 @@ public class NerellCommonContext {
     @Bean
     public IPathFinder pathFinder() {
         MultiPathFinderImpl pf = new MultiPathFinderImpl();
-
         pf.setAlgorithm(IConstantesNerellConfig.pathFindingAlgo);
         pf.setSaveImages(env.getProperty("robot.pathfinding.saveImages", Boolean.class, true));
-
         return pf;
     }
 

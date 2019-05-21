@@ -3,10 +3,8 @@ package org.arig.robot.web.controller;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.IIOService;
-import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,9 +24,6 @@ public class CapteursController extends AbstractCapteursController implements In
 
     @Autowired
     private IIOService ioService;
-
-    @Autowired
-    private I2CAdcAnalogInput i2CAdcAnalogInput;
 
     @Getter
     @Accessors(fluent = true)
@@ -50,7 +45,7 @@ public class CapteursController extends AbstractCapteursController implements In
         numeriqueInfos.put("Puissance 12V", ioService::alimPuissance12VOk);
         numeriqueInfos.put("Tirette", ioService::tirette);
         numeriqueInfos.put("Index barillet", ioService::indexCarousel);
-        numeriqueInfos.put("Presence lecture culeur", ioService::presenceLectureCouleur);
+        numeriqueInfos.put("Presence lecture couleur", ioService::presenceLectureCouleur);
         numeriqueInfos.put("Bordure arrière droite", ioService::calageBordureArriereDroit);
         numeriqueInfos.put("Bordure arrière gauche", ioService::calageBordureArriereGauche);
         numeriqueInfos.put("Presence palet droit", ioService::presencePaletDroit);
@@ -59,27 +54,16 @@ public class CapteursController extends AbstractCapteursController implements In
         numeriqueInfos.put("Butée palet gauche", ioService::buteePaletGauche);
         numeriqueInfos.put("Présence palet ventouse droit", ioService::presencePaletVentouseDroit);
         numeriqueInfos.put("Présence palet ventouse gauche", ioService::presencePaletVentouseGauche);
-        //numeriqueInfos.put("Trappe magasin droit ferme", ioService::trappeMagasinDroitFerme);
-        //numeriqueInfos.put("Trappe magasin gauche ferme", ioService::trappeMagasinGaucheFerme);
 
         // Capteurs informations analogique
-//        analogiqueInfos.put("Vaccum droit", () -> readI2CAnalogValue(IConstantesI2CAdc.VACUOSTAT_DROIT));
-//        analogiqueInfos.put("Vaccum gauche", () -> readI2CAnalogValue(IConstantesI2CAdc.VACUOSTAT_GAUCHE));
-        //analogiqueInfos.put("NB Palet magasin droit", () -> (double) ioService.nbPaletDansMagasinDroit());
-        //analogiqueInfos.put("NB Palet magasin gauche", () -> (double) ioService.nbPaletDansMagasinGauche());
+//        analogiqueInfos.put("Vaccum droit", () -> readI2CAnalogValue(IConstantesAnalogToDigital.VACUOSTAT_DROIT));
+//        analogiqueInfos.put("Vaccum gauche", () -> readI2CAnalogValue(IConstantesAnalogToDigital.VACUOSTAT_GAUCHE));
+//        analogiqueInfos.put("NB Palet magasin droit", () -> (double) ioService.nbPaletDansMagasinDroit());
+//        analogiqueInfos.put("NB Palet magasin gauche", () -> (double) ioService.nbPaletDansMagasinGauche());
 
         // Capteurs informations Text
         textInfos.put("Equipe", () -> rs.getTeam().name());
-        textInfos.put("Couleur palet (hex)", () -> ioService.couleurPaletRaw().hexColor());
-        textInfos.put("Couleur palet", () -> ioService.couleurPalet().name());
-    }
-
-    private Double readI2CAnalogValue(byte capteurId) {
-        try {
-            return (double) i2CAdcAnalogInput.readCapteurValue(capteurId);
-        } catch (I2CException e) {
-            log.warn("Erreur de lecture du capteur {} pour le monitoring", capteurId);
-            return (double) -1;
-        }
+//        textInfos.put("Couleur palet (hex)", () -> ioService.couleurPaletRaw().hexColor());
+//        textInfos.put("Couleur palet", () -> ioService.couleurPalet().name());
     }
 }

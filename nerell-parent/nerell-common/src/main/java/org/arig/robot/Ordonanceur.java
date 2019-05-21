@@ -22,6 +22,7 @@ import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
+import org.arig.robot.utils.TableUtils;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -76,6 +77,9 @@ public class Ordonanceur {
 
     @Autowired
     private ILidarTelemeter lidar;
+
+    @Autowired
+    private TableUtils tableUtils;
 
     @Autowired
     @Qualifier("currentPosition")
@@ -147,7 +151,7 @@ public class Ordonanceur {
         log.info("Initialisation du Carousel");
         initialisationCarousel();
 
-        log.warn("La tirette n'est pas la et la selection couleur n'as pas eu lieu. Phase de préparation Nerell");
+        log.warn("La tirette n'est pas la. Phase de préparation Nerell");
         boolean selectionCouleur = false;
         /*while(!ioService.tirette() || !selectionCouleur) {
             Team selectedTeam = ioService.equipe();
@@ -174,6 +178,13 @@ public class Ordonanceur {
         String fileResourcePath = String.format("classpath:maps/%s.png", robotStatus.getTeam().name().toLowerCase());
         final InputStream imgMap = patternResolver.getResource(fileResourcePath).getInputStream();
         pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
+
+        log.info("Définition des zones 'mortes' de la carte.");
+        if (robotStatus.getTeam() == Team.JAUNE) {
+            tableUtils.addDeadZone(new java.awt.Rectangle.Double(0, 0, 10, 10)); // Balance
+        } else {
+            tableUtils.addDeadZone(new java.awt.Rectangle.Double(0, 0, 10, 10)); // Balance
+        }
 
         // Attente la mise de la tirette
         log.info("Mise de la tirette pour lancer la calibration");
