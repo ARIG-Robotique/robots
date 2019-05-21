@@ -19,7 +19,6 @@ import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
@@ -417,14 +416,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     @Override
     public CouleurPalet couleurPalet() {
         ColorData c = couleurPaletRaw();
-
-        MonitorTimeSerie mts = new MonitorTimeSerie();
-        mts.measurementName("couleur")
-                .addTag(MonitorTimeSerie.TAG_NAME, "palet")
-                .addField("r", c.r())
-                .addField("g", c.g())
-                .addField("b", c.b());
-        monitoring.addTimeSeriePoint(mts);
 
         int delta = 42;
 

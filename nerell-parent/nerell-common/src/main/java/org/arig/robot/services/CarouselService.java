@@ -66,7 +66,11 @@ public class CarouselService {
         working.set(true);
         tourner(index - ICarouselManager.LECTEUR);
 
+        ioService.enableLedCapteurCouleur();
+        ThreadUtils.sleep(50);
         CouleurPalet couleur = ioService.couleurPalet();
+        ioService.disableLedCapteurCouleur();
+
         carouselManager.setColor(ICarouselManager.LECTEUR, couleur);
         working.set(false);
     }
@@ -90,7 +94,7 @@ public class CarouselService {
      * Tourner dans le sens trigo
      */
     private void tourner(int nb) {
-        //carouselManager.tourneIndex(nb);
+        carouselManager.tourneIndex(nb);
     }
 
     public void ejectionAvantRetourStand() {
