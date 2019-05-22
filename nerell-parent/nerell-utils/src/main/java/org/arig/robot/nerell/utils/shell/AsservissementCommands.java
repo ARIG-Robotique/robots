@@ -140,6 +140,7 @@ public class AsservissementCommands {
     @ShellMethod("Initialisation carousel")
     public void initialisationCarousel() {
         Ordonanceur.getInstance().initialisationCarousel();
+        rs.enableCarousel();
     }
 
     @ShellMethodAvailability("alimentationOk")

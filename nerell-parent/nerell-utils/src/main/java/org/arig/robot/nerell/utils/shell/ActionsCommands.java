@@ -28,13 +28,13 @@ public class ActionsCommands {
                 ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
     }
 
-    @ShellMethod
+    @ShellMethod("Callage bordure")
     @SneakyThrows
     public void callageBordure() {
         ordonanceur.callageBordure();
     }
 
-    @ShellMethod
+    @ShellMethod("Execute une action")
     @SneakyThrows
     public void action(@ShellOption(valueProvider = ActionsProvider.class) String name) {
         final Optional<IAction> action = actions.stream()

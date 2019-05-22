@@ -569,7 +569,7 @@ public class VentousesService implements InitializingBean {
                 }
 
                 service.porteBarilletOuvert(true);
-                service.ascenseurCarousel(true);
+                service.ascenseurCarouselDepose(true);
 
                 service.pivotVentouseCarouselVertical(true);
 

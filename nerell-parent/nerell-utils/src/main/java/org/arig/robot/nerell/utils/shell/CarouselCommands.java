@@ -44,4 +44,9 @@ public class CarouselCommands {
         magasinService.stockage(couleur, side);
     }
 
+    @ShellMethod("Ejection retour stand")
+    public void ejectionCarousel() {
+        carouselService.ejectionAvantRetourStand();
+    }
+
 }
