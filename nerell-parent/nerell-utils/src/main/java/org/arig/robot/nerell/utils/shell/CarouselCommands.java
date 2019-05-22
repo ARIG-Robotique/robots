@@ -1,10 +1,13 @@
 package org.arig.robot.nerell.utils.shell;
 
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.ESide;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.CarouselService;
 import org.arig.robot.services.IIOService;
+import org.arig.robot.services.MagasinService;
 import org.arig.robot.system.ICarouselManager;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -21,6 +24,7 @@ public class CarouselCommands {
     private final IIOService ioService;
     private final CarouselService carouselService;
     private final ICarouselManager carouselManager;
+    private final MagasinService magasinService;
 
     @ShellMethodAvailability
     public Availability alimentationOk() {
@@ -32,6 +36,12 @@ public class CarouselCommands {
     public void lectureCouleur(int index) {
         carouselManager.setColor(index, CouleurPalet.INCONNU);
         carouselService.lectureCouleurAsync(index);
+    }
+
+    @ShellMethod("Stockage magasin")
+    @SneakyThrows
+    public void stockageMagasin(CouleurPalet couleur, ESide side) {
+        magasinService.stockage(couleur, side);
     }
 
 }

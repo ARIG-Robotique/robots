@@ -1,7 +1,0 @@
-https://github.com/555kav555/i2c-bcm2835-corrected
-
-i2c-gpio Software module
-
-Return to bcm2708 dans l'overlay
-
-Bridge serial <-> I2C (FT232H, arduino nano)
