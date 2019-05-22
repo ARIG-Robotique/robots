@@ -16,6 +16,8 @@ import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.ExecutionException;
+
 @Slf4j
 @Component
 public class PrendreGoldenium extends AbstractAction {
@@ -71,21 +73,18 @@ public class PrendreGoldenium extends AbstractAction {
             mv.gotoOrientationDeg(90);
 
             ventouses.waitAvailable(side);
-            ventouses.preparePriseGoldenium(side);
+            ventouses.preparePriseGoldenium(side).get();
 
             mv.avanceMM(2000 - 50 - yAvantAvance - IConstantesNerellConfig.dstVentouseFacade);
 
             // prise goldenium
-            boolean ok = ventouses.priseGoldenium(side);
+            boolean ok = ventouses.priseGoldenium(side).get();
 
-            // recule
-            mv.reculeMM(50);
-
-            ventouses.finishPriseGoldeniumAsync(ok, side);
+            ventouses.finishPriseGoldenium(ok, side);
 
             completed = true;
 
-        } catch (NoPathFoundException | AvoidingException | VentouseNotAvailableException | RefreshPathFindingException e) {
+        } catch (NoPathFoundException | AvoidingException | VentouseNotAvailableException | RefreshPathFindingException | InterruptedException | ExecutionException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
         }

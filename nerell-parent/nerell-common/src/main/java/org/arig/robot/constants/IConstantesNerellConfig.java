@@ -148,6 +148,6 @@ public interface IConstantesNerellConfig {
     int nbPaletsBalanceMax = 6;
     int nbPaletsAccelerateurMax = 10;
     int nbPaletsMagasinMax = 3;
-    int offsetTableau = 200;
+    int offsetTableau = 80;
 
 }

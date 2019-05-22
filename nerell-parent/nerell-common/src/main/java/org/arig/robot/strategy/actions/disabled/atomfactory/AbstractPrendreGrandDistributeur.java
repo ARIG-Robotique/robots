@@ -16,10 +16,12 @@ import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.utils.NerellUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Component
@@ -77,9 +79,9 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
             int yAvantAvance = 680;
 
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(xViolet, 680);
+                mv.pathTo(xViolet, yAvantAvance);
             } else {
-                mv.pathTo(xJaune, 680);
+                mv.pathTo(xJaune, yAvantAvance);
             }
 
             rs.disableAvoidance();
@@ -90,8 +92,10 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
             ventouses.waitAvailable(ESide.GAUCHE);
             ventouses.waitAvailable(ESide.DROITE);
 
-            ventouses.preparePriseDistributeur(ESide.GAUCHE);
-            ventouses.preparePriseDistributeur(ESide.DROITE);
+            NerellUtils.all(
+                    ventouses.preparePriseDistributeur(ESide.GAUCHE),
+                    ventouses.preparePriseDistributeur(ESide.DROITE)
+            ).get();
 
             // 457 = distance bord distributeur
             double yOffset = -457 + yAvantAvance - IConstantesNerellConfig.dstVentouseFacade;
@@ -99,19 +103,23 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
             mv.avanceMM(yOffset);
 
             // prise du 1 et du 2
-            boolean ok1 = ventouses.priseDistributeur(liste().get(index1), side1);
-            boolean ok2 = ventouses.priseDistributeur(liste().get(index2), side2);
+            NerellUtils.CompoundFutureResult2<Boolean, Boolean> ok = NerellUtils.all(
+                    ventouses.priseDistributeur(liste().get(index1), side1),
+                    ventouses.priseDistributeur(liste().get(index2), side2)
+            ).get();
+            boolean ok1 = ok.getA();
+            boolean ok2 = ok.getB();
 
             // recule
             mv.reculeMM(50);
 
             // stocke
-            ventouses.finishPriseDistributeurAsync(ok1, side1);
-            ventouses.finishPriseDistributeurAsync(ok2, side2);
+            ventouses.finishPriseDistributeur(ok1, side1);
+            ventouses.finishPriseDistributeur(ok2, side2);
 
             completed = true;
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException e) {
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException | InterruptedException | ExecutionException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
         }

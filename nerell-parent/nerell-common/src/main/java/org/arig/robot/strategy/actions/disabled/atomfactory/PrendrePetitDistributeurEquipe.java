@@ -15,8 +15,11 @@ import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.utils.NerellUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Component
@@ -89,15 +92,19 @@ public class PrendrePetitDistributeurEquipe extends AbstractAction {
             mv.avanceMM(yAvantAvance - IConstantesNerellConfig.dstVentouseFacade);
 
             // prise du bleu et du vert
-            boolean bleuOk = ventouses.priseDistributeur(CouleurPalet.BLEU, sideBleu);
-            boolean vertOk = ventouses.priseDistributeur(CouleurPalet.VERT, sideVert);
+            NerellUtils.CompoundFutureResult2<Boolean, Boolean> ok = NerellUtils.all(
+                    ventouses.priseDistributeur(CouleurPalet.BLEU, sideBleu),
+                    ventouses.priseDistributeur(CouleurPalet.VERT, sideVert)
+            ).get();
+            boolean bleuOk = ok.getA();
+            boolean vertOk = ok.getB();
 
             // recule
             mv.reculeMM(200);
 
             // stocke
-            ventouses.finishPriseDistributeurAsync(bleuOk, sideBleu);
-            ventouses.finishPriseDistributeurAsync(vertOk, sideVert);
+            ventouses.finishPriseDistributeur(bleuOk, sideBleu);
+            ventouses.finishPriseDistributeur(vertOk, sideVert);
 
             // avance en face du ROUGE
             if (rs.getTeam() == Team.VIOLET) {
@@ -115,13 +122,13 @@ public class PrendrePetitDistributeurEquipe extends AbstractAction {
             mv.avanceMM(yAvantAvance - IConstantesNerellConfig.dstVentouseFacade);
 
             // prise du rouge
-            boolean rougeOk = ventouses.priseDistributeur(CouleurPalet.ROUGE, sideRouge);
+            boolean rougeOk = ventouses.priseDistributeur(CouleurPalet.ROUGE, sideRouge).get();
 
             // recule
             mv.reculeMM(50);
 
             // stocke
-            ventouses.finishPriseDistributeurAsync(rougeOk, sideRouge);
+            ventouses.finishPriseDistributeur(rougeOk, sideRouge);
 
             rs.enableAvoidance();
             if (rs.getTeam() == Team.VIOLET) {
@@ -142,7 +149,7 @@ public class PrendrePetitDistributeurEquipe extends AbstractAction {
 
             completed = true;
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException e) {
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException | InterruptedException | ExecutionException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
         }

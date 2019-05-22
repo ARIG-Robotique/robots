@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
@@ -38,9 +39,6 @@ public class VentousesService implements InitializingBean {
 
     @Autowired
     private ICarouselManager carousel;
-
-    @Autowired
-    private SerrageService serrage;
 
     private final Map<ESide, AtomicBoolean> working = new EnumMap<>(ESide.class);
     private final Map<ESide, CouleurPalet> couleur = new EnumMap<>(ESide.class);
@@ -88,12 +86,13 @@ public class VentousesService implements InitializingBean {
     /**
      * Prise de palet au sol
      */
-    public boolean priseTable(CouleurPalet couleur, ESide side) {
+    @Async
+    public CompletableFuture<Boolean> priseTable(CouleurPalet couleur, ESide side) {
         IRobotSide service = sideServices.get(side);
 
         if (!carousel.has(null)) {
             log.warn("Pas de place dans le carousel");
-            return false;
+            return CompletableFuture.completedFuture(false);
         }
 
         service.pivotVentouseTable(true);
@@ -101,51 +100,7 @@ public class VentousesService implements InitializingBean {
 
         if (!service.presencePaletVentouse()) {
             log.warn("Pas de palet visible");
-            return false;
-        }
-
-        service.enablePompeAVide();
-
-        if (!tentativeAspiration(service)) {
-            log.warn("Impossible d'aspirer le palet");
-            return false;
-        }
-
-        this.couleur.put(side, couleur);
-
-        service.pinceSerrageRepos(false);
-        service.disablePompeAVide();
-
-        return true;
-    }
-
-    /**
-     * Met la ventouse en position pour prendre dans le distributeur
-     * A appeller avant d'avancer
-     */
-    public boolean preparePriseDistributeur(ESide side) {
-        IRobotSide service = sideServices.get(side);
-
-        if (!carousel.has(null)) {
-            log.warn("Pas de place dans le carousel");
-            return false;
-        }
-
-        service.pivotVentouseFacade(false);
-        service.ascenseurDistributeur(true);
-
-        return true;
-    }
-
-    /**
-     * Prise de palet dans le distributeur
-     */
-    public boolean priseDistributeur(CouleurPalet couleur, ESide side) {
-        IRobotSide service = sideServices.get(side);
-
-        if (!service.presencePaletVentouse()) {
-            log.warn("Pas de palet visible");
-            return false;
+            return CompletableFuture.completedFuture(false);
         }
 
         service.enablePompeAVide();
@@ -156,7 +111,49 @@ public class VentousesService implements InitializingBean {
             this.couleur.put(side, couleur);
         }
 
-        return ok;
+        return CompletableFuture.completedFuture(ok);
+    }
+
+    /**
+     * Met la ventouse en position pour prendre dans le distributeur
+     * A appeller avant d'avancer
+     */
+    @Async
+    public CompletableFuture<Boolean> preparePriseDistributeur(ESide side) {
+        IRobotSide service = sideServices.get(side);
+
+        if (!carousel.has(null)) {
+            log.warn("Pas de place dans le carousel");
+            return CompletableFuture.completedFuture(false);
+        }
+
+        service.pivotVentouseFacade(false);
+        service.ascenseurDistributeur(true);
+
+        return CompletableFuture.completedFuture(true);
+    }
+
+    /**
+     * Prise de palet dans le distributeur
+     */
+    @Async
+    public CompletableFuture<Boolean> priseDistributeur(CouleurPalet couleur, ESide side) {
+        IRobotSide service = sideServices.get(side);
+
+        if (!service.presencePaletVentouse()) {
+            log.warn("Pas de palet visible");
+            return CompletableFuture.completedFuture(false);
+        }
+
+        service.enablePompeAVide();
+        boolean ok = tentativeAspiration(service);
+        service.disablePompeAVide();
+
+        if (ok) {
+            this.couleur.put(side, couleur);
+        }
+
+        return CompletableFuture.completedFuture(ok);
     }
 
     /**
@@ -164,13 +161,11 @@ public class VentousesService implements InitializingBean {
      * A appeller après avoir reculé pour pas percuter le décor
      */
     @Async
-    public void finishPriseDistributeurAsync(boolean ok, ESide side) {
-        IRobotSide service = sideServices.get(side);
-
+    public CompletableFuture<Void> finishPriseDistributeur(boolean ok, ESide side) {
         if (!ok) {
-            servosHomeAndDisablePompeAndRelease(side);
+            return servosHomeAndDisablePompeAndRelease(side);
         } else {
-            stockageAsync(side);
+            return stockageCarousel(side);
         }
     }
 
@@ -178,19 +173,21 @@ public class VentousesService implements InitializingBean {
      * Met la ventouse en position pour prendre le goldenium
      * A appeller avant d'avancer
      */
-    public boolean preparePriseGoldenium(ESide side) {
+    @Async
+    public CompletableFuture<Void> preparePriseGoldenium(ESide side) {
         IRobotSide service = sideServices.get(side);
 
         service.pivotVentouseFacade(false);
         service.ascenseurGold(true);
 
-        return true;
+        return CompletableFuture.completedFuture(null);
     }
 
     /**
      * Prise du goldenium
      */
-    public boolean priseGoldenium(ESide side) {
+    @Async
+    public CompletableFuture<Boolean> priseGoldenium(ESide side) {
         IRobotSide service = sideServices.get(side);
 
         service.enablePompeAVide();
@@ -198,11 +195,13 @@ public class VentousesService implements InitializingBean {
         service.disablePompeAVide();
 
         if (ok) {
+            service.ascenseurCarousel(true);
+
             rs.setGoldeniumPrit(true);
             couleur.put(side, CouleurPalet.GOLD);
         }
 
-        return ok;
+        return CompletableFuture.completedFuture(ok);
     }
 
     /**
@@ -210,15 +209,17 @@ public class VentousesService implements InitializingBean {
      * A appeller après avoir reculé pour pas percuter le décor
      */
     @Async
-    public void finishPriseGoldeniumAsync(boolean ok, ESide side) {
+    public CompletableFuture<Void> finishPriseGoldenium(boolean ok, ESide side) {
         IRobotSide service = sideServices.get(side);
 
         if (!ok) {
-            servosHomeAndDisablePompeAndRelease(side);
+            return servosHomeAndDisablePompeAndRelease(side);
 
         } else {
             service.pivotVentouseTable(false);
             service.ascenseurAccelerateur(false);
+
+            return CompletableFuture.completedFuture(null);
         }
     }
 
@@ -226,60 +227,66 @@ public class VentousesService implements InitializingBean {
      * Mise en place pour dépose dans l'accélérateur
      * A faire avant d'avancer
      */
-    public boolean prepareDeposeAccelerateur(ESide side) {
+    @Async
+    public CompletableFuture<Void> prepareDeposeAccelerateur(ESide side) {
         IRobotSide service = sideServices.get(side);
 
         if (rs.isCarouselEnabled()) {
             service.pivotVentouseCarouselVertical(false);
             service.ascenseurAccelerateur(true);
 
-        } else {
+        } else if (this.couleur.get(side) != null) {
             service.porteBarilletOuvert(true);
 
             service.ascenseurCarouselDepose(false);
             service.pivotVentouseCarouselSortie(true);
         }
 
-        return true;
+        return CompletableFuture.completedFuture(null);
     }
 
     /**
      * Mise en place pour la prise sur l'accélérateur
      * A faire avant d'avancer
      */
-    public boolean preparePriseAccelerateur(ESide side) {
+    @Async
+    public CompletableFuture<Boolean> preparePriseAccelerateur(ESide side) {
         IRobotSide service = sideServices.get(side);
 
         if (!carousel.has(null)) {
             log.warn("Pas de place dans le carousel");
-            return false;
+            return CompletableFuture.completedFuture(false);
         }
 
         service.pivotVentouseFacade(false);
         service.ascenseurAccelerateur(true);
 
-        return true;
+        return CompletableFuture.completedFuture(true);
     }
 
     /**
      * Active le poussage !
      */
-    public void pousseAccelerateur(ESide side) {
+    @Async
+    public CompletableFuture<Void> pousseAccelerateur(ESide side) {
         IRobotSide service = sideServices.get(side);
 
         service.pousseAccelerateurAction(true);
         service.pousseAccelerateurFerme(true);
+
+        return CompletableFuture.completedFuture(null);
     }
 
     /**
      * Prise du palet dans le distributeur
      */
-    public boolean priseAccelerateur(ESide side) {
+    @Async
+    public CompletableFuture<Boolean> priseAccelerateur(ESide side) {
         IRobotSide service = sideServices.get(side);
 
         if (!service.presencePaletVentouse()) {
             log.warn("Pas de palet visible");
-            return false;
+            return CompletableFuture.completedFuture(false);
         }
 
         service.enablePompeAVide();
@@ -290,35 +297,35 @@ public class VentousesService implements InitializingBean {
             this.couleur.put(side, CouleurPalet.BLEU);
         }
 
-        return ok;
+        return CompletableFuture.completedFuture(ok);
     }
 
     /**
      * Dépose un palet dans l'accélérateur
      * Balance violette, côté droit | balance jaune, côté gauche
      */
-    public boolean deposeAccelerateur(CouleurPalet couleur, ESide side) throws CarouselNotAvailableException {
+    @Async
+    public CompletableFuture<Boolean> deposeAccelerateur(CouleurPalet couleur, ESide side) throws CarouselNotAvailableException {
         IRobotSide service = sideServices.get(side);
 
         if (rs.getPaletsInAccelerateur().size() >= IConstantesNerellConfig.nbPaletsAccelerateurMax) {
             log.warn("L'accelerateur est plein");
-            return false;
+            return CompletableFuture.completedFuture(false);
         }
 
-        CouleurPalet couleurFinale = null;
-
         if (rs.isCarouselEnabled()) {
-            couleurFinale = priseCarousel(couleur, service);
-        } else {
-            couleurFinale = this.couleur.get(side);
+            priseCarousel(couleur, service);
+        }
+
+        if (this.couleur.get(side) == null) {
+            return CompletableFuture.completedFuture(false);
+        }
+
+        if (!rs.isCarouselEnabled()) {
             service.pivotVentouseFacade(true);
             service.ascenseurAccelerateur(true);
 
             service.porteBarilletFerme(false);
-        }
-
-        if (couleurFinale == null) {
-            return false;
         }
 
         service.airElectroVanne();
@@ -329,19 +336,17 @@ public class VentousesService implements InitializingBean {
 
         service.videElectroVanne();
 
-        rs.getPaletsInAccelerateur().add(couleurFinale);
+        rs.getPaletsInAccelerateur().add(this.couleur.get(side));
 
-        if (!rs.isCarouselEnabled()) {
-            this.couleur.put(side, null);
-        }
+        this.couleur.put(side, null);
 
-        return true;
+        return CompletableFuture.completedFuture(true);
     }
 
-    private CouleurPalet priseCarousel(CouleurPalet couleur, IRobotSide service) throws CarouselNotAvailableException {
+    private void priseCarousel(CouleurPalet couleur, IRobotSide service) throws CarouselNotAvailableException {
         if (!carousel.has(couleur)) {
             log.warn("Le carousel est vide");
-            return null;
+            return;
         }
 
         carouselService.waitAvailable(TEMPS_MAX_AVAILABLE);
@@ -357,7 +362,7 @@ public class VentousesService implements InitializingBean {
 
         if (!ok) {
             service.porteBarilletFerme(false);
-            return null;
+            return;
         }
 
         service.ascenseurCarouselDepose(true);
@@ -365,12 +370,10 @@ public class VentousesService implements InitializingBean {
         service.ascenseurAccelerateur(true);
         service.porteBarilletFerme(false);
 
-        CouleurPalet couleurFinale = carousel.get(service.positionCarouselVentouse());
+        this.couleur.put(service.id(), carousel.get(service.positionCarouselVentouse()));
 
         carouselService.release();
         carousel.unstore(service.positionCarouselVentouse());
-
-        return couleurFinale;
     }
 
     /**
@@ -378,84 +381,71 @@ public class VentousesService implements InitializingBean {
      * A faire après avoir reculé
      */
     @Async
-    public void finishDeposeAccelerateurAsync(ESide side) {
+    public CompletableFuture<Void> finishDeposeAccelerateur(ESide side) {
         IRobotSide service = sideServices.get(side);
 
         service.pousseAccelerateurFerme(false);
-        servosHomeAndDisablePompeAndRelease(side);
+
+        return servosHomeAndDisablePompeAndRelease(side);
     }
 
     /**
      * Première phase de la dépose balance
      * A faire avant d'avancer
      */
-    public boolean deposeBalance1(CouleurPalet couleur, ESide side) throws CarouselNotAvailableException {
+    @Async
+    public CompletableFuture<Boolean> deposeBalance1(CouleurPalet couleur, ESide side) throws CarouselNotAvailableException {
         IRobotSide service = sideServices.get(side);
 
         if (couleur == CouleurPalet.GOLD) {
             if (this.couleur.get(side) != CouleurPalet.GOLD) {
                 log.warn("On a pas le goldenium, ou il n'est pas dans la bonne ventouse");
-                return false;
+                return CompletableFuture.completedFuture(false);
             }
 
             service.ascenseurCarousel(false);
             service.pivotVentouseFacade(true);
 
         } else {
-            if (isWorking(side)) {
-                log.warn("Ventouse déjà utilisée");
-                return false;
-            }
-
-            CouleurPalet couleurFinale;
-
             if (rs.isCarouselEnabled()) {
-                couleurFinale = priseCarousel(couleur, service);
-            } else {
-                couleurFinale = this.couleur.get(side);
-
-                if (couleur != null) {
-                    service.pivotVentouseFacade(true);
-                    service.ascenseurCarousel(true);
-                }
+                priseCarousel(couleur, service);
             }
 
-            if (couleurFinale == null) {
-                return false;
+            if (this.couleur.get(side) == null) {
+                return CompletableFuture.completedFuture(false);
             }
 
-            this.couleur.put(side, couleurFinale);
+            if (!rs.isCarouselEnabled()) {
+                service.pivotVentouseFacade(false);
+                service.ascenseurAccelerateur(true);
+            }
         }
 
-        return true;
+        return CompletableFuture.completedFuture(true);
     }
 
     /**
      * Seconde phase de la dépose balance
      * A faire après avoir avancé
      */
-    public boolean deposeBalance2(ESide side) {
+    @Async
+    public CompletableFuture<Boolean> deposeBalance2(ESide side) {
         IRobotSide service = sideServices.get(side);
 
         if (couleur.get(side) == null) {
             log.warn("Rien dans la ventouse, impossible de déposer");
-            return false;
+            return CompletableFuture.completedFuture(false);
         }
 
         service.disablePompeAVide();
         service.airElectroVanne();
 
-        rs.getPaletsInBalance().add(couleur.get(side));
-        couleur.put(side, null);
-
-        // TODO : suprimmer
-        if (!rs.isCarouselEnabled()) {
-            this.couleur.put(side, null);
-        }
+        rs.getPaletsInBalance().add(this.couleur.get(side));
+        this.couleur.put(side, null);
 
         ThreadUtils.sleep(500);
 
-        return true;
+        return CompletableFuture.completedFuture(true);
     }
 
     /**
@@ -463,23 +453,24 @@ public class VentousesService implements InitializingBean {
      * A faire après avoir reculé
      */
     @Async
-    public void finishDeposeAsync(ESide side) {
-        IRobotSide service = sideServices.get(side);
-
-        servosHomeAndDisablePompeAndRelease(side);
+    public CompletableFuture<Void> finishDepose(ESide side) {
+        rs.enableSerrage();
+        return servosHomeAndDisablePompeAndRelease(side);
     }
 
     /**
      * Depose du goldenium sur la table
      */
-    public boolean deposeGoldeniumTable(ESide side) {
+    @Async
+    public CompletableFuture<Boolean> deposeGoldeniumTable(ESide side) {
         IRobotSide service = sideServices.get(side);
 
         if (couleur.get(side) != CouleurPalet.GOLD) {
             log.warn("On a pas le goldenium, ou il n'est pas dans la bonne ventouse");
-            return false;
+            return CompletableFuture.completedFuture(false);
         }
 
+        rs.disableSerrage();
 
         service.pinceSerrageRepos(false);
         service.ascenseurTableGold(true);
@@ -492,22 +483,21 @@ public class VentousesService implements InitializingBean {
         service.videElectroVanne();
 
         rs.getPaletsInTableauBleu().add(CouleurPalet.GOLD);
+        this.couleur.put(side, null);
 
-        couleur.put(side, null);
-
-        return true;
+        return CompletableFuture.completedFuture(true);
     }
 
-    public boolean deposeTable(ESide side) {
+    @Async
+    public CompletableFuture<Boolean> deposeTable(ESide side) {
         IRobotSide service = sideServices.get(side);
 
         if (couleur.get(side) == null) {
             log.info("Pas de palet à {}", side);
-            return false;
+            return CompletableFuture.completedFuture(false);
         }
 
         rs.disableSerrage();
-
 
         service.pinceSerrageRepos(true);
         service.pivotVentouseTable(true);
@@ -520,12 +510,13 @@ public class VentousesService implements InitializingBean {
         service.videElectroVanne();
 
         rs.enableSerrage();
-        couleur.put(side, null);
 
-        return true;
+        this.couleur.put(side, null);
+
+        return CompletableFuture.completedFuture(true);
     }
 
-    private void servosHomeAndDisablePompeAndRelease(ESide side) {
+    private CompletableFuture<Void> servosHomeAndDisablePompeAndRelease(ESide side) {
         IRobotSide service = sideServices.get(side);
 
         service.disablePompeAVide();
@@ -536,6 +527,8 @@ public class VentousesService implements InitializingBean {
 
         couleur.put(side, null);
         working.get(side).set(false);
+
+        return CompletableFuture.completedFuture(null);
     }
 
     private boolean tentativeAspiration(IRobotSide side) {
@@ -558,16 +551,15 @@ public class VentousesService implements InitializingBean {
     }
 
     @Async
-    public void stockageAsync(ESide side) {
+    public CompletableFuture<Void> stockageCarousel(ESide side) {
         IRobotSide service = sideServices.get(side);
 
         if (!service.presencePaletVentouse() || couleur.get(side) == null) {
             log.info("Rien à stocker");
-            return;
+            return CompletableFuture.completedFuture(null);
         }
 
         try {
-            // TODO : à suprimmer
             if (rs.isCarouselEnabled()) {
                 carouselService.waitAvailable(TEMPS_MAX_AVAILABLE * 2);
 
@@ -593,32 +585,32 @@ public class VentousesService implements InitializingBean {
                 carousel.store(service.positionCarouselVentouse(), couleur.get(side));
 
                 carouselService.release();
+
             }
+
+            service.pivotVentouseTable(false);
+            service.ascenseurAccelerateur(true);
 
         } catch (CarouselNotAvailableException e) {
             service.disablePompeAVide();
             service.releaseElectroVanne();
 
         } finally {
-            service.pivotVentouseTable(false);
-            service.ascenseurAccelerateur(true);
             working.get(side).set(false);
-
-            if (rs.isCarouselEnabled()) {
-                couleur.put(side, null);
-            }
+            couleur.put(side, null);
         }
 
+        return CompletableFuture.completedFuture(null);
     }
 
     // TODO factoriser ça
     @Async
-    public void stockageAsyncMaisResteEnHaut(ESide side) {
+    public CompletableFuture<Void> stockageCarouselMaisResteEnHaut(ESide side) {
         IRobotSide service = sideServices.get(side);
 
         if (!service.presencePaletVentouse() || couleur.get(side) == null) {
             log.info("Rien à stocker");
-            return;
+            return CompletableFuture.completedFuture(null);
         }
 
         try {
@@ -646,18 +638,19 @@ public class VentousesService implements InitializingBean {
 
             carouselService.release();
 
+            service.pivotVentouseCarouselVertical(false);
+            service.ascenseurAccelerateur(true);
+
         } catch (CarouselNotAvailableException e) {
             service.disablePompeAVide();
             service.releaseElectroVanne();
 
         } finally {
-
-            service.pivotVentouseCarouselVertical(false);
-            service.ascenseurAccelerateur(true);
-
             couleur.put(side, null);
             working.get(side).set(false);
         }
+
+        return CompletableFuture.completedFuture(null);
     }
 
 }

@@ -19,6 +19,8 @@ import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.ExecutionException;
+
 @Slf4j
 @Component
 public class DeposerBalance extends AbstractAction {
@@ -98,7 +100,7 @@ public class DeposerBalance extends AbstractAction {
                         CouleurPalet.GOLD :
                         carousel.has(CouleurPalet.BLEU) ? CouleurPalet.BLEU : CouleurPalet.VERT;
 
-                if (!ventouses.deposeBalance1(couleur, side)) {
+                if (!ventouses.deposeBalance1(couleur, side).get()) {
                     throw new VentouseNotAvailableException();
                 }
 
@@ -107,19 +109,19 @@ public class DeposerBalance extends AbstractAction {
 
                 mv.avanceMM(yOffset);
 
-                ventouses.deposeBalance2(side);
+                ventouses.deposeBalance2(side).get();
 
                 mv.reculeMM(yOffset);
             }
 
             completed = rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax;
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | CarouselNotAvailableException | VentouseNotAvailableException e) {
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | CarouselNotAvailableException | VentouseNotAvailableException | InterruptedException | ExecutionException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
 
         } finally {
-            ventouses.finishDeposeAsync(side);
+            ventouses.finishDepose(side);
         }
     }
 

@@ -175,14 +175,11 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     private boolean goldeniumPrit = false;
 
-    @Setter(AccessLevel.NONE)
-    private short nbDeposesTableau = 0;
-
-    public void incNbDeposesTableau() {
-        nbDeposesTableau++;
+    public int getNbDeposesTableau() {
+        return Math.max(paletsInTableauRouge.size(), paletsInTableauVert.size());
     }
 
-    public void transfertTableau() {
+    public void transfertMagasinTableau() {
         if (team == Team.VIOLET) {
             paletsInTableauRouge.addAll(magasin.getDroit());
             paletsInTableauVert.addAll(magasin.getGauche());
@@ -193,6 +190,42 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
         magasin.emptyGauche();
         magasin.emptyDroit();
+    }
+
+    public void transfertPinceTableau(boolean paletPinceDroit, boolean paletPinceGauche) {
+        if (getTeam() == Team.JAUNE) {
+            if (paletPinceDroit) {
+                getPaletsInTableauVert().add(CouleurPalet.INCONNU);
+            }
+            if (paletPinceGauche) {
+                getPaletsInTableauRouge().add(CouleurPalet.INCONNU);
+            }
+        } else {
+            if (paletPinceDroit) {
+                getPaletsInTableauRouge().add(CouleurPalet.INCONNU);
+            }
+            if (paletPinceGauche) {
+                getPaletsInTableauVert().add(CouleurPalet.INCONNU);
+            }
+        }
+    }
+
+    public void transfertVentouseTableau(CouleurPalet paletDroite, CouleurPalet paletGauche) {
+        if (getTeam() == Team.JAUNE) {
+            if (paletDroite != null) {
+                getPaletsInTableauVert().add(paletDroite);
+            }
+            if (paletGauche != null) {
+                getPaletsInTableauRouge().add(paletGauche);
+            }
+        } else {
+            if (paletDroite != null) {
+                getPaletsInTableauRouge().add(paletDroite);
+            }
+            if (paletGauche != null) {
+                getPaletsInTableauVert().add(paletGauche);
+            }
+        }
     }
 
     /**

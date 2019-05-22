@@ -1,9 +1,16 @@
 package org.arig.robot.nerell.utils.shell;
 
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.shell.standard.ShellCommandGroup;
-import org.springframework.shell.standard.ShellComponent;
+import org.arig.robot.Ordonanceur;
+import org.arig.robot.services.IIOService;
+import org.arig.robot.strategy.IAction;
+import org.springframework.shell.Availability;
+import org.springframework.shell.standard.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @ShellComponent
@@ -11,81 +18,35 @@ import org.springframework.shell.standard.ShellComponent;
 @AllArgsConstructor
 public class ActionsCommands {
 
-//    private IIOService ioService;
-//    private Ordonanceur ordonanceur;
-//
-//    private PrendreAtomesDepart prendreAtomesDepart;
-//    private PrendrePetitDistributeurEquipe prendrePetitDistributeurEquipe;
-//    private PrendreTrouNoirEquipe prendreTrouNoirEquipe;
-//    private DeposeAccelerateur deposeAccelerateur;
-//    private DeposerBalance deposerBalance;
-//    private PrendreGoldenium prendreGoldenium;
-//    private PrendreGrandDistributeurEquipe1 prendreGrandDistributeurEquipe1;
-//    private PrendreGrandDistributeurEquipe2 prendreGrandDistributeurEquipe2;
-//    private PrendreGrandDistributeurEquipe3 prendreGrandDistributeurEquipe3;
-//
-//    @ShellMethodAvailability
-//    public Availability alimentationOk() {
-//        return ioService.auOk() && ioService.alimPuissance5VOk() && ioService.alimPuissance12VOk()
-//                ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
-//    }
-//
-//    @ShellMethod
-//    @SneakyThrows
-//    public void callageBordure() {
-//        ordonanceur.callageBordure();
-//    }
-//
-//    @ShellMethod
-//    public void priseAtomesDepart() {
-//        execute(prendreAtomesDepart);
-//    }
-//
-//    @ShellMethod
-//    public void priseTrouNoirEquipe() {
-//        execute(prendreTrouNoirEquipe);
-//    }
-//
-//    @ShellMethod
-//    public void prisePetitDistributeur() {
-//        execute(prendrePetitDistributeurEquipe);
-//    }
-//
-//    @ShellMethod
-//    public void deposeAccelerateur() {
-//        execute(deposeAccelerateur);
-//    }
-//
-//    @ShellMethod
-//    public void deposeBalance() {
-//        execute(deposerBalance);
-//    }
-//
-//    @ShellMethod
-//    public void priseGoldenium() {
-//        execute(prendreGoldenium);
-//    }
-//
-//    @ShellMethod
-//    public void priseGrandDistributeurEquipe(@NotNull Integer index) {
-//        switch (index) {
-//            case 1:
-//                execute(prendreGrandDistributeurEquipe1);
-//                break;
-//            case 2:
-//                execute(prendreGrandDistributeurEquipe2);
-//                break;
-//            case 3:
-//                execute(prendreGrandDistributeurEquipe3);
-//                break;
-//            default:
-//                log.warn("Index invalide");
-//        }
-//    }
-//
-//    private void execute(AbstractAction action) {
-//        log.info("Execution de l'action {}, ordre {}, valide {}", action.name(), action.order(), action.isValid());
-//        action.execute();
-//    }
+    private IIOService ioService;
+    private Ordonanceur ordonanceur;
+    private List<IAction> actions;
+
+    @ShellMethodAvailability
+    public Availability alimentationOk() {
+        return ioService.auOk() && ioService.alimPuissance5VOk() && ioService.alimPuissance12VOk()
+                ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
+    }
+
+    @ShellMethod
+    @SneakyThrows
+    public void callageBordure() {
+        ordonanceur.callageBordure();
+    }
+
+    @ShellMethod
+    @SneakyThrows
+    public void action(@ShellOption(valueProvider = ActionsProvider.class) String name) {
+        final Optional<IAction> action = actions.stream()
+                .filter(a -> a.getClass().getSimpleName().equals(name))
+                .findFirst();
+
+        if (action.isPresent()) {
+            log.info("Execution de l'action {}, ordre {}, valide {}", action.get().name(), action.get().order(), action.get().isValid());
+            action.get().execute();
+        } else {
+            log.warn("Pas d'action nommée \"{}\" trouvée", name);
+        }
+    }
 
 }

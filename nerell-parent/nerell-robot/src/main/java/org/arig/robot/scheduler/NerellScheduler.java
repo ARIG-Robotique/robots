@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.ExecutionException;
+
 @Component
 public class NerellScheduler {
 
@@ -89,13 +91,13 @@ public class NerellScheduler {
                 if (rightSideService.buteePalet() && rightSideService.presencePalet() && !ventousesService.isWorking(ESide.DROITE)) {
                     ventousesService.waitAvailable(ESide.DROITE);
 
-                    if (ventousesService.priseTable(CouleurPalet.INCONNU, ESide.DROITE)) {
-                        ventousesService.stockageAsync(ESide.DROITE);
+                    if (ventousesService.priseTable(CouleurPalet.INCONNU, ESide.DROITE).get()) {
+                        ventousesService.stockageCarousel(ESide.DROITE).get();
                     } else {
-                        ventousesService.finishDeposeAsync(ESide.DROITE);
+                        ventousesService.finishDepose(ESide.DROITE).get();
                     }
                 }
-            } catch (VentouseNotAvailableException e) {
+            } catch (VentouseNotAvailableException | InterruptedException | ExecutionException e) {
 
             }
         }
@@ -108,13 +110,13 @@ public class NerellScheduler {
                 if (leftSideService.buteePalet() && leftSideService.presencePalet() && !ventousesService.isWorking(ESide.GAUCHE)) {
                     ventousesService.waitAvailable(ESide.GAUCHE);
 
-                    if (ventousesService.priseTable(CouleurPalet.INCONNU, ESide.GAUCHE)) {
-                        ventousesService.stockageAsync(ESide.GAUCHE);
+                    if (ventousesService.priseTable(CouleurPalet.INCONNU, ESide.GAUCHE).get()) {
+                        ventousesService.stockageCarousel(ESide.GAUCHE).get();
                     } else {
-                        ventousesService.finishDeposeAsync(ESide.GAUCHE);
+                        ventousesService.finishDepose(ESide.GAUCHE).get();
                     }
                 }
-            } catch (VentouseNotAvailableException e) {
+            } catch (VentouseNotAvailableException | InterruptedException | ExecutionException e) {
 
             }
         }

@@ -11,6 +11,7 @@ import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.NerellUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,6 +33,9 @@ public class PrendreAtomesDepart extends AbstractAction {
     @Autowired
     @Qualifier("currentPosition")
     private Position currentPosition;
+
+    @Autowired
+    private ConvertionRobotUnit conv;
 
     @Getter
     private boolean completed = false;
@@ -69,8 +73,11 @@ public class PrendreAtomesDepart extends AbstractAction {
             }
 
             for (Pair<Point, ESide> config : configs) {
-                double offsetAngle = NerellUtils.getAngleDecallagePince(currentPosition.getPt(), config.getLeft(), config.getRight());
-                double distance = NerellUtils.getDistance(currentPosition.getPt(), config.getLeft());
+                Point currentPosInMm = new Point(conv.pulseToMm(currentPosition.getPt().getX()),
+                        conv.pulseToMm(currentPosition.getPt().getY()));
+
+                double offsetAngle = NerellUtils.getAngleDecallagePince(currentPosInMm, config.getLeft(), config.getRight());
+                double distance = currentPosInMm.distance(config.getLeft());
 
                 mv.alignFrontToAvecDecalage(config.getLeft().getX(), config.getLeft().getY(), offsetAngle);
                 mv.avanceMM(distance);

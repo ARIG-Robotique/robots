@@ -232,6 +232,7 @@ public class Ordonanceur {
         servosService.pinceSerragePaletDroit(IConstantesServos.PINCE_SERRAGE_PALET_DROIT_REPOS, false);
 
         log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
+        displayScore();
 
         // Désactivation de la puissance moteur pour être sur de ne plus rouler
         ioService.disableAlim5VPuissance();
@@ -315,6 +316,14 @@ public class Ordonanceur {
                 position.setPt(new Point(conv.mmToPulse(2750), conv.mmToPulse(1500)));
                 position.setAngle(conv.degToPulse(180));
             }
+        }
+    }
+
+    private void displayScore() {
+        try {
+            new ProcessBuilder("figlet", "-f", "big", String.format("                       Score : %d", robotStatus.calculerPoints())).start();
+        } catch (IOException e) {
+            log.info("Score : {}", robotStatus.calculerPoints());
         }
     }
 

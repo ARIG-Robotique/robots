@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class DeposerTableau extends AbstractAction {
+public class DeposerMagasinTableau extends AbstractAction {
 
     @Autowired
     private IIOService io;
@@ -37,7 +37,7 @@ public class DeposerTableau extends AbstractAction {
 
     @Override
     public String name() {
-        return "Depose depalets dans le tableau";
+        return "Depose de palets dans le tableau depuis la magasin";
     }
 
     @Override
@@ -58,25 +58,23 @@ public class DeposerTableau extends AbstractAction {
         try {
             rs.enableAvoidance();
 
+            // 30=marge de sécu
+            double offset = IConstantesNerellConfig.dstArriere + rs.getNbDeposesTableau() * IConstantesNerellConfig.offsetTableau + 30;
+
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(2550 - IConstantesNerellConfig.dstArriere, 1400);
+                mv.pathTo(2550 - offset, 1400);
                 mv.gotoOrientationDeg(180);
             } else {
-                mv.pathTo(450 + IConstantesNerellConfig.dstArriere, 1400);
+                mv.pathTo(offset, 1400);
                 mv.gotoOrientationDeg(0);
             }
-
-            int distance = 450 - rs.getNbDeposesTableau() * IConstantesNerellConfig.offsetTableau;
-
-            mv.reculeMM(distance);
 
             magasin.startEjection(ESide.DROITE);
             magasin.startEjection(ESide.GAUCHE);
 
-            mv.avanceMM(distance);
+            mv.avanceMM(IConstantesNerellConfig.offsetTableau * 3);
 
-            rs.incNbDeposesTableau();
-            rs.transfertTableau();
+            rs.transfertMagasinTableau();
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
