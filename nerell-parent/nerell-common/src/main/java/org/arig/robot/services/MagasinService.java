@@ -76,10 +76,11 @@ public class MagasinService implements InitializingBean {
     public boolean stockage(CouleurPalet couleur, ESide side) throws CarouselNotAvailableException {
         IRobotSide service = sideServices.get(side);
 
-        if (service.nbPaletDansMagasin() >= NB_MAX_MAGASIN) {
-            log.warn("Le magasin est déjà plein");
-            return false;
-        }
+        // TODO
+//        if (service.nbPaletDansMagasin() >= NB_MAX_MAGASIN) {
+//            log.warn("Le magasin est déjà plein");
+//            return false;
+//        }
 
         if (!carousel.has(couleur)) {
             log.warn("Pas de {} dans le carousel", couleur);
@@ -95,15 +96,16 @@ public class MagasinService implements InitializingBean {
         service.trappeMagasinOuvert(true);
         service.trappeMagasinFerme(true);
 
-        if (service.nbPaletDansMagasin() > nbPaletInit) {
+        // TODO tinylidar
+//        if (service.nbPaletDansMagasin() > nbPaletInit) {
             carousel.unstore(service.positionCarouselMagasin());
             carouselService.release();
             return true;
-        } else {
-            log.warn("Un problème est survenu pendant le stockage");
-            carouselService.release();
-            return false;
-        }
+//        } else {
+//            log.warn("Un problème est survenu pendant le stockage");
+//            carouselService.release();
+//            return false;
+//        }
     }
 
     public void ejectionAvantRetourStand() {
