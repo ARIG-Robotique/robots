@@ -110,7 +110,8 @@ public interface IConstantesNerellConfig {
     double arretOrientDeg = 1;
     double approcheDistanceMm = 100;
     double approcheOrientationDeg = 5;
-    double angleReculDeg = 0.45;
+    //double angleReculDeg = 0.45;
+    double angleReculDeg = -1;
 
     double dstArriere = 161.5; // distance du dos du robot au milieu des roues
     double dstVentouseFacade = 180; // distance de la ventouse en prise facade au milieu de roues

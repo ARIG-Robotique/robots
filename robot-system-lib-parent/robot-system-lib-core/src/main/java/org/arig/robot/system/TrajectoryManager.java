@@ -108,7 +108,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     private final double approcheOrientDeg;
 
     private final double coefAngle;
-    private long startAngle;
+    private long startAngle = -1;
 
     /**
      * Instantiates a new robot manager.
@@ -148,12 +148,16 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
         fenetreArretOrientation = conv.degToPulse(arretOrientDeg);
         fenetreApprocheOrientation = conv.degToPulse(approcheOrientDeg);
 
-        // Angle de départ pour les déplacements.
-        // Si l'angle est supérieur en absolu, on annule la distance
-        // afin de naviguer en priorité en marche avant.
-        // Cela a pour effet de tourner sur place en reculant avant de partir en avant.
-        startAngle = (long) (coefAngle * conv.getPiPulse());
-        log.info("Angle pour le demi tour {}°", conv.pulseToDeg(startAngle));
+        if (coefAngle != -1) {
+            // Angle de départ pour les déplacements.
+            // Si l'angle est supérieur en absolu, on annule la distance
+            // afin de naviguer en priorité en marche avant.
+            // Cela a pour effet de tourner sur place en reculant avant de partir en avant.
+            startAngle = (long) (coefAngle * conv.getPiPulse());
+            log.info("Angle pour le demi tour {}°", conv.pulseToDeg(startAngle));
+        } else {
+            log.info("Angle pour le demi tour désactivé");
+        }
     }
 
     /**
@@ -272,7 +276,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
             // Calcul du coef d'annulation de la distance
             // Permet d'effectuer un demi tour en 3 temps.
-            if (Math.abs(consOrient) > startAngle) {
+            if (startAngle != -1 && Math.abs(consOrient) > startAngle) {
                 consDist = (consDist * ((startAngle - Math.abs(consOrient)) / startAngle));
             }
 
