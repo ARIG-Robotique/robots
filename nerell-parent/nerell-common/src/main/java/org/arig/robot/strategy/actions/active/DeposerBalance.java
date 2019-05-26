@@ -84,10 +84,10 @@ public class DeposerBalance extends AbstractAction {
 
             // va au point le plus proche
             if (rs.getTeam() == Team.VIOLET) {
-                // 20 = moitié du séparateur, 110 = moitié de la balance
-                mv.pathTo(1500 + 130 + IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
+                // 150 = moitié du séparateur +  moitié de la balance + marge
+                mv.pathTo(1500 + 150 + IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
             } else {
-                mv.pathTo(1500 - 130 - IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
+                mv.pathTo(1500 - 150 - IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
             }
 
             rs.disableAvoidance();
@@ -108,7 +108,7 @@ public class DeposerBalance extends AbstractAction {
                 }
 
                 // 400 = longueur de la balance, 30 = pour pas déposer juste au bord de la balance
-                double yOffset = -400 + yAvantAvance - IConstantesNerellConfig.dstVentouseFacade + 30;
+                double yOffset = -400 + yAvantAvance - IConstantesNerellConfig.dstVentouseFacade + 15;
 
                 mv.avanceMM(yOffset);
 
