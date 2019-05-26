@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.Ordonanceur;
+import org.arig.robot.constants.IConstantesUtiles;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.RobotStatus;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @ShellComponent
@@ -46,12 +48,12 @@ public class StartMatchCommands {
     private void choixTeam() {
         boolean choixTeam = false;
         do {
-            String teamAnswer = shellInputReader.prompt("Choisi ton équipe en entrant le chiffre : \n 1.JAUNE \n 2.VIOLET : ");
+            String teamAnswer = shellInputReader.prompt("Choisi ton équipe en entrant le chiffre : \n 1.JAUNE \n 2.VIOLET  \n");
             if (StringUtils.isNotBlank(teamAnswer) && StringUtils.isNumeric(teamAnswer)) {
                 int teamNumber = Integer.valueOf(teamAnswer);
                 if (teamNumber > 0 && teamNumber < 3) {
                     Team team = teamNumber == 1 ? Team.JAUNE : Team.VIOLET;
-                    rs.setTeam(team);
+                    System.setProperty(IConstantesUtiles.ENV_PROP_TEAM, team.name());
                     choixTeam = true;
                 }
             }
@@ -62,16 +64,19 @@ public class StartMatchCommands {
     private void choixStratgies() {
         StringBuilder choixStratQuestion = new StringBuilder("Choisi tes stratégies en entrant les chiffres (séparés par ',' ) : \n");
 
-        ArrayList<EStrategy> allStrategies = new ArrayList<>(EnumSet.allOf(EStrategy.class));
+        List<String> allStrategies = new ArrayList<>(EnumSet.allOf(EStrategy.class))
+                .stream()
+                .map(EStrategy::name)
+                .collect(Collectors.toList());
 
         for (int i = 0; i < allStrategies.size(); i++) {
             choixStratQuestion.append((i + 1) + ". : ")
-                    .append(allStrategies.get(i).name())
+                    .append(allStrategies.get(i))
                     .append("\n");
         }
 
-        choixStratQuestion.append((allStrategies.size() + 1) + " . : ")
-                .append(" Skip ")
+        choixStratQuestion.append((allStrategies.size() + 1) + ". : ")
+                .append("Skip")
                 .append("\n");
 
         boolean choixStrategies = false;
@@ -80,7 +85,7 @@ public class StartMatchCommands {
 
         String defautChoix = String.valueOf(allStrategies.size() + 1);
 
-        List<EStrategy> strategies;
+        List<String> strategies;
 
         do {
             strategies = new ArrayList<>();
@@ -119,7 +124,7 @@ public class StartMatchCommands {
         } while (!choixStrategies);
 
         if (CollectionUtils.isNotEmpty(strategies)) {
-            rs.setStrategies(strategies);
+            System.setProperty(IConstantesUtiles.ENV_PROP_STRATEGIES, strategies.stream().collect(Collectors.joining(",")));
         } else {
             log.info("Tu as choisi aucune stratégie");
         }

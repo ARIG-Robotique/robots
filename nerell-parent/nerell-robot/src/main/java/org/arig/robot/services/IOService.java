@@ -14,6 +14,7 @@ import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
 import org.arig.robot.constants.IConstantesI2C;
 import org.arig.robot.constants.IConstantesAnalogToDigital;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.IConstantesUtiles;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.RobotStatus;
@@ -205,13 +206,13 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public Team equipe() {
-        rs.setTeam(Team.valueOf(System.getProperty("equipe")));
+        rs.setTeam(Team.valueOf(System.getProperty(IConstantesUtiles.ENV_PROP_TEAM)));
         return rs.getTeam();
     }
 
     @Override
     public List<EStrategy> strategies() {
-        List<EStrategy> strategies = Stream.of(System.getProperty("strategies", "").split(","))
+        List<EStrategy> strategies = Stream.of(System.getProperty(IConstantesUtiles.ENV_PROP_STRATEGIES, "").split(","))
                 .filter(StringUtils::isNotBlank)
                 .map(EStrategy::valueOf)
                 .collect(Collectors.toList());
