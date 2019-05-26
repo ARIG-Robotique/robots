@@ -216,7 +216,7 @@ public class Ordonanceur {
 
         // On arrette le lidar
         lidar.stopScan();
-        lidar.end();
+//        lidar.end(); // Pour éviter le lidar ne démarre pas pendant le second cycle
 
         // On envoi les datas collecté
         monitoringWrapper.save();
