@@ -1,10 +1,6 @@
 package org.arig.robot.model;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.constants.IConstantesNerellConfig;
@@ -12,12 +8,7 @@ import org.arig.robot.model.balise.StatutBalise;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.springframework.beans.factory.InitializingBean;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Data
@@ -151,7 +142,7 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     private StatutBalise statutBalise = null;
 
     @Setter(AccessLevel.NONE)
-    private Magasin magasin = new Magasin();
+    private Map<ESide, List<CouleurPalet>> magasin = new EnumMap<>(ESide.class);
 
     private boolean trouNoirVioletVisite = false;
     private boolean trouNoirJauneVisite = false;
@@ -190,31 +181,31 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     public void transfertMagasinTableau() {
         if (team == Team.VIOLET) {
-            paletsInTableauRouge.addAll(magasin.getDroit());
-            paletsInTableauVert.addAll(magasin.getGauche());
+            paletsInTableauRouge.addAll(magasin.get(ESide.DROITE));
+            paletsInTableauVert.addAll(magasin.get(ESide.GAUCHE));
         } else {
-            paletsInTableauRouge.addAll(magasin.getGauche());
-            paletsInTableauVert.addAll(magasin.getDroit());
+            paletsInTableauRouge.addAll(magasin.get(ESide.GAUCHE));
+            paletsInTableauVert.addAll(magasin.get(ESide.DROITE));
         }
 
-        magasin.emptyGauche();
-        magasin.emptyDroit();
+        magasin.get(ESide.DROITE).clear();
+        magasin.get(ESide.GAUCHE).clear();
     }
 
     public void transfertPinceTableau(boolean paletPinceDroit, boolean paletPinceGauche) {
         if (getTeam() == Team.JAUNE) {
             if (paletPinceDroit) {
-                getPaletsInTableauVert().add(CouleurPalet.INCONNU);
+                paletsInTableauVert.add(CouleurPalet.INCONNU);
             }
             if (paletPinceGauche) {
-                getPaletsInTableauRouge().add(CouleurPalet.INCONNU);
+                paletsInTableauRouge.add(CouleurPalet.INCONNU);
             }
         } else {
             if (paletPinceDroit) {
-                getPaletsInTableauRouge().add(CouleurPalet.INCONNU);
+                paletsInTableauRouge.add(CouleurPalet.INCONNU);
             }
             if (paletPinceGauche) {
-                getPaletsInTableauVert().add(CouleurPalet.INCONNU);
+                paletsInTableauVert.add(CouleurPalet.INCONNU);
             }
         }
     }
@@ -222,19 +213,40 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     public void transfertVentouseTableau(CouleurPalet paletDroite, CouleurPalet paletGauche) {
         if (getTeam() == Team.JAUNE) {
             if (paletDroite != null) {
-                getPaletsInTableauVert().add(paletDroite);
+                paletsInTableauVert.add(paletDroite);
             }
             if (paletGauche != null) {
-                getPaletsInTableauRouge().add(paletGauche);
+                paletsInTableauRouge.add(paletGauche);
             }
         } else {
             if (paletDroite != null) {
-                getPaletsInTableauRouge().add(paletDroite);
+                paletsInTableauRouge.add(paletDroite);
             }
             if (paletGauche != null) {
-                getPaletsInTableauVert().add(paletGauche);
+                paletsInTableauVert.add(paletGauche);
             }
         }
+    }
+
+    /**
+     * Retourne le meilleur côté pour stocker un palet dans le magasin
+     * null si tout est plein
+     */
+    public ESide getSideMagasin(CouleurPalet couleur) {
+        if (team == Team.VIOLET) {
+            if (couleur == CouleurPalet.ROUGE && magasin.get(ESide.DROITE).size() < IConstantesNerellConfig.nbPaletsMagasinMax) {
+                return ESide.DROITE;
+            } else if (magasin.get(ESide.GAUCHE).size() < IConstantesNerellConfig.nbPaletsMagasinMax) {
+                return ESide.GAUCHE;
+            }
+        } else {
+            if (couleur == CouleurPalet.ROUGE && magasin.get(ESide.GAUCHE).size() < IConstantesNerellConfig.nbPaletsMagasinMax) {
+                return ESide.GAUCHE;
+            } else if (magasin.get(ESide.DROITE).size() < IConstantesNerellConfig.nbPaletsMagasinMax) {
+                return ESide.DROITE;
+            }
+        }
+        return null;
     }
 
     /**
@@ -261,6 +273,9 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         paletsPetitDistributeur.put(0, CouleurPalet.BLEU);
         paletsPetitDistributeur.put(1, CouleurPalet.VERT);
         paletsPetitDistributeur.put(2, CouleurPalet.ROUGE);
+
+        magasin.put(ESide.DROITE, new ArrayList<>());
+        magasin.put(ESide.GAUCHE, new ArrayList<>());
     }
 
     public int calculerPoints() {
