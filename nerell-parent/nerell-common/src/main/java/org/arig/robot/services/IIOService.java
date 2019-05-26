@@ -50,8 +50,8 @@ public interface IIOService {
     boolean paletPrisDansVentouseGauche();
     byte nbPaletDansMagasinDroit();
     byte nbPaletDansMagasinGauche();
-//    int distanceTelemetreAvantDroit();
-//    int distanceTelemetreAvantGauche();
+    int distanceTelemetreAvantDroit();
+    int distanceTelemetreAvantGauche();
 
     // Couleur
     TCS34725ColorSensor.ColorData couleurPaletRaw();

@@ -74,16 +74,25 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     }
 
     @Setter(AccessLevel.NONE)
-    private boolean calageBordureEnabled = false;
+    private EModeCalage calageBordure = null;
 
-    public void enableCalageBordure() {
-        log.info("Activation calage bordure");
-        calageBordureEnabled = true;
+    @Setter(AccessLevel.NONE)
+    private double calageBordureDistance = 0;
+
+    public void enableCalageBordureAriere() {
+        log.info("Activation calage bordure arrière");
+        calageBordure = EModeCalage.ARRIERE;
     }
 
     public void disableCalageBordure() {
         log.info("Désactivation calage bordure");
-        calageBordureEnabled = false;
+        calageBordure = null;
+    }
+
+    public void enableCalageBordureAvant(double dst) {
+        log.info("Activation calage bordure avant, {}mm", dst);
+        calageBordure = EModeCalage.AVANT;
+        calageBordureDistance = dst;
     }
 
     @Setter(AccessLevel.NONE)

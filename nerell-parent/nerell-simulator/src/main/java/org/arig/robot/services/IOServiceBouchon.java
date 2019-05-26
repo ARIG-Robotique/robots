@@ -154,9 +154,17 @@ public class IOServiceBouchon implements IIOService {
         return 0;
     }
 
+    @Override
+    public int distanceTelemetreAvantDroit() {
+        return 0;
+    }
+
+    @Override
+    public int distanceTelemetreAvantGauche() {
+        return 0;
+    }
 
     // Couleur
-
 
     @Override
     public TCS34725ColorSensor.ColorData couleurPaletRaw() {

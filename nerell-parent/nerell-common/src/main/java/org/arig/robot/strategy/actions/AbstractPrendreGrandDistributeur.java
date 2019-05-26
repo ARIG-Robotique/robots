@@ -99,8 +99,10 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
 
             // 457 = distance bord distributeur
             double yOffset = -457 + yAvantAvance - IConstantesNerellConfig.dstVentouseFacade;
-
             mv.avanceMM(yOffset);
+
+//            rs.enableCalageBordureAvant(IConstantesNerellConfig.dstVentouseFacade);
+//            mv.avanceMM(500);
 
             // prise du 1 et du 2
             NerellUtils.CompoundFutureResult2<Boolean, Boolean> ok = NerellUtils.all(

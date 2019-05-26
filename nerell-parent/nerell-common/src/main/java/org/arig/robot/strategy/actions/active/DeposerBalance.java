@@ -109,12 +109,16 @@ public class DeposerBalance extends AbstractAction {
 
                 // 400 = longueur de la balance, 30 = pour pas déposer juste au bord de la balance
                 double yOffset = -400 + yAvantAvance - IConstantesNerellConfig.dstVentouseFacade + 15;
-
                 mv.avanceMM(yOffset);
+
+//            rs.enableCalageBordureAvant(IConstantesNerellConfig.dstVentouseFacade);
+//            mv.avanceMM(500);
 
                 ventouses.deposeBalance2(side).get();
 
                 mv.reculeMM(yOffset);
+
+//                mv.reculeMM(100);
             }
 
             completed = rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax;

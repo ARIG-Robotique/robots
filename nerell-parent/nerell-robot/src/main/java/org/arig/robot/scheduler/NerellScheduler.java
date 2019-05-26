@@ -76,7 +76,7 @@ public class NerellScheduler {
 
     @Scheduled(fixedDelay = 200)
     public void calageBordureTask() {
-        if (rs.isCalageBordureEnabled()) {
+        if (rs.getCalageBordure() != null) {
             if (calageBordure.process() || trajectoryManager.isTrajetAtteint() || trajectoryManager.isTrajetEnApproche()) {
                 // Calage effectué, on arrete
                 rs.disableCalageBordure();

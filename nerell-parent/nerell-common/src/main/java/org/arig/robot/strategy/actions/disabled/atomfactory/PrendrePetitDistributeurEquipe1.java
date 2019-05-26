@@ -93,6 +93,9 @@ public class PrendrePetitDistributeurEquipe1 extends AbstractAction {
 
             mv.avanceMM(yAvantAvance - IConstantesNerellConfig.dstVentouseFacade);
 
+//            rs.enableCalageBordureAvant(IConstantesNerellConfig.dstVentouseFacade);
+//            mv.avanceMM(500);
+
             // prise du bleu et du vert
             NerellUtils.CompoundFutureResult2<Boolean, Boolean> ok = NerellUtils.all(
                     ventouses.priseDistributeur(CouleurPalet.BLEU, sideBleu),

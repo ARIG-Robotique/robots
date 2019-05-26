@@ -90,6 +90,9 @@ public class PrendrePetitDistributeurEquipe2 extends AbstractAction {
 
             mv.avanceMM(yAvantAvance - IConstantesNerellConfig.dstVentouseFacade);
 
+//            rs.enableCalageBordureAvant(IConstantesNerellConfig.dstVentouseFacade);
+//            mv.avanceMM(500);
+
             // prise du rouge
             boolean rougeOk = ventouses.priseDistributeur(CouleurPalet.ROUGE, sideRouge).get();
 

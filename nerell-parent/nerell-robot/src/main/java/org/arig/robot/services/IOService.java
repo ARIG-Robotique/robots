@@ -346,12 +346,26 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public byte nbPaletDansMagasinDroit() {
+        // TODO tinylidar
         return convertDistanceToNbPaletDansStock(IConstantesNerellConfig.diametrePaletMm /*stockMagasinDroit.readValue()*/);
     }
 
     @Override
     public byte nbPaletDansMagasinGauche() {
+        // TODO tinylidar
         return convertDistanceToNbPaletDansStock(IConstantesNerellConfig.diametrePaletMm /*stockMagasinGauche.readValue()*/);
+    }
+
+    @Override
+    public int distanceTelemetreAvantDroit() {
+        // TODO tinylidar
+        return 10000 + IConstantesNerellConfig.dstTinylidarAvant;
+    }
+
+    @Override
+    public int distanceTelemetreAvantGauche() {
+        // TODO tinylidar
+        return 10000 + IConstantesNerellConfig.dstTinylidarAvant;
     }
 
     private byte convertDistanceToNbPaletDansStock(int distance) {
