@@ -109,7 +109,7 @@ public interface IConstantesNerellConfig {
     double dstVentouseFacade = 180; // distance de la ventouse en prise facade au milieu de roues
     double dstAtomeCentre = 50; // distance du milieu du palet au centre du robot (largeur)
     double dstAtomeCentre2 = 120; // distance du milieu du palet au centre du robot (longueur)
-    double dstTinylidarAvant = 50; // FIXME
+    int dstTinylidarAvant = 50; // FIXME
 
     // -------------------------- //
     // Paramètre Carousel manager //
