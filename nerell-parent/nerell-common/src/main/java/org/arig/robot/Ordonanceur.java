@@ -225,7 +225,6 @@ public class Ordonanceur {
         servosService.pinceSerragePaletDroit(IConstantesServos.PINCE_SERRAGE_PALET_DROIT_REPOS, false);
 
         log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
-        displayScore();
 
         // Désactivation de la puissance moteur pour être sur de ne plus rouler
         ioService.disableAlim5VPuissance();
@@ -245,6 +244,9 @@ public class Ordonanceur {
         lines.add(stopOrdonnanceur.format(savePattern));
         FileUtils.writeLines(execFile, lines);
         log.info("Création du fichier de fin d'éxécution {}", execFile.getAbsolutePath());
+
+        // Visualisation du score
+        displayScore();
 
         // Attente remise de la tirette pour ejecter les palets en stock
         while(!ioService.tirette() || !ioService.auOk()) {
@@ -314,7 +316,7 @@ public class Ordonanceur {
             ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", String.format("\n\nScore : %d", robotStatus.calculerPoints()));
             Process p = pb.start();
 
-            StreamGobbler out = new StreamGobbler(p.getInputStream(), log::info);
+            StreamGobbler out = new StreamGobbler(p.getInputStream(), System.out::println);
             StreamGobbler err = new StreamGobbler(p.getErrorStream(), log::error);
             new Thread(out).start();
             new Thread(err).start();
