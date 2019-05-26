@@ -6,10 +6,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
-import org.arig.robot.model.RobotStatus;
-import org.arig.robot.model.Team;
+import org.arig.robot.model.*;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.strategy.AbstractAction;
@@ -60,7 +57,7 @@ public class PrendreTable extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return rs.isBaliseOk() && canStore();
+        return rs.strategyActive(EStrategy.PRIS_TABLE) && rs.isBaliseOk() && canStore();
     }
 
     private boolean canStore() {

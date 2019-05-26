@@ -45,7 +45,7 @@ public class PrendreTrouNoirEquipe extends AbstractAction {
         try {
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-            
+
             rs.enableAvoidance();
 
             if (rs.getTeam() == Team.VIOLET) {

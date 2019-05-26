@@ -115,11 +115,11 @@ public class PrendrePetitDistributeurEquipe1 extends AbstractAction {
                 rs.getPaletsPetitDistributeur().put(1, null);
             }
 
-            completed = true;
-
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException | InterruptedException | ExecutionException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
+        } finally {
+            completed = true;
         }
     }
 }

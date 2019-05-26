@@ -103,11 +103,11 @@ public class PrendrePetitDistributeurEquipe2 extends AbstractAction {
             // stocke
             ventouses.finishPriseDistributeur(rougeOk, sideRouge);
 
-            completed = true;
-
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException | InterruptedException | ExecutionException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
+        } finally {
+            completed = true;
         }
     }
 }
