@@ -53,8 +53,8 @@ public interface IConstantesNerellConfig {
     double rampAccDistance = 500.0; // en mm/s2
     double rampDecDistance = 500.0; // en mm/s2
 
-    double rampAccOrientation = 800.0; // en mm/s2
-    double rampDecOrientation = 800.0; // en mm/s2
+    double rampAccOrientation = 1000.0; // en mm/s2
+    double rampDecOrientation = 1000.0; // en mm/s2
 
     double rampAccCarousel = 500.0; // en mm/s2
     double rampDecCarousel = 500.0; // en mm/s2
@@ -75,7 +75,7 @@ public interface IConstantesNerellConfig {
     long vitesseSuperLente = 200;
     long vitesseUltraLente = 100;
 
-    long vitessePath = vitesseLente;
+    long vitessePath = vitesseMoyenneHaute;
     long vitesseMouvement = vitesseLente;
     long vitesseOrientation = vitesseOrientationSuperHaute;
 
@@ -90,14 +90,6 @@ public interface IConstantesNerellConfig {
     double kpOrientation = 10;
     double kiOrientation = 312.75 * asservTimeS;
     double kdOrientation = 0.0 / asservTimeS;
-
-    double kpMotDroit = 0.9;
-    double kiMotDroit = 0.5 * asservTimeS;
-    double kdMotDroit = 0.0009 / asservTimeS;
-
-    double kpMotGauche = 0.9;
-    double kiMotGauche = 0.5 * asservTimeS;
-    double kdMotGauche = 0.0009 / asservTimeS;
 
     double kpCarousel = 15;
     double kiCarousel = 1 * asservTimeCarouselS;

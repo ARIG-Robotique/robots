@@ -47,6 +47,15 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     public void startMatch() {
         matchTime.start();
+
+        log.info("Démarrage du match");
+
+        // Activation
+        this.enableMatch();
+        this.enableSerrage();
+        this.enableCarousel();
+        this.enableVentouses();
+        this.enableMagasin();
     }
 
     public void stopMatch() {

@@ -38,7 +38,7 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
 
     final int orderMux;
 
-    abstract Map<Integer, CouleurPalet> liste();
+    protected abstract Map<Integer, CouleurPalet> liste();
 
     @Autowired
     private ITrajectoryManager mv;
@@ -71,7 +71,7 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
         ESide side1 = rs.getTeam() == Team.VIOLET ? ESide.GAUCHE : ESide.DROITE;
         ESide side2 = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
 
-        mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientationBasse);
+        mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
         try {
             rs.enableAvoidance();

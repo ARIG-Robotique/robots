@@ -23,7 +23,7 @@ public class PrendreGrandDistributeurAdverse2 extends AbstractPrendreGrandDistri
     }
 
     @Override
-    Map<Integer, CouleurPalet> liste() {
+    protected Map<Integer, CouleurPalet> liste() {
         return rs.getPaletsGrandDistributeurAdverse();
     }
 

@@ -366,7 +366,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                         angle - angleOrig - 360.0,
                         angle - angleOrig + 360.0
                 )
-                        .min((a, b) -> new Double(Math.abs(a) - Math.abs(b)).intValue())
+                        .min((a, b) -> Double.valueOf(Math.abs(a) - Math.abs(b)).intValue())
                         .get();
 
             default:

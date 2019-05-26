@@ -10,7 +10,7 @@ import java.util.function.Consumer;
  *
  * @author gdepuille on 11/04/17.
  */
-class StreamGobbler implements Runnable {
+public class StreamGobbler implements Runnable {
 
     private InputStream inputStream;
     private Consumer<String> consumeInputLine;

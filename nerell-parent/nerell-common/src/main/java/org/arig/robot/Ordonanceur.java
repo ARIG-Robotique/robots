@@ -21,6 +21,7 @@ import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.pathfinding.IPathFinder;
+import org.arig.robot.system.process.StreamGobbler;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
 import org.arig.robot.utils.ThreadUtils;
@@ -210,14 +211,6 @@ public class Ordonanceur {
         // Début du compteur de temps pour le match
         robotStatus.startMatch();
 
-        log.info("Démarrage du match");
-
-        // Activation
-        robotStatus.enableMatch();
-        robotStatus.enableSerrage();
-//        robotStatus.enableCarousel();
-//        robotStatus.enableVentouses();
-
         // Match de XX secondes.
 //        boolean activateCollecteAdverse = false;
         while(robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
@@ -255,10 +248,7 @@ public class Ordonanceur {
 
         // Attente remise de la tirette pour ejecter les palets en stock
         while(!ioService.tirette() || !ioService.auOk()) {
-            //ioService.colorLedRGBOk();
-            ThreadUtils.sleep(500);
-            //ioService.clearColorLedRGB();
-            ThreadUtils.sleep(500);
+            ThreadUtils.sleep(1000);
         }
 
         // Ejection du stock
@@ -321,8 +311,15 @@ public class Ordonanceur {
 
     private void displayScore() {
         try {
-            new ProcessBuilder("figlet", "-f", "big", String.format("                       Score : %d", robotStatus.calculerPoints())).start();
-        } catch (IOException e) {
+            ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", String.format("\n\nScore : %d", robotStatus.calculerPoints()));
+            Process p = pb.start();
+
+            StreamGobbler out = new StreamGobbler(p.getInputStream(), log::info);
+            StreamGobbler err = new StreamGobbler(p.getErrorStream(), log::error);
+            new Thread(out).start();
+            new Thread(err).start();
+            p.waitFor();
+        } catch (IOException | InterruptedException e) {
             log.info("Score : {}", robotStatus.calculerPoints());
         }
     }

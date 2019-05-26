@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled.atomfactory;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +47,7 @@ public class PrendreAtomesDepart extends AbstractAction {
     @Override
     public void execute() {
         try {
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
             rs.disableAvoidance();
 
             List<Pair<Point, Boolean>> configs = new ArrayList<>();
