@@ -75,6 +75,9 @@ public class DeposerBalance extends AbstractAction {
         ESide side = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
 
         try {
+
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+
             rs.enableAvoidance();
 
             int yAvantAvance = 795;

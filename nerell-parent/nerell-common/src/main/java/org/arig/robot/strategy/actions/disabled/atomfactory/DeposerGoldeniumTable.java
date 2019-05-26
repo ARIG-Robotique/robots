@@ -60,6 +60,9 @@ public class DeposerGoldeniumTable extends AbstractAction {
         ESide side = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
 
         try {
+
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+
             rs.enableAvoidance();
 
             // va au point le plus proche (zone bleu)

@@ -57,6 +57,8 @@ public class PrendreGoldenium extends AbstractAction {
         try {
             rs.enableAvoidance();
 
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+
             int yAvantAvance = 1725;
 
             // va au point le plus proche

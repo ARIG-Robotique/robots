@@ -56,6 +56,9 @@ public class DeposerMagasinTableau extends AbstractAction {
     public void execute() {
 
         try {
+
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+
             rs.enableAvoidance();
 
             // 30=marge de sécu

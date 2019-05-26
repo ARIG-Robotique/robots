@@ -47,7 +47,9 @@ public class PrendreAtomesDepart extends AbstractAction {
     @Override
     public void execute() {
         try {
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+
+            mv.setVitesse(IConstantesNerellConfig.vitesseMouvement, IConstantesNerellConfig.vitesseOrientation);
+
             rs.disableAvoidance();
 
             List<Pair<Point, Boolean>> configs = new ArrayList<>();

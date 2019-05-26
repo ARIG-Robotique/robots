@@ -3,6 +3,7 @@ package org.arig.robot.strategy.actions.disabled.atomfactory;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
+import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Point;
@@ -70,6 +71,8 @@ public class PrendreTable extends AbstractAction {
     public void execute() {
         try {
             rs.enableAvoidance();
+
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             while (canStore()) {
                 Point atome = getClosest();
