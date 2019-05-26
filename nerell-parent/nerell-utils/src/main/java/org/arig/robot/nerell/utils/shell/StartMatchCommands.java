@@ -36,7 +36,7 @@ public class StartMatchCommands {
 
     @SneakyThrows
     @ShellMethod("Paramétrer pour le début match")
-    public void debutMatch() throws IOException, RefreshPathFindingException {
+    public void start() throws IOException, RefreshPathFindingException {
 
         choixTeam();
         choixStratgies();
