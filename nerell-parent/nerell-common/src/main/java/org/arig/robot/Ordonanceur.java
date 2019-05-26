@@ -146,34 +146,9 @@ public class Ordonanceur {
         }
         log.info("Alimentation puissance OK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
 
-        log.info("Démarrage du lidar");
-        lidar.startScan();
-
-        log.info("Initialisation du Carousel");
-        initialisationCarousel();
-
-        log.warn("La tirette n'est pas la. Phase de préparation Nerell");
-        boolean selectionCouleur = false;
-        /*while(!ioService.tirette() || !selectionCouleur) {
-            Team selectedTeam = ioService.equipe();
-            if (selectedTeam != initTeam && !selectionCouleur && !ioService.tirette()) {
-                log.info("Couleur selectionné une première fois");
-                selectionCouleur = true;
-            }
-
-            if (selectionCouleur) {
-                // Affichage de la couleur selectione
-                ioService.teamColorLedRGB();
-            }
-
-            ThreadUtils.sleep(100);
-        }*/
-
         List<EStrategy> strategies = ioService.strategies();
-        log.info("Stratégies actives : {}", strategies);
-
-        log.info("Phase de préparation terminé");
         log.info("Equipe : {}", ioService.equipe().name());
+        log.info("Stratégies actives : {}", strategies);
 
         log.info("Chargement de la carte");
         String fileResourcePath = String.format("classpath:maps/%s.png", robotStatus.getTeam().name().toLowerCase());
@@ -199,8 +174,11 @@ public class Ordonanceur {
 
         callageBordure();
 
-        log.info("Position initiale avant match des servos");
-        //servosService.homes();
+        log.info("Démarrage du lidar");
+        lidar.startScan();
+
+        log.info("Initialisation du Carousel");
+        initialisationCarousel();
 
         // Attente tirette.
         log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
@@ -212,7 +190,6 @@ public class Ordonanceur {
         robotStatus.startMatch();
 
         // Match de XX secondes.
-//        boolean activateCollecteAdverse = false;
         while(robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
             ThreadUtils.sleep(200);
         }
