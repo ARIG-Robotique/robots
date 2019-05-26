@@ -164,14 +164,14 @@ public class CodeursCommands {
 
             if (mesure > 0) {
                 double value = carouselEncoder.getValue();
-                log.info("Valeur : {}", value);
                 values.add(value);
                 sum += value;
+                log.info("Valeur : {}, moyenne: {}", value, sum / mesure / 6);
             }
         }
 
         log.info("Valeurs rotation : {}", values);
-        log.info("Moyenne : {}", sum / nbtours);
+        log.info("Moyenne : {}", sum / nbtours / 6);
     }
 
     @SneakyThrows

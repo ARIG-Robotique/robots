@@ -91,8 +91,8 @@ public interface IConstantesNerellConfig {
     double kiOrientation = 312.75 * asservTimeS;
     double kdOrientation = 0.0 / asservTimeS;
 
-    double kpCarousel = 15;
-    double kiCarousel = 1 * asservTimeCarouselS;
+    double kpCarousel = 10;
+    double kiCarousel = 0.5 * asservTimeCarouselS;
     double kdCarousel = 0.000625 / asservTimeCarouselS;
 
     // --------------------------- //
