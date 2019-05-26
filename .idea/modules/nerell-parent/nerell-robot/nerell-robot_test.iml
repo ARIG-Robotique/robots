@@ -5,14 +5,14 @@
       <configuration />
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_9">
     <output-test url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-robot/out/test/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-robot/build/generated/sources/annotationProcessor/java/test">
       <sourceFolder url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-robot/build/generated/sources/annotationProcessor/java/test" isTestSource="true" generated="true" />
     </content>
     <content url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-robot/src/test" />
-    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="nerell-robot_main" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.projectlombok:lombok:1.18.6" level="project" />
@@ -29,8 +29,8 @@
     <orderEntry type="library" name="Gradle: org.springframework:spring-webflux:5.1.6.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-web:5.1.6.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.synchronoss.cloud:nio-multipart-parser:1.1.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.pi4j:pi4j-gpio-extension:1.2" level="project" />
-    <orderEntry type="library" name="Gradle: com.pi4j:pi4j-core:1.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.pi4j:pi4j-gpio-extension:1.2-jdk9-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Gradle: com.pi4j:pi4j-core:1.2-jdk9-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-test-autoconfigure:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-test:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: com.jayway.jsonpath:json-path:2.4.0" level="project" />

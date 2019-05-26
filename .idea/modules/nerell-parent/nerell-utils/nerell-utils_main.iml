@@ -5,7 +5,7 @@
       <configuration />
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_9">
     <output url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-utils/out/production/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-utils/build/generated/sources/annotationProcessor/java/main">
@@ -62,8 +62,8 @@
     <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-to-slf4j:2.11.2" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:jul-to-slf4j:1.7.26" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.26" level="project" />
-    <orderEntry type="library" name="Gradle: com.pi4j:pi4j-gpio-extension:1.2" level="project" />
-    <orderEntry type="library" name="Gradle: com.pi4j:pi4j-core:1.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.pi4j:pi4j-gpio-extension:1.2-jdk9-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Gradle: com.pi4j:pi4j-core:1.2-jdk9-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: org.jline:jline:3.4.0" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-jcl:5.1.6.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />

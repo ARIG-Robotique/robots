@@ -5,14 +5,14 @@
       <configuration />
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_9">
     <output-test url="file://$MODULE_DIR$/../../../nerell-parent/out/test/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../nerell-parent/build/generated/sources/annotationProcessor/java/test">
       <sourceFolder url="file://$MODULE_DIR$/../../../nerell-parent/build/generated/sources/annotationProcessor/java/test" isTestSource="true" generated="true" />
     </content>
     <content url="file://$MODULE_DIR$/../../../nerell-parent/src/test" />
-    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="nerell-parent_main" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.projectlombok:lombok:1.18.6" level="project" />
