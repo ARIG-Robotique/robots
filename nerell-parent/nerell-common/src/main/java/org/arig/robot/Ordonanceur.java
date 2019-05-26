@@ -286,7 +286,7 @@ public class Ordonanceur {
             trajectoryManager.gotoOrientationDeg(-90);
 
             robotStatus.enableCalageBordure();
-            trajectoryManager.reculeMMSansAngle(1000);
+            trajectoryManager.reculeMM(1000);
 
             position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstArriere));
             position.setAngle(conv.degToPulse(-90));
