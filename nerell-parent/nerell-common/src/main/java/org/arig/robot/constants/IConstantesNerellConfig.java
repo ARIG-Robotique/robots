@@ -105,7 +105,7 @@ public interface IConstantesNerellConfig {
     //double angleReculDeg = 0.45;
     double angleReculDeg = -1;
 
-    double dstArriere = 161.5; // distance du dos du robot au milieu des roues
+    double dstArriere = 162.5; // distance du dos du robot au milieu des roues
     double dstVentouseFacade = 180; // distance de la ventouse en prise facade au milieu de roues
     double dstAtomeCentre = 50; // distance du milieu du palet au centre du robot (largeur)
     double dstAtomeCentre2 = 120; // distance du milieu du palet au centre du robot (longueur)

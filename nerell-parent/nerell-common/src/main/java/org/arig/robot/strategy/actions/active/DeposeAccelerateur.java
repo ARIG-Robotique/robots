@@ -123,10 +123,12 @@ public class DeposeAccelerateur extends AbstractAction {
                 } else if (!rs.isAccelerateurOuvert()) {
                     ventouses.pousseAccelerateur(side).get();
                     rs.setAccelerateurOuvert(true);
+                    rs.getPaletsInAccelerateur().add(CouleurPalet.BLEU);
                 }
             } else if (!rs.isAccelerateurOuvert() && !rs.isAccelerateurPrit()) {
                 ventouses.pousseAccelerateur(side).get();
                 rs.setAccelerateurOuvert(true);
+                rs.getPaletsInAccelerateur().add(CouleurPalet.BLEU);
             }
 
             // dépose
