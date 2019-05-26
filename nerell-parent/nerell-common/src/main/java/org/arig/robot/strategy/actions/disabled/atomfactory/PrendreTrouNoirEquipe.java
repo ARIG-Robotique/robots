@@ -2,6 +2,7 @@ package org.arig.robot.strategy.actions.disabled.atomfactory;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.RobotStatus;
@@ -42,6 +43,9 @@ public class PrendreTrouNoirEquipe extends AbstractAction {
     @Override
     public void execute() {
         try {
+
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+            
             rs.enableAvoidance();
 
             if (rs.getTeam() == Team.VIOLET) {
