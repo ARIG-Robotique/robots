@@ -3,12 +3,8 @@ package org.arig.robot.utils;
 import lombok.Getter;
 
 /**
- * The Class ConvertionRobotUnit.
- * <p>
  * Cette classe permet de réalisé les changements d'unité.
  * Elle réalie les convertions pulse <-> mm et pulse <-> °
- *
- * @author gdepuille
  */
 public final class ConvertionRobotUnit {
 
