@@ -6,7 +6,6 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
-import org.arig.robot.exceptions.CarouselNotAvailableException;
 import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.EStrategy;
@@ -57,7 +56,6 @@ public class PrendreGoldeniumAdverse extends AbstractAction {
         ESide side = rs.getTeam() == Team.VIOLET ? ESide.GAUCHE : ESide.DROITE;
 
         try {
-
             rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
@@ -87,15 +85,13 @@ public class PrendreGoldeniumAdverse extends AbstractAction {
             ventouses.finishPriseGoldenium(ok, side);
 
             completed = true;
-
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | CarouselNotAvailableException | VentouseNotAvailableException | InterruptedException | ExecutionException e) {
-
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException | ExecutionException | InterruptedException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
-
         } finally {
             completed = true;
         }
+
     }
 
     @Override
