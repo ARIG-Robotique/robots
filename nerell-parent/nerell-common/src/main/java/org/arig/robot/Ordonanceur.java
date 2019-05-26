@@ -297,8 +297,7 @@ public class Ordonanceur {
             StreamGobbler err = new StreamGobbler(p.getErrorStream(), log::error);
             new Thread(out).start();
             new Thread(err).start();
-            p.waitFor();
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             log.info("Score : {}", robotStatus.calculerPoints());
         }
     }
