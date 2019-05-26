@@ -15,6 +15,7 @@ import org.arig.robot.services.LeftSideService;
 import org.arig.robot.services.RightSideService;
 import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
+import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.TrajectoryManager;
 import org.arig.robot.utils.NerellUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class DeposerPincesTableau extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private TrajectoryManager mv;
+    private ITrajectoryManager mv;
 
     @Autowired
     private LeftSideService leftSideService;
