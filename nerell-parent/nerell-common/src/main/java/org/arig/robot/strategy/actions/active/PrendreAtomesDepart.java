@@ -55,11 +55,11 @@ public class PrendreAtomesDepart extends AbstractAction {
             List<Pair<Point, Boolean>> configs = new ArrayList<>();
 
             if (rs.getTeam().equals(Team.VIOLET)) {
-                configs.add(Pair.of(new Point(2500, 1550 - IConstantesNerellConfig.dstAtomeCentre), false));
+                configs.add(Pair.of(new Point(2500, 1550 - IConstantesNerellConfig.dstAtomeCentre), true));
                 configs.add(Pair.of(new Point(2500 - IConstantesNerellConfig.dstAtomeCentre, 1250), false));
                 configs.add(Pair.of(new Point(2500 + IConstantesNerellConfig.dstAtomeCentre, 950), true));
             } else {
-                configs.add(Pair.of(new Point(500, 1550 - IConstantesNerellConfig.dstAtomeCentre), false));
+                configs.add(Pair.of(new Point(500, 1550 - IConstantesNerellConfig.dstAtomeCentre), true));
                 configs.add(Pair.of(new Point(500 + IConstantesNerellConfig.dstAtomeCentre, 1250), false));
                 configs.add(Pair.of(new Point(500 - IConstantesNerellConfig.dstAtomeCentre, 950), true));
             }

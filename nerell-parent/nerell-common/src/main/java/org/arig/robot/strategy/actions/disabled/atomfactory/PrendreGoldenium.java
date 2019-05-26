@@ -52,7 +52,7 @@ public class PrendreGoldenium extends AbstractAction {
 
     @Override
     public void execute() {
-        ESide side = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
+        ESide side = rs.mainSide();
 
         try {
             rs.enableAvoidance();

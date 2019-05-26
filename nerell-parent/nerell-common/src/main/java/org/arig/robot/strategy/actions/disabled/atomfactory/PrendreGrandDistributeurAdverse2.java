@@ -2,6 +2,7 @@ package org.arig.robot.strategy.actions.disabled.atomfactory;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.enums.CouleurPalet;
+import org.arig.robot.strategy.actions.AbstractPrendreGrandDistributeur;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

@@ -48,7 +48,7 @@ public class DeposerBalance extends AbstractAction {
     @Override
     public int order() {
         // 24 pour le gold
-        int points = (ventouses.getCouleur(rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE) == CouleurPalet.GOLD ? 24 : 0) +
+        int points = (ventouses.getCouleur(rs.mainSide()) == CouleurPalet.GOLD ? 24 : 0) +
                 // 12 pour les bleus
                 (int) Math.min(IConstantesNerellConfig.nbPaletsBalanceMax - rs.getPaletsInBalance().size(), carousel.count(CouleurPalet.BLEU)) * 12 +
                 // 8 pour les verts
@@ -64,7 +64,7 @@ public class DeposerBalance extends AbstractAction {
     private boolean canDepose() {
         return rs.getPaletsInBalance().size() < IConstantesNerellConfig.nbPaletsBalanceMax &&
                 (
-                        ventouses.getCouleur(rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE) == CouleurPalet.GOLD ||
+                        ventouses.getCouleur(rs.mainSide()) == CouleurPalet.GOLD ||
                                 carousel.has(CouleurPalet.BLEU) ||
                                 carousel.has(CouleurPalet.VERT)
                 );
@@ -72,7 +72,7 @@ public class DeposerBalance extends AbstractAction {
 
     @Override
     public void execute() {
-        ESide side = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
+        ESide side = rs.mainSide();
 
         try {
 

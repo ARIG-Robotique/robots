@@ -51,13 +51,13 @@ public class DeposerGoldeniumTable extends AbstractAction {
     @Override
     public boolean isValid() {
         return isTimeValid() &&
-                ventouses.getCouleur(rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE) == CouleurPalet.GOLD &&
+                ventouses.getCouleur(rs.mainSide()) == CouleurPalet.GOLD &&
                 rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax;
     }
 
     @Override
     public void execute() {
-        ESide side = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
+        ESide side = rs.mainSide();
 
         try {
 

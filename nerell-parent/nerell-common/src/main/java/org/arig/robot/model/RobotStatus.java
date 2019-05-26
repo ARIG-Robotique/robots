@@ -173,17 +173,28 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     private boolean goldeniumPrit = false;
 
+    /**
+     * Coté pour l'accelerateur, le distributeur et la balance
+     */
+    public ESide mainSide() {
+        return team == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
+    }
+
     public int getNbDeposesTableau() {
         return Math.max(paletsInTableauRouge.size(), paletsInTableauVert.size());
     }
 
-    public void transfertMagasinTableau() {
-        if (team == Team.VIOLET) {
+    public void transfertMagasinTableau(boolean onlyRed) {
+        if (onlyRed) {
+            paletsInTableauRouge.addAll(magasin.get(ESide.DROITE));
+            paletsInTableauRouge.addAll(magasin.get(ESide.GAUCHE));
+        }
+        else if (team == Team.VIOLET) {
             paletsInTableauRouge.addAll(magasin.get(ESide.DROITE));
             paletsInTableauVert.addAll(magasin.get(ESide.GAUCHE));
         } else {
-            paletsInTableauRouge.addAll(magasin.get(ESide.GAUCHE));
             paletsInTableauVert.addAll(magasin.get(ESide.DROITE));
+            paletsInTableauRouge.addAll(magasin.get(ESide.GAUCHE));
         }
 
         magasin.get(ESide.DROITE).clear();

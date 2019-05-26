@@ -9,6 +9,7 @@ import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.MagasinService;
 import org.arig.robot.strategy.AbstractAction;
@@ -64,11 +65,14 @@ public class DeposerMagasinTableau extends AbstractAction {
             // 30=marge de sécu
             double offset = IConstantesNerellConfig.dstArriere + rs.getNbDeposesTableau() * IConstantesNerellConfig.offsetTableau + 30;
 
+            boolean mostlyRed = mostlyRed();
+            double y = mostlyRed ? 1550 : 1400;
+
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(2550 - offset, 1400);
+                mv.pathTo(2550 - offset, y);
                 mv.gotoOrientationDeg(180);
             } else {
-                mv.pathTo(offset, 1400);
+                mv.pathTo(offset, y);
                 mv.gotoOrientationDeg(0);
             }
 
@@ -77,11 +81,27 @@ public class DeposerMagasinTableau extends AbstractAction {
 
             mv.avanceMM(IConstantesNerellConfig.offsetTableau * 3);
 
-            rs.transfertMagasinTableau();
+            rs.transfertMagasinTableau(mostlyRed);
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
         }
+    }
+
+    /**
+     * Regarde si dans le coté "vert" contient plutot du rouge
+     */
+    private boolean mostlyRed() {
+        if (rs.getTeam() == Team.VIOLET) {
+            if (rs.getMagasin().get(ESide.GAUCHE).stream().filter(c -> c != CouleurPalet.ROUGE).count() <= 1) {
+                return true;
+            }
+        } else {
+            if (rs.getMagasin().get(ESide.DROITE).stream().filter(c -> c != CouleurPalet.ROUGE).count() <= 1) {
+                return true;
+            }
+        }
+        return false;
     }
 }

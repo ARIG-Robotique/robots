@@ -49,15 +49,19 @@ public class DeposeAccelerateur extends AbstractAction {
     @Override
     public int order() {
         // 10 pour ouvrir l'accelerateur
-        int points = (!rs.isAccelerateurOuvert() ? 10 + 20 + 24 : 0) +
+        int points = (!rs.isAccelerateurOuvert() ? 10 + 20 : 0) +
                 // 10 par palet
-                (int) Math.min(IConstantesNerellConfig.nbPaletsAccelerateurMax - rs.getPaletsInAccelerateur().size(), rs.getRemainingTime() < 30 ? carousel.count(CouleurPalet.ANY) : carousel.count(CouleurPalet.ROUGE)) * 10;
+                (int) Math.min(IConstantesNerellConfig.nbPaletsAccelerateurMax - rs.getPaletsInAccelerateur().size(), rs.getRemainingTime() < 30000 ? carousel.count(CouleurPalet.ANY) : carousel.count(CouleurPalet.ROUGE)) * 10;
         return points;
     }
 
     @Override
     public boolean isValid() {
         return isTimeValid() &&
+                (
+                        rs.getRemainingTime() < 60000 ||
+                                carousel.count(CouleurPalet.ROUGE) >= 3
+                ) &&
                 (
                         !rs.isAccelerateurOuvert() ||
                                 canDepose() ||
@@ -69,13 +73,13 @@ public class DeposeAccelerateur extends AbstractAction {
         return rs.getPaletsInAccelerateur().size() < IConstantesNerellConfig.nbPaletsAccelerateurMax &&
                 (
                         carousel.has(CouleurPalet.ROUGE) ||
-                                carousel.has(CouleurPalet.ANY) && rs.getRemainingTime() < 30
+                                carousel.has(CouleurPalet.ANY) && rs.getRemainingTime() < 30000
                 );
     }
 
     @Override
     public void execute() {
-        ESide side = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
+        ESide side = rs.mainSide();
 
         try {
 
