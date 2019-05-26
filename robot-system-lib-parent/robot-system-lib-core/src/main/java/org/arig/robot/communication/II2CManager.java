@@ -30,15 +30,6 @@ public interface II2CManager {
     void sendData(final String deviceName, final byte... datas) throws I2CException;
 
     /**
-     * Send data.
-     *
-     * @param deviceName the address
-     * @param nbResult   the nb result
-     * @param datas      the datas
-     */
-    void sendData(final String deviceName, final int nbResult, final byte... datas) throws I2CException;
-
-    /**
      * Gets the data.
      *
      * @param deviceName the address

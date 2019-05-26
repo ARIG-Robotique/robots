@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 
+import java.io.IOException;
 import java.util.concurrent.Future;
 
 /**
@@ -23,10 +24,11 @@ import java.util.concurrent.Future;
 @Slf4j
 public class TinyLidar {
 
-    public static int INVALID_VALUE = -1;
+    private static final int INVALID_VALUE = -1;
 
-    private static char READ_DATA_REGISTER = 'D'; // 0x44
-    private static char QUERY_SETTINGS_REGISTER = 'Q'; // 0x51
+    private static final byte READ_DATA_REGISTER = 0x44;
+    private static final byte QUERY_SETTINGS_REGISTER = 0x51;
+    private static final byte[] SET_CONTINUOUS_MODE = new byte[]{0x4d, 0x43};
 
     private static String UNKNOWN_RESULT = "** UNKNOWN **";
 
@@ -40,6 +42,12 @@ public class TinyLidar {
 
     public TinyLidar(String deviceName) {
         this.deviceName = deviceName;
+
+        try {
+            i2cManager.sendData(deviceName, SET_CONTINUOUS_MODE);
+        } catch (I2CException e) {
+            log.warn("Impossible de passer le tinyLIDAR en continous mode");
+        }
     }
 
     @Async
@@ -124,7 +132,7 @@ public class TinyLidar {
 
             final String offsetCal = ((datas[14] & 0x08) == 8) ? "Custom" : "Default";
 
-            final int calOffset = (int) ((datas[15] << 24 | datas[16] << 16 | datas[17] << 8 | datas[18]) /1000.0);
+            final int calOffset = (int) ((datas[15] << 24 | datas[16] << 16 | datas[17] << 8 | datas[18]) / 1000.0);
             final double xtalk = (datas[19] << 24 | datas[20] << 16 | datas[21] << 8 | datas[22]) / 65536.0;
 
             log.info("tinyLidar {} configuration :", deviceName);

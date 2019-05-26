@@ -44,9 +44,6 @@ public class BouchonI2CManager extends AbstractI2CManager<BouchonI2CDevice> {
     public void sendData(String deviceName, byte... datas) throws I2CException { }
 
     @Override
-    public void sendData(String deviceName, int nbResult, byte... datas) throws I2CException { }
-
-    @Override
     public byte getData(String deviceName) throws I2CException {
         return 0;
     }
