@@ -290,7 +290,7 @@ public class Ordonanceur {
 
     private void displayScore() {
         try {
-            ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", String.format("\n\nScore : %d", robotStatus.calculerPoints()));
+            ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", String.format("\n\n\n\nScore : %d", robotStatus.calculerPoints()));
             Process p = pb.start();
 
             StreamGobbler out = new StreamGobbler(p.getInputStream(), System.out::println);
