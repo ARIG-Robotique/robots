@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.disabled.atomfactory;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Component
-public class PrendrePetitDistributeurEquipe extends AbstractAction {
+public class PrendrePetitDistributeurEquipe1 extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -42,27 +42,29 @@ public class PrendrePetitDistributeurEquipe extends AbstractAction {
 
     @Override
     public String name() {
-        return "Prise des palets dans le petit distributeur de l'équipe";
+        return "Prise des palets dans le petit distributeur 1 de l'équipe";
     }
 
     @Override
     public int order() {
-        return 2 * (CouleurPalet.BLEU.getImportance() + CouleurPalet.ROUGE.getImportance() + CouleurPalet.VERT.getImportance());
+        return 2 * (CouleurPalet.BLEU.getImportance() + CouleurPalet.VERT.getImportance());
     }
 
     @Override
     public boolean isValid() {
         return isTimeValid() &&
-                carousel.count(null) >= 3;
+                carousel.count(null) >= 2;
     }
 
     @Override
     public void execute() {
         ESide sideBleu = rs.getTeam() == Team.VIOLET ? ESide.GAUCHE : ESide.DROITE;
         ESide sideVert = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
-        ESide sideRouge = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
 
         try {
+
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+
             rs.enableAvoidance();
 
             int yAvantAvance = 200;
@@ -100,51 +102,17 @@ public class PrendrePetitDistributeurEquipe extends AbstractAction {
             boolean vertOk = ok.getB();
 
             // recule
-            mv.reculeMM(200);
+            mv.reculeMM(50);
 
             // stocke
             ventouses.finishPriseDistributeur(bleuOk, sideBleu);
             ventouses.finishPriseDistributeur(vertOk, sideVert);
-
-            // avance en face du ROUGE
-            if (rs.getTeam() == Team.VIOLET) {
-                mv.gotoPointMM(3000 - xPos - 100, yAvantAvance);
-            } else {
-                mv.gotoPointMM(xPos + 100, yAvantAvance);
-            }
-
-            // aligne, prépare les ventouses et avance
-            mv.gotoOrientationDeg(-90);
-
-            ventouses.waitAvailable(sideRouge);
-            ventouses.preparePriseDistributeur(sideRouge);
-
-            mv.avanceMM(yAvantAvance - IConstantesNerellConfig.dstVentouseFacade);
-
-            // prise du rouge
-            boolean rougeOk = ventouses.priseDistributeur(CouleurPalet.ROUGE, sideRouge).get();
-
-            // recule
-            mv.reculeMM(50);
-
-            // stocke
-            ventouses.finishPriseDistributeur(rougeOk, sideRouge);
-
-            rs.enableAvoidance();
-            if (rs.getTeam() == Team.VIOLET) {
-                mv.gotoPointMM(3000 - 245, 600);
-            } else {
-                mv.gotoPointMM(245, 600);
-            }
 
             if (bleuOk) {
                 rs.getPaletsPetitDistributeur().put(0, null);
             }
             if (vertOk) {
                 rs.getPaletsPetitDistributeur().put(1, null);
-            }
-            if (rougeOk) {
-                rs.getPaletsPetitDistributeur().put(2, null);
             }
 
             completed = true;
