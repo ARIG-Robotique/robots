@@ -158,10 +158,15 @@ public class Ordonanceur {
         pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
 
         log.info("Définition des zones 'mortes' de la carte.");
+
+        // zone de déco
+        // Inverse de width && height
+        tableUtils.addDeadZone(new java.awt.Rectangle.Double(0, 0,  3000, 457));
+
         if (robotStatus.getTeam() == Team.JAUNE) {
-            tableUtils.addDeadZone(new java.awt.Rectangle.Double(0, 0, 10, 10)); // Balance
+            tableUtils.addDeadZone(new java.awt.Rectangle.Double(1050,457,450,200)); // Balance
         } else {
-            tableUtils.addDeadZone(new java.awt.Rectangle.Double(0, 0, 10, 10)); // Balance
+            tableUtils.addDeadZone(new java.awt.Rectangle.Double(1500,457,450,200)); // Balance
         }
 
         // Attente la mise de la tirette
