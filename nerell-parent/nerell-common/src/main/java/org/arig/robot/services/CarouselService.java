@@ -8,6 +8,7 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -91,9 +92,14 @@ public class CarouselService {
     }
 
     /**
-     * Tourner dans le sens trigo
+     * Tourner dans le sens le plus rapide
      */
     private void tourner(int nb) {
+        if (nb > 3) {
+            nb -= 6;
+        } else if (nb < -3) {
+            nb += 6;
+        }
         carouselManager.tourneIndex(nb);
     }
 
@@ -102,10 +108,9 @@ public class CarouselService {
             return;
         }
 
-        // ventouse en haut pour utiliser son capteur
-        // barillet ouvert
-        rightSideService.ascenseurCarousel(true);
+        // ventouse en haut pour utiliser son capteurs
         rightSideService.pivotVentouseCarouselVertical(true);
+        rightSideService.ascenseurCarousel(true);
         rightSideService.porteBarilletOuvert(true);
 
         while (carouselManager.has(CouleurPalet.ANY)) {
