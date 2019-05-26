@@ -167,8 +167,6 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     @Setter(AccessLevel.NONE)
     private List<CouleurPalet> paletsInTableauBleu = new ArrayList<>();
 
-    private boolean experienceActivee = false;
-
     private boolean accelerateurOuvert = false;
 
     private boolean accelerateurPrit = false;
@@ -279,7 +277,7 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     }
 
     public int calculerPoints() {
-        int points = 5; // experience placée
+        int points = 40; // experience
         points += pointsTableau(paletsInTableauRouge, CouleurPalet.ROUGE);
         points += pointsTableau(paletsInTableauVert, CouleurPalet.VERT);
         points += pointsTableau(paletsInTableauBleu, CouleurPalet.BLEU);
@@ -287,7 +285,6 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         points += 10 * paletsInAccelerateur.size();
         points += accelerateurOuvert ? 10 : 0;
         points += goldeniumPrit ? 20 : 0;
-        points += experienceActivee ? 15 + 20 : 0;
         return points;
     }
 
@@ -303,7 +300,7 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     private int pointsTableau(final List<CouleurPalet> tableau, CouleurPalet couleur) {
         return tableau.stream()
                 .filter(Objects::nonNull)
-                .mapToInt(c -> 1 + (CouleurPalet.GOLD == c ? 6 : couleur == c ? 5 : 0))
+                .mapToInt(c -> 1 + ((CouleurPalet.GOLD == c || couleur == c) ? 5 : 0))
                 .sum();
     }
 
