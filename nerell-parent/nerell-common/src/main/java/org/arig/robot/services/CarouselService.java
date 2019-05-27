@@ -3,6 +3,7 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exceptions.CarouselNotAvailableException;
 import org.arig.robot.model.enums.CouleurPalet;
+import org.arig.robot.system.CarouselManager;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class CarouselService {
 
     @Autowired
     private RightSideService rightSideService;
+
+    @Autowired
+    private LeftSideService leftSideService;
 
     @Autowired
     private ICarouselManager carouselManager;
@@ -114,19 +118,18 @@ public class CarouselService {
         }
 
         // ventouse en haut pour utiliser son capteurs
-        rightSideService.pivotVentouseCarouselVertical(true);
-        rightSideService.ascenseurCarousel(true);
-        rightSideService.porteBarilletOuvert(true);
+        rightSideService.porteBarilletOuvert(false);
+        leftSideService.porteBarilletOuvert(false);
+        rightSideService.ascenseurTableGold(false);
+        leftSideService.ascenseurTableGold(true);
 
-        while (carouselManager.has(CouleurPalet.ANY)) {
-            tourner(carouselManager.firstIndexOf(CouleurPalet.ANY, ICarouselManager.VENTOUSE_DROITE));
-
-            // on attend que la palet soit enlevé (ou tombe ?)
-            while (ioService.presencePaletVentouseDroit()) {
-                ThreadUtils.sleep(100);
-            }
+        for (int i = 0 ; i < 6 ; i++) {
+            tourner(1);
         }
 
-        rightSideService.porteBarilletFerme(true);
+        ThreadUtils.sleep(1000);
+
+        rightSideService.porteBarilletFerme(false);
+        leftSideService.porteBarilletFerme(true);
     }
 }
