@@ -20,6 +20,7 @@ import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.services.avoiding.BasicAvoidingService;
 import org.arig.robot.services.avoiding.CompleteAvoidingService;
 import org.arig.robot.system.avoiding.IAvoidingService;
+import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
@@ -80,7 +81,7 @@ public class NerellRobotContext {
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_GAUCHE, IConstantesI2C.CODEUR_GAUCHE_ADDRESS);
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_CAROUSEL, IConstantesI2C.CODEUR_CAROUSEL_ADDRESS);
         manager.registerDevice(IConstantesI2C.TCS34725_DEVICE_NAME, IConstantesI2C.TCS34725_ADDRESS);
-//        manager.registerDevice(IConstantesI2C.I2C_ADC_DEVICE_NAME, IConstantesI2C.I2C_ADC_ADDRESS);
+        manager.registerDevice(IConstantesI2C.I2C_ADC_DEVICE_NAME, IConstantesI2C.I2C_ADC_ADDRESS);
 //        manager.registerDevice(IConstantesI2C.TINY_LIDAR_MAGASIN_DROIT_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_MAGASIN_DROIT_ADDRESS, (byte) 0x44);
 //        manager.registerDevice(IConstantesI2C.TINY_LIDAR_MAGASIN_GAUCHE_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_MAGASIN_GAUCHE_ADDRESS, (byte) 0x44);
 //        manager.registerDevice(IConstantesI2C.TINY_LIDAR_AVANT_DROIT_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_AVANT_DROIT_ADDRESS, (byte) 0x44);
@@ -145,6 +146,10 @@ public class NerellRobotContext {
         return new TCS34725ColorSensor(IConstantesI2C.TCS34725_DEVICE_NAME);
     }
 
+    @Bean
+    public I2CAdcAnalogInput i2cAdc() {
+        return new I2CAdcAnalogInput(IConstantesI2C.I2C_ADC_DEVICE_NAME);
+    }
     @Bean
     public TinyLidar stockMagasinDroit() {
         return new TinyLidar(IConstantesI2C.TINY_LIDAR_MAGASIN_DROIT_DEVICE_NAME);

@@ -20,6 +20,7 @@ import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
+import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 import org.springframework.beans.factory.DisposableBean;
@@ -44,6 +45,9 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Autowired
     private I2CBus bus;
+
+    @Autowired
+    private I2CAdcAnalogInput i2cAdc;
 
     @Autowired
     private TCS34725ColorSensor colorSensor;
@@ -314,8 +318,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     // Analogique
     @Override
     public boolean paletPrisDansVentouseDroit() {
-        boolean result = true;
-/*
+        boolean result;
         try {
             int analogValue = i2cAdc.readCapteurValue(IConstantesAnalogToDigital.VACUOSTAT_DROIT);
             result = analogValue > IConstantesAnalogToDigital.VACUOSTAT_DROIT_SEUIL;
@@ -323,15 +326,13 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         } catch (I2CException e) {
             result = false;
         }
- */
         log.info("Présence module dans bras : {}", result);
         return result;
     }
 
     @Override
     public boolean paletPrisDansVentouseGauche() {
-        boolean result = true;
-/*
+        boolean result;
         try {
             int analogValue = i2cAdc.readCapteurValue(IConstantesAnalogToDigital.VACUOSTAT_GAUCHE);
             result = analogValue > IConstantesAnalogToDigital.VACUOSTAT_GAUCHE_SEUIL;
@@ -339,7 +340,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         } catch (I2CException e) {
             result = false;
         }
-*/
         log.info("Présence module dans bras : {}", result);
         return result;
     }

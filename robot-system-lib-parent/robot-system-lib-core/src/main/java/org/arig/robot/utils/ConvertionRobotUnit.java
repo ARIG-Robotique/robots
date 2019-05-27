@@ -4,7 +4,7 @@ import lombok.Getter;
 
 /**
  * Cette classe permet de réalisé les changements d'unité.
- * Elle réalie les convertions pulse <-> mm et pulse <-> °
+ * Elle réalie les convertions pulse vers mm et pulse vers °
  */
 public final class ConvertionRobotUnit {
 

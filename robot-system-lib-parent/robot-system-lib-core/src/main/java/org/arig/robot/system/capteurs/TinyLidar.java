@@ -22,7 +22,7 @@ import java.util.concurrent.Future;
  * @see <a href="https://microed.co/tinylidar/">tinyLidar documentation</a>
  */
 @Slf4j
-public class TinyLidar {
+public class TinyLidar  {
 
     private static final int INVALID_VALUE = -1;
 
@@ -42,12 +42,14 @@ public class TinyLidar {
 
     public TinyLidar(String deviceName) {
         this.deviceName = deviceName;
-
+/*
         try {
             i2cManager.sendData(deviceName, SET_CONTINUOUS_MODE);
         } catch (I2CException e) {
             log.warn("Impossible de passer le tinyLIDAR en continous mode");
         }
+
+ */
     }
 
     @Async
