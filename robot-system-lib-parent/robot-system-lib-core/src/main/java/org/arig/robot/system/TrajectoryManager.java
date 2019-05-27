@@ -484,17 +484,18 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                     Point targetPoint = c.next().multiplied(divisor);
 
                     // Processing du path
-                    if (first) {
-                        first = false;
+                    //if (first) {
+                    //    first = false;
                         rs.disableAvoidance();
                         alignFrontTo(targetPoint.getX(), targetPoint.getY());
-                    }
+                    //}
 
                     // Toujours activer l'évittement en Path
                     rs.enableAvoidance();
 
                     // Va au premier point
-                    gotoPointMM(targetPoint.getX(), targetPoint.getY(), !c.hasNext() && avecArret, true);
+                    //gotoPointMM(targetPoint.getX(), targetPoint.getY(), !c.hasNext() && avecArret, true);
+                    gotoPointMM(targetPoint.getX(), targetPoint.getY(), true, true);
                 }
 
                 // TODO gestion unutile avec les synchronized
