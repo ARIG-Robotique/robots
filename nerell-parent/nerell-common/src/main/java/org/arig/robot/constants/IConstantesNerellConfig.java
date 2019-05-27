@@ -50,11 +50,11 @@ public interface IConstantesNerellConfig {
     // ------------------------ //
     // Configuration des rampes //
     // ------------------------ //
-    double rampAccDistance = 500.0; // en mm/s2
+    double rampAccDistance = 800.0; // en mm/s2
     double rampDecDistance = 500.0; // en mm/s2
 
-    double rampAccOrientation = 1000.0; // en mm/s2
-    double rampDecOrientation = 1000.0; // en mm/s2
+    double rampAccOrientation = 800.0; // en mm/s2
+    double rampDecOrientation = 500.0; // en mm/s2
 
     double rampAccCarousel = 500.0; // en mm/s2
     double rampDecCarousel = 500.0; // en mm/s2
@@ -85,11 +85,11 @@ public interface IConstantesNerellConfig {
 
     double kpDistance = 20.7;
     double kiDistance = 417.0 * asservTimeS;
-    double kdDistance = 0.0 / asservTimeS;
+    double kdDistance = 0.005 / asservTimeS;
 
     double kpOrientation = 10;
     double kiOrientation = 312.75 * asservTimeS;
-    double kdOrientation = 0.0 / asservTimeS;
+    double kdOrientation = 0.005 / asservTimeS;
 
     double kpCarousel = 10;
     double kiCarousel = 0.5 * asservTimeCarouselS;
