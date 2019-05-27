@@ -29,7 +29,7 @@ public class Point2Action extends AbstractAction {
         return "Point 2";
     }
 
-    private int order = 1000;
+    private int order = 1;
 
     @Override
     public int order() {
