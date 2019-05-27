@@ -1,8 +1,10 @@
 package org.arig.robot.web.controller;
 
+import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.model.servos.ServoConfig;
+import org.arig.robot.model.servos.ServoGroup;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -12,7 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author gdepuille on 13/10/16.
@@ -28,8 +31,32 @@ public abstract class AbstractServosController {
     protected abstract List<ServoConfig> servosConfig();
 
     @GetMapping
-    public final List<ServoConfig> config() {
-        return servosConfig();
+    public final Map<String, List<Pair<ServoConfig, ServoConfig>>> config() {
+        List<ServoConfig> srvosConfig = servosConfig();
+
+        Map<String, List<ServoConfig>> sortedServConfig = srvosConfig.stream()
+                .sorted((servo1, servo2) -> {
+                    if (servo1.getGroup().getOrder() == servo2.getGroup().getOrder()) {
+                        return servo1.getName().compareToIgnoreCase(servo2.getName());
+                    }
+
+                    return servo1.getGroup().getOrder() - servo2.getGroup().getOrder();
+                })
+                .collect(Collectors.groupingBy(s -> s.getGroup().getName()));
+
+        Map<String, List<Pair<ServoConfig, ServoConfig>>> result = new LinkedHashMap<>();
+
+        for(Map.Entry<String, List<ServoConfig>> entry: sortedServConfig.entrySet()) {
+            List<Pair<ServoConfig, ServoConfig>> pairs = new ArrayList<>();
+            for(int i = 0 ; i < entry.getValue().size(); i = i +2 ) {
+                Pair<ServoConfig, ServoConfig> pair = new Pair<>(entry.getValue().get(i+1), entry.getValue().get(i));
+                pairs.add(pair);
+            }
+
+            result.put(entry.getKey(), pairs);
+        }
+
+        return result;
     }
 
     @GetMapping(value = "/{idServo}")

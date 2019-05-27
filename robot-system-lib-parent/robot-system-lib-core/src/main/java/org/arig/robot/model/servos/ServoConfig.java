@@ -26,6 +26,7 @@ public class ServoConfig {
     private String name;
     private int currentSpeed;
     private int currentPosition;
+    private ServoGroup group;
 
     @Setter(AccessLevel.NONE)
     private int minPosition = DEFAULT_MIN;

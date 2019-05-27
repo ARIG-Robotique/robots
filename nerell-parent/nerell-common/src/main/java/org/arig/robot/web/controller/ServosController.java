@@ -2,6 +2,8 @@ package org.arig.robot.web.controller;
 
 import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.model.servos.ServoConfig;
+import org.arig.robot.model.servos.ServoGroup;
+import org.arig.robot.model.servos.ServoUtils;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedList;
@@ -18,6 +20,7 @@ public class ServosController extends AbstractServosController {
     static {
         servoConfigs.add(new ServoConfig()
                 .setId(IConstantesServos.PINCE_SERRAGE_PALET_DROIT)
+                .setGroup(ServoUtils.groupImportant())
                 .setName("Pince serrage droit")
                 .position("Repos", IConstantesServos.PINCE_SERRAGE_PALET_DROIT_REPOS)
                 .position("Lock", IConstantesServos.PINCE_SERRAGE_PALET_DROIT_LOCK)
@@ -25,6 +28,7 @@ public class ServosController extends AbstractServosController {
 
         servoConfigs.add(new ServoConfig()
                 .setId(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE)
+                .setGroup(ServoUtils.groupImportant())
                 .setName("Pince serrage gauche")
                 .position("Repos", IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_REPOS)
                 .position("Lock", IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_LOCK)
@@ -33,6 +37,7 @@ public class ServosController extends AbstractServosController {
         servoConfigs.add(new ServoConfig()
                 .setId(IConstantesServos.PIVOT_VENTOUSE_DROIT)
                 .setName("Pivot ventouse droit")
+                .setGroup(ServoUtils.groupImportant())
                 .position("Carousel vertical", IConstantesServos.PIVOT_VENTOUSE_DROIT_CAROUSEL_VERTICAL)
                 .position("Carousel sortie", IConstantesServos.PIVOT_VENTOUSE_DROIT_CAROUSEL_SORTIE)
                 .position("Facade", IConstantesServos.PIVOT_VENTOUSE_DROIT_FACADE)
@@ -42,6 +47,7 @@ public class ServosController extends AbstractServosController {
         servoConfigs.add(new ServoConfig()
                 .setId(IConstantesServos.PIVOT_VENTOUSE_GAUCHE)
                 .setName("Pivot ventouse gauche")
+                .setGroup(ServoUtils.groupImportant())
                 .position("Carousel vertical", IConstantesServos.PIVOT_VENTOUSE_GAUCHE_CAROUSEL_VERTICAL)
                 .position("Carousel sortie", IConstantesServos.PIVOT_VENTOUSE_GAUCHE_CAROUSEL_SORTIE)
                 .position("Facade", IConstantesServos.PIVOT_VENTOUSE_GAUCHE_FACADE)
@@ -51,6 +57,7 @@ public class ServosController extends AbstractServosController {
         servoConfigs.add(new ServoConfig()
                 .setId(IConstantesServos.ASCENSEUR_VENTOUSE_DROIT)
                 .setName("Ascenseur droit")
+                .setGroup(ServoUtils.groupImportant())
                 .position("Carousel dépose", IConstantesServos.ASCENSEUR_DROIT_CAROUSEL_DEPOSE)
                 .position("Carousel", IConstantesServos.ASCENSEUR_DROIT_CAROUSEL)
                 .position("Accelerateur", IConstantesServos.ASCENSEUR_DROIT_ACCELERATEUR)
@@ -63,6 +70,7 @@ public class ServosController extends AbstractServosController {
         servoConfigs.add(new ServoConfig()
                 .setId(IConstantesServos.ASCENSEUR_VENTOUSE_GAUCHE)
                 .setName("Ascenseur gauche")
+                .setGroup(ServoUtils.groupImportant())
                 .position("Carousel dépose", IConstantesServos.ASCENSEUR_GAUCHE_CAROUSEL_DEPOSE)
                 .position("Carousel", IConstantesServos.ASCENSEUR_GAUCHE_CAROUSEL)
                 .position("Accelerateur", IConstantesServos.ASCENSEUR_GAUCHE_ACCELERATEUR)
@@ -75,6 +83,7 @@ public class ServosController extends AbstractServosController {
         servoConfigs.add(new ServoConfig()
                 .setId(IConstantesServos.PORTE_BARILLET_DROIT)
                 .setName("Porte barillet droit")
+                .setGroup(ServoUtils.groupImportant())
                 .position("Ferme", IConstantesServos.PORTE_BARILLET_DROIT_FERME)
                 .position("Ouvert", IConstantesServos.PORTE_BARILLET_DROIT_OUVERT)
         );
@@ -82,6 +91,7 @@ public class ServosController extends AbstractServosController {
         servoConfigs.add(new ServoConfig()
                 .setId(IConstantesServos.PORTE_BARILLET_GAUCHE)
                 .setName("Porte barillet gauche")
+                .setGroup(ServoUtils.groupImportant())
                 .position("Ferme", IConstantesServos.PORTE_BARILLET_GAUCHE_FERME)
                 .position("Ouvert", IConstantesServos.PORTE_BARILLET_GAUCHE_OUVERT)
         );
@@ -89,6 +99,7 @@ public class ServosController extends AbstractServosController {
         servoConfigs.add(new ServoConfig()
                 .setId(IConstantesServos.TRAPPE_MAGASIN_DROIT)
                 .setName("Trappe magasin droit")
+                .setGroup(ServoUtils.groupDerier())
                 .position("Ferme", IConstantesServos.TRAPPE_MAGASIN_DROIT_FERME)
                 .position("Ouvert", IConstantesServos.TRAPPE_MAGASIN_DROIT_OUVERT)
         );
@@ -96,6 +107,7 @@ public class ServosController extends AbstractServosController {
         servoConfigs.add(new ServoConfig()
                 .setId(IConstantesServos.TRAPPE_MAGASIN_GAUCHE)
                 .setName("Trappe magasin gauche")
+                .setGroup(ServoUtils.groupDerier())
                 .position("Ferme", IConstantesServos.TRAPPE_MAGASIN_GAUCHE_FERME)
                 .position("Ouvert", IConstantesServos.TRAPPE_MAGASIN_GAUCHE_OUVERT)
         );
@@ -103,6 +115,7 @@ public class ServosController extends AbstractServosController {
         servoConfigs.add(new ServoConfig()
                 .setId(IConstantesServos.EJECTION_MAGASIN_DROIT)
                 .setName("Ejection magasin droit")
+                .setGroup(ServoUtils.groupDivers())
                 .position("Ferme", IConstantesServos.EJECTION_MAGASIN_DROIT_FERME)
                 .position("Ouvert", IConstantesServos.EJECTION_MAGASIN_DROIT_OUVERT)
         );
@@ -110,6 +123,7 @@ public class ServosController extends AbstractServosController {
         servoConfigs.add(new ServoConfig()
                 .setId(IConstantesServos.EJECTION_MAGASIN_GAUCHE)
                 .setName("Ejection magasin gauche")
+                .setGroup(ServoUtils.groupDivers())
                 .position("Ferme", IConstantesServos.EJECTION_MAGASIN_GAUCHE_FERME)
                 .position("Ouvert", IConstantesServos.EJECTION_MAGASIN_GAUCHE_OUVERT)
         );
@@ -117,6 +131,7 @@ public class ServosController extends AbstractServosController {
         servoConfigs.add(new ServoConfig()
                 .setId(IConstantesServos.POUSSE_ACCELERATEUR_DROIT)
                 .setName("Pousse accelerateur droit")
+                .setGroup(ServoUtils.groupDivers())
                 .position("Ferme", IConstantesServos.POUSSE_ACCELERATEUR_DROIT_FERME)
                 .position("Standby", IConstantesServos.POUSSE_ACCELERATEUR_DROIT_STANDBY)
                 .position("Action", IConstantesServos.POUSSE_ACCELERATEUR_DROIT_ACTION)
@@ -125,6 +140,7 @@ public class ServosController extends AbstractServosController {
         servoConfigs.add(new ServoConfig()
                 .setId(IConstantesServos.POUSSE_ACCELERATEUR_GAUCHE)
                 .setName("Pousse accelerateur gauche")
+                .setGroup(ServoUtils.groupDivers())
                 .position("Ferme", IConstantesServos.POUSSE_ACCELERATEUR_GAUCHE_FERME)
                 .position("Standby", IConstantesServos.POUSSE_ACCELERATEUR_GAUCHE_STANDBY)
                 .position("Action", IConstantesServos.POUSSE_ACCELERATEUR_GAUCHE_ACTION)
