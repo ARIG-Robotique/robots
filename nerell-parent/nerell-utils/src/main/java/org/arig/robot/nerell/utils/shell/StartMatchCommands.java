@@ -35,7 +35,7 @@ public class StartMatchCommands {
     private ShellInputReader shellInputReader;
 
     @SneakyThrows
-    @ShellMethod("Paramétrer pour le début match")
+    @ShellMethod("Démarrer un match")
     public void start() throws IOException, RefreshPathFindingException {
 
         choixTeam();
@@ -50,7 +50,7 @@ public class StartMatchCommands {
         do {
             String teamAnswer = shellInputReader.prompt("Choisi ton équipe en entrant le chiffre : \n 1.JAUNE \n 2.VIOLET  \n");
             if (StringUtils.isNotBlank(teamAnswer) && StringUtils.isNumeric(teamAnswer)) {
-                int teamNumber = Integer.valueOf(teamAnswer);
+                int teamNumber = Integer.parseInt(teamAnswer);
                 if (teamNumber > 0 && teamNumber < 3) {
                     Team team = teamNumber == 1 ? Team.JAUNE : Team.VIOLET;
                     System.setProperty(IConstantesUtiles.ENV_PROP_TEAM, team.name());
@@ -70,12 +70,16 @@ public class StartMatchCommands {
                 .collect(Collectors.toList());
 
         for (int i = 0; i < allStrategies.size(); i++) {
-            choixStratQuestion.append((i + 1) + ". : ")
+            choixStratQuestion
+                    .append(i + 1)
+                    .append(". : ")
                     .append(allStrategies.get(i))
                     .append("\n");
         }
 
-        choixStratQuestion.append((allStrategies.size() + 1) + ". : ")
+        choixStratQuestion
+                .append((allStrategies.size() + 1))
+                .append(". : ")
                 .append("Skip")
                 .append("\n");
 
