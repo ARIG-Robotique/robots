@@ -13,8 +13,7 @@ echo "* Configuration de la JVM"
 JAVA_HOME=/opt/bellsoft-jre-9.0.4
 PATH=${JAVA_HOME}/bin:${PATH}
 java -version
-# -XX:MaxGCPauseMillis=5
-JVM_ARGS="-Xmx256m -Xms256m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m --add-exports java.base/jdk.internal.misc=ALL-UNNAMED --add-exports java.base/jdk.internal.ref=ALL-UNNAMED"
+JVM_ARGS="-XX:+UseG1GC -XX:MaxGCPauseMillis=5 -Xmx256m -Xms256m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m --add-exports java.base/jdk.internal.misc=ALL-UNNAMED --add-exports java.base/jdk.internal.ref=ALL-UNNAMED"
 DEBUG_ARGS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8787,suspend=y"
 
 echo "  - JVM Args   : ${JVM_ARGS}"
