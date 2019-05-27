@@ -11,7 +11,7 @@ public interface IConstantesNerellConfig {
     int nbThreadAsyncExecutor = 10;
 
     // Configuration asservissement //
-    double asservTimeMs = 10;
+    double asservTimeMs = 20;
     double asservTimeS = IConstantesNerellConfig.asservTimeMs / 1000;
     double asservTimeCarouselMs = 50;
     double asservTimeCarouselS = IConstantesNerellConfig.asservTimeCarouselMs / 1000;
@@ -63,10 +63,12 @@ public interface IConstantesNerellConfig {
     // Configuration des vitesses //
     // -------------------------- //
 
+    long vitesseOrientationUltraHaute = 1000;
     long vitesseOrientationSuperHaute = 800;
     long vitesseOrientationBasse = 300;
     long vitesseOrientationSuperBasse = 150;
 
+    long vitesseUltraHaute = 1000;
     long vitesseSuperHaute = 750;
     long vitesseHaute = 600;
     long vitesseMoyenneHaute = 500;
@@ -75,21 +77,21 @@ public interface IConstantesNerellConfig {
     long vitesseSuperLente = 200;
     long vitesseUltraLente = 100;
 
-    long vitessePath = vitesseMoyenneHaute;
+    long vitessePath = vitesseUltraHaute;
     long vitesseMouvement = vitesseLente;
-    long vitesseOrientation = vitesseOrientationSuperHaute;
+    long vitesseOrientation = vitesseOrientationUltraHaute;
 
     // -------------- //
     // Parametres PID //
     // -------------- //
 
-    double kpDistance = 20.7;
-    double kiDistance = 417.0 * asservTimeS;
-    double kdDistance = 0.005 / asservTimeS;
+    double kpDistance = 8;
+    double kiDistance = 170 * asservTimeS;
+    double kdDistance = 0.08 / asservTimeS;
 
-    double kpOrientation = 10;
-    double kiOrientation = 312.75 * asservTimeS;
-    double kdOrientation = 0.005 / asservTimeS;
+    double kpOrientation = 6;
+    double kiOrientation = 0.5 * asservTimeS;
+    double kdOrientation = 0.05 / asservTimeS;
 
     double kpCarousel = 10;
     double kiCarousel = 0.5 * asservTimeCarouselS;
