@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled.atomfactory;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +9,7 @@ import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.exceptions.CarouselNotAvailableException;
 import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
+import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
@@ -16,7 +17,9 @@ import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ExecutionException;
@@ -36,6 +39,13 @@ public class DeposerBalance extends AbstractAction {
 
     @Autowired
     private ICarouselManager carousel;
+
+    @Autowired
+    private ConvertionRobotUnit conv;
+
+    @Autowired
+    @Qualifier("currentPosition")
+    private Position currentPosition; // Attention ce sont des pulses
 
     @Getter
     private boolean completed = false;
@@ -109,6 +119,9 @@ public class DeposerBalance extends AbstractAction {
 
                 // 400 = longueur de la balance, 30 = pour pas déposer juste au bord de la balance
                 double yOffset = -400 + yAvantAvance - IConstantesNerellConfig.dstVentouseFacade + 15;
+
+                // Position Y de SolidWorks = 579
+                yOffset = conv.pulseToMm(currentPosition.getPt().getY()) - 576;
                 mv.avanceMM(yOffset);
 
 //            rs.enableCalageBordureAvant(IConstantesNerellConfig.dstVentouseFacade);
