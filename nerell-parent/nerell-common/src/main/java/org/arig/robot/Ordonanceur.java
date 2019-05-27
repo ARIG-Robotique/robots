@@ -208,7 +208,7 @@ public class Ordonanceur {
         servosService.pinceSerragePaletGauche(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_REPOS, false);
         servosService.pinceSerragePaletDroit(IConstantesServos.PINCE_SERRAGE_PALET_DROIT_REPOS, false);
         servosService.ejectionMagasinGauche(IConstantesServos.EJECTION_MAGASIN_GAUCHE_OUVERT, false);
-        servosService.ejectionMagasinDroit(IConstantesServos.EJECTION_MAGASIN_DROIT_OUVERT, false);
+        servosService.ejectionMagasinDroit(IConstantesServos.EJECTION_MAGASIN_DROIT_OUVERT, true);
 
         log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
 
@@ -242,7 +242,9 @@ public class Ordonanceur {
         ioService.enableAlim5VPuissance();
         ioService.enableAlim12VPuissance();
 
+        robotStatus.enableAsservCarousel();
         carouselService.ejectionAvantRetourStand();
+        robotStatus.disableAsservCarousel();
 
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();

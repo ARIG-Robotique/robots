@@ -29,7 +29,7 @@ public enum NerellUtils {
     public static <A, B> CompletableFuture<CompoundFutureResult2<A, B>> all(CompletableFuture<A> a, CompletableFuture<B> b) {
         return CompletableFuture.allOf(a, b)
                 .thenCompose((Void) ->
-                        CompletableFuture.completedFuture(new CompoundFutureResult2<A, B>(a.join(), b.join()))
+                        CompletableFuture.completedFuture(new CompoundFutureResult2<>(a.join(), b.join()))
                 );
     }
 
@@ -39,7 +39,7 @@ public enum NerellUtils {
     public static <A, B, C> CompletableFuture<CompoundFutureResult3<A, B, C>> all(CompletableFuture<A> a, CompletableFuture<B> b, CompletableFuture<C> c) {
         return CompletableFuture.allOf(a, b, c)
                 .thenCompose((Void) ->
-                        CompletableFuture.completedFuture(new CompoundFutureResult3<A, B, C>(a.join(), b.join(), c.join()))
+                        CompletableFuture.completedFuture(new CompoundFutureResult3<>(a.join(), b.join(), c.join()))
                 );
     }
 
