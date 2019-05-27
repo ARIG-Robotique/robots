@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.disabled.atomfactory;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.enums.CouleurPalet;
@@ -9,14 +9,14 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class PrendreGrandDistributeurEquipe1 extends AbstractPrendreGrandDistributeur {
+public class PrendreGrandDistributeurEquipe3 extends AbstractPrendreGrandDistributeur {
 
-    public PrendreGrandDistributeurEquipe1() {
+    public PrendreGrandDistributeurEquipe3() {
         super(
-                2450,
-                550,
-                0,
-                1,
+                2050,
+                950,
+                4,
+                5,
                 3
         );
     }
