@@ -120,7 +120,7 @@ public interface IConstantesNerellConfig {
     // Paramètre Avoiding service //
     // -------------------------- //
     enum AvoidingSelection {
-        BASIC, FULL
+        BASIC, FULL, NOT_BASIC
     }
 
     // ---------------------- //
@@ -129,7 +129,7 @@ public interface IConstantesNerellConfig {
     PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.LAZY_THETA_STAR;
     int pathFindingAngle = 45;
     int pathFindingSeuilAvoidance = 900;
-    int pathFindingSeuilProximite = 450;
+    int pathFindingSeuilProximite = 600;
     int pathFindingTailleObstacle = IConstantesNerellConfig.pathFindingSeuilProximite + 50;
 
     // --------------------- //

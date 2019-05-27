@@ -50,85 +50,85 @@ public class TrajectoryManagerAsync implements ITrajectoryManager {
 
     @Override
     @Async
-    public void gotoPointMM(double x, double y) throws RefreshPathFindingException {
+    public void gotoPointMM(double x, double y) throws RefreshPathFindingException, AvoidingException {
         decorated.gotoPointMM(x, y);
     }
 
     @Override
     @Async
-    public void gotoPointMM(double x, double y, boolean avecArret, boolean disableMonitor) throws RefreshPathFindingException {
+    public void gotoPointMM(double x, double y, boolean avecArret, boolean disableMonitor) throws RefreshPathFindingException, AvoidingException {
         decorated.gotoPointMM(x, y, avecArret, disableMonitor);
     }
 
     @Override
     @Async
-    public void gotoOrientationDeg(double angle) throws RefreshPathFindingException {
+    public void gotoOrientationDeg(double angle) throws RefreshPathFindingException, AvoidingException {
         decorated.gotoOrientationDeg(angle);
     }
 
     @Override
     @Async
-    public void gotoOrientationDeg(double angle, SensRotation sensRotation) throws RefreshPathFindingException {
+    public void gotoOrientationDeg(double angle, SensRotation sensRotation) throws RefreshPathFindingException, AvoidingException {
         decorated.gotoOrientationDeg(angle, sensRotation);
     }
 
     @Override
     @Async
-    public void alignFrontTo(double x, double y) throws RefreshPathFindingException {
+    public void alignFrontTo(double x, double y) throws RefreshPathFindingException, AvoidingException {
         decorated.alignFrontTo(x, y);
     }
 
     @Override
     @Async
-    public void alignFrontToAvecDecalage(double x, double y, double decalageDeg) throws RefreshPathFindingException {
+    public void alignFrontToAvecDecalage(double x, double y, double decalageDeg) throws RefreshPathFindingException, AvoidingException {
         decorated.alignFrontToAvecDecalage(x, y, decalageDeg);
     }
 
     @Override
     @Async
-    public void alignBackTo(double x, double y) throws RefreshPathFindingException {
+    public void alignBackTo(double x, double y) throws RefreshPathFindingException, AvoidingException {
         decorated.alignBackTo(x, y);
     }
 
     @Override
     @Async
-    public void avanceMM(double distance) throws RefreshPathFindingException {
+    public void avanceMM(double distance) throws RefreshPathFindingException, AvoidingException {
         decorated.avanceMM(distance);
     }
 
     @Override
     @Async
-    public void avanceMMSansAngle(double distance) throws RefreshPathFindingException {
+    public void avanceMMSansAngle(double distance) throws RefreshPathFindingException, AvoidingException {
         decorated.avanceMMSansAngle(distance);
     }
 
     @Override
     @Async
-    public void reculeMM(double distance) throws RefreshPathFindingException {
+    public void reculeMM(double distance) throws RefreshPathFindingException, AvoidingException {
         decorated.reculeMM(distance);
     }
 
     @Override
     @Async
-    public void reculeMMSansAngle(double distance) throws RefreshPathFindingException {
+    public void reculeMMSansAngle(double distance) throws RefreshPathFindingException, AvoidingException {
         decorated.reculeMMSansAngle(distance);
     }
 
     @Override
     @Async
-    public void tourneDeg(double angle) throws RefreshPathFindingException {
+    public void tourneDeg(double angle) throws RefreshPathFindingException, AvoidingException {
         decorated.tourneDeg(angle);
     }
 
     @Override
     @Async
-    public void followLine(double x1, double y1, double x2, double y2) throws RefreshPathFindingException {
+    public void followLine(double x1, double y1, double x2, double y2) throws RefreshPathFindingException, AvoidingException {
         decorated.followLine(x1, y1, x2, y2);
     }
 
     @Override
     @Async
-    public void turnAround(double x, double y, double r) throws RefreshPathFindingException {
+    public void turnAround(double x, double y, double r) throws RefreshPathFindingException, AvoidingException {
         decorated.turnAround(x, y, r);
     }
 
@@ -139,7 +139,7 @@ public class TrajectoryManagerAsync implements ITrajectoryManager {
     }
 
     @Override
-    public void waitMouvement() throws RefreshPathFindingException {
+    public void waitMouvement() throws RefreshPathFindingException, AvoidingException {
         decorated.waitMouvement();
     }
 
@@ -176,5 +176,10 @@ public class TrajectoryManagerAsync implements ITrajectoryManager {
     @Override
     public void refreshPathFinding() {
         decorated.refreshPathFinding();
+    }
+
+    @Override
+    public void cancelMouvement() {
+        decorated.cancelMouvement();
     }
 }

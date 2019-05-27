@@ -22,37 +22,37 @@ public interface ITrajectoryManager {
 
     void pathTo(double x, double y, boolean avecArret) throws NoPathFoundException, AvoidingException;
 
-    void gotoPointMM(double x, double y) throws RefreshPathFindingException;
+    void gotoPointMM(double x, double y) throws RefreshPathFindingException, AvoidingException;
 
-    void gotoPointMM(double x, double y, boolean avecArret, boolean disableMonitor) throws RefreshPathFindingException;
+    void gotoPointMM(double x, double y, boolean avecArret, boolean disableMonitor) throws RefreshPathFindingException, AvoidingException;
 
-    void gotoOrientationDeg(double angle) throws RefreshPathFindingException;
+    void gotoOrientationDeg(double angle) throws RefreshPathFindingException, AvoidingException;
 
-    void gotoOrientationDeg(double angle, SensRotation sensRotation) throws RefreshPathFindingException;
+    void gotoOrientationDeg(double angle, SensRotation sensRotation) throws RefreshPathFindingException, AvoidingException;
 
-    void alignFrontTo(double x, double y) throws RefreshPathFindingException;
+    void alignFrontTo(double x, double y) throws RefreshPathFindingException, AvoidingException;
 
-    void alignFrontToAvecDecalage(double x, double y, double decalageDeg) throws RefreshPathFindingException;
+    void alignFrontToAvecDecalage(double x, double y, double decalageDeg) throws RefreshPathFindingException, AvoidingException;
 
-    void alignBackTo(double x, double y) throws RefreshPathFindingException;
+    void alignBackTo(double x, double y) throws RefreshPathFindingException, AvoidingException;
 
-    void avanceMM(double distance) throws RefreshPathFindingException;
+    void avanceMM(double distance) throws RefreshPathFindingException, AvoidingException;
 
-    void avanceMMSansAngle(double distance) throws RefreshPathFindingException;
+    void avanceMMSansAngle(double distance) throws RefreshPathFindingException, AvoidingException;
 
-    void reculeMM(double distance) throws RefreshPathFindingException;
+    void reculeMM(double distance) throws RefreshPathFindingException, AvoidingException;
 
-    void reculeMMSansAngle(double distance) throws RefreshPathFindingException;
+    void reculeMMSansAngle(double distance) throws RefreshPathFindingException, AvoidingException;
 
-    void tourneDeg(double angle) throws RefreshPathFindingException;
+    void tourneDeg(double angle) throws RefreshPathFindingException, AvoidingException;
 
-    void followLine(double x1, double y1, double x2, double y2) throws RefreshPathFindingException;
+    void followLine(double x1, double y1, double x2, double y2) throws RefreshPathFindingException, AvoidingException;
 
-    void turnAround(double x, double y, double r) throws RefreshPathFindingException;
+    void turnAround(double x, double y, double r) throws RefreshPathFindingException, AvoidingException;
 
     void setVitesse(long vDistance, long vOrientation);
 
-    void waitMouvement() throws RefreshPathFindingException;
+    void waitMouvement() throws RefreshPathFindingException, AvoidingException;
 
     boolean isTrajetAtteint();
 
@@ -67,4 +67,6 @@ public interface ITrajectoryManager {
     void calageBordureDone();
 
     void refreshPathFinding();
+
+    void cancelMouvement();
 }

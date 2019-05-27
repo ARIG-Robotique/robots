@@ -10,7 +10,7 @@ robot:
 
   # Système d'évittement
   avoidance:
-      implementation: FULL # FULL ou BASIC
+      implementation: NOT_BASIC # FULL ou BASIC
 
   # Config
   pathfinding:

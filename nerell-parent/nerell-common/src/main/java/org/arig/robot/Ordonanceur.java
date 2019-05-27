@@ -8,6 +8,7 @@ import org.arig.robot.communication.II2CManager;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IConstantesServos;
+import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.*;
@@ -96,7 +97,7 @@ public class Ordonanceur {
         return INSTANCE;
     }
 
-    public void run() throws RefreshPathFindingException, IOException {
+    public void run() throws IOException {
         // Configuration a faire pour chaque match (gestion sans redemarrage programme)
         // Définition d'un ID unique pour le nommage des fichiers
         final LocalDateTime startOrdonnanceur = LocalDateTime.now();
@@ -119,7 +120,7 @@ public class Ordonanceur {
 
         if (!ioService.auOk()) {
             log.warn("L'arrêt d'urgence est coupé.");
-            while(!ioService.auOk()) {
+            while (!ioService.auOk()) {
                 ThreadUtils.sleep(500);
             }
         }
@@ -142,7 +143,7 @@ public class Ordonanceur {
         if (!ioService.alimPuissance12VOk() || !ioService.alimPuissance5VOk()) {
             log.warn("Alimentation puissance NOK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
             //ioService.colorLedRGBKo();
-            while(!ioService.alimPuissance12VOk() && !ioService.alimPuissance5VOk()) {
+            while (!ioService.alimPuissance12VOk() && !ioService.alimPuissance5VOk()) {
                 ThreadUtils.sleep(500);
             }
         }
@@ -161,12 +162,12 @@ public class Ordonanceur {
 
         // zone de déco
         // Inverse de width && height
-        tableUtils.addDeadZone(new java.awt.Rectangle.Double(0, 0,  3000, 457));
+        tableUtils.addDeadZone(new java.awt.Rectangle.Double(0, 0, 3000, 457));
 
         if (robotStatus.getTeam() == Team.JAUNE) {
-            tableUtils.addDeadZone(new java.awt.Rectangle.Double(1050,457,450,200)); // Balance
+            tableUtils.addDeadZone(new java.awt.Rectangle.Double(1050, 457, 450, 200)); // Balance
         } else {
-            tableUtils.addDeadZone(new java.awt.Rectangle.Double(1500,457,450,200)); // Balance
+            tableUtils.addDeadZone(new java.awt.Rectangle.Double(1500, 457, 450, 200)); // Balance
         }
 
         // Attente la mise de la tirette
@@ -189,7 +190,7 @@ public class Ordonanceur {
 
         // Attente tirette.
         log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
-        while(ioService.tirette()) {
+        while (ioService.tirette()) {
             ThreadUtils.sleep(1);
         }
 
@@ -197,7 +198,7 @@ public class Ordonanceur {
         robotStatus.startMatch();
 
         // Match de XX secondes.
-        while(robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
+        while (robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
             ThreadUtils.sleep(200);
         }
 
@@ -234,7 +235,7 @@ public class Ordonanceur {
         displayScore();
 
         // Attente remise de la tirette pour ejecter les palets en stock
-        while(!ioService.tirette() || !ioService.auOk()) {
+        while (!ioService.tirette() || !ioService.auOk()) {
             ThreadUtils.sleep(1000);
         }
 
@@ -250,50 +251,54 @@ public class Ordonanceur {
         ioService.disableAlim12VPuissance();
     }
 
-    public void callageBordure() throws RefreshPathFindingException {
-        robotStatus.disableAvoidance();
-        robotStatus.enableAsserv();
+    public void callageBordure() {
+        try {
+            robotStatus.disableAvoidance();
+            robotStatus.enableAsserv();
 
-        trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseUltraLente, IConstantesNerellConfig.vitesseOrientationSuperBasse);
+            trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseUltraLente, IConstantesNerellConfig.vitesseOrientationSuperBasse);
 
-        if (!robotStatus.isSimulateur()) {
-            robotStatus.enableCalageBordureArriere();
-            trajectoryManager.reculeMMSansAngle(1000);
+            if (!robotStatus.isSimulateur()) {
+                robotStatus.enableCalageBordureArriere();
+                trajectoryManager.reculeMMSansAngle(1000);
 
-            if (robotStatus.getTeam() == Team.JAUNE) {
-                position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstArriere));
-                position.setAngle(conv.degToPulse(0));
+                if (robotStatus.getTeam() == Team.JAUNE) {
+                    position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstArriere));
+                    position.setAngle(conv.degToPulse(0));
+                } else {
+                    position.getPt().setX(conv.mmToPulse(3000 - IConstantesNerellConfig.dstArriere));
+                    position.setAngle(conv.degToPulse(180));
+                }
+
+                trajectoryManager.avanceMM(150);
+                trajectoryManager.gotoOrientationDeg(-90);
+
+                robotStatus.enableCalageBordureArriere();
+                trajectoryManager.reculeMM(1000);
+
+                position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstArriere));
+                position.setAngle(conv.degToPulse(-90));
+
+                trajectoryManager.avanceMM(150);
+
+                if (robotStatus.getTeam() == Team.JAUNE) {
+                    trajectoryManager.gotoPointMM(250, 1500);
+                    trajectoryManager.gotoOrientationDeg(0);
+                } else {
+                    trajectoryManager.gotoPointMM(2750, 1500);
+                    trajectoryManager.gotoOrientationDeg(180);
+                }
             } else {
-                position.getPt().setX(conv.mmToPulse(3000 - IConstantesNerellConfig.dstArriere));
-                position.setAngle(conv.degToPulse(180));
+                if (robotStatus.getTeam() == Team.JAUNE) {
+                    position.setPt(new Point(conv.mmToPulse(250), conv.mmToPulse(1500)));
+                    position.setAngle(conv.degToPulse(0));
+                } else {
+                    position.setPt(new Point(conv.mmToPulse(2750), conv.mmToPulse(1500)));
+                    position.setAngle(conv.degToPulse(180));
+                }
             }
-
-            trajectoryManager.avanceMM(150);
-            trajectoryManager.gotoOrientationDeg(-90);
-
-            robotStatus.enableCalageBordureArriere();
-            trajectoryManager.reculeMM(1000);
-
-            position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstArriere));
-            position.setAngle(conv.degToPulse(-90));
-
-            trajectoryManager.avanceMM(150);
-
-            if (robotStatus.getTeam() == Team.JAUNE) {
-                trajectoryManager.gotoPointMM(250, 1500);
-                trajectoryManager.gotoOrientationDeg(0);
-            } else {
-                trajectoryManager.gotoPointMM(2750, 1500);
-                trajectoryManager.gotoOrientationDeg(180);
-            }
-        } else {
-            if (robotStatus.getTeam() == Team.JAUNE) {
-                position.setPt(new Point(conv.mmToPulse(250), conv.mmToPulse(1500)));
-                position.setAngle(conv.degToPulse(0));
-            } else {
-                position.setPt(new Point(conv.mmToPulse(2750), conv.mmToPulse(1500)));
-                position.setAngle(conv.degToPulse(180));
-            }
+        } catch (AvoidingException | RefreshPathFindingException e) {
+            throw new RuntimeException("Impossible de se placer pour le départ", e);
         }
     }
 

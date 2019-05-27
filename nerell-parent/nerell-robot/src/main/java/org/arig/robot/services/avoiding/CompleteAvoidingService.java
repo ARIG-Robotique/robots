@@ -123,25 +123,22 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
             for (Point pt : AvoidingUtils.calculateCenterObs(getDetectedPointsMm())) {
                 tmpCollisionsShape.add(new Cercle(pt, IConstantesNerellConfig.pathFindingSeuilProximite));
 
-                // Définition de l'obstacle polygone (autour de nous)
-                int r1 = (int) (Math.cos(Math.toRadians(22.5)) * IConstantesNerellConfig.pathFindingTailleObstacle / 10);
-                int r2 = (int) (Math.sin(Math.toRadians(22.5)) * IConstantesNerellConfig.pathFindingTailleObstacle / 10);
-
-                Polygon obsPoly = new Polygon();
-                obsPoly.addPoint(r2, r1);
-                obsPoly.addPoint(r1, r2);
-                obsPoly.addPoint(r1, -r2);
-                obsPoly.addPoint(r2, -r1);
-                obsPoly.addPoint(-r2, -r1);
-                obsPoly.addPoint(-r1, -r2);
-                obsPoly.addPoint(-r1, r2);
-                obsPoly.addPoint(-r2, r1);
-                obsPoly.translate((int) pt.getX() / 10, (int) pt.getY() / 10);
+                Rectangle obstacle = new Rectangle(
+                        (int) Math.round(pt.getX() / 10. - IConstantesNerellConfig.pathFindingSeuilProximite / 10. / 2.),
+                        (int) Math.round(pt.getY() / 10. - IConstantesNerellConfig.pathFindingSeuilProximite / 10. / 2.),
+                        (int) Math.round(IConstantesNerellConfig.pathFindingSeuilProximite / 10.),
+                        (int) Math.round(IConstantesNerellConfig.pathFindingSeuilProximite / 10.)
+                );
 
                 for (Line2D l : lines) {
-                    if (l.intersects(obsPoly.getBounds())) {
-                        log.info("Collision détectée, ajout polygon : {} {}", pt, obsPoly);
-                        tmpObstacles.add(obsPoly);
+                    if (l.intersects(obstacle)) {
+                        log.info("Collision détectée, ajout polygon : {} {}", pt, obstacle.toString());
+                        tmpObstacles.add(new Rectangle(
+                                (int) Math.round(pt.getX() / 10. - IConstantesNerellConfig.pathFindingTailleObstacle / 10. / 2.),
+                                (int) Math.round(pt.getY() / 10. - IConstantesNerellConfig.pathFindingTailleObstacle / 10. / 2.),
+                                (int) Math.round(IConstantesNerellConfig.pathFindingTailleObstacle / 10.),
+                                (int) Math.round(IConstantesNerellConfig.pathFindingTailleObstacle / 10.)
+                        ));
                         continue pointLidar;
                     }
                 }

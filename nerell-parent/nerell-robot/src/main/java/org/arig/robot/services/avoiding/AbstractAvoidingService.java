@@ -64,7 +64,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             detectedPointsMm.addAll(
                     lidarScan.getScan().parallelStream()
                             .map(scan -> tableUtils.getPointFromAngle(scan.getDistanceMm(), scan.getAngleDeg()))
-                            .filter(pt -> tableUtils.isInTable(pt) && checkValidPointForSeuil(pt, IConstantesNerellConfig.pathFindingSeuilAvoidance))
+                            .filter(pt -> tableUtils.isInTable(pt) /*&& checkValidPointForSeuil(pt, IConstantesNerellConfig.pathFindingSeuilAvoidance)*/)
                             .collect(Collectors.toList())
             );
         }

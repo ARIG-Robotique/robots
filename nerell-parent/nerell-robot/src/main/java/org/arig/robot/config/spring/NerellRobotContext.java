@@ -19,6 +19,7 @@ import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.services.avoiding.BasicAvoidingService;
 import org.arig.robot.services.avoiding.CompleteAvoidingService;
+import org.arig.robot.services.avoiding.NotBasicAvoidingService;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
@@ -194,6 +195,8 @@ public class NerellRobotContext {
         IConstantesNerellConfig.AvoidingSelection avoidingImplementation = env.getProperty("robot.avoidance.implementation", IConstantesNerellConfig.AvoidingSelection.class);
         if (avoidingImplementation == IConstantesNerellConfig.AvoidingSelection.BASIC) {
             return new BasicAvoidingService();
+        } else if (avoidingImplementation == IConstantesNerellConfig.AvoidingSelection.NOT_BASIC) {
+                return new NotBasicAvoidingService();
         } else {
             return new CompleteAvoidingService();
         }

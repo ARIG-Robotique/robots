@@ -14,11 +14,7 @@ import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -74,37 +70,37 @@ public class MouvementController {
     }
 
     @PostMapping(value = "/position")
-    public void allerEnPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws RefreshPathFindingException {
+    public void allerEnPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws RefreshPathFindingException, AvoidingException {
         trajectoryManager.gotoPointMM(x, y);
     }
 
     @PostMapping(value = "/face")
-    public void alignFace(@RequestParam("x") final double x, @RequestParam("y") final double y) throws RefreshPathFindingException {
+    public void alignFace(@RequestParam("x") final double x, @RequestParam("y") final double y) throws RefreshPathFindingException, AvoidingException {
         trajectoryManager.alignFrontTo(x, y);
     }
 
     @PostMapping(value = "/dos")
-    public void alignDos(@RequestParam("x") final double x, @RequestParam("y") final double y) throws RefreshPathFindingException {
+    public void alignDos(@RequestParam("x") final double x, @RequestParam("y") final double y) throws RefreshPathFindingException, AvoidingException {
         trajectoryManager.alignBackTo(x, y);
     }
 
     @PostMapping(value = "/orientation")
-    public void orientation(@RequestParam("angle") final double angle) throws RefreshPathFindingException {
+    public void orientation(@RequestParam("angle") final double angle) throws RefreshPathFindingException, AvoidingException {
         trajectoryManager.gotoOrientationDeg(angle);
     }
 
     @PostMapping(value = "/tourne")
-    public void tourne(@RequestParam("angle") final double angle) throws RefreshPathFindingException {
+    public void tourne(@RequestParam("angle") final double angle) throws RefreshPathFindingException, AvoidingException {
         trajectoryManager.tourneDeg(angle);
     }
 
     @PostMapping(value = "/avance")
-    public void avance(@RequestParam("distance") final double distance) throws RefreshPathFindingException {
+    public void avance(@RequestParam("distance") final double distance) throws RefreshPathFindingException, AvoidingException {
         trajectoryManager.avanceMM(distance);
     }
 
     @PostMapping(value = "/recule")
-    public void recule(@RequestParam("distance") final double distance) throws RefreshPathFindingException {
+    public void recule(@RequestParam("distance") final double distance) throws RefreshPathFindingException, AvoidingException {
         trajectoryManager.reculeMM(distance);
     }
 }

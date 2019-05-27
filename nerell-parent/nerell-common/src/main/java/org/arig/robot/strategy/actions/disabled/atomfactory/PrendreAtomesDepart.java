@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotStatus;
@@ -69,7 +70,7 @@ public class PrendreAtomesDepart extends AbstractAction {
             }
 
 
-        } catch (RefreshPathFindingException e) {
+        } catch (RefreshPathFindingException | AvoidingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
 
         } finally {
