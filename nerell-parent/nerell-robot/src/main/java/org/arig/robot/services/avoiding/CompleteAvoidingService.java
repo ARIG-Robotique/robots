@@ -121,7 +121,7 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
             tmpCollisionsShape.clear();
 
             pointLidar:
-            for (Point pt : getDetectedPointsMm()) {
+            for (Point pt : AvoidingUtils.calculateCenterObs(getDetectedPointsMm())) {
                 tmpCollisionsShape.add(new Cercle(pt, DISTANCE_CENTRE_OBSTACLE));
 
                 // Définition de l'obstacle polygone (autour de nous)
