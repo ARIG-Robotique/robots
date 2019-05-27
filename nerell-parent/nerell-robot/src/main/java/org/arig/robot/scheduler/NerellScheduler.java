@@ -88,7 +88,7 @@ public class NerellScheduler {
     public void priseVentouseDroiteTask() {
         if (rs.isVentousesEnabled()) {
             try {
-                if (rightSideService.buteePalet() && rightSideService.presencePalet() && !ventousesService.isWorking(ESide.DROITE)) {
+                if (rightSideService.buteePalet() && rightSideService.presencePalet() && !ventousesService.isWorking(ESide.DROITE) && carousel.has(null)) {
                     ventousesService.waitAvailable(ESide.DROITE);
 
                     if (ventousesService.priseTable(CouleurPalet.INCONNU, ESide.DROITE).get()) {
@@ -107,7 +107,7 @@ public class NerellScheduler {
     public void priseVentouseGaucheTask() {
         if (rs.isVentousesEnabled()) {
             try {
-                if (leftSideService.buteePalet() && leftSideService.presencePalet() && !ventousesService.isWorking(ESide.GAUCHE)) {
+                if (leftSideService.buteePalet() && leftSideService.presencePalet() && !ventousesService.isWorking(ESide.GAUCHE) && carousel.has(null)) {
                     ventousesService.waitAvailable(ESide.GAUCHE);
 
                     if (ventousesService.priseTable(CouleurPalet.INCONNU, ESide.GAUCHE).get()) {

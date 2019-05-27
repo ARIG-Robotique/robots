@@ -127,6 +127,10 @@ public interface IConstantesNerellConfig {
     // Paramètre path finding //
     // ---------------------- //
     PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.LAZY_THETA_STAR;
+    int pathFindingAngle = 45;
+    int pathFindingSeuilAvoidance = 900;
+    int pathFindingSeuilProximite = 450;
+    int pathFindingTailleObstacle = IConstantesNerellConfig.pathFindingSeuilProximite + 50;
 
     // --------------------- //
     // Paramètre pneumatique //

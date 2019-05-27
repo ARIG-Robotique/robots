@@ -2,6 +2,7 @@ package org.arig.robot.services.avoiding;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.Cercle;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
@@ -23,8 +24,6 @@ import java.util.List;
 
 @Slf4j
 public class CompleteAvoidingService extends AbstractAvoidingService {
-
-    private static final int DISTANCE_CENTRE_OBSTACLE = 450;
 
     @Autowired
     private ITrajectoryManager trajectoryManager;
@@ -79,7 +78,7 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
 
         // Construction du chemin a parcourir sur le changement de mouvement
         if (currentMvt != trajectoryManager.getCurrentMouvement()) {
-            log.info("Le mouvement courrant a changé");
+            log.info("Le mouvement courant a changé");
             mouvementHasChanged = true;
             currentMvt = trajectoryManager.getCurrentMouvement();
 
@@ -122,11 +121,11 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
 
             pointLidar:
             for (Point pt : AvoidingUtils.calculateCenterObs(getDetectedPointsMm())) {
-                tmpCollisionsShape.add(new Cercle(pt, DISTANCE_CENTRE_OBSTACLE));
+                tmpCollisionsShape.add(new Cercle(pt, IConstantesNerellConfig.pathFindingSeuilProximite));
 
                 // Définition de l'obstacle polygone (autour de nous)
-                int r1 = (int) (Math.cos(Math.toRadians(22.5)) * DISTANCE_CENTRE_OBSTACLE / 10);
-                int r2 = (int) (Math.sin(Math.toRadians(22.5)) * DISTANCE_CENTRE_OBSTACLE / 10);
+                int r1 = (int) (Math.cos(Math.toRadians(22.5)) * IConstantesNerellConfig.pathFindingTailleObstacle / 10);
+                int r2 = (int) (Math.sin(Math.toRadians(22.5)) * IConstantesNerellConfig.pathFindingTailleObstacle / 10);
 
                 Polygon obsPoly = new Polygon();
                 obsPoly.addPoint(r2, r1);
@@ -152,9 +151,9 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
         return obstaclesHasChanged;
     }
 
-    private void setObstacles(List<java.awt.Shape> ostacles) {
+    private void setObstacles(List<java.awt.Shape> obstacles) {
         hasObstacle = true;
-        pathFinder.setObstacles(ostacles.toArray(new java.awt.Shape[0]));
+        pathFinder.setObstacles(obstacles.toArray(new java.awt.Shape[0]));
 
         // On rafraichit le path
         if (rs.isAvoidanceEnabled()) {

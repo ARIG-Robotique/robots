@@ -2,6 +2,8 @@ package org.arig.robot.services.avoiding;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.Shape;
@@ -22,9 +24,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class AbstractAvoidingService implements IAvoidingService, InitializingBean {
 
-    protected static final int SEUIL_DISTANCE_PROX_LIDAR_MM = 450;
-    protected static final int SEUIL_DISTANCE_AVOID_LIDAR_MM = 900;
-
     @Autowired
     private TableUtils tableUtils;
 
@@ -37,6 +36,9 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
 
     @Autowired
     private ILidarTelemeter lidar;
+
+    @Autowired
+    private CommandeRobot cmdRobot;
 
     // Stockages des points d'obstacles
     @Getter
@@ -62,7 +64,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             detectedPointsMm.addAll(
                     lidarScan.getScan().parallelStream()
                             .map(scan -> tableUtils.getPointFromAngle(scan.getDistanceMm(), scan.getAngleDeg()))
-                            .filter(pt -> tableUtils.isInTable(pt) && checkValidPointForSeuil(pt, SEUIL_DISTANCE_AVOID_LIDAR_MM))
+                            .filter(pt -> tableUtils.isInTable(pt) && checkValidPointForSeuil(pt, IConstantesNerellConfig.pathFindingSeuilAvoidance))
                             .collect(Collectors.toList())
             );
         }
@@ -76,7 +78,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
 
     protected boolean hasProximite() {
         return getDetectedPointsMm().parallelStream()
-                .anyMatch(pt -> checkValidPointForSeuil(pt, SEUIL_DISTANCE_PROX_LIDAR_MM));
+                .anyMatch(pt -> checkValidPointForSeuil(pt, IConstantesNerellConfig.pathFindingSeuilProximite));
     }
 
     private boolean checkValidPointForSeuil(Point pt, int seuilMm) {
@@ -88,20 +90,19 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
             return false;
         }
 
-        return true;
+        double alpha = Math.toDegrees(Math.atan2(Math.toRadians(dY), Math.toRadians(dX)));
+        double dA = alpha - conv.pulseToDeg(position.getAngle());
+        if (dA > 180) {
+            dA -= 360;
+        } else if (dA < -180) {
+            dA += 360;
+        }
 
-//        double alpha = Math.toDegrees(Math.atan2(Math.toRadians(dY), Math.toRadians(dX)));
-//        double dA = alpha - conv.pulseToDeg(position.getAngle());
-//        if (dA > 180) {
-//            dA -= 360;
-//        } else if (dA < -180) {
-//            dA += 360;
-//        }
-//
-//        if (cmdRobot.getConsigne().getDistance() > 0) {
-//            return dA > -45 && dA < 45;
-//        } else {
-//            return Math.abs(dA) < 180 && Math.abs(dA) > 135;
-//        }
+        if (cmdRobot.getConsigne().getDistance() > 0) {
+            return Math.abs(dA) <= IConstantesNerellConfig.pathFindingAngle;
+        } else {
+            return Math.abs(dA) >= 180 - IConstantesNerellConfig.pathFindingAngle;
+        }
     }
+
 }
