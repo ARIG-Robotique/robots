@@ -55,6 +55,7 @@ public class ServosController extends AbstractServosController {
                 .position("Carousel", IConstantesServos.ASCENSEUR_DROIT_CAROUSEL)
                 .position("Accelerateur", IConstantesServos.ASCENSEUR_DROIT_ACCELERATEUR)
                 .position("Distributeur", IConstantesServos.ASCENSEUR_DROIT_DISTRIBUTEUR)
+                .position("Distributeur gold", IConstantesServos.ASCENSEUR_DROIT_GOLD)
                 .position("Table", IConstantesServos.ASCENSEUR_DROIT_TABLE)
                 .position("Table pour gold", IConstantesServos.ASCENSEUR_DROIT_TABLE_GOLD)
         );
@@ -66,6 +67,7 @@ public class ServosController extends AbstractServosController {
                 .position("Carousel", IConstantesServos.ASCENSEUR_GAUCHE_CAROUSEL)
                 .position("Accelerateur", IConstantesServos.ASCENSEUR_GAUCHE_ACCELERATEUR)
                 .position("Distributeur", IConstantesServos.ASCENSEUR_GAUCHE_DISTRIBUTEUR)
+                .position("Distributeur gold", IConstantesServos.ASCENSEUR_GAUCHE_GOLD)
                 .position("Table", IConstantesServos.ASCENSEUR_GAUCHE_TABLE)
                 .position("Table pour gold", IConstantesServos.ASCENSEUR_GAUCHE_TABLE_GOLD)
         );
