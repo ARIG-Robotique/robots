@@ -67,12 +67,17 @@ public class CarouselService {
         working.set(true);
         tourner(index - ICarouselManager.LECTEUR);
 
-        ioService.enableLedCapteurCouleur();
-        ThreadUtils.sleep(50);
-        CouleurPalet couleur = ioService.couleurPalet();
-        ioService.disableLedCapteurCouleur();
+        if (ioService.presenceLectureCouleur()) {
+            ioService.enableLedCapteurCouleur();
+            ThreadUtils.sleep(50);
+            CouleurPalet couleur = ioService.couleurPalet();
+            ioService.disableLedCapteurCouleur();
 
-        carouselManager.setColor(ICarouselManager.LECTEUR, couleur);
+            carouselManager.setColor(ICarouselManager.LECTEUR, couleur);
+        } else {
+            carouselManager.setColor(ICarouselManager.LECTEUR, null);
+        }
+
         working.set(false);
     }
 
