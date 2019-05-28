@@ -73,7 +73,7 @@ public class DeposeAccelerateur extends AbstractAction {
                 );
     }
 
-    private boolean canDepose() {
+    public boolean canDepose() {
         return rs.getPaletsInAccelerateur().size() < IConstantesNerellConfig.nbPaletsAccelerateurMax &&
                 (
                         carousel.has(CouleurPalet.ROUGE) ||

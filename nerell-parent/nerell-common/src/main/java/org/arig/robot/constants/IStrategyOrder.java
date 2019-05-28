@@ -2,14 +2,13 @@ package org.arig.robot.constants;
 
 public interface IStrategyOrder {
 
-    int DEPOSE_ACCELERATEUR = 0;
-    int PRIS_GRAND_DIS_1 = 0;
-    int PRIS_GRAND_DIS_2 = 0;
-    int PRIS_GRAND_DIS_3 = 0;
-
-    int DEPOSE_GOLDENIUM = 0;
-    int PRIS_GOLDENIUM = 0;
-    int DEPOSE_MAGASIN = 0;
-    int DEPOSE_BALANCE = 0;
-    int PRIS_TROU_NOIR = 0;
+    int PRISE_ATOMES_DEPART = 1000;
+    int PRISE_GRAND_DIS_1 = 999;
+    int DEPOSE_ACCELERATEUR_1 = 998;
+    int PRISE_GOLDENIUM = 997;
+    int DEPOSE_BALANCE_1 = 996;
+    int PRISE_GRAND_DIS_2 = 995;
+    int PRISE_GRAND_DIS_3 = 994;
+    int DEPOSE_ACCELERATEUR_2 = 993;
+    int DEPOSE_BALANCE_2 = 992;
 }
