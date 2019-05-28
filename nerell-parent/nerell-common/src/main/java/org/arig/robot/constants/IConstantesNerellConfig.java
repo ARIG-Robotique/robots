@@ -112,6 +112,9 @@ public interface IConstantesNerellConfig {
     double dstAtomeCentre2 = 120; // distance du milieu du palet au centre du robot (longueur)
     int dstTinylidarAvant = 50; // FIXME
 
+    double seuilErreurPidOrientation = 30000;
+    double seuilErreurPidDistance = 30000;
+
     // -------------------------- //
     // Paramètre Carousel manager //
     // -------------------------- //

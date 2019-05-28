@@ -15,6 +15,7 @@ import org.arig.robot.services.VentousesService;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.avoiding.IAvoidingService;
+import org.arig.robot.system.blockermanager.ISystemBlockerManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -59,6 +60,9 @@ public class NerellScheduler {
 
     @Autowired
     private LeftSideService leftSideService;
+
+    @Autowired
+    private ISystemBlockerManager systemBlockerManager;
 
     @Scheduled(fixedDelay = 100)
     public void obstacleAvoidanceTask() {
@@ -143,6 +147,11 @@ public class NerellScheduler {
         if (rs.isMagasinEnabled()) {
             magasinService.process();
         }
+    }
+
+    @Scheduled(fixedDelay = 1000)
+    public void systemBlockerManagerTask() {
+        systemBlockerManager.process();
     }
 
 }

@@ -19,6 +19,8 @@ import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.TrajectoryManager;
 import org.arig.robot.system.TrajectoryManagerAsync;
+import org.arig.robot.system.blockermanager.ISystemBlockerManager;
+import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.arig.robot.system.encoders.AbstractEncoder;
 import org.arig.robot.system.motion.AsservissementPolaireDistanceOrientation;
 import org.arig.robot.system.motion.AsservissementPosition;
@@ -180,5 +182,10 @@ public class NerellCommonContext {
         services.put(ESide.DROITE, rightSideService);
         services.put(ESide.GAUCHE, leftSideService);
         return services;
+    }
+
+    @Bean
+    public ISystemBlockerManager systemBlockerManager() {
+        return new SystemBlockerManager(IConstantesNerellConfig.seuilErreurPidDistance, IConstantesNerellConfig.seuilErreurPidOrientation);
     }
 }

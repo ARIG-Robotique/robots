@@ -100,4 +100,8 @@ public abstract class AbstractPidFilter implements IPidFilter {
 
         return this.output;
     }
+
+    public final Double getPidErrorSum() {
+        return this.integral.getSum();
+    }
 }
