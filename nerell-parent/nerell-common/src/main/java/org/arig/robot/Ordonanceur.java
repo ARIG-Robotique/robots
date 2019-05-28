@@ -160,15 +160,9 @@ public class Ordonanceur {
 
         log.info("Définition des zones 'mortes' de la carte.");
 
-        // zone de déco
+        // Exclusion de toutes la zone pente et distributeur personel
         // Inverse de width && height
-        tableUtils.addDeadZone(new java.awt.Rectangle.Double(0, 0, 3000, 457));
-
-        if (robotStatus.getTeam() == Team.JAUNE) {
-            tableUtils.addDeadZone(new java.awt.Rectangle.Double(1050, 457, 450, 200)); // Balance
-        } else {
-            tableUtils.addDeadZone(new java.awt.Rectangle.Double(1500, 457, 450, 200)); // Balance
-        }
+        tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 3000, 457));
 
         // Attente la mise de la tirette
         log.info("Mise de la tirette pour lancer la calibration");

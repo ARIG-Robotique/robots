@@ -24,7 +24,8 @@ public class TableUtils {
     private Position position;
 
     private final int minXmm, maxXmm, minYmm, maxYmm;
-    private List<Rectangle.Double> deadZones = new ArrayList<>();
+    private List<Rectangle.Double> persistentDeadZones = new ArrayList<>();
+    private List<Rectangle.Double> dynamicDeadZones = new ArrayList<>();
 
     public TableUtils(int minXmm, int maxXmm, int minYmm, int maxYmm) {
         this.minXmm = minXmm;
@@ -33,13 +34,19 @@ public class TableUtils {
         this.maxYmm = maxYmm;
     }
 
-    public void clearDeadZones() {
-        deadZones.clear();
+    public void clearDynamicDeadZones() {
+        dynamicDeadZones.clear();
     }
 
-    public void addDeadZone(Rectangle.Double r) {
+    public void addPersistentDeadZone(Rectangle.Double r) {
         if (r != null) {
-            deadZones.add(r);
+            persistentDeadZones.add(r);
+        }
+    }
+
+    public void addDynamicDeadZone(Rectangle.Double r) {
+        if (r != null) {
+            dynamicDeadZones.add(r);
         }
     }
 
@@ -53,14 +60,20 @@ public class TableUtils {
         boolean inTable = pt.getX() > minXmm && pt.getX() < maxXmm
                 && pt.getY() > minYmm && pt.getY() < maxYmm;
 
-        boolean inDeadZones = false;
-        if (CollectionUtils.isNotEmpty(deadZones)) {
-            inDeadZones = deadZones.parallelStream().anyMatch(
+        boolean inPersistantDeadZones = false;
+        if (CollectionUtils.isNotEmpty(persistentDeadZones)) {
+            inPersistantDeadZones = persistentDeadZones.parallelStream().anyMatch(
                 r -> r.contains(new Point2D.Double(pt.getX(), pt.getY()))
             );
         }
+        boolean inDynamicDeadZones = false;
+        if (CollectionUtils.isNotEmpty(dynamicDeadZones)) {
+            inDynamicDeadZones = dynamicDeadZones.parallelStream().anyMatch(
+                    r -> r.contains(new Point2D.Double(pt.getX(), pt.getY()))
+            );
+        }
 
-        return inTable && !inDeadZones;
+        return inTable && !inPersistantDeadZones && !inDynamicDeadZones;
     }
 
     /**
