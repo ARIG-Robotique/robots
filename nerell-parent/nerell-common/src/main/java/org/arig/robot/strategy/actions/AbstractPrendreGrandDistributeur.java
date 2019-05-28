@@ -97,8 +97,9 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
                     ventouses.preparePriseDistributeur(ESide.DROITE)
             ).get();
 
-            // 457 = distance bord distributeur
-            double yOffset = -457 + yAvantAvance - IConstantesNerellConfig.dstVentouseFacade;
+            // 457 = distance bord distributeur, 20 = pour le calage
+            double yOffset = -457 + yAvantAvance - IConstantesNerellConfig.dstVentouseFacade + 20;
+            rs.enableCalageVentouse();
             mv.avanceMM(yOffset);
 
 //            rs.enableCalageBordureAvant(IConstantesNerellConfig.dstVentouseFacade);

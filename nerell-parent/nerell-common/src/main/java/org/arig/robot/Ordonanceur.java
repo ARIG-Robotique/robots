@@ -180,7 +180,7 @@ public class Ordonanceur {
         log.info("Initialisation du contrôleur de mouvement");
         trajectoryManager.init();
 
-        callageBordure();
+        calageBordure();
 
         log.info("Démarrage du lidar");
         lidar.startScan();
@@ -251,7 +251,7 @@ public class Ordonanceur {
         ioService.disableAlim12VPuissance();
     }
 
-    public void callageBordure() {
+    public void calageBordure() {
         try {
             robotStatus.disableAvoidance();
             robotStatus.enableAsserv();

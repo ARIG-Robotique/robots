@@ -91,7 +91,8 @@ public class PrendrePetitDistributeurEquipe1 extends AbstractAction {
             ventouses.preparePriseDistributeur(ESide.GAUCHE);
             ventouses.preparePriseDistributeur(ESide.DROITE);
 
-            mv.avanceMM(yAvantAvance - IConstantesNerellConfig.dstVentouseFacade);
+            rs.enableCalageVentouse();
+            mv.avanceMM(yAvantAvance - IConstantesNerellConfig.dstVentouseFacade + 20);
 
 //            rs.enableCalageBordureAvant(IConstantesNerellConfig.dstVentouseFacade);
 //            mv.avanceMM(500);

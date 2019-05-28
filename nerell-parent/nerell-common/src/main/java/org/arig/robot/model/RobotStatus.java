@@ -95,6 +95,11 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         calageBordureDistance = dst;
     }
 
+    public void enableCalageVentouse() {
+        log.info("Activation calage ventouse");
+        calageBordure = EModeCalage.VENTOUSE;
+    }
+
     @Setter(AccessLevel.NONE)
     private boolean carouselEnabled = false;
 

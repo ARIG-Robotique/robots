@@ -77,7 +77,8 @@ public class PrendreGoldenium extends AbstractAction {
             ventouses.waitAvailable(side);
             ventouses.preparePriseGoldenium(side).get();
 
-            mv.avanceMM(2000 - 50 - yAvantAvance - IConstantesNerellConfig.dstVentouseFacade);
+            rs.enableCalageVentouse();
+            mv.avanceMM(2000 - 50 - yAvantAvance - IConstantesNerellConfig.dstVentouseFacade + 20);
 
 //            rs.enableCalageBordureAvant(IConstantesNerellConfig.dstVentouseFacade - 15);
 //            mv.avanceMM(500);

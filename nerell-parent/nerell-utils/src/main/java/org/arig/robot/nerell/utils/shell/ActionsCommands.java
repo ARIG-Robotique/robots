@@ -28,10 +28,10 @@ public class ActionsCommands {
                 ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
     }
 
-    @ShellMethod("Callage bordure")
+    @ShellMethod("Calage bordure")
     @SneakyThrows
-    public void callageBordure() {
-        ordonanceur.callageBordure();
+    public void calageBordure() {
+        ordonanceur.calageBordure();
     }
 
     @ShellMethod("Execute une action")

@@ -42,6 +42,10 @@ public class CalageBordureService {
                     done = ioService.calageBordureArriereDroit() || ioService.calageBordureArriereGauche();
                 }
                 break;
+
+            case VENTOUSE:
+                done = ioService.presencePaletVentouseDroit() || ioService.presencePaletVentouseGauche();
+                break;
         }
 
         if (done) {
