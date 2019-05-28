@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 public class VentousesService implements IVentousesService, InitializingBean {
 
     private static final int TEMPS_TENTATIVE_ASPIRATION = 1000;
-    private static final int TEMPS_MAX_AVAILABLE = 3000;
+    private static final int TEMPS_MAX_AVAILABLE = 6000;
 
     @Autowired
     @Qualifier("sideServices")
@@ -93,6 +93,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     @Override
     @Async
     public CompletableFuture<Boolean> priseTable(CouleurPalet couleur, ESide side) {
+        log.info("Prise table à {}", side);
+
         IRobotSide service = sideServices.get(side);
 
         if (!carousel.has(null)) {
@@ -126,6 +128,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     @Override
     @Async
     public CompletableFuture<Boolean> preparePriseDistributeur(ESide side) {
+        log.info("Prépare prise distributeur {}", side);
+
         IRobotSide service = sideServices.get(side);
 
         if (!carousel.has(null)) {
@@ -147,6 +151,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     @Override
     @Async
     public CompletableFuture<Boolean> priseDistributeur(CouleurPalet couleur, ESide side) {
+        log.info("Prise distributeur à {}", side);
+
         IRobotSide service = sideServices.get(side);
 
         if (!service.presencePaletVentouse()) {
@@ -172,6 +178,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     @Override
     @Async
     public CompletableFuture<Void> finishPriseDistributeur(boolean ok, ESide side) {
+        log.info("Finish prise distributeur à {}", side);
+
         if (!ok) {
             return servosHomeAndDisablePompeAndRelease(side);
         } else {
@@ -186,6 +194,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     @Override
     @Async
     public CompletableFuture<Void> preparePriseGoldenium(ESide side) {
+        log.info("Prépare prise goldenium à {}", side);
+
         IRobotSide service = sideServices.get(side);
 
         service.pivotVentouseFacade(false);
@@ -200,6 +210,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     @Override
     @Async
     public CompletableFuture<Boolean> priseGoldenium(ESide side) {
+        log.info("Prise goldenium à {}", side);
+
         IRobotSide service = sideServices.get(side);
 
         service.enablePompeAVide();
@@ -223,6 +235,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     @Override
     @Async
     public CompletableFuture<Void> finishPriseGoldenium(boolean ok, ESide side) {
+        log.info("Finish prise goldenium à {}", side);
+
         IRobotSide service = sideServices.get(side);
 
         if (!ok) {
@@ -243,6 +257,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     @Override
     @Async
     public CompletableFuture<Void> prepareDeposeAccelerateur(ESide side) {
+        log.info("Prépare dépose accelerateur à {}", side);
+
         IRobotSide service = sideServices.get(side);
 
         service.pivotVentouseCarouselVertical(false);
@@ -258,6 +274,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     @Override
     @Async
     public CompletableFuture<Boolean> preparePriseAccelerateur(ESide side) {
+        log.info("Prépare prise accelerateur à {}", side);
+
         IRobotSide service = sideServices.get(side);
 
         if (!carousel.has(null)) {
@@ -277,6 +295,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     @Override
     @Async
     public CompletableFuture<Void> pousseAccelerateur(ESide side) {
+        log.info("Pousse accélérateur à {}", side);
+
         IRobotSide service = sideServices.get(side);
 
         service.pousseAccelerateurAction(true);
@@ -291,6 +311,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     @Override
     @Async
     public CompletableFuture<Boolean> priseAccelerateur(ESide side) {
+        log.info("Prise accélerateur à {}", side);
+
         IRobotSide service = sideServices.get(side);
 
         if (!service.presencePaletVentouse()) {
@@ -316,6 +338,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     @Override
     @Async
     public CompletableFuture<Boolean> deposeAccelerateur(CouleurPalet couleur, ESide side) throws CarouselNotAvailableException {
+        log.info("Dépose accelerateur à {}", side);
+
         IRobotSide service = sideServices.get(side);
 
         if (rs.getPaletsInAccelerateur().size() >= IConstantesNerellConfig.nbPaletsAccelerateurMax) {
@@ -405,6 +429,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     @Override
     @Async
     public CompletableFuture<Void> finishDeposeAccelerateur(ESide side) {
+        log.info("Finish depose accelerateur à {}", side);
+
         IRobotSide service = sideServices.get(side);
 
         service.pousseAccelerateurFerme(false);
@@ -418,6 +444,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     @Override
     @Async
     public CompletableFuture<Boolean> deposeBalance(CouleurPalet couleur, ESide side) throws CarouselNotAvailableException {
+        log.info("Dépose balance à {}", side);
+
         IRobotSide service = sideServices.get(side);
 
         if (couleur == CouleurPalet.GOLD) {
@@ -459,6 +487,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     @Override
     @Async
     public CompletableFuture<Void> finishDepose(ESide side) {
+        log.info("Finish dépose à {}", side);
+
         rs.enableSerrage();
         return servosHomeAndDisablePompeAndRelease(side);
     }
@@ -469,6 +499,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     @Override
     @Async
     public CompletableFuture<Boolean> deposeGoldeniumTable(ESide side) {
+        log.info("Dépose goldenium table à {}", side);
+
         IRobotSide service = sideServices.get(side);
 
         if (couleur.get(side) != CouleurPalet.GOLD) {
@@ -497,6 +529,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     @Override
     @Async
     public CompletableFuture<Boolean> deposeTable(ESide side) {
+        log.info("Dépose table à {}", side);
+
         IRobotSide service = sideServices.get(side);
 
         if (couleur.get(side) == null) {
@@ -572,6 +606,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
     }
 
     private CompletableFuture<Void> stockageCarousel(ESide side, Consumer<IRobotSide> finish) {
+        log.info("Stockage carousel à {}", side);
+
         IRobotSide service = sideServices.get(side);
 
         if (!service.presencePaletVentouse() || couleur.get(side) == null) {

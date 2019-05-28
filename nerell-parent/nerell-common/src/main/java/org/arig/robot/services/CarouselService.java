@@ -84,6 +84,7 @@ public class CarouselService {
     }
 
     public void setHint(int index, CouleurPalet couleur) {
+        log.info("Carousel hint {} at {}", couleur, index);
         hintIndex = index;
         hintCouleur = couleur;
     }

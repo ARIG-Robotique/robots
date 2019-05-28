@@ -37,9 +37,9 @@ public class CalageBordureService {
 
             case ARRIERE:
                 if (cmdRobot.isType(TypeConsigne.DIST) && cmdRobot.isType(TypeConsigne.ANGLE)) {
-                    done = ioService.calageBordureArriereDroit() && ioService.calageBordureArriereGauche();
-                } else {
                     done = ioService.calageBordureArriereDroit() || ioService.calageBordureArriereGauche();
+                } else {
+                    done = ioService.calageBordureArriereDroit() && ioService.calageBordureArriereGauche();
                 }
                 break;
 

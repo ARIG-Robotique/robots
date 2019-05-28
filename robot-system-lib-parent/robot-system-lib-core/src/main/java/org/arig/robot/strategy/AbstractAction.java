@@ -22,7 +22,7 @@ public abstract class AbstractAction implements IAction {
     }
 
     protected void updateValidTime() {
-        setValidTime(LocalDateTime.now().plusNanos(2000)); // 2ms
+        setValidTime(LocalDateTime.now().plusNanos(5000));
     }
 
 }

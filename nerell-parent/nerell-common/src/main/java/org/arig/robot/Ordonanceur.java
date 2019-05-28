@@ -200,6 +200,8 @@ public class Ordonanceur {
 
         ioService.airElectroVanneDroite();
         ioService.airElectroVanneGauche();
+        ioService.disablePompeAVideDroite();
+        ioService.disablePompeAVideGauche();
         servosService.pinceSerragePaletGauche(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_REPOS, false);
         servosService.pinceSerragePaletDroit(IConstantesServos.PINCE_SERRAGE_PALET_DROIT_REPOS, false);
         servosService.ejectionMagasinGauche(IConstantesServos.EJECTION_MAGASIN_GAUCHE_OUVERT, false);

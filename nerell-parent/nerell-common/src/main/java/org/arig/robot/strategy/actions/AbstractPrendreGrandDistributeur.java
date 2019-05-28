@@ -76,7 +76,7 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
         try {
             rs.enableAvoidance();
 
-            int yAvantAvance = 680;
+            int yAvantAvance = 700;
 
             if (rs.getTeam() == Team.VIOLET) {
                 mv.pathTo(xViolet, yAvantAvance);

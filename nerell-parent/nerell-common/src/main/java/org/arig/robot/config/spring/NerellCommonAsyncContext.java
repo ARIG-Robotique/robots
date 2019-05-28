@@ -6,6 +6,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
@@ -14,6 +15,7 @@ import java.util.concurrent.Executor;
  * @author gdepuille on 29/04/15.
  */
 @Slf4j
+@EnableAsync
 @Configuration
 public class NerellCommonAsyncContext implements AsyncConfigurer {
 
