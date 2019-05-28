@@ -1,7 +1,7 @@
 package org.arig.robot.web.controller;
 
-import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.model.servos.ServoConfig;
 import org.arig.robot.model.servos.ServoGroup;
@@ -49,7 +49,7 @@ public abstract class AbstractServosController {
         for(Map.Entry<String, List<ServoConfig>> entry: sortedServConfig.entrySet()) {
             List<Pair<ServoConfig, ServoConfig>> pairs = new ArrayList<>();
             for(int i = 0 ; i < entry.getValue().size(); i = i +2 ) {
-                Pair<ServoConfig, ServoConfig> pair = new Pair<>(entry.getValue().get(i+1), entry.getValue().get(i));
+                Pair<ServoConfig, ServoConfig> pair = Pair.of(entry.getValue().get(i+1), entry.getValue().get(i));
                 pairs.add(pair);
             }
 
