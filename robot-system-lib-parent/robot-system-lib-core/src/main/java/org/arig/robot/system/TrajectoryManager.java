@@ -3,6 +3,7 @@ package org.arig.robot.system;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.NotYetImplementedException;
@@ -555,6 +556,8 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
         log.info("Va au point X = {}mm ; Y = {}mm {}", x, y, avecArret ? "et arrete toi" : "sans arret");
 
         synchronized (this) {
+            setVitesse(700, 1000);
+
             cmdRobot.getPosition().setAngle(0);
             cmdRobot.getPosition().getPt().setX(conv.mmToPulse(x));
             cmdRobot.getPosition().getPt().setY(conv.mmToPulse(y));
@@ -632,6 +635,8 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             double dX = conv.mmToPulse(x) - currentPosition.getPt().getX();
             double dY = conv.mmToPulse(y) - currentPosition.getPt().getY();
 
+            setVitesse(1000, 700);
+
             cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
             cmdRobot.getConsigne().setDistance(0);
             cmdRobot.getConsigne().setOrientation((long) (calculAngleConsigne(dX, dY) + conv.degToPulse(decalageDeg)));
@@ -663,6 +668,8 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             } else {
                 consOrient += conv.getPiPulse();
             }
+
+            setVitesse(1000, 700);
 
             cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
             cmdRobot.getConsigne().setDistance(0);
@@ -696,6 +703,9 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
         }
 
         synchronized (this) {
+
+            setVitesse(700, 1000);
+
             cmdRobot.setTypes(types);
             cmdRobot.getConsigne().setDistance((long) conv.mmToPulse(distance));
             cmdRobot.getConsigne().setOrientation(0);
@@ -747,6 +757,9 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
         try {
             synchronized (this) {
                 rs.disableAvoidance();
+
+                setVitesse(1000, 700);
+
                 cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
                 cmdRobot.getConsigne().setDistance(0);
                 cmdRobot.getConsigne().setOrientation((long) conv.degToPulse(angle));
