@@ -94,8 +94,6 @@ public class DeposerBalance extends AbstractAction {
 
             rs.enableAvoidance();
 
-            mv.pathTo(1500, 1000);
-            
             // va au point le plus proche
             // 150 = moitié du séparateur +  moitié de la balance + marge
             int yAvantAvance = 795;
