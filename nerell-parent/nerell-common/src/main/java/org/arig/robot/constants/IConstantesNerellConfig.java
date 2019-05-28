@@ -56,7 +56,7 @@ public interface IConstantesNerellConfig {
     double rampAccOrientation = 800.0; // en mm/s2
     double rampDecOrientation = 500.0; // en mm/s2
 
-    double rampAccCarousel = 500.0; // en mm/s2
+    double rampAccCarousel = 800.0; // en mm/s2
     double rampDecCarousel = 500.0; // en mm/s2
 
     // -------------------------- //

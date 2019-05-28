@@ -339,7 +339,7 @@ public class Ordonanceur {
         robotStatus.carouselIsInitialized();
         robotStatus.enableAsservCarousel();
 
-        carouselManager.setVitesse(100);
+        carouselManager.setVitesse(500);
         carouselManager.tourne(5 * IConstantesNerellConfig.countPerCarouselIndex + IConstantesNerellConfig.countOffsetInitCarousel);
         carouselManager.waitMouvement();
     }
