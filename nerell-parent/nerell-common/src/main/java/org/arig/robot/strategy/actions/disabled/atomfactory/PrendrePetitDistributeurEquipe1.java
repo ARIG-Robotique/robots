@@ -88,8 +88,10 @@ public class PrendrePetitDistributeurEquipe1 extends AbstractAction {
             ventouses.waitAvailable(ESide.GAUCHE);
             ventouses.waitAvailable(ESide.DROITE);
 
-            ventouses.preparePriseDistributeur(ESide.GAUCHE);
-            ventouses.preparePriseDistributeur(ESide.DROITE);
+            NerellUtils.all(
+                    ventouses.preparePriseDistributeur(ESide.GAUCHE),
+                    ventouses.preparePriseDistributeur(ESide.DROITE)
+            ).get();
 
             rs.enableCalageVentouse();
             mv.avanceMM(yAvantAvance - IConstantesNerellConfig.dstVentouseFacade + 20);

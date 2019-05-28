@@ -86,7 +86,7 @@ public class PrendrePetitDistributeurEquipe2 extends AbstractAction {
             mv.gotoOrientationDeg(-90);
 
             ventouses.waitAvailable(sideRouge);
-            ventouses.preparePriseDistributeur(sideRouge);
+            ventouses.preparePriseDistributeur(sideRouge).get(); // TODO ça plante ?
 
             rs.enableCalageVentouse();
             mv.avanceMM(yAvantAvance - IConstantesNerellConfig.dstVentouseFacade + 20);

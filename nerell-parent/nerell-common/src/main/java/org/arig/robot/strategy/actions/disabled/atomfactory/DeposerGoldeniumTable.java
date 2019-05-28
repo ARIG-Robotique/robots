@@ -17,8 +17,6 @@ import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.ExecutionException;
-
 @Slf4j
 @Component
 public class DeposerGoldeniumTable extends AbstractAction {
@@ -78,14 +76,14 @@ public class DeposerGoldeniumTable extends AbstractAction {
 
             mv.avanceMM(100);
 
-            ventouses.deposeGoldeniumTable(side).get();
+            ventouses.deposeGoldeniumTable(side);
 
             mv.reculeMM(100);
             mv.gotoOrientationDeg(rs.getTeam() == Team.VIOLET ? 180 : 0);
 
             completed = true;
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | InterruptedException | ExecutionException e) {
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
 

@@ -23,8 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.ExecutionException;
-
 @Slf4j
 @Component
 public class DeposerBalance extends AbstractAction {
@@ -122,7 +120,7 @@ public class DeposerBalance extends AbstractAction {
                         CouleurPalet.GOLD :
                         carousel.has(CouleurPalet.BLEU) ? CouleurPalet.BLEU : CouleurPalet.VERT;
 
-                if (!ventouses.deposeBalance(couleur, side).get()) {
+                if (!ventouses.deposeBalance(couleur, side)) {
                     break;
                 }
             }
@@ -131,7 +129,7 @@ public class DeposerBalance extends AbstractAction {
 
             completed = rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax;
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | CarouselNotAvailableException | VentouseNotAvailableException | InterruptedException | ExecutionException e) {
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | CarouselNotAvailableException | VentouseNotAvailableException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
 

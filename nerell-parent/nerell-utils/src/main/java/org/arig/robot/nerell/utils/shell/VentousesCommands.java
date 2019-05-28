@@ -36,75 +36,75 @@ public class VentousesCommands {
     @ShellMethod("Release côté")
     @SneakyThrows
     public void releaseSide(@NotNull ESide side) {
-        ventouses.finishDepose(side).get();
+        ventouses.finishDepose(side);
     }
 
     @ShellMethod("Prise sur la table")
     @SneakyThrows
     public void priseTable(@NotNull ESide side) {
-        if (ventouses.priseTable(CouleurPalet.INCONNU, side).get()) {
+        if (ventouses.priseTable(CouleurPalet.INCONNU, side)) {
             log.info("Prise sur table côté {}", side.name());
-            ventouses.stockageCarousel(side).get();
+            ventouses.stockageCarousel(side);
         } else {
             log.info("Echec de prise sur table côté {}", side.name());
-            ventouses.finishDepose(side).get();
+            ventouses.finishDepose(side);
         }
     }
 
     @ShellMethod("Prise sur un distributeur")
     @SneakyThrows
     public void priseDistributeur(@NotNull ESide side) {
-        ventouses.preparePriseDistributeur(side).get();
+        ventouses.preparePriseDistributeur(side);
         ThreadUtils.sleep(5000);
         boolean ok = ventouses.priseDistributeur(CouleurPalet.ROUGE, side).get();
         ThreadUtils.sleep(5000);
-        ventouses.finishPriseDistributeur(ok, side).get();
+        ventouses.finishPriseDistributeur(ok, side);
     }
 
     @ShellMethod("Prise du un accelerateur")
     @SneakyThrows
     public void priseAccelerateur(@NotNull ESide side) throws VentouseNotAvailableException {
-        ventouses.preparePriseAccelerateur(side).get();
+        ventouses.preparePriseAccelerateur(side);
         ThreadUtils.sleep(5000);
-        ventouses.priseAccelerateur(side).get();
-        ventouses.stockageCarouselMaisResteEnHaut(side).get();
+        ventouses.priseAccelerateur(side);
+        ventouses.stockageCarouselMaisResteEnHaut(side);
         ThreadUtils.sleep(5000);
-        ventouses.finishDeposeAccelerateur(side).get();
+        ventouses.finishDeposeAccelerateur(side);
     }
 
     @ShellMethod("Depose accelerateur")
     @SneakyThrows
     public void deposeAccelerateur(@NotNull ESide side) throws CarouselNotAvailableException {
-        ventouses.prepareDeposeAccelerateur(side).get();
+        ventouses.prepareDeposeAccelerateur(side);
         ThreadUtils.sleep(5000);
-        ventouses.deposeAccelerateur(CouleurPalet.ROUGE, side).get();
+        ventouses.deposeAccelerateur(CouleurPalet.ROUGE, side);
         ThreadUtils.sleep(5000);
-        ventouses.finishDeposeAccelerateur(side).get();
+        ventouses.finishDeposeAccelerateur(side);
     }
 
     @ShellMethod("Dépose sur la balance")
     @SneakyThrows
     public void deposeBalance(@NotNull ESide side) throws CarouselNotAvailableException {
-        ventouses.deposeBalance(CouleurPalet.ROUGE, side).get();
+        ventouses.deposeBalance(CouleurPalet.ROUGE, side);
         ThreadUtils.sleep(5000);
-        ventouses.finishDepose(side).get();
+        ventouses.finishDepose(side);
     }
 
     @ShellMethod("Prise du goldenium")
     @SneakyThrows
     public void priseGoldenium(@NotNull ESide side) {
-        ventouses.preparePriseGoldenium(side).get();
+        ventouses.preparePriseGoldenium(side);
         ThreadUtils.sleep(5000);
-        boolean ok = ventouses.priseGoldenium(side).get();
+        boolean ok = ventouses.priseGoldenium(side);
         ThreadUtils.sleep(5000);
-        ventouses.finishPriseGoldenium(ok, side).get();
+        ventouses.finishPriseGoldenium(ok, side);
     }
 
     @ShellMethod("Dépose goldenium sur table")
     @SneakyThrows
     public void deposeGoldeniumTable(@NotNull ESide side) {
-        ventouses.deposeGoldeniumTable(side).get();
+        ventouses.deposeGoldeniumTable(side);
         ThreadUtils.sleep(5000);
-        ventouses.finishDepose(side).get();
+        ventouses.finishDepose(side);
     }
 }

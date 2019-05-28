@@ -21,8 +21,6 @@ import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.ExecutionException;
-
 @Slf4j
 @Component
 public class DeposeAccelerateur extends AbstractAction {
@@ -110,11 +108,11 @@ public class DeposeAccelerateur extends AbstractAction {
             rs.disableVentouses();
 
             if (rs.strategyActive(EStrategy.PRISE_BLEU_ACCELERATEUR)) {
-                if (!ventouses.preparePriseAccelerateur(side).get()) {
+                if (!ventouses.preparePriseAccelerateur(side)) {
                     throw new CarouselNotAvailableException();
                 }
             } else {
-                ventouses.prepareDeposeAccelerateur(side).get();
+                ventouses.prepareDeposeAccelerateur(side);
             }
 
             // oriente et avance à fond
@@ -125,17 +123,17 @@ public class DeposeAccelerateur extends AbstractAction {
 
             // prend ou pousse le bleu
             if (rs.strategyActive(EStrategy.PRISE_BLEU_ACCELERATEUR) && !rs.isAccelerateurPrit()) {
-                if (ventouses.priseAccelerateur(side).get()) {
-                    ventouses.stockageCarouselMaisResteEnHaut(side).get();
+                if (ventouses.priseAccelerateur(side)) {
+                    ventouses.stockageCarouselMaisResteEnHaut(side);
                     rs.setAccelerateurPrit(true);
 
                 } else if (!rs.isAccelerateurOuvert()) {
-                    ventouses.pousseAccelerateur(side).get();
+                    ventouses.pousseAccelerateur(side);
                     rs.setAccelerateurOuvert(true);
                     rs.getPaletsInAccelerateur().add(CouleurPalet.BLEU);
                 }
             } else if (!rs.isAccelerateurOuvert() && !rs.isAccelerateurPrit()) {
-                ventouses.pousseAccelerateur(side).get();
+                ventouses.pousseAccelerateur(side);
                 rs.setAccelerateurOuvert(true);
                 rs.getPaletsInAccelerateur().add(CouleurPalet.BLEU);
             }
@@ -144,7 +142,7 @@ public class DeposeAccelerateur extends AbstractAction {
             while (canDepose()) {
                 CouleurPalet couleur = carousel.has(CouleurPalet.ROUGE) ? CouleurPalet.ROUGE : CouleurPalet.ANY;
 
-                if (!ventouses.deposeAccelerateur(couleur, side).get()) {
+                if (!ventouses.deposeAccelerateur(couleur, side)) {
                     break;
                 }
 
@@ -156,19 +154,19 @@ public class DeposeAccelerateur extends AbstractAction {
 
             completed = rs.getPaletsInAccelerateur().size() >= IConstantesNerellConfig.nbPaletsAccelerateurMax;
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException | CarouselNotAvailableException | InterruptedException | ExecutionException e) {
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException | CarouselNotAvailableException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
 
         } finally {
             try {
                 mv.reculeMM(50);
-                ventouses.finishDeposeAccelerateur(side).get();
+                ventouses.finishDeposeAccelerateur(side);
                 rs.enableMagasin();
                 rs.enableCarousel();
                 rs.enableVentouses();
 
-            } catch (RefreshPathFindingException | AvoidingException | InterruptedException | ExecutionException e) {
+            } catch (RefreshPathFindingException | AvoidingException e) {
                 e.printStackTrace();
             }
         }

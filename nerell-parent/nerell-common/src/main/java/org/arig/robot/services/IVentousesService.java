@@ -14,7 +14,7 @@ public interface IVentousesService {
 
     void waitAvailable(ESide side) throws VentouseNotAvailableException;
 
-    CompletableFuture<Boolean> priseTable(CouleurPalet couleur, ESide side);
+    boolean priseTable(CouleurPalet couleur, ESide side);
 
     CompletableFuture<Boolean> preparePriseDistributeur(ESide side);
 
@@ -22,33 +22,33 @@ public interface IVentousesService {
 
     CompletableFuture<Void> finishPriseDistributeur(boolean ok, ESide side);
 
-    CompletableFuture<Void> preparePriseGoldenium(ESide side);
+    void preparePriseGoldenium(ESide side);
 
-    CompletableFuture<Boolean> priseGoldenium(ESide side);
+    boolean priseGoldenium(ESide side);
 
     CompletableFuture<Void> finishPriseGoldenium(boolean ok, ESide side);
 
-    CompletableFuture<Void> prepareDeposeAccelerateur(ESide side);
+    void prepareDeposeAccelerateur(ESide side);
 
-    CompletableFuture<Boolean> preparePriseAccelerateur(ESide side);
+    boolean preparePriseAccelerateur(ESide side);
 
-    CompletableFuture<Void> pousseAccelerateur(ESide side);
+    void pousseAccelerateur(ESide side);
 
-    CompletableFuture<Boolean> priseAccelerateur(ESide side);
+    boolean priseAccelerateur(ESide side);
 
-    CompletableFuture<Boolean> deposeAccelerateur(CouleurPalet couleur, ESide side) throws CarouselNotAvailableException;
+    boolean deposeAccelerateur(CouleurPalet couleur, ESide side) throws CarouselNotAvailableException;
 
-    CompletableFuture<Void> finishDeposeAccelerateur(ESide side);
+    void finishDeposeAccelerateur(ESide side);
 
-    CompletableFuture<Boolean> deposeBalance(CouleurPalet couleur, ESide side) throws CarouselNotAvailableException;
+    boolean deposeBalance(CouleurPalet couleur, ESide side) throws CarouselNotAvailableException;
 
     CompletableFuture<Void> finishDepose(ESide side);
 
-    CompletableFuture<Boolean> deposeGoldeniumTable(ESide side);
+    boolean deposeGoldeniumTable(ESide side);
 
     CompletableFuture<Boolean> deposeTable(ESide side);
 
-    CompletableFuture<Void> stockageCarousel(ESide side);
+    void stockageCarousel(ESide side);
 
-    CompletableFuture<Void> stockageCarouselMaisResteEnHaut(ESide side);
+    void stockageCarouselMaisResteEnHaut(ESide side);
 }

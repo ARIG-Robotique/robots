@@ -88,8 +88,8 @@ public class NerellScheduler {
                 if (rightSideService.buteePalet() && rightSideService.presencePalet() && !ventousesService.isWorking(ESide.DROITE) && carousel.has(null)) {
                     ventousesService.waitAvailable(ESide.DROITE);
 
-                    if (ventousesService.priseTable(CouleurPalet.INCONNU, ESide.DROITE).get()) {
-                        ventousesService.stockageCarousel(ESide.DROITE).get();
+                    if (ventousesService.priseTable(CouleurPalet.INCONNU, ESide.DROITE)) {
+                        ventousesService.stockageCarousel(ESide.DROITE);
                     } else {
                         ventousesService.finishDepose(ESide.DROITE).get();
                     }
@@ -107,8 +107,8 @@ public class NerellScheduler {
                 if (leftSideService.buteePalet() && leftSideService.presencePalet() && !ventousesService.isWorking(ESide.GAUCHE) && carousel.has(null)) {
                     ventousesService.waitAvailable(ESide.GAUCHE);
 
-                    if (ventousesService.priseTable(CouleurPalet.INCONNU, ESide.GAUCHE).get()) {
-                        ventousesService.stockageCarousel(ESide.GAUCHE).get();
+                    if (ventousesService.priseTable(CouleurPalet.INCONNU, ESide.GAUCHE)) {
+                        ventousesService.stockageCarousel(ESide.GAUCHE);
                     } else {
                         ventousesService.finishDepose(ESide.GAUCHE).get();
                     }
