@@ -84,9 +84,9 @@ public interface IConstantesNerellConfig {
     // Parametres PID //
     // -------------- //
 
-    double kpDistance = 8;
-    double kiDistance = 170 * asservTimeS;
-    double kdDistance = 0.08 / asservTimeS;
+    double kpDistance = 5;
+    double kiDistance = 100 * asservTimeS;
+    double kdDistance = 0.2 / asservTimeS;
 
     double kpOrientation = 2;
     double kiOrientation = 150 * asservTimeS;
