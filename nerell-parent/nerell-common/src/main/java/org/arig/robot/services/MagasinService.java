@@ -88,12 +88,10 @@ public class MagasinService implements InitializingBean {
      * Stockage automatique dans le magasin si l'accelerateur et le magasin sont pleins ou qu'ilne reste plus beaucoup de temps
      */
     private void stockageAuto() {
-        if (!carouselService.isWorking() && (
-                rs.getRemainingTime() < 30000 ||
-                        rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax &&
-                                rs.getPaletsInAccelerateur().size() >= IConstantesNerellConfig.nbPaletsAccelerateurMax
-        )) {
-
+        if (rs.getRemainingTime() < 30000 ||
+                rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax &&
+                        rs.getPaletsInAccelerateur().size() >= IConstantesNerellConfig.nbPaletsAccelerateurMax
+        ) {
             final Optional<CouleurPalet> couleur = Stream.of(CouleurPalet.ROUGE, CouleurPalet.VERT)
                     .filter(carouselManager::has)
                     .findFirst();
@@ -118,38 +116,34 @@ public class MagasinService implements InitializingBean {
     public boolean stockage(CouleurPalet couleur, ESide side) throws CarouselNotAvailableException {
         IRobotSide service = sideServices.get(side);
 
-        // TODO
-//        if (service.nbPaletDansMagasin() >= NB_MAX_MAGASIN) {
-//            log.warn("Le magasin est déjà plein");
-//            return false;
-//        }
+        if (rs.getMagasin().get(side).size() >= NB_MAX_MAGASIN) {
+            log.warn("Le magasin est déjà plein");
+            return false;
+        }
 
         if (!carousel.has(couleur)) {
             log.warn("Pas de {} dans le carousel", couleur);
             return false;
         }
 
-        int nbPaletInit = service.nbPaletDansMagasin();
+        if (carousel.get(service.positionCarouselMagasin()) == couleur) {
+            carouselService.lock(service.positionCarouselMagasin(), TEMPS_MAX_AVAILABLE);
 
-        carouselService.waitAvailable(TEMPS_MAX_AVAILABLE);
+        } else {
+            carouselService.fullLock(service.positionCarouselMagasin(), TEMPS_MAX_AVAILABLE);
 
-        carouselService.tourner(service.positionCarouselMagasin(), couleur);
+            carouselService.tourner(service.positionCarouselMagasin(), couleur);
+        }
 
         service.trappeMagasinOuvert(true);
         ThreadUtils.sleep(200);
         service.trappeMagasinFerme(true);
 
-        // TODO tinylidar
-//        if (service.nbPaletDansMagasin() > nbPaletInit) {
         rs.getMagasin().get(side).add(couleur);
         carousel.unstore(service.positionCarouselMagasin());
-        carouselService.release();
+        carouselService.release(service.positionCarouselMagasin());
+
         return true;
-//        } else {
-//            log.warn("Un problème est survenu pendant le stockage");
-//            carouselService.release();
-//            return false;
-//        }
     }
 
 }

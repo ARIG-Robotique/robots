@@ -12,6 +12,8 @@ import org.arig.robot.utils.SimpleCircularList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 @Slf4j
@@ -116,13 +118,13 @@ public class CarouselManager implements ICarouselManager {
 
     @Override
     public void tourne(final long pulse) {
+        list.rotate(conv.pulseToIndex(pulse));
+
         cmdCarousel.getConsigne().setValue(pulse);
         cmdCarousel.setFrein(true);
 
         prepareNextMouvement();
         waitMouvement();
-
-        list.rotate(conv.pulseToIndex(pulse));
     }
 
     /**
@@ -197,9 +199,7 @@ public class CarouselManager implements ICarouselManager {
         Predicate<CouleurPalet> predicate = getPaletCouleurPredicate(couleur);
         for (int i = ref; i < ref + 6; i++) {
             int realIndex = i < 6 ? i : i - 6;
-            CouleurPalet palet = get(realIndex);
-
-            if (predicate.test(palet)) {
+            if (predicate.test(get(realIndex))) {
                 return realIndex;
             }
         }

@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.disabled.atomfactory;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -13,12 +13,12 @@ import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.services.VentousesService;
+import org.arig.robot.services.CarouselService;
+import org.arig.robot.services.IVentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -36,16 +36,16 @@ public class DeposerBalance extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private VentousesService ventouses;
+    private IVentousesService ventouses;
 
     @Autowired
     private ICarouselManager carousel;
 
     @Autowired
-    private ConvertionRobotUnit conv;
+    private CarouselService carouselService;
 
     @Autowired
-    private TableUtils tableUtils;
+    private ConvertionRobotUnit conv;
 
     @Autowired
     @Qualifier("currentPosition")
@@ -89,19 +89,19 @@ public class DeposerBalance extends AbstractAction {
         ESide side = rs.mainSide();
 
         try {
+            carouselService.setHint(side.getPositionVentouse(), carousel.has(CouleurPalet.BLEU) ? CouleurPalet.BLEU : CouleurPalet.VERT);
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             rs.enableAvoidance();
 
-            // va au point le plus proche
-            // 150 = moitié du séparateur +  moitié de la balance + marge
             int yAvantAvance = 795;
+
+            // va au point le plus proche
             if (rs.getTeam() == Team.VIOLET) {
-                tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(1500, 457, 450, 200)); // Balance
+                // 150 = moitié du séparateur +  moitié de la balance + marge
                 mv.pathTo(1500 + 150 + IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
             } else {
-                tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(1050, 457, 450, 200)); // Balance
                 mv.pathTo(1500 - 150 - IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
             }
 
@@ -122,20 +122,12 @@ public class DeposerBalance extends AbstractAction {
                         CouleurPalet.GOLD :
                         carousel.has(CouleurPalet.BLEU) ? CouleurPalet.BLEU : CouleurPalet.VERT;
 
-                if (!ventouses.deposeBalance1(couleur, side).get()) {
-                    throw new VentouseNotAvailableException();
+                if (!ventouses.deposeBalance(couleur, side).get()) {
+                    break;
                 }
-
-//            rs.enableCalageBordureAvant(IConstantesNerellConfig.dstVentouseFacade);
-//            mv.avanceMM(500);
-
-                ventouses.deposeBalance2(side).get();
-
-                rs.enableAvoidance();
-                mv.reculeMM(yOffset);
-
-//                mv.reculeMM(100);
             }
+
+            mv.reculeMM(100);
 
             completed = rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax;
 
@@ -144,7 +136,6 @@ public class DeposerBalance extends AbstractAction {
             updateValidTime();
 
         } finally {
-            tableUtils.clearDynamicDeadZones();
             ventouses.finishDepose(side);
         }
     }

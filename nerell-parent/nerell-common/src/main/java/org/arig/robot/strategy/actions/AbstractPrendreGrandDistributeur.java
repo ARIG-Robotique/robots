@@ -12,7 +12,7 @@ import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.services.VentousesService;
+import org.arig.robot.services.IVentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
@@ -47,7 +47,7 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
     protected RobotStatus rs;
 
     @Autowired
-    private VentousesService ventouses;
+    private IVentousesService ventouses;
 
     @Autowired
     private ICarouselManager carousel;
@@ -101,9 +101,6 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
             double yOffset = -457 + yAvantAvance - IConstantesNerellConfig.dstVentouseFacade + 20;
             rs.enableCalageVentouse();
             mv.avanceMM(yOffset);
-
-//            rs.enableCalageBordureAvant(IConstantesNerellConfig.dstVentouseFacade);
-//            mv.avanceMM(500);
 
             // prise du 1 et du 2
             NerellUtils.CompoundFutureResult2<Boolean, Boolean> ok = NerellUtils.all(

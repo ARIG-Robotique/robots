@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.disabled.atomfactory;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -6,7 +6,6 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.model.Team;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class Point1Action extends AbstractAction {
+public class Point2Action extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -27,7 +26,7 @@ public class Point1Action extends AbstractAction {
 
     @Override
     public String name() {
-        return "Point 1";
+        return "Point 2";
     }
 
     private int order = 1;
@@ -48,8 +47,7 @@ public class Point1Action extends AbstractAction {
             order--;
             rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-
-            mv.pathTo(700, 1000);
+            mv.pathTo(2300, 1000);
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();

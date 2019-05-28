@@ -11,7 +11,7 @@ import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.services.VentousesService;
+import org.arig.robot.services.IVentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
@@ -32,7 +32,7 @@ public class PrendrePetitDistributeurEquipe1 extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private VentousesService ventouses;
+    private IVentousesService ventouses;
 
     @Autowired
     private ICarouselManager carousel;
@@ -93,9 +93,6 @@ public class PrendrePetitDistributeurEquipe1 extends AbstractAction {
 
             rs.enableCalageVentouse();
             mv.avanceMM(yAvantAvance - IConstantesNerellConfig.dstVentouseFacade + 20);
-
-//            rs.enableCalageBordureAvant(IConstantesNerellConfig.dstVentouseFacade);
-//            mv.avanceMM(500);
 
             // prise du bleu et du vert
             NerellUtils.CompoundFutureResult2<Boolean, Boolean> ok = NerellUtils.all(

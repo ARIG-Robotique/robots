@@ -2,6 +2,7 @@ package org.arig.robot.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class SimpleCircularList<T> extends ArrayList<T> {
@@ -9,12 +10,12 @@ public class SimpleCircularList<T> extends ArrayList<T> {
     private final int size;
     private int head = 0;
 
-    public SimpleCircularList(int size, T initValue) {
+    public SimpleCircularList(int size, Function<Integer, T> initSupplier) {
         super(size);
         this.size = size;
 
         for (int i = 0; i < size; i++) {
-            super.add(initValue);
+            super.add(initSupplier == null ? null : initSupplier.apply(i));
         }
     }
 

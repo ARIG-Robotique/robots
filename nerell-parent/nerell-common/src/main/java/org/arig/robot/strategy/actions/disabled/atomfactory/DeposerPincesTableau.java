@@ -11,12 +11,11 @@ import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.IIOService;
+import org.arig.robot.services.IVentousesService;
 import org.arig.robot.services.LeftSideService;
 import org.arig.robot.services.RightSideService;
-import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.system.TrajectoryManager;
 import org.arig.robot.utils.NerellUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,7 +42,7 @@ public class DeposerPincesTableau extends AbstractAction {
     private RightSideService rightSideService;
 
     @Autowired
-    private VentousesService ventouses;
+    private IVentousesService ventouses;
 
     @Getter
     private boolean completed = false;

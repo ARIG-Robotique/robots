@@ -8,7 +8,7 @@ import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.IIOService;
-import org.arig.robot.services.VentousesService;
+import org.arig.robot.services.IVentousesService;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
 public class VentousesCommands {
 
     private final IIOService ioService;
-    private final VentousesService ventouses;
+    private final IVentousesService ventouses;
 
     @ShellMethodAvailability
     public Availability alimentationOk() {
@@ -85,9 +85,7 @@ public class VentousesCommands {
     @ShellMethod("Dépose sur la balance")
     @SneakyThrows
     public void deposeBalance(@NotNull ESide side) throws CarouselNotAvailableException {
-        ventouses.deposeBalance1(CouleurPalet.ROUGE, side).get();
-        ThreadUtils.sleep(5000);
-        ventouses.deposeBalance2(side).get();
+        ventouses.deposeBalance(CouleurPalet.ROUGE, side).get();
         ThreadUtils.sleep(5000);
         ventouses.finishDepose(side).get();
     }

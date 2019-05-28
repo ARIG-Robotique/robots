@@ -10,8 +10,8 @@ import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
+import org.arig.robot.services.IVentousesService;
 import org.arig.robot.services.SerrageService;
-import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class DeposerGoldeniumTable extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private VentousesService ventouses;
+    private IVentousesService ventouses;
 
     @Autowired
     private SerrageService serrageService;

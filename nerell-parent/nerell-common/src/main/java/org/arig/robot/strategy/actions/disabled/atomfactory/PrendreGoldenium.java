@@ -10,7 +10,7 @@ import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
-import org.arig.robot.services.VentousesService;
+import org.arig.robot.services.IVentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class PrendreGoldenium extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private VentousesService ventouses;
+    private IVentousesService ventouses;
 
     @Getter
     private boolean completed = false;
@@ -79,9 +79,6 @@ public class PrendreGoldenium extends AbstractAction {
 
             rs.enableCalageVentouse();
             mv.avanceMM(2000 - 50 - yAvantAvance - IConstantesNerellConfig.dstVentouseFacade + 20);
-
-//            rs.enableCalageBordureAvant(IConstantesNerellConfig.dstVentouseFacade - 15);
-//            mv.avanceMM(500);
 
             // prise goldenium
             boolean ok = ventouses.priseGoldenium(side).get();

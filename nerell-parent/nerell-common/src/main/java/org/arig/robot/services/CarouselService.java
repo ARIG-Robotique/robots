@@ -3,14 +3,13 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exceptions.CarouselNotAvailableException;
 import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.system.CarouselManager;
 import org.arig.robot.system.ICarouselManager;
+import org.arig.robot.utils.SimpleCircularList;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
@@ -29,48 +28,96 @@ public class CarouselService {
     @Autowired
     private ICarouselManager carouselManager;
 
-    private AtomicBoolean working = new AtomicBoolean(false);
+    private AtomicBoolean rotating = new AtomicBoolean(false);
 
-    /**
-     * Verifie si le service est occupé
-     */
-    public boolean isWorking() {
-        return working.get();
+    private List<AtomicBoolean> locks = new SimpleCircularList<>(6, (i) -> new AtomicBoolean(false));
+
+    private int hintIndex = -1;
+    private CouleurPalet hintCouleur = null;
+
+    public boolean isLocked() {
+        return locks.stream().anyMatch(AtomicBoolean::get);
+    }
+
+    public boolean isRotating() {
+        return rotating.get();
     }
 
     /**
-     * Attends que le service se libère
+     * Prend un lock complet sur le service (attends que tous les locks soit libérés)
      */
-    public void waitAvailable(long waitTime) throws CarouselNotAvailableException {
+    public void fullLock(int index, long waitTime) throws CarouselNotAvailableException {
         long remaining = waitTime;
-        while (isWorking() && remaining > 0) {
+        while (isLocked() && remaining > 0) {
             remaining -= 100;
             ThreadUtils.sleep(100);
         }
 
-        if (isWorking()) {
+        if (isLocked()) {
             log.warn("Temps d'attente trop long du carousel");
             throw new CarouselNotAvailableException();
         } else {
-            working.set(true);
+            locks.get(index).set(true);
         }
     }
 
     /**
-     * Libère le service
+     * Prend un lock sur une seule position pour empecher la rotation (attends que la rotation en cours soit terminée)
      */
-    public void release() {
-        working.set(false);
+    public void lock(int index, long waitTime) throws CarouselNotAvailableException {
+        long remaining = waitTime;
+        while (isRotating() && remaining > 0) {
+            remaining -= 100;
+            ThreadUtils.sleep(100);
+        }
+
+        if (isRotating()) {
+            log.warn("Temps d'attente trop long du carousel");
+            throw new CarouselNotAvailableException();
+        } else {
+            locks.get(index).set(true);
+        }
     }
 
-    /**
-     * Lecture asynchrone d'une couleur
-     */
-    @Async
-    public void lectureCouleurAsync(int index) {
-        working.set(true);
-        tourner(index - ICarouselManager.LECTEUR);
+    public void release(int index) {
+        locks.get(index).set(false);
+    }
 
+    public void setHint(int index, CouleurPalet couleur) {
+        hintIndex = index;
+        hintCouleur = couleur;
+    }
+
+    public void clearHint() {
+        setHint(-1, null);
+    }
+
+    public void lectureCouleur() {
+        try {
+            if (isLocked()) {
+                if (!rotating.get() && carouselManager.get(ICarouselManager.LECTEUR) == CouleurPalet.INCONNU) {
+                    lock(ICarouselManager.LECTEUR, 1000);
+
+                    doLectureCouleur();
+
+                    release(ICarouselManager.LECTEUR);
+                }
+            } else if (carouselManager.has(CouleurPalet.INCONNU)) {
+                fullLock(ICarouselManager.LECTEUR, 1000);
+
+                tourner(carouselManager.firstIndexOf(CouleurPalet.INCONNU, ICarouselManager.LECTEUR) - ICarouselManager.LECTEUR);
+
+                doLectureCouleur();
+
+                release(ICarouselManager.LECTEUR);
+            }
+
+        } catch (CarouselNotAvailableException e) {
+            // nothing
+        }
+    }
+
+    private void doLectureCouleur() {
         if (ioService.presenceLectureCouleur()) {
             ioService.enableLedCapteurCouleur();
             ThreadUtils.sleep(50);
@@ -81,8 +128,48 @@ public class CarouselService {
         } else {
             carouselManager.setColor(ICarouselManager.LECTEUR, null);
         }
+    }
 
-        working.set(false);
+    public void positionIdeale() {
+        try {
+            if (!isLocked() && !carouselManager.has(CouleurPalet.INCONNU)) {
+                if (hintCouleur != null && carouselManager.has(hintCouleur)) {
+                    // essaye de respecter l'hint d'une action
+                    if (carouselManager.get(hintIndex) != hintCouleur) {
+                        fullLock(hintIndex, 1000);
+
+                        tourner(hintIndex, hintCouleur);
+
+                        release(hintIndex);
+                    }
+
+                } else if (carouselManager.get(ICarouselManager.VENTOUSE_DROITE) != null && carouselManager.get(ICarouselManager.VENTOUSE_GAUCHE) != null) {
+                    // essaye de trouver deux places vides l'une a coté de l'autre
+                    int coolIndex = -1;
+                    for (int i = 0; i < 6; i++) {
+                        if (carouselManager.get(i) == null && carouselManager.get(i == 5 ? 0 : i + 1) == null) {
+                            coolIndex = i;
+                            break;
+                        }
+                    }
+
+                    if (coolIndex == -1) {
+                        coolIndex = carouselManager.firstIndexOf(null, ICarouselManager.VENTOUSE_GAUCHE);
+                    }
+
+                    if (coolIndex != -1) {
+                        fullLock(ICarouselManager.VENTOUSE_GAUCHE, 1000);
+
+                        tourner(coolIndex - ICarouselManager.VENTOUSE_GAUCHE);
+
+                        release(ICarouselManager.VENTOUSE_GAUCHE);
+                    }
+                }
+            }
+
+        } catch (CarouselNotAvailableException e) {
+            // nothing
+        }
     }
 
     /**
@@ -109,7 +196,10 @@ public class CarouselService {
         } else if (nb < -3) {
             nb += 6;
         }
+
+        rotating.set(true);
         carouselManager.tourneIndex(nb);
+        rotating.set(false);
     }
 
     public void ejectionAvantRetourStand() {
@@ -123,8 +213,9 @@ public class CarouselService {
         rightSideService.ascenseurTableGold(false);
         leftSideService.ascenseurTableGold(true);
 
-        for (int i = 0 ; i < 6 ; i++) {
+        for (int i = 0; i < 6; i++) {
             tourner(1);
+            carouselManager.unstore(i);
         }
 
         ThreadUtils.sleep(1000);

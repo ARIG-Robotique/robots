@@ -35,7 +35,7 @@ public class CarouselCommands {
     @ShellMethod("Lecture de la couleur d'un atome")
     public void lectureCouleur(int index) {
         carouselManager.setColor(index, CouleurPalet.INCONNU);
-        carouselService.lectureCouleurAsync(index);
+        carouselService.lectureCouleur();
     }
 
     @ShellMethod("Stockage magasin")

@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled.atomfactory;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,8 @@ import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.services.VentousesService;
+import org.arig.robot.services.CarouselService;
+import org.arig.robot.services.IVentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
@@ -33,10 +34,13 @@ public class DeposeAccelerateur extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private VentousesService ventouses;
+    private IVentousesService ventouses;
 
     @Autowired
     private ICarouselManager carousel;
+
+    @Autowired
+    private CarouselService carouselService;
 
     @Getter
     private boolean completed = false;
@@ -82,6 +86,8 @@ public class DeposeAccelerateur extends AbstractAction {
         ESide side = rs.mainSide();
 
         try {
+            carouselService.setHint(side.getPositionVentouse(), carousel.has(CouleurPalet.ROUGE) ? CouleurPalet.ROUGE : CouleurPalet.ANY);
+            rs.disableMagasin();
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
@@ -114,9 +120,6 @@ public class DeposeAccelerateur extends AbstractAction {
             // 30 = epaisseur accelerateur
             mv.avanceMM(2000 - 30 - yAvantAvance - IConstantesNerellConfig.dstVentouseFacade);
 
-//            rs.enableCalageBordureAvant(IConstantesNerellConfig.dstVentouseFacade);
-//            mv.avanceMM(500);
-
             // prend ou pousse le bleu
             if (rs.strategyActive(EStrategy.PRISE_BLEU_ACCELERATEUR) && !rs.isAccelerateurPrit()) {
                 if (ventouses.priseAccelerateur(side).get()) {
@@ -138,7 +141,9 @@ public class DeposeAccelerateur extends AbstractAction {
             while (canDepose()) {
                 CouleurPalet couleur = carousel.has(CouleurPalet.ROUGE) ? CouleurPalet.ROUGE : CouleurPalet.ANY;
 
-                ventouses.deposeAccelerateur(couleur, side).get();
+                if (!ventouses.deposeAccelerateur(couleur, side).get()) {
+                    break;
+                }
 
                 // cas ou a prit le bleu
                 if (!rs.isAccelerateurOuvert()) {
@@ -156,6 +161,7 @@ public class DeposeAccelerateur extends AbstractAction {
 
         } finally {
             ventouses.finishDeposeAccelerateur(side);
+            rs.enableMagasin();
         }
     }
 
