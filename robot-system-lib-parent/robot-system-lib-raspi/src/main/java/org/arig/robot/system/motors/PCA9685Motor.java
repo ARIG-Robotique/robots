@@ -2,6 +2,7 @@ package org.arig.robot.system.motors;
 
 import com.pi4j.gpio.extension.pca.PCA9685GpioProvider;
 import com.pi4j.io.gpio.Pin;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class PCA9685Motor extends AbstractMotor {
@@ -9,7 +10,7 @@ public class PCA9685Motor extends AbstractMotor {
     private final Pin motorPin;
     private final Pin directionPin;
 
-    private boolean prevDirection;
+    private Boolean prevDirection;
 
     @Autowired
     private PCA9685GpioProvider pca9685;
@@ -23,7 +24,7 @@ public class PCA9685Motor extends AbstractMotor {
         maxVal = PCA9685GpioProvider.PWM_STEPS - 1;
         minVal = -maxVal;
         prev = Integer.MAX_VALUE;
-        prevDirection = false;
+        prevDirection = null;
     }
 
     @Override
@@ -46,7 +47,7 @@ public class PCA9685Motor extends AbstractMotor {
         }
 
         final boolean dir = cmd > 0;
-        if (dir == prevDirection) {
+        if (prevDirection != null && dir == prevDirection) {
             return;
         }
         prevDirection = dir;
