@@ -141,9 +141,9 @@ public class NerellScheduler {
         }
     }
 
-    @Scheduled(fixedDelay = 1000)
-    public void systemBlockerManagerTask() {
-        systemBlockerManager.process();
-    }
+//    @Scheduled(fixedDelay = 1000)
+//    public void systemBlockerManagerTask() {
+//        systemBlockerManager.process();
+//    }
 
 }

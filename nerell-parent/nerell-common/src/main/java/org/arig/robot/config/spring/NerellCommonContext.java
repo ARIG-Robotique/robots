@@ -184,8 +184,8 @@ public class NerellCommonContext {
         return services;
     }
 
-    @Bean
-    public ISystemBlockerManager systemBlockerManager() {
-        return new SystemBlockerManager(IConstantesNerellConfig.seuilErreurPidDistance, IConstantesNerellConfig.seuilErreurPidOrientation);
-    }
+//    @Bean
+//    public ISystemBlockerManager systemBlockerManager() {
+//        return new SystemBlockerManager(IConstantesNerellConfig.seuilErreurPidDistance, IConstantesNerellConfig.seuilErreurPidOrientation);
+//    }
 }
