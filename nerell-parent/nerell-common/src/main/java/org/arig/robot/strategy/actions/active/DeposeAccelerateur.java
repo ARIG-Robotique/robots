@@ -106,6 +106,9 @@ public class DeposeAccelerateur extends AbstractAction {
 
             ventouses.waitAvailable(side);
 
+            rs.disableCarousel();
+            rs.disableVentouses();
+
             if (rs.strategyActive(EStrategy.PRISE_BLEU_ACCELERATEUR)) {
                 if (!ventouses.preparePriseAccelerateur(side).get()) {
                     throw new CarouselNotAvailableException();
@@ -151,8 +154,6 @@ public class DeposeAccelerateur extends AbstractAction {
                 }
             }
 
-            mv.reculeMM(50);
-
             completed = rs.getPaletsInAccelerateur().size() >= IConstantesNerellConfig.nbPaletsAccelerateurMax;
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException | CarouselNotAvailableException | InterruptedException | ExecutionException e) {
@@ -160,8 +161,16 @@ public class DeposeAccelerateur extends AbstractAction {
             updateValidTime();
 
         } finally {
-            ventouses.finishDeposeAccelerateur(side);
-            rs.enableMagasin();
+            try {
+                mv.reculeMM(50);
+                ventouses.finishDeposeAccelerateur(side).get();
+                rs.enableMagasin();
+                rs.enableCarousel();
+                rs.enableVentouses();
+
+            } catch (RefreshPathFindingException | AvoidingException | InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
         }
     }
 
