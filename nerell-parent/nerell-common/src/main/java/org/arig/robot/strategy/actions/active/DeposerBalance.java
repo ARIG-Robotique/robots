@@ -113,6 +113,10 @@ public class DeposerBalance extends AbstractAction {
 
             mv.gotoOrientationDeg(-90);
 
+            // Position Y de SolidWorks = 579
+            double yOffset = conv.pulseToMm(currentPosition.getPt().getY()) - 576;
+            mv.avanceMM(yOffset);
+
             while (canDepose()) {
                 CouleurPalet couleur = ventouses.getCouleur(side) == CouleurPalet.GOLD ?
                         CouleurPalet.GOLD :
@@ -121,13 +125,6 @@ public class DeposerBalance extends AbstractAction {
                 if (!ventouses.deposeBalance1(couleur, side).get()) {
                     throw new VentouseNotAvailableException();
                 }
-
-                // 400 = longueur de la balance, 30 = pour pas déposer juste au bord de la balance
-                double yOffset = -400 + yAvantAvance - IConstantesNerellConfig.dstVentouseFacade + 15;
-
-                // Position Y de SolidWorks = 579
-                yOffset = conv.pulseToMm(currentPosition.getPt().getY()) - 576;
-                mv.avanceMM(yOffset);
 
 //            rs.enableCalageBordureAvant(IConstantesNerellConfig.dstVentouseFacade);
 //            mv.avanceMM(500);
