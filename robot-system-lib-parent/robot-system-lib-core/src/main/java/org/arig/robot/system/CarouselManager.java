@@ -215,6 +215,7 @@ public class CarouselManager implements ICarouselManager {
         if (isFree(index)) {
             log.warn("L'emplacement {} était vide", index);
         } else {
+            log.info("Changement de la couleur de {} : {}", index, couleur);
             list.set(index, couleur);
         }
     }
@@ -228,6 +229,8 @@ public class CarouselManager implements ICarouselManager {
             return false;
         }
 
+        log.info("Stockage d'un {} à {}", palet, index);
+
         list.set(index, palet);
         return true;
     }
@@ -240,6 +243,7 @@ public class CarouselManager implements ICarouselManager {
         if (isFree(index)) {
             log.warn("L'emplacement {} était déjà vide", index);
         } else {
+            log.info("Destockage depuis {}", index);
             list.set(index, null);
         }
     }

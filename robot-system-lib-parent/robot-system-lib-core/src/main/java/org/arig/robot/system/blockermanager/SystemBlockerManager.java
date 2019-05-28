@@ -40,8 +40,6 @@ public class SystemBlockerManager implements ISystemBlockerManager {
         double errorSumPidDistance = pidDistance.getPidErrorSum();
         double errorSumPidOrientation = pidOrientation.getPidErrorSum();
 
-        log.info("L'erreur (sum) de pidDistance: {} et de pidOrientation: {}", errorSumPidDistance, errorSumPidOrientation);
-
         if (errorSumPidDistance >= seuilErreurPidDistance || errorSumPidOrientation >= seuilErreurPidOrientation) {
 
             log.warn("L'erreur de pidDistance {} ou pidOrientation {} détectée ", errorSumPidDistance, errorSumPidOrientation);

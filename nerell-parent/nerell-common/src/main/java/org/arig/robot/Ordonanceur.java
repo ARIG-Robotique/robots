@@ -313,6 +313,9 @@ public class Ordonanceur {
     }
 
     public void initialisationCarousel() {
+        servosService.porteBarilletGauche(IConstantesServos.PORTE_BARILLET_GAUCHE_OUVERT, false);
+        servosService.porteBarilletDroit(IConstantesServos.PORTE_BARILLET_DROIT_OUVERT, false);
+
         robotStatus.carouselIsNotInitialized();
         robotStatus.disableAsservCarousel();
 
@@ -334,6 +337,9 @@ public class Ordonanceur {
 
         robotStatus.carouselIsInitialized();
         robotStatus.enableAsservCarousel();
+
+        servosService.porteBarilletGauche(IConstantesServos.PORTE_BARILLET_GAUCHE_FERME, false);
+        servosService.porteBarilletDroit(IConstantesServos.PORTE_BARILLET_DROIT_FERME, true);
 
         carouselManager.setVitesse(500);
         carouselManager.tourne(5 * IConstantesNerellConfig.countPerCarouselIndex + IConstantesNerellConfig.countOffsetInitCarousel);

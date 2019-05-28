@@ -166,6 +166,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
 
         if (ok) {
             this.couleur.put(side, couleur);
+
+            service.ascenseurAccelerateur(false);
         }
 
         return CompletableFuture.completedFuture(ok);
@@ -611,7 +613,7 @@ public class VentousesService implements IVentousesService, InitializingBean {
         IRobotSide service = sideServices.get(side);
 
         if (!service.presencePaletVentouse() || couleur.get(side) == null) {
-            log.info("Rien à stocker");
+            log.warn("Rien à stocker");
             return CompletableFuture.completedFuture(null);
         }
 

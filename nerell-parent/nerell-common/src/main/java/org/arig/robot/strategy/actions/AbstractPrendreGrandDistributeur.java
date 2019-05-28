@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
-import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
@@ -14,7 +13,6 @@ import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.IVentousesService;
-import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
@@ -53,9 +51,6 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
 
     @Autowired
     private ICarouselManager carousel;
-
-    @Autowired
-    private ServosService servos;
 
     @Getter
     private boolean completed = false;
@@ -114,10 +109,6 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
             ).get();
             boolean ok1 = ok.getA();
             boolean ok2 = ok.getB();
-
-            // Pour eviter de frotter contre le distributeur
-            servos.ascenseurGauche(IConstantesServos.ASCENSEUR_GAUCHE_ACCELERATEUR, false);
-            servos.ascenseurDroit(IConstantesServos.ASCENSEUR_DROIT_ACCELERATEUR, false);
 
             // recule
             mv.reculeMM(50);

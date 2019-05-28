@@ -54,8 +54,8 @@ public class NerellScheduler {
     @Autowired
     private LeftSideService leftSideService;
 
-    @Autowired
-    private ISystemBlockerManager systemBlockerManager;
+//    @Autowired
+//    private ISystemBlockerManager systemBlockerManager;
 
     @Scheduled(fixedDelay = 100)
     public void obstacleAvoidanceTask() {

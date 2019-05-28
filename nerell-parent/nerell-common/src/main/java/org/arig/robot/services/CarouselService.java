@@ -134,9 +134,9 @@ public class CarouselService {
     public void positionIdeale() {
         try {
             if (!isLocked() && !carouselManager.has(CouleurPalet.INCONNU)) {
-                if (hintCouleur != null && carouselManager.has(hintCouleur)) {
+                if (hintCouleur != null) {
                     // essaye de respecter l'hint d'une action
-                    if (carouselManager.get(hintIndex) != hintCouleur) {
+                    if (carouselManager.has(hintCouleur) && carouselManager.get(hintIndex) != hintCouleur) {
                         fullLock(hintIndex, 1000);
 
                         tourner(hintIndex, hintCouleur);
