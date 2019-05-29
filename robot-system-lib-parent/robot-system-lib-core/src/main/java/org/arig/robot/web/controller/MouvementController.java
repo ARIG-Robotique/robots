@@ -45,7 +45,7 @@ public class MouvementController {
     private IAvoidingService avoidingService;
 
     @Autowired
-    @Qualifier("trajectoryManagerAsync")
+    @Qualifier("trajectoryManager")
     private ITrajectoryManager trajectoryManager;
 
     @GetMapping
