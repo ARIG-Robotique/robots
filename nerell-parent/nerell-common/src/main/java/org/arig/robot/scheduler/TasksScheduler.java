@@ -5,6 +5,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.services.CalageBordureService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.ICarouselManager;
@@ -37,6 +38,9 @@ public class TasksScheduler implements InitializingBean {
     private ICarouselManager carouselManager;
 
     @Autowired
+    private CalageBordureService calageBordure;
+
+    @Autowired
     private IIOService ioService;
 
     @Override
@@ -45,8 +49,23 @@ public class TasksScheduler implements InitializingBean {
             long lastTimeAsserv = System.nanoTime();
             long lastTimeAsservCarousel = lastTimeAsserv;
             long lastTimeI2C = lastTimeAsserv;
+            long lastTimeCalage = lastTimeAsserv;
 
             while (true) {
+                long timeStartCalage = System.nanoTime();
+                long ellapsedCalage = timeStartCalage - lastTimeCalage;
+
+                if (ellapsedCalage >= IConstantesNerellConfig.calageTimeMs * 1000000) {
+                    lastTimeCalage = timeStartCalage;
+
+                    if (rs.getCalageBordure() != null) {
+                        if (calageBordure.process() || trajectoryManager.isTrajetAtteint() || trajectoryManager.isTrajetEnApproche()) {
+                            // Calage effectué, on arrete
+                            rs.disableCalageBordure();
+                        }
+                    }
+                }
+
                 long timeStartAsserv = System.nanoTime();
                 long ellapsedAsserv = timeStartAsserv - lastTimeAsserv;
 
