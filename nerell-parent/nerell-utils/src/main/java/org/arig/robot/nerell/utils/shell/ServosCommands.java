@@ -19,12 +19,12 @@ public class ServosCommands {
     private final ServosService servosService;
     private final IIOService ioService;
 
-    @ShellMethodAvailability
     public Availability alimentationOk() {
         return ioService.auOk() && ioService.alimPuissance5VOk() && ioService.alimPuissance12VOk()
                 ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
     }
 
+    @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Cycle de préparation des servos")
     public void preparation() {
         servosService.cyclePreparation();
@@ -33,6 +33,5 @@ public class ServosCommands {
     @ShellMethod("Récupèration de tension des servos")
     public void getTension() {
         final double tension = servosService.getTension();
-        log.info("La tension actuelle des servos {}", tension);
     }
 }
