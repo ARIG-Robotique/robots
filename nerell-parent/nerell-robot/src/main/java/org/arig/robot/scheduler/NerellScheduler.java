@@ -142,9 +142,9 @@ public class NerellScheduler {
 //        systemBlockerManager.process();
 //    }
 
-//    @Scheduled(fixedDelay = 5000)
-//    public void systemCheckTensionTaks() {
-//        servosService.controlBatteryVolts();
-//    }
+    @Scheduled(fixedDelay = 5000)
+    public void systemCheckTensionTaks() {
+        servosService.controlBatteryVolts();
+    }
 
 }
