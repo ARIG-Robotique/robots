@@ -17,7 +17,8 @@ import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.utils.TableUtils;
+import org.arig.robot.utils.SimpleCircularList;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -49,7 +50,7 @@ public class PrendreZoneChaosEquipe extends AbstractAction {
     @Getter
     private boolean completed = false;
 
-    private static final int rayon = 150;
+    private static final int rayon = 180;
 
     @Override
     public String name() {
@@ -84,14 +85,12 @@ public class PrendreZoneChaosEquipe extends AbstractAction {
                 points = definePointPassage(1000, 950);
             }
 
-            boolean first = true;
-            for (DistancePoint pt : points) {
-                if (!first) {
-                    mv.setVitesse(IConstantesNerellConfig.vitesseUltraLente, IConstantesNerellConfig.vitesseOrientation);
-                }
-                mv.pathTo(pt.getPt().getX(), pt.getPt().getY());
-                first = false;
-            }
+            mv.pathTo(points.get(0).getPt().getX(), points.get(0).getPt().getY());
+            mv.setVitesse(IConstantesNerellConfig.vitesseUltraLente / 2, IConstantesNerellConfig.vitesseOrientation);
+            mv.pathTo(points.get(1).getPt().getX(), points.get(1).getPt().getY());
+            mv.pathTo(points.get(3).getPt().getX(), points.get(3).getPt().getY());
+            mv.pathTo(points.get(2).getPt().getX(), points.get(2).getPt().getY());
+            mv.pathTo(points.get(0).getPt().getX(), points.get(0).getPt().getY());
 
             completed = true;
         } catch (NoPathFoundException | AvoidingException e) {
@@ -110,9 +109,10 @@ public class PrendreZoneChaosEquipe extends AbstractAction {
 
     private List<DistancePoint> definePointPassage(int x, int y) {
         // Position courante du Robot
-        final Point positionRobot = currentPosition.getPt();
-        positionRobot.setX(conv.pulseToMm(positionRobot.getX()));
-        positionRobot.setY(conv.pulseToMm(positionRobot.getY()));
+        final Point positionRobot = new Point(
+                conv.pulseToMm(currentPosition.getPt().getX()),
+                conv.pulseToMm(currentPosition.getPt().getY())
+        );
 
         List<DistancePoint> points = new ArrayList<>(4);
         points.add(new DistancePoint(new Point(x + rayon, y)));
