@@ -1,6 +1,7 @@
 package org.arig.test.robot.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.utils.SimpleCircularList;
 import org.junit.Assert;
 import org.junit.Test;
@@ -72,7 +73,7 @@ public class SimpleCircularListTest {
     }
 
     private SimpleCircularList<String> initList() {
-        SimpleCircularList<String> list = new SimpleCircularList<>(6, "");
+        SimpleCircularList<String> list = new SimpleCircularList<>(6, (i) -> StringUtils.EMPTY);
 
         list.set(0, "A");
         list.set(1, "B");
