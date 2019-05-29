@@ -454,7 +454,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      */
     @Override
     public void pathTo(final double targetXmm, final double targetYmm, final boolean avecArret) throws NoPathFoundException, AvoidingException {
-        boolean trajetOk = false, first = true;
+        boolean trajetOk = false;
         int nbCollisionDetected = 0, nbTryPath = 1;
         int divisor = 10;
 
@@ -483,22 +483,14 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                 while (c.hasNext()) {
                     Point targetPoint = c.next().multiplied(divisor);
 
-                    // Processing du path
-                    //if (first) {
-                    //    first = false;
-                        rs.disableAvoidance();
-                        alignFrontTo(targetPoint.getX(), targetPoint.getY());
-                    //}
-
                     // Toujours activer l'évittement en Path
                     rs.enableAvoidance();
 
                     // Va au premier point
-                    //gotoPointMM(targetPoint.getX(), targetPoint.getY(), !c.hasNext() && avecArret, true);
-                    gotoPointMM(targetPoint.getX(), targetPoint.getY(), true, true);
+                    gotoPointMM(targetPoint.getX(), targetPoint.getY());
                 }
 
-                // TODO gestion unutile avec les synchronized
+                // TODO gestion unutile avec les synchronized ??
                 // Contrôle que l'on est proche de la position demandée
                 double dXmm = (targetXmm - conv.pulseToMm(currentPosition.getPt().getX()));
                 double dYmm = (targetYmm - conv.pulseToMm(currentPosition.getPt().getY()));
@@ -540,7 +532,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      */
     @Override
     public void gotoPointMM(final double x, final double y) throws RefreshPathFindingException, AvoidingException {
-        gotoPointMM(x, y, true, false);
+        gotoPointMM(x, y, true);
     }
 
     /**
@@ -551,8 +543,19 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param avecArret demande d'arret sur le point
      */
     @Override
-    public void gotoPointMM(final double x, final double y, final boolean avecArret, boolean disableMonitor) throws RefreshPathFindingException, AvoidingException  {
+    public void gotoPointMM(final double x, final double y, final boolean avecArret) throws RefreshPathFindingException, AvoidingException  {
         log.info("Va au point X = {}mm ; Y = {}mm {}", x, y, avecArret ? "et arrete toi" : "sans arret");
+
+        boolean avoidanceEnabled = rs.isAvoidanceEnabled();
+
+        // Alignement sur le point
+        rs.disableAvoidance();
+        alignFrontTo(x, y);
+
+        // Retour de l'évittement si actif avant
+        if (avoidanceEnabled) {
+            rs.enableAvoidance();
+        }
 
         synchronized (this) {
             cmdRobot.getPosition().setAngle(0);
@@ -561,21 +564,21 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             cmdRobot.setFrein(avecArret);
             cmdRobot.setTypes(TypeConsigne.XY);
 
-            if (!disableMonitor) {
-                double dX = (cmdRobot.getPosition().getPt().getX() - currentPosition.getPt().getX());
-                double dY = (cmdRobot.getPosition().getPt().getY() - currentPosition.getPt().getY());
-                double distance = calculDistance(dX, dY);
-
-                MonitorMouvementTranslation mTr = new MonitorMouvementTranslation();
-                mTr.setFromPoint(new Point(
-                        conv.pulseToMm(currentPosition.getPt().getX()),
-                        conv.pulseToMm(currentPosition.getPt().getY())
-                ));
-                mTr.setToPoint(new Point(x, y));
-                mTr.setDistance(conv.pulseToMm(distance));
-                currentMouvement = mTr;
-                monitoring.addMouvementPoint(mTr);
-            }
+//            if (!disableMonitor) {
+//                double dX = (cmdRobot.getPosition().getPt().getX() - currentPosition.getPt().getX());
+//                double dY = (cmdRobot.getPosition().getPt().getY() - currentPosition.getPt().getY());
+//                double distance = calculDistance(dX, dY);
+//
+//                MonitorMouvementTranslation mTr = new MonitorMouvementTranslation();
+//                mTr.setFromPoint(new Point(
+//                        conv.pulseToMm(currentPosition.getPt().getX()),
+//                        conv.pulseToMm(currentPosition.getPt().getY())
+//                ));
+//                mTr.setToPoint(new Point(x, y));
+//                mTr.setDistance(conv.pulseToMm(distance));
+//                currentMouvement = mTr;
+//                monitoring.addMouvementPoint(mTr);
+//            }
 
             prepareNextMouvement();
         }

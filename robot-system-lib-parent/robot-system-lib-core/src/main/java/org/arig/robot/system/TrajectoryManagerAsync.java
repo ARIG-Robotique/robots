@@ -56,8 +56,8 @@ public class TrajectoryManagerAsync implements ITrajectoryManager {
 
     @Override
     @Async
-    public void gotoPointMM(double x, double y, boolean avecArret, boolean disableMonitor) throws RefreshPathFindingException, AvoidingException {
-        decorated.gotoPointMM(x, y, avecArret, disableMonitor);
+    public void gotoPointMM(double x, double y, boolean avecArret) throws RefreshPathFindingException, AvoidingException {
+        decorated.gotoPointMM(x, y, avecArret);
     }
 
     @Override

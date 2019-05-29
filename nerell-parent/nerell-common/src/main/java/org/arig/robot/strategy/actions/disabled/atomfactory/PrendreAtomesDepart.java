@@ -66,7 +66,7 @@ public class PrendreAtomesDepart extends AbstractAction {
             }
 
             for (Pair<Point, Boolean> config : configs) {
-                mv.gotoPointMM(config.getLeft().getX(), config.getLeft().getY(), config.getRight(), false);
+                mv.gotoPointMM(config.getLeft().getX(), config.getLeft().getY(), config.getRight());
             }
 
 

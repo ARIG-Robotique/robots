@@ -24,7 +24,7 @@ public interface ITrajectoryManager {
 
     void gotoPointMM(double x, double y) throws RefreshPathFindingException, AvoidingException;
 
-    void gotoPointMM(double x, double y, boolean avecArret, boolean disableMonitor) throws RefreshPathFindingException, AvoidingException;
+    void gotoPointMM(double x, double y, boolean avecArret) throws RefreshPathFindingException, AvoidingException;
 
     void gotoOrientationDeg(double angle) throws RefreshPathFindingException, AvoidingException;
 
