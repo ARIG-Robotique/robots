@@ -45,7 +45,7 @@ public class TasksScheduler implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        new Thread(() -> {
+        Thread processThread = new Thread(() -> {
             long lastTimeAsserv = System.nanoTime();
             long lastTimeAsservCarousel = lastTimeAsserv;
             long lastTimeI2C = lastTimeAsserv;
@@ -128,7 +128,11 @@ public class TasksScheduler implements InitializingBean {
                     monitoringWrapper.addTimeSeriePoint(serie);
                 }
             }
-        }).start();
+        });
+
+        processThread.setName("process");
+
+        processThread.start();
     }
 
     @Scheduled(fixedDelay = 1)

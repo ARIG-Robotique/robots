@@ -109,7 +109,7 @@ public class NerellScheduler {
     public void carouselTask() {
         if (rs.isCarouselEnabled()) {
             carouselService.lectureCouleur();
-//            carouselService.positionIdeale();
+            carouselService.positionIdeale();
         }
     }
 

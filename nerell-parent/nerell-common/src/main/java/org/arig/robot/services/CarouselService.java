@@ -59,6 +59,7 @@ public class CarouselService {
             throw new CarouselNotAvailableException();
         } else {
             locks.get(index).set(true);
+            rotating.set(true);
         }
     }
 
@@ -135,7 +136,7 @@ public class CarouselService {
     public void positionIdeale() {
         try {
             if (!isLocked() && !carouselManager.has(CouleurPalet.INCONNU)) {
-                if (hintCouleur != null) {
+                /*if (hintCouleur != null) {
                     log.info("Positionnement idéal {} at {}", hintCouleur, hintIndex);
 
                     // essaye de respecter l'hint d'une action
@@ -147,7 +148,8 @@ public class CarouselService {
                         release(hintIndex);
                     }
 
-                } else if (carouselManager.get(ICarouselManager.VENTOUSE_DROITE) != null && carouselManager.get(ICarouselManager.VENTOUSE_GAUCHE) != null) {
+                } else*/
+                if (carouselManager.get(ICarouselManager.VENTOUSE_DROITE) != null && carouselManager.get(ICarouselManager.VENTOUSE_GAUCHE) != null) {
                     log.info("Positionnement idéal d'un vide");
 
                     // essaye de trouver deux places vides l'une a coté de l'autre
@@ -185,6 +187,8 @@ public class CarouselService {
         int targetIndex = carouselManager.firstIndexOf(couleur, index);
 
         if (targetIndex == -1) {
+            release(index);
+            rotating.set(false);
             return false;
         }
 
