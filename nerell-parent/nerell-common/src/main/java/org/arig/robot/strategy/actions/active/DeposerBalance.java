@@ -164,6 +164,7 @@ public class DeposerBalance extends AbstractAction {
 
         }
 
+        tableUtils.clearDynamicDeadZones();
         ventouses.finishDepose(side);
         ventouses.releaseSide(ESide.GAUCHE);
         ventouses.releaseSide(ESide.DROITE);
