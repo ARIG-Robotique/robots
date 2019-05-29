@@ -29,4 +29,10 @@ public class ServosCommands {
     public void preparation() {
         servosService.cyclePreparation();
     }
+
+    @ShellMethod("Récupèration de tension des servos")
+    public void getTension() {
+        final double tension = servosService.getTension();
+        log.info("La tension actuelle des servos {}", tension);
+    }
 }

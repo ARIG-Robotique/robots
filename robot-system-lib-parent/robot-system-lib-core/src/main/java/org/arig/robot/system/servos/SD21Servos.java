@@ -19,6 +19,7 @@ import java.util.Map;
 public class SD21Servos implements InitializingBean {
 
     private static final byte VERSION_REGISTER = 0x40;
+    private static final byte BATTERY_VOLTS_REGISTER = 0x41;
     private static final int NB_SERVOS = 21;
 
     protected String deviceName;
@@ -52,7 +53,6 @@ public class SD21Servos implements InitializingBean {
      * REGISTER 2 : HIGH BYTE POSITION REGISTER
      *
      * @param servoNb the servo nb
-     *
      * @return the base register
      */
     public static byte getBaseRegister(final byte servoNb) {
@@ -181,7 +181,6 @@ public class SD21Servos implements InitializingBean {
      * Get the last position of servo
      *
      * @param servoNb Numero du servo
-     *
      * @return La dernière position du servo
      */
     public int getPosition(final byte servoNb) {
@@ -196,7 +195,6 @@ public class SD21Servos implements InitializingBean {
      * Get the last speed of servo
      *
      * @param servoNb Numero du servo
-     *
      * @return La dernière vitesse du servo
      */
     public int getSpeed(final byte servoNb) {
@@ -220,11 +218,21 @@ public class SD21Servos implements InitializingBean {
         }
     }
 
+    public double getTension() {
+        try {
+            i2cManager.sendData(deviceName, SD21Servos.BATTERY_VOLTS_REGISTER);
+            return i2cManager.getData(deviceName) * 0.039; // A battery voltage of 7.2v will read about 184. 6v will read about 154.
+        } catch (I2CException e) {
+            log.error("Erreur lors de la récupération de la tension de la carte SD21");
+        }
+
+        return -1;
+    }
+
     /**
      * Check servo.
      *
      * @param servoNb the servo nb
-     *
      * @return true, if servo number are between 1 and 21. False otherwise
      */
     private boolean checkServo(final byte servoNb) {
@@ -249,7 +257,6 @@ public class SD21Servos implements InitializingBean {
      * @param start  Position de départ
      * @param target Position d'arrivé
      * @param speed  Valeur de vitesse configuré
-     *
      * @return Le temps d'attente théorique en ms
      */
     private int calculWaitTimeMs(int start, int target, int speed) {

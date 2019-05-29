@@ -1,5 +1,6 @@
 package org.arig.robot.scheduler;
 
+import org.arig.robot.constants.IConstantesUtiles;
 import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
@@ -49,6 +50,9 @@ public class NerellScheduler {
 
     @Autowired
     private LeftSideService leftSideService;
+
+    @Autowired
+    private ServosService servosService;
 
 //    @Autowired
 //    private ISystemBlockerManager systemBlockerManager;
@@ -131,5 +135,10 @@ public class NerellScheduler {
 //    public void systemBlockerManagerTask() {
 //        systemBlockerManager.process();
 //    }
+
+    @Scheduled(fixedDelay = 5000)
+    public void systemCheckTensionTaks() {
+        servosService.controlBatteryVolts();
+    }
 
 }

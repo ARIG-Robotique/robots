@@ -3,10 +3,14 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Triple;
 import org.arig.robot.constants.IConstantesServos;
+import org.arig.robot.constants.IConstantesUtiles;
+import org.arig.robot.model.RobotStatus;
 import org.arig.robot.system.servos.SD21Servos;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.awt.*;
 
 /**
  * @author gdepuille on 27/04/15.
@@ -20,6 +24,9 @@ public class ServosService {
 
     @Autowired
     private IIOService ioService;
+
+    @Autowired
+    private RobotStatus robotStatus;
 
     /* **************************************** */
     /* Méthode pour le positionnement d'origine */
@@ -318,6 +325,21 @@ public class ServosService {
 
     public void pousseAccelerateurGauche(int position, boolean wait) {
         setPosition(IConstantesServos.POUSSE_ACCELERATEUR_GAUCHE, position, wait);
+    }
+
+    public void controlBatteryVolts() {
+        if (robotStatus.isMatchEnabled()) {
+            final double tension = getTension();
+            if (tension < IConstantesUtiles.SEUIL_BATTERY_VOLTS && tension > 0) {
+                log.warn("La tension de la carte sd21 a dépassé le seuil avec une valeur {}", tension);
+                ioService.disableAlim12VPuissance();
+                ioService.disableAlim5VPuissance();
+            }
+        }
+    }
+
+    public double getTension() {
+        return servos.getTension();
     }
 
 }

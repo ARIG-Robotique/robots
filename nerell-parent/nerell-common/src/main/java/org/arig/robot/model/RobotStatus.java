@@ -202,8 +202,7 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         if (onlyRed) {
             paletsInTableauRouge.addAll(magasin.get(ESide.DROITE));
             paletsInTableauRouge.addAll(magasin.get(ESide.GAUCHE));
-        }
-        else if (team == Team.VIOLET) {
+        } else if (team == Team.VIOLET) {
             paletsInTableauRouge.addAll(magasin.get(ESide.DROITE));
             paletsInTableauVert.addAll(magasin.get(ESide.GAUCHE));
         } else {
