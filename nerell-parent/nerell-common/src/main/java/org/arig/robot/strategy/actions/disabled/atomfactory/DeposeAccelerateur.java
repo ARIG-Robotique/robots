@@ -18,8 +18,11 @@ import org.arig.robot.services.IVentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.awt.*;
 
 @Slf4j
 @Component
@@ -39,6 +42,9 @@ public class DeposeAccelerateur extends AbstractAction {
 
     @Autowired
     private CarouselService carouselService;
+
+    @Autowired
+    private TableUtils tableUtils;
 
     @Getter
     private boolean completed = false;
@@ -96,10 +102,12 @@ public class DeposeAccelerateur extends AbstractAction {
 
             // va au point le plus proche
             if (rs.getTeam() == Team.VIOLET) {
+                tableUtils.addDynamicDeadZone(new Rectangle.Double(1700, 1600, 300, 400));
                 mv.pathTo(2300, 1400);
                 mv.pathTo(1500, 1000);
                 mv.pathTo(1500 - 210 - IConstantesNerellConfig.dstAtomeCentre + 15, yAvantAvance);
             } else {
+                tableUtils.addDynamicDeadZone(new Rectangle.Double(1000, 1600, 300, 400));
                 mv.pathTo(700, 1400);
                 mv.pathTo(1500, 1000);
                 mv.pathTo(1500 + 210 + IConstantesNerellConfig.dstAtomeCentre - 15, yAvantAvance);
@@ -167,8 +175,9 @@ public class DeposeAccelerateur extends AbstractAction {
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException | CarouselNotAvailableException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
-
         }
+
+        tableUtils.clearDynamicDeadZones();
 
         try {
             mv.reculeMM(50);
@@ -180,7 +189,7 @@ public class DeposeAccelerateur extends AbstractAction {
             rs.enableVentouses();
 
         } catch (RefreshPathFindingException | AvoidingException e) {
-            e.printStackTrace();
+            log.error("Erreur d'éxécution de la finalisation de l'action : {}", e.toString());
         }
     }
 
