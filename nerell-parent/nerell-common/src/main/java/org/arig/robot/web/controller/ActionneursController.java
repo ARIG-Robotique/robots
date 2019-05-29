@@ -5,19 +5,13 @@ import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.EState;
 import org.arig.robot.services.IIOService;
-import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author gdepuille on 21/12/13.

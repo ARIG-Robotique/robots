@@ -12,8 +12,6 @@ import org.arig.robot.utils.SimpleCircularList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Predicate;
 
 @Slf4j

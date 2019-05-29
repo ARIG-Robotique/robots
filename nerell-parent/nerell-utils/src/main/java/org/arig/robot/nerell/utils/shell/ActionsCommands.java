@@ -7,7 +7,11 @@ import org.arig.robot.Ordonanceur;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.strategy.IAction;
 import org.springframework.shell.Availability;
-import org.springframework.shell.standard.*;
+import org.springframework.shell.standard.ShellCommandGroup;
+import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellMethodAvailability;
+import org.springframework.shell.standard.ShellOption;
 
 import java.util.List;
 import java.util.Optional;

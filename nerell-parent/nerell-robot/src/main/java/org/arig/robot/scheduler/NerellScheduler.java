@@ -1,11 +1,17 @@
 package org.arig.robot.scheduler;
 
-import org.arig.robot.constants.IConstantesUtiles;
 import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.services.*;
+import org.arig.robot.services.BaliseService;
+import org.arig.robot.services.CarouselService;
+import org.arig.robot.services.IVentousesService;
+import org.arig.robot.services.LeftSideService;
+import org.arig.robot.services.MagasinService;
+import org.arig.robot.services.RightSideService;
+import org.arig.robot.services.SerrageService;
+import org.arig.robot.services.ServosService;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.avoiding.IAvoidingService;

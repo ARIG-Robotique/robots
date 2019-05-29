@@ -6,7 +6,6 @@ import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 
 @Slf4j
 public class NotBasicAvoidingService extends AbstractAvoidingService {

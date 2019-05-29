@@ -19,8 +19,6 @@ import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.TrajectoryManager;
 import org.arig.robot.system.TrajectoryManagerAsync;
-import org.arig.robot.system.blockermanager.ISystemBlockerManager;
-import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.arig.robot.system.encoders.AbstractEncoder;
 import org.arig.robot.system.motion.AsservissementPolaireDistanceOrientation;
 import org.arig.robot.system.motion.AsservissementPosition;

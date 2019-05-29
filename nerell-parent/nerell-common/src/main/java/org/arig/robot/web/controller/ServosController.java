@@ -2,7 +2,6 @@ package org.arig.robot.web.controller;
 
 import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.model.servos.ServoConfig;
-import org.arig.robot.model.servos.ServoGroup;
 import org.arig.robot.model.servos.ServoUtils;
 import org.springframework.web.bind.annotation.RestController;
 
