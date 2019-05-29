@@ -78,7 +78,7 @@ public interface IConstantesNerellConfig {
     long vitesseUltraLente = 100;
 
     long vitessePath = vitesseSuperHaute;
-    long vitesseMouvement = vitesseLente;
+    long vitesseMouvement = vitesseSuperLente;
     long vitesseOrientation = vitesseOrientationUltraHaute;
 
     // -------------- //
