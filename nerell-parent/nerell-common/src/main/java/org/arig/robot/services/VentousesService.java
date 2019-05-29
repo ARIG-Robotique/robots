@@ -381,13 +381,6 @@ public class VentousesService implements IVentousesService, InitializingBean {
             carouselService.tourner(service.positionCarouselVentouse(), couleur);
         }
 
-        if (!service.presencePaletVentouse()) {
-            log.warn("Pas de palet à prendre dans le carousel");
-            carousel.unstore(service.positionCarouselVentouse());
-            this.couleur.put(service.id(), null);
-            return;
-        }
-
         service.pivotVentouseCarouselVertical(true);
         service.ascenseurCarousel(true);
         service.porteBarilletOuvert(true);

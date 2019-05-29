@@ -119,7 +119,7 @@ public class DeposeAccelerateur extends AbstractAction {
             mv.gotoOrientationDeg(90);
 
             // 30 = epaisseur accelerateur
-            mv.avanceMM(2000 - 30 - yAvantAvance - IConstantesNerellConfig.dstVentouseFacade);
+            mv.avanceMM(2000 - 30 - yAvantAvance - IConstantesNerellConfig.dstVentouseFacade + 5);
 
             // prend ou pousse le bleu
             if (rs.strategyActive(EStrategy.PRISE_BLEU_ACCELERATEUR) && !rs.isAccelerateurPrit()) {

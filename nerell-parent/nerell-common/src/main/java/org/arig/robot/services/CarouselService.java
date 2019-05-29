@@ -54,7 +54,8 @@ public class CarouselService {
         }
 
         if (isLocked()) {
-            log.warn("Temps d'attente trop long du carousel");
+            log.warn("Temps d'attente trop long du carousel pour lock complet\n VG:{} VD:{} LC:{} MD:{} MG:{} NA:{}",
+                    locks.get(0).get(), locks.get(1).get(), locks.get(2).get(), locks.get(3).get(), locks.get(4).get(), locks.get(5).get());
             throw new CarouselNotAvailableException();
         } else {
             locks.get(index).set(true);
@@ -72,7 +73,7 @@ public class CarouselService {
         }
 
         if (isRotating()) {
-            log.warn("Temps d'attente trop long du carousel");
+            log.warn("Temps d'attente trop long du carousel pour lock partiel");
             throw new CarouselNotAvailableException();
         } else {
             locks.get(index).set(true);
@@ -114,7 +115,7 @@ public class CarouselService {
             }
 
         } catch (CarouselNotAvailableException e) {
-            // nothing
+            log.warn("Erreur pendant la lecture couleur", e);
         }
     }
 
@@ -135,6 +136,8 @@ public class CarouselService {
         try {
             if (!isLocked() && !carouselManager.has(CouleurPalet.INCONNU)) {
                 if (hintCouleur != null) {
+                    log.info("Positionnement idéal {} at {}", hintCouleur, hintIndex);
+
                     // essaye de respecter l'hint d'une action
                     if (carouselManager.has(hintCouleur) && carouselManager.get(hintIndex) != hintCouleur) {
                         fullLock(hintIndex, 1000);
@@ -145,6 +148,8 @@ public class CarouselService {
                     }
 
                 } else if (carouselManager.get(ICarouselManager.VENTOUSE_DROITE) != null && carouselManager.get(ICarouselManager.VENTOUSE_GAUCHE) != null) {
+                    log.info("Positionnement idéal d'un vide");
+
                     // essaye de trouver deux places vides l'une a coté de l'autre
                     int coolIndex = -1;
                     for (int i = 0; i < 6; i++) {
@@ -169,7 +174,7 @@ public class CarouselService {
             }
 
         } catch (CarouselNotAvailableException e) {
-            // nothing
+            log.warn("Erreur pendant le positionnement idéal du carousel", e);
         }
     }
 
