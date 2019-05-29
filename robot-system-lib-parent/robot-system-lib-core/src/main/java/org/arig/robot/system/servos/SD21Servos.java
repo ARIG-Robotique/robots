@@ -221,10 +221,13 @@ public class SD21Servos implements InitializingBean {
     public double getTension() {
         try {
             i2cManager.sendData(deviceName, SD21Servos.BATTERY_VOLTS_REGISTER);
-            final int rawVolts = i2cManager.getData(deviceName);
-            final double volts = rawVolts * 0.039;
+
+            final byte[] rawVolts = i2cManager.getDatas(deviceName, 2);
+            short value = ((short) ((rawVolts[0] << 8) + (rawVolts[1] & 0xFF)));
+
+            final double volts = value * 0.039; // A battery voltage of 7.2v will read about 184. 6v will read about 154.
             log.info("Tension SD21 (raw : {}) : {} volts", rawVolts, volts);
-            return volts; // A battery voltage of 7.2v will read about 184. 6v will read about 154.
+            return volts;
         } catch (I2CException e) {
             log.error("Erreur lors de la récupération de la tension de la carte SD21");
         }
