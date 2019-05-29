@@ -258,6 +258,22 @@ public class Ordonanceur {
                 robotStatus.enableCalageBordureArriere();
                 trajectoryManager.reculeMMSansAngle(1000);
 
+                // callage côté expérience
+
+                position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstArriere));
+                position.setAngle(conv.degToPulse(-90));
+
+                trajectoryManager.avanceMM(150);
+
+                if (robotStatus.getTeam() == Team.JAUNE) {
+                    trajectoryManager.gotoOrientationDeg(0);
+                } else {
+                    trajectoryManager.gotoOrientationDeg(180);
+                }
+
+                robotStatus.enableCalageBordureArriere();
+                trajectoryManager.reculeMM(1000);
+
                 if (robotStatus.getTeam() == Team.JAUNE) {
                     position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstArriere));
                     position.setAngle(conv.degToPulse(0));
@@ -265,15 +281,6 @@ public class Ordonanceur {
                     position.getPt().setX(conv.mmToPulse(3000 - IConstantesNerellConfig.dstArriere));
                     position.setAngle(conv.degToPulse(180));
                 }
-
-                trajectoryManager.avanceMM(150);
-                trajectoryManager.gotoOrientationDeg(-90);
-
-                robotStatus.enableCalageBordureArriere();
-                trajectoryManager.reculeMM(1000);
-
-                position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstArriere));
-                position.setAngle(conv.degToPulse(-90));
 
                 trajectoryManager.avanceMM(150);
 
@@ -284,6 +291,15 @@ public class Ordonanceur {
                     trajectoryManager.gotoPointMM(2750, 1500);
                     trajectoryManager.gotoOrientationDeg(180);
                 }
+
+
+                // Aligne vers le distributeur centre
+                if (robotStatus.getTeam() == Team.JAUNE) {
+                    trajectoryManager.alignFrontTo(750, 700);
+                } else {
+                    trajectoryManager.alignFrontTo(2250, 700);
+                }
+
             } else {
                 if (robotStatus.getTeam() == Team.JAUNE) {
                     position.setPt(new Point(conv.mmToPulse(250), conv.mmToPulse(1500)));
