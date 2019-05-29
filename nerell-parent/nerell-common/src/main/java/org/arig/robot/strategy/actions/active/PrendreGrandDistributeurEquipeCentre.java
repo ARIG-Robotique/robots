@@ -9,9 +9,9 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class PrendreGrandDistributeurEquipe2 extends AbstractPrendreGrandDistributeur {
+public class PrendreGrandDistributeurEquipeCentre extends AbstractPrendreGrandDistributeur {
 
-    public PrendreGrandDistributeurEquipe2() {
+    public PrendreGrandDistributeurEquipeCentre() {
         super(
                 2250,
                 750,
