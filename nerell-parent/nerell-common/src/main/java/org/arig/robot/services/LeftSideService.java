@@ -111,6 +111,11 @@ public class LeftSideService implements IRobotSide {
     }
 
     @Override
+    public void ascenseurAccelerateurDepose(final boolean wait) {
+        servosService.ascenseurGauche(IConstantesServos.ASCENSEUR_GAUCHE_ACCELERATEUR_DEPOSE, wait);
+    }
+
+    @Override
     public void ascenseurGold(boolean wait) {
         servosService.ascenseurGauche(IConstantesServos.ASCENSEUR_GAUCHE_GOLD, wait);
     }

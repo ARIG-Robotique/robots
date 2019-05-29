@@ -47,6 +47,8 @@ public interface IRobotSide {
 
     void ascenseurAccelerateur(boolean wait);
 
+    void ascenseurAccelerateurDepose(boolean wait);
+
     void ascenseurGold(boolean wait);
 
     void ascenseurCarousel(boolean wait);
