@@ -255,13 +255,17 @@ public class VentousesService implements IVentousesService, InitializingBean {
      * A faire avant d'avancer
      */
     @Override
-    public void prepareDeposeAccelerateur(ESide side) {
+    public void prepareDeposeAccelerateur(ESide side, ESide sideDepose) {
         log.info("Prépare dépose accelerateur à {}", side);
 
         IRobotSide service = sideServices.get(side);
+        IRobotSide serviceDepose = sideServices.get(sideDepose);
 
-        service.pivotVentouseCarouselVertical(false);
-        service.ascenseurAccelerateur(true);
+        service.ascenseurAccelerateur(false);
+        service.pivotVentouseCarouselVertical(true);
+
+        serviceDepose.ascenseurAccelerateur(true);
+        serviceDepose.pivotVentouseCarouselVertical(true);
     }
 
     /**
@@ -269,10 +273,11 @@ public class VentousesService implements IVentousesService, InitializingBean {
      * A faire avant d'avancer
      */
     @Override
-    public boolean preparePriseAccelerateur(ESide side) {
+    public boolean preparePriseAccelerateur(ESide side, ESide sideDepose) {
         log.info("Prépare prise accelerateur à {}", side);
 
         IRobotSide service = sideServices.get(side);
+        IRobotSide serviceDepose = sideServices.get(sideDepose);
 
         if (!carousel.has(null)) {
             log.warn("Pas de place dans le carousel");
@@ -280,7 +285,10 @@ public class VentousesService implements IVentousesService, InitializingBean {
         }
 
         service.pivotVentouseFacade(false);
-        service.ascenseurAccelerateur(true);
+        service.ascenseurAccelerateur(false);
+
+        serviceDepose.pivotVentouseCarouselVertical(false);
+        serviceDepose.ascenseurAccelerateur(true);
 
         return true;
     }
@@ -339,19 +347,25 @@ public class VentousesService implements IVentousesService, InitializingBean {
         }
 
         priseCarousel(couleur, service, () -> {
-            service.ascenseurAccelerateur(true);
+            service.ascenseurAccelerateurDepose(true);
         });
 
         if (this.couleur.get(side) == null) {
+            service.porteBarilletFerme(false);
+            carouselService.release(service.positionCarouselVentouse());
             return false;
         }
 
         service.airElectroVanne();
         ThreadUtils.sleep(200);
 
-        service.pivotVentouseCarouselVertical(true);
+        service.pivotVentouseCarouselVertical(false);
+        service.ascenseurAccelerateur(true);
 
-        pousseAccelerateur(side);
+        service.porteBarilletFerme(true);
+        carouselService.release(service.positionCarouselVentouse());
+
+//        pousseAccelerateur(side);
 
         service.videElectroVanne();
 
@@ -381,15 +395,17 @@ public class VentousesService implements IVentousesService, InitializingBean {
             carouselService.tourner(service.positionCarouselVentouse(), couleur);
         }
 
+        service.porteBarilletOuvert(true);
         service.pivotVentouseCarouselVertical(true);
         service.ascenseurCarousel(true);
-        service.porteBarilletOuvert(true);
 
         service.enablePompeAVide();
         boolean ok = tentativeAspiration(service);
         service.disablePompeAVide();
 
         if (!ok) {
+            service.airElectroVanne();
+            service.ascenseurAccelerateur(false);
             service.porteBarilletFerme(false);
 
             carousel.setColor(service.positionCarouselVentouse(), CouleurPalet.INCONNU);
@@ -398,14 +414,11 @@ public class VentousesService implements IVentousesService, InitializingBean {
             service.ascenseurCarouselDepose(true);
             service.pivotVentouseFacade(true);
             finish.run();
-            service.porteBarilletFerme(false);
 
             this.couleur.put(service.id(), carousel.get(service.positionCarouselVentouse()));
 
             carousel.unstore(service.positionCarouselVentouse());
         }
-
-        carouselService.release(service.positionCarouselVentouse());
     }
 
     /**
@@ -413,7 +426,7 @@ public class VentousesService implements IVentousesService, InitializingBean {
      * A faire après avoir reculé
      */
     @Override
-    public void finishDeposeAccelerateur(ESide side) {
+    public void finishDeposeAccelerateur(ESide side, ESide sideDepose) {
         log.info("Finish depose accelerateur à {}", side);
 
         IRobotSide service = sideServices.get(side);
@@ -421,6 +434,17 @@ public class VentousesService implements IVentousesService, InitializingBean {
         service.pousseAccelerateurFerme(false);
 
         servosHomeAndDisablePompeAndRelease(side);
+        servosHomeAndDisablePompeAndRelease(sideDepose);
+    }
+
+    @Override
+    public void prepareDeposeBalance(ESide side) {
+        log.info("Prépare dépose balance à {}", side);
+
+        IRobotSide service = sideServices.get(side);
+
+        service.ascenseurAccelerateur(false);
+        service.pivotVentouseCarouselVertical(true);
     }
 
     /**
@@ -446,7 +470,10 @@ public class VentousesService implements IVentousesService, InitializingBean {
         } else {
             priseCarousel(couleur, service, () -> {
                 service.ascenseurCarousel(true);
+                service.porteBarilletFerme(false);
             });
+
+            carouselService.release(service.positionCarouselVentouse());
 
             if (this.couleur.get(side) != null) {
                 service.disablePompeAVide();
@@ -456,6 +483,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
                 this.couleur.put(side, null);
 
                 ThreadUtils.sleep(500);
+
+                service.ascenseurAccelerateur(true);
 
                 return true;
             }

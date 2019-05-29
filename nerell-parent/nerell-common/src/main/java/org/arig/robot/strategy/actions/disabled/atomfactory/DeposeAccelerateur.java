@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.disabled.atomfactory;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -61,7 +61,7 @@ public class DeposeAccelerateur extends AbstractAction {
     public boolean isValid() {
         return isTimeValid() &&
                 (
-                        rs.getRemainingTime() < 60000 ||
+                        rs.getRemainingTime() < 70000 ||
                                 carousel.count(CouleurPalet.ROUGE) >= 3
                 ) &&
                 (
@@ -82,22 +82,27 @@ public class DeposeAccelerateur extends AbstractAction {
     @Override
     public void execute() {
         ESide side = rs.mainSide();
+        ESide sideDepose = side == ESide.GAUCHE ? ESide.DROITE : ESide.GAUCHE;
 
         try {
-            carouselService.setHint(side.getPositionVentouse(), carousel.has(CouleurPalet.ROUGE) ? CouleurPalet.ROUGE : CouleurPalet.ANY);
+            carouselService.setHint(sideDepose.getPositionVentouse(), carousel.has(CouleurPalet.ROUGE) ? CouleurPalet.ROUGE : CouleurPalet.ANY);
             rs.disableMagasin();
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             rs.enableAvoidance();
 
-            int yAvantAvance = 1740;
+            int yAvantAvance = 1700;
 
             // va au point le plus proche
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(1500 - 210 - IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
+                mv.pathTo(2300, 1400);
+                mv.pathTo(1500, 1000);
+                mv.pathTo(1500 - 210 - IConstantesNerellConfig.dstAtomeCentre + 15, yAvantAvance);
             } else {
-                mv.pathTo(1500 + 210 + IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
+                mv.pathTo(700, 1400);
+                mv.pathTo(1500, 1000);
+                mv.pathTo(1500 + 210 + IConstantesNerellConfig.dstAtomeCentre - 15, yAvantAvance);
             }
 
             rs.disableAvoidance();
@@ -109,18 +114,22 @@ public class DeposeAccelerateur extends AbstractAction {
             rs.disableVentouses();
 
             if (rs.strategyActive(EStrategy.PRISE_BLEU_ACCELERATEUR)) {
-                if (!ventouses.preparePriseAccelerateur(side)) {
+                if (!ventouses.preparePriseAccelerateur(side, sideDepose)) {
                     throw new CarouselNotAvailableException();
                 }
             } else {
-                ventouses.prepareDeposeAccelerateur(side);
+                ventouses.prepareDeposeAccelerateur(side, sideDepose);
             }
 
-            // oriente et avance à fond
-            mv.gotoOrientationDeg(90);
+            mv.setVitesse(IConstantesNerellConfig.vitesseMouvement, IConstantesNerellConfig.vitesseOrientation);
 
-            // 30 = epaisseur accelerateur
-            mv.avanceMM(2000 - 30 - yAvantAvance - IConstantesNerellConfig.dstVentouseFacade + 5);
+            if (rs.getTeam() == Team.VIOLET) {
+                mv.gotoPointMM(1240, 1800 + 3);
+            } else {
+                mv.gotoPointMM(3000 - 1240, 1800 + 3);
+            }
+
+            mv.gotoOrientationDeg(90);
 
             // prend ou pousse le bleu
             if (rs.strategyActive(EStrategy.PRISE_BLEU_ACCELERATEUR) && !rs.isAccelerateurPrit()) {
@@ -143,7 +152,7 @@ public class DeposeAccelerateur extends AbstractAction {
             while (canDepose()) {
                 CouleurPalet couleur = carousel.has(CouleurPalet.ROUGE) ? CouleurPalet.ROUGE : CouleurPalet.ANY;
 
-                if (!ventouses.deposeAccelerateur(couleur, side)) {
+                if (!ventouses.deposeAccelerateur(couleur, sideDepose)) {
                     break;
                 }
 
@@ -159,19 +168,19 @@ public class DeposeAccelerateur extends AbstractAction {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
 
-        } finally {
-            try {
-                mv.reculeMM(50);
-                ventouses.finishDeposeAccelerateur(side);
-                ventouses.releaseSide(ESide.GAUCHE);
-                ventouses.releaseSide(ESide.DROITE);
-                rs.enableMagasin();
-                rs.enableCarousel();
-                rs.enableVentouses();
+        }
 
-            } catch (RefreshPathFindingException | AvoidingException e) {
-                e.printStackTrace();
-            }
+        try {
+            mv.reculeMM(50);
+            ventouses.finishDeposeAccelerateur(side, sideDepose);
+            ventouses.releaseSide(ESide.GAUCHE);
+            ventouses.releaseSide(ESide.DROITE);
+            rs.enableMagasin();
+            rs.enableCarousel();
+            rs.enableVentouses();
+
+        } catch (RefreshPathFindingException | AvoidingException e) {
+            e.printStackTrace();
         }
     }
 

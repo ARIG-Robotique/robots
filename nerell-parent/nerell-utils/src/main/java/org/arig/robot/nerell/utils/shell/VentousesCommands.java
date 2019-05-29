@@ -64,22 +64,22 @@ public class VentousesCommands {
     @ShellMethod("Prise du un accelerateur")
     @SneakyThrows
     public void priseAccelerateur(@NotNull ESide side) throws VentouseNotAvailableException {
-        ventouses.preparePriseAccelerateur(side);
+        ventouses.preparePriseAccelerateur(side, side == ESide.GAUCHE ? ESide.DROITE : ESide.GAUCHE);
         ThreadUtils.sleep(5000);
         ventouses.priseAccelerateur(side);
         ventouses.stockageCarouselMaisResteEnHaut(side);
         ThreadUtils.sleep(5000);
-        ventouses.finishDeposeAccelerateur(side);
+        ventouses.finishDeposeAccelerateur(side, side == ESide.GAUCHE ? ESide.DROITE : ESide.GAUCHE);
     }
 
     @ShellMethod("Depose accelerateur")
     @SneakyThrows
     public void deposeAccelerateur(@NotNull ESide side) throws CarouselNotAvailableException {
-        ventouses.prepareDeposeAccelerateur(side);
+        ventouses.prepareDeposeAccelerateur(side, side == ESide.GAUCHE ? ESide.DROITE : ESide.GAUCHE);
         ThreadUtils.sleep(5000);
         ventouses.deposeAccelerateur(CouleurPalet.ROUGE, side);
         ThreadUtils.sleep(5000);
-        ventouses.finishDeposeAccelerateur(side);
+        ventouses.finishDeposeAccelerateur(side, side == ESide.GAUCHE ? ESide.DROITE : ESide.GAUCHE);
     }
 
     @ShellMethod("Dépose sur la balance")

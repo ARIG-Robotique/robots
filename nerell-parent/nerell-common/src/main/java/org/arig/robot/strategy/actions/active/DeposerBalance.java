@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled.atomfactory;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -74,7 +74,11 @@ public class DeposerBalance extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && canDepose();
+        return isTimeValid() && canDepose() &&
+                (
+                        rs.getRemainingTime() < 70000 ||
+                                carousel.count(CouleurPalet.BLEU) + carousel.count(CouleurPalet.VERT) >= 3
+                );
     }
 
     private boolean canDepose() {
@@ -92,6 +96,7 @@ public class DeposerBalance extends AbstractAction {
 
         try {
             carouselService.setHint(side.getPositionVentouse(), carousel.has(CouleurPalet.BLEU) ? CouleurPalet.BLEU : CouleurPalet.VERT);
+            rs.disableMagasin();
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
@@ -112,14 +117,26 @@ public class DeposerBalance extends AbstractAction {
             rs.disableAvoidance();
 
             if (ventouses.getCouleur(side) != CouleurPalet.GOLD) {
-                ventouses.waitAvailable(side);
+                ventouses.waitAvailable(ESide.DROITE);
+                ventouses.waitAvailable(ESide.GAUCHE);
+            } else {
+                ventouses.waitAvailable(side == ESide.GAUCHE ? ESide.DROITE : ESide.GAUCHE);
+            }
+
+            rs.disableVentouses();
+            rs.disableCarousel();
+
+            ventouses.prepareDeposeBalance(side);
+
+            mv.setVitesse(IConstantesNerellConfig.vitesseMouvement, IConstantesNerellConfig.vitesseOrientation);
+
+            if (rs.getTeam() == Team.VIOLET) {
+                mv.gotoPointMM(1500 + 150 + IConstantesNerellConfig.dstAtomeCentre, 586);
+            } else {
+                mv.gotoPointMM(1500 - 150 - IConstantesNerellConfig.dstAtomeCentre, 586);
             }
 
             mv.gotoOrientationDeg(-90);
-
-            // Position Y de SolidWorks = 579
-            double yOffset = conv.pulseToMm(currentPosition.getPt().getY()) - 576;
-            mv.avanceMM(yOffset);
 
             while (canDepose()) {
                 CouleurPalet couleur = ventouses.getCouleur(side) == CouleurPalet.GOLD ?
@@ -131,7 +148,7 @@ public class DeposerBalance extends AbstractAction {
                 }
             }
 
-            mv.reculeMM(100);
+            mv.reculeMM(150);
 
             completed = rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax;
 
@@ -139,9 +156,20 @@ public class DeposerBalance extends AbstractAction {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
 
-        } finally {
-            ventouses.finishDepose(side);
+            try {
+                mv.reculeMM(100);
+            } catch (RefreshPathFindingException | AvoidingException ex) {
+                ex.printStackTrace();
+            }
+
         }
+
+        ventouses.finishDepose(side);
+        ventouses.releaseSide(ESide.GAUCHE);
+        ventouses.releaseSide(ESide.DROITE);
+        rs.enableMagasin();
+        rs.enableVentouses();
+        rs.enableCarousel();
     }
 
 }

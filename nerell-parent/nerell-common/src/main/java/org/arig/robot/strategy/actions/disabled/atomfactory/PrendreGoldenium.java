@@ -90,6 +90,12 @@ public class PrendreGoldenium extends AbstractAction {
         } catch (NoPathFoundException | AvoidingException | VentouseNotAvailableException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
+
+            try {
+                mv.reculeMM(50);
+            } catch (RefreshPathFindingException | AvoidingException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 

@@ -38,7 +38,7 @@ public class Point2Action extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid();
+        return isTimeValid() && rs.isAccelerateurOuvert();
     }
 
     @Override

@@ -125,6 +125,12 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
 
             ventouses.releaseSide(ESide.DROITE);
             ventouses.releaseSide(ESide.GAUCHE);
+
+            try {
+                mv.reculeMM(50);
+            } catch (RefreshPathFindingException | AvoidingException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 }

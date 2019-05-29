@@ -28,9 +28,9 @@ public interface IVentousesService {
 
     CompletableFuture<Void> finishPriseGoldenium(boolean ok, ESide side);
 
-    void prepareDeposeAccelerateur(ESide side);
+    void prepareDeposeAccelerateur(ESide side, ESide sideDepose);
 
-    boolean preparePriseAccelerateur(ESide side);
+    boolean preparePriseAccelerateur(ESide side, ESide sideDepose);
 
     void pousseAccelerateur(ESide side);
 
@@ -38,7 +38,9 @@ public interface IVentousesService {
 
     boolean deposeAccelerateur(CouleurPalet couleur, ESide side) throws CarouselNotAvailableException;
 
-    void finishDeposeAccelerateur(ESide side);
+    void finishDeposeAccelerateur(ESide side, ESide sideDepose);
+
+    void prepareDeposeBalance(ESide side);
 
     boolean deposeBalance(CouleurPalet couleur, ESide side) throws CarouselNotAvailableException;
 
