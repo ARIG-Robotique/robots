@@ -102,7 +102,8 @@ public class DeposeAccelerateur extends AbstractAction {
 
             rs.disableAvoidance();
 
-            ventouses.waitAvailable(side);
+            ventouses.waitAvailable(ESide.DROITE);
+            ventouses.waitAvailable(ESide.GAUCHE);
 
             rs.disableCarousel();
             rs.disableVentouses();
@@ -162,6 +163,8 @@ public class DeposeAccelerateur extends AbstractAction {
             try {
                 mv.reculeMM(50);
                 ventouses.finishDeposeAccelerateur(side);
+                ventouses.releaseSide(ESide.GAUCHE);
+                ventouses.releaseSide(ESide.DROITE);
                 rs.enableMagasin();
                 rs.enableCarousel();
                 rs.enableVentouses();

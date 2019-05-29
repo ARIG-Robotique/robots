@@ -51,4 +51,6 @@ public interface IVentousesService {
     void stockageCarousel(ESide side);
 
     void stockageCarouselMaisResteEnHaut(ESide side);
+
+    void releaseSide(ESide side);
 }

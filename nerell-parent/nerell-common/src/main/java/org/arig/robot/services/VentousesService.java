@@ -392,6 +392,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
         if (!ok) {
             service.porteBarilletFerme(false);
 
+            carousel.setColor(service.positionCarouselVentouse(), CouleurPalet.INCONNU);
+
         } else {
             service.ascenseurCarouselDepose(true);
             service.pivotVentouseFacade(true);
@@ -608,6 +610,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
                 }
             }
 
+            carousel.store(service.positionCarouselVentouse(), couleur.get(side));
+
             service.porteBarilletOuvert(true);
             service.ascenseurCarouselDepose(true);
             service.pivotVentouseCarouselVertical(true);
@@ -618,7 +622,6 @@ public class VentousesService implements IVentousesService, InitializingBean {
             service.ascenseurAccelerateur(true);
             service.porteBarilletFerme(true);
 
-            carousel.store(service.positionCarouselVentouse(), couleur.get(side));
             carouselService.release(service.positionCarouselVentouse());
 
             service.videElectroVanne();
@@ -635,7 +638,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
         }
     }
 
-    private void releaseSide(ESide side) {
+    @Override
+    public void releaseSide(ESide side) {
         log.info("Release de la ventouse {}", side);
         working.get(side).set(false);
     }

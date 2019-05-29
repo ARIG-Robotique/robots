@@ -122,6 +122,9 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException | InterruptedException | ExecutionException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
+
+            ventouses.releaseSide(ESide.DROITE);
+            ventouses.releaseSide(ESide.GAUCHE);
         }
     }
 }
