@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled.atomfactory;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +53,7 @@ public class DeposerMagasinTableau extends AbstractAction {
     @Override
     public boolean isValid() {
         return isTimeValid() &&
+                rs.getNbDeposesTableau() == 0 &&
                 (
                         rs.getMagasin().get(ESide.DROITE).size() + rs.getMagasin().get(ESide.GAUCHE).size() > 4 ||
                                 rs.getRemainingTime() < 40000 && rs.getMagasin().get(ESide.DROITE).size() + rs.getMagasin().get(ESide.GAUCHE).size() > 0
@@ -67,31 +68,32 @@ public class DeposerMagasinTableau extends AbstractAction {
 
             rs.enableAvoidance();
 
-            double offset = 214 + rs.getNbDeposesTableau() * IConstantesNerellConfig.offsetTableau;
-
-            boolean mostlyRed = mostlyRed();
-            double y = mostlyRed ? 1550 : 1400;
-
-            if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(3000 - offset, y);
+            if (rs.getTeam().equals(Team.VIOLET)) {
+                mv.pathTo(2500, 1580 - IConstantesNerellConfig.dstAtomeCentre);
                 mv.gotoOrientationDeg(180);
             } else {
-                mv.pathTo(offset, y);
+                mv.pathTo(500, 1580 - IConstantesNerellConfig.dstAtomeCentre);
                 mv.gotoOrientationDeg(0);
             }
 
+            rs.disableAvoidance();
             rs.disableMagasin();
+
+            mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
+
+            mv.reculeMM(500 - IConstantesNerellConfig.dstArriere - 30);
+
             magasin.moisson();
 
             magasin.startEjection();
 
-            mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
-
-            mv.avanceMM(IConstantesNerellConfig.offsetTableau * 3);
+            mv.avanceMM(240);
             mv.reculeMM(100);
             mv.avanceMM(100);
 
-            rs.transfertMagasinTableau(mostlyRed);
+            rs.transfertMagasinTableau(true);
+
+            completed = true;
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());

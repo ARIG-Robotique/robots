@@ -52,6 +52,7 @@ public class DeposerMagasinTableauRediumByGreenium extends AbstractAction {
     @Override
     public boolean isValid() {
         return isTimeValid() &&
+                rs.getNbDeposesTableau() == 0 &&
                 (
                         rs.getMagasin().get(ESide.DROITE).size() + rs.getMagasin().get(ESide.GAUCHE).size() > 4 ||
                                 rs.getRemainingTime() < 40000 && rs.getMagasin().get(ESide.DROITE).size() + rs.getMagasin().get(ESide.GAUCHE).size() > 0
@@ -66,10 +67,14 @@ public class DeposerMagasinTableauRediumByGreenium extends AbstractAction {
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(3000 - 225, 750);
+                mv.pathTo(3000 - 280, 1050);
             } else {
-                mv.pathTo(225, 750);
+                mv.pathTo(280, 1050);
             }
+
+            rs.disableAvoidance();
+
+
             mv.gotoOrientationDeg(-90);
 
             mv.reculeMM(450);
@@ -83,9 +88,11 @@ public class DeposerMagasinTableauRediumByGreenium extends AbstractAction {
 
             mv.avanceMM(240);
             mv.reculeMM(100);
-            mv.avanceMM(100);
+            mv.avanceMM(200);
 
             rs.transfertMagasinTableau(true);
+
+            completed = true;
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
