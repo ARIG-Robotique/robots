@@ -495,7 +495,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                     rs.enableAvoidance();
 
                     // Va au premier point
-                    gotoPointMM(targetPoint.getX(), targetPoint.getY());
+                    gotoPointMM(targetPoint.getX(), targetPoint.getY(), true);
                 }
 
                 // TODO gestion unutile avec les synchronized ??
@@ -537,9 +537,10 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      *
      * @param x position sur l'axe X
      * @param y position sur l'axe Y
+     * @param avecOrientation Activation de l'orientation avant la translation
      */
     @Override
-    public void gotoPointMM(final double x, final double y) throws RefreshPathFindingException, AvoidingException {
+    public void gotoPointMM(final double x, final double y, boolean avecOrientation) throws RefreshPathFindingException, AvoidingException {
         gotoPointMM(x, y, true);
     }
 
@@ -551,18 +552,20 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param avecArret demande d'arret sur le point
      */
     @Override
-    public void gotoPointMM(final double x, final double y, final boolean avecArret) throws RefreshPathFindingException, AvoidingException  {
+    public void gotoPointMM(final double x, final double y, final boolean avecOrientation, final boolean avecArret) throws RefreshPathFindingException, AvoidingException  {
         log.info("Va au point X = {}mm ; Y = {}mm {}", x, y, avecArret ? "et arrete toi" : "sans arret");
 
-        boolean avoidanceEnabled = rs.isAvoidanceEnabled();
+        if (avecOrientation) {
+            boolean avoidanceEnabled = rs.isAvoidanceEnabled();
 
-        // Alignement sur le point
-        rs.disableAvoidance();
-        alignFrontTo(x, y);
+            // Alignement sur le point
+            rs.disableAvoidance();
+            alignFrontTo(x, y);
 
-        // Retour de l'évittement si actif avant
-        if (avoidanceEnabled) {
-            rs.enableAvoidance();
+            // Retour de l'évittement si actif avant
+            if (avoidanceEnabled) {
+                rs.enableAvoidance();
+            }
         }
 
         synchronized (this) {

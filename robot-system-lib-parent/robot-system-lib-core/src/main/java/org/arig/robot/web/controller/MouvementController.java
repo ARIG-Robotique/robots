@@ -75,7 +75,7 @@ public class MouvementController {
 
     @PostMapping(value = "/position")
     public void allerEnPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws RefreshPathFindingException, AvoidingException {
-        trajectoryManager.gotoPointMM(x, y);
+        trajectoryManager.gotoPointMM(x, y, true);
     }
 
     @PostMapping(value = "/face")

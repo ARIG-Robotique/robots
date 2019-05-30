@@ -282,9 +282,9 @@ public class Ordonanceur {
                 trajectoryManager.avanceMM(150);
 
                 if (robotStatus.getTeam() == Team.JAUNE) {
-                    trajectoryManager.gotoPointMM(250, 1500);
+                    trajectoryManager.gotoPointMM(250, 1500, true);
                 } else {
-                    trajectoryManager.gotoPointMM(2750, 1500);
+                    trajectoryManager.gotoPointMM(2750, 1500, true);
                 }
 
                 // Aligne vers le distributeur centre

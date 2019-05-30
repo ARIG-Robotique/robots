@@ -131,9 +131,9 @@ public class DeposerBalance extends AbstractAction {
             mv.setVitesse(IConstantesNerellConfig.vitesseMouvement, IConstantesNerellConfig.vitesseOrientation);
 
             if (rs.getTeam() == Team.VIOLET) {
-                mv.gotoPointMM(1500 + 150 + IConstantesNerellConfig.dstAtomeCentre, 588);
+                mv.gotoPointMM(1500 + 150 + IConstantesNerellConfig.dstAtomeCentre, 588, true);
             } else {
-                mv.gotoPointMM(1500 - 150 - IConstantesNerellConfig.dstAtomeCentre, 588);
+                mv.gotoPointMM(1500 - 150 - IConstantesNerellConfig.dstAtomeCentre, 588, true);
             }
 
             mv.gotoOrientationDeg(-90);

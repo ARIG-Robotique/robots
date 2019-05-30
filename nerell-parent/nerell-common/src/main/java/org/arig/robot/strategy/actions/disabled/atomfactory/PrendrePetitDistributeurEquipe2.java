@@ -74,12 +74,12 @@ public class PrendrePetitDistributeurEquipe2 extends AbstractAction {
                 mv.pathTo(3000 - 275, 235);
                 rs.disableAvoidance();
 
-                mv.gotoPointMM(3000 - xPos, yAvantAvance);
+                mv.gotoPointMM(3000 - xPos, yAvantAvance, true);
             } else {
                 mv.pathTo(275, 235);
                 rs.disableAvoidance();
 
-                mv.gotoPointMM(xPos, yAvantAvance);
+                mv.gotoPointMM(xPos, yAvantAvance, true);
             }
 
             // aligne, prépare les ventouses et avance

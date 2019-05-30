@@ -22,9 +22,9 @@ public interface ITrajectoryManager {
 
     void pathTo(double x, double y, boolean avecArret) throws NoPathFoundException, AvoidingException;
 
-    void gotoPointMM(double x, double y) throws RefreshPathFindingException, AvoidingException;
+    void gotoPointMM(double x, double y, boolean avecOrientation) throws RefreshPathFindingException, AvoidingException;
 
-    void gotoPointMM(double x, double y, boolean avecArret) throws RefreshPathFindingException, AvoidingException;
+    void gotoPointMM(double x, double y, boolean avecOrientation, boolean avecArret) throws RefreshPathFindingException, AvoidingException;
 
     void gotoOrientationDeg(double angle) throws RefreshPathFindingException, AvoidingException;
 

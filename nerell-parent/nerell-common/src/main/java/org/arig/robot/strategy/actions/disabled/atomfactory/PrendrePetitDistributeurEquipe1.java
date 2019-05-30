@@ -75,11 +75,11 @@ public class PrendrePetitDistributeurEquipe1 extends AbstractAction {
             if (rs.getTeam() == Team.VIOLET) {
                 mv.pathTo(3000 - 235, 235);
                 rs.disableAvoidance();
-                mv.gotoPointMM(3000 - xPos, yAvantAvance);
+                mv.gotoPointMM(3000 - xPos, yAvantAvance, true);
             } else {
                 mv.pathTo(235, 235);
                 rs.disableAvoidance();
-                mv.gotoPointMM(xPos, yAvantAvance);
+                mv.gotoPointMM(xPos, yAvantAvance, true);
             }
 
             // aligne, prépare les ventouses et avance

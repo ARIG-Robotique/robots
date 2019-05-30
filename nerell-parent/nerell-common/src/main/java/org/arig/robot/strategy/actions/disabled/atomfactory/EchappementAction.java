@@ -47,9 +47,9 @@ public class EchappementAction extends AbstractAction {
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             if (rs.getTeam() == Team.JAUNE) {
-                mv.gotoPointMM(250, 1500);
+                mv.gotoPointMM(250, 1500, true);
             } else {
-                mv.gotoPointMM(2750, 1500);
+                mv.gotoPointMM(2750, 1500, true);
             }
 
             return;

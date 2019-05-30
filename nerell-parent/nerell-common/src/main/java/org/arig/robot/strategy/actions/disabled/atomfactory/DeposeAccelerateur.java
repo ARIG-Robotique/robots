@@ -132,9 +132,9 @@ public class DeposeAccelerateur extends AbstractAction {
             mv.setVitesse(IConstantesNerellConfig.vitesseMouvement, IConstantesNerellConfig.vitesseOrientation);
 
             if (rs.getTeam() == Team.VIOLET) {
-                mv.gotoPointMM(1240, 1800 + 3);
+                mv.gotoPointMM(1240, 1800 + 3, true);
             } else {
-                mv.gotoPointMM(3000 - 1240, 1800 + 3);
+                mv.gotoPointMM(3000 - 1240, 1800 + 3, true);
             }
 
             mv.gotoOrientationDeg(90);
