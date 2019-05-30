@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled.atomfactory;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,6 @@ import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.services.IIOService;
 import org.arig.robot.services.MagasinService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
@@ -20,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class DeposerMagasinTableau extends AbstractAction {
+public class DeposerMagasinTableauRediumByGreenium extends AbstractAction {
 
     @Autowired
     private RobotStatus rs;
@@ -39,7 +38,7 @@ public class DeposerMagasinTableau extends AbstractAction {
 
     @Override
     public String name() {
-        return "Depose de palets dans le tableau depuis la magasin";
+        return "Depose de palets dans le tableau rouge en passant par la case greenium depuis la magasin";
     }
 
     @Override
@@ -47,7 +46,7 @@ public class DeposerMagasinTableau extends AbstractAction {
         int nbPaletsMagasin = rs.getMagasin().get(ESide.DROITE).size() + rs.getMagasin().get(ESide.GAUCHE).size();
         int nbPaletsCarousel = (int) carousel.count(CouleurPalet.ROUGE);
         int nbPaletsMax = nbPaletsMagasin + Math.min(nbPaletsCarousel, IConstantesNerellConfig.nbPaletsMagasinMax * 2 - nbPaletsMagasin);
-        return nbPaletsMax * 6;
+        return (nbPaletsMax * 6) - 1;
     }
 
     @Override
@@ -63,22 +62,17 @@ public class DeposerMagasinTableau extends AbstractAction {
     public void execute() {
 
         try {
+            rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.enableAvoidance();
-
-            double offset = 214 + rs.getNbDeposesTableau() * IConstantesNerellConfig.offsetTableau;
-
-            boolean mostlyRed = mostlyRed();
-            double y = mostlyRed ? 1550 : 1400;
-
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(3000 - offset, y);
-                mv.gotoOrientationDeg(180);
+                mv.pathTo(3000 - 225, 750);
             } else {
-                mv.pathTo(offset, y);
-                mv.gotoOrientationDeg(0);
+                mv.pathTo(225, 750);
             }
+            mv.gotoOrientationDeg(-90);
+
+            mv.reculeMM(450);
 
             rs.disableMagasin();
             magasin.moisson();
@@ -87,35 +81,18 @@ public class DeposerMagasinTableau extends AbstractAction {
 
             mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
 
-            mv.avanceMM(IConstantesNerellConfig.offsetTableau * 3);
+            mv.avanceMM(240);
             mv.reculeMM(100);
             mv.avanceMM(100);
 
-            rs.transfertMagasinTableau(mostlyRed);
+            rs.transfertMagasinTableau(true);
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
         }
-
+        completed = true;
         rs.enableMagasin();
-
         magasin.endEjection();
-    }
-
-    /**
-     * Regarde si dans le coté "vert" contient plutot du rouge
-     */
-    private boolean mostlyRed() {
-        if (rs.getTeam() == Team.VIOLET) {
-            if (rs.getMagasin().get(ESide.GAUCHE).stream().filter(c -> c != CouleurPalet.ROUGE).count() <= 1) {
-                return true;
-            }
-        } else {
-            if (rs.getMagasin().get(ESide.DROITE).stream().filter(c -> c != CouleurPalet.ROUGE).count() <= 1) {
-                return true;
-            }
-        }
-        return false;
     }
 }
