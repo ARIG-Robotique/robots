@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.disabled.atomfactory;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class DeposerBalance extends AbstractAction {
+public class DeposerGoldeniumBalance extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -52,36 +52,17 @@ public class DeposerBalance extends AbstractAction {
 
     @Override
     public String name() {
-        return "Déposer des palets dans la balance";
+        return "Déposer le goldenium dans la balance";
     }
 
     @Override
     public int order() {
-        // 24 pour le gold
-        int points = (ventouses.getCouleur(rs.mainSide()) == CouleurPalet.GOLD ? 24 : 0) +
-                // 12 pour les bleus
-                (int) Math.min(IConstantesNerellConfig.nbPaletsBalanceMax - rs.getPaletsInBalance().size(), carousel.count(CouleurPalet.BLEU)) * 12 +
-                // 8 pour les verts
-                (int) Math.min(IConstantesNerellConfig.nbPaletsBalanceMax - rs.getPaletsInBalance().size(), carousel.count(CouleurPalet.VERT)) * 8;
-        return points;
+        return Integer.MAX_VALUE;
     }
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && canDepose() &&
-                (
-                        rs.getRemainingTime() < 70000 ||
-                                carousel.count(CouleurPalet.BLEU) + carousel.count(CouleurPalet.VERT) >= 3
-                );
-    }
-
-    private boolean canDepose() {
-        return rs.getPaletsInBalance().size() < IConstantesNerellConfig.nbPaletsBalanceMax &&
-                (
-                        ventouses.getCouleur(rs.mainSide()) == CouleurPalet.GOLD ||
-                                carousel.has(CouleurPalet.BLEU) ||
-                                carousel.has(CouleurPalet.VERT)
-                );
+        return isTimeValid() &&  ventouses.getCouleur(rs.mainSide()) == CouleurPalet.GOLD;
     }
 
     @Override
@@ -89,8 +70,6 @@ public class DeposerBalance extends AbstractAction {
         ESide side = rs.mainSide();
 
         try {
-            rs.disableMagasin();
-
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             rs.enableAvoidance();
@@ -101,29 +80,25 @@ public class DeposerBalance extends AbstractAction {
             // va au point le plus proche
             if (rs.getTeam() == Team.VIOLET) {
                 tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(1000, 420, 500, 330));
+                mv.pathTo(1800, 1000);
                 mv.pathTo(1500 + 150 + IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
             } else {
                 tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(1500, 420, 500, 330));
+                mv.pathTo(1200, 1000);
                 mv.pathTo(1500 - 150 - IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
             }
 
             rs.disableAvoidance();
 
-            if (ventouses.getCouleur(side) != CouleurPalet.GOLD) {
-                ventouses.waitAvailable(ESide.DROITE);
-                ventouses.waitAvailable(ESide.GAUCHE);
-            } else {
-                ventouses.waitAvailable(side == ESide.GAUCHE ? ESide.DROITE : ESide.GAUCHE);
-            }
+            ventouses.waitAvailable(side == ESide.GAUCHE ? ESide.DROITE : ESide.GAUCHE);
 
             rs.disableVentouses();
-            rs.disableCarousel();
+
+            ventouses.prepareDeposeBalance(side);
 
             mv.setVitesse(IConstantesNerellConfig.vitesseMouvement, IConstantesNerellConfig.vitesseOrientation);
 
             mv.gotoOrientationDeg(-90);
-
-            ventouses.prepareVomiBalance(side);
 
             if (rs.getTeam() == Team.VIOLET) {
                 mv.gotoPointMM(1500 + 150 + IConstantesNerellConfig.dstAtomeCentre, 588, false);
@@ -133,15 +108,10 @@ public class DeposerBalance extends AbstractAction {
 
             mv.gotoOrientationDeg(-90);
 
-            magasin.moisson();
-
-            ventouses.vomiBalance(side);
+            ventouses.deposeBalance(CouleurPalet.GOLD, side);
 
             mv.reculeMM(150);
 
-            completed = rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax;
-
-            // FIXME
             completed = true;
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException | CarouselNotAvailableException e) {
@@ -159,9 +129,7 @@ public class DeposerBalance extends AbstractAction {
         tableUtils.clearDynamicDeadZones();
         ventouses.releaseSide(ESide.GAUCHE);
         ventouses.releaseSide(ESide.DROITE);
-        rs.enableMagasin();
         rs.enableVentouses();
-        rs.enableCarousel();
         ventouses.finishDepose(side);
     }
 

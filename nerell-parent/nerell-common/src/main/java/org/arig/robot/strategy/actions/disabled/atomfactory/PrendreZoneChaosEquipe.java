@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.disabled.atomfactory;
 
 import lombok.Data;
 import lombok.Getter;

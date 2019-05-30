@@ -222,13 +222,14 @@ public class VentousesService implements IVentousesService, InitializingBean {
 
         service.enablePompeAVide();
         boolean ok = tentativeAspiration(service);
-        service.disablePompeAVide();
 
         if (ok) {
-            service.ascenseurCarousel(true);
+            service.ascenseurCarouselDepose(false);
 
             rs.setGoldeniumPrit(true);
             couleur.put(side, CouleurPalet.GOLD);
+        } else {
+            service.disablePompeAVide();
         }
 
         return ok;
@@ -450,8 +451,13 @@ public class VentousesService implements IVentousesService, InitializingBean {
 
         IRobotSide service = sideServices.get(side);
 
-        service.ascenseurAccelerateur(false);
-        service.pivotVentouseCarouselVertical(true);
+        if (couleur.get(side) == CouleurPalet.GOLD) {
+            service.ascenseurCarousel(false);
+            service.pivotVentouseFacade(true);
+        } else {
+            service.ascenseurAccelerateur(false);
+            service.pivotVentouseCarouselVertical(true);
+        }
     }
 
     @Override
@@ -479,7 +485,16 @@ public class VentousesService implements IVentousesService, InitializingBean {
                 return false;
             }
 
-            service.ascenseurCarousel(false);
+            service.pivotVentouseVomi(true);
+
+            service.disablePompeAVide();
+            service.airElectroVanne();
+
+            ThreadUtils.sleep(200);
+
+            rs.getPaletsInBalance().add(CouleurPalet.GOLD);
+            this.couleur.put(side, null);
+
             service.pivotVentouseFacade(true);
 
             return true;

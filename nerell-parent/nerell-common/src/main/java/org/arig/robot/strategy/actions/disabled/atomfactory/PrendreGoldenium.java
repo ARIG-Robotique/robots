@@ -81,7 +81,7 @@ public class PrendreGoldenium extends AbstractAction {
             // prise goldenium
             boolean ok = ventouses.priseGoldenium(side);
 
-            mv.reculeMM(50);
+            mv.reculeMM(100);
 
             ventouses.finishPriseGoldenium(ok, side);
 

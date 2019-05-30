@@ -8,21 +8,21 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.exceptions.CarouselNotAvailableException;
 import org.arig.robot.exceptions.VentouseNotAvailableException;
-import org.arig.robot.model.ESide;
-import org.arig.robot.model.EStrategy;
-import org.arig.robot.model.RobotStatus;
-import org.arig.robot.model.Team;
+import org.arig.robot.model.*;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.CarouselService;
 import org.arig.robot.services.IVentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
+import java.awt.Rectangle;
 
 @Slf4j
 @Component
@@ -46,8 +46,17 @@ public class DeposeAccelerateur extends AbstractAction {
     @Autowired
     private TableUtils tableUtils;
 
+    @Autowired
+    private ConvertionRobotUnit conv;
+
+    @Autowired
+    @Qualifier("currentPosition")
+    private Position currentPosition;
+
     @Getter
     private boolean completed = false;
+
+    private boolean even = true;
 
     @Override
     public String name() {
@@ -103,18 +112,50 @@ public class DeposeAccelerateur extends AbstractAction {
             // va au point le plus proche
             if (rs.getTeam() == Team.VIOLET) {
                 tableUtils.addDynamicDeadZone(new Rectangle.Double(1700, 1600, 300, 400));
-                mv.pathTo(2300, 1400);
-                mv.pathTo(1500, 1000);
-                mv.pathTo(1500 - 210 - IConstantesNerellConfig.dstAtomeCentre + 15, yAvantAvance);
+
+                if (even) {
+                    mv.pathTo(1500, 1000);
+                } else {
+                    mv.pathTo(1900, 1200);
+                }
+
+                mv.pathTo(1100, 1700);
+
             } else {
                 tableUtils.addDynamicDeadZone(new Rectangle.Double(1000, 1600, 300, 400));
-                mv.pathTo(700, 1400);
-                mv.pathTo(1500, 1000);
-                mv.pathTo(1500 + 210 + IConstantesNerellConfig.dstAtomeCentre - 15, yAvantAvance);
+
+                if (even) {
+                    mv.pathTo(1500, 1000);
+                } else {
+                    mv.pathTo(1100, 1200);
+                }
+
+                mv.pathTo(1900, 1700);
             }
 
             rs.disableAvoidance();
 
+            mv.setVitesse(IConstantesNerellConfig.vitesseMouvement, IConstantesNerellConfig.vitesseOrientation);
+
+            // calage sur le plexi
+            mv.gotoOrientationDeg(-90);
+            rs.enableCalageBordureArriere();
+            mv.reculeMM(500);
+
+            // repositionne au point voulu
+            mv.avanceMM(50);
+
+            double currentY = conv.pulseToMm(currentPosition.getPt().getY());
+
+            if (rs.getTeam() == Team.VIOLET) {
+                mv.gotoPointMM(1240, currentY, true);
+            } else {
+                mv.gotoPointMM(3000 - 1240, currentY, true);
+            }
+
+            mv.gotoOrientationDeg(90);
+
+            // préparation
             ventouses.waitAvailable(ESide.DROITE);
             ventouses.waitAvailable(ESide.GAUCHE);
 
@@ -126,18 +167,10 @@ public class DeposeAccelerateur extends AbstractAction {
                     throw new CarouselNotAvailableException();
                 }
             } else {
-                ventouses.prepareDeposeAccelerateur(side, sideDepose);
+                ventouses.prepareDeposeAccelerateur(side, sideDepose); // FIXME
             }
 
-            mv.setVitesse(IConstantesNerellConfig.vitesseMouvement, IConstantesNerellConfig.vitesseOrientation);
-
-            if (rs.getTeam() == Team.VIOLET) {
-                mv.gotoPointMM(1240, 1800 + 3, true);
-            } else {
-                mv.gotoPointMM(3000 - 1240, 1800 + 3, true);
-            }
-
-            mv.gotoOrientationDeg(90);
+            mv.avanceMM(45);
 
             // prend ou pousse le bleu
             if (rs.strategyActive(EStrategy.PRISE_BLEU_ACCELERATEUR) && !rs.isAccelerateurPrit()) {
@@ -172,6 +205,8 @@ public class DeposeAccelerateur extends AbstractAction {
 
             completed = rs.getPaletsInAccelerateur().size() >= IConstantesNerellConfig.nbPaletsAccelerateurMax;
 
+            completed = true;
+
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException | CarouselNotAvailableException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
@@ -184,7 +219,7 @@ public class DeposeAccelerateur extends AbstractAction {
             ventouses.finishDeposeAccelerateur(side, sideDepose);
             ventouses.releaseSide(ESide.GAUCHE);
             ventouses.releaseSide(ESide.DROITE);
-            rs.enableMagasin();
+//            rs.enableMagasin();
             rs.enableCarousel();
             rs.enableVentouses();
 

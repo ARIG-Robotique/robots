@@ -1,7 +1,7 @@
 package org.arig.robot.strategy.actions.disabled.atomfactorybasic;
 
 import org.arig.robot.constants.IStrategyOrder;
-import org.arig.robot.strategy.actions.active.PrendreGrandDistributeurEquipeCentre;
+import org.arig.robot.strategy.actions.disabled.atomfactory.PrendreGrandDistributeurEquipeCentre;
 import org.springframework.stereotype.Component;
 
 @Component
