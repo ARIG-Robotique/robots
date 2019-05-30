@@ -45,4 +45,13 @@ public class AlimentationCommands {
         rs.enableSerrage();
         rs.enableVentouses();
     }
+
+    @ShellMethod("Désactivation des services")
+    public void disableStocksServices() {
+        rs.disableAsservCarousel();
+        rs.disableCarousel();
+        rs.disableMagasin();
+        rs.disableSerrage();
+        rs.disableVentouses();
+    }
 }
