@@ -59,9 +59,10 @@ public class PrendreZoneChaosEquipe extends AbstractAction {
 
     @Override
     public int order() {
-        return CouleurPalet.ROUGE.getImportance() * 2
+        // 50% du poid des palets histoire que ce soit une action de fond de panier
+        return (CouleurPalet.ROUGE.getImportance() * 2
                 + CouleurPalet.VERT.getImportance()
-                + CouleurPalet.BLEU.getImportance();
+                + CouleurPalet.BLEU.getImportance()) / 2;
     }
 
     @Override
@@ -87,13 +88,13 @@ public class PrendreZoneChaosEquipe extends AbstractAction {
 
             mv.pathTo(points.get(0).getPt().getX(), points.get(0).getPt().getY());
             mv.setVitesse(IConstantesNerellConfig.vitesseUltraLente, IConstantesNerellConfig.vitesseOrientation);
-            mv.pathTo(points.get(1).getPt().getX(), points.get(1).getPt().getY());
-            mv.pathTo(points.get(3).getPt().getX(), points.get(3).getPt().getY());
-            mv.pathTo(points.get(2).getPt().getX(), points.get(2).getPt().getY());
-            mv.pathTo(points.get(0).getPt().getX(), points.get(0).getPt().getY());
+            mv.gotoPointMM(points.get(1).getPt().getX(), points.get(1).getPt().getY(), false);
+            mv.gotoPointMM(points.get(3).getPt().getX(), points.get(3).getPt().getY(), false);
+            mv.gotoPointMM(points.get(2).getPt().getX(), points.get(2).getPt().getY(), false);
+            mv.gotoPointMM(points.get(0).getPt().getX(), points.get(0).getPt().getY(), false);
 
             completed = true;
-        } catch (NoPathFoundException | AvoidingException e) {
+        } catch (RefreshPathFindingException | NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
         }
