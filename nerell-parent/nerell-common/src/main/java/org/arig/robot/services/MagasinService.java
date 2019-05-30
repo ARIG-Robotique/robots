@@ -154,6 +154,7 @@ public class MagasinService {
 
         } catch (CarouselNotAvailableException e) {
             carouselService.release(side.getPositionVentouse());
+            log.warn("Stockage magasin echoué", e);
             return false;
         }
     }
@@ -161,13 +162,57 @@ public class MagasinService {
     public void moisson() {
         log.info("Remplissage complet du magasin");
 
-        while (carousel.has(CouleurPalet.ROUGE) && (rs.getMagasin().get(ESide.DROITE).size() < IConstantesNerellConfig.nbPaletsMagasinMax || rs.getMagasin().get(ESide.GAUCHE).size() < IConstantesNerellConfig.nbPaletsMagasinMax)) {
+        carouselService.forceLectureCouleur();
+
+        int k = 0;
+        while (k < 6 && carousel.has(CouleurPalet.ROUGE) && (rs.getMagasin().get(ESide.DROITE).size() < IConstantesNerellConfig.nbPaletsMagasinMax || rs.getMagasin().get(ESide.GAUCHE).size() < IConstantesNerellConfig.nbPaletsMagasinMax)) {
+
+            if (rs.getMagasin().get(ESide.DROITE).size() < IConstantesNerellConfig.nbPaletsMagasinMax && rs.getMagasin().get(ESide.GAUCHE).size() < IConstantesNerellConfig.nbPaletsMagasinMax) {
+                int coolIndex = -1;
+                for (int i = 0; i < 6; i++) {
+                    if (carouselManager.get(i) == CouleurPalet.ROUGE && carouselManager.get(i == 5 ? 0 : i + 1) == CouleurPalet.ROUGE) {
+                        coolIndex = i;
+                        break;
+                    }
+                }
+
+                if (coolIndex != -1) {
+                    try {
+                        carouselService.fullLock(ICarouselManager.MAGASIN_DROIT, TEMPS_MAX_AVAILABLE);
+                        carouselService.tourner(coolIndex, ICarouselManager.MAGASIN_DROIT);
+
+                        sideServices.get(ESide.DROITE).trappeMagasinOuvert(false);
+                        sideServices.get(ESide.GAUCHE).trappeMagasinOuvert(true);
+
+                        ThreadUtils.sleep(200);
+
+                        sideServices.get(ESide.DROITE).trappeMagasinFerme(false);
+                        sideServices.get(ESide.GAUCHE).trappeMagasinFerme(true);
+
+                        rs.getMagasin().get(ESide.DROITE).add(carousel.get(ICarouselManager.MAGASIN_DROIT));
+                        rs.getMagasin().get(ESide.GAUCHE).add(carousel.get(ICarouselManager.MAGASIN_GAUCHE));
+
+                        carouselManager.unstore(ICarouselManager.MAGASIN_DROIT);
+                        carouselManager.unstore(ICarouselManager.MAGASIN_GAUCHE);
+
+                    } catch (CarouselNotAvailableException e) {
+                        log.warn("Stockage magasin echoué", e);
+                    }
+
+                    carouselService.release(ICarouselManager.MAGASIN_DROIT);
+
+                    k += 2;
+                    continue;
+                }
+            }
+
             if (rs.getMagasin().get(ESide.DROITE).size() < IConstantesNerellConfig.nbPaletsMagasinMax) {
                 stockage(CouleurPalet.ROUGE, ESide.DROITE);
 
             } else if (rs.getMagasin().get(ESide.GAUCHE).size() < IConstantesNerellConfig.nbPaletsMagasinMax) {
                 stockage(CouleurPalet.ROUGE, ESide.GAUCHE);
             }
+            k++;
         }
     }
 }

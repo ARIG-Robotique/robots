@@ -55,6 +55,8 @@ public interface IRobotSide {
 
     void pivotVentouseTable(boolean wait);
 
+    void pivotVentouseVomi(boolean wait);
+
     void pivotVentouseFacade(boolean wait);
 
     void pivotVentouseCarouselVertical(boolean wait);
@@ -66,6 +68,8 @@ public interface IRobotSide {
     void pinceSerrageLock(boolean wait);
 
     void porteBarilletOuvert(boolean wait);
+
+    void porteBarilletVomi(boolean wait);
 
     void porteBarilletFerme(boolean wait);
 

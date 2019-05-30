@@ -454,6 +454,16 @@ public class VentousesService implements IVentousesService, InitializingBean {
         service.pivotVentouseCarouselVertical(true);
     }
 
+    @Override
+    public void prepareVomiBalance(ESide side) {
+        log.info("Prépare vomi balance à {}", side);
+
+        IRobotSide service = sideServices.get(side);
+
+        service.ascenseurCarouselDepose(false);
+        service.pivotVentouseVomi(false);
+    }
+
     /**
      * Première phase de la dépose balance
      */
@@ -498,6 +508,35 @@ public class VentousesService implements IVentousesService, InitializingBean {
         }
 
         return false;
+    }
+
+    @Override
+    public void vomiBalance(ESide side) throws CarouselNotAvailableException {
+        log.info("Vomi balance à {}, {} palets", side, carousel.count(CouleurPalet.ANY));
+
+        IRobotSide service = sideServices.get(side);
+        IRobotSide otherService = sideServices.get(side == ESide.GAUCHE ? ESide.DROITE : ESide.GAUCHE);
+
+        otherService.porteBarilletVomi(false);
+        service.porteBarilletOuvert(true);
+
+        carouselService.fullLock(side.getPositionVentouse(), TEMPS_MAX_AVAILABLE);
+
+        carousel.setVitesse(IConstantesNerellConfig.vitesseCarouselADonf);
+        if (side == ESide.DROITE) {
+            carousel.tourneIndex(-10);
+        } else {
+            carousel.tourneIndex(10);
+        }
+        carousel.setVitesse(IConstantesNerellConfig.vitesseCarouselNormal);
+
+        otherService.porteBarilletFerme(false);
+        service.porteBarilletFerme(true);
+
+        rs.getPaletsInBalance().addAll(carousel.getAll());
+        carousel.vidange();
+
+        carouselService.release(side.getPositionVentouse());
     }
 
     /**

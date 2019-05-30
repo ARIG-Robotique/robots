@@ -9,24 +9,18 @@ import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.exceptions.CarouselNotAvailableException;
 import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
-import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.CarouselService;
-import org.arig.robot.services.IRobotSide;
 import org.arig.robot.services.IVentousesService;
-import org.arig.robot.services.ServosService;
+import org.arig.robot.services.MagasinService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 @Slf4j
 @Component
@@ -45,21 +39,13 @@ public class DeposerBalance extends AbstractAction {
     private ICarouselManager carousel;
 
     @Autowired
-    @Qualifier("sideServices")
-    private Map<ESide, IRobotSide> sideServices;
-
-    @Autowired
     private CarouselService carouselService;
 
     @Autowired
     private TableUtils tableUtils;
 
-//    @Autowired
-//    private ConvertionRobotUnit conv;
-//
-//    @Autowired
-//    @Qualifier("currentPosition")
-//    private Position currentPosition; // Attention ce sont des pulses
+    @Autowired
+    private MagasinService magasin;
 
     @Getter
     private boolean completed = false;
@@ -103,7 +89,6 @@ public class DeposerBalance extends AbstractAction {
         ESide side = rs.mainSide();
 
         try {
-            carouselService.setHint(side.getPositionVentouse(), carousel.has(CouleurPalet.BLEU) ? CouleurPalet.BLEU : CouleurPalet.VERT);
             rs.disableMagasin();
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
@@ -134,45 +119,32 @@ public class DeposerBalance extends AbstractAction {
             rs.disableVentouses();
             rs.disableCarousel();
 
-            ventouses.prepareDeposeBalance(side);
-
             mv.setVitesse(IConstantesNerellConfig.vitesseMouvement, IConstantesNerellConfig.vitesseOrientation);
 
+            mv.gotoOrientationDeg(-90);
+
+            ventouses.prepareVomiBalance(side);
+
             if (rs.getTeam() == Team.VIOLET) {
-                mv.gotoPointMM(1500 + 150 + IConstantesNerellConfig.dstAtomeCentre, 588, true);
+                mv.gotoPointMM(1500 + 150 + IConstantesNerellConfig.dstAtomeCentre, 588, false);
             } else {
-                mv.gotoPointMM(1500 - 150 - IConstantesNerellConfig.dstAtomeCentre, 588, true);
+                mv.gotoPointMM(1500 - 150 - IConstantesNerellConfig.dstAtomeCentre, 588, false);
             }
 
             mv.gotoOrientationDeg(-90);
 
-            // Opération vomito
-            // TODO Stocker les rouge dans le magasin et compter les points correctement
-            sideServices.get(ESide.DROITE).porteBarilletOuvert(false);
-            sideServices.get(ESide.GAUCHE).porteBarilletOuvert(true);
-            carousel.tourneIndex(8);
-            carousel.tourneIndex(-8);
+            magasin.moisson();
 
-            /*while (canDepose()) {
-                CouleurPalet couleur = ventouses.getCouleur(side) == CouleurPalet.GOLD ?
-                        CouleurPalet.GOLD :
-                        carousel.has(CouleurPalet.BLEU) ? CouleurPalet.BLEU : CouleurPalet.VERT;
-
-                if (!ventouses.deposeBalance(couleur, side)) {
-                    break;
-                }
-            }*/
+            ventouses.vomiBalance(side);
 
             mv.reculeMM(150);
-            sideServices.get(ESide.DROITE).porteBarilletFerme(false);
-            sideServices.get(ESide.GAUCHE).porteBarilletFerme(true);
 
             completed = rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax;
 
             // FIXME
             completed = true;
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException e) {
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException | CarouselNotAvailableException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
 

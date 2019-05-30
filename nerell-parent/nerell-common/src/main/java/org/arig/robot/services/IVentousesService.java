@@ -42,7 +42,11 @@ public interface IVentousesService {
 
     void prepareDeposeBalance(ESide side);
 
+    void prepareVomiBalance(ESide side);
+
     boolean deposeBalance(CouleurPalet couleur, ESide side) throws CarouselNotAvailableException;
+
+    void vomiBalance(ESide side) throws CarouselNotAvailableException;
 
     CompletableFuture<Void> finishDepose(ESide side);
 

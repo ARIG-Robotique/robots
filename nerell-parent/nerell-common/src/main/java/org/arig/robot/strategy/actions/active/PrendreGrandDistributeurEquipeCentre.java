@@ -17,7 +17,7 @@ public class PrendreGrandDistributeurEquipeCentre extends AbstractPrendreGrandDi
                 750,
                 2,
                 3,
-                3,
+                100,
                 true
         );
     }

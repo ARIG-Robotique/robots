@@ -40,6 +40,7 @@ public class ServosController extends AbstractServosController {
                 .position("Carousel vertical", IConstantesServos.PIVOT_VENTOUSE_DROIT_CAROUSEL_VERTICAL)
                 .position("Carousel sortie", IConstantesServos.PIVOT_VENTOUSE_DROIT_CAROUSEL_SORTIE)
                 .position("Facade", IConstantesServos.PIVOT_VENTOUSE_DROIT_FACADE)
+                .position("Vomi", IConstantesServos.PIVOT_VENTOUSE_DROIT_VOMI)
                 .position("Table", IConstantesServos.PIVOT_VENTOUSE_DROIT_TABLE)
         );
 
@@ -50,6 +51,7 @@ public class ServosController extends AbstractServosController {
                 .position("Carousel vertical", IConstantesServos.PIVOT_VENTOUSE_GAUCHE_CAROUSEL_VERTICAL)
                 .position("Carousel sortie", IConstantesServos.PIVOT_VENTOUSE_GAUCHE_CAROUSEL_SORTIE)
                 .position("Facade", IConstantesServos.PIVOT_VENTOUSE_GAUCHE_FACADE)
+                .position("Vomi", IConstantesServos.PIVOT_VENTOUSE_GAUCHE_VOMI)
                 .position("Table", IConstantesServos.PIVOT_VENTOUSE_GAUCHE_TABLE)
         );
 

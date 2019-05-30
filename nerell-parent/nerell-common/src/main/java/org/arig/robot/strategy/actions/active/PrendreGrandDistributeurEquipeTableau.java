@@ -2,7 +2,9 @@ package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.enums.CouleurPalet;
+import org.arig.robot.services.MagasinService;
 import org.arig.robot.strategy.actions.AbstractPrendreGrandDistributeur;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -11,13 +13,16 @@ import java.util.Map;
 @Component
 public class PrendreGrandDistributeurEquipeTableau extends AbstractPrendreGrandDistributeur {
 
+    @Autowired
+    private MagasinService magasin;
+
     public PrendreGrandDistributeurEquipeTableau() {
         super(
                 2450,
                 550,
                 0,
                 1,
-                3,
+                99,
                 false
         );
     }
@@ -32,4 +37,10 @@ public class PrendreGrandDistributeurEquipeTableau extends AbstractPrendreGrandD
         return "Prise des palets dans le grand distributeur de l'équipe";
     }
 
+    @Override
+    public void execute() {
+        super.execute(false);
+
+        magasin.moisson();
+    }
 }

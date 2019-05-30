@@ -60,6 +60,17 @@ public class SimpleCircularList<T> extends ArrayList<T> {
         return index;
     }
 
+    public void reset() {
+        for (int i = 0; i < size; i++) {
+            set(i, null);
+        }
+    }
+
+    @Override
+    public void clear() {
+        throw new IllegalArgumentException();
+    }
+
     @Override
     public T remove(int index) {
         throw new IllegalArgumentException();

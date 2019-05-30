@@ -70,6 +70,10 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
 
     @Override
     public void execute() {
+        execute(true);
+    }
+
+    public void execute(boolean async) {
         ESide side1 = rs.getTeam() == Team.VIOLET ? ESide.GAUCHE : ESide.DROITE;
         ESide side2 = rs.getTeam() == Team.VIOLET ? ESide.DROITE : ESide.GAUCHE;
 
@@ -124,8 +128,15 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
             mv.reculeMM(50);
 
             // stocke
-            ventouses.finishPriseDistributeur(ok1, side1);
-            ventouses.finishPriseDistributeur(ok2, side2);
+            if (async) {
+                ventouses.finishPriseDistributeur(ok1, side1);
+                ventouses.finishPriseDistributeur(ok2, side2);
+            } else {
+                NerellUtils.all(
+                        ventouses.finishPriseDistributeur(ok1, side1),
+                        ventouses.finishPriseDistributeur(ok2, side2)
+                ).get();
+            }
 
             completed = true;
 

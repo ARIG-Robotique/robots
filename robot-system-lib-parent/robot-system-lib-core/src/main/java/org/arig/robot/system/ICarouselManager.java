@@ -2,6 +2,8 @@ package org.arig.robot.system;
 
 import org.arig.robot.model.enums.CouleurPalet;
 
+import java.util.List;
+
 public interface ICarouselManager {
 
     int VENTOUSE_GAUCHE = 0;
@@ -45,4 +47,8 @@ public interface ICarouselManager {
     boolean store(int index, CouleurPalet palet);
 
     void unstore(int index);
+
+    List<CouleurPalet> getAll();
+
+    void vidange();
 }

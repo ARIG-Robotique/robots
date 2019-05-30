@@ -131,6 +131,11 @@ public class RightSideService implements IRobotSide {
     }
 
     @Override
+    public void pivotVentouseVomi(boolean wait) {
+        servosService.pivotVentouseDroit(IConstantesServos.PIVOT_VENTOUSE_DROIT_VOMI, wait);
+    }
+
+    @Override
     public void pivotVentouseFacade(boolean wait) {
         servosService.pivotVentouseDroit(IConstantesServos.PIVOT_VENTOUSE_DROIT_FACADE, wait);
     }
@@ -163,6 +168,11 @@ public class RightSideService implements IRobotSide {
     @Override
     public void porteBarilletOuvert(boolean wait) {
         servosService.porteBarilletDroit(IConstantesServos.PORTE_BARILLET_DROIT_OUVERT, wait);
+    }
+
+    @Override
+    public void porteBarilletVomi(boolean wait) {
+        servosService.porteBarilletDroit(IConstantesServos.PORTE_BARILLET_DROIT_VOMI, wait);
     }
 
     @Override

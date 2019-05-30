@@ -12,6 +12,8 @@ import org.arig.robot.utils.SimpleCircularList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 @Slf4j
@@ -244,6 +246,17 @@ public class CarouselManager implements ICarouselManager {
             log.info("Destockage depuis {}", index);
             list.set(index, null);
         }
+    }
+
+    @Override
+    public List<CouleurPalet> getAll() {
+        return new ArrayList<>(list);
+    }
+
+    @Override
+    public void vidange() {
+        log.info("Vidage complet du carousel");
+        list.reset();
     }
 
     private Predicate<CouleurPalet> getPaletCouleurPredicate(CouleurPalet couleur) {

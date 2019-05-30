@@ -201,6 +201,10 @@ public class CarouselService {
         return true;
     }
 
+    public void tourner(int index, int pos) throws CarouselNotAvailableException {
+        tourner(index - pos);
+    }
+
     /**
      * Tourner dans le sens le plus rapide
      */
@@ -242,5 +246,14 @@ public class CarouselService {
 
         rightSideService.porteBarilletFerme(false);
         leftSideService.porteBarilletFerme(true);
+    }
+
+    public void forceLectureCouleur() {
+        int i = 0;
+
+        while (i < 6 && carouselManager.has(CouleurPalet.INCONNU)) {
+            lectureCouleur();
+            i++;
+        }
     }
 }
