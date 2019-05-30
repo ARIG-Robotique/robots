@@ -45,6 +45,18 @@ public class ServosCommands {
         }
     }
 
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Gestion de l'ascenseur")
+    public void ascenseur(@NotNull Boolean top) {
+        if (top) {
+            servosService.ascenseurDroit(IConstantesServos.ASCENSEUR_DROIT_CAROUSEL_DEPOSE, false);
+            servosService.ascenseurGauche(IConstantesServos.ASCENSEUR_GAUCHE_CAROUSEL_DEPOSE, true);
+        } else {
+            servosService.ascenseurDroit(IConstantesServos.ASCENSEUR_DROIT_TABLE, false);
+            servosService.ascenseurGauche(IConstantesServos.ASCENSEUR_GAUCHE_TABLE, true);
+        }
+    }
+
     @ShellMethod("Récupèration de tension des servos")
     public void getTension() {
         final double tension = servosService.getTension();
