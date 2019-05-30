@@ -61,7 +61,7 @@ public class PrendreTable extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return rs.strategyActive(EStrategy.PRIS_TABLE) && rs.isBaliseOk() && canStore();
+        return rs.strategyActive(EStrategy.PRISE_TABLE) && rs.isBaliseOk() && canStore();
     }
 
     private boolean canStore() {

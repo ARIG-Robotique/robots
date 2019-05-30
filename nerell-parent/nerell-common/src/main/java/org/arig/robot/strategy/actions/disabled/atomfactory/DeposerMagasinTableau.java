@@ -13,6 +13,7 @@ import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.MagasinService;
 import org.arig.robot.strategy.AbstractAction;
+import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.TrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,6 +34,9 @@ public class DeposerMagasinTableau extends AbstractAction {
     @Autowired
     private MagasinService magasin;
 
+    @Autowired
+    private ICarouselManager carousel;
+
     @Getter
     private boolean completed = false;
 
@@ -43,43 +47,47 @@ public class DeposerMagasinTableau extends AbstractAction {
 
     @Override
     public int order() {
-        int points = io.nbPaletDansMagasinDroit() * 6 + io.nbPaletDansMagasinGauche() * 6;
-        return points;
+        int nbPaletsMagasin = rs.getMagasin().get(ESide.DROITE).size() + rs.getMagasin().get(ESide.GAUCHE).size();
+        int nbPaletsCarousel = (int) carousel.count(CouleurPalet.ROUGE);
+        int nbPaletsMax = nbPaletsMagasin + Math.min(nbPaletsCarousel, IConstantesNerellConfig.nbPaletsMagasinMax * 2 - nbPaletsMagasin);
+        return nbPaletsMax * 6;
     }
 
     @Override
     public boolean isValid() {
         return isTimeValid() &&
-                (io.nbPaletDansMagasinDroit() > 0 || io.nbPaletDansMagasinGauche() > 0);
+                (rs.getMagasin().get(ESide.DROITE).size() > 0 || rs.getMagasin().get(ESide.GAUCHE).size() > 0 || carousel.has(CouleurPalet.ROUGE));
     }
 
     @Override
     public void execute() {
 
         try {
-
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             rs.enableAvoidance();
 
-            // 30=marge de sécu
-            double offset = IConstantesNerellConfig.dstArriere + rs.getNbDeposesTableau() * IConstantesNerellConfig.offsetTableau + 30;
+            double offset = 214 + rs.getNbDeposesTableau() * IConstantesNerellConfig.offsetTableau;
 
             boolean mostlyRed = mostlyRed();
             double y = mostlyRed ? 1550 : 1400;
 
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(2550 - offset, y);
+                mv.pathTo(3000 - offset, y);
                 mv.gotoOrientationDeg(180);
             } else {
                 mv.pathTo(offset, y);
                 mv.gotoOrientationDeg(0);
             }
 
-            magasin.startEjection(ESide.DROITE);
-            magasin.startEjection(ESide.GAUCHE);
+            rs.disableMagasin();
+            magasin.moisson();
 
-            mv.avanceMM(IConstantesNerellConfig.offsetTableau * 3);
+            magasin.startEjection();
+
+            mv.avanceMM((IConstantesNerellConfig.offsetTableau + 20) * 3);
+            mv.reculeMM(IConstantesNerellConfig.offsetTableau);
+            mv.avanceMM(IConstantesNerellConfig.offsetTableau);
 
             rs.transfertMagasinTableau(mostlyRed);
 
@@ -87,6 +95,10 @@ public class DeposerMagasinTableau extends AbstractAction {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
         }
+
+        magasin.endEjection();
+
+        rs.enableMagasin();
     }
 
     /**

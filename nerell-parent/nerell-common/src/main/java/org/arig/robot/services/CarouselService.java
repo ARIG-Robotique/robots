@@ -1,5 +1,6 @@
 package org.arig.robot.services;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exceptions.CarouselNotAvailableException;
 import org.arig.robot.model.enums.CouleurPalet;
@@ -27,6 +28,9 @@ public class CarouselService {
 
     @Autowired
     private ICarouselManager carouselManager;
+
+    @Autowired
+    private ServosService servosService;
 
     private AtomicBoolean rotating = new AtomicBoolean(false);
 
@@ -183,7 +187,7 @@ public class CarouselService {
     /**
      * Tourne le carousel pour avoir une couleur en position
      */
-    public boolean tourner(int index, CouleurPalet couleur) {
+    public boolean tourner(int index, CouleurPalet couleur) throws CarouselNotAvailableException {
         int targetIndex = carouselManager.firstIndexOf(couleur, index);
 
         if (targetIndex == -1) {
@@ -200,11 +204,16 @@ public class CarouselService {
     /**
      * Tourner dans le sens le plus rapide
      */
-    private void tourner(int nb) {
+    private void tourner(int nb) throws CarouselNotAvailableException {
         if (nb > 3) {
             nb -= 6;
         } else if (nb < -3) {
             nb += 6;
+        }
+
+        if (servosService.isTrappeMagasinDroitOuvert() || servosService.isTrappeMagasinGaucheOuvert()) {
+            log.warn("Impossible de tourner le carousel avec des portes ouvertes");
+            throw new CarouselNotAvailableException();
         }
 
         rotating.set(true);
@@ -212,6 +221,7 @@ public class CarouselService {
         rotating.set(false);
     }
 
+    @SneakyThrows
     public void ejectionAvantRetourStand() {
         if (!carouselManager.has(CouleurPalet.ANY)) {
             return;
