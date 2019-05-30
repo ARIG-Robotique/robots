@@ -1,6 +1,6 @@
 package org.arig.robot.config.spring;
 
-import org.arig.robot.nerell.utils.shell.ShellInputReader;
+import org.arig.robot.nerell.utils.ShellInputReader;
 import org.jline.reader.LineReader;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;

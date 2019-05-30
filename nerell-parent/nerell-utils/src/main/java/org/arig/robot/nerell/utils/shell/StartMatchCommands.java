@@ -11,6 +11,7 @@ import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
+import org.arig.robot.nerell.utils.ShellInputReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;

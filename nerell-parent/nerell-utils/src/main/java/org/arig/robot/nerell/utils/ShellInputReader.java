@@ -1,4 +1,4 @@
-package org.arig.robot.nerell.utils.shell;
+package org.arig.robot.nerell.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jline.reader.LineReader;
