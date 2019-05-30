@@ -541,7 +541,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      */
     @Override
     public void gotoPointMM(final double x, final double y, boolean avecOrientation) throws RefreshPathFindingException, AvoidingException {
-        gotoPointMM(x, y, true);
+        gotoPointMM(x, y, avecOrientation, true);
     }
 
     /**

@@ -38,6 +38,8 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
 
     final int orderMux;
 
+    final boolean preferGoto;
+
     protected abstract Map<Integer, CouleurPalet> liste();
 
     @Autowired
@@ -79,9 +81,17 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
             int yAvantAvance = 700;
 
             if (rs.getTeam() == Team.VIOLET) {
-                mv.pathTo(xViolet, yAvantAvance);
+                if (preferGoto) {
+                    mv.gotoPointMM(xViolet, yAvantAvance, false);
+                } else {
+                    mv.pathTo(xViolet, yAvantAvance);
+                }
             } else {
-                mv.pathTo(xJaune, yAvantAvance);
+                if (preferGoto) {
+                    mv.gotoPointMM(xJaune, yAvantAvance, false);
+                } else {
+                    mv.pathTo(xJaune, yAvantAvance);
+                }
             }
 
             rs.disableAvoidance();

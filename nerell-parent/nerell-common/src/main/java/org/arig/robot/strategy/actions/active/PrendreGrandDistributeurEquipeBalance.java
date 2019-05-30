@@ -17,7 +17,8 @@ public class PrendreGrandDistributeurEquipeBalance extends AbstractPrendreGrandD
                 950,
                 4,
                 5,
-                3
+                3,
+                false
         );
     }
 

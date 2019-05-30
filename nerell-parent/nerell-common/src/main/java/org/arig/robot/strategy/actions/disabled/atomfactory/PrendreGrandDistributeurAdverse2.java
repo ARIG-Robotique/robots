@@ -19,7 +19,8 @@ public class PrendreGrandDistributeurAdverse2 extends AbstractPrendreGrandDistri
                 2250,
                 3,
                 2,
-                1
+                1,
+                false
         );
     }
 

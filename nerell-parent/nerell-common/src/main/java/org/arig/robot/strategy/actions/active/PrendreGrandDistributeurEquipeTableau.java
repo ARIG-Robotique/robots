@@ -17,7 +17,8 @@ public class PrendreGrandDistributeurEquipeTableau extends AbstractPrendreGrandD
                 550,
                 0,
                 1,
-                3
+                3,
+                false
         );
     }
 
