@@ -187,7 +187,7 @@ public class Ordonanceur {
         initialisationCarousel();
 
         // Attente tirette.
-        log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
+        displayDepart();
         while (ioService.tirette()) {
             ThreadUtils.sleep(1);
         }
@@ -307,9 +307,21 @@ public class Ordonanceur {
         }
     }
 
+    private void displayDepart() {
+        try {
+            ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", "\n/!\\ READY /!\\\n");
+            Process p = pb.start();
+
+            StreamGobbler out = new StreamGobbler(p.getInputStream(), System.out::println);
+            new Thread(out).start();
+        } catch (IOException e) {
+            log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
+        }
+    }
+
     private void displayScore() {
         try {
-            ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", String.format("\n\n\n\nScore : %d", robotStatus.calculerPoints()));
+            ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", String.format("\n\n\n\nScore : %d\n", robotStatus.calculerPoints()));
             Process p = pb.start();
 
             StreamGobbler out = new StreamGobbler(p.getInputStream(), System.out::println);
