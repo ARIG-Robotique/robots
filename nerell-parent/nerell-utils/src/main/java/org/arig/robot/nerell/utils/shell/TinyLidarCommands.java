@@ -21,11 +21,11 @@ public class TinyLidarCommands {
     private final TinyLidar distanceAvantDroit;
     private final TinyLidar distanceAvantGauche;
 
-    @ShellMethod("Contenu du magasin arrière")
-    public void stockMagasin(@NotNull ESide side) {
-        byte nb = side.equals(ESide.DROITE) ? ioService.nbPaletDansMagasinDroit() : ioService.nbPaletDansMagasinGauche();
-        log.info("Nombre d'élément dans le magasin {} : {}", side.name(), nb);
-    }
+//    @ShellMethod("Contenu du magasin arrière")
+//    public void stockMagasin(@NotNull ESide side) {
+//        byte nb = side.equals(ESide.DROITE) ? ioService.nbPaletDansMagasinDroit() : ioService.nbPaletDansMagasinGauche();
+//        log.info("Nombre d'élément dans le magasin {} : {}", side.name(), nb);
+//    }
 
     @ShellMethod("Distance tinyLidar facade")
     public void distanceFacade(@NotNull ESide side) {

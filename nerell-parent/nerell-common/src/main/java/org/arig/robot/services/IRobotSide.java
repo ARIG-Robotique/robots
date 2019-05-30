@@ -33,8 +33,6 @@ public interface IRobotSide {
 
     boolean paletPrisDansVentouse();
 
-    int nbPaletDansMagasin();
-
     boolean presencePaletVentouse();
 
     // SERVOS

@@ -144,25 +144,25 @@ public class IOServiceBouchon implements IIOService {
         return false;
     }
 
-    @Override
-    public byte nbPaletDansMagasinDroit() {
-        return 0;
-    }
-
-    @Override
-    public byte nbPaletDansMagasinGauche() {
-        return 0;
-    }
-
-    @Override
-    public int distanceTelemetreAvantDroit() {
-        return 0;
-    }
-
-    @Override
-    public int distanceTelemetreAvantGauche() {
-        return 0;
-    }
+//    @Override
+//    public byte nbPaletDansMagasinDroit() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public byte nbPaletDansMagasinGauche() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public int distanceTelemetreAvantDroit() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public int distanceTelemetreAvantGauche() {
+//        return 0;
+//    }
 
     // Couleur
 

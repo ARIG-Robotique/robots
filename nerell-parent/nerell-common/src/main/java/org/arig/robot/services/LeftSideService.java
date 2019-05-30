@@ -81,11 +81,6 @@ public class LeftSideService implements IRobotSide {
     }
 
     @Override
-    public int nbPaletDansMagasin() {
-        return ioService.nbPaletDansMagasinGauche();
-    }
-
-    @Override
     public boolean presencePaletVentouse() {
         return ioService.presencePaletVentouseGauche();
     }

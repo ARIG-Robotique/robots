@@ -32,8 +32,9 @@ public class CalageBordureService {
 
         switch (rs.getCalageBordure()) {
             case AVANT:
-                done = ioService.distanceTelemetreAvantDroit() <= rs.getCalageBordureDistance() || ioService.distanceTelemetreAvantGauche() <= rs.getCalageBordureDistance();
-                break;
+                throw new RuntimeException("Calage avant non implemnenté");
+//                done = ioService.distanceTelemetreAvantDroit() <= rs.getCalageBordureDistance() || ioService.distanceTelemetreAvantGauche() <= rs.getCalageBordureDistance();
+//                break;
 
             case ARRIERE:
                 if (cmdRobot.isType(TypeConsigne.DIST) && cmdRobot.isType(TypeConsigne.ANGLE)) {

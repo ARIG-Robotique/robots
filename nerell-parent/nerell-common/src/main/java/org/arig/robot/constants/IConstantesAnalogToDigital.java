@@ -6,8 +6,8 @@ package org.arig.robot.constants;
 public interface IConstantesAnalogToDigital {
 
     byte VACUOSTAT_DROIT = 6;
-    int VACUOSTAT_DROIT_SEUIL = 1950;
+    int VACUOSTAT_DROIT_SEUIL = 2400;
 
     byte VACUOSTAT_GAUCHE = 7;
-    int VACUOSTAT_GAUCHE_SEUIL = 1950;
+    int VACUOSTAT_GAUCHE_SEUIL = 2400;
 }

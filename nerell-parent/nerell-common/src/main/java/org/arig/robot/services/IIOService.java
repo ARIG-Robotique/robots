@@ -48,10 +48,10 @@ public interface IIOService {
     // Analogique
     boolean paletPrisDansVentouseDroit();
     boolean paletPrisDansVentouseGauche();
-    byte nbPaletDansMagasinDroit();
-    byte nbPaletDansMagasinGauche();
-    int distanceTelemetreAvantDroit();
-    int distanceTelemetreAvantGauche();
+//    byte nbPaletDansMagasinDroit();
+//    byte nbPaletDansMagasinGauche();
+//    int distanceTelemetreAvantDroit();
+//    int distanceTelemetreAvantGauche();
 
     // Couleur
     TCS34725ColorSensor.ColorData couleurPaletRaw();
