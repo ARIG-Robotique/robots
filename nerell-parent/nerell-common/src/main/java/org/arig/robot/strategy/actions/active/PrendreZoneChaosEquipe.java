@@ -86,7 +86,7 @@ public class PrendreZoneChaosEquipe extends AbstractAction {
             }
 
             mv.pathTo(points.get(0).getPt().getX(), points.get(0).getPt().getY());
-            mv.setVitesse(IConstantesNerellConfig.vitesseUltraLente / 2, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(IConstantesNerellConfig.vitesseUltraLente, IConstantesNerellConfig.vitesseOrientation);
             mv.pathTo(points.get(1).getPt().getX(), points.get(1).getPt().getY());
             mv.pathTo(points.get(3).getPt().getX(), points.get(3).getPt().getY());
             mv.pathTo(points.get(2).getPt().getX(), points.get(2).getPt().getY());
