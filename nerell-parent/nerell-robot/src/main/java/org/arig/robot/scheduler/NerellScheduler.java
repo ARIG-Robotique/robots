@@ -15,6 +15,7 @@ import org.arig.robot.services.ServosService;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.avoiding.IAvoidingService;
+import org.arig.robot.system.blockermanager.ISystemBlockerManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -60,8 +61,8 @@ public class NerellScheduler {
     @Autowired
     private ServosService servosService;
 
-//    @Autowired
-//    private ISystemBlockerManager systemBlockerManager;
+    @Autowired
+    private ISystemBlockerManager systemBlockerManager;
 
     @Scheduled(fixedDelay = 100)
     public void obstacleAvoidanceTask() {
@@ -137,10 +138,10 @@ public class NerellScheduler {
         }
     }
 
-//    @Scheduled(fixedDelay = 1000)
-//    public void systemBlockerManagerTask() {
-//        systemBlockerManager.process();
-//    }
+    @Scheduled(fixedDelay = 500)
+    public void systemBlockerManagerTask() {
+        systemBlockerManager.process();
+    }
 
     @Scheduled(fixedDelay = 5000)
     public void systemCheckTensionTaks() {

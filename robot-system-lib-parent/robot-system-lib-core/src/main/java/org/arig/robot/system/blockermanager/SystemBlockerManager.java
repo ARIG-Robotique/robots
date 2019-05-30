@@ -37,8 +37,8 @@ public class SystemBlockerManager implements ISystemBlockerManager {
     @Override
     public void process() {
 
-        double errorSumPidDistance = pidDistance.getPidErrorSum();
-        double errorSumPidOrientation = pidOrientation.getPidErrorSum();
+        double errorSumPidDistance = Math.abs(pidDistance.getPidErrorSum());
+        double errorSumPidOrientation = Math.abs(pidOrientation.getPidErrorSum());
 
         if (errorSumPidDistance >= seuilErreurPidDistance || errorSumPidOrientation >= seuilErreurPidOrientation) {
 

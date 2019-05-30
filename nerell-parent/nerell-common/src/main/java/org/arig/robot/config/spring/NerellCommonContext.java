@@ -14,6 +14,8 @@ import org.arig.robot.system.CarouselManager;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.TrajectoryManager;
+import org.arig.robot.system.blockermanager.ISystemBlockerManager;
+import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.arig.robot.system.encoders.AbstractEncoder;
 import org.arig.robot.system.motion.*;
 import org.arig.robot.system.pathfinding.IPathFinder;
@@ -167,8 +169,8 @@ public class NerellCommonContext {
         return services;
     }
 
-//    @Bean
-//    public ISystemBlockerManager systemBlockerManager() {
-//        return new SystemBlockerManager(IConstantesNerellConfig.seuilErreurPidDistance, IConstantesNerellConfig.seuilErreurPidOrientation);
-//    }
+    @Bean
+    public ISystemBlockerManager systemBlockerManager() {
+        return new SystemBlockerManager(IConstantesNerellConfig.seuilErreurPidDistance, IConstantesNerellConfig.seuilErreurPidOrientation);
+    }
 }
