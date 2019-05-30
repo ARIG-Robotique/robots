@@ -14,7 +14,9 @@ import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.CarouselService;
+import org.arig.robot.services.IRobotSide;
 import org.arig.robot.services.IVentousesService;
+import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
@@ -23,6 +25,8 @@ import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -41,17 +45,21 @@ public class DeposerBalance extends AbstractAction {
     private ICarouselManager carousel;
 
     @Autowired
-    private CarouselService carouselService;
+    @Qualifier("sideServices")
+    private Map<ESide, IRobotSide> sideServices;
 
     @Autowired
-    private ConvertionRobotUnit conv;
+    private CarouselService carouselService;
 
     @Autowired
     private TableUtils tableUtils;
 
-    @Autowired
-    @Qualifier("currentPosition")
-    private Position currentPosition; // Attention ce sont des pulses
+//    @Autowired
+//    private ConvertionRobotUnit conv;
+//
+//    @Autowired
+//    @Qualifier("currentPosition")
+//    private Position currentPosition; // Attention ce sont des pulses
 
     @Getter
     private boolean completed = false;
@@ -138,7 +146,14 @@ public class DeposerBalance extends AbstractAction {
 
             mv.gotoOrientationDeg(-90);
 
-            while (canDepose()) {
+            // Opération vomito
+            // TODO Stocker les rouge dans le magasin et compter les points correctement
+            sideServices.get(ESide.DROITE).porteBarilletOuvert(false);
+            sideServices.get(ESide.GAUCHE).porteBarilletOuvert(true);
+            carousel.tourneIndex(8);
+            carousel.tourneIndex(-8);
+
+            /*while (canDepose()) {
                 CouleurPalet couleur = ventouses.getCouleur(side) == CouleurPalet.GOLD ?
                         CouleurPalet.GOLD :
                         carousel.has(CouleurPalet.BLEU) ? CouleurPalet.BLEU : CouleurPalet.VERT;
@@ -146,16 +161,18 @@ public class DeposerBalance extends AbstractAction {
                 if (!ventouses.deposeBalance(couleur, side)) {
                     break;
                 }
-            }
+            }*/
 
             mv.reculeMM(150);
+            sideServices.get(ESide.DROITE).porteBarilletFerme(false);
+            sideServices.get(ESide.GAUCHE).porteBarilletFerme(true);
 
             completed = rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax;
 
             // FIXME
             completed = true;
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | CarouselNotAvailableException | VentouseNotAvailableException e) {
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
 
