@@ -12,7 +12,7 @@ ROBOT_NAME=${1}
 INSTALL_DIR=/home/pi/${ROBOT_NAME}
 
 echo "Compilation ..."
-JAVA_HOME=~/apps/jdk-9.0.4 ./gradlew assemble
+JAVA_HOME=~/apps/jdk-9.0.4 ./gradlew clean assemble
 
 echo "Cleaning ..."
 ssh ${ROBOT_NAME} rm -vf ${INSTALL_DIR}/*.sh
