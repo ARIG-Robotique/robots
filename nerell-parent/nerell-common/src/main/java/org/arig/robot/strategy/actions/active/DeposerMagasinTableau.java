@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled.atomfactory;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +56,10 @@ public class DeposerMagasinTableau extends AbstractAction {
     @Override
     public boolean isValid() {
         return isTimeValid() &&
-                (rs.getMagasin().get(ESide.DROITE).size() > 0 || rs.getMagasin().get(ESide.GAUCHE).size() > 0 || carousel.has(CouleurPalet.ROUGE));
+                (
+                        rs.getMagasin().get(ESide.DROITE).size() + rs.getMagasin().get(ESide.GAUCHE).size() > 4 ||
+                                rs.getRemainingTime() < 40000 && rs.getMagasin().get(ESide.DROITE).size() + rs.getMagasin().get(ESide.GAUCHE).size() > 0
+                );
     }
 
     @Override
@@ -85,9 +88,11 @@ public class DeposerMagasinTableau extends AbstractAction {
 
             magasin.startEjection();
 
-            mv.avanceMM((IConstantesNerellConfig.offsetTableau + 20) * 3);
-            mv.reculeMM(IConstantesNerellConfig.offsetTableau);
-            mv.avanceMM(IConstantesNerellConfig.offsetTableau);
+            mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
+
+            mv.avanceMM(IConstantesNerellConfig.offsetTableau * 3);
+            mv.reculeMM(100);
+            mv.avanceMM(100);
 
             rs.transfertMagasinTableau(mostlyRed);
 
@@ -96,9 +101,9 @@ public class DeposerMagasinTableau extends AbstractAction {
             updateValidTime();
         }
 
-        magasin.endEjection();
-
         rs.enableMagasin();
+
+        magasin.endEjection();
     }
 
     /**

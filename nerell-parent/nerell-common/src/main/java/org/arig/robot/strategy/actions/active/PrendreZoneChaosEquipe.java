@@ -66,7 +66,7 @@ public class PrendreZoneChaosEquipe extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && cm.count(null) >= 3;
+        return isTimeValid() && cm.count(null) >= 3 && rs.getRemainingTime() > 40000;
     }
 
     @Override

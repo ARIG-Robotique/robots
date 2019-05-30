@@ -152,6 +152,9 @@ public class DeposerBalance extends AbstractAction {
 
             completed = rs.getPaletsInBalance().size() >= IConstantesNerellConfig.nbPaletsBalanceMax;
 
+            // FIXME
+            completed = true;
+
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | CarouselNotAvailableException | VentouseNotAvailableException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
@@ -165,12 +168,12 @@ public class DeposerBalance extends AbstractAction {
         }
 
         tableUtils.clearDynamicDeadZones();
-        ventouses.finishDepose(side);
         ventouses.releaseSide(ESide.GAUCHE);
         ventouses.releaseSide(ESide.DROITE);
         rs.enableMagasin();
         rs.enableVentouses();
         rs.enableCarousel();
+        ventouses.finishDepose(side);
     }
 
 }
