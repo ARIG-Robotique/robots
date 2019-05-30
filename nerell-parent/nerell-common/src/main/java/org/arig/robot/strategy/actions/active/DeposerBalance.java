@@ -149,7 +149,7 @@ public class DeposerBalance extends AbstractAction {
             updateValidTime();
 
             try {
-                mv.reculeMM(100);
+                mv.reculeMM(150);
             } catch (RefreshPathFindingException | AvoidingException ex) {
                 ex.printStackTrace();
             }

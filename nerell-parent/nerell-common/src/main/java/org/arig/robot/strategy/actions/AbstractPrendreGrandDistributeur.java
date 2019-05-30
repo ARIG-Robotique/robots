@@ -103,6 +103,8 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
             // aligne puis avance en position
             mv.gotoOrientationDeg(-90);
 
+            rs.disableMagasin();
+
             ventouses.waitAvailable(ESide.GAUCHE);
             ventouses.waitAvailable(ESide.DROITE);
 
@@ -153,5 +155,7 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
                 ex.printStackTrace();
             }
         }
+
+        rs.enableMagasin();
     }
 }

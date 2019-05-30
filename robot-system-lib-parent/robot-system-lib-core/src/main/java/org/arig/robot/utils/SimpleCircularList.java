@@ -62,7 +62,7 @@ public class SimpleCircularList<T> extends ArrayList<T> {
 
     public void reset() {
         for (int i = 0; i < size; i++) {
-            set(i, null);
+            super.set(i, null);
         }
     }
 
