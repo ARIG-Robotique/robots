@@ -4,32 +4,28 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author gdepuille on 29/04/15.
  */
 @Slf4j
-@EnableAsync
 @Configuration
-public class NerellCommonAsyncContext implements AsyncConfigurer {
+public class NerellCommonAsyncContext {
 
-    @Override
-    public Executor getAsyncExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(IConstantesNerellConfig.nbThreadAsyncExecutor);
-        executor.setThreadNamePrefix("AsyncExecutor-");
-        executor.initialize();
+    @Bean
+    public ThreadPoolExecutor threadPoolTaskExecutor() {
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(IConstantesNerellConfig.nbThreadAsyncExecutor);
         return executor;
     }
 
-    @Override
-    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-        return (throwable, method, obj) -> log.error("Erreur d'éxécution de la méthode {}({}) : {}", method.getName(), StringUtils.join(obj, ", "), throwable.getMessage());
-    }
 }

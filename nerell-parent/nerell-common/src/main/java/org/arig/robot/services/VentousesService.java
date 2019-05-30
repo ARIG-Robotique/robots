@@ -12,12 +12,12 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
@@ -40,6 +40,9 @@ public class VentousesService implements IVentousesService, InitializingBean {
 
     @Autowired
     private ICarouselManager carousel;
+
+    @Autowired
+    private ThreadPoolExecutor executor;
 
     private final Map<ESide, AtomicBoolean> working = new EnumMap<>(ESide.class);
     private final Map<ESide, CouleurPalet> couleur = new EnumMap<>(ESide.class);
@@ -126,51 +129,53 @@ public class VentousesService implements IVentousesService, InitializingBean {
      * A appeller avant d'avancer
      */
     @Override
-    @Async
     public CompletableFuture<Boolean> preparePriseDistributeur(ESide side) {
-        log.info("Prépare prise distributeur {}", side);
+        return CompletableFuture.supplyAsync(() -> {
+            log.info("Prépare prise distributeur {}", side);
 
-        IRobotSide service = sideServices.get(side);
+            IRobotSide service = sideServices.get(side);
 
-        if (!carousel.has(null)) {
-            log.warn("Pas de place dans le carousel");
-            return CompletableFuture.completedFuture(false);
-        }
+            if (!carousel.has(null)) {
+                log.warn("Pas de place dans le carousel");
+                return false;
+            }
 
-        service.pivotVentouseFacade(false);
-        service.ascenseurDistributeur(true);
+            service.pivotVentouseFacade(false);
+            service.ascenseurDistributeur(true);
 
-        service.enablePompeAVide();
+            service.enablePompeAVide();
 
-        return CompletableFuture.completedFuture(true);
+            return true;
+        }, executor);
     }
 
     /**
      * Prise de palet dans le distributeur
      */
     @Override
-    @Async
     public CompletableFuture<Boolean> priseDistributeur(CouleurPalet couleur, ESide side) {
-        log.info("Prise distributeur à {}", side);
+        return CompletableFuture.supplyAsync(() -> {
+            log.info("Prise distributeur à {}", side);
 
-        IRobotSide service = sideServices.get(side);
+            IRobotSide service = sideServices.get(side);
 
-        if (!service.presencePaletVentouse()) {
-            log.warn("Pas de palet visible");
-            return CompletableFuture.completedFuture(false);
-        }
+            if (!service.presencePaletVentouse()) {
+                log.warn("Pas de palet visible");
+                return false;
+            }
 
-        service.enablePompeAVide();
-        boolean ok = tentativeAspiration(service);
-        service.disablePompeAVide();
+            service.enablePompeAVide();
+            boolean ok = tentativeAspiration(service);
+            service.disablePompeAVide();
 
-        if (ok) {
-            this.couleur.put(side, couleur);
+            if (ok) {
+                this.couleur.put(side, couleur);
 
-            service.ascenseurAccelerateur(false);
-        }
+                service.ascenseurAccelerateur(false);
+            }
 
-        return CompletableFuture.completedFuture(ok);
+            return ok;
+        }, executor);
     }
 
     /**
@@ -178,17 +183,18 @@ public class VentousesService implements IVentousesService, InitializingBean {
      * A appeller après avoir reculé pour pas percuter le décor
      */
     @Override
-    @Async
     public CompletableFuture<Void> finishPriseDistributeur(boolean ok, ESide side) {
-        log.info("Finish prise distributeur à {}", side);
+        return CompletableFuture.supplyAsync(() -> {
+            log.info("Finish prise distributeur à {}", side);
 
-        if (!ok) {
-            servosHomeAndDisablePompeAndRelease(side);
-        } else {
-            stockageCarousel(side);
-        }
+            if (!ok) {
+                servosHomeAndDisablePompeAndRelease(side);
+            } else {
+                stockageCarousel(side);
+            }
 
-        return CompletableFuture.completedFuture(null);
+            return null;
+        }, executor);
     }
 
     /**
@@ -233,21 +239,22 @@ public class VentousesService implements IVentousesService, InitializingBean {
      * A appeller après avoir reculé pour pas percuter le décor
      */
     @Override
-    @Async
     public CompletableFuture<Void> finishPriseGoldenium(boolean ok, ESide side) {
-        log.info("Finish prise goldenium à {}", side);
+        return CompletableFuture.supplyAsync(() -> {
+            log.info("Finish prise goldenium à {}", side);
 
-        IRobotSide service = sideServices.get(side);
+            IRobotSide service = sideServices.get(side);
 
-        if (!ok) {
-            servosHomeAndDisablePompeAndRelease(side);
+            if (!ok) {
+                servosHomeAndDisablePompeAndRelease(side);
 
-        } else {
-            service.pivotVentouseTable(false);
-            service.ascenseurAccelerateur(false);
-        }
+            } else {
+                service.pivotVentouseTable(false);
+                service.ascenseurAccelerateur(false);
+            }
 
-        return CompletableFuture.completedFuture(null);
+            return null;
+        }, executor);
     }
 
     /**
@@ -498,13 +505,14 @@ public class VentousesService implements IVentousesService, InitializingBean {
      * A faire après avoir reculé
      */
     @Override
-    @Async
     public CompletableFuture<Void> finishDepose(ESide side) {
-        log.info("Finish dépose à {}", side);
+        return CompletableFuture.supplyAsync(() -> {
+            log.info("Finish dépose à {}", side);
 
-        rs.enableSerrage();
-        servosHomeAndDisablePompeAndRelease(side);
-        return CompletableFuture.completedFuture(null);
+            rs.enableSerrage();
+            servosHomeAndDisablePompeAndRelease(side);
+            return null;
+        }, executor);
     }
 
     /**
@@ -540,34 +548,35 @@ public class VentousesService implements IVentousesService, InitializingBean {
     }
 
     @Override
-    @Async
     public CompletableFuture<Boolean> deposeTable(ESide side) {
-        log.info("Dépose table à {}", side);
+        return CompletableFuture.supplyAsync(() -> {
+            log.info("Dépose table à {}", side);
 
-        IRobotSide service = sideServices.get(side);
+            IRobotSide service = sideServices.get(side);
 
-        if (couleur.get(side) == null) {
-            log.info("Pas de palet à {}", side);
-            return CompletableFuture.completedFuture(false);
-        }
+            if (couleur.get(side) == null) {
+                log.info("Pas de palet à {}", side);
+                return false;
+            }
 
-        rs.disableSerrage();
+            rs.disableSerrage();
 
-        service.pinceSerrageRepos(true);
-        service.pivotVentouseTable(true);
-        service.ascenseurTable(true);
+            service.pinceSerrageRepos(true);
+            service.pivotVentouseTable(true);
+            service.ascenseurTable(true);
 
-        service.airElectroVanne();
+            service.airElectroVanne();
 
-        service.ascenseurDistributeur(true);
+            service.ascenseurDistributeur(true);
 
-        service.videElectroVanne();
+            service.videElectroVanne();
 
-        rs.enableSerrage();
+            rs.enableSerrage();
 
-        this.couleur.put(side, null);
+            this.couleur.put(side, null);
 
-        return CompletableFuture.completedFuture(true);
+            return true;
+        }, executor);
     }
 
     private void servosHomeAndDisablePompeAndRelease(ESide side) {

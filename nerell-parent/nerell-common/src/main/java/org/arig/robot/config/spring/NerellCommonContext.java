@@ -6,11 +6,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
-import org.arig.robot.model.CommandeAsservissementPosition;
-import org.arig.robot.model.CommandeRobot;
-import org.arig.robot.model.ESide;
-import org.arig.robot.model.Position;
-import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.*;
 import org.arig.robot.services.IRobotSide;
 import org.arig.robot.services.LeftSideService;
 import org.arig.robot.services.RightSideService;
@@ -18,14 +14,8 @@ import org.arig.robot.system.CarouselManager;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.TrajectoryManager;
-import org.arig.robot.system.TrajectoryManagerAsync;
 import org.arig.robot.system.encoders.AbstractEncoder;
-import org.arig.robot.system.motion.AsservissementPolaireDistanceOrientation;
-import org.arig.robot.system.motion.AsservissementPosition;
-import org.arig.robot.system.motion.IAsservissement;
-import org.arig.robot.system.motion.IAsservissementPolaire;
-import org.arig.robot.system.motion.IOdometrie;
-import org.arig.robot.system.motion.OdometrieLineaire;
+import org.arig.robot.system.motion.*;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.utils.ConvertionCarouselUnit;
@@ -72,11 +62,6 @@ public class NerellCommonContext {
         return new TrajectoryManager(IConstantesNerellConfig.arretDistanceMm, IConstantesNerellConfig.approcheDistanceMm,
                 IConstantesNerellConfig.arretOrientDeg, IConstantesNerellConfig.approcheOrientationDeg,
                 IConstantesNerellConfig.angleReculDeg);
-    }
-
-    @Bean(value = "trajectoryManagerAsync")
-    public ITrajectoryManager trajectoryManagerAsync() {
-        return new TrajectoryManagerAsync(trajectoryManager());
     }
 
     @Bean
