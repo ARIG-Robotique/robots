@@ -132,6 +132,7 @@ public class DeposeAccelerateur extends AbstractAction {
 
                 mv.pathTo(1900, 1700);
             }
+            even = !even;
 
             rs.disableAvoidance();
 
