@@ -123,24 +123,17 @@ public class Ordonanceur {
             return;
         }
 
-        if (!ioService.auOk()) {
-            log.warn("L'arrêt d'urgence est coupé.");
-            while (!ioService.auOk()) {
-                ThreadUtils.sleep(500);
-            }
-        }
-
         HealthInfos lidarHealth = lidar.healthInfo();
         if (!lidarHealth.isOk()) {
             log.error("Status du Lidar KO : {} - {} - Code {}", lidarHealth.getState(), lidarHealth.getValue(), lidarHealth.getErrorCode());
             return;
         }
 
-        // Check tension
-        double tension = servosService.getTension();
-        if (tension < IConstantesUtiles.SEUIL_BATTERY_VOLTS && tension > 0) {
-            displayProblemeTension(tension);
-            return;
+        if (!ioService.auOk()) {
+            log.warn("L'arrêt d'urgence est coupé.");
+            while (!ioService.auOk()) {
+                ThreadUtils.sleep(500);
+            }
         }
 
         log.info("Arrêt d'urgence OK");
@@ -159,6 +152,13 @@ public class Ordonanceur {
             }
         }
         log.info("Alimentation puissance OK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
+
+        // Check tension
+        double tension = servosService.getTension();
+        if (tension < IConstantesUtiles.SEUIL_BATTERY_VOLTS && tension > 0) {
+            displayProblemeTension(tension);
+            return;
+        }
 
         List<EStrategy> strategies = ioService.strategies();
         log.info("Equipe : {}", ioService.equipe().name());
@@ -327,13 +327,13 @@ public class Ordonanceur {
 
     private void displayProblemeTension(double tension) {
         try {
-            ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", "\n/!\\ PROBLEME DE TENSION /!\\\n");
+            ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", "\n/!\\ PROBLEME DE TENSION SERVOS /!\\\n");
             Process p = pb.start();
 
             StreamGobbler out = new StreamGobbler(p.getInputStream(), System.out::println);
             new Thread(out).start();
         } catch (IOException e) {
-            log.warn("!!! ... TENSION {}V ... !!!, vérifier le fusible", tension);
+            log.warn("/!\\ PROBLEME DE TENSION SERVOS /!\\");
         }
     }
 
