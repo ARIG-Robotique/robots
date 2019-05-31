@@ -133,7 +133,7 @@ public class NerellScheduler {
 
     @Scheduled(fixedDelay = 1000)
     public void magasinTask() {
-        if (rs.isMagasinEnabled()) {
+        if (rs.isMagasinEnabled() && rs.getRemainingTime() < 50000) {
             magasinService.process();
         }
     }
