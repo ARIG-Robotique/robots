@@ -39,9 +39,6 @@ public class DeposerBalance extends AbstractAction {
     private ICarouselManager carousel;
 
     @Autowired
-    private CarouselService carouselService;
-
-    @Autowired
     private TableUtils tableUtils;
 
     @Autowired
