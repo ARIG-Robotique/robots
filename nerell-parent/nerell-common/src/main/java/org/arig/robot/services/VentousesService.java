@@ -207,8 +207,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
 
         IRobotSide service = sideServices.get(side);
 
-        service.pivotVentouseFacade(false);
-        service.ascenseurGold(true);
+        service.ascenseurGold(false);
+        service.pivotVentouseFacade(true);
     }
 
     /**
