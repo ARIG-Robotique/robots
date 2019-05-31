@@ -20,6 +20,7 @@ import org.arig.robot.system.encoders.AbstractEncoder;
 import org.arig.robot.system.motion.*;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
+import org.arig.robot.system.pathfinding.impl.NoPathFinderImpl;
 import org.arig.robot.utils.ConvertionCarouselUnit;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
@@ -145,10 +146,11 @@ public class NerellCommonContext {
 
     @Bean
     public IPathFinder pathFinder() {
-        MultiPathFinderImpl pf = new MultiPathFinderImpl();
-        pf.setAlgorithm(IConstantesNerellConfig.pathFindingAlgo);
-        pf.setSaveImages(env.getProperty("robot.pathfinding.saveImages", Boolean.class, true));
-        return pf;
+//        MultiPathFinderImpl pf = new MultiPathFinderImpl();
+//        pf.setAlgorithm(IConstantesNerellConfig.pathFindingAlgo);
+//        pf.setSaveImages(env.getProperty("robot.pathfinding.saveImages", Boolean.class, true));
+//        return pf;
+        return new NoPathFinderImpl();
     }
 
     @Bean
