@@ -130,16 +130,16 @@ public class Ordonanceur {
             }
         }
 
+        HealthInfos lidarHealth = lidar.healthInfo();
+        if (!lidarHealth.isOk()) {
+            log.error("Status du Lidar KO : {} - {} - Code {}", lidarHealth.getState(), lidarHealth.getValue(), lidarHealth.getErrorCode());
+            return;
+        }
+
         // Check tension
         double tension = servosService.getTension();
         if (tension < IConstantesUtiles.SEUIL_BATTERY_VOLTS && tension > 0) {
             displayProblemeTension(tension);
-            return;
-        }
-
-        HealthInfos lidarHealth = lidar.healthInfo();
-        if (!lidarHealth.isOk()) {
-            log.error("Status du Lidar KO : {} - {} - Code {}", lidarHealth.getState(), lidarHealth.getValue(), lidarHealth.getErrorCode());
             return;
         }
 
