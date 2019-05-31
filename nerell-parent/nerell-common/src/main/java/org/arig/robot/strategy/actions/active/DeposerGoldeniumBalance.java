@@ -50,6 +50,8 @@ public class DeposerGoldeniumBalance extends AbstractAction {
     @Getter
     private boolean completed = false;
 
+    private boolean even = false;
+
     @Override
     public String name() {
         return "Déposer le goldenium dans la balance";
@@ -76,15 +78,25 @@ public class DeposerGoldeniumBalance extends AbstractAction {
 
             int yAvantAvance = 795;
 
+            even = !even;
+
             // 150 = moitié du séparateur +  moitié de la balance + marge
             // va au point le plus proche
             if (rs.getTeam() == Team.VIOLET) {
                 tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(1000, 420, 500, 330));
-                mv.pathTo(1800, 1000);
+                if (even) {
+                    mv.pathTo(2000, 1200);
+                } else {
+                    mv.pathTo(1800, 1000);
+                }
                 mv.pathTo(1500 + 150 + IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
             } else {
                 tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(1500, 420, 500, 330));
-                mv.pathTo(1200, 1000);
+                if (even) {
+                    mv.pathTo(1000, 1200);
+                } else {
+                    mv.pathTo(1200, 1000);
+                }
                 mv.pathTo(1500 - 150 - IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
             }
 
