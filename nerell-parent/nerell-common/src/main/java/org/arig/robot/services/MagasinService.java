@@ -206,12 +206,11 @@ public class MagasinService {
                 }
             }
 
-            if (rs.getMagasin().get(ESide.DROITE).size() < IConstantesNerellConfig.nbPaletsMagasinMax) {
-                stockage(CouleurPalet.ROUGE, ESide.DROITE);
+            Stream.of(ESide.values())
+                    .filter(s -> rs.getMagasin().get(s).size() < IConstantesNerellConfig.nbPaletsMagasinMax)
+                    .min((a, b) -> rs.getMagasin().get(a).size() - rs.getMagasin().get(b).size())
+                    .ifPresent(s -> stockage(CouleurPalet.ROUGE, s));
 
-            } else if (rs.getMagasin().get(ESide.GAUCHE).size() < IConstantesNerellConfig.nbPaletsMagasinMax) {
-                stockage(CouleurPalet.ROUGE, ESide.GAUCHE);
-            }
             k++;
         }
     }
