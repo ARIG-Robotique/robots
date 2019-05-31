@@ -221,6 +221,8 @@ public class Ordonanceur {
         ioService.disablePompeAVideGauche();
         servosService.ascenseurDroit(IConstantesServos.ASCENSEUR_DROIT_DISTRIBUTEUR, false);
         servosService.ascenseurGauche(IConstantesServos.ASCENSEUR_GAUCHE_DISTRIBUTEUR, false);
+        servosService.pivotVentouseDroit(IConstantesServos.PIVOT_VENTOUSE_DROIT_FACADE, false);
+        servosService.pivotVentouseGauche(IConstantesServos.PIVOT_VENTOUSE_GAUCHE_FACADE, false);
         servosService.pinceSerragePaletGauche(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_REPOS, false);
         servosService.pinceSerragePaletDroit(IConstantesServos.PINCE_SERRAGE_PALET_DROIT_REPOS, false);
         servosService.ejectionMagasinGauche(IConstantesServos.EJECTION_MAGASIN_GAUCHE_OUVERT, false);
