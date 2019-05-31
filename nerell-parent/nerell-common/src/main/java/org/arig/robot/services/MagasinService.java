@@ -25,7 +25,6 @@ import java.util.stream.Stream;
 @Slf4j
 public class MagasinService {
 
-    private static final int NB_MAX_MAGASIN = 3;
     private static final int TEMPS_MAX_AVAILABLE = 3000;
 
     @Autowired
@@ -37,9 +36,6 @@ public class MagasinService {
 
     @Autowired
     private CarouselService carouselService;
-
-    @Autowired
-    private ICarouselManager carouselManager;
 
     @Autowired
     private ICarouselManager carousel;
@@ -90,7 +86,7 @@ public class MagasinService {
                             rs.getPaletsInAccelerateur().size() >= IConstantesNerellConfig.nbPaletsAccelerateurMax
             ) {
                 final Optional<CouleurPalet> couleur = Stream.of(CouleurPalet.ROUGE, CouleurPalet.VERT)
-                        .filter(carouselManager::has)
+                        .filter(carousel::has)
                         .findFirst();
 
                 if (couleur.isPresent()) {
@@ -104,14 +100,35 @@ public class MagasinService {
 
             // stockage con juste le rouge
         } else {
-            if (!carouselService.isLocked() && carousel.has(CouleurPalet.ROUGE)) {
-                if (rs.getMagasin().get(ESide.DROITE).size() < IConstantesNerellConfig.nbPaletsMagasinMax) {
-                    stockage(CouleurPalet.ROUGE, ESide.DROITE);
+            if (carouselService.isLocked()) {
+                Stream.of(ESide.values())
+                        .filter(side -> carousel.get(side.getPositionMagasin()) == CouleurPalet.ROUGE && rs.getMagasin().get(side).size() < IConstantesNerellConfig.nbPaletsMagasinMax)
+                        .min((a, b) -> rs.getMagasin().get(a).size() - rs.getMagasin().get(b).size())
+                        .ifPresent(side -> {
+                            try {
+                                IRobotSide service = sideServices.get(side);
 
-                }
-                if (rs.getMagasin().get(ESide.GAUCHE).size() < IConstantesNerellConfig.nbPaletsMagasinMax) {
-                    stockage(CouleurPalet.ROUGE, ESide.GAUCHE);
-                }
+                                carouselService.lock(side.getPositionMagasin(), 1000);
+
+                                service.trappeMagasinOuvert(true);
+                                ThreadUtils.sleep(200);
+                                service.trappeMagasinFerme(true);
+
+                                rs.getMagasin().get(side).add(CouleurPalet.ROUGE);
+                                carousel.unstore(service.positionCarouselMagasin());
+
+                            } catch (CarouselNotAvailableException e) {
+                                log.warn("Stockage magasin echoué", e);
+                            }
+
+                            carouselService.release(side.getPositionVentouse());
+                        });
+            }
+            else if (carousel.has(CouleurPalet.ROUGE)) {
+                Stream.of(ESide.values())
+                        .filter(s -> rs.getMagasin().get(s).size() < IConstantesNerellConfig.nbPaletsMagasinMax)
+                        .min((a, b) -> rs.getMagasin().get(a).size() - rs.getMagasin().get(b).size())
+                        .ifPresent(s -> stockage(CouleurPalet.ROUGE, s));
             }
         }
     }
@@ -123,7 +140,7 @@ public class MagasinService {
         try {
             IRobotSide service = sideServices.get(side);
 
-            if (rs.getMagasin().get(side).size() >= NB_MAX_MAGASIN) {
+            if (rs.getMagasin().get(side).size() >= IConstantesNerellConfig.nbPaletsMagasinMax) {
                 log.warn("Le magasin est déjà plein");
                 return false;
             }
@@ -170,7 +187,7 @@ public class MagasinService {
             if (rs.getMagasin().get(ESide.DROITE).size() < IConstantesNerellConfig.nbPaletsMagasinMax && rs.getMagasin().get(ESide.GAUCHE).size() < IConstantesNerellConfig.nbPaletsMagasinMax) {
                 int coolIndex = -1;
                 for (int i = 0; i < 6; i++) {
-                    if (carouselManager.get(i) == CouleurPalet.ROUGE && carouselManager.get(i == 5 ? 0 : i + 1) == CouleurPalet.ROUGE) {
+                    if (carousel.get(i) == CouleurPalet.ROUGE && carousel.get(i == 5 ? 0 : i + 1) == CouleurPalet.ROUGE) {
                         coolIndex = i;
                         break;
                     }
@@ -192,8 +209,8 @@ public class MagasinService {
                         rs.getMagasin().get(ESide.DROITE).add(carousel.get(ICarouselManager.MAGASIN_DROIT));
                         rs.getMagasin().get(ESide.GAUCHE).add(carousel.get(ICarouselManager.MAGASIN_GAUCHE));
 
-                        carouselManager.unstore(ICarouselManager.MAGASIN_DROIT);
-                        carouselManager.unstore(ICarouselManager.MAGASIN_GAUCHE);
+                        carousel.unstore(ICarouselManager.MAGASIN_DROIT);
+                        carousel.unstore(ICarouselManager.MAGASIN_GAUCHE);
 
                     } catch (CarouselNotAvailableException e) {
                         log.warn("Stockage magasin echoué", e);

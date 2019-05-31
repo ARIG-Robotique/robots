@@ -7,8 +7,9 @@ import org.arig.robot.system.ICarouselManager;
 @Getter
 @AllArgsConstructor
 public enum ESide {
-    DROITE(ICarouselManager.VENTOUSE_DROITE),
-    GAUCHE(ICarouselManager.VENTOUSE_GAUCHE);
+    DROITE(ICarouselManager.VENTOUSE_DROITE, ICarouselManager.MAGASIN_DROIT),
+    GAUCHE(ICarouselManager.VENTOUSE_GAUCHE, ICarouselManager.MAGASIN_GAUCHE);
 
     private int positionVentouse;
+    private int positionMagasin;
 }
