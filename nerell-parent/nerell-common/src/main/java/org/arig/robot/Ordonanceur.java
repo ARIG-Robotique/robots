@@ -146,7 +146,6 @@ public class Ordonanceur {
 
         if (!ioService.alimPuissance12VOk() || !ioService.alimPuissance5VOk()) {
             log.warn("Alimentation puissance NOK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
-            //ioService.colorLedRGBKo();
             while (!ioService.alimPuissance12VOk() && !ioService.alimPuissance5VOk()) {
                 ThreadUtils.sleep(500);
             }
@@ -212,6 +211,8 @@ public class Ordonanceur {
         ioService.airElectroVanneGauche();
         ioService.disablePompeAVideDroite();
         ioService.disablePompeAVideGauche();
+        servosService.ascenseurDroit(IConstantesServos.ASCENSEUR_DROIT_DISTRIBUTEUR, false);
+        servosService.ascenseurGauche(IConstantesServos.ASCENSEUR_GAUCHE_DISTRIBUTEUR, false);
         servosService.pinceSerragePaletGauche(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_REPOS, false);
         servosService.pinceSerragePaletDroit(IConstantesServos.PINCE_SERRAGE_PALET_DROIT_REPOS, false);
         servosService.ejectionMagasinGauche(IConstantesServos.EJECTION_MAGASIN_GAUCHE_OUVERT, false);
