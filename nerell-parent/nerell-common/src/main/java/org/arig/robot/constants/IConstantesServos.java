@@ -58,8 +58,7 @@ public interface IConstantesServos {
     // ---------------------- //
 
     int PINCE_SERRAGE_PALET_DROIT_REPOS = 480;
-    //int PINCE_SERRAGE_PALET_DROIT_LOCK = 2250;
-    int PINCE_SERRAGE_PALET_DROIT_LOCK = 480;
+    int PINCE_SERRAGE_PALET_DROIT_LOCK = 2250;
 
     int PINCE_SERRAGE_PALET_GAUCHE_REPOS = 2280;
     int PINCE_SERRAGE_PALET_GAUCHE_LOCK = 500;
