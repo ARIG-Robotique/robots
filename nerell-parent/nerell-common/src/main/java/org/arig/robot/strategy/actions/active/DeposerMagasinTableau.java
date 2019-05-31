@@ -87,13 +87,13 @@ public class DeposerMagasinTableau extends AbstractAction {
 
             magasin.startEjection();
 
-            mv.avanceMM(240);
+            rs.enableAvoidance();
+
+            mv.avanceMM(340);
             mv.reculeMM(100);
             mv.avanceMM(100);
 
             rs.transfertMagasinTableau(true);
-
-            completed = true;
 
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
@@ -103,6 +103,8 @@ public class DeposerMagasinTableau extends AbstractAction {
         rs.enableMagasin();
 
         magasin.endEjection();
+
+        completed = true;
     }
 
     /**

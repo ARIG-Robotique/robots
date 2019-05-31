@@ -86,18 +86,17 @@ public class DeposerMagasinTableauRediumByGreenium extends AbstractAction {
 
             mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
 
-            mv.avanceMM(240);
+            mv.avanceMM(340);
             mv.reculeMM(100);
             mv.avanceMM(200);
 
             rs.transfertMagasinTableau(true);
 
-            completed = true;
-
         } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
         }
+
         completed = true;
         rs.enableMagasin();
         magasin.endEjection();
