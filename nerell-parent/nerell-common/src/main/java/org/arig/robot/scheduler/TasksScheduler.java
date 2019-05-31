@@ -59,10 +59,7 @@ public class TasksScheduler implements InitializingBean {
                     lastTimeCalage = timeStartCalage;
 
                     if (rs.getCalageBordure() != null) {
-                        if (calageBordure.process() || trajectoryManager.isTrajetAtteint() || trajectoryManager.isTrajetEnApproche()) {
-                            // Calage effectué, on arrete
-                            rs.disableCalageBordure();
-                        }
+                        calageBordure.process();
                     }
                 }
 
