@@ -326,7 +326,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         } catch (I2CException e) {
             result = false;
         }
-        log.info("Présence module dans bras : {}", result);
+        log.info("Présence module dans ventouse droit : {}", result);
         return result;
     }
 
@@ -340,7 +340,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         } catch (I2CException e) {
             result = false;
         }
-        log.info("Présence module dans bras : {}", result);
+        log.info("Présence module dans ventouse gauche : {}", result);
         return result;
     }
 
