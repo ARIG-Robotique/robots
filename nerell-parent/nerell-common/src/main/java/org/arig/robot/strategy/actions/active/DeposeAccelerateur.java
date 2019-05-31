@@ -65,7 +65,7 @@ public class DeposeAccelerateur extends AbstractAction {
     @Getter
     private boolean completed = false;
 
-    private boolean even = true;
+    private boolean even = false;
 
     @Override
     public String name() {
@@ -119,6 +119,7 @@ public class DeposeAccelerateur extends AbstractAction {
 
             int yAvantAvance = 1700;
 
+            even = !even;
             // va au point le plus proche
             if (rs.getTeam() == Team.VIOLET) {
                 tableUtils.addDynamicDeadZone(new Rectangle.Double(1700, 1600, 300, 400));
@@ -126,7 +127,7 @@ public class DeposeAccelerateur extends AbstractAction {
                 if (!even) {
                     mv.pathTo(1500, 1000);
                 } else {
-                    mv.pathTo(1900, 1200);
+                    mv.pathTo(1900, 1200); // Premier point (even = false, mais est inversé avant le test)
                 }
 
                 mv.pathTo(1100, 1700);
@@ -137,12 +138,11 @@ public class DeposeAccelerateur extends AbstractAction {
                 if (!even) {
                     mv.pathTo(1500, 1000);
                 } else {
-                    mv.pathTo(1100, 1200);
+                    mv.pathTo(1100, 1200); // Premier point (cf au dessus)
                 }
 
                 mv.pathTo(1900, 1700);
             }
-            even = !even;
 
             rs.disableAvoidance();
             rs.disableCarousel();
