@@ -3,6 +3,7 @@ package org.arig.robot.strategy.actions.active;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
@@ -11,7 +12,9 @@ import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.*;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.services.CarouselService;
+import org.arig.robot.services.IIOService;
 import org.arig.robot.services.IVentousesService;
+import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
@@ -44,10 +47,16 @@ public class DeposeAccelerateur extends AbstractAction {
     private CarouselService carouselService;
 
     @Autowired
+    private ServosService servosService;
+
+    @Autowired
     private TableUtils tableUtils;
 
     @Autowired
     private ConvertionRobotUnit conv;
+
+    @Autowired
+    private IIOService ioService;
 
     @Autowired
     @Qualifier("currentPosition")
@@ -76,7 +85,7 @@ public class DeposeAccelerateur extends AbstractAction {
     public boolean isValid() {
         return isTimeValid() &&
                 (
-                        rs.getRemainingTime() < 70000 ||
+                        rs.getRemainingTime() < 85000 ||
                                 carousel.count(CouleurPalet.ROUGE) >= 3
                 ) &&
                 (
@@ -101,7 +110,8 @@ public class DeposeAccelerateur extends AbstractAction {
 
         try {
             carouselService.setHint(sideDepose.getPositionVentouse(), carousel.has(CouleurPalet.ROUGE) ? CouleurPalet.ROUGE : CouleurPalet.ANY);
-            rs.disableMagasin();
+            //rs.disableMagasin();
+            rs.enableMagasin();
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
@@ -113,7 +123,7 @@ public class DeposeAccelerateur extends AbstractAction {
             if (rs.getTeam() == Team.VIOLET) {
                 tableUtils.addDynamicDeadZone(new Rectangle.Double(1700, 1600, 300, 400));
 
-                if (even) {
+                if (!even) {
                     mv.pathTo(1500, 1000);
                 } else {
                     mv.pathTo(1900, 1200);
@@ -124,7 +134,7 @@ public class DeposeAccelerateur extends AbstractAction {
             } else {
                 tableUtils.addDynamicDeadZone(new Rectangle.Double(1000, 1600, 300, 400));
 
-                if (even) {
+                if (!even) {
                     mv.pathTo(1500, 1000);
                 } else {
                     mv.pathTo(1100, 1200);
@@ -135,6 +145,7 @@ public class DeposeAccelerateur extends AbstractAction {
             even = !even;
 
             rs.disableAvoidance();
+            rs.disableCarousel();
 
             mv.setVitesse(IConstantesNerellConfig.vitesseMouvement, IConstantesNerellConfig.vitesseOrientation);
 
@@ -143,8 +154,19 @@ public class DeposeAccelerateur extends AbstractAction {
             rs.enableCalageBordureArriere();
             mv.reculeMM(500);
 
-            // repositionne au point voulu
-            mv.avanceMM(50);
+            rs.disableSerrage();
+
+            if (ioService.presencePaletDroit() || ioService.presencePaletGauche()) {
+                // Ouvre les pinces de serrage pour ne pas patiner
+                servosService.pinceSerragePaletDroit(IConstantesServos.PINCE_SERRAGE_PALET_DROIT_REPOS, false);
+                servosService.pinceSerragePaletGauche(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_REPOS, true);
+
+                mv.avanceMM(100);
+                mv.reculeMM(50);
+            } else {
+                // repositionne au point voulu
+                mv.avanceMM(50);
+            }
 
             double currentY = conv.pulseToMm(currentPosition.getPt().getY());
 
@@ -159,8 +181,6 @@ public class DeposeAccelerateur extends AbstractAction {
             // préparation
             ventouses.waitAvailable(ESide.DROITE);
             ventouses.waitAvailable(ESide.GAUCHE);
-
-            rs.disableCarousel();
             rs.disableVentouses();
 
             if (rs.strategyActive(EStrategy.PRISE_BLEU_ACCELERATEUR)) {
@@ -168,7 +188,7 @@ public class DeposeAccelerateur extends AbstractAction {
                     throw new CarouselNotAvailableException();
                 }
             } else {
-                ventouses.prepareDeposeAccelerateur(side, sideDepose); // FIXME
+                //ventouses.prepareDeposeAccelerateur(side, sideDepose); // FIXME
             }
 
             mv.avanceMM(45);
@@ -191,18 +211,18 @@ public class DeposeAccelerateur extends AbstractAction {
             }
 
             // dépose
-            while (canDepose()) {
-                CouleurPalet couleur = carousel.has(CouleurPalet.ROUGE) ? CouleurPalet.ROUGE : CouleurPalet.ANY;
-
-                if (!ventouses.deposeAccelerateur(couleur, sideDepose)) {
-                    break;
-                }
-
-                // cas ou a prit le bleu
-                if (!rs.isAccelerateurOuvert()) {
-                    rs.setAccelerateurOuvert(true);
-                }
-            }
+//            while (canDepose()) {
+//                CouleurPalet couleur = carousel.has(CouleurPalet.ROUGE) ? CouleurPalet.ROUGE : CouleurPalet.ANY;
+//
+//                if (!ventouses.deposeAccelerateur(couleur, side)) {
+//                    break;
+//                }
+//
+//                // cas ou a prit le bleu
+//                if (!rs.isAccelerateurOuvert()) {
+//                    rs.setAccelerateurOuvert(true);
+//                }
+//            }
 
             completed = rs.getPaletsInAccelerateur().size() >= IConstantesNerellConfig.nbPaletsAccelerateurMax;
 
@@ -220,9 +240,10 @@ public class DeposeAccelerateur extends AbstractAction {
             ventouses.finishDeposeAccelerateur(side, sideDepose);
             ventouses.releaseSide(ESide.GAUCHE);
             ventouses.releaseSide(ESide.DROITE);
-//            rs.enableMagasin();
+            //rs.enableMagasin();
             rs.enableCarousel();
             rs.enableVentouses();
+            rs.enableSerrage();
 
         } catch (RefreshPathFindingException | AvoidingException e) {
             log.error("Erreur d'éxécution de la finalisation de l'action : {}", e.toString());

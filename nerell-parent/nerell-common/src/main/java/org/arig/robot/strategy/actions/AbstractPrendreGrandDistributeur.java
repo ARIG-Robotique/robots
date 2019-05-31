@@ -156,6 +156,6 @@ public abstract class AbstractPrendreGrandDistributeur extends AbstractAction {
             }
         }
 
-        rs.enableMagasin();
+        //rs.enableMagasin();
     }
 }

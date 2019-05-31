@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.enums.TypeConsigne;
+import org.arig.robot.model.monitor.MonitorMouvementPath;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,7 +41,8 @@ public class SystemBlockerManager implements ISystemBlockerManager {
         double errorSumPidDistance = Math.abs(pidDistance.getPidErrorSum());
         double errorSumPidOrientation = Math.abs(pidOrientation.getPidErrorSum());
 
-        if (errorSumPidDistance >= seuilErreurPidDistance || errorSumPidOrientation >= seuilErreurPidOrientation) {
+        if (trajectoryManager.getCurrentMouvement() != null && trajectoryManager.getCurrentMouvement() instanceof MonitorMouvementPath
+                && (errorSumPidDistance >= seuilErreurPidDistance || errorSumPidOrientation >= seuilErreurPidOrientation)) {
 
             log.warn("L'erreur de pidDistance {} ou pidOrientation {} détectée ", errorSumPidDistance, errorSumPidOrientation);
 

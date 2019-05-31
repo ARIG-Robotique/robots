@@ -272,8 +272,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
         service.ascenseurAccelerateur(false);
         service.pivotVentouseCarouselVertical(true);
 
-        serviceDepose.ascenseurAccelerateur(true);
-        serviceDepose.pivotVentouseCarouselVertical(true);
+        //serviceDepose.ascenseurAccelerateur(false);
+        //serviceDepose.pivotVentouseCarouselVertical(true);
     }
 
     /**
@@ -373,7 +373,7 @@ public class VentousesService implements IVentousesService, InitializingBean {
         service.porteBarilletFerme(true);
         carouselService.release(service.positionCarouselVentouse());
 
-//        pousseAccelerateur(side);
+        pousseAccelerateur(side);
 
         service.videElectroVanne();
 

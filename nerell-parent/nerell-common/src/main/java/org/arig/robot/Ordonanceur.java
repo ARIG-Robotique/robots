@@ -165,8 +165,14 @@ public class Ordonanceur {
         log.info("Définition des zones 'mortes' de la carte.");
 
         // Exclusion de toutes la zone pente et distributeur personel
-        // Inverse de width && height
-        tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 3000, 457));
+        tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 3000, 457)); // Pente + petit distrib
+        if (initTeam == Team.VIOLET) {
+            // Zone départ adverse Jaune
+            tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 300, 2000));
+        } else {
+            // Zone d&part adverse Violet
+            tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(2700, 0, 300, 2000));
+        }
 
         // Attente la mise de la tirette
         log.info("Mise de la tirette pour lancer la calibration");

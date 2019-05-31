@@ -93,6 +93,7 @@ public class PrendreGoldenium extends AbstractAction {
 
             try {
                 mv.reculeMM(50);
+                ventouses.releaseSide(side);
             } catch (RefreshPathFindingException | AvoidingException ex) {
                 ex.printStackTrace();
             }
