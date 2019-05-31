@@ -10,7 +10,6 @@ import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.services.IIOService;
 import org.arig.robot.services.MagasinService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
@@ -69,30 +68,27 @@ public class DeposerMagasinTableau extends AbstractAction {
             rs.enableAvoidance();
 
             if (rs.getTeam().equals(Team.VIOLET)) {
-                mv.pathTo(2500, 1580 - IConstantesNerellConfig.dstAtomeCentre);
-                mv.gotoOrientationDeg(180);
+                mv.pathTo(2300, 1580 - IConstantesNerellConfig.dstAtomeCentre);
+                mv.pathTo(3000 - 280, 1580 - IConstantesNerellConfig.dstAtomeCentre);
             } else {
-                mv.pathTo(500, 1580 - IConstantesNerellConfig.dstAtomeCentre);
-                mv.gotoOrientationDeg(0);
+                mv.pathTo(700, 1580 - IConstantesNerellConfig.dstAtomeCentre);
+                mv.pathTo(280, 1580 - IConstantesNerellConfig.dstAtomeCentre);
             }
 
             rs.disableAvoidance();
+            mv.gotoOrientationDeg(-90);
+
             rs.disableMagasin();
             magasin.digerer();
 
-            mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
-
-            mv.reculeMM(500 - IConstantesNerellConfig.dstArriere - 30);
-
-            magasin.moisson();
-
             magasin.startEjection();
 
-            rs.enableAvoidance();
+            mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
 
+            // On chie !!
             mv.avanceMM(340);
             mv.reculeMM(100);
-            mv.avanceMM(100);
+            mv.avanceMM(200);
 
             rs.transfertMagasinTableau(true);
 
