@@ -8,6 +8,7 @@ import org.arig.robot.communication.II2CManager;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IConstantesServos;
+import org.arig.robot.constants.IConstantesUtiles;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.exception.RefreshPathFindingException;
@@ -127,6 +128,13 @@ public class Ordonanceur {
             while (!ioService.auOk()) {
                 ThreadUtils.sleep(500);
             }
+        }
+
+        // Check tension
+        double tension = servosService.getTension();
+        if (tension < IConstantesUtiles.SEUIL_BATTERY_VOLTS && tension > 0) {
+            displayProblemeTension(tension);
+            return;
         }
 
         HealthInfos lidarHealth = lidar.healthInfo();
@@ -311,6 +319,18 @@ public class Ordonanceur {
             }
         } catch (AvoidingException | RefreshPathFindingException e) {
             throw new RuntimeException("Impossible de se placer pour le départ", e);
+        }
+    }
+
+    private void displayProblemeTension(double tension) {
+        try {
+            ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", "\n/!\\ PROBLEME DE TENSION /!\\\n");
+            Process p = pb.start();
+
+            StreamGobbler out = new StreamGobbler(p.getInputStream(), System.out::println);
+            new Thread(out).start();
+        } catch (IOException e) {
+            log.warn("!!! ... TENSION {}V ... !!!, vérifier le fusible", tension);
         }
     }
 
