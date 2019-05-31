@@ -249,10 +249,11 @@ public class Ordonanceur {
         log.info("Création du fichier de fin d'éxécution {}", execFile.getAbsolutePath());
 
         // Visualisation du score
-        displayScore();
+        int score = robotStatus.calculerPoints();
 
         // Attente remise de la tirette pour ejecter les palets en stock
         while (!ioService.tirette() || !ioService.auOk()) {
+            displayScore(score);
             ThreadUtils.sleep(1000);
         }
 
@@ -348,9 +349,9 @@ public class Ordonanceur {
         }
     }
 
-    private void displayScore() {
+    private void displayScore(int score) {
         try {
-            ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", String.format("\n\n\n\nScore : %d\n", robotStatus.calculerPoints()));
+            ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", String.format("\n\n\n\nScore : %d\n", score));
             Process p = pb.start();
 
             StreamGobbler out = new StreamGobbler(p.getInputStream(), System.out::println);
@@ -358,7 +359,7 @@ public class Ordonanceur {
             new Thread(out).start();
             new Thread(err).start();
         } catch (IOException e) {
-            log.info("Score : {}", robotStatus.calculerPoints());
+            log.info("Score : {}", score);
         }
     }
 
