@@ -551,6 +551,8 @@ public class VentousesService implements IVentousesService, InitializingBean {
         rs.getPaletsInBalance().addAll(carousel.getAll());
         carousel.vidange();
 
+        // Libration des lock
+        carouselService.disableRotatingGereManuellement(); // /!\ Hook de gestion manuel a faire avec madame Parcimonie
         carouselService.release(side.getPositionVentouse());
     }
 

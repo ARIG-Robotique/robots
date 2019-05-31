@@ -85,6 +85,10 @@ public class CarouselService {
         }
     }
 
+    public void disableRotatingGereManuellement() {
+        rotating.set(false);
+    }
+
     public void release(int index) {
         locks.get(index).set(false);
     }
