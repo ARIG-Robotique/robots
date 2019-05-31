@@ -78,6 +78,7 @@ public class DeposerMagasinTableau extends AbstractAction {
 
             rs.disableAvoidance();
             rs.disableMagasin();
+            magasin.digerer();
 
             mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
 
@@ -101,9 +102,7 @@ public class DeposerMagasinTableau extends AbstractAction {
         }
 
         rs.enableMagasin();
-
         magasin.endEjection();
-
         completed = true;
     }
 

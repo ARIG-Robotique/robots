@@ -159,7 +159,7 @@ public class MagasinService {
         }
     }
 
-    public void moisson() {
+    public void digerer() {
         log.info("Remplissage complet du magasin");
 
         carouselService.forceLectureCouleur();

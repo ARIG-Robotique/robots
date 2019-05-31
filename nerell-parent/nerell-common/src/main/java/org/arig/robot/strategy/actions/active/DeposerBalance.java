@@ -12,7 +12,6 @@ import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
-import org.arig.robot.services.CarouselService;
 import org.arig.robot.services.IVentousesService;
 import org.arig.robot.services.MagasinService;
 import org.arig.robot.strategy.AbstractAction;
@@ -134,7 +133,7 @@ public class DeposerBalance extends AbstractAction {
 
             mv.gotoOrientationDeg(-90);
 
-            magasin.moisson();
+            magasin.digerer();
 
             ventouses.vomiBalance(side);
 

@@ -125,6 +125,7 @@ public class DeposerGoldeniumBalance extends AbstractAction {
 
             if ((rs.getPaletsInBalance().size() + carousel.count(CouleurPalet.ANY))
                     <= IConstantesNerellConfig.nbPaletsBalanceMax) {
+                magasin.digerer();
                 ventouses.prepareVomiBalance(side);
                 ventouses.vomiBalance(side);
             }

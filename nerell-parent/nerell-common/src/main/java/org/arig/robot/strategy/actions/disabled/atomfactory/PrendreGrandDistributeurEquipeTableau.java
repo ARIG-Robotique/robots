@@ -41,6 +41,6 @@ public class PrendreGrandDistributeurEquipeTableau extends AbstractPrendreGrandD
     public void execute() {
         super.execute(false);
 
-        magasin.moisson();
+        magasin.digerer();
     }
 }

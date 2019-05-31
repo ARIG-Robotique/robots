@@ -73,19 +73,18 @@ public class DeposerMagasinTableauRediumByGreenium extends AbstractAction {
             }
 
             rs.disableAvoidance();
-
-
             mv.gotoOrientationDeg(-90);
 
             mv.reculeMM(450);
 
             rs.disableMagasin();
-            magasin.moisson();
+            magasin.digerer();
 
             magasin.startEjection();
 
             mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
 
+            // On chie
             mv.avanceMM(340);
             mv.reculeMM(100);
             mv.avanceMM(200);
@@ -97,8 +96,8 @@ public class DeposerMagasinTableauRediumByGreenium extends AbstractAction {
             updateValidTime();
         }
 
-        completed = true;
         rs.enableMagasin();
         magasin.endEjection();
+        completed = true;
     }
 }
