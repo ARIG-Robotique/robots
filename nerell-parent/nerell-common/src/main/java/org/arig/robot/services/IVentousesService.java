@@ -14,6 +14,8 @@ public interface IVentousesService {
 
     void waitAvailable(ESide side) throws VentouseNotAvailableException;
 
+    void waitAvailable(ESide side, int waitTime) throws VentouseNotAvailableException;
+
     boolean priseTable(CouleurPalet couleur, ESide side);
 
     CompletableFuture<Boolean> preparePriseDistributeur(ESide side);

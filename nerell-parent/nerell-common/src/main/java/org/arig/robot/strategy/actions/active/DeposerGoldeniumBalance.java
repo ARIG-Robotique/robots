@@ -103,7 +103,7 @@ public class DeposerGoldeniumBalance extends AbstractAction {
             rs.disableAvoidance();
             rs.disableMagasin();
 
-            ventouses.waitAvailable(side == ESide.GAUCHE ? ESide.DROITE : ESide.GAUCHE);
+            ventouses.waitAvailable(side == ESide.GAUCHE ? ESide.DROITE : ESide.GAUCHE, 15000);
 
             rs.disableVentouses();
 

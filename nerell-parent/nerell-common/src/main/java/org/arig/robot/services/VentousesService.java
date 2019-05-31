@@ -77,7 +77,14 @@ public class VentousesService implements IVentousesService, InitializingBean {
      */
     @Override
     public void waitAvailable(ESide side) throws VentouseNotAvailableException {
-        long remaining = TEMPS_MAX_AVAILABLE;
+        waitAvailable(side, TEMPS_MAX_AVAILABLE);
+    }
+
+    /**
+     * Attends qu'une ventouse ce libère
+     */
+    @Override
+    public void waitAvailable(ESide side, int remaining) throws VentouseNotAvailableException {
         while (isWorking(side) && remaining > 0) {
             remaining -= 100;
             ThreadUtils.sleep(100);
