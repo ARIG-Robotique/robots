@@ -6,11 +6,14 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.RefreshPathFindingException;
+import org.arig.robot.exceptions.VentouseNotAvailableException;
 import org.arig.robot.model.ESide;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
+import org.arig.robot.services.CarouselService;
 import org.arig.robot.services.MagasinService;
+import org.arig.robot.services.VentousesService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.TrajectoryManager;
@@ -31,10 +34,18 @@ public class DeposerMagasinTableau extends AbstractAction {
     private MagasinService magasin;
 
     @Autowired
+    private VentousesService ventouses;
+
+    @Autowired
+    private CarouselService carouselService;
+
+    @Autowired
     private ICarouselManager carousel;
 
     @Getter
     private boolean completed = false;
+
+    private boolean even = false;
 
     @Override
     public String name() {
@@ -63,22 +74,40 @@ public class DeposerMagasinTableau extends AbstractAction {
     public void execute() {
 
         try {
+            rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            rs.enableAvoidance();
-
-            if (rs.getTeam().equals(Team.VIOLET)) {
-                mv.pathTo(2300, 1580 - IConstantesNerellConfig.dstAtomeCentre);
-                mv.pathTo(3000 - 280, 1580 - IConstantesNerellConfig.dstAtomeCentre);
+            even = !even;
+            if (even) {
+                if (rs.getTeam().equals(Team.VIOLET)) {
+                    mv.pathTo(2300, 1580 - IConstantesNerellConfig.dstAtomeCentre);
+                    rs.disableAvoidance();
+                    mv.gotoPointMM(3000 - 280, 1580 - IConstantesNerellConfig.dstAtomeCentre, true);
+                } else {
+                    mv.pathTo(700, 1580 - IConstantesNerellConfig.dstAtomeCentre);
+                    rs.disableAvoidance();
+                    mv.gotoPointMM(280, 1580 - IConstantesNerellConfig.dstAtomeCentre, true);
+                }
             } else {
-                mv.pathTo(700, 1580 - IConstantesNerellConfig.dstAtomeCentre);
-                mv.pathTo(280, 1580 - IConstantesNerellConfig.dstAtomeCentre);
+                if (rs.getTeam() == Team.VIOLET) {
+                    mv.pathTo(3000 - 280, 1050);
+                } else {
+                    mv.pathTo(280, 1050);
+                }
             }
 
             rs.disableAvoidance();
             mv.gotoOrientationDeg(-90);
 
+            if (!even) {
+                // Second point de passage il faut reculer
+                mv.reculeMM(450);
+            }
+
             rs.disableMagasin();
+            ventouses.waitAvailable(ESide.DROITE);
+            ventouses.waitAvailable(ESide.GAUCHE);
+            carouselService.forceLectureCouleur();
             magasin.digerer();
 
             magasin.startEjection();
@@ -92,14 +121,19 @@ public class DeposerMagasinTableau extends AbstractAction {
 
             rs.transfertMagasinTableau(true);
 
-        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException e) {
+            completed = true;
+
+        } catch (NoPathFoundException | AvoidingException | RefreshPathFindingException | VentouseNotAvailableException e) {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
             updateValidTime();
+        } finally {
+            ventouses.releaseSide(ESide.DROITE);
+            ventouses.releaseSide(ESide.GAUCHE);
         }
 
         rs.enableMagasin();
         magasin.endEjection();
-        completed = true;
+
     }
 
     /**
