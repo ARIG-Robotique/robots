@@ -105,15 +105,14 @@ public class CarouselService {
 
     public void lectureCouleur() {
         try {
-            if (isLocked()) {
-                if (!rotating.get() && carouselManager.get(ICarouselManager.LECTEUR) == CouleurPalet.INCONNU) {
-                    lock(ICarouselManager.LECTEUR, 1000);
+            if (!rotating.get() && carouselManager.get(ICarouselManager.LECTEUR) == CouleurPalet.INCONNU) {
+                lock(ICarouselManager.LECTEUR, 1000);
 
-                    doLectureCouleur();
+                doLectureCouleur();
 
-                    release(ICarouselManager.LECTEUR);
-                }
-            } else if (carouselManager.has(CouleurPalet.INCONNU)) {
+                release(ICarouselManager.LECTEUR);
+
+            } else if (!isLocked() && carouselManager.has(CouleurPalet.INCONNU)) {
                 fullLock(ICarouselManager.LECTEUR, 1000);
 
                 tourner(carouselManager.firstIndexOf(CouleurPalet.INCONNU, ICarouselManager.LECTEUR) - ICarouselManager.LECTEUR);
