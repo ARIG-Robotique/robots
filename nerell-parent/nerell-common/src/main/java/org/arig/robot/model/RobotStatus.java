@@ -56,7 +56,7 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         this.enableSerrage();
         this.enableCarousel();
         this.enableVentouses();
-        //this.enableMagasin();
+        this.enableMagasin();
     }
 
     public void stopMatch() {

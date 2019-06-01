@@ -111,7 +111,7 @@ public class DeposeAccelerateur extends AbstractAction {
         try {
             carouselService.setHint(sideDepose.getPositionVentouse(), carousel.has(CouleurPalet.ROUGE) ? CouleurPalet.ROUGE : CouleurPalet.ANY);
             //rs.disableMagasin();
-            rs.enableMagasin();
+//            rs.enableMagasin();
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
