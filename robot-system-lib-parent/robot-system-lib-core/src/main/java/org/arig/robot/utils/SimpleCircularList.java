@@ -29,10 +29,18 @@ public class SimpleCircularList<T> extends ArrayList<T> {
         return super.get(realIndex(index));
     }
 
+    public static void main (String ... args) {
+        System.out.println("Modulo -8 % 6 " + (-8 % 6));
+    }
+
     /**
      * Rotation des données "vers la gauche"
      */
     public void rotate(int val) {
+        if (Math.abs(val) >= size) {
+            val = val % size;
+        }
+
         head += val;
 
         if (head >= size) {
