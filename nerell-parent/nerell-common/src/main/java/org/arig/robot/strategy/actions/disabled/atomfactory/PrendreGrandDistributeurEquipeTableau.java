@@ -34,13 +34,8 @@ public class PrendreGrandDistributeurEquipeTableau extends AbstractPrendreGrandD
 
     @Override
     public String name() {
-        return "Prise des palets dans le grand distributeur de l'équipe";
+        return "Prise des palets dans le distributeur tableau de l'équipe";
     }
 
-    @Override
-    public void execute() {
-        super.execute(false);
 
-        magasin.digerer();
-    }
 }

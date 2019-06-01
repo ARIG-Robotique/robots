@@ -29,7 +29,7 @@ public class PrendreGrandDistributeurEquipeBalance extends AbstractPrendreGrandD
 
     @Override
     public String name() {
-        return "Prise des palets dans le grand distributeur de l'équipe";
+        return "Prise des palets dans le distributeur balance de l'équipe";
     }
 
 }
