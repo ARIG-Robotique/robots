@@ -70,6 +70,7 @@ public class DeposerGoldeniumBalance extends AbstractAction {
     @Override
     public void execute() {
         ESide side = rs.mainSide();
+        ESide otherSide = side == ESide.GAUCHE ? ESide.DROITE : ESide.GAUCHE;
 
         try {
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
@@ -123,9 +124,11 @@ public class DeposerGoldeniumBalance extends AbstractAction {
 
             ventouses.deposeBalance(CouleurPalet.GOLD, side);
 
+            carouselService.forceLectureCouleur();
+            magasin.digerer();
+
             if ((rs.getPaletsInBalance().size() + carousel.count(CouleurPalet.ANY))
                     <= IConstantesNerellConfig.nbPaletsBalanceMax) {
-                magasin.digerer();
                 ventouses.prepareVomiBalance(side);
                 ventouses.vomiBalance(side);
             }
@@ -147,11 +150,12 @@ public class DeposerGoldeniumBalance extends AbstractAction {
         }
 
         tableUtils.clearDynamicDeadZones();
-        ventouses.releaseSide(ESide.GAUCHE);
-        ventouses.releaseSide(ESide.DROITE);
+        ventouses.releaseSide(otherSide);
         rs.enableVentouses();
         rs.enableMagasin();
-        ventouses.finishDepose(side);
+        if (ventouses.getCouleur(side) != CouleurPalet.GOLD) {
+            ventouses.finishDepose(side);
+        }
     }
 
 }
