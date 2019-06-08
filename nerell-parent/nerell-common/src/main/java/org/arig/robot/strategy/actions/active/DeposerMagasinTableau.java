@@ -107,8 +107,8 @@ public class DeposerMagasinTableau extends AbstractAction {
             rs.disableMagasin();
             ventouses.waitAvailable(ESide.DROITE);
             ventouses.waitAvailable(ESide.GAUCHE);
-            carouselService.forceLectureCouleur();
-            magasin.digerer();
+
+            magasin.digerer(CouleurPalet.ROUGE);
 
             magasin.startEjection();
 
@@ -120,6 +120,19 @@ public class DeposerMagasinTableau extends AbstractAction {
             mv.avanceMM(200);
 
             rs.transfertMagasinTableau(true);
+
+            // une deuxième fois en vert/bleu
+            if (rs.getRemainingTime() < 15000 && carousel.has(CouleurPalet.ANY)) {
+                magasin.endEjection();
+
+                magasin.digerer(CouleurPalet.ANY);
+
+                magasin.startEjection();
+
+                mv.avanceMM(340);
+                mv.reculeMM(100);
+                mv.avanceMM(200);
+            }
 
             completed = true;
 

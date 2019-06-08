@@ -42,6 +42,8 @@ public interface ICarouselManager {
 
     int firstIndexOf(CouleurPalet couleur, int ref);
 
+    int findAdjancent(CouleurPalet couleur);
+
     void setColor(int index, CouleurPalet couleur);
 
     boolean store(int index, CouleurPalet palet);

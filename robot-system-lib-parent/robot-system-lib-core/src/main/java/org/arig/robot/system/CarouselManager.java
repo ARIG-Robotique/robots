@@ -208,6 +208,21 @@ public class CarouselManager implements ICarouselManager {
     }
 
     /**
+     * Renvoie la première position suivie de la même couleur
+     */
+    @Override
+    public int findAdjancent(CouleurPalet couleur) {
+        Predicate<CouleurPalet> predicate = getPaletCouleurPredicate(couleur);
+        for (int i = 0; i < 6; i++) {
+            if (predicate.test(get(i)) && predicate.test(get(i == 5 ? 0 : i + 1))) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    /**
      * Change la couleur d'un palet
      */
     @Override

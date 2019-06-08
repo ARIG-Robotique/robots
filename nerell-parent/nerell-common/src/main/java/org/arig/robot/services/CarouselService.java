@@ -160,13 +160,7 @@ public class CarouselService {
                     log.info("Positionnement idéal d'un vide");
 
                     // essaye de trouver deux places vides l'une a coté de l'autre
-                    int coolIndex = -1;
-                    for (int i = 0; i < 6; i++) {
-                        if (carouselManager.get(i) == null && carouselManager.get(i == 5 ? 0 : i + 1) == null) {
-                            coolIndex = i;
-                            break;
-                        }
-                    }
+                    int coolIndex = carouselManager.findAdjancent(null);
 
                     if (coolIndex == -1) {
                         coolIndex = carouselManager.firstIndexOf(null, ICarouselManager.VENTOUSE_GAUCHE);

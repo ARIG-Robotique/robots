@@ -137,8 +137,7 @@ public class DeposerBalance extends AbstractAction {
 
             mv.gotoOrientationDeg(-90);
 
-            carouselService.forceLectureCouleur();
-            magasin.digerer();
+            magasin.digerer(CouleurPalet.ROUGE);
 
             ventouses.vomiBalance(side);
 

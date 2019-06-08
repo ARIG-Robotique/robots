@@ -13,11 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -175,33 +171,16 @@ public class MagasinService {
         }
     }
 
-    private void storeOneSide(final CouleurPalet couleur, final ESide side) {
-        final IRobotSide service = sideServices.get(side);
-
-        service.trappeMagasinOuvert(true);
-        ThreadUtils.sleep(200);
-        service.trappeMagasinFerme(true);
-
-        rs.getMagasin().get(side).add(couleur);
-        carousel.unstore(service.positionCarouselMagasin());
-    }
-
-    public void digerer() {
+    public void digerer(final CouleurPalet couleur) {
         log.info("Remplissage complet du magasin");
 
         carouselService.forceLectureCouleur();
 
         int k = 0;
-        while (k < 6 && carousel.has(CouleurPalet.ROUGE) && (rs.getMagasin().get(ESide.DROITE).size() < IConstantesNerellConfig.nbPaletsMagasinMax || rs.getMagasin().get(ESide.GAUCHE).size() < IConstantesNerellConfig.nbPaletsMagasinMax)) {
+        while (k < 6 && carousel.has(couleur) && (rs.getMagasin().get(ESide.DROITE).size() < IConstantesNerellConfig.nbPaletsMagasinMax || rs.getMagasin().get(ESide.GAUCHE).size() < IConstantesNerellConfig.nbPaletsMagasinMax)) {
 
             if (rs.getMagasin().get(ESide.DROITE).size() < IConstantesNerellConfig.nbPaletsMagasinMax && rs.getMagasin().get(ESide.GAUCHE).size() < IConstantesNerellConfig.nbPaletsMagasinMax) {
-                int coolIndex = -1;
-                for (int i = 0; i < 6; i++) {
-                    if (carousel.get(i) == CouleurPalet.ROUGE && carousel.get(i == 5 ? 0 : i + 1) == CouleurPalet.ROUGE) {
-                        coolIndex = i;
-                        break;
-                    }
-                }
+                int coolIndex = carousel.findAdjancent(couleur);
 
                 if (coolIndex != -1) {
                     try {
@@ -224,10 +203,21 @@ public class MagasinService {
             Stream.of(ESide.values())
                     .filter(s -> rs.getMagasin().get(s).size() < IConstantesNerellConfig.nbPaletsMagasinMax)
                     .min(Comparator.comparingInt(a -> rs.getMagasin().get(a).size()))
-                    .ifPresent(s -> stockage(CouleurPalet.ROUGE, s));
+                    .ifPresent(s -> stockage(couleur, s));
 
             k++;
         }
+    }
+
+    private void storeOneSide(final CouleurPalet couleur, final ESide side) {
+        final IRobotSide service = sideServices.get(side);
+
+        service.trappeMagasinOuvert(true);
+        ThreadUtils.sleep(200);
+        service.trappeMagasinFerme(true);
+
+        rs.getMagasin().get(side).add(couleur);
+        carousel.unstore(service.positionCarouselMagasin());
     }
 
     private void storeDoubleSide() {
