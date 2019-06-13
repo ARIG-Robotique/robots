@@ -119,7 +119,7 @@ public class DeposerMagasinTableau extends AbstractAction {
             mv.reculeMM(100);
             mv.avanceMM(200);
 
-            rs.transfertMagasinTableau(true);
+            rs.transfertMagasinTableau(CouleurPalet.ROUGE);
 
             // une deuxième fois en vert/bleu
             if (rs.getRemainingTime() < 15000 && carousel.has(CouleurPalet.ANY)) {
@@ -132,6 +132,8 @@ public class DeposerMagasinTableau extends AbstractAction {
                 mv.avanceMM(340);
                 mv.reculeMM(100);
                 mv.avanceMM(200);
+
+                rs.transfertMagasinTableau(CouleurPalet.VERT);
             }
 
             completed = true;
@@ -149,19 +151,4 @@ public class DeposerMagasinTableau extends AbstractAction {
 
     }
 
-    /**
-     * Regarde si dans le coté "vert" contient plutot du rouge
-     */
-    private boolean mostlyRed() {
-        if (rs.getTeam() == Team.VIOLET) {
-            if (rs.getMagasin().get(ESide.GAUCHE).stream().filter(c -> c != CouleurPalet.ROUGE).count() <= 1) {
-                return true;
-            }
-        } else {
-            if (rs.getMagasin().get(ESide.DROITE).stream().filter(c -> c != CouleurPalet.ROUGE).count() <= 1) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

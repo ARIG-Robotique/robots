@@ -208,16 +208,28 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         return Math.max(paletsInTableauRouge.size(), paletsInTableauVert.size());
     }
 
-    public void transfertMagasinTableau(boolean onlyRed) {
-        if (onlyRed) {
-            paletsInTableauRouge.addAll(magasin.get(ESide.DROITE));
-            paletsInTableauRouge.addAll(magasin.get(ESide.GAUCHE));
-        } else if (team == Team.VIOLET) {
-            paletsInTableauRouge.addAll(magasin.get(ESide.DROITE));
-            paletsInTableauVert.addAll(magasin.get(ESide.GAUCHE));
-        } else {
-            paletsInTableauVert.addAll(magasin.get(ESide.DROITE));
-            paletsInTableauRouge.addAll(magasin.get(ESide.GAUCHE));
+    public void transfertMagasinTableau(CouleurPalet tableau) {
+        switch (tableau) {
+            case BLEU:
+                paletsInTableauBleu.addAll(magasin.get(ESide.DROITE));
+                paletsInTableauBleu.addAll(magasin.get(ESide.GAUCHE));
+                break;
+            case VERT:
+                paletsInTableauVert.addAll(magasin.get(ESide.DROITE));
+                paletsInTableauVert.addAll(magasin.get(ESide.GAUCHE));
+                break;
+            case ROUGE:
+                paletsInTableauRouge.addAll(magasin.get(ESide.DROITE));
+                paletsInTableauRouge.addAll(magasin.get(ESide.GAUCHE));
+                break;
+            default:
+                if (team == Team.VIOLET) {
+                    paletsInTableauRouge.addAll(magasin.get(ESide.DROITE));
+                    paletsInTableauVert.addAll(magasin.get(ESide.GAUCHE));
+                } else {
+                    paletsInTableauVert.addAll(magasin.get(ESide.DROITE));
+                    paletsInTableauRouge.addAll(magasin.get(ESide.GAUCHE));
+                }
         }
 
         magasin.get(ESide.DROITE).clear();
