@@ -81,7 +81,7 @@ public interface IConstantesNerellConfig {
     long vitesseMouvement = vitesseSuperLente;
     long vitesseOrientation = vitesseOrientationUltraHaute;
 
-    long vitesseCarouselNormal = 300;
+    long vitesseCarouselNormal = 500;
     long vitesseCarouselADonf = 1000;
 
     // -------------- //
