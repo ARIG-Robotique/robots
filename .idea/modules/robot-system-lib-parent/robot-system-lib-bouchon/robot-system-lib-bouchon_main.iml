@@ -71,8 +71,8 @@
     <orderEntry type="library" name="Gradle: io.datafx:core:8.0.1" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-jcl:5.1.6.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: de.jensd:fontawesomefx-commons:8.15" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.9.8" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: de.jensd:fontawesomefx-commons:8.15" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-codec-http2:4.1.34.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-handler-proxy:4.1.34.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-codec-http:4.1.34.Final" level="project" />

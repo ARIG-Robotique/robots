@@ -83,8 +83,8 @@
     <orderEntry type="library" name="Gradle: io.datafx:core:8.0.1" level="project" />
     <orderEntry type="library" name="Gradle: net.minidev:json-smart:2.3" level="project" />
     <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy:1.9.12" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: de.jensd:fontawesomefx-commons:8.15" level="project" />
     <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy-agent:1.9.12" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: de.jensd:fontawesomefx-commons:8.15" level="project" />
     <orderEntry type="library" name="Gradle: org.objenesis:objenesis:2.6" level="project" />
     <orderEntry type="library" name="Gradle: com.vaadin.external.google:android-json:0.0.20131108.vaadin1" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-jcl:5.1.6.RELEASE" level="project" />
