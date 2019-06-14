@@ -109,7 +109,6 @@ public class DeposerMagasinTableau extends AbstractAction {
             ventouses.waitAvailable(ESide.GAUCHE);
 
             magasin.digerer(CouleurPalet.ROUGE);
-
             magasin.startEjection();
 
             mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
@@ -119,20 +118,47 @@ public class DeposerMagasinTableau extends AbstractAction {
             mv.reculeMM(100);
             mv.avanceMM(200);
 
+            magasin.endEjection();
             rs.transfertMagasinTableau(CouleurPalet.ROUGE);
 
-            // une deuxième fois en vert/bleu
-            if (rs.getRemainingTime() < 15000 && carousel.has(CouleurPalet.ANY)) {
-                magasin.endEjection();
+            if (rs.getRemainingTime() > 5000) {
+                // une deuxième fois en vert
+                if (carousel.has(CouleurPalet.VERT)) {
+                    magasin.digerer(CouleurPalet.VERT);
+                    magasin.startEjection();
 
+                    mv.avanceMM(340);
+                    mv.reculeMM(100);
+                    mv.avanceMM(200);
+
+                    magasin.endEjection();
+                    rs.transfertMagasinTableau(CouleurPalet.VERT);
+                } else {
+                    mv.avanceMM(440);
+                }
+
+                // une troisième fois en bleu
+                if (carousel.has(CouleurPalet.BLEU)) {
+                    magasin.digerer(CouleurPalet.BLEU);
+                    magasin.startEjection();
+
+                    mv.avanceMM(340);
+                    mv.reculeMM(100);
+                    mv.avanceMM(200);
+
+                    magasin.endEjection();
+                    rs.transfertMagasinTableau(CouleurPalet.BLEU);
+                }
+            } else if (carousel.has(CouleurPalet.ANY)) {
+                // une deuxième fois en vert/bleu car plus beaucoup de temps
                 magasin.digerer(CouleurPalet.ANY);
-
                 magasin.startEjection();
 
                 mv.avanceMM(340);
                 mv.reculeMM(100);
                 mv.avanceMM(200);
 
+                magasin.endEjection();
                 rs.transfertMagasinTableau(CouleurPalet.VERT);
             }
 
@@ -148,7 +174,5 @@ public class DeposerMagasinTableau extends AbstractAction {
 
         rs.enableMagasin();
         magasin.endEjection();
-
     }
-
 }
