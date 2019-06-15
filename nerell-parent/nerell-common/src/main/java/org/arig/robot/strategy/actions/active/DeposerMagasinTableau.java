@@ -121,7 +121,7 @@ public class DeposerMagasinTableau extends AbstractAction {
             magasin.endEjection();
             rs.transfertMagasinTableau(CouleurPalet.ROUGE);
 
-            if (rs.getRemainingTime() > 5000) {
+            if (rs.getRemainingTime() > 10000) {
                 // une deuxième fois en vert
                 if (carousel.has(CouleurPalet.VERT)) {
                     magasin.digerer(CouleurPalet.VERT);
