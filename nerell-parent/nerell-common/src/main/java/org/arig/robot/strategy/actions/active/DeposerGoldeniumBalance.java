@@ -90,7 +90,7 @@ public class DeposerGoldeniumBalance extends AbstractAction {
                 } else {
                     mv.pathTo(1800, 1000);
                 }
-                mv.pathTo(1500 + 150 + IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
+                mv.pathTo(1500 + 160 + IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
             } else {
                 tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(1500, 420, 500, 330));
                 if (even) {
@@ -98,7 +98,7 @@ public class DeposerGoldeniumBalance extends AbstractAction {
                 } else {
                     mv.pathTo(1200, 1000);
                 }
-                mv.pathTo(1500 - 150 - IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
+                mv.pathTo(1500 - 160 - IConstantesNerellConfig.dstAtomeCentre, yAvantAvance);
             }
 
             rs.disableAvoidance();
@@ -115,9 +115,9 @@ public class DeposerGoldeniumBalance extends AbstractAction {
             mv.gotoOrientationDeg(-90);
 
             if (rs.getTeam() == Team.VIOLET) {
-                mv.gotoPointMM(1500 + 150 + IConstantesNerellConfig.dstAtomeCentre, 588, false);
+                mv.gotoPointMM(1500 + 160 + IConstantesNerellConfig.dstAtomeCentre, 588, false);
             } else {
-                mv.gotoPointMM(1500 - 150 - IConstantesNerellConfig.dstAtomeCentre, 588, false);
+                mv.gotoPointMM(1500 - 160 - IConstantesNerellConfig.dstAtomeCentre, 588, false);
             }
 
             mv.gotoOrientationDeg(-90);

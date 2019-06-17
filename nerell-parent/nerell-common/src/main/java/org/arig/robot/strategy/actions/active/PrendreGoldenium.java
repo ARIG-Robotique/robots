@@ -57,7 +57,7 @@ public class PrendreGoldenium extends AbstractAction {
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            int yAvantAvance = 1725;
+            int yAvantAvance = 1675;
 
             // va au point le plus proche
             if (rs.getTeam() == Team.VIOLET) {

@@ -236,7 +236,7 @@ public class DeposeAccelerateur extends AbstractAction {
         tableUtils.clearDynamicDeadZones();
 
         try {
-            mv.reculeMM(50);
+            mv.reculeMM(100);
             ventouses.finishDeposeAccelerateur(side, sideDepose);
             ventouses.releaseSide(ESide.GAUCHE);
             ventouses.releaseSide(ESide.DROITE);
