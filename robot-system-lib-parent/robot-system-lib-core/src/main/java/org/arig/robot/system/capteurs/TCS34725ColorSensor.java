@@ -1,6 +1,10 @@
 package org.arig.robot.system.capteurs;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -103,7 +107,7 @@ public class TCS34725ColorSensor {
     @Accessors(fluent = true, chain = true)
     @NoArgsConstructor
     @AllArgsConstructor
-    public class ColorData {
+    public static class ColorData {
         private int r;
         private int g;
         private int b;

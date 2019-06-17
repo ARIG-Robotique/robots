@@ -18,9 +18,6 @@ public class DummyI2CManager extends AbstractI2CManager<Byte> {
     public void sendData(String deviceName, byte... datas) {}
 
     @Override
-    public void sendData(String deviceName, int nbResult, byte... datas) {}
-
-    @Override
     public byte getData(String deviceName) {
         return (byte) Math.random();
     }

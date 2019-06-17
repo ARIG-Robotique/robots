@@ -62,7 +62,7 @@ public abstract class AbstractOdometrie implements IOdometrie, InitializingBean 
     private void sendMonitoring() {
         // Construction du monitoring
         MonitorTimeSerie serie = new MonitorTimeSerie()
-                .tableName("odometrie")
+                .measurementName("odometrie")
                 .addField("X", conv.pulseToMm(getPosition().getPt().getX()))
                 .addField("Y", conv.pulseToMm(getPosition().getPt().getY()))
                 .addField("angle", conv.pulseToDeg(getPosition().getAngle()))

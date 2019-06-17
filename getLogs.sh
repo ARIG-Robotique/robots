@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 LOG_DIR=./$1-parent/$1-robot/logs
 
 echo "Création répertoire de stockage des logs du robot"

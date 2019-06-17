@@ -1,11 +1,10 @@
 package org.arig.robot;
 
-import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.config.spring.BootifullApplication;
 
-@Slf4j
-public class RobotElfa {
+public class RobotElfa extends BootifullApplication {
 
-    public static void main(final String [] args) throws Exception {
-        log.info("Demarrage de Elfa ...");
+    public static void main(final String [] args) {
+        boot(args);
     }
 }

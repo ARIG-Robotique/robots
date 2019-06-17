@@ -1,5 +1,6 @@
 package org.arig.robot.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -15,11 +16,12 @@ import lombok.Data;
  * |---------------------------------- x (3000)
  * 0,0
  * <p>
- * angle = 0 dans le sens de X
+ * angle = 0 dans le sens de X dans le sens trigo
  *
  * @author gdepuille
  */
 @Data
+@AllArgsConstructor
 public class Position {
 
     private Point pt;

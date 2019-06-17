@@ -6,12 +6,18 @@ import org.arig.robot.model.servos.ServoConfig;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author gdepuille on 13/10/16.
@@ -26,20 +32,44 @@ public abstract class AbstractServosController {
 
     protected abstract List<ServoConfig> servosConfig();
 
-    @RequestMapping(method = RequestMethod.GET)
-    public final List<ServoConfig> config() {
-        return servosConfig();
+    @GetMapping
+    public final Map<String, List<List<ServoConfig>>> config() {
+        List<ServoConfig> servosConfig = servosConfig();
+
+        Map<String, List<ServoConfig>> sortedServConfig = servosConfig.stream()
+                .sorted((servo1, servo2) -> {
+                    if (servo1.getGroup().getOrder() == servo2.getGroup().getOrder()) {
+                        return servo1.getName().compareToIgnoreCase(servo2.getName());
+                    }
+
+                    return servo1.getGroup().getOrder() - servo2.getGroup().getOrder();
+                })
+                .collect(Collectors.groupingBy(s -> s.getGroup().getName()));
+
+        Map<String, List<List<ServoConfig>>> result = new LinkedHashMap<>();
+
+        for (Map.Entry<String, List<ServoConfig>> entry : sortedServConfig.entrySet()) {
+            List<List<ServoConfig>> pairs = new ArrayList<>();
+            for (int i = 0; i < entry.getValue().size(); i = i + 2) {
+                List<ServoConfig> pair = Arrays.asList(entry.getValue().get(i + 1), entry.getValue().get(i));
+                pairs.add(pair);
+            }
+
+            result.put(entry.getKey(), pairs);
+        }
+
+        return result;
     }
 
-    @RequestMapping(value = "/{idServo}", method = RequestMethod.GET)
+    @GetMapping(value = "/{idServo}")
     public final ServoConfig getServoPositionAndSpeed(@PathVariable("idServo") final Byte idServo) {
         return servosConfig().stream()
                 .filter(s -> s.getId() == idServo)
                 .findFirst()
-                .get();
+                .orElse(null);
     }
 
-    @RequestMapping(value = "/{idServo}", method = RequestMethod.POST)
+    @PostMapping(value = "/{idServo}")
     public final void servoPositionAndSpeed(
             @PathVariable("idServo") final Byte idServo,
             @RequestParam("position") final Integer position,

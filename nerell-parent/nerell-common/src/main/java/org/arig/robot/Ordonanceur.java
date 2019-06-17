@@ -3,30 +3,44 @@ package org.arig.robot;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.arig.robot.communication.II2CManager;
+import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.IConstantesServos;
+import org.arig.robot.constants.IConstantesUtiles;
+import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.exception.RefreshPathFindingException;
+import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
-import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.arig.robot.services.EjectionModuleService;
+import org.arig.robot.services.CarouselService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
+import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.pathfinding.IPathFinder;
+import org.arig.robot.system.process.StreamGobbler;
 import org.arig.robot.utils.ConvertionRobotUnit;
+import org.arig.robot.utils.TableUtils;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author gdepuille on 08/03/15.
@@ -50,13 +64,13 @@ public class Ordonanceur {
     private II2CManager i2CManager;
 
     @Autowired
-    private EjectionModuleService ejectionModuleService;
-
-    @Autowired
     private ServosService servosService;
 
     @Autowired
     private ITrajectoryManager trajectoryManager;
+
+    @Autowired
+    private ICarouselManager carouselManager;
 
     @Autowired
     private IPathFinder pathFinder;
@@ -71,6 +85,12 @@ public class Ordonanceur {
     private ILidarTelemeter lidar;
 
     @Autowired
+    private TableUtils tableUtils;
+
+    @Autowired
+    private CarouselService carouselService;
+
+    @Autowired
     @Qualifier("currentPosition")
     private Position position;
 
@@ -82,7 +102,13 @@ public class Ordonanceur {
         return INSTANCE;
     }
 
-    public void run() throws RefreshPathFindingException, IOException {
+    public void run() throws IOException {
+        // Configuration a faire pour chaque match (gestion sans redemarrage programme)
+        // Définition d'un ID unique pour le nommage des fichiers
+        final LocalDateTime startOrdonnanceur = LocalDateTime.now();
+        final String execId = startOrdonnanceur.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        System.setProperty(IConstantesConfig.keyExecutionId, execId);
+
         log.info("Demarrage de l'ordonancement du match ...");
 
         // Equipe au démarrage
@@ -97,24 +123,20 @@ public class Ordonanceur {
             return;
         }
 
-        if (!ioService.auOk()) {
-            log.warn("L'arrêt d'urgence est coupé.");
-            ioService.colorLedRGBKo();
-            while(!ioService.auOk()) {
-                waitTimeMs(500);
-            }
-        }
-
         HealthInfos lidarHealth = lidar.healthInfo();
         if (!lidarHealth.isOk()) {
             log.error("Status du Lidar KO : {} - {} - Code {}", lidarHealth.getState(), lidarHealth.getValue(), lidarHealth.getErrorCode());
-            ioService.colorLedRGBKo();
             return;
         }
 
-        ioService.colorLedRGBOk();
-        log.info("Arrêt d'urgence OK");
+        if (!ioService.auOk()) {
+            log.warn("L'arrêt d'urgence est coupé.");
+            while (!ioService.auOk()) {
+                ThreadUtils.sleep(500);
+            }
+        }
 
+        log.info("Arrêt d'urgence OK");
         log.info("Position de préparation des servos moteurs");
         servosService.cyclePreparation();
 
@@ -125,121 +147,88 @@ public class Ordonanceur {
 
         if (!ioService.alimPuissance12VOk() || !ioService.alimPuissance5VOk()) {
             log.warn("Alimentation puissance NOK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
-            ioService.colorLedRGBKo();
-            while(!ioService.alimPuissance12VOk() && !ioService.alimPuissance5VOk()) {
-                waitTimeMs(500);
+            while (!ioService.alimPuissance12VOk() && !ioService.alimPuissance5VOk()) {
+                ThreadUtils.sleep(500);
             }
         }
-        ioService.colorLedRGBOk();
         log.info("Alimentation puissance OK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
 
-        log.info("Démarrage du lidar");
-        lidar.startScan();
-
-        log.info("Position initiale de l'ejection module");
-        ejectionModuleService.init();
-
-        log.warn("La tirette n'est pas la et la selection couleur n'as pas eu lieu. Phase de préparation Nerell");
-        boolean selectionCouleur = false;
-        while(!ioService.tirette() || !selectionCouleur) {
-            Team selectedTeam = ioService.equipe();
-            if (selectedTeam != initTeam && !selectionCouleur && !ioService.tirette()) {
-                log.info("Couleur selectionné une première fois");
-                selectionCouleur = true;
-            }
-
-            if (selectionCouleur) {
-                // Affichage de la couleur selectione
-                ioService.teamColorLedRGB();
-            }
-
-            waitTimeMs(100);
+        // Check tension
+        double tension = servosService.getTension();
+        if (tension < IConstantesUtiles.SEUIL_BATTERY_VOLTS && tension > 0) {
+            displayProblemeTension(tension);
+            return;
         }
-        log.info("Phase de préparation terminé");
+
+        List<EStrategy> strategies = ioService.strategies();
+        log.info("Equipe : {}", ioService.equipe().name());
+        log.info("Stratégies actives : {}", strategies);
 
         log.info("Chargement de la carte");
         String fileResourcePath = String.format("classpath:maps/%s.png", robotStatus.getTeam().name().toLowerCase());
         final InputStream imgMap = patternResolver.getResource(fileResourcePath).getInputStream();
         pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
 
+        log.info("Définition des zones 'mortes' de la carte.");
+
+        // Exclusion de toutes la zone pente et distributeur personel
+        tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 3000, 457)); // Pente + petit distrib
+        if (initTeam == Team.VIOLET) {
+            // Zone départ adverse Jaune
+            tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 300, 2000));
+        } else {
+            // Zone d&part adverse Violet
+            tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(2700, 0, 300, 2000));
+        }
+
+        // Attente la mise de la tirette
+        log.info("Mise de la tirette pour lancer la calibration");
+        while (!ioService.tirette()) {
+            ThreadUtils.sleep(100);
+        }
+
         // Initialisation Mouvement Manager
         log.info("Initialisation du contrôleur de mouvement");
         trajectoryManager.init();
 
-        robotStatus.disableAvoidance();
-        robotStatus.enableAsserv();
+        calageBordure();
 
-        trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
-        position.setAngle(conv.degToPulse(90));
+        log.info("Démarrage du lidar");
+        lidar.startScan();
 
-        if (!robotStatus.isSimulateur()) {
-            if (robotStatus.getTeam() == Team.JAUNE) {
-                position.setPt(new Point(conv.mmToPulse(320), conv.mmToPulse(772)));
-                trajectoryManager.avanceMM(50);
-                trajectoryManager.gotoPointMM(650, 980);
-                trajectoryManager.gotoPointMM(1100, 772);
-                trajectoryManager.gotoPointMM(890, 300);
-                trajectoryManager.gotoOrientationDeg(90, SensRotation.TRIGO);
-                trajectoryManager.reculeMM(125);
-                servosService.aspirationFerme();
-            } else {
-                position.setPt(new Point(conv.mmToPulse(2680), conv.mmToPulse(772)));
-                trajectoryManager.avanceMM(300);
-                servosService.aspirationFerme();
-                trajectoryManager.gotoPointMM(3000 - 1100, 772);
-                trajectoryManager.gotoPointMM(3000 - 890, 300);
-                trajectoryManager.gotoOrientationDeg(90, SensRotation.TRIGO);
-                trajectoryManager.reculeMM(125);
-            }
-
-            // Calage sur la bordure de départ
-            robotStatus.enableCalageBordure();
-            trajectoryManager.reculeMMSansAngle(20);
-
-        } else {
-            if (robotStatus.getTeam() == Team.JAUNE) {
-                position.setPt(new Point(conv.mmToPulse(890), conv.mmToPulse(165)));
-            } else {
-                position.setPt(new Point(conv.mmToPulse(3000 - 890), conv.mmToPulse(165)));
-            }
-        }
-
-        log.info("Position initiale avant match des servos");
-        servosService.homes();
+        log.info("Initialisation du Carousel");
+        initialisationCarousel();
 
         // Attente tirette.
-        log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
-        while(ioService.tirette()) {
-            waitTimeMs(1);
+        displayDepart();
+        while (ioService.tirette()) {
+            ThreadUtils.sleep(1);
         }
 
         // Début du compteur de temps pour le match
         robotStatus.startMatch();
 
-        log.info("Démarrage du match");
-
-        // Activation
-        robotStatus.enableMatch();
-//        robotStatus.enableAvoidance();
-        robotStatus.enablePinces();
-
         // Match de XX secondes.
-//        boolean activateCollecteAdverse = false;
-        while(robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
-/*
-            if (robotStatus.getElapsedTime() > 45000 && !activateCollecteAdverse) {
-                activateCollecteAdverse = true;
-                log.info("Activation par le temps de la collecte dans la zone adverse");
-                System.setProperty("strategy.collect.zone.adverse", "true");
-            }
-*/
-            waitTimeMs(200);
+        while (robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
+            ThreadUtils.sleep(200);
         }
-        robotStatus.stopMatch();
-        log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
 
-        servosService.brasAttentePriseRobot();
-        servosService.pinceDroiteOuvert();
+        robotStatus.stopMatch();
+
+        ioService.airElectroVanneDroite();
+        ioService.airElectroVanneGauche();
+        ioService.disablePompeAVideDroite();
+        ioService.disablePompeAVideGauche();
+        servosService.ascenseurDroit(IConstantesServos.ASCENSEUR_DROIT_DISTRIBUTEUR, false);
+        servosService.ascenseurGauche(IConstantesServos.ASCENSEUR_GAUCHE_DISTRIBUTEUR, false);
+        servosService.pivotVentouseDroit(IConstantesServos.PIVOT_VENTOUSE_DROIT_FACADE, false);
+        servosService.pivotVentouseGauche(IConstantesServos.PIVOT_VENTOUSE_GAUCHE_FACADE, false);
+        servosService.pinceSerragePaletGauche(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_REPOS, false);
+        servosService.pinceSerragePaletDroit(IConstantesServos.PINCE_SERRAGE_PALET_DROIT_REPOS, false);
+        servosService.ejectionMagasinGauche(IConstantesServos.EJECTION_MAGASIN_GAUCHE_OUVERT, false);
+        servosService.ejectionMagasinDroit(IConstantesServos.EJECTION_MAGASIN_DROIT_OUVERT, true);
+
+        log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
 
         // Désactivation de la puissance moteur pour être sur de ne plus rouler
         ioService.disableAlim5VPuissance();
@@ -247,40 +236,164 @@ public class Ordonanceur {
 
         // On arrette le lidar
         lidar.stopScan();
-        lidar.end();
 
         // On envoi les datas collecté
         monitoringWrapper.save();
+        final LocalDateTime stopOrdonnanceur = LocalDateTime.now();
+        final File execFile = new File("./logs/" + execId + ".exec");
+        DateTimeFormatter savePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        List<String> lines = new ArrayList<>();
+        lines.add(startOrdonnanceur.format(savePattern));
+        lines.add(stopOrdonnanceur.format(savePattern));
+        FileUtils.writeLines(execFile, lines);
+        log.info("Création du fichier de fin d'éxécution {}", execFile.getAbsolutePath());
 
-        // Attente remise de la tirette pour ejecter les modules et les balles en stocks
-        while(!ioService.tirette() || !ioService.auOk()) {
-            ioService.colorLedRGBOk();
-            waitTimeMs(500);
-            ioService.clearColorLedRGB();
-            waitTimeMs(500);
+        // Visualisation du score
+        int score = robotStatus.calculerPoints();
+
+        // Attente remise de la tirette pour ejecter les palets en stock
+        while (!ioService.tirette() || !ioService.auOk()) {
+            displayScore(score);
+            ThreadUtils.sleep(1000);
         }
 
         // Ejection du stock
-        ioService.colorLedRGBKo();
         ioService.enableAlim5VPuissance();
         ioService.enableAlim12VPuissance();
 
-        ejectionModuleService.ejectionAvantRetourStand();
-        if (ioService.presenceBallesAspiration()) {
-            servosService.aspirationTransfert();
-            servosService.waitAspiration();
-        }
+        robotStatus.enableAsservCarousel();
+        carouselService.ejectionAvantRetourStand();
+        robotStatus.disableAsservCarousel();
 
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();
-        ioService.clearColorLedRGB();
     }
 
-    private void waitTimeMs(long ms) {
+    public void calageBordure() {
         try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            log.error("Interruption du Thread", e);
+            robotStatus.disableAvoidance();
+            robotStatus.enableAsserv();
+
+            trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseUltraLente, IConstantesNerellConfig.vitesseOrientationSuperBasse);
+
+            if (!robotStatus.isSimulateur()) {
+                robotStatus.enableCalageBordureArriere();
+                trajectoryManager.reculeMMSansAngle(1000);
+
+                if (robotStatus.getTeam() == Team.JAUNE) {
+                    position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstArriere));
+                    position.setAngle(conv.degToPulse(0));
+                } else {
+                    position.getPt().setX(conv.mmToPulse(3000 - IConstantesNerellConfig.dstArriere));
+                    position.setAngle(conv.degToPulse(180));
+                }
+
+                trajectoryManager.avanceMM(150);
+                trajectoryManager.gotoOrientationDeg(-90);
+
+                robotStatus.enableCalageBordureArriere();
+                trajectoryManager.reculeMM(1000);
+
+                position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstArriere));
+                position.setAngle(conv.degToPulse(-90));
+
+                trajectoryManager.avanceMM(150);
+
+                if (robotStatus.getTeam() == Team.JAUNE) {
+                    trajectoryManager.gotoPointMM(250, 1500, true);
+                } else {
+                    trajectoryManager.gotoPointMM(2750, 1500, true);
+                }
+
+                // Aligne vers le distributeur centre
+                if (robotStatus.getTeam() == Team.JAUNE) {
+                    trajectoryManager.alignFrontTo(750, 700);
+                } else {
+                    trajectoryManager.alignFrontTo(2250, 700);
+                }
+            } else {
+                if (robotStatus.getTeam() == Team.JAUNE) {
+                    position.setPt(new Point(conv.mmToPulse(250), conv.mmToPulse(1500)));
+                    position.setAngle(conv.degToPulse(0));
+                } else {
+                    position.setPt(new Point(conv.mmToPulse(2750), conv.mmToPulse(1500)));
+                    position.setAngle(conv.degToPulse(180));
+                }
+            }
+        } catch (AvoidingException | RefreshPathFindingException e) {
+            throw new RuntimeException("Impossible de se placer pour le départ", e);
         }
+    }
+
+    private void displayProblemeTension(double tension) {
+        try {
+            ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", "\n/!\\ PROBLEME DE TENSION SERVOS /!\\\n");
+            Process p = pb.start();
+
+            StreamGobbler out = new StreamGobbler(p.getInputStream(), System.out::println);
+            new Thread(out).start();
+        } catch (IOException e) {
+            log.warn("/!\\ PROBLEME DE TENSION SERVOS /!\\");
+        }
+    }
+
+    private void displayDepart() {
+        try {
+            ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", "\n/!\\ READY /!\\\n");
+            Process p = pb.start();
+
+            StreamGobbler out = new StreamGobbler(p.getInputStream(), System.out::println);
+            new Thread(out).start();
+        } catch (IOException e) {
+            log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
+        }
+    }
+
+    private void displayScore(int score) {
+        try {
+            ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", String.format("\n\n\n\nScore : %d\n", score));
+            Process p = pb.start();
+
+            StreamGobbler out = new StreamGobbler(p.getInputStream(), System.out::println);
+            StreamGobbler err = new StreamGobbler(p.getErrorStream(), log::error);
+            new Thread(out).start();
+            new Thread(err).start();
+        } catch (IOException e) {
+            log.info("Score : {}", score);
+        }
+    }
+
+    public void initialisationCarousel() {
+        servosService.porteBarilletGauche(IConstantesServos.PORTE_BARILLET_GAUCHE_OUVERT, false);
+        servosService.porteBarilletDroit(IConstantesServos.PORTE_BARILLET_DROIT_OUVERT, false);
+
+        robotStatus.carouselIsNotInitialized();
+        robotStatus.disableAsservCarousel();
+
+        carouselManager.rawMotorSpeed(500);
+        ThreadUtils.sleep(2000);
+        while (!ioService.indexCarousel()) {
+            ThreadUtils.sleep(10);
+        }
+        carouselManager.rawMotorSpeed(-500);
+        while (ioService.indexCarousel()) {
+            ThreadUtils.sleep(10);
+        }
+        carouselManager.rawMotorSpeed(400);
+        while (!ioService.indexCarousel()) {
+            ThreadUtils.sleep(10);
+        }
+        carouselManager.stop();
+        carouselManager.resetEncodeur();
+
+        robotStatus.carouselIsInitialized();
+        robotStatus.enableAsservCarousel();
+
+        carouselManager.setVitesse(IConstantesNerellConfig.vitesseCarouselNormal);
+        carouselManager.tourne(5 * IConstantesNerellConfig.countPerCarouselIndex + IConstantesNerellConfig.countOffsetInitCarousel);
+        carouselManager.waitMouvement();
+
+        servosService.porteBarilletGauche(IConstantesServos.PORTE_BARILLET_GAUCHE_FERME, false);
+        servosService.porteBarilletDroit(IConstantesServos.PORTE_BARILLET_DROIT_FERME, true);
     }
 }

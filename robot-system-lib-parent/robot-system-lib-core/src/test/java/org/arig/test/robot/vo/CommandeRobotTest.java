@@ -9,7 +9,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 
 /**
  * The Class CommandeRobotTest.
- * 
+ *
  * @author GregoryDepuille
  */
 @RunWith(BlockJUnit4ClassRunner.class)

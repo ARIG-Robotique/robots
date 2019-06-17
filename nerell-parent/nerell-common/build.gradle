@@ -2,8 +2,4 @@ description = "ARIG Association - Nerell Common"
 
 dependencies {
 	compile project(':robot-system-lib-parent:robot-system-lib-core')
-	compile "org.eclipse.jetty:jetty-server:${jettyVersion}"
-	compile "org.eclipse.jetty:jetty-webapp:${jettyVersion}"
-	compile "org.eclipse.jetty:jetty-annotations:${jettyVersion}"
-	compile "org.eclipse.jetty:jetty-servlets:${jettyVersion}"
 }

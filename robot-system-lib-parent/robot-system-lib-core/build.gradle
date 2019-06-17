@@ -1,17 +1,15 @@
 description = "ARIG Association - Robot System Librairie - Core : Librairie coeur du système."
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-
-    compile "org.springframework:spring-context:${springVersion}"
-    compile "org.springframework:spring-webmvc:${springVersion}"
-    compile "org.apache.commons:commons-lang3:${apacheCommonsLangVersion}"
+    compile "org.apache.commons:commons-lang3"
     compile "org.apache.commons:commons-collections4:${apacheCommonsCollectionsVersion}"
     compile "commons-io:commons-io:${apacheCommonsIOVersion}"
-    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     compile "com.google.guava:guava:${googleGuavaVersion}"
-    compile "org.influxdb:influxdb-java:${influxdbVersion}"
     compile "com.kohlschutter.junixsocket:junixsocket-native-common:${junixsocketVersion}"
     compile "com.kohlschutter.junixsocket:junixsocket-common:${junixsocketVersion}"
-    compile "org.slf4j:slf4j-log4j12:${slf4jVersion}"
+    compile "com.github.Ohohcakester:Any-Angle-Pathfinding:${anyAnglePathFindingGitVersion}"
+    compile "com.jfoenix:jfoenix:${jFoenixVersion}"
+    compile "io.datafx:datafx:${dataFxVersion}"
+    compile "io.datafx:flow:${dataFxVersion}"
+    compile "de.jensd:fontawesomefx-fontawesome:${fontAwesomeFxVersion}" // FontAwesome (Bintray)
 }

@@ -74,7 +74,9 @@ public abstract class Abstract2WheelsEncoders {
 
     private void sendMonitoring() {
         // Construction du monitoring
-        MonitorTimeSerie serie = new MonitorTimeSerie().tableName(name)
+        MonitorTimeSerie serie = new MonitorTimeSerie()
+                .measurementName("encodeurs")
+                .addTag(MonitorTimeSerie.TAG_NAME, name)
                 .addField("gauche", getGauche())
                 .addField("droit", getDroit())
                 .addField("distance", getDistance())

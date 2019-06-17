@@ -3,8 +3,6 @@ package org.arig.robot.monitoring;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
-import org.arig.robot.model.AbstractRobotStatus;
-import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 

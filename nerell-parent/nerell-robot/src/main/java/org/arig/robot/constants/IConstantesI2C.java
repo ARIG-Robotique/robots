@@ -1,6 +1,6 @@
 package org.arig.robot.constants;
 
-import com.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
+import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 
 /**
@@ -14,6 +14,9 @@ public interface IConstantesI2C {
     String CODEUR_MOTEUR_GAUCHE = "Codeur Moteur Gauche";
     int CODEUR_GAUCHE_ADDRESS = 0x32;
 
+    String CODEUR_MOTEUR_CAROUSEL = "Codeur Moteur Carousel";
+    int CODEUR_CAROUSEL_ADDRESS = 0x34;
+
     String PCF_ALIM_DEVICE_NAME = "Carte alimentation";
     int PCF_ALIM_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3D;
 
@@ -26,6 +29,9 @@ public interface IConstantesI2C {
     String PCF3_DEVICE_NAME = "PCF 3 (Output)";
     int PCF3_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3F;
 
+    String PCA9685_DEVICE_NAME = "PCA9685";
+    int PCA9685_ADDRESS = 0x40;
+
     String I2C_ADC_DEVICE_NAME = "I2C ADC";
     int I2C_ADC_ADDRESS = 0x48;
 
@@ -35,15 +41,16 @@ public interface IConstantesI2C {
     String TCS34725_DEVICE_NAME = "Front color sensor";
     int TCS34725_ADDRESS = TCS34725ColorSensor.TCS34725_ADDRESS;
 
-    String US_LAT_GAUCHE_NAME = "US Lat Gauche";
-    int US_LAT_GAUCHE_ADDRESS = 0x71;
+    String TINY_LIDAR_MAGASIN_DROIT_DEVICE_NAME = "tinyLidar magasin droit";
+    int TINY_LIDAR_MAGASIN_DROIT_ADDRESS = 0x14;
 
-    String US_GAUCHE_NAME = "US Gauche";
-    int US_GAUCHE_ADDRESS = 0x72;
+    String TINY_LIDAR_MAGASIN_GAUCHE_DEVICE_NAME = "tinyLidar magasin gauche";
+    int TINY_LIDAR_MAGASIN_GAUCHE_ADDRESS = 0x13;
 
-    String US_DROIT_NAME = "US Droit";
-    int US_DROIT_ADDRESS = 0x73;
+    String TINY_LIDAR_AVANT_DROIT_DEVICE_NAME = "tinyLidar avant droit";
+    int TINY_LIDAR_AVANT_DROIT_ADDRESS = 0x11;
 
-    String US_LAT_DROIT_NAME = "US Lat Droit";
-    int US_LAT_DROIT_ADDRESS = 0x70;
+    String TINY_LIDAR_AVANT_GAUCHE_DEVICE_NAME = "tinyLidar avant gauche";
+    int TINY_LIDAR_AVANT_GAUCHE_ADDRESS = 0x12;
+
 }

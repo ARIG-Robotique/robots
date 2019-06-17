@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalUnit;
 
 /**
  * @author gdepuille on 23/05/17.
@@ -23,7 +22,7 @@ public abstract class AbstractAction implements IAction {
     }
 
     protected void updateValidTime() {
-        setValidTime(LocalDateTime.now().plusNanos(2000)); // 2ms
+        setValidTime(LocalDateTime.now().plusSeconds(2));
     }
 
 }

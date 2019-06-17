@@ -14,6 +14,10 @@ public class Point {
     private double x;
     private double y;
 
+    public Point(final Point point) {
+        this(point.x, point.y);
+    }
+
     public void addDeltaX(final double dX) {
         x += dX;
     }
@@ -32,5 +36,11 @@ public class Point {
 
     public Point offsettedY(double dY) {
         return new Point(x, y + dY);
+    }
+
+    public double distance(Point other) {
+        double dX = other.getX() - x;
+        double dY = other.getY() - y;
+        return Math.sqrt(dX * dX + dY * dY);
     }
 }

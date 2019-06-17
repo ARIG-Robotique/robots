@@ -11,6 +11,7 @@ import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,10 +24,10 @@ public abstract class AbstractMonitoringWrapper implements IMonitoringWrapper {
     private AbstractRobotStatus robotStatus = null;
 
     @Getter(AccessLevel.PROTECTED)
-    private final List<MonitorTimeSerie> monitorTimeSeriePoints = new ArrayList<>();
+    private final List<MonitorTimeSerie> monitorTimeSeriePoints = Collections.synchronizedList(new ArrayList<>());
 
     @Getter(AccessLevel.PROTECTED)
-    private final List<AbstractMonitorMouvement> monitorMouvementPoints = new ArrayList<>();
+    private final List<AbstractMonitorMouvement> monitorMouvementPoints = Collections.synchronizedList(new ArrayList<>());
 
     @Setter
     @Getter(AccessLevel.PROTECTED)
@@ -64,7 +65,7 @@ public abstract class AbstractMonitoringWrapper implements IMonitoringWrapper {
 
     @Override
     public void addTimeSeriePoint(MonitorTimeSerie point) {
-        if (robotStatus == null || robotStatus.isMatchEnabled()) {
+        if (robotStatus == null || robotStatus.isForceMonitoring() || robotStatus.isMatchEnabled()) {
             forceAddTimeSeriePoint(point);
         }
     }
@@ -78,7 +79,7 @@ public abstract class AbstractMonitoringWrapper implements IMonitoringWrapper {
 
     @Override
     public void addMouvementPoint(final AbstractMonitorMouvement point) {
-        if (robotStatus == null || robotStatus.isMatchEnabled()) {
+        if (robotStatus == null || robotStatus.isForceMonitoring() || robotStatus.isMatchEnabled()) {
             forceAddMouvementPoint(point);
         }
     }

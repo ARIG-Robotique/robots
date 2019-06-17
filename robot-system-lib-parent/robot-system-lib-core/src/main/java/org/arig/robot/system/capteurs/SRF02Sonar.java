@@ -7,8 +7,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.exception.I2CException;
-import org.arig.robot.filters.values.IAverage;
-import org.arig.robot.filters.values.PassThroughValueAverage;
+import org.arig.robot.filters.average.IAverage;
+import org.arig.robot.filters.average.PassThroughValueAverage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -140,7 +140,7 @@ public class SRF02Sonar {
                 return new AsyncResult<>(INVALID_VALUE);
             } else {
                 // De partout on parle en pulse ou en mm
-                return new AsyncResult<>(avg.average(res * 10));
+                return new AsyncResult<>(avg.filter(res * 10));
             }
         } catch (I2CException | InterruptedException e) {
             log.error("Erreur de lecture du Sonar {} : {}", deviceName, e.toString());

@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.I2CException;
-import org.arig.robot.filters.values.IAverage;
-import org.arig.robot.filters.values.PassThroughValueAverage;
+import org.arig.robot.filters.average.IAverage;
+import org.arig.robot.filters.average.PassThroughValueAverage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -62,9 +62,9 @@ public class GP2D12 {
             int raw10bit = convertTo10BitValue(raw12bit);
             double rawMm = convertToCmFrom10Bit(raw10bit) * 10;
             if (raw10bit >= MIN_RAW_VALUE && raw10bit <= MAX_RAW_VALUE) {
-                int avgRaw12Bit = this.avgRaw12Bit.average(raw12bit);
-                int avgRaw10Bit = this.avgRaw10Bit.average(raw10bit);
-                double avgMm = this.avgCm.average(rawMm);
+                int avgRaw12Bit = this.avgRaw12Bit.filter(raw12bit);
+                int avgRaw10Bit = this.avgRaw10Bit.filter(raw10bit);
+                double avgMm = this.avgCm.filter(rawMm);
                 result.setRaw12BitValue(avgRaw12Bit);
                 result.setRaw10BitValue(avgRaw10Bit);
                 result.setMmValue(avgMm);

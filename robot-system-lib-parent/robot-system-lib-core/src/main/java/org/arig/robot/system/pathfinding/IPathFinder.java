@@ -5,7 +5,6 @@ import org.arig.robot.model.Chemin;
 import org.arig.robot.model.Point;
 
 import java.awt.*;
-import java.io.File;
 import java.io.InputStream;
 
 /**
@@ -24,41 +23,6 @@ public interface IPathFinder {
     Chemin findPath(Point from, Point to) throws NoPathFoundException;
 
     /**
-     * Nombre de tuiles sur l'axe X
-     *
-     * @param nbTileX nombre de tuile sur l'axe X pour constuire le maillage
-     */
-    void setNbTileX(int nbTileX);
-
-    /**
-     * Nombre de tuiles sur l'axe Y
-     *
-     * @param nbTileY nombre de tuile sur l'axe Y pour constuire le maillage
-     */
-    void setNbTileY(int nbTileY);
-
-    /**
-     * Setter pour authorisé les déplacement en diagonale dans le graph
-     *
-     * @param allowDiagonal true pour autorisé les déplacement sur le maillage diagonal
-     */
-    void setAllowDiagonal(boolean allowDiagonal);
-
-    /**
-     * Initialisation du graph par une image en noir et blanc. Le noir représente les zones inaccessible.
-     *
-     * @param filePath Chemin de l'image source
-     */
-    void construitGraphDepuisImageNoirEtBlanc(String filePath);
-
-    /**
-     * Intialisation du graph par une image en noir et blanc. Le noir représente les zones inaccessible
-     *
-     * @param file Fichier image source
-     */
-    void construitGraphDepuisImageNoirEtBlanc(File file);
-
-    /**
      * Intialisation du graph par une image en noir et blanc. Le noir représente les zones inaccessible
      *
      * @param is InputStream image source
@@ -70,6 +34,6 @@ public interface IPathFinder {
      *
      * @param obstacles Une forme représentant les obstacles détecté.
      */
-    void addObstacles(Shape... obstacles);
+    void setObstacles(Shape... obstacles);
 
 }

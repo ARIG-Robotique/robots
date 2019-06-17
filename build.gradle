@@ -1,58 +1,57 @@
 // Configuration pour le build
 buildscript {
+	ext {
+		springBootVersion = '2.1.4.RELEASE'
+	}
+
 	repositories {
 		mavenLocal()
 		mavenCentral()
+		jcenter()
 	}
 	dependencies {
-		// Add build plugins here
+		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
 	}
 }
 
+plugins {
+	id 'com.jfrog.bintray' version '1.7.3' apply false
+}
+
 // Configuration de tous les projets
-configure(allprojects) {
+configure(allprojects) { project ->
 	group = 'org.arig.robot'
-	version = '1.1.0-SNAPSHOT'
+	version = '2019-SNAPSHOT'
 
 	// Variable de configuration
 	ext {
 		// Project dependencies
-		javaVersion = '1.8'
+		javaVersion = '1.9'
 		javaTestVersion = javaVersion
 
 		// Dependencies versions
-		lombokVersion = '1.16.14'
-		springVersion = '4.3.7.RELEASE'
-		apacheCommonsLangVersion = '3.5'
-		apacheCommonsCollectionsVersion = '4.1'
-		apacheCommonsIOVersion = '2.5'
-		googleGuavaVersion = '21.0'
-		jacksonVersion = '2.8.6'
-		influxdbVersion = '2.5'
-		pi4jVersion = '1.2-arig-SNAPSHOT'
-		junixsocketVersion = '2.0.5-SNAPSHOT'
-		slf4jVersion = '1.7.23'
-
-		// Container dependencies
-    	jettyVersion = '9.4.1.v20170120'
-
-		// Test dependencies versions
-		junitVersion = '4.12'
-		mockitoVersion = '2.7.9'
+		springShellVersion = '2.0.1.BUILD-SNAPSHOT'
+		apacheCommonsCollectionsVersion = '4.2'
+		apacheCommonsIOVersion = '2.6'
+		googleGuavaVersion = '27.0.1-jre'
+		pi4jVersion = '1.2-jdk9-SNAPSHOT'
+		junixsocketVersion = '2.2.0'
+		anyAnglePathFindingGitVersion = 'master-7b196baf6b-1'
+		jFoenixVersion = '8.0.8'
+		dataFxVersion = '8.0.1'
+		fontAwesomeFxVersion = '4.7.0-5'
 	}
 
 	// Plugin de build
 	apply plugin: 'java'
-	apply plugin: 'maven'
 	apply plugin: 'jacoco'
+	apply plugin: 'io.spring.dependency-management'
 
-	// Plugin pour les IDE
-  	apply plugin: 'idea'
-
-	// Définition de configurations supplémentaire (non standard
-	configurations {
-        provided
-  	}
+	dependencyManagement {
+		imports {
+			mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+		}
+	}
 
 	// Version pour la compilation
 	compileJava {
@@ -65,44 +64,33 @@ configure(allprojects) {
 		targetCompatibility = javaTestVersion
 	}
 
-	// Classpath de compilation
-	sourceSets {
-		main {
-			compileClasspath += configurations.provided
-		}
-		test {
-			compileClasspath += configurations.provided
-			runtimeClasspath += configurations.provided
-		}
-	}
-
 	// Configuration des repository de dépendences
 	repositories {
 		mavenLocal()
 		mavenCentral()
+		jcenter()
+		maven { url 'https://repo.spring.io/milestone' }
+		maven { url 'https://repo.spring.io/libs-snapshot' }
+		maven { url 'https://jitpack.io' }
+		maven {
+			url "s3://arig-artefacts.s3.eu-west-3.amazonaws.com/maven/snapshots"
+			authentication {
+				awsIm(AwsImAuthentication)
+			}
+		}
 	}
 
 	// Dependence commune pour tous les projets
 	dependencies {
-		provided "org.projectlombok:lombok:${lombokVersion}"
+		compileOnly "org.projectlombok:lombok"
+		testCompileOnly "org.projectlombok:lombok"
+		annotationProcessor "org.projectlombok:lombok"
+		testAnnotationProcessor "org.projectlombok:lombok"
 
-		testCompile "org.springframework:spring-test:${springVersion}"
-		testCompile "junit:junit:${junitVersion}"
-		testCompile "org.mockito:mockito-core:${mockitoVersion}"
-	}
+		compile "org.springframework.boot:spring-boot-starter-webflux"
 
-	// Intégration avec IntellijIDEA
-	idea {
-		targetVersion = "14"
-
-		module {
-			jdkName = javaVersion
-
-			scopes.PROVIDED.plus += [ configurations.provided ]
-
-			downloadJavadoc = true
-			downloadSources = true
-		}
+		testCompile "org.springframework.boot:spring-boot-starter-test"
+		testCompile "io.projectreactor:reactor-test"
 	}
 
 	// JAvaCOCOverage
@@ -127,16 +115,14 @@ configure(subprojects) { subproject ->
 
 	// Configuration pour la Javadoc
 	javadoc {
-		classpath = project.sourceSets.main.compileClasspath + configurations.provided
-
 		options {
-			memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+			memberLevel = JavadocMemberLevel.PROTECTED
 			author = true
 			header = project.name
 		}
 
 		// Désactivation de la Javadoc strict avec le JDK 8
-		if (org.gradle.api.JavaVersion.current().isJava8Compatible()) {
+		if (JavaVersion.current().isJava8Compatible()) {
 			options.addStringOption('Xdoclint:none', '-quiet')
 		}
 	}
@@ -177,7 +163,7 @@ configure(rootProject) {
 
 		reports {
 			xml.enabled true
-			xml.destination "${buildDir}/reports/jacoco/report.xml"
+			xml.destination file("${buildDir}/reports/jacoco/report.xml")
 			html.enabled false
 			csv.enabled false
 		}
@@ -187,8 +173,9 @@ configure(rootProject) {
 		subprojects*.test
 	}
 
-	task wrapper(type: Wrapper) {
+	wrapper {
 		description = "Generates gradlew[.bat] scripts"
-		gradleVersion = "3.4.1"
+		gradleVersion = "5.4.1"
+		distributionType = "all"
 	}
 }

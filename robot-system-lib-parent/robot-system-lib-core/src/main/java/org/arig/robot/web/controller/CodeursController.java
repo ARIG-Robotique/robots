@@ -5,8 +5,8 @@ import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -16,15 +16,15 @@ import java.util.Map;
  * @author gdepuille on 22/12/14.
  */
 @Slf4j
-@Profile(IConstantesConfig.profileMonitoring)
 @RestController
 @RequestMapping("/codeurs")
+@Profile(IConstantesConfig.profileMonitoring)
 public class CodeursController {
 
     @Autowired
     private Abstract2WheelsEncoders encoders;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public Map<String, Double> showValues() {
         encoders.lectureValeurs();
         Map<String, Double> v = new HashMap<>();
@@ -36,7 +36,7 @@ public class CodeursController {
         return v;
     }
 
-    @RequestMapping(value = "/reset", method = RequestMethod.GET)
+    @GetMapping(value = "/reset")
     public void resetValues() {
         encoders.reset();
     }

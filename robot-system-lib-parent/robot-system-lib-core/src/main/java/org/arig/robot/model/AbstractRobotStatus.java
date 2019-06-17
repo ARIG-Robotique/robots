@@ -5,12 +5,22 @@ import lombok.Data;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author gdepuille on 08/05/15.
- */
 @Slf4j
 @Data
 public abstract class AbstractRobotStatus {
+
+    @Setter(AccessLevel.NONE)
+    private boolean forceMonitoring = false;
+
+    public void enableForceMonitoring() {
+        log.warn("Activation du monitoring en dehors du match");
+        forceMonitoring = true;
+    }
+
+    public void disableForceMonitoring() {
+        log.warn("Desactivation du monitoring en dehors du match");
+        forceMonitoring = false;
+    }
 
     @Setter(AccessLevel.NONE)
     private boolean asservEnabled = false;
@@ -23,6 +33,32 @@ public abstract class AbstractRobotStatus {
     public void disableAsserv() {
         log.info("Désactivation asservissement");
         asservEnabled = false;
+    }
+
+    @Setter(AccessLevel.NONE)
+    private boolean asservCarouselEnabled = false;
+
+    public void enableAsservCarousel() {
+        log.info("Activation asservissement carousel");
+        asservCarouselEnabled = true;
+    }
+
+    public void disableAsservCarousel() {
+        log.info("Désactivation asservissement carousel");
+        asservCarouselEnabled = false;
+    }
+
+    @Setter(AccessLevel.NONE)
+    private boolean carouselInitialized = false;
+
+    public void carouselIsInitialized() {
+        log.info("Initialisation du Carousel effectué");
+        carouselInitialized = true;
+    }
+
+    public void carouselIsNotInitialized() {
+        log.info("Désinitialisation du Carousel effectué");
+        carouselInitialized = false;
     }
 
     @Setter(AccessLevel.NONE)
@@ -48,4 +84,9 @@ public abstract class AbstractRobotStatus {
     public void disableMatch() {
         matchEnabled = false;
     }
+
+    public abstract long getElapsedTime();
+
+    public abstract long getRemainingTime();
+
 }

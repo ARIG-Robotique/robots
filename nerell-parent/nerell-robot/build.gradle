@@ -1,12 +1,16 @@
 description = "ARIG Association - Nerell Robot"
 
-dependencies {
-	compile project(':nerell-parent:nerell-common')
-	compile project(':robot-system-lib-parent:robot-system-lib-raspi')
+apply plugin: 'org.springframework.boot'
+
+jar {
+    enabled = true
 }
 
-// Tâche de copy des dépendances
-task copyDependencies(type: Copy) {
-  into "$buildDir/dependencies"
-  from configurations.runtime
+bootJar  {
+    classifier = 'exec'
+}
+
+dependencies {
+    compile project(':robot-system-lib-parent:robot-system-lib-raspi')
+    compile project(':nerell-parent:nerell-common')
 }

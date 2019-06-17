@@ -3,11 +3,13 @@ package org.arig.robot.communication;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.arig.robot.exception.I2CException;
 import org.springframework.util.Assert;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * The Class AbstractI2CManager.
@@ -18,7 +20,10 @@ import java.util.Map;
 public abstract class AbstractI2CManager<D> implements II2CManager {
 
     @Getter(value = AccessLevel.PROTECTED)
-    private final Map<String, D> deviceMap = new HashMap<>();
+    private final Map<String, D> deviceMap = new TreeMap<>();
+
+    @Getter(value = AccessLevel.PROTECTED)
+    private final Map<String, byte[]> deviceQuery = new HashMap<>();
 
     /**
      * Nb device registered.
@@ -58,12 +63,16 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
      * @param deviceName the device name
      * @param device     the address
      */
-    public void registerDevice(final String deviceName, D device) {
+    public void registerDevice(final String deviceName, D device, byte ... cmd) {
         Assert.notNull(device, "Le device doit être précisé");
         Assert.hasText(deviceName, "Le nom de la carte doit être précisé");
 
         log.debug("Enregistrement de la carte {} ({}).", deviceName, device.toString());
         deviceMap.put(deviceName, device);
+
+        if (ArrayUtils.isNotEmpty(cmd)) {
+            deviceQuery.put(deviceName, cmd);
+        }
     }
 
     /**

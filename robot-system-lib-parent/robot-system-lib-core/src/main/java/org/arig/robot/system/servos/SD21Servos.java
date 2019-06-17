@@ -3,6 +3,7 @@ package org.arig.robot.system.servos;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.exception.I2CException;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,6 +19,7 @@ import java.util.Map;
 public class SD21Servos implements InitializingBean {
 
     private static final byte VERSION_REGISTER = 0x40;
+    private static final byte BATTERY_VOLTS_REGISTER = 0x41;
     private static final int NB_SERVOS = 21;
 
     protected String deviceName;
@@ -51,7 +53,6 @@ public class SD21Servos implements InitializingBean {
      * REGISTER 2 : HIGH BYTE POSITION REGISTER
      *
      * @param servoNb the servo nb
-     *
      * @return the base register
      */
     public static byte getBaseRegister(final byte servoNb) {
@@ -81,7 +82,7 @@ public class SD21Servos implements InitializingBean {
             }
             i2cManager.sendData(deviceName, (byte) (SD21Servos.getBaseRegister(servoNb) + 1), (byte) (position & 0xFF), (byte) (position >> 8));
         } catch (I2CException e) {
-            log.error("Erreur lors de l'envoi de la position");
+            log.error("Erreur lors de l'envoi de la position, servo: {}, position: {}", servoNb, position);
         }
     }
 
@@ -180,7 +181,6 @@ public class SD21Servos implements InitializingBean {
      * Get the last position of servo
      *
      * @param servoNb Numero du servo
-     *
      * @return La dernière position du servo
      */
     public int getPosition(final byte servoNb) {
@@ -195,7 +195,6 @@ public class SD21Servos implements InitializingBean {
      * Get the last speed of servo
      *
      * @param servoNb Numero du servo
-     *
      * @return La dernière vitesse du servo
      */
     public int getSpeed(final byte servoNb) {
@@ -219,18 +218,33 @@ public class SD21Servos implements InitializingBean {
         }
     }
 
-    public void waitTime(long waitTime) {
+    public double getTension() {
         try {
-            Thread.sleep(waitTime);
-        } catch (InterruptedException e) {
+            i2cManager.sendData(deviceName, SD21Servos.BATTERY_VOLTS_REGISTER);
+
+            final byte[] rawVolts = i2cManager.getDatas(deviceName, 1);
+
+            final double volts;
+
+            if (rawVolts[0] >= 0) {
+                volts = rawVolts[0] * 0.039; // A battery voltage of 7.2v will read about 184. 6v will read about 154.
+            } else {
+                volts = (255 + rawVolts[0]) * 0.039;
+            }
+
+            log.info("Tension SD21 (raw : {}) : {} volts", rawVolts, volts);
+            return volts;
+        } catch (I2CException e) {
+            log.error("Erreur lors de la récupération de la tension de la carte SD21");
         }
+
+        return -1;
     }
 
     /**
      * Check servo.
      *
      * @param servoNb the servo nb
-     *
      * @return true, if servo number are between 1 and 21. False otherwise
      */
     private boolean checkServo(final byte servoNb) {
@@ -246,7 +260,7 @@ public class SD21Servos implements InitializingBean {
         if (log.isDebugEnabled()) {
             log.debug("Attente pour le mouvement servo {} {} -> {} à la vitesse de {} pendant {} ms", servoNb, oldP, newP, speed, waitTime);
         }
-        waitTime(waitTime);
+        ThreadUtils.sleep(waitTime);
     }
 
     /**
@@ -255,7 +269,6 @@ public class SD21Servos implements InitializingBean {
      * @param start  Position de départ
      * @param target Position d'arrivé
      * @param speed  Valeur de vitesse configuré
-     *
      * @return Le temps d'attente théorique en ms
      */
     private int calculWaitTimeMs(int start, int target, int speed) {
