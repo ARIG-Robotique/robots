@@ -15,7 +15,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="nerell-robot_main" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.projectlombok:lombok:1.18.6" level="project" />
     <orderEntry type="module" module-name="robot-system-lib-raspi_main" />
     <orderEntry type="module" module-name="nerell-common_main" />
     <orderEntry type="module" module-name="robot-system-lib-core_main" />
@@ -109,6 +108,7 @@
     <orderEntry type="library" name="Gradle: io.netty:netty-transport:4.1.34.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-buffer:4.1.34.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-resolver:4.1.34.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.projectlombok:lombok:1.18.6" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-common:4.1.34.Final" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm:5.0.4" level="project" />
   </component>
