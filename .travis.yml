@@ -2,8 +2,8 @@ dist: bionic
 language: java
 sudo: required
 jdk:
-  - oraclejdk9
-  - oraclejdk11
+  - openjdk9
+  - openjdk11
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -12,6 +12,10 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+
+before_install:
+  - sudo apt update
+  - sudo apt install -y openjfx
 
 before_script:
   - sudo pip install pre-commit
