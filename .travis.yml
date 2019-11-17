@@ -2,18 +2,26 @@ dist: bionic
 language: java
 sudo: required
 jdk:
-- oraclejdk9
+  - oraclejdk9
   - oraclejdk11
 
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
 before_script:
-- sudo pip install pre-commit
-- pre-commit install
+  - sudo pip install pre-commit
+  - pre-commit install
 script:
-- pre-commit run --all-files
-- "./gradlew check --warning-mode all"
-- "./gradlew codeCoverageReport --warning-mode all"
+  - pre-commit run --all-files
+  - "./gradlew check --warning-mode all"
+  - "./gradlew codeCoverageReport --warning-mode all"
 after_success:
-- bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)
 
 notifications:
   slack:
