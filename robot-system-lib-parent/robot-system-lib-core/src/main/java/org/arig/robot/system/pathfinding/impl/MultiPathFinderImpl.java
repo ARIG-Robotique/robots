@@ -15,6 +15,7 @@ import org.arig.robot.model.Point;
 import org.arig.robot.system.pathfinding.AbstractPathFinder;
 import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 import org.arig.robot.utils.ImageUtils;
+import org.arig.robot.utils.SimpleCircularList;
 import org.springframework.util.Assert;
 
 import javax.imageio.ImageIO;
@@ -76,7 +77,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         if (workGraph.isBlocked((int) from.getX(), (int) from.getY())) {
             log.warn("Impossible de trouver le noeud de départ, tentative de trouver un autre point proche");
 
-            fromCorrige = getNearestPoint(from);
+            fromCorrige = getNearestPoint(from, to);
 
             if (fromCorrige == null) {
                 log.error("Toujours impossible de trouver le point départ");
@@ -266,31 +267,56 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         algoFunction = null;
     }
 
-    // TODO Choisir dans le quadrant vers la destination pour eviter de reculer.
-    // TODO Chercher plus que 4 points autours, 8 ou 16 ?
-    private Point getNearestPoint(Point from) {
-        Point point;
+    private static final double ROOT_THREE_BY_TWO = Math.sqrt(3) / 2;
+
+    // 1 point tous les 30°
+    private static final List<Point> CHECKPOINTS = Arrays.asList(
+            new Point(1, 0),
+            new Point(ROOT_THREE_BY_TWO, 0.5),
+            new Point(0.5, ROOT_THREE_BY_TWO),
+            new Point(0, 1),
+            new Point(-0.5, ROOT_THREE_BY_TWO),
+            new Point(-ROOT_THREE_BY_TWO, 0.5),
+            new Point(-1, 0),
+            new Point(-ROOT_THREE_BY_TWO, -0.5),
+            new Point(-0.5, -ROOT_THREE_BY_TWO),
+            new Point(0, -1),
+            new Point(0.5, -ROOT_THREE_BY_TWO),
+            new Point(ROOT_THREE_BY_TWO, -0.5)
+    );
+
+    private Point getNearestPoint(final Point from, final Point to) {
+        double angle = Math.atan2(to.getX() - from.getX(), to.getY() - from.getY());
+        if (angle < 0) {
+            angle += Math.PI * 2;
+        }
+
+        // crée une liste de checkpoints dont le premier élément est celui dans la direction générale demandée
+        final SimpleCircularList<Point> checkpoints = new SimpleCircularList<>(CHECKPOINTS);
+        checkpoints.rotate((int) Math.round(angle / Math.PI / 2 * checkpoints.size()));
 
         int seuil = 9;
         int maxSeuil = seuil * 2;
 
+        Point point;
         do {
-            point = from.offsettedX(seuil);
-            if (!workGraph.isBlocked((int) point.getX(), (int) point.getY())) {
-                return point;
+            // itère les checkpoints en alternant à "gauche" et à "droite" du premier
+            for (int i = 0; i < checkpoints.size(); i++) {
+                int index;
+                if (i == 0) {
+                    index = i;
+                } else if (i % 2 == 0) {
+                    index = checkpoints.size() - i / 2;
+                } else {
+                    index = (i + 1) / 2;
+                }
+
+                point = from.offsetted(checkpoints.get(index).getX() * seuil, checkpoints.get(index).getY() * seuil);
+                if (!workGraph.isBlocked((int) point.getX(), (int) point.getY())) {
+                    return point;
+                }
             }
-            point = from.offsettedY(-seuil);
-            if (!workGraph.isBlocked((int) point.getX(), (int) point.getY())) {
-                return point;
-            }
-            point = from.offsettedY(seuil);
-            if (!workGraph.isBlocked((int) point.getX(), (int) point.getY())) {
-                return point;
-            }
-            point = from.offsettedX(-seuil);
-            if (!workGraph.isBlocked((int) point.getX(), (int) point.getY())) {
-                return point;
-            }
+
             seuil += seuil;
         } while (seuil <= maxSeuil);
 
