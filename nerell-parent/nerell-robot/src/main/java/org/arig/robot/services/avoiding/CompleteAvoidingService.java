@@ -5,16 +5,11 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.Cercle;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
-import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.enums.TypeMouvement;
 import org.arig.robot.model.monitor.AbstractMonitorMouvement;
 import org.arig.robot.model.monitor.MonitorMouvementPath;
-import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.pathfinding.IPathFinder;
-import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -22,24 +17,15 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Evitement complet avec recalcul en temps réel du path si obstacle détecté
+ * Ne fonctionne que sur simulateur
+ */
 @Slf4j
 public class CompleteAvoidingService extends AbstractAvoidingService {
 
     @Autowired
-    private ITrajectoryManager trajectoryManager;
-
-    @Autowired
-    private ConvertionRobotUnit conv;
-
-    @Autowired
-    @Qualifier("currentPosition")
-    private Position currentPosition;
-
-    @Autowired
     private IPathFinder pathFinder;
-
-    @Autowired
-    private RobotStatus rs;
 
     private boolean hasObstacle = false;
 
@@ -73,7 +59,7 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
         }
     }
 
-    private boolean checkMouvement() {
+    protected boolean checkMouvement() {
         boolean mouvementHasChanged = false;
 
         // Construction du chemin a parcourir sur le changement de mouvement
@@ -106,7 +92,7 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
         return mouvementHasChanged;
     }
 
-    private boolean checkObstacles() {
+    protected boolean checkObstacles() {
         boolean obstaclesHasChanged = false;
 
         // Si les points lidar on changé on check

@@ -1,14 +1,12 @@
 package org.arig.robot.services.avoiding;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.system.ITrajectoryManager;
-import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Evitement basique : arret complet si obstacle sans reprise
+ */
 @Slf4j
 public class BasicAvoidingService extends AbstractAvoidingService {
-
-    @Autowired
-    private ITrajectoryManager trajectoryManager;
 
     private boolean currentObstacle = false;
 

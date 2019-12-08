@@ -73,7 +73,6 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
             throw new NoPathFoundException(NoPathFoundException.ErrorType.END_NODE_DOES_NOT_EXIST);
         }
 
-        // Choisir dans le quadrant vers la destination pour eviter de reculer.
         if (workGraph.isBlocked((int) from.getX(), (int) from.getY())) {
             log.warn("Impossible de trouver le noeud de départ, tentative de trouver un autre point proche");
 
@@ -267,6 +266,8 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         algoFunction = null;
     }
 
+    // TODO Choisir dans le quadrant vers la destination pour eviter de reculer.
+    // TODO Chercher plus que 4 points autours, 8 ou 16 ?
     private Point getNearestPoint(Point from) {
         Point point;
 
