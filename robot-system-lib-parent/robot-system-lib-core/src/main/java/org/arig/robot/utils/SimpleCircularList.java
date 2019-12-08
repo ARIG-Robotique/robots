@@ -2,6 +2,7 @@ package org.arig.robot.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -19,6 +20,10 @@ public class SimpleCircularList<T> extends ArrayList<T> {
         }
     }
 
+    public SimpleCircularList(final List<T> source) {
+        this(source.size(), source::get);
+    }
+
     @Override
     public T set(int index, T element) {
         return super.set(realIndex(index), element);
@@ -27,10 +32,6 @@ public class SimpleCircularList<T> extends ArrayList<T> {
     @Override
     public T get(int index) {
         return super.get(realIndex(index));
-    }
-
-    public static void main (String ... args) {
-        System.out.println("Modulo -8 % 6 " + (-8 % 6));
     }
 
     /**

@@ -30,6 +30,10 @@ public class Point {
         return new Point(x * f, y * f);
     }
 
+    public Point offsetted(double dX, double dY) {
+        return new Point(x + dX, y + dY);
+    }
+
     public Point offsettedX(double dX) {
         return new Point(x + dX, y);
     }
