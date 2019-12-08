@@ -1,23 +1,13 @@
 package org.arig.robot.services.avoiding;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.CommandeRobot;
-import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.enums.TypeConsigne;
-import org.arig.robot.system.ITrajectoryManager;
-import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Evitement sans path-finding : arret complet en cas d'obstacle et reprise après 1 seconde de blocage
+ */
 @Slf4j
 public class NotBasicAvoidingService extends AbstractAvoidingService {
-
-    @Autowired
-    private ITrajectoryManager trajectoryManager;
-
-    @Autowired
-    private CommandeRobot cmdRobot;
-
-    @Autowired
-    private RobotStatus rs;
 
     private boolean currentObstacle = false;
 
@@ -41,7 +31,7 @@ public class NotBasicAvoidingService extends AbstractAvoidingService {
             obstacleCount++;
             trajectoryManager.obstacleFound();
 
-            if (obstacleCount > 10) {
+            if (obstacleCount > 10) { // le scheduler est a 100ms => 1s d'attente
                 log.warn("L'obstacle n'est pas parti après 1sec, on annule tout");
 
                 cmdRobot.getConsigne().setDistance(0);

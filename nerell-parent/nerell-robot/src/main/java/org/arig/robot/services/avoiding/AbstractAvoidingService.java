@@ -3,11 +3,9 @@ package org.arig.robot.services.avoiding;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
-import org.arig.robot.model.CommandeRobot;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
-import org.arig.robot.model.Shape;
+import org.arig.robot.model.*;
 import org.arig.robot.model.lidar.ScanInfos;
+import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -25,20 +23,26 @@ import java.util.stream.Collectors;
 public abstract class AbstractAvoidingService implements IAvoidingService, InitializingBean {
 
     @Autowired
-    private TableUtils tableUtils;
+    protected ITrajectoryManager trajectoryManager;
 
     @Autowired
-    private ConvertionRobotUnit conv;
+    protected TableUtils tableUtils;
+
+    @Autowired
+    protected ConvertionRobotUnit conv;
 
     @Autowired
     @Qualifier("currentPosition")
-    private Position position;
+    protected Position currentPosition;
 
     @Autowired
     private ILidarTelemeter lidar;
 
     @Autowired
-    private CommandeRobot cmdRobot;
+    protected CommandeRobot cmdRobot;
+
+    @Autowired
+    protected RobotStatus rs;
 
     // Stockages des points d'obstacles
     @Getter
@@ -82,8 +86,8 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
     }
 
     private boolean checkValidPointForSeuil(Point pt, int seuilMm) {
-        long dX = (long) (pt.getX() - conv.pulseToMm(position.getPt().getX()));
-        long dY = (long) (pt.getY() - conv.pulseToMm(position.getPt().getY()));
+        long dX = (long) (pt.getX() - conv.pulseToMm(currentPosition.getPt().getX()));
+        long dY = (long) (pt.getY() - conv.pulseToMm(currentPosition.getPt().getY()));
         double distanceMm = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
 
         if (distanceMm > seuilMm) {
@@ -91,7 +95,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService, Initi
         }
 
         double alpha = Math.toDegrees(Math.atan2(Math.toRadians(dY), Math.toRadians(dX)));
-        double dA = alpha - conv.pulseToDeg(position.getAngle());
+        double dA = alpha - conv.pulseToDeg(currentPosition.getAngle());
         if (dA > 180) {
             dA -= 360;
         } else if (dA < -180) {

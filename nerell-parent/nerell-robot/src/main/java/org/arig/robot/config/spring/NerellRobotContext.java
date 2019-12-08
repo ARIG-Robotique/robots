@@ -20,6 +20,7 @@ import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.services.avoiding.BasicAvoidingService;
 import org.arig.robot.services.avoiding.CompleteAvoidingService;
 import org.arig.robot.services.avoiding.NotBasicAvoidingService;
+import org.arig.robot.services.avoiding.SemiCompleteAvoidingService;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
@@ -191,13 +192,17 @@ public class NerellRobotContext {
 
     @Bean
     public IAvoidingService avoidingService(Environment env) {
-        IConstantesNerellConfig.AvoidingSelection avoidingImplementation = env.getProperty("robot.avoidance.implementation", IConstantesNerellConfig.AvoidingSelection.class);
-        if (avoidingImplementation == IConstantesNerellConfig.AvoidingSelection.BASIC) {
-            return new BasicAvoidingService();
-        } else if (avoidingImplementation == IConstantesNerellConfig.AvoidingSelection.NOT_BASIC) {
+        IConstantesNerellConfig.AvoidingSelection avoidingImplementation = env.getProperty("robot.avoidance.implementation", IConstantesNerellConfig.AvoidingSelection.class, IConstantesNerellConfig.AvoidingSelection.FULL);
+        switch (avoidingImplementation) {
+            case BASIC:
+                return new BasicAvoidingService();
+            case NOT_BASIC:
                 return new NotBasicAvoidingService();
-        } else {
-            return new CompleteAvoidingService();
+            case SEMI_FULL:
+                return new SemiCompleteAvoidingService();
+            case FULL:
+            default:
+                return new CompleteAvoidingService();
         }
     }
 }
