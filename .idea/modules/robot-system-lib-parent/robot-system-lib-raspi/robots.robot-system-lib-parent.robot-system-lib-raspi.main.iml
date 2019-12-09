@@ -5,22 +5,27 @@
       <configuration />
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_9">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_11">
     <output url="file://$MODULE_DIR$/../../../../robot-system-lib-parent/robot-system-lib-raspi/out/production/classes" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../../../robot-system-lib-parent/robot-system-lib-raspi/build/generated/sources/annotationProcessor/java/main">
-      <sourceFolder url="file://$MODULE_DIR$/../../../../robot-system-lib-parent/robot-system-lib-raspi/build/generated/sources/annotationProcessor/java/main" isTestSource="false" generated="true" />
-    </content>
     <content url="file://$MODULE_DIR$/../../../../robot-system-lib-parent/robot-system-lib-raspi/src/main">
       <sourceFolder url="file://$MODULE_DIR$/../../../../robot-system-lib-parent/robot-system-lib-raspi/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../../robot-system-lib-parent/robot-system-lib-raspi/src/main/generated" isTestSource="false" generated="true" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="robot-system-lib-core_main" />
+    <orderEntry type="module" module-name="robots.robot-system-lib-parent.robot-system-lib-core.main" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-webflux:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: com.pi4j:pi4j-gpio-extension:1.2-jdk9-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: com.pi4j:pi4j-core:1.2-jdk9-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-fxml:linux:11.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-controls:linux:11.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-controls:11.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-graphics:linux:11.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-graphics:11.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-base:linux:11.0.2" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-json:2.1.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-base:11.0.2" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-reactor-netty:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.hibernate.validator:hibernate-validator:6.0.16.Final" level="project" />

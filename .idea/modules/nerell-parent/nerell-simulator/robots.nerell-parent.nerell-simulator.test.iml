@@ -5,24 +5,25 @@
       <configuration />
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_9">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_11">
     <output-test url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-simulator/out/test/classes" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-simulator/build/generated/sources/annotationProcessor/java/test">
-      <sourceFolder url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-simulator/build/generated/sources/annotationProcessor/java/test" isTestSource="true" generated="true" />
-    </content>
     <content url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-simulator/src/test" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="nerell-simulator_main" />
-    <orderEntry type="module" module-name="robot-system-lib-bouchon_main" />
-    <orderEntry type="module" module-name="nerell-common_main" />
-    <orderEntry type="module" module-name="robot-system-lib-core_main" />
+    <orderEntry type="module" module-name="robots.nerell-parent.nerell-simulator.main" />
+    <orderEntry type="module" module-name="robots.robot-system-lib-parent.robot-system-lib-bouchon.main" />
+    <orderEntry type="module" module-name="robots.nerell-parent.nerell-common.main" />
+    <orderEntry type="module" module-name="robots.robot-system-lib-parent.robot-system-lib-core.main" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-webflux:2.1.4.RELEASE" level="project" />
-    <orderEntry type="library" name="Gradle: org.openjfx:javafx-fxml:11" level="project" />
-    <orderEntry type="library" name="Gradle: org.openjfx:javafx-controls:11" level="project" />
-    <orderEntry type="library" name="Gradle: org.openjfx:javafx-graphics:11" level="project" />
-    <orderEntry type="library" name="Gradle: org.openjfx:javafx-base:11" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-fxml:11.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-fxml:linux:11.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-controls:11.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-controls:linux:11.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-graphics:11.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-graphics:linux:11.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-base:11.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-base:linux:11.0.2" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-test:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: io.projectreactor:reactor-test:3.2.8.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-json:2.1.4.RELEASE" level="project" />
@@ -32,7 +33,6 @@
     <orderEntry type="library" name="Gradle: org.springframework:spring-webflux:5.1.6.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-web:5.1.6.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.synchronoss.cloud:nio-multipart-parser:1.1.0" level="project" />
-    <orderEntry type="library" name="Gradle: commons-io:commons-io:2.6" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-test-autoconfigure:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-test:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: com.jayway.jsonpath:json-path:2.4.0" level="project" />
@@ -56,8 +56,8 @@
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-logging:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: javax.annotation:javax.annotation-api:1.3.2" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.9.8" level="project" />
-    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.8" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.yaml:snakeyaml:1.23" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.8" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.8" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.9.8" level="project" />
     <orderEntry type="library" name="Gradle: javax.validation:validation-api:2.0.1.Final" level="project" />
@@ -70,6 +70,7 @@
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.26" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.8.1" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-collections4:4.2" level="project" />
+    <orderEntry type="library" name="Gradle: commons-io:commons-io:2.6" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:guava:27.0.1-jre" level="project" />
     <orderEntry type="library" name="Gradle: com.kohlschutter.junixsocket:junixsocket-native-common:2.2.0" level="project" />
     <orderEntry type="library" name="Gradle: com.kohlschutter.junixsocket:junixsocket-common:2.2.0" level="project" />
@@ -114,5 +115,5 @@
     <orderEntry type="library" name="Gradle: io.netty:netty-common:4.1.34.Final" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm:5.0.4" level="project" />
   </component>
-  <component name="TestModuleProperties" production-module="nerell-simulator_main" />
+  <component name="TestModuleProperties" production-module="robots.nerell-parent.nerell-simulator.main" />
 </module>
