@@ -16,6 +16,7 @@ buildscript {
 
 plugins {
 	id 'com.jfrog.bintray' version '1.7.3' apply false
+	id 'org.openjfx.javafxplugin' version '0.0.8'
 }
 
 // Configuration de tous les projets
@@ -26,7 +27,7 @@ configure(allprojects) { project ->
 	// Variable de configuration
 	ext {
 		// Project dependencies
-		javaVersion = '1.9'
+		javaVersion = '11'
 		javaTestVersion = javaVersion
 
 		// Dependencies versions
@@ -46,6 +47,7 @@ configure(allprojects) { project ->
 	apply plugin: 'java'
 	apply plugin: 'jacoco'
 	apply plugin: 'io.spring.dependency-management'
+	apply plugin: 'org.openjfx.javafxplugin'
 
 	dependencyManagement {
 		imports {
@@ -111,6 +113,11 @@ configure(subprojects) { subproject ->
 		manifest.attributes["Implementation-Version"] = subproject.version
 		manifest.attributes["Created-By"] = "Gradle " + gradle.gradleVersion
 		manifest.attributes["Build-Jdk"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
+	}
+
+	javafx {
+		version = "11.0.2"
+		modules = [ 'javafx.controls', 'javafx.fxml' ]
 	}
 
 	// Configuration pour la Javadoc
