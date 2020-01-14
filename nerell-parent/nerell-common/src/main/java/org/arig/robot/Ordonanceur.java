@@ -20,11 +20,9 @@ import org.arig.robot.model.ecran.UpdateMatchInfos;
 import org.arig.robot.model.ecran.UpdateStateInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.arig.robot.services.CarouselService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.StrategyManager;
-import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.capteurs.IEcran;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
@@ -46,9 +44,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author gdepuille on 08/03/15.
- */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Ordonanceur {
@@ -77,9 +72,6 @@ public class Ordonanceur {
     private StrategyManager strategyManager;
 
     @Autowired
-    private ICarouselManager carouselManager;
-
-    @Autowired
     private IPathFinder pathFinder;
 
     @Autowired
@@ -93,9 +85,6 @@ public class Ordonanceur {
 
     @Autowired
     private TableUtils tableUtils;
-
-    @Autowired
-    private CarouselService carouselService;
 
     @Autowired
     @Qualifier("currentPosition")
@@ -215,9 +204,6 @@ public class Ordonanceur {
         displayScreenMessage("Démarrage du lidar");
         lidar.startScan();
 
-        displayScreenMessage("Initialisation du Carousel");
-        initialisationCarousel();
-
         displayScreenMessage("Attente mise de la tirette");
         while(!ioService.tirette()) {
             ThreadUtils.sleep(100);
@@ -244,18 +230,9 @@ public class Ordonanceur {
 
         robotStatus.stopMatch();
 
-        ioService.airElectroVanneDroite();
-        ioService.airElectroVanneGauche();
-        ioService.disablePompeAVideDroite();
-        ioService.disablePompeAVideGauche();
-        servosService.ascenseurDroit(IConstantesServos.ASCENSEUR_DROIT_DISTRIBUTEUR, false);
-        servosService.ascenseurGauche(IConstantesServos.ASCENSEUR_GAUCHE_DISTRIBUTEUR, false);
-        servosService.pivotVentouseDroit(IConstantesServos.PIVOT_VENTOUSE_DROIT_FACADE, false);
-        servosService.pivotVentouseGauche(IConstantesServos.PIVOT_VENTOUSE_GAUCHE_FACADE, false);
-        servosService.pinceSerragePaletGauche(IConstantesServos.PINCE_SERRAGE_PALET_GAUCHE_REPOS, false);
-        servosService.pinceSerragePaletDroit(IConstantesServos.PINCE_SERRAGE_PALET_DROIT_REPOS, false);
-        servosService.ejectionMagasinGauche(IConstantesServos.EJECTION_MAGASIN_GAUCHE_OUVERT, false);
-        servosService.ejectionMagasinDroit(IConstantesServos.EJECTION_MAGASIN_DROIT_OUVERT, true);
+        ioService.airElectroVanneAvant();
+        ioService.disablePompeAVideAvant();
+        servosService.ascenseurAvant(IConstantesServos.POS_ASCENSEUR_AVANT_HAUT, false);
 
         log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
 
@@ -289,10 +266,6 @@ public class Ordonanceur {
         // Ejection du stock
         ioService.enableAlim5VPuissance();
         ioService.enableAlim12VPuissance();
-
-        robotStatus.enableAsservCarousel();
-        carouselService.ejectionAvantRetourStand();
-        robotStatus.disableAsservCarousel();
 
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();
@@ -416,42 +389,6 @@ public class Ordonanceur {
             new Thread(err).start();
         } catch (IOException e) {
             log.info("Score : {}", score);
-        }
-    }
-
-    public void initialisationCarousel() {
-        if (!robotStatus.isSimulateur()) {
-            servosService.porteBarilletGauche(IConstantesServos.PORTE_BARILLET_GAUCHE_OUVERT, false);
-            servosService.porteBarilletDroit(IConstantesServos.PORTE_BARILLET_DROIT_OUVERT, false);
-
-            robotStatus.carouselIsNotInitialized();
-            robotStatus.disableAsservCarousel();
-
-            carouselManager.rawMotorSpeed(500);
-            ThreadUtils.sleep(2000);
-            while (!ioService.indexCarousel()) {
-                ThreadUtils.sleep(10);
-            }
-            carouselManager.rawMotorSpeed(-500);
-            while (ioService.indexCarousel()) {
-                ThreadUtils.sleep(10);
-            }
-            carouselManager.rawMotorSpeed(400);
-            while (!ioService.indexCarousel()) {
-                ThreadUtils.sleep(10);
-            }
-            carouselManager.stop();
-            carouselManager.resetEncodeur();
-
-            robotStatus.carouselIsInitialized();
-            robotStatus.enableAsservCarousel();
-
-            carouselManager.setVitesse(IConstantesNerellConfig.vitesseCarouselNormal);
-            carouselManager.tourne(5 * IConstantesNerellConfig.countPerCarouselIndex + IConstantesNerellConfig.countOffsetInitCarousel);
-            carouselManager.waitMouvement();
-
-            servosService.porteBarilletGauche(IConstantesServos.PORTE_BARILLET_GAUCHE_FERME, false);
-            servosService.porteBarilletDroit(IConstantesServos.PORTE_BARILLET_DROIT_FERME, true);
         }
     }
 }

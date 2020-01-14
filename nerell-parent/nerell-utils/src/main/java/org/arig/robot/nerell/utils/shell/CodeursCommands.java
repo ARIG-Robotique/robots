@@ -5,17 +5,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.arig.robot.model.CommandeAsservissementPosition;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.IIOService;
-import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
-import org.arig.robot.system.encoders.AbstractEncoder;
-import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
-import org.arig.robot.utils.ThreadUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -34,20 +27,12 @@ import java.util.stream.Collectors;
 @ShellCommandGroup("Codeurs")
 public class CodeursCommands {
 
-    private final AbstractEncoder carouselEncoder;
     private final Abstract2WheelsEncoders wheelsEncoders;
     private final AbstractPropulsionsMotors propulsionsMotors;
     private final IIOService ioService;
     private final RobotStatus rs;
-    private final CommandeAsservissementPosition cmdAsservCarousel;
-    private final ICarouselManager cm;
-
-    @Autowired
-    @Qualifier("motorCarousel")
-    private AbstractMotor carouselMotor;
 
     private final List<InfoCapturePropulsions> infosPropulsions = new ArrayList<>();
-    private final List<InfoCaptureCarousel> infosCarousel = new ArrayList<>();
 
     public Availability alimentationOk() {
         return ioService.auOk() && ioService.alimPuissance5VOk() && ioService.alimPuissance12VOk()
@@ -59,13 +44,6 @@ public class CodeursCommands {
     public void readCodeursRoues() {
         wheelsEncoders.lectureValeurs();
         log.info("Gauche : {} - Droite : {}", wheelsEncoders.getGauche(), wheelsEncoders.getDroit());
-    }
-
-    @SneakyThrows
-    @ShellMethod("Lecture du codeur carousel")
-    public void readCodeurCarousel() {
-        carouselEncoder.lectureValeur();
-        log.info("Carousel : {}", carouselEncoder.getValue());
     }
 
     @SneakyThrows
@@ -99,82 +77,6 @@ public class CodeursCommands {
     }
 
     @SneakyThrows
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Capture des valeurs du codeur du carousel")
-    public void captureCodeurCarousel() {
-        // Vitesse positive
-        log.info("Reset codeurs");
-        carouselEncoder.reset();
-        for (int vitesse = carouselMotor.getStopSpeed(); vitesse <= carouselMotor.getMaxSpeed(); vitesse++) {
-            captureCarouselForVitesse(vitesse);
-        }
-
-        carouselMotor.stop();
-        Thread.sleep(5000);
-
-        // Vitesse négative
-        log.info("Reset codeurs");
-        carouselEncoder.reset();
-        for (int vitesse = carouselMotor.getStopSpeed() - 1; vitesse >= carouselMotor.getMinSpeed(); vitesse--) {
-            captureCarouselForVitesse(vitesse);
-        }
-
-        carouselMotor.stop();
-
-        // Ecriture en CSV
-        List<String> lines = infosCarousel.parallelStream()
-                .map(i -> String.format("%s;%s", i.getVitesse(), i.getValue()))
-                .collect(Collectors.toList());
-        IOUtils.writeLines(lines, "\n", new FileOutputStream("capture-carousel.csv"), Charset.defaultCharset());
-    }
-
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Calibration carousel")
-    public void calibrationCarousel() {
-
-        carouselEncoder.reset();
-
-        List<Double> values = new ArrayList<>();
-        double sum = 0;
-        int nbtours = 50;
-
-        for (int mesure = 0; mesure <= nbtours; mesure++) {
-            carouselMotor.speed(100);
-
-            ThreadUtils.sleep(2000);
-
-            while (!ioService.indexCarousel()) {
-                ThreadUtils.sleep(10);
-            }
-
-            carouselMotor.speed(-80);
-
-            while (ioService.indexCarousel()) {
-                ThreadUtils.sleep(10);
-            }
-
-            carouselMotor.speed(80);
-
-            while (!ioService.indexCarousel()) {
-                ThreadUtils.sleep(10);
-            }
-
-            carouselMotor.stop();
-            carouselEncoder.lectureValeur();
-
-            if (mesure > 0) {
-                double value = carouselEncoder.getValue();
-                values.add(value);
-                sum += value;
-                log.info("Valeur : {}, moyenne: {}", value, sum / mesure / 6);
-            }
-        }
-
-        log.info("Valeurs rotation : {}", values);
-        log.info("Moyenne : {}", sum / nbtours / 6);
-    }
-
-    @SneakyThrows
     private void capturePropulsionsForVitesse(int vitesse) {
         log.info("Vitesse moteurs propulsions {}", vitesse);
         propulsionsMotors.generateMouvement(vitesse, vitesse);
@@ -186,27 +88,10 @@ public class CodeursCommands {
         }
     }
 
-    @SneakyThrows
-    private void captureCarouselForVitesse(int vitesse) {
-        log.info("Vitesse moteur carousel {}", vitesse);
-        carouselMotor.speed(vitesse);
-        for (int mesure = 0; mesure < 10; mesure++) {
-            Thread.sleep(10);
-
-            carouselEncoder.lectureValeur();
-            infosCarousel.add(new InfoCaptureCarousel(vitesse, carouselEncoder.getValue()));
-        }
-    }
-
     @Data
     class InfoCapturePropulsions {
         private final int vitesse;
         private final double gauche, droit;
     }
 
-    @Data
-    class InfoCaptureCarousel {
-        private final int vitesse;
-        private final double value;
-    }
 }

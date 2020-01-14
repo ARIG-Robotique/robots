@@ -43,9 +43,6 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @author gdepuille on 30/10/16.
- */
 @Configuration
 @ComponentScan("org.arig.robot.clr")
 public class NerellSimulatorContext {
@@ -82,11 +79,6 @@ public class NerellSimulatorContext {
     }
 
     @Bean
-    public AbstractMotor motorCarousel() {
-        return new BouchonMotor();
-    }
-
-    @Bean
     @SneakyThrows
     public ARIG2WheelsEncoders encoders(ResourcePatternResolver patternResolver) {
         InputStream is = patternResolver.getResource("classpath:nerell-propulsions.csv").getInputStream();
@@ -103,24 +95,6 @@ public class NerellSimulatorContext {
                 .collect(Collectors.toList());
 
         return new BouchonARIG2WheelsEncoders(IConstantesI2CSimulator.CODEUR_MOTEUR_GAUCHE, IConstantesI2CSimulator.CODEUR_MOTEUR_DROIT, values);
-    }
-
-    @Bean
-    @SneakyThrows
-    public ARIGEncoder encoderCarousel(ResourcePatternResolver patternResolver) {
-        InputStream is = patternResolver.getResource("classpath:nerell-carousel.csv").getInputStream();
-        List<String> lines = IOUtils.readLines(is, Charset.defaultCharset());
-        List<BouchonEncoderValue> values = lines.parallelStream()
-                .filter(l -> !l.startsWith("#"))
-                .map(l -> {
-                    String [] v = l.split(";");
-                    return new BouchonEncoderValue()
-                            .vitesseMoteur(Integer.parseInt(v[0]))
-                            .value(Double.parseDouble(v[1]));
-                })
-                .collect(Collectors.toList());
-
-        return new BouchonARIGEncoder(IConstantesI2CSimulator.CODEUR_MOTEUR_CAROUSEL, values);
     }
 
     @Bean

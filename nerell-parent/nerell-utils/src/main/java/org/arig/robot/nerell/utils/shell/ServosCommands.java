@@ -34,26 +34,12 @@ public class ServosCommands {
     }
 
     @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Gestion des portes")
-    public void portes(@NotNull Boolean open) {
-        if (open) {
-            servosService.porteBarilletDroit(IConstantesServos.PORTE_BARILLET_DROIT_OUVERT, false);
-            servosService.porteBarilletGauche(IConstantesServos.PORTE_BARILLET_GAUCHE_OUVERT, true);
-        } else {
-            servosService.porteBarilletDroit(IConstantesServos.PORTE_BARILLET_DROIT_FERME, false);
-            servosService.porteBarilletGauche(IConstantesServos.PORTE_BARILLET_GAUCHE_FERME, true);
-        }
-    }
-
-    @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Gestion de l'ascenseur")
     public void ascenseur(@NotNull Boolean top) {
         if (top) {
-            servosService.ascenseurDroit(IConstantesServos.ASCENSEUR_DROIT_CAROUSEL_DEPOSE, false);
-            servosService.ascenseurGauche(IConstantesServos.ASCENSEUR_GAUCHE_CAROUSEL_DEPOSE, true);
+            servosService.ascenseurAvant(IConstantesServos.POS_ASCENSEUR_AVANT_HAUT, false);
         } else {
-            servosService.ascenseurDroit(IConstantesServos.ASCENSEUR_DROIT_TABLE, false);
-            servosService.ascenseurGauche(IConstantesServos.ASCENSEUR_GAUCHE_TABLE, true);
+            servosService.ascenseurAvant(IConstantesServos.POS_ASCENSEUR_AVANT_BAS, true);
         }
     }
 

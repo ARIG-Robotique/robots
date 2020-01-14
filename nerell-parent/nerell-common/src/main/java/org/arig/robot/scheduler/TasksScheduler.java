@@ -8,7 +8,6 @@ import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.CalageBordureService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.strategy.StrategyManager;
-import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +34,6 @@ public class TasksScheduler implements InitializingBean {
     private ITrajectoryManager trajectoryManager;
 
     @Autowired
-    private ICarouselManager carouselManager;
-
-    @Autowired
     private CalageBordureService calageBordure;
 
     @Autowired
@@ -47,7 +43,6 @@ public class TasksScheduler implements InitializingBean {
     public void afterPropertiesSet() {
         Thread processThread = new Thread(() -> {
             long lastTimeAsserv = System.nanoTime();
-            long lastTimeAsservCarousel = lastTimeAsserv;
             long lastTimeI2C = lastTimeAsserv;
             long lastTimeCalage = lastTimeAsserv;
 
@@ -81,28 +76,6 @@ public class TasksScheduler implements InitializingBean {
                             .addField("rate", IConstantesNerellConfig.asservTimeMs)
                             .addField("runTime", System.nanoTime() - timeStartAsserv)
                             .addField("execTime", ellapsedAsserv);
-
-                    monitoringWrapper.addTimeSeriePoint(serie);
-                }
-
-                long timeStartAsservCarousel = System.nanoTime();
-                long ellapsedAsservCarousel = timeStartAsservCarousel - lastTimeAsservCarousel;
-
-                if (ellapsedAsservCarousel >= IConstantesNerellConfig.asservTimeCarouselMs * 1000000) {
-                    lastTimeAsservCarousel = timeStartAsservCarousel;
-
-                    if (rs.isCarouselInitialized() && rs.isAsservCarouselEnabled()) {
-                        carouselManager.process();
-                    } else if (rs.isCarouselInitialized()) {
-                        carouselManager.stop();
-                    }
-
-                    MonitorTimeSerie serie = new MonitorTimeSerie()
-                            .measurementName("tasks")
-                            .addTag(MonitorTimeSerie.TAG_NAME, "asservissementCarousel")
-                            .addField("rate", IConstantesNerellConfig.asservTimeCarouselMs)
-                            .addField("runTime", System.nanoTime() - timeStartAsservCarousel)
-                            .addField("execTime", ellapsedAsservCarousel);
 
                     monitoringWrapper.addTimeSeriePoint(serie);
                 }

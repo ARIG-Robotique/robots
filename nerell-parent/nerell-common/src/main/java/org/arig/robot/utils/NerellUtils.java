@@ -2,26 +2,11 @@ package org.arig.robot.utils;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.arig.robot.constants.IConstantesNerellConfig;
-import org.arig.robot.model.ESide;
-import org.arig.robot.model.Point;
 
 import java.util.concurrent.CompletableFuture;
 
 public enum NerellUtils {
     ;
-
-    /**
-     * Retourne l'angle à utiliser dans {@link org.arig.robot.system.TrajectoryManager#alignFrontToAvecDecalage(double, double, double)}
-     * pour qu'on point tombe dans une pince
-     */
-    public static double getAngleDecallagePince(Point from, Point to, ESide side) {
-        double distance = from.distance(to);
-
-        double angle = Math.toDegrees(Math.asin(IConstantesNerellConfig.dstAtomeCentre / distance));
-
-        return ESide.DROITE.equals(side) ? angle : -angle;
-    }
 
     /**
      * Wrapper autour de CompletavleFuture#allOf pour récupérer le resultat

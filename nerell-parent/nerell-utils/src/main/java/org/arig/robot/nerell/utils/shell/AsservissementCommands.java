@@ -4,11 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.arig.robot.Ordonanceur;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.filters.pid.IPidFilter;
-import org.arig.robot.model.CommandeAsservissementPosition;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
@@ -16,7 +14,6 @@ import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.IIOService;
-import org.arig.robot.utils.ConvertionCarouselUnit;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -42,13 +39,10 @@ public class AsservissementCommands {
     private final IIOService ioService;
     private final RobotStatus rs;
     private final ConvertionRobotUnit convRobot;
-    private final ConvertionCarouselUnit convCarousel;
     private final CommandeRobot cmdRobot;
-    private final CommandeAsservissementPosition cmdAsservCarousel;
     private final Position currentPosition;
     private final IPidFilter pidDistance;
     private final IPidFilter pidOrientation;
-    private final IPidFilter pidCarousel;
 
     private void startMonitoring() {
         final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
@@ -92,12 +86,6 @@ public class AsservissementCommands {
         pidOrientation.reset();
     }
 
-    @ShellMethod("Réglage PID Carousel")
-    public void pidCarousel(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
-        pidCarousel.setTunings(kp, ki * IConstantesNerellConfig.asservTimeCarouselS, kd / IConstantesNerellConfig.asservTimeCarouselS);
-        pidCarousel.reset();
-    }
-
     @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Asservissement du robot")
     public void asservRobot(@NotNull TypeConsigne[] typeConsignes, long distance, long orientation, long vitesseDistance, long vitesseOrientation) {
@@ -132,32 +120,6 @@ public class AsservissementCommands {
     @ShellMethod("Désactivation asservissement du robot")
     public void disableAsservRobot() {
         rs.disableAsserv();
-        endMonitoring();
-    }
-
-
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Initialisation carousel")
-    public void initialisationCarousel() {
-        Ordonanceur.getInstance().initialisationCarousel();
-        rs.enableCarousel();
-    }
-
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Asservissement du Carousel")
-    public void asservCarousel(int index, long vitesse) {
-        startMonitoring();
-
-        cmdAsservCarousel.getVitesse().setValue(vitesse);
-        cmdAsservCarousel.getConsigne().setValue(convCarousel.indexToPulse(index));
-        cmdAsservCarousel.setFrein(true);
-
-        rs.enableAsservCarousel();
-    }
-
-    @ShellMethod("Désactivation asservissement du carousel")
-    public void disableAsservCarousel() {
-        rs.disableAsservCarousel();
         endMonitoring();
     }
 

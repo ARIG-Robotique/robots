@@ -32,10 +32,7 @@ import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TinyLidar;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
-import org.arig.robot.system.encoders.ARIGEncoder;
-import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
-import org.arig.robot.system.motors.PCA9685Motor;
 import org.arig.robot.system.motors.PropulsionsPCA9685Motors;
 import org.arig.robot.system.process.EcranProcess;
 import org.arig.robot.system.process.RPLidarBridgeProcess;
@@ -49,9 +46,6 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-/**
- * @author gdepuille on 21/12/13.
- */
 @Slf4j
 @Configuration
 public class NerellRobotContext {
@@ -83,11 +77,8 @@ public class NerellRobotContext {
         manager.registerDevice(IConstantesI2C.SERVO_DEVICE_NAME, IConstantesI2C.SD21_ADDRESS);
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_DROIT, IConstantesI2C.CODEUR_DROIT_ADDRESS);
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_GAUCHE, IConstantesI2C.CODEUR_GAUCHE_ADDRESS);
-        manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_CAROUSEL, IConstantesI2C.CODEUR_CAROUSEL_ADDRESS);
         manager.registerDevice(IConstantesI2C.TCS34725_DEVICE_NAME, IConstantesI2C.TCS34725_ADDRESS);
         manager.registerDevice(IConstantesI2C.I2C_ADC_DEVICE_NAME, IConstantesI2C.I2C_ADC_ADDRESS);
-//        manager.registerDevice(IConstantesI2C.TINY_LIDAR_MAGASIN_DROIT_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_MAGASIN_DROIT_ADDRESS, (byte) 0x44);
-//        manager.registerDevice(IConstantesI2C.TINY_LIDAR_MAGASIN_GAUCHE_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_MAGASIN_GAUCHE_ADDRESS, (byte) 0x44);
 //        manager.registerDevice(IConstantesI2C.TINY_LIDAR_AVANT_DROIT_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_AVANT_DROIT_ADDRESS, (byte) 0x44);
 //        manager.registerDevice(IConstantesI2C.TINY_LIDAR_AVANT_GAUCHE_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_AVANT_GAUCHE_ADDRESS, (byte) 0x44);
 
@@ -112,11 +103,6 @@ public class NerellRobotContext {
     }
 
     @Bean
-    public ARIGEncoder encoderCarousel() {
-        return new ARIGEncoder(IConstantesI2C.CODEUR_MOTEUR_CAROUSEL);
-    }
-
-    @Bean
     @SneakyThrows
     public PCA9685GpioProvider pca9685GpioControler(I2CBus bus) {
         final PCA9685GpioProvider gpioProvider = new PCA9685GpioProvider(bus, IConstantesI2C.PCA9685_ADDRESS, new BigDecimal(200));
@@ -130,11 +116,6 @@ public class NerellRobotContext {
         gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_05);
 
         return gpioProvider;
-    }
-
-    @Bean
-    public AbstractMotor motorCarousel() {
-        return new PCA9685Motor(PCA9685Pin.PWM_05, PCA9685Pin.PWM_04);
     }
 
     @Bean
@@ -154,24 +135,10 @@ public class NerellRobotContext {
     public I2CAdcAnalogInput i2cAdc() {
         return new I2CAdcAnalogInput(IConstantesI2C.I2C_ADC_DEVICE_NAME);
     }
-    @Bean
-    public TinyLidar stockMagasinDroit() {
-        return new TinyLidar(IConstantesI2C.TINY_LIDAR_MAGASIN_DROIT_DEVICE_NAME);
-    }
 
     @Bean
-    public TinyLidar stockMagasinGauche() {
-        return new TinyLidar(IConstantesI2C.TINY_LIDAR_MAGASIN_GAUCHE_DEVICE_NAME);
-    }
-
-    @Bean
-    public TinyLidar distanceAvantDroit() {
-        return new TinyLidar(IConstantesI2C.TINY_LIDAR_AVANT_DROIT_DEVICE_NAME);
-    }
-
-    @Bean
-    public TinyLidar distanceAvantGauche() {
-        return new TinyLidar(IConstantesI2C.TINY_LIDAR_AVANT_GAUCHE_DEVICE_NAME);
+    public TinyLidar distanceAvant() {
+        return new TinyLidar(IConstantesI2C.TINY_LIDAR_AVANT_DEVICE_NAME);
     }
 
     @Bean

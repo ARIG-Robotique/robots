@@ -1,11 +1,11 @@
 package org.arig.robot.services;
 
-import org.arig.robot.model.enums.CouleurPalet;
+import org.arig.robot.model.EStrategy;
+import org.arig.robot.model.Team;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 
-/**
- * @author gdepuille on 23/04/15.
- */
+import java.util.List;
+
 public interface IIOService {
 
     // --------------------------------------------------------- //
@@ -25,40 +25,20 @@ public interface IIOService {
 
     // Numerique
     boolean ledCapteurCouleur();
-    boolean presencePaletDroit();
-    boolean presencePaletGauche();
-    boolean buteePaletDroit();
-    boolean buteePaletGauche();
-    boolean presencePaletVentouseDroit();
-    boolean presencePaletVentouseGauche();
+    boolean presenceVentouseAvant();
     boolean calageBordureArriereDroit();
     boolean calageBordureArriereGauche();
-//    boolean trappeMagasinDroitFerme();
-//    boolean trappeMagasinGaucheFerme();
-    boolean indexCarousel();
     boolean presenceLectureCouleur();
 
     // Analogique
-    boolean paletPrisDansVentouseDroit();
-    boolean paletPrisDansVentouseGauche();
-//    byte nbPaletDansMagasinDroit();
-//    byte nbPaletDansMagasinGauche();
-//    int distanceTelemetreAvantDroit();
-//    int distanceTelemetreAvantGauche();
+    boolean gobeletPritDansVentouseAvant();
 
     // Couleur
-    TCS34725ColorSensor.ColorData couleurPaletRaw();
-    CouleurPalet couleurPalet();
+    TCS34725ColorSensor.ColorData couleurRaw();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
-
-//    void colorLedRGBKo();
-//    void colorLedRGBOk();
-
-//    void teamColorLedRGB();
-//    void clearColorLedRGB();
 
     void enableLedCapteurCouleur();
     void disableLedCapteurCouleur();
@@ -68,15 +48,11 @@ public interface IIOService {
     void enableAlim12VPuissance();
     void disableAlim12VPuissance();
 
-    void airElectroVanneDroite();
-    void videElectroVanneDroite();
-    void airElectroVanneGauche();
-    void videElectroVanneGauche();
+    void airElectroVanneAvant();
+    void videElectroVanneAvant();
 
-    void enablePompeAVideDroite();
-    void disablePompeAVideDroite();
-    void enablePompeAVideGauche();
-    void disablePompeAVideGauche();
+    void enablePompeAVideAvant();
+    void disablePompeAVideAvant();
 
     // ----------------------------------------------------------- //
     // -------------------------- BUSINESS ----------------------- //

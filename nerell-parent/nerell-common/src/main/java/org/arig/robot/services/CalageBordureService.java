@@ -8,9 +8,6 @@ import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * @author gdepuille on 07/05/15.
- */
 @Slf4j
 @Service
 public class CalageBordureService {
@@ -42,10 +39,6 @@ public class CalageBordureService {
                 } else {
                     done = ioService.calageBordureArriereDroit() && ioService.calageBordureArriereGauche();
                 }
-                break;
-
-            case VENTOUSE:
-                done = ioService.presencePaletVentouseDroit() || ioService.presencePaletVentouseGauche();
                 break;
         }
 

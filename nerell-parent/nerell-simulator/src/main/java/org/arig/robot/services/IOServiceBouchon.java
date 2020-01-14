@@ -4,7 +4,6 @@ import lombok.Setter;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
-import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,9 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author gdepuille on 30/10/16.
- */
 @Service
 public class IOServiceBouchon implements IIOService {
 
@@ -70,32 +66,7 @@ public class IOServiceBouchon implements IIOService {
     }
 
     @Override
-    public boolean presencePaletDroit() {
-        return false;
-    }
-
-    @Override
-    public boolean presencePaletGauche() {
-        return false;
-    }
-
-    @Override
-    public boolean buteePaletDroit() {
-        return false;
-    }
-
-    @Override
-    public boolean buteePaletGauche() {
-        return false;
-    }
-
-    @Override
-    public boolean presencePaletVentouseDroit() {
-        return false;
-    }
-
-    @Override
-    public boolean presencePaletVentouseGauche() {
+    public boolean presenceVentouseAvant() {
         return false;
     }
 
@@ -110,11 +81,6 @@ public class IOServiceBouchon implements IIOService {
     }
 
     @Override
-    public boolean indexCarousel() {
-        return false;
-    }
-
-    @Override
     public boolean presenceLectureCouleur() {
         return false;
     }
@@ -122,45 +88,15 @@ public class IOServiceBouchon implements IIOService {
     // Analogique
 
     @Override
-    public boolean paletPrisDansVentouseDroit() {
+    public boolean gobeletPritDansVentouseAvant() {
         return false;
     }
-
-    @Override
-    public boolean paletPrisDansVentouseGauche() {
-        return false;
-    }
-
-//    @Override
-//    public byte nbPaletDansMagasinDroit() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public byte nbPaletDansMagasinGauche() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public int distanceTelemetreAvantDroit() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public int distanceTelemetreAvantGauche() {
-//        return 0;
-//    }
 
     // Couleur
 
     @Override
-    public TCS34725ColorSensor.ColorData couleurPaletRaw() {
+    public TCS34725ColorSensor.ColorData couleurRaw() {
         return new TCS34725ColorSensor.ColorData().r(0).g(0).b(0);
-    }
-
-    @Override
-    public CouleurPalet couleurPalet() {
-        return CouleurPalet.INCONNU;
     }
 
     // --------------------------------------------------------- //
@@ -198,28 +134,16 @@ public class IOServiceBouchon implements IIOService {
     }
 
     @Override
-    public void airElectroVanneDroite() { }
+    public void airElectroVanneAvant() { }
 
     @Override
-    public void videElectroVanneDroite() { }
+    public void videElectroVanneAvant() { }
 
     @Override
-    public void airElectroVanneGauche() { }
+    public void enablePompeAVideAvant() { }
 
     @Override
-    public void videElectroVanneGauche() { }
-
-    @Override
-    public void enablePompeAVideDroite() { }
-
-    @Override
-    public void disablePompeAVideDroite() { }
-
-    @Override
-    public void enablePompeAVideGauche() { }
-
-    @Override
-    public void disablePompeAVideGauche() { }
+    public void disablePompeAVideAvant() { }
 
     // ----------------------------------------------------------- //
     // -------------------------- BUSINESS ----------------------- //

@@ -36,22 +36,4 @@ public class AlimentationCommands {
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();
     }
-
-    @ShellMethod("Activation des services")
-    public void enableStocksServices() {
-        rs.enableAsservCarousel();
-        rs.enableCarousel();
-        rs.enableMagasin();
-        rs.enableSerrage();
-        rs.enableVentouses();
-    }
-
-    @ShellMethod("Désactivation des services")
-    public void disableStocksServices() {
-        rs.disableAsservCarousel();
-        rs.disableCarousel();
-        rs.disableMagasin();
-        rs.disableSerrage();
-        rs.disableVentouses();
-    }
 }
