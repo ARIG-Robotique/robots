@@ -89,6 +89,34 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     private StatutBalise statutBalise = null;
 
     /**
+     * STATUT
+     */
+    @Setter
+    boolean mancheAAir1 = false;
+
+    @Setter
+    boolean mancheAAir2 = false;
+
+    @Setter
+    boolean bonPort = false;
+
+    @Setter
+    boolean pavillon = false;
+
+    List<ECouleurBouee> grandPort = new ArrayList<>();
+
+    List<ECouleurBouee> petitPort = new ArrayList<>();
+
+    List<ECouleurBouee> grandChenalVert = new ArrayList<>();
+
+    List<ECouleurBouee> grandChenalRouge = new ArrayList<>();
+
+    List<ECouleurBouee> petitChenalVert = new ArrayList<>();
+
+    List<ECouleurBouee> petitChenalRouge = new ArrayList<>();
+
+
+    /**
      * INIT
      */
     @Override
@@ -97,16 +125,35 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     }
 
     public int calculerPoints() {
-        return 0;
+        int points = 15; // phare
+        points += grandPort.size();
+        points += petitPort.size();
+        points += pointsChenaux(grandChenalRouge, grandChenalVert);
+        points += pointsChenaux(petitChenalRouge, petitChenalVert);
+        points += (mancheAAir1 && mancheAAir2) ? 15 : (mancheAAir1 || mancheAAir2) ? 5 : 0;
+        points += bonPort ? 10 : 0;
+        points += pavillon ? 10 : 0;
+        return points;
     }
 
     public double scoreFinal() {
         int points = calculerPoints();
         double score = points;
         score += 0.3 * points; // evaluation
-        score += 10; // bonus;
-        score += finale ? 30 : 0;
+        score += 5; // bonus;
         return score;
+    }
+
+    private int pointsChenaux(List<ECouleurBouee> chenalRouge, List<ECouleurBouee> chenalVert) {
+        long nbBoueeOkRouge = chenalRouge.stream()
+                .filter(b -> b == ECouleurBouee.ROUGE)
+                .count();
+
+        long nbBoueeOkVert = chenalVert.stream()
+                .filter(b -> b == ECouleurBouee.VERT)
+                .count();
+
+        return (int) (nbBoueeOkRouge + nbBoueeOkVert + Math.min(nbBoueeOkRouge, nbBoueeOkVert) * 2);
     }
 
 }
