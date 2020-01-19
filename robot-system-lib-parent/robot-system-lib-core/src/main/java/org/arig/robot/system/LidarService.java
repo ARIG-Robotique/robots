@@ -3,6 +3,10 @@ package org.arig.robot.system;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.math3.ml.clustering.Cluster;
+import org.apache.commons.math3.ml.clustering.Clusterable;
+import org.apache.commons.math3.ml.clustering.DBSCANClusterer;
+import org.apache.commons.math3.ml.clustering.evaluation.ClusterEvaluator;
 import org.arig.robot.model.Cercle;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Shape;
@@ -24,6 +28,18 @@ import java.util.stream.Collectors;
 @Slf4j
 public class LidarService implements ILidarService, InitializingBean {
 
+    // passe plat pour pas recoder centroidOf(Cluster)
+    private static class CustomClusterEvaluator<T extends Clusterable> extends ClusterEvaluator<T> {
+        public Clusterable getCenter(Cluster<T> cluster) {
+            return super.centroidOf(cluster);
+        }
+
+        @Override
+        public double score(List<? extends Cluster<T>> clusters) {
+            return 0;
+        }
+    }
+
     @Autowired
     private ILidarTelemeter lidar;
 
@@ -40,16 +56,21 @@ public class LidarService implements ILidarService, InitializingBean {
     @Getter
     protected final AtomicBoolean hasObstacle = new AtomicBoolean(false);
 
+    private final DBSCANClusterer<Point> clusterer;
+    private final CustomClusterEvaluator<Point> clusterEvaluator = new CustomClusterEvaluator<>();
+
     final int pathFindingSeuilProximite;
     final int pathFindingTailleObstacle;
 
-    public LidarService(int pathFindingSeuilProximite, int pathFindingTailleObstacle) {
+    public LidarService(int pathFindingSeuilProximite, int pathFindingTailleObstacle, int lidarClusterSizeMm) {
         this.pathFindingSeuilProximite = pathFindingSeuilProximite;
         this.pathFindingTailleObstacle = pathFindingTailleObstacle;
+
+        clusterer = new DBSCANClusterer<>(lidarClusterSizeMm, 2);
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         log.info("Initialisation du service d'évittement d'obstacle");
         lidar.deviceInfo();
     }
@@ -84,7 +105,7 @@ public class LidarService implements ILidarService, InitializingBean {
         List<java.awt.Shape> obstacles = new ArrayList<>();
 
         pointLidar:
-        for (Point pt : getDetectedPointsMm() /* TODO AvoidingUtils.calculateCenterObs(getDetectedPointsMm()) */) {
+        for (Point pt : applyClustering(detectedPointsMm)) {
             collisionsShape.add(new Cercle(pt, pathFindingSeuilProximite));
 
             Rectangle obstacle = new Rectangle(
@@ -98,7 +119,6 @@ public class LidarService implements ILidarService, InitializingBean {
                 log.info("Ajout polygon : {} {}", pt, obstacle.toString());
                 obstacles.add(obstacle);
             } else {
-
                 for (Line2D l : lines) {
                     if (l.intersects(obstacle)) {
                         log.info("Collision détectée, ajout polygon : {} {}", pt, obstacle.toString());
@@ -120,6 +140,16 @@ public class LidarService implements ILidarService, InitializingBean {
     @Override
     public boolean hasObstacle() {
         return hasObstacle.get();
+    }
+
+    List<Point> applyClustering(List<Point> input) {
+        return clusterer.cluster(input)
+                .stream()
+                .map(cluster -> {
+                    Clusterable center = clusterEvaluator.getCenter(cluster);
+                    return new Point(center.getPoint()[0], center.getPoint()[1]);
+                })
+                .collect(Collectors.toList());
     }
 
 }

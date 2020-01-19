@@ -33,6 +33,7 @@ configure(allprojects) { project ->
 		// Dependencies versions
 		springShellVersion = '2.0.1.BUILD-SNAPSHOT'
 		apacheCommonsCollectionsVersion = '4.2'
+		apacheCommonsMathVersion = '3.6.1'
 		apacheCommonsIOVersion = '2.6'
 		googleGuavaVersion = '27.0.1-jre'
 		pi4jVersion = '1.2-jdk9-SNAPSHOT'
