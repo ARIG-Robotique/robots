@@ -142,6 +142,8 @@ public interface IConstantesNerellConfig {
     int pathFindingSeuilProximite = 600;
     int pathFindingTailleObstacle = IConstantesNerellConfig.pathFindingSeuilProximite + 50;
 
+    int lidarClusterSizeMm = 50;
+
     // --------------------- //
     // Paramètre pneumatique //
     // --------------------- //

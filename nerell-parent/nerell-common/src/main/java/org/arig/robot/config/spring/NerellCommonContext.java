@@ -55,7 +55,9 @@ public class NerellCommonContext {
 
     @Bean
     public ILidarService lidarService() {
-        return new LidarService(IConstantesNerellConfig.pathFindingSeuilProximite, IConstantesNerellConfig.pathFindingTailleObstacle);
+        return new LidarService(IConstantesNerellConfig.pathFindingSeuilProximite,
+                IConstantesNerellConfig.pathFindingTailleObstacle,
+                IConstantesNerellConfig.lidarClusterSizeMm);
     }
 
     @Bean

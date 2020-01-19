@@ -3,6 +3,7 @@ package org.arig.robot.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.math3.ml.clustering.Clusterable;
 
 /**
  * @author gdepuille on 29/12/13.
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Point {
+public class Point implements Clusterable {
     private double x;
     private double y;
 
@@ -46,5 +47,10 @@ public class Point {
         double dX = other.getX() - x;
         double dY = other.getY() - y;
         return Math.sqrt(dX * dX + dY * dY);
+    }
+
+    @Override
+    public double[] getPoint() {
+        return new double[]{x, y};
     }
 }
