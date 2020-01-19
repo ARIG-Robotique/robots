@@ -1,4 +1,4 @@
-package org.arig.robot.services.avoiding;
+package org.arig.robot.utils;
 
 import org.arig.robot.model.Point;
 

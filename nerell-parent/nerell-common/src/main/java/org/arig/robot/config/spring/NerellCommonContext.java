@@ -10,10 +10,7 @@ import org.arig.robot.model.*;
 import org.arig.robot.services.IRobotSide;
 import org.arig.robot.services.LeftSideService;
 import org.arig.robot.services.RightSideService;
-import org.arig.robot.system.CarouselManager;
-import org.arig.robot.system.ICarouselManager;
-import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.system.TrajectoryManager;
+import org.arig.robot.system.*;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.arig.robot.system.encoders.AbstractEncoder;
@@ -33,9 +30,6 @@ import org.springframework.core.env.Environment;
 import java.util.EnumMap;
 import java.util.Map;
 
-/**
- * @author gdepuille on 23/12/14.
- */
 @Slf4j
 @Configuration
 public class NerellCommonContext {
@@ -57,6 +51,11 @@ public class NerellCommonContext {
     public TableUtils tableUtils() {
         return new TableUtils(IConstantesNerellConfig.minX, IConstantesNerellConfig.maxX,
                 IConstantesNerellConfig.minY, IConstantesNerellConfig.maxY);
+    }
+
+    @Bean
+    public ILidarService lidarService() {
+        return new LidarService(IConstantesNerellConfig.pathFindingSeuilProximite, IConstantesNerellConfig.pathFindingTailleObstacle);
     }
 
     @Bean
@@ -146,11 +145,16 @@ public class NerellCommonContext {
 
     @Bean
     public IPathFinder pathFinder() {
-//        MultiPathFinderImpl pf = new MultiPathFinderImpl();
-//        pf.setAlgorithm(IConstantesNerellConfig.pathFindingAlgo);
-//        pf.setSaveImages(env.getProperty("robot.pathfinding.saveImages", Boolean.class, true));
-//        return pf;
-        return new NoPathFinderImpl();
+        boolean enable = env.getProperty("robot.pathfinding.enable", Boolean.class, true);
+
+        if (enable) {
+            MultiPathFinderImpl pf = new MultiPathFinderImpl();
+            pf.setAlgorithm(IConstantesNerellConfig.pathFindingAlgo);
+            pf.setSaveImages(env.getProperty("robot.pathfinding.saveImages", Boolean.class, true));
+            return pf;
+        } else {
+            return new NoPathFinderImpl();
+        }
     }
 
     @Bean

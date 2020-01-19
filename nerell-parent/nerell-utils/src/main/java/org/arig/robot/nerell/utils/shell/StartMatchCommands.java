@@ -7,7 +7,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.Ordonanceur;
 import org.arig.robot.constants.IConstantesUtiles;
-import org.arig.robot.exception.RefreshPathFindingException;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
@@ -37,7 +36,7 @@ public class StartMatchCommands {
 
     @SneakyThrows
     @ShellMethod("Démarrer un match")
-    public void start() throws IOException, RefreshPathFindingException {
+    public void start() throws IOException {
 
         choixTeam();
         choixStratgies();

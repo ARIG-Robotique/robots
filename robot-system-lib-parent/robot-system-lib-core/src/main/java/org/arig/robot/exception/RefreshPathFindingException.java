@@ -1,7 +1,7 @@
 package org.arig.robot.exception;
 
 /**
- * @author gdepuille on 04/05/15.
+ * Exception de gestion interne au path finding
  */
-public class RefreshPathFindingException extends Exception {
+public class RefreshPathFindingException extends RuntimeException {
 }

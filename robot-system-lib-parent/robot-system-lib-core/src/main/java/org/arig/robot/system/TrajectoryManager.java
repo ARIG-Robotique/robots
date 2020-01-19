@@ -7,18 +7,10 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.exception.RefreshPathFindingException;
-import org.arig.robot.model.AbstractRobotStatus;
-import org.arig.robot.model.Chemin;
-import org.arig.robot.model.CommandeRobot;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
+import org.arig.robot.model.*;
 import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.model.enums.TypeConsigne;
-import org.arig.robot.model.monitor.AbstractMonitorMouvement;
-import org.arig.robot.model.monitor.MonitorMouvementPath;
-import org.arig.robot.model.monitor.MonitorMouvementRotation;
-import org.arig.robot.model.monitor.MonitorMouvementTranslation;
-import org.arig.robot.model.monitor.MonitorTimeSerie;
+import org.arig.robot.model.monitor.*;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.IAsservissementPolaire;
@@ -64,6 +56,9 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
     @Autowired
     private IPathFinder pathFinder;
+
+    @Autowired
+    private ILidarService lidarService;
 
     @Autowired
     private AbstractRobotStatus rs;
@@ -462,6 +457,9 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      */
     @Override
     public void pathTo(final double targetXmm, final double targetYmm, final boolean avecArret) throws NoPathFoundException, AvoidingException {
+        lidarService.refreshDetectedPoints();
+        lidarService.refreshObstacles();
+
         boolean trajetOk = false;
         int nbCollisionDetected = 0, nbTryPath = 1;
         int divisor = 10;
@@ -540,7 +538,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param avecOrientation Activation de l'orientation avant la translation
      */
     @Override
-    public void gotoPointMM(final double x, final double y, boolean avecOrientation) throws RefreshPathFindingException, AvoidingException {
+    public void gotoPointMM(final double x, final double y, boolean avecOrientation) throws AvoidingException {
         gotoPointMM(x, y, avecOrientation, true);
     }
 
@@ -552,7 +550,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param avecArret demande d'arret sur le point
      */
     @Override
-    public void gotoPointMM(final double x, final double y, final boolean avecOrientation, final boolean avecArret) throws RefreshPathFindingException, AvoidingException  {
+    public void gotoPointMM(final double x, final double y, final boolean avecOrientation, final boolean avecArret) throws AvoidingException  {
         log.info("Va au point X = {}mm ; Y = {}mm {}", x, y, avecArret ? "et arrete toi" : "sans arret");
 
         if (avecOrientation) {
@@ -603,12 +601,12 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param angle the angle
      */
     @Override
-    public void gotoOrientationDeg(final double angle) throws RefreshPathFindingException, AvoidingException  {
+    public void gotoOrientationDeg(final double angle) throws AvoidingException  {
         gotoOrientationDeg(angle, SensRotation.AUTO);
     }
 
     @Override
-    public void gotoOrientationDeg(double angle, SensRotation sensRotation) throws RefreshPathFindingException, AvoidingException  {
+    public void gotoOrientationDeg(double angle, SensRotation sensRotation) throws AvoidingException  {
         log.info("Aligne toi sur l'angle {}° du repère dans le sens {}", angle, sensRotation.name());
 
         double newOrient = calculAngleDelta(conv.pulseToDeg(currentPosition.getAngle()), angle, sensRotation);
@@ -623,7 +621,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param y the y
      */
     @Override
-    public void alignFrontTo(final double x, final double y) throws RefreshPathFindingException, AvoidingException  {
+    public void alignFrontTo(final double x, final double y) throws AvoidingException  {
         log.info("Aligne ton avant sur le point X = {}mm ; Y = {}mm", x, y);
         alignFrontToAvecDecalage(x, y, 0);
     }
@@ -634,10 +632,9 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param x           position sur l'axe X
      * @param y           position sur l'axe Y
      * @param decalageDeg valeur du déclage angulaire par rapport au point X,Y
-     * @throws RefreshPathFindingException
      */
     @Override
-    public void alignFrontToAvecDecalage(final double x, final double y, final double decalageDeg) throws RefreshPathFindingException, AvoidingException  {
+    public void alignFrontToAvecDecalage(final double x, final double y, final double decalageDeg) throws AvoidingException  {
         if (decalageDeg != 0) {
             log.info("Décalage de {}° par rapport au point X = {}mm ; Y = {}mm", decalageDeg, x, y);
         }
@@ -664,7 +661,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param y the y
      */
     @Override
-    public void alignBackTo(final double x, final double y) throws RefreshPathFindingException, AvoidingException  {
+    public void alignBackTo(final double x, final double y) throws AvoidingException  {
         log.info("Aligne ton cul sur le point X = {}mm ; Y = {}mm", x, y);
 
         synchronized (this) {
@@ -695,16 +692,16 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param distance the distance
      */
     @Override
-    public void avanceMM(final double distance) throws RefreshPathFindingException, AvoidingException  {
+    public void avanceMM(final double distance) throws AvoidingException  {
         cmdAvanceMMByType(distance, TypeConsigne.DIST, TypeConsigne.ANGLE);
     }
 
     @Override
-    public void avanceMMSansAngle(final double distance) throws RefreshPathFindingException, AvoidingException  {
+    public void avanceMMSansAngle(final double distance) throws AvoidingException  {
         cmdAvanceMMByType(distance, TypeConsigne.DIST);
     }
 
-    private void cmdAvanceMMByType(final double distance, TypeConsigne... types) throws RefreshPathFindingException, AvoidingException  {
+    private void cmdAvanceMMByType(final double distance, TypeConsigne... types) throws AvoidingException  {
         if (distance > 0) {
             log.info("{} de {}mm en mode : {}", distance > 0 ? "Avance" : "Recul", distance, StringUtils.join(types, ", "));
         }
@@ -737,13 +734,13 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param distance the distance
      */
     @Override
-    public void reculeMM(final double distance) throws RefreshPathFindingException, AvoidingException  {
+    public void reculeMM(final double distance) throws AvoidingException  {
         log.info("Recul de {}mm", Math.abs(distance));
         avanceMM(-distance);
     }
 
     @Override
-    public void reculeMMSansAngle(final double distance) throws RefreshPathFindingException, AvoidingException  {
+    public void reculeMMSansAngle(final double distance) throws AvoidingException  {
         log.info("Recul de {}mm sans angle", Math.abs(distance));
         avanceMMSansAngle(-distance);
     }
@@ -754,7 +751,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param angle the angle
      */
     @Override
-    public void tourneDeg(final double angle) throws RefreshPathFindingException, AvoidingException {
+    public void tourneDeg(final double angle) throws AvoidingException {
         log.info("Tourne de {}°", angle);
 
         boolean isAvoidance = rs.isAvoidanceEnabled();
@@ -793,7 +790,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param y2 the y2
      */
     @Override
-    public void followLine(final double x1, final double y1, final double x2, final double y2) throws RefreshPathFindingException {
+    public void followLine(final double x1, final double y1, final double x2, final double y2) {
         // TODO : A implémenter la commande
         throw new NotYetImplementedException();
     }
@@ -806,7 +803,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param r the r
      */
     @Override
-    public void turnAround(final double x, final double y, final double r) throws RefreshPathFindingException {
+    public void turnAround(final double x, final double y, final double r) {
         // TODO : A implémenter la commande
         throw new NotYetImplementedException();
     }
@@ -847,7 +844,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * Permet d'attendre le passage au point suivant
      */
     @Override
-    public void waitMouvement() throws RefreshPathFindingException, AvoidingException {
+    public void waitMouvement() throws AvoidingException {
         if (cmdRobot.isFrein()) {
             log.info("Attente fin de trajet");
             while (!trajetAtteint.get()) {
@@ -897,6 +894,10 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
     @Override
     public void cancelMouvement() {
+        cmdRobot.getConsigne().setDistance(0);
+        cmdRobot.getConsigne().setOrientation(0);
+        cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+
         cancelMouvement.set(true);
     }
 

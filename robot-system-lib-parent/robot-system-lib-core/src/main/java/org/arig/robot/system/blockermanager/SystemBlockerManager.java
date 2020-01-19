@@ -23,9 +23,6 @@ public class SystemBlockerManager implements ISystemBlockerManager {
     @Autowired
     private ITrajectoryManager trajectoryManager;
 
-    @Autowired
-    private CommandeRobot cmdRobot;
-
     private final double seuilErreurPidDistance;
     private final double seuilErreurPidOrientation;
 
@@ -45,10 +42,6 @@ public class SystemBlockerManager implements ISystemBlockerManager {
                 && (errorSumPidDistance >= seuilErreurPidDistance || errorSumPidOrientation >= seuilErreurPidOrientation)) {
 
             log.warn("L'erreur de pidDistance {} ou pidOrientation {} détectée ", errorSumPidDistance, errorSumPidOrientation);
-
-            cmdRobot.getConsigne().setDistance(0);
-            cmdRobot.getConsigne().setOrientation(0);
-            cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
 
             trajectoryManager.cancelMouvement();
         }
