@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Evitement semi-temps réel :
- * - prise en compte des obstacles toutes les X secondes ou sur changement de mouvement
+ * - prise en compte des obstacles toutes les X secondes
  * - arret sur obstacle et reprise après Y secondes
  */
 @Slf4j
@@ -49,12 +49,11 @@ public class SemiCompleteAvoidingService extends CompleteAvoidingService {
             if (hasProximite) {
                 log.info("L'obstacle à disparu");
 
-                super.processAvoiding();
                 trajectoryManager.obstacleNotFound();
                 hasProximite = false;
                 stopWatch.reset();
             }
-            else if (checkMouvement() || stopWatch.getTime(TimeUnit.MILLISECONDS) > IConstantesNerellConfig.avoidancePathRefreshTimeMs) {
+            else if (stopWatch.getTime(TimeUnit.MILLISECONDS) > IConstantesNerellConfig.avoidancePathRefreshTimeMs) {
                 log.info("Mise à jour du path");
 
                 super.processAvoiding();

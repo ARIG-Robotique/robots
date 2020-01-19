@@ -131,7 +131,7 @@ public interface IConstantesNerellConfig {
         BASIC, FULL, NOT_BASIC, SEMI_FULL
     }
     int avoidanceWaitTimeMs = 1000;
-    int avoidancePathRefreshTimeMs = 1000;
+    int avoidancePathRefreshTimeMs = 2000;
 
     // ---------------------- //
     // Paramètre path finding //

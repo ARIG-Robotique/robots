@@ -10,10 +10,11 @@ robot:
 
   # Système d'évittement
   avoidance:
-      implementation: NOT_BASIC # FULL ou BASIC
+      implementation: SEMI_FULL
 
   # Config
   pathfinding:
+    enable: True
     saveImages: True
 
   # Monitoring

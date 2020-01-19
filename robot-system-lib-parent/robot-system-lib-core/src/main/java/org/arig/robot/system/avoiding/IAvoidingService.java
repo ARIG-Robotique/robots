@@ -1,13 +1,5 @@
 package org.arig.robot.system.avoiding;
 
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Shape;
-
-import java.util.List;
-
-/**
- * @author gdepuille on 13/05/15.
- */
 public interface IAvoidingService {
 
     /**
@@ -15,7 +7,4 @@ public interface IAvoidingService {
      */
     void process();
 
-    List<Point> getDetectedPointsMm();
-
-    List<Shape> getCollisionsShape();
 }

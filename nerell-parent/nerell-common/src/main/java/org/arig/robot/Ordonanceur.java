@@ -11,12 +11,7 @@ import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.constants.IConstantesUtiles;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.I2CException;
-import org.arig.robot.exception.RefreshPathFindingException;
-import org.arig.robot.model.EStrategy;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
-import org.arig.robot.model.RobotStatus;
-import org.arig.robot.model.Team;
+import org.arig.robot.model.*;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.CarouselService;
@@ -320,7 +315,7 @@ public class Ordonanceur {
                     position.setAngle(conv.degToPulse(180));
                 }
             }
-        } catch (AvoidingException | RefreshPathFindingException e) {
+        } catch (AvoidingException e) {
             throw new RuntimeException("Impossible de se placer pour le départ", e);
         }
     }

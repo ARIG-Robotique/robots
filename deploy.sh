@@ -2,7 +2,7 @@
 set -e
 
 if [[ -z ${1} ]] ; then
-    echo "Il faut préciser le nom du robot à déployé"
+    echo "Il faut préciser le nom du robot à déployer"
     exit 1
 fi
 
@@ -12,7 +12,7 @@ ROBOT_NAME=${1}
 INSTALL_DIR=/home/pi/${ROBOT_NAME}
 
 echo "Compilation ..."
-JAVA_HOME=~/apps/jdk-9.0.4 ./gradlew assemble
+JAVA_HOME=~/apps/jdk-11 ./gradlew assemble
 
 echo "Cleaning ..."
 ssh ${ROBOT_NAME} rm -vf ${INSTALL_DIR}/*.sh

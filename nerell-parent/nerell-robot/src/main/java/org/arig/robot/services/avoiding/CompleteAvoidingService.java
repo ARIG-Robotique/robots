@@ -1,9 +1,6 @@
 package org.arig.robot.services.avoiding;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.arig.robot.constants.IConstantesNerellConfig;
-import org.arig.robot.model.Cercle;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.TypeMouvement;
 import org.arig.robot.model.monitor.AbstractMonitorMouvement;
@@ -11,7 +8,6 @@ import org.arig.robot.model.monitor.MonitorMouvementPath;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -31,31 +27,29 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
 
     private AbstractMonitorMouvement currentMvt;
 
-    private int checkSumLidar = 0; // Checksum des coordonnées lidar pour detecter les changements
-
     private List<Line2D> lines = new ArrayList<>(); // Chemin parcouru
-
-    private List<java.awt.Shape> tmpObstacles = new ArrayList<>(); // Obstacles pour le pathfinding
-
-    private List<org.arig.robot.model.Shape> tmpCollisionsShape = new ArrayList<>(); // Obstacles pour le superviseur
 
     @Override
     protected void processAvoiding() {
         checkMouvement();
-        checkObstacles();
-
-        // Affichage des zones d'ombre sur le superviseur
-        synchronized (this.collisionsShape) {
-            this.collisionsShape.clear();
-            this.collisionsShape.addAll(tmpCollisionsShape);
-        }
+        lidarService.refreshObstacles(lines);
 
         // Une collision est détecté
-        if (CollectionUtils.isNotEmpty(tmpObstacles)) {
-            setObstacles(tmpObstacles);
+        if (lidarService.hasObstacle()) {
+            hasObstacle = true;
+
+            // On rafraichit le path
+            if (rs.isAvoidanceEnabled()) {
+                trajectoryManager.refreshPathFinding();
+            }
 
         } else if (hasObstacle) {
-            clearOstacles();
+            hasObstacle = false;
+
+            // On rafraichit le path
+            if (rs.isAvoidanceEnabled()) {
+                trajectoryManager.refreshPathFinding();
+            }
         }
     }
 
@@ -92,65 +86,4 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
         return mouvementHasChanged;
     }
 
-    protected boolean checkObstacles() {
-        boolean obstaclesHasChanged = false;
-
-        // Si les points lidar on changé on check
-        int checkSumLidar = getDetectedPointsMm().hashCode();
-
-        if (checkSumLidar != this.checkSumLidar) {
-            this.checkSumLidar = checkSumLidar;
-            obstaclesHasChanged = true;
-
-            tmpObstacles.clear();
-            tmpCollisionsShape.clear();
-
-            pointLidar:
-            for (Point pt : AvoidingUtils.calculateCenterObs(getDetectedPointsMm())) {
-                tmpCollisionsShape.add(new Cercle(pt, IConstantesNerellConfig.pathFindingSeuilProximite));
-
-                Rectangle obstacle = new Rectangle(
-                        (int) Math.round(pt.getX() / 10. - IConstantesNerellConfig.pathFindingSeuilProximite / 10. / 2.),
-                        (int) Math.round(pt.getY() / 10. - IConstantesNerellConfig.pathFindingSeuilProximite / 10. / 2.),
-                        (int) Math.round(IConstantesNerellConfig.pathFindingSeuilProximite / 10.),
-                        (int) Math.round(IConstantesNerellConfig.pathFindingSeuilProximite / 10.)
-                );
-
-                for (Line2D l : lines) {
-                    if (l.intersects(obstacle)) {
-                        log.info("Collision détectée, ajout polygon : {} {}", pt, obstacle.toString());
-                        tmpObstacles.add(new Rectangle(
-                                (int) Math.round(pt.getX() / 10. - IConstantesNerellConfig.pathFindingTailleObstacle / 10. / 2.),
-                                (int) Math.round(pt.getY() / 10. - IConstantesNerellConfig.pathFindingTailleObstacle / 10. / 2.),
-                                (int) Math.round(IConstantesNerellConfig.pathFindingTailleObstacle / 10.),
-                                (int) Math.round(IConstantesNerellConfig.pathFindingTailleObstacle / 10.)
-                        ));
-                        continue pointLidar;
-                    }
-                }
-            }
-        }
-
-        return obstaclesHasChanged;
-    }
-
-    private void setObstacles(List<java.awt.Shape> obstacles) {
-        hasObstacle = true;
-        pathFinder.setObstacles(obstacles.toArray(new java.awt.Shape[0]));
-
-        // On rafraichit le path
-        if (rs.isAvoidanceEnabled()) {
-            trajectoryManager.refreshPathFinding();
-        }
-    }
-
-    private void clearOstacles() {
-        hasObstacle = false;
-        pathFinder.setObstacles();
-
-        // On rafraichit le path
-        if (rs.isAvoidanceEnabled()) {
-            trajectoryManager.refreshPathFinding();
-        }
-    }
 }
