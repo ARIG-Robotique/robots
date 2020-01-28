@@ -42,23 +42,74 @@ public class ServosService {
     }
 
     public void homes() {
+        servos.setPositionAndSpeed(IConstantesServos.MOUSTACHE_DROITE, IConstantesServos.POS_MOUSTACHE_DROITE_FERME, IConstantesServos.SPEED_MOUSTACHE_DROITE);
+        servos.setPositionAndSpeed(IConstantesServos.MOUSTACHE_GAUCHE, IConstantesServos.POS_MOUSTACHE_GAUCHE_FERME, IConstantesServos.SPEED_MOUSTACHE_GAUCHE);
+        servos.setPositionAndSpeed(IConstantesServos.POUSSOIR_DROITE, IConstantesServos.POS_POUSSOIR_DROITE_FERME, IConstantesServos.SPEED_POUSSOIR_DROITE);
+        servos.setPositionAndSpeed(IConstantesServos.POUSSOIR_GAUCHE, IConstantesServos.POS_POUSSOIR_GAUCHE_FERME, IConstantesServos.SPEED_POUSSOIR_GAUCHE);
         servos.setPositionAndSpeed(IConstantesServos.ASCENSEUR_AVANT, IConstantesServos.POS_ASCENSEUR_AVANT_HAUT, IConstantesServos.SPEED_ASCENSEUR_AVANT);
-    }
-
-    //*******************************************//
-    //* Temporisations                          *//
-    //*******************************************//
-
-    public void waitAscenseurAvant() {
-        ThreadUtils.sleep(IConstantesServos.WAIT_ASCENSEUR_AVANT);
+        servos.setPositionAndSpeed(IConstantesServos.PINCE_AVANT_1, IConstantesServos.POS_PINCE_AVANT_1_FERME, IConstantesServos.SPEED_PINCE_AVANT);
+        servos.setPositionAndSpeed(IConstantesServos.PINCE_AVANT_2, IConstantesServos.POS_PINCE_AVANT_2_FERME, IConstantesServos.SPEED_PINCE_AVANT);
+        servos.setPositionAndSpeed(IConstantesServos.PINCE_AVANT_3, IConstantesServos.POS_PINCE_AVANT_3_FERME, IConstantesServos.SPEED_PINCE_AVANT);
+        servos.setPositionAndSpeed(IConstantesServos.PINCE_AVANT_4, IConstantesServos.POS_PINCE_AVANT_4_FERME, IConstantesServos.SPEED_PINCE_AVANT);
+        servos.setPositionAndSpeed(IConstantesServos.ASCENSEUR_ARRIERE, IConstantesServos.POS_ASCENSEUR_ARRIERE_HAUT, IConstantesServos.SPEED_ASCENSEUR_ARRIERE);
+        servos.setPositionAndSpeed(IConstantesServos.PIVOT_ARRIERE, IConstantesServos.POS_PIVOT_ARRIERE_FERME, IConstantesServos.SPEED_PIVOT_ARRIERE);
+        servos.setPositionAndSpeed(IConstantesServos.PINCE_ARRIERE_1, IConstantesServos.POS_PINCE_ARRIERE_1_FERME, IConstantesServos.SPEED_PINCE_ARRIERE);
+        servos.setPositionAndSpeed(IConstantesServos.PINCE_ARRIERE_2, IConstantesServos.POS_PINCE_ARRIERE_2_FERME, IConstantesServos.SPEED_PINCE_ARRIERE);
+        servos.setPositionAndSpeed(IConstantesServos.PINCE_ARRIERE_3, IConstantesServos.POS_PINCE_ARRIERE_3_FERME, IConstantesServos.SPEED_PINCE_ARRIERE);
+        servos.setPositionAndSpeed(IConstantesServos.PINCE_ARRIERE_4, IConstantesServos.POS_PINCE_ARRIERE_4_FERME, IConstantesServos.SPEED_PINCE_ARRIERE);
+        servos.setPositionAndSpeed(IConstantesServos.PINCE_ARRIERE_5, IConstantesServos.POS_PINCE_ARRIERE_5_FERME, IConstantesServos.SPEED_PINCE_ARRIERE);
     }
 
     //*******************************************//
     //* Lecture des positions                   *//
     //*******************************************//
 
+    public boolean isMoustachesOuvert() {
+        return servos.getPosition(IConstantesServos.MOUSTACHE_DROITE) == IConstantesServos.POS_MOUSTACHE_DROITE_OUVERT;
+    }
+
+    public boolean isMoustachesFerme() {
+        return servos.getPosition(IConstantesServos.MOUSTACHE_DROITE) == IConstantesServos.POS_MOUSTACHE_DROITE_FERME;
+    }
+
     public boolean isAscenseurAvantHaut() {
         return servos.getPosition(IConstantesServos.ASCENSEUR_AVANT) == IConstantesServos.POS_ASCENSEUR_AVANT_HAUT;
+    }
+
+    public boolean isAscenseurAvantBas() {
+        return servos.getPosition(IConstantesServos.ASCENSEUR_AVANT) == IConstantesServos.POS_ASCENSEUR_AVANT_BAS;
+    }
+
+    public boolean isPincesAvantOuvert() {
+        return servos.getPosition(IConstantesServos.PINCE_AVANT_1) == IConstantesServos.POS_PINCE_AVANT_1_OUVERT;
+    }
+
+    public boolean isPincesAvantFerme() {
+        return servos.getPosition(IConstantesServos.PINCE_AVANT_1) == IConstantesServos.POS_PINCE_AVANT_1_FERME;
+    }
+
+    public boolean isAscenseurArriereHaut() {
+        return servos.getPosition(IConstantesServos.ASCENSEUR_ARRIERE) == IConstantesServos.POS_ASCENSEUR_ARRIERE_HAUT;
+    }
+
+    public boolean isAscenseurArriereBas() {
+        return servos.getPosition(IConstantesServos.ASCENSEUR_ARRIERE) == IConstantesServos.POS_ASCENSEUR_ARRIERE_BAS;
+    }
+
+    public boolean isPivotArriereFerme() {
+        return servos.getPosition(IConstantesServos.PIVOT_ARRIERE) == IConstantesServos.POS_PIVOT_ARRIERE_FERME;
+    }
+
+    public boolean isPivotArriereOuvert() {
+        return servos.getPosition(IConstantesServos.PIVOT_ARRIERE) == IConstantesServos.POS_PIVOT_ARRIERE_OUVERT;
+    }
+
+    public boolean isPincesArriereOuvert() {
+        return servos.getPosition(IConstantesServos.PINCE_ARRIERE_1) == IConstantesServos.POS_PINCE_ARRIERE_1_OUVERT;
+    }
+
+    public boolean isPincesArriereFerme() {
+        return servos.getPosition(IConstantesServos.PINCE_ARRIERE_1) == IConstantesServos.POS_PINCE_ARRIERE_1_FERME;
     }
 
     //*******************************************//
@@ -77,6 +128,18 @@ public class ServosService {
         }
     }
 
+    private void setPositionBatch(int[][] servosPos, boolean wait) {
+        int currentPosition = servos.getPosition((byte) servosPos[0][0]);
+
+        for (int[] servoPos : servosPos) {
+            servos.setPosition((byte) servoPos[0], servoPos[1]);
+        }
+
+        if (wait && currentPosition != servosPos[0][1]) {
+            ThreadUtils.sleep(computeWaitTime((byte) servosPos[0][0], currentPosition, servosPos[0][1]));
+        }
+    }
+
     private int computeWaitTime(byte servo, int currentPosition, int position) {
         Triple<Integer, Integer, Integer> config = IConstantesServos.MIN_TIME_MAX.get(servo);
 
@@ -84,13 +147,111 @@ public class ServosService {
         int time = config.getMiddle();
         int max = config.getRight();
 
+        // au cas ou la constante n'a pas été triée
+        if (max < min) {
+            min = config.getRight();
+            max = config.getLeft();
+        }
+
         double wait = time * Math.abs(position - currentPosition) / (max * 1. - min);
         return (int) Math.round(wait);
     }
 
-    public void ascenseurAvant(int position, boolean wait) {
-        setPosition(IConstantesServos.ASCENSEUR_AVANT, position, wait);
+    public void moustachesOuvert(boolean wait) {
+        setPositionBatch(new int[][]{
+                new int[]{IConstantesServos.MOUSTACHE_DROITE, IConstantesServos.POS_MOUSTACHE_DROITE_OUVERT},
+                new int[]{IConstantesServos.MOUSTACHE_GAUCHE, IConstantesServos.POS_MOUSTACHE_GAUCHE_OUVERT}
+        }, wait);
     }
+
+    public void moustachesFerme(boolean wait) {
+        setPositionBatch(new int[][]{
+                new int[]{IConstantesServos.MOUSTACHE_DROITE, IConstantesServos.POS_MOUSTACHE_DROITE_FERME},
+                new int[]{IConstantesServos.MOUSTACHE_GAUCHE, IConstantesServos.POS_MOUSTACHE_GAUCHE_FERME}
+        }, wait);
+    }
+
+    public void poussoirGaucheOuvert(boolean wait) {
+        setPosition(IConstantesServos.POUSSOIR_GAUCHE, IConstantesServos.POS_POUSSOIR_GAUCHE_OUVERT, wait);
+    }
+
+    public void poussoirGaucheFerme(boolean wait) {
+        setPosition(IConstantesServos.POUSSOIR_GAUCHE, IConstantesServos.POS_POUSSOIR_GAUCHE_FERME, wait);
+    }
+
+    public void poussoirDroiteOuvert(boolean wait) {
+        setPosition(IConstantesServos.POUSSOIR_DROITE, IConstantesServos.POS_POUSSOIR_DROITE_OUVERT, wait);
+    }
+
+    public void poussoirDroiteFerme(boolean wait) {
+        setPosition(IConstantesServos.POUSSOIR_DROITE, IConstantesServos.POS_POUSSOIR_DROITE_FERME, wait);
+    }
+
+    public void ascenseurAvantHaut(boolean wait) {
+        setPosition(IConstantesServos.ASCENSEUR_AVANT, IConstantesServos.POS_ASCENSEUR_AVANT_HAUT, wait);
+    }
+
+    public void ascenseurAvantBas(boolean wait) {
+        setPosition(IConstantesServos.ASCENSEUR_AVANT, IConstantesServos.POS_ASCENSEUR_AVANT_BAS, wait);
+    }
+
+    public void ascenseurArriereHaut(boolean wait) {
+        setPosition(IConstantesServos.ASCENSEUR_ARRIERE, IConstantesServos.POS_ASCENSEUR_ARRIERE_HAUT, wait);
+    }
+
+    public void ascenseurArriereBas(boolean wait) {
+        setPosition(IConstantesServos.ASCENSEUR_ARRIERE, IConstantesServos.POS_ASCENSEUR_ARRIERE_BAS, wait);
+    }
+
+    public void pivotArriereFerme(boolean wait) {
+        setPosition(IConstantesServos.PIVOT_ARRIERE, IConstantesServos.POS_PIVOT_ARRIERE_FERME, wait);
+    }
+
+    public void pivotArriereOuvert(boolean wait) {
+        setPosition(IConstantesServos.PIVOT_ARRIERE, IConstantesServos.POS_PIVOT_ARRIERE_OUVERT, wait);
+    }
+
+    public void pincesAvantFerme(boolean wait) {
+        setPositionBatch(new int[][]{
+                new int[]{IConstantesServos.PINCE_AVANT_1, IConstantesServos.POS_PINCE_AVANT_1_FERME},
+                new int[]{IConstantesServos.PINCE_AVANT_2, IConstantesServos.POS_PINCE_AVANT_2_FERME},
+                new int[]{IConstantesServos.PINCE_AVANT_3, IConstantesServos.POS_PINCE_AVANT_3_FERME},
+                new int[]{IConstantesServos.PINCE_AVANT_4, IConstantesServos.POS_PINCE_AVANT_4_FERME}
+        }, wait);
+    }
+
+    public void pincesAvantOuvert(boolean wait) {
+        setPositionBatch(new int[][]{
+                new int[]{IConstantesServos.PINCE_AVANT_1, IConstantesServos.POS_PINCE_AVANT_1_OUVERT},
+                new int[]{IConstantesServos.PINCE_AVANT_2, IConstantesServos.POS_PINCE_AVANT_2_OUVERT},
+                new int[]{IConstantesServos.PINCE_AVANT_3, IConstantesServos.POS_PINCE_AVANT_3_OUVERT},
+                new int[]{IConstantesServos.PINCE_AVANT_4, IConstantesServos.POS_PINCE_AVANT_4_OUVERT}
+        }, wait);
+    }
+
+    public void pincesArriereFerme(boolean wait) {
+        setPositionBatch(new int[][]{
+                new int[]{IConstantesServos.PINCE_ARRIERE_1, IConstantesServos.POS_PINCE_ARRIERE_1_FERME},
+                new int[]{IConstantesServos.PINCE_ARRIERE_2, IConstantesServos.POS_PINCE_ARRIERE_2_FERME},
+                new int[]{IConstantesServos.PINCE_ARRIERE_3, IConstantesServos.POS_PINCE_ARRIERE_3_FERME},
+                new int[]{IConstantesServos.PINCE_ARRIERE_4, IConstantesServos.POS_PINCE_ARRIERE_4_FERME},
+                new int[]{IConstantesServos.PINCE_ARRIERE_5, IConstantesServos.POS_PINCE_ARRIERE_5_FERME}
+        }, wait);
+    }
+
+    public void pincesArriereOuvert(boolean wait) {
+        setPositionBatch(new int[][]{
+                new int[]{IConstantesServos.PINCE_ARRIERE_1, IConstantesServos.POS_PINCE_ARRIERE_1_OUVERT},
+                new int[]{IConstantesServos.PINCE_ARRIERE_2, IConstantesServos.POS_PINCE_ARRIERE_2_OUVERT},
+                new int[]{IConstantesServos.PINCE_ARRIERE_3, IConstantesServos.POS_PINCE_ARRIERE_3_OUVERT},
+                new int[]{IConstantesServos.PINCE_ARRIERE_4, IConstantesServos.POS_PINCE_ARRIERE_4_OUVERT},
+                new int[]{IConstantesServos.PINCE_ARRIERE_5, IConstantesServos.POS_PINCE_ARRIERE_5_OUVERT}
+        }, wait);
+    }
+
+    //*******************************************//
+    //* Autres                                  *//
+    //*******************************************//
 
     public void controlBatteryVolts() {
         if (robotStatus.isMatchEnabled()) {
