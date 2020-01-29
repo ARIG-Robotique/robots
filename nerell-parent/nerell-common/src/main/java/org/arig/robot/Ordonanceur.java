@@ -230,9 +230,8 @@ public class Ordonanceur {
 
         robotStatus.stopMatch();
 
-        ioService.airElectroVanneAvant();
-        ioService.disablePompeAVideAvant();
-        servosService.ascenseurAvant(IConstantesServos.POS_ASCENSEUR_AVANT_HAUT, false);
+        servosService.pincesAvantOuvert(false);
+        servosService.pincesArriereOuvert(false);
 
         log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
 
@@ -263,9 +262,22 @@ public class Ordonanceur {
             ThreadUtils.sleep(1000);
         }
 
-        // Ejection du stock
+        // Remise en place
         ioService.enableAlim5VPuissance();
         ioService.enableAlim12VPuissance();
+
+        servosService.pincesAvantFerme(false);
+        servosService.pincesArriereFerme(false);
+        servosService.poussoirDroiteFerme(false);
+        servosService.poussoirGaucheFerme(false);
+        servosService.ascenseurAvantHaut(true);
+        servosService.ascenseurArriereHaut(true);
+        servosService.pivotArriereFerme(false);
+        servosService.moustachesFerme(false);
+
+        ThreadUtils.sleep(1000); // pour attendre les derniers servos avant de couper l'alim
+
+        ioService.disableMoteurDrapeau();
 
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();

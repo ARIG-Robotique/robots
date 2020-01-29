@@ -5,10 +5,9 @@ import com.pi4j.io.i2c.I2CBus;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
-import org.arig.robot.constants.IConstantesAnalogToDigital;
 import org.arig.robot.constants.IConstantesI2C;
 import org.arig.robot.constants.IConstantesUtiles;
-import org.arig.robot.exception.I2CException;
+import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
@@ -63,22 +62,29 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     private GpioPinDigitalInput inTirette;
 
     // Input : Numerique
-    private GpioPinDigitalInput inPresenceVentouseAvant;
+    private GpioPinDigitalInput inPresenceLectureCouleur;
     private GpioPinDigitalInput inCalageBordureDroit;
     private GpioPinDigitalInput inCalageBordureGauche;
-    private GpioPinDigitalInput inPresenceLectureCouleur;
+    private GpioPinDigitalInput inPresencePinceAvant1;
+    private GpioPinDigitalInput inPresencePinceAvant2;
+    private GpioPinDigitalInput inPresencePinceAvant3;
+    private GpioPinDigitalInput inPresencePinceAvant4;
+    private GpioPinDigitalInput inPresencePinceArriere1;
+    private GpioPinDigitalInput inPresencePinceArriere2;
+    private GpioPinDigitalInput inPresencePinceArriere3;
+    private GpioPinDigitalInput inPresencePinceArriere4;
+    private GpioPinDigitalInput inPresencePinceArriere5;
 
     // Référence sur les PIN Output
     // ----------------------------
 
     // GPIO
     private GpioPinDigitalOutput outCmdLedCapteurRGB;
+    private GpioPinDigitalOutput outCmdMoteurDrapeau;
 
     // PCF
     private GpioPinDigitalOutput outAlimPuissance5V;
     private GpioPinDigitalOutput outAlimPuissance12V;
-    private GpioPinDigitalOutput outElectroVanneAvant;
-    private GpioPinDigitalOutput outPompeAVideAvant;
 
     @Override
     public void destroy() throws Exception {
@@ -106,9 +112,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 //        inIrq5 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_15);
 //        inIrq6 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_06);
 
-        // Output
-        outCmdLedCapteurRGB = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, PinState.LOW);
-
         // Config PCF8574 //
         // -------------- //
         // TODO Config IRQ
@@ -127,21 +130,27 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
         // PCF1
         inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
-        inPresenceLectureCouleur = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
-        inPresenceVentouseAvant = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
-        inCalageBordureDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
+        inPresenceLectureCouleur = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
+        inPresencePinceAvant1 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
+        inPresencePinceAvant2 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
+        inPresencePinceAvant3 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
+        inPresencePinceAvant4 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
 
         // PCF2
-        inCalageBordureGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_07);
+        inCalageBordureDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
+        inCalageBordureGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
+        inPresencePinceArriere1 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
+        inPresencePinceArriere2 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
+        inPresencePinceArriere3 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
+        inPresencePinceArriere4 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
+        inPresencePinceArriere5 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
 
         // PCF3
-        outElectroVanneAvant = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_01);
-        outPompeAVideAvant = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_04);
+        outCmdLedCapteurRGB = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_00, PinState.LOW);
+        outCmdMoteurDrapeau = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_01, PinState.LOW);
 
         // Etat initial des IOs
         disableLedCapteurCouleur();
-        videElectroVanneAvant();
-        disablePompeAVideAvant();
     }
 
     @Override
@@ -208,15 +217,53 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     // Numerique
 
     @Override
-    public boolean ledCapteurCouleur() {
-        boolean result = outCmdLedCapteurRGB.isHigh();
-        log.info("LED capteur couleur allumé : {}", result);
-        return result;
+    public boolean presenceLectureCouleur() {
+        return inPresenceLectureCouleur.isLow();
     }
 
     @Override
-    public boolean presenceVentouseAvant() {
-        return inPresenceVentouseAvant.isLow();
+    public boolean presencePinceAvant1() {
+        return inPresencePinceAvant1.isLow();
+    }
+
+    @Override
+    public boolean presencePinceAvant2() {
+        return inPresencePinceAvant2.isLow();
+    }
+
+    @Override
+    public boolean presencePinceAvant3() {
+        return inPresencePinceAvant3.isLow();
+    }
+
+    @Override
+    public boolean presencePinceAvant4() {
+        return inPresencePinceAvant4.isLow();
+    }
+
+    @Override
+    public boolean presencePinceArriere1() {
+        return inPresencePinceArriere1.isLow();
+    }
+
+    @Override
+    public boolean presencePinceArriere2() {
+        return inPresencePinceArriere2.isLow();
+    }
+
+    @Override
+    public boolean presencePinceArriere3() {
+        return inPresencePinceArriere3.isLow();
+    }
+
+    @Override
+    public boolean presencePinceArriere4() {
+        return inPresencePinceArriere4.isLow();
+    }
+
+    @Override
+    public boolean presencePinceArriere5() {
+        return inPresencePinceArriere5.isLow();
     }
 
     @Override
@@ -227,26 +274,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     @Override
     public boolean calageBordureArriereGauche() {
         return inCalageBordureGauche.isLow();
-    }
-
-    @Override
-    public boolean presenceLectureCouleur() {
-        return inPresenceLectureCouleur.isLow();
-    }
-
-    // Analogique
-    @Override
-    public boolean gobeletPritDansVentouseAvant() {
-        boolean result;
-        try {
-            int analogValue = i2cAdc.readCapteurValue(IConstantesAnalogToDigital.VACUOSTAT_AVANT);
-            result = analogValue > IConstantesAnalogToDigital.VACUOSTAT_AVANT_SEUIL;
-            log.info("Lecture capteur de vide droit {}", analogValue);
-        } catch (I2CException e) {
-            result = false;
-        }
-        log.info("Présence module dans ventouse droit : {}", result);
-        return result;
     }
 
     // Couleur
@@ -272,6 +299,18 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     }
 
     @Override
+    public void enableMoteurDrapeau() {
+        log.info("Activation drapeau");
+        outCmdMoteurDrapeau.high();
+    }
+
+    @Override
+    public void disableMoteurDrapeau() {
+        log.info("Désactivation drapeau");
+        outCmdMoteurDrapeau.low();
+    }
+
+    @Override
     public void enableAlim5VPuissance() {
         log.info("Activation puissance 5V");
         outAlimPuissance5V.low();
@@ -293,30 +332,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     public void disableAlim12VPuissance() {
         log.info("Desactivation puissance 12V");
         outAlimPuissance12V.high();
-    }
-
-    @Override
-    public void airElectroVanneAvant() {
-        log.info("Air electrovanne avant");
-        outElectroVanneAvant.low();
-    }
-
-    @Override
-    public void videElectroVanneAvant() {
-        log.info("Vide electrovanne avant");
-        outElectroVanneAvant.high();
-    }
-
-    @Override
-    public void enablePompeAVideAvant() {
-        log.info("Activation pompe a vide avant");
-        outPompeAVideAvant.high();
-    }
-
-    @Override
-    public void disablePompeAVideAvant() {
-        log.info("Desactivation pompe a vide avant");
-        outPompeAVideAvant.low();
     }
 
 }

@@ -24,14 +24,23 @@ public interface IIOService {
     // --------------------------------------------------------- //
 
     // Numerique
-    boolean ledCapteurCouleur();
-    boolean presenceVentouseAvant();
-    boolean calageBordureArriereDroit();
-    boolean calageBordureArriereGauche();
     boolean presenceLectureCouleur();
 
+    boolean presencePinceAvant1();
+    boolean presencePinceAvant2();
+    boolean presencePinceAvant3();
+    boolean presencePinceAvant4();
+
+    boolean presencePinceArriere1();
+    boolean presencePinceArriere2();
+    boolean presencePinceArriere3();
+    boolean presencePinceArriere4();
+    boolean presencePinceArriere5();
+
+    boolean calageBordureArriereDroit();
+    boolean calageBordureArriereGauche();
+
     // Analogique
-    boolean gobeletPritDansVentouseAvant();
 
     // Couleur
     TCS34725ColorSensor.ColorData couleurRaw();
@@ -43,16 +52,13 @@ public interface IIOService {
     void enableLedCapteurCouleur();
     void disableLedCapteurCouleur();
 
+    void enableMoteurDrapeau();
+    void disableMoteurDrapeau();
+
     void enableAlim5VPuissance();
     void disableAlim5VPuissance();
     void enableAlim12VPuissance();
     void disableAlim12VPuissance();
-
-    void airElectroVanneAvant();
-    void videElectroVanneAvant();
-
-    void enablePompeAVideAvant();
-    void disablePompeAVideAvant();
 
     // ----------------------------------------------------------- //
     // -------------------------- BUSINESS ----------------------- //

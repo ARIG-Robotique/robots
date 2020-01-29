@@ -14,13 +14,17 @@ import java.util.List;
 @Service
 public class IOServiceBouchon implements IIOService {
 
-    @Autowired private RobotStatus rs;
+    @Autowired
+    private RobotStatus rs;
 
-    @Setter private Team team = Team.UNKNOWN;
-    @Setter private List<EStrategy> strategies = new ArrayList<>();
-    @Setter private boolean au = false;
-    @Setter private boolean tirette = false;
-    private boolean ledCapteurCouleur = false;
+    @Setter
+    private Team team = Team.UNKNOWN;
+    @Setter
+    private List<EStrategy> strategies = new ArrayList<>();
+    @Setter
+    private boolean au = false;
+    @Setter
+    private boolean tirette = false;
     private boolean alim5V = false;
     private boolean alim12V = false;
 
@@ -61,12 +65,52 @@ public class IOServiceBouchon implements IIOService {
     // Numerique
 
     @Override
-    public boolean ledCapteurCouleur() {
-        return ledCapteurCouleur;
+    public boolean presenceLectureCouleur() {
+        return false;
     }
 
     @Override
-    public boolean presenceVentouseAvant() {
+    public boolean presencePinceAvant1() {
+        return false;
+    }
+
+    @Override
+    public boolean presencePinceAvant2() {
+        return false;
+    }
+
+    @Override
+    public boolean presencePinceAvant3() {
+        return false;
+    }
+
+    @Override
+    public boolean presencePinceAvant4() {
+        return false;
+    }
+
+    @Override
+    public boolean presencePinceArriere1() {
+        return false;
+    }
+
+    @Override
+    public boolean presencePinceArriere2() {
+        return false;
+    }
+
+    @Override
+    public boolean presencePinceArriere3() {
+        return false;
+    }
+
+    @Override
+    public boolean presencePinceArriere4() {
+        return false;
+    }
+
+    @Override
+    public boolean presencePinceArriere5() {
         return false;
     }
 
@@ -77,18 +121,6 @@ public class IOServiceBouchon implements IIOService {
 
     @Override
     public boolean calageBordureArriereGauche() {
-        return false;
-    }
-
-    @Override
-    public boolean presenceLectureCouleur() {
-        return false;
-    }
-
-    // Analogique
-
-    @Override
-    public boolean gobeletPritDansVentouseAvant() {
         return false;
     }
 
@@ -105,12 +137,22 @@ public class IOServiceBouchon implements IIOService {
 
     @Override
     public void enableLedCapteurCouleur() {
-        ledCapteurCouleur = true;
+
     }
 
     @Override
     public void disableLedCapteurCouleur() {
-        ledCapteurCouleur = false;
+
+    }
+
+    @Override
+    public void disableMoteurDrapeau() {
+
+    }
+
+    @Override
+    public void enableMoteurDrapeau() {
+
     }
 
     @Override
@@ -132,18 +174,6 @@ public class IOServiceBouchon implements IIOService {
     public void disableAlim12VPuissance() {
         alim12V = false;
     }
-
-    @Override
-    public void airElectroVanneAvant() { }
-
-    @Override
-    public void videElectroVanneAvant() { }
-
-    @Override
-    public void enablePompeAVideAvant() { }
-
-    @Override
-    public void disablePompeAVideAvant() { }
 
     // ----------------------------------------------------------- //
     // -------------------------- BUSINESS ----------------------- //
