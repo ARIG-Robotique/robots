@@ -119,10 +119,11 @@ public interface IConstantesNerellConfig {
     int lidarClusterSizeMm = 50;
     int lidarOffsetPointMm = 30; // "recule" les points détectés pour prendre en compte qu'on ne detecte que les faces avant
 
-    // --------------------- //
-    // Paramètre pneumatique //
-    // --------------------- //
-    int tempsActivationElectrovanne = 200;
+    // ---------------- //
+    // Paramètre balise //
+    // ---------------- //
+    int directionGirouetteBuffer = 10; // nombre de lectures
+    float directionGirouetteMajority = 0.6f; // majorité nécessaire
 
     // ----------------- //
     // Paramètres métier //

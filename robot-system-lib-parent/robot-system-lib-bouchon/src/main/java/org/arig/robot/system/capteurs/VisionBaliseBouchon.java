@@ -5,10 +5,6 @@ import org.arig.robot.model.balise.StatutBalise;
 public class VisionBaliseBouchon implements IVisionBalise {
 
     @Override
-    public void startEtallonage() {
-    }
-
-    @Override
     public void startDetection() {
     }
 

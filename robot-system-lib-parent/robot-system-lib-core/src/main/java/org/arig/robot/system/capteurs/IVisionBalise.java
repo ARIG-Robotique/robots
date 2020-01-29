@@ -4,8 +4,6 @@ import org.arig.robot.model.balise.StatutBalise;
 
 public interface IVisionBalise {
 
-    void startEtallonage();
-
     void startDetection();
 
     StatutBalise getStatut();

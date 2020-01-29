@@ -7,7 +7,6 @@ import org.apache.commons.io.FileUtils;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.constants.IConstantesNerellConfig;
-import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.constants.IConstantesUtiles;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.I2CException;
@@ -20,6 +19,7 @@ import org.arig.robot.model.ecran.UpdateMatchInfos;
 import org.arig.robot.model.ecran.UpdateStateInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.StrategyManager;
@@ -85,6 +85,9 @@ public class Ordonanceur {
 
     @Autowired
     private TableUtils tableUtils;
+
+    @Autowired
+    private BaliseService baliseService;
 
     @Autowired
     @Qualifier("currentPosition")
@@ -204,6 +207,15 @@ public class Ordonanceur {
         displayScreenMessage("Démarrage du lidar");
         lidar.startScan();
 
+        displayScreenMessage("Connexion à la balise");
+        short tries = 3;
+        do {
+            baliseService.tryConnect();
+            tries--;
+        } while(!baliseService.isConnected() && tries > 0);
+        screenState.setBalise(baliseService.isConnected());
+        updateScreenState();
+
         displayScreenMessage("Attente mise de la tirette");
         while(!ioService.tirette()) {
             ThreadUtils.sleep(100);
@@ -211,7 +223,6 @@ public class Ordonanceur {
         screenState.setTirette(true);
         updateScreenState();
 
-        // Attente tirette.
         displayDepart();
         while (ioService.tirette()) {
             ThreadUtils.sleep(1);

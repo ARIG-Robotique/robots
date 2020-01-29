@@ -4,11 +4,14 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.model.balise.DetectionResult;
 import org.arig.robot.model.balise.StatutBalise;
+import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Data
@@ -85,8 +88,7 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         calageBordureDistance = dst;
     }
 
-    private boolean baliseOk = false;
-    private StatutBalise statutBalise = null;
+    private DirectionGirouette directionGirouette = DirectionGirouette.UNKNOWN;
 
     /**
      * STATUT

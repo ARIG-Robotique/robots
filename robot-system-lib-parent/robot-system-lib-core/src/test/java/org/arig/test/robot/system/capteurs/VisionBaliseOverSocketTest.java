@@ -3,6 +3,7 @@ package org.arig.test.robot.system.capteurs;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.arig.robot.model.balise.StatutBalise;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -42,15 +43,18 @@ public class VisionBaliseOverSocketTest {
 
     @Test
     @SneakyThrows
-    public void testGlobal() {
-        visionBalise.startEtallonage();
-        int i = 0;
-        while(!visionBalise.getStatut().isEtallonageOk() && i < 4) {
-            i++;
-            Thread.sleep(3000);
-        }
-
+    public void testDetection() {
         visionBalise.startDetection();
+
+        short tries = 4;
+        StatutBalise statut;
+        do {
+            Thread.sleep(3000);
+            statut = visionBalise.getStatut();
+            log.info("Statut : {}", statut);
+            tries--;
+
+        } while ((statut == null || !statut.detectionOk()) && tries > 0);
     }
 
     @Test

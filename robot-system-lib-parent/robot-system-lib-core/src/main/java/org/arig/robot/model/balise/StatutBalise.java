@@ -9,7 +9,6 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StatutBalise implements Serializable {
 
-    boolean etallonageOk;
     DetectionResult detection;
 
     public boolean detectionOk() {

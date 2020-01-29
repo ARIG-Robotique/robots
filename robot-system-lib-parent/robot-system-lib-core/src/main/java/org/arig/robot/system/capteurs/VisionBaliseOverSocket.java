@@ -13,6 +13,8 @@ import org.arig.robot.communication.socket.balise.StatusQuery;
 import org.arig.robot.communication.socket.balise.StatusResponse;
 import org.arig.robot.communication.socket.balise.enums.BaliseAction;
 import org.arig.robot.model.balise.StatutBalise;
+import org.arig.robot.model.communication.balise.*;
+import org.arig.robot.model.communication.balise.enums.BaliseAction;
 
 import java.io.File;
 import java.util.Base64;
@@ -26,16 +28,6 @@ public class VisionBaliseOverSocket extends AbstractSocketClient<BaliseAction> i
 
     public VisionBaliseOverSocket(File socketFile) {
         super(socketFile);
-    }
-
-    @Override
-    public void startEtallonage() {
-        try {
-            sendToSocketAndGet(new EtallonageQuery(), EtallonageResponse.class);
-
-        } catch (Exception e) {
-            log.warn("Erreur de lecture", e);
-        }
     }
 
     @Override
