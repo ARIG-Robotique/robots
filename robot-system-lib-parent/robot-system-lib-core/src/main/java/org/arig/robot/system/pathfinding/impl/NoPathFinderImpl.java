@@ -7,6 +7,7 @@ import org.arig.robot.system.pathfinding.AbstractPathFinder;
 
 import java.awt.*;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * /!\ Faux PathFinder pour des test de mouvement lors de la phase de réglage
@@ -17,7 +18,7 @@ import java.io.InputStream;
 public class NoPathFinderImpl extends AbstractPathFinder {
 
     @Override
-    public void setObstacles(Shape... obstacles) {
+    public void setObstacles(final List<Shape> obstacles) {
     }
 
     @Override

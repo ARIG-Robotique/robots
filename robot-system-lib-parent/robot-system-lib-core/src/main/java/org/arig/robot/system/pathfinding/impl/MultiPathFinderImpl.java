@@ -7,7 +7,7 @@ import algorithms.anya16.Anya16;
 import grid.GridGraph;
 import lombok.extern.slf4j.Slf4j;
 import main.AlgoFunction;
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Chemin;
@@ -134,10 +134,10 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
     }
 
     @Override
-    public void setObstacles(Shape... obstacles) {
-        log.info("Ajout de {} obstacles", obstacles.length);
+    public void setObstacles(final List<Shape> obstacles) {
+        log.info("Ajout de {} obstacles", obstacles.size());
 
-        if (ArrayUtils.isEmpty(obstacles)) {
+        if (CollectionUtils.isEmpty(obstacles)) {
             makeGraphFromBufferedImage(tableImage);
             return;
         }
@@ -293,7 +293,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
 
         // crée une liste de checkpoints dont le premier élément est celui dans la direction générale demandée
         final SimpleCircularList<Point> checkpoints = new SimpleCircularList<>(CHECKPOINTS);
-        checkpoints.rotate((int) Math.round(angle / Math.PI / 2 * checkpoints.size()));
+        checkpoints.rotate(-(int) Math.round(angle / Math.PI / 2 * checkpoints.size()));
 
         int seuil = 9;
         int maxSeuil = seuil * 2;

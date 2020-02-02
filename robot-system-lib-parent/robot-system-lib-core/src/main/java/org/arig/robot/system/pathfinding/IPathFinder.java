@@ -6,6 +6,7 @@ import org.arig.robot.model.Point;
 
 import java.awt.*;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * @author gdepuille on 29/12/13.
@@ -34,6 +35,6 @@ public interface IPathFinder {
      *
      * @param obstacles Une forme représentant les obstacles détecté.
      */
-    void setObstacles(Shape... obstacles);
+    void setObstacles(List<Shape> obstacles);
 
 }

@@ -19,6 +19,7 @@ import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -457,8 +458,11 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      */
     @Override
     public void pathTo(final double targetXmm, final double targetYmm, final boolean avecArret) throws NoPathFoundException, AvoidingException {
-        lidarService.refreshDetectedPoints();
-        lidarService.refreshObstacles();
+        try {
+            lidarService.waitCleanup();
+        } catch (InterruptedException e) {
+            throw new AvoidingException();
+        }
 
         boolean trajetOk = false;
         int nbCollisionDetected = 0, nbTryPath = 1;
