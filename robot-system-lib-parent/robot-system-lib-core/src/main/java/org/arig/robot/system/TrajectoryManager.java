@@ -475,6 +475,11 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             );
             Point ptToCm = new Point(targetXmm / divisor, targetYmm / divisor);
             try {
+                // si c'est une nouvelle tentative et qu'on est dans le noir, on recule
+                if (nbCollisionDetected > 0 && pathFinder.isBlocked(ptFromCm)) {
+                    reculeMM(50);
+                }
+
                 log.info("Demande de chemin vers X = {}mm ; Y = {}mm", targetXmm, targetYmm);
                 Chemin c = pathFinder.findPath(ptFromCm, ptToCm);
 
@@ -500,7 +505,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                     gotoPointMM(targetPoint.getX(), targetPoint.getY(), true);
                 }
 
-                // TODO gestion unutile avec les synchronized ??
+                // TODO gestion inutile avec les synchronized ??
                 // Contrôle que l'on est proche de la position demandée
                 double dXmm = (targetXmm - conv.pulseToMm(currentPosition.getPt().getX()));
                 double dYmm = (targetYmm - conv.pulseToMm(currentPosition.getPt().getY()));
@@ -526,7 +531,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                 nbCollisionDetected++;
                 log.info("Collision detectée n° {}, on recalcul un autre chemin", nbCollisionDetected);
 
-                if (nbCollisionDetected > 100) {
+                if (nbCollisionDetected > 10) {
                     log.warn("Trop de collision ({}), on passe à la suite", nbCollisionDetected);
                     throw new AvoidingException();
                 }

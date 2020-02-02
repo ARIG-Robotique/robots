@@ -29,6 +29,11 @@ public class NoPathFinderImpl extends AbstractPathFinder {
     }
 
     @Override
+    public boolean isBlocked(Point point) {
+        return false;
+    }
+
+    @Override
     public void construitGraphDepuisImageNoirEtBlanc(final InputStream is) {
     }
 }

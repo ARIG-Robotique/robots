@@ -125,6 +125,11 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
     }
 
     @Override
+    public boolean isBlocked(Point point) {
+        return workGraph.isBlocked((int) point.getX(), (int) point.getY());
+    }
+
+    @Override
     public void setObstacles(final List<Shape> obstacles) {
         log.info("Ajout de {} obstacles", obstacles.size());
 
