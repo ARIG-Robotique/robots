@@ -28,9 +28,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @author gdepuille on 29/12/13.
- */
 @Slf4j
 public class MultiPathFinderImpl extends AbstractPathFinder {
 
@@ -57,12 +54,6 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
 
         log.info("Recherche de chemin de {} a {} avec l'algorithme {}", from.toString(), to.toString(), algorithm.toString());
 
-        if (isSaveImages()) {
-            Chemin c = new Chemin();
-            c.addPoint(to);
-            saveImageForPath(from, c);
-        }
-
         // Pour les stats de temps
         StopWatch sw = new StopWatch();
         sw.start();
@@ -71,6 +62,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
 
         if (workGraph.isBlocked((int) to.getX(), (int) to.getY())) {
             log.error("Impossible de trouver le noeud d'arrivée");
+            saveImageForErrorPath(from, to);
             throw new NoPathFoundException(NoPathFoundException.ErrorType.END_NODE_DOES_NOT_EXIST);
         }
 
@@ -81,6 +73,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
 
             if (fromCorrige == null) {
                 log.error("Toujours impossible de trouver le point départ");
+                saveImageForErrorPath(from, to);
                 throw new NoPathFoundException(NoPathFoundException.ErrorType.START_NODE_DOES_NOT_EXIST);
             }
         }
@@ -126,9 +119,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         sw.stop();
         log.info("Calcul du chemin en {}", sw.toString());
 
-        if (isSaveImages()) {
-            saveImageForPath(from, c);
-        }
+        saveImageForPath(from, c);
 
         return c;
     }
