@@ -30,6 +30,8 @@ public interface IPathFinder {
      */
     void construitGraphDepuisImageNoirEtBlanc(InputStream is);
 
+    boolean isBlocked(Point point);
+
     /**
      * Ajout d'un obstacle sur la map.
      *
