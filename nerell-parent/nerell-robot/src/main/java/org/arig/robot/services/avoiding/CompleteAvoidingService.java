@@ -5,8 +5,6 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.TypeMouvement;
 import org.arig.robot.model.monitor.AbstractMonitorMouvement;
 import org.arig.robot.model.monitor.MonitorMouvementPath;
-import org.arig.robot.system.pathfinding.IPathFinder;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -19,9 +17,6 @@ import java.util.List;
  */
 @Slf4j
 public class CompleteAvoidingService extends AbstractAvoidingService {
-
-    @Autowired
-    private IPathFinder pathFinder;
 
     private boolean hasObstacle = false;
 
@@ -53,13 +48,10 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
         }
     }
 
-    protected boolean checkMouvement() {
-        boolean mouvementHasChanged = false;
-
+    protected void checkMouvement() {
         // Construction du chemin a parcourir sur le changement de mouvement
         if (currentMvt != trajectoryManager.getCurrentMouvement()) {
             log.info("Le mouvement courant a changé");
-            mouvementHasChanged = true;
             currentMvt = trajectoryManager.getCurrentMouvement();
 
             lines.clear();
@@ -82,8 +74,6 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
                 }
             }
         }
-
-        return mouvementHasChanged;
     }
 
 }

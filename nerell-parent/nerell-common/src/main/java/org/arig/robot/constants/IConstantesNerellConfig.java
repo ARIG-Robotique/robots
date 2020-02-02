@@ -138,11 +138,11 @@ public interface IConstantesNerellConfig {
     // ---------------------- //
     PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.LAZY_THETA_STAR;
     int pathFindingAngle = 45;
-    int pathFindingSeuilAvoidance = 900;
-    int pathFindingSeuilProximite = 600;
+    int pathFindingSeuilProximite = 650;
     int pathFindingTailleObstacle = IConstantesNerellConfig.pathFindingSeuilProximite + 50;
 
     int lidarClusterSizeMm = 50;
+    int lidarOffsetPointMm = 30; // "recule" les points détectés pour prendre en compte qu'on ne detecte que les faces avant
 
     // --------------------- //
     // Paramètre pneumatique //

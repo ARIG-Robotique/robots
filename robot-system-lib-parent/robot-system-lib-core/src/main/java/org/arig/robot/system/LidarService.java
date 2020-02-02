@@ -56,17 +56,33 @@ public class LidarService implements ILidarService, InitializingBean {
     @Getter
     protected final AtomicBoolean hasObstacle = new AtomicBoolean(false);
 
+    private final AtomicBoolean cleanup = new AtomicBoolean(false);
+
     private final DBSCANClusterer<Point> clusterer;
     private final CustomClusterEvaluator<Point> clusterEvaluator = new CustomClusterEvaluator<>();
 
-    final int pathFindingSeuilProximite;
     final int pathFindingTailleObstacle;
+    final int lidarOffsetPointMm;
 
-    public LidarService(int pathFindingSeuilProximite, int pathFindingTailleObstacle, int lidarClusterSizeMm) {
-        this.pathFindingSeuilProximite = pathFindingSeuilProximite;
+    public LidarService(int pathFindingTailleObstacle, int lidarOffsetPointMm, int lidarClusterSizeMm) {
         this.pathFindingTailleObstacle = pathFindingTailleObstacle;
+        this.lidarOffsetPointMm = lidarOffsetPointMm;
 
         clusterer = new DBSCANClusterer<>(lidarClusterSizeMm, 2);
+    }
+
+    @Override
+    synchronized public void waitCleanup() throws InterruptedException {
+        cleanup.set(true);
+
+        while (cleanup.get()) {
+            wait();
+        }
+    }
+
+    @Override
+    public boolean mustCleanup() {
+        return cleanup.get();
     }
 
     @Override
@@ -84,6 +100,7 @@ public class LidarService implements ILidarService, InitializingBean {
         if (lidarScan != null) {
             detectedPointsMm.addAll(
                     lidarScan.getScan().parallelStream()
+                            .map(scan -> scan.offsetDistanceMm(lidarOffsetPointMm))
                             .map(scan -> tableUtils.getPointFromAngle(scan.getDistanceMm(), scan.getAngleDeg()))
                             .filter(pt -> tableUtils.isInTable(pt) /*&& checkValidPointForSeuil(pt, IConstantesNerellConfig.pathFindingSeuilAvoidance)*/)
                             .collect(Collectors.toList())
@@ -100,27 +117,41 @@ public class LidarService implements ILidarService, InitializingBean {
     }
 
     @Override
-    public void refreshObstacles(final List<Line2D> lines) {
+    synchronized public void refreshObstacles(final List<Line2D> lines) {
         List<org.arig.robot.model.Shape> collisionsShape = new ArrayList<>();
         List<java.awt.Shape> obstacles = new ArrayList<>();
 
         pointLidar:
         for (Point pt : applyClustering(detectedPointsMm)) {
-            collisionsShape.add(new Cercle(pt, pathFindingSeuilProximite));
+            collisionsShape.add(new Cercle(pt, pathFindingTailleObstacle / 2));
 
-            Rectangle obstacle = new Rectangle(
-                    (int) Math.round(pt.getX() / 10. - pathFindingSeuilProximite / 10. / 2.),
-                    (int) Math.round(pt.getY() / 10. - pathFindingSeuilProximite / 10. / 2.),
-                    (int) Math.round(pathFindingSeuilProximite / 10.),
-                    (int) Math.round(pathFindingSeuilProximite / 10.)
-            );
+            int r1 = (int) (Math.cos(Math.toRadians(22.5)) * pathFindingTailleObstacle / 2 / 10);
+            int r2 = (int) (Math.sin(Math.toRadians(22.5)) * pathFindingTailleObstacle / 2 / 10);
+
+            Polygon obstacle = new Polygon();
+            obstacle.addPoint(r2, r1);
+            obstacle.addPoint(r1, r2);
+            obstacle.addPoint(r1, -r2);
+            obstacle.addPoint(r2, -r1);
+            obstacle.addPoint(-r2, -r1);
+            obstacle.addPoint(-r1, -r2);
+            obstacle.addPoint(-r1, r2);
+            obstacle.addPoint(-r2, r1);
+            obstacle.translate((int) pt.getX() / 10, (int) pt.getY() / 10);
+
+//            Rectangle obstacle = new Rectangle(
+//                    (int) Math.round(pt.getX() / 10. - pathFindingSeuilProximite / 10. / 2.),
+//                    (int) Math.round(pt.getY() / 10. - pathFindingSeuilProximite / 10. / 2.),
+//                    (int) Math.round(pathFindingSeuilProximite / 10.),
+//                    (int) Math.round(pathFindingSeuilProximite / 10.)
+//            );
 
             if (CollectionUtils.isEmpty(lines)) {
                 log.info("Ajout polygon : {} {}", pt, obstacle.toString());
                 obstacles.add(obstacle);
             } else {
                 for (Line2D l : lines) {
-                    if (l.intersects(obstacle)) {
+                    if (l.intersects(obstacle.getBounds())) {
                         log.info("Collision détectée, ajout polygon : {} {}", pt, obstacle.toString());
                         obstacles.add(obstacle);
                         continue pointLidar;
@@ -132,9 +163,12 @@ public class LidarService implements ILidarService, InitializingBean {
         this.collisionsShape.clear();
         this.collisionsShape.addAll(collisionsShape);
 
-        pathFinder.setObstacles(obstacles.toArray(new java.awt.Shape[obstacles.size()]));
+        pathFinder.setObstacles(obstacles);
 
         hasObstacle.set(!obstacles.isEmpty());
+
+        cleanup.set(false);
+        notify();
     }
 
     @Override

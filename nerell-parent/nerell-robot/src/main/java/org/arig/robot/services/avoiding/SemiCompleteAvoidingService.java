@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * - arret sur obstacle et reprise après Y secondes
  */
 @Slf4j
-public class SemiCompleteAvoidingService extends CompleteAvoidingService {
+public class SemiCompleteAvoidingService extends AbstractAvoidingService {
 
     private StopWatch stopWatch = new StopWatch();
 
@@ -37,7 +37,8 @@ public class SemiCompleteAvoidingService extends CompleteAvoidingService {
             if (stopWatch.getTime(TimeUnit.MILLISECONDS) > IConstantesNerellConfig.avoidanceWaitTimeMs) {
                 log.warn("L'obstacle n'est pas parti après 1sec, recherche d'un nouveau chemin");
 
-                super.processAvoiding();
+                lidarService.refreshObstacles();
+                trajectoryManager.refreshPathFinding();
                 trajectoryManager.obstacleNotFound();
                 hasProximite = false;
                 stopWatch.reset();
@@ -53,12 +54,13 @@ public class SemiCompleteAvoidingService extends CompleteAvoidingService {
                 hasProximite = false;
                 stopWatch.reset();
             }
-            else if (stopWatch.getTime(TimeUnit.MILLISECONDS) > IConstantesNerellConfig.avoidancePathRefreshTimeMs) {
-                log.info("Mise à jour du path");
-
-                super.processAvoiding();
-                stopWatch.reset();
-            }
+//            else if (stopWatch.getTime(TimeUnit.MILLISECONDS) > IConstantesNerellConfig.avoidancePathRefreshTimeMs) {
+//                log.info("Mise à jour du path");
+//
+//                lidarService.refreshObstacles();
+//                trajectoryManager.refreshPathFinding();
+//                stopWatch.reset();
+//            }
         }
 
         if (!stopWatch.isStarted()) {

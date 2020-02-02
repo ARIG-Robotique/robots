@@ -24,4 +24,8 @@ public interface ILidarService {
 
     boolean hasObstacle();
 
+    void waitCleanup() throws InterruptedException;
+
+    boolean mustCleanup();
+
 }

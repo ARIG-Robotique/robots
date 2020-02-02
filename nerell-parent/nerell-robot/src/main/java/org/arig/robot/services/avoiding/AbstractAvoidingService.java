@@ -40,6 +40,10 @@ public abstract class AbstractAvoidingService implements IAvoidingService {
     public final void process() {
         lidarService.refreshDetectedPoints();
 
+        if (lidarService.mustCleanup()) {
+            lidarService.refreshObstacles();
+        }
+
         processAvoiding();
     }
 

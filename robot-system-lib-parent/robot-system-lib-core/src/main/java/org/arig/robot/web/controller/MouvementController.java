@@ -57,8 +57,8 @@ public class MouvementController {
         pos.put("trajetAtteint", trajectoryManager.isTrajetAtteint());
         pos.put("trajetEnApproche", trajectoryManager.isTrajetEnApproche());
         pos.put("typeAsserv", cmdRobot.typeAsserv());
-        pos.put("pointsLidar", new ArrayList<>(lidarService.getDetectedPointsMm()));
-        pos.put("collisions", new ArrayList<>(lidarService.getCollisionsShape()));
+        pos.put("pointsLidar", lidarService.getDetectedPointsMm());
+        pos.put("collisions", lidarService.getCollisionsShape());
         pos.put("matchTime", rs.getElapsedTime());
         return pos;
     }

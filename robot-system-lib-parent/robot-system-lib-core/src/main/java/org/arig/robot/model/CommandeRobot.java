@@ -3,13 +3,12 @@ package org.arig.robot.model;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.model.enums.TypeConsigne;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * The Class CommandeRobot.
@@ -57,9 +56,9 @@ public class CommandeRobot {
     }
 
     public void setTypes(final TypeConsigne... values) {
-        types.clear();
-        for (final TypeConsigne tc : values) {
-            types.add(tc);
+        synchronized (types) {
+            types.clear();
+            Collections.addAll(types, values);
         }
     }
 
@@ -76,9 +75,9 @@ public class CommandeRobot {
         return result;
     }
 
-    public synchronized String typeAsserv() {
-        Function<TypeConsigne, String> f = TypeConsigne::name;
-        Optional<String> res = types.stream().map(f).reduce((a1, a2) -> a1 + "," + a2);
-        return res.isPresent() ? res.get() : StringUtils.EMPTY;
+    public String typeAsserv() {
+        synchronized (types) {
+            return types.stream().map(TypeConsigne::name).collect(Collectors.joining(","));
+        }
     }
 }
