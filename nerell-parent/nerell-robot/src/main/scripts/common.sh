@@ -1,7 +1,6 @@
 #!/bin/bash
 
 echo "* Suppression des logs ..."
-rm -vf logs/0-traces.log
 rm -vf gc.log
 echo ""
 

@@ -30,7 +30,7 @@ balise:
 
 # Logging
 logging:
-  file: ./logs/0-traces.log
+  file: ./logs/${execution.id}-traces.log
   pattern:
     file: "%d{ISO8601};%p;%t;%c;%m%n"
 
