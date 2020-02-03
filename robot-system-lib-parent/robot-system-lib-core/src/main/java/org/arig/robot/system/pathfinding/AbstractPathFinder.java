@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.model.Chemin;
 import org.arig.robot.model.Point;
 import org.arig.robot.utils.ImageUtils;
@@ -26,8 +27,12 @@ public abstract class AbstractPathFinder implements IPathFinder {
     private boolean saveImages = true;
 
     private BufferedImage workImage;
-    private File pathDir = new File("./logs/path");
-    private final DateTimeFormatter dteFormat = DateTimeFormatter.ISO_DATE_TIME;
+    private File pathDir;
+    private final DateTimeFormatter dteFormat = DateTimeFormatter.ISO_TIME;
+
+    public AbstractPathFinder() {
+        pathDir = new File("./logs/path/" + System.getProperty(IConstantesConfig.keyExecutionId));
+    }
 
     public void saveImageForWork(BufferedImage workImage) {
         this.workImage = workImage;

@@ -98,12 +98,7 @@ public class Ordonanceur {
     }
 
     public void run() throws IOException {
-        // Configuration a faire pour chaque match (gestion sans redemarrage programme)
-        // Définition d'un ID unique pour le nommage des fichiers
         final LocalDateTime startOrdonnanceur = LocalDateTime.now();
-        final String execId = startOrdonnanceur.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        System.setProperty(IConstantesConfig.keyExecutionId, execId);
-
         log.info("Demarrage de l'ordonancement du match ...");
 
         // Equipe au démarrage
@@ -235,7 +230,7 @@ public class Ordonanceur {
         // On envoi les datas collecté
         monitoringWrapper.save();
         final LocalDateTime stopOrdonnanceur = LocalDateTime.now();
-        final File execFile = new File("./logs/" + execId + ".exec");
+        final File execFile = new File("./logs/" + System.getProperty(IConstantesConfig.keyExecutionId) + ".exec");
         DateTimeFormatter savePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         List<String> lines = new ArrayList<>();
         lines.add(startOrdonnanceur.format(savePattern));

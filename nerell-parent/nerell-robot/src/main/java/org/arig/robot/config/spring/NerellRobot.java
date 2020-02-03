@@ -6,16 +6,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-/**
- * @author gdepuille on 20/12/13.
- */
 @SpringBootApplication
 public class NerellRobot {
 
     public static void main(final String [] args) throws IOException {
-        //boot(args);
-        System.setProperty(IConstantesConfig.keyExecutionId, "0");
+        // Définition d'un ID unique pour le nommage des fichiers
+        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        System.setProperty(IConstantesConfig.keyExecutionId, execId);
+
         SpringApplication.run(NerellRobot.class, args);
 
         Ordonanceur.getInstance().run();
