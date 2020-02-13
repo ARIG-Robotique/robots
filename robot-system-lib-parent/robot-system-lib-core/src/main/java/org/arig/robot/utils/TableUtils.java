@@ -63,7 +63,7 @@ public class TableUtils {
         boolean inPersistantDeadZones = false;
         if (CollectionUtils.isNotEmpty(persistentDeadZones)) {
             inPersistantDeadZones = persistentDeadZones.parallelStream().anyMatch(
-                r -> r.contains(new Point2D.Double(pt.getX(), pt.getY()))
+                    r -> r.contains(new Point2D.Double(pt.getX(), pt.getY()))
             );
         }
         boolean inDynamicDeadZones = false;
@@ -80,8 +80,8 @@ public class TableUtils {
      * Définition d'un point (dans le repère table) en fonction d'une distance
      * et d'un angle par rapport à la position du robot
      *
-     * @param distanceMm Distance par rapport au robot.
-     * @param offsetAngle Valeur en degré par rapport au robot.
+     * @param distanceMm     Distance par rapport au robot.
+     * @param offsetAngle    Valeur en degré par rapport au robot.
      * @param offsetXRobotMm Valeur en mm de décalage du capteur par rapport au robot sur l'axe X
      * @param offsetYRobotMm Valeur en mm de décalage du capteur par rapport au robot sur l'axe Y
      * @return Le point si présent sur la table, null sinon
@@ -102,5 +102,25 @@ public class TableUtils {
 
     public Point getPointFromAngle(double distanceMm, double offsetAngle) {
         return getPointFromAngle(distanceMm, offsetAngle, 0, 0);
+    }
+
+    /**
+     * Eloigne un point dans la direction du robot
+     */
+    public Point eloigner(Point point, double offset) {
+        double currentX = conv.pulseToMm(position.getPt().getX());
+        double currentY = conv.pulseToMm(position.getPt().getY());
+
+        double dY = point.getY() - currentY;
+        double dX = point.getX() - currentX;
+        double angle = Math.atan2(dY, dX);
+        double dist = Math.sqrt(dX * dX + dY * dY);
+
+        Point ptObstacle = new Point();
+        ptObstacle.setX((dist + offset) * Math.cos(angle));
+        ptObstacle.setY((dist + offset) * Math.sin(angle));
+        ptObstacle.addDeltaX(currentX);
+        ptObstacle.addDeltaY(currentY);
+        return ptObstacle;
     }
 }

@@ -100,7 +100,7 @@ public abstract class AbstractPathFinder implements IPathFinder {
             if (isError || pts.size() > 2) {
                 g.setColor(isError ? Color.RED : Color.BLUE);
                 g.setStroke(new BasicStroke(isError ? 2 : 1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10, new float[]{5}, 0));
-                g.drawLine((int) pts.get(0).getX(), (int) pts.get(0).getY(), (int) pts.get(l - 1).getX(), (int) pts.get(l - 1).getX());
+                g.drawLine((int) pts.get(0).getX(), (int) pts.get(0).getY(), (int) pts.get(l - 1).getX(), (int) pts.get(l - 1).getY());
             }
 
             g.dispose();

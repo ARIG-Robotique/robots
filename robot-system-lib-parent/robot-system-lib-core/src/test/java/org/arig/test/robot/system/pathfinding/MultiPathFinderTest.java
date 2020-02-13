@@ -17,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.awt.geom.Ellipse2D;
+import java.util.Collections;
 
 /**
  * @author gdepuille on 30/12/13.
@@ -99,7 +100,7 @@ public class MultiPathFinderTest {
         Assert.assertNotNull(cheminSansObstacles);
         Assert.assertTrue(cheminSansObstacles.hasNext());
 
-        pf.setObstacles(new Ellipse2D.Double(195 - 20, 80 - 20, 40, 40));
+        pf.setObstacles(Collections.singletonList(new Ellipse2D.Double(195 - 20, 80 - 20, 40, 40)));
         Chemin cheminAvecObstacles = pf.findPath(from, to);
         Assert.assertNotNull(cheminAvecObstacles);
         Assert.assertTrue(cheminAvecObstacles.hasNext());
