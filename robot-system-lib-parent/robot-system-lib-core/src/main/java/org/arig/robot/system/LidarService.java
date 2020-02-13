@@ -100,7 +100,6 @@ public class LidarService implements ILidarService, InitializingBean {
         if (lidarScan != null) {
             detectedPointsMm.addAll(
                     lidarScan.getScan().parallelStream()
-                            .map(scan -> scan.offsetDistanceMm(lidarOffsetPointMm))
                             .map(scan -> tableUtils.getPointFromAngle(scan.getDistanceMm(), scan.getAngleDeg()))
                             .filter(pt -> tableUtils.isInTable(pt) /*&& checkValidPointForSeuil(pt, IConstantesNerellConfig.pathFindingSeuilAvoidance)*/)
                             .collect(Collectors.toList())
@@ -124,6 +123,8 @@ public class LidarService implements ILidarService, InitializingBean {
         pointLidar:
         for (Point pt : applyClustering(detectedPointsMm)) {
             collisionsShape.add(new Cercle(pt, pathFindingTailleObstacle / 2));
+//            collisionsShape.add(new org.arig.robot.model.Rectangle(pt.getX() - pathFindingTailleObstacle / 2., pt.getY() - pathFindingTailleObstacle / 2., pathFindingTailleObstacle, pathFindingTailleObstacle));
+
 
             int r1 = (int) (Math.cos(Math.toRadians(22.5)) * pathFindingTailleObstacle / 2 / 10);
             int r2 = (int) (Math.sin(Math.toRadians(22.5)) * pathFindingTailleObstacle / 2 / 10);
@@ -183,6 +184,7 @@ public class LidarService implements ILidarService, InitializingBean {
                     Clusterable center = clusterEvaluator.getCenter(cluster);
                     return new Point(center.getPoint()[0], center.getPoint()[1]);
                 })
+                .map(point -> tableUtils.eloigner(point, lidarOffsetPointMm))
                 .collect(Collectors.toList());
     }
 

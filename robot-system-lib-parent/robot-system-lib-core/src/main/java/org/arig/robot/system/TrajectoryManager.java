@@ -477,7 +477,12 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             try {
                 // si c'est une nouvelle tentative et qu'on est dans le noir, on recule
                 if (nbCollisionDetected > 0 && pathFinder.isBlocked(ptFromCm)) {
-                    reculeMM(50);
+                    reculeMM(100);
+
+                    ptFromCm = new Point(
+                            conv.pulseToMm(currentPosition.getPt().getX()) / divisor,
+                            conv.pulseToMm(currentPosition.getPt().getY()) / divisor
+                    );
                 }
 
                 log.info("Demande de chemin vers X = {}mm ; Y = {}mm", targetXmm, targetYmm);

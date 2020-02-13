@@ -61,7 +61,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService {
             return false;
         }
 
-        double alpha = Math.toDegrees(Math.atan2(Math.toRadians(dY), Math.toRadians(dX)));
+        double alpha = Math.toDegrees(Math.atan2(dY, dX));
         double dA = alpha - conv.pulseToDeg(currentPosition.getAngle());
         if (dA > 180) {
             dA -= 360;
