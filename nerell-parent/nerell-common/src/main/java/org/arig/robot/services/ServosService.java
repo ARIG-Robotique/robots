@@ -158,17 +158,11 @@ public class ServosService {
     }
 
     public void moustachesOuvert(boolean wait) {
-        setPositionBatch(new int[][]{
-                new int[]{IConstantesServos.MOUSTACHE_DROITE, IConstantesServos.POS_MOUSTACHE_DROITE_OUVERT},
-                new int[]{IConstantesServos.MOUSTACHE_GAUCHE, IConstantesServos.POS_MOUSTACHE_GAUCHE_OUVERT}
-        }, wait);
+        setPositionBatch(IConstantesServos.GROUP_CONFIG.get(IConstantesServos.GROUPE_MOUSTACHES).get(IConstantesServos.POS_GROUPE_MOUSTACHES_OUVERT), wait);
     }
 
     public void moustachesFerme(boolean wait) {
-        setPositionBatch(new int[][]{
-                new int[]{IConstantesServos.MOUSTACHE_DROITE, IConstantesServos.POS_MOUSTACHE_DROITE_FERME},
-                new int[]{IConstantesServos.MOUSTACHE_GAUCHE, IConstantesServos.POS_MOUSTACHE_GAUCHE_FERME}
-        }, wait);
+        setPositionBatch(IConstantesServos.GROUP_CONFIG.get(IConstantesServos.GROUPE_MOUSTACHES).get(IConstantesServos.POS_GROUPE_MOUSTACHES_FERME), wait);
     }
 
     public void poussoirGaucheOuvert(boolean wait) {
@@ -212,41 +206,19 @@ public class ServosService {
     }
 
     public void pincesAvantFerme(boolean wait) {
-        setPositionBatch(new int[][]{
-                new int[]{IConstantesServos.PINCE_AVANT_1, IConstantesServos.POS_PINCE_AVANT_1_FERME},
-                new int[]{IConstantesServos.PINCE_AVANT_2, IConstantesServos.POS_PINCE_AVANT_2_FERME},
-                new int[]{IConstantesServos.PINCE_AVANT_3, IConstantesServos.POS_PINCE_AVANT_3_FERME},
-                new int[]{IConstantesServos.PINCE_AVANT_4, IConstantesServos.POS_PINCE_AVANT_4_FERME}
-        }, wait);
+        setPositionBatch(IConstantesServos.GROUP_CONFIG.get(IConstantesServos.GROUPE_PINCES_AVANT).get(IConstantesServos.POS_GROUPE_PINCES_AVANT_FERME), wait);
     }
 
     public void pincesAvantOuvert(boolean wait) {
-        setPositionBatch(new int[][]{
-                new int[]{IConstantesServos.PINCE_AVANT_1, IConstantesServos.POS_PINCE_AVANT_1_OUVERT},
-                new int[]{IConstantesServos.PINCE_AVANT_2, IConstantesServos.POS_PINCE_AVANT_2_OUVERT},
-                new int[]{IConstantesServos.PINCE_AVANT_3, IConstantesServos.POS_PINCE_AVANT_3_OUVERT},
-                new int[]{IConstantesServos.PINCE_AVANT_4, IConstantesServos.POS_PINCE_AVANT_4_OUVERT}
-        }, wait);
+        setPositionBatch(IConstantesServos.GROUP_CONFIG.get(IConstantesServos.GROUPE_PINCES_AVANT).get(IConstantesServos.POS_GROUPE_PINCES_AVANT_OUVERT), wait);
     }
 
     public void pincesArriereFerme(boolean wait) {
-        setPositionBatch(new int[][]{
-                new int[]{IConstantesServos.PINCE_ARRIERE_1, IConstantesServos.POS_PINCE_ARRIERE_1_FERME},
-                new int[]{IConstantesServos.PINCE_ARRIERE_2, IConstantesServos.POS_PINCE_ARRIERE_2_FERME},
-                new int[]{IConstantesServos.PINCE_ARRIERE_3, IConstantesServos.POS_PINCE_ARRIERE_3_FERME},
-                new int[]{IConstantesServos.PINCE_ARRIERE_4, IConstantesServos.POS_PINCE_ARRIERE_4_FERME},
-                new int[]{IConstantesServos.PINCE_ARRIERE_5, IConstantesServos.POS_PINCE_ARRIERE_5_FERME}
-        }, wait);
+        setPositionBatch(IConstantesServos.GROUP_CONFIG.get(IConstantesServos.GROUPE_PINCES_ARRIERE).get(IConstantesServos.POS_GROUPE_PINCES_ARRIERE_FERME), wait);
     }
 
     public void pincesArriereOuvert(boolean wait) {
-        setPositionBatch(new int[][]{
-                new int[]{IConstantesServos.PINCE_ARRIERE_1, IConstantesServos.POS_PINCE_ARRIERE_1_OUVERT},
-                new int[]{IConstantesServos.PINCE_ARRIERE_2, IConstantesServos.POS_PINCE_ARRIERE_2_OUVERT},
-                new int[]{IConstantesServos.PINCE_ARRIERE_3, IConstantesServos.POS_PINCE_ARRIERE_3_OUVERT},
-                new int[]{IConstantesServos.PINCE_ARRIERE_4, IConstantesServos.POS_PINCE_ARRIERE_4_OUVERT},
-                new int[]{IConstantesServos.PINCE_ARRIERE_5, IConstantesServos.POS_PINCE_ARRIERE_5_OUVERT}
-        }, wait);
+        setPositionBatch(IConstantesServos.GROUP_CONFIG.get(IConstantesServos.GROUPE_PINCES_ARRIERE).get(IConstantesServos.POS_GROUPE_PINCES_ARRIERE_OUVERT), wait);
     }
 
     //*******************************************//

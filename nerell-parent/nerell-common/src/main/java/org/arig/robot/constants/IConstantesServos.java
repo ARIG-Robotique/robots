@@ -92,6 +92,20 @@ public interface IConstantesServos {
     int POS_PINCE_ARRIERE_5_OUVERT = 1500;
     int POS_PINCE_ARRIERE_5_FERME = 1500;
 
+    // Constantes de groupes //
+    // --------------------- //
+
+    byte GROUPE_PINCES_AVANT = 1;
+    byte GROUPE_PINCES_ARRIERE = 2;
+    byte GROUPE_MOUSTACHES = 3;
+
+    byte POS_GROUPE_PINCES_AVANT_FERME = 1;
+    byte POS_GROUPE_PINCES_AVANT_OUVERT = 2;
+    byte POS_GROUPE_PINCES_ARRIERE_FERME = 3;
+    byte POS_GROUPE_PINCES_ARRIERE_OUVERT = 4;
+    byte POS_GROUPE_MOUSTACHES_FERME = 5;
+    byte POS_GROUPE_MOUSTACHES_OUVERT = 6;
+
     Map<Byte, Triple<Integer, Integer, Integer>> MIN_TIME_MAX = ImmutableMap.<Byte, Triple<Integer, Integer, Integer>>builder()
             .put(MOUSTACHE_DROITE, Triple.of(POS_MOUSTACHE_DROITE_FERME, WAIT_MOUSTACHE_DROITE, POS_MOUSTACHE_DROITE_OUVERT))
             .put(MOUSTACHE_GAUCHE, Triple.of(POS_MOUSTACHE_GAUCHE_FERME, WAIT_MOUSTACHE_GAUCHE, POS_MOUSTACHE_GAUCHE_OUVERT))
@@ -109,5 +123,48 @@ public interface IConstantesServos {
             .put(PINCE_ARRIERE_3, Triple.of(POS_PINCE_ARRIERE_3_FERME, WAIT_PINCE_ARRIERE, POS_PINCE_ARRIERE_3_OUVERT))
             .put(PINCE_ARRIERE_4, Triple.of(POS_PINCE_ARRIERE_4_FERME, WAIT_PINCE_ARRIERE, POS_PINCE_ARRIERE_4_OUVERT))
             .put(PINCE_ARRIERE_5, Triple.of(POS_PINCE_ARRIERE_5_FERME, WAIT_PINCE_ARRIERE, POS_PINCE_ARRIERE_5_OUVERT))
+            .build();
+
+    Map<Byte, Map<Byte, int[][]>> GROUP_CONFIG = ImmutableMap.<Byte, Map<Byte, int[][]>>builder()
+            .put(GROUPE_PINCES_ARRIERE, ImmutableMap.<Byte, int[][]>builder()
+                    .put(POS_GROUPE_PINCES_ARRIERE_FERME, new int[][]{
+                            new int[]{IConstantesServos.PINCE_ARRIERE_1, IConstantesServos.POS_PINCE_ARRIERE_1_FERME},
+                            new int[]{IConstantesServos.PINCE_ARRIERE_2, IConstantesServos.POS_PINCE_ARRIERE_2_FERME},
+                            new int[]{IConstantesServos.PINCE_ARRIERE_3, IConstantesServos.POS_PINCE_ARRIERE_3_FERME},
+                            new int[]{IConstantesServos.PINCE_ARRIERE_4, IConstantesServos.POS_PINCE_ARRIERE_4_FERME},
+                            new int[]{IConstantesServos.PINCE_ARRIERE_5, IConstantesServos.POS_PINCE_ARRIERE_5_FERME}
+                    })
+                    .put(POS_GROUPE_PINCES_ARRIERE_OUVERT, new int[][]{
+                            new int[]{IConstantesServos.PINCE_ARRIERE_1, IConstantesServos.POS_PINCE_ARRIERE_1_OUVERT},
+                            new int[]{IConstantesServos.PINCE_ARRIERE_2, IConstantesServos.POS_PINCE_ARRIERE_2_OUVERT},
+                            new int[]{IConstantesServos.PINCE_ARRIERE_3, IConstantesServos.POS_PINCE_ARRIERE_3_OUVERT},
+                            new int[]{IConstantesServos.PINCE_ARRIERE_4, IConstantesServos.POS_PINCE_ARRIERE_4_OUVERT},
+                            new int[]{IConstantesServos.PINCE_ARRIERE_5, IConstantesServos.POS_PINCE_ARRIERE_5_OUVERT}
+                    })
+                    .build())
+            .put(GROUPE_PINCES_AVANT, ImmutableMap.<Byte, int[][]>builder()
+                    .put(POS_GROUPE_PINCES_AVANT_FERME, new int[][]{
+                            new int[]{IConstantesServos.PINCE_AVANT_1, IConstantesServos.POS_PINCE_AVANT_1_FERME},
+                            new int[]{IConstantesServos.PINCE_AVANT_2, IConstantesServos.POS_PINCE_AVANT_2_FERME},
+                            new int[]{IConstantesServos.PINCE_AVANT_3, IConstantesServos.POS_PINCE_AVANT_3_FERME},
+                            new int[]{IConstantesServos.PINCE_AVANT_4, IConstantesServos.POS_PINCE_AVANT_4_FERME}
+                    })
+                    .put(POS_GROUPE_PINCES_AVANT_OUVERT, new int[][]{
+                            new int[]{IConstantesServos.PINCE_AVANT_1, IConstantesServos.POS_PINCE_AVANT_1_OUVERT},
+                            new int[]{IConstantesServos.PINCE_AVANT_2, IConstantesServos.POS_PINCE_AVANT_2_OUVERT},
+                            new int[]{IConstantesServos.PINCE_AVANT_3, IConstantesServos.POS_PINCE_AVANT_3_OUVERT},
+                            new int[]{IConstantesServos.PINCE_AVANT_4, IConstantesServos.POS_PINCE_AVANT_4_OUVERT}
+                    })
+                    .build())
+            .put(GROUPE_MOUSTACHES, ImmutableMap.<Byte, int[][]>builder()
+                    .put(POS_GROUPE_MOUSTACHES_FERME, new int[][]{
+                            new int[]{IConstantesServos.MOUSTACHE_DROITE, IConstantesServos.POS_MOUSTACHE_DROITE_FERME},
+                            new int[]{IConstantesServos.MOUSTACHE_GAUCHE, IConstantesServos.POS_MOUSTACHE_GAUCHE_FERME}
+                    })
+                    .put(POS_GROUPE_MOUSTACHES_OUVERT, new int[][]{
+                            new int[]{IConstantesServos.MOUSTACHE_DROITE, IConstantesServos.POS_MOUSTACHE_DROITE_OUVERT},
+                            new int[]{IConstantesServos.MOUSTACHE_GAUCHE, IConstantesServos.POS_MOUSTACHE_GAUCHE_OUVERT}
+                    })
+                    .build())
             .build();
 }

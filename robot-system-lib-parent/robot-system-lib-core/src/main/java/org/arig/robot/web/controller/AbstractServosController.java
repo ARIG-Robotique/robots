@@ -3,6 +3,7 @@ package org.arig.robot.web.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.model.servos.ServoConfig;
+import org.arig.robot.model.servos.ServoGroup;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -13,12 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-/**
- * @author gdepuille on 13/10/16.
- */
 @Slf4j
 @RequestMapping("/servos")
 @Profile(IConstantesConfig.profileMonitoring)
@@ -27,24 +23,20 @@ public abstract class AbstractServosController {
     @Autowired
     protected SD21Servos sd21Servos;
 
-    protected abstract List<ServoConfig> servosConfig();
+    protected abstract List<ServoGroup> servosConfig();
+
+    protected abstract int[][] getGroupPositions(Byte idGroupe, Byte position);
 
     @GetMapping
-    public final Map<String, List<ServoConfig>> config() {
-        return servosConfig().stream()
-                .sorted((servo1, servo2) -> {
-                    if (servo1.getGroup().getOrder() == servo2.getGroup().getOrder()) {
-                        return servo1.getName().compareToIgnoreCase(servo2.getName());
-                    }
-
-                    return servo1.getGroup().getOrder() - servo2.getGroup().getOrder();
-                })
-                .collect(Collectors.groupingBy(s -> s.getGroup().getName()));
+    public final List<ServoGroup> config() {
+        return servosConfig();
     }
 
     @GetMapping(value = "/{idServo}")
     public final ServoConfig getServoPositionAndSpeed(@PathVariable("idServo") final Byte idServo) {
         return servosConfig().stream()
+                .map(ServoGroup::getServos)
+                .flatMap(List::stream)
                 .filter(s -> s.getId() == idServo)
                 .findFirst()
                 .orElse(null);
@@ -62,6 +54,14 @@ public abstract class AbstractServosController {
         } else {
             log.info("Modification du servo moteur {} : Pos -> {}", idServo, position);
             sd21Servos.setPosition(idServo, position);
+        }
+    }
+
+    @PostMapping("/groupe/{idGroupe}")
+    public final void groupPosition(@PathVariable("idGroupe") final Byte idGroupe,
+                                    @RequestParam("position") final Byte position) {
+        for (int[] servoPos : getGroupPositions(idGroupe, position)) {
+            sd21Servos.setPosition((byte) servoPos[0], servoPos[1]);
         }
     }
 }
