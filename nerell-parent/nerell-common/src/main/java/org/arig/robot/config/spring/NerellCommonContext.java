@@ -9,7 +9,10 @@ import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.system.*;
+import org.arig.robot.system.ILidarService;
+import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.system.LidarService;
+import org.arig.robot.system.TrajectoryManager;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.arig.robot.system.motion.AsservissementPolaireDistanceOrientation;
@@ -17,6 +20,7 @@ import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motion.OdometrieLineaire;
 import org.arig.robot.system.pathfinding.IPathFinder;
+import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.system.pathfinding.impl.NoPathFinderImpl;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
@@ -26,9 +30,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
-
-import java.util.EnumMap;
-import java.util.Map;
 
 @Slf4j
 @Configuration

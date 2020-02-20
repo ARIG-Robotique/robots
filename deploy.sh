@@ -20,10 +20,10 @@ echo "Cleaning ..."
 ssh ${ROBOT_NAME} rm -vf ${INSTALL_DIR}/*.sh
 
 echo "Déploiement Applicatif ..."
-scp ./${ROBOT_NAME}-parent/${ROBOT_NAME}-robot/build/libs/${ROBOT_NAME}-robot-2019-SNAPSHOT-exec.jar ${ROBOT_NAME}:${INSTALL_DIR}/${ROBOT_NAME}-robot-2019-SNAPSHOT.jar
+scp ./${ROBOT_NAME}-parent/${ROBOT_NAME}-robot/build/libs/${ROBOT_NAME}-robot-2020-SNAPSHOT-exec.jar ${ROBOT_NAME}:${INSTALL_DIR}/${ROBOT_NAME}-robot-2020-SNAPSHOT.jar
 scp -r ./${ROBOT_NAME}-parent/${ROBOT_NAME}-robot/src/main/scripts/*.sh ${ROBOT_NAME}:${INSTALL_DIR}/
 scp ./${ROBOT_NAME}-parent/${ROBOT_NAME}-robot/src/main/desktop/*.desktop ${ROBOT_NAME}:${DESKTOP_DIR}/
 
 echo "Déploiement Utils ..."
-scp ./${ROBOT_NAME}-parent/${ROBOT_NAME}-utils/build/libs/${ROBOT_NAME}-utils-2019-SNAPSHOT.jar ${ROBOT_NAME}:${INSTALL_DIR}/
+scp ./${ROBOT_NAME}-parent/${ROBOT_NAME}-utils/build/libs/${ROBOT_NAME}-utils-2020-SNAPSHOT.jar ${ROBOT_NAME}:${INSTALL_DIR}/
 scp -r ./${ROBOT_NAME}-parent/${ROBOT_NAME}-utils/src/main/scripts/*.sh ${ROBOT_NAME}:${INSTALL_DIR}/

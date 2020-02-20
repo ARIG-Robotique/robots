@@ -2,10 +2,8 @@ package org.arig.robot.config.spring;
 
 import org.arig.robot.Ordonanceur;
 import org.arig.robot.constants.IConstantesConfig;
-import org.arig.robot.model.RobotStatus;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.IOException;

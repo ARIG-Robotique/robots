@@ -1,10 +1,6 @@
 package org.arig.robot.services;
 
-import org.arig.robot.model.EStrategy;
-import org.arig.robot.model.Team;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
-
-import java.util.List;
 
 public interface IIOService {
 
@@ -13,7 +9,6 @@ public interface IIOService {
     // --------------------------------------------------------- //
 
     void refreshAllPcf();
-
     boolean auOk();
     boolean alimPuissance5VOk();
     boolean alimPuissance12VOk();

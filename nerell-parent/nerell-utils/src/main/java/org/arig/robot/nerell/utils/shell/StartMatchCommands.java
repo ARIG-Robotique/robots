@@ -48,11 +48,11 @@ public class StartMatchCommands {
     private void choixTeam() {
         boolean choixTeam = false;
         do {
-            String teamAnswer = shellInputReader.prompt("Choisi ton équipe en entrant le chiffre : \n 1.JAUNE \n 2.VIOLET  \n");
+            String teamAnswer = shellInputReader.prompt("Choisi ton équipe en entrant le chiffre : \n 1.JAUNE \n 2.BLEU  \n");
             if (StringUtils.isNotBlank(teamAnswer) && StringUtils.isNumeric(teamAnswer)) {
                 int teamNumber = Integer.parseInt(teamAnswer);
                 if (teamNumber > 0 && teamNumber < 3) {
-                    Team team = teamNumber == 1 ? Team.JAUNE : Team.VIOLET;
+                    Team team = teamNumber == 1 ? Team.JAUNE : Team.BLEU;
                     System.setProperty(IConstantesUtiles.ENV_PROP_TEAM, team.name());
                     choixTeam = true;
                 }

@@ -16,9 +16,6 @@ public class IOServiceBouchon implements IIOService {
 
     @Autowired
     private RobotStatus rs;
-
-    @Setter
-    private Team team = Team.UNKNOWN;
     @Setter
     private List<EStrategy> strategies = new ArrayList<>();
     @Setter
@@ -27,6 +24,10 @@ public class IOServiceBouchon implements IIOService {
     private boolean tirette = false;
     private boolean alim5V = false;
     private boolean alim12V = false;
+
+    public void setTeam(Team team) {
+        rs.setTeam(team);
+    }
 
     // --------------------------------------------------------- //
     // --------------------- INFOS TECHNIQUE ------------------- //

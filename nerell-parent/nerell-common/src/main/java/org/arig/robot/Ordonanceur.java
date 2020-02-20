@@ -110,6 +110,7 @@ public class Ordonanceur {
     public void run() throws IOException {
         final LocalDateTime startOrdonnanceur = LocalDateTime.now();
         displayScreenMessage("Demarrage de l'ordonancement du match ...");
+
         try {
             // Bus I2C
             displayScreenMessage("Scan I2C");
@@ -175,7 +176,7 @@ public class Ordonanceur {
             ThreadUtils.sleep(500);
         } while(!infos.isStartCalibration());
 
-        robotStatus.setTeam(infos.getTeam() == 1 ? Team.JAUNE : Team.VIOLET);
+        robotStatus.setTeam(infos.getTeam() == 1 ? Team.JAUNE : Team.BLEU);
 
         log.info("Equipe : {}", robotStatus.getTeam().name());
         //List<EStrategy> strategies = ioService.strategies();
@@ -189,11 +190,11 @@ public class Ordonanceur {
         displayScreenMessage("Définition des zones 'mortes' de la carte.");
         // Exclusion de toutes la zone pente et distributeur personel
         tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 3000, 457)); // Pente + petit distrib
-        if (robotStatus.getTeam() == Team.VIOLET) {
+        if (robotStatus.getTeam() == Team.BLEU) {
             // Zone départ adverse Jaune
             tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 300, 2000));
         } else {
-            // Zone d&part adverse Violet
+            // Zone d&part adverse Bleu
             tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(2700, 0, 300, 2000));
         }
 
