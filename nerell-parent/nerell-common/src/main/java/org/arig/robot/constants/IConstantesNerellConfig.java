@@ -138,7 +138,7 @@ public interface IConstantesNerellConfig {
     // ---------------------- //
     PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.LAZY_THETA_STAR;
     int pathFindingAngle = 45;
-    int pathFindingSeuilProximite = 450;
+    int pathFindingSeuilProximite = 480;
     int pathFindingTailleObstacle = IConstantesNerellConfig.pathFindingSeuilProximite * 2 + 50;
 
     int lidarClusterSizeMm = 50;
