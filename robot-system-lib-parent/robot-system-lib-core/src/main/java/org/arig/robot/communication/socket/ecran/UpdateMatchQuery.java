@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import org.arig.robot.communication.socket.AbstractQueryWithDatas;
 import org.arig.robot.communication.socket.ecran.enums.EcranAction;
 import org.arig.robot.model.ecran.UpdateMatchInfos;
-import org.arig.robot.model.ecran.UpdateStateInfos;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

@@ -42,8 +42,8 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         return strategies.contains(strategy);
     }
 
-    @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     private StopWatch matchTime = new StopWatch();
 
     public void startMatch() {

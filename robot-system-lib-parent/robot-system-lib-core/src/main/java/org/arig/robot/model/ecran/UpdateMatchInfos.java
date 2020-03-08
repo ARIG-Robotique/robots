@@ -8,5 +8,5 @@ import java.io.Serializable;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UpdateMatchInfos implements Serializable {
-    int score;
+    int score = 0;
 }

@@ -2,12 +2,10 @@ package org.arig.test.robot.system.capteurs;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.arig.robot.model.ecran.GetConfigInfos;
 import org.arig.robot.model.ecran.UpdateMatchInfos;
 import org.arig.robot.model.ecran.UpdateStateInfos;
 import org.arig.robot.system.capteurs.EcranOverSocket;
-import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.utils.ThreadUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -17,7 +15,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
-import java.io.File;
 import java.net.Socket;
 
 @Slf4j
@@ -46,10 +43,7 @@ public class EcranOverSocketTest {
     @SneakyThrows
     public void testCommEcran() {
         final UpdateStateInfos state = new UpdateStateInfos();
-        state.setAlim5vl(true);
-
         final UpdateMatchInfos match = new UpdateMatchInfos();
-        match.setScore(0);
 
         state.setMessage("AU a débloquer");
         ecran.updateState(state);

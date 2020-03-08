@@ -22,7 +22,9 @@ import org.arig.robot.services.avoiding.CompleteAvoidingService;
 import org.arig.robot.services.avoiding.NotBasicAvoidingService;
 import org.arig.robot.services.avoiding.SemiCompleteAvoidingService;
 import org.arig.robot.system.avoiding.IAvoidingService;
+import org.arig.robot.system.capteurs.EcranOverSocket;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
+import org.arig.robot.system.capteurs.IEcran;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
@@ -35,6 +37,7 @@ import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.PCA9685Motor;
 import org.arig.robot.system.motors.PropulsionsPCA9685Motors;
+import org.arig.robot.system.process.EcranProcess;
 import org.arig.robot.system.process.RPLidarBridgeProcess;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.context.annotation.Bean;
@@ -181,6 +184,18 @@ public class NerellRobotContext {
     public ILidarTelemeter rplidar() throws Exception {
         final File socketFile = new File(RPLidarBridgeProcess.socketPath);
         return new RPLidarA2TelemeterOverSocket(socketFile);
+    }
+
+    @Bean
+    public EcranProcess ecranProcess() {
+        return new EcranProcess("/opt/nerell-gui/bin/nerell-gui");
+    }
+
+    @Bean
+    @DependsOn("ecranProcess")
+    public IEcran ecran() throws Exception {
+        final File socketFile = new File(EcranProcess.socketPath);
+        return new EcranOverSocket(socketFile);
     }
 
     @Bean

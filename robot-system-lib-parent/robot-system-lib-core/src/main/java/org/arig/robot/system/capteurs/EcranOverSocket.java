@@ -10,12 +10,9 @@ import org.arig.robot.communication.socket.ecran.UpdateMatchResponse;
 import org.arig.robot.communication.socket.ecran.UpdateStateQuery;
 import org.arig.robot.communication.socket.ecran.UpdateStateResponse;
 import org.arig.robot.communication.socket.ecran.enums.EcranAction;
-import org.arig.robot.communication.socket.lidar.StartScanResponse;
-import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.ecran.GetConfigInfos;
 import org.arig.robot.model.ecran.UpdateMatchInfos;
 import org.arig.robot.model.ecran.UpdateStateInfos;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.IOException;

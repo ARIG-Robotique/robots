@@ -8,6 +8,10 @@ echo "* Suppression de la socket Lidar"
 sudo rm -vf /tmp/lidar.sock
 echo ""
 
+echo "* Suppression de la socket Ecran"
+sudo rm -vf /tmp/ecran.sock
+echo ""
+
 echo "* Configuration de la JVM"
 # JVM Bellsoft
 #JAVA_HOME=/opt/bellsoft-jre-9.0.4

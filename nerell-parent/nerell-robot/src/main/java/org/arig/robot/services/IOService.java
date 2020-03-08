@@ -8,17 +8,13 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.i2c.I2CBus;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
 import org.arig.robot.constants.IConstantesAnalogToDigital;
 import org.arig.robot.constants.IConstantesI2C;
 import org.arig.robot.constants.IConstantesNerellConfig;
-import org.arig.robot.constants.IConstantesUtiles;
 import org.arig.robot.exception.I2CException;
-import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.CouleurPalet;
 import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
@@ -29,9 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author gdepuille on 23/04/15.
@@ -207,24 +200,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     // --------------------------------------------------------- //
     // --------------------- INFOS TECHNIQUE ------------------- //
     // --------------------------------------------------------- //
-
-    @Override
-    public Team equipe() {
-        rs.setTeam(Team.valueOf(System.getProperty(IConstantesUtiles.ENV_PROP_TEAM)));
-        return rs.getTeam();
-    }
-
-    @Override
-    public List<EStrategy> strategies() {
-        List<EStrategy> strategies = Stream.of(System.getProperty(IConstantesUtiles.ENV_PROP_STRATEGIES, "").split(","))
-                .filter(StringUtils::isNotBlank)
-                .map(EStrategy::valueOf)
-                .collect(Collectors.toList());
-
-        rs.setStrategies(strategies);
-
-        return strategies;
-    }
 
     @Override
     public boolean auOk() {

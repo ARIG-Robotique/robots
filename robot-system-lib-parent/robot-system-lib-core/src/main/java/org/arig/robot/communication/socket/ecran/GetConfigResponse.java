@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.arig.robot.communication.socket.AbstractResponseWithDatas;
 import org.arig.robot.communication.socket.ecran.enums.EcranAction;
-import org.arig.robot.communication.socket.lidar.enums.LidarAction;
 import org.arig.robot.model.ecran.GetConfigInfos;
 
 @Data

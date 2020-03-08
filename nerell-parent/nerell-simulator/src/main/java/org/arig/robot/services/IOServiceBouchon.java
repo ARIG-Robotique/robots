@@ -39,19 +39,6 @@ public class IOServiceBouchon implements IIOService {
     }
 
     @Override
-    public Team equipe() {
-        rs.setTeam(Team.valueOf(System.getProperty("equipe")));
-
-        return rs.getTeam();
-    }
-
-    @Override
-    public List<EStrategy> strategies() {
-        rs.setStrategies(strategies);
-        return rs.getStrategies();
-    }
-
-    @Override
     public boolean auOk() {
         return au;
     }

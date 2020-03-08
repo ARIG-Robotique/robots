@@ -2,8 +2,6 @@ package org.arig.robot.system.blockermanager;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.pid.IPidFilter;
-import org.arig.robot.model.CommandeRobot;
-import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.model.monitor.MonitorMouvementPath;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;

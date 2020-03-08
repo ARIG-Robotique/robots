@@ -12,8 +12,9 @@ public class UpdateStateInfos implements Serializable {
     boolean au = false;
     boolean alim12v = false;
     boolean alim5vp = false;
-    boolean alim5vl = false;
     boolean tirette = false;
+    boolean i2c = false;
+    boolean lidar = false;
     boolean phare = false;
     boolean balise = false;
 }
