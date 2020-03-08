@@ -2,17 +2,17 @@ package org.arig.robot.system.capteurs;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.balise.StatutBalise;
-import org.arig.robot.model.communication.balise.DetectionQuery;
-import org.arig.robot.model.communication.balise.DetectionResponse;
-import org.arig.robot.model.communication.balise.EtallonageQuery;
-import org.arig.robot.model.communication.balise.EtallonageResponse;
-import org.arig.robot.model.communication.balise.ExitQuery;
-import org.arig.robot.model.communication.balise.ExitResponse;
-import org.arig.robot.model.communication.balise.PhotoQuery;
-import org.arig.robot.model.communication.balise.PhotoResponse;
-import org.arig.robot.model.communication.balise.StatusQuery;
-import org.arig.robot.model.communication.balise.StatusResponse;
-import org.arig.robot.model.communication.balise.enums.BaliseAction;
+import org.arig.robot.communication.socket.balise.DetectionQuery;
+import org.arig.robot.communication.socket.balise.DetectionResponse;
+import org.arig.robot.communication.socket.balise.EtallonageQuery;
+import org.arig.robot.communication.socket.balise.EtallonageResponse;
+import org.arig.robot.communication.socket.balise.ExitQuery;
+import org.arig.robot.communication.socket.balise.ExitResponse;
+import org.arig.robot.communication.socket.balise.PhotoQuery;
+import org.arig.robot.communication.socket.balise.PhotoResponse;
+import org.arig.robot.communication.socket.balise.StatusQuery;
+import org.arig.robot.communication.socket.balise.StatusResponse;
+import org.arig.robot.communication.socket.balise.enums.BaliseAction;
 
 import java.io.File;
 import java.util.Base64;
