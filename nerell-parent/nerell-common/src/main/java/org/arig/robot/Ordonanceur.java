@@ -23,6 +23,7 @@ import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.CarouselService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
+import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.ICarouselManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.capteurs.IEcran;
@@ -71,6 +72,9 @@ public class Ordonanceur {
 
     @Autowired
     private ITrajectoryManager trajectoryManager;
+
+    @Autowired
+    private StrategyManager strategyManager;
 
     @Autowired
     private ICarouselManager carouselManager;
@@ -233,6 +237,7 @@ public class Ordonanceur {
         // Match de XX secondes.
         while (robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
             matchInfos.setScore(robotStatus.calculerPoints());
+            matchInfos.setMessage(String.format("%s (%s restantes) - %s s", strategyManager.getCurrentAction(), strategyManager.actionsCount(), robotStatus.getRemainingTime() / 1000));
             updateMatchState();
             ThreadUtils.sleep(200);
         }
@@ -399,6 +404,7 @@ public class Ordonanceur {
 
     private void displayScore(int score) {
         matchInfos.setScore(score);
+        matchInfos.setMessage("FIN - Remettre la tirette et AU pour ejection");
         updateMatchState();
         try {
             ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", String.format("\n\n\n\nScore : %d\n", score));

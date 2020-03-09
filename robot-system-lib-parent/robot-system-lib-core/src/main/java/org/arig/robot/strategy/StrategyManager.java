@@ -21,6 +21,9 @@ public class StrategyManager {
     @Autowired
     private List<IAction> actions;
 
+    @Getter
+    private String currentAction = "AUCUNE";
+
     private List<IAction> completedActions = new ArrayList<>();
 
     public void execute() {
@@ -33,16 +36,18 @@ public class StrategyManager {
                 .findFirst();
 
         if (!nextAction.isPresent()) {
+            currentAction = "AUCUNE";
             log.warn("0/{} actions disponible pour le moment", actionsCount());
             return;
         }
 
         IAction action = nextAction.get();
-        log.info("Execution de l'action {}", action.name());
+        currentAction = action.name();
+        log.info("Execution de l'action {}", currentAction);
         action.execute();
 
         if (action.isCompleted()) {
-            log.info("L'action {} est terminé.", action.name());
+            log.info("L'action {} est terminé.", currentAction);
             actions.remove(action);
             completedActions.add(action);
         }
