@@ -1,5 +1,6 @@
 package org.arig.robot.system.capteurs;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.socket.ecran.ExitQuery;
 import org.arig.robot.communication.socket.ecran.ExitResponse;
@@ -22,12 +23,10 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
 
     public EcranOverSocket(String hostname, Integer port) throws Exception {
         super(hostname, port);
-        openSocket();
     }
 
     public EcranOverSocket(File socketFile) throws Exception {
         super(socketFile);
-        openSocket();
     }
 
     @Override
@@ -47,6 +46,7 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
     public GetConfigInfos configInfos() {
         GetConfigInfos r;
         try {
+            openIfNecessary();
             GetConfigResponse rawResponse = sendToSocketAndGet(new GetConfigQuery(), GetConfigResponse.class);
             r = rawResponse.getDatas();
         } catch (Exception e) {
@@ -63,6 +63,7 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
     @Override
     public void updateState(UpdateStateInfos datas) {
         try {
+            openIfNecessary();
             UpdateStateQuery query = new UpdateStateQuery();
             query.setDatas(datas);
             sendToSocketAndGet(query, UpdateStateResponse.class);
@@ -74,11 +75,19 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
     @Override
     public void updateMatch(UpdateMatchInfos datas) {
         try {
+            openIfNecessary();
             UpdateMatchQuery query = new UpdateMatchQuery();
             query.setDatas(datas);
             sendToSocketAndGet(query, UpdateMatchResponse.class);
         } catch (Exception e) {
             log.error("Erreur de lecture", e);
+        }
+    }
+
+    @SneakyThrows
+    private void openIfNecessary() {
+        if (!isOpen()) {
+            openSocket();
         }
     }
 }
