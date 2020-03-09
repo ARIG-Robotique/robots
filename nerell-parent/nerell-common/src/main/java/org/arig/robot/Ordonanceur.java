@@ -420,36 +420,38 @@ public class Ordonanceur {
     }
 
     public void initialisationCarousel() {
-        servosService.porteBarilletGauche(IConstantesServos.PORTE_BARILLET_GAUCHE_OUVERT, false);
-        servosService.porteBarilletDroit(IConstantesServos.PORTE_BARILLET_DROIT_OUVERT, false);
+        if (!robotStatus.isSimulateur()) {
+            servosService.porteBarilletGauche(IConstantesServos.PORTE_BARILLET_GAUCHE_OUVERT, false);
+            servosService.porteBarilletDroit(IConstantesServos.PORTE_BARILLET_DROIT_OUVERT, false);
 
-        robotStatus.carouselIsNotInitialized();
-        robotStatus.disableAsservCarousel();
+            robotStatus.carouselIsNotInitialized();
+            robotStatus.disableAsservCarousel();
 
-        carouselManager.rawMotorSpeed(500);
-        ThreadUtils.sleep(2000);
-        while (!ioService.indexCarousel()) {
-            ThreadUtils.sleep(10);
+            carouselManager.rawMotorSpeed(500);
+            ThreadUtils.sleep(2000);
+            while (!ioService.indexCarousel()) {
+                ThreadUtils.sleep(10);
+            }
+            carouselManager.rawMotorSpeed(-500);
+            while (ioService.indexCarousel()) {
+                ThreadUtils.sleep(10);
+            }
+            carouselManager.rawMotorSpeed(400);
+            while (!ioService.indexCarousel()) {
+                ThreadUtils.sleep(10);
+            }
+            carouselManager.stop();
+            carouselManager.resetEncodeur();
+
+            robotStatus.carouselIsInitialized();
+            robotStatus.enableAsservCarousel();
+
+            carouselManager.setVitesse(IConstantesNerellConfig.vitesseCarouselNormal);
+            carouselManager.tourne(5 * IConstantesNerellConfig.countPerCarouselIndex + IConstantesNerellConfig.countOffsetInitCarousel);
+            carouselManager.waitMouvement();
+
+            servosService.porteBarilletGauche(IConstantesServos.PORTE_BARILLET_GAUCHE_FERME, false);
+            servosService.porteBarilletDroit(IConstantesServos.PORTE_BARILLET_DROIT_FERME, true);
         }
-        carouselManager.rawMotorSpeed(-500);
-        while (ioService.indexCarousel()) {
-            ThreadUtils.sleep(10);
-        }
-        carouselManager.rawMotorSpeed(400);
-        while (!ioService.indexCarousel()) {
-            ThreadUtils.sleep(10);
-        }
-        carouselManager.stop();
-        carouselManager.resetEncodeur();
-
-        robotStatus.carouselIsInitialized();
-        robotStatus.enableAsservCarousel();
-
-        carouselManager.setVitesse(IConstantesNerellConfig.vitesseCarouselNormal);
-        carouselManager.tourne(5 * IConstantesNerellConfig.countPerCarouselIndex + IConstantesNerellConfig.countOffsetInitCarousel);
-        carouselManager.waitMouvement();
-
-        servosService.porteBarilletGauche(IConstantesServos.PORTE_BARILLET_GAUCHE_FERME, false);
-        servosService.porteBarilletDroit(IConstantesServos.PORTE_BARILLET_DROIT_FERME, true);
     }
 }
