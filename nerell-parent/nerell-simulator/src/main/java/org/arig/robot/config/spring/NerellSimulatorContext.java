@@ -130,7 +130,7 @@ public class NerellSimulatorContext {
 
     @Bean
     public EcranProcess ecranProcess() {
-        return new EcranProcess("/home/gregorydepuille@sglk.local/workspaces/arig-wksp/cpp-linux/build-nerell-gui-Qt_5_11_3_System-Debug/nerell-gui");
+        return new EcranProcess("/opt/nerell-gui");
     }
 
     @Bean
