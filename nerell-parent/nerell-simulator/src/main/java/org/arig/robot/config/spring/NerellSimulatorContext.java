@@ -13,6 +13,8 @@ import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
 import org.arig.robot.system.avoiding.IAvoidingService;
+import org.arig.robot.system.capteurs.EcranOverSocket;
+import org.arig.robot.system.capteurs.IEcran;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
@@ -26,13 +28,16 @@ import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.BouchonMotor;
 import org.arig.robot.system.motors.BouchonPropulsionsMotors;
+import org.arig.robot.system.process.EcranProcess;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -121,6 +126,18 @@ public class NerellSimulatorContext {
     @Bean
     public TCS34725ColorSensor colorSensor() {
         return new TCS34725ColorSensor(IConstantesI2CSimulator.TCS34725_DEVICE_NAME);
+    }
+
+    @Bean
+    public EcranProcess ecranProcess() {
+        return new EcranProcess("/home/gregorydepuille@sglk.local/workspaces/arig-wksp/cpp-linux/build-nerell-gui-Qt_5_11_3_System-Debug/nerell-gui");
+    }
+
+    @Bean
+    @DependsOn("ecranProcess")
+    public IEcran ecran() throws Exception {
+        final File socketFile = new File(EcranProcess.socketPath);
+        return new EcranOverSocket(socketFile);
     }
 
     @Bean

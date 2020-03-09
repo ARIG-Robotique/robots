@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="NerellSimulator" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="robots.nerell-parent.nerell-simulator.main" />
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
       <option name="IS_SUBST" value="false" />
@@ -14,7 +15,6 @@
     <option name="ACTIVE_PROFILES" value="default,monitoring,simulateur,ui" />
     <option name="VM_PARAMETERS" value="-Dequipe=JAUNE" />
     <option name="WORKING_DIRECTORY" value="file://$MODULE_WORKING_DIR$" />
-    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="ALTERNATIVE_JRE_PATH" value="Oracle 1.8" />
     <method v="2">
       <option name="Make" enabled="true" />

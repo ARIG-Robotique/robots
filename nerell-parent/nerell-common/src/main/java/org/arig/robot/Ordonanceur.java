@@ -133,6 +133,8 @@ public class Ordonanceur {
             displayScreenMessage(error, LogLevel.ERROR);
             return;
         }
+        screenState.setLidar(true);
+        updateScreenState();
 
         if (!ioService.auOk()) {
             displayScreenMessage("L'arrêt d'urgence est coupé", LogLevel.WARN);
@@ -396,6 +398,8 @@ public class Ordonanceur {
     }
 
     private void displayScore(int score) {
+        matchInfos.setScore(score);
+        updateMatchState();
         try {
             ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", String.format("\n\n\n\nScore : %d\n", score));
             Process p = pb.start();

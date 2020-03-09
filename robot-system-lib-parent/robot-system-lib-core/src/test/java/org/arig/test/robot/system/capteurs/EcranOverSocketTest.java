@@ -26,7 +26,7 @@ public class EcranOverSocketTest {
     @BeforeClass
     @SneakyThrows
     public static void initTest() {
-        String host = "nerell";
+        String host = "localhost";
         Assume.assumeTrue("Contrôle par la présence de l'ecran", serverListening(host, 9000));
         ecran = new EcranOverSocket(host, 9000);
         Assert.assertTrue(ecran.isOpen());
@@ -46,6 +46,8 @@ public class EcranOverSocketTest {
         final UpdateMatchInfos match = new UpdateMatchInfos();
 
         state.setMessage("AU a débloquer");
+        state.setI2c(true);
+        state.setLidar(true);
         ecran.updateState(state);
         ThreadUtils.sleep(2000);
 
