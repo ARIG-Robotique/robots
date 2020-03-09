@@ -38,6 +38,7 @@ import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 
@@ -181,6 +182,7 @@ public class NerellCommonContext {
     }
 
     @Bean
+    @DependsOn({"ecran", "rplidar"})
     public Ordonanceur ordonanceur() {
         return Ordonanceur.getInstance();
     }
