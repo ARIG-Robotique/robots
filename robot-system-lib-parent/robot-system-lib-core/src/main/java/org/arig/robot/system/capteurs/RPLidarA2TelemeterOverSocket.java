@@ -3,6 +3,8 @@ package org.arig.robot.system.capteurs;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.socket.lidar.DeviceInfosQuery;
 import org.arig.robot.communication.socket.lidar.DeviceInfosResponse;
+import org.arig.robot.communication.socket.lidar.ExitQuery;
+import org.arig.robot.communication.socket.lidar.ExitResponse;
 import org.arig.robot.communication.socket.lidar.GrabDataQuery;
 import org.arig.robot.communication.socket.lidar.GrabDataResponse;
 import org.arig.robot.communication.socket.lidar.HealthInfosQuery;
@@ -40,6 +42,20 @@ public class RPLidarA2TelemeterOverSocket extends AbstractSocketClient<LidarActi
     public RPLidarA2TelemeterOverSocket(File socketFile) throws Exception {
         super(socketFile);
         openSocket();
+    }
+
+    @Override
+    public void end() {
+        if (isOpen()) {
+            try {
+                sendToSocketAndGet(new ExitQuery(), ExitResponse.class);
+
+            } catch (Exception e) {
+                log.warn("Erreur de lecture", e);
+            }
+        }
+
+        super.end();
     }
 
     @Override
