@@ -179,19 +179,25 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     @Override
     public void refreshAllPcf() {
         try {
-            pcf1.readAll();
+            if (!pcf1.isShutdown()) {
+                pcf1.readAll();
+            }
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
 
         try {
-            pcf2.readAll();
+            if (!pcf2.isShutdown()) {
+                pcf2.readAll();
+            }
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
 
         try {
-            pcfAlim.readAll();
+            if (!pcfAlim.isShutdown()) {
+                pcfAlim.readAll();
+            }
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
