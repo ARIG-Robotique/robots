@@ -9,7 +9,9 @@ fi
 echo "$(date)"
 
 ROBOT_NAME=${1}
-INSTALL_DIR=/home/pi/${ROBOT_NAME}
+HOME_DIR=/home/pi
+DESKTOP_DIR=${HOME_DIR}/Desktop
+INSTALL_DIR=${HOME_DIR}/${ROBOT_NAME}
 
 echo "Compilation ..."
 JAVA_HOME=~/apps/jdk-11 ./gradlew assemble
@@ -20,6 +22,7 @@ ssh ${ROBOT_NAME} rm -vf ${INSTALL_DIR}/*.sh
 echo "Déploiement Applicatif ..."
 scp ./${ROBOT_NAME}-parent/${ROBOT_NAME}-robot/build/libs/${ROBOT_NAME}-robot-2019-SNAPSHOT-exec.jar ${ROBOT_NAME}:${INSTALL_DIR}/${ROBOT_NAME}-robot-2019-SNAPSHOT.jar
 scp -r ./${ROBOT_NAME}-parent/${ROBOT_NAME}-robot/src/main/scripts/*.sh ${ROBOT_NAME}:${INSTALL_DIR}/
+scp ./${ROBOT_NAME}-parent/${ROBOT_NAME}-robot/src/main/desktop/*.desktop ${ROBOT_NAME}:${DESKTOP_DIR}/
 
 echo "Déploiement Utils ..."
 scp ./${ROBOT_NAME}-parent/${ROBOT_NAME}-utils/build/libs/${ROBOT_NAME}-utils-2019-SNAPSHOT.jar ${ROBOT_NAME}:${INSTALL_DIR}/
