@@ -22,7 +22,7 @@ public class AvoidingUtilsTest {
 
         List<Point> result = AvoidingUtils.calculateCenterObs(points);
 
-        Assert.assertEquals("Il y a qu'un seul centreroid" , 1, result.size());
+        Assert.assertEquals("Il y a qu'un seul centroid" , 1, result.size());
     }
 
     @Test
@@ -39,7 +39,7 @@ public class AvoidingUtilsTest {
 
         List<Point> result = AvoidingUtils.calculateCenterObs(points);
 
-        Assert.assertEquals("Il y a 2 centreroids" , 2, result.size());
+        Assert.assertEquals("Il y a 2 centroids" , 2, result.size());
     }
 
     @Test
@@ -57,6 +57,6 @@ public class AvoidingUtilsTest {
 
         List<Point> result = AvoidingUtils.calculateCenterObs(points);
 
-        Assert.assertEquals("Il y a 1 centreroid" , 1, result.size());
+        Assert.assertEquals("Il y a 1 centroid" , 1, result.size());
     }
 }

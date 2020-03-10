@@ -16,7 +16,6 @@ buildscript {
 
 plugins {
 	id 'com.jfrog.bintray' version '1.7.3' apply false
-	id 'org.openjfx.javafxplugin' version '0.0.8'
 }
 
 // Configuration de tous les projets
@@ -39,16 +38,12 @@ configure(allprojects) { project ->
 		pi4jVersion = '1.2-jdk9-SNAPSHOT'
 		junixsocketVersion = '2.2.0'
 		anyAnglePathFindingGitVersion = 'master-7b196baf6b-1'
-		jFoenixVersion = '8.0.8'
-		dataFxVersion = '8.0.1'
-		fontAwesomeFxVersion = '4.7.0-5'
 	}
 
 	// Plugin de build
 	apply plugin: 'java'
 	apply plugin: 'jacoco'
 	apply plugin: 'io.spring.dependency-management'
-	apply plugin: 'org.openjfx.javafxplugin'
 
 	dependencyManagement {
 		imports {
@@ -116,11 +111,6 @@ configure(subprojects) { subproject ->
 		manifest.attributes["Build-Jdk"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
 	}
 
-	javafx {
-		version = "11.0.2"
-		modules = [ 'javafx.controls', 'javafx.fxml' ]
-	}
-
 	// Configuration pour la Javadoc
 	javadoc {
 		options {
@@ -137,14 +127,14 @@ configure(subprojects) { subproject ->
 
 	// Construction du jar de source
 	task sourcesJar(type: Jar, dependsOn:classes) {
-		classifier = "sources"
+		getArchiveClassifier().set("sources")
 		from sourceSets.main.allJava.srcDirs
 		include "**/*.java"
 	}
 
 	// Construction du jar de javadoc
 	task javadocJar(type: Jar) {
-		classifier = "javadoc"
+		getArchiveClassifier().set("javadoc")
 		from javadoc
 	}
 

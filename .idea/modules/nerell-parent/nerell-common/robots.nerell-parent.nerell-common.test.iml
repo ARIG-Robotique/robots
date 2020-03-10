@@ -14,13 +14,6 @@
     <orderEntry type="module" module-name="robots.nerell-parent.nerell-common.main" />
     <orderEntry type="module" module-name="robots.robot-system-lib-parent.robot-system-lib-core.main" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-webflux:2.1.4.RELEASE" level="project" />
-    <orderEntry type="library" name="Gradle: org.openjfx:javafx-fxml:linux:11.0.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.openjfx:javafx-controls:linux:11.0.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.openjfx:javafx-controls:11.0.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.openjfx:javafx-graphics:linux:11.0.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.openjfx:javafx-graphics:11.0.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.openjfx:javafx-base:linux:11.0.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.openjfx:javafx-base:11.0.2" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-test:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: io.projectreactor:reactor-test:3.2.8.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-json:2.1.4.RELEASE" level="project" />
@@ -38,10 +31,6 @@
     <orderEntry type="library" name="Gradle: com.kohlschutter.junixsocket:junixsocket-native-common:2.2.0" level="project" />
     <orderEntry type="library" name="Gradle: com.kohlschutter.junixsocket:junixsocket-common:2.2.0" level="project" />
     <orderEntry type="library" name="Gradle: com.github.Ohohcakester:Any-Angle-Pathfinding:master-7b196baf6b-1" level="project" />
-    <orderEntry type="library" name="Gradle: com.jfoenix:jfoenix:8.0.8" level="project" />
-    <orderEntry type="library" name="Gradle: io.datafx:datafx:8.0.1" level="project" />
-    <orderEntry type="library" name="Gradle: io.datafx:flow:8.0.1" level="project" />
-    <orderEntry type="library" name="Gradle: de.jensd:fontawesomefx-fontawesome:4.7.0-5" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-test-autoconfigure:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-test:2.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: com.jayway.jsonpath:json-path:2.4.0" level="project" />
@@ -84,11 +73,9 @@
     <orderEntry type="library" name="Gradle: com.google.errorprone:error_prone_annotations:2.2.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.j2objc:j2objc-annotations:1.1" level="project" />
     <orderEntry type="library" name="Gradle: org.codehaus.mojo:animal-sniffer-annotations:1.17" level="project" />
-    <orderEntry type="library" name="Gradle: io.datafx:core:8.0.1" level="project" />
     <orderEntry type="library" name="Gradle: net.minidev:json-smart:2.3" level="project" />
     <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy:1.9.12" level="project" />
     <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy-agent:1.9.12" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: de.jensd:fontawesomefx-commons:8.15" level="project" />
     <orderEntry type="library" name="Gradle: org.objenesis:objenesis:2.6" level="project" />
     <orderEntry type="library" name="Gradle: com.vaadin.external.google:android-json:0.0.20131108.vaadin1" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-jcl:5.1.6.RELEASE" level="project" />
