@@ -25,26 +25,4 @@ public class ActionneursCommands {
         return ioService.auOk() && ioService.alimPuissance5VOk() && ioService.alimPuissance12VOk()
                 ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
     }
-
-    @ShellMethod("Electrovanne")
-    public void electrovanne(@NotNull final EState state) {
-        log.info("Electrovanne : {}", state.name());
-
-        if (state == EState.ON) {
-            ioService.airElectroVanneAvant();
-        } else {
-            ioService.videElectroVanneAvant();
-        }
-    }
-
-    @ShellMethod(value = "Pompe a vide")
-    public void pompe(@NotNull final EState state) {
-        log.info("Pompe a vide : {}", state.name());
-
-        if (state == EState.ON) {
-            ioService.enablePompeAVideAvant();
-        } else {
-            ioService.disablePompeAVideAvant();
-        }
-    }
 }

@@ -33,16 +33,6 @@ public class ServosCommands {
         servosService.cyclePreparation();
     }
 
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Gestion de l'ascenseur")
-    public void ascenseur(@NotNull Boolean top) {
-        if (top) {
-            servosService.ascenseurAvant(IConstantesServos.POS_ASCENSEUR_AVANT_HAUT, false);
-        } else {
-            servosService.ascenseurAvant(IConstantesServos.POS_ASCENSEUR_AVANT_BAS, true);
-        }
-    }
-
     @ShellMethod("Récupèration de tension des servos")
     public void getTension() {
         final double tension = servosService.getTension();
