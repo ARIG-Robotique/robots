@@ -1,18 +1,16 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.queue.CircularFifoQueue;
-import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.balise.StatutBalise;
-import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
+import org.arig.robot.model.communication.balise.enums.CouleurDetectee;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -24,7 +22,7 @@ public class BaliseService {
     @Autowired
     private RobotStatus rs;
 
-    private CircularFifoQueue<DirectionGirouette> historiqueDirectionGirouette = new CircularFifoQueue<>(IConstantesNerellConfig.directionGirouetteBuffer);
+    private StatutBalise statut;
 
     public boolean isConnected() {
         return balise.isOpen();
@@ -42,26 +40,7 @@ public class BaliseService {
     }
 
     public void updateStatus() {
-        StatutBalise statut = balise.getStatut();
-
-        // 20 secondes après le début du match, on commence à lire la girouette
-        // la direction est déterminée parmi les 10 dernières lectures (20 secondes normalement)
-        // il faut 60% de lectures identiques pour que la valeur soit acceptée
-        if (statut != null && rs.getElapsedTime() > 20000) {
-            historiqueDirectionGirouette.add(statut.getDetection().getDirection());
-
-            if (historiqueDirectionGirouette.isAtFullCapacity()) {
-                final DirectionGirouette mostDetected = historiqueDirectionGirouette.stream()
-                        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                        .entrySet().stream()
-                        .filter(e -> 1.0f * e.getValue() / IConstantesNerellConfig.directionGirouetteBuffer >= IConstantesNerellConfig.directionGirouetteMajority)
-                        .findFirst()
-                        .map(Map.Entry::getKey)
-                        .orElse(DirectionGirouette.UNKNOWN);
-
-                rs.setDirectionGirouette(mostDetected);
-            }
-        }
+        statut = balise.getStatut();
     }
 
     public void startDetection() {
@@ -70,6 +49,43 @@ public class BaliseService {
 
     public byte[] getPhoto() {
         return balise.getPhoto(800);
+    }
+
+    public void lectureGirouette() {
+        if (statut != null && statut.getDetection() != null) {
+            rs.setDirectionGirouette(statut.getDetection().getDirection());
+        }
+    }
+
+    public void lectureCouleurEccueil() {
+        if (statut != null && statut.getDetection() != null) {
+            boolean valid = Stream.of(statut.getDetection().getColors())
+                    .allMatch(c -> c != CouleurDetectee.UNKNONW);
+
+            if (valid) {
+                rs.setCouleursEccueil(
+                        Stream.of(statut.getDetection().getColors())
+                                .map(c -> { // comme on lit sur le distributeur adverse, les couleurs sont inversées
+                                    if (c == CouleurDetectee.RED) {
+                                        return ECouleurBouee.VERT;
+                                    } else {
+                                        return ECouleurBouee.ROUGE;
+                                    }
+                                })
+                                .collect(Collectors.toList())
+                );
+            }
+        }
+    }
+
+    public void lectureEcueilAdverse() {
+        if (statut != null && statut.getDetection() != null) {
+            rs.setEccueilAdverseDispo(
+                    Stream.of(statut.getDetection().getColors())
+                            .filter(c -> c == CouleurDetectee.UNKNONW)
+                            .count() < 4
+            );
+        }
     }
 
 }

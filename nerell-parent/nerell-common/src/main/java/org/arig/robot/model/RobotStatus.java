@@ -91,6 +91,10 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     private DirectionGirouette directionGirouette = DirectionGirouette.UNKNOWN;
 
+    private List<ECouleurBouee> couleursEccueil = null;
+
+    private boolean eccueilAdverseDispo = true;
+
     /**
      * STATUT
      */

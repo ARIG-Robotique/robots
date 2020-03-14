@@ -2,6 +2,7 @@ package org.arig.robot.model.balise;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import org.arig.robot.model.communication.balise.enums.CouleurDetectee;
 import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
 
 import java.io.Serializable;
@@ -11,5 +12,7 @@ import java.io.Serializable;
 public class DetectionResult implements Serializable {
 
     private DirectionGirouette direction;
+
+    private CouleurDetectee[] colors;
 
 }
