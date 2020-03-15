@@ -106,11 +106,12 @@ public interface IConstantesServos {
     byte GROUPE_MOUSTACHES = 3;
 
     byte POS_GROUPE_PINCES_AVANT_FERME = 1;
-    byte POS_GROUPE_PINCES_AVANT_OUVERT = 2;
-    byte POS_GROUPE_PINCES_ARRIERE_FERME = 3;
-    byte POS_GROUPE_PINCES_ARRIERE_OUVERT = 4;
-    byte POS_GROUPE_MOUSTACHES_FERME = 5;
-    byte POS_GROUPE_MOUSTACHES_OUVERT = 6;
+    byte POS_GROUPE_PINCES_AVANT_PRISE = 2;
+    byte POS_GROUPE_PINCES_AVANT_OUVERT = 3;
+    byte POS_GROUPE_PINCES_ARRIERE_FERME = 4;
+    byte POS_GROUPE_PINCES_ARRIERE_OUVERT = 5;
+    byte POS_GROUPE_MOUSTACHES_FERME = 6;
+    byte POS_GROUPE_MOUSTACHES_OUVERT = 7;
 
     Map<Byte, Triple<Integer, Integer, Integer>> MIN_TIME_MAX = ImmutableMap.<Byte, Triple<Integer, Integer, Integer>>builder()
             .put(MOUSTACHE_DROITE, Triple.of(POS_MOUSTACHE_DROITE_FERME, WAIT_MOUSTACHE_DROITE, POS_MOUSTACHE_DROITE_OUVERT))
@@ -154,6 +155,12 @@ public interface IConstantesServos {
                             new int[]{IConstantesServos.PINCE_AVANT_2, IConstantesServos.POS_PINCE_AVANT_2_FERME},
                             new int[]{IConstantesServos.PINCE_AVANT_3, IConstantesServos.POS_PINCE_AVANT_3_FERME},
                             new int[]{IConstantesServos.PINCE_AVANT_4, IConstantesServos.POS_PINCE_AVANT_4_FERME}
+                    })
+                    .put(POS_GROUPE_PINCES_AVANT_PRISE, new int[][]{
+                            new int[]{IConstantesServos.PINCE_AVANT_1, IConstantesServos.POS_PINCE_AVANT_1_PRISE},
+                            new int[]{IConstantesServos.PINCE_AVANT_2, IConstantesServos.POS_PINCE_AVANT_2_PRISE},
+                            new int[]{IConstantesServos.PINCE_AVANT_3, IConstantesServos.POS_PINCE_AVANT_3_PRISE},
+                            new int[]{IConstantesServos.PINCE_AVANT_4, IConstantesServos.POS_PINCE_AVANT_4_PRISE}
                     })
                     .put(POS_GROUPE_PINCES_AVANT_OUVERT, new int[][]{
                             new int[]{IConstantesServos.PINCE_AVANT_1, IConstantesServos.POS_PINCE_AVANT_1_OUVERT},
