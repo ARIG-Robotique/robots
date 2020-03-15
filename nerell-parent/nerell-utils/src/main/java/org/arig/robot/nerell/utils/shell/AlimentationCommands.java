@@ -17,7 +17,6 @@ public class AlimentationCommands {
 
     private final IIOService ioService;
     private final ServosService servosService;
-    private final RobotStatus rs;
 
     public Availability auOK() {
         return ioService.auOk() ? Availability.available() : Availability.unavailable("Arret d'urgence non OK");

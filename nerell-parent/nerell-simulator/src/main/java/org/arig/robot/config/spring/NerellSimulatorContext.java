@@ -17,7 +17,6 @@ import org.arig.robot.system.capteurs.IEcran;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.VisionBaliseBouchon;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
@@ -39,7 +38,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Configuration
-@ComponentScan("org.arig.robot.clr")
 public class NerellSimulatorContext {
 
     @Bean
@@ -90,11 +88,6 @@ public class NerellSimulatorContext {
                 .collect(Collectors.toList());
 
         return new BouchonARIG2WheelsEncoders(IConstantesI2CSimulator.CODEUR_MOTEUR_GAUCHE, IConstantesI2CSimulator.CODEUR_MOTEUR_DROIT, values);
-    }
-
-    @Bean
-    public TCS34725ColorSensor colorSensor() {
-        return new TCS34725ColorSensor(IConstantesI2CSimulator.TCS34725_DEVICE_NAME);
     }
 
     @Bean

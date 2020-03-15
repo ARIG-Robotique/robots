@@ -31,10 +31,6 @@ public class ServosService {
         log.info("Servos en position initiale");
         servos.printVersion();
 
-        // Moteurs
-        servos.setPositionAndSpeed(IConstantesServos.MOTOR_DROIT, 1500, (byte) 0);
-        servos.setPositionAndSpeed(IConstantesServos.MOTOR_GAUCHE, 1500, (byte) 0);
-
         ioService.enableAlim5VPuissance();
         while (!ioService.alimPuissance5VOk()) ;
 
@@ -44,9 +40,9 @@ public class ServosService {
     public void homes() {
         servos.setPositionAndSpeed(IConstantesServos.MOUSTACHE_DROITE, IConstantesServos.POS_MOUSTACHE_DROITE_FERME, IConstantesServos.SPEED_MOUSTACHE_DROITE);
         servos.setPositionAndSpeed(IConstantesServos.MOUSTACHE_GAUCHE, IConstantesServos.POS_MOUSTACHE_GAUCHE_FERME, IConstantesServos.SPEED_MOUSTACHE_GAUCHE);
-        servos.setPositionAndSpeed(IConstantesServos.POUSSOIR_DROITE, IConstantesServos.POS_POUSSOIR_DROITE_FERME, IConstantesServos.SPEED_POUSSOIR_DROITE);
-        servos.setPositionAndSpeed(IConstantesServos.POUSSOIR_GAUCHE, IConstantesServos.POS_POUSSOIR_GAUCHE_FERME, IConstantesServos.SPEED_POUSSOIR_GAUCHE);
-        servos.setPositionAndSpeed(IConstantesServos.ASCENSEUR_AVANT, IConstantesServos.POS_ASCENSEUR_AVANT_HAUT, IConstantesServos.SPEED_ASCENSEUR_AVANT);
+        servos.setPositionAndSpeed(IConstantesServos.BRAS_DROITE, IConstantesServos.POS_BRAS_DROITE_FERME, IConstantesServos.SPEED_POUSSOIR_DROITE);
+        servos.setPositionAndSpeed(IConstantesServos.BRAS_GAUCHE, IConstantesServos.POS_BRAS_GAUCHE_FERME, IConstantesServos.SPEED_POUSSOIR_GAUCHE);
+        servos.setPositionAndSpeed(IConstantesServos.ASCENSEUR_AVANT, IConstantesServos.POS_ASCENSEUR_AVANT_OUVERTURE_MOUSTACHE, IConstantesServos.SPEED_ASCENSEUR_AVANT);
         servos.setPositionAndSpeed(IConstantesServos.PINCE_AVANT_1, IConstantesServos.POS_PINCE_AVANT_1_FERME, IConstantesServos.SPEED_PINCE_AVANT);
         servos.setPositionAndSpeed(IConstantesServos.PINCE_AVANT_2, IConstantesServos.POS_PINCE_AVANT_2_FERME, IConstantesServos.SPEED_PINCE_AVANT);
         servos.setPositionAndSpeed(IConstantesServos.PINCE_AVANT_3, IConstantesServos.POS_PINCE_AVANT_3_FERME, IConstantesServos.SPEED_PINCE_AVANT);
@@ -73,7 +69,7 @@ public class ServosService {
     }
 
     public boolean isAscenseurAvantHaut() {
-        return servos.getPosition(IConstantesServos.ASCENSEUR_AVANT) == IConstantesServos.POS_ASCENSEUR_AVANT_HAUT;
+        return servos.getPosition(IConstantesServos.ASCENSEUR_AVANT) == IConstantesServos.POS_ASCENSEUR_AVANT_OUVERTURE_MOUSTACHE;
     }
 
     public boolean isAscenseurAvantBas() {
@@ -93,7 +89,7 @@ public class ServosService {
     }
 
     public boolean isAscenseurArriereBas() {
-        return servos.getPosition(IConstantesServos.ASCENSEUR_ARRIERE) == IConstantesServos.POS_ASCENSEUR_ARRIERE_BAS;
+        return servos.getPosition(IConstantesServos.ASCENSEUR_ARRIERE) == IConstantesServos.POS_ASCENSEUR_ARRIERE_ECCUEIL;
     }
 
     public boolean isPivotArriereFerme() {
@@ -166,23 +162,23 @@ public class ServosService {
     }
 
     public void poussoirGaucheOuvert(boolean wait) {
-        setPosition(IConstantesServos.POUSSOIR_GAUCHE, IConstantesServos.POS_POUSSOIR_GAUCHE_OUVERT, wait);
+        setPosition(IConstantesServos.BRAS_GAUCHE, IConstantesServos.POS_BRAS_GAUCHE_MANCHE_AIR, wait);
     }
 
     public void poussoirGaucheFerme(boolean wait) {
-        setPosition(IConstantesServos.POUSSOIR_GAUCHE, IConstantesServos.POS_POUSSOIR_GAUCHE_FERME, wait);
+        setPosition(IConstantesServos.BRAS_GAUCHE, IConstantesServos.POS_BRAS_GAUCHE_FERME, wait);
     }
 
     public void poussoirDroiteOuvert(boolean wait) {
-        setPosition(IConstantesServos.POUSSOIR_DROITE, IConstantesServos.POS_POUSSOIR_DROITE_OUVERT, wait);
+        setPosition(IConstantesServos.BRAS_DROITE, IConstantesServos.POS_BRAS_DROITE_MANCHE_AIR, wait);
     }
 
     public void poussoirDroiteFerme(boolean wait) {
-        setPosition(IConstantesServos.POUSSOIR_DROITE, IConstantesServos.POS_POUSSOIR_DROITE_FERME, wait);
+        setPosition(IConstantesServos.BRAS_DROITE, IConstantesServos.POS_BRAS_DROITE_FERME, wait);
     }
 
     public void ascenseurAvantHaut(boolean wait) {
-        setPosition(IConstantesServos.ASCENSEUR_AVANT, IConstantesServos.POS_ASCENSEUR_AVANT_HAUT, wait);
+        setPosition(IConstantesServos.ASCENSEUR_AVANT, IConstantesServos.POS_ASCENSEUR_AVANT_OUVERTURE_MOUSTACHE, wait);
     }
 
     public void ascenseurAvantBas(boolean wait) {
@@ -194,7 +190,7 @@ public class ServosService {
     }
 
     public void ascenseurArriereBas(boolean wait) {
-        setPosition(IConstantesServos.ASCENSEUR_ARRIERE, IConstantesServos.POS_ASCENSEUR_ARRIERE_BAS, wait);
+        setPosition(IConstantesServos.ASCENSEUR_ARRIERE, IConstantesServos.POS_ASCENSEUR_ARRIERE_ECCUEIL, wait);
     }
 
     public void pivotArriereFerme(boolean wait) {

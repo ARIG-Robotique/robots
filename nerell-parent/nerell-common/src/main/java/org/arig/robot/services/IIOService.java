@@ -1,7 +1,5 @@
 package org.arig.robot.services;
 
-import org.arig.robot.system.capteurs.TCS34725ColorSensor;
-
 public interface IIOService {
 
     // --------------------------------------------------------- //
@@ -19,8 +17,6 @@ public interface IIOService {
     // --------------------------------------------------------- //
 
     // Numerique
-    boolean presenceLectureCouleur();
-
     boolean presencePinceAvant1();
     boolean presencePinceAvant2();
     boolean presencePinceAvant3();
@@ -35,20 +31,9 @@ public interface IIOService {
     boolean calageBordureArriereDroit();
     boolean calageBordureArriereGauche();
 
-    // Analogique
-
-    // Couleur
-    TCS34725ColorSensor.ColorData couleurRaw();
-
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
-
-    void enableLedCapteurCouleur();
-    void disableLedCapteurCouleur();
-
-    void enableMoteurDrapeau();
-    void disableMoteurDrapeau();
 
     void enableAlim5VPuissance();
     void disableAlim5VPuissance();

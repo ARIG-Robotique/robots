@@ -23,13 +23,10 @@ import org.arig.robot.services.avoiding.NotBasicAvoidingService;
 import org.arig.robot.services.avoiding.SemiCompleteAvoidingService;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.EcranOverSocket;
-import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
 import org.arig.robot.system.capteurs.IEcran;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor;
-import org.arig.robot.system.capteurs.TinyLidar;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
@@ -77,16 +74,11 @@ public class NerellRobotContext {
         manager.registerDevice(IConstantesI2C.SERVO_DEVICE_NAME, IConstantesI2C.SD21_ADDRESS);
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_DROIT, IConstantesI2C.CODEUR_DROIT_ADDRESS);
         manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_GAUCHE, IConstantesI2C.CODEUR_GAUCHE_ADDRESS);
-        manager.registerDevice(IConstantesI2C.TCS34725_DEVICE_NAME, IConstantesI2C.TCS34725_ADDRESS);
-        manager.registerDevice(IConstantesI2C.I2C_ADC_DEVICE_NAME, IConstantesI2C.I2C_ADC_ADDRESS);
-//        manager.registerDevice(IConstantesI2C.TINY_LIDAR_AVANT_DROIT_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_AVANT_DROIT_ADDRESS, (byte) 0x44);
-//        manager.registerDevice(IConstantesI2C.TINY_LIDAR_AVANT_GAUCHE_DEVICE_NAME, IConstantesI2C.TINY_LIDAR_AVANT_GAUCHE_ADDRESS, (byte) 0x44);
 
         // Enregistrement juste pour le scan.
         manager.registerDevice(IConstantesI2C.PCF_ALIM_DEVICE_NAME, IConstantesI2C.PCF_ALIM_ADDRESS);
         manager.registerDevice(IConstantesI2C.PCF1_DEVICE_NAME, IConstantesI2C.PCF1_ADDRESS);
         manager.registerDevice(IConstantesI2C.PCF2_DEVICE_NAME, IConstantesI2C.PCF2_ADDRESS);
-        manager.registerDevice(IConstantesI2C.PCF3_DEVICE_NAME, IConstantesI2C.PCF3_ADDRESS);
         manager.registerDevice(IConstantesI2C.PCA9685_DEVICE_NAME, IConstantesI2C.PCA9685_ADDRESS);
 
         return manager;
@@ -124,21 +116,6 @@ public class NerellRobotContext {
         final PropulsionsPCA9685Motors motors = new PropulsionsPCA9685Motors(PCA9685Pin.PWM_02, PCA9685Pin.PWM_03, PCA9685Pin.PWM_00, PCA9685Pin.PWM_01);
         motors.assignMotors(IConstantesNerellConfig.numeroMoteurGauche, IConstantesNerellConfig.numeroMoteurDroit);
         return motors;
-    }
-
-    @Bean
-    public TCS34725ColorSensor colorSensor() {
-        return new TCS34725ColorSensor(IConstantesI2C.TCS34725_DEVICE_NAME);
-    }
-
-    @Bean
-    public I2CAdcAnalogInput i2cAdc() {
-        return new I2CAdcAnalogInput(IConstantesI2C.I2C_ADC_DEVICE_NAME);
-    }
-
-    @Bean
-    public TinyLidar distanceAvant() {
-        return new TinyLidar(IConstantesI2C.TINY_LIDAR_AVANT_DEVICE_NAME);
     }
 
     @Bean

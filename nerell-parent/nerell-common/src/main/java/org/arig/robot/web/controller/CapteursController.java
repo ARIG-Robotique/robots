@@ -41,7 +41,6 @@ public class CapteursController extends AbstractCapteursController implements In
         numeriqueInfos.put("Puissance 5V", ioService::alimPuissance5VOk);
         numeriqueInfos.put("Puissance 12V", ioService::alimPuissance12VOk);
         numeriqueInfos.put("Tirette", ioService::tirette);
-        numeriqueInfos.put("Presence lecture couleur", ioService::presenceLectureCouleur);
         numeriqueInfos.put("Bordure arrière droite", ioService::calageBordureArriereDroit);
         numeriqueInfos.put("Bordure arrière gauche", ioService::calageBordureArriereGauche);
         numeriqueInfos.put("Presence pince avant 1", ioService::presencePinceAvant1);

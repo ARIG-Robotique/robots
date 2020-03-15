@@ -2,7 +2,6 @@ package org.arig.robot.nerell.utils.shell;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesServos;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.springframework.shell.Availability;
@@ -10,8 +9,6 @@ import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
-
-import javax.validation.constraints.NotNull;
 
 @Slf4j
 @ShellComponent

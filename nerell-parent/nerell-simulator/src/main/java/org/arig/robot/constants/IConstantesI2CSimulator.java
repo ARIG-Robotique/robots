@@ -1,7 +1,5 @@
 package org.arig.robot.constants;
 
-import org.arig.robot.system.capteurs.TCS34725ColorSensor;
-
 public interface IConstantesI2CSimulator {
 
     String CODEUR_MOTEUR_DROIT = "Codeur Moteur Droit";
@@ -10,12 +8,6 @@ public interface IConstantesI2CSimulator {
     String CODEUR_MOTEUR_GAUCHE = "Codeur Moteur Gauche";
     int CODEUR_GAUCHE_ADDRESS = 0x32;
 
-    String I2C_ADC_DEVICE_NAME = "I2C ADC";
-    int I2C_ADC_ADDRESS = 0x48;
-
     String SERVO_DEVICE_NAME = "SD21";
     int SD21_ADDRESS = 0x61;
-
-    String TCS34725_DEVICE_NAME = "Front color sensor";
-    int TCS34725_ADDRESS = TCS34725ColorSensor.TCS34725_ADDRESS;
 }

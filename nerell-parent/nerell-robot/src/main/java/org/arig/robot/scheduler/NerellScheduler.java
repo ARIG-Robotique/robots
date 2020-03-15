@@ -20,9 +20,6 @@ public class NerellScheduler {
     private IAvoidingService avoidingService;
 
     @Autowired
-    private ITrajectoryManager trajectoryManager;
-
-    @Autowired
     private BaliseService baliseService;
 
     @Autowired

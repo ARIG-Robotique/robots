@@ -37,6 +37,10 @@ public class EcranProcess implements InitializingBean, DisposableBean {
         args.add(executablePath);
         args.add("unix");
         args.add(socketPath);
+
+        // TODO : External config
+        args.add("sauron");
+        args.add("9042");
         if (debug) {
             args.add("debug");
         }

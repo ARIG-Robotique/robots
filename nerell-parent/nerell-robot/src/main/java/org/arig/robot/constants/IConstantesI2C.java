@@ -1,7 +1,6 @@
 package org.arig.robot.constants;
 
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 
 public interface IConstantesI2C {
 
@@ -14,28 +13,15 @@ public interface IConstantesI2C {
     String PCF_ALIM_DEVICE_NAME = "Carte alimentation";
     int PCF_ALIM_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3D;
 
-    String PCF1_DEVICE_NAME = "PCF 1 (Input)";
+    String PCF1_DEVICE_NAME = "PCF 1 (Inputs Pololu)";
     int PCF1_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3B;
 
-    String PCF2_DEVICE_NAME = "PCF 2 (Input)";
-    int PCF2_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3E;
-
-    String PCF3_DEVICE_NAME = "PCF 3 (Output)";
-    int PCF3_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3F;
+    String PCF2_DEVICE_NAME = "PCF 2 (Inputs µSwitch)";
+    int PCF2_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3F;
 
     String PCA9685_DEVICE_NAME = "PCA9685";
     int PCA9685_ADDRESS = 0x40;
 
-    String I2C_ADC_DEVICE_NAME = "I2C ADC";
-    int I2C_ADC_ADDRESS = 0x48;
-
     String SERVO_DEVICE_NAME = "SD21";
     int SD21_ADDRESS = 0x61;
-
-    String TCS34725_DEVICE_NAME = "Front color sensor";
-    int TCS34725_ADDRESS = TCS34725ColorSensor.TCS34725_ADDRESS;
-
-    String TINY_LIDAR_AVANT_DEVICE_NAME = "tinyLidar avant droit";
-    int TINY_LIDAR_AVANT_ADDRESS = 0x11;
-
 }

@@ -289,8 +289,6 @@ public class Ordonanceur {
 
         ThreadUtils.sleep(1000); // pour attendre les derniers servos avant de couper l'alim
 
-        ioService.disableMoteurDrapeau();
-
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();
     }

@@ -4,7 +4,6 @@ import lombok.Setter;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,11 +65,6 @@ public class IOServiceBouchon implements IIOService {
     // Numerique
 
     @Override
-    public boolean presenceLectureCouleur() {
-        return false;
-    }
-
-    @Override
     public boolean presencePinceAvant1() {
         return false;
     }
@@ -125,36 +119,9 @@ public class IOServiceBouchon implements IIOService {
         return false;
     }
 
-    // Couleur
-
-    @Override
-    public TCS34725ColorSensor.ColorData couleurRaw() {
-        return new TCS34725ColorSensor.ColorData().r(0).g(0).b(0);
-    }
-
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
-
-    @Override
-    public void enableLedCapteurCouleur() {
-
-    }
-
-    @Override
-    public void disableLedCapteurCouleur() {
-
-    }
-
-    @Override
-    public void disableMoteurDrapeau() {
-
-    }
-
-    @Override
-    public void enableMoteurDrapeau() {
-
-    }
 
     @Override
     public void enableAlim5VPuissance() {

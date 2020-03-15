@@ -4,16 +4,12 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.i2c.I2CBus;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
 import org.arig.robot.constants.IConstantesI2C;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.system.capteurs.I2CAdcAnalogInput;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,18 +27,11 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     @Autowired
     private I2CBus bus;
 
-    @Autowired
-    private I2CAdcAnalogInput i2cAdc;
-
-    @Autowired
-    private TCS34725ColorSensor colorSensor;
-
     // Controlleur GPIO
     private GpioController gpio;
     private PCF8574GpioProvider pcfAlim;
     private PCF8574GpioProvider pcf1;
     private PCF8574GpioProvider pcf2;
-    private PCF8574GpioProvider pcf3;
 
     // Référence sur les PIN Inputs
     // ----------------------------
@@ -63,7 +52,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     private GpioPinDigitalInput inTirette;
 
     // Input : Numerique
-    private GpioPinDigitalInput inPresenceLectureCouleur;
     private GpioPinDigitalInput inCalageBordureDroit;
     private GpioPinDigitalInput inCalageBordureGauche;
     private GpioPinDigitalInput inPresencePinceAvant1;
@@ -79,10 +67,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     // Référence sur les PIN Output
     // ----------------------------
 
-    // GPIO
-    private GpioPinDigitalOutput outCmdLedCapteurRGB;
-    private GpioPinDigitalOutput outCmdMoteurDrapeau;
-
     // PCF
     private GpioPinDigitalOutput outAlimPuissance5V;
     private GpioPinDigitalOutput outAlimPuissance12V;
@@ -92,7 +76,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         pcfAlim.shutdown();
         pcf1.shutdown();
         pcf2.shutdown();
-        pcf3.shutdown();
         gpio.shutdown();
     }
 
@@ -119,7 +102,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         pcfAlim = new PCF8574GpioProvider(bus, IConstantesI2C.PCF_ALIM_ADDRESS, true);
         pcf1 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF1_ADDRESS, true);
         pcf2 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF2_ADDRESS, true);
-        pcf3 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF3_ADDRESS, true);
 
         // Alim
         inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_04);
@@ -130,28 +112,21 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         outAlimPuissance12V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
 
         // PCF1
-        inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
-        inPresenceLectureCouleur = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
-        inPresencePinceAvant1 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
-        inPresencePinceAvant2 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
-        inPresencePinceAvant3 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
-        inPresencePinceAvant4 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
+        inPresencePinceAvant1 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
+        inPresencePinceAvant2 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
+        inPresencePinceAvant3 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
+        inPresencePinceAvant4 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
 
         // PCF2
-        inCalageBordureDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
-        inCalageBordureGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
-        inPresencePinceArriere1 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
-        inPresencePinceArriere2 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
+        inTirette = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
+        inPresencePinceArriere1 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
+        inPresencePinceArriere2 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_07);
         inPresencePinceArriere3 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
-        inPresencePinceArriere4 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
-        inPresencePinceArriere5 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
+        inPresencePinceArriere4 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
+        inPresencePinceArriere5 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
+        inCalageBordureGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
+        inCalageBordureDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
 
-        // PCF3
-        outCmdLedCapteurRGB = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_00, PinState.LOW);
-        outCmdMoteurDrapeau = gpio.provisionDigitalOutputPin(pcf3, PCF8574Pin.GPIO_01, PinState.LOW);
-
-        // Etat initial des IOs
-        disableLedCapteurCouleur();
     }
 
     @Override
@@ -218,11 +193,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     // Numerique
 
     @Override
-    public boolean presenceLectureCouleur() {
-        return inPresenceLectureCouleur.isLow();
-    }
-
-    @Override
     public boolean presencePinceAvant1() {
         return inPresencePinceAvant1.isLow();
     }
@@ -277,39 +247,9 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         return inCalageBordureGauche.isLow();
     }
 
-    // Couleur
-    @Override
-    public ColorData couleurRaw() {
-        return colorSensor.getColorData();
-    }
-
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
-
-    @Override
-    public void enableLedCapteurCouleur() {
-        log.info("Led blanche capteur couleur allumé");
-        outCmdLedCapteurRGB.high();
-    }
-
-    @Override
-    public void disableLedCapteurCouleur() {
-        log.info("Led blanche capteur couleur eteinte");
-        outCmdLedCapteurRGB.low();
-    }
-
-    @Override
-    public void enableMoteurDrapeau() {
-        log.info("Activation drapeau");
-        outCmdMoteurDrapeau.high();
-    }
-
-    @Override
-    public void disableMoteurDrapeau() {
-        log.info("Désactivation drapeau");
-        outCmdMoteurDrapeau.low();
-    }
 
     @Override
     public void enableAlim5VPuissance() {
@@ -334,5 +274,4 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         log.info("Desactivation puissance 12V");
         outAlimPuissance12V.high();
     }
-
 }

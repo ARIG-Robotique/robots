@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
@@ -30,7 +29,6 @@ public class CodeursCommands {
     private final Abstract2WheelsEncoders wheelsEncoders;
     private final AbstractPropulsionsMotors propulsionsMotors;
     private final IIOService ioService;
-    private final RobotStatus rs;
 
     private final List<InfoCapturePropulsions> infosPropulsions = new ArrayList<>();
 
