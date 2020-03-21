@@ -29,7 +29,9 @@ import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
+import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
+import org.arig.robot.system.motors.PCA9685Motor;
 import org.arig.robot.system.motors.PropulsionsPCA9685Motors;
 import org.arig.robot.system.process.EcranProcess;
 import org.arig.robot.system.process.RPLidarBridgeProcess;
@@ -48,7 +50,7 @@ import java.math.BigDecimal;
 public class NerellRobotContext {
 
     protected RobotName robotName() {
-        return new RobotName().name("Nerell (The Big One)").version("latest");
+        return new RobotName().name("Nerell (The Big One)").version("2020 (Sail the World)");
     }
 
     @Bean
@@ -100,12 +102,17 @@ public class NerellRobotContext {
         final PCA9685GpioProvider gpioProvider = new PCA9685GpioProvider(bus, IConstantesI2C.PCA9685_ADDRESS, new BigDecimal(200));
 
         final GpioController gpio = GpioFactory.getInstance();
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_00);
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_01);
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_02);
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_03);
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_04);
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_05);
+        // Moteur Gauche
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_00); // PWM
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_01); // Direction
+
+        // Moteur Droit
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_02); // PWM
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_03); // Direction
+
+        // Moteur drapeaux
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_10); // PWM
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_09); // Direction
 
         return gpioProvider;
     }
@@ -116,6 +123,11 @@ public class NerellRobotContext {
         final PropulsionsPCA9685Motors motors = new PropulsionsPCA9685Motors(PCA9685Pin.PWM_02, PCA9685Pin.PWM_03, PCA9685Pin.PWM_00, PCA9685Pin.PWM_01);
         motors.assignMotors(IConstantesNerellConfig.numeroMoteurGauche, IConstantesNerellConfig.numeroMoteurDroit);
         return motors;
+    }
+
+    @Bean
+    public AbstractMotor motorDrapeaux() {
+        return new PCA9685Motor(PCA9685Pin.PWM_10, PCA9685Pin.PWM_09);
     }
 
     @Bean
