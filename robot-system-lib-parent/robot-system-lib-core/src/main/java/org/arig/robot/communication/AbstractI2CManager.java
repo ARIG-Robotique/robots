@@ -19,11 +19,18 @@ import java.util.TreeMap;
 @Slf4j
 public abstract class AbstractI2CManager<D> implements II2CManager {
 
+    private boolean status = false;
+
     @Getter(value = AccessLevel.PROTECTED)
     private final Map<String, D> deviceMap = new TreeMap<>();
 
     @Getter(value = AccessLevel.PROTECTED)
     private final Map<String, byte[]> deviceQuery = new HashMap<>();
+
+    @Override
+    public boolean status() {
+        return status;
+    }
 
     /**
      * Nb device registered.
@@ -42,12 +49,14 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
     public final void executeScan() throws I2CException {
         Assert.notEmpty(deviceMap, "Le mapping des cartes est obligatoire");
         scan();
+        status = true;
     }
 
     @Override
     public void reset() throws I2CException {
         log.info("Reset des cartes enregistrés");
         deviceMap.clear();
+        status = false;
     }
 
     /**

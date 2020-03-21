@@ -8,6 +8,13 @@ import org.arig.robot.exception.I2CException;
 public interface II2CManager {
 
     /**
+     * Etat du bus I2C
+     *
+     * @return
+     */
+    boolean status();
+
+    /**
      * Execute un scan I2C afin de detecter que tous les périphérique enregistré sont bien présent.
      *
      * @throws I2CException
