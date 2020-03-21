@@ -25,5 +25,6 @@ public class NerellSimulator {
         rs.setSimulateur();
         Ordonanceur.getInstance().run();
         context.close();
+        System.exit(0);
     }
 }

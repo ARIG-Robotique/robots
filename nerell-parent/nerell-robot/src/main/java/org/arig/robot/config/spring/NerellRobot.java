@@ -22,5 +22,6 @@ public class NerellRobot {
         Ordonanceur.getInstance().run();
         SpringApplication.exit(context);
         context.close();
+        System.exit(0);
     }
 }
