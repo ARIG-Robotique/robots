@@ -1,6 +1,7 @@
 package org.arig.robot.system.capteurs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.communication.socket.AbstractQuery;
@@ -40,6 +41,13 @@ public class AbstractSocketClient<T extends Enum> {
     public AbstractSocketClient(final File socketFile) {
         this.unixSocket = true;
         this.socketFile = socketFile;
+    }
+
+    @SneakyThrows
+    protected void openIfNecessary() {
+        if (!isOpen()) {
+            openSocket();
+        }
     }
 
     public void openSocket() throws Exception {
@@ -93,8 +101,7 @@ public class AbstractSocketClient<T extends Enum> {
                 throw new IllegalStateException(rawResponse.getErrorMessage());
             }
             return rawResponse;
-        }
-        else {
+        } else {
             throw new IllegalStateException("Socket non ouvert");
         }
     }

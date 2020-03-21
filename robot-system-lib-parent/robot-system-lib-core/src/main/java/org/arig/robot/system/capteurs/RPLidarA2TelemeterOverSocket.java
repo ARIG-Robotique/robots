@@ -36,12 +36,10 @@ public class RPLidarA2TelemeterOverSocket extends AbstractSocketClient<LidarActi
 
     public RPLidarA2TelemeterOverSocket(String hostname, Integer port) throws Exception {
         super(hostname, port);
-        openSocket();
     }
 
     public RPLidarA2TelemeterOverSocket(File socketFile) throws Exception {
         super(socketFile);
-        openSocket();
     }
 
     @Override
@@ -49,17 +47,16 @@ public class RPLidarA2TelemeterOverSocket extends AbstractSocketClient<LidarActi
         if (isOpen()) {
             try {
                 sendToSocketAndGet(new ExitQuery(), ExitResponse.class);
-
             } catch (Exception e) {
-                log.warn("Erreur de lecture", e);
+                log.warn("Erreur d'envoi de la commande d'extinction", e);
             }
         }
-
         super.end();
     }
 
     @Override
     public void printDeviceInfo() {
+        openIfNecessary();
         DeviceInfos d = deviceInfo();
         log.info("RPLidar A2 version [Firmware : {} ; Hardware {} ; Serial number : {}",
                 d.getFirmwareVersion(), d.getHardwareVersion(), d.getSerialNumber());
@@ -69,6 +66,7 @@ public class RPLidarA2TelemeterOverSocket extends AbstractSocketClient<LidarActi
     public DeviceInfos deviceInfo() {
         DeviceInfos r;
         try {
+            openIfNecessary();
             DeviceInfosResponse rawResponse = sendToSocketAndGet(new DeviceInfosQuery(), DeviceInfosResponse.class);
             r = rawResponse.getDatas();
         } catch (Exception e) {
@@ -86,6 +84,7 @@ public class RPLidarA2TelemeterOverSocket extends AbstractSocketClient<LidarActi
     public HealthInfos healthInfo() {
         HealthInfos r;
         try {
+            openIfNecessary();
             HealthInfosResponse rawResponse = sendToSocketAndGet(new HealthInfosQuery(), HealthInfosResponse.class);
             r = rawResponse.getDatas();
         } catch (Exception e) {
@@ -107,6 +106,7 @@ public class RPLidarA2TelemeterOverSocket extends AbstractSocketClient<LidarActi
     @Override
     public void startScan(Short speed) {
         try {
+            openIfNecessary();
             StartScanQuery query = new StartScanQuery();
             if (speed > -1) {
                 query.setSpeed(speed);
@@ -120,6 +120,7 @@ public class RPLidarA2TelemeterOverSocket extends AbstractSocketClient<LidarActi
     @Override
     public void stopScan() {
         try {
+            openIfNecessary();
             sendToSocketAndGet(new StopScanQuery(), StopScanResponse.class);
         } catch (Exception e) {
             log.error("Erreur de lecture", e);
@@ -129,6 +130,7 @@ public class RPLidarA2TelemeterOverSocket extends AbstractSocketClient<LidarActi
     @Override
     public void setSpeed(Short speed) {
         try {
+            openIfNecessary();
             sendToSocketAndGet(new SetSpeedQuery(speed), SetSpeedResponse.class);
         } catch (Exception e) {
             log.error("Erreur de lecture", e);
@@ -139,6 +141,7 @@ public class RPLidarA2TelemeterOverSocket extends AbstractSocketClient<LidarActi
     public ScanInfos grabDatas() {
         ScanInfos r;
         try {
+            openIfNecessary();
             GrabDataResponse rawResponse = sendToSocketAndGet(new GrabDataQuery(), GrabDataResponse.class);
             return rawResponse.getDatas();
         } catch (Exception e) {
@@ -150,5 +153,4 @@ public class RPLidarA2TelemeterOverSocket extends AbstractSocketClient<LidarActi
 
         return r;
     }
-
 }

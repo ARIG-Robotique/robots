@@ -1,6 +1,7 @@
 package org.arig.robot.system.capteurs;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.arig.robot.communication.socket.balise.DetectionQuery;
 import org.arig.robot.communication.socket.balise.DetectionResponse;
 import org.arig.robot.communication.socket.balise.ExitQuery;
@@ -27,23 +28,37 @@ public class VisionBaliseOverSocket extends AbstractSocketClient<BaliseAction> i
     }
 
     @Override
+    public void end() {
+        if (isOpen()) {
+            try {
+                sendToSocketAndGet(new ExitQuery(), ExitResponse.class);
+            } catch (Exception e) {
+                log.warn("Erreur de lecture", e);
+            }
+        }
+        super.end();
+    }
+
+    @Override
     public void startDetection() {
         try {
+            openIfNecessary();
             sendToSocketAndGet(new DetectionQuery(), DetectionResponse.class);
 
         } catch (Exception e) {
-            log.warn("Erreur de lecture", e);
+            log.warn("Erreur de récupération de la detection", e);
         }
     }
 
     @Override
     public StatutBalise getStatut() {
         try {
+            openIfNecessary();
             StatusResponse response = sendToSocketAndGet(new StatusQuery(), StatusResponse.class);
             return response.getDatas();
 
         } catch (Exception e) {
-            log.warn("Erreur de lecture", e);
+            log.warn("Erreur de recupération du statut", e);
             return null;
         }
     }
@@ -51,26 +66,13 @@ public class VisionBaliseOverSocket extends AbstractSocketClient<BaliseAction> i
     @Override
     public byte[] getPhoto(int width) {
         try {
+            openIfNecessary();
             PhotoResponse response = sendToSocketAndGet(new PhotoQuery(width), PhotoResponse.class);
             return Base64.getDecoder().decode(response.getDatas());
 
         } catch (Exception e) {
             log.warn("Erreur de lecture", e);
-            return null;
+            return ArrayUtils.EMPTY_BYTE_ARRAY;
         }
-    }
-
-    @Override
-    public void end() {
-        if (isOpen()) {
-            try {
-                sendToSocketAndGet(new ExitQuery(), ExitResponse.class);
-
-            } catch (Exception e) {
-                log.warn("Erreur de lecture", e);
-            }
-        }
-
-        super.end();
     }
 }

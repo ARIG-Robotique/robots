@@ -5,15 +5,10 @@ import org.arig.robot.model.balise.StatutBalise;
 public interface IVisionBalise {
 
     void startDetection();
-
     StatutBalise getStatut();
-
     byte[] getPhoto(int width);
-
     void openSocket() throws Exception;
-
     boolean isOpen();
-
     void end();
 
 }

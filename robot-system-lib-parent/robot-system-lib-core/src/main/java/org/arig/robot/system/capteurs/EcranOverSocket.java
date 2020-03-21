@@ -38,7 +38,6 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
                 log.warn("Impossible de fermer l'ecran");
             }
         }
-
         super.end();
     }
 
@@ -81,13 +80,6 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
             sendToSocketAndGet(query, UpdateMatchResponse.class);
         } catch (Exception e) {
             log.error("Erreur de lecture", e);
-        }
-    }
-
-    @SneakyThrows
-    private void openIfNecessary() {
-        if (!isOpen()) {
-            openSocket();
         }
     }
 }
