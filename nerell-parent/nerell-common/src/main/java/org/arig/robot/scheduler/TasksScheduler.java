@@ -6,6 +6,7 @@ import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.CalageBordureService;
+import org.arig.robot.services.EcranService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.ITrajectoryManager;
@@ -38,6 +39,9 @@ public class TasksScheduler implements InitializingBean {
 
     @Autowired
     private IIOService ioService;
+
+    @Autowired
+    private EcranService ecranService;
 
     @Override
     public void afterPropertiesSet() {
@@ -103,6 +107,11 @@ public class TasksScheduler implements InitializingBean {
         processThread.setName("process");
 
         processThread.start();
+    }
+
+    @Scheduled(fixedRate = 1000)
+    public void ecranTask() {
+        ecranService.process();
     }
 
     @Scheduled(fixedDelay = 1)

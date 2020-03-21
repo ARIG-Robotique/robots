@@ -81,6 +81,11 @@ public class LidarService implements ILidarService, InitializingBean {
     }
 
     @Override
+    public boolean isConnected() {
+        return lidar.isOpen();
+    }
+
+    @Override
     public boolean mustCleanup() {
         return cleanup.get();
     }

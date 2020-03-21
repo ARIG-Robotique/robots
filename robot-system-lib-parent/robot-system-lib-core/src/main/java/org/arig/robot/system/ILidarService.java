@@ -28,4 +28,5 @@ public interface ILidarService {
 
     boolean mustCleanup();
 
+    boolean isConnected();
 }

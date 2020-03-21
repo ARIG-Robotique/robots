@@ -29,6 +29,11 @@ public class LidarTelemeterBouchon implements ILidarTelemeter {
     }
 
     @Override
+    public boolean isOpen() {
+        return true;
+    }
+
+    @Override
     public void end() {
         // NOOP
     }

@@ -162,23 +162,17 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public boolean auOk() {
-        boolean result = inAu.isLow();
-        log.info("AU present : {}", result);
-        return result;
+        return inAu.isLow();
     }
 
     @Override
     public boolean alimPuissance5VOk() {
-        boolean result = inAlimPuissance5V.isHigh();
-        log.info("Puissance 5V present : {}", result);
-        return result;
+        return inAlimPuissance5V.isHigh();
     }
 
     @Override
     public boolean alimPuissance12VOk() {
-        boolean result = inAlimPuissance12V.isHigh();
-        log.info("Puisance 12V present : {}", result);
-        return result;
+        return inAlimPuissance12V.isHigh();
     }
 
     @Override

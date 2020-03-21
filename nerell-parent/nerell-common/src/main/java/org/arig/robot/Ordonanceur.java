@@ -15,19 +15,16 @@ import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.ecran.GetConfigInfos;
-import org.arig.robot.model.ecran.UpdateMatchInfos;
-import org.arig.robot.model.ecran.UpdateStateInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.BaliseService;
+import org.arig.robot.services.EcranService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.system.capteurs.IEcran;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.pathfinding.IPathFinder;
-import org.arig.robot.system.process.StreamGobbler;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
 import org.arig.robot.utils.ThreadUtils;
@@ -90,14 +87,11 @@ public class Ordonanceur {
     private BaliseService baliseService;
 
     @Autowired
-    @Qualifier("currentPosition")
-    private Position position;
+    private EcranService ecranService;
 
     @Autowired
-    private IEcran ecran;
-
-    private UpdateStateInfos screenState = new UpdateStateInfos();
-    private UpdateMatchInfos matchInfos = new UpdateMatchInfos();
+    @Qualifier("currentPosition")
+    private Position position;
 
     public static Ordonanceur getInstance() {
         if (INSTANCE == null) {
@@ -109,45 +103,44 @@ public class Ordonanceur {
 
     public void run() throws IOException {
         final LocalDateTime startOrdonnanceur = LocalDateTime.now();
-        displayScreenMessage("Demarrage de l'ordonancement du match ...");
+        ecranService.displayMessage("Demarrage de l'ordonancement du match ...");
 
         try {
             // Bus I2C
-            displayScreenMessage("Scan I2C");
+            ecranService.displayMessage("Scan I2C");
             i2CManager.executeScan();
         } catch (I2CException e) {
             String error ="Erreur lors du scan I2C";
-            displayScreenMessage(error, LogLevel.OFF);
+            ecranService.displayMessage(error, LogLevel.OFF);
             log.error(error, e);
             return;
         }
-        screenState.setI2c(true);
-        updateScreenState();
 
         HealthInfos lidarHealth = lidar.healthInfo();
         if (!lidarHealth.isOk()) {
             String error = String.format("Status du Lidar KO : %s - %s - Code %s", lidarHealth.getState(), lidarHealth.getValue(), lidarHealth.getErrorCode());
-            displayScreenMessage(error, LogLevel.ERROR);
+            ecranService.displayMessage(error, LogLevel.ERROR);
             return;
         }
-        screenState.setLidar(true);
-        updateScreenState();
+
+        ecranService.displayMessage("Connexion à la balise");
+        short tries = 3;
+        do {
+            baliseService.tryConnect();
+            tries--;
+        } while(!baliseService.isConnected() && tries > 0);
 
         if (!ioService.auOk()) {
-            displayScreenMessage("L'arrêt d'urgence est coupé", LogLevel.WARN);
+            ecranService.displayMessage("L'arrêt d'urgence est coupé", LogLevel.WARN);
             while (!ioService.auOk()) {
                 ThreadUtils.sleep(500);
             }
         }
-        displayScreenMessage("Arrêt d'urgence OK");
-        screenState.setAu(true);
-        updateScreenState();
-
-        displayScreenMessage("Position de préparation des servos moteurs");
+        ecranService.displayMessage("Position de préparation des servos moteurs");
         servosService.cyclePreparation();
 
         // Activation des puissances
-        displayScreenMessage("Activation puissances 5V et 12V");
+        ecranService.displayMessage("Activation puissances 5V et 12V");
         ioService.enableAlim5VPuissance();
         ioService.enableAlim12VPuissance();
         if (!ioService.alimPuissance12VOk() || !ioService.alimPuissance5VOk()) {
@@ -156,38 +149,32 @@ public class Ordonanceur {
                 ThreadUtils.sleep(500);
             }
         }
-        screenState.setAlim5vp(true);
-        screenState.setAlim12v(true);
-        updateScreenState();
         log.info("Alimentation puissance OK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
 
         // Check tension
         double tension = servosService.getTension();
         if (tension < IConstantesUtiles.SEUIL_BATTERY_VOLTS && tension > 0) {
-            displayProblemeTension(tension);
+            ecranService.displayMessage("/!\\ PROBLEME DE TENSION SERVOS /!\\", LogLevel.ERROR);
             return;
         }
 
-        displayScreenMessage("Choix équipe, strategy et lancement calibration");
+        ecranService.displayMessage("Choix équipe, strategy et lancement calibration");
         GetConfigInfos infos;
         do {
-            infos = ecran.configInfos();
+            infos = ecranService.config();
             log.info("Team {} ; Strategy {} ; Calibration {}", infos.getTeam(), infos.getStrategy(), infos.isStartCalibration());
             ThreadUtils.sleep(500);
         } while(!infos.isStartCalibration());
 
         robotStatus.setTeam(infos.getTeam() == 1 ? Team.JAUNE : Team.BLEU);
-
         log.info("Equipe : {}", robotStatus.getTeam().name());
-        //List<EStrategy> strategies = ioService.strategies();
-        //log.info("Stratégies actives : {}", strategies);
 
-        displayScreenMessage("Chargement de la carte");
+        ecranService.displayMessage("Chargement de la carte");
         String fileResourcePath = String.format("classpath:maps/%s.png", robotStatus.getTeam().name().toLowerCase());
         final InputStream imgMap = patternResolver.getResource(fileResourcePath).getInputStream();
         pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
 
-        displayScreenMessage("Définition des zones 'mortes' de la carte.");
+        ecranService.displayMessage("Définition des zones 'mortes' de la carte.");
         // Exclusion de toutes la zone pente et distributeur personel
         tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 3000, 457)); // Pente + petit distrib
         if (robotStatus.getTeam() == Team.BLEU) {
@@ -199,32 +186,21 @@ public class Ordonanceur {
         }
 
         // Initialisation Mouvement Manager
-        displayScreenMessage("Initialisation du contrôleur de mouvement");
+        ecranService.displayMessage("Initialisation du contrôleur de mouvement");
         trajectoryManager.init();
 
-        displayScreenMessage("Calage bordure");
+        ecranService.displayMessage("Calage bordure");
         calageBordure();
 
-        displayScreenMessage("Démarrage du lidar");
+        ecranService.displayMessage("Démarrage du lidar");
         lidar.startScan();
 
-        displayScreenMessage("Connexion à la balise");
-        short tries = 3;
-        do {
-            baliseService.tryConnect();
-            tries--;
-        } while(!baliseService.isConnected() && tries > 0);
-        screenState.setBalise(baliseService.isConnected());
-        updateScreenState();
-
-        displayScreenMessage("Attente mise de la tirette");
+        ecranService.displayMessage("Attente mise de la tirette");
         while(!ioService.tirette()) {
             ThreadUtils.sleep(100);
         }
-        screenState.setTirette(true);
-        updateScreenState();
 
-        displayDepart();
+        ecranService.displayMessage("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
         while (ioService.tirette()) {
             ThreadUtils.sleep(1);
         }
@@ -234,9 +210,6 @@ public class Ordonanceur {
 
         // Match de XX secondes.
         while (robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
-            matchInfos.setScore(robotStatus.calculerPoints());
-            matchInfos.setMessage(String.format("%s (%s restantes) - %s s", strategyManager.getCurrentAction(), strategyManager.actionsCount(), robotStatus.getRemainingTime() / 1000));
-            updateMatchState();
             ThreadUtils.sleep(200);
         }
 
@@ -265,14 +238,13 @@ public class Ordonanceur {
         FileUtils.writeLines(execFile, lines);
         log.info("Création du fichier de fin d'éxécution {}", execFile.getAbsolutePath());
 
-        // Visualisation du score
-        int score = robotStatus.calculerPoints();
-
-        // Attente remise de la tirette pour ejecter les palets en stock
+        // Attente remise de la tirette pour ejecter le stock
+        ecranService.displayMessage("FIN - Remettre la tirette et AU pour ejection");
         while (!ioService.tirette() || !ioService.auOk()) {
-            displayScore(score);
             ThreadUtils.sleep(1000);
         }
+
+        ecranService.displayMessage("FIN");
 
         // Remise en place
         ioService.enableAlim5VPuissance();
@@ -345,72 +317,8 @@ public class Ordonanceur {
                 }
             }
         } catch (AvoidingException e) {
+            ecranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
             throw new RuntimeException("Impossible de se placer pour le départ", e);
-        }
-    }
-
-    private void displayProblemeTension(double tension) {
-        String message = "/!\\ PROBLEME DE TENSION SERVOS /!\\";
-        displayScreenMessage(message, LogLevel.OFF);
-        try {
-            ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", "\n" + message + "\n");
-            Process p = pb.start();
-
-            StreamGobbler out = new StreamGobbler(p.getInputStream(), System.out::println);
-            new Thread(out).start();
-        } catch (IOException e) {
-            log.error("/!\\ PROBLEME DE TENSION SERVOS /!\\");
-        }
-    }
-
-    private void displayDepart() {
-        displayScreenMessage("READY");
-        try {
-            ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", "\n/!\\ READY /!\\\n");
-            Process p = pb.start();
-
-            StreamGobbler out = new StreamGobbler(p.getInputStream(), System.out::println);
-            new Thread(out).start();
-        } catch (IOException e) {
-            log.info("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
-        }
-    }
-
-    private void displayScreenMessage(String message) {
-        displayScreenMessage(message, LogLevel.INFO);
-    }
-
-    private void displayScreenMessage(String message, LogLevel logLevel) {
-        if (logLevel == LogLevel.INFO) log.info(message);
-        else if (logLevel == LogLevel.WARN) log.warn(message);
-        else if (logLevel == LogLevel.ERROR) log.error(message);
-
-        screenState.setMessage(message);
-        updateScreenState();
-    }
-
-    private void updateScreenState() {
-        ecran.updateState(screenState);
-    }
-
-    private void updateMatchState() {
-        ecran.updateMatch(matchInfos);
-    }
-
-    private void displayScore(int score) {
-        matchInfos.setScore(score);
-        matchInfos.setMessage("FIN - Remettre la tirette et AU pour ejection");
-        updateMatchState();
-        try {
-            ProcessBuilder pb = new ProcessBuilder("figlet", "-f", "big", String.format("\n\n\n\nScore : %d\n", score));
-            Process p = pb.start();
-
-            StreamGobbler out = new StreamGobbler(p.getInputStream(), System.out::println);
-            StreamGobbler err = new StreamGobbler(p.getErrorStream(), log::error);
-            new Thread(out).start();
-            new Thread(err).start();
-        } catch (IOException e) {
-            log.info("Score : {}", score);
         }
     }
 }

@@ -3,7 +3,6 @@ package org.arig.robot.scheduler;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.ServosService;
-import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
 import org.springframework.beans.factory.annotation.Autowired;

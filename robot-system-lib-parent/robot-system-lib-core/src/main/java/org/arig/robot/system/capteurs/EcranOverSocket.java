@@ -1,6 +1,5 @@
 package org.arig.robot.system.capteurs;
 
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.socket.ecran.ExitQuery;
 import org.arig.robot.communication.socket.ecran.ExitResponse;

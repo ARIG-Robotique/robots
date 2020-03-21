@@ -2,7 +2,6 @@ package org.arig.robot.nerell.utils.shell;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.springframework.shell.Availability;

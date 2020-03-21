@@ -9,6 +9,7 @@ import org.arig.robot.model.lidar.ScanInfos;
  */
 public interface ILidarTelemeter {
 
+    boolean isOpen();
     void printDeviceInfo();
     void end();
 
