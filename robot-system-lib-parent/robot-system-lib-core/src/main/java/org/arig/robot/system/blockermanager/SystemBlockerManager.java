@@ -36,10 +36,10 @@ public class SystemBlockerManager implements ISystemBlockerManager {
         double errorSumPidDistance = Math.abs(pidDistance.getPidErrorSum());
         double errorSumPidOrientation = Math.abs(pidOrientation.getPidErrorSum());
 
-        if (trajectoryManager.getCurrentMouvement() != null && trajectoryManager.getCurrentMouvement() instanceof MonitorMouvementPath
+        if (trajectoryManager.getCurrentMouvement() instanceof MonitorMouvementPath
                 && (errorSumPidDistance >= seuilErreurPidDistance || errorSumPidOrientation >= seuilErreurPidOrientation)) {
 
-            log.warn("L'erreur de pidDistance {} ou pidOrientation {} détectée ", errorSumPidDistance, errorSumPidOrientation);
+            log.warn("Somme de l'erreur d'un PID trop importante : distance {} ; orientation {}", errorSumPidDistance, errorSumPidOrientation);
 
             trajectoryManager.cancelMouvement();
         }
