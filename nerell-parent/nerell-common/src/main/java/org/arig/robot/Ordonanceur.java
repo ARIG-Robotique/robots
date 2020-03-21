@@ -21,9 +21,9 @@ import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.EcranService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
-import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
+import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
@@ -66,9 +66,6 @@ public class Ordonanceur {
     private ITrajectoryManager trajectoryManager;
 
     @Autowired
-    private StrategyManager strategyManager;
-
-    @Autowired
     private IPathFinder pathFinder;
 
     @Autowired
@@ -88,6 +85,9 @@ public class Ordonanceur {
 
     @Autowired
     private EcranService ecranService;
+
+    @Autowired
+    private AbstractMotor motorPavillon;
 
     @Autowired
     @Qualifier("currentPosition")
@@ -210,6 +210,14 @@ public class Ordonanceur {
 
         // Match de XX secondes.
         while (robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
+
+            // Déclenchement du pavillon
+            if (robotStatus.getRemainingTime() <= IConstantesNerellConfig.pavillonRemainingTimeMs && !robotStatus.isPavillon()) {
+                log.info("Activation du pavillon");
+                motorPavillon.speed(motorPavillon.getMaxSpeed());
+                robotStatus.setPavillon(true);
+            }
+
             ThreadUtils.sleep(200);
         }
 

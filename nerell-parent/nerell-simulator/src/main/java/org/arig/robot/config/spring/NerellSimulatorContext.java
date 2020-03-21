@@ -20,7 +20,9 @@ import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
 import org.arig.robot.system.capteurs.VisionBaliseBouchon;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
+import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
+import org.arig.robot.system.motors.BouchonMotor;
 import org.arig.robot.system.motors.BouchonPropulsionsMotors;
 import org.arig.robot.system.process.EcranProcess;
 import org.arig.robot.system.servos.SD21Servos;
@@ -68,6 +70,11 @@ public class NerellSimulatorContext {
         final AbstractPropulsionsMotors motors = new BouchonPropulsionsMotors();
         motors.assignMotors(1, 2);
         return motors;
+    }
+
+    @Bean
+    public AbstractMotor motorPavillon() {
+        return new BouchonMotor();
     }
 
     @Bean
