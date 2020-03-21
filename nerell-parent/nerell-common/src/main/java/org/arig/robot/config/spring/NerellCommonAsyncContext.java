@@ -17,8 +17,6 @@ public class NerellCommonAsyncContext {
 
     @Bean
     public ThreadPoolExecutor threadPoolTaskExecutor() {
-        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(IConstantesNerellConfig.nbThreadAsyncExecutor);
-        return executor;
+        return (ThreadPoolExecutor) Executors.newFixedThreadPool(IConstantesNerellConfig.nbThreadAsyncExecutor);
     }
-
 }
