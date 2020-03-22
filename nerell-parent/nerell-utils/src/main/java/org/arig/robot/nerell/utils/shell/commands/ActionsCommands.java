@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.Ordonanceur;
+import org.arig.robot.model.RobotStatus;
 import org.arig.robot.nerell.utils.shell.providers.ActionsProvider;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.strategy.IAction;
@@ -26,6 +27,7 @@ public class ActionsCommands {
     private IIOService ioService;
     private Ordonanceur ordonanceur;
     private List<IAction> actions;
+    private final RobotStatus rs;
 
     @ShellMethodAvailability
     public Availability alimentationOk() {
@@ -37,6 +39,16 @@ public class ActionsCommands {
     @SneakyThrows
     public void calageBordure() {
         ordonanceur.calageBordure();
+    }
+
+    @ShellMethod("Activation des services")
+    public void enablePinceService() {
+        rs.enablePinces();
+    }
+
+    @ShellMethod("Désactivation des services")
+    public void disablePinceService() {
+        rs.disablePinces();
     }
 
     @ShellMethod("Execute une action")

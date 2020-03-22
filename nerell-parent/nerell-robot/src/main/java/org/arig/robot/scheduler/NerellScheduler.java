@@ -2,6 +2,7 @@ package org.arig.robot.scheduler;
 
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.BaliseService;
+import org.arig.robot.services.PincesAvantService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
@@ -27,10 +28,20 @@ public class NerellScheduler {
     @Autowired
     private ISystemBlockerManager systemBlockerManager;
 
+    @Autowired
+    private PincesAvantService pincesAvant;
+
     @Scheduled(fixedDelay = 100)
     public void obstacleAvoidanceTask() {
         if (rs.isMatchEnabled()) {
             avoidingService.process();
+        }
+    }
+
+    @Scheduled(fixedDelay = 200)
+    public void pincesAvantTask() {
+        if (rs.isPincesEnabled()) {
+            pincesAvant.process();
         }
     }
 

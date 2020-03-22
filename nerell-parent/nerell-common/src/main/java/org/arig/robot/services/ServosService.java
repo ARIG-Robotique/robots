@@ -222,6 +222,10 @@ public class ServosService {
         setPosition(IConstantesServos.PIVOT_ARRIERE, IConstantesServos.POS_PIVOT_ARRIERE_OUVERT, wait);
     }
 
+    public void pincesAvantPrise(boolean wait) {
+        setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_AVANT).get(IConstantesServos.POS_BATCH_PINCES_AVANT_PRISE), wait);
+    }
+
     public void pincesAvantFerme(boolean wait) {
         setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_AVANT).get(IConstantesServos.POS_BATCH_PINCES_AVANT_FERME), wait);
     }
@@ -230,8 +234,9 @@ public class ServosService {
         setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_AVANT).get(IConstantesServos.POS_BATCH_PINCES_AVANT_OUVERT), wait);
     }
 
-    public void pinceAvant1Prise(boolean wait) {
-        setPosition(IConstantesServos.PINCE_AVANT_1, IConstantesServos.POS_PINCE_AVANT_1_PRISE, wait);
+    public void pinceAvantPrise(int index, boolean wait) {
+        int[] config = IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_AVANT).get(IConstantesServos.POS_BATCH_PINCES_AVANT_PRISE)[index];
+        setPosition((byte) config[0], config[1], wait);
     }
 
     public void pinceAvant2Prise(boolean wait) {

@@ -1,17 +1,15 @@
 package org.arig.robot.model;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -86,6 +84,17 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     private boolean eccueilAdverseDispo = true;
 
+    @Setter(AccessLevel.NONE)
+    private boolean pincesEnabled = false;
+
+    public void enablePinces() {
+        pincesEnabled = true;
+    }
+
+    public void disablePinces() {
+        pincesEnabled = false;
+    }
+
     /**
      * STATUT
      */
@@ -112,6 +121,28 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     List<ECouleurBouee> petitChenalVert = new ArrayList<>();
 
     List<ECouleurBouee> petitChenalRouge = new ArrayList<>();
+
+    @Setter(AccessLevel.NONE)
+    ECouleurBouee[] pincesArriere = new ECouleurBouee[]{null, null, null, null, null};
+
+    @Setter(AccessLevel.NONE)
+    ECouleurBouee[] pincesAvant = new ECouleurBouee[]{null, null,null,null};
+
+    public void setPinceArriere(int pos, ECouleurBouee bouee) {
+        pincesArriere[pos] = bouee;
+    }
+
+    public void setPinceAvant(int pos, ECouleurBouee bouee) {
+        pincesAvant[pos] = bouee;
+    }
+
+    public void clearPincesArriere() {
+        Arrays.fill(pincesArriere, null);
+    }
+
+    public void clearPincesAvant() {
+        Arrays.fill(pincesAvant, null);
+    }
 
 
     /**
@@ -153,5 +184,4 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
         return (int) (nbBoueeOkRouge + nbBoueeOkVert + Math.min(nbBoueeOkRouge, nbBoueeOkVert) * 2);
     }
-
 }
