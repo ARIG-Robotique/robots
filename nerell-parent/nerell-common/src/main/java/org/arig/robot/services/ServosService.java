@@ -40,8 +40,8 @@ public class ServosService {
     public void homes() {
         servos.setPositionAndSpeed(IConstantesServos.MOUSTACHE_DROITE, IConstantesServos.POS_MOUSTACHE_DROITE_FERME, IConstantesServos.SPEED_MOUSTACHE_DROITE);
         servos.setPositionAndSpeed(IConstantesServos.MOUSTACHE_GAUCHE, IConstantesServos.POS_MOUSTACHE_GAUCHE_FERME, IConstantesServos.SPEED_MOUSTACHE_GAUCHE);
-        servos.setPositionAndSpeed(IConstantesServos.BRAS_DROITE, IConstantesServos.POS_BRAS_DROITE_FERME, IConstantesServos.SPEED_POUSSOIR_DROITE);
-        servos.setPositionAndSpeed(IConstantesServos.BRAS_GAUCHE, IConstantesServos.POS_BRAS_GAUCHE_FERME, IConstantesServos.SPEED_POUSSOIR_GAUCHE);
+        servos.setPositionAndSpeed(IConstantesServos.BRAS_DROIT, IConstantesServos.POS_BRAS_DROIT_FERME, IConstantesServos.SPEED_BRAS_DROIT);
+        servos.setPositionAndSpeed(IConstantesServos.BRAS_GAUCHE, IConstantesServos.POS_BRAS_GAUCHE_FERME, IConstantesServos.SPEED_BRAS_GAUCHE);
         servos.setPositionAndSpeed(IConstantesServos.ASCENSEUR_AVANT, IConstantesServos.POS_ASCENSEUR_AVANT_OUVERTURE_MOUSTACHE, IConstantesServos.SPEED_ASCENSEUR_AVANT);
         servos.setPositionAndSpeed(IConstantesServos.PINCE_AVANT_1, IConstantesServos.POS_PINCE_AVANT_1_FERME, IConstantesServos.SPEED_PINCE_AVANT);
         servos.setPositionAndSpeed(IConstantesServos.PINCE_AVANT_2, IConstantesServos.POS_PINCE_AVANT_2_FERME, IConstantesServos.SPEED_PINCE_AVANT);
@@ -154,31 +154,48 @@ public class ServosService {
     }
 
     public void moustachesOuvert(boolean wait) {
-        setPositionBatch(IConstantesServos.GROUP_CONFIG.get(IConstantesServos.GROUPE_MOUSTACHES).get(IConstantesServos.POS_GROUPE_MOUSTACHES_OUVERT), wait);
+        setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_MOUSTACHES).get(IConstantesServos.POS_BATCH_MOUSTACHES_OUVERT), wait);
     }
 
     public void moustachesFerme(boolean wait) {
-        setPositionBatch(IConstantesServos.GROUP_CONFIG.get(IConstantesServos.GROUPE_MOUSTACHES).get(IConstantesServos.POS_GROUPE_MOUSTACHES_FERME), wait);
+        setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_MOUSTACHES).get(IConstantesServos.POS_BATCH_MOUSTACHES_FERME), wait);
     }
 
-    public void poussoirGaucheOuvert(boolean wait) {
+    // TODO gestion de la vitesse
+    public void moustachesPoussette(boolean wait) {
+        setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_MOUSTACHES).get(IConstantesServos.POS_BATCH_MOUSTACHES_POUSETTE), wait);
+    }
+
+    public void brasGaucheMancheAAir(boolean wait) {
         setPosition(IConstantesServos.BRAS_GAUCHE, IConstantesServos.POS_BRAS_GAUCHE_MANCHE_AIR, wait);
     }
 
-    public void poussoirGaucheFerme(boolean wait) {
+    public void brasGauchePhare(boolean wait) {
+        setPosition(IConstantesServos.BRAS_GAUCHE, IConstantesServos.POS_BRAS_GAUCHE_PHARE, wait);
+    }
+
+    public void brasGaucheFerme(boolean wait) {
         setPosition(IConstantesServos.BRAS_GAUCHE, IConstantesServos.POS_BRAS_GAUCHE_FERME, wait);
     }
 
-    public void poussoirDroiteOuvert(boolean wait) {
-        setPosition(IConstantesServos.BRAS_DROITE, IConstantesServos.POS_BRAS_DROITE_MANCHE_AIR, wait);
+    public void brasDroitMancheAAir(boolean wait) {
+        setPosition(IConstantesServos.BRAS_DROIT, IConstantesServos.POS_BRAS_DROIT_MANCHE_AIR, wait);
     }
 
-    public void poussoirDroiteFerme(boolean wait) {
-        setPosition(IConstantesServos.BRAS_DROITE, IConstantesServos.POS_BRAS_DROITE_FERME, wait);
+    public void brasDroitPhare(boolean wait) {
+        setPosition(IConstantesServos.BRAS_DROIT, IConstantesServos.POS_BRAS_DROIT_PHARE, wait);
     }
 
-    public void ascenseurAvantHaut(boolean wait) {
+    public void brasDroitFerme(boolean wait) {
+        setPosition(IConstantesServos.BRAS_DROIT, IConstantesServos.POS_BRAS_DROIT_FERME, wait);
+    }
+
+    public void ascenseurAvantOuvertureMoustache(boolean wait) {
         setPosition(IConstantesServos.ASCENSEUR_AVANT, IConstantesServos.POS_ASCENSEUR_AVANT_OUVERTURE_MOUSTACHE, wait);
+    }
+
+    public void ascenseurAvantRoulage(boolean wait) {
+        setPosition(IConstantesServos.ASCENSEUR_AVANT, IConstantesServos.POS_ASCENSEUR_AVANT_ROULAGE, wait);
     }
 
     public void ascenseurAvantBas(boolean wait) {
@@ -189,8 +206,12 @@ public class ServosService {
         setPosition(IConstantesServos.ASCENSEUR_ARRIERE, IConstantesServos.POS_ASCENSEUR_ARRIERE_HAUT, wait);
     }
 
-    public void ascenseurArriereBas(boolean wait) {
+    public void ascenseurArriereEccueil(boolean wait) {
         setPosition(IConstantesServos.ASCENSEUR_ARRIERE, IConstantesServos.POS_ASCENSEUR_ARRIERE_ECCUEIL, wait);
+    }
+
+    public void ascenseurArriereTable(boolean wait) {
+        setPosition(IConstantesServos.ASCENSEUR_ARRIERE, IConstantesServos.POS_ASCENSEUR_ARRIERE_TABLE, wait);
     }
 
     public void pivotArriereFerme(boolean wait) {
@@ -202,19 +223,35 @@ public class ServosService {
     }
 
     public void pincesAvantFerme(boolean wait) {
-        setPositionBatch(IConstantesServos.GROUP_CONFIG.get(IConstantesServos.GROUPE_PINCES_AVANT).get(IConstantesServos.POS_GROUPE_PINCES_AVANT_FERME), wait);
+        setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_AVANT).get(IConstantesServos.POS_BATCH_PINCES_AVANT_FERME), wait);
     }
 
     public void pincesAvantOuvert(boolean wait) {
-        setPositionBatch(IConstantesServos.GROUP_CONFIG.get(IConstantesServos.GROUPE_PINCES_AVANT).get(IConstantesServos.POS_GROUPE_PINCES_AVANT_OUVERT), wait);
+        setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_AVANT).get(IConstantesServos.POS_BATCH_PINCES_AVANT_OUVERT), wait);
+    }
+
+    public void pinceAvant1Prise(boolean wait) {
+        setPosition(IConstantesServos.PINCE_AVANT_1, IConstantesServos.POS_PINCE_AVANT_1_PRISE, wait);
+    }
+
+    public void pinceAvant2Prise(boolean wait) {
+        setPosition(IConstantesServos.PINCE_AVANT_2, IConstantesServos.POS_PINCE_AVANT_2_PRISE, wait);
+    }
+
+    public void pinceAvant3Prise(boolean wait) {
+        setPosition(IConstantesServos.PINCE_AVANT_3, IConstantesServos.POS_PINCE_AVANT_3_PRISE, wait);
+    }
+
+    public void pinceAvant4Prise(boolean wait) {
+        setPosition(IConstantesServos.PINCE_AVANT_4, IConstantesServos.POS_PINCE_AVANT_4_PRISE, wait);
     }
 
     public void pincesArriereFerme(boolean wait) {
-        setPositionBatch(IConstantesServos.GROUP_CONFIG.get(IConstantesServos.GROUPE_PINCES_ARRIERE).get(IConstantesServos.POS_GROUPE_PINCES_ARRIERE_FERME), wait);
+        setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_ARRIERE).get(IConstantesServos.POS_BATCH_PINCES_ARRIERE_FERME), wait);
     }
 
     public void pincesArriereOuvert(boolean wait) {
-        setPositionBatch(IConstantesServos.GROUP_CONFIG.get(IConstantesServos.GROUPE_PINCES_ARRIERE).get(IConstantesServos.POS_GROUPE_PINCES_ARRIERE_OUVERT), wait);
+        setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_ARRIERE).get(IConstantesServos.POS_BATCH_PINCES_ARRIERE_OUVERT), wait);
     }
 
     //*******************************************//

@@ -261,9 +261,9 @@ public class Ordonanceur {
 
         servosService.pincesAvantFerme(false);
         servosService.pincesArriereFerme(false);
-        servosService.poussoirDroiteFerme(false);
-        servosService.poussoirGaucheFerme(false);
-        servosService.ascenseurAvantHaut(true);
+        servosService.brasDroitFerme(false);
+        servosService.brasGaucheFerme(false);
+        servosService.ascenseurAvantRoulage(true);
         servosService.ascenseurArriereHaut(true);
         servosService.pivotArriereFerme(false);
         servosService.moustachesFerme(false);

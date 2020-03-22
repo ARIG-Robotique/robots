@@ -38,11 +38,11 @@ public class ServosController extends AbstractServosController {
                         .position(FERME, IConstantesServos.POS_MOUSTACHE_GAUCHE_FERME)
                 )
                 .servo(new ServoConfig()
-                        .setId(IConstantesServos.BRAS_DROITE)
-                        .setName("Bras droite")
-                        .position(MANCHE_A_AIR, IConstantesServos.POS_BRAS_DROITE_MANCHE_AIR)
-                        .position(PHARE, IConstantesServos.POS_BRAS_DROITE_PHARE)
-                        .position(FERME, IConstantesServos.POS_BRAS_DROITE_FERME)
+                        .setId(IConstantesServos.BRAS_DROIT)
+                        .setName("Bras droit")
+                        .position(MANCHE_A_AIR, IConstantesServos.POS_BRAS_DROIT_MANCHE_AIR)
+                        .position(PHARE, IConstantesServos.POS_BRAS_DROIT_PHARE)
+                        .position(FERME, IConstantesServos.POS_BRAS_DROIT_FERME)
                 )
                 .servo(new ServoConfig()
                         .setId(IConstantesServos.BRAS_GAUCHE)
@@ -54,10 +54,10 @@ public class ServosController extends AbstractServosController {
         );
 
         servoConfigs.add(new ServoGroup()
-                .setId(IConstantesServos.GROUPE_PINCES_ARRIERE)
+                .setId(IConstantesServos.BATCH_PINCES_ARRIERE)
                 .setName("Pinces arrières")
-                .batch("Tout ouvert", IConstantesServos.POS_GROUPE_PINCES_ARRIERE_OUVERT)
-                .batch("Tout fermé", IConstantesServos.POS_GROUPE_PINCES_ARRIERE_FERME)
+                .batch("Tout ouvert", IConstantesServos.POS_BATCH_PINCES_ARRIERE_OUVERT)
+                .batch("Tout fermé", IConstantesServos.POS_BATCH_PINCES_ARRIERE_FERME)
                 .servo(new ServoConfig()
                         .setId(IConstantesServos.ASCENSEUR_ARRIERE)
                         .setName("Ascenseur arrière")
@@ -104,11 +104,11 @@ public class ServosController extends AbstractServosController {
         );
 
         servoConfigs.add(new ServoGroup()
-                .setId(IConstantesServos.GROUPE_PINCES_AVANT)
+                .setId(IConstantesServos.BATCH_PINCES_AVANT)
                 .setName("Pinces avants")
-                .batch("Tout ouvert", IConstantesServos.POS_GROUPE_PINCES_AVANT_OUVERT)
-                .batch("Tout prise", IConstantesServos.POS_GROUPE_PINCES_AVANT_PRISE)
-                .batch("Tout fermé", IConstantesServos.POS_GROUPE_PINCES_AVANT_FERME)
+                .batch("Tout ouvert", IConstantesServos.POS_BATCH_PINCES_AVANT_OUVERT)
+                .batch("Tout prise", IConstantesServos.POS_BATCH_PINCES_AVANT_PRISE)
+                .batch("Tout fermé", IConstantesServos.POS_BATCH_PINCES_AVANT_FERME)
                 .servo(new ServoConfig()
                         .setId(IConstantesServos.ASCENSEUR_AVANT)
                         .setName("Ascenseur avant")
@@ -148,9 +148,9 @@ public class ServosController extends AbstractServosController {
     }
 
     @Override
-    protected int[][] getGroupPositions(Byte idGroupe, Byte position) {
+    protected int[][] getBatchPositions(Byte idBatch, Byte position) {
         try {
-            return IConstantesServos.GROUP_CONFIG.get(idGroupe).get(position);
+            return IConstantesServos.BATCH_CONFIG.get(idBatch).get(position);
         } catch (Exception e) {
             return new int[][]{};
         }

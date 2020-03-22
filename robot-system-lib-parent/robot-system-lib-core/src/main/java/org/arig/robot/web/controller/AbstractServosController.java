@@ -25,7 +25,7 @@ public abstract class AbstractServosController {
 
     protected abstract List<ServoGroup> servosConfig();
 
-    protected abstract int[][] getGroupPositions(Byte idGroupe, Byte position);
+    protected abstract int[][] getBatchPositions(Byte idGroupe, Byte position);
 
     @GetMapping
     public final List<ServoGroup> config() {
@@ -57,10 +57,10 @@ public abstract class AbstractServosController {
         }
     }
 
-    @PostMapping("/groupe/{idGroupe}")
-    public final void groupPosition(@PathVariable("idGroupe") final Byte idGroupe,
+    @PostMapping({"/groupe/{idBatch}", "/batch/{idBatch}"}) // rétro-compat groupe -> batch
+    public final void batchPosition(@PathVariable("idBatch") final Byte idBatch,
                                     @RequestParam("position") final Byte position) {
-        for (int[] servoPos : getGroupPositions(idGroupe, position)) {
+        for (int[] servoPos : getBatchPositions(idBatch, position)) {
             sd21Servos.setPosition((byte) servoPos[0], servoPos[1]);
         }
     }
