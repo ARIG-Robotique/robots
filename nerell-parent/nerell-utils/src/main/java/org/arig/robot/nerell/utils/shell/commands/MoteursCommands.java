@@ -2,6 +2,7 @@ package org.arig.robot.nerell.utils.shell;
 
 import lombok.RequiredArgsConstructor;
 import org.arig.robot.services.IIOService;
+import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -16,6 +17,7 @@ public class MoteursCommands {
 
     private final IIOService ioService;
     private final AbstractPropulsionsMotors propulsionsMotors;
+    private final AbstractMotor motorPavillon;
 
     public Availability alimentationOk() {
         return ioService.auOk() && ioService.alimPuissance5VOk() && ioService.alimPuissance12VOk()
@@ -28,4 +30,9 @@ public class MoteursCommands {
         propulsionsMotors.generateMouvement(gauche, droite);
     }
 
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Sortie du pavillon")
+    public void moteurPavillon(int value) {
+        motorPavillon.speed(value);
+    }
 }
