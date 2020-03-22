@@ -71,7 +71,9 @@ public class TasksScheduler implements InitializingBean {
                     if (rs.isAsservEnabled()) {
                         trajectoryManager.process();
                     } else {
-                        trajectoryManager.stop();
+                        if (!rs.isCaptureEnabled()) {
+                            trajectoryManager.stop();
+                        }
                     }
 
                     MonitorTimeSerie serie = new MonitorTimeSerie()

@@ -5,9 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 @ShellCommandGroup("Codeurs")
 public class CodeursCommands {
 
+    private final AbstractRobotStatus rs;
     private final Abstract2WheelsEncoders wheelsEncoders;
     private final AbstractPropulsionsMotors propulsionsMotors;
     private final IIOService ioService;
@@ -48,6 +51,9 @@ public class CodeursCommands {
     @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Capture des valeurs de codeurs des roues de propulsions")
     public void captureCodeursPropulsions() {
+        rs.enableCapture();
+        ThreadUtils.sleep(2000);
+
         // Vitesse positive
         log.info("Reset codeurs");
         wheelsEncoders.reset();
@@ -66,6 +72,9 @@ public class CodeursCommands {
         }
 
         propulsionsMotors.stopAll();
+
+        ThreadUtils.sleep(2000);
+        rs.disableCapture();
 
         // Ecriture en CSV
         List<String> lines = infosPropulsions.parallelStream()

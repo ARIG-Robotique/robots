@@ -36,6 +36,19 @@ public abstract class AbstractRobotStatus {
     }
 
     @Setter(AccessLevel.NONE)
+    private boolean captureEnabled = false;
+
+    public void enableCapture() {
+        log.info("Activation capture");
+        captureEnabled = true;
+    }
+
+    public void disableCapture() {
+        log.info("Désactivation capture");
+        captureEnabled = false;
+    }
+
+    @Setter(AccessLevel.NONE)
     private boolean avoidanceEnabled = false;
 
     public void enableAvoidance() {
