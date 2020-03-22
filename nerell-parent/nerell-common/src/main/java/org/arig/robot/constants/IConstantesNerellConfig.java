@@ -97,10 +97,18 @@ public interface IConstantesNerellConfig {
     double angleReculDeg = 0.45;
     //double angleReculDeg = -1;
 
-    double dstArriere = 162.5; // distance du dos du robot au milieu des roues
-
     double seuilErreurPidOrientation = 5000;
     double seuilErreurPidDistance = 5000;
+
+    // -------------------------- //
+    // Paramètre Physiques        //
+    // -------------------------- //
+
+    double dstCallageY = 151.0; // dos du robot <=> milieu du robot
+    double dstDeposeArriereY = 223.5; // milieu de gobelets arrière, posés au sol <=> milieu du robot
+    double dstDeposeAvantY = 125; // milieu des gobelets avant <=> milieu du robot
+    double[] dstDeposeAvantX = new double[]{-130, -55, 55, 130};
+    double dstBrasMancheAAirX = 210; // distance minimale pour pousser la manche à air
 
     // -------------------------- //
     // Paramètre Avoiding service //
@@ -108,6 +116,7 @@ public interface IConstantesNerellConfig {
     enum AvoidingSelection {
         BASIC, FULL, NOT_BASIC, SEMI_FULL
     }
+
     int avoidanceWaitTimeMs = 1000;
     int avoidancePathRefreshTimeMs = 2000;
 

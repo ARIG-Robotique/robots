@@ -286,10 +286,10 @@ public class Ordonanceur {
                 trajectoryManager.reculeMMSansAngle(1000);
 
                 if (robotStatus.getTeam() == Team.JAUNE) {
-                    position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstArriere));
+                    position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstCallageY));
                     position.setAngle(conv.degToPulse(0));
                 } else {
-                    position.getPt().setX(conv.mmToPulse(3000 - IConstantesNerellConfig.dstArriere));
+                    position.getPt().setX(conv.mmToPulse(3000 - IConstantesNerellConfig.dstCallageY));
                     position.setAngle(conv.degToPulse(180));
                 }
 
@@ -299,7 +299,7 @@ public class Ordonanceur {
                 robotStatus.enableCalageBordure();
                 trajectoryManager.reculeMM(1000);
 
-                position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstArriere));
+                position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstCallageY));
                 position.setAngle(conv.degToPulse(-90));
 
                 trajectoryManager.avanceMM(150);
