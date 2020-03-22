@@ -1,9 +1,10 @@
-package org.arig.robot.nerell.utils.shell;
+package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.Ordonanceur;
+import org.arig.robot.nerell.utils.shell.providers.ActionsProvider;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.strategy.IAction;
 import org.springframework.shell.Availability;

@@ -1,4 +1,4 @@
-package org.arig.robot.nerell.utils.shell;
+package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import org.arig.robot.services.IIOService;

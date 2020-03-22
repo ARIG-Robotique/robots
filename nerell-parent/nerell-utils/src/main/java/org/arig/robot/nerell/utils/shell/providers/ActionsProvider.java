@@ -1,4 +1,4 @@
-package org.arig.robot.nerell.utils.shell;
+package org.arig.robot.nerell.utils.shell.providers;
 
 import org.arig.robot.strategy.IAction;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package org.arig.robot.nerell.utils.shell;
+package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.arig.robot.model.AbstractRobotStatus;

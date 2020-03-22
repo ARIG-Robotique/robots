@@ -1,4 +1,4 @@
-package org.arig.robot.nerell.utils.shell;
+package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
