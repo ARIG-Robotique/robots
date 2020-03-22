@@ -37,10 +37,9 @@ public class CapteursController extends AbstractCapteursController implements In
     @Override
     public void afterPropertiesSet() throws Exception {
         // Capteurs informations numérique
-        numeriqueInfos.put("AU", ioService::auOk);
-        numeriqueInfos.put("Puissance 5V", ioService::alimPuissance5VOk);
-        numeriqueInfos.put("Puissance 12V", ioService::alimPuissance12VOk);
-        numeriqueInfos.put("Tirette", ioService::tirette);
+        numeriqueInfos.put("Arret d'urgence", ioService::auOk);
+        numeriqueInfos.put("Alim. Puissance 5V", ioService::alimPuissance5VOk);
+        numeriqueInfos.put("Alim. Puissance 12V", ioService::alimPuissance12VOk);
         numeriqueInfos.put("Bordure arrière droite", ioService::calageBordureDroit);
         numeriqueInfos.put("Bordure arrière gauche", ioService::calageBordureGauche);
         numeriqueInfos.put("Presence pince avant 1", ioService::presencePinceAvant1);
@@ -52,8 +51,10 @@ public class CapteursController extends AbstractCapteursController implements In
         numeriqueInfos.put("Presence pince arrière 3", ioService::presencePinceArriere3);
         numeriqueInfos.put("Presence pince arrière 4", ioService::presencePinceArriere4);
         numeriqueInfos.put("Presence pince arrière 5", ioService::presencePinceArriere5);
+        numeriqueInfos.put("Tirette", ioService::tirette);
 
         // Capteurs informations analogique
+        // NOP en 2020
 
         // Capteurs informations Text
         textInfos.put("Equipe", () -> rs.getTeam().name());
