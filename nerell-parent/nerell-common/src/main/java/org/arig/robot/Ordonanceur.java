@@ -155,6 +155,7 @@ public class Ordonanceur {
         double tension = servosService.getTension();
         if (tension < IConstantesUtiles.SEUIL_BATTERY_VOLTS && tension > 0) {
             ecranService.displayMessage("/!\\ PROBLEME DE TENSION SERVOS /!\\", LogLevel.ERROR);
+            ThreadUtils.sleep(10000);
             return;
         }
 
