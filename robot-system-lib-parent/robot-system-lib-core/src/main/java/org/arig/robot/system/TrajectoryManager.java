@@ -507,14 +507,24 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                 currentMouvement = mPath;
                 monitoring.addMouvementPoint(mPath);
 
+                boolean firstPoint = true;
                 while (c.hasNext()) {
                     Point targetPoint = c.next().multiplied(divisor);
 
                     // Toujours activer l'évittement en Path
                     rs.enableAvoidance();
 
-                    // Va au premier point
+                    // Enchainement avec freinage, et alignement en rotation sur chaque point
                     gotoPointMM(targetPoint.getX(), targetPoint.getY(), true);
+
+                    // Alignement en rotation sur le premier point, puis enchainement avec freinage jusqu'au dernier point
+                    //gotoPointMM(targetPoint.getX(), targetPoint.getY(), firstPoint);
+
+                    // Alignement en rotation sur le premier point, puis enchainement sans freinage jusqu'au dernier point
+                    //gotoPointMM(targetPoint.getX(), targetPoint.getY(), firstPoint, !c.hasNext());
+
+                    // Après un tour ce n'est plus le premier point
+                    firstPoint = false;
                 }
 
                 // TODO gestion inutile avec les synchronized ??
