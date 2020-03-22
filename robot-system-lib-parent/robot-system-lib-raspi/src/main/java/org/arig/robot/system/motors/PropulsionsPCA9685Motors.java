@@ -15,7 +15,7 @@ public class PropulsionsPCA9685Motors extends AbstractPropulsionsMotors implemen
     private ApplicationContext applicationContext;
 
     public PropulsionsPCA9685Motors(final Pin motor1Pin, final Pin motor1Direction, final Pin motor2Pin, final Pin motor2Direction) {
-        super(0);
+        super(PCA9685Motor.OFFSET);
         motor1 = new PCA9685Motor(motor1Pin, motor1Direction);
         motor2 = new PCA9685Motor(motor2Pin, motor2Direction);
     }

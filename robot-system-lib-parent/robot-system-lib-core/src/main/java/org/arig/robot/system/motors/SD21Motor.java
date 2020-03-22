@@ -5,19 +5,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class SD21Motor extends AbstractMotor {
 
+    public static int OFFSET = 1500;
+    public static int MIN = 1100;
+    public static int MAX = 1900;
+
     private final byte motorRegister;
 
     @Autowired
     private SD21Servos sd21;
 
     public SD21Motor(final byte motorRegister) {
-        super(1500);
+        super(OFFSET);
 
         this.motorRegister = motorRegister;
 
-        minVal = 1100;
-        maxVal = 1900;
-        prev = 1500;
+        minVal = MIN;
+        maxVal = MAX;
+        prev = OFFSET;
     }
 
     @Override

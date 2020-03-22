@@ -6,6 +6,9 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+/**
+ * NON TESTE
+ */
 public class PropulsionsPCA9685MotorsServos extends AbstractPropulsionsMotors implements ApplicationContextAware, InitializingBean {
 
     private PCA9685MotorServos motor1;
@@ -15,7 +18,7 @@ public class PropulsionsPCA9685MotorsServos extends AbstractPropulsionsMotors im
     private ApplicationContext applicationContext;
 
     public PropulsionsPCA9685MotorsServos(final Pin motor1Pin, final Pin motor2Pin) {
-        super(1500);
+        super(PCA9685MotorServos.OFFSET);
         motor1 = new PCA9685MotorServos(motor1Pin);
         motor2 = new PCA9685MotorServos(motor2Pin);
     }

@@ -41,6 +41,10 @@ import java.util.stream.Collectors;
 @Configuration
 public class NerellSimulatorContext {
 
+    private static final int PCA9685_OFFSET = 0;
+    private static final int PCA9685_MAX = 4095;
+    private static final int PCA9685_MIN = -PCA9685_MAX;
+
     @Bean
     public RobotName robotName() {
         return new RobotName().name("Nerell (simulator)").version("latest");
@@ -67,14 +71,14 @@ public class NerellSimulatorContext {
 
     @Bean
     public AbstractPropulsionsMotors motors() {
-        final AbstractPropulsionsMotors motors = new BouchonPropulsionsMotors();
+        final AbstractPropulsionsMotors motors = new BouchonPropulsionsMotors(PCA9685_OFFSET, PCA9685_MIN, PCA9685_MAX);
         motors.assignMotors(1, 2);
         return motors;
     }
 
     @Bean
     public AbstractMotor motorPavillon() {
-        return new BouchonMotor();
+        return new BouchonMotor(PCA9685_OFFSET, PCA9685_MIN, PCA9685_MAX);
     }
 
     @Bean

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class PCA9685Motor extends AbstractMotor {
 
+    public static int OFFSET = 0;
+
     private final Pin motorPin;
     private final Pin directionPin;
 
@@ -15,7 +17,7 @@ public class PCA9685Motor extends AbstractMotor {
     private PCA9685GpioProvider pca9685;
 
     public PCA9685Motor(final Pin motorPin, final Pin directionPin) {
-        super(0);
+        super(OFFSET);
 
         this.motorPin = motorPin;
         this.directionPin = directionPin;

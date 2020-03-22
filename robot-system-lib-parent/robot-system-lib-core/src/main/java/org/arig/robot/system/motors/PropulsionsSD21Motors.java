@@ -15,7 +15,7 @@ public class PropulsionsSD21Motors extends AbstractPropulsionsMotors implements 
 
 
     public PropulsionsSD21Motors(final byte motor1Register, final byte motor2Register) {
-        super(1500);
+        super(SD21Motor.OFFSET);
         motor1 = new SD21Motor(motor1Register);
         motor2 = new SD21Motor(motor2Register);
     }

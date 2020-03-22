@@ -1,9 +1,15 @@
 package org.arig.robot.system.motors;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class BouchonMotor extends AbstractMotor {
 
-    public BouchonMotor() {
-        super(0);
+    public BouchonMotor(int offset, int min, int max) {
+        super(offset);
+        minVal = min;
+        maxVal = max;
+        prev = offset;
     }
 
     @Override
@@ -12,6 +18,11 @@ public class BouchonMotor extends AbstractMotor {
 
     @Override
     public void speed(final int val) {
+        final int cmd = check(val + offsetValue);
+        if (cmd == prev) {
+            return;
+        }
+        prev = cmd;
     }
 
     @Override

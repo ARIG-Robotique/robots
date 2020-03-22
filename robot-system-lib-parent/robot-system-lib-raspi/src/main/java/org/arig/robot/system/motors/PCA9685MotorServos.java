@@ -4,7 +4,14 @@ import com.pi4j.gpio.extension.pca.PCA9685GpioProvider;
 import com.pi4j.io.gpio.Pin;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * NON TESTE
+ */
 public class PCA9685MotorServos extends AbstractMotor {
+
+    public static int OFFSET = 1500;
+    public static int MIN = 1100;
+    public static int MAX = 1900;
 
     private final Pin motorPin;
 
@@ -12,13 +19,13 @@ public class PCA9685MotorServos extends AbstractMotor {
     private PCA9685GpioProvider pca9685;
 
     public PCA9685MotorServos(final Pin motorPin) {
-        super(1500);
+        super(OFFSET);
 
         this.motorPin = motorPin;
 
-        minVal = 1100;
-        maxVal = 1900;
-        prev = 1500;
+        minVal = MIN;
+        maxVal = MAX;
+        prev = OFFSET;
     }
 
     @Override
