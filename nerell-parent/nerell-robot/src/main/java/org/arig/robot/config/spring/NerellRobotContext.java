@@ -111,8 +111,8 @@ public class NerellRobotContext {
         gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_03); // Direction
 
         // Moteur pavillon
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_10); // PWM
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_09); // Direction
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_15); // PWM
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_14); // Direction
 
         return gpioProvider;
     }
@@ -127,7 +127,7 @@ public class NerellRobotContext {
 
     @Bean
     public AbstractMotor motorPavillon() {
-        return new PCA9685Motor(PCA9685Pin.PWM_10, PCA9685Pin.PWM_09);
+        return new PCA9685Motor(PCA9685Pin.PWM_15, PCA9685Pin.PWM_14);
     }
 
     @Bean
