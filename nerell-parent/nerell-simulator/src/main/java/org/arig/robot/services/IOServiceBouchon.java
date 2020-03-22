@@ -110,12 +110,12 @@ public class IOServiceBouchon implements IIOService {
     }
 
     @Override
-    public boolean calageBordureArriereDroit() {
+    public boolean calageBordureDroit() {
         return false;
     }
 
     @Override
-    public boolean calageBordureArriereGauche() {
+    public boolean calageBordureGauche() {
         return false;
     }
 

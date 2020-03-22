@@ -232,12 +232,12 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     }
 
     @Override
-    public boolean calageBordureArriereDroit() {
+    public boolean calageBordureDroit() {
         return inCalageBordureDroit.isLow();
     }
 
     @Override
-    public boolean calageBordureArriereGauche() {
+    public boolean calageBordureGauche() {
         return inCalageBordureGauche.isLow();
     }
 

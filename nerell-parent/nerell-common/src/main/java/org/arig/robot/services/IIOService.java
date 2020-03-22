@@ -28,8 +28,8 @@ public interface IIOService {
     boolean presencePinceArriere4();
     boolean presencePinceArriere5();
 
-    boolean calageBordureArriereDroit();
-    boolean calageBordureArriereGauche();
+    boolean calageBordureDroit();
+    boolean calageBordureGauche();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

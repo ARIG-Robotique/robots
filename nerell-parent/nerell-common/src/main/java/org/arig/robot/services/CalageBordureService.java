@@ -24,29 +24,20 @@ public class CalageBordureService {
     @Autowired
     private CommandeRobot cmdRobot;
 
-    public boolean process() {
-        boolean done = false;
+    public void process() {
+        if (rs.isCalageBordure()) {
+            boolean done;
 
-        switch (rs.getCalageBordure()) {
-            case AVANT:
-                throw new RuntimeException("Calage avant non implemnenté");
-//                done = ioService.distanceTelemetreAvantDroit() <= rs.getCalageBordureDistance() || ioService.distanceTelemetreAvantGauche() <= rs.getCalageBordureDistance();
-//                break;
+            if (cmdRobot.isType(TypeConsigne.DIST) && cmdRobot.isType(TypeConsigne.ANGLE)) {
+                done = ioService.calageBordureDroit() || ioService.calageBordureGauche();
+            } else {
+                done = ioService.calageBordureDroit() && ioService.calageBordureGauche();
+            }
 
-            case ARRIERE:
-                if (cmdRobot.isType(TypeConsigne.DIST) && cmdRobot.isType(TypeConsigne.ANGLE)) {
-                    done = ioService.calageBordureArriereDroit() || ioService.calageBordureArriereGauche();
-                } else {
-                    done = ioService.calageBordureArriereDroit() && ioService.calageBordureArriereGauche();
-                }
-                break;
+            if (done) {
+                trajectoryManager.calageBordureDone();
+                rs.disableCalageBordure();
+            }
         }
-
-        if (done) {
-            trajectoryManager.calageBordureDone();
-            rs.disableCalageBordure();
-        }
-
-        return done;
     }
 }

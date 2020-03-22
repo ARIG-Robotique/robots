@@ -57,7 +57,7 @@ public class TasksScheduler implements InitializingBean {
                 if (ellapsedCalage >= IConstantesNerellConfig.calageTimeMs * 1000000) {
                     lastTimeCalage = timeStartCalage;
 
-                    if (rs.getCalageBordure() != null) {
+                    if (rs.isCalageBordure()) {
                         calageBordure.process();
                     }
                 }

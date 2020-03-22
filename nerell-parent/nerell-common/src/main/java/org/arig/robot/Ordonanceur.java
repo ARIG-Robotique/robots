@@ -282,7 +282,7 @@ public class Ordonanceur {
             trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseUltraLente, IConstantesNerellConfig.vitesseOrientationSuperBasse);
 
             if (!robotStatus.isSimulateur()) {
-                robotStatus.enableCalageBordureArriere();
+                robotStatus.enableCalageBordure();
                 trajectoryManager.reculeMMSansAngle(1000);
 
                 if (robotStatus.getTeam() == Team.JAUNE) {
@@ -296,7 +296,7 @@ public class Ordonanceur {
                 trajectoryManager.avanceMM(150);
                 trajectoryManager.gotoOrientationDeg(-90);
 
-                robotStatus.enableCalageBordureArriere();
+                robotStatus.enableCalageBordure();
                 trajectoryManager.reculeMM(1000);
 
                 position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstArriere));
