@@ -57,7 +57,5 @@ public class CapteursController extends AbstractCapteursController implements In
 
         // Capteurs informations Text
         textInfos.put("Equipe", () -> rs.getTeam().name());
-//        textInfos.put("Couleur palet (hex)", () -> ioService.couleurPaletRaw().hexColor());
-//        textInfos.put("Couleur palet", () -> ioService.couleurPalet().name());
     }
 }

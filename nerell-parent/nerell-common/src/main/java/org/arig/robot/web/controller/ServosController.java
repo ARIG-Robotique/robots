@@ -11,6 +11,13 @@ import java.util.List;
 @RestController
 public class ServosController extends AbstractServosController {
 
+    private static final String OUVERT = "Ouvert";
+    private static final String FERME = "Fermé";
+    private static final String POUSSETTE = "Poussette";
+    private static final String MANCHE_A_AIR = "Manche à air";
+    private static final String PHARE = "Phare";
+    private static final String PRISE = "Prise";
+
     private static List<ServoGroup> servoConfigs = new ArrayList<>();
 
     static {
@@ -19,30 +26,30 @@ public class ServosController extends AbstractServosController {
                 .servo(new ServoConfig()
                         .setId(IConstantesServos.MOUSTACHE_DROITE)
                         .setName("Moustache droite")
-                        .position("Ouvert", IConstantesServos.POS_MOUSTACHE_DROITE_OUVERT)
-                        .position("Poussette", IConstantesServos.POS_MOUSTACHE_DROITE_POUSSETTE)
-                        .position("Fermé", IConstantesServos.POS_MOUSTACHE_DROITE_FERME)
+                        .position(OUVERT, IConstantesServos.POS_MOUSTACHE_DROITE_OUVERT)
+                        .position(POUSSETTE, IConstantesServos.POS_MOUSTACHE_DROITE_POUSSETTE)
+                        .position(FERME, IConstantesServos.POS_MOUSTACHE_DROITE_FERME)
                 )
                 .servo(new ServoConfig()
                         .setId(IConstantesServos.MOUSTACHE_GAUCHE)
                         .setName("Moustache gauche")
-                        .position("Ouvert", IConstantesServos.POS_MOUSTACHE_GAUCHE_OUVERT)
-                        .position("Poussette", IConstantesServos.POS_MOUSTACHE_GAUCHE_POUSSETTE)
-                        .position("Fermé", IConstantesServos.POS_MOUSTACHE_GAUCHE_FERME)
+                        .position(OUVERT, IConstantesServos.POS_MOUSTACHE_GAUCHE_OUVERT)
+                        .position(POUSSETTE, IConstantesServos.POS_MOUSTACHE_GAUCHE_POUSSETTE)
+                        .position(FERME, IConstantesServos.POS_MOUSTACHE_GAUCHE_FERME)
                 )
                 .servo(new ServoConfig()
                         .setId(IConstantesServos.BRAS_DROITE)
                         .setName("Bras droite")
-                        .position("Manche a air", IConstantesServos.POS_BRAS_DROITE_MANCHE_AIR)
-                        .position("Phare", IConstantesServos.POS_BRAS_DROITE_PHARE)
-                        .position("Fermé", IConstantesServos.POS_BRAS_DROITE_FERME)
+                        .position(MANCHE_A_AIR, IConstantesServos.POS_BRAS_DROITE_MANCHE_AIR)
+                        .position(PHARE, IConstantesServos.POS_BRAS_DROITE_PHARE)
+                        .position(FERME, IConstantesServos.POS_BRAS_DROITE_FERME)
                 )
                 .servo(new ServoConfig()
                         .setId(IConstantesServos.BRAS_GAUCHE)
                         .setName("Bras gauche")
-                        .position("Manche a air", IConstantesServos.POS_BRAS_GAUCHE_MANCHE_AIR)
-                        .position("Phare", IConstantesServos.POS_BRAS_GAUCHE_PHARE)
-                        .position("Fermé", IConstantesServos.POS_BRAS_GAUCHE_FERME)
+                        .position(MANCHE_A_AIR, IConstantesServos.POS_BRAS_GAUCHE_MANCHE_AIR)
+                        .position(PHARE, IConstantesServos.POS_BRAS_GAUCHE_PHARE)
+                        .position(FERME, IConstantesServos.POS_BRAS_GAUCHE_FERME)
                 )
         );
 
@@ -61,38 +68,38 @@ public class ServosController extends AbstractServosController {
                 .servo(new ServoConfig()
                         .setId(IConstantesServos.PIVOT_ARRIERE)
                         .setName("Pivot arrière")
-                        .position("Ouvert", IConstantesServos.POS_PIVOT_ARRIERE_OUVERT)
-                        .position("Fermé", IConstantesServos.POS_PIVOT_ARRIERE_FERME)
+                        .position(OUVERT, IConstantesServos.POS_PIVOT_ARRIERE_OUVERT)
+                        .position(FERME, IConstantesServos.POS_PIVOT_ARRIERE_FERME)
                 )
                 .servo(new ServoConfig()
                         .setId(IConstantesServos.PINCE_ARRIERE_1)
                         .setName("Pince arrière 1")
-                        .position("Ouvert", IConstantesServos.POS_PINCE_ARRIERE_1_OUVERT)
-                        .position("Fermé", IConstantesServos.POS_PINCE_ARRIERE_1_FERME)
+                        .position(OUVERT, IConstantesServos.POS_PINCE_ARRIERE_1_OUVERT)
+                        .position(FERME, IConstantesServos.POS_PINCE_ARRIERE_1_FERME)
                 )
                 .servo(new ServoConfig()
                         .setId(IConstantesServos.PINCE_ARRIERE_2)
                         .setName("Pince arrière 2")
-                        .position("Ouvert", IConstantesServos.POS_PINCE_ARRIERE_2_OUVERT)
-                        .position("Fermé", IConstantesServos.POS_PINCE_ARRIERE_2_FERME)
+                        .position(OUVERT, IConstantesServos.POS_PINCE_ARRIERE_2_OUVERT)
+                        .position(FERME, IConstantesServos.POS_PINCE_ARRIERE_2_FERME)
                 )
                 .servo(new ServoConfig()
                         .setId(IConstantesServos.PINCE_ARRIERE_3)
                         .setName("Pince arrière 3")
-                        .position("Ouvert", IConstantesServos.POS_PINCE_ARRIERE_3_OUVERT)
-                        .position("Fermé", IConstantesServos.POS_PINCE_ARRIERE_3_FERME)
+                        .position(OUVERT, IConstantesServos.POS_PINCE_ARRIERE_3_OUVERT)
+                        .position(FERME, IConstantesServos.POS_PINCE_ARRIERE_3_FERME)
                 )
                 .servo(new ServoConfig()
                         .setId(IConstantesServos.PINCE_ARRIERE_4)
                         .setName("Pince arrière 4")
-                        .position("Ouvert", IConstantesServos.POS_PINCE_ARRIERE_4_OUVERT)
-                        .position("Fermé", IConstantesServos.POS_PINCE_ARRIERE_4_FERME)
+                        .position(OUVERT, IConstantesServos.POS_PINCE_ARRIERE_4_OUVERT)
+                        .position(FERME, IConstantesServos.POS_PINCE_ARRIERE_4_FERME)
                 )
                 .servo(new ServoConfig()
                         .setId(IConstantesServos.PINCE_ARRIERE_5)
                         .setName("Pince arrière 5")
-                        .position("Ouvert", IConstantesServos.POS_PINCE_ARRIERE_5_OUVERT)
-                        .position("Fermé", IConstantesServos.POS_PINCE_ARRIERE_5_FERME)
+                        .position(OUVERT, IConstantesServos.POS_PINCE_ARRIERE_5_OUVERT)
+                        .position(FERME, IConstantesServos.POS_PINCE_ARRIERE_5_FERME)
                 )
         );
 
@@ -112,30 +119,30 @@ public class ServosController extends AbstractServosController {
                 .servo(new ServoConfig()
                         .setId(IConstantesServos.PINCE_AVANT_1)
                         .setName("Pince avant 1")
-                        .position("Ouvert", IConstantesServos.POS_PINCE_AVANT_1_OUVERT)
-                        .position("Prise", IConstantesServos.POS_PINCE_AVANT_1_PRISE)
-                        .position("Fermé", IConstantesServos.POS_PINCE_AVANT_1_FERME)
+                        .position(OUVERT, IConstantesServos.POS_PINCE_AVANT_1_OUVERT)
+                        .position(PRISE, IConstantesServos.POS_PINCE_AVANT_1_PRISE)
+                        .position(FERME, IConstantesServos.POS_PINCE_AVANT_1_FERME)
                 )
                 .servo(new ServoConfig()
                         .setId(IConstantesServos.PINCE_AVANT_2)
                         .setName("Pince avant 2")
-                        .position("Ouvert", IConstantesServos.POS_PINCE_AVANT_2_OUVERT)
-                        .position("Prise", IConstantesServos.POS_PINCE_AVANT_2_PRISE)
-                        .position("Fermé", IConstantesServos.POS_PINCE_AVANT_2_FERME)
+                        .position(OUVERT, IConstantesServos.POS_PINCE_AVANT_2_OUVERT)
+                        .position(PRISE, IConstantesServos.POS_PINCE_AVANT_2_PRISE)
+                        .position(FERME, IConstantesServos.POS_PINCE_AVANT_2_FERME)
                 )
                 .servo(new ServoConfig()
                         .setId(IConstantesServos.PINCE_AVANT_3)
                         .setName("Pince avant 3")
-                        .position("Ouvert", IConstantesServos.POS_PINCE_AVANT_3_OUVERT)
-                        .position("Prise", IConstantesServos.POS_PINCE_AVANT_3_PRISE)
-                        .position("Fermé", IConstantesServos.POS_PINCE_AVANT_3_FERME)
+                        .position(OUVERT, IConstantesServos.POS_PINCE_AVANT_3_OUVERT)
+                        .position(PRISE, IConstantesServos.POS_PINCE_AVANT_3_PRISE)
+                        .position(FERME, IConstantesServos.POS_PINCE_AVANT_3_FERME)
                 )
                 .servo(new ServoConfig()
                         .setId(IConstantesServos.PINCE_AVANT_4)
                         .setName("Pince avant 4")
-                        .position("Ouvert", IConstantesServos.POS_PINCE_AVANT_4_OUVERT)
-                        .position("Prise", IConstantesServos.POS_PINCE_AVANT_4_PRISE)
-                        .position("Fermé", IConstantesServos.POS_PINCE_AVANT_4_FERME)
+                        .position(OUVERT, IConstantesServos.POS_PINCE_AVANT_4_OUVERT)
+                        .position(PRISE, IConstantesServos.POS_PINCE_AVANT_4_PRISE)
+                        .position(FERME, IConstantesServos.POS_PINCE_AVANT_4_FERME)
                 )
         );
     }
@@ -151,12 +158,12 @@ public class ServosController extends AbstractServosController {
 
     @Override
     protected List<ServoGroup> servosConfig() {
-        servoConfigs.forEach(sc -> {
+        servoConfigs.forEach(sc ->
             sc.getServos().forEach(s -> {
                 s.setCurrentPosition(sd21Servos.getPosition(s.getId()));
                 s.setCurrentSpeed(sd21Servos.getSpeed(s.getId()));
-            });
-        });
+            })
+        );
 
         return servoConfigs;
     }
