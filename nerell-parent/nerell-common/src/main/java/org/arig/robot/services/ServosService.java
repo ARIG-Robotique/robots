@@ -47,12 +47,12 @@ public class ServosService {
         servos.setPositionAndSpeed(IConstantesServos.PINCE_AVANT_2, IConstantesServos.POS_PINCE_AVANT_2_FERME, IConstantesServos.SPEED_PINCE_AVANT);
         servos.setPositionAndSpeed(IConstantesServos.PINCE_AVANT_3, IConstantesServos.POS_PINCE_AVANT_3_FERME, IConstantesServos.SPEED_PINCE_AVANT);
         servos.setPositionAndSpeed(IConstantesServos.PINCE_AVANT_4, IConstantesServos.POS_PINCE_AVANT_4_FERME, IConstantesServos.SPEED_PINCE_AVANT);
+        servos.setPositionAndSpeed(IConstantesServos.ASCENSEUR_ARRIERE, IConstantesServos.POS_ASCENSEUR_ARRIERE_HAUT, IConstantesServos.SPEED_ASCENSEUR_ARRIERE);
         servos.setPositionAndSpeed(IConstantesServos.PINCE_ARRIERE_1, IConstantesServos.POS_PINCE_ARRIERE_1_FERME, IConstantesServos.SPEED_PINCE_ARRIERE);
         servos.setPositionAndSpeed(IConstantesServos.PINCE_ARRIERE_2, IConstantesServos.POS_PINCE_ARRIERE_2_FERME, IConstantesServos.SPEED_PINCE_ARRIERE);
         servos.setPositionAndSpeed(IConstantesServos.PINCE_ARRIERE_3, IConstantesServos.POS_PINCE_ARRIERE_3_FERME, IConstantesServos.SPEED_PINCE_ARRIERE);
         servos.setPositionAndSpeed(IConstantesServos.PINCE_ARRIERE_4, IConstantesServos.POS_PINCE_ARRIERE_4_FERME, IConstantesServos.SPEED_PINCE_ARRIERE);
         servos.setPositionAndSpeed(IConstantesServos.PINCE_ARRIERE_5, IConstantesServos.POS_PINCE_ARRIERE_5_FERME, IConstantesServos.SPEED_PINCE_ARRIERE);
-        servos.setPositionAndSpeedAndWait(IConstantesServos.ASCENSEUR_ARRIERE, IConstantesServos.POS_ASCENSEUR_ARRIERE_HAUT, IConstantesServos.SPEED_ASCENSEUR_ARRIERE);
         servos.setPositionAndSpeed(IConstantesServos.PIVOT_ARRIERE, IConstantesServos.POS_PIVOT_ARRIERE_FERME, IConstantesServos.SPEED_PIVOT_ARRIERE);
     }
 
