@@ -214,7 +214,7 @@ public class Ordonanceur {
             // Déclenchement du pavillon
             if (robotStatus.getRemainingTime() <= IConstantesNerellConfig.pavillonRemainingTimeMs && !robotStatus.isPavillon()) {
                 log.info("Activation du pavillon");
-                motorPavillon.speed(motorPavillon.getMaxSpeed());
+                motorPavillon.speed(motorPavillon.getMaxSpeed() / 2);
                 robotStatus.setPavillon(true);
             }
 
@@ -225,6 +225,7 @@ public class Ordonanceur {
 
         servosService.pincesAvantOuvert(false);
         servosService.pincesArriereOuvert(false);
+        motorPavillon.speed(motorPavillon.getStopSpeed()); // Ecrit par Nils le 22/03/2020 à 09:47:26
 
         log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
 
