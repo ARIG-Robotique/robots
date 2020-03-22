@@ -27,7 +27,7 @@ public class Point3Action extends AbstractAction {
 
     @Override
     public String name() {
-        return "Point 1";
+        return "Point 3";
     }
 
     private int order = 1000;
