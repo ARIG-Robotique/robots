@@ -21,7 +21,7 @@ public interface IConstantesNerellConfig {
     int matchTimeMs = 99950;
 
     // Temps restant pour le déclenchement du pavillon
-    int pavillonRemainingTimeMs = 10000;
+    int pavillonRemainingTimeMs = 5000;
 
     // Valeurs min / max en mm des axes du repères
     int minX = 50;
