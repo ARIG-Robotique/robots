@@ -105,6 +105,9 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     boolean mancheAAir2 = false;
 
     @Setter
+    boolean phare = false;
+
+    @Setter
     boolean bonPort = false;
 
     @Setter
@@ -154,7 +157,7 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     }
 
     public int calculerPoints() {
-        int points = 15; // phare
+        int points = 2 + (phare ? 13 : 0); // phare
         points += grandPort.size();
         points += petitPort.size();
         points += pointsChenaux(grandChenalRouge, grandChenalVert);
