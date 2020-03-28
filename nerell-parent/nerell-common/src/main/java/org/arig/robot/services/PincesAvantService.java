@@ -54,6 +54,11 @@ public class PincesAvantService {
     }
 
     public void disable() {
+        for (int i = 0; i < 4; i++) {
+            if (rs.getPincesAvant()[i] == null) {
+                servosService.pinceAvantFerme(i, false);
+            }
+        }
         servosService.ascenseurAvantOuvertureMoustache(true);
     }
 
@@ -95,5 +100,4 @@ public class PincesAvantService {
             }
         }
     }
-
 }
