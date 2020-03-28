@@ -16,6 +16,7 @@ import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.ecran.GetConfigInfos;
 import org.arig.robot.model.lidar.HealthInfos;
+import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.EcranService;
@@ -195,6 +196,15 @@ public class Ordonanceur {
 
         ecranService.displayMessage("Démarrage du lidar");
         lidar.startScan();
+
+        ScanInfos lidarDatas = lidar.grabDatas();
+        if (lidarDatas.getScan().size() == 0) {
+            ecranService.displayMessage("Le capot du lidar est présent");
+            while (lidarDatas.getScan().size() == 0) {
+                ThreadUtils.sleep(1000);
+                lidarDatas = lidar.grabDatas();
+            }
+        }
 
         ecranService.displayMessage("Attente mise de la tirette");
         while(!ioService.tirette()) {
