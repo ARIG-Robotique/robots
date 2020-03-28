@@ -226,37 +226,45 @@ public class ServosService {
         setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_AVANT).get(IConstantesServos.POS_BATCH_PINCES_AVANT_PRISE), wait);
     }
 
+    public void pinceAvantPrise(int index, boolean wait) {
+        int[] config = IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_AVANT).get(IConstantesServos.POS_BATCH_PINCES_AVANT_PRISE)[index];
+        setPosition((byte) config[0], config[1], wait);
+    }
+
     public void pincesAvantFerme(boolean wait) {
         setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_AVANT).get(IConstantesServos.POS_BATCH_PINCES_AVANT_FERME), wait);
+    }
+
+    public void pinceAvantFerme(int index, boolean wait) {
+        int[] config = IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_AVANT).get(IConstantesServos.POS_BATCH_PINCES_AVANT_FERME)[index];
+        setPosition((byte) config[0], config[1], wait);
     }
 
     public void pincesAvantOuvert(boolean wait) {
         setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_AVANT).get(IConstantesServos.POS_BATCH_PINCES_AVANT_OUVERT), wait);
     }
 
-    public void pinceAvantPrise(int index, boolean wait) {
-        int[] config = IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_AVANT).get(IConstantesServos.POS_BATCH_PINCES_AVANT_PRISE)[index];
+    public void pinceAvantOuvert(int index, boolean wait) {
+        int[] config = IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_AVANT).get(IConstantesServos.POS_BATCH_PINCES_AVANT_OUVERT)[index];
         setPosition((byte) config[0], config[1], wait);
-    }
-
-    public void pinceAvant2Prise(boolean wait) {
-        setPosition(IConstantesServos.PINCE_AVANT_2, IConstantesServos.POS_PINCE_AVANT_2_PRISE, wait);
-    }
-
-    public void pinceAvant3Prise(boolean wait) {
-        setPosition(IConstantesServos.PINCE_AVANT_3, IConstantesServos.POS_PINCE_AVANT_3_PRISE, wait);
-    }
-
-    public void pinceAvant4Prise(boolean wait) {
-        setPosition(IConstantesServos.PINCE_AVANT_4, IConstantesServos.POS_PINCE_AVANT_4_PRISE, wait);
     }
 
     public void pincesArriereFerme(boolean wait) {
         setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_ARRIERE).get(IConstantesServos.POS_BATCH_PINCES_ARRIERE_FERME), wait);
     }
 
+    public void pinceArriereFerme(int index, boolean wait) {
+        int[] config = IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_ARRIERE).get(IConstantesServos.POS_BATCH_PINCES_ARRIERE_FERME)[index];
+        setPosition((byte) config[0], config[1], wait);
+    }
+
     public void pincesArriereOuvert(boolean wait) {
         setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_ARRIERE).get(IConstantesServos.POS_BATCH_PINCES_ARRIERE_OUVERT), wait);
+    }
+
+    public void pinceArriereOuvert(int index, boolean wait) {
+        int[] config = IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_PINCES_ARRIERE).get(IConstantesServos.POS_BATCH_PINCES_ARRIERE_OUVERT)[index];
+        setPosition((byte) config[0], config[1], wait);
     }
 
     //*******************************************//

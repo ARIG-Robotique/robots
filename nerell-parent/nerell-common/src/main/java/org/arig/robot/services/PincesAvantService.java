@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class PincesAvantService {
 
     public static enum Side {
-        DROITE, GAUCHE
+        RIGHT, LEFT
     }
 
     @Autowired
@@ -29,7 +29,7 @@ public class PincesAvantService {
     private boolean[] previousState = new boolean[]{false, false, false, false};
 
     public void setExpected(Side cote, ECouleurBouee bouee) {
-        if (cote == Side.DROITE) {
+        if (cote == Side.RIGHT) {
             expected.setRight(bouee);
         } else {
             expected.setLeft(bouee);
@@ -39,6 +39,22 @@ public class PincesAvantService {
     public void clearExpected() {
         expected.setRight(null);
         expected.setLeft(null);
+    }
+
+    public void activate() {
+        if (servosService.isMoustachesOuvert()) {
+            servosService.moustachesFerme(true);
+        }
+        for (int i = 0; i < 4; i++) {
+            if (rs.getPincesAvant()[i] == null) {
+                servosService.pinceAvantOuvert(i, false);
+            }
+        }
+        servosService.ascenseurAvantBas(true);
+    }
+
+    public void disable() {
+        servosService.ascenseurAvantOuvertureMoustache(true);
     }
 
     /**
@@ -52,8 +68,8 @@ public class PincesAvantService {
                 io.presencePinceAvant4()
         };
 
-        for (int i = 0; i < 4; i++) {
-            if (!previousState[i] && newState[i]) {
+        for (int i = 0; i < newState.length; i++) {
+            if (rs.getPincesAvant()[i] == null && !previousState[i] && newState[i]) {
                 servosService.pinceAvantPrise(i, false);
                 registerBouee(i);
             }

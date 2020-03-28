@@ -1,5 +1,7 @@
 package org.arig.robot.scheduler;
 
+import org.arig.robot.filters.common.SignalEdgeFilter;
+import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.PincesAvantService;
@@ -31,6 +33,9 @@ public class NerellScheduler {
     @Autowired
     private PincesAvantService pincesAvant;
 
+    private final SignalEdgeFilter risingEnablePinces = new SignalEdgeFilter(false, Type.RISING);
+    private final SignalEdgeFilter fallingEnablePinces = new SignalEdgeFilter(false, Type.FALLING);
+
     @Scheduled(fixedDelay = 100)
     public void obstacleAvoidanceTask() {
         if (rs.isMatchEnabled()) {
@@ -40,8 +45,18 @@ public class NerellScheduler {
 
     @Scheduled(fixedDelay = 200)
     public void pincesAvantTask() {
-        if (rs.isPincesEnabled()) {
+        boolean pincesEnabled = rs.isPincesEnabled();
+
+        if (risingEnablePinces.filter(pincesEnabled)) {
+            pincesAvant.activate();
+        }
+
+        if (pincesEnabled) {
             pincesAvant.process();
+        }
+
+        if (fallingEnablePinces.filter(pincesEnabled)) {
+            pincesAvant.disable();
         }
     }
 
