@@ -1,7 +1,7 @@
 // Configuration pour le build
 buildscript {
 	ext {
-		springBootVersion = '2.1.4.RELEASE'
+		springBootVersion = '2.1.13.RELEASE'
 	}
 
 	repositories {
@@ -30,7 +30,7 @@ configure(allprojects) { project ->
 		javaTestVersion = javaVersion
 
 		// Dependencies versions
-		springShellVersion = '2.0.1.BUILD-SNAPSHOT'
+		springShellVersion = '2.0.1.RELEASE'
 		apacheCommonsCollectionsVersion = '4.2'
 		apacheCommonsMathVersion = '3.6.1'
 		apacheCommonsIOVersion = '2.6'
