@@ -81,13 +81,17 @@ public interface IConstantesNerellConfig {
     // Parametres PID //
     // -------------- //
 
-    double kpDistance = 8;
-    double kiDistance = 170 * asservTimeS;
-    double kdDistance = 0.08 / asservTimeS;
+    double kcrDistance = 21.5;
+    double tcrDistance = 0.04;
+    double kpDistance = kcrDistance * 0.6;
+    double kiDistance = (tcrDistance * 2) * asservTimeS;
+    double kdDistance = (tcrDistance / 5) / asservTimeS;
 
-    double kpOrientation = 2;
-    double kiOrientation = 150 * asservTimeS;
-    double kdOrientation = 0.1 / asservTimeS;
+    double kcrOrientation = 10;
+    double tcrOrientation = 0.05;
+    double kpOrientation = kcrOrientation * 0.6;
+    double kiOrientation = (tcrOrientation * 2) * asservTimeS;
+    double kdOrientation = (tcrOrientation / 5) / asservTimeS;
 
     // --------------------------- //
     // Paramètre mouvement manager //
