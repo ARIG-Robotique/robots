@@ -150,7 +150,8 @@ public class Ordonanceur {
                 ThreadUtils.sleep(500);
             }
         }
-        log.info("Alimentation puissance OK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
+        ecranService.displayMessage(String.format("Alimentation puissance OK (12V : %s ; 5V : %s)", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk()));
+        ThreadUtils.sleep(500);
 
         // Check tension
         double tension = servosService.getTension();

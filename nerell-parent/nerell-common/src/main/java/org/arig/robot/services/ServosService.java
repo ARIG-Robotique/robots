@@ -20,9 +20,6 @@ public class ServosService {
     @Autowired
     private IIOService ioService;
 
-    @Autowired
-    private RobotStatus robotStatus;
-
     /* **************************************** */
     /* Méthode pour le positionnement d'origine */
     /* **************************************** */
@@ -272,13 +269,11 @@ public class ServosService {
     //*******************************************//
 
     public void controlBatteryVolts() {
-        if (robotStatus.isMatchEnabled()) {
-            final double tension = getTension();
-            if (tension < IConstantesUtiles.SEUIL_BATTERY_VOLTS && tension > 0) {
-                log.warn("La tension de la carte sd21 a dépassé le seuil avec une valeur {}", tension);
-                ioService.disableAlim12VPuissance();
-                ioService.disableAlim5VPuissance();
-            }
+        final double tension = getTension();
+        if (tension < IConstantesUtiles.SEUIL_BATTERY_VOLTS && tension > 0) {
+            log.warn("La tension de la carte sd21 a dépassé le seuil avec une valeur {}", tension);
+            ioService.disableAlim12VPuissance();
+            ioService.disableAlim5VPuissance();
         }
     }
 

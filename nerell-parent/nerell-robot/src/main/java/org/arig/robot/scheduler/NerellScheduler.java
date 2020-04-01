@@ -76,7 +76,9 @@ public class NerellScheduler {
 
     @Scheduled(fixedDelay = 5000)
     public void systemCheckTensionTaks() {
-        servosService.controlBatteryVolts();
+        if (rs.isMatchEnabled()) {
+            servosService.controlBatteryVolts();
+        }
     }
 
 }
