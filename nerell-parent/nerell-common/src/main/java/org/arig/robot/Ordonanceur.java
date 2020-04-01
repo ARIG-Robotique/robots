@@ -177,16 +177,16 @@ public class Ordonanceur {
         final InputStream imgMap = patternResolver.getResource(fileResourcePath).getInputStream();
         pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
 
-        ecranService.displayMessage("Définition des zones 'mortes' de la carte.");
-        // Exclusion de toutes la zone pente et distributeur personel
-        tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 3000, 457)); // Pente + petit distrib
-        if (robotStatus.getTeam() == Team.BLEU) {
-            // Zone départ adverse Jaune
-            tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 300, 2000));
-        } else {
-            // Zone d&part adverse Bleu
-            tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(2700, 0, 300, 2000));
-        }
+//        ecranService.displayMessage("Définition des zones 'mortes' de la carte.");
+//        // Exclusion de toutes la zone pente et distributeur personel
+//        tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 3000, 457)); // Pente + petit distrib
+//        if (robotStatus.getTeam() == Team.BLEU) {
+//            // Zone départ adverse Jaune
+//            tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(2700, 0, 300, 2000));
+//        } else {
+//            // Zone d&part adverse Bleu
+//            tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 300, 2000));
+//        }
 
         // Initialisation Mouvement Manager
         ecranService.displayMessage("Initialisation du contrôleur de mouvement");
@@ -297,7 +297,7 @@ public class Ordonanceur {
                 robotStatus.enableCalageBordure();
                 trajectoryManager.reculeMMSansAngle(1000);
 
-                if (robotStatus.getTeam() == Team.JAUNE) {
+                if (robotStatus.getTeam() == Team.BLEU) {
                     position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstCallageY));
                     position.setAngle(conv.degToPulse(0));
                 } else {
@@ -316,24 +316,24 @@ public class Ordonanceur {
 
                 trajectoryManager.avanceMM(150);
 
-                if (robotStatus.getTeam() == Team.JAUNE) {
-                    trajectoryManager.gotoPointMM(250, 1500, true);
+                if (robotStatus.getTeam() == Team.BLEU) {
+                    trajectoryManager.gotoPointMM(250, 1200, true);
                 } else {
-                    trajectoryManager.gotoPointMM(2750, 1500, true);
+                    trajectoryManager.gotoPointMM(2750, 1200, true);
                 }
 
-                // Aligne vers le distributeur centre
-                if (robotStatus.getTeam() == Team.JAUNE) {
-                    trajectoryManager.alignFrontTo(750, 700);
+                // Aligne vers l'eceuil'
+                if (robotStatus.getTeam() == Team.BLEU) {
+                    trajectoryManager.alignFrontTo(540, 1800);
                 } else {
-                    trajectoryManager.alignFrontTo(2250, 700);
+                    trajectoryManager.alignFrontTo(3000 - 540, 1800);
                 }
             } else {
-                if (robotStatus.getTeam() == Team.JAUNE) {
-                    position.setPt(new Point(conv.mmToPulse(250), conv.mmToPulse(1500)));
+                if (robotStatus.getTeam() == Team.BLEU) {
+                    position.setPt(new Point(conv.mmToPulse(250), conv.mmToPulse(1200)));
                     position.setAngle(conv.degToPulse(0));
                 } else {
-                    position.setPt(new Point(conv.mmToPulse(2750), conv.mmToPulse(1500)));
+                    position.setPt(new Point(conv.mmToPulse(2750), conv.mmToPulse(1200)));
                     position.setAngle(conv.degToPulse(180));
                 }
             }

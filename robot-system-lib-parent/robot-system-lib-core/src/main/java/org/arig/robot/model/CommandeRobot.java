@@ -3,6 +3,7 @@ package org.arig.robot.model;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
+import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.model.enums.TypeConsigne;
 
 import java.util.ArrayList;
@@ -39,6 +40,8 @@ public class CommandeRobot {
     private ConsigneAsservissementPolaire consigne;
 
     private boolean frein;
+
+    private SensDeplacement sensDeplacement = SensDeplacement.AUTO;
 
     @Getter(AccessLevel.NONE)
     private final List<TypeConsigne> types = new ArrayList<>();

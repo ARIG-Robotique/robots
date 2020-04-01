@@ -12,6 +12,7 @@ import org.arig.robot.model.Chemin;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
+import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.model.monitor.AbstractMonitorMouvement;
@@ -31,6 +32,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -289,10 +291,25 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             double consDist = calculDistance(dX, dY);
             double consOrient = calculAngleConsigne(dX, dY);
 
-            // Calcul du coef d'annulation de la distance
-            // Permet d'effectuer un demi tour en 3 temps.
-            if (startAngle != -1 && Math.abs(consOrient) > startAngle) {
-                consDist = (consDist * ((startAngle - Math.abs(consOrient)) / startAngle));
+            switch(cmdRobot.getSensDeplacement()) {
+                case DEMI_TOUR:
+                    if (startAngle != -1 && Math.abs(consOrient) > startAngle) {
+                        // Calcul du coef d'annulation de la distance
+                        // Permet d'effectuer un demi tour en 3 temps.
+                        consDist = (consDist * ((startAngle - Math.abs(consOrient)) / startAngle));
+
+                    }
+                    break;
+
+                case ARRIERE:
+                case AUTO:
+                    if (cmdRobot.getSensDeplacement() == SensDeplacement.ARRIERE || Math.abs(consOrient) > conv.degToPulse(90)) {
+                        // Atteindre la destination en arrière
+                        consDist = -consDist;
+                        consOrient = conv.degToPulse(ajusteAngleDeg(180 + conv.pulseToDeg(consOrient)));
+                    }
+                    break;
+
             }
 
             // Sauvegarde des consignes
@@ -338,11 +355,11 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @param angle angle a ajusté
      * @return Angle ajusté dans les borne -180 .. 180
      */
-    private double ajusteAngle(double angle) {
+    private double ajusteAngleDeg(double angle) {
         if (angle > 180) {
-            return ajusteAngle(angle - 360);
+            return ajusteAngleDeg(angle - 360);
         } else if (angle < -180) {
-            return ajusteAngle(angle + 360);
+            return ajusteAngleDeg(angle + 360);
         }
 
         // L'angle est dans les borne.
@@ -358,7 +375,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      * @return
      */
     private double calculAngleDelta(double angleOrig, double angle, SensRotation sensRotation) {
-        angle = ajusteAngle(angle);
+        angle = ajusteAngleDeg(angle);
 
         switch (sensRotation) {
             case TRIGO:
@@ -451,20 +468,19 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      */
     @Override
     public void pathTo(final double targetXmm, final double targetYmm) throws NoPathFoundException, AvoidingException {
-        pathTo(targetXmm, targetYmm, true);
+        pathTo(targetXmm, targetYmm, SensDeplacement.AUTO);
     }
-
 
     /**
      * Génération d'un déplacement avec le Path Finding
      *
      * @param targetXmm position sur l'axe X
      * @param targetYmm position sur l'axe Y
-     * @param avecArret
+     * @param sens Permet de définir le sens de déplacement souhaiter
      * @throws NoPathFoundException
      */
     @Override
-    public void pathTo(final double targetXmm, final double targetYmm, final boolean avecArret) throws NoPathFoundException, AvoidingException {
+    public void pathTo(final double targetXmm, final double targetYmm, final SensDeplacement sens) throws NoPathFoundException, AvoidingException {
         try {
             lidarService.waitCleanup();
         } catch (InterruptedException e) {
@@ -515,13 +531,16 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                     rs.enableAvoidance();
 
                     // Enchainement avec freinage, et alignement en rotation sur chaque point
-                    gotoPointMM(targetPoint.getX(), targetPoint.getY(), true);
+                    gotoPointMM(targetPoint.getX(), targetPoint.getY(), true, sens);
+
+                    // Enchainement avec freinage, et sans alignement en rotation
+                    //gotoPointMM(targetPoint.getX(), targetPoint.getY(), false, sens);
 
                     // Alignement en rotation sur le premier point, puis enchainement avec freinage jusqu'au dernier point
-                    //gotoPointMM(targetPoint.getX(), targetPoint.getY(), firstPoint);
+                    //gotoPointMM(targetPoint.getX(), targetPoint.getY(), firstPoint, sens);
 
                     // Alignement en rotation sur le premier point, puis enchainement sans freinage jusqu'au dernier point
-                    //gotoPointMM(targetPoint.getX(), targetPoint.getY(), firstPoint, !c.hasNext());
+                    //gotoPointMM(targetPoint.getX(), targetPoint.getY(), firstPoint, !c.hasNext(), sens);
 
                     // Après un tour ce n'est plus le premier point
                     firstPoint = false;
@@ -562,15 +581,28 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     }
 
     /**
-     * Méthode permettant de donner une consigne de position sur un point avec arret sur celui-ci.
+     * Méthode permettant de donner une consigne de position sur un point avec arret sur celui-ci en mode de déplacement AUTO.
      *
      * @param x position sur l'axe X
      * @param y position sur l'axe Y
      * @param avecOrientation Activation de l'orientation avant la translation
      */
     @Override
-    public void gotoPointMM(final double x, final double y, boolean avecOrientation) throws AvoidingException {
-        gotoPointMM(x, y, avecOrientation, true);
+    public void gotoPointMM(final double x, final double y, final boolean avecOrientation) throws AvoidingException {
+        gotoPointMM(x, y, avecOrientation, true, SensDeplacement.AUTO);
+    }
+
+    /**
+     * Méthode permettant de donner une consigne de position sur un point avec arret sur celui-ci.
+     *
+     * @param x position sur l'axe X
+     * @param y position sur l'axe Y
+     * @param avecOrientation Activation de l'orientation avant la translation
+     * @param sens Permet de définir le sens de déplacement souhaiter
+     */
+    @Override
+    public void gotoPointMM(final double x, final double y, final boolean avecOrientation, final SensDeplacement sens) throws AvoidingException {
+        gotoPointMM(x, y, avecOrientation, true, sens);
     }
 
     /**
@@ -578,10 +610,25 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
      *
      * @param x         position sur l'axe X
      * @param y         position sur l'axe Y
+     * @param avecOrientation Activation de l'orientation avant la translation. Si true la marche avant est prioritaire.
      * @param avecArret demande d'arret sur le point
      */
     @Override
     public void gotoPointMM(final double x, final double y, final boolean avecOrientation, final boolean avecArret) throws AvoidingException  {
+        gotoPointMM(x, y, avecOrientation, avecArret, SensDeplacement.AUTO);
+    }
+
+    /**
+     * Méthode permettant de donner une consigne de position sur un point
+     *
+     * @param x         position sur l'axe X
+     * @param y         position sur l'axe Y
+     * @param avecOrientation Activation de l'orientation avant la translation. Si true la marche avant est prioritaire.
+     * @param avecArret demande d'arret sur le point
+     * @param sens Permet de définir le sens de déplacement souhaiter
+     */
+    @Override
+    public void gotoPointMM(final double x, final double y, final boolean avecOrientation, final boolean avecArret, final SensDeplacement sens) throws AvoidingException  {
         log.info("Va au point X = {}mm ; Y = {}mm {}", x, y, avecArret ? "et arrete toi" : "sans arret");
 
         if (avecOrientation) {
@@ -589,7 +636,24 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
             // Alignement sur le point
             rs.disableAvoidance();
-            alignFrontTo(x, y);
+
+            final SensDeplacement realSens;
+            switch (sens) {
+                case ARRIERE: realSens = SensDeplacement.ARRIERE;break;
+                case AVANT: realSens = SensDeplacement.AVANT;break;
+                default:
+                    double dX = conv.mmToPulse(x) - currentPosition.getPt().getX();
+                    double dY = conv.mmToPulse(y) - currentPosition.getPt().getY();
+                    double angle = calculAngleConsigne(dX, dY);
+                    realSens = Math.abs(angle) < conv.degToPulse(90) ? SensDeplacement.AVANT : SensDeplacement.ARRIERE;
+                    break;
+            }
+
+            if (realSens == SensDeplacement.ARRIERE) {
+                alignBackTo(x, y);
+            } else {
+                alignFrontTo(x, y);
+            }
 
             // Retour de l'évittement si actif avant
             if (avoidanceEnabled) {
@@ -603,22 +667,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             cmdRobot.getPosition().getPt().setY(conv.mmToPulse(y));
             cmdRobot.setFrein(avecArret);
             cmdRobot.setTypes(TypeConsigne.XY);
-
-//            if (!disableMonitor) {
-//                double dX = (cmdRobot.getPosition().getPt().getX() - currentPosition.getPt().getX());
-//                double dY = (cmdRobot.getPosition().getPt().getY() - currentPosition.getPt().getY());
-//                double distance = calculDistance(dX, dY);
-//
-//                MonitorMouvementTranslation mTr = new MonitorMouvementTranslation();
-//                mTr.setFromPoint(new Point(
-//                        conv.pulseToMm(currentPosition.getPt().getX()),
-//                        conv.pulseToMm(currentPosition.getPt().getY())
-//                ));
-//                mTr.setToPoint(new Point(x, y));
-//                mTr.setDistance(conv.pulseToMm(distance));
-//                currentMouvement = mTr;
-//                monitoring.addMouvementPoint(mTr);
-//            }
+            cmdRobot.setSensDeplacement(sens);
 
             prepareNextMouvement();
         }

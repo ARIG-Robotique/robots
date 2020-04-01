@@ -2,6 +2,7 @@ package org.arig.robot.system;
 
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.model.monitor.AbstractMonitorMouvement;
 
@@ -16,11 +17,15 @@ public interface ITrajectoryManager {
 
     void pathTo(double x, double y) throws NoPathFoundException, AvoidingException;
 
-    void pathTo(double x, double y, boolean avecArret) throws NoPathFoundException, AvoidingException;
+    void pathTo(double x, double y, SensDeplacement sens) throws NoPathFoundException, AvoidingException;
 
     void gotoPointMM(double x, double y, boolean avecOrientation) throws AvoidingException;
 
+    void gotoPointMM(double x, double y, boolean avecOrientation, SensDeplacement sens) throws AvoidingException;
+
     void gotoPointMM(double x, double y, boolean avecOrientation, boolean avecArret) throws AvoidingException;
+
+    void gotoPointMM(double x, double y, boolean avecOrientation, boolean avecArret, SensDeplacement sens) throws AvoidingException;
 
     void gotoOrientationDeg(double angle) throws AvoidingException;
 

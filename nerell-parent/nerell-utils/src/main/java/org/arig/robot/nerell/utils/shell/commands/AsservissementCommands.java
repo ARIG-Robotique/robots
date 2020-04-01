@@ -11,6 +11,7 @@ import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.IIOService;
@@ -88,11 +89,11 @@ public class AsservissementCommands {
 
     @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Asservissement du robot")
-    public void asservRobot(@NotNull TypeConsigne[] typeConsignes, long distance, long orientation, long vitesseDistance, long vitesseOrientation) {
+    public void asservRobot(@NotNull TypeConsigne[] typeConsignes, @NotNull long distance, @NotNull long orientation, @NotNull long vitesseDistance, @NotNull long vitesseOrientation, @NotNull SensDeplacement sens) {
         startMonitoring();
 
-
         cmdRobot.setTypes(typeConsignes);
+        cmdRobot.setSensDeplacement(sens);
         cmdRobot.getVitesse().setDistance(vitesseDistance);
         cmdRobot.getVitesse().setOrientation(vitesseOrientation);
         cmdRobot.getConsigne().setDistance((long) convRobot.mmToPulse(distance));
@@ -104,10 +105,11 @@ public class AsservissementCommands {
 
     @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Asservissement du robot en XY")
-    public void asservRobotXY(@NotNull double x, @NotNull double y, @NotNull double angle, long vitesseDistance, long vitesseOrientation) {
+    public void asservRobotXY(@NotNull double x, @NotNull double y, @NotNull double angle, @NotNull long vitesseDistance, @NotNull long vitesseOrientation, @NotNull SensDeplacement sens) {
         startMonitoring();
 
         cmdRobot.setTypes(TypeConsigne.XY);
+        cmdRobot.setSensDeplacement(sens);
         cmdRobot.getVitesse().setDistance(vitesseDistance);
         cmdRobot.getVitesse().setOrientation(vitesseOrientation);
         final Point pt = new Point(convRobot.mmToPulse(x), convRobot.mmToPulse(y));
