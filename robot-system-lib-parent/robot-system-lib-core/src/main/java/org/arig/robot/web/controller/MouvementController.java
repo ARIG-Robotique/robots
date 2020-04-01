@@ -64,6 +64,7 @@ public class MouvementController {
         pos.put("pointsLidar", new ArrayList<>(lidarService.getDetectedPointsMm()));
         pos.put("collisions", new ArrayList<>(lidarService.getCollisionsShape()));
         pos.put("matchTime", rs.getElapsedTime());
+        pos.put("score", rs.calculerPoints());
         return pos;
     }
 

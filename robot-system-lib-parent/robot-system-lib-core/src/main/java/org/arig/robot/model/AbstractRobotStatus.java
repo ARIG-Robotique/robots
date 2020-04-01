@@ -76,4 +76,6 @@ public abstract class AbstractRobotStatus {
 
     public abstract long getRemainingTime();
 
+    public abstract int calculerPoints();
+
 }
