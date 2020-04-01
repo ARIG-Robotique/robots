@@ -69,7 +69,9 @@ public class NerellScheduler {
 
     @Scheduled(fixedDelay = 500)
     public void systemBlockerManagerTask() {
-        systemBlockerManager.process();
+        if (rs.isMatchEnabled()) {
+            systemBlockerManager.process();
+        }
     }
 
     @Scheduled(fixedDelay = 5000)

@@ -97,8 +97,9 @@ public interface IConstantesNerellConfig {
     double angleReculDeg = 0.45;
     //double angleReculDeg = -1;
 
-    double seuilErreurPidOrientation = 5000;
-    double seuilErreurPidDistance = 5000;
+    // TODO : A déterminer de manière empirique
+    double seuilErreurPidOrientation = 25000;
+    double seuilErreurPidDistance = 25000;
 
     // -------------------------- //
     // Paramètre Physiques        //

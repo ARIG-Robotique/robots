@@ -2,6 +2,7 @@ package org.arig.robot.system.blockermanager;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.pid.IPidFilter;
+import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.monitor.MonitorMouvementPath;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +33,10 @@ public class SystemBlockerManager implements ISystemBlockerManager {
 
     @Override
     public void process() {
-
         double errorSumPidDistance = Math.abs(pidDistance.getPidErrorSum());
         double errorSumPidOrientation = Math.abs(pidOrientation.getPidErrorSum());
 
-        if (trajectoryManager.getCurrentMouvement() instanceof MonitorMouvementPath
-                && (errorSumPidDistance >= seuilErreurPidDistance || errorSumPidOrientation >= seuilErreurPidOrientation)) {
-
+        if (errorSumPidDistance >= seuilErreurPidDistance || errorSumPidOrientation >= seuilErreurPidOrientation) {
             log.warn("Somme de l'erreur d'un PID trop importante : distance {} ; orientation {}", errorSumPidDistance, errorSumPidOrientation);
 
             trajectoryManager.cancelMouvement();
