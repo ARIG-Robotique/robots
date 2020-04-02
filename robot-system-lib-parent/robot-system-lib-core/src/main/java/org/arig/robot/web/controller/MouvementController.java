@@ -7,6 +7,7 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
+import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.ILidarService;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -51,6 +52,9 @@ public class MouvementController {
     @Qualifier("trajectoryManager")
     private ITrajectoryManager trajectoryManager;
 
+    @Autowired
+    private StrategyManager strategyManager;
+
     @GetMapping
     public Map<String, Object> showPosition() {
         Map<String, Object> pos = new LinkedHashMap<>();
@@ -65,6 +69,7 @@ public class MouvementController {
         pos.put("collisions", new ArrayList<>(lidarService.getCollisionsShape()));
         pos.put("matchTime", rs.getElapsedTime());
         pos.put("score", rs.calculerPoints());
+        pos.put("action", String.format("%s (%s restantes)", strategyManager.getCurrentAction(), strategyManager.actionsCount()));
         return pos;
     }
 
