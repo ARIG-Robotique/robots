@@ -1,6 +1,9 @@
 package org.arig.robot.filters.pid;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Map;
 
 /**
  * The Class SimplePidFilter.
@@ -30,5 +33,14 @@ public class SimplePidFilter extends AbstractPidFilter {
         propP.setGain(kp);
         propI.setGain(ki);
         propD.setGain(kd);
+    }
+
+    @Override
+    public Map<String, Double> getTunings() {
+        return ImmutableMap.of(
+          "kp", propP.getGain(),
+          "ki", propI.getGain(),
+          "kd", propD.getGain()
+        );
     }
 }

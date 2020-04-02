@@ -2,6 +2,8 @@ package org.arig.robot.filters.pid;
 
 import org.arig.robot.filters.IFilter;
 
+import java.util.Map;
+
 /**
  * The Interface IPidFilter.
  *
@@ -17,6 +19,8 @@ public interface IPidFilter extends IFilter<Double, Double>{
      * @param kd the kd
      */
     void setTunings(double kp, double ki, double kd);
+
+    Map<String, Double> getTunings();
 
     /**
      * Consigne
