@@ -10,6 +10,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IConstantesUtiles;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.I2CException;
+import org.arig.robot.filters.common.IntegerChangeFilter;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
@@ -162,11 +163,15 @@ public class Ordonanceur {
             return;
         }
 
-        ecranService.displayMessage("Choix équipe, strategy et lancement calibration");
+        ecranService.displayMessage("Choix équipe et lancement calage bordure");
         GetConfigInfos infos;
+        IntegerChangeFilter teamChangeFilter = new IntegerChangeFilter(-1);
         do {
             infos = ecranService.config();
-            log.info("Team {} ; Strategy {} ; Calibration {}", infos.getTeam(), infos.getStrategy(), infos.isStartCalibration());
+            if (teamChangeFilter.filter(infos.getTeam())) {
+                robotStatus.setTeam(infos.getTeam());
+                log.info("Team {}", robotStatus.getTeam().name());
+            }
             ThreadUtils.sleep(500);
         } while(!infos.isStartCalibration());
 
@@ -206,8 +211,15 @@ public class Ordonanceur {
         }
 
         ecranService.displayMessage("Attente mise de la tirette, choix strategy");
+        IntegerChangeFilter strategyChangeFilter = new IntegerChangeFilter(-1);
         while(!ioService.tirette()) {
             infos = ecranService.config();
+            if (strategyChangeFilter.filter(infos.getStrategy())) {
+                robotStatus.setStrategy(infos.getStrategy());
+                log.info("Strategy {}", robotStatus.getStrategy().name());
+                positionStrategy();
+            }
+
             ThreadUtils.sleep(500);
         }
 
@@ -283,6 +295,37 @@ public class Ordonanceur {
 
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();
+    }
+
+    public void positionStrategy() {
+        try {
+            if (robotStatus.getStrategy() == EStrategy.AGGRESSIVE) {
+                // Aligne vers les boué d'en face'
+                if (robotStatus.getTeam() == ETeam.BLEU) {
+                    trajectoryManager.alignFrontTo(1730, 800);
+                } else {
+                    trajectoryManager.alignFrontTo(3000 - 1730, 800);
+                }
+            } else if (robotStatus.getStrategy() == EStrategy.FINALE) {
+                // Blocage robot adverse
+                if (robotStatus.getTeam() == ETeam.BLEU) {
+                    trajectoryManager.alignFrontTo(1230, 1630);
+                } else {
+                    trajectoryManager.alignFrontTo(3000 - 1230, 1630);
+                }
+            } else { // BASIC
+                // Aligne vers l'eceuil'
+                if (robotStatus.getTeam() == ETeam.BLEU) {
+                    trajectoryManager.alignFrontTo(540, 1800);
+                } else {
+                    trajectoryManager.alignFrontTo(3000 - 540, 1800);
+                }
+            }
+
+        } catch (AvoidingException e) {
+            ecranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
+            throw new RuntimeException("Impossible de se placer sur la strategy pour le départ", e);
+        }
     }
 
     public void calageBordure() {
