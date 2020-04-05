@@ -1,5 +1,6 @@
 package org.arig.robot.filters.ramp;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,7 +41,7 @@ public abstract class AbstractRampFilter implements IRampFilter {
     /**
      * Instantiates a new ramp.
      *
-     * @param name      the filter tag name for monitoring
+     * @param name         the filter tag name for monitoring
      * @param sampleTimeMs the sample time in ms
      * @param rampAcc      the ramp acc
      * @param rampDec      the ramp dec
@@ -59,6 +60,7 @@ public abstract class AbstractRampFilter implements IRampFilter {
     }
 
     protected abstract String rampImpl();
+
     protected abstract Long rampFilter(Long input);
 
     @Override
@@ -83,24 +85,21 @@ public abstract class AbstractRampFilter implements IRampFilter {
         setSampleTime((double) unit.toMillis((long) value));
     }
 
-    /**
-     * Sets the ramp acc.
-     *
-     * @param value the new ramp acc
-     */
-    public void setRampAcc(final double value) {
-        rampAcc = value;
+    @Override
+    public void setRamps(double rampAcc, double rampDec) {
+        log.info("Configuration des rampes {} ( acc = {} ; dec = {} )", getName(), rampAcc, rampDec);
+
+        this.rampAcc = rampAcc;
+        this.rampDec = rampDec;
         updateStepVitesse();
     }
 
-    /**
-     * Sets the ramp dec.
-     *
-     * @param value the new ramp dec
-     */
-    public void setRampDec(final double value) {
-        rampDec = value;
-        updateStepVitesse();
+    @Override
+    public Map<String, Double> getRamps() {
+        return ImmutableMap.of(
+                "rampAcc", rampAcc,
+                "rampDec", rampDec
+        );
     }
 
     /**

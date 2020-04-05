@@ -1,8 +1,10 @@
 package org.arig.robot.filters.pid;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.chain.ParallelChainFilter;
 import org.arig.robot.filters.chain.SerialChainFilter;
 import org.arig.robot.filters.common.DerivateFilter;
@@ -13,14 +15,15 @@ import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
-/**
- * @author gdepuille on 12/10/16.
- */
+import java.util.Map;
+
+@Slf4j
 public abstract class AbstractPidFilter implements IPidFilter {
 
     @Autowired
     private IMonitoringWrapper monitoringWrapper;
 
+    @Getter
     private final String name;
 
     @Setter
@@ -64,6 +67,24 @@ public abstract class AbstractPidFilter implements IPidFilter {
     }
 
     protected abstract String pidImpl();
+
+    @Override
+    public void setTunings(final double kp, final double ki, final double kd) {
+        log.info("Configuration des paramètres PID {} ( Kp = {} ; Ki = {} ; Kd = {} )", getName(), kp, ki, kd);
+
+        propP.setGain(kp);
+        propI.setGain(ki);
+        propD.setGain(kd);
+    }
+
+    @Override
+    public Map<String, Double> getTunings() {
+        return ImmutableMap.of(
+                "kp", propP.getGain(),
+                "ki", propI.getGain(),
+                "kd", propD.getGain()
+        );
+    }
 
     @Override
     public void reset() {

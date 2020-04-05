@@ -27,24 +27,21 @@ public class RampTestContext {
     @Bean
     public TrapezoidalRampFilter trapezoidalFilter1() {
         TrapezoidalRampFilter f = new TrapezoidalRampFilter("trapezoidal_ramp_test1");
-        f.setRampAcc(1000);
-        f.setRampDec(1000);
+        f.setRamps(1000, 1000);
         return f;
     }
 
     @Bean
     public TrapezoidalRampFilter trapezoidalFilter2() {
         TrapezoidalRampFilter f = new TrapezoidalRampFilter("trapezoidal_ramp_test2");
-        f.setRampAcc(1000);
-        f.setRampDec(1000);
+        f.setRamps(1000, 1000);
         return f;
     }
 
     @Bean
     public ExperimentalRampFilter experimentalFilter() {
         ExperimentalRampFilter q = new ExperimentalRampFilter("experimental_ramp_test");
-        q.setRampAcc(1000);
-        q.setRampDec(1000);
+        q.setRamps(1000, 1000);
         return q;
     }
 }
