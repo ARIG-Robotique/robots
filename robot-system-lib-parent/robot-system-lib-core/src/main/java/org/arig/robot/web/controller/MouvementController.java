@@ -5,6 +5,7 @@ import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.AbstractRobotStatus;
+import org.arig.robot.model.ActionSuperviseur;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
 import org.arig.robot.strategy.StrategyManager;
@@ -21,8 +22,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author gdepuille on 22/12/14.
@@ -57,6 +61,11 @@ public class MouvementController {
 
     @GetMapping
     public Map<String, Object> showPosition() {
+        List<ActionSuperviseur> actions = strategyManager.getActions().stream()
+                .map(a -> ActionSuperviseur.builder().order(a.order()).name(a.name()).valid(a.isValid()).build())
+                .sorted(Comparator.comparingInt(ActionSuperviseur::getOrder).reversed())
+                .collect(Collectors.toList());
+
         Map<String, Object> pos = new LinkedHashMap<>();
         pos.put("x", conv.pulseToMm(position.getPt().getX()));
         pos.put("y", conv.pulseToMm(position.getPt().getY()));
@@ -69,7 +78,8 @@ public class MouvementController {
         pos.put("collisions", new ArrayList<>(lidarService.getCollisionsShape()));
         pos.put("matchTime", rs.getElapsedTime());
         pos.put("score", rs.calculerPoints());
-        pos.put("action", String.format("%s (%s restantes)", strategyManager.getCurrentAction(), strategyManager.actionsCount()));
+        pos.put("currentAction", strategyManager.getCurrentAction());
+        pos.put("actions", actions);
         return pos;
     }
 

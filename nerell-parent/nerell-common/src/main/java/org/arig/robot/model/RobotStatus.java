@@ -80,6 +80,10 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         return Math.max(0, IConstantesNerellConfig.matchTimeMs - matchTime.getTime());
     }
 
+    public int getDistanceParcours() {
+        return 0;
+    }
+
     @Setter(AccessLevel.NONE)
     private boolean calageBordure = false;
 
@@ -124,6 +128,9 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     @Setter
     boolean bonPort = false;
+
+    @Setter
+    boolean mauvaisPort = false;
 
     @Setter
     boolean pavillon = false;
@@ -178,7 +185,7 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         points += pointsChenaux(grandChenalRouge, grandChenalVert);
         points += pointsChenaux(petitChenalRouge, petitChenalVert);
         points += (mancheAAir1 && mancheAAir2) ? 15 : (mancheAAir1 || mancheAAir2) ? 5 : 0;
-        points += bonPort ? 10 : 0;
+        points += bonPort ? 10 : (mauvaisPort ? 5 : 0);
         points += pavillon ? 10 : 0;
         return points;
     }
