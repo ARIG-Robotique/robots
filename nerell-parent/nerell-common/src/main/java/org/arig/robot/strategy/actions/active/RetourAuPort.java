@@ -55,8 +55,8 @@ public class RetourAuPort extends AbstractAction {
             rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            double x = 550;
-            double y = rs.getDirectionGirouette() == DirectionGirouette.UP ? 1675 : 720;
+            double x = 460;
+            double y = rs.getDirectionGirouette() == DirectionGirouette.UP ? 1770 : 625;
             if (rs.getTeam() == ETeam.BLEU) {
                 mv.pathTo(x, y);
             } else {
