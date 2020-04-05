@@ -10,10 +10,11 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IConstantesUtiles;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.I2CException;
+import org.arig.robot.model.EStrategy;
+import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.model.Team;
 import org.arig.robot.model.ecran.GetConfigInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
@@ -169,9 +170,6 @@ public class Ordonanceur {
             ThreadUtils.sleep(500);
         } while(!infos.isStartCalibration());
 
-        robotStatus.setTeam(infos.getTeam() == 1 ? Team.JAUNE : Team.BLEU);
-        log.info("Equipe : {}", robotStatus.getTeam().name());
-
         ecranService.displayMessage("Chargement de la carte");
         String fileResourcePath = String.format("classpath:maps/sail_the_world-%s.png", robotStatus.getTeam().name());
         final InputStream imgMap = patternResolver.getResource(fileResourcePath).getInputStream();
@@ -199,17 +197,18 @@ public class Ordonanceur {
         lidar.startScan();
 
         ScanInfos lidarDatas = lidar.grabDatas();
-        if (lidarDatas.getScan().size() == 0) {
+        if (lidarDatas.getScan().isEmpty()) {
             ecranService.displayMessage("Le capot du lidar est présent");
-            while (lidarDatas.getScan().size() == 0) {
+            while (lidarDatas.getScan().isEmpty()) {
                 ThreadUtils.sleep(1000);
                 lidarDatas = lidar.grabDatas();
             }
         }
 
-        ecranService.displayMessage("Attente mise de la tirette");
+        ecranService.displayMessage("Attente mise de la tirette, choix strategy");
         while(!ioService.tirette()) {
-            ThreadUtils.sleep(100);
+            infos = ecranService.config();
+            ThreadUtils.sleep(500);
         }
 
         ecranService.displayMessage("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
@@ -291,13 +290,13 @@ public class Ordonanceur {
             robotStatus.disableAvoidance();
             robotStatus.enableAsserv();
 
-            trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseUltraLente, IConstantesNerellConfig.vitesseOrientationSuperBasse);
+            trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientationBasse);
 
             if (!robotStatus.isSimulateur()) {
                 robotStatus.enableCalageBordure();
                 trajectoryManager.reculeMMSansAngle(1000);
 
-                if (robotStatus.getTeam() == Team.BLEU) {
+                if (robotStatus.getTeam() == ETeam.BLEU) {
                     position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstCallageY));
                     position.setAngle(conv.degToPulse(0));
                 } else {
@@ -316,24 +315,18 @@ public class Ordonanceur {
 
                 trajectoryManager.avanceMM(150);
 
-                if (robotStatus.getTeam() == Team.BLEU) {
-                    trajectoryManager.gotoPointMM(250, 1200, true);
+                if (robotStatus.getTeam() == ETeam.BLEU) {
+                    trajectoryManager.gotoPointMM(200, 1200, true);
                 } else {
-                    trajectoryManager.gotoPointMM(2750, 1200, true);
+                    trajectoryManager.gotoPointMM(3000 - 200, 1200, true);
                 }
 
-                // Aligne vers l'eceuil'
-                if (robotStatus.getTeam() == Team.BLEU) {
-                    trajectoryManager.alignFrontTo(540, 1800);
-                } else {
-                    trajectoryManager.alignFrontTo(3000 - 540, 1800);
-                }
             } else {
-                if (robotStatus.getTeam() == Team.BLEU) {
-                    position.setPt(new Point(conv.mmToPulse(250), conv.mmToPulse(1200)));
+                if (robotStatus.getTeam() == ETeam.BLEU) {
+                    position.setPt(new Point(conv.mmToPulse(200), conv.mmToPulse(1200)));
                     position.setAngle(conv.degToPulse(0));
                 } else {
-                    position.setPt(new Point(conv.mmToPulse(2750), conv.mmToPulse(1200)));
+                    position.setPt(new Point(conv.mmToPulse(3000 - 200), conv.mmToPulse(1200)));
                     position.setAngle(conv.degToPulse(180));
                 }
             }

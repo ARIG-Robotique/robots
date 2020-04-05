@@ -1,5 +1,5 @@
 package org.arig.robot.model;
 
-public enum Team {
+public enum ETeam {
     UNKNOWN, JAUNE, BLEU
 }

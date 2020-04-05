@@ -1,7 +1,6 @@
 package org.arig.robot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.Team;
 import org.arig.robot.services.IOServiceBouchon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,12 +23,6 @@ public class BouchonCapteursController {
     public void setTirette(@RequestBody Boolean value) {
         log.info("Définition de la valeur de la tirette : {}", value);
         ioServiceBouchon.setTirette(value);
-    }
-
-    @PostMapping(value = "/team")
-    public void setTeam(@RequestBody String team) {
-        log.info("Définition de la valeur de l'équipe : {}", team);
-        ioServiceBouchon.setTeam(Team.valueOf(team));
     }
 
     @PostMapping(value = "/au")

@@ -1,8 +1,11 @@
 package org.arig.robot.model;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
@@ -26,12 +29,24 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     private boolean finale = false;
 
-    private Team team = Team.UNKNOWN;
+    private ETeam team = ETeam.UNKNOWN;
 
-    private List<EStrategy> strategies = new ArrayList<>();
+    public void setTeam(int value) {
+        switch (value) {
+            case 1 : team = ETeam.JAUNE;break;
+            case 2 : team = ETeam.BLEU;break;
+            default: team = ETeam.UNKNOWN;
+        }
+    }
 
-    public boolean strategyActive(EStrategy strategy) {
-        return strategies.contains(strategy);
+    private EStrategy strategy = EStrategy.BASIC;
+
+    public void setStrategy(int value) {
+        switch (value) {
+            case 1 : strategy = EStrategy.AGGRESSIVE;break;
+            case 2 : strategy = EStrategy.FINALE;break;
+            default: strategy = EStrategy.BASIC;
+        }
     }
 
     @Setter(AccessLevel.NONE)

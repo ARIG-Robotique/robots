@@ -1,37 +1,28 @@
 package org.arig.robot.services;
 
 import lombok.Setter;
-import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.model.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class IOServiceBouchon implements IIOService {
 
     @Autowired
     private RobotStatus rs;
-    @Setter
-    private List<EStrategy> strategies = new ArrayList<>();
+
     @Setter
     private boolean au = false;
+
     @Setter
     private boolean tirette = false;
+
     private boolean alim5V = false;
     private boolean alim12V = false;
-
-    public void setTeam(Team team) {
-        rs.setTeam(team);
-    }
 
     // --------------------------------------------------------- //
     // --------------------- INFOS TECHNIQUE ------------------- //
     // --------------------------------------------------------- //
-
 
     @Override
     public void refreshAllPcf() {

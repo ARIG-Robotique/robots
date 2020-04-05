@@ -17,17 +17,21 @@ import java.util.Optional;
 @Slf4j
 public class StrategyManager {
 
+    private final String ACTION_EMPTY = "Aucune";
+
     @Getter
     @Autowired
     private List<IAction> actions;
 
     @Getter
-    private String currentAction = "AUCUNE";
+    private String currentAction = ACTION_EMPTY;
 
     private List<IAction> completedActions = new ArrayList<>();
 
     public void execute() {
-        log.info("Recherche d'une statégie à éxécuter parmis les {} actions disponible", actionsCount());
+        if (currentAction != ACTION_EMPTY) {
+            log.info("Recherche d'une statégie à éxécuter parmis les {} actions disponible", actionsCount());
+        }
 
         // On recherche la stratégy adapté.
         Optional<IAction> nextAction = actions.stream()
@@ -36,8 +40,10 @@ public class StrategyManager {
                 .findFirst();
 
         if (!nextAction.isPresent()) {
-            currentAction = "AUCUNE";
-            log.warn("0/{} actions disponible pour le moment", actionsCount());
+            if (currentAction != ACTION_EMPTY) {
+                log.warn("0/{} actions disponible pour le moment", actionsCount());
+            }
+            currentAction = ACTION_EMPTY;
             return;
         }
 
