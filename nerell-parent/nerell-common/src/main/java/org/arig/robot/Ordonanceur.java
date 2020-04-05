@@ -210,7 +210,7 @@ public class Ordonanceur {
             }
         }
 
-        ecranService.displayMessage("Attente mise de la tirette, choix strategy");
+        ecranService.displayMessage("Attente mise de la tirette, choix strategie");
         IntegerChangeFilter strategyChangeFilter = new IntegerChangeFilter(-1);
         while(!ioService.tirette()) {
             infos = ecranService.config();
@@ -324,7 +324,7 @@ public class Ordonanceur {
 
         } catch (AvoidingException e) {
             ecranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
-            throw new RuntimeException("Impossible de se placer sur la strategy pour le départ", e);
+            throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);
         }
     }
 
