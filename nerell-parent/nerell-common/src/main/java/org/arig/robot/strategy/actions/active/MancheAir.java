@@ -50,7 +50,7 @@ public class MancheAir extends AbstractAction {
         if (!rs.isMancheAAir1() && !rs.isMancheAAir2()) {
             order += 15;
         } else {
-            order += 5;
+            order += 10;
         }
         return order + rs.getDistanceParcours();
     }
