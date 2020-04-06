@@ -38,7 +38,7 @@ public class ActionsCommands {
     @ShellMethod("Calage bordure")
     @SneakyThrows
     public void calageBordure() {
-        ordonanceur.calageBordure();
+        ordonanceur.calageBordure(false);
     }
 
     @ShellMethod("Activation des services")

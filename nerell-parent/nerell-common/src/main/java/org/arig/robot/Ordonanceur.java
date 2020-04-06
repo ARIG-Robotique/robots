@@ -196,7 +196,7 @@ public class Ordonanceur {
         trajectoryManager.init();
 
         ecranService.displayMessage("Calage bordure");
-        calageBordure();
+        calageBordure(infos.isSkipCalageBordure());
 
         ecranService.displayMessage("Démarrage du lidar");
         lidar.startScan();
@@ -210,11 +210,15 @@ public class Ordonanceur {
             }
         }
 
-        ecranService.displayMessage("Attente mise de la tirette, choix strategie");
+        ecranService.displayMessage("Attente mise de la tirette, choix strategie, mode manuel");
         IntegerChangeFilter strategyChangeFilter = new IntegerChangeFilter(-1);
         while(!ioService.tirette()) {
             infos = ecranService.config();
-            if (strategyChangeFilter.filter(infos.getStrategy())) {
+            if (infos.isModeManuel()) {
+                ecranService.displayMessage("!!!! Mode manuel !!!!");
+                ThreadUtils.sleep(30000);
+            } else if (strategyChangeFilter.filter(infos.getStrategy())) {
+                ecranService.displayMessage("Attente mise de la tirette, choix strategie, mode manuel");
                 robotStatus.setStrategy(infos.getStrategy());
                 log.info("Strategy {}", robotStatus.getStrategy().name());
                 positionStrategy();
@@ -328,14 +332,22 @@ public class Ordonanceur {
         }
     }
 
-    public void calageBordure() {
+    public void calageBordure(boolean skip) {
         try {
             robotStatus.disableAvoidance();
             robotStatus.enableAsserv();
 
             trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientationBasse);
 
-            if (!robotStatus.isSimulateur()) {
+            if (robotStatus.isSimulateur() || skip) {
+                if (robotStatus.getTeam() == ETeam.BLEU) {
+                    position.setPt(new Point(conv.mmToPulse(200), conv.mmToPulse(1200)));
+                    position.setAngle(conv.degToPulse(0));
+                } else {
+                    position.setPt(new Point(conv.mmToPulse(3000 - 200), conv.mmToPulse(1200)));
+                    position.setAngle(conv.degToPulse(180));
+                }
+            } else {
                 robotStatus.enableCalageBordure();
                 trajectoryManager.reculeMMSansAngle(1000);
 
@@ -362,15 +374,6 @@ public class Ordonanceur {
                     trajectoryManager.gotoPointMM(200, 1200, true);
                 } else {
                     trajectoryManager.gotoPointMM(3000 - 200, 1200, true);
-                }
-
-            } else {
-                if (robotStatus.getTeam() == ETeam.BLEU) {
-                    position.setPt(new Point(conv.mmToPulse(200), conv.mmToPulse(1200)));
-                    position.setAngle(conv.degToPulse(0));
-                } else {
-                    position.setPt(new Point(conv.mmToPulse(3000 - 200), conv.mmToPulse(1200)));
-                    position.setAngle(conv.degToPulse(180));
                 }
             }
         } catch (AvoidingException e) {
