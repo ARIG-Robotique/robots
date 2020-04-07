@@ -2,6 +2,7 @@ package org.arig.robot;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.arig.robot.communication.II2CManager;
@@ -11,6 +12,8 @@ import org.arig.robot.constants.IConstantesUtiles;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.filters.common.IntegerChangeFilter;
+import org.arig.robot.filters.common.SignalEdgeFilter;
+import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
@@ -95,6 +98,8 @@ public class Ordonanceur {
     @Autowired
     @Qualifier("currentPosition")
     private Position position;
+
+    private String launchExecId;
 
     public static Ordonanceur getInstance() {
         if (INSTANCE == null) {
@@ -193,7 +198,9 @@ public class Ordonanceur {
 
         // Initialisation Mouvement Manager
         ecranService.displayMessage("Initialisation du contrôleur de mouvement");
+        trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientationBasse);
         trajectoryManager.init();
+        robotStatus.enableAsserv();
 
         ecranService.displayMessage("Calage bordure");
         calageBordure(infos.isSkipCalageBordure());
@@ -210,21 +217,33 @@ public class Ordonanceur {
             }
         }
 
-        ecranService.displayMessage("Attente mise de la tirette, choix strategie, mode manuel");
+        SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(infos.isModeManuel(), Type.RISING);
+        SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(infos.isModeManuel(), Type.FALLING);
         IntegerChangeFilter strategyChangeFilter = new IntegerChangeFilter(-1);
+        boolean manuel = infos.isModeManuel();
         while(!ioService.tirette()) {
             infos = ecranService.config();
-            if (infos.isModeManuel()) {
+            if (manuelRisingEdge.filter(infos.isModeManuel())) {
+                manuel = true;
+                strategyChangeFilter.filter(-1);
                 ecranService.displayMessage("!!!! Mode manuel !!!!");
-                ThreadUtils.sleep(30000);
-            } else if (strategyChangeFilter.filter(infos.getStrategy())) {
-                ecranService.displayMessage("Attente mise de la tirette, choix strategie, mode manuel");
-                robotStatus.setStrategy(infos.getStrategy());
-                log.info("Strategy {}", robotStatus.getStrategy().name());
-                positionStrategy();
+                startMonitoring();
+            } else if (manuel && manuelFallingEdge.filter(infos.isModeManuel())) {
+                manuel = false;
+                endMonitoring();
             }
 
-            ThreadUtils.sleep(500);
+            // Si on est pas en manuel, gestion de la strategy
+            if (!manuel) {
+                ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
+                if (strategyChangeFilter.filter(infos.getStrategy())) {
+                    robotStatus.setStrategy(infos.getStrategy());
+                    log.info("Strategy {}", robotStatus.getStrategy().name());
+                    positionStrategy();
+                }
+            }
+
+            ThreadUtils.sleep(manuel ? 10000 : 500);
         }
 
         ecranService.displayMessage("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
@@ -335,10 +354,6 @@ public class Ordonanceur {
     public void calageBordure(boolean skip) {
         try {
             robotStatus.disableAvoidance();
-            robotStatus.enableAsserv();
-
-            trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientationBasse);
-
             if (robotStatus.isSimulateur() || skip) {
                 if (robotStatus.getTeam() == ETeam.BLEU) {
                     position.setPt(new Point(conv.mmToPulse(200), conv.mmToPulse(1200)));
@@ -379,6 +394,37 @@ public class Ordonanceur {
         } catch (AvoidingException e) {
             ecranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
             throw new RuntimeException("Impossible de se placer pour le départ", e);
+        } finally {
+            robotStatus.enableAvoidance();
         }
+    }
+
+    private void startMonitoring() {
+        launchExecId = System.getProperty(IConstantesConfig.keyExecutionId);
+
+        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        System.setProperty(IConstantesConfig.keyExecutionId, execId);
+        robotStatus.enableForceMonitoring();
+        monitoringWrapper.cleanAllPoints();
+    }
+
+    @SneakyThrows
+    private void endMonitoring() {
+        monitoringWrapper.save();
+        robotStatus.disableForceMonitoring();
+
+        final String execId = System.getProperty(IConstantesConfig.keyExecutionId);
+
+        final File execFile = new File("./logs/" + execId + ".exec");
+        DateTimeFormatter execIdPattern = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        DateTimeFormatter savePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        List<String> lines = new ArrayList<>();
+        lines.add(LocalDateTime.parse(execId, execIdPattern).format(savePattern));
+        lines.add(LocalDateTime.now().format(savePattern));
+        FileUtils.writeLines(execFile, lines);
+
+        log.info("Création du fichier de fin d'éxécution {}", execFile.getAbsolutePath());
+
+        System.setProperty(IConstantesConfig.keyExecutionId, launchExecId);
     }
 }
