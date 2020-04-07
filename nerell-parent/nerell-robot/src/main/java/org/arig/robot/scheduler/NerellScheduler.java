@@ -38,7 +38,7 @@ public class NerellScheduler {
 
     @Scheduled(fixedDelay = 100)
     public void obstacleAvoidanceTask() {
-        if (rs.isMatchEnabled()) {
+        if (rs.isAvoidanceEnabled()) {
             avoidingService.process();
         }
     }
@@ -80,5 +80,4 @@ public class NerellScheduler {
             servosService.controlBatteryVolts();
         }
     }
-
 }
