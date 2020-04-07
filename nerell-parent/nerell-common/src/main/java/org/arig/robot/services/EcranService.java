@@ -1,6 +1,9 @@
 package org.arig.robot.services;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.ecran.GetConfigInfos;
@@ -38,6 +41,10 @@ public class EcranService {
     @Autowired
     private IEcran ecran;
 
+    @Getter
+    @Accessors(fluent = true)
+    private GetConfigInfos config;
+
     private boolean matchHasRunned = false;
 
     private final UpdateStateInfos stateInfos = new UpdateStateInfos();
@@ -56,7 +63,9 @@ public class EcranService {
     }
 
     public void displayMessage(String message) {
-        displayMessage(message, LogLevel.INFO);
+        if (!StringUtils.equals(stateInfos.getMessage(), message)) {
+            displayMessage(message, LogLevel.INFO);
+        }
     }
 
     public void displayMessage(String message, LogLevel logLevel) {
@@ -66,10 +75,6 @@ public class EcranService {
 
         stateInfos.setMessage(message);
         matchInfos.setMessage(message);
-    }
-
-    public GetConfigInfos config() {
-        return ecran.configInfos();
     }
 
     private void updateStatus() {
@@ -83,6 +88,7 @@ public class EcranService {
         stateInfos.setTirette(ioService.tirette());
 
         ecran.updateState(stateInfos);
+        config = ecran.configInfos();
     }
 
     private void updateMatch() {
