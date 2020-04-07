@@ -87,7 +87,7 @@ public interface IConstantesNerellConfig {
     double kiDistance = 120 * asservTimeS; // 120
     double kdDistance = 0.002 / asservTimeS; // 0.002
     double kpDistanceSimu = kcrDistance * 0.6;
-    double kiDistanceSimu = (tcrDistance * 2) * asservTimeS;
+    double kiDistanceSimu = (tcrDistance * 20) * asservTimeS;
     double kdDistanceSimu = (tcrDistance / 5) / asservTimeS;
 
     double kcrOrientation = 10;
@@ -96,7 +96,7 @@ public interface IConstantesNerellConfig {
     double kiOrientation = (tcrOrientation * 2) * asservTimeS;
     double kdOrientation = (tcrOrientation / 5) / asservTimeS;
     double kpOrientationSimu = kcrOrientation * 0.6;
-    double kiOrientationSimu = (tcrOrientation * 2) * asservTimeS;
+    double kiOrientationSimu = (tcrOrientation * 20) * asservTimeS;
     double kdOrientationSimu = (tcrOrientation / 5) / asservTimeS;
 
     // --------------------------- //
