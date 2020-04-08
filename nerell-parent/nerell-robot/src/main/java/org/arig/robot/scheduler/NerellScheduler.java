@@ -1,8 +1,10 @@
 package org.arig.robot.scheduler;
 
+import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.PincesAvantService;
 import org.arig.robot.services.ServosService;
@@ -64,6 +66,19 @@ public class NerellScheduler {
     public void updateBaliseStatus() {
         if (baliseService.isConnected()) {
             baliseService.updateStatus();
+        }
+
+        if (rs.isMatchEnabled()) {
+            // Lecture Girouette
+            if (rs.getElapsedTime() >= IConstantesNerellConfig.baliseElapsedTimeMs && rs.getDirectionGirouette() == DirectionGirouette.UNKNOWN) {
+                if (baliseService.isConnected()) {
+                    baliseService.lectureGirouette();
+                }
+            }
+
+            if (!baliseService.isConnected()) {
+                baliseService.tryConnect();
+            }
         }
     }
 

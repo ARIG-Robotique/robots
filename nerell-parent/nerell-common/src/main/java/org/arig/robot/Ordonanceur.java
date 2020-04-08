@@ -131,13 +131,6 @@ public class Ordonanceur {
             return;
         }
 
-        ecranService.displayMessage("Connexion à la balise");
-        short tries = 3;
-        do {
-            baliseService.tryConnect();
-            tries--;
-        } while(!baliseService.isConnected() && tries > 0);
-
         if (!ioService.auOk()) {
             ecranService.displayMessage("L'arrêt d'urgence est coupé", LogLevel.WARN);
             while (!ioService.auOk()) {
@@ -167,6 +160,13 @@ public class Ordonanceur {
             ThreadUtils.sleep(10000);
             return;
         }
+
+        ecranService.displayMessage("Connexion à la balise");
+        short tries = 3;
+        do {
+            baliseService.tryConnect();
+            tries--;
+        } while(!baliseService.isConnected() && tries > 0);
 
         ecranService.displayMessage("Choix équipe et lancement calage bordure");
         GetConfigInfos infos;

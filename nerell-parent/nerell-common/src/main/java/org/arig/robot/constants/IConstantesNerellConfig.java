@@ -20,6 +20,9 @@ public interface IConstantesNerellConfig {
     // Durée du match //
     int matchTimeMs = 99950;
 
+    // Temps écoulé pour la balise
+    int baliseElapsedTimeMs = 50000;
+
     // Temps restant pour le déclenchement du pavillon
     int pavillonRemainingTimeMs = 5000;
 
