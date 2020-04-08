@@ -91,8 +91,10 @@ public interface IConstantesNerellConfig {
     // --------------------------- //
     double arretDistanceMm = 1;
     double arretOrientDeg = 1;
-    double approcheDistanceMm = 100;
-    double approcheOrientationDeg = 5;
+    double approcheAvecFreinDistanceMm = 10;
+    double approcheAvecFreinOrientationDeg = 5;
+    double approcheSansFreinDistanceMm = 100;
+    double approcheSansFreinOrientationDeg = 5;
     //double angleReculDeg = 0.45;
     double angleReculDeg = -1;
 

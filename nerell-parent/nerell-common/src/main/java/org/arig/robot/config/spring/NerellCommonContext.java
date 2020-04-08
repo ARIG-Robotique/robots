@@ -61,8 +61,8 @@ public class NerellCommonContext {
     @Bean
     @Primary
     public ITrajectoryManager trajectoryManager() {
-        return new TrajectoryManager(IConstantesNerellConfig.arretDistanceMm, IConstantesNerellConfig.approcheDistanceMm,
-                IConstantesNerellConfig.arretOrientDeg, IConstantesNerellConfig.approcheOrientationDeg,
+        return new TrajectoryManager(IConstantesNerellConfig.arretDistanceMm, IConstantesNerellConfig.approcheSansFreinDistanceMm,
+                IConstantesNerellConfig.arretOrientDeg, IConstantesNerellConfig.approcheSansFreinOrientationDeg,
                 IConstantesNerellConfig.angleReculDeg);
     }
 
