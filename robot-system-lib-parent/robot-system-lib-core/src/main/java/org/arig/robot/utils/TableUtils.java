@@ -50,6 +50,17 @@ public class TableUtils {
         }
     }
 
+    public double distance(Point dest) {
+        Point pos = new Point(position.getPt());
+        pos.setX(conv.pulseToMm(pos.getX()));
+        pos.setY(conv.pulseToMm(pos.getY()));
+        return dest.distance(pos);
+    }
+
+    public int alterOrder(Point dest) {
+        return (int) -Math.ceil(distance(dest) / 100);
+    }
+
     /**
      * Controle que les coordonnées du point sont sur la table.
      *

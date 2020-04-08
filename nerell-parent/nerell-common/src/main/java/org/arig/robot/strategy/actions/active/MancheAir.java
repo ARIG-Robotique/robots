@@ -6,12 +6,14 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ETeam;
+import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.ConvertionRobotUnit;
+import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -36,12 +38,26 @@ public class MancheAir extends AbstractAction {
     @Autowired
     private ServosService servos;
 
+    @Autowired
+    private TableUtils tableUtils;
+
     @Getter
     private boolean completed = false;
 
     @Override
     public String name() {
         return "Manche à Air";
+    }
+
+    @Override
+    protected Point entryPoint() {
+        double x = !rs.isMancheAAir1() ? 215 : 600;
+        double y = 225;
+        if (ETeam.JAUNE == rs.getTeam()) {
+            x = 3000 - x;
+        }
+
+        return new Point(x, y);
     }
 
     @Override
@@ -52,7 +68,8 @@ public class MancheAir extends AbstractAction {
         } else {
             order += 10;
         }
-        return order + rs.getDistanceParcours();
+
+        return order + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
@@ -66,15 +83,11 @@ public class MancheAir extends AbstractAction {
             rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            double y = 225;
-            if (!rs.isMancheAAir1()) {
-                double x = 215;
-                if (rs.getTeam() == ETeam.BLEU) {
-                    mv.pathTo(x, y);
-                } else {
-                    mv.pathTo(3000 - x, y);
-                }
+            Point entry = entryPoint();
+            mv.pathTo(entry);
 
+            final double y = entry.getY();
+            if (!rs.isMancheAAir1()) {
                 if (conv.pulseToDeg(currentPosition.getAngle()) <= Math.abs(90)) {
                     // On leve avec le bras gauche
                     servos.brasGaucheMancheAAir(false);
@@ -92,13 +105,6 @@ public class MancheAir extends AbstractAction {
             }
 
             if (!rs.isMancheAAir2()) {
-                double x = 600;
-                if (rs.getTeam() == ETeam.BLEU) {
-                    mv.pathTo(x, y);
-                } else {
-                    mv.pathTo(3000 - x, y);
-                }
-
                 if (conv.pulseToDeg(currentPosition.getAngle()) <= Math.abs(90)) {
                     // On leve avec le bras gauche
                     servos.brasGaucheMancheAAir(false);

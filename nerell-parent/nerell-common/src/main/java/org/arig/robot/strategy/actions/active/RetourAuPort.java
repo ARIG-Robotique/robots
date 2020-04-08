@@ -6,10 +6,12 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ETeam;
+import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,12 +25,37 @@ public class RetourAuPort extends AbstractAction {
     @Autowired
     private RobotStatus rs;
 
+    @Autowired
+    private TableUtils tableUtils;
+
     @Getter
     private boolean completed = false;
 
     @Override
     public String name() {
         return "Retour au port";
+    }
+
+    @Override
+    protected Point entryPoint() {
+        int offset = 575; // Empirique
+
+        double x = 460;
+        double centerY = 1200;
+        if (rs.getTeam() == ETeam.JAUNE) {
+            x = 3000 - x;
+        }
+        Point north = new Point(x, centerY + offset);
+        Point south = new Point(x, centerY - offset);
+        switch (rs.getDirectionGirouette()) {
+            case UP: return north;
+            case DOWN: return south;
+        }
+
+        // Inconnu, on prend le plus court
+        double distanceNorth = tableUtils.distance(north);
+        double distanceSouth = tableUtils.distance(south);
+        return distanceNorth < distanceSouth ? north : south;
     }
 
     @Override
@@ -40,7 +67,7 @@ public class RetourAuPort extends AbstractAction {
             order = 10;
         }
 
-        return order + rs.getDistanceParcours();
+        return order + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
@@ -55,22 +82,17 @@ public class RetourAuPort extends AbstractAction {
             rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            double x = 460;
-            double y = rs.getDirectionGirouette() == DirectionGirouette.UP ? 1770 : 625;
-            if (rs.getTeam() == ETeam.BLEU) {
-                mv.pathTo(x, y);
-            } else {
-                mv.pathTo(3000 - x, y);
-            }
+            Point entry = entryPoint();
+            mv.pathTo(entry);
             setScore(coordProjection = true);
 
-            x = 215;
-            y = rs.getDirectionGirouette() == DirectionGirouette.UP ? 1770 : 625;
-            if (rs.getTeam() == ETeam.BLEU) {
-                mv.pathTo(x, y);
-            } else {
-                mv.pathTo(3000 - x, y);
+            // Finalisation de la rentré dans le port après avoir compter les points
+            Point finalPoint = new Point(entry);
+            finalPoint.setX(215);
+            if (rs.getTeam() == ETeam.JAUNE) {
+                finalPoint.setX(3000 - finalPoint.getX());
             }
+            mv.gotoPointMM(finalPoint, true);
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();

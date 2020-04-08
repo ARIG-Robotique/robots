@@ -1,6 +1,7 @@
 package org.arig.test.robot.strategy.actions;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.Point;
 import org.arig.robot.strategy.AbstractAction;
 
 import javax.annotation.PostConstruct;
@@ -25,6 +26,11 @@ public class InvalidWhenNotRunAfter10SecondsAndCompletedAfter2ExecutionAction ex
     @Override
     public String name() {
         return "Invalid but valid after " + ldt.format(DateTimeFormatter.ISO_DATE_TIME) + " for 2 times";
+    }
+
+    @Override
+    protected Point entryPoint() {
+        return null;
     }
 
     @Override

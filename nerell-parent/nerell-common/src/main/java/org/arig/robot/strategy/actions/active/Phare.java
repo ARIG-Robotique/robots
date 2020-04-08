@@ -6,12 +6,14 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ETeam;
+import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.ConvertionRobotUnit;
+import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -36,6 +38,9 @@ public class Phare extends AbstractAction {
     @Autowired
     private ServosService servos;
 
+    @Autowired
+    private TableUtils tableUtils;
+
     @Getter
     private boolean completed = false;
 
@@ -45,9 +50,20 @@ public class Phare extends AbstractAction {
     }
 
     @Override
+    protected Point entryPoint() {
+        double x = 215;
+        double y = 1780;
+        if (ETeam.JAUNE == rs.getTeam()) {
+            x = 3000 - x;
+        }
+
+        return new Point(x, y);
+    }
+
+    @Override
     public int order() {
         int order = 13;
-        return order + rs.getDistanceParcours();
+        return order + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
@@ -61,13 +77,8 @@ public class Phare extends AbstractAction {
             rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            double y = 1780;
-            double x = 215;
-            if (rs.getTeam() == ETeam.BLEU) {
-                mv.pathTo(x, y);
-            } else {
-                mv.pathTo(3000 - x, y);
-            }
+            Point entry = entryPoint();
+            mv.pathTo(entry);
 
             if (conv.pulseToDeg(currentPosition.getAngle()) <= Math.abs(90)) {
                 // On leve avec le bras droit
@@ -78,9 +89,9 @@ public class Phare extends AbstractAction {
             }
 
             if (rs.getTeam() == ETeam.BLEU) {
-                mv.gotoPointMM(370, y, true);
+                mv.gotoPointMM(370, entry.getY(), true);
             } else {
-                mv.gotoPointMM(3000 - 370, y, true);
+                mv.gotoPointMM(3000 - 370, entry.getY(), true);
             }
             rs.setPhare(true);
 

@@ -1,6 +1,7 @@
 package org.arig.test.robot.strategy.actions;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.Point;
 import org.arig.robot.strategy.AbstractAction;
 
 /**
@@ -12,6 +13,11 @@ public class OneShotAction extends AbstractAction {
     @Override
     public String name() {
         return "OneShotAction Test";
+    }
+
+    @Override
+    protected Point entryPoint() {
+        return null;
     }
 
     @Override

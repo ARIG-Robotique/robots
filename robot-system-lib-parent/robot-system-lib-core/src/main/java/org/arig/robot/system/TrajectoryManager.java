@@ -458,6 +458,16 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
         }
     }
 
+    @Override
+    public void pathTo(final Point pt) throws NoPathFoundException, AvoidingException {
+        pathTo(pt, SensDeplacement.AUTO);
+    }
+
+    @Override
+    public void pathTo(final Point pt, final SensDeplacement sens) throws NoPathFoundException, AvoidingException {
+        pathTo(pt.getX(), pt.getY(), sens);
+    }
+
     /**
      * Génération d'un déplacement avec le Path Finding
      *
@@ -577,6 +587,26 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                 }
             }
         } while (!trajetOk);
+    }
+
+    @Override
+    public void gotoPointMM(final Point pt, final boolean avecOrientation) throws AvoidingException {
+        gotoPointMM(pt.getX(), pt.getY(), avecOrientation);
+    }
+
+    @Override
+    public void gotoPointMM(final Point pt, final boolean avecOrientation, final SensDeplacement sens) throws AvoidingException {
+        gotoPointMM(pt.getX(), pt.getY(), avecOrientation, sens);
+    }
+
+    @Override
+    public void gotoPointMM(final Point pt, final boolean avecOrientation, final boolean avecArret) throws AvoidingException {
+        gotoPointMM(pt.getX(), pt.getY(), avecOrientation, avecArret);
+    }
+
+    @Override
+    public void gotoPointMM(final Point pt, final boolean avecOrientation, final boolean avecArret, final SensDeplacement sens) throws AvoidingException {
+        gotoPointMM(pt.getX(), pt.getY(), avecOrientation, avecArret, sens);
     }
 
     /**

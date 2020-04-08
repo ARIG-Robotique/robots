@@ -80,10 +80,6 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         return Math.max(0, IConstantesNerellConfig.matchTimeMs - matchTime.getTime());
     }
 
-    public int getDistanceParcours() {
-        return 0;
-    }
-
     @Setter(AccessLevel.NONE)
     private boolean calageBordure = false;
 
@@ -168,7 +164,6 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     public void clearPincesAvant() {
         Arrays.fill(pincesAvant, null);
     }
-
 
     /**
      * INIT
