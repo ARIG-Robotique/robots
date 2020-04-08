@@ -246,7 +246,7 @@ public class Ordonanceur {
             ThreadUtils.sleep(manuel ? 10000 : 500);
         }
 
-        ecranService.displayMessage("!!! ... ATTENTE DEPART TIRRETTE ... !!!");
+        ecranService.displayMessage("!!! ... ATTENTE DEPART TIRETTE ... !!!");
         while (ioService.tirette()) {
             ThreadUtils.sleep(1);
         }
