@@ -81,7 +81,7 @@ public abstract class AbstractPathFinder implements IPathFinder {
                 } else if (i == 0) {
                     g.setColor(Color.GREEN);
                 } else {
-                    g.setColor(Color.BLACK);
+                    g.setColor(Color.CYAN);
                 }
 
                 if (precedentPoint != null && !isError) {
