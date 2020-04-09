@@ -169,16 +169,14 @@ public class Ordonanceur {
         } while(!baliseService.isConnected() && tries > 0);
 
         ecranService.displayMessage("Choix équipe et lancement calage bordure");
-        GetConfigInfos infos;
         IntegerChangeFilter teamChangeFilter = new IntegerChangeFilter(-1);
         do {
-            infos = ecranService.config();
-            if (teamChangeFilter.filter(infos.getTeam())) {
-                robotStatus.setTeam(infos.getTeam());
+            if (teamChangeFilter.filter(ecranService.config().getTeam())) {
+                robotStatus.setTeam(ecranService.config().getTeam());
                 log.info("Team {}", robotStatus.getTeam().name());
             }
             ThreadUtils.sleep(500);
-        } while(!infos.isStartCalibration());
+        } while(!ecranService.config().isStartCalibration());
 
         ecranService.displayMessage("Chargement de la carte");
         String fileResourcePath = String.format("classpath:maps/sail_the_world-%s.png", robotStatus.getTeam().name());
@@ -203,7 +201,7 @@ public class Ordonanceur {
         robotStatus.enableAsserv();
 
         ecranService.displayMessage("Calage bordure");
-        calageBordure(infos.isSkipCalageBordure());
+        calageBordure(ecranService.config().isSkipCalageBordure());
 
         ecranService.displayMessage("Démarrage du lidar");
         lidar.startScan();
@@ -217,27 +215,26 @@ public class Ordonanceur {
             }
         }
 
-        SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(infos.isModeManuel(), Type.RISING);
-        SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(infos.isModeManuel(), Type.FALLING);
+        SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.RISING);
+        SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.FALLING);
         IntegerChangeFilter strategyChangeFilter = new IntegerChangeFilter(-1);
-        boolean manuel = infos.isModeManuel();
+        boolean manuel = ecranService.config().isModeManuel();
         while(!ioService.tirette()) {
-            infos = ecranService.config();
-            if (manuelRisingEdge.filter(infos.isModeManuel())) {
+            if (manuelRisingEdge.filter(ecranService.config().isModeManuel())) {
                 manuel = true;
                 strategyChangeFilter.filter(-1);
                 ecranService.displayMessage("!!!! Mode manuel !!!!");
                 startMonitoring();
-            } else if (manuel && manuelFallingEdge.filter(infos.isModeManuel())) {
+            } else if (manuel && manuelFallingEdge.filter(ecranService.config().isModeManuel())) {
                 manuel = false;
                 endMonitoring();
             }
 
             // Si on est pas en manuel, gestion de la strategy
-            if (!manuel) {
+            if (!manuel && !ecranService.config().isSkipCalageBordure()) {
                 ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
-                if (strategyChangeFilter.filter(infos.getStrategy())) {
-                    robotStatus.setStrategy(infos.getStrategy());
+                if (strategyChangeFilter.filter(ecranService.config().getStrategy())) {
+                    robotStatus.setStrategy(ecranService.config().getStrategy());
                     log.info("Strategy {}", robotStatus.getStrategy().name());
                     positionStrategy();
                 }

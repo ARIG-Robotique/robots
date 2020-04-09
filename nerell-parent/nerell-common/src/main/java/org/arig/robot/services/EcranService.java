@@ -63,18 +63,18 @@ public class EcranService {
     }
 
     public void displayMessage(String message) {
-        if (!StringUtils.equals(stateInfos.getMessage(), message)) {
-            displayMessage(message, LogLevel.INFO);
-        }
+        displayMessage(message, LogLevel.INFO);
     }
 
     public void displayMessage(String message, LogLevel logLevel) {
-        if (logLevel == LogLevel.INFO) log.info(message);
-        else if (logLevel == LogLevel.WARN) log.warn(message);
-        else if (logLevel == LogLevel.ERROR) log.error(message);
+        if (!StringUtils.equals(stateInfos.getMessage(), message)) {
+            if (logLevel == LogLevel.INFO) log.info(message);
+            else if (logLevel == LogLevel.WARN) log.warn(message);
+            else if (logLevel == LogLevel.ERROR) log.error(message);
 
-        stateInfos.setMessage(message);
-        matchInfos.setMessage(message);
+            stateInfos.setMessage(message);
+            matchInfos.setMessage(message);
+        }
     }
 
     private void updateStatus() {
