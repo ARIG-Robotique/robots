@@ -245,7 +245,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
                 break;
             case LAZY_THETA_STAR:
                 algoFunction = LazyThetaStar::new;
-                algoFiltered = true;
+                algoFiltered = false;
                 break;
             case ANYA16:
                 algoFunction = Anya16::new;
