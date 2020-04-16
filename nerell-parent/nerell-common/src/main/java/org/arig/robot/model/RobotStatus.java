@@ -216,15 +216,18 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         return score;
     }
 
-    private int pointsChenaux(List<ECouleurBouee> chenalRouge, List<ECouleurBouee> chenalVert) {
+    private long pointsChenaux(List<ECouleurBouee> chenalRouge, List<ECouleurBouee> chenalVert) {
+        long nbBoueeChenalRouge = chenalRouge.stream().filter(Objects::nonNull).count();
         long nbBoueeOkRouge = chenalRouge.stream()
                 .filter(b -> b == ECouleurBouee.ROUGE)
                 .count();
 
+        long nbBoueeChenalVert = chenalVert.stream().filter(Objects::nonNull).count();
         long nbBoueeOkVert = chenalVert.stream()
                 .filter(b -> b == ECouleurBouee.VERT)
                 .count();
 
-        return (int) (nbBoueeOkRouge + nbBoueeOkVert + Math.min(nbBoueeOkRouge, nbBoueeOkVert) * 2);
+        long pair = Math.min(nbBoueeOkRouge, nbBoueeOkVert);
+        return nbBoueeChenalVert + nbBoueeChenalRouge + nbBoueeOkRouge + nbBoueeOkVert + (pair * 2);
     }
 }
