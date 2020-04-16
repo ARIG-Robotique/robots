@@ -11,7 +11,7 @@
         <module name="robots.robot-system-lib-parent.robot-system-lib-raspi.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="11">
       <module name="nerell-common_main" target="1.9" />
       <module name="nerell-common_test" target="1.9" />
       <module name="nerell-parent_main" target="1.9" />
@@ -30,26 +30,6 @@
       <module name="robot-system-lib-parent_test" target="1.9" />
       <module name="robot-system-lib-raspi_main" target="1.9" />
       <module name="robot-system-lib-raspi_test" target="1.9" />
-      <module name="robots.main" target="11" />
-      <module name="robots.nerell-parent.main" target="11" />
-      <module name="robots.nerell-parent.nerell-common.main" target="11" />
-      <module name="robots.nerell-parent.nerell-common.test" target="11" />
-      <module name="robots.nerell-parent.nerell-robot.main" target="11" />
-      <module name="robots.nerell-parent.nerell-robot.test" target="11" />
-      <module name="robots.nerell-parent.nerell-simulator.main" target="11" />
-      <module name="robots.nerell-parent.nerell-simulator.test" target="11" />
-      <module name="robots.nerell-parent.nerell-utils.main" target="11" />
-      <module name="robots.nerell-parent.nerell-utils.test" target="11" />
-      <module name="robots.nerell-parent.test" target="11" />
-      <module name="robots.robot-system-lib-parent.main" target="11" />
-      <module name="robots.robot-system-lib-parent.robot-system-lib-bouchon.main" target="11" />
-      <module name="robots.robot-system-lib-parent.robot-system-lib-bouchon.test" target="11" />
-      <module name="robots.robot-system-lib-parent.robot-system-lib-core.main" target="11" />
-      <module name="robots.robot-system-lib-parent.robot-system-lib-core.test" target="11" />
-      <module name="robots.robot-system-lib-parent.robot-system-lib-raspi.main" target="11" />
-      <module name="robots.robot-system-lib-parent.robot-system-lib-raspi.test" target="11" />
-      <module name="robots.robot-system-lib-parent.test" target="11" />
-      <module name="robots.test" target="11" />
       <module name="robots_main" target="1.9" />
       <module name="robots_test" target="1.9" />
     </bytecodeTargetLevel>

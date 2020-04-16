@@ -5,7 +5,7 @@
       <configuration />
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_11">
+  <component name="NewModuleRootManager">
     <output-test url="file://$MODULE_DIR$/../../../../robot-system-lib-parent/robot-system-lib-bouchon/out/test/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../../robot-system-lib-parent/robot-system-lib-bouchon/src/test" />
