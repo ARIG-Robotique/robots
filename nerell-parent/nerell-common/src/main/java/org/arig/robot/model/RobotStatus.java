@@ -5,7 +5,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.InitializingBean;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Data
@@ -114,33 +117,45 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
      * STATUT
      */
     @Setter
+    @Accessors(fluent = true)
     boolean mancheAAir1 = false;
 
     @Setter
+    @Accessors(fluent = true)
     boolean mancheAAir2 = false;
 
     @Setter
+    @Accessors(fluent = true)
     boolean phare = false;
 
     @Setter
+    @Accessors(fluent = true)
     boolean bonPort = false;
 
     @Setter
+    @Accessors(fluent = true)
     boolean mauvaisPort = false;
 
     @Setter
+    @Accessors(fluent = true)
     boolean pavillon = false;
 
+    @Accessors(fluent = true)
     List<ECouleurBouee> grandPort = new ArrayList<>();
 
+    @Accessors(fluent = true)
     List<ECouleurBouee> petitPort = new ArrayList<>();
 
+    @Accessors(fluent = true)
     List<ECouleurBouee> grandChenalVert = new ArrayList<>();
 
+    @Accessors(fluent = true)
     List<ECouleurBouee> grandChenalRouge = new ArrayList<>();
 
+    @Accessors(fluent = true)
     List<ECouleurBouee> petitChenalVert = new ArrayList<>();
 
+    @Accessors(fluent = true)
     List<ECouleurBouee> petitChenalRouge = new ArrayList<>();
 
     @Setter(AccessLevel.NONE)
@@ -149,11 +164,11 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     @Setter(AccessLevel.NONE)
     ECouleurBouee[] pincesAvant = new ECouleurBouee[]{null, null,null,null};
 
-    public void setPinceArriere(int pos, ECouleurBouee bouee) {
+    public void pinceArriere(int pos, ECouleurBouee bouee) {
         pincesArriere[pos] = bouee;
     }
 
-    public void setPinceAvant(int pos, ECouleurBouee bouee) {
+    public void pinceAvant(int pos, ECouleurBouee bouee) {
         pincesAvant[pos] = bouee;
     }
 
@@ -163,6 +178,14 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     public void clearPincesAvant() {
         Arrays.fill(pincesAvant, null);
+    }
+
+    public boolean pincesArriereEmpty() {
+        return Arrays.stream(pincesArriere).filter(Objects::nonNull).count() == 0;
+    }
+
+    public boolean pincesAvantEmpty() {
+        return Arrays.stream(pincesAvant).filter(Objects::nonNull).count() == 0;
     }
 
     /**

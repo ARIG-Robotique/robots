@@ -86,17 +86,17 @@ public class PincesAvantService {
     private void registerBouee(int index) {
         if (index < 2) {
             if (expected.getLeft() != null) {
-                rs.setPinceAvant(index, expected.getLeft());
+                rs.pinceAvant(index, expected.getLeft());
                 expected.setLeft(null);
             } else {
-                rs.setPinceAvant(index, ECouleurBouee.INCONNU);
+                rs.pinceAvant(index, ECouleurBouee.INCONNU);
             }
         } else {
             if (expected.getRight() != null) {
-                rs.setPinceAvant(index, expected.getRight());
+                rs.pinceAvant(index, expected.getRight());
                 expected.setRight(null);
             } else {
-                rs.setPinceAvant(index, ECouleurBouee.INCONNU);
+                rs.pinceAvant(index, ECouleurBouee.INCONNU);
             }
         }
     }

@@ -11,8 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Slf4j
-@Service
-public class PincesArriereService {
+public abstract class AbstractPincesArriereService implements IPincesArriereService {
 
     @Autowired
     private ServosService srv;
@@ -26,30 +25,37 @@ public class PincesArriereService {
     /**
      * Prises des bouees dans un éccueil
      */
-    public boolean priseEccueil(ECouleurBouee ...bouees) {
+    @Override
+    public boolean preparePriseEcueil() {
+        srv.pincesArriereOuvert(false);
+        srv.pivotArriereOuvert(false);
+        srv.ascenseurArriereEccueil(false);
+
+        return true;
+    }
+
+    @Override
+    public boolean finalisePriseEcueil(ECouleurBouee... bouees) {
         Assert.isTrue(bouees.length == 5, "Paramètre bouees invalide");
 
-        srv.pincesArriereOuvert(false);
-        srv.pivotArriereOuvert(true);
-        srv.ascenseurArriereEccueil(true);
         srv.pincesArriereFerme(true);
         srv.ascenseurArriereHaut(true);
-        srv.pivotArriereFerme(true);
+        srv.pivotArriereFerme(false);
 
         if (io.presencePinceArriere1()) {
-            rs.setPinceArriere(0, bouees[0]);
+            rs.pinceArriere(0, bouees[0]);
         }
         if (io.presencePinceArriere2()) {
-            rs.setPinceArriere(1, bouees[1]);
+            rs.pinceArriere(1, bouees[1]);
         }
         if (io.presencePinceArriere3()) {
-            rs.setPinceArriere(2, bouees[2]);
+            rs.pinceArriere(2, bouees[2]);
         }
         if (io.presencePinceArriere4()) {
-            rs.setPinceArriere(3, bouees[3]);
+            rs.pinceArriere(3, bouees[3]);
         }
         if (io.presencePinceArriere5()) {
-            rs.setPinceArriere(4, bouees[4]);
+            rs.pinceArriere(4, bouees[4]);
         }
 
         return true;
@@ -59,6 +65,7 @@ public class PincesArriereService {
      * Déposer la pince arrière dans un chenal
      * @param chenal Une des liste de RobotStatus
      */
+    @Override
     public boolean deposeArriereChenal(List<ECouleurBouee> chenal) {
         srv.pivotArriereOuvert(true);
         srv.ascenseurArriereTable(true);

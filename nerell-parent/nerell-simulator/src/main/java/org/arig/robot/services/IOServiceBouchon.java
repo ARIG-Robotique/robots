@@ -1,6 +1,7 @@
 package org.arig.robot.services;
 
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.arig.robot.model.RobotStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,17 +9,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class IOServiceBouchon implements IIOService {
 
-    @Autowired
-    private RobotStatus rs;
-
     @Setter
+    @Accessors(fluent = true)
     private boolean au = false;
 
     @Setter
+    @Accessors(fluent = true)
     private boolean tirette = false;
 
     private boolean alim5V = false;
     private boolean alim12V = false;
+
+    @Setter
+    @Accessors(fluent = true)
+    private boolean contentPinceArriere = false;
 
     // --------------------------------------------------------- //
     // --------------------- INFOS TECHNIQUE ------------------- //
@@ -77,27 +81,27 @@ public class IOServiceBouchon implements IIOService {
 
     @Override
     public boolean presencePinceArriere1() {
-        return false;
+        return contentPinceArriere;
     }
 
     @Override
     public boolean presencePinceArriere2() {
-        return false;
+        return contentPinceArriere;
     }
 
     @Override
     public boolean presencePinceArriere3() {
-        return false;
+        return contentPinceArriere;
     }
 
     @Override
     public boolean presencePinceArriere4() {
-        return false;
+        return contentPinceArriere;
     }
 
     @Override
     public boolean presencePinceArriere5() {
-        return false;
+        return contentPinceArriere;
     }
 
     @Override

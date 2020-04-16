@@ -22,12 +22,12 @@ public class BouchonCapteursController {
     @PostMapping(value = "/tirette")
     public void setTirette(@RequestBody Boolean value) {
         log.info("Définition de la valeur de la tirette : {}", value);
-        ioServiceBouchon.setTirette(value);
+        ioServiceBouchon.tirette(value);
     }
 
     @PostMapping(value = "/au")
     public void setAu(@RequestBody Boolean value) {
         log.info("Définition de la valeur de l'arret d'urgence : {}", value);
-        ioServiceBouchon.setAu(value);
+        ioServiceBouchon.au(value);
     }
 }

@@ -19,7 +19,6 @@ import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.model.ecran.GetConfigInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
@@ -255,10 +254,10 @@ public class Ordonanceur {
         while (robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
 
             // Déclenchement du pavillon
-            if (robotStatus.getRemainingTime() <= IConstantesNerellConfig.pavillonRemainingTimeMs && !robotStatus.isPavillon()) {
+            if (robotStatus.getRemainingTime() <= IConstantesNerellConfig.pavillonRemainingTimeMs && !robotStatus.pavillon()) {
                 log.info("Activation du pavillon");
                 motorPavillon.speed(motorPavillon.getMaxSpeed() / 2);
-                robotStatus.setPavillon(true);
+                robotStatus.pavillon(true);
             }
 
             ThreadUtils.sleep(200);

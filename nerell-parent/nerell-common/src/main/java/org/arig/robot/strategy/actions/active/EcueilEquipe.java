@@ -5,23 +5,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotStatus;
-import org.arig.robot.model.enums.SensRotation;
-import org.arig.robot.services.ServosService;
+import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class Phare extends AbstractAction {
+public class EcueilEquipe extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -30,14 +27,7 @@ public class Phare extends AbstractAction {
     private RobotStatus rs;
 
     @Autowired
-    private ConvertionRobotUnit conv;
-
-    @Autowired
-    @Qualifier("currentPosition")
-    private Position currentPosition;
-
-    @Autowired
-    private ServosService servos;
+    private IPincesArriereService pincesArriereService;
 
     @Autowired
     private TableUtils tableUtils;
@@ -47,13 +37,13 @@ public class Phare extends AbstractAction {
 
     @Override
     public String name() {
-        return "Phare";
+        return "Ecueil equipe";
     }
 
     @Override
     protected Point entryPoint() {
-        double x = 225;
-        double y = 1775;
+        double x = 230;
+        double y = 400;
         if (ETeam.JAUNE == rs.getTeam()) {
             x = 3000 - x;
         }
@@ -63,13 +53,13 @@ public class Phare extends AbstractAction {
 
     @Override
     public int order() {
-        int order = 13;
+        int order = 14; // Sur chenal, bien trié (5 bouées, 2 paires)
         return order + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rs.phare();
+        return isTimeValid() && rs.pincesArriereEmpty();
     }
 
     @Override
@@ -81,34 +71,31 @@ public class Phare extends AbstractAction {
             final Point entry = entryPoint();
             mv.pathTo(entry);
 
-            final double angleRobot = conv.pulseToDeg(currentPosition.getAngle());
-            if (Math.abs(angleRobot) <= 90) {
-                if (angleRobot < 0) {
-                    mv.gotoOrientationDeg(0);
-                }
+            mv.gotoOrientationDeg(rs.getTeam() == ETeam.BLEU ? 0 : 180);
 
-                // On active avec le bras gauche
-                servos.brasGauchePhare(true);
-                mv.gotoOrientationDeg(-35, SensRotation.HORAIRE);
+            pincesArriereService.preparePriseEcueil();
+            mv.reculeMM(60);
 
+            mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
+            rs.enableCalageBordure();
+            mv.reculeMMSansAngle(60);
+
+            if (rs.getTeam() == ETeam.BLEU) {
+                pincesArriereService.finalisePriseEcueil(ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE);
             } else {
-                if (angleRobot < 0) {
-                    mv.gotoOrientationDeg(180);
-                }
-
-                // On active avec le bras droit
-                servos.brasDroitPhare(true);
-                mv.gotoOrientationDeg(-180 + 35, SensRotation.TRIGO);
+                pincesArriereService.finalisePriseEcueil(ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT);
             }
-            rs.phare(true);
+
+            // STOCK
+
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+            mv.gotoPointMM(entry, false);
+
+            completed = true;
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
-        } finally {
-            completed = rs.phare();
-            servos.brasDroitFerme(false);
-            servos.brasGaucheFerme(false);
         }
     }
 }

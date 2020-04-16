@@ -45,8 +45,8 @@ public class RetourAuPort extends AbstractAction {
         if (rs.getTeam() == ETeam.JAUNE) {
             x = 3000 - x;
         }
-        Point north = new Point(x, centerY + offset);
-        Point south = new Point(x, centerY - offset);
+        final Point north = new Point(x, centerY + offset);
+        final Point south = new Point(x, centerY - offset);
         switch (rs.getDirectionGirouette()) {
             case UP: return north;
             case DOWN: return south;
@@ -82,7 +82,7 @@ public class RetourAuPort extends AbstractAction {
             rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            Point entry = entryPoint();
+            final Point entry = entryPoint();
             mv.pathTo(entry);
             setScore(coordProjection = true);
 
@@ -105,9 +105,9 @@ public class RetourAuPort extends AbstractAction {
 
     private void setScore(boolean coordProjection) {
         if (coordProjection && rs.getDirectionGirouette() != DirectionGirouette.UNKNOWN) {
-            rs.setBonPort(true);
+            rs.bonPort(true);
         } else if (coordProjection) {
-            rs.setMauvaisPort(true);
+            rs.mauvaisPort(true);
         }
     }
 }
