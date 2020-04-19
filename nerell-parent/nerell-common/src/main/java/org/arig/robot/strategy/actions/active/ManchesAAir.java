@@ -92,7 +92,7 @@ public class ManchesAAir extends AbstractAction {
                 } else {
                     mv.gotoOrientationDeg(30);
                     servos.brasDroitMancheAAir(true);
-                    mv.gotoPointMM(3000 - xManche2, y, true);
+                    mv.gotoPointMM(3000 - xManche2, y, true, SensDeplacement.ARRIERE);
                 }
                 rs.mancheAAir1(true);
             }

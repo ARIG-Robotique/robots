@@ -47,15 +47,18 @@ public class RetourAuPort extends AbstractAction {
         }
         final Point north = new Point(x, centerY + offset);
         final Point south = new Point(x, centerY - offset);
-        switch (rs.getDirectionGirouette()) {
-            case UP: return north;
-            case DOWN: return south;
-        }
 
-        // Inconnu, on prend le plus court
-        double distanceNorth = tableUtils.distance(north);
-        double distanceSouth = tableUtils.distance(south);
-        return distanceNorth < distanceSouth ? north : south;
+        switch (rs.getDirectionGirouette()) {
+            case UP:
+                return north;
+            case DOWN:
+                return south;
+            default:
+                // Inconnu, on prend le plus court
+                double distanceNorth = tableUtils.distance(north);
+                double distanceSouth = tableUtils.distance(south);
+                return distanceNorth < distanceSouth ? north : south;
+        }
     }
 
     @Override
@@ -84,7 +87,7 @@ public class RetourAuPort extends AbstractAction {
 
             final Point entry = entryPoint();
             mv.pathTo(entry);
-            setScore(coordProjection = true);
+            setScore(coordProjection = true); //FIXME je comprends pas
 
             // Finalisation de la rentré dans le port après avoir compter les points
             Point finalPoint = new Point(entry);

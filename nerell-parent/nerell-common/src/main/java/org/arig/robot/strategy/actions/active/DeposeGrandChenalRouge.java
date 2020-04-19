@@ -58,15 +58,11 @@ public class DeposeGrandChenalRouge extends AbstractAction {
 
     @Override
     public int order() {
-        final Predicate<? super ECouleurBouee> boueeRouge = b -> b == ECouleurBouee.ROUGE;
-        final Predicate<? super ECouleurBouee> boueeVerte = b -> b == ECouleurBouee.VERT;
-        final Predicate<? super ECouleurBouee> boueeAutre = b -> b != ECouleurBouee.ROUGE;
+        int nbBoueeRouge = (int) Arrays.stream(rs.getPincesArriere()).filter(ECouleurBouee.isRouge).count();
+        int nbBoueeAutre = (int) Arrays.stream(rs.getPincesArriere()).filter(ECouleurBouee.isNotRouge).count();
 
-        int nbBoueeRouge = (int) Arrays.stream(rs.getPincesArriere()).filter(boueeRouge).count();
-        int nbBoueeAutre = (int) Arrays.stream(rs.getPincesArriere()).filter(Objects::nonNull).filter(boueeAutre).count();
-
-        int nbBoueeVerteGdChenalVert = (int) rs.grandChenalVert().stream().filter(boueeVerte).count();
-        int nbBoueeRougeGdChenalRouge = (int) rs.grandChenalRouge().stream().filter(boueeRouge).count();
+        int nbBoueeVerteGdChenalVert = (int) rs.grandChenalVert().stream().filter(ECouleurBouee.isVert).count();
+        int nbBoueeRougeGdChenalRouge = (int) rs.grandChenalRouge().stream().filter(ECouleurBouee.isRouge).count();
 
         int pair = 0;
         if (nbBoueeVerteGdChenalVert > nbBoueeRougeGdChenalRouge) {
@@ -102,7 +98,7 @@ public class DeposeGrandChenalRouge extends AbstractAction {
 
             } else {
                 if (!rs.pincesArriereEmpty()) {
-                    mv.gotoPointMM(3000 - xRef, 2000 - getYDepose(yRef,false), true, SensDeplacement.ARRIERE);
+                    mv.gotoPointMM(xRef, getYDepose(yRef,false), true, SensDeplacement.ARRIERE);
                     pincesArriereService.deposeArriereChenal(rs.grandChenalRouge());  // TODO Dépose partiel
                     mv.gotoPointMM(entry, false);
                 }
@@ -116,8 +112,12 @@ public class DeposeGrandChenalRouge extends AbstractAction {
     }
 
     private double getYDepose(double yRef, boolean avant) {
-        int coefAvant = -160;
-        int coefArriere = -61;
-        return yRef + (avant ? coefAvant : coefArriere);
+        int coef = avant ? 160 : 61; // de combien il faut reculer
+
+        if (rs.getTeam() == ETeam.BLEU) {
+            return yRef - coef;
+        } else {
+            return yRef + coef;
+        }
     }
 }
