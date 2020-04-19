@@ -49,15 +49,16 @@ public abstract class AbstractPidTest {
         pid().setTunings(1, 0, 0);
 
         double consigne = 100;
-        double input = 0, output = 0;
+        double input = 0, output, error;
         for (int i = 0 ; i < 100 ; i++) {
             if (i > 10) {
                 input = (i * consigne) / 100;
             }
-            pid().setConsigne(consigne);
+            pid().consigne(consigne);
+            error = consigne - input;
             output = pid().filter(input);
             log.info("Test P : consigne {}, mesure {}, output {}", consigne, input, output);
-            Assert.assertEquals(consigne - input, output, 1);
+            Assert.assertEquals(error, output, 0);
         }
     }
 
@@ -67,14 +68,19 @@ public abstract class AbstractPidTest {
         pid().setTunings(1, 1, 0);
 
         double consigne = 100;
-        double input = 0, output = 0;
+        double input = 0, output, error, errorSum = 0;
         for (int i = 0 ; i < 100 ; i++) {
             if (i > 10) {
                 input = (i * consigne) / 100;
             }
-            pid().setConsigne(consigne);
+            pid().consigne(consigne);
+            error = consigne - input;
+            errorSum += error;
             output = pid().filter(input);
             log.info("Test PI : consigne {}, mesure {}, output {}", consigne, input, output);
+
+            double expected = error + errorSum;
+            Assert.assertEquals(expected, output, 0);
         }
     }
 
@@ -84,14 +90,20 @@ public abstract class AbstractPidTest {
         pid().setTunings(1, 1, 1);
 
         double consigne = 100;
-        double input = 0, output;
+        double input = 0, output, error, errorSum = 0, errorPrec = 0;
         for (int i = 0 ; i < 100 ; i++) {
             if (i > 10) {
                 input = (i * consigne) / 100;
             }
-            pid().setConsigne(consigne);
+            pid().consigne(consigne);
+            error = consigne - input;
+            errorSum += error;
             output = pid().filter(input);
             log.info("Test PID : consigne {}, mesure {}, output {}", consigne, input, output);
+
+            double expected = error + errorSum + error - errorPrec;
+            errorPrec = error;
+            Assert.assertEquals(expected, output, 0);
         }
     }
 }

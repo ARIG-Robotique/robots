@@ -27,11 +27,11 @@ public interface IPidFilter extends IFilter<Double, Double>{
      *
      * @param consigne La consigne a atteindre
      */
-    void setConsigne(double consigne);
+    void consigne(Double consigne);
 
     /**
      * Récupérer de l'erreur sum de pid
      * @return
      */
-    Double getPidErrorSum();
+    Double getErrorSum();
 }

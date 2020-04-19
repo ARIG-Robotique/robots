@@ -65,7 +65,7 @@ public class AsservissementPolaireDistanceOrientation implements IAsservissement
             rampDistance.setConsigneVitesse(cmdRobot.getVitesse().getDistance());
             rampDistance.setFrein(cmdRobot.isFrein());
             final double positionDistance = rampDistance.filter(cmdRobot.getConsigne().getDistance());
-            pidDistance.setConsigne(positionDistance);
+            pidDistance.consigne(positionDistance);
             distance = pidDistance.filter(encoders.getDistance());
         } else {
             distance = 0;
@@ -76,7 +76,7 @@ public class AsservissementPolaireDistanceOrientation implements IAsservissement
             rampOrientation.setConsigneVitesse(cmdRobot.getVitesse().getOrientation());
             rampOrientation.setFrein(true);
             final double positionOrientation = rampOrientation.filter(cmdRobot.getConsigne().getOrientation());
-            pidOrientation.setConsigne(positionOrientation);
+            pidOrientation.consigne(positionOrientation);
             orientation = pidOrientation.filter(encoders.getOrientation());
         } else {
             orientation = 0;

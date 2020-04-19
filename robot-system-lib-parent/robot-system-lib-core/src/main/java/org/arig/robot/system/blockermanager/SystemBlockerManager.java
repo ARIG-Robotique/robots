@@ -31,8 +31,8 @@ public class SystemBlockerManager implements ISystemBlockerManager {
 
     @Override
     public void process() {
-        double errorSumPidDistance = Math.abs(pidDistance.getPidErrorSum());
-        double errorSumPidOrientation = Math.abs(pidOrientation.getPidErrorSum());
+        double errorSumPidDistance = Math.abs(pidDistance.getErrorSum());
+        double errorSumPidOrientation = Math.abs(pidOrientation.getErrorSum());
 
         if (errorSumPidDistance >= seuilErreurPidDistance || errorSumPidOrientation >= seuilErreurPidOrientation) {
             log.warn("Somme de l'erreur d'un PID trop importante : distance {} ; orientation {}", errorSumPidDistance, errorSumPidOrientation);

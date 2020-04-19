@@ -4,11 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.filters.chain.ParallelChainFilter;
-import org.arig.robot.filters.chain.SerialChainFilter;
-import org.arig.robot.filters.common.DerivateFilter;
-import org.arig.robot.filters.common.IntegralFilter;
 import org.arig.robot.filters.common.ProportionalFilter;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
@@ -26,73 +23,74 @@ public abstract class AbstractPidFilter implements IPidFilter {
     @Getter
     private final String name;
 
-    @Setter
     @Getter(AccessLevel.PROTECTED)
-    private double consigne, input, output;
+    @Accessors(fluent = true)
+    private Double consigne;
 
-    final ProportionalFilter propP, propI, propD;
-    private final IntegralFilter integral;
-    private final DerivateFilter derivate;
-    //private final LimiterFilter limiter;
+    @Getter(AccessLevel.PROTECTED)
+    @Accessors(fluent = true)
+    private final ProportionalFilter kp;
 
-    private final SerialChainFilter<Double> integralChain, derivateChain, completePid;
-    private final ParallelChainFilter pid;
+    @Getter(AccessLevel.PROTECTED)
+    @Accessors(fluent = true)
+    private final ProportionalFilter ki;
 
-    AbstractPidFilter(final String name, double min, double max) {
-        this.name = name;
-        propP = new ProportionalFilter(0d);
-        propI = new ProportionalFilter(0d);
-        propD = new ProportionalFilter(0d);
-        integral = new IntegralFilter(0d);
-        derivate = new DerivateFilter(0d);
-        //limiter = new LimiterFilter(min, max);
+    @Getter(AccessLevel.PROTECTED)
+    @Accessors(fluent = true)
+    private final ProportionalFilter kd;
 
-        integralChain = new SerialChainFilter<>();
-        integralChain.addFilter(integral);
-        integralChain.addFilter(propI);
-        //integralChain.addFilter(limiter);
+    @Setter(AccessLevel.PROTECTED)
+    @Getter(AccessLevel.PROTECTED)
+    @Accessors(fluent = true)
+    private Double input;
 
-        derivateChain = new SerialChainFilter<>();
-        derivateChain.addFilter(derivate);
-        derivateChain.addFilter(propD);
+    @Setter(AccessLevel.PROTECTED)
+    @Getter(AccessLevel.PROTECTED)
+    @Accessors(fluent = true)
+    private Double output;
 
-        pid = new ParallelChainFilter();
-        pid.addFilter(propP);
-        pid.addFilter(integralChain);
-        pid.addFilter(derivateChain);
-
-        completePid = new SerialChainFilter<>();
-        completePid.addFilter(pid);
-        //completePid.addFilter(limiter);
-    }
+    @Setter(AccessLevel.PROTECTED)
+    @Getter(AccessLevel.PROTECTED)
+    @Accessors(fluent = true)
+    private Double error;
 
     protected abstract String pidImpl();
+    protected abstract Double filterImpl(Double input);
+
+    AbstractPidFilter(final String name) {
+        this.name = name;
+
+        kp = new ProportionalFilter(0d);
+        ki = new ProportionalFilter(0d);
+        kd = new ProportionalFilter(0d);
+    }
+
+    public void consigne(Double consigne) {
+        this.consigne = consigne;
+    }
 
     @Override
     public void setTunings(final double kp, final double ki, final double kd) {
         log.info("Configuration des paramètres PID {} ( Kp = {} ; Ki = {} ; Kd = {} )", getName(), kp, ki, kd);
 
-        propP.setGain(kp);
-        propI.setGain(ki);
-        propD.setGain(kd);
+        this.kp.setGain(kp);
+        this.ki.setGain(ki);
+        this.kd.setGain(kd);
     }
 
     @Override
     public Map<String, Double> getTunings() {
         return ImmutableMap.of(
-                "kp", propP.getGain(),
-                "ki", propI.getGain(),
-                "kd", propD.getGain()
+                "kp", kp.getGain(),
+                "ki", ki.getGain(),
+                "kd", kd.getGain()
         );
     }
 
     @Override
     public void reset() {
-        integral.reset();
-        derivate.reset();
-
-        input = 0;
-        output = 0;
+        input = 0d;
+        output = 0d;
     }
 
     @Override
@@ -100,29 +98,25 @@ public abstract class AbstractPidFilter implements IPidFilter {
         Assert.notNull(input, FILTER_VALUE_NULL_MESSAGE);
 
         this.input = input;
-        double error = consigne - input;
-        this.output = completePid.filter(error);
+        error = consigne - input;
+        output = filterImpl(input);
 
         // Construction du monitoring
         MonitorTimeSerie serie = new MonitorTimeSerie()
                 .measurementName("correcteur_pid")
                 .addTag(MonitorTimeSerie.TAG_NAME, name)
                 .addTag(MonitorTimeSerie.TAG_IMPLEMENTATION, pidImpl())
-                .addField("kp", propP.getGain())
-                .addField("ki", propI.getGain())
-                .addField("kd", propD.getGain())
-                .addField("consigne", getConsigne())
-                .addField("input", getInput())
-                .addField("output", getOutput())
+                .addField("kp", kp().getGain())
+                .addField("ki", ki().getGain())
+                .addField("kd", kd().getGain())
+                .addField("consigne", consigne)
+                .addField("input", input)
+                .addField("output", output)
                 .addField("error", error)
-                .addField("errorSum", integral.getSum());
+                .addField("errorSum", getErrorSum());
 
         monitoringWrapper.addTimeSeriePoint(serie);
 
-        return this.output;
-    }
-
-    public final Double getPidErrorSum() {
-        return this.integral.getSum();
+        return output();
     }
 }

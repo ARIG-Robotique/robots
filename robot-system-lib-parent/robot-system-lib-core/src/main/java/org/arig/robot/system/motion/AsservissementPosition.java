@@ -34,7 +34,7 @@ public class AsservissementPosition implements IAsservissement {
         final double position = ramp.filter(cmd.getConsigne().getValue());
 
         // Correction PID
-        pid.setConsigne(position);
+        pid.consigne(position);
         final double distance = pid.filter(encoder.getValue());
 
         // Comande moteur
