@@ -1,5 +1,7 @@
 package org.arig.robot.system.motion;
 
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.arig.robot.model.enums.TypeOdometrie;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -18,8 +20,19 @@ public class OdometrieLineaire extends AbstractOdometrie {
     @Autowired
     private ConvertionRobotUnit conv;
 
+    @Setter
+    @Accessors(fluent = true)
+    private double corrfuge = 0;
+
+    private final boolean correctionCentrifuge;
+
     public OdometrieLineaire() {
+        this(false);
+    }
+
+    public OdometrieLineaire(boolean correctionCentrifuge) {
         super(TypeOdometrie.LINEAIRE);
+        this.correctionCentrifuge = correctionCentrifuge;
     }
 
     /**
@@ -46,5 +59,14 @@ public class OdometrieLineaire extends AbstractOdometrie {
         getPosition().setAngle(newTheta);
         getPosition().addDeltaX(dX);
         getPosition().addDeltaY(dY);
+
+        if (correctionCentrifuge) {
+            double courbureRad = conv.pulseToRad(encoders.getOrientation());
+            double corrX = (dY * courbureRad) * corrfuge;
+            double corrY = -(dX * courbureRad) * corrfuge;
+
+            getPosition().addDeltaX(corrX);
+            getPosition().addDeltaY(corrY);
+        }
     }
 }
