@@ -98,7 +98,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
         // Config PCF8574 //
         // -------------- //
-        // TODO Config IRQ
         pcfAlim = new PCF8574GpioProvider(bus, IConstantesI2C.PCF_ALIM_ADDRESS, true);
         pcf1 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF1_ADDRESS, true);
         pcf2 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF2_ADDRESS, true);

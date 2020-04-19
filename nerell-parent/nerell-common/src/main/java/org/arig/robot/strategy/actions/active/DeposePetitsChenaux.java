@@ -54,7 +54,7 @@ public class DeposePetitsChenaux extends AbstractAction {
 
     @Override
     public int order() {
-        Chenaux chenauxFuture = rs.petitChanaux().with(
+        Chenaux chenauxFuture = rs.petitChenaux().with(
                 ArrayUtils.subarray(rs.getPincesAvant(), 0, 2),
                 ArrayUtils.subarray(rs.getPincesAvant(), 2, 4)
         );
@@ -64,7 +64,7 @@ public class DeposePetitsChenaux extends AbstractAction {
             chenauxFuture.addVert(ECouleurBouee.ROUGE, ECouleurBouee.VERT);
         }
 
-        int order = chenauxFuture.score() - rs.petitChanaux().score();
+        int order = chenauxFuture.score() - rs.petitChenaux().score();
         return order + tableUtils.alterOrder(entryPoint());
     }
 
@@ -104,8 +104,8 @@ public class DeposePetitsChenaux extends AbstractAction {
                 servos.ascenseurAvantBas(true);
                 servos.pincesAvantOuvert(true);
 
-                rs.petitChanaux().addRouge(ECouleurBouee.ROUGE, ECouleurBouee.VERT);
-                rs.petitChanaux().addVert(ECouleurBouee.ROUGE, ECouleurBouee.VERT);
+                rs.petitChenaux().addRouge(ECouleurBouee.ROUGE, ECouleurBouee.VERT);
+                rs.petitChenaux().addVert(ECouleurBouee.ROUGE, ECouleurBouee.VERT);
             }
             // déposes suivantes
             else {
@@ -115,8 +115,8 @@ public class DeposePetitsChenaux extends AbstractAction {
                 servos.pincesAvantOuvert(true);
             }
 
-            rs.petitChanaux().addRouge(ArrayUtils.subarray(rs.getPincesAvant(), 0, 2));
-            rs.petitChanaux().addVert(ArrayUtils.subarray(rs.getPincesAvant(), 2, 4));
+            rs.petitChenaux().addRouge(ArrayUtils.subarray(rs.getPincesAvant(), 0, 2));
+            rs.petitChenaux().addVert(ArrayUtils.subarray(rs.getPincesAvant(), 2, 4));
             rs.clearPincesAvant();
 
             mv.gotoPointMM(x, y, false, true, SensDeplacement.ARRIERE);

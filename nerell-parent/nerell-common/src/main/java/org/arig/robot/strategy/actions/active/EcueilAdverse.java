@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class EccueilEquipe extends AbstractAction {
+public class EcueilAdverse extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -37,13 +37,13 @@ public class EccueilEquipe extends AbstractAction {
 
     @Override
     public String name() {
-        return "Eccueil equipe";
+        return "Ecueil adverse";
     }
 
     @Override
     protected Point entryPoint() {
-        double x = 230;
-        double y = 400;
+        double x = 2150;
+        double y = 2000 - 230;
         if (ETeam.JAUNE == rs.getTeam()) {
             x = 3000 - x;
         }
@@ -53,13 +53,13 @@ public class EccueilEquipe extends AbstractAction {
 
     @Override
     public int order() {
-        int order = 14; // Sur chenal, bien trié (5 bouées, 2 paires)
+        int order = rs.getEcueilAdverseDispo() * 2 + (int) Math.ceil(rs.getEcueilAdverseDispo() / 2.0) * 2; // Sur chenal, bien trié (X bouées, X/2 paires)
         return order + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && rs.pincesArriereEmpty();
+        return isTimeValid() && rs.pincesArriereEmpty() && rs.getEcueilAdverseDispo() > 0;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class EccueilEquipe extends AbstractAction {
             final Point entry = entryPoint();
             mv.pathTo(entry);
 
-            mv.gotoOrientationDeg(rs.getTeam() == ETeam.BLEU ? 0 : 180);
+            mv.gotoOrientationDeg(-90);
 
             pincesArriereService.preparePriseEcueil();
             mv.reculeMM(60);
@@ -80,11 +80,20 @@ public class EccueilEquipe extends AbstractAction {
             rs.enableCalageBordure();
             mv.reculeMMSansAngle(60);
 
-            if (rs.getTeam() == ETeam.BLEU) {
-                pincesArriereService.finalisePriseEcueil(ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE);
-            } else {
-                pincesArriereService.finalisePriseEcueil(ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT);
+            ECouleurBouee[] couleursEcueil = rs.getCouleursEcueil(); // TODO Cette valeur est changé par la lecture balise
+            ECouleurBouee[] couleursFinales = new ECouleurBouee[5];
+            for (int i = 0; i < 5; i++) {
+                // on symétrise et on inverse (les connues seulement)
+                if (couleursEcueil[5 - i] == ECouleurBouee.ROUGE) {
+                    couleursFinales[i] = ECouleurBouee.VERT;
+                } else if (couleursEcueil[5 - i] == ECouleurBouee.VERT) {
+                    couleursFinales[i] = ECouleurBouee.ROUGE;
+                } else {
+                    couleursFinales[i] = ECouleurBouee.INCONNU; // FIXME Si la lecture balise a réussi on écrase avec des INCONNUS
+                }
             }
+
+            pincesArriereService.finalisePriseEcueil(couleursFinales);
 
             // STOCK
 

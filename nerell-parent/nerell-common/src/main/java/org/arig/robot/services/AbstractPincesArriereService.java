@@ -19,13 +19,13 @@ public abstract class AbstractPincesArriereService implements IPincesArriereServ
     private IIOService io;
 
     /**
-     * Prises des bouees dans un éccueil
+     * Prises des bouees dans un écueil
      */
     @Override
     public boolean preparePriseEcueil() {
         srv.pincesArriereOuvert(false);
         srv.pivotArriereOuvert(false);
-        srv.ascenseurArriereEccueil(false);
+        srv.ascenseurArriereEcueil(false);
 
         return true;
     }

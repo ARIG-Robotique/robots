@@ -62,7 +62,7 @@ public class ServosController extends AbstractServosController {
                         .setId(IConstantesServos.ASCENSEUR_ARRIERE)
                         .setName("Ascenseur arrière")
                         .position("Haut", IConstantesServos.POS_ASCENSEUR_ARRIERE_HAUT)
-                        .position("Eccueil", IConstantesServos.POS_ASCENSEUR_ARRIERE_ECCUEIL)
+                        .position("Ecueil", IConstantesServos.POS_ASCENSEUR_ARRIERE_ECUEIL)
                         .position("Table", IConstantesServos.POS_ASCENSEUR_ARRIERE_TABLE)
                 )
                 .servo(new ServoConfig()

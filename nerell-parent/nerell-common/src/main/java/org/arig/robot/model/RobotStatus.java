@@ -93,9 +93,9 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     private DirectionGirouette directionGirouette = DirectionGirouette.UNKNOWN;
 
-    private ECouleurBouee[] couleursEccueil = new ECouleurBouee[]{ECouleurBouee.VERT, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.ROUGE};
+    private ECouleurBouee[] couleursEcueil = new ECouleurBouee[]{ECouleurBouee.VERT, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.ROUGE};
 
-    private int eccueilAdverseDispo = 0;
+    private int ecueilAdverseDispo = 0;
 
     @Setter(AccessLevel.NONE)
     private boolean pincesEnabled = false;
@@ -149,7 +149,7 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     @Accessors(fluent = true)
     @Setter(AccessLevel.NONE)
-    Chenaux petitChanaux = new Chenaux();
+    Chenaux petitChenaux = new Chenaux();
 
     @Setter(AccessLevel.NONE)
     ECouleurBouee[] pincesArriere = new ECouleurBouee[]{null, null, null, null, null};
@@ -194,7 +194,7 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         points += grandPort.size();
         points += petitPort.size();
         points += grandChenaux.score();
-        points += petitChanaux.score();
+        points += petitChenaux.score();
         points += (mancheAAir1 && mancheAAir2) ? 15 : (mancheAAir1 || mancheAAir2) ? 5 : 0;
         points += bonPort ? 10 : (mauvaisPort ? 5 : 0);
         points += pavillon ? 10 : 0;

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class EccueilAdverse extends AbstractAction {
+public class EcueilEquipe extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -37,13 +37,13 @@ public class EccueilAdverse extends AbstractAction {
 
     @Override
     public String name() {
-        return "Eccueil adverse";
+        return "Ecueil equipe";
     }
 
     @Override
     protected Point entryPoint() {
-        double x = 2150;
-        double y = 2000 - 230;
+        double x = 230;
+        double y = 400;
         if (ETeam.JAUNE == rs.getTeam()) {
             x = 3000 - x;
         }
@@ -53,13 +53,13 @@ public class EccueilAdverse extends AbstractAction {
 
     @Override
     public int order() {
-        int order = rs.getEccueilAdverseDispo() * 2 + (int) Math.ceil(rs.getEccueilAdverseDispo() / 2.0) * 2; // Sur chenal, bien trié (X bouées, X/2 paires)
+        int order = 14; // Sur chenal, bien trié (5 bouées, 2 paires)
         return order + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && rs.pincesArriereEmpty() && rs.getEccueilAdverseDispo() > 0;
+        return isTimeValid() && rs.pincesArriereEmpty();
     }
 
     @Override
@@ -71,7 +71,7 @@ public class EccueilAdverse extends AbstractAction {
             final Point entry = entryPoint();
             mv.pathTo(entry);
 
-            mv.gotoOrientationDeg(-90);
+            mv.gotoOrientationDeg(rs.getTeam() == ETeam.BLEU ? 0 : 180);
 
             pincesArriereService.preparePriseEcueil();
             mv.reculeMM(60);
@@ -80,20 +80,11 @@ public class EccueilAdverse extends AbstractAction {
             rs.enableCalageBordure();
             mv.reculeMMSansAngle(60);
 
-            ECouleurBouee[] couleursEccueil = rs.getCouleursEccueil();
-            ECouleurBouee[] couleursFinales = new ECouleurBouee[5];
-            for (int i = 0; i < 5; i++) {
-                // on symétrise et on inverse (les connues seulement)
-                if (couleursEccueil[5 - i] == ECouleurBouee.ROUGE) {
-                    couleursFinales[i] = ECouleurBouee.VERT;
-                } else if (couleursEccueil[5 - i] == ECouleurBouee.VERT) {
-                    couleursFinales[i] = ECouleurBouee.ROUGE;
-                } else {
-                    couleursFinales[i] = ECouleurBouee.INCONNU;
-                }
+            if (rs.getTeam() == ETeam.BLEU) {
+                pincesArriereService.finalisePriseEcueil(ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE);
+            } else {
+                pincesArriereService.finalisePriseEcueil(ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT);
             }
-
-            pincesArriereService.finalisePriseEcueil(couleursFinales);
 
             // STOCK
 

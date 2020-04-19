@@ -56,7 +56,7 @@ public class BaliseService {
         }
     }
 
-    public boolean lectureCouleurEccueil() {
+    public boolean lectureCouleurEcueil() {
         boolean valid = false;
 
         if (statut != null && statut.getDetection() != null) {
@@ -76,7 +76,7 @@ public class BaliseService {
                     }
                 }
 
-                rs.setCouleursEccueil(couleurs);
+                rs.setCouleursEcueil(couleurs);
             }
         }
 
@@ -85,7 +85,7 @@ public class BaliseService {
 
     public void lectureEcueilAdverse() {
         if (statut != null && statut.getDetection() != null) {
-            rs.setEccueilAdverseDispo(
+            rs.setEcueilAdverseDispo(
                     (int) Stream.of(statut.getDetection().getColors())
                             .filter(c -> c != CouleurDetectee.UNKNONW)
                             .count()

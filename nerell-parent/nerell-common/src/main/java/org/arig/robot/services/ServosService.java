@@ -85,7 +85,7 @@ public class ServosService {
     }
 
     public boolean isAscenseurArriereBas() {
-        return servos.getPosition(IConstantesServos.ASCENSEUR_ARRIERE) == IConstantesServos.POS_ASCENSEUR_ARRIERE_ECCUEIL;
+        return servos.getPosition(IConstantesServos.ASCENSEUR_ARRIERE) == IConstantesServos.POS_ASCENSEUR_ARRIERE_ECUEIL;
     }
 
     public boolean isPivotArriereFerme() {
@@ -202,8 +202,8 @@ public class ServosService {
         setPosition(IConstantesServos.ASCENSEUR_ARRIERE, IConstantesServos.POS_ASCENSEUR_ARRIERE_HAUT, wait);
     }
 
-    public void ascenseurArriereEccueil(boolean wait) {
-        setPosition(IConstantesServos.ASCENSEUR_ARRIERE, IConstantesServos.POS_ASCENSEUR_ARRIERE_ECCUEIL, wait);
+    public void ascenseurArriereEcueil(boolean wait) {
+        setPosition(IConstantesServos.ASCENSEUR_ARRIERE, IConstantesServos.POS_ASCENSEUR_ARRIERE_ECUEIL, wait);
     }
 
     public void ascenseurArriereTable(boolean wait) {
