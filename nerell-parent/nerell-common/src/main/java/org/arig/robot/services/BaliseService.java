@@ -9,7 +9,6 @@ import org.arig.robot.system.capteurs.IVisionBalise;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -57,33 +56,39 @@ public class BaliseService {
         }
     }
 
-    public void lectureCouleurEccueil() {
+    public boolean lectureCouleurEccueil() {
+        boolean valid = false;
+
         if (statut != null && statut.getDetection() != null) {
-            boolean valid = Stream.of(statut.getDetection().getColors())
+            valid = Stream.of(statut.getDetection().getColors())
                     .allMatch(c -> c != CouleurDetectee.UNKNONW);
 
             if (valid) {
-                rs.setCouleursEccueil(
-                        Stream.of(statut.getDetection().getColors())
-                                .map(c -> { // comme on lit sur le distributeur adverse, les couleurs sont inversées
-                                    if (c == CouleurDetectee.RED) {
-                                        return ECouleurBouee.VERT;
-                                    } else {
-                                        return ECouleurBouee.ROUGE;
-                                    }
-                                })
-                                .collect(Collectors.toList())
-                );
+                CouleurDetectee[] detection = statut.getDetection().getColors();
+                ECouleurBouee[] couleurs = new ECouleurBouee[5];
+
+                // la détection se faisant coté adverse il faut symétriser et inverser
+                for (int i = 0; i < 5; i++) {
+                    if (detection[5 - i] == CouleurDetectee.RED) {
+                        couleurs[i] = ECouleurBouee.VERT;
+                    } else {
+                        couleurs[i] = ECouleurBouee.ROUGE;
+                    }
+                }
+
+                rs.setCouleursEccueil(couleurs);
             }
         }
+
+        return valid;
     }
 
     public void lectureEcueilAdverse() {
         if (statut != null && statut.getDetection() != null) {
             rs.setEccueilAdverseDispo(
-                    Stream.of(statut.getDetection().getColors())
-                            .filter(c -> c == CouleurDetectee.UNKNONW)
-                            .count() < 4
+                    (int) Stream.of(statut.getDetection().getColors())
+                            .filter(c -> c != CouleurDetectee.UNKNONW)
+                            .count()
             );
         }
     }

@@ -1,13 +1,8 @@
 package org.arig.robot.model;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
@@ -98,9 +93,9 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     private DirectionGirouette directionGirouette = DirectionGirouette.UNKNOWN;
 
-    private List<ECouleurBouee> couleursEccueil = null;
+    private ECouleurBouee[] couleursEccueil = new ECouleurBouee[]{ECouleurBouee.VERT, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.ROUGE};
 
-    private boolean eccueilAdverseDispo = true;
+    private int eccueilAdverseDispo = 0;
 
     @Setter(AccessLevel.NONE)
     private boolean pincesEnabled = false;
@@ -160,7 +155,7 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     ECouleurBouee[] pincesArriere = new ECouleurBouee[]{null, null, null, null, null};
 
     @Setter(AccessLevel.NONE)
-    ECouleurBouee[] pincesAvant = new ECouleurBouee[]{null, null,null,null};
+    ECouleurBouee[] pincesAvant = new ECouleurBouee[]{null, null, null, null};
 
     public void pinceArriere(int pos, ECouleurBouee bouee) {
         pincesArriere[pos] = bouee;

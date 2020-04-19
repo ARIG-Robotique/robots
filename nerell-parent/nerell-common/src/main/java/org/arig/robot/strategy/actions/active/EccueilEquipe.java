@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class EcueilEquipe extends AbstractAction {
+public class EccueilEquipe extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -37,7 +37,7 @@ public class EcueilEquipe extends AbstractAction {
 
     @Override
     public String name() {
-        return "Ecueil equipe";
+        return "Eccueil equipe";
     }
 
     @Override
