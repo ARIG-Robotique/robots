@@ -212,12 +212,15 @@ public class Ordonanceur {
                 ThreadUtils.sleep(1000);
                 lidarDatas = lidar.grabDatas();
             }
+
+            ecranService.displayMessage("Attente 10s pour remettre la capot si besoin");
+            ThreadUtils.sleep(10000);
         }
 
-        SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.RISING);
-        SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.FALLING);
+        SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(false, Type.RISING);
+        SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(false, Type.FALLING);
         IntegerChangeFilter strategyChangeFilter = new IntegerChangeFilter(-1);
-        boolean manuel = ecranService.config().isModeManuel();
+        boolean manuel = false;
         while(!ioService.tirette()) {
             if (manuelRisingEdge.filter(ecranService.config().isModeManuel())) {
                 manuel = true;
@@ -227,6 +230,7 @@ public class Ordonanceur {
             } else if (manuel && manuelFallingEdge.filter(ecranService.config().isModeManuel())) {
                 manuel = false;
                 endMonitoring();
+                ecranService.displayMessage("");
             }
 
             // Si on est pas en manuel, gestion de la strategy
