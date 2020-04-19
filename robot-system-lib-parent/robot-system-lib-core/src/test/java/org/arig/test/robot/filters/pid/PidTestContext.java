@@ -1,5 +1,6 @@
 package org.arig.test.robot.filters.pid;
 
+import org.arig.robot.filters.pid.DerivateInputPidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
@@ -15,6 +16,14 @@ public class PidTestContext {
     @Bean
     public SimplePidFilter simplePID() {
         SimplePidFilter pid = new SimplePidFilter("test");
+        pid.setTunings(1, 0, 0);
+
+        return pid;
+    }
+
+    @Bean
+    public DerivateInputPidFilter derivateInputPID() {
+        DerivateInputPidFilter pid = new DerivateInputPidFilter("test");
         pid.setTunings(1, 0, 0);
 
         return pid;
