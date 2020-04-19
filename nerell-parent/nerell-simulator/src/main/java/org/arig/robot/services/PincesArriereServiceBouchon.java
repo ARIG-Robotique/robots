@@ -5,8 +5,6 @@ import org.arig.robot.model.ECouleurBouee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Slf4j
 @Service
 public class PincesArriereServiceBouchon extends AbstractPincesArriereService {
@@ -15,14 +13,14 @@ public class PincesArriereServiceBouchon extends AbstractPincesArriereService {
     private IOServiceBouchon io;
 
     @Override
-    public boolean finalisePriseEcueil(ECouleurBouee... bouees) {
+    public boolean finalisePriseEcueil(final ECouleurBouee... bouees) {
         io.contentPinceArriere(true);
 
         return super.finalisePriseEcueil(bouees);
     }
 
     @Override
-    public boolean deposeArriereChenal(final List<ECouleurBouee> chenal) {
+    public boolean deposeArriereChenal(final ECouleurBouee chenal) {
         io.contentPinceArriere(false);
 
         return super.deposeArriereChenal(chenal);

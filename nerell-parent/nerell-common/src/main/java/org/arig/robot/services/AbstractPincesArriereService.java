@@ -4,11 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.RobotStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-
-import java.util.Collections;
-import java.util.List;
 
 @Slf4j
 public abstract class AbstractPincesArriereService implements IPincesArriereService {
@@ -66,7 +62,7 @@ public abstract class AbstractPincesArriereService implements IPincesArriereServ
      * @param chenal Une des liste de RobotStatus
      */
     @Override
-    public boolean deposeArriereChenal(List<ECouleurBouee> chenal) {
+    public boolean deposeArriereChenal(final ECouleurBouee chenal) {
         srv.pivotArriereOuvert(true);
         srv.ascenseurArriereTable(true);
         srv.pincesArriereOuvert(true);
@@ -74,7 +70,12 @@ public abstract class AbstractPincesArriereService implements IPincesArriereServ
         srv.pivotArriereFerme(false);
         srv.pincesArriereFerme(false);
 
-        Collections.addAll(chenal, rs.getPincesArriere());
+        if (chenal == ECouleurBouee.ROUGE) {
+            rs.grandChenaux().addRouge(rs.getPincesArriere());
+        } else {
+            rs.grandChenaux().addVert(rs.getPincesArriere());
+        }
+
         rs.clearPincesArriere();
 
         return true;

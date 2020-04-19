@@ -141,22 +141,20 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     boolean pavillon = false;
 
     @Accessors(fluent = true)
+    @Setter(AccessLevel.NONE)
     List<ECouleurBouee> grandPort = new ArrayList<>();
 
     @Accessors(fluent = true)
+    @Setter(AccessLevel.NONE)
     List<ECouleurBouee> petitPort = new ArrayList<>();
 
     @Accessors(fluent = true)
-    List<ECouleurBouee> grandChenalVert = new ArrayList<>();
+    @Setter(AccessLevel.NONE)
+    Chenaux grandChenaux = new Chenaux();
 
     @Accessors(fluent = true)
-    List<ECouleurBouee> grandChenalRouge = new ArrayList<>();
-
-    @Accessors(fluent = true)
-    List<ECouleurBouee> petitChenalVert = new ArrayList<>();
-
-    @Accessors(fluent = true)
-    List<ECouleurBouee> petitChenalRouge = new ArrayList<>();
+    @Setter(AccessLevel.NONE)
+    Chenaux petitChanaux = new Chenaux();
 
     @Setter(AccessLevel.NONE)
     ECouleurBouee[] pincesArriere = new ECouleurBouee[]{null, null, null, null, null};
@@ -200,8 +198,8 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         int points = 2 + (phare ? 13 : 0); // phare
         points += grandPort.size();
         points += petitPort.size();
-        points += pointsChenaux(grandChenalRouge, grandChenalVert);
-        points += pointsChenaux(petitChenalRouge, petitChenalVert);
+        points += grandChenaux.score();
+        points += petitChanaux.score();
         points += (mancheAAir1 && mancheAAir2) ? 15 : (mancheAAir1 || mancheAAir2) ? 5 : 0;
         points += bonPort ? 10 : (mauvaisPort ? 5 : 0);
         points += pavillon ? 10 : 0;
@@ -214,20 +212,5 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         score += 0.3 * points; // evaluation
         score += 5; // bonus;
         return score;
-    }
-
-    private long pointsChenaux(List<ECouleurBouee> chenalRouge, List<ECouleurBouee> chenalVert) {
-        long nbBoueeChenalRouge = chenalRouge.stream().filter(Objects::nonNull).count();
-        long nbBoueeOkRouge = chenalRouge.stream()
-                .filter(b -> b == ECouleurBouee.ROUGE)
-                .count();
-
-        long nbBoueeChenalVert = chenalVert.stream().filter(Objects::nonNull).count();
-        long nbBoueeOkVert = chenalVert.stream()
-                .filter(b -> b == ECouleurBouee.VERT)
-                .count();
-
-        long pair = Math.min(nbBoueeOkRouge, nbBoueeOkVert);
-        return nbBoueeChenalVert + nbBoueeChenalRouge + nbBoueeOkRouge + nbBoueeOkVert + (pair * 2);
     }
 }

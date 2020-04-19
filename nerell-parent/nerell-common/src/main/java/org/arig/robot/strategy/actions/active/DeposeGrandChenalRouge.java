@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.ETeam;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.*;
 import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.strategy.AbstractAction;
@@ -58,18 +55,8 @@ public class DeposeGrandChenalRouge extends AbstractAction {
 
     @Override
     public int order() {
-        int nbBoueeRouge = (int) Arrays.stream(rs.getPincesArriere()).filter(ECouleurBouee.isRouge).count();
-        int nbBoueeAutre = (int) Arrays.stream(rs.getPincesArriere()).filter(ECouleurBouee.isNotRouge).count();
-
-        int nbBoueeVerteGdChenalVert = (int) rs.grandChenalVert().stream().filter(ECouleurBouee.isVert).count();
-        int nbBoueeRougeGdChenalRouge = (int) rs.grandChenalRouge().stream().filter(ECouleurBouee.isRouge).count();
-
-        int pair = 0;
-        if (nbBoueeVerteGdChenalVert > nbBoueeRougeGdChenalRouge) {
-            pair = Math.min(nbBoueeRouge, nbBoueeVerteGdChenalVert - nbBoueeRougeGdChenalRouge);
-        }
-
-        int order = 2 * (nbBoueeRouge + pair) + nbBoueeAutre;
+        Chenaux chenauxFuture = rs.grandChenaux().with(rs.getPincesArriere(), null);
+        int order = chenauxFuture.score() - rs.grandChenaux().score();
         return order + tableUtils.alterOrder(entryPoint());
     }
 
@@ -92,14 +79,14 @@ public class DeposeGrandChenalRouge extends AbstractAction {
             if (rs.getTeam() == ETeam.BLEU) {
                 if (!rs.pincesArriereEmpty()) {
                     mv.gotoPointMM(xRef, getYDepose(yRef,false), true, SensDeplacement.ARRIERE);
-                    pincesArriereService.deposeArriereChenal(rs.grandChenalRouge()); // TODO Dépose partiel
+                    pincesArriereService.deposeArriereChenal(ECouleurBouee.ROUGE); // TODO Dépose partiel
                     mv.gotoPointMM(xRef, yRef, false);
                 }
 
             } else {
                 if (!rs.pincesArriereEmpty()) {
                     mv.gotoPointMM(xRef, getYDepose(yRef,false), true, SensDeplacement.ARRIERE);
-                    pincesArriereService.deposeArriereChenal(rs.grandChenalRouge());  // TODO Dépose partiel
+                    pincesArriereService.deposeArriereChenal(ECouleurBouee.ROUGE);  // TODO Dépose partiel
                     mv.gotoPointMM(entry, false);
                 }
             }
