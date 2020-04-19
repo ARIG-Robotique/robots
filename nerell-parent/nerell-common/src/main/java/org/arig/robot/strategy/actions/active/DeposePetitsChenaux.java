@@ -55,8 +55,8 @@ public class DeposePetitsChenaux extends AbstractAction {
     @Override
     public int order() {
         Chenaux chenauxFuture = rs.petitChanaux().with(
-                ArrayUtils.subarray(rs.getPincesArriere(), 0, 2),
-                ArrayUtils.subarray(rs.getPincesArriere(), 2, 4)
+                ArrayUtils.subarray(rs.getPincesAvant(), 0, 2),
+                ArrayUtils.subarray(rs.getPincesAvant(), 2, 4)
         );
 
         if (step == 0) {
@@ -115,18 +115,8 @@ public class DeposePetitsChenaux extends AbstractAction {
                 servos.pincesAvantOuvert(true);
             }
 
-            if (rs.getPincesAvant()[0] != null) {
-                rs.petitChanaux().addRouge(rs.getPincesAvant()[0]);
-            }
-            if (rs.getPincesAvant()[1] != null) {
-                rs.petitChanaux().addRouge(rs.getPincesAvant()[1]);
-            }
-            if (rs.getPincesAvant()[2] != null) {
-                rs.petitChanaux().addVert(rs.getPincesAvant()[2]);
-            }
-            if (rs.getPincesAvant()[3] != null) {
-                rs.petitChanaux().addVert(rs.getPincesAvant()[3]);
-            }
+            rs.petitChanaux().addRouge(ArrayUtils.subarray(rs.getPincesAvant(), 0, 2));
+            rs.petitChanaux().addVert(ArrayUtils.subarray(rs.getPincesAvant(), 2, 4));
             rs.clearPincesAvant();
 
             mv.gotoPointMM(x, y, false, true, SensDeplacement.ARRIERE);
