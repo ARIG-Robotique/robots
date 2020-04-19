@@ -217,10 +217,10 @@ public class Ordonanceur {
             ThreadUtils.sleep(10000);
         }
 
-        SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(false, Type.RISING);
-        SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(false, Type.FALLING);
+        SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.RISING);
+        SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.FALLING);
         IntegerChangeFilter strategyChangeFilter = new IntegerChangeFilter(-1);
-        boolean manuel = false;
+        boolean manuel = ecranService.config().isModeManuel();
         while(!ioService.tirette()) {
             if (manuelRisingEdge.filter(ecranService.config().isModeManuel())) {
                 manuel = true;
