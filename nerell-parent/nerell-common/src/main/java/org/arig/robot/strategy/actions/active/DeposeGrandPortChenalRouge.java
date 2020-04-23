@@ -5,7 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.*;
+import org.arig.robot.model.Chenaux;
+import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.ETeam;
+import org.arig.robot.model.Point;
+import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.strategy.AbstractAction;
@@ -14,13 +18,9 @@ import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.function.Predicate;
-
 @Slf4j
 @Component
-public class DeposeGrandChenalRouge extends AbstractAction {
+public class DeposeGrandPortChenalRouge extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -39,12 +39,12 @@ public class DeposeGrandChenalRouge extends AbstractAction {
 
     @Override
     public String name() {
-        return "Dépose grand chenal rouge";
+        return "Dépose grand port chenal rouge";
     }
 
     @Override
     protected Point entryPoint() {
-        double x = 225;
+        double x = 460;
         double y = 1200;
         if (ETeam.JAUNE == rs.getTeam()) {
             x = 3000 - x;
@@ -62,7 +62,7 @@ public class DeposeGrandChenalRouge extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rs.pincesArriereEmpty();
+        return isTimeValid() && !rs.inPort() && !rs.pincesArriereEmpty();
     }
 
     @Override
@@ -74,18 +74,21 @@ public class DeposeGrandChenalRouge extends AbstractAction {
             final Point entry = entryPoint();
             mv.pathTo(entry);
 
-            double xRef = entry.getX();
+            double xRef = 225;
             double yRef = entry.getY();
             if (rs.getTeam() == ETeam.BLEU) {
                 if (!rs.pincesArriereEmpty()) {
                     mv.gotoPointMM(xRef, getYDepose(yRef,false), true, SensDeplacement.ARRIERE);
+                    mv.gotoOrientationDeg(90);
                     pincesArriereService.deposeArriereChenal(ECouleurBouee.ROUGE); // TODO Dépose partiel
                     mv.gotoPointMM(xRef, yRef, false);
                 }
 
             } else {
+                xRef = 3000 - xRef;
                 if (!rs.pincesArriereEmpty()) {
                     mv.gotoPointMM(xRef, getYDepose(yRef,false), true, SensDeplacement.ARRIERE);
+                    mv.gotoOrientationDeg(-90);
                     pincesArriereService.deposeArriereChenal(ECouleurBouee.ROUGE);  // TODO Dépose partiel
                     mv.gotoPointMM(entry, false);
                 }

@@ -5,10 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.Chenaux;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
@@ -18,7 +20,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class EcueilAdverse extends AbstractAction {
+public class DeposeGrandPortChenalVert extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
@@ -37,13 +39,13 @@ public class EcueilAdverse extends AbstractAction {
 
     @Override
     public String name() {
-        return "Ecueil adverse";
+        return "Dépose grand port chenal vert";
     }
 
     @Override
     protected Point entryPoint() {
-        double x = 2150;
-        double y = 2000 - 230;
+        double x = 460;
+        double y = 1200;
         if (ETeam.JAUNE == rs.getTeam()) {
             x = 3000 - x;
         }
@@ -53,13 +55,14 @@ public class EcueilAdverse extends AbstractAction {
 
     @Override
     public int order() {
-        int order = rs.getEcueilAdverseDispo() * 2 + (int) Math.ceil(rs.getEcueilAdverseDispo() / 2.0) * 2; // Sur chenal, bien trié (X bouées, X/2 paires)
+        Chenaux chenauxFuture = rs.grandChenaux().with(null, rs.getPincesArriere());
+        int order = chenauxFuture.score() - rs.grandChenaux().score();
         return order + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && rs.pincesArriereEmpty() && rs.getEcueilAdverseDispo() > 0;
+        return isTimeValid() && !rs.inPort() && !rs.pincesArriereEmpty();
     }
 
     @Override
@@ -71,40 +74,40 @@ public class EcueilAdverse extends AbstractAction {
             final Point entry = entryPoint();
             mv.pathTo(entry);
 
-            mv.gotoOrientationDeg(-90);
+            double xRef = 225;
+            double yRef = entry.getY();
+            if (rs.getTeam() == ETeam.BLEU) {
+                if (!rs.pincesArriereEmpty()) {
+                    mv.gotoPointMM(xRef, getYDepose(yRef,false), true, SensDeplacement.ARRIERE);
+                    mv.gotoOrientationDeg(-90);
+                    pincesArriereService.deposeArriereChenal(ECouleurBouee.VERT); // TODO Dépose partiel
+                    mv.gotoPointMM(xRef, yRef, false);
+                }
 
-            pincesArriereService.preparePriseEcueil();
-            mv.reculeMM(60);
-
-            mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
-            rs.enableCalageBordure();
-            mv.reculeMMSansAngle(60);
-
-            ECouleurBouee[] couleursEcueil = rs.getCouleursEcueil(); // TODO Cette valeur est changé par la lecture balise
-            ECouleurBouee[] couleursFinales = new ECouleurBouee[5];
-            for (int i = 0; i < 5; i++) {
-                // on symétrise et on inverse (les connues seulement)
-                if (couleursEcueil[5 - i] == ECouleurBouee.ROUGE) {
-                    couleursFinales[i] = ECouleurBouee.VERT;
-                } else if (couleursEcueil[5 - i] == ECouleurBouee.VERT) {
-                    couleursFinales[i] = ECouleurBouee.ROUGE;
-                } else {
-                    couleursFinales[i] = ECouleurBouee.INCONNU; // FIXME Si la lecture balise a réussi on écrase avec des INCONNUS
+            } else {
+                xRef = 3000 - xRef;
+                if (!rs.pincesArriereEmpty()) {
+                    mv.gotoPointMM(xRef, getYDepose(yRef,false), true, SensDeplacement.ARRIERE);
+                    mv.gotoOrientationDeg(90);
+                    pincesArriereService.deposeArriereChenal(ECouleurBouee.VERT);  // TODO Dépose partiel
+                    mv.gotoPointMM(entry, false);
                 }
             }
-
-            pincesArriereService.finalisePriseEcueil(couleursFinales);
-
-            // STOCK
-
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-            mv.gotoPointMM(entry, false);
-
             completed = true;
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+        }
+    }
+
+    private double getYDepose(double yRef, boolean avant) {
+        int coef = avant ? 160 : 61; // de combien il faut reculer
+
+        if (rs.getTeam() == ETeam.BLEU) {
+            return yRef + coef;
+        } else {
+            return yRef - coef;
         }
     }
 }

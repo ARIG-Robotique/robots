@@ -59,7 +59,7 @@ public class PincesAvantService {
                 servosService.pinceAvantFerme(i, false);
             }
         }
-        servosService.ascenseurAvantOuvertureMoustache(true);
+        servosService.ascenseurAvantRoulage(true);
     }
 
     /**

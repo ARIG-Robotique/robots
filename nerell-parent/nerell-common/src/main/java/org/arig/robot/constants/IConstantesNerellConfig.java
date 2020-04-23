@@ -26,6 +26,9 @@ public interface IConstantesNerellConfig {
     // Temps restant pour le déclenchement du pavillon
     int pavillonRemainingTimeMs = 5000;
 
+    // Temps pour rendre le port prioritaire
+    int invalidPriseRemainingTime = 20000;
+
     // Valeurs min / max en mm des axes du repères
     int minX = 50;
     int minY = 50;

@@ -10,10 +10,9 @@ public interface IConstantesServos {
     // Constantes de vitesse //
     // --------------------- //
 
-    byte SPEED_MOUSTACHE_DROITE = 0;
-    byte SPEED_MOUSTACHE_GAUCHE = SPEED_MOUSTACHE_DROITE;
-    byte SPEED_BRAS_DROIT = 0;
-    byte SPEED_BRAS_GAUCHE = SPEED_BRAS_DROIT;
+    byte SPEED_MOUSTACHE_POUSSETTE = 10;
+    byte SPEED_MOUSTACHE = 0;
+    byte SPEED_BRAS = 0;
     byte SPEED_ASCENSEUR_AVANT = 0;
     byte SPEED_PINCE_AVANT = 0;
     byte SPEED_ASCENSEUR_ARRIERE = 0;

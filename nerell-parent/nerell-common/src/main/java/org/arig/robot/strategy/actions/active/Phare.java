@@ -69,7 +69,7 @@ public class Phare extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rs.phare();
+        return isTimeValid() && !rs.phare() && !rs.inPort();
     }
 
     @Override

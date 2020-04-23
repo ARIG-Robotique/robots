@@ -75,7 +75,7 @@ public class RetourAuPort extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && rs.getRemainingTime() < 30000;
+        return isTimeValid() && !rs.inPort() && rs.getRemainingTime() < IConstantesNerellConfig.invalidPriseRemainingTime;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class RetourAuPort extends AbstractAction {
 
             final Point entry = entryPoint();
             mv.pathTo(entry);
-            setScore(coordProjection = true); //FIXME je comprends pas
+            setScore(coordProjection = true); // FIXME je comprends pas
 
             // Finalisation de la rentré dans le port après avoir compter les points
             Point finalPoint = new Point(entry);

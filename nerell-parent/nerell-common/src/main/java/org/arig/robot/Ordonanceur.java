@@ -14,6 +14,7 @@ import org.arig.robot.exception.I2CException;
 import org.arig.robot.filters.common.IntegerChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
+import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
@@ -176,6 +177,15 @@ public class Ordonanceur {
             }
             ThreadUtils.sleep(500);
         } while(!ecranService.config().isStartCalibration());
+
+        ecranService.displayMessage("Définition arbitraire des écueils");
+        if (robotStatus.getTeam() == ETeam.BLEU) {
+            robotStatus.setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.VERT});
+            robotStatus.setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
+        } else {
+            robotStatus.setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
+            robotStatus.setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.VERT});
+        }
 
         ecranService.displayMessage("Chargement de la carte");
         String fileResourcePath = String.format("classpath:maps/sail_the_world-%s.png", robotStatus.getTeam().name());

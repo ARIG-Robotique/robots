@@ -93,9 +93,11 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     private DirectionGirouette directionGirouette = DirectionGirouette.UNKNOWN;
 
-    private ECouleurBouee[] couleursEcueil = new ECouleurBouee[]{ECouleurBouee.VERT, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.ROUGE};
+    private ECouleurBouee[] couleursEcueilCommunEquipe = new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.VERT};
+    private ECouleurBouee[] couleursEcueilCommunAdverse = new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.VERT};
 
-    private int ecueilAdverseDispo = 0;
+    private byte ecueilCommunBleuDispo = 5;
+    private byte ecueilCommunJauneDispo = 5;
 
     @Setter(AccessLevel.NONE)
     private boolean pincesEnabled = false;
@@ -131,6 +133,10 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     @Accessors(fluent = true)
     boolean mauvaisPort = false;
 
+    public boolean inPort() {
+        return bonPort || mauvaisPort;
+    }
+
     @Setter
     @Accessors(fluent = true)
     boolean pavillon = false;
@@ -151,9 +157,11 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     @Setter(AccessLevel.NONE)
     Chenaux petitChenaux = new Chenaux();
 
+    // De gauche a droite, dans le sens du robot
     @Setter(AccessLevel.NONE)
     ECouleurBouee[] pincesArriere = new ECouleurBouee[]{null, null, null, null, null};
 
+    // De gauche à droite, dans le sens du robot
     @Setter(AccessLevel.NONE)
     ECouleurBouee[] pincesAvant = new ECouleurBouee[]{null, null, null, null};
 

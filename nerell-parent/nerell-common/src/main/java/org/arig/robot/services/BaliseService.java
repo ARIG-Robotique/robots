@@ -2,6 +2,7 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.ETeam;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.balise.StatutBalise;
 import org.arig.robot.model.communication.balise.enums.CouleurDetectee;
@@ -64,19 +65,23 @@ public class BaliseService {
                     .allMatch(c -> c != CouleurDetectee.UNKNONW);
 
             if (valid) {
-                CouleurDetectee[] detection = statut.getDetection().getColors();
-                ECouleurBouee[] couleurs = new ECouleurBouee[5];
+                final CouleurDetectee[] detection = statut.getDetection().getColors();
+                final ECouleurBouee[] couleursAdverse = new ECouleurBouee[5];
+                final ECouleurBouee[] couleursEquipe = new ECouleurBouee[5];
 
-                // la détection se faisant coté adverse il faut symétriser et inverser
-                for (int i = 0; i < 5; i++) {
-                    if (detection[5 - i] == CouleurDetectee.RED) {
-                        couleurs[i] = ECouleurBouee.VERT;
+                // Récupération de gauche a droit par la balise.
+                // Les pinces arrières sont dans l'autre sens, on inverse le tableau
+                for (int i = 0 ; i < 5 ; i++) {
+                    if (detection[4 - i] == CouleurDetectee.RED) {
+                        couleursAdverse[i] = ECouleurBouee.ROUGE;
+                        couleursEquipe[4 - i] = ECouleurBouee.VERT;
                     } else {
-                        couleurs[i] = ECouleurBouee.ROUGE;
+                        couleursAdverse[i] = ECouleurBouee.VERT;
+                        couleursEquipe[4 - i] = ECouleurBouee.ROUGE;
                     }
                 }
-
-                rs.setCouleursEcueil(couleurs);
+                rs.setCouleursEcueilCommunAdverse(couleursAdverse);
+                rs.setCouleursEcueilCommunEquipe(couleursEquipe);
             }
         }
 
@@ -85,12 +90,15 @@ public class BaliseService {
 
     public void lectureEcueilAdverse() {
         if (statut != null && statut.getDetection() != null) {
-            rs.setEcueilAdverseDispo(
-                    (int) Stream.of(statut.getDetection().getColors())
-                            .filter(c -> c != CouleurDetectee.UNKNONW)
-                            .count()
-            );
+            byte nbBouees = (byte) Stream.of(statut.getDetection().getColors())
+                    .filter(c -> c != CouleurDetectee.UNKNONW)
+                    .count();
+
+            if (rs.getTeam() == ETeam.BLEU) {
+                rs.setEcueilCommunJauneDispo(nbBouees);
+            } else {
+                rs.setEcueilCommunBleuDispo(nbBouees);
+            }
         }
     }
-
 }

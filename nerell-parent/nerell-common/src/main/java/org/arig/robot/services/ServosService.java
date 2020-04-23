@@ -34,10 +34,10 @@ public class ServosService {
     }
 
     public void homes() {
-        servos.setPositionAndSpeed(IConstantesServos.MOUSTACHE_DROITE, IConstantesServos.POS_MOUSTACHE_DROITE_FERME, IConstantesServos.SPEED_MOUSTACHE_DROITE);
-        servos.setPositionAndSpeed(IConstantesServos.MOUSTACHE_GAUCHE, IConstantesServos.POS_MOUSTACHE_GAUCHE_FERME, IConstantesServos.SPEED_MOUSTACHE_GAUCHE);
-        servos.setPositionAndSpeed(IConstantesServos.BRAS_DROIT, IConstantesServos.POS_BRAS_DROIT_FERME, IConstantesServos.SPEED_BRAS_DROIT);
-        servos.setPositionAndSpeed(IConstantesServos.BRAS_GAUCHE, IConstantesServos.POS_BRAS_GAUCHE_FERME, IConstantesServos.SPEED_BRAS_GAUCHE);
+        servos.setPositionAndSpeed(IConstantesServos.MOUSTACHE_DROITE, IConstantesServos.POS_MOUSTACHE_DROITE_FERME, IConstantesServos.SPEED_MOUSTACHE);
+        servos.setPositionAndSpeed(IConstantesServos.MOUSTACHE_GAUCHE, IConstantesServos.POS_MOUSTACHE_GAUCHE_FERME, IConstantesServos.SPEED_MOUSTACHE);
+        servos.setPositionAndSpeed(IConstantesServos.BRAS_DROIT, IConstantesServos.POS_BRAS_DROIT_FERME, IConstantesServos.SPEED_BRAS);
+        servos.setPositionAndSpeed(IConstantesServos.BRAS_GAUCHE, IConstantesServos.POS_BRAS_GAUCHE_FERME, IConstantesServos.SPEED_BRAS);
         servos.setPositionAndSpeed(IConstantesServos.ASCENSEUR_AVANT, IConstantesServos.POS_ASCENSEUR_AVANT_OUVERTURE_MOUSTACHE, IConstantesServos.SPEED_ASCENSEUR_AVANT);
         servos.setPositionAndSpeed(IConstantesServos.PINCE_AVANT_1, IConstantesServos.POS_PINCE_AVANT_1_FERME, IConstantesServos.SPEED_PINCE_AVANT);
         servos.setPositionAndSpeed(IConstantesServos.PINCE_AVANT_2, IConstantesServos.POS_PINCE_AVANT_2_FERME, IConstantesServos.SPEED_PINCE_AVANT);
@@ -132,6 +132,18 @@ public class ServosService {
         }
     }
 
+    private void setPositionBatchAndSpeed(int[][] servosPos, byte speed, boolean wait) {
+        int currentPosition = servos.getPosition((byte) servosPos[0][0]);
+
+        for (int[] servoPos : servosPos) {
+            servos.setPositionAndSpeed((byte) servoPos[0], servoPos[1], speed);
+        }
+
+        if (wait && currentPosition != servosPos[0][1]) {
+            ThreadUtils.sleep(computeWaitTime((byte) servosPos[0][0], currentPosition, servosPos[0][1]));
+        }
+    }
+
     private int computeWaitTime(byte servo, int currentPosition, int position) {
         Triple<Integer, Integer, Integer> config = IConstantesServos.MIN_TIME_MAX.get(servo);
 
@@ -150,16 +162,15 @@ public class ServosService {
     }
 
     public void moustachesOuvert(boolean wait) {
-        setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_MOUSTACHES).get(IConstantesServos.POS_BATCH_MOUSTACHES_OUVERT), wait);
+        setPositionBatchAndSpeed(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_MOUSTACHES).get(IConstantesServos.POS_BATCH_MOUSTACHES_OUVERT), IConstantesServos.SPEED_MOUSTACHE, wait);
     }
 
     public void moustachesFerme(boolean wait) {
-        setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_MOUSTACHES).get(IConstantesServos.POS_BATCH_MOUSTACHES_FERME), wait);
+        setPositionBatchAndSpeed(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_MOUSTACHES).get(IConstantesServos.POS_BATCH_MOUSTACHES_FERME), IConstantesServos.SPEED_MOUSTACHE, wait);
     }
 
-    // TODO gestion de la vitesse
     public void moustachesPoussette(boolean wait) {
-        setPositionBatch(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_MOUSTACHES).get(IConstantesServos.POS_BATCH_MOUSTACHES_POUSETTE), wait);
+        setPositionBatchAndSpeed(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_MOUSTACHES).get(IConstantesServos.POS_BATCH_MOUSTACHES_POUSETTE), IConstantesServos.SPEED_MOUSTACHE_POUSSETTE, wait);
     }
 
     public void brasGaucheMancheAAir(boolean wait) {

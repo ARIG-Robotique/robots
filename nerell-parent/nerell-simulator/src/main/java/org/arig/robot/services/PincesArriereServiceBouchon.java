@@ -25,4 +25,11 @@ public class PincesArriereServiceBouchon extends AbstractPincesArriereService {
 
         return super.deposeArriereChenal(chenal);
     }
+
+    @Override
+    public boolean deposeArrierePetitPort() {
+        io.contentPinceArriere(false);
+
+        return super.deposeArrierePetitPort();
+    }
 }

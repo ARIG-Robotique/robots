@@ -540,7 +540,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                     rs.enableAvoidance();
 
                     // Enchainement avec freinage, et alignement en rotation sur chaque point
-                    gotoPointMM(targetPoint.getX(), targetPoint.getY(), true, sens);
+                    //gotoPointMM(targetPoint.getX(), targetPoint.getY(), true, sens);
 
                     // Enchainement avec freinage, et sans alignement en rotation
                     //gotoPointMM(targetPoint.getX(), targetPoint.getY(), false, sens);
@@ -549,7 +549,7 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
                     //gotoPointMM(targetPoint.getX(), targetPoint.getY(), firstPoint, sens);
 
                     // Alignement en rotation sur le premier point, puis enchainement sans freinage jusqu'au dernier point
-                    //gotoPointMM(targetPoint.getX(), targetPoint.getY(), firstPoint, !c.hasNext(), sens);
+                    gotoPointMM(targetPoint.getX(), targetPoint.getY(), firstPoint, !c.hasNext(), sens);
 
                     // Après un tour ce n'est plus le premier point
                     firstPoint = false;

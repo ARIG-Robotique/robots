@@ -59,16 +59,12 @@ public abstract class AbstractPincesArriereService implements IPincesArriereServ
 
     /**
      * Déposer la pince arrière dans un chenal
+     *
      * @param chenal Une des liste de RobotStatus
      */
     @Override
     public boolean deposeArriereChenal(final ECouleurBouee chenal) {
-        srv.pivotArriereOuvert(true);
-        srv.ascenseurArriereTable(true);
-        srv.pincesArriereOuvert(true);
-        srv.ascenseurArriereHaut(true);
-        srv.pivotArriereFerme(false);
-        srv.pincesArriereFerme(false);
+        deposeTable();
 
         if (chenal == ECouleurBouee.ROUGE) {
             rs.grandChenaux().addRouge(rs.getPincesArriere());
@@ -81,4 +77,28 @@ public abstract class AbstractPincesArriereService implements IPincesArriereServ
         return true;
     }
 
+    /**
+     * Déposer la pince arrière dans le petit port
+     */
+    @Override
+    public boolean deposeArrierePetitPort() {
+        deposeTable();
+
+        rs.petitChenaux().addVert(rs.getPincesArriere()[0], rs.getPincesArriere()[1]);
+        rs.petitPort().add(rs.getPincesArriere()[2]);
+        rs.petitChenaux().addRouge(rs.getPincesArriere()[3], rs.getPincesArriere()[4]);
+
+        rs.clearPincesArriere();
+
+        return true;
+    }
+
+    private void deposeTable() {
+        srv.pivotArriereOuvert(true);
+        srv.ascenseurArriereTable(true);
+        srv.pincesArriereOuvert(true);
+        srv.ascenseurArriereHaut(true);
+        srv.pivotArriereFerme(false);
+        srv.pincesArriereFerme(false);
+    }
 }
