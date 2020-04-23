@@ -51,23 +51,23 @@ public interface IConstantesNerellConfig {
     // ------------------------ //
     // Configuration des rampes //
     // ------------------------ //
-    double rampAccDistance = 1000.0; // en mm/s2
-    double rampDecDistance = 1000.0; // en mm/s2
+    double rampAccDistance = 800.0; // en mm/s2
+    double rampDecDistance = 800.0; // en mm/s2
 
-    double rampAccOrientation = 1000.0; // en mm/s2
-    double rampDecOrientation = 1000.0; // en mm/s2
+    double rampAccOrientation = 1000.0 * 2; // en mm/s2
+    double rampDecOrientation = 1000.0 * 2; // en mm/s2
 
     // -------------------------- //
     // Configuration des vitesses //
     // -------------------------- //
 
-    long vitesseOrientationUltraHaute = 1000;
+    long vitesseOrientationUltraHaute = 1000 * 2;
     long vitesseOrientationSuperHaute = 800;
     long vitesseOrientationBasse = 300;
     long vitesseOrientationSuperBasse = 150;
 
     long vitesseUltraHaute = 1000;
-    long vitesseSuperHaute = 700;
+    long vitesseSuperHaute = 800;
     long vitesseHaute = 600;
     long vitesseMoyenneHaute = 500;
     long vitesseMoyenneBasse = 400;
@@ -75,7 +75,7 @@ public interface IConstantesNerellConfig {
     long vitesseSuperLente = 200;
     long vitesseUltraLente = 100;
 
-    long vitessePath = vitesseUltraHaute;
+    long vitessePath = vitesseSuperHaute;
     long vitesseOrientation = vitesseOrientationUltraHaute;
 
     // -------------- //
@@ -88,7 +88,7 @@ public interface IConstantesNerellConfig {
     double kiDistance = 120 * asservTimeS; // 120
     double kdDistance = 0.002 / asservTimeS; // 0.002
     double kpDistanceSimu = kcrDistance * 0.6;
-    double kiDistanceSimu = (tcrDistance * 120) * asservTimeS;
+    double kiDistanceSimu = (tcrDistance * 0) * asservTimeS;
     double kdDistanceSimu = (tcrDistance / 5) / asservTimeS;
 
     double kcrOrientation = 10;
@@ -97,7 +97,7 @@ public interface IConstantesNerellConfig {
     double kiOrientation = (tcrOrientation * 2) * asservTimeS;
     double kdOrientation = (tcrOrientation / 5) / asservTimeS;
     double kpOrientationSimu = kcrOrientation * 0.6;
-    double kiOrientationSimu = (tcrOrientation * 120) * asservTimeS;
+    double kiOrientationSimu = (tcrOrientation * 0) * asservTimeS;
     double kdOrientationSimu = (tcrOrientation / 5) / asservTimeS;
 
     // --------------------------- //
