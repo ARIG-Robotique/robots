@@ -2,8 +2,6 @@ package org.arig.robot.services;
 
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.arig.robot.model.RobotStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

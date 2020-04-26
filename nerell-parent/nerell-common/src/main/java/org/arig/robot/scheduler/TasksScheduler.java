@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author gdepuille on 23/12/14.
  */
@@ -69,7 +71,7 @@ public class TasksScheduler implements InitializingBean {
                     lastTimeAsserv = timeStartAsserv;
 
                     if (rs.isAsservEnabled()) {
-                        trajectoryManager.process();
+                        trajectoryManager.process(TimeUnit.MICROSECONDS.toMillis(ellapsedAsserv));
                     } else {
                         if (!rs.isCaptureEnabled()) {
                             trajectoryManager.stop();

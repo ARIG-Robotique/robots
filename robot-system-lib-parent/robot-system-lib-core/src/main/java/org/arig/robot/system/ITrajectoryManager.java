@@ -14,7 +14,7 @@ public interface ITrajectoryManager {
 
     void stop();
 
-    void process();
+    void process(long timeStepMs);
 
     void pathTo(Point pt) throws NoPathFoundException, AvoidingException;
 

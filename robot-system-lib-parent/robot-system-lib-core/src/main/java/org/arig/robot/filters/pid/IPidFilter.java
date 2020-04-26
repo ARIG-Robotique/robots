@@ -3,6 +3,7 @@ package org.arig.robot.filters.pid;
 import org.arig.robot.filters.IFilter;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Interface IPidFilter.
@@ -28,6 +29,10 @@ public interface IPidFilter extends IFilter<Double, Double>{
      * @param consigne La consigne a atteindre
      */
     void consigne(Double consigne);
+
+    void setSampleTimeMs(double value);
+
+    void setSampleTime(double value, TimeUnit unit);
 
     /**
      * Récupérer de l'erreur sum de pid

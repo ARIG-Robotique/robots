@@ -76,13 +76,13 @@ public abstract class AbstractRampFilter implements IRampFilter {
      *
      * @param value the new sample time ms
      */
-    public void setSampleTime(final double value) {
+    public void setSampleTimeMs(final double value) {
         sampleTimeS = value / 1000;
         updateStepVitesse();
     }
 
     public void setSampleTime(double value, TimeUnit unit) {
-        setSampleTime((double) unit.toMillis((long) value));
+        setSampleTimeMs((double) unit.toMillis((long) value));
     }
 
     @Override

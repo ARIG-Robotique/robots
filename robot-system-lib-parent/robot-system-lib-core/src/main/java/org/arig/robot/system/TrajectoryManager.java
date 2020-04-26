@@ -177,9 +177,10 @@ public class TrajectoryManager implements ITrajectoryManager {
 
     /**
      * Process. Cette méthode permet de réaliser les fonctions lié aux déplacements.
+     * @param timeStepMs
      */
     @Override
-    public void process() {
+    public void process(final long timeStepMs) {
         synchronized (this) {
             // 1. Calcul de la position du robot
             encoders.lectureValeurs();
@@ -207,7 +208,7 @@ public class TrajectoryManager implements ITrajectoryManager {
                 tCalcul2 = System.nanoTime();
 
                 // C.2. Asservissement sur les consignes
-                asservissementPolaire.process();
+                asservissementPolaire.process(timeStepMs);
 
                 tAsserv = System.nanoTime();
             }

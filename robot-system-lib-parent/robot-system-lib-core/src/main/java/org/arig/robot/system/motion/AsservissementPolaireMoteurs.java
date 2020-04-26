@@ -61,7 +61,7 @@ public class AsservissementPolaireMoteurs implements IAsservissementPolaire {
     }
 
     @Override
-    public void process() {
+    public void process(final long timeStepMs) {
         final double positionDistance, positionOrientation;
 
         // Distance
@@ -86,9 +86,11 @@ public class AsservissementPolaireMoteurs implements IAsservissementPolaire {
         double consigneMotDroit = positionDistance + positionOrientation;
         double consigneMotGauche = positionDistance - positionOrientation;
 
+        pidMoteurDroit.setSampleTimeMs(timeStepMs);
         pidMoteurDroit.consigne(consigneMotDroit);
         double cmdMotDroit = pidMoteurDroit.filter(encoders.getDroit());
 
+        pidMoteurGauche.setSampleTimeMs(timeStepMs);
         pidMoteurGauche.consigne(consigneMotGauche);
         double cmdMotGauche = pidMoteurGauche.filter(encoders.getGauche());
 

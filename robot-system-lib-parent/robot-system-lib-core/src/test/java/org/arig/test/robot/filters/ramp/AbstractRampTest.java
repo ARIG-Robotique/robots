@@ -43,10 +43,10 @@ public abstract class AbstractRampTest {
     @Test
     @DirtiesContext
     public void testChangeSampleTime() {
-        getFiltre().setSampleTime(1000);
+        getFiltre().setSampleTimeMs(1000);
         Assert.assertEquals(1, getFiltre().getSampleTimeS(), 0);
 
-        getFiltre().setSampleTime(1500);
+        getFiltre().setSampleTimeMs(1500);
         Assert.assertEquals(1.5, getFiltre().getSampleTimeS(), 0);
 
         getFiltre().setSampleTime(10, TimeUnit.SECONDS);

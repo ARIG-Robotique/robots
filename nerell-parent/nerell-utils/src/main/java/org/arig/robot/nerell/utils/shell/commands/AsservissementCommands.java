@@ -5,7 +5,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.arig.robot.constants.IConstantesConfig;
-import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Point;
@@ -77,13 +76,13 @@ public class AsservissementCommands {
 
     @ShellMethod("Réglage PID Distance")
     public void pidDistance(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
-        pidDistance.setTunings(kp, ki * IConstantesNerellConfig.asservTimeS, kd / IConstantesNerellConfig.asservTimeS);
+        pidDistance.setTunings(kp, ki, kd);
         pidDistance.reset();
     }
 
     @ShellMethod("Réglage PID Orientation")
     public void pidOrientation(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
-        pidOrientation.setTunings(kp, ki * IConstantesNerellConfig.asservTimeS, kd / IConstantesNerellConfig.asservTimeS);
+        pidOrientation.setTunings(kp, ki, kd);
         pidOrientation.reset();
     }
 

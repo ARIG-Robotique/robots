@@ -88,20 +88,20 @@ public interface IConstantesNerellConfig {
     double kcrDistance = 21.5;
     double tcrDistance = 0.04;
     double kpDistance = 12.9; // 12.90
-    double kiDistance = 120 * asservTimeS; // 120
-    double kdDistance = 0.002 / asservTimeS; // 0.002
-    double kpDistanceSimu = kcrDistance * 0.6;
-    double kiDistanceSimu = (tcrDistance * 0) * asservTimeS;
-    double kdDistanceSimu = (tcrDistance / 5) / asservTimeS;
+    double kiDistance = 0.0; // 120
+    double kdDistance = 0.4; // 0.002
+    double kpDistanceSimu = 12.9;
+    double kiDistanceSimu = 0.0;
+    double kdDistanceSimu = 0.008;
 
-    double kcrOrientation = 10;
+    double kcrOrientation = 10.0;
     double tcrOrientation = 0.05;
-    double kpOrientation = kcrOrientation * 0.6;
-    double kiOrientation = (tcrOrientation * 2) * asservTimeS;
-    double kdOrientation = (tcrOrientation / 5) / asservTimeS;
-    double kpOrientationSimu = kcrOrientation * 0.6;
-    double kiOrientationSimu = (tcrOrientation * 0) * asservTimeS;
-    double kdOrientationSimu = (tcrOrientation / 5) / asservTimeS;
+    double kpOrientation = 3.0;
+    double kiOrientation = 0.5;
+    double kdOrientation = 4.5;
+    double kpOrientationSimu = 6.0;
+    double kiOrientationSimu = 0.0;
+    double kdOrientationSimu = 0.01;
 
     // --------------------------- //
     // Paramètre mouvement manager //

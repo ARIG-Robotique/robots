@@ -88,14 +88,14 @@ public abstract class AbstractPidFilter implements IPidFilter {
      *
      * @param value the new sample time ms
      */
-    public void setSampleTime(final double value) {
+    public void setSampleTimeMs(final double value) {
         sampleTimeS = value / 1000;
         integralTime.setGain(sampleTimeS);
         derivateTime.setGain(1 / sampleTimeS);
     }
 
     public void setSampleTime(double value, TimeUnit unit) {
-        setSampleTime((double) unit.toMillis((long) value));
+        setSampleTimeMs((double) unit.toMillis((long) value));
     }
 
     @Override

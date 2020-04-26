@@ -9,8 +9,9 @@ public interface IAsservissement {
 
     /**
      * Process.
+     * @param timeStepMs
      */
-    void process();
+    void process(long timeStepMs);
 
     /**
      * Reset.
