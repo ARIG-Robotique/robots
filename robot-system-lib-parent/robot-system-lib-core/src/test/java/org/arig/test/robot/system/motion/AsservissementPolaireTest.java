@@ -48,7 +48,7 @@ public class AsservissementPolaireTest {
         cmdRobot.getConsigne().setDistance(1000);
 
         for (int i = 2000 ; i >= 0 ; i--) {
-            asserv.process();
+            asserv.process(1);
             Thread.sleep(1);
         }
     }
