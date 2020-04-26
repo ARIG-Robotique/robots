@@ -28,10 +28,10 @@ import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -43,7 +43,7 @@ import java.util.stream.Stream;
  * @author gdepuille
  */
 @Slf4j
-public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
+public class TrajectoryManager implements ITrajectoryManager {
 
     @Autowired
     private IOdometrie odom;
@@ -109,39 +109,22 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
     private AtomicBoolean cancelMouvement = new AtomicBoolean(false);
 
-    /* Fenetre d'arret / approche distance */
-    private double fenetreApprocheDistance;
-    private double fenetreArretDistance;
-    private final double arretDistanceMm;
-    private final double approcheDistanceMm;
+    private final TrajectoryManagerConfig trajectoryManagerConfig;
 
-    /* Fenetre d'arret / approche orientation */
-    private double fenetreApprocheOrientation;
-    private double fenetreArretOrientation;
-    private final double arretOrientDeg;
-    private final double approcheOrientDeg;
+    public TrajectoryManager(TrajectoryManagerConfig trajectoryManagerConfig) {
+        this.trajectoryManagerConfig = trajectoryManagerConfig;
+    }
 
-    private final double coefAngle;
-    private long startAngle = -1;
-
-    /**
-     * Instantiates a new robot manager.
-     *
-     * @param arretDistanceMm the arret distance mm
-     * @param arretOrientDeg  the arret orient deg
-     * @param coefAngle       the coef angle
-     */
-    public TrajectoryManager(final double arretDistanceMm, final double approcheDistanceMm,
-                             final double arretOrientDeg, final double approcheOrientDeg,
-                             final double coefAngle) {
-        super();
-
-        // On stock les valeurs brut, le calcul sera fait sur le afterPropertiesSet.
-        this.arretDistanceMm = arretDistanceMm;
-        this.approcheDistanceMm = approcheDistanceMm;
-        this.arretOrientDeg = arretOrientDeg;
-        this.approcheOrientDeg = approcheOrientDeg;
-        this.coefAngle = coefAngle;
+    @PostConstruct
+    public void postConstruct() {
+        log.info("Fenetre arret distance                  : {} pulse -> {} mm", trajectoryManagerConfig.getFenetreArretDistance(), conv.pulseToMm(trajectoryManagerConfig.getFenetreArretDistance()));
+        log.info("Fenetre approche distance avec frein    : {} pulse -> {} mm", trajectoryManagerConfig.getFenetreApprocheAvecFreinDistance(), conv.pulseToMm(trajectoryManagerConfig.getFenetreApprocheAvecFreinDistance()));
+        log.info("Fenetre approche distance sans frein    : {} pulse -> {} mm", trajectoryManagerConfig.getFenetreApprocheSansFreinDistance(), conv.pulseToMm(trajectoryManagerConfig.getFenetreApprocheSansFreinDistance()));
+        log.info("Fenetre arret orientation               : {} pulse -> {} °", trajectoryManagerConfig.getFenetreArretOrientation(), conv.pulseToMm(trajectoryManagerConfig.getFenetreArretOrientation()));
+        log.info("Fenetre approche orientation avec frein : {} pulse -> {} °", trajectoryManagerConfig.getFenetreApprocheAvecFreinOrientation(), conv.pulseToMm(trajectoryManagerConfig.getFenetreApprocheAvecFreinOrientation()));
+        log.info("Fenetre approche orientation sans frein : {} pulse -> {} °", trajectoryManagerConfig.getFenetreApprocheSansFreinOrientation(), conv.pulseToMm(trajectoryManagerConfig.getFenetreApprocheSansFreinOrientation()));
+        log.info("Angle de démarrage en demi tour         : {} pulse -> {} °", trajectoryManagerConfig.getStartAngleDemiTour(), conv.pulseToDeg(trajectoryManagerConfig.getStartAngleDemiTour()));
+        log.info("Angle d'ajustement vitesse déplacement  : {} pulse -> {} °", trajectoryManagerConfig.getStartAngleLimitSpeedDistance(), conv.pulseToDeg(trajectoryManagerConfig.getStartAngleLimitSpeedDistance()));
     }
 
     @Override
@@ -152,26 +135,6 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
     @Override
     public boolean isTrajetEnApproche() {
         return trajetEnApproche.get();
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        fenetreArretDistance = conv.mmToPulse(arretDistanceMm);
-        fenetreApprocheDistance = conv.mmToPulse(approcheDistanceMm);
-
-        fenetreArretOrientation = conv.degToPulse(arretOrientDeg);
-        fenetreApprocheOrientation = conv.degToPulse(approcheOrientDeg);
-
-        if (coefAngle != -1) {
-            // Angle de départ pour les déplacements.
-            // Si l'angle est supérieur en absolu, on annule la distance
-            // afin de naviguer en priorité en marche avant.
-            // Cela a pour effet de tourner sur place en reculant avant de partir en avant.
-            startAngle = (long) (coefAngle * conv.getPiPulse());
-            log.info("Angle pour le demi tour {}°", conv.pulseToDeg(startAngle));
-        } else {
-            log.info("Angle pour le demi tour désactivé");
-        }
     }
 
     /**
@@ -292,10 +255,10 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
 
             switch(cmdRobot.getSensDeplacement()) {
                 case DEMI_TOUR:
-                    if (startAngle != -1 && Math.abs(consOrient) > startAngle) {
+                    if (Math.abs(consOrient) > trajectoryManagerConfig.getStartAngleDemiTour()) {
                         // Calcul du coef d'annulation de la distance
                         // Permet d'effectuer un demi tour en 3 temps.
-                        consDist = (consDist * ((startAngle - Math.abs(consOrient)) / startAngle));
+                        consDist = (consDist * ((trajectoryManagerConfig.getStartAngleDemiTour() - Math.abs(consOrient)) / trajectoryManagerConfig.getStartAngleDemiTour()));
 
                     }
                     break;
@@ -423,8 +386,8 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
         // Calcul du trajet atteints en mode freinage (toujours en DIST,ANGLE ici normale) //
         // ------------------------------------------------------------------------------- //
 
-        distAtteint = Math.abs(cmdRobot.getConsigne().getDistance()) < fenetreArretDistance;
-        orientAtteint = Math.abs(cmdRobot.getConsigne().getOrientation()) < fenetreArretOrientation;
+        distAtteint = Math.abs(cmdRobot.getConsigne().getDistance()) < trajectoryManagerConfig.getFenetreArretDistance();
+        orientAtteint = Math.abs(cmdRobot.getConsigne().getOrientation()) < trajectoryManagerConfig.getFenetreArretOrientation();
         trajetAtteint.set(cmdRobot.isFrein() && distAtteint && orientAtteint);
 
         // -------------------------------------------------------------------------- //
@@ -438,14 +401,14 @@ public class TrajectoryManager implements InitializingBean, ITrajectoryManager {
             long dY = (long) (cmdRobot.getPosition().getPt().getY() - currentPosition.getPt().getY());
 
             // On recalcul car la consigne de distance est altéré par le coeficient pour le demi tour
-            distApproche = Math.abs(calculDistance(dX, dY)) < fenetreApprocheDistance;
+            distApproche = Math.abs(calculDistance(dX, dY)) < trajectoryManagerConfig.getFenetreApprocheAvecFreinDistance();
             orientApproche = true;
         } else {
-            distApproche = Math.abs(cmdRobot.getConsigne().getDistance()) < fenetreApprocheDistance;
-            orientApproche = Math.abs(cmdRobot.getConsigne().getOrientation()) < fenetreApprocheOrientation;
+            distApproche = Math.abs(cmdRobot.getConsigne().getDistance()) < trajectoryManagerConfig.getFenetreApprocheAvecFreinDistance();
+            orientApproche = Math.abs(cmdRobot.getConsigne().getOrientation()) < trajectoryManagerConfig.getFenetreApprocheAvecFreinOrientation();
         }
 
-        // Lorsque l'on est dans la fenetre d'approche on bascule l'asserve en mode basique
+        // Lorsque l'on est dans la fenêtre d'approche on bascule l'asserve en mode basique (distance, angle)
         // Si on ne fait pas ça on obtient une spirale sur le point d'arrivé qui est jolie mais pas très pratique
         if (distApproche && orientApproche) {
             // Modification du type de consigne pour la stabilisation

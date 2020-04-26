@@ -13,6 +13,7 @@ import org.arig.robot.system.ILidarService;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.LidarService;
 import org.arig.robot.system.TrajectoryManager;
+import org.arig.robot.system.TrajectoryManagerConfig;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.arig.robot.system.motion.AsservissementPolaireDistanceOrientation;
@@ -60,10 +61,19 @@ public class NerellCommonContext {
 
     @Bean
     @Primary
-    public ITrajectoryManager trajectoryManager() {
-        return new TrajectoryManager(IConstantesNerellConfig.arretDistanceMm, IConstantesNerellConfig.approcheSansFreinDistanceMm,
-                IConstantesNerellConfig.arretOrientDeg, IConstantesNerellConfig.approcheSansFreinOrientationDeg,
-                IConstantesNerellConfig.angleReculDeg);
+    public ITrajectoryManager trajectoryManager(ConvertionRobotUnit conv) {
+        final TrajectoryManagerConfig config = TrajectoryManagerConfig.builder()
+                .fenetreArretDistance(conv.mmToPulse(IConstantesNerellConfig.arretDistanceMm))
+                .fenetreApprocheAvecFreinDistance(conv.mmToPulse(IConstantesNerellConfig.approcheAvecFreinDistanceMm))
+                .fenetreApprocheSansFreinDistance(conv.mmToPulse(IConstantesNerellConfig.approcheSansFreinDistanceMm))
+                .fenetreArretOrientation(conv.degToPulse(IConstantesNerellConfig.arretOrientDeg))
+                .fenetreApprocheAvecFreinOrientation(conv.degToPulse(IConstantesNerellConfig.approcheAvecFreinOrientationDeg))
+                .fenetreApprocheSansFreinOrientation(conv.degToPulse(IConstantesNerellConfig.approcheSansFreinOrientationDeg))
+                .startAngleDemiTour(conv.degToPulse(IConstantesNerellConfig.startAngleDemiTourDeg))
+                .startAngleLimitSpeedDistance(conv.degToPulse(IConstantesNerellConfig.startAngleLimitVitesseDistance))
+                .build();
+
+        return new TrajectoryManager(config);
     }
 
     @Bean
