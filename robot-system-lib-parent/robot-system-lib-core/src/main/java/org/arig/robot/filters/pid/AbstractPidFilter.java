@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public abstract class AbstractPidFilter implements IPidFilter {
@@ -23,7 +24,10 @@ public abstract class AbstractPidFilter implements IPidFilter {
     @Getter
     private final String name;
 
-    @Getter(AccessLevel.PROTECTED)
+    @Getter
+    private double sampleTimeS;
+
+    @Getter
     @Accessors(fluent = true)
     private Double consigne;
 
@@ -37,7 +41,15 @@ public abstract class AbstractPidFilter implements IPidFilter {
 
     @Getter(AccessLevel.PROTECTED)
     @Accessors(fluent = true)
+    private final ProportionalFilter integralTime;
+
+    @Getter(AccessLevel.PROTECTED)
+    @Accessors(fluent = true)
     private final ProportionalFilter kd;
+
+    @Getter(AccessLevel.PROTECTED)
+    @Accessors(fluent = true)
+    private final ProportionalFilter derivateTime;
 
     @Setter(AccessLevel.PROTECTED)
     @Getter(AccessLevel.PROTECTED)
@@ -62,11 +74,28 @@ public abstract class AbstractPidFilter implements IPidFilter {
 
         kp = new ProportionalFilter(0d);
         ki = new ProportionalFilter(0d);
+        integralTime = new ProportionalFilter(1d);
         kd = new ProportionalFilter(0d);
+        derivateTime = new ProportionalFilter(1d);
     }
 
     public void consigne(Double consigne) {
         this.consigne = consigne;
+    }
+
+    /**
+     * Sets the sample time ms.
+     *
+     * @param value the new sample time ms
+     */
+    public void setSampleTime(final double value) {
+        sampleTimeS = value / 1000;
+        integralTime.setGain(sampleTimeS);
+        derivateTime.setGain(1 / sampleTimeS);
+    }
+
+    public void setSampleTime(double value, TimeUnit unit) {
+        setSampleTime((double) unit.toMillis((long) value));
     }
 
     @Override

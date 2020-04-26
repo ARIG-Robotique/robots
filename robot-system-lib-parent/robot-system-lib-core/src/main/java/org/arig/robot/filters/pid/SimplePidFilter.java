@@ -11,7 +11,6 @@ public class SimplePidFilter extends AbstractPidFilter {
 
     private final IntegralFilter integral;
     private final DerivateFilter derivate;
-    private final SerialChainFilter<Double> derivateChain;
     private final ParallelChainFilter pid;
 
     public SimplePidFilter(String name) {
@@ -23,10 +22,12 @@ public class SimplePidFilter extends AbstractPidFilter {
         final SerialChainFilter<Double> integralChain = new SerialChainFilter<>();
         integralChain.addFilter(integral);
         integralChain.addFilter(ki());
+        integralChain.addFilter(integralTime());
 
-        derivateChain = new SerialChainFilter<>();
+        final SerialChainFilter<Double>  derivateChain = new SerialChainFilter<>();
         derivateChain.addFilter(derivate);
         derivateChain.addFilter(kd());
+        derivateChain.addFilter(derivateTime());
 
         pid = new ParallelChainFilter();
         pid.addFilter(kp());
