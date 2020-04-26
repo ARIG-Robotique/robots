@@ -394,9 +394,19 @@ public class TrajectoryManager implements ITrajectoryManager {
         orientAtteint = Math.abs(cmdRobot.getConsigne().getOrientation()) < trajectoryManagerConfig.getFenetreArretOrientation();
         trajetAtteint.set(cmdRobot.isFrein() && distAtteint && orientAtteint);
 
-        // -------------------------------------------------------------------------- //
-        // Calcul des fenetres d'approche pour le passage au point suivant sans arret //
-        // -------------------------------------------------------------------------- //
+        // ---------------------------------------------------------------------------------- //
+        // Calcul des fenetres d'approche pour le passage au point suivant avec ou sans arret //
+        // ---------------------------------------------------------------------------------- //
+
+        final double fenetreApprocheDistance;
+        final double fenetreApprocheOrientation;
+        if (cmdRobot.isFrein()) {
+            fenetreApprocheDistance = trajectoryManagerConfig.getFenetreApprocheAvecFreinDistance();
+            fenetreApprocheOrientation = trajectoryManagerConfig.getFenetreApprocheAvecFreinOrientation();
+        } else {
+            fenetreApprocheDistance = trajectoryManagerConfig.getFenetreApprocheSansFreinDistance();
+            fenetreApprocheOrientation = trajectoryManagerConfig.getFenetreApprocheSansFreinOrientation();
+        }
 
         // Si on est en mode déplacement XY, seul la distance d'approche du point est importante.
         if (cmdRobot.isType(TypeConsigne.XY)) {
@@ -405,11 +415,11 @@ public class TrajectoryManager implements ITrajectoryManager {
             long dY = (long) (cmdRobot.getPosition().getPt().getY() - currentPosition.getPt().getY());
 
             // On recalcul car la consigne de distance est altéré par le coeficient pour le demi tour
-            distApproche = Math.abs(calculDistance(dX, dY)) < trajectoryManagerConfig.getFenetreApprocheAvecFreinDistance();
+            distApproche = Math.abs(calculDistance(dX, dY)) < fenetreApprocheDistance;
             orientApproche = true;
         } else {
-            distApproche = Math.abs(cmdRobot.getConsigne().getDistance()) < trajectoryManagerConfig.getFenetreApprocheAvecFreinDistance();
-            orientApproche = Math.abs(cmdRobot.getConsigne().getOrientation()) < trajectoryManagerConfig.getFenetreApprocheAvecFreinOrientation();
+            distApproche = Math.abs(cmdRobot.getConsigne().getDistance()) < fenetreApprocheDistance;
+            orientApproche = Math.abs(cmdRobot.getConsigne().getOrientation()) < fenetreApprocheOrientation;
         }
 
         // Lorsque l'on est dans la fenêtre d'approche on bascule l'asserve en mode basique (distance, angle)
