@@ -278,6 +278,15 @@ public class TrajectoryManager implements ITrajectoryManager {
 
             }
 
+            // Limite de la vitesse de déplacement en fonction de l'angle du prochain point.
+            // On favorise la rotation pour l'enchainement des points
+            if (Math.abs(consOrient) > trajectoryManagerConfig.getStartAngleLimitSpeedDistance()) {
+                applyVitesse(0, vitesseOrientation.get());
+            } else {
+                double coef = (trajectoryManagerConfig.getStartAngleLimitSpeedDistance() - Math.abs(consOrient)) / trajectoryManagerConfig.getStartAngleLimitSpeedDistance();
+                applyVitesse((long) (coef * vitesseDistance.get()), vitesseOrientation.get());
+            }
+
             // Sauvegarde des consignes
             cmdRobot.getConsigne().setDistance((long) consDist);
             cmdRobot.getConsigne().setOrientation((long) consOrient);
@@ -289,6 +298,8 @@ public class TrajectoryManager implements ITrajectoryManager {
             // TODO : Consigne de rotation autour d'un point.
 
         } else {
+            applyVitesse(vitesseDistance.get(), vitesseOrientation.get());
+
             // Calcul par différence vis a vis de la valeur codeur(asservissement de position "basique")
             if (cmdRobot.isType(TypeConsigne.DIST)) {
                 cmdRobot.getConsigne().setDistance((long) (cmdRobot.getConsigne().getDistance() - encoders.getDistance()));
