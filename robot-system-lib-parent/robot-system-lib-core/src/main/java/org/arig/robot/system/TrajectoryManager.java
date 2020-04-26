@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -87,6 +88,9 @@ public class TrajectoryManager implements ITrajectoryManager {
 
     @Getter
     private AbstractMonitorMouvement currentMouvement = null;
+
+    private AtomicLong vitesseDistance = new AtomicLong(0);
+    private AtomicLong vitesseOrientation = new AtomicLong(0);
 
     private AtomicBoolean trajetAtteint = new AtomicBoolean(false);
 
@@ -906,6 +910,12 @@ public class TrajectoryManager implements ITrajectoryManager {
      */
     @Override
     public void setVitesse(long vDistance, long vOrientation) {
+        this.vitesseDistance.set(vDistance);
+        this.vitesseOrientation.set(vOrientation);
+        applyVitesse(vDistance, vOrientation);
+    }
+
+    private void applyVitesse(long vDistance, long vOrientation) {
         synchronized (this) {
             cmdRobot.getVitesse().setDistance(vDistance);
             cmdRobot.getVitesse().setOrientation(vOrientation);
