@@ -72,13 +72,13 @@ public class DeposeGrandPortChenalVert extends AbstractAction {
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             final Point entry = entryPoint();
-            mv.pathTo(entry);
+            mv.pathTo(entry, false);
 
             double xRef = 225;
             double yRef = entry.getY();
             if (rs.getTeam() == ETeam.BLEU) {
                 if (!rs.pincesArriereEmpty()) {
-                    mv.gotoPointMM(xRef, getYDepose(yRef,false), true, SensDeplacement.ARRIERE);
+                    mv.gotoPointMM(xRef, getYDepose(yRef,false), false, SensDeplacement.ARRIERE);
                     mv.gotoOrientationDeg(-90);
                     pincesArriereService.deposeArriereChenal(ECouleurBouee.VERT); // TODO Dépose partiel
                     mv.gotoPointMM(xRef, yRef, false);
@@ -87,7 +87,7 @@ public class DeposeGrandPortChenalVert extends AbstractAction {
             } else {
                 xRef = 3000 - xRef;
                 if (!rs.pincesArriereEmpty()) {
-                    mv.gotoPointMM(xRef, getYDepose(yRef,false), true, SensDeplacement.ARRIERE);
+                    mv.gotoPointMM(xRef, getYDepose(yRef,false), false, SensDeplacement.ARRIERE);
                     mv.gotoOrientationDeg(90);
                     pincesArriereService.deposeArriereChenal(ECouleurBouee.VERT);  // TODO Dépose partiel
                     mv.gotoPointMM(entry, false);
@@ -102,7 +102,7 @@ public class DeposeGrandPortChenalVert extends AbstractAction {
     }
 
     private double getYDepose(double yRef, boolean avant) {
-        int coef = avant ? 160 : 61; // de combien il faut reculer
+        int coef = avant ? 160 : 61; // Offset pour Y en fonction du type de dépose
 
         if (rs.getTeam() == ETeam.BLEU) {
             return yRef + coef;

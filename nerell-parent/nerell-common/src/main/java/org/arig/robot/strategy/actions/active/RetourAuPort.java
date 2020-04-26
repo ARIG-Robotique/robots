@@ -86,7 +86,7 @@ public class RetourAuPort extends AbstractAction {
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             final Point entry = entryPoint();
-            mv.pathTo(entry);
+            mv.pathTo(entry, false);
             setScore(coordProjection = true); // FIXME je comprends pas
 
             // Finalisation de la rentré dans le port après avoir compter les points
@@ -95,7 +95,7 @@ public class RetourAuPort extends AbstractAction {
             if (rs.getTeam() == ETeam.JAUNE) {
                 finalPoint.setX(3000 - finalPoint.getX());
             }
-            mv.gotoPointMM(finalPoint, true);
+            mv.gotoPointMM(finalPoint, false);
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();

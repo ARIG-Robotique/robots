@@ -61,7 +61,6 @@ public abstract class AbstractEcueil extends AbstractAction {
 
             final Point entry = entryPoint();
             mv.pathTo(entry);
-
             mv.gotoOrientationDeg(orientationPourPrise());
 
             pincesArriereService.preparePriseEcueil();

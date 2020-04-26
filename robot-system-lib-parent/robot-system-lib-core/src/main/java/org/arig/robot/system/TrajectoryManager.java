@@ -449,36 +449,41 @@ public class TrajectoryManager implements ITrajectoryManager {
 
     @Override
     public void pathTo(final Point pt) throws NoPathFoundException, AvoidingException {
-        pathTo(pt, SensDeplacement.AUTO);
+        pathTo(pt, SensDeplacement.AUTO, true);
+    }
+
+    @Override
+    public void pathTo(final Point pt, boolean frein) throws NoPathFoundException, AvoidingException {
+        pathTo(pt, SensDeplacement.AUTO, frein);
     }
 
     @Override
     public void pathTo(final Point pt, final SensDeplacement sens) throws NoPathFoundException, AvoidingException {
-        pathTo(pt.getX(), pt.getY(), sens);
+        pathTo(pt.getX(), pt.getY(), sens, true);
     }
 
-    /**
-     * Génération d'un déplacement avec le Path Finding
-     *
-     * @param targetXmm position sur l'axe X
-     * @param targetYmm position sur l'axe Y
-     * @throws NoPathFoundException
-     */
+    @Override
+    public void pathTo(final Point pt, final SensDeplacement sens, boolean frein) throws NoPathFoundException, AvoidingException {
+        pathTo(pt.getX(), pt.getY(), sens, frein);
+    }
+
     @Override
     public void pathTo(final double targetXmm, final double targetYmm) throws NoPathFoundException, AvoidingException {
-        pathTo(targetXmm, targetYmm, SensDeplacement.AUTO);
+        pathTo(targetXmm, targetYmm, SensDeplacement.AUTO, true);
     }
 
-    /**
-     * Génération d'un déplacement avec le Path Finding
-     *
-     * @param targetXmm position sur l'axe X
-     * @param targetYmm position sur l'axe Y
-     * @param sens Permet de définir le sens de déplacement souhaiter
-     * @throws NoPathFoundException
-     */
+    @Override
+    public void pathTo(final double targetXmm, final double targetYmm, boolean frein) throws NoPathFoundException, AvoidingException {
+        pathTo(targetXmm, targetYmm, SensDeplacement.AUTO, frein);
+    }
+
     @Override
     public void pathTo(final double targetXmm, final double targetYmm, final SensDeplacement sens) throws NoPathFoundException, AvoidingException {
+       pathTo(targetXmm, targetYmm, sens, true);
+    }
+
+    @Override
+    public void pathTo(final double targetXmm, final double targetYmm, final SensDeplacement sens, boolean frein) throws NoPathFoundException, AvoidingException {
         try {
             lidarService.waitCleanup();
         } catch (InterruptedException e) {
@@ -523,47 +528,43 @@ public class TrajectoryManager implements ITrajectoryManager {
 
                 boolean firstPoint = true;
                 while (c.hasNext()) {
-                    Point targetPoint = c.next().multiplied(divisor);
+                    final Point targetPoint = c.next().multiplied(divisor);
 
                     // Toujours activer l'évittement en Path
                     rs.enableAvoidance();
 
-                    // Enchainement avec freinage, et alignement en rotation sur chaque point
-                    //gotoPointMM(targetPoint.getX(), targetPoint.getY(), true, sens);
+                    // Alignement en rotation sur le premier point, puis enchainement sans freinage jusqu'au dernier
+                    // point si le frein du path est actif
+                    gotoPointMM(targetPoint.getX(), targetPoint.getY(), firstPoint, frein && !c.hasNext(), sens);
 
-                    // Enchainement avec freinage, et sans alignement en rotation
-                    //gotoPointMM(targetPoint.getX(), targetPoint.getY(), false, sens);
-
-                    // Alignement en rotation sur le premier point, puis enchainement avec freinage jusqu'au dernier point
-                    //gotoPointMM(targetPoint.getX(), targetPoint.getY(), firstPoint, sens);
-
-                    // Alignement en rotation sur le premier point, puis enchainement sans freinage jusqu'au dernier point
-                    gotoPointMM(targetPoint.getX(), targetPoint.getY(), firstPoint, !c.hasNext(), sens);
-
-                    // Après un tour ce n'est plus le premier point
+                    // Après un point de passage ce n'est plus le premier point
                     firstPoint = false;
                 }
 
-                // TODO gestion inutile avec les synchronized ??
-                // Contrôle que l'on est proche de la position demandée
-                double dXmm = (targetXmm - conv.pulseToMm(currentPosition.getPt().getX()));
-                double dYmm = (targetYmm - conv.pulseToMm(currentPosition.getPt().getY()));
-                double targetDistMm = calculDistance(dXmm, dYmm);
+                if (!frein) {
+                    trajetOk = true;
 
-                // Trajet ok si il reste moins de 2cm
-                trajetOk = targetDistMm <= 20;
+                } else {
+                    // Contrôle que l'on est proche de la position demandée
+                    double dXmm = (targetXmm - conv.pulseToMm(currentPosition.getPt().getX()));
+                    double dYmm = (targetYmm - conv.pulseToMm(currentPosition.getPt().getY()));
+                    double targetDistMm = calculDistance(dXmm, dYmm);
 
-                if (!trajetOk) {
-                    // Le trajet n'est pas OK
-                    nbTryPath++;
+                    // Trajet ok si il reste moins de 2cm avec le freinage, sinon le dernier point n'est pas la fin
+                    trajetOk = targetDistMm <= 20;
 
-                    if (nbTryPath >= 3) {
-                        log.warn("Trop de tentative de path, on passe à l'action suivante");
-                        throw new AvoidingException();
+                    if (!trajetOk) {
+                        // Le trajet n'est pas OK
+                        nbTryPath++;
+
+                        if (nbTryPath >= 3) {
+                            log.warn("Trop de tentative de path, on passe à l'action suivante");
+                            throw new AvoidingException();
+                        }
+
+                        log.warn("Tentative de path non atteint, on réessai (tentative : {})", nbTryPath);
+                        prepareNextMouvement();
                     }
-
-                    log.warn("Tentative de path non atteint, on réessai (tentative : {})", nbTryPath);
-                    prepareNextMouvement();
                 }
 
             } catch (RefreshPathFindingException e) {

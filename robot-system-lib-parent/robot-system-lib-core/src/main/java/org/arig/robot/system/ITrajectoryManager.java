@@ -18,11 +18,19 @@ public interface ITrajectoryManager {
 
     void pathTo(Point pt) throws NoPathFoundException, AvoidingException;
 
+    void pathTo(Point pt, boolean frein) throws NoPathFoundException, AvoidingException;
+
     void pathTo(double x, double y) throws NoPathFoundException, AvoidingException;
+
+    void pathTo(double x, double y, boolean frein) throws NoPathFoundException, AvoidingException;
 
     void pathTo(Point pt, SensDeplacement sens) throws NoPathFoundException, AvoidingException;
 
+    void pathTo(Point pt, SensDeplacement sens, boolean frein) throws NoPathFoundException, AvoidingException;
+
     void pathTo(double x, double y, SensDeplacement sens) throws NoPathFoundException, AvoidingException;
+
+    void pathTo(double x, double y, SensDeplacement sens, boolean frein) throws NoPathFoundException, AvoidingException;
 
     void gotoPointMM(Point pt, boolean avecOrientation) throws AvoidingException;
 
