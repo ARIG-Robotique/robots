@@ -110,7 +110,7 @@ public interface IConstantesNerellConfig {
     double arretOrientDeg = 1;
     double approcheAvecFreinDistanceMm = 10;
     double approcheAvecFreinOrientationDeg = 5;
-    double approcheSansFreinDistanceMm = 100;
+    double approcheSansFreinDistanceMm = 20;
     double approcheSansFreinOrientationDeg = 5;
     double startAngleDemiTourDeg = 75;
     double startAngleLimitVitesseDistance = 15;

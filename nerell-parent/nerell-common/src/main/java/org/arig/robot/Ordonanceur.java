@@ -226,6 +226,7 @@ public class Ordonanceur {
             ecranService.displayMessage("Attente 10s pour remettre la capot si besoin");
             ThreadUtils.sleep(10000);
         }
+        ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
 
         SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.RISING);
         SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.FALLING);
@@ -335,23 +336,23 @@ public class Ordonanceur {
             if (robotStatus.getStrategy() == EStrategy.AGGRESSIVE) {
                 // Aligne vers les boué d'en face'
                 if (robotStatus.getTeam() == ETeam.BLEU) {
-                    trajectoryManager.alignFrontTo(1730, 800);
+                    trajectoryManager.gotoOrientationDeg(0);
                 } else {
-                    trajectoryManager.alignFrontTo(3000 - 1730, 800);
+                    trajectoryManager.gotoOrientationDeg(0);
                 }
             } else if (robotStatus.getStrategy() == EStrategy.FINALE) {
                 // Blocage robot adverse
                 if (robotStatus.getTeam() == ETeam.BLEU) {
-                    trajectoryManager.alignFrontTo(1230, 1630);
+                    trajectoryManager.gotoOrientationDeg(0);
                 } else {
-                    trajectoryManager.alignFrontTo(3000 - 1230, 1630);
+                    trajectoryManager.gotoOrientationDeg(0);
                 }
             } else { // BASIC
                 // Aligne vers l'eceuil'
                 if (robotStatus.getTeam() == ETeam.BLEU) {
-                    trajectoryManager.alignFrontTo(540, 1800);
+                    trajectoryManager.gotoOrientationDeg(0);
                 } else {
-                    trajectoryManager.alignFrontTo(3000 - 540, 1800);
+                    trajectoryManager.gotoOrientationDeg(0);
                 }
             }
 

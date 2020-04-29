@@ -45,7 +45,7 @@ public abstract class AbstractEcueil extends AbstractAction {
     }
 
     @Override
-    public final boolean isValid() {
+    public boolean isValid() {
         if (rs.getRemainingTime() < IConstantesNerellConfig.invalidPriseRemainingTime) {
             return false;
         }

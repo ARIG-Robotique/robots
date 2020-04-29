@@ -87,7 +87,7 @@ public class RetourAuPort extends AbstractAction {
 
             final Point entry = entryPoint();
             mv.pathTo(entry, false);
-            setScore(coordProjection = true); // FIXME je comprends pas
+            setScore(coordProjection = true);
 
             // Finalisation de la rentré dans le port après avoir compter les points
             Point finalPoint = new Point(entry);
