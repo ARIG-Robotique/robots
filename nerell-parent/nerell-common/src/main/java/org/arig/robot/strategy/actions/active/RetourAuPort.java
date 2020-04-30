@@ -75,7 +75,7 @@ public class RetourAuPort extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rs.inPort() && rs.getRemainingTime() < IConstantesNerellConfig.invalidPriseRemainingTime;
+        return isTimeValid() && !rs.inPort() && rs.getRemainingTime() < IConstantesNerellConfig.validRetourPortRemainingTime;
     }
 
     @Override

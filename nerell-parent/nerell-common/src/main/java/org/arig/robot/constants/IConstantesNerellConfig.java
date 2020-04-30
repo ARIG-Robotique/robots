@@ -29,6 +29,9 @@ public interface IConstantesNerellConfig {
     // Temps pour rendre le port prioritaire
     int invalidPriseRemainingTime = 20000;
 
+    // Temps pour rendre valide le retour au port
+    int validRetourPortRemainingTime = 10000;
+
     // Valeurs min / max en mm des axes du repères
     int minX = 50;
     int minY = 50;
