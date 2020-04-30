@@ -73,6 +73,7 @@ public class DeposeGrandPortChenalVert extends AbstractAction {
 
             final Point entry = entryPoint();
             mv.pathTo(entry, false);
+            rs.disableAvoidance();
 
             double xRef = 225;
             double yRef = entry.getY();

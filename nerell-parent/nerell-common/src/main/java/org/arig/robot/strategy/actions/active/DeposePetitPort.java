@@ -102,6 +102,7 @@ public class DeposePetitPort extends AbstractAction {
             final double x = entry.getX();
             final double y = entry.getY();
             mv.pathTo(entry);
+            rs.disableAvoidance();
 
             mv.gotoOrientationDeg(-90);
 
