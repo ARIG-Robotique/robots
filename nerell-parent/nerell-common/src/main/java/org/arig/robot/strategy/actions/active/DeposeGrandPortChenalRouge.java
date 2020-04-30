@@ -37,6 +37,8 @@ public class DeposeGrandPortChenalRouge extends AbstractAction {
     @Getter
     private boolean completed = false;
 
+    private SensDeplacement sensEntry = SensDeplacement.AUTO;
+
     @Override
     public String name() {
         return "Dépose grand port chenal rouge";
@@ -50,7 +52,20 @@ public class DeposeGrandPortChenalRouge extends AbstractAction {
             x = 3000 - x;
         }
 
-        return new Point(x, y);
+        final Point central = new Point(x, y);
+
+        if (rs.getTeam() == ETeam.JAUNE && rs.bouee13().prise()) {
+            // Point entrée ISO phare
+            final Point phare = new Point(3000 - 225, 1775);
+
+            double distanceCentral = tableUtils.distance(central);
+            double distancePhare = tableUtils.distance(phare);
+            sensEntry = distanceCentral < distancePhare ? SensDeplacement.ARRIERE : SensDeplacement.AVANT;
+            return distanceCentral < distancePhare ? central : phare;
+        }
+
+        sensEntry = SensDeplacement.ARRIERE;
+        return central;
     }
 
     @Override
@@ -68,18 +83,20 @@ public class DeposeGrandPortChenalRouge extends AbstractAction {
     @Override
     public void execute() {
         try {
-            rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             final Point entry = entryPoint();
-            mv.pathTo(entry, false);
+            if (tableUtils.distance(entry) > 100) {
+                rs.enableAvoidance();
+                mv.pathTo(entry, false);
+            }
             rs.disableAvoidance();
 
             double xRef = 225;
-            double yRef = entry.getY();
+            double yRef = 1200;
             if (rs.getTeam() == ETeam.BLEU) {
                 if (!rs.pincesArriereEmpty()) {
-                    mv.gotoPointMM(xRef, getYDepose(yRef,false), false, SensDeplacement.ARRIERE);
+                    mv.gotoPointMM(xRef, getYDepose(yRef,false), false, sensEntry);
                     mv.gotoOrientationDeg(90);
                     pincesArriereService.deposeArriereChenal(ECouleurBouee.ROUGE); // TODO Dépose partiel
                     mv.gotoPointMM(xRef, yRef, false);
@@ -88,10 +105,10 @@ public class DeposeGrandPortChenalRouge extends AbstractAction {
             } else {
                 xRef = 3000 - xRef;
                 if (!rs.pincesArriereEmpty()) {
-                    mv.gotoPointMM(xRef, getYDepose(yRef,false), false, SensDeplacement.ARRIERE);
+                    mv.gotoPointMM(xRef, getYDepose(yRef,false), false, sensEntry);
                     mv.gotoOrientationDeg(-90);
                     pincesArriereService.deposeArriereChenal(ECouleurBouee.ROUGE);  // TODO Dépose partiel
-                    mv.gotoPointMM(entry, false);
+                    mv.gotoPointMM(xRef, yRef, false);
                 }
             }
             completed = true;
