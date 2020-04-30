@@ -117,25 +117,55 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     /**
      * STATUT
      */
-    @Setter
-    @Accessors(fluent = true)
-    boolean mancheAAir1 = false;
+
+    ///////////////////////////////////////////////////////
+    //                      Bouées                       //
+    ///////////////////////////////////////////////////////
+    //              5                    12              //
+    //                                                   //
+    //     1          6               11         13      //
+    // -----| 2                               14 |-------//
+    // Bleu |            7         10            | Jaune //
+    // -----| 3                               15 |-------//
+    //     4               8     9               16      //
+    // -----------  -----------------------  ----------- //
+
+    @Accessors(fluent = true) private Bouee bouee1 = new Bouee(ECouleurBouee.ROUGE);
+    @Accessors(fluent = true) private Bouee bouee2 = new Bouee(ECouleurBouee.VERT);
+    @Accessors(fluent = true) private Bouee bouee3 = new Bouee(ECouleurBouee.ROUGE);
+    @Accessors(fluent = true) private Bouee bouee4 = new Bouee(ECouleurBouee.VERT);
+    @Accessors(fluent = true) private Bouee bouee5 = new Bouee(ECouleurBouee.ROUGE);
+    @Accessors(fluent = true) private Bouee bouee6 = new Bouee(ECouleurBouee.VERT);
+    @Accessors(fluent = true) private Bouee bouee7 = new Bouee(ECouleurBouee.ROUGE);
+    @Accessors(fluent = true) private Bouee bouee8 = new Bouee(ECouleurBouee.VERT);
+    @Accessors(fluent = true) private Bouee bouee9 = new Bouee(ECouleurBouee.ROUGE);
+    @Accessors(fluent = true) private Bouee bouee10 = new Bouee(ECouleurBouee.VERT);
+    @Accessors(fluent = true) private Bouee bouee11 = new Bouee(ECouleurBouee.ROUGE);
+    @Accessors(fluent = true) private Bouee bouee12 = new Bouee(ECouleurBouee.VERT);
+    @Accessors(fluent = true) private Bouee bouee13 = new Bouee(ECouleurBouee.VERT);
+    @Accessors(fluent = true) private Bouee bouee14 = new Bouee(ECouleurBouee.ROUGE);
+    @Accessors(fluent = true) private Bouee bouee15 = new Bouee(ECouleurBouee.VERT);
+    @Accessors(fluent = true) private Bouee bouee16 = new Bouee(ECouleurBouee.ROUGE);
 
     @Setter
     @Accessors(fluent = true)
-    boolean mancheAAir2 = false;
+    private boolean mancheAAir1 = false;
 
     @Setter
     @Accessors(fluent = true)
-    boolean phare = false;
+    private boolean mancheAAir2 = false;
 
     @Setter
     @Accessors(fluent = true)
-    boolean bonPort = false;
+    private boolean phare = false;
 
     @Setter
     @Accessors(fluent = true)
-    boolean mauvaisPort = false;
+    private boolean bonPort = false;
+
+    @Setter
+    @Accessors(fluent = true)
+    private boolean mauvaisPort = false;
 
     public boolean inPort() {
         return bonPort || mauvaisPort;
@@ -143,31 +173,31 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     @Setter
     @Accessors(fluent = true)
-    boolean pavillon = false;
+    private boolean pavillon = false;
 
     @Accessors(fluent = true)
     @Setter(AccessLevel.NONE)
-    List<ECouleurBouee> grandPort = new ArrayList<>();
+    private List<ECouleurBouee> grandPort = new ArrayList<>();
 
     @Accessors(fluent = true)
     @Setter(AccessLevel.NONE)
-    List<ECouleurBouee> petitPort = new ArrayList<>();
+    private List<ECouleurBouee> petitPort = new ArrayList<>();
 
     @Accessors(fluent = true)
     @Setter(AccessLevel.NONE)
-    Chenaux grandChenaux = new Chenaux();
+    private Chenaux grandChenaux = new Chenaux();
 
     @Accessors(fluent = true)
     @Setter(AccessLevel.NONE)
-    Chenaux petitChenaux = new Chenaux();
+    private Chenaux petitChenaux = new Chenaux();
 
     // De gauche a droite, dans le sens du robot
     @Setter(AccessLevel.NONE)
-    ECouleurBouee[] pincesArriere = new ECouleurBouee[]{null, null, null, null, null};
+    private ECouleurBouee[] pincesArriere = new ECouleurBouee[]{null, null, null, null, null};
 
     // De gauche à droite, dans le sens du robot
     @Setter(AccessLevel.NONE)
-    ECouleurBouee[] pincesAvant = new ECouleurBouee[]{null, null, null, null};
+    private ECouleurBouee[] pincesAvant = new ECouleurBouee[]{null, null, null, null};
 
     public void pinceArriere(int pos, ECouleurBouee bouee) {
         pincesArriere[pos] = bouee;

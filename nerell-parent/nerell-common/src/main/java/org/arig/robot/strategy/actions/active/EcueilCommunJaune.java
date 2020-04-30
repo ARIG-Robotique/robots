@@ -23,6 +23,11 @@ public class EcueilCommunJaune extends AbstractEcueil {
     }
 
     @Override
+    public boolean isValid() {
+        return rs.bouee11().prise() && rs.bouee12().prise() && super.isValid();
+    }
+
+    @Override
     protected double orientationPourPrise() {
         return -90;
     }
