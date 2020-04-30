@@ -104,14 +104,14 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     private byte ecueilCommunJauneDispo = 5;
 
     @Setter(AccessLevel.NONE)
-    private boolean pincesEnabled = false;
+    private boolean pincesAvantEnabled = false;
 
-    public void enablePinces() {
-        pincesEnabled = true;
+    public void enablePincesAvant() {
+        pincesAvantEnabled = true;
     }
 
-    public void disablePinces() {
-        pincesEnabled = false;
+    public void disablePincesAvant() {
+        pincesAvantEnabled = false;
     }
 
     /**

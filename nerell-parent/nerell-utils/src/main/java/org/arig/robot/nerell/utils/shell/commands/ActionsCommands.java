@@ -42,13 +42,13 @@ public class ActionsCommands {
     }
 
     @ShellMethod("Activation des services")
-    public void enablePinceService() {
-        rs.enablePinces();
+    public void enableServices() {
+        rs.enablePincesAvant();
     }
 
     @ShellMethod("Désactivation des services")
-    public void disablePinceService() {
-        rs.disablePinces();
+    public void disableServices() {
+        rs.disablePincesAvant();
     }
 
     @ShellMethod("Execute une action")

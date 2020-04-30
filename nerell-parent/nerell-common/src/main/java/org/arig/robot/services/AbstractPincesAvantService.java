@@ -5,14 +5,12 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.RobotStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service
-public class PincesAvantService {
+public abstract class AbstractPincesAvantService implements IPincesAvantService {
 
-    public static enum Side {
-        RIGHT, LEFT
+    public enum Side {
+        LEFT, RIGHT
     }
 
     @Autowired
@@ -28,7 +26,10 @@ public class PincesAvantService {
 
     private boolean[] previousState = new boolean[]{false, false, false, false};
 
-    public void setExpected(Side cote, ECouleurBouee bouee) {
+    @Override
+    public void setExpected(Side cote, ECouleurBouee bouee, int pos) {
+        // Dans cette implémentation pos ne sert a rien c'est normal.
+        // C'est utilisé pour le pilotage des IOs en mode bouchon
         if (cote == Side.RIGHT) {
             expected.setRight(bouee);
         } else {
@@ -36,11 +37,7 @@ public class PincesAvantService {
         }
     }
 
-    public void clearExpected() {
-        expected.setRight(null);
-        expected.setLeft(null);
-    }
-
+    @Override
     public void activate() {
         if (servosService.isMoustachesOuvert()) {
             servosService.moustachesFerme(true);
@@ -53,7 +50,10 @@ public class PincesAvantService {
         servosService.ascenseurAvantBas(true);
     }
 
+    @Override
     public void disable() {
+        clearExpected();
+
         for (int i = 0; i < 4; i++) {
             if (rs.getPincesAvant()[i] == null) {
                 servosService.pinceAvantFerme(i, false);
@@ -65,6 +65,7 @@ public class PincesAvantService {
     /**
      * Prise automatique sur la table
      */
+    @Override
     public void process() {
         final boolean[] newState = new boolean[]{
                 io.presencePinceAvant1(),
@@ -81,6 +82,11 @@ public class PincesAvantService {
         }
 
         previousState = newState;
+    }
+
+    private void clearExpected() {
+        expected.setRight(null);
+        expected.setLeft(null);
     }
 
     private void registerBouee(int index) {

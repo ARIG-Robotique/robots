@@ -22,13 +22,28 @@ public class IOServiceBouchon implements IIOService {
     @Accessors(fluent = true)
     private boolean contentPinceArriere = false;
 
+    @Setter
+    @Accessors(fluent = true)
+    private boolean contentPinceAvant1 = false;
+
+    @Setter
+    @Accessors(fluent = true)
+    private boolean contentPinceAvant2 = false;
+
+    @Setter
+    @Accessors(fluent = true)
+    private boolean contentPinceAvant3 = false;
+
+    @Setter
+    @Accessors(fluent = true)
+    private boolean contentPinceAvant4 = false;
+
     // --------------------------------------------------------- //
     // --------------------- INFOS TECHNIQUE ------------------- //
     // --------------------------------------------------------- //
 
     @Override
     public void refreshAllPcf() {
-
     }
 
     @Override
@@ -59,22 +74,22 @@ public class IOServiceBouchon implements IIOService {
 
     @Override
     public boolean presencePinceAvant1() {
-        return false;
+        return contentPinceAvant1;
     }
 
     @Override
     public boolean presencePinceAvant2() {
-        return false;
+        return contentPinceAvant2;
     }
 
     @Override
     public boolean presencePinceAvant3() {
-        return false;
+        return contentPinceAvant3;
     }
 
     @Override
     public boolean presencePinceAvant4() {
-        return false;
+        return contentPinceAvant4;
     }
 
     @Override

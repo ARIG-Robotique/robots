@@ -2,12 +2,15 @@ package org.arig.robot.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.filters.common.SignalEdgeFilter;
+import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.CalageBordureService;
 import org.arig.robot.services.EcranService;
 import org.arig.robot.services.IIOService;
+import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.InitializingBean;
@@ -44,6 +47,12 @@ public class TasksScheduler implements InitializingBean {
 
     @Autowired
     private EcranService ecranService;
+
+    @Autowired
+    private IPincesAvantService pincesAvant;
+
+    private final SignalEdgeFilter risingEnablePinces = new SignalEdgeFilter(false, Type.RISING);
+    private final SignalEdgeFilter fallingEnablePinces = new SignalEdgeFilter(false, Type.FALLING);
 
     @Override
     public void afterPropertiesSet() {
@@ -122,6 +131,23 @@ public class TasksScheduler implements InitializingBean {
     public void strategyTask() {
         if (rs.isMatchEnabled()) {
             strategyManager.execute();
+        }
+    }
+
+    @Scheduled(fixedDelay = 200)
+    public void pincesAvantTask() {
+        boolean pincesEnabled = rs.isPincesAvantEnabled();
+
+        if (Boolean.TRUE.equals(risingEnablePinces.filter(pincesEnabled))) {
+            pincesAvant.activate();
+        }
+
+        if (pincesEnabled) {
+            pincesAvant.process();
+        }
+
+        if (Boolean.TRUE.equals(fallingEnablePinces.filter(pincesEnabled))) {
+            pincesAvant.disable();
         }
     }
 }

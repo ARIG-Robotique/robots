@@ -2,7 +2,6 @@ package org.arig.robot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.Point;
@@ -60,9 +59,9 @@ public class Test extends AbstractAction {
             rs.disableAvoidance();
             mv.setVitesse(300, 300);
 
-            rs.enablePinces();
+            rs.enablePincesAvant();
             mv.avanceMM(1000);
-            rs.disablePinces();
+            rs.disablePincesAvant();
             mv.gotoOrientationDeg(180);
             mv.avanceMM(800);
             mv.gotoOrientationDeg(0);
