@@ -226,7 +226,7 @@ public class Ordonanceur {
             for (int i = 0 ; i < 10 ; i++) {
                 ecranService.displayMessage(String.format("Attente %ss pour remettre la capot si besoin", 10 - i));
                 ThreadUtils.sleep(1000);
-        }
+            }
         }
         ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
 
@@ -336,25 +336,29 @@ public class Ordonanceur {
     public void positionStrategy() {
         try {
             if (robotStatus.getStrategy() == EStrategy.AGGRESSIVE) {
-                // Aligne vers les boué d'en face'
                 if (robotStatus.getTeam() == ETeam.BLEU) {
+                    trajectoryManager.gotoPointMM(200, 1200, true);
                     trajectoryManager.gotoOrientationDeg(0);
                 } else {
+                    trajectoryManager.gotoPointMM(3000 - 200, 1200, true);
                     trajectoryManager.gotoOrientationDeg(0);
                 }
             } else if (robotStatus.getStrategy() == EStrategy.FINALE) {
-                // Blocage robot adverse
                 if (robotStatus.getTeam() == ETeam.BLEU) {
+                    trajectoryManager.gotoPointMM(200, 1200, true);
                     trajectoryManager.gotoOrientationDeg(0);
                 } else {
+                    trajectoryManager.gotoPointMM(3000 - 200, 1200, true);
                     trajectoryManager.gotoOrientationDeg(0);
                 }
             } else { // BASIC
-                // Aligne vers l'eceuil'
+                // Aligne vers les bouées au nord du port
                 if (robotStatus.getTeam() == ETeam.BLEU) {
-                    trajectoryManager.gotoOrientationDeg(0);
+                    trajectoryManager.gotoPointMM(220, 1290, true);
+                    trajectoryManager.gotoOrientationDeg(66); // 51 ° pour 1 Rouge et 3 Vert
                 } else {
-                    trajectoryManager.gotoOrientationDeg(0);
+                    trajectoryManager.gotoPointMM(3000 - 220, 1290, true);
+                    trajectoryManager.gotoOrientationDeg(180 - 66);
                 }
             }
 
