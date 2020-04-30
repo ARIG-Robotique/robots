@@ -223,8 +223,10 @@ public class Ordonanceur {
                 lidarDatas = lidar.grabDatas();
             }
 
-            ecranService.displayMessage("Attente 10s pour remettre la capot si besoin");
-            ThreadUtils.sleep(10000);
+            for (int i = 0 ; i < 10 ; i++) {
+                ecranService.displayMessage(String.format("Attente %ss pour remettre la capot si besoin", 10 - i));
+                ThreadUtils.sleep(1000);
+        }
         }
         ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
 
