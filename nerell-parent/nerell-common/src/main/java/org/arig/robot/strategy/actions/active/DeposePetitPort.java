@@ -115,12 +115,15 @@ public class DeposePetitPort extends AbstractAction {
                 servos.moustachesPoussette(true);
                 servos.moustachesOuvert(true);
 
+                rs.petitChenaux().addRouge(ECouleurBouee.ROUGE);
+                rs.petitChenaux().addVert(ECouleurBouee.VERT);
+
                 mv.gotoPointMM(x, 220, false);
                 servos.moustachesPoussette(true);
                 servos.moustachesOuvert(true);
 
-                rs.petitChenaux().addRouge(ECouleurBouee.ROUGE, ECouleurBouee.VERT);
-                rs.petitChenaux().addVert(ECouleurBouee.ROUGE, ECouleurBouee.VERT);
+                rs.petitChenaux().addRouge(ECouleurBouee.VERT);
+                rs.petitChenaux().addVert(ECouleurBouee.ROUGE);
 
                 moustacheFaites = true;
             } else {
