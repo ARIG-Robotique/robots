@@ -11,6 +11,10 @@ public class Chenaux {
 
     private ArrayList<ECouleurBouee> chenalRouge = new ArrayList<>();
 
+    public boolean full() {
+        return chenalRouge.size() > 0 && chenalVert.size() > 0;
+    }
+
     public int score() {
         long nbBoueeChenalRouge = chenalRouge.stream().filter(Objects::nonNull).count();
         long nbBoueeOkRouge = chenalRouge.stream().filter(ECouleurBouee.isRouge).count();

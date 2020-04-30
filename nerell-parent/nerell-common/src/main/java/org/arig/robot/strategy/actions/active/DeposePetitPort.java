@@ -72,7 +72,7 @@ public class DeposePetitPort extends AbstractAction {
         );
         List<ECouleurBouee> petitPortFutur = new ArrayList<>();
 
-        if (!rs.pincesArriereEmpty()) {
+        if (!rs.pincesArriereEmpty() && rs.grandChenaux().full()) {
             chenauxFuture.addVert(ArrayUtils.subarray(rs.getPincesArriere(), 0, 2));
             petitPortFutur.add(rs.getPincesArriere()[2]);
             chenauxFuture.addRouge(ArrayUtils.subarray(rs.getPincesArriere(), 3, 4));
@@ -100,7 +100,6 @@ public class DeposePetitPort extends AbstractAction {
 
             final Point entry = entryPoint();
             final double x = entry.getX();
-            final double y = entry.getY();
             mv.pathTo(entry);
             rs.disableAvoidance();
 
@@ -140,7 +139,7 @@ public class DeposePetitPort extends AbstractAction {
 
             mv.reculeMM(120);
 
-            if (!rs.pincesArriereEmpty()) {
+            if (!rs.pincesArriereEmpty() && rs.grandChenaux().full()) {
                 // Dépose stock arrière si il y en as
                 servos.moustachesFerme(false);
                 mv.gotoOrientationDeg(90);
