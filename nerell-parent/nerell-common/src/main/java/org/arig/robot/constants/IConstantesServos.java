@@ -10,7 +10,7 @@ public interface IConstantesServos {
     // Constantes de vitesse //
     // --------------------- //
 
-    byte SPEED_MOUSTACHE_POUSSETTE = 10;
+    byte SPEED_MOUSTACHE_POUSSETTE = 25;
     byte SPEED_MOUSTACHE = 0;
     byte SPEED_BRAS = 0;
     byte SPEED_ASCENSEUR_AVANT = 0;
@@ -22,6 +22,7 @@ public interface IConstantesServos {
     // Tempo servos //
     // ------------ //
 
+    int WAIT_MOUSTACHE_POUSSETTE = 525;
     int WAIT_MOUSTACHE_DROITE = 390;
     int WAIT_MOUSTACHE_GAUCHE = WAIT_MOUSTACHE_DROITE;
     int WAIT_BRAS_DROIT = 440;
@@ -55,10 +56,10 @@ public interface IConstantesServos {
     // ---------------------- //
 
     int POS_MOUSTACHE_GAUCHE_OUVERT = 2240;
-    int POS_MOUSTACHE_GAUCHE_POUSSETTE = 1840;
+    int POS_MOUSTACHE_GAUCHE_POUSSETTE = 1740;
     int POS_MOUSTACHE_GAUCHE_FERME = 940;
     int POS_MOUSTACHE_DROITE_OUVERT = 990;
-    int POS_MOUSTACHE_DROITE_POUSSETTE = 1360;
+    int POS_MOUSTACHE_DROITE_POUSSETTE = 1460;
     int POS_MOUSTACHE_DROITE_FERME = 2180;
     int POS_BRAS_GAUCHE_MANCHE_AIR = 1050;
     int POS_BRAS_GAUCHE_PHARE = 960;

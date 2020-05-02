@@ -170,7 +170,12 @@ public class ServosService {
     }
 
     public void moustachesPoussette(boolean wait) {
-        setPositionBatchAndSpeed(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_MOUSTACHES).get(IConstantesServos.POS_BATCH_MOUSTACHES_POUSETTE), IConstantesServos.SPEED_MOUSTACHE_POUSSETTE, wait);
+        setPositionBatchAndSpeed(IConstantesServos.BATCH_CONFIG.get(IConstantesServos.BATCH_MOUSTACHES).get(IConstantesServos.POS_BATCH_MOUSTACHES_POUSETTE), IConstantesServos.SPEED_MOUSTACHE_POUSSETTE, false);
+
+        if (wait) {
+            // Position poussette est toujours avec une tempo fixe
+            ThreadUtils.sleep(IConstantesServos.WAIT_MOUSTACHE_POUSSETTE);
+        }
     }
 
     public void brasGaucheMancheAAir(boolean wait) {

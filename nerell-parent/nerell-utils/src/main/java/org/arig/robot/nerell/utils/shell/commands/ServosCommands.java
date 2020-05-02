@@ -37,15 +37,56 @@ public class ServosCommands {
                 ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
     }
 
+    @ShellMethod("Récupèration de tension des servos")
+    public void getTension() {
+        final double tension = servosService.getTension();
+    }
+
     @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Cycle de préparation des servos")
     public void preparation() {
         servosService.cyclePreparation();
+        ThreadUtils.sleep(800);
     }
 
-    @ShellMethod("Récupèration de tension des servos")
-    public void getTension() {
-        final double tension = servosService.getTension();
+    private void priseAvant() {
+        rs.enablePincesAvant();
+
+        long nbBouees = 0;
+        while(nbBouees != 4) {
+            nbBouees = Arrays.stream(rs.pincesAvant()).filter(Objects::nonNull).count();
+        }
+
+        rs.disablePincesAvant();
+        ThreadUtils.sleep(2000);
+    }
+
+    private void deposeAvant() {
+        pincesAvantService.deposePetitPort();
+        ThreadUtils.sleep(5000);
+        pincesAvantService.finaliseDepose();
+    }
+
+    @ShellMethod("Cycle poussette (avec ou sans prise avant)")
+    public void cyclePoussette(boolean avecPrise) {
+        if (avecPrise) {
+            priseAvant();
+        }
+
+        servosService.ascenseurAvantOuvertureMoustache(true);
+        servosService.moustachesOuvert(true);
+        ThreadUtils.sleep(5000);
+
+        servosService.moustachesPoussette(true);
+        servosService.moustachesOuvert(true);
+
+        if (avecPrise) {
+            deposeAvant();
+        } else {
+            ThreadUtils.sleep(5000);
+        }
+
+        servosService.moustachesFerme(false);
     }
 
     @ShellMethod("Prise ecueil, dépose table")
@@ -61,20 +102,8 @@ public class ServosCommands {
 
     @ShellMethod("Prise avant puis dépose")
     public void cyclePriseAvantPuisDepose() {
-        rs.enablePincesAvant();
-
-        long nbBouees = 0;
-        while(nbBouees != 4) {
-            nbBouees = Arrays.stream(rs.pincesAvant()).filter(Objects::nonNull).count();
-        }
-
-        rs.disablePincesAvant();
-        ThreadUtils.sleep(2000);
-
-        pincesAvantService.deposePetitPort();
-        ThreadUtils.sleep(5000);
-        pincesAvantService.finaliseDepose();
-
+        priseAvant();
+        deposeAvant();
     }
 
     @ShellMethod("Configuration attente moustaches")
@@ -84,6 +113,16 @@ public class ServosCommands {
             ThreadUtils.sleep(wait);
             servosService.moustachesFerme(false);
             ThreadUtils.sleep(wait);
+        }
+    }
+
+    @ShellMethod("Configuration poussette")
+    public void configWaitPoussette(int wait) {
+        servosService.moustachesOuvert(true);
+        for (int i = 0 ; i < nbLoop ; i++) {
+            servosService.moustachesPoussette(false);
+            ThreadUtils.sleep(wait);
+            servosService.moustachesOuvert(true);
         }
     }
 
