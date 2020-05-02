@@ -72,7 +72,7 @@ public class Test extends AbstractAction {
             pincesArriereService.finalisePriseEcueil(ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU);
             mv.avanceMM(1200);
             mv.gotoOrientationDeg(180);
-            pincesArriereService.deposeArrierePetitPort();
+            pincesArriereService.deposePetitPort();
             mv.avanceMM(60);
             mv.gotoOrientationDeg(0);
             servos.ascenseurAvantBas(true);

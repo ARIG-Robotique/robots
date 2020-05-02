@@ -70,7 +70,7 @@ public class DeposeGrandPortChenalRouge extends AbstractAction {
 
     @Override
     public int order() {
-        Chenaux chenauxFuture = rs.grandChenaux().with(rs.getPincesArriere(), null);
+        Chenaux chenauxFuture = rs.grandChenaux().with(rs.pincesArriere(), null);
         int order = chenauxFuture.score() - rs.grandChenaux().score();
         return order + tableUtils.alterOrder(entryPoint());
     }
@@ -98,7 +98,7 @@ public class DeposeGrandPortChenalRouge extends AbstractAction {
                 if (!rs.pincesArriereEmpty()) {
                     mv.gotoPointMM(xRef, getYDepose(yRef,false), false, sensEntry);
                     mv.gotoOrientationDeg(90);
-                    pincesArriereService.deposeArriereChenal(ECouleurBouee.ROUGE); // TODO Dépose partiel
+                    pincesArriereService.deposeGrandChenal(ECouleurBouee.ROUGE); // TODO Dépose partiel
                     mv.gotoPointMM(xRef, yRef, false);
                 }
 
@@ -107,7 +107,7 @@ public class DeposeGrandPortChenalRouge extends AbstractAction {
                 if (!rs.pincesArriereEmpty()) {
                     mv.gotoPointMM(xRef, getYDepose(yRef,false), false, sensEntry);
                     mv.gotoOrientationDeg(-90);
-                    pincesArriereService.deposeArriereChenal(ECouleurBouee.ROUGE);  // TODO Dépose partiel
+                    pincesArriereService.deposeGrandChenal(ECouleurBouee.ROUGE);  // TODO Dépose partiel
                     mv.gotoPointMM(xRef, yRef, false);
                 }
             }

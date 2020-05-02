@@ -12,6 +12,7 @@ import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.IPincesArriereService;
+import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
@@ -28,6 +29,9 @@ public class DeposePetitPort extends AbstractAction {
 
     @Autowired
     private ITrajectoryManager mv;
+
+    @Autowired
+    private IPincesAvantService pincesAvantService;
 
     @Autowired
     private IPincesArriereService pincesArriereService;
@@ -67,15 +71,15 @@ public class DeposePetitPort extends AbstractAction {
     @Override
     public int order() {
         Chenaux chenauxFuture = rs.petitChenaux().with(
-                ArrayUtils.subarray(rs.getPincesAvant(), 0, 2),
-                ArrayUtils.subarray(rs.getPincesAvant(), 2, 4)
+                ArrayUtils.subarray(rs.pincesAvant(), 0, 2),
+                ArrayUtils.subarray(rs.pincesAvant(), 2, 4)
         );
         List<ECouleurBouee> petitPortFutur = new ArrayList<>();
 
-        if (!rs.pincesArriereEmpty() && rs.grandChenaux().full()) {
-            chenauxFuture.addVert(ArrayUtils.subarray(rs.getPincesArriere(), 0, 2));
-            petitPortFutur.add(rs.getPincesArriere()[2]);
-            chenauxFuture.addRouge(ArrayUtils.subarray(rs.getPincesArriere(), 3, 4));
+        if (!rs.pincesArriereEmpty() && rs.grandChenaux().deposeArriereImpossible()) {
+            chenauxFuture.addVert(ArrayUtils.subarray(rs.pincesArriere(), 0, 2));
+            petitPortFutur.add(rs.pincesArriere()[2]);
+            chenauxFuture.addRouge(ArrayUtils.subarray(rs.pincesArriere(), 3, 4));
         }
 
         if (!moustacheFaites) {
@@ -132,21 +136,16 @@ public class DeposePetitPort extends AbstractAction {
             }
 
             if (!rs.pincesAvantEmpty()) {
-                servos.ascenseurAvantBas(true);
-                servos.pincesAvantOuvert(true);
-                rs.petitChenaux().addRouge(ArrayUtils.subarray(rs.getPincesAvant(), 0, 2));
-                rs.petitChenaux().addVert(ArrayUtils.subarray(rs.getPincesAvant(), 2, 4));
-                rs.clearPincesAvant();
+                pincesAvantService.deposePetitPort();
+                mv.reculeMM(120);
                 step++;
             }
 
-            mv.reculeMM(120);
-
-            if (!rs.pincesArriereEmpty() && rs.grandChenaux().full()) {
+            if (!rs.pincesArriereEmpty() && rs.grandChenaux().deposeArriereImpossible()) {
                 // Dépose stock arrière si il y en as
                 servos.moustachesFerme(false);
                 mv.gotoOrientationDeg(90);
-                pincesArriereService.deposeArrierePetitPort();
+                pincesArriereService.deposePetitPort();
                 step++;
             }
 
@@ -158,7 +157,8 @@ public class DeposePetitPort extends AbstractAction {
             updateValidTime();
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         } finally {
-            servos.moustachesFerme(true);
+            pincesAvantService.finaliseDepose();
+            servos.moustachesFerme(false);
         }
     }
 }

@@ -60,16 +60,16 @@ public abstract class AbstractPincesArriereService implements IPincesArriereServ
     /**
      * Déposer la pince arrière dans un chenal
      *
-     * @param chenal Une des liste de RobotStatus
+     * @param couleurChenal Couleur du chenal dans lequel a lieu la dépose
      */
     @Override
-    public boolean deposeArriereChenal(final ECouleurBouee chenal) {
+    public boolean deposeGrandChenal(final ECouleurBouee couleurChenal) {
         deposeTable();
 
-        if (chenal == ECouleurBouee.ROUGE) {
-            rs.grandChenaux().addRouge(rs.getPincesArriere());
+        if (couleurChenal == ECouleurBouee.ROUGE) {
+            rs.grandChenaux().addRouge(rs.pincesArriere());
         } else {
-            rs.grandChenaux().addVert(rs.getPincesArriere());
+            rs.grandChenaux().addVert(rs.pincesArriere());
         }
 
         rs.clearPincesArriere();
@@ -81,12 +81,12 @@ public abstract class AbstractPincesArriereService implements IPincesArriereServ
      * Déposer la pince arrière dans le petit port
      */
     @Override
-    public boolean deposeArrierePetitPort() {
+    public boolean deposePetitPort() {
         deposeTable();
 
-        rs.petitChenaux().addVert(rs.getPincesArriere()[0], rs.getPincesArriere()[1]);
-        rs.petitPort().add(rs.getPincesArriere()[2]);
-        rs.petitChenaux().addRouge(rs.getPincesArriere()[3], rs.getPincesArriere()[4]);
+        rs.petitChenaux().addVert(rs.pincesArriere()[0], rs.pincesArriere()[1]);
+        rs.petitPort().add(rs.pincesArriere()[2]);
+        rs.petitChenaux().addRouge(rs.pincesArriere()[3], rs.pincesArriere()[4]);
 
         rs.clearPincesArriere();
 

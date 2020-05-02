@@ -1,6 +1,7 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.RobotStatus;
@@ -27,6 +28,28 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
     private boolean[] previousState = new boolean[]{false, false, false, false};
 
     @Override
+    public boolean deposeGrandChenal(ECouleurBouee couleurChenal) {
+
+        return true;
+    }
+
+    @Override
+    public boolean deposePetitPort() {
+        servosService.ascenseurAvantBas(true);
+        servosService.pincesAvantOuvert(true);
+        rs.petitChenaux().addRouge(ArrayUtils.subarray(rs.pincesAvant(), 0, 2));
+        rs.petitChenaux().addVert(ArrayUtils.subarray(rs.pincesAvant(), 2, 4));
+        rs.clearPincesAvant();
+
+        return true;
+    }
+
+    @Override
+    public void finaliseDepose() {
+        servosService.pincesAvantFerme(false);
+    }
+
+    @Override
     public void setExpected(Side cote, ECouleurBouee bouee, int pos) {
         // Dans cette implémentation pos ne sert a rien c'est normal.
         // C'est utilisé pour le pilotage des IOs en mode bouchon
@@ -43,7 +66,7 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
             servosService.moustachesFerme(true);
         }
         for (int i = 0; i < 4; i++) {
-            if (rs.getPincesAvant()[i] == null) {
+            if (rs.pincesAvant()[i] == null) {
                 servosService.pinceAvantOuvert(i, false);
             }
         }
@@ -55,7 +78,7 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
         clearExpected();
 
         for (int i = 0; i < 4; i++) {
-            if (rs.getPincesAvant()[i] == null) {
+            if (rs.pincesAvant()[i] == null) {
                 servosService.pinceAvantFerme(i, false);
             }
         }
@@ -75,7 +98,7 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
         };
 
         for (int i = 0; i < newState.length; i++) {
-            if (rs.getPincesAvant()[i] == null && !previousState[i] && newState[i]) {
+            if (rs.pincesAvant()[i] == null && !previousState[i] && newState[i]) {
                 servosService.pinceAvantPrise(i, false);
                 registerBouee(i);
             }

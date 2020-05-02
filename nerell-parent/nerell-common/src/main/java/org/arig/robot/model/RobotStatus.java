@@ -185,18 +185,20 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
 
     @Accessors(fluent = true)
     @Setter(AccessLevel.NONE)
-    private Chenaux grandChenaux = new Chenaux();
+    private GrandChenaux grandChenaux = new GrandChenaux();
 
     @Accessors(fluent = true)
     @Setter(AccessLevel.NONE)
-    private Chenaux petitChenaux = new Chenaux();
+    private PetitChenaux petitChenaux = new PetitChenaux();
 
     // De gauche a droite, dans le sens du robot
     @Setter(AccessLevel.NONE)
+    @Accessors(fluent = true)
     private ECouleurBouee[] pincesArriere = new ECouleurBouee[]{null, null, null, null, null};
 
     // De gauche à droite, dans le sens du robot
     @Setter(AccessLevel.NONE)
+    @Accessors(fluent = true)
     private ECouleurBouee[] pincesAvant = new ECouleurBouee[]{null, null, null, null};
 
     public void pinceArriere(int pos, ECouleurBouee bouee) {
