@@ -2,7 +2,11 @@ package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.IIOService;
+import org.arig.robot.services.IPincesArriereService;
+import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
@@ -11,14 +15,20 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 @Slf4j
 @ShellComponent
 @ShellCommandGroup("Servos")
 @AllArgsConstructor
 public class ServosCommands {
 
+    private final RobotStatus rs;
     private final ServosService servosService;
     private final IIOService ioService;
+    private final IPincesAvantService pincesAvantService;
+    private final IPincesArriereService pincesArriereService;
 
     private final int nbLoop = 3;
 
@@ -36,6 +46,35 @@ public class ServosCommands {
     @ShellMethod("Récupèration de tension des servos")
     public void getTension() {
         final double tension = servosService.getTension();
+    }
+
+    @ShellMethod("Prise ecueil, dépose table")
+    public void cyclePriseEcueilDeposeTable() {
+        preparation();
+
+        pincesArriereService.preparePriseEcueil();
+        ThreadUtils.sleep(5000);
+        pincesArriereService.finalisePriseEcueil(ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU);
+        ThreadUtils.sleep(2000);
+        pincesArriereService.deposePetitPort();
+    }
+
+    @ShellMethod("Prise avant puis dépose")
+    public void cyclePriseAvantPuisDepose() {
+        rs.enablePincesAvant();
+
+        long nbBouees = 0;
+        while(nbBouees != 4) {
+            nbBouees = Arrays.stream(rs.pincesAvant()).filter(Objects::nonNull).count();
+        }
+
+        rs.disablePincesAvant();
+        ThreadUtils.sleep(2000);
+
+        pincesAvantService.deposePetitPort();
+        ThreadUtils.sleep(5000);
+        pincesAvantService.finaliseDepose();
+
     }
 
     @ShellMethod("Configuration attente moustaches")
