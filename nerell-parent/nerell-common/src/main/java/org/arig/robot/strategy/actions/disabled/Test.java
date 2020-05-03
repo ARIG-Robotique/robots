@@ -75,10 +75,16 @@ public class Test extends AbstractAction {
             pincesArriereService.deposePetitPort();
             mv.avanceMM(60);
             mv.gotoOrientationDeg(0);
-            servos.ascenseurAvantBas(true);
-            servos.pincesAvantOuvert(true);
-            mv.reculeMM(120);
-            servos.pincesAvantFerme(false);
+            if (!rs.pincesAvantEmpty()) {
+                servos.ascenseurAvantBas(true);
+                servos.pincesAvantOuvert(true);
+                mv.reculeMM(120);
+                servos.pincesAvantFerme(false);
+                mv.reculeMM(1000 - 120);
+            } else {
+                mv.reculeMM(1000);
+            }
+            mv.gotoOrientationDeg(180);
 
             completed = true;
         } catch (AvoidingException e) {
