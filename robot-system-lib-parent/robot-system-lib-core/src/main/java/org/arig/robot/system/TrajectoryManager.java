@@ -925,6 +925,14 @@ public class TrajectoryManager implements ITrajectoryManager {
         calageBordure.set(false);
     }
 
+    public long vitesseDistance() {
+        return this.vitesseDistance.get();
+    }
+
+    public long vitesseOrientation() {
+        return this.vitesseOrientation.get();
+    }
+
     /**
      * Définition des vitesses de déplacement sur les deux axes du robot.
      *

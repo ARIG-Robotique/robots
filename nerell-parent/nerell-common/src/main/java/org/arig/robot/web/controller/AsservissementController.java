@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.IRampFilter;
-import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.system.TrajectoryManager;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +24,7 @@ import java.util.Map;
 @Profile(IConstantesConfig.profileMonitoring)
 public class AsservissementController {
 
-    private final CommandeRobot cmdRobot;
+    private final TrajectoryManager mv;
     private final IPidFilter pidDistance;
     private final IPidFilter pidOrientation;
     private final IRampFilter rampDistance;
@@ -38,12 +38,12 @@ public class AsservissementController {
         if ("ANGLE".equals(type)) {
             values.putAll(pidOrientation.getTunings());
             values.putAll(rampOrientation.getRamps());
-            values.put("vitesse", (double) cmdRobot.getVitesse().getOrientation());
+            values.put("vitesse", (double) mv.vitesseOrientation());
 
         } else if ("DIST".equals(type)) {
             values.putAll(pidDistance.getTunings());
             values.putAll(rampDistance.getRamps());
-            values.put("vitesse", (double) cmdRobot.getVitesse().getDistance());
+            values.put("vitesse", (double) mv.vitesseDistance());
 
         } else {
             log.warn("Type d'asservissement invalide");
@@ -64,13 +64,15 @@ public class AsservissementController {
             pidOrientation.setTunings(kp, ki, kd);
             pidOrientation.reset();
             rampOrientation.setRamps(rampAcc, rampDec);
-            cmdRobot.getVitesse().setOrientation((long) vitesse);
+            log.info("Vitesse orientation {}", vitesse);
+            mv.setVitesse(mv.vitesseDistance(), (long) vitesse);
 
         } else if ("DIST".equals(type)) {
             pidDistance.setTunings(kp, ki, kd);
             pidDistance.reset();
             rampDistance.setRamps(rampAcc, rampDec);
-            cmdRobot.getVitesse().setDistance((long) vitesse);
+            log.info("Vitesse distance {}", vitesse);
+            mv.setVitesse((long) vitesse, mv.vitesseOrientation());
 
         } else {
             log.warn("Type d'asservissement invalide");
