@@ -25,8 +25,8 @@ robot:
 # Balise de vision
 balise:
   socket:
-    host: 192.168.1.15
-    port: 8080
+    host: sauron
+    port: 9042
 
 # Logging
 logging:
@@ -56,3 +56,30 @@ spring:
 robot:
   ui:
     title: Nerell Simulateur
+
+balise:
+  socket:
+    host: localhost
+    port: 9042
+
+---
+
+# Spring properties
+spring:
+  profiles: greg
+
+# Balise de vision
+balise:
+  socket:
+    host: 192.168.1.22
+
+---
+
+# Spring properties
+spring:
+  profiles: damien
+
+# Balise de vision
+balise:
+  socket:
+    host: 192.168.1.1

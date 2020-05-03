@@ -1,10 +1,6 @@
 package org.arig.robot.model;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
@@ -72,6 +68,7 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         this.disableAvoidance();
         this.disableMatch();
         this.disableCalageBordure();
+        this.disableBalise();
     }
 
     public long getElapsedTime() {
@@ -114,6 +111,17 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         pincesAvantEnabled = false;
     }
 
+    @Setter(AccessLevel.NONE)
+    private boolean baliseEnabled = false;
+
+    public void enableBalise() {
+        baliseEnabled = true;
+    }
+
+    public void disableBalise() {
+        baliseEnabled = false;
+    }
+
     /**
      * STATUT
      */
@@ -130,22 +138,29 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
     //     4               8     9               16      //
     // -----------  -----------------------  ----------- //
 
-    @Accessors(fluent = true) private Bouee bouee1 = new Bouee(ECouleurBouee.ROUGE);
-    @Accessors(fluent = true) private Bouee bouee2 = new Bouee(ECouleurBouee.VERT);
-    @Accessors(fluent = true) private Bouee bouee3 = new Bouee(ECouleurBouee.ROUGE);
-    @Accessors(fluent = true) private Bouee bouee4 = new Bouee(ECouleurBouee.VERT);
-    @Accessors(fluent = true) private Bouee bouee5 = new Bouee(ECouleurBouee.ROUGE);
-    @Accessors(fluent = true) private Bouee bouee6 = new Bouee(ECouleurBouee.VERT);
-    @Accessors(fluent = true) private Bouee bouee7 = new Bouee(ECouleurBouee.ROUGE);
-    @Accessors(fluent = true) private Bouee bouee8 = new Bouee(ECouleurBouee.VERT);
-    @Accessors(fluent = true) private Bouee bouee9 = new Bouee(ECouleurBouee.ROUGE);
-    @Accessors(fluent = true) private Bouee bouee10 = new Bouee(ECouleurBouee.VERT);
-    @Accessors(fluent = true) private Bouee bouee11 = new Bouee(ECouleurBouee.ROUGE);
-    @Accessors(fluent = true) private Bouee bouee12 = new Bouee(ECouleurBouee.VERT);
-    @Accessors(fluent = true) private Bouee bouee13 = new Bouee(ECouleurBouee.VERT);
-    @Accessors(fluent = true) private Bouee bouee14 = new Bouee(ECouleurBouee.ROUGE);
-    @Accessors(fluent = true) private Bouee bouee15 = new Bouee(ECouleurBouee.VERT);
-    @Accessors(fluent = true) private Bouee bouee16 = new Bouee(ECouleurBouee.ROUGE);
+    @Getter(AccessLevel.NONE)
+    private List<Bouee> bouees = Arrays.asList(
+            new Bouee(ECouleurBouee.ROUGE),
+            new Bouee(ECouleurBouee.VERT),
+            new Bouee(ECouleurBouee.ROUGE),
+            new Bouee(ECouleurBouee.VERT),
+            new Bouee(ECouleurBouee.ROUGE),
+            new Bouee(ECouleurBouee.VERT),
+            new Bouee(ECouleurBouee.ROUGE),
+            new Bouee(ECouleurBouee.VERT),
+            new Bouee(ECouleurBouee.ROUGE),
+            new Bouee(ECouleurBouee.VERT),
+            new Bouee(ECouleurBouee.ROUGE),
+            new Bouee(ECouleurBouee.VERT),
+            new Bouee(ECouleurBouee.VERT),
+            new Bouee(ECouleurBouee.ROUGE),
+            new Bouee(ECouleurBouee.VERT),
+            new Bouee(ECouleurBouee.ROUGE)
+    );
+
+    public Bouee bouee(int numero) {
+        return bouees.get(numero - 1);
+    }
 
     @Setter
     @Accessors(fluent = true)

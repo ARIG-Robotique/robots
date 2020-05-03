@@ -72,31 +72,31 @@ public class PriseBoueesNord extends AbstractAction {
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
                 mv.gotoPointMM(entry, false, true, SensDeplacement.AVANT);
-                rs.bouee1().prise(true);
-                rs.bouee2().prise(true);
+                rs.bouee(1).prise(true);
+                rs.bouee(2).prise(true);
 
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 0);
                 mv.gotoPointMM(640, y, true, SensDeplacement.AVANT);
-                rs.bouee5().prise(true);
+                rs.bouee(5).prise(true);
 
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 2);
                 mv.gotoPointMM(940, 1662, true, SensDeplacement.AVANT);
-                rs.bouee6().prise(true);
+                rs.bouee(6).prise(true);
 
             } else {
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 0);
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 2);
                 mv.gotoPointMM(entry, false, true, SensDeplacement.AVANT);
-                rs.bouee13().prise(true);
-                rs.bouee14().prise(true);
+                rs.bouee(13).prise(true);
+                rs.bouee(14).prise(true);
 
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT,3);
                 mv.gotoPointMM(3000 - 640, y, true, SensDeplacement.AVANT);
-                rs.bouee12().prise(true);
+                rs.bouee(12).prise(true);
 
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
                 mv.gotoPointMM(3000 - 940, 1662, true, SensDeplacement.AVANT);
-                rs.bouee11().prise(true);
+                rs.bouee(11).prise(true);
             }
 
         } catch (AvoidingException e) {

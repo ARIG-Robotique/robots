@@ -5,8 +5,10 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.CalageBordureService;
 import org.arig.robot.services.EcranService;
 import org.arig.robot.services.IIOService;
@@ -47,6 +49,9 @@ public class TasksScheduler implements InitializingBean {
 
     @Autowired
     private EcranService ecranService;
+
+    @Autowired
+    private BaliseService baliseService;
 
     @Autowired
     private IPincesAvantService pincesAvant;
@@ -125,6 +130,37 @@ public class TasksScheduler implements InitializingBean {
     @Scheduled(fixedRate = 1000)
     public void ecranTask() {
         ecranService.process();
+    }
+
+    @Scheduled(fixedDelay = 2000)
+    public void updateBaliseStatus() {
+        if (!rs.isBaliseEnabled()) {
+            return;
+        }
+
+        if (!baliseService.isConnected()) {
+            baliseService.tryConnect();
+
+        } else {
+            baliseService.startDetection();
+            baliseService.updateStatus();
+
+            if (rs.isMatchEnabled()) {
+                // Lecture Girouette
+                if (rs.getElapsedTime() >= IConstantesNerellConfig.baliseElapsedTimeMs && rs.getDirectionGirouette() == DirectionGirouette.UNKNOWN) {
+                    baliseService.lectureGirouette();
+                }
+
+                // Lecture couleur bouée
+                baliseService.lectureCouleurBouees();
+
+                // Lecture de l'ecueil adverse
+                baliseService.lectureEcueilAdverse();
+            } else {
+                // Lecture couleur écueil
+                baliseService.lectureCouleurEcueil();
+            }
+        }
     }
 
     @Scheduled(fixedDelay = 1)

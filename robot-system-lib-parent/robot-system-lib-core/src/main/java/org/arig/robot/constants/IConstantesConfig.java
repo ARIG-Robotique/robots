@@ -1,8 +1,5 @@
 package org.arig.robot.constants;
 
-/**
- * @author gdepuille on 13/10/16.
- */
 public interface IConstantesConfig {
 
     // Profile de configuration pour le monitoring
@@ -10,4 +7,7 @@ public interface IConstantesConfig {
 
     // Clé pour la récupération de l'identifiant d'éxécution
     String keyExecutionId = "execution.id";
+
+    // Paramètre VM pour ne pas lancer l'écran (pour débug local)
+    String disableEcran = "disableEcran";
 }
