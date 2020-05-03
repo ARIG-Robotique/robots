@@ -137,9 +137,9 @@ public class DeposePetitPort extends AbstractAction {
 
             if (!rs.pincesAvantEmpty()) {
                 pincesAvantService.deposePetitPort();
-                mv.reculeMM(120);
                 step++;
             }
+            mv.reculeMM(120);
 
             if (!rs.pincesArriereEmpty() && rs.grandChenaux().deposeArriereImpossible()) {
                 // Dépose stock arrière si il y en as
