@@ -1,11 +1,18 @@
 package org.arig.robot.system.capteurs;
 
+import org.arig.robot.model.balise.EtalonnageBalise;
 import org.arig.robot.model.balise.StatutBalise;
 
 public class VisionBaliseBouchon implements IVisionBalise {
 
     @Override
-    public void startDetection() {
+    public boolean startDetection() {
+        return true;
+    }
+
+    @Override
+    public EtalonnageBalise etalonnage(int[][] ecueil, int[][] bouees) {
+        return null;
     }
 
     @Override
@@ -14,8 +21,8 @@ public class VisionBaliseBouchon implements IVisionBalise {
     }
 
     @Override
-    public byte[] getPhoto(final int width) {
-        return new byte[0];
+    public String getPhoto(int width) {
+        return "";
     }
 
     @Override

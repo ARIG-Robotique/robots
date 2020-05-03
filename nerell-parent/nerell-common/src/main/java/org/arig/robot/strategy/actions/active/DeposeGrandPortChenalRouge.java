@@ -54,7 +54,7 @@ public class DeposeGrandPortChenalRouge extends AbstractAction {
 
         final Point central = new Point(x, y);
 
-        if (rs.getTeam() == ETeam.JAUNE && rs.bouee13().prise()) {
+        if (rs.getTeam() == ETeam.JAUNE && rs.bouee(13).prise()) {
             // Point entrée ISO phare
             final Point phare = new Point(3000 - 225, 1775);
 

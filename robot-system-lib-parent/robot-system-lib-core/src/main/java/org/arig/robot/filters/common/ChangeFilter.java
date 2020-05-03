@@ -5,20 +5,20 @@ import lombok.experimental.Accessors;
 import org.arig.robot.filters.IFilter;
 import org.springframework.util.Assert;
 
-public class IntegerChangeFilter implements IFilter<Integer, Boolean> {
+public class ChangeFilter<T> implements IFilter<T, Boolean> {
 
-    public static final String INITIAL_VALUE_NULL_MESSAGE = "La valeur initial ne peut être null";
+    public static final String INITIAL_VALUE_NULL_MESSAGE = "La valeur initiale ne peut être null";
 
-    private final Integer initial;
+    private final T initial;
 
     @Getter
-    private Integer lastValue;
+    private T lastValue;
 
     @Getter
     @Accessors(fluent = true)
     private Boolean lastResult;
 
-    public IntegerChangeFilter(Integer initial) {
+    public ChangeFilter(T initial) {
         super();
 
         Assert.notNull(initial, INITIAL_VALUE_NULL_MESSAGE);
@@ -32,7 +32,7 @@ public class IntegerChangeFilter implements IFilter<Integer, Boolean> {
     }
 
     @Override
-    public Boolean filter(Integer value) {
+    public Boolean filter(T value) {
         Assert.notNull(value, FILTER_VALUE_NULL_MESSAGE);
 
         boolean result = false;

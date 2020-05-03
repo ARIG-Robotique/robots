@@ -24,7 +24,7 @@ public class EcueilCommunBleu extends AbstractEcueil {
 
     @Override
     public boolean isValid() {
-        return rs.bouee5().prise() && rs.bouee6().prise() && super.isValid();
+        return rs.bouee(5).prise() && rs.bouee(6).prise() && super.isValid();
     }
 
     @Override

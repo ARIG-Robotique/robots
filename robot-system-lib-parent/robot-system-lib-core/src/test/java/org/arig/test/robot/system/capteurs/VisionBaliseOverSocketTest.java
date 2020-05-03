@@ -15,6 +15,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 
 import java.io.File;
 import java.net.Socket;
+import java.util.Base64;
 
 /**
  * @author gdepuille on 03/03/17.
@@ -60,7 +61,8 @@ public class VisionBaliseOverSocketTest {
     @Test
     @SneakyThrows
     public void testGetPhoto() {
-        byte[] img = visionBalise.getPhoto(600);
+        String imgStr = visionBalise.getPhoto(600);
+        byte[] img = Base64.getDecoder().decode(imgStr);
         File dest = new File("img.jpg");
         FileUtils.writeByteArrayToFile(dest, img);
         log.info("Photo : {}", dest.getAbsolutePath());

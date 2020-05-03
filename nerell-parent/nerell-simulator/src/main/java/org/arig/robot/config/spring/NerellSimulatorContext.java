@@ -12,12 +12,7 @@ import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
 import org.arig.robot.system.avoiding.IAvoidingService;
-import org.arig.robot.system.capteurs.EcranOverSocket;
-import org.arig.robot.system.capteurs.IEcran;
-import org.arig.robot.system.capteurs.ILidarTelemeter;
-import org.arig.robot.system.capteurs.IVisionBalise;
-import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
-import org.arig.robot.system.capteurs.VisionBaliseBouchon;
+import org.arig.robot.system.capteurs.*;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractMotor;
@@ -118,8 +113,10 @@ public class NerellSimulatorContext {
     }
 
     @Bean
-    public IVisionBalise visionBalise() {
-        return new VisionBaliseBouchon();
+    public IVisionBalise visionBalise(Environment env) {
+        final String host = env.getRequiredProperty("balise.socket.host");
+        final Integer port = env.getRequiredProperty("balise.socket.port", Integer.class);
+        return new VisionBaliseOverSocket(host, port);
     }
 
     @Bean

@@ -7,4 +7,4 @@ import org.arig.robot.communication.socket.ecran.enums.EcranAction;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ExitResponse extends AbstractResponse<EcranAction> { }
+public class EmptyResponse extends AbstractResponse<EcranAction> { }

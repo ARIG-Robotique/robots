@@ -11,15 +11,11 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IConstantesUtiles;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.I2CException;
-import org.arig.robot.filters.common.IntegerChangeFilter;
+import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
-import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.EStrategy;
-import org.arig.robot.model.ETeam;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
-import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.*;
+import org.arig.robot.model.balise.EtalonnageBalise;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
@@ -118,7 +114,7 @@ public class Ordonanceur {
             ecranService.displayMessage("Scan I2C");
             i2CManager.executeScan();
         } catch (I2CException e) {
-            String error ="Erreur lors du scan I2C";
+            String error = "Erreur lors du scan I2C";
             ecranService.displayMessage(error, LogLevel.OFF);
             log.error(error, e);
             return;
@@ -166,17 +162,17 @@ public class Ordonanceur {
         do {
             baliseService.tryConnect();
             tries--;
-        } while(!baliseService.isConnected() && tries > 0);
+        } while (!baliseService.isConnected() && tries > 0);
 
         ecranService.displayMessage("Choix équipe et lancement calage bordure");
-        IntegerChangeFilter teamChangeFilter = new IntegerChangeFilter(-1);
+        ChangeFilter<Integer> teamChangeFilter = new ChangeFilter<>(-1);
         do {
             if (teamChangeFilter.filter(ecranService.config().getTeam())) {
                 robotStatus.setTeam(ecranService.config().getTeam());
                 log.info("Team {}", robotStatus.getTeam().name());
             }
             ThreadUtils.sleep(500);
-        } while(!ecranService.config().isStartCalibration());
+        } while (!ecranService.config().isStartCalibration());
 
         ecranService.displayMessage("Définition arbitraire des écueils");
         if (robotStatus.getTeam() == ETeam.BLEU) {
@@ -186,6 +182,7 @@ public class Ordonanceur {
             robotStatus.setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
             robotStatus.setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.VERT});
         }
+        robotStatus.enableBalise();
 
         ecranService.displayMessage("Chargement de la carte");
         String fileResourcePath = String.format("classpath:maps/sail_the_world-%s.png", robotStatus.getTeam().name());
@@ -223,7 +220,7 @@ public class Ordonanceur {
                 lidarDatas = lidar.grabDatas();
             }
 
-            for (int i = 0 ; i < 10 ; i++) {
+            for (int i = 0; i < 10; i++) {
                 ecranService.displayMessage(String.format("Attente %ss pour remettre la capot si besoin", 10 - i));
                 ThreadUtils.sleep(1000);
             }
@@ -232,9 +229,9 @@ public class Ordonanceur {
 
         SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.RISING);
         SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.FALLING);
-        IntegerChangeFilter strategyChangeFilter = new IntegerChangeFilter(-1);
+        ChangeFilter<Integer> strategyChangeFilter = new ChangeFilter<>(-1);
         boolean manuel = ecranService.config().isModeManuel();
-        while(!ioService.tirette()) {
+        while (!ioService.tirette()) {
             if (manuelRisingEdge.filter(ecranService.config().isModeManuel())) {
                 manuel = true;
                 strategyChangeFilter.filter(-1);

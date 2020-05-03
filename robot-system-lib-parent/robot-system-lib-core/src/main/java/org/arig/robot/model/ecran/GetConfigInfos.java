@@ -13,4 +13,8 @@ public class GetConfigInfos implements Serializable {
     boolean startCalibration;
     boolean modeManuel;
     boolean skipCalageBordure;
+    boolean updatePhoto;
+    boolean etalonnageBalise;
+    int[][] posEcueil;
+    int[][] posBouees;
 }

@@ -1,16 +1,10 @@
 package org.arig.robot.system.capteurs;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.socket.ecran.ExitQuery;
-import org.arig.robot.communication.socket.ecran.ExitResponse;
-import org.arig.robot.communication.socket.ecran.GetConfigQuery;
-import org.arig.robot.communication.socket.ecran.GetConfigResponse;
-import org.arig.robot.communication.socket.ecran.UpdateMatchQuery;
-import org.arig.robot.communication.socket.ecran.UpdateMatchResponse;
-import org.arig.robot.communication.socket.ecran.UpdateStateQuery;
-import org.arig.robot.communication.socket.ecran.UpdateStateResponse;
+import org.arig.robot.communication.socket.ecran.*;
 import org.arig.robot.communication.socket.ecran.enums.EcranAction;
 import org.arig.robot.model.ecran.GetConfigInfos;
+import org.arig.robot.model.ecran.UpdateEtalonnageData;
 import org.arig.robot.model.ecran.UpdateMatchInfos;
 import org.arig.robot.model.ecran.UpdateStateInfos;
 
@@ -32,7 +26,7 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
     public void end() {
         if (isOpen()) {
             try {
-                sendToSocketAndGet(new ExitQuery(), ExitResponse.class);
+                sendToSocketAndGet(new ExitQuery(), EmptyResponse.class);
             } catch (IOException e) {
                 log.warn("Impossible de fermer l'ecran");
             }
@@ -64,7 +58,7 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
             openIfNecessary();
             UpdateStateQuery query = new UpdateStateQuery();
             query.setDatas(datas);
-            sendToSocketAndGet(query, UpdateStateResponse.class);
+            sendToSocketAndGet(query, EmptyResponse.class);
         } catch (Exception e) {
             log.error("Erreur de lecture", e);
         }
@@ -76,7 +70,31 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
             openIfNecessary();
             UpdateMatchQuery query = new UpdateMatchQuery();
             query.setDatas(datas);
-            sendToSocketAndGet(query, UpdateMatchResponse.class);
+            sendToSocketAndGet(query, EmptyResponse.class);
+        } catch (Exception e) {
+            log.error("Erreur de lecture", e);
+        }
+    }
+
+    @Override
+    public void updatePhoto(String photo) {
+        try {
+            openIfNecessary();
+            UpdatePhotoQuery query = new UpdatePhotoQuery();
+            query.setDatas(photo);
+            sendToSocketAndGet(query, EmptyResponse.class);
+        } catch (Exception e) {
+            log.error("Erreur de lecture", e);
+        }
+    }
+
+    @Override
+    public void updateEtalonnage(UpdateEtalonnageData etalonnage) {
+        try {
+            openIfNecessary();
+            UpdateEtalonnageQuery query = new UpdateEtalonnageQuery();
+            query.setDatas(etalonnage);
+            sendToSocketAndGet(query, EmptyResponse.class);
         } catch (Exception e) {
             log.error("Erreur de lecture", e);
         }

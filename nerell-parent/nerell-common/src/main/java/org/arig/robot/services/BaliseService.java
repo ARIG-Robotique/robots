@@ -1,9 +1,11 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.balise.EtalonnageBalise;
 import org.arig.robot.model.balise.StatutBalise;
 import org.arig.robot.model.communication.balise.enums.CouleurDetectee;
 import org.arig.robot.system.capteurs.IVisionBalise;
@@ -16,6 +18,10 @@ import java.util.stream.Stream;
 @Service
 public class BaliseService {
 
+    private static final int PHOTO_NATIVE_WIDTH = 2592;
+    private static final double PHOTO_RATIO = 0.5;
+    private static final int PHOTO_WORK_WIDTH = (int) Math.round(PHOTO_NATIVE_WIDTH * PHOTO_RATIO);
+
     @Autowired
     private IVisionBalise balise;
 
@@ -23,6 +29,7 @@ public class BaliseService {
     private RobotStatus rs;
 
     private StatutBalise statut;
+    private boolean detectionStarted = false;
 
     public boolean isConnected() {
         return balise.isOpen();
@@ -34,7 +41,7 @@ public class BaliseService {
             log.info("Connecté à la balise");
             return true;
         } catch (Exception e) {
-            log.warn("Impossible de se connecter à la balise", e);
+            log.warn("Impossible de se connecter à la balise");
             return false;
         }
     }
@@ -44,11 +51,14 @@ public class BaliseService {
     }
 
     public void startDetection() {
-        balise.startDetection();
+        if (!detectionStarted) {
+            detectionStarted = balise.startDetection();
+        }
     }
 
-    public byte[] getPhoto() {
-        return balise.getPhoto(800);
+    public String getPhoto() {
+        log.info("Prise d'une photo");
+        return balise.getPhoto(PHOTO_WORK_WIDTH);
     }
 
     public void lectureGirouette() {
@@ -61,17 +71,17 @@ public class BaliseService {
         boolean valid = false;
 
         if (statut != null && statut.getDetection() != null) {
-            valid = Stream.of(statut.getDetection().getColors())
-                    .allMatch(c -> c != CouleurDetectee.UNKNONW);
+            valid = Stream.of(statut.getDetection().getEcueil())
+                    .allMatch(c -> c != CouleurDetectee.UNKNOWN);
 
             if (valid) {
-                final CouleurDetectee[] detection = statut.getDetection().getColors();
+                final CouleurDetectee[] detection = statut.getDetection().getEcueil();
                 final ECouleurBouee[] couleursAdverse = new ECouleurBouee[5];
                 final ECouleurBouee[] couleursEquipe = new ECouleurBouee[5];
 
-                // Récupération de gauche a droit par la balise.
+                // Récupération de gauche a droite par la balise.
                 // Les pinces arrières sont dans l'autre sens, on inverse le tableau
-                for (int i = 0 ; i < 5 ; i++) {
+                for (int i = 0; i < 5; i++) {
                     if (detection[4 - i] == CouleurDetectee.RED) {
                         couleursAdverse[i] = ECouleurBouee.ROUGE;
                         couleursEquipe[4 - i] = ECouleurBouee.VERT;
@@ -88,10 +98,30 @@ public class BaliseService {
         return valid;
     }
 
+    public boolean lectureCouleurBouees() {
+        if (statut != null && statut.getDetection() != null && !ArrayUtils.isEmpty(statut.getDetection().getBouees())) {
+            CouleurDetectee[] bouees = statut.getDetection().getBouees();
+            for (int i = 0; i < Math.min(6, bouees.length); i++) {
+                // les bouees sont lues en partant de la plus proche de la balise
+                // on ignore les deux bouées proches de notre eccueil
+                // BLEU : 12=>5
+                // JAUNE : 5=>12
+                if (bouees[i] == CouleurDetectee.UNKNOWN) {
+                    int numBouee = rs.getTeam() == ETeam.BLEU ? 12 - i : 5 + i;
+                    rs.bouee(numBouee).prise(true);
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     public void lectureEcueilAdverse() {
         if (statut != null && statut.getDetection() != null) {
-            byte nbBouees = (byte) Stream.of(statut.getDetection().getColors())
-                    .filter(c -> c != CouleurDetectee.UNKNONW)
+            byte nbBouees = (byte) Stream.of(statut.getDetection().getEcueil())
+                    .filter(c -> c != CouleurDetectee.UNKNOWN)
                     .count();
 
             if (rs.getTeam() == ETeam.BLEU) {
@@ -100,5 +130,29 @@ public class BaliseService {
                 rs.setEcueilCommunBleuDispo(nbBouees);
             }
         }
+    }
+
+    public EtalonnageBalise etalonnage(int[][] ecueil, int[][] bouees) {
+        log.info("Démarrage de l'étalonnage");
+
+        // scale les coordonnées car on bosse sur une image plus petite
+        return balise.etalonnage(scalePoints(ecueil), scalePoints(bouees));
+    }
+
+    private int[][] scalePoints(int[][] points) {
+        if (points == null) {
+            return null;
+        }
+
+        int[][] scaled = new int[points.length][];
+
+        for (int i = 0; i < points.length; i++) {
+            scaled[i] = new int[]{
+                    (int) Math.round(points[i][0] / PHOTO_RATIO),
+                    (int) Math.round(points[i][1] / PHOTO_RATIO)
+            };
+        }
+
+        return scaled;
     }
 }

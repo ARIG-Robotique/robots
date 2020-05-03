@@ -1,26 +1,22 @@
 package org.arig.test.robot.filters.common;
 
-import org.arig.robot.filters.common.IntegerChangeFilter;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
+import org.arig.robot.filters.common.ChangeFilter;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
 @RunWith(BlockJUnit4ClassRunner.class)
-public class IntegerChangeFilterTest {
+public class ChangeFilterTest {
 
-    private static IntegerChangeFilter filter;
+    private static ChangeFilter<Integer> filter;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     @BeforeClass
     public static void initClass() {
-        filter = new IntegerChangeFilter(-1);
+        filter = new ChangeFilter<>(-1);
     }
 
     @Before
@@ -30,10 +26,10 @@ public class IntegerChangeFilterTest {
 
     @Test
     public void testFilter() {
-        Assert.assertEquals(false,filter.filter(-1));
+        Assert.assertEquals(false, filter.filter(-1));
         Assert.assertEquals(true, filter.filter(10));
-        Assert.assertEquals(false,filter.filter(10));
-        Assert.assertEquals(true,filter.filter(9));
+        Assert.assertEquals(false, filter.filter(10));
+        Assert.assertEquals(true, filter.filter(9));
     }
 
     @Test

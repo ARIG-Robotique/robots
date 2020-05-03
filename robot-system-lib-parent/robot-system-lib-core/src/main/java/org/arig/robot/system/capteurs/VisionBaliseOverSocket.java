@@ -1,20 +1,12 @@
 package org.arig.robot.system.capteurs;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
-import org.arig.robot.communication.socket.balise.DetectionQuery;
-import org.arig.robot.communication.socket.balise.DetectionResponse;
-import org.arig.robot.communication.socket.balise.ExitQuery;
-import org.arig.robot.communication.socket.balise.ExitResponse;
-import org.arig.robot.communication.socket.balise.PhotoQuery;
-import org.arig.robot.communication.socket.balise.PhotoResponse;
-import org.arig.robot.communication.socket.balise.StatusQuery;
-import org.arig.robot.communication.socket.balise.StatusResponse;
+import org.arig.robot.communication.socket.balise.*;
 import org.arig.robot.communication.socket.balise.enums.BaliseAction;
+import org.arig.robot.model.balise.EtalonnageBalise;
 import org.arig.robot.model.balise.StatutBalise;
 
 import java.io.File;
-import java.util.Base64;
 
 @Slf4j
 public class VisionBaliseOverSocket extends AbstractSocketClient<BaliseAction> implements IVisionBalise {
@@ -40,14 +32,28 @@ public class VisionBaliseOverSocket extends AbstractSocketClient<BaliseAction> i
     }
 
     @Override
-    public void startDetection() {
+    public EtalonnageBalise etalonnage(int[][] ecueil, int[][] bouees) {
+        try {
+            openIfNecessary();
+            EtalonnageResponse response = sendToSocketAndGet(new EtalonnageQuery(ecueil, bouees), EtalonnageResponse.class);
+            return response.getDatas();
+
+        } catch (Exception e) {
+            log.warn("Erreur de récupération de l'étalonnage", e);
+            return null;
+        }
+    }
+
+    @Override
+    public boolean startDetection() {
         try {
             openIfNecessary();
             sendToSocketAndGet(new DetectionQuery(), DetectionResponse.class);
-
+            return true;
         } catch (Exception e) {
             log.warn("Erreur de récupération de la detection", e);
         }
+        return false;
     }
 
     @Override
@@ -64,15 +70,15 @@ public class VisionBaliseOverSocket extends AbstractSocketClient<BaliseAction> i
     }
 
     @Override
-    public byte[] getPhoto(int width) {
+    public String getPhoto(int width) {
         try {
             openIfNecessary();
             PhotoResponse response = sendToSocketAndGet(new PhotoQuery(width), PhotoResponse.class);
-            return Base64.getDecoder().decode(response.getDatas());
+            return response.getDatas();
 
         } catch (Exception e) {
             log.warn("Erreur de lecture", e);
-            return ArrayUtils.EMPTY_BYTE_ARRAY;
+            return "";
         }
     }
 }

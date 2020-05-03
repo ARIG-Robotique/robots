@@ -1,6 +1,7 @@
 package org.arig.robot.system.process;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IConstantesConfig;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -28,6 +29,11 @@ public class EcranProcess implements InitializingBean, DisposableBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        if (System.getProperty(IConstantesConfig.disableEcran) != null) {
+            log.info("Le démarrage de l'écran est désactivé");
+            return;
+        }
+
         final File execDir = new File("/tmp/ecran");
         if (!execDir.exists()) {
             log.info("Création du répertoire d'execution pour le program de l'ecran {} : {}", execDir.getAbsolutePath(), execDir.mkdirs());
@@ -38,9 +44,6 @@ public class EcranProcess implements InitializingBean, DisposableBean {
         args.add("unix");
         args.add(socketPath);
 
-        // TODO : External config
-        args.add("sauron");
-        args.add("9042");
         if (debug) {
             args.add("debug");
         }

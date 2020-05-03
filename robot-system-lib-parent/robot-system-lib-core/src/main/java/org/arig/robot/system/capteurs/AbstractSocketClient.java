@@ -67,7 +67,13 @@ public class AbstractSocketClient<T extends Enum> {
         socket.setKeepAlive(true);
 
         // Récupération des IO
+        if (out != null) {
+            out.close();
+        }
         out = new OutputStreamWriter(socket.getOutputStream());
+        if (in != null) {
+            in.close();
+        }
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
 
@@ -76,7 +82,11 @@ public class AbstractSocketClient<T extends Enum> {
     }
 
     public void end() {
-        if (isOpen()) {
+        end(false);
+    }
+
+    public void end(boolean force) {
+        if (isOpen() || force) {
             try {
                 socket.shutdownOutput();
                 socket.shutdownInput();
@@ -86,23 +96,32 @@ public class AbstractSocketClient<T extends Enum> {
             closeQuietly(in);
             closeQuietly(out);
             closeQuietly(socket);
+            socket = null;
         }
     }
 
     protected <Q extends AbstractQuery<T>, R extends AbstractResponse<T>> R sendToSocketAndGet(Q query, Class<R> responseClazz) throws IOException {
-        if (isOpen()) {
-            String q = objectMapper.writeValueAsString(query);
-            out.write(q + "\r\n");
-            out.flush();
+        try {
+            if (isOpen()) {
+                String q = objectMapper.writeValueAsString(query);
+                log.debug(q);
 
-            String res = in.readLine();
-            R rawResponse = objectMapper.readValue(res, responseClazz);
-            if (rawResponse.isError()) {
-                throw new IllegalStateException(rawResponse.getErrorMessage());
+                out.write(q + "\r\n");
+                out.flush();
+
+                String res = in.readLine();
+                R rawResponse = objectMapper.readValue(res, responseClazz);
+                if (rawResponse.isError()) {
+                    throw new IllegalStateException(rawResponse.getErrorMessage());
+                }
+                return rawResponse;
+            } else {
+                throw new IllegalStateException("Socket non ouverte");
             }
-            return rawResponse;
-        } else {
-            throw new IllegalStateException("Socket non ouvert");
+        } catch (IOException e) {
+            log.warn("Connexion perdu");
+            end(true);
+            throw new IllegalStateException("Socket perdu");
         }
     }
 
