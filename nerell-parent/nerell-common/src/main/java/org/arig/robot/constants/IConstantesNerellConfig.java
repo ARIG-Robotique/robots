@@ -90,18 +90,18 @@ public interface IConstantesNerellConfig {
 
     double kcrDistance = 21.5;
     double tcrDistance = 0.04;
-    double kpDistance = 6.5; // 12.90
-    double kiDistance = 0.025; // 120
-    double kdDistance = 150; // 0.002
+    double kpDistance = 7;   // 6.5;   // 12.90
+    double kiDistance = 0.1; // 0.025; // 120
+    double kdDistance = 0;   // 150;   // 0.002
     double kpDistanceSimu = 12.9;
     double kiDistanceSimu = 0.0;
     double kdDistanceSimu = 0.008;
 
     double kcrOrientation = 10.0;
     double tcrOrientation = 0.05;
-    double kpOrientation = 2.5;
-    double kiOrientation = 0.025;
-    double kdOrientation = 50;
+    double kpOrientation = 4;    // 0.8;   // 5;
+    double kiOrientation = 0.05; // 0.005; // 0.09;
+    double kdOrientation = 80;   // 80;    // 50;
     double kpOrientationSimu = 6.0;
     double kiOrientationSimu = 0.0;
     double kdOrientationSimu = 0.01;
