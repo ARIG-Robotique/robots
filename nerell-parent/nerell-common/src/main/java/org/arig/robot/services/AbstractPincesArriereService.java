@@ -97,8 +97,9 @@ public abstract class AbstractPincesArriereService implements IPincesArriereServ
         srv.pivotArriereOuvert(true);
         srv.ascenseurArriereTable(true);
         srv.pincesArriereOuvert(true);
-        srv.ascenseurArriereHaut(true);
+        srv.ascenseurArriereEcueil(true);
         srv.pivotArriereFerme(false);
         srv.pincesArriereFerme(false);
+        srv.ascenseurArriereHaut(false);
     }
 }
