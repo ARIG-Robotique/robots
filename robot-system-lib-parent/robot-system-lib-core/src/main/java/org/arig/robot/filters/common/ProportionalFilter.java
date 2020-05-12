@@ -1,6 +1,7 @@
 package org.arig.robot.filters.common;
 
 import lombok.Getter;
+import lombok.experimental.Accessors;
 import org.arig.robot.filters.IFilter;
 import org.springframework.util.Assert;
 
@@ -11,6 +12,10 @@ public class ProportionalFilter implements IFilter<Double, Double> {
     @Getter
     private Double gain;
 
+    @Getter
+    @Accessors(fluent = true)
+    private Double lastResult;
+
     public ProportionalFilter(Double gain) {
         super();
         setGain(gain);
@@ -19,7 +24,8 @@ public class ProportionalFilter implements IFilter<Double, Double> {
     @Override
     public Double filter(Double value) {
         Assert.notNull(value, FILTER_VALUE_NULL_MESSAGE);
-        return gain * value;
+        lastResult = gain * value;
+        return lastResult;
     }
 
     public void setGain(Double gain) {

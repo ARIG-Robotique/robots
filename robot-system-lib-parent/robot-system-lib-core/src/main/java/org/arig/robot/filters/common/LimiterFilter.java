@@ -1,5 +1,7 @@
 package org.arig.robot.filters.common;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.filters.IFilter;
 import org.springframework.util.Assert;
@@ -20,6 +22,10 @@ public class LimiterFilter implements IFilter<Double, Double> {
     private final Double positiveMin, positiveMax;
     private Double negativeMin, negativeMax;
     private final LimiterType type;
+
+    @Getter
+    @Accessors(fluent = true)
+    private Double lastResult;
 
     public LimiterFilter(Double min, Double max) {
         this(min, max, LimiterType.SIMPLE);
@@ -63,9 +69,10 @@ public class LimiterFilter implements IFilter<Double, Double> {
     public Double filter(Double value) {
         Assert.notNull(value, FILTER_VALUE_NULL_MESSAGE);
         if (type == LimiterType.SIMPLE || (type == LimiterType.DOUBLE && value >= 0)) {
-            return value < positiveMin ? positiveMin : (value > positiveMax) ? positiveMax : value;
+            lastResult = value < positiveMin ? positiveMin : (value > positiveMax) ? positiveMax : value;
         } else {
-            return value > negativeMin ? negativeMin : (value < negativeMax) ? negativeMax : value;
+            lastResult = value > negativeMin ? negativeMin : (value < negativeMax) ? negativeMax : value;
         }
+        return lastResult;
     }
 }

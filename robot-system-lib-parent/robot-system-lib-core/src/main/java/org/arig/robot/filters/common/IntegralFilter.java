@@ -32,4 +32,9 @@ public class IntegralFilter implements IFilter<Double, Double> {
         sum = sum + value;
         return sum;
     }
+
+    @Override
+    public Double lastResult() {
+        return sum;
+    }
 }

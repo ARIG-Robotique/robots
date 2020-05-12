@@ -1,6 +1,7 @@
 package org.arig.robot.filters.common;
 
 import lombok.Getter;
+import lombok.experimental.Accessors;
 import org.arig.robot.filters.IFilter;
 import org.springframework.util.Assert;
 
@@ -12,6 +13,10 @@ public class DerivateFilter implements IFilter<Double, Double> {
 
     @Getter
     private Double lastValue;
+
+    @Getter
+    @Accessors(fluent = true)
+    private Double lastResult;
 
     public DerivateFilter(Double initial) {
         super();
@@ -29,8 +34,8 @@ public class DerivateFilter implements IFilter<Double, Double> {
     @Override
     public Double filter(Double value) {
         Assert.notNull(value, FILTER_VALUE_NULL_MESSAGE);
-        Double res = value - lastValue;
+        lastResult = value - lastValue;
         lastValue = value;
-        return res;
+        return lastResult;
     }
 }

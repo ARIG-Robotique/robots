@@ -1,6 +1,7 @@
 package org.arig.robot.filters.common;
 
 import lombok.Getter;
+import lombok.experimental.Accessors;
 import org.arig.robot.filters.IFilter;
 import org.springframework.util.Assert;
 
@@ -12,6 +13,10 @@ public class IntegerChangeFilter implements IFilter<Integer, Boolean> {
 
     @Getter
     private Integer lastValue;
+
+    @Getter
+    @Accessors(fluent = true)
+    private Boolean lastResult;
 
     public IntegerChangeFilter(Integer initial) {
         super();
@@ -35,6 +40,7 @@ public class IntegerChangeFilter implements IFilter<Integer, Boolean> {
             lastValue = value;
             result = true;
         }
-        return result;
+        lastResult = result;
+        return lastResult;
     }
 }

@@ -1,5 +1,7 @@
 package org.arig.robot.filters.average;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.springframework.util.Assert;
 
@@ -13,6 +15,10 @@ import java.util.function.BinaryOperator;
 public abstract class AbstractCircularFifoValueAverage<T> implements IAverage<T> {
 
     private CircularFifoQueue<T> queue;
+
+    @Getter
+    @Accessors(fluent = true)
+    private T lastResult;
 
     AbstractCircularFifoValueAverage(int nbValues) {
         queue = new CircularFifoQueue<>(nbValues);
@@ -39,7 +45,8 @@ public abstract class AbstractCircularFifoValueAverage<T> implements IAverage<T>
         Assert.notNull(newValue, FILTER_VALUE_NULL_MESSAGE);
         queue.offer(newValue);
         T res = queue.parallelStream().reduce(identityValue(), reduceFunction());
-        return effectiveAverage(res, queue.size());
+        lastResult = effectiveAverage(res, queue.size());
+        return lastResult;
     }
 
     protected abstract T identityValue();

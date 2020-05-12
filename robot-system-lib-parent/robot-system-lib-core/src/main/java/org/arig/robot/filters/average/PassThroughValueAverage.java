@@ -14,11 +14,16 @@ public class PassThroughValueAverage<T> implements IAverage<T> {
     @Accessors(fluent = true)
     private final int size = 0;
 
+    @Getter
+    @Accessors(fluent = true)
+    private T lastResult;
+
     @Override
     public void setNbValues(int nbValues) { }
 
     @Override
     public T filter(T newValue) {
-        return newValue;
+        lastResult = newValue;
+        return lastResult;
     }
 }

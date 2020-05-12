@@ -48,6 +48,11 @@ public class SignalEdgeFilter implements IFilter<Boolean, Boolean> {
         return result;
     }
 
+    @Override
+    public Boolean lastResult() {
+        return lastValue;
+    }
+
     private boolean risingEdge(boolean value) {
         return value && !lastValue;
     }
@@ -55,5 +60,4 @@ public class SignalEdgeFilter implements IFilter<Boolean, Boolean> {
     private boolean fallingEdge(boolean value) {
         return !value && lastValue;
     }
-
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.MapUtils;
 import org.arig.robot.filters.common.ProportionalFilter;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
@@ -143,9 +144,19 @@ public abstract class AbstractPidFilter implements IPidFilter {
                 .addField("output", output)
                 .addField("error", error)
                 .addField("errorSum", getErrorSum());
+        customMonitoringFields().forEach(serie::addField);
 
         monitoringWrapper.addTimeSeriePoint(serie);
 
         return output();
+    }
+
+    @Override
+    public Double lastResult() {
+        return output();
+    }
+
+    protected Map<String, Number> customMonitoringFields() {
+        return MapUtils.EMPTY_SORTED_MAP;
     }
 }

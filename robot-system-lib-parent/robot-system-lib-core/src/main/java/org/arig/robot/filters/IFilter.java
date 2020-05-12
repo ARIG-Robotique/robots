@@ -16,4 +16,11 @@ public interface IFilter<In, Out> {
      * @return La valeur filtré selon l'algorithme implémenté
      */
     Out filter(In value);
+
+    /**
+     * Récupération du dernier résultat
+     *
+     * @return La valeur du dernier process
+     */
+    Out lastResult();
 }

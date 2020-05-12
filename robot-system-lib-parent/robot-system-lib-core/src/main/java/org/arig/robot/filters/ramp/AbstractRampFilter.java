@@ -120,6 +120,11 @@ public abstract class AbstractRampFilter implements IRampFilter {
         return this.output;
     }
 
+    @Override
+    public Long lastResult() {
+        return output;
+    }
+
     protected void sendMonitoring() {
         // Construction du monitoring
         MonitorTimeSerie serie = new MonitorTimeSerie()

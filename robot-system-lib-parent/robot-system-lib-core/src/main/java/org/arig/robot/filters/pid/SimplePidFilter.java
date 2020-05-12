@@ -6,11 +6,17 @@ import org.arig.robot.filters.chain.SerialChainFilter;
 import org.arig.robot.filters.common.DerivateFilter;
 import org.arig.robot.filters.common.IntegralFilter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 public class SimplePidFilter extends AbstractPidFilter {
 
     private final IntegralFilter integral;
     private final DerivateFilter derivate;
+
+    private final SerialChainFilter<Double> integralChain;
+    private final SerialChainFilter<Double> derivateChain;
     private final ParallelChainFilter pid;
 
     public SimplePidFilter(String name) {
@@ -19,12 +25,12 @@ public class SimplePidFilter extends AbstractPidFilter {
         integral = new IntegralFilter(0d);
         derivate = new DerivateFilter(0d);
 
-        final SerialChainFilter<Double> integralChain = new SerialChainFilter<>();
+        integralChain = new SerialChainFilter<>();
         integralChain.addFilter(integral);
         integralChain.addFilter(ki());
         integralChain.addFilter(integralTime());
 
-        final SerialChainFilter<Double>  derivateChain = new SerialChainFilter<>();
+        derivateChain = new SerialChainFilter<>();
         derivateChain.addFilter(derivate);
         derivateChain.addFilter(kd());
         derivateChain.addFilter(derivateTime());
@@ -47,6 +53,15 @@ public class SimplePidFilter extends AbstractPidFilter {
 
     public final Double getErrorSum() {
         return this.integral.getSum();
+    }
+
+    @Override
+    protected Map<String, Number> customMonitoringFields() {
+        Map<String, Number> fields = new HashMap<>();
+        fields.put("p", kp().lastResult());
+        fields.put("i", integralChain.lastResult());
+        fields.put("d", derivateChain.lastResult());
+        return fields;
     }
 
     @Override
