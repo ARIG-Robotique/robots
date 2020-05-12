@@ -312,23 +312,22 @@ public class Ordonanceur {
             ThreadUtils.sleep(1000);
         }
 
-        ecranService.displayMessage("FIN");
-
         // Remise en place
         ioService.enableAlim5VPuissance();
-        ioService.enableAlim12VPuissance();
-
         servosService.pincesAvantFerme(false);
         servosService.pincesArriereFerme(false);
         servosService.brasDroitFerme(false);
         servosService.brasGaucheFerme(false);
-        servosService.ascenseurAvantRoulage(true);
-        servosService.ascenseurArriereHaut(true);
+        servosService.ascenseurAvantRoulage(false);
+        servosService.ascenseurArriereHaut(false);
         servosService.pivotArriereFerme(false);
         servosService.moustachesFerme(false);
+        ecranService.displayMessage("FIN - Attente béquille et enlever la tirette");
+        while (ioService.tirette()) {
+            ThreadUtils.sleep(1000);
+        }
 
-        ThreadUtils.sleep(1000); // pour attendre les derniers servos avant de couper l'alim
-
+        // On coupe le jus
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();
     }
