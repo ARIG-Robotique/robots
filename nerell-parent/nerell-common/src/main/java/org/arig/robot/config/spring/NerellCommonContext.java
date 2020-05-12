@@ -3,6 +3,7 @@ package org.arig.robot.config.spring;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.Ordonanceur;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
@@ -78,7 +79,15 @@ public class NerellCommonContext {
 
     @Bean
     public IAsservissementPolaire asservissement() {
-        return new AsservissementPolaireDistanceOrientation();
+        // Positive Min moteur Gauche : 102
+        // Negative Min moteur Gauche : -37
+        LimiterFilter limiterMoteurGauche = new LimiterFilter(102d, 5000d, -37d, -5000d);
+
+        // Positive Min moteur Droit : 93
+        // Negative Min moteur Droit : -78
+        LimiterFilter limiterMoteurDroit = new LimiterFilter(93d, 5000d, -78d,  -5000d);
+
+        return new AsservissementPolaireDistanceOrientation(limiterMoteurGauche, limiterMoteurDroit);
     }
 
     @Bean

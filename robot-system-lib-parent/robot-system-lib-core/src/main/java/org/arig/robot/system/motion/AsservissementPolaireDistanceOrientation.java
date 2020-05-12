@@ -1,5 +1,6 @@
 package org.arig.robot.system.motion;
 
+import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.CommandeRobot;
@@ -37,11 +38,20 @@ public class AsservissementPolaireDistanceOrientation implements IAsservissement
     @Qualifier("rampOrientation")
     private TrapezoidalRampFilter rampOrientation;
 
+    private final LimiterFilter limiterMoteurGauche;
+    private final LimiterFilter limiterMoteurDroit;
+
     /**
      * Instantiates a new asservissement polaire.
      */
     public AsservissementPolaireDistanceOrientation() {
+        this(new LimiterFilter(-Double.MAX_VALUE + 1, Double.MAX_VALUE), new LimiterFilter(-Double.MAX_VALUE + 1, Double.MAX_VALUE));
+    }
+
+    public AsservissementPolaireDistanceOrientation(LimiterFilter limiterMoteurGauche, LimiterFilter limiterMoteurDroit) {
         super();
+        this.limiterMoteurGauche = limiterMoteurGauche;
+        this.limiterMoteurDroit = limiterMoteurDroit;
     }
 
     @Override
@@ -85,10 +95,10 @@ public class AsservissementPolaireDistanceOrientation implements IAsservissement
         }
 
         // Consigne moteurs
-        double cmdMotDroit = distance + orientation;
         double cmdMotGauche = distance - orientation;
+        double cmdMotDroit = distance + orientation;
 
-        cmdRobot.getMoteur().setDroit((int) cmdMotDroit);
-        cmdRobot.getMoteur().setGauche((int) cmdMotGauche);
+        cmdRobot.getMoteur().setGauche(limiterMoteurGauche.filter(cmdMotGauche).intValue());
+        cmdRobot.getMoteur().setDroit(limiterMoteurDroit.filter(cmdMotDroit).intValue());
     }
 }

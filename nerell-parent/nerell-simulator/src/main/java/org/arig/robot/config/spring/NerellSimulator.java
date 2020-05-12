@@ -6,6 +6,7 @@ import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.model.RobotStatus;
+import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -32,6 +33,10 @@ public class NerellSimulator {
         IPidFilter pidOrientation = context.getBean("pidOrientation", IPidFilter.class);
         pidOrientation.setTunings(IConstantesNerellConfig.kpOrientationSimu, IConstantesNerellConfig.kiOrientationSimu, IConstantesNerellConfig.kdOrientationSimu);
 
+        // Affichage des bornes pour le limiteur des moteurs
+        context.getBean(BouchonARIG2WheelsEncoders.class).printLimiterValues();
+
+        // Démarrage de l'ordonancement de match
         Ordonanceur.getInstance().run();
         context.close();
         System.exit(0);
