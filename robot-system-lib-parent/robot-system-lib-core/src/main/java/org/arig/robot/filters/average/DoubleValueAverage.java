@@ -22,7 +22,7 @@ public class DoubleValueAverage extends AbstractCircularFifoValueAverage<Double>
 
     @Override
     protected BinaryOperator<Double> reduceFunction() {
-        return (a, b) -> a + b;
+        return Double::sum;
     }
 
     @Override

@@ -6,7 +6,7 @@ import org.springframework.util.Assert;
 import java.util.function.BinaryOperator;
 
 /**
- * Classe de base pour les calcul de moyenne en utilisant une FIFO circulaire.
+ * Classe de base pour les calculs de moyenne en utilisant une FIFO circulaire.
  *
  * @author gdepuille on 14/05/17.
  */

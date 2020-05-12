@@ -22,7 +22,7 @@ public class IntegerValueAverage extends AbstractCircularFifoValueAverage<Intege
 
     @Override
     protected BinaryOperator<Integer> reduceFunction() {
-        return (a, b) -> a + b;
+        return Integer::sum;
     }
 
     @Override
