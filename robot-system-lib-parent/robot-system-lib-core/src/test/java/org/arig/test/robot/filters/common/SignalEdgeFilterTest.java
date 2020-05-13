@@ -37,6 +37,13 @@ public class SignalEdgeFilterTest {
     }
 
     @Test
+    public void lastResult() {
+        Assert.assertEquals(false, risingFilter.lastResult());
+        risingFilter.filter(true);
+        Assert.assertEquals(true, risingFilter.lastResult());
+    }
+
+    @Test
     public void risingValueIsNull() {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage(IFilter.FILTER_VALUE_NULL_MESSAGE);
