@@ -39,7 +39,7 @@ public class LimiterFilter implements IFilter<Double, Double> {
         positiveMin = min;
         positiveMax = max;
         this.type = type;
-        if (type != LimiterType.SIMPLE) {
+        if (type == LimiterType.DOUBLE) {
             negativeMin = -min;
             negativeMax = -max;
         }

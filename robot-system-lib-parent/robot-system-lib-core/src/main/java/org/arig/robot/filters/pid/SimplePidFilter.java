@@ -5,6 +5,8 @@ import org.arig.robot.filters.chain.ParallelChainFilter;
 import org.arig.robot.filters.chain.SerialChainFilter;
 import org.arig.robot.filters.common.DerivateFilter;
 import org.arig.robot.filters.common.IntegralFilter;
+import org.arig.robot.filters.common.LimiterFilter;
+import org.arig.robot.filters.common.LimiterFilter.LimiterType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +31,7 @@ public class SimplePidFilter extends AbstractPidFilter {
         integralChain.addFilter(integral);
         integralChain.addFilter(ki());
         integralChain.addFilter(integralTime());
+        integralChain.addFilter(new LimiterFilter(0d, 4096d, LimiterType.DOUBLE));
 
         derivateChain = new SerialChainFilter<>();
         derivateChain.addFilter(derivate);
