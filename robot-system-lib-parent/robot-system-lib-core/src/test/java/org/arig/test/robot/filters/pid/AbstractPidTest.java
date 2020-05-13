@@ -76,6 +76,9 @@ public abstract class AbstractPidTest {
             pid().consigne(consigne);
             error = consigne - input;
             errorSum += error;
+            if (errorSum > 4096) {
+                errorSum = 4096;
+            }
             output = pid().filter(input);
             log.info("Test PI : consigne {}, mesure {}, output {}", consigne, input, output);
 
@@ -98,6 +101,9 @@ public abstract class AbstractPidTest {
             pid().consigne(consigne);
             error = consigne - input;
             errorSum += error;
+            if (errorSum > 4096) {
+                errorSum = 4096;
+            }
             output = pid().filter(input);
             log.info("Test PID : consigne {}, mesure {}, output {}", consigne, input, output);
 
