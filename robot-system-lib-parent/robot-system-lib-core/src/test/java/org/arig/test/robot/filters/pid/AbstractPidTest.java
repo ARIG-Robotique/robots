@@ -1,5 +1,7 @@
 package org.arig.test.robot.filters.pid;
 
+import lombok.AccessLevel;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
@@ -29,13 +31,17 @@ public abstract class AbstractPidTest {
     @Autowired
     private IMonitoringWrapper monitoringWrapper;
 
-    abstract IPidFilter pid();
+    @Setter(value = AccessLevel.PROTECTED)
+    private boolean hasIntegralLimiter = false;
+
+    protected abstract IPidFilter pid();
 
     @Before
     public void before() {
         System.setProperty(IConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
         monitoringWrapper.cleanAllPoints();
         pid().reset();
+        hasIntegralLimiter = false;
     }
 
     @After
@@ -76,7 +82,7 @@ public abstract class AbstractPidTest {
             pid().consigne(consigne);
             error = consigne - input;
             errorSum += error;
-            if (errorSum > 4096) {
+            if (hasIntegralLimiter && errorSum > 4096) {
                 errorSum = 4096;
             }
             output = pid().filter(input);

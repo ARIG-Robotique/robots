@@ -3,6 +3,7 @@ package org.arig.test.robot.filters.pid;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -20,8 +21,13 @@ public class SimplePidTest extends AbstractPidTest {
     private SimplePidFilter pid;
 
     @Override
-    IPidFilter pid() {
+    protected IPidFilter pid() {
         return pid;
     }
 
+    @Before
+    public void before() {
+        super.before();
+        setHasIntegralLimiter(true);
+    }
 }

@@ -18,7 +18,7 @@ public class DerivateInputPidTest extends AbstractPidTest {
     private DerivateInputPidFilter pid;
 
     @Override
-    IPidFilter pid() {
+    protected IPidFilter pid() {
         return pid;
     }
 
