@@ -25,6 +25,8 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
 
     private MutablePair<ECouleurBouee, ECouleurBouee> expected = new MutablePair<>();
 
+    private boolean[] enabled = new boolean[]{true, true, true, true};
+
     private boolean[] previousState = new boolean[]{false, false, false, false};
 
     @Override
@@ -61,12 +63,17 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
     }
 
     @Override
+    public void setEnabled(boolean ena1, boolean ena2, boolean ena3, boolean ena4) {
+        enabled = new boolean[]{ena1, ena2, ena3, ena4};
+    }
+
+    @Override
     public void activate() {
         if (servosService.isMoustachesOuvert()) {
             servosService.moustachesFerme(true);
         }
         for (int i = 0; i < 4; i++) {
-            if (rs.pincesAvant()[i] == null) {
+            if (rs.pincesAvant()[i] == null && enabled[i]) {
                 servosService.pinceAvantOuvert(i, false);
             }
         }

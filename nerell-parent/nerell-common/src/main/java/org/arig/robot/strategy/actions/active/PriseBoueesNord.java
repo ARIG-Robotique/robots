@@ -12,6 +12,7 @@ import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.services.AbstractPincesAvantService.Side;
 import org.arig.robot.services.IPincesAvantService;
+import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class PriseBoueesNord extends AbstractAction {
 
     @Getter
     private boolean completed = false;
+
+    @Autowired
+    private ServosService servosService;
 
     @Override
     public String name() {
@@ -63,12 +67,14 @@ public class PriseBoueesNord extends AbstractAction {
     public void execute() {
         try {
             mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
-            rs.enablePincesAvant();
 
             Point entry = entryPoint();
             double y = entry.getY();
 
             if (rs.getTeam() == ETeam.BLEU) {
+                pincesAvantService.setEnabled(false, true, true, true);
+                rs.enablePincesAvant();
+
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
                 mv.gotoPointMM(entry, false, true, SensDeplacement.AVANT);
@@ -76,7 +82,9 @@ public class PriseBoueesNord extends AbstractAction {
                 rs.bouee(2).prise(true);
 
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 0);
-                mv.gotoPointMM(640, y, true, SensDeplacement.AVANT);
+                mv.gotoOrientationDeg(0);
+                servosService.pinceAvantOuvert(0, false);
+                mv.gotoPointMM(640, y, false, SensDeplacement.AVANT);
                 rs.bouee(5).prise(true);
 
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 2);
@@ -84,6 +92,9 @@ public class PriseBoueesNord extends AbstractAction {
                 rs.bouee(6).prise(true);
 
             } else {
+                pincesAvantService.setEnabled(true, true, true, false);
+                rs.enablePincesAvant();
+
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 0);
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 2);
                 mv.gotoPointMM(entry, false, true, SensDeplacement.AVANT);
@@ -91,7 +102,9 @@ public class PriseBoueesNord extends AbstractAction {
                 rs.bouee(14).prise(true);
 
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT,3);
-                mv.gotoPointMM(3000 - 640, y, true, SensDeplacement.AVANT);
+                mv.gotoOrientationDeg(180);
+                servosService.pinceAvantOuvert(3, false);
+                mv.gotoPointMM(3000 - 640, y, false, SensDeplacement.AVANT);
                 rs.bouee(12).prise(true);
 
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
