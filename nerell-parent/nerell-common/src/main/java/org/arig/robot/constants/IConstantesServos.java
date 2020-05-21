@@ -10,7 +10,7 @@ public interface IConstantesServos {
     // Constantes de vitesse //
     // --------------------- //
 
-    byte SPEED_MOUSTACHE_POUSSETTE = 25;
+    byte SPEED_MOUSTACHE_POUSSETTE = 20;
     byte SPEED_MOUSTACHE = 0;
     byte SPEED_BRAS = 0;
     byte SPEED_ASCENSEUR_AVANT = 0;

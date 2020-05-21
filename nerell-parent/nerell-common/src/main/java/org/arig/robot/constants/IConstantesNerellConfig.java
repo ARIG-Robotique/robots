@@ -18,7 +18,7 @@ public interface IConstantesNerellConfig {
     double calageTimeMs = 200;
 
     // Durée du match //
-    int matchTimeMs = 99950;
+    int matchTimeMs = 100000;
 
     // Temps écoulé pour la balise
     int baliseElapsedTimeMs = 50000;

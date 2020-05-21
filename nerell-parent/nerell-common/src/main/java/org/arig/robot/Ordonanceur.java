@@ -205,11 +205,11 @@ public class Ordonanceur {
 //            tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 300, 2000));
 //        }
 
-            // Initialisation Mouvement Manager
-            ecranService.displayMessage("Initialisation du contrôleur de mouvement");
-            trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientationBasse);
-            trajectoryManager.init();
-            robotStatus.enableAsserv();
+        // Initialisation Mouvement Manager
+        ecranService.displayMessage("Initialisation du contrôleur de mouvement");
+        trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseUltraLente, IConstantesNerellConfig.vitesseOrientationBasse);
+        trajectoryManager.init();
+        robotStatus.enableAsserv();
 
             ecranService.displayMessage("Calage bordure");
             calageBordure(ecranService.config().isSkipCalageBordure());

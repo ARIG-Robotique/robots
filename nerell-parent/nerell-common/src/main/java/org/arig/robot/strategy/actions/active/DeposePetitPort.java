@@ -104,6 +104,7 @@ public class DeposePetitPort extends AbstractAction {
 
             final Point entry = entryPoint();
             final double x = entry.getX();
+            final double baseYStep = 250;
             mv.pathTo(entry);
             rs.disableAvoidance();
 
@@ -123,7 +124,9 @@ public class DeposePetitPort extends AbstractAction {
                     }
                 }
 
-                mv.gotoPointMM(x, 250, false);
+                mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
+                mv.gotoPointMM(x, baseYStep, false);
+                mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
                 rs.petitChenaux().addRouge(ECouleurBouee.ROUGE);
                 rs.petitChenaux().addVert(ECouleurBouee.VERT);
@@ -135,22 +138,23 @@ public class DeposePetitPort extends AbstractAction {
                 rs.petitChenaux().addVert(ECouleurBouee.ROUGE);
 
                 moustacheFaites = true;
-            } else {
+
+            } else if (!rs.pincesAvantEmpty()) {
                 // déposes suivantes
-                mv.gotoPointMM(x, 250 + step * 80, false);
+                mv.gotoPointMM(x, baseYStep + step * 80, false);
+                mv.gotoOrientationDeg(-90);
             }
 
             if (!rs.pincesAvantEmpty()) {
-                mv.gotoOrientationDeg(-90);
                 pincesAvantService.deposePetitPort();
                 step++;
-
                 mv.reculeMM(150);
                 pincesAvantService.finaliseDepose();
             }
 
             if (!rs.pincesArriereEmpty()) {
                 // Dépose stock arrière si il y en as
+                mv.gotoPointMM(x, baseYStep + 150 + step * 80, false);
                 servos.moustachesFerme(false);
                 mv.gotoOrientationDeg(90);
                 pincesArriereService.deposePetitPort();
