@@ -70,7 +70,7 @@ public class BaliseService {
     public boolean lectureCouleurEcueil() {
         boolean valid = false;
 
-        if (statut != null && statut.getDetection() != null) {
+        if (statut != null && statut.getDetection() != null && !ArrayUtils.isEmpty(statut.getDetection().getEcueil())) {
             valid = Stream.of(statut.getDetection().getEcueil())
                     .allMatch(c -> c != CouleurDetectee.UNKNOWN);
 
@@ -101,11 +101,10 @@ public class BaliseService {
     public boolean lectureCouleurBouees() {
         if (statut != null && statut.getDetection() != null && !ArrayUtils.isEmpty(statut.getDetection().getBouees())) {
             CouleurDetectee[] bouees = statut.getDetection().getBouees();
-            for (int i = 0; i < Math.min(6, bouees.length); i++) {
+            for (int i = 0; i < bouees.length; i++) {
                 // les bouees sont lues en partant de la plus proche de la balise
-                // on ignore les deux bouées proches de notre eccueil
-                // BLEU : 12=>5
-                // JAUNE : 5=>12
+                // BLEU : 12=>7
+                // JAUNE : 5=>10
                 if (bouees[i] == CouleurDetectee.UNKNOWN) {
                     int numBouee = rs.getTeam() == ETeam.BLEU ? 12 - i : 5 + i;
                     rs.bouee(numBouee).prise(true);
