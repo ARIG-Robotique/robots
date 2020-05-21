@@ -107,11 +107,11 @@ public class DeposePetitPort extends AbstractAction {
             mv.pathTo(entry);
             rs.disableAvoidance();
 
-            mv.gotoOrientationDeg(-90);
-
             // première dépose
             // gestion des bouées devant et sur les côtés
             if (!moustacheFaites) {
+                mv.gotoOrientationDeg(-90);
+
                 servos.ascenseurAvantOuvertureMoustache(true);
                 servos.moustachesOuvert(true);
                 servos.ascenseurAvantRoulage(true);
@@ -141,11 +141,13 @@ public class DeposePetitPort extends AbstractAction {
             }
 
             if (!rs.pincesAvantEmpty()) {
+                mv.gotoOrientationDeg(-90);
                 pincesAvantService.deposePetitPort();
                 step++;
+
+                mv.reculeMM(150);
+                pincesAvantService.finaliseDepose();
             }
-            mv.reculeMM(150);
-            pincesAvantService.finaliseDepose();
 
             if (!rs.pincesArriereEmpty()) {
                 // Dépose stock arrière si il y en as
