@@ -56,7 +56,7 @@ public class DeposeGrandPortChenalRouge extends AbstractAction {
 
         if (rs.getTeam() == ETeam.JAUNE && rs.bouee(13).prise()) {
             // Point entrée ISO phare
-            final Point phare = new Point(3000 - 225, 1775);
+            final Point phare = new Point(3000 - Phare.ENTRY_X, Phare.ENTRY_Y);
 
             double distanceCentral = tableUtils.distance(central);
             double distancePhare = tableUtils.distance(phare);

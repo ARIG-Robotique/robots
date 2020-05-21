@@ -23,6 +23,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class Phare extends AbstractAction {
 
+    public static final double ENTRY_X = 225;
+    public static final double ENTRY_Y = 1755;
+
     @Autowired
     private ITrajectoryManager mv;
 
@@ -52,8 +55,8 @@ public class Phare extends AbstractAction {
 
     @Override
     protected Point entryPoint() {
-        double x = 225;
-        double y = 1775;
+        double x = ENTRY_X;
+        double y = ENTRY_Y;
         if (ETeam.JAUNE == rs.getTeam()) {
             x = 3000 - x;
         }
