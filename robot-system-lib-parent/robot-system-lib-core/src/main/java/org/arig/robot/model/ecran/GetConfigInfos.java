@@ -8,6 +8,7 @@ import java.io.Serializable;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GetConfigInfos implements Serializable {
+    boolean exit;
     int team;
     int strategy;
     boolean startCalibration;

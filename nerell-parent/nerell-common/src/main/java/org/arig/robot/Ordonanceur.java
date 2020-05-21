@@ -106,88 +106,93 @@ public class Ordonanceur {
     }
 
     public void run() throws IOException {
-        final LocalDateTime startOrdonnanceur = LocalDateTime.now();
-        ecranService.displayMessage("Demarrage de l'ordonancement du match ...");
-
         try {
-            // Bus I2C
-            ecranService.displayMessage("Scan I2C");
-            i2CManager.executeScan();
-        } catch (I2CException e) {
-            String error = "Erreur lors du scan I2C";
-            ecranService.displayMessage(error, LogLevel.OFF);
-            log.error(error, e);
-            return;
-        }
+            final LocalDateTime startOrdonnanceur = LocalDateTime.now();
+            ecranService.displayMessage("Demarrage de l'ordonancement du match ...");
 
-        HealthInfos lidarHealth = lidar.healthInfo();
-        if (!lidarHealth.isOk()) {
-            String error = String.format("Status du Lidar KO : %s - %s - Code %s", lidarHealth.getState(), lidarHealth.getValue(), lidarHealth.getErrorCode());
-            ecranService.displayMessage(error, LogLevel.ERROR);
-            return;
-        }
-
-        if (!ioService.auOk()) {
-            ecranService.displayMessage("L'arrêt d'urgence est coupé", LogLevel.WARN);
-            while (!ioService.auOk()) {
-                ThreadUtils.sleep(500);
+            try {
+                // Bus I2C
+                ecranService.displayMessage("Scan I2C");
+                i2CManager.executeScan();
+            } catch (I2CException e) {
+                String error = "Erreur lors du scan I2C";
+                ecranService.displayMessage(error, LogLevel.OFF);
+                log.error(error, e);
+                return;
             }
-        }
-        ecranService.displayMessage("Position de préparation des servos moteurs");
-        servosService.cyclePreparation();
 
-        // Activation des puissances
-        ecranService.displayMessage("Activation puissances 5V et 12V");
-        ioService.enableAlim5VPuissance();
-        ioService.enableAlim12VPuissance();
-        if (!ioService.alimPuissance12VOk() || !ioService.alimPuissance5VOk()) {
-            log.warn("Alimentation puissance NOK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
-            while (!ioService.alimPuissance12VOk() && !ioService.alimPuissance5VOk()) {
-                ThreadUtils.sleep(500);
+            HealthInfos lidarHealth = lidar.healthInfo();
+            if (!lidarHealth.isOk()) {
+                String error = String.format("Status du Lidar KO : %s - %s - Code %s", lidarHealth.getState(), lidarHealth.getValue(), lidarHealth.getErrorCode());
+                ecranService.displayMessage(error, LogLevel.ERROR);
+                return;
             }
-        }
-        ecranService.displayMessage(String.format("Alimentation puissance OK (12V : %s ; 5V : %s)", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk()));
-        ThreadUtils.sleep(500);
 
-        // Check tension
-        double tension = servosService.getTension();
-        if (tension < IConstantesUtiles.SEUIL_BATTERY_VOLTS && tension > 0) {
-            ecranService.displayMessage("/!\\ PROBLEME DE TENSION SERVOS /!\\", LogLevel.ERROR);
-            ThreadUtils.sleep(10000);
-            return;
-        }
-
-        ecranService.displayMessage("Connexion à la balise");
-        short tries = 3;
-        do {
-            baliseService.tryConnect();
-            tries--;
-        } while (!baliseService.isConnected() && tries > 0);
-
-        ecranService.displayMessage("Choix équipe et lancement calage bordure");
-        ChangeFilter<Integer> teamChangeFilter = new ChangeFilter<>(-1);
-        do {
-            if (teamChangeFilter.filter(ecranService.config().getTeam())) {
-                robotStatus.setTeam(ecranService.config().getTeam());
-                log.info("Team {}", robotStatus.getTeam().name());
+            if (!ioService.auOk()) {
+                ecranService.displayMessage("L'arrêt d'urgence est coupé", LogLevel.WARN);
+                while (!ioService.auOk()) {
+                    ThreadUtils.sleep(500);
+                }
             }
+            ecranService.displayMessage("Position de préparation des servos moteurs");
+            servosService.cyclePreparation();
+
+            // Activation des puissances
+            ecranService.displayMessage("Activation puissances 5V et 12V");
+            ioService.enableAlim5VPuissance();
+            ioService.enableAlim12VPuissance();
+            if (!ioService.alimPuissance12VOk() || !ioService.alimPuissance5VOk()) {
+                log.warn("Alimentation puissance NOK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
+                while (!ioService.alimPuissance12VOk() && !ioService.alimPuissance5VOk()) {
+                    ThreadUtils.sleep(500);
+                }
+            }
+            ecranService.displayMessage(String.format("Alimentation puissance OK (12V : %s ; 5V : %s)", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk()));
             ThreadUtils.sleep(500);
-        } while (!ecranService.config().isStartCalibration());
 
-        ecranService.displayMessage("Définition arbitraire des écueils");
-        if (robotStatus.getTeam() == ETeam.BLEU) {
-            robotStatus.setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.VERT});
-            robotStatus.setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
-        } else {
-            robotStatus.setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
-            robotStatus.setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.VERT});
-        }
-        robotStatus.enableBalise();
+            // Check tension
+            double tension = servosService.getTension();
+            if (tension < IConstantesUtiles.SEUIL_BATTERY_VOLTS && tension > 0) {
+                ecranService.displayMessage("/!\\ PROBLEME DE TENSION SERVOS /!\\", LogLevel.ERROR);
+                ThreadUtils.sleep(10000);
+                return;
+            }
 
-        ecranService.displayMessage("Chargement de la carte");
-        String fileResourcePath = String.format("classpath:maps/sail_the_world-%s.png", robotStatus.getTeam().name());
-        final InputStream imgMap = patternResolver.getResource(fileResourcePath).getInputStream();
-        pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
+            ecranService.displayMessage("Connexion à la balise");
+            short tries = 3;
+            do {
+                baliseService.tryConnect();
+                tries--;
+            } while (!baliseService.isConnected() && tries > 0);
+
+            ecranService.displayMessage("Choix équipe et lancement calage bordure");
+            ChangeFilter<Integer> teamChangeFilter = new ChangeFilter<>(-1);
+            do {
+                if (teamChangeFilter.filter(ecranService.config().getTeam())) {
+                    robotStatus.setTeam(ecranService.config().getTeam());
+                    log.info("Team {}", robotStatus.getTeam().name());
+                }
+                if (ecranService.config().isExit()) {
+                    log.info("Arret du programme");
+                    return;
+                }
+                ThreadUtils.sleep(500);
+            } while (!ecranService.config().isStartCalibration());
+
+            ecranService.displayMessage("Définition arbitraire des écueils");
+            if (robotStatus.getTeam() == ETeam.BLEU) {
+                robotStatus.setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.VERT});
+                robotStatus.setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
+            } else {
+                robotStatus.setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
+                robotStatus.setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.VERT});
+            }
+            robotStatus.enableBalise();
+
+            ecranService.displayMessage("Chargement de la carte");
+            String fileResourcePath = String.format("classpath:maps/sail_the_world-%s.png", robotStatus.getTeam().name());
+            final InputStream imgMap = patternResolver.getResource(fileResourcePath).getInputStream();
+            pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
 
 //        ecranService.displayMessage("Définition des zones 'mortes' de la carte.");
 //        // Exclusion de toutes la zone pente et distributeur personel
@@ -200,133 +205,141 @@ public class Ordonanceur {
 //            tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 300, 2000));
 //        }
 
-        // Initialisation Mouvement Manager
-        ecranService.displayMessage("Initialisation du contrôleur de mouvement");
-        trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientationBasse);
-        trajectoryManager.init();
-        robotStatus.enableAsserv();
+            // Initialisation Mouvement Manager
+            ecranService.displayMessage("Initialisation du contrôleur de mouvement");
+            trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientationBasse);
+            trajectoryManager.init();
+            robotStatus.enableAsserv();
 
-        ecranService.displayMessage("Calage bordure");
-        calageBordure(ecranService.config().isSkipCalageBordure());
+            ecranService.displayMessage("Calage bordure");
+            calageBordure(ecranService.config().isSkipCalageBordure());
 
-        ecranService.displayMessage("Démarrage du lidar");
-        lidar.startScan();
+            ecranService.displayMessage("Démarrage du lidar");
+            lidar.startScan();
 
-        ScanInfos lidarDatas = lidar.grabDatas();
-        if (lidarDatas.getScan().isEmpty()) {
-            ecranService.displayMessage("Le capot du lidar est présent");
-            while (lidarDatas.getScan().isEmpty()) {
-                ThreadUtils.sleep(1000);
-                lidarDatas = lidar.grabDatas();
-            }
+            ScanInfos lidarDatas = lidar.grabDatas();
+            if (lidarDatas.getScan().isEmpty()) {
+                ecranService.displayMessage("Le capot du lidar est présent");
+                while (lidarDatas.getScan().isEmpty()) {
+                    ThreadUtils.sleep(1000);
+                    lidarDatas = lidar.grabDatas();
+                }
 
-            for (int i = 0; i < 10; i++) {
-                ecranService.displayMessage(String.format("Attente %ss pour remettre la capot si besoin", 10 - i));
-                ThreadUtils.sleep(1000);
-            }
-        }
-        ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
-
-        SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.RISING);
-        SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.FALLING);
-        ChangeFilter<Integer> strategyChangeFilter = new ChangeFilter<>(-1);
-        boolean manuel = ecranService.config().isModeManuel();
-        while (!ioService.tirette()) {
-            if (manuelRisingEdge.filter(ecranService.config().isModeManuel())) {
-                manuel = true;
-                strategyChangeFilter.filter(-1);
-                ecranService.displayMessage("!!!! Mode manuel !!!!");
-                startMonitoring();
-            } else if (manuel && manuelFallingEdge.filter(ecranService.config().isModeManuel())) {
-                manuel = false;
-                endMonitoring();
-                ecranService.displayMessage("");
-            }
-
-            // Si on est pas en manuel, gestion de la strategy
-            if (!manuel && !ecranService.config().isSkipCalageBordure()) {
-                ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
-                if (strategyChangeFilter.filter(ecranService.config().getStrategy())) {
-                    robotStatus.setStrategy(ecranService.config().getStrategy());
-                    log.info("Strategy {}", robotStatus.getStrategy().name());
-                    positionStrategy();
+                for (int i = 0; i < 10; i++) {
+                    ecranService.displayMessage(String.format("Attente %ss pour remettre la capot si besoin", 10 - i));
+                    ThreadUtils.sleep(1000);
                 }
             }
+            ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
 
-            ThreadUtils.sleep(manuel ? 10000 : 500);
-        }
+            SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.RISING);
+            SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.FALLING);
+            ChangeFilter<Integer> strategyChangeFilter = new ChangeFilter<>(-1);
+            boolean manuel = ecranService.config().isModeManuel();
+            while (!ioService.tirette()) {
+                if (manuelRisingEdge.filter(ecranService.config().isModeManuel())) {
+                    manuel = true;
+                    strategyChangeFilter.filter(-1);
+                    ecranService.displayMessage("!!!! Mode manuel !!!!");
+                    startMonitoring();
+                } else if (manuel && manuelFallingEdge.filter(ecranService.config().isModeManuel())) {
+                    manuel = false;
+                    endMonitoring();
+                    ecranService.displayMessage("");
+                }
 
-        ecranService.displayMessage("!!! ... ATTENTE DEPART TIRETTE ... !!!");
-        while (ioService.tirette()) {
-            ThreadUtils.sleep(1);
-        }
+                // Si on est pas en manuel, gestion de la strategy
+                if (!manuel && !ecranService.config().isSkipCalageBordure()) {
+                    ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
+                    if (strategyChangeFilter.filter(ecranService.config().getStrategy())) {
+                        robotStatus.setStrategy(ecranService.config().getStrategy());
+                        log.info("Strategy {}", robotStatus.getStrategy().name());
+                        positionStrategy();
+                    }
+                }
 
-        // Début du compteur de temps pour le match
-        robotStatus.startMatch();
+                if (ecranService.config().isExit()) {
+                    log.info("Arret du programme");
+                    return;
+                }
 
-        // Match de XX secondes.
-        while (robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
-
-            // Déclenchement du pavillon
-            if (robotStatus.getRemainingTime() <= IConstantesNerellConfig.pavillonRemainingTimeMs && !robotStatus.pavillon()) {
-                log.info("Activation du pavillon");
-                motorPavillon.speed(motorPavillon.getMaxSpeed() / 2);
-                robotStatus.pavillon(true);
+                ThreadUtils.sleep(manuel ? 10000 : 500);
             }
 
-            ThreadUtils.sleep(200);
+            ecranService.displayMessage("!!! ... ATTENTE DEPART TIRETTE ... !!!");
+            while (ioService.tirette()) {
+                ThreadUtils.sleep(1);
+            }
+
+            // Début du compteur de temps pour le match
+            robotStatus.startMatch();
+
+            // Match de XX secondes.
+            while (robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
+
+                // Déclenchement du pavillon
+                if (robotStatus.getRemainingTime() <= IConstantesNerellConfig.pavillonRemainingTimeMs && !robotStatus.pavillon()) {
+                    log.info("Activation du pavillon");
+                    motorPavillon.speed(motorPavillon.getMaxSpeed() / 2);
+                    robotStatus.pavillon(true);
+                }
+
+                ThreadUtils.sleep(200);
+            }
+
+            robotStatus.stopMatch();
+
+            servosService.pincesAvantOuvert(false);
+            servosService.pincesArriereOuvert(false);
+            motorPavillon.speed(motorPavillon.getStopSpeed()); // Ecrit par Nils le 22/03/2020 à 09:47:26
+
+            log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
+
+            // Désactivation de la puissance moteur pour être sur de ne plus rouler
+            ioService.disableAlim5VPuissance();
+            ioService.disableAlim12VPuissance();
+
+            // On arrette le lidar
+            lidar.stopScan();
+
+            // On envoi les datas collecté
+            monitoringWrapper.save();
+            final LocalDateTime stopOrdonnanceur = LocalDateTime.now();
+            final File execFile = new File("./logs/" + System.getProperty(IConstantesConfig.keyExecutionId) + ".exec");
+            DateTimeFormatter savePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            List<String> lines = new ArrayList<>();
+            lines.add(startOrdonnanceur.format(savePattern));
+            lines.add(stopOrdonnanceur.format(savePattern));
+            FileUtils.writeLines(execFile, lines);
+            log.info("Création du fichier de fin d'éxécution {}", execFile.getAbsolutePath());
+
+            // Attente remise de la tirette pour ejecter le stock
+            ecranService.displayMessage("FIN - Remettre la tirette et AU pour ejection");
+            while (!ioService.tirette() || !ioService.auOk()) {
+                ThreadUtils.sleep(1000);
+            }
+
+            // Remise en place
+            ioService.enableAlim5VPuissance();
+            servosService.pincesAvantFerme(false);
+            servosService.pincesArriereFerme(false);
+            servosService.brasDroitFerme(false);
+            servosService.brasGaucheFerme(false);
+            servosService.ascenseurAvantRoulage(false);
+            servosService.ascenseurArriereHaut(false);
+            servosService.pivotArriereFerme(false);
+            servosService.moustachesFerme(false);
+            ecranService.displayMessage("FIN - Attente béquille et enlever la tirette");
+            while (ioService.tirette()) {
+                ThreadUtils.sleep(1000);
+            }
+        } finally {
+            lidar.stopScan();
+
+            // On coupe le jus
+            ioService.disableAlim5VPuissance();
+            ioService.disableAlim12VPuissance();
         }
-
-        robotStatus.stopMatch();
-
-        servosService.pincesAvantOuvert(false);
-        servosService.pincesArriereOuvert(false);
-        motorPavillon.speed(motorPavillon.getStopSpeed()); // Ecrit par Nils le 22/03/2020 à 09:47:26
-
-        log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
-
-        // Désactivation de la puissance moteur pour être sur de ne plus rouler
-        ioService.disableAlim5VPuissance();
-        ioService.disableAlim12VPuissance();
-
-        // On arrette le lidar
-        lidar.stopScan();
-
-        // On envoi les datas collecté
-        monitoringWrapper.save();
-        final LocalDateTime stopOrdonnanceur = LocalDateTime.now();
-        final File execFile = new File("./logs/" + System.getProperty(IConstantesConfig.keyExecutionId) + ".exec");
-        DateTimeFormatter savePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        List<String> lines = new ArrayList<>();
-        lines.add(startOrdonnanceur.format(savePattern));
-        lines.add(stopOrdonnanceur.format(savePattern));
-        FileUtils.writeLines(execFile, lines);
-        log.info("Création du fichier de fin d'éxécution {}", execFile.getAbsolutePath());
-
-        // Attente remise de la tirette pour ejecter le stock
-        ecranService.displayMessage("FIN - Remettre la tirette et AU pour ejection");
-        while (!ioService.tirette() || !ioService.auOk()) {
-            ThreadUtils.sleep(1000);
-        }
-
-        // Remise en place
-        ioService.enableAlim5VPuissance();
-        servosService.pincesAvantFerme(false);
-        servosService.pincesArriereFerme(false);
-        servosService.brasDroitFerme(false);
-        servosService.brasGaucheFerme(false);
-        servosService.ascenseurAvantRoulage(false);
-        servosService.ascenseurArriereHaut(false);
-        servosService.pivotArriereFerme(false);
-        servosService.moustachesFerme(false);
-        ecranService.displayMessage("FIN - Attente béquille et enlever la tirette");
-        while (ioService.tirette()) {
-            ThreadUtils.sleep(1000);
-        }
-
-        // On coupe le jus
-        ioService.disableAlim5VPuissance();
-        ioService.disableAlim12VPuissance();
     }
 
     public void positionStrategy() {
