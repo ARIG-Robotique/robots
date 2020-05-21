@@ -21,20 +21,10 @@ public class NerellScheduler {
     @Autowired
     private ServosService servosService;
 
-    @Autowired
-    private ISystemBlockerManager systemBlockerManager;
-
     @Scheduled(fixedDelay = 100)
     public void obstacleAvoidanceTask() {
         if (rs.isAvoidanceEnabled()) {
             avoidingService.process();
-        }
-    }
-
-    @Scheduled(fixedDelay = 500)
-    public void systemBlockerManagerTask() {
-        if (rs.isMatchEnabled()) {
-            systemBlockerManager.process();
         }
     }
 

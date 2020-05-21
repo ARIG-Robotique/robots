@@ -157,9 +157,4 @@ public class NerellCommonContext {
     public Ordonanceur ordonanceur() {
         return Ordonanceur.getInstance();
     }
-
-    @Bean
-    public ISystemBlockerManager systemBlockerManager() {
-        return new SystemBlockerManager(IConstantesNerellConfig.seuilErreurPidDistance, IConstantesNerellConfig.seuilErreurPidOrientation);
-    }
 }
