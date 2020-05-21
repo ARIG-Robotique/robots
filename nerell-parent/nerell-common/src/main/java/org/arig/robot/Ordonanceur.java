@@ -407,8 +407,6 @@ public class Ordonanceur {
         } catch (AvoidingException e) {
             ecranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
             throw new RuntimeException("Impossible de se placer pour le départ", e);
-        } finally {
-            robotStatus.enableAvoidance();
         }
     }
 
