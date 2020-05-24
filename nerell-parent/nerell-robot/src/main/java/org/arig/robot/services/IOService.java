@@ -73,10 +73,34 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Override
     public void destroy() throws Exception {
-        pcfAlim.shutdown();
-        pcf1.shutdown();
-        pcf2.shutdown();
-        gpio.shutdown();
+        try {
+            if (pcfAlim != null) {
+                pcfAlim.shutdown();
+            }
+        } catch (Exception e) {
+            log.warn("Problème de shutdown du PCF ALim : {}", e.getMessage());
+        }
+        try {
+            if (pcf1 != null) {
+                pcf1.shutdown();
+            }
+        } catch (Exception e) {
+            log.warn("Problème de shutdown du PCF 1 : {}", e.getMessage());
+        }
+        try {
+            if (pcf2 != null) {
+                pcf2.shutdown();
+            }
+        } catch (Exception e) {
+            log.warn("Problème de shutdown du PCF 2 : {}", e.getMessage());
+        }
+        try {
+            if (gpio != null) {
+                gpio.shutdown();
+            }
+        } catch (Exception e) {
+            log.warn("Problème de shutdown du GPIO Raspi : {}", e.getMessage());
+        }
     }
 
     @Override
@@ -135,7 +159,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
                 pcf1.readAll();
             }
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            log.error("Erreur lecture PCF 1 : " + e.getMessage(), e);
         }
 
         try {
@@ -143,7 +167,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
                 pcf2.readAll();
             }
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            log.error("Erreur lecture PCF 2 : " + e.getMessage(), e);
         }
 
         try {
@@ -151,7 +175,7 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
                 pcfAlim.readAll();
             }
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            log.error("Erreur lecture PCF Alim : " + e.getMessage(), e);
         }
     }
 
