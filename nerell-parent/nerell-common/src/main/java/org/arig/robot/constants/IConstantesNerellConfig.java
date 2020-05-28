@@ -119,8 +119,8 @@ public interface IConstantesNerellConfig {
     double startAngleLimitVitesseDistance = 15;
 
     // TODO : A déterminer de manière empirique
-    double seuilErreurPidOrientation = 25000;
-    double seuilErreurPidDistance = 25000;
+    double seuilErreurOrientationDeg = 1;
+    double seuilErreurDistanceMm = 1;
 
     // -------------------------- //
     // Paramètre Physiques        //
