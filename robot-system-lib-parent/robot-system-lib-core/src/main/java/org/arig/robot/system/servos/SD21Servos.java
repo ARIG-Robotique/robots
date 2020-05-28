@@ -3,6 +3,8 @@ package org.arig.robot.system.servos;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.exception.I2CException;
+import org.arig.robot.model.monitor.MonitorTimeSerie;
+import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class SD21Servos implements InitializingBean {
 
     @Autowired
     private II2CManager i2cManager;
+
+    @Autowired
+    protected IMonitoringWrapper monitoringWrapper;
 
     private Map<Byte, Integer> lastPositions = new HashMap<>(21);
     private Map<Byte, Byte> lastSpeed = new HashMap<>(21);
@@ -233,6 +238,14 @@ public class SD21Servos implements InitializingBean {
             }
 
             log.info("Tension SD21 (raw : {}) : {} volts", rawVolts, volts);
+
+            // Construction du monitoring
+            final MonitorTimeSerie serie = new MonitorTimeSerie()
+                    .measurementName("power")
+                    .addField("servosTension", volts);
+
+            monitoringWrapper.addTimeSeriePoint(serie);
+
             return volts;
         } catch (I2CException e) {
             log.error("Erreur lors de la récupération de la tension de la carte SD21");
