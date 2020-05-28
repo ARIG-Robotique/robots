@@ -80,6 +80,7 @@ public class MouvementController {
         pos.put("score", rs.calculerPoints());
         pos.put("currentAction", strategyManager.getCurrentAction());
         pos.put("actions", actions);
+        pos.put("gameStatus", rs.gameStatus());
         return pos;
     }
 

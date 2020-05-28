@@ -10,7 +10,10 @@ import org.springframework.beans.factory.InitializingBean;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
@@ -78,6 +81,23 @@ public class NerellStatus extends AbstractRobotStatus {
 
     public void disableBalise() {
         baliseEnabled = false;
+    }
+
+    @Override
+    public Map<String, Object> gameStatus() {
+        Map<String, Object> r = new HashMap<>();
+        r.put("bouees", bouees);
+        r.put("grandPort", grandPort);
+        r.put("grandChenalVert", grandChenaux.chenalVert);
+        r.put("grandChenalRouge", grandChenaux.chenalRouge);
+        r.put("petitPort", petitPort);
+        r.put("petitChenalVert", petitChenaux.chenalVert);
+        r.put("petitChenalRouge", petitChenaux.chenalRouge);
+        r.put("phare", phare);
+        r.put("mancheAAir1", mancheAAir1);
+        r.put("mancheAAir2", mancheAAir2);
+        r.put("girouette", directionGirouette);
+        return r;
     }
 
     /**
