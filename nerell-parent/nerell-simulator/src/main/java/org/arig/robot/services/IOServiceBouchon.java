@@ -4,7 +4,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("IOService")
 public class IOServiceBouchon implements IIOService {
 
     @Setter
