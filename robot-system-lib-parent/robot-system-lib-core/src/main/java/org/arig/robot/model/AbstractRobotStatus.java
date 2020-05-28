@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 
+import java.util.Map;
+
 @Slf4j
 @Data
 public abstract class AbstractRobotStatus {
@@ -136,5 +138,7 @@ public abstract class AbstractRobotStatus {
     }
 
     public abstract int calculerPoints();
+
+    public abstract Map<String, ?> gameStatus();
 
 }
