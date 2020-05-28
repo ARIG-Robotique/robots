@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
 import org.arig.robot.constants.IConstantesI2C;
-import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.NerellStatus;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import java.io.IOException;
 public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     @Autowired
-    private RobotStatus rs;
+    private NerellStatus rs;
 
     @Autowired
     private I2CBus bus;

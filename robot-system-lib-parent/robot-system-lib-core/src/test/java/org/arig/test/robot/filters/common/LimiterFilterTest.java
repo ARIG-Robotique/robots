@@ -16,7 +16,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 public class LimiterFilterTest {
 
     private static LimiterFilter simpleFilter;
-    private static LimiterFilter doubleFilter;
+    private static LimiterFilter mirrorFilter;
     private static LimiterFilter doubleMirrorFilter;
 
     @Rule
@@ -25,8 +25,8 @@ public class LimiterFilterTest {
     @BeforeClass
     public static void initClass() {
         simpleFilter = new LimiterFilter(-10d, 10d);
-        doubleFilter = new LimiterFilter(2d, 10d, -10d, -20d);
-        doubleMirrorFilter = new LimiterFilter(2d, 10d, LimiterType.DOUBLE);
+        mirrorFilter = new LimiterFilter(2d, 10d, -10d, -20d);
+        doubleMirrorFilter = new LimiterFilter(2d, 10d, LimiterType.MIRROR);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class LimiterFilterTest {
             } else {
                 expected = i;
             }
-            Assert.assertEquals(expected, doubleFilter.filter(i), 0);
+            Assert.assertEquals(expected, mirrorFilter.filter(i), 0);
         }
     }
 

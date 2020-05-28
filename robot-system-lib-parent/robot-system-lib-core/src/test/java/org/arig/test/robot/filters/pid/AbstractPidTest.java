@@ -107,7 +107,7 @@ public abstract class AbstractPidTest {
             pid().consigne(consigne);
             error = consigne - input;
             errorSum += error;
-            if (errorSum > 4096) {
+            if (hasIntegralLimiter && errorSum > 4096) {
                 errorSum = 4096;
             }
             output = pid().filter(input);

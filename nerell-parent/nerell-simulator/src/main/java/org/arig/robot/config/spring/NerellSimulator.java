@@ -1,11 +1,12 @@
 package org.arig.robot.config.spring;
 
 import lombok.SneakyThrows;
-import org.arig.robot.Ordonanceur;
+import org.arig.robot.NerellOrdonanceur;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.filters.pid.IPidFilter;
-import org.arig.robot.model.RobotStatus;
+import org.arig.robot.filters.ramp.IGainFactorRampFilter;
+import org.arig.robot.model.NerellStatus;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,8 +25,14 @@ public class NerellSimulator {
         System.setProperty(IConstantesConfig.keyExecutionId, execId);
 
         ConfigurableApplicationContext context = SpringApplication.run(NerellSimulator.class, args);
-        RobotStatus rs = context.getBean(RobotStatus.class);
+        NerellStatus rs = context.getBean(NerellStatus.class);
         rs.setSimulateur();
+
+        IGainFactorRampFilter rampDistance = context.getBean("rampDistance", IGainFactorRampFilter.class);
+        rampDistance.setGain(IConstantesNerellConfig.gainVitesseRampeDistanceSimulateur);
+
+        IGainFactorRampFilter rampOrientation = context.getBean("rampOrientation", IGainFactorRampFilter.class);
+        rampOrientation.setGain(IConstantesNerellConfig.gainVitesseRampeOrientationSimulateur);
 
         IPidFilter pidDistance = context.getBean("pidDistance", IPidFilter.class);
         pidDistance.setTunings(IConstantesNerellConfig.kpDistanceSimu, IConstantesNerellConfig.kiDistanceSimu, IConstantesNerellConfig.kdDistanceSimu);
@@ -37,7 +44,7 @@ public class NerellSimulator {
         context.getBean(BouchonARIG2WheelsEncoders.class).printLimiterValues();
 
         // Démarrage de l'ordonancement de match
-        Ordonanceur.getInstance().run();
+        NerellOrdonanceur.getInstance().run();
         context.close();
         System.exit(0);
     }

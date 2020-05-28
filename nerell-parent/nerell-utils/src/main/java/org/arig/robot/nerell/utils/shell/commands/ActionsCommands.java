@@ -3,8 +3,8 @@ package org.arig.robot.nerell.utils.shell.commands;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.Ordonanceur;
-import org.arig.robot.model.RobotStatus;
+import org.arig.robot.NerellOrdonanceur;
+import org.arig.robot.model.NerellStatus;
 import org.arig.robot.nerell.utils.shell.providers.ActionsProvider;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.strategy.IAction;
@@ -25,9 +25,9 @@ import java.util.Optional;
 public class ActionsCommands {
 
     private IIOService ioService;
-    private Ordonanceur ordonanceur;
+    private NerellOrdonanceur nerellOrdonanceur;
     private List<IAction> actions;
-    private final RobotStatus rs;
+    private final NerellStatus rs;
 
     @ShellMethodAvailability
     public Availability alimentationOk() {
@@ -38,7 +38,7 @@ public class ActionsCommands {
     @ShellMethod("Calage bordure")
     @SneakyThrows
     public void calageBordure() {
-        ordonanceur.calageBordure(false);
+        nerellOrdonanceur.calageBordure(false);
     }
 
     @ShellMethod("Activation des services")

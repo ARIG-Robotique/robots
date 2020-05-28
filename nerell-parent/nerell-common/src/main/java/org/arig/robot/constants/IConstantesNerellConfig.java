@@ -57,17 +57,22 @@ public interface IConstantesNerellConfig {
     // ------------------------ //
     // Configuration des rampes //
     // ------------------------ //
+    double gainVitesseRampeDistance = 3;
+    double gainVitesseRampeOrientation = gainVitesseRampeDistance * 2;
+    double gainVitesseRampeDistanceSimulateur = 1;
+    double gainVitesseRampeOrientationSimulateur = gainVitesseRampeDistanceSimulateur * 2;
+
     double rampAccDistance = 1000.0; // en mm/s2
     double rampDecDistance = 1000.0; // en mm/s2
 
-    double rampAccOrientation = 1000.0 * 2; // en mm/s2
-    double rampDecOrientation = 1000.0 * 2; // en mm/s2
+    double rampAccOrientation = 1000.0; // en mm/s2
+    double rampDecOrientation = 1000.0; // en mm/s2
 
     // -------------------------- //
     // Configuration des vitesses //
     // -------------------------- //
 
-    long vitesseOrientationUltraHaute = 1000 * 2;
+    long vitesseOrientationUltraHaute = 1000;
     long vitesseOrientationSuperHaute = 800;
     long vitesseOrientationBasse = 300;
     long vitesseOrientationSuperBasse = 150;
@@ -90,9 +95,9 @@ public interface IConstantesNerellConfig {
 
     double kcrDistance = 21.5;
     double tcrDistance = 0.04;
-    double kpDistance = 7;   // 6.5;   // 12.90
-    double kiDistance = 0.1; // 0.025; // 120
-    double kdDistance = 0;   // 150;   // 0.002
+    double kpDistance = 9;   // 6.5;   // 12.90
+    double kiDistance = 0; // 0.025; // 120
+    double kdDistance = 1;   // 150;   // 0.002
     double kpDistanceSimu = 12.9;
     double kiDistanceSimu = 0.0;
     double kdDistanceSimu = 0.008;
@@ -100,8 +105,8 @@ public interface IConstantesNerellConfig {
     double kcrOrientation = 10.0;
     double tcrOrientation = 0.05;
     double kpOrientation = 4;    // 0.8;   // 5;
-    double kiOrientation = 0.05; // 0.005; // 0.09;
-    double kdOrientation = 80;   // 80;    // 50;
+    double kiOrientation = 0; // 0.005; // 0.09;
+    double kdOrientation = 2;   // 80;    // 50;
     double kpOrientationSimu = 6.0;
     double kiOrientationSimu = 0.0;
     double kdOrientationSimu = 0.01;

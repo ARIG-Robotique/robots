@@ -3,7 +3,7 @@ package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.Ordonanceur;
+import org.arig.robot.NerellOrdonanceur;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -19,6 +19,6 @@ public class StartMatchCommands {
     @ShellMethod("Démarrer un match")
     public void start() throws IOException {
         // begin match
-        Ordonanceur.getInstance().run();
+        NerellOrdonanceur.getInstance().run();
     }
 }

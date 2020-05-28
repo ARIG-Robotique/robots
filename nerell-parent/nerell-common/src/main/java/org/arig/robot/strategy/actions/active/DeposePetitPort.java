@@ -9,8 +9,8 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Chenaux;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
+import org.arig.robot.model.NerellStatus;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.RobotStatus;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.services.ServosService;
@@ -37,7 +37,7 @@ public class DeposePetitPort extends AbstractAction {
     private IPincesArriereService pincesArriereService;
 
     @Autowired
-    private RobotStatus rs;
+    private NerellStatus rs;
 
     @Autowired
     private ServosService servos;

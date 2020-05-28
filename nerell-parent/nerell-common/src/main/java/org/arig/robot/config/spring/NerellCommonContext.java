@@ -1,15 +1,16 @@
 package org.arig.robot.config.spring;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.Ordonanceur;
+import org.arig.robot.NerellOrdonanceur;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.filters.common.LimiterFilter;
+import org.arig.robot.filters.common.LimiterFilter.LimiterType;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.NerellStatus;
 import org.arig.robot.model.Position;
-import org.arig.robot.model.RobotStatus;
 import org.arig.robot.system.ILidarService;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.LidarService;
@@ -81,11 +82,11 @@ public class NerellCommonContext {
     public IAsservissementPolaire asservissement() {
         // Positive Min moteur Gauche : 102
         // Negative Min moteur Gauche : -37
-        LimiterFilter limiterMoteurGauche = new LimiterFilter(102d, 5000d, -37d, -5000d);
+        LimiterFilter limiterMoteurGauche = new LimiterFilter(35d, 4095d, LimiterType.MIRROR);
 
         // Positive Min moteur Droit : 93
         // Negative Min moteur Droit : -78
-        LimiterFilter limiterMoteurDroit = new LimiterFilter(93d, 5000d, -78d,  -5000d);
+        LimiterFilter limiterMoteurDroit = new LimiterFilter(35d, 4095d, LimiterType.MIRROR);
 
         return new AsservissementPolaireDistanceOrientation(limiterMoteurGauche, limiterMoteurDroit);
     }
@@ -124,13 +125,13 @@ public class NerellCommonContext {
     @Bean(name = "rampDistance")
     public TrapezoidalRampFilter rampDistance() {
         log.info("Configuration TrapezoidalRampFilter Distance");
-        return new TrapezoidalRampFilter("distance", IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccDistance, IConstantesNerellConfig.rampDecDistance);
+        return new TrapezoidalRampFilter("distance", IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccDistance, IConstantesNerellConfig.rampDecDistance, IConstantesNerellConfig.gainVitesseRampeDistance);
     }
 
     @Bean(name = "rampOrientation")
     public TrapezoidalRampFilter rampOrientation() {
         log.info("Configuration TrapezoidalRampFilter Orientation");
-        return new TrapezoidalRampFilter("orientation", IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccOrientation, IConstantesNerellConfig.rampDecOrientation);
+        return new TrapezoidalRampFilter("orientation", IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccOrientation, IConstantesNerellConfig.rampDecOrientation, IConstantesNerellConfig.gainVitesseRampeOrientation);
     }
 
     @Bean
@@ -148,14 +149,14 @@ public class NerellCommonContext {
     }
 
     @Bean
-    public RobotStatus robotStatus() {
-        return new RobotStatus();
+    public NerellStatus robotStatus() {
+        return new NerellStatus(IConstantesNerellConfig.matchTimeMs);
     }
 
     @Bean
     @DependsOn({"ecran", "rplidar"})
-    public Ordonanceur ordonanceur() {
-        return Ordonanceur.getInstance();
+    public NerellOrdonanceur ordonanceur() {
+        return NerellOrdonanceur.getInstance();
     }
 
     @Bean

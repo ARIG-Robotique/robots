@@ -1,7 +1,6 @@
 package org.arig.test.robot.filters.ramp;
 
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
-import org.arig.robot.filters.ramp.experimental.ExperimentalRampFilter;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -36,12 +35,5 @@ public class RampTestContext {
         TrapezoidalRampFilter f = new TrapezoidalRampFilter("trapezoidal_ramp_test2");
         f.setRamps(1000, 1000);
         return f;
-    }
-
-    @Bean
-    public ExperimentalRampFilter experimentalFilter() {
-        ExperimentalRampFilter q = new ExperimentalRampFilter("experimental_ramp_test");
-        q.setRamps(1000, 1000);
-        return q;
     }
 }

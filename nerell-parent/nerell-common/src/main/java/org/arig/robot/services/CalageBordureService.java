@@ -2,7 +2,7 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.CommandeRobot;
-import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.NerellStatus;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class CalageBordureService {
     private IIOService ioService;
 
     @Autowired
-    private RobotStatus rs;
+    private NerellStatus rs;
 
     @Autowired
     private CommandeRobot cmdRobot;

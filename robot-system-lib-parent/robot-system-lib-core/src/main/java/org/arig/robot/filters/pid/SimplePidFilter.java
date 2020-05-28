@@ -22,6 +22,10 @@ public class SimplePidFilter extends AbstractPidFilter {
     private final ParallelChainFilter pid;
 
     public SimplePidFilter(String name) {
+        this(name, false);
+    }
+
+    public SimplePidFilter(String name, boolean integralLimit) {
         super(name);
 
         integral = new IntegralFilter(0d);
@@ -29,9 +33,11 @@ public class SimplePidFilter extends AbstractPidFilter {
 
         integralChain = new SerialChainFilter<>();
         integralChain.addFilter(integral);
+        if (integralLimit) {
+            integralChain.addFilter(new LimiterFilter(0d, 4096d, LimiterType.MIRROR));
+        }
         integralChain.addFilter(ki());
         integralChain.addFilter(integralTime());
-        integralChain.addFilter(new LimiterFilter(0d, 4096d, LimiterType.DOUBLE));
 
         derivateChain = new SerialChainFilter<>();
         derivateChain.addFilter(derivate);

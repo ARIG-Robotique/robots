@@ -3,7 +3,7 @@ package org.arig.robot.web.controller;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.NerellStatus;
 import org.arig.robot.services.IIOService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class CapteursController extends AbstractCapteursController implements InitializingBean {
 
     @Autowired
-    private RobotStatus rs;
+    private NerellStatus rs;
 
     @Autowired
     private IIOService ioService;

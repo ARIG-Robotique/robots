@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
-import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.NerellStatus;
 import org.arig.robot.model.balise.EtalonnageBalise;
 import org.arig.robot.model.ecran.GetConfigInfos;
 import org.arig.robot.model.ecran.UpdateEtalonnageData;
@@ -44,7 +44,7 @@ public class EcranService {
     private ILidarService lidarService;
 
     @Autowired
-    private RobotStatus rs;
+    private NerellStatus rs;
 
     @Autowired
     private IEcran ecran;

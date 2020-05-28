@@ -7,9 +7,9 @@ import org.apache.commons.io.FileUtils;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.NerellStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
-import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.monitoring.IMonitoringWrapper;
@@ -37,7 +37,7 @@ public class AsservissementCommands {
 
     private final IMonitoringWrapper monitoringWrapper;
     private final IIOService ioService;
-    private final RobotStatus rs;
+    private final NerellStatus rs;
     private final ConvertionRobotUnit convRobot;
     private final CommandeRobot cmdRobot;
     private final Position currentPosition;

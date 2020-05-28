@@ -1,6 +1,6 @@
 package org.arig.robot.scheduler;
 
-import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.NerellStatus;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class NerellSimulatorScheduler {
 
     @Autowired
-    private RobotStatus rs;
+    private NerellStatus rs;
 
     @Autowired
     private IAvoidingService avoidingService;

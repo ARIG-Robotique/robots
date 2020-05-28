@@ -15,7 +15,6 @@ import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.*;
-import org.arig.robot.model.balise.EtalonnageBalise;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
@@ -45,15 +44,15 @@ import java.util.List;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Ordonanceur {
+public class NerellOrdonanceur {
 
-    private static Ordonanceur INSTANCE;
+    private static NerellOrdonanceur INSTANCE;
 
     @Autowired
     private ResourcePatternResolver patternResolver;
 
     @Autowired
-    private RobotStatus robotStatus;
+    private NerellStatus nerellStatus;
 
     @Autowired
     private IIOService ioService;
@@ -97,9 +96,9 @@ public class Ordonanceur {
 
     private String launchExecId;
 
-    public static Ordonanceur getInstance() {
+    public static NerellOrdonanceur getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new Ordonanceur();
+            INSTANCE = new NerellOrdonanceur();
         }
 
         return INSTANCE;
@@ -169,8 +168,8 @@ public class Ordonanceur {
             ChangeFilter<Integer> teamChangeFilter = new ChangeFilter<>(-1);
             do {
                 if (teamChangeFilter.filter(ecranService.config().getTeam())) {
-                    robotStatus.setTeam(ecranService.config().getTeam());
-                    log.info("Team {}", robotStatus.getTeam().name());
+                    nerellStatus.setTeam(ecranService.config().getTeam());
+                    log.info("Team {}", nerellStatus.getTeam().name());
                 }
                 if (ecranService.config().isExit()) {
                     log.info("Arret du programme");
@@ -180,17 +179,17 @@ public class Ordonanceur {
             } while (!ecranService.config().isStartCalibration());
 
             ecranService.displayMessage("Définition arbitraire des écueils");
-            if (robotStatus.getTeam() == ETeam.BLEU) {
-                robotStatus.setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.VERT});
-                robotStatus.setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
+            if (nerellStatus.getTeam() == ETeam.BLEU) {
+                nerellStatus.setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.VERT});
+                nerellStatus.setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
             } else {
-                robotStatus.setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
-                robotStatus.setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.VERT});
+                nerellStatus.setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
+                nerellStatus.setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.VERT});
             }
-            robotStatus.enableBalise();
+            nerellStatus.enableBalise();
 
             ecranService.displayMessage("Chargement de la carte");
-            String fileResourcePath = String.format("classpath:maps/sail_the_world-%s.png", robotStatus.getTeam().name());
+            String fileResourcePath = String.format("classpath:maps/sail_the_world-%s.png", nerellStatus.getTeam().name());
             final InputStream imgMap = patternResolver.getResource(fileResourcePath).getInputStream();
             pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
 
@@ -209,7 +208,7 @@ public class Ordonanceur {
         ecranService.displayMessage("Initialisation du contrôleur de mouvement");
         trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseUltraLente, IConstantesNerellConfig.vitesseOrientationBasse);
         trajectoryManager.init();
-        robotStatus.enableAsserv();
+        nerellStatus.enableAsserv();
 
             ecranService.displayMessage("Calage bordure");
             calageBordure(ecranService.config().isSkipCalageBordure());
@@ -245,15 +244,15 @@ public class Ordonanceur {
                 } else if (manuel && manuelFallingEdge.filter(ecranService.config().isModeManuel())) {
                     manuel = false;
                     endMonitoring();
-                    ecranService.displayMessage("");
+                    ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
                 }
 
                 // Si on est pas en manuel, gestion de la strategy
                 if (!manuel && !ecranService.config().isSkipCalageBordure()) {
                     ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
                     if (strategyChangeFilter.filter(ecranService.config().getStrategy())) {
-                        robotStatus.setStrategy(ecranService.config().getStrategy());
-                        log.info("Strategy {}", robotStatus.getStrategy().name());
+                        nerellStatus.setStrategy(ecranService.config().getStrategy());
+                        log.info("Strategy {}", nerellStatus.getStrategy().name());
                         positionStrategy();
                     }
                 }
@@ -272,37 +271,32 @@ public class Ordonanceur {
             }
 
             // Début du compteur de temps pour le match
-            robotStatus.startMatch();
+            nerellStatus.startMatch();
 
             // Match de XX secondes.
-            while (robotStatus.getElapsedTime() < IConstantesNerellConfig.matchTimeMs) {
+            while (nerellStatus.matchRunning()) {
 
                 // Déclenchement du pavillon
-                if (robotStatus.getRemainingTime() <= IConstantesNerellConfig.pavillonRemainingTimeMs && !robotStatus.pavillon()) {
+                if (nerellStatus.getRemainingTime() <= IConstantesNerellConfig.pavillonRemainingTimeMs && !nerellStatus.pavillon()) {
                     log.info("Activation du pavillon");
                     motorPavillon.speed(motorPavillon.getMaxSpeed() / 2);
-                    robotStatus.pavillon(true);
+                    nerellStatus.pavillon(true);
                 }
 
                 ThreadUtils.sleep(200);
             }
-
-            robotStatus.stopMatch();
-
-            servosService.pincesAvantOuvert(false);
-            servosService.pincesArriereOuvert(false);
-            motorPavillon.speed(motorPavillon.getStopSpeed()); // Ecrit par Nils le 22/03/2020 à 09:47:26
-
-            log.info("Fin de l'ordonancement du match. Durée {} ms", robotStatus.getElapsedTime());
-
-            // Désactivation de la puissance moteur pour être sur de ne plus rouler
-            ioService.disableAlim5VPuissance();
+            nerellStatus.stopMatch();
             ioService.disableAlim12VPuissance();
-
-            // On arrette le lidar
             lidar.stopScan();
+            ecranService.displayMessage(String.format("FIN - Durée match %s ms", nerellStatus.getElapsedTime()));
+
+            motorPavillon.speed(motorPavillon.getStopSpeed()); // Ecrit par Nils le 22/03/2020 à 09:47:26
+            servosService.pincesAvantOuvert(false);
+            servosService.pincesArriereOuvert(true);
+            ioService.disableAlim5VPuissance();
 
             // On envoi les datas collecté
+            ecranService.displayMessage("FIN - Sauvegarde télémétrie");
             monitoringWrapper.save();
             final LocalDateTime stopOrdonnanceur = LocalDateTime.now();
             final File execFile = new File("./logs/" + System.getProperty(IConstantesConfig.keyExecutionId) + ".exec");
@@ -325,7 +319,7 @@ public class Ordonanceur {
             servosService.pincesArriereFerme(false);
             servosService.brasDroitFerme(false);
             servosService.brasGaucheFerme(false);
-            servosService.ascenseurAvantRoulage(false);
+            servosService.ascenseurAvantBas(false);
             servosService.ascenseurArriereHaut(false);
             servosService.pivotArriereFerme(false);
             servosService.moustachesFerme(false);
@@ -344,16 +338,16 @@ public class Ordonanceur {
 
     public void positionStrategy() {
         try {
-            if (robotStatus.getStrategy() == EStrategy.AGGRESSIVE) {
-                if (robotStatus.getTeam() == ETeam.BLEU) {
+            if (nerellStatus.getStrategy() == EStrategy.AGGRESSIVE) {
+                if (nerellStatus.getTeam() == ETeam.BLEU) {
                     trajectoryManager.gotoPointMM(200, 1200, true);
                     trajectoryManager.gotoOrientationDeg(0);
                 } else {
                     trajectoryManager.gotoPointMM(3000 - 200, 1200, true);
                     trajectoryManager.gotoOrientationDeg(0);
                 }
-            } else if (robotStatus.getStrategy() == EStrategy.FINALE) {
-                if (robotStatus.getTeam() == ETeam.BLEU) {
+            } else if (nerellStatus.getStrategy() == EStrategy.FINALE) {
+                if (nerellStatus.getTeam() == ETeam.BLEU) {
                     trajectoryManager.gotoPointMM(200, 1200, true);
                     trajectoryManager.gotoOrientationDeg(0);
                 } else {
@@ -362,7 +356,7 @@ public class Ordonanceur {
                 }
             } else { // BASIC
                 // Aligne vers les bouées au nord du port
-                if (robotStatus.getTeam() == ETeam.BLEU) {
+                if (nerellStatus.getTeam() == ETeam.BLEU) {
                     trajectoryManager.gotoPointMM(220, 1290, true);
                     trajectoryManager.gotoOrientationDeg(66); // 51 ° pour 1 Rouge et 3 Vert
                 } else {
@@ -379,9 +373,9 @@ public class Ordonanceur {
 
     public void calageBordure(boolean skip) {
         try {
-            robotStatus.disableAvoidance();
-            if (robotStatus.isSimulateur() || skip) {
-                if (robotStatus.getTeam() == ETeam.BLEU) {
+            nerellStatus.disableAvoidance();
+            if (nerellStatus.isSimulateur() || skip) {
+                if (nerellStatus.getTeam() == ETeam.BLEU) {
                     position.setPt(new Point(conv.mmToPulse(200), conv.mmToPulse(1200)));
                     position.setAngle(conv.degToPulse(0));
                 } else {
@@ -389,10 +383,10 @@ public class Ordonanceur {
                     position.setAngle(conv.degToPulse(180));
                 }
             } else {
-                robotStatus.enableCalageBordure();
+                nerellStatus.enableCalageBordure();
                 trajectoryManager.reculeMMSansAngle(1000);
 
-                if (robotStatus.getTeam() == ETeam.BLEU) {
+                if (nerellStatus.getTeam() == ETeam.BLEU) {
                     position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstCallageY));
                     position.setAngle(conv.degToPulse(0));
                 } else {
@@ -403,7 +397,7 @@ public class Ordonanceur {
                 trajectoryManager.avanceMM(150);
                 trajectoryManager.gotoOrientationDeg(-90);
 
-                robotStatus.enableCalageBordure();
+                nerellStatus.enableCalageBordure();
                 trajectoryManager.reculeMM(1000);
 
                 position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstCallageY));
@@ -411,7 +405,7 @@ public class Ordonanceur {
 
                 trajectoryManager.avanceMM(150);
 
-                if (robotStatus.getTeam() == ETeam.BLEU) {
+                if (nerellStatus.getTeam() == ETeam.BLEU) {
                     trajectoryManager.gotoPointMM(200, 1200, true);
                 } else {
                     trajectoryManager.gotoPointMM(3000 - 200, 1200, true);
@@ -428,14 +422,14 @@ public class Ordonanceur {
 
         final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         System.setProperty(IConstantesConfig.keyExecutionId, execId);
-        robotStatus.enableForceMonitoring();
+        nerellStatus.enableForceMonitoring();
         monitoringWrapper.cleanAllPoints();
     }
 
     @SneakyThrows
     private void endMonitoring() {
         monitoringWrapper.save();
-        robotStatus.disableForceMonitoring();
+        nerellStatus.disableForceMonitoring();
 
         final String execId = System.getProperty(IConstantesConfig.keyExecutionId);
 
