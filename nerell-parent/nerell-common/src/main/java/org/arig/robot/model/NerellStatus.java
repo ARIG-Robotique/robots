@@ -16,16 +16,11 @@ import java.util.Objects;
 @Slf4j
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RobotStatus extends AbstractRobotStatus implements InitializingBean {
+public class NerellStatus extends AbstractRobotStatus {
 
-    @Setter(AccessLevel.NONE)
-    private boolean simulateur = false;
-
-    public void setSimulateur() {
-        simulateur = true;
+    public NerellStatus(final int matchTimeMs) {
+        super(matchTimeMs);
     }
-
-    private boolean finale = false;
 
     private ETeam team = ETeam.UNKNOWN;
 
@@ -47,50 +42,13 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         }
     }
 
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private StopWatch matchTime = new StopWatch();
-
-    public void startMatch() {
-        matchTime.start();
-
-        log.info("Démarrage du match");
-
-        // Activation
-        this.enableMatch();
-    }
-
+    @Override
     public void stopMatch() {
-        matchTime.stop();
+        super.stopMatch();
 
-        // Arrêt de l'asservissement et des moteurs, et tout et tout
-        this.disableAsserv();
-        this.disableAvoidance();
-        this.disableMatch();
-        this.disableCalageBordure();
         this.disableBalise();
     }
 
-    public long getElapsedTime() {
-        return matchTime.getTime();
-    }
-
-    public long getRemainingTime() {
-        return Math.max(0, IConstantesNerellConfig.matchTimeMs - matchTime.getTime());
-    }
-
-    @Setter(AccessLevel.NONE)
-    private boolean calageBordure = false;
-
-    public void enableCalageBordure() {
-        log.info("Activation calage bordure");
-        calageBordure = true;
-    }
-
-    public void disableCalageBordure() {
-        log.info("Désactivation calage bordure");
-        calageBordure = false;
-    }
 
     private DirectionGirouette directionGirouette = DirectionGirouette.UNKNOWN;
 
@@ -240,14 +198,6 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         return Arrays.stream(pincesAvant).filter(Objects::nonNull).count() == 0;
     }
 
-    /**
-     * INIT
-     */
-    @Override
-    public void afterPropertiesSet() {
-
-    }
-
     public int calculerPoints() {
         int points = 2 + (phare ? 13 : 0); // phare
         points += grandPort.size();
@@ -258,13 +208,5 @@ public class RobotStatus extends AbstractRobotStatus implements InitializingBean
         points += bonPort ? 10 : (mauvaisPort ? 5 : 0);
         points += pavillon ? 10 : 0;
         return points;
-    }
-
-    public double scoreFinal() {
-        int points = calculerPoints();
-        double score = points;
-        score += 0.3 * points; // evaluation
-        score += 5; // bonus;
-        return score;
     }
 }

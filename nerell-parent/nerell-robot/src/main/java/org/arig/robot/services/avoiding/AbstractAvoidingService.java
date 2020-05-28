@@ -3,9 +3,9 @@ package org.arig.robot.services.avoiding;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.NerellStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
-import org.arig.robot.model.RobotStatus;
 import org.arig.robot.system.ILidarService;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.avoiding.IAvoidingService;
@@ -33,7 +33,7 @@ public abstract class AbstractAvoidingService implements IAvoidingService {
     protected CommandeRobot cmdRobot;
 
     @Autowired
-    protected RobotStatus rs;
+    protected NerellStatus rs;
 
     protected abstract void processAvoiding();
 

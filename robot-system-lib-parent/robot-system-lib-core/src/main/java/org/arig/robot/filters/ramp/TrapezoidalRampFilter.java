@@ -12,7 +12,7 @@ import java.util.Map;
  * @author gdepuille
  */
 @Slf4j
-public class TrapezoidalRampFilter extends AbstractRampFilter {
+public class TrapezoidalRampFilter extends AbstractGainFactorRampFilter {
 
     private double posToDecel;
     private double currentVitesse;
@@ -30,16 +30,12 @@ public class TrapezoidalRampFilter extends AbstractRampFilter {
         this(name, 10, 100, 100);
     }
 
-    /**
-     * Instantiates a new ramp.
-     *
-     * @param name         the filter tag name for monitoring
-     * @param sampleTimeMs the sample time in ms
-     * @param rampAcc      the ramp acc
-     * @param rampDec      the ramp dec
-     */
     public TrapezoidalRampFilter(final String name, final double sampleTimeMs, final double rampAcc, final double rampDec) {
-        super(name, sampleTimeMs, rampAcc, rampDec);
+        this(name, sampleTimeMs, rampAcc, rampDec, 1);
+    }
+
+    public TrapezoidalRampFilter(final String name, final double sampleTimeMs, final double rampAcc, final double rampDec, final double gain) {
+        super(name, sampleTimeMs, rampAcc, rampDec, gain);
     }
 
     @Override
@@ -59,7 +55,7 @@ public class TrapezoidalRampFilter extends AbstractRampFilter {
     }
 
     @Override
-    protected Map<String, Number> specificMonitoringFields() {
+    protected Map<String, Number> gainFactorSpecificMonitoringFields() {
         final Map<String, Number> fields = new HashMap<>();
         fields.put("distanceDeceleration", posToDecel);
         fields.put("currentVitesse", currentVitesse);
@@ -79,7 +75,11 @@ public class TrapezoidalRampFilter extends AbstractRampFilter {
 
         if (input > 0 && currentVitesse >= 0) {
             // Distance a parcourir en avant
-            if (currentVitesse > getConsigneVitesse() || (input <= posToDecel && frein)) {
+            if (input < getStepVitesseAccel()) {
+                // Distance restante très proche
+                currentVitesse = input;
+
+            } else if (currentVitesse > getConsigneVitesse() || (input <= posToDecel && frein)) {
                 // Trop vite
                 currentVitesse -= getStepVitesseDecel();
 
@@ -97,7 +97,11 @@ public class TrapezoidalRampFilter extends AbstractRampFilter {
 
         } else if (input < 0 && currentVitesse <= 0) {
             // Distance a parcourir en arrière
-            if (currentVitesse < -getConsigneVitesse() || (input >= -posToDecel && frein)) {
+            if (input > -getStepVitesseAccel()) {
+                // Distance restante très proche
+                currentVitesse = input;
+
+            } else if (currentVitesse < -getConsigneVitesse() || (input >= -posToDecel && frein)) {
                 // Trop vite
                 currentVitesse += getStepVitesseDecel();
 
@@ -108,7 +112,6 @@ public class TrapezoidalRampFilter extends AbstractRampFilter {
                 // Evite les oscilations en régime établie
                 currentVitesse = Math.max(currentVitesse, -getConsigneVitesse());
             }
-
 
         } else if (input > 0 && currentVitesse < 0) {
             // Distance dépasser en arrière

@@ -2,10 +2,12 @@ package org.arig.robot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.NerellStatus;
+import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
@@ -24,7 +26,7 @@ public class Test extends AbstractAction {
     private IPincesArriereService pincesArriereService;
 
     @Autowired
-    private RobotStatus rs;
+    private NerellStatus rs;
 
     @Autowired
     private ServosService servos;
@@ -57,34 +59,36 @@ public class Test extends AbstractAction {
     public void execute() {
         try {
             rs.disableAvoidance();
-            mv.setVitesse(300, 300);
 
+            // Récupération des élements dans la pince avant
             rs.enablePincesAvant();
-            mv.avanceMM(1000);
+            mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientationUltraHaute);
+            mv.gotoPointMM(1200,1200, true, SensDeplacement.AVANT);
             rs.disablePincesAvant();
-            mv.gotoOrientationDeg(180);
-            mv.avanceMM(800);
-            mv.gotoOrientationDeg(0);
+
+            // Récupération de l'ecueil
+            mv.setVitesse(IConstantesNerellConfig.vitesseUltraHaute, IConstantesNerellConfig.vitesseOrientationUltraHaute);
+            mv.gotoPointMM(400,1200, true, SensDeplacement.AVANT);
             pincesArriereService.preparePriseEcueil();
-            mv.reculeMM(150);
+            mv.gotoPointMM(250,1200, true, SensDeplacement.ARRIERE);
             rs.enableCalageBordure();
+            mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientationBasse);
             mv.reculeMM(60);
             pincesArriereService.finalisePriseEcueil(ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU);
-            mv.avanceMM(1200);
+
+            mv.setVitesse(IConstantesNerellConfig.vitesseUltraHaute, IConstantesNerellConfig.vitesseOrientationUltraHaute);
+            mv.gotoPointMM(1200,1200, false, SensDeplacement.AVANT);
             mv.gotoOrientationDeg(180);
             pincesArriereService.deposePetitPort();
             mv.avanceMM(60);
-            mv.gotoOrientationDeg(0);
             if (!rs.pincesAvantEmpty()) {
+                mv.gotoOrientationDeg(0);
                 servos.ascenseurAvantBas(true);
                 servos.pincesAvantOuvert(true);
                 mv.reculeMM(120);
                 servos.pincesAvantFerme(false);
-                mv.reculeMM(1000 - 120);
-            } else {
-                mv.reculeMM(1000);
             }
-            mv.gotoOrientationDeg(180);
+            mv.gotoPointMM(800, 1200, false);
 
             completed = true;
         } catch (AvoidingException e) {

@@ -1,6 +1,7 @@
 package org.arig.test.robot.filters.common;
 
 import org.arig.robot.filters.common.OffsetFilter;
+import org.arig.robot.filters.common.OffsetFilter.OffsetType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -13,26 +14,37 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 @RunWith(BlockJUnit4ClassRunner.class)
 public class OffsetFilterTest {
 
-    private static OffsetFilter filter;
+    private static OffsetFilter simpleOffset;
+    private static OffsetFilter mirrorOffset;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     @BeforeClass
     public static void initClass() {
-        filter = new OffsetFilter(10d);
+        simpleOffset = new OffsetFilter(10d);
+        mirrorOffset = new OffsetFilter(10d, OffsetType.MIRROR);
     }
 
     @Before
     public void beforeTest() {
-        filter.reset();
+        simpleOffset.reset();
+        mirrorOffset.reset();
     }
 
     @Test
-    public void testFilter() {
-        Assert.assertEquals(9d, filter.filter(-1d), 0d);
-        Assert.assertEquals(20d, filter.filter(10d), 0d);
-        Assert.assertEquals(20d, filter.filter(10d), 0d);
-        Assert.assertEquals(19d, filter.filter(9d), 0d);
+    public void testSimpleFilter() {
+        Assert.assertEquals(9d, simpleOffset.filter(-1d), 0d);
+        Assert.assertEquals(20d, simpleOffset.filter(10d), 0d);
+        Assert.assertEquals(20d, simpleOffset.filter(10d), 0d);
+        Assert.assertEquals(19d, simpleOffset.filter(9d), 0d);
+    }
+
+    @Test
+    public void testMirrorFilter() {
+        Assert.assertEquals(-11d, mirrorOffset.filter(-1d), 0d);
+        Assert.assertEquals(20d, mirrorOffset.filter(10d), 0d);
+        Assert.assertEquals(-20d, mirrorOffset.filter(-10d), 0d);
+        Assert.assertEquals(11d, mirrorOffset.filter(1d), 0d);
     }
 }

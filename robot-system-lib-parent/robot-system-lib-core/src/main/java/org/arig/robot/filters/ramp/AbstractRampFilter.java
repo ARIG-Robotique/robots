@@ -34,8 +34,8 @@ public abstract class AbstractRampFilter implements IRampFilter {
     @Getter(AccessLevel.PROTECTED)
     private double rampAcc, rampDec, stepVitesseAccel, stepVitesseDecel;
 
-    @Getter
     @Setter
+    @Getter(AccessLevel.PROTECTED)
     private double consigneVitesse;
 
     /**
@@ -59,23 +59,12 @@ public abstract class AbstractRampFilter implements IRampFilter {
         updateStepVitesse();
     }
 
-    protected abstract String rampImpl();
-
-    protected abstract Long rampFilter(Long input);
-
     @Override
     public void reset() {
         input = 0;
         output = 0;
     }
 
-    protected abstract Map<String, Number> specificMonitoringFields();
-
-    /**
-     * Sets the sample time ms.
-     *
-     * @param value the new sample time ms
-     */
     public void setSampleTimeMs(final double value) {
         sampleTimeS = value / 1000;
         updateStepVitesse();
@@ -100,14 +89,6 @@ public abstract class AbstractRampFilter implements IRampFilter {
                 "rampAcc", rampAcc,
                 "rampDec", rampDec
         );
-    }
-
-    /**
-     * Update step vitesse.
-     */
-    private void updateStepVitesse() {
-        stepVitesseAccel = rampAcc * sampleTimeS;
-        stepVitesseDecel = rampDec * sampleTimeS;
     }
 
     @Override
@@ -138,5 +119,16 @@ public abstract class AbstractRampFilter implements IRampFilter {
         specificMonitoringFields().forEach(serie::addField);
 
         monitoringWrapper.addTimeSeriePoint(serie);
+    }
+
+    protected abstract String rampImpl();
+
+    protected abstract Long rampFilter(Long input);
+
+    protected abstract Map<String, Number> specificMonitoringFields();
+
+    private void updateStepVitesse() {
+        stepVitesseAccel = rampAcc * sampleTimeS;
+        stepVitesseDecel = rampDec * sampleTimeS;
     }
 }

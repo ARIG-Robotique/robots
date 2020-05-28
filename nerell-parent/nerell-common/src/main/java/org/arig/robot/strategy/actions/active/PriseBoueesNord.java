@@ -7,8 +7,8 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
+import org.arig.robot.model.NerellStatus;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.RobotStatus;
 import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.services.AbstractPincesAvantService.Side;
 import org.arig.robot.services.IPincesAvantService;
@@ -29,7 +29,7 @@ public class PriseBoueesNord extends AbstractAction {
     private IPincesAvantService pincesAvantService;
 
     @Autowired
-    private RobotStatus rs;
+    private NerellStatus rs;
 
     @Getter
     private boolean completed = false;

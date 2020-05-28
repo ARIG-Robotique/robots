@@ -150,7 +150,7 @@ public class TrapezoidalRampFilterTest extends AbstractRampTest {
         for (int i = 150 ; i > 0 ; i -= output) {
             output = filtre1.filter((long) i);
             double dt = derivateFilter.filter(output);
-            log.info("Filtre {} frein inactif, , Vitesse {}, consigne {}, output {}, dt {}", filtre1.getName(), vitesse, i, output, dt);
+            log.info("Filtre {} frein inactif, vitesse {}, consigne {}, output {}, dt {}", filtre1.getName(), vitesse, i, output, dt);
 
             if (i > 95) {
                 // Phase d'acceleration

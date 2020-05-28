@@ -6,6 +6,7 @@ import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 /**
  * @author gdepuille on 11/10/16.
@@ -14,8 +15,17 @@ import org.springframework.context.annotation.Configuration;
 public class PidTestContext {
 
     @Bean
+    @Primary
     public SimplePidFilter simplePID() {
         SimplePidFilter pid = new SimplePidFilter("test");
+        pid.setTunings(1, 0, 0);
+
+        return pid;
+    }
+
+    @Bean
+    public SimplePidFilter simplePIDIntegralLimit() {
+        SimplePidFilter pid = new SimplePidFilter("test", true);
         pid.setTunings(1, 0, 0);
 
         return pid;

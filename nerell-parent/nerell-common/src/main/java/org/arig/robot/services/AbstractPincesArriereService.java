@@ -2,7 +2,7 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.RobotStatus;
+import org.arig.robot.model.NerellStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
@@ -13,7 +13,7 @@ public abstract class AbstractPincesArriereService implements IPincesArriereServ
     private ServosService srv;
 
     @Autowired
-    private RobotStatus rs;
+    private NerellStatus rs;
 
     @Autowired
     private IIOService io;

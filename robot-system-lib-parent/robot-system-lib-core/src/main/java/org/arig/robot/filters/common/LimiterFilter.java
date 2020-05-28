@@ -9,7 +9,7 @@ import org.springframework.util.Assert;
 public class LimiterFilter implements IFilter<Double, Double> {
 
     public enum LimiterType {
-        SIMPLE, DOUBLE
+        SIMPLE, MIRROR
     }
 
     public static final String MIN_VALUE_NULL_MESSAGE = "%s Min ne peut être null";
@@ -39,7 +39,7 @@ public class LimiterFilter implements IFilter<Double, Double> {
         positiveMin = min;
         positiveMax = max;
         this.type = type;
-        if (type == LimiterType.DOUBLE) {
+        if (type == LimiterType.MIRROR) {
             negativeMin = -min;
             negativeMax = -max;
         }
@@ -58,7 +58,7 @@ public class LimiterFilter implements IFilter<Double, Double> {
         Assert.isTrue(negativeMax < 0 && negativeMin < 0, NEGATIVE_MESSAGE);
         Assert.isTrue(negativeMax < negativeMin, MAX_SMALLER_MIN_MESSAGE);
 
-        this.type = LimiterType.DOUBLE;
+        this.type = LimiterType.MIRROR;
         this.positiveMin = positiveMin;
         this.positiveMax = positiveMax;
         this.negativeMin = negativeMin;
@@ -68,7 +68,7 @@ public class LimiterFilter implements IFilter<Double, Double> {
     @Override
     public Double filter(Double value) {
         Assert.notNull(value, FILTER_VALUE_NULL_MESSAGE);
-        if (type == LimiterType.SIMPLE || (type == LimiterType.DOUBLE && value >= 0)) {
+        if (type == LimiterType.SIMPLE || (type == LimiterType.MIRROR && value >= 0)) {
             lastResult = value < positiveMin ? positiveMin : (value > positiveMax) ? positiveMax : value;
         } else {
             lastResult = value > negativeMin ? negativeMin : (value < negativeMax) ? negativeMax : value;
