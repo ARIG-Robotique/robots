@@ -2,6 +2,9 @@ package org.arig.robot.system.blockermanager;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.common.DerivateFilter;
+import org.arig.robot.model.AbstractRobotStatus;
+import org.arig.robot.model.monitor.MonitorTimeSerie;
+import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +12,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public class SystemBlockerManager implements ISystemBlockerManager {
 
+    private static final byte MAX_ERROR_DISTANCE = 10;
+    private static final byte MAX_ERROR_ORIENTATION = 10;
+
+    @Autowired
+    private AbstractRobotStatus rs;
+
     @Autowired
     private ITrajectoryManager trajectoryManager;
 
     @Autowired
     private Abstract2WheelsEncoders encoders;
+
+    @Autowired
+    protected IMonitoringWrapper monitoringWrapper;
 
     private final DerivateFilter derivateDistance = new DerivateFilter(0d);
     private final DerivateFilter derivateOrientation = new DerivateFilter(0d);
@@ -46,18 +58,32 @@ public class SystemBlockerManager implements ISystemBlockerManager {
             countErrorDistance = 0;
         }
 
-        if (!trajectoryManager.isTrajetAtteint() && derivateOrientation.filter(encoders.getOrientation()) < seuilOrientationPulse) {
+        if (!rs.isCalageBordure() && !trajectoryManager.isTrajetAtteint() && derivateOrientation.filter(encoders.getOrientation()) < seuilOrientationPulse) {
             countErrorOrientation++;
         } else {
             derivateOrientation.reset();
             countErrorOrientation = 0;
         }
 
-        // 10 itération de 500 ms (cf Scheduler)
-        if (countErrorDistance >= 10 && countErrorOrientation >= 10) {
+        // Construction du monitoring
+        final MonitorTimeSerie serie = new MonitorTimeSerie()
+                .measurementName("blocker")
+                .addField("maxErrorDistance", MAX_ERROR_DISTANCE)
+                .addField("maxErrorOrientation", MAX_ERROR_ORIENTATION)
+                .addField("seuilDistance", seuilDistancePulse)
+                .addField("seuilOrientation", seuilOrientationPulse)
+                .addField("derivateDistance", derivateDistance.getLastValue())
+                .addField("derivateOrientation", derivateOrientation.getLastValue())
+                .addField("countErrorDistance", countErrorDistance)
+                .addField("countErrorOrientation", countErrorOrientation);
+
+        monitoringWrapper.addTimeSeriePoint(serie);
+
+        // x itérations de 500 ms (cf Scheduler)
+        if (countErrorDistance >= MAX_ERROR_DISTANCE && countErrorOrientation >= MAX_ERROR_ORIENTATION) {
             log.warn("Détection de blocage trop importante : distance {} ; orientation {}", countErrorDistance, countErrorOrientation);
 
-            trajectoryManager.cancelMouvement();
+            //trajectoryManager.cancelMouvement();
             reset();
         }
     }
