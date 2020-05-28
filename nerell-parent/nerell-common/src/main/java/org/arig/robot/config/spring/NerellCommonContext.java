@@ -157,4 +157,12 @@ public class NerellCommonContext {
     public Ordonanceur ordonanceur() {
         return Ordonanceur.getInstance();
     }
+
+    @Bean
+    public ISystemBlockerManager systemBlockerManager(ConvertionRobotUnit conv) {
+        return new SystemBlockerManager(
+                conv.mmToPulse(IConstantesNerellConfig.seuilErreurDistanceMm),
+                conv.degToPulse(IConstantesNerellConfig.seuilErreurOrientationDeg)
+        );
+    }
 }
