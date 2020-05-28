@@ -44,6 +44,6 @@ public interface IAction {
     /**
      * Recupere l'UUID de l'action
      */
-    String getUUID();
+    String uuid();
 
 }
