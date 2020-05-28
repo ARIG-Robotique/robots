@@ -2,6 +2,7 @@ package org.arig.robot.strategy;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.arig.robot.model.Point;
 
 import java.time.LocalDateTime;
@@ -12,7 +13,8 @@ import java.time.LocalDateTime;
 public abstract class AbstractAction implements IAction {
 
     @Getter
-    private String UUID = java.util.UUID.randomUUID().toString();
+    @Accessors(fluent = true)
+    private String uuid = java.util.UUID.randomUUID().toString();
 
     @Getter
     @Setter

@@ -3,6 +3,7 @@ package org.arig.robot.web.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.constants.IConstantesConfig;
+import org.arig.robot.model.ActionSuperviseur;
 import org.arig.robot.strategy.IAction;
 import org.arig.robot.strategy.StrategyManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author gdepuille on 22/12/14.
@@ -29,14 +32,16 @@ public class StrategyController {
     private StrategyManager strategyManager;
 
     @GetMapping
-    public List<IAction> listStrategy() {
-        return strategyManager.getActions();
+    public List<ActionSuperviseur> listStrategy() {
+        return strategyManager.getActions().stream()
+                .map(ActionSuperviseur::fromAction)
+                .collect(Collectors.toList());
     }
 
     @PostMapping(path = "/execute")
     public void execute(@RequestParam("uid") String uid) {
         Optional<IAction> action = strategyManager.getActions().stream()
-                .filter(a -> StringUtils.equalsIgnoreCase(a.getUUID(), uid))
+                .filter(a -> StringUtils.equalsIgnoreCase(a.uuid(), uid))
                 .findFirst();
 
         if (action.isPresent()) {
