@@ -21,6 +21,10 @@ public class CommandeRobotTest {
     public void testIsType() {
         Assert.assertFalse(consigne.isType(TypeConsigne.LINE));
         Assert.assertTrue(consigne.isType(TypeConsigne.DIST));
+        Assert.assertTrue(consigne.isType(TypeConsigne.LINE, TypeConsigne.ANGLE));
+        Assert.assertTrue(consigne.isType(TypeConsigne.DIST, TypeConsigne.ANGLE));
+        Assert.assertTrue(consigne.isType(TypeConsigne.XY, TypeConsigne.ANGLE));
+        Assert.assertFalse(consigne.isType(TypeConsigne.XY, TypeConsigne.CIRCLE));
     }
 
     @Test

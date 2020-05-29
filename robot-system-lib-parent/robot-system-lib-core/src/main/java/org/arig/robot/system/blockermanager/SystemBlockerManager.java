@@ -2,7 +2,8 @@ package org.arig.robot.system.blockermanager;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.common.DerivateFilter;
-import org.arig.robot.model.AbstractRobotStatus;
+import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.system.ITrajectoryManager;
@@ -16,7 +17,7 @@ public class SystemBlockerManager implements ISystemBlockerManager {
     private static final byte MAX_ERROR_ORIENTATION = 10;
 
     @Autowired
-    private AbstractRobotStatus rs;
+    private CommandeRobot cmdRobot;
 
     @Autowired
     private ITrajectoryManager trajectoryManager;
@@ -51,15 +52,19 @@ public class SystemBlockerManager implements ISystemBlockerManager {
 
     @Override
     public void process() {
-        if (!trajectoryManager.isTrajetAtteint() && derivateDistance.filter(encoders.getDistance()) < seuilDistancePulse) {
+        if (cmdRobot.isType(TypeConsigne.DIST, TypeConsigne.XY) && !trajectoryManager.isTrajetAtteint() &&
+                derivateDistance.filter(encoders.getDistance()) < seuilDistancePulse) {
             countErrorDistance++;
+
         } else {
             derivateDistance.reset();
             countErrorDistance = 0;
         }
 
-        if (!rs.isCalageBordure() && !trajectoryManager.isTrajetAtteint() && derivateOrientation.filter(encoders.getOrientation()) < seuilOrientationPulse) {
+        if (cmdRobot.isType(TypeConsigne.ANGLE, TypeConsigne.XY)  && !trajectoryManager.isTrajetAtteint() &&
+                derivateOrientation.filter(encoders.getOrientation()) < seuilOrientationPulse) {
             countErrorOrientation++;
+
         } else {
             derivateOrientation.reset();
             countErrorOrientation = 0;
