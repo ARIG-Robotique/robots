@@ -10,6 +10,7 @@ import org.arig.robot.model.NerellStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
 import org.arig.robot.strategy.AbstractAction;
+import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class RetourAuPort extends AbstractAction {
+public class RetourAuPort extends AbstractNerellAction {
 
     @Autowired
     private ITrajectoryManager mv;

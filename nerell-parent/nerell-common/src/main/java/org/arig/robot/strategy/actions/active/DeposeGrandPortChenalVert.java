@@ -13,6 +13,7 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.strategy.AbstractAction;
+import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class DeposeGrandPortChenalVert extends AbstractAction {
+public class DeposeGrandPortChenalVert extends AbstractNerellAction {
 
     @Autowired
     private ITrajectoryManager mv;
