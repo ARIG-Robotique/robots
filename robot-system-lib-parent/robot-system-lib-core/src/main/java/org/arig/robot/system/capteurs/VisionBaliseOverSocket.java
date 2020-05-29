@@ -1,7 +1,16 @@
 package org.arig.robot.system.capteurs;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.socket.balise.*;
+import org.arig.robot.communication.socket.balise.DetectionQuery;
+import org.arig.robot.communication.socket.balise.DetectionResponse;
+import org.arig.robot.communication.socket.balise.EtalonnageQuery;
+import org.arig.robot.communication.socket.balise.EtalonnageResponse;
+import org.arig.robot.communication.socket.balise.ExitQuery;
+import org.arig.robot.communication.socket.balise.ExitResponse;
+import org.arig.robot.communication.socket.balise.PhotoQuery;
+import org.arig.robot.communication.socket.balise.PhotoResponse;
+import org.arig.robot.communication.socket.balise.StatusQuery;
+import org.arig.robot.communication.socket.balise.StatusResponse;
 import org.arig.robot.communication.socket.balise.enums.BaliseAction;
 import org.arig.robot.model.balise.EtalonnageBalise;
 import org.arig.robot.model.balise.StatutBalise;

@@ -9,7 +9,6 @@ import org.arig.robot.model.ETeam;
 import org.arig.robot.model.NerellStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
-import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.TableUtils;
