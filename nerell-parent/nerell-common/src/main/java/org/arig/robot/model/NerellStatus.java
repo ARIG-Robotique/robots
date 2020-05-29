@@ -93,6 +93,8 @@ public class NerellStatus extends AbstractRobotStatus {
         r.put("petitPort", petitPort);
         r.put("petitChenalVert", petitChenaux.chenalVert);
         r.put("petitChenalRouge", petitChenaux.chenalRouge);
+        r.put("pincesAvant", pincesAvant);
+        r.put("pincesArriere", pincesArriere);
         r.put("phare", phare);
         r.put("mancheAAir1", mancheAAir1);
         r.put("mancheAAir2", mancheAAir2);
