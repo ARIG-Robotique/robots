@@ -9,9 +9,9 @@ import org.arig.robot.model.ETeam;
 import org.arig.robot.model.NerellStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
-import org.arig.robot.model.enums.SensDeplacement;
+import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.services.ServosService;
-import org.arig.robot.strategy.AbstractAction;
+import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
@@ -21,10 +21,10 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class Phare extends AbstractAction {
+public class Phare extends AbstractNerellAction {
 
     public static final double ENTRY_X = 225;
-    public static final double ENTRY_Y = 1765;
+    public static final double ENTRY_Y = 1755;
 
     @Autowired
     private ITrajectoryManager mv;
@@ -47,8 +47,6 @@ public class Phare extends AbstractAction {
 
     @Getter
     private boolean completed = false;
-
-    private SensDeplacement sensEntry = SensDeplacement.AUTO;
 
     @Override
     public String name() {
@@ -84,21 +82,27 @@ public class Phare extends AbstractAction {
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             final Point entry = entryPoint();
-            mv.pathTo(entry, SensDeplacement.ARRIERE);
-            mv.gotoOrientationDeg(rs.getTeam() == ETeam.BLEU ? 0 : 180);
+            mv.pathTo(entry);
 
-            mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
-            rs.enableCalageBordure();
-            mv.reculeMM(200);
+            final double angleRobot = conv.pulseToDeg(currentPosition.getAngle());
+            if (Math.abs(angleRobot) <= 90) {
+                if (angleRobot < 0) {
+                    mv.gotoOrientationDeg(0);
+                }
 
-            if (rs.getTeam() == ETeam.BLEU) {
+                // On active avec le bras gauche
                 servos.brasGauchePhare(true);
-            } else {
-                servos.brasDroitPhare(true);
-            }
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-            mv.avanceMM(200);
+                mv.gotoOrientationDeg(-35, SensRotation.HORAIRE);
 
+            } else {
+                if (angleRobot < 0) {
+                    mv.gotoOrientationDeg(180);
+                }
+
+                // On active avec le bras droit
+                servos.brasDroitPhare(true);
+                mv.gotoOrientationDeg(-180 + 35, SensRotation.TRIGO);
+            }
             rs.phare(true);
 
         } catch (NoPathFoundException | AvoidingException e) {
