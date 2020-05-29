@@ -73,7 +73,7 @@ public class Test extends AbstractAction {
             mv.gotoPointMM(250,1200, true, SensDeplacement.ARRIERE);
             rs.enableCalageBordure();
             mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientationBasse);
-            mv.reculeMM(60);
+            mv.reculeMMSansAngle(60);
             pincesArriereService.finalisePriseEcueil(ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU);
 
             mv.setVitesse(IConstantesNerellConfig.vitesseUltraHaute, IConstantesNerellConfig.vitesseOrientationUltraHaute);
