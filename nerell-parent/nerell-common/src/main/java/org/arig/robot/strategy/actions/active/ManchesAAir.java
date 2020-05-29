@@ -12,6 +12,7 @@ import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
+import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ManchesAAir extends AbstractAction {
+public class ManchesAAir extends AbstractNerellAction {
 
     @Autowired
     private ITrajectoryManager mv;

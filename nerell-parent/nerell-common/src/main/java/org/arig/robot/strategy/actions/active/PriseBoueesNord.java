@@ -14,13 +14,14 @@ import org.arig.robot.services.AbstractPincesAvantService.Side;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
+import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PriseBoueesNord extends AbstractAction {
+public class PriseBoueesNord extends AbstractNerellAction {
 
     @Autowired
     private ITrajectoryManager mv;

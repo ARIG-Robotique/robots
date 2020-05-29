@@ -10,12 +10,13 @@ import org.arig.robot.model.NerellStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.strategy.AbstractAction;
+import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
-public abstract class AbstractEcueil extends AbstractAction {
+public abstract class AbstractEcueil extends AbstractNerellAction {
 
     @Autowired
     protected NerellStatus rs;

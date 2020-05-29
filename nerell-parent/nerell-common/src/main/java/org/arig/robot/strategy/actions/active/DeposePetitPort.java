@@ -15,6 +15,7 @@ import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
+import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class DeposePetitPort extends AbstractAction {
+public class DeposePetitPort extends AbstractNerellAction {
 
     @Autowired
     private ITrajectoryManager mv;
