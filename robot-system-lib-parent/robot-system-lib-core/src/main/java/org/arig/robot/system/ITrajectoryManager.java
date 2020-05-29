@@ -52,6 +52,10 @@ public interface ITrajectoryManager {
 
     void gotoOrientationDeg(double angle, SensRotation sensRotation) throws AvoidingException;
 
+    void gotoOrientationDegSansDistance(double angle) throws AvoidingException;
+
+    void gotoOrientationDegSansDistance(double angle, SensRotation sensRotation) throws AvoidingException;
+
     void alignFrontTo(double x, double y) throws AvoidingException;
 
     void alignFrontToAvecDecalage(double x, double y, double decalageDeg) throws AvoidingException;
@@ -67,6 +71,8 @@ public interface ITrajectoryManager {
     void reculeMMSansAngle(double distance) throws AvoidingException;
 
     void tourneDeg(double angle) throws AvoidingException;
+
+    void tourneDegSansDistance(double angle) throws AvoidingException;
 
     void followLine(double x1, double y1, double x2, double y2) throws AvoidingException;
 
