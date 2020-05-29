@@ -1,7 +1,14 @@
 package org.arig.robot.system.capteurs;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.socket.ecran.*;
+import org.arig.robot.communication.socket.ecran.EmptyResponse;
+import org.arig.robot.communication.socket.ecran.ExitQuery;
+import org.arig.robot.communication.socket.ecran.GetConfigQuery;
+import org.arig.robot.communication.socket.ecran.GetConfigResponse;
+import org.arig.robot.communication.socket.ecran.UpdateEtalonnageQuery;
+import org.arig.robot.communication.socket.ecran.UpdateMatchQuery;
+import org.arig.robot.communication.socket.ecran.UpdatePhotoQuery;
+import org.arig.robot.communication.socket.ecran.UpdateStateQuery;
 import org.arig.robot.communication.socket.ecran.enums.EcranAction;
 import org.arig.robot.model.ecran.GetConfigInfos;
 import org.arig.robot.model.ecran.UpdateEtalonnageData;

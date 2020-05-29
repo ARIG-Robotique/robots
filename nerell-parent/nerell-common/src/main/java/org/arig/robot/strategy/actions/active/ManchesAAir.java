@@ -11,7 +11,6 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.services.ServosService;
-import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.TableUtils;

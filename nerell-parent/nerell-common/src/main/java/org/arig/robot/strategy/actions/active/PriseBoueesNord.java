@@ -13,7 +13,6 @@ import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.services.AbstractPincesAvantService.Side;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.services.ServosService;
-import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
