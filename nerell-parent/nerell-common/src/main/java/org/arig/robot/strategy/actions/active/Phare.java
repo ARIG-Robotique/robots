@@ -87,21 +87,21 @@ public class Phare extends AbstractNerellAction {
             final double angleRobot = conv.pulseToDeg(currentPosition.getAngle());
             if (Math.abs(angleRobot) <= 90) {
                 if (angleRobot < 0) {
-                    mv.gotoOrientationDeg(0);
+                    mv.gotoOrientationDegSansDistance(0);
                 }
 
                 // On active avec le bras gauche
                 servos.brasGauchePhare(true);
-                mv.gotoOrientationDeg(-35, SensRotation.HORAIRE);
+                mv.gotoOrientationDegSansDistance(-35, SensRotation.HORAIRE);
 
             } else {
                 if (angleRobot < 0) {
-                    mv.gotoOrientationDeg(180);
+                    mv.gotoOrientationDegSansDistance(180);
                 }
 
                 // On active avec le bras droit
                 servos.brasDroitPhare(true);
-                mv.gotoOrientationDeg(-180 + 35, SensRotation.TRIGO);
+                mv.gotoOrientationDegSansDistance(-180 + 35, SensRotation.TRIGO);
             }
             rs.phare(true);
 

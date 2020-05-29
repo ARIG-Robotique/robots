@@ -86,11 +86,11 @@ public class ManchesAAir extends AbstractNerellAction {
             boolean manche1Before = !rs.mancheAAir1();
             if (manche1Before) {
                 if (rs.getTeam() == ETeam.BLEU) {
-                    mv.gotoOrientationDeg(150);
+                    mv.gotoOrientationDegSansDistance(150);
                     servos.brasGaucheMancheAAir(true);
                     mv.gotoPointMM(xManche2, y, true, SensDeplacement.ARRIERE);
                 } else {
-                    mv.gotoOrientationDeg(30);
+                    mv.gotoOrientationDegSansDistance(30);
                     servos.brasDroitMancheAAir(true);
                     mv.gotoPointMM(3000 - xManche2, y, true, SensDeplacement.ARRIERE);
                 }
@@ -100,18 +100,18 @@ public class ManchesAAir extends AbstractNerellAction {
             if (!rs.mancheAAir2()) {
                 if (rs.getTeam() == ETeam.BLEU) {
                     if (!manche1Before) {
-                        mv.gotoOrientationDeg(180);
+                        mv.gotoOrientationDegSansDistance(180);
                         servos.brasGaucheMancheAAir(true);
                     }
                     mv.gotoPointMM(xFinManche2, y, false, SensDeplacement.ARRIERE);
-                    mv.gotoOrientationDeg(-160, SensRotation.TRIGO);
+                    mv.gotoOrientationDegSansDistance(-160, SensRotation.TRIGO);
                 } else {
                     if (!manche1Before) {
-                        mv.gotoOrientationDeg(0);
+                        mv.gotoOrientationDegSansDistance(0);
                         servos.brasDroitMancheAAir(true);
                     }
                     mv.gotoPointMM(3000 - xFinManche2, y, false, SensDeplacement.ARRIERE);
-                    mv.gotoOrientationDeg(-20, SensRotation.HORAIRE);
+                    mv.gotoOrientationDegSansDistance(-20, SensRotation.HORAIRE);
                 }
                 rs.mancheAAir2(true);
             }
