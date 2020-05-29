@@ -398,7 +398,7 @@ public class NerellOrdonanceur {
                 trajectoryManager.gotoOrientationDeg(-90);
 
                 nerellStatus.enableCalageBordure();
-                trajectoryManager.reculeMM(1000);
+                trajectoryManager.reculeMMSansAngle(1000);
 
                 position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstCallageY));
                 position.setAngle(conv.degToPulse(-90));
