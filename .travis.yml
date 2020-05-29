@@ -1,6 +1,5 @@
 dist: bionic
 language: java
-sudo: required
 jdk: openjdk11
 
 before_cache:
