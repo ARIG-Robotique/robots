@@ -65,8 +65,13 @@ public class CommandeRobot {
         }
     }
 
-    public boolean isType(final TypeConsigne t) {
-        return types.contains(t);
+    public boolean isType(final TypeConsigne... types) {
+        for (final TypeConsigne t : types) {
+            if(this.types.contains(t)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isAllTypes(final TypeConsigne... types) {
