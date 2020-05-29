@@ -80,10 +80,11 @@ public class Test extends AbstractAction {
             mv.gotoPointMM(1200,1200, false, SensDeplacement.AVANT);
             mv.gotoOrientationDeg(180);
             pincesArriereService.deposePetitPort();
-            mv.avanceMM(60);
+            mv.avanceMM(35);
             if (!rs.pincesAvantEmpty()) {
                 mv.gotoOrientationDeg(0);
                 servos.ascenseurAvantBas(true);
+                mv.avanceMM(65);
                 servos.pincesAvantOuvert(true);
                 mv.reculeMM(120);
                 servos.pincesAvantFerme(false);
