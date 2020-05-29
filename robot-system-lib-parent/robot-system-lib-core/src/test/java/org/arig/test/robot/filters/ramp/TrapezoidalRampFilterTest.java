@@ -69,9 +69,15 @@ public class TrapezoidalRampFilterTest extends AbstractRampTest {
             if (i > 945 || (i < 915 && i > 750) || (i < 515 && i > 350)) {
                 // Phase d'acceleration
                 Assert.assertEquals(1, dt, 0d);
+
+            } else if (i < 10) {
+                // Fin de la rampe (input < step)
+                Assert.assertEquals(0, output, 0d);
+
             } else if (i <= 200 || (i < 710 & i > 545)) {
                 // Il faut 200 points pour décélerer (vitesse ² / (2 * rampeDecel))
                 Assert.assertEquals(-1, dt, 0d);
+
             } else {
                 // Régime établi
                 Assert.assertEquals(0, dt, 0d);
@@ -82,12 +88,12 @@ public class TrapezoidalRampFilterTest extends AbstractRampTest {
     @Test
     public void testChangementVitesseSansFrein() {
         double vitesse = 100;
-        double output;
+        double output = -1;
 
         filtre1.setFrein(false);
 
         DerivateFilter derivateFilter = new DerivateFilter(0d);
-        for (int i = 1000 ; i > 0 ; i -= output) {
+        for (int i = 1000 ; output != 0 ; i -= output) {
             if (i == 905 || i == 505) {
                 vitesse = 200;
             } else if (i == 690) {
@@ -102,8 +108,14 @@ public class TrapezoidalRampFilterTest extends AbstractRampTest {
             if (i > 945 || (i < 915 && i > 750) || (i < 515 && i > 350)) {
                 // Phase d'acceleration
                 Assert.assertEquals(1, dt, 0d);
+
+            } else if (i < 10) {
+                // Fin de la rampe (input < step) => Dépassement du point
+                Assert.assertEquals(-1, dt, 0d);
+
             } else if (i < 710 & i > 545) {
                 Assert.assertEquals(-1, dt, 0d);
+
             } else {
                 // Régime établi
                 Assert.assertEquals(0, dt, 0d);
@@ -128,9 +140,15 @@ public class TrapezoidalRampFilterTest extends AbstractRampTest {
             if (i > 95) {
                 // Phase d'acceleration
                 Assert.assertEquals(1, dt, 0d);
+
+            } else if (i < 10) {
+                // Fin de la rampe (input < step)
+                Assert.assertEquals(0, output, 0d);
+
             } else if (i <= 50) {
                 // Il faut 50 points pour décélerer (vitesse ² / (2 * rampeDecel))
                 Assert.assertEquals(-1, dt, 0d);
+
             } else {
                 // Régime établi
                 Assert.assertEquals(0, dt, 0d);
@@ -141,13 +159,13 @@ public class TrapezoidalRampFilterTest extends AbstractRampTest {
     @Test
     public void testFilterSansFrein() {
         double vitesse = 100;
-        double output;
+        double output = -1;
 
         filtre1.setConsigneVitesse(vitesse);
         filtre1.setFrein(false);
 
         DerivateFilter derivateFilter = new DerivateFilter(0d);
-        for (int i = 150 ; i > 0 ; i -= output) {
+        for (int i = 150 ; output != 0 ; i -= output) {
             output = filtre1.filter((long) i);
             double dt = derivateFilter.filter(output);
             log.info("Filtre {} frein inactif, vitesse {}, consigne {}, output {}, dt {}", filtre1.getName(), vitesse, i, output, dt);
@@ -155,6 +173,11 @@ public class TrapezoidalRampFilterTest extends AbstractRampTest {
             if (i > 95) {
                 // Phase d'acceleration
                 Assert.assertEquals(1, dt, 0d);
+
+            } else if (i < 10) {
+                // Fin de la rampe (input < step)
+                Assert.assertEquals(0, output, 0d);
+
             } else {
                 // Pas de décelération sur le target quand il n'y a pas de frein
                 Assert.assertEquals(0, dt, 0d);
