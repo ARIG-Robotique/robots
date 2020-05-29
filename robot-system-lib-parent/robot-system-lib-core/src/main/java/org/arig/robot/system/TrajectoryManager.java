@@ -706,11 +706,25 @@ public class TrajectoryManager implements ITrajectoryManager {
 
     @Override
     public void gotoOrientationDeg(double angle, SensRotation sensRotation) throws AvoidingException  {
+        gotoOrientationDegByType(angle, sensRotation, TypeConsigne.DIST, TypeConsigne.ANGLE);
+    }
+
+    @Override
+    public void gotoOrientationDegSansDistance(final double angle) throws AvoidingException {
+        gotoOrientationDegSansDistance(angle, SensRotation.AUTO);
+    }
+
+    @Override
+    public void gotoOrientationDegSansDistance(final double angle, final SensRotation sensRotation) throws AvoidingException {
+        gotoOrientationDegByType(angle, sensRotation, TypeConsigne.ANGLE);
+    }
+
+    private void gotoOrientationDegByType(double angle, SensRotation sensRotation, TypeConsigne ... types) throws AvoidingException  {
         log.info("Aligne toi sur l'angle {}° du repère dans le sens {}", angle, sensRotation.name());
 
         double newOrient = calculAngleDelta(conv.pulseToDeg(currentPosition.getAngle()), angle, sensRotation);
 
-        tourneDeg(newOrient);
+        tourneDegByType(newOrient, types);
     }
 
     /**
@@ -851,13 +865,22 @@ public class TrajectoryManager implements ITrajectoryManager {
      */
     @Override
     public void tourneDeg(final double angle) throws AvoidingException {
-        log.info("Tourne de {}°", angle);
+        tourneDegByType(angle, TypeConsigne.DIST, TypeConsigne.ANGLE);
+    }
+
+    @Override
+    public void tourneDegSansDistance(final double angle) throws AvoidingException {
+        tourneDegByType(angle, TypeConsigne.ANGLE);
+    }
+
+    private void tourneDegByType(final double angle, TypeConsigne ... types) throws AvoidingException {
+        log.info("Tourne de {}° en mode : {}", angle, StringUtils.join(types, ", "));
 
         boolean isAvoidance = rs.isAvoidanceEnabled();
         try {
             synchronized (this) {
                 rs.disableAvoidance();
-                cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+                cmdRobot.setTypes(types);
                 cmdRobot.getConsigne().setDistance(0);
                 cmdRobot.getConsigne().setOrientation((long) conv.degToPulse(angle));
                 cmdRobot.setFrein(true);
