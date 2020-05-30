@@ -183,14 +183,7 @@ public class NerellOrdonanceur {
                 ThreadUtils.sleep(500);
             } while (!ecranService.config().isStartCalibration());
 
-            ecranService.displayMessage("Définition arbitraire des écueils");
-            if (nerellStatus.getTeam() == ETeam.BLEU) {
-                nerellStatus.setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.VERT});
-                nerellStatus.setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
-            } else {
-                nerellStatus.setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
-                nerellStatus.setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.VERT});
-            }
+            ecranService.displayMessage("Activation de la balise");
             nerellStatus.enableBalise();
 
             ecranService.displayMessage("Chargement de la carte");

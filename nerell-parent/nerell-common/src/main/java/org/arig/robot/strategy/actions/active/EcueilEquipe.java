@@ -38,22 +38,6 @@ public class EcueilEquipe extends AbstractEcueil {
 
     @Override
     protected ECouleurBouee[] bouees() {
-        if (rs.getTeam() == ETeam.BLEU) {
-            return new ECouleurBouee[]{
-                    ECouleurBouee.ROUGE,
-                    ECouleurBouee.VERT,
-                    ECouleurBouee.ROUGE,
-                    ECouleurBouee.VERT,
-                    ECouleurBouee.ROUGE
-            };
-        } else {
-            return new ECouleurBouee[]{
-                ECouleurBouee.VERT,
-                ECouleurBouee.ROUGE,
-                ECouleurBouee.VERT,
-                ECouleurBouee.ROUGE,
-                ECouleurBouee.VERT
-            };
-        }
+        return rs.getCouleursEcueilEquipe();
     }
 }

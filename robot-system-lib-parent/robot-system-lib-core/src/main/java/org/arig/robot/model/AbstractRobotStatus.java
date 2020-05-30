@@ -15,6 +15,10 @@ public abstract class AbstractRobotStatus {
 
     private final int matchTimeMs;
 
+    public AbstractRobotStatus() {
+        this(0);
+    }
+
     public AbstractRobotStatus(final int matchTimeMs) {
         this.matchTimeMs = matchTimeMs;
     }

@@ -30,9 +30,23 @@ public class NerellStatus extends AbstractRobotStatus {
 
     public void setTeam(int value) {
         switch (value) {
-            case 1 : team = ETeam.JAUNE;break;
-            case 2 : team = ETeam.BLEU;break;
-            default: team = ETeam.UNKNOWN;
+            case 1:
+                team = ETeam.JAUNE;
+                setCouleursEcueilEquipe(new ECouleurBouee[]{ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT});
+                setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
+                setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.VERT});
+                break;
+            case 2:
+                team = ETeam.BLEU;
+                setCouleursEcueilEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE});
+                setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.VERT});
+                setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
+                break;
+            default:
+                team = ETeam.UNKNOWN;
+                setCouleursEcueilEquipe(new ECouleurBouee[]{ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU});
+                setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.VERT});
+                setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.VERT});
         }
     }
 
@@ -40,9 +54,14 @@ public class NerellStatus extends AbstractRobotStatus {
 
     public void setStrategy(int value) {
         switch (value) {
-            case 1 : strategy = EStrategy.AGGRESSIVE;break;
-            case 2 : strategy = EStrategy.FINALE;break;
-            default: strategy = EStrategy.BASIC;
+            case 1:
+                strategy = EStrategy.AGGRESSIVE;
+                break;
+            case 2:
+                strategy = EStrategy.FINALE;
+                break;
+            default:
+                strategy = EStrategy.BASIC;
         }
     }
 
@@ -56,6 +75,7 @@ public class NerellStatus extends AbstractRobotStatus {
 
     private DirectionGirouette directionGirouette = DirectionGirouette.UNKNOWN;
 
+    private ECouleurBouee[] couleursEcueilEquipe = new ECouleurBouee[]{ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU};
     private ECouleurBouee[] couleursEcueilCommunEquipe = new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.VERT};
     private ECouleurBouee[] couleursEcueilCommunAdverse = new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.VERT};
 
@@ -100,6 +120,7 @@ public class NerellStatus extends AbstractRobotStatus {
         r.put("mancheAAir1", mancheAAir1);
         r.put("mancheAAir2", mancheAAir2);
         r.put("girouette", directionGirouette);
+        r.put("couleursEcueilEquipe", couleursEcueilEquipe);
         r.put("couleursEcueilCommunEquipe", couleursEcueilCommunEquipe);
         r.put("couleursEcueilCommunAdverse", couleursEcueilCommunAdverse);
         return r;
