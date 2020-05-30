@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Data
@@ -86,7 +87,7 @@ public class NerellStatus extends AbstractRobotStatus {
     @Override
     public Map<String, Object> gameStatus() {
         Map<String, Object> r = new HashMap<>();
-        r.put("bouees", bouees);
+        r.put("bouees", bouees.stream().map(Bouee::prise).collect(Collectors.toList()));
         r.put("grandPort", grandPort);
         r.put("grandChenalVert", grandChenaux.chenalVert);
         r.put("grandChenalRouge", grandChenaux.chenalRouge);
@@ -99,6 +100,8 @@ public class NerellStatus extends AbstractRobotStatus {
         r.put("mancheAAir1", mancheAAir1);
         r.put("mancheAAir2", mancheAAir2);
         r.put("girouette", directionGirouette);
+        r.put("couleursEcueilCommunEquipe", couleursEcueilCommunEquipe);
+        r.put("couleursEcueilCommunAdverse", couleursEcueilCommunAdverse);
         return r;
     }
 
