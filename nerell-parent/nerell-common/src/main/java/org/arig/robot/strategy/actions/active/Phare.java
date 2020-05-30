@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 public class Phare extends AbstractNerellAction {
 
     public static final double ENTRY_X = 225;
-    public static final double ENTRY_Y = 1755;
+    public static final double ENTRY_Y = 1760;
 
     @Autowired
     private ITrajectoryManager mv;
