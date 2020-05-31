@@ -111,20 +111,22 @@ public class DeposePetitPort extends AbstractNerellAction {
             if (!moustacheFaites) {
                 mv.gotoOrientationDeg(-90);
 
-                servos.ascenseurAvantOuvertureMoustache(true);
-                servos.moustachesOuvert(true);
-                servos.ascenseurAvantRoulage(true);
-
                 if (rs.pincesAvantEmpty()) {
                     servos.ascenseurAvantBas(true);
+                } else {
+                    servos.ascenseurAvantOuvertureMoustache(true);
+                }
+                servos.moustachesOuvert(true);
+                if (!rs.pincesAvantEmpty()) {
+                    servos.ascenseurAvantRoulage(false);
                 }
 
                 // ouvre ce qui est vide pour ne pas faire tomber les deux bouées de devant
-//                for (int i = 0; i < 4; i++) {
-//                    if (rs.pincesAvant()[i] == null) {
-//                        servos.pinceAvantOuvert(i, false);
-//                    }
-//                }
+                for (int i = 0; i < 4; i++) {
+                    if (rs.pincesAvant()[i] == null) {
+                        servos.pinceAvantOuvert(i, false);
+                    }
+                }
 
                 mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
                 mv.gotoPointMM(x, baseYStep, false);
