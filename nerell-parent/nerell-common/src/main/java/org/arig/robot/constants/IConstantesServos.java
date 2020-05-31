@@ -23,7 +23,7 @@ public interface IConstantesServos {
     // ------------ //
 
     int WAIT_MOUSTACHE_POUSSETTE = 525;
-    int WAIT_MOUSTACHE_DROITE = 390;
+    int WAIT_MOUSTACHE_DROITE = 550;
     int WAIT_MOUSTACHE_GAUCHE = WAIT_MOUSTACHE_DROITE;
     int WAIT_BRAS_DROIT = 440;
     int WAIT_BRAS_GAUCHE = WAIT_BRAS_DROIT;

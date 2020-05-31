@@ -85,7 +85,9 @@ public abstract class AbstractPincesArriereService implements IPincesArriereServ
         deposeTable();
 
         rs.petitChenaux().addVert(rs.pincesArriere()[0], rs.pincesArriere()[1]);
-        rs.petitPort().add(rs.pincesArriere()[2]);
+        if (rs.pincesArriere()[2] != null) {
+            rs.petitPort().add(rs.pincesArriere()[2]);
+        }
         rs.petitChenaux().addRouge(rs.pincesArriere()[3], rs.pincesArriere()[4]);
 
         rs.clearPincesArriere();

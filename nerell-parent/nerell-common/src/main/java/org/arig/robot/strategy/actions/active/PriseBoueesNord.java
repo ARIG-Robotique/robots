@@ -15,6 +15,7 @@ import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -67,6 +68,9 @@ public class PriseBoueesNord extends AbstractNerellAction {
     public void execute() {
         try {
             mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
+
+            // attente d'ouverture des servos
+            ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 2);
 
             Point entry = entryPoint();
             double y = entry.getY();

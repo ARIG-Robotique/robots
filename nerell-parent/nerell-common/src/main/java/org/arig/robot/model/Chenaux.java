@@ -26,11 +26,19 @@ public abstract class Chenaux {
     }
 
     public void addRouge(ECouleurBouee... bouees) {
-        CollectionUtils.addAll(chenalRouge, bouees);
+        for (ECouleurBouee bouee : bouees) {
+            if (bouee != null) {
+                chenalRouge.add(bouee);
+            }
+        }
     }
 
     public void addVert(ECouleurBouee... bouees) {
-        CollectionUtils.addAll(chenalVert, bouees);
+        for (ECouleurBouee bouee : bouees) {
+            if (bouee != null) {
+                chenalVert.add(bouee);
+            }
+        }
     }
 
     public Chenaux with(ECouleurBouee[] newChenalRouge, ECouleurBouee[] newChenalVert) {

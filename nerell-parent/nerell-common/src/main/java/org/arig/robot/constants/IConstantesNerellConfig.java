@@ -14,7 +14,7 @@ public interface IConstantesNerellConfig {
     double asservTimeMs = 20;
     double asservTimeS = IConstantesNerellConfig.asservTimeMs / 1000;
 
-    double i2cReadTimeMs = 50;
+    int i2cReadTimeMs = 50;
     double calageTimeMs = 200;
 
     // Durée du match //
