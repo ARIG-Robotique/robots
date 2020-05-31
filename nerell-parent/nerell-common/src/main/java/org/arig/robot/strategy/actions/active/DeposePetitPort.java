@@ -100,7 +100,7 @@ public class DeposePetitPort extends AbstractNerellAction {
 
             final Point entry = entryPoint();
             final double x = entry.getX();
-            final double baseYStep = 250;
+            final double baseYStep = 240;
             mv.pathTo(entry);
             rs.disableAvoidance();
 
@@ -141,10 +141,10 @@ public class DeposePetitPort extends AbstractNerellAction {
 
                 mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientationBasse);
 
-                mv.tourneDeg(5);
+                mv.tourneDeg(10);
                 rs.petitChenaux().addVert(ECouleurBouee.ROUGE);
 
-                mv.tourneDeg(-15);
+                mv.tourneDeg(-20);
                 rs.petitChenaux().addRouge(ECouleurBouee.VERT);
 
                 mv.gotoOrientationDeg(-90);
