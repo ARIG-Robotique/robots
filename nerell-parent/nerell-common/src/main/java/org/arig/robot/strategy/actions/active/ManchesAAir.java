@@ -65,6 +65,10 @@ public class ManchesAAir extends AbstractNerellAction {
             order += 10;
         }
 
+        if (rs.isEcueilEquipePrit()) {
+            order += 10;
+        }
+
         return order + tableUtils.alterOrder(entryPoint());
     }
 
