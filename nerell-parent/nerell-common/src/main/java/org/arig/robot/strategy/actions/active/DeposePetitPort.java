@@ -117,9 +117,6 @@ public class DeposePetitPort extends AbstractNerellAction {
                     servos.ascenseurAvantOuvertureMoustache(true);
                 }
                 servos.moustachesOuvert(true);
-                if (!rs.pincesAvantEmpty()) {
-                    servos.ascenseurAvantRoulage(false);
-                }
 
                 // ouvre ce qui est vide pour ne pas faire tomber les deux bouées de devant
                 for (int i = 0; i < 4; i++) {

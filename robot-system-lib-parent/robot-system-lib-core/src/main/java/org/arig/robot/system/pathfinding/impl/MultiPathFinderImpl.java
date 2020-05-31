@@ -291,8 +291,8 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         final SimpleCircularList<Point> checkpoints = new SimpleCircularList<>(CHECKPOINTS);
         checkpoints.rotate(-(int) Math.round(angle / Math.PI / 2 * checkpoints.size()));
 
-        int seuil = 9;
-        int maxSeuil = seuil * 2;
+        int seuil = 8;
+        int maxSeuil = seuil * 3;
 
         Point point;
         do {

@@ -12,6 +12,7 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.services.AbstractPincesAvantService.Side;
 import org.arig.robot.services.IPincesAvantService;
+import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
     @Autowired
     private NerellStatus rs;
+
+    @Autowired
+    private ServosService servos;
 
     @Getter
     private boolean completed = false;
@@ -93,6 +97,23 @@ public class PriseBoueesSud extends AbstractNerellAction {
                 rs.bouee(3).prise(true);
                 rs.bouee(4).prise(true);
 
+                servos.ascenseurAvantRoulage(false);
+
+                mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+                rs.enableAvoidance();
+                mv.pathTo(910, 1070);
+                servos.ascenseurAvantBas(false);
+
+                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
+                mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
+                mv.gotoPointMM(1093, 1146, true);
+                rs.bouee(7).prise(true);
+
+                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
+                mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
+                mv.gotoPointMM(1330, 933, true);
+                rs.bouee(8).prise(true);
+
             } else {
                 mv.gotoPointMM(3000 - 220, 1110, true);
                 mv.gotoOrientationDeg(-180 + 66);
@@ -106,6 +127,23 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
                 rs.bouee(15).prise(true);
                 rs.bouee(16).prise(true);
+
+                servos.ascenseurAvantRoulage(false);
+
+                mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+                rs.enableAvoidance();
+                mv.pathTo(3000 - 910, 1070);
+                servos.ascenseurAvantBas(false);
+
+                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
+                mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
+                mv.gotoPointMM(3000 - 1093, 1146, true);
+                rs.bouee(10).prise(true);
+
+                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 0);
+                mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
+                mv.gotoPointMM(3000 - 1330, 933, true);
+                rs.bouee(9).prise(true);
             }
 
         } catch (AvoidingException | NoPathFoundException e) {
