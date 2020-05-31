@@ -129,18 +129,25 @@ public class DeposePetitPort extends AbstractNerellAction {
                 }
 
                 mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
+
+                mv.gotoPointMM(x, 540, false);
+                servos.moustachesPoussette(true);
+                servos.moustachesOuvert(false);
+
                 mv.gotoPointMM(x, baseYStep, false);
-                mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
                 rs.petitChenaux().addRouge(ECouleurBouee.ROUGE);
                 rs.petitChenaux().addVert(ECouleurBouee.VERT);
 
-                servos.moustachesPoussette(true);
-                servos.moustachesOuvert(true);
+                mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientationBasse);
 
-                rs.petitChenaux().addRouge(ECouleurBouee.VERT);
+                mv.tourneDeg(5);
                 rs.petitChenaux().addVert(ECouleurBouee.ROUGE);
 
+                mv.tourneDeg(-15);
+                rs.petitChenaux().addRouge(ECouleurBouee.VERT);
+
+                mv.gotoOrientationDeg(-90);
                 moustacheFaites = true;
 
             } else if (!rs.pincesAvantEmpty()) {
