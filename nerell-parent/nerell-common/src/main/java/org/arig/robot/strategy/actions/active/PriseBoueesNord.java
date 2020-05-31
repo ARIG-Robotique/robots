@@ -69,15 +69,15 @@ public class PriseBoueesNord extends AbstractNerellAction {
         try {
             mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
 
-            // attente d'ouverture des servos
-            ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 2);
-
             Point entry = entryPoint();
             double y = entry.getY();
 
             if (rs.getTeam() == ETeam.BLEU) {
                 pincesAvantService.setEnabled(false, true, true, true);
                 rs.enablePincesAvant();
+
+                // attente d'ouverture des servos
+                ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 2);
 
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
@@ -98,6 +98,9 @@ public class PriseBoueesNord extends AbstractNerellAction {
             } else {
                 pincesAvantService.setEnabled(true, true, true, false);
                 rs.enablePincesAvant();
+
+                // attente d'ouverture des servos
+                ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 2);
 
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 0);
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 2);
