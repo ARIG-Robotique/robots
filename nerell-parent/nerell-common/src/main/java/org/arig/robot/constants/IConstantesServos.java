@@ -55,9 +55,9 @@ public interface IConstantesServos {
     // Constantes de position //
     // ---------------------- //
 
-    int POS_MOUSTACHE_GAUCHE_OUVERT = 2240;
-    int POS_MOUSTACHE_GAUCHE_POUSSETTE = 2140;
-    int POS_MOUSTACHE_GAUCHE_FERME = 940;
+    int POS_MOUSTACHE_GAUCHE_OUVERT = 1980;
+    int POS_MOUSTACHE_GAUCHE_POUSSETTE = 1840;
+    int POS_MOUSTACHE_GAUCHE_FERME = 730;
     int POS_MOUSTACHE_DROITE_OUVERT = 990;
     int POS_MOUSTACHE_DROITE_POUSSETTE = 1090;
     int POS_MOUSTACHE_DROITE_FERME = 2180;
