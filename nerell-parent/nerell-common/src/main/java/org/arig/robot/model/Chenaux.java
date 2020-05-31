@@ -14,6 +14,14 @@ public abstract class Chenaux {
     // L'introspection est trop coûteuse en temps
     protected abstract Chenaux newInstance();
 
+    public boolean chenalVertEmpty() {
+        return chenalVert.isEmpty();
+    }
+
+    public boolean chenalRougeEmpty() {
+        return chenalRouge.isEmpty();
+    }
+
     public int score() {
         long nbBoueeChenalRouge = chenalRouge.stream().filter(Objects::nonNull).count();
         long nbBoueeOkRouge = chenalRouge.stream().filter(ECouleurBouee.isRouge).count();

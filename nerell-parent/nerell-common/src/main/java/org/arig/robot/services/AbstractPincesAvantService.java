@@ -31,6 +31,14 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
 
     @Override
     public boolean deposeGrandChenal(ECouleurBouee couleurChenal) {
+        servosService.ascenseurAvantBas(true);
+        servosService.pincesAvantOuvert(true);
+        if (couleurChenal == ECouleurBouee.ROUGE) {
+            rs.grandChenaux().addRouge(rs.pincesAvant());
+        } else {
+            rs.grandChenaux().addVert(rs.pincesAvant());
+        }
+        rs.clearPincesAvant();
 
         return true;
     }
@@ -83,6 +91,7 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
     @Override
     public void disable() {
         clearExpected();
+        setEnabled(true, true, true, true);
 
         for (int i = 0; i < 4; i++) {
             if (rs.pincesAvant()[i] == null) {

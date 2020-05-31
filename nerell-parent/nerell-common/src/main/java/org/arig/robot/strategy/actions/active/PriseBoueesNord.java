@@ -67,7 +67,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
     @Override
     public void execute() {
         try {
-            mv.setVitesse(IConstantesNerellConfig.vitesseMoyenneBasse, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
 
             // attente d'ouverture des servos
             ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 2);

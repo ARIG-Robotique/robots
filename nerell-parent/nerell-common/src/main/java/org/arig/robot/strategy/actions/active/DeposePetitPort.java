@@ -6,11 +6,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.Chenaux;
-import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.ETeam;
-import org.arig.robot.model.NerellStatus;
-import org.arig.robot.model.Point;
+import org.arig.robot.model.*;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.services.ServosService;
@@ -108,6 +104,8 @@ public class DeposePetitPort extends AbstractNerellAction {
             mv.pathTo(entry);
             rs.disableAvoidance();
 
+            boolean deposePinceDone = false;
+
             // première dépose
             // gestion des bouées devant et sur les côtés
             if (!moustacheFaites) {
@@ -117,12 +115,16 @@ public class DeposePetitPort extends AbstractNerellAction {
                 servos.moustachesOuvert(true);
                 servos.ascenseurAvantRoulage(true);
 
-                // ouvre ce qui est vide pour ne pas faire tomber les deux bouées de devant
-                for (int i = 0; i < 4; i++) {
-                    if (rs.pincesAvant()[i] == null) {
-                        servos.pinceAvantOuvert(i, false);
-                    }
+                if (rs.pincesAvantEmpty()) {
+                    servos.ascenseurAvantBas(true);
                 }
+
+                // ouvre ce qui est vide pour ne pas faire tomber les deux bouées de devant
+//                for (int i = 0; i < 4; i++) {
+//                    if (rs.pincesAvant()[i] == null) {
+//                        servos.pinceAvantOuvert(i, false);
+//                    }
+//                }
 
                 mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
                 mv.gotoPointMM(x, baseYStep, false);
@@ -150,6 +152,7 @@ public class DeposePetitPort extends AbstractNerellAction {
                 step++;
                 mv.reculeMM(150);
                 pincesAvantService.finaliseDepose();
+                deposePinceDone = true;
             }
 
             if (!rs.pincesArriereEmpty()) {
@@ -158,7 +161,12 @@ public class DeposePetitPort extends AbstractNerellAction {
                 servos.moustachesFerme(false);
                 mv.gotoOrientationDeg(90);
                 pincesArriereService.deposePetitPort();
+                deposePinceDone = true;
                 step++;
+            }
+
+            if (!deposePinceDone) {
+                mv.reculeMM(150);
             }
 
             if (step > 3) {

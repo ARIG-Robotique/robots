@@ -38,6 +38,8 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
 
     protected abstract byte nbBoueesDispo();
 
+    protected abstract void onComplete();
+
     @Override
     public final int order() {
         int order = nbBoueesDispo() * 2 + (int) Math.ceil(nbBoueesDispo() / 2.0) * 2; // Sur chenal, bien trié (X bouées, X/2 paires)
@@ -73,6 +75,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             pincesArriereService.finalisePriseEcueil(bouees());
 
             completed = true; // Action terminé, on laisse le path finding reprendre la main pour le dégagement si on se fait bloqué
+            onComplete();
 
             rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);

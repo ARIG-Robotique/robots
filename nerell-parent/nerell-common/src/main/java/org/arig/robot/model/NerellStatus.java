@@ -166,6 +166,8 @@ public class NerellStatus extends AbstractRobotStatus {
         return bouees.get(numero - 1);
     }
 
+    private boolean ecueilEquipePrit = false;
+
     @Setter
     @Accessors(fluent = true)
     private boolean mancheAAir1 = false;

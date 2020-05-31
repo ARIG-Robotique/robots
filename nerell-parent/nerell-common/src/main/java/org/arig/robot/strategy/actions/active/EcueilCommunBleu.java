@@ -41,4 +41,9 @@ public class EcueilCommunBleu extends AbstractEcueil {
     protected ECouleurBouee[] bouees() {
         return rs.getTeam() == ETeam.BLEU ? rs.getCouleursEcueilCommunEquipe() : rs.getCouleursEcueilCommunAdverse();
     }
+
+    @Override
+    protected void onComplete() {
+
+    }
 }

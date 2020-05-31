@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class EcueilEquipe extends AbstractEcueil {
 
+    public static final double ENTRY_X = 230;
+    public static final double ENTRY_Y = 400;
+
     @Override
     public String name() {
         return "Ecueil equipe";
@@ -17,8 +20,8 @@ public class EcueilEquipe extends AbstractEcueil {
 
     @Override
     protected Point entryPoint() {
-        double x = 230;
-        double y = 400;
+        double x = ENTRY_X;
+        double y = ENTRY_Y;
         if (ETeam.JAUNE == rs.getTeam()) {
             x = 3000 - x;
         }
@@ -39,5 +42,10 @@ public class EcueilEquipe extends AbstractEcueil {
     @Override
     protected ECouleurBouee[] bouees() {
         return rs.getCouleursEcueilEquipe();
+    }
+
+    @Override
+    protected void onComplete() {
+        rs.setEcueilEquipePrit(true);
     }
 }

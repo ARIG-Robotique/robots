@@ -356,7 +356,7 @@ public class NerellOrdonanceur {
                 // Aligne vers les bouées au nord du port
                 if (nerellStatus.getTeam() == ETeam.BLEU) {
                     trajectoryManager.gotoPointMM(220, 1290, true);
-                    trajectoryManager.gotoOrientationDeg(66); // 51 ° pour 1 Rouge et 3 Vert
+                    trajectoryManager.gotoOrientationDeg(66);
                 } else {
                     trajectoryManager.gotoPointMM(3000 - 220, 1290, true);
                     trajectoryManager.gotoOrientationDeg(180 - 66);
