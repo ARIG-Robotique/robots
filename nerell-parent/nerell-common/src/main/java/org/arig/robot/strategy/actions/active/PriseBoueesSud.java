@@ -87,6 +87,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
                 mv.gotoPointMM(220, 1110, true);
                 mv.gotoOrientationDeg(-66);
 
+                pincesAvantService.setEnabled(true, true, true, false);
                 rs.enablePincesAvant();
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 0);
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 2);
@@ -109,6 +110,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
                 mv.gotoPointMM(1093, 1146, true);
                 rs.bouee(7).prise(true);
 
+                servos.pinceAvantOuvert(3, false);
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
                 mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
                 mv.gotoPointMM(1330, 933, true);
@@ -118,6 +120,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
                 mv.gotoPointMM(3000 - 220, 1110, true);
                 mv.gotoOrientationDeg(-180 + 66);
 
+                pincesAvantService.setEnabled(false, true, true, true);
                 rs.enablePincesAvant();
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
@@ -135,11 +138,12 @@ public class PriseBoueesSud extends AbstractNerellAction {
                 mv.pathTo(3000 - 910, 1070);
                 servos.ascenseurAvantBas(false);
 
-                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
+                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 2);
                 mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
                 mv.gotoPointMM(3000 - 1093, 1146, true);
                 rs.bouee(10).prise(true);
 
+                servos.pinceAvantOuvert(0, false);
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 0);
                 mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
                 mv.gotoPointMM(3000 - 1330, 933, true);
