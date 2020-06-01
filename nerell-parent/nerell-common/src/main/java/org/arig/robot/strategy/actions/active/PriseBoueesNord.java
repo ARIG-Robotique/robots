@@ -114,7 +114,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
                 mv.gotoPointMM(3000 - 640, y, false, SensDeplacement.AVANT);
                 rs.bouee(12).prise(true);
 
-                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 3);
+                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 2);
                 mv.gotoPointMM(3000 - 940, 1662, true, SensDeplacement.AVANT);
                 rs.bouee(11).prise(true);
             }
