@@ -8,6 +8,8 @@ import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.ActionSuperviseur;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
+import org.arig.robot.model.enums.SensDeplacement;
+import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.ILidarService;
 import org.arig.robot.system.ITrajectoryManager;
@@ -86,15 +88,21 @@ public class MouvementController {
     }
 
     @PostMapping(value = "/path")
-    public void cheminVersPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws NoPathFoundException, AvoidingException {
+    public void cheminVersPosition(@RequestParam("x") final double x,
+                                   @RequestParam("y") final double y,
+                                   @RequestParam("sens") final SensDeplacement sens
+    ) throws NoPathFoundException, AvoidingException {
         rs.enableAvoidance();
-        trajectoryManager.pathTo(x, y);
+        trajectoryManager.pathTo(x, y, sens != null ? sens : SensDeplacement.AUTO);
         rs.disableAvoidance();
     }
 
     @PostMapping(value = "/position")
-    public void allerEnPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws AvoidingException {
-        trajectoryManager.gotoPointMM(x, y, true);
+    public void allerEnPosition(@RequestParam("x") final double x,
+                                @RequestParam("y") final double y,
+                                @RequestParam("sens") final SensDeplacement sens
+    ) throws AvoidingException {
+        trajectoryManager.gotoPointMM(x, y, true, sens != null ? sens : SensDeplacement.AUTO);
     }
 
     @PostMapping(value = "/face")
@@ -108,8 +116,10 @@ public class MouvementController {
     }
 
     @PostMapping(value = "/orientation")
-    public void orientation(@RequestParam("angle") final double angle) throws AvoidingException {
-        trajectoryManager.gotoOrientationDeg(angle);
+    public void orientation(@RequestParam("angle") final double angle,
+                            @RequestParam("sens") final SensRotation sens
+    ) throws AvoidingException {
+        trajectoryManager.gotoOrientationDeg(angle, sens != null ? sens : SensRotation.AUTO);
     }
 
     @PostMapping(value = "/tourne")
