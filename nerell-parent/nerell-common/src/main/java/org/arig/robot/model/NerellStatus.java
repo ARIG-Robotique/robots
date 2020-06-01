@@ -257,4 +257,18 @@ public class NerellStatus extends AbstractRobotStatus {
         points += pavillon ? 10 : 0;
         return points;
     }
+
+    @Override
+    public Map<String, Integer> scoreStatus() {
+        Map<String, Integer> r = new HashMap<>();
+        r.put("Phare", 2 + (phare ? 13 : 0));
+        r.put("Grand port", grandPort.size());
+        r.put("Petit port", petitPort.size());
+        r.put("Grand chenaux", grandChenaux.score());
+        r.put("Petit chenaux", petitChenaux.score());
+        r.put("Manche à air", (mancheAAir1 && mancheAAir2) ? 15 : (mancheAAir1 || mancheAAir2) ? 5 : 0);
+        r.put("Port", bonPort ? 10 : (mauvaisPort ? 5 : 0));
+        r.put("Pavillon", pavillon ? 10 : 0);
+        return r;
+    }
 }
