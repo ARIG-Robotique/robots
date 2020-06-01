@@ -86,7 +86,9 @@ public class MouvementController {
 
     @PostMapping(value = "/path")
     public void cheminVersPosition(@RequestParam("x") final double x, @RequestParam("y") final double y) throws NoPathFoundException, AvoidingException {
+        rs.enableAvoidance();
         trajectoryManager.pathTo(x, y);
+        rs.disableAvoidance();
     }
 
     @PostMapping(value = "/position")

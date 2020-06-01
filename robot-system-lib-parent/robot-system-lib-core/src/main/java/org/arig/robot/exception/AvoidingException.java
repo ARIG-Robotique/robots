@@ -1,7 +1,16 @@
 package org.arig.robot.exception;
 
-/**
- * @author gdepuille on 04/05/15.
- */
 public class AvoidingException extends Exception {
+
+    public AvoidingException() {
+    }
+
+    public AvoidingException(String message) {
+        super(message);
+    }
+
+    public AvoidingException(Throwable cause) {
+        super(cause);
+    }
+
 }

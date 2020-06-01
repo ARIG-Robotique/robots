@@ -45,12 +45,16 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
     }
 
     @Override
-    public Chemin findPath(Point from, Point to) throws NoPathFoundException {
-        Assert.notNull(workGraph, "Le graph de la carte doit être initialisé");
-
+    public void init() {
         if (algoFunction == null) {
             definePathFinder();
         }
+    }
+
+    @Override
+    public Chemin findPath(Point from, Point to) throws NoPathFoundException {
+        Assert.notNull(workGraph, "Le graph de la carte doit être initialisé");
+        Assert.notNull(algoFunction, "L'algorithme doit être initialisé");
 
         log.info("Recherche de chemin de {} a {} avec l'algorithme {}", from.toString(), to.toString(), algorithm.toString());
 

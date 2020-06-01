@@ -485,9 +485,11 @@ public class TrajectoryManager implements ITrajectoryManager {
     @Override
     public void pathTo(final double targetXmm, final double targetYmm, final SensDeplacement sens, boolean frein) throws NoPathFoundException, AvoidingException {
         try {
-            lidarService.waitCleanup();
+            if (!lidarService.waitCleanup()) {
+                throw new AvoidingException("Timeout du lidar");
+            }
         } catch (InterruptedException e) {
-            throw new AvoidingException();
+            throw new AvoidingException(e);
         }
 
         boolean trajetOk = false;

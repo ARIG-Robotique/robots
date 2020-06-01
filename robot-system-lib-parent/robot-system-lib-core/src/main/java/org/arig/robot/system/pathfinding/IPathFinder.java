@@ -8,10 +8,12 @@ import java.awt.*;
 import java.io.InputStream;
 import java.util.List;
 
-/**
- * @author gdepuille on 29/12/13.
- */
 public interface IPathFinder {
+
+    /**
+     * Initialise le path finder si nécéssaire
+     */
+    void init();
 
     /**
      * Méthode pour réaliser une detection de chemin a emprunter.

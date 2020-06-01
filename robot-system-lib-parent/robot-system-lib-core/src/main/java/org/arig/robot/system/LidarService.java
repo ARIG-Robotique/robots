@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class LidarService implements ILidarService, InitializingBean {
 
-    // passe plat pour pas recoder centroidOf(Cluster)
+    // passe plat pour pas recoder centroidOf(Cluster) qui n'est pas publique
     private static class CustomClusterEvaluator<T extends Clusterable> extends ClusterEvaluator<T> {
         public Clusterable getCenter(Cluster<T> cluster) {
             return super.centroidOf(cluster);
@@ -72,12 +72,14 @@ public class LidarService implements ILidarService, InitializingBean {
     }
 
     @Override
-    synchronized public void waitCleanup() throws InterruptedException {
+    synchronized public boolean waitCleanup() throws InterruptedException {
         cleanup.set(true);
 
         while (cleanup.get()) {
-            wait();
+            wait(1000);
         }
+
+        return !cleanup.get();
     }
 
     @Override

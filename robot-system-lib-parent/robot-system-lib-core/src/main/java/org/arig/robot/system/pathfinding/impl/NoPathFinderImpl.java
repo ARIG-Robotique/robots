@@ -12,10 +12,12 @@ import java.util.List;
 /**
  * /!\ Faux PathFinder pour des test de mouvement lors de la phase de réglage
  * Cette implémentation ne calcul aucun chemin. La destination est tout de suite a atteindre.
- *
- * @author gdepuille on 30/12/13.
  */
 public class NoPathFinderImpl extends AbstractPathFinder {
+
+    @Override
+    public void init() {
+    }
 
     @Override
     public void setObstacles(final List<Shape> obstacles) {
