@@ -59,7 +59,7 @@ public interface IConstantesNerellConfig {
     // ------------------------ //
     double gainVitesseRampeDistance = 3;
     double gainVitesseRampeOrientation = gainVitesseRampeDistance * 2;
-    double gainVitesseRampeDistanceSimulateur = 1;
+    double gainVitesseRampeDistanceSimulateur = 3;
     double gainVitesseRampeOrientationSimulateur = gainVitesseRampeDistanceSimulateur * 2;
 
     double rampAccDistance = 1000.0; // en mm/s2
