@@ -13,15 +13,22 @@ public class PincesAvantServiceBouchon extends AbstractPincesAvantService {
     private IOServiceBouchon io;
 
     @Override
-    public void setExpected(final Side cote, final ECouleurBouee bouee, int pos) {
-        switch(pos) {
-            case 0 : io.contentPinceAvant1(true);break;
-            case 1 : io.contentPinceAvant2(true);break;
-            case 2 : io.contentPinceAvant3(true);break;
-            case 3 : io.contentPinceAvant4(true);break;
+    public void setExpected(final Side cote, final ECouleurBouee bouee, int pinceNumber) {
+        if (cote == Side.LEFT && pinceNumber > 2) {
+            throw new IllegalArgumentException("Le coté gauche n'as que les pinces 1 et 2");
+        } else if (cote == Side.RIGHT && pinceNumber < 3) {
+            throw new IllegalArgumentException("Le coté droit n'as que les pinces 3 et 4");
         }
 
-        super.setExpected(cote, bouee, pos);
+        switch(pinceNumber) {
+            case 1 : io.contentPinceAvant1(true);break;
+            case 2 : io.contentPinceAvant2(true);break;
+            case 3 : io.contentPinceAvant3(true);break;
+            case 4 : io.contentPinceAvant4(true);break;
+            default: throw new IllegalArgumentException("Position de pinces inexistantes");
+        }
+
+        super.setExpected(cote, bouee, pinceNumber);
     }
 
     @Override

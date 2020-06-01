@@ -79,19 +79,19 @@ public class PriseBoueesNord extends AbstractNerellAction {
                 // attente d'ouverture des servos
                 ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 2);
 
-                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
-                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
+                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 2);
+                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 4);
                 mv.gotoPointMM(entry, false, true, SensDeplacement.AVANT);
                 rs.bouee(1).prise(true);
                 rs.bouee(2).prise(true);
 
-                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 0);
+                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
                 mv.gotoOrientationDeg(0);
                 servosService.pinceAvantOuvert(0, false);
                 mv.gotoPointMM(640, y, false, SensDeplacement.AVANT);
                 rs.bouee(5).prise(true);
 
-                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 2);
+                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
                 mv.gotoPointMM(940, 1662, true, SensDeplacement.AVANT);
                 rs.bouee(6).prise(true);
 
@@ -102,19 +102,19 @@ public class PriseBoueesNord extends AbstractNerellAction {
                 // attente d'ouverture des servos
                 ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 2);
 
-                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 0);
-                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 2);
+                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
+                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
                 mv.gotoPointMM(entry, false, true, SensDeplacement.AVANT);
                 rs.bouee(13).prise(true);
                 rs.bouee(14).prise(true);
 
-                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT,3);
+                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT,4);
                 mv.gotoOrientationDeg(180);
                 servosService.pinceAvantOuvert(3, false);
                 mv.gotoPointMM(3000 - 640, y, false, SensDeplacement.AVANT);
                 rs.bouee(12).prise(true);
 
-                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
+                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 3);
                 mv.gotoPointMM(3000 - 940, 1662, true, SensDeplacement.AVANT);
                 rs.bouee(11).prise(true);
             }

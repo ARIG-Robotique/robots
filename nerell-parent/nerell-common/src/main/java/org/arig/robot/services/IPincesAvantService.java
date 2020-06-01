@@ -10,7 +10,7 @@ public interface IPincesAvantService {
 
     void finaliseDepose();
 
-    void setExpected(Side cote, ECouleurBouee bouee, int pos);
+    void setExpected(Side cote, ECouleurBouee bouee, int pinceNumber);
 
     void setEnabled(boolean ena1, boolean ena2, boolean ena3, boolean ena4);
 

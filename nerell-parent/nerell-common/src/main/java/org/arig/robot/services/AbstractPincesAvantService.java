@@ -60,8 +60,8 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
     }
 
     @Override
-    public void setExpected(Side cote, ECouleurBouee bouee, int pos) {
-        // Dans cette implémentation pos ne sert a rien c'est normal.
+    public void setExpected(Side cote, ECouleurBouee bouee, int pinceNumber) {
+        // Dans cette implémentation pinceNumber ne sert a rien c'est normal.
         // C'est utilisé pour le pilotage des IOs en mode bouchon
         if (cote == Side.RIGHT) {
             expected.setRight(bouee);
