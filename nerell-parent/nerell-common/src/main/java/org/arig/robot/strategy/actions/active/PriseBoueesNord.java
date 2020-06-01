@@ -140,7 +140,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
 
                 mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
-                mv.gotoPointMM(entry, false, true, SensDeplacement.AVANT);
+                mv.gotoPointMM(target, false, true, SensDeplacement.AVANT);
                 rs.bouee(13).prise(true);
                 rs.bouee(14).prise(true);
 
