@@ -1,5 +1,5 @@
 package org.arig.robot.model;
 
 public enum EStrategy {
-    BASIC, AGGRESSIVE, FINALE
+    BASIC_NORD, BASIC_SUD, AGGRESSIVE, FINALE
 }

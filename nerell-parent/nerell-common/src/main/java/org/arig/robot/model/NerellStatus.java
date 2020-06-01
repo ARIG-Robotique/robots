@@ -50,18 +50,24 @@ public class NerellStatus extends AbstractRobotStatus {
         }
     }
 
-    private EStrategy strategy = EStrategy.BASIC;
+    private EStrategy strategy = EStrategy.BASIC_NORD;
 
     public void setStrategy(int value) {
         switch (value) {
+            case 0:
+                strategy = EStrategy.BASIC_NORD;
+                break;
             case 1:
-                strategy = EStrategy.AGGRESSIVE;
+                strategy = EStrategy.BASIC_SUD;
                 break;
             case 2:
+                strategy = EStrategy.AGGRESSIVE;
+                break;
+            case 3:
                 strategy = EStrategy.FINALE;
                 break;
             default:
-                strategy = EStrategy.BASIC;
+                throw new IllegalArgumentException("Strategy invalide");
         }
     }
 

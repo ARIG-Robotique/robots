@@ -71,8 +71,8 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
     }
 
     @Override
-    public void setEnabled(boolean ena1, boolean ena2, boolean ena3, boolean ena4) {
-        enabled = new boolean[]{ena1, ena2, ena3, ena4};
+    public void setEnabled(boolean pince1, boolean pince2, boolean pince3, boolean pince4) {
+        enabled = new boolean[]{pince1, pince2, pince3, pince4};
     }
 
     @Override

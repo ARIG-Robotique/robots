@@ -6,6 +6,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.NerellStatus;
 import org.arig.robot.model.Point;
@@ -15,6 +16,8 @@ import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.utils.TableUtils;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +36,9 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
     @Autowired
     private ServosService servos;
+
+    @Autowired
+    private TableUtils tableUtils;
 
     @Getter
     private boolean completed = false;
@@ -55,53 +61,60 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
     @Override
     public int order() {
-        return 6 + (rs.isEcueilEquipePrit() ? 0 : 10);
+        if (rs.getStrategy() == EStrategy.BASIC_SUD) {
+            return 1000;
+        }
+        return 6 + (rs.isEcueilEquipePris() ? 0 : 10);
     }
 
     @Override
     public boolean isValid() {
-        return rs.pincesAvantEmpty() && (
-                rs.getTeam() == ETeam.JAUNE && rs.grandChenaux().chenalVertEmpty() || rs.grandChenaux().chenalRougeEmpty()
+        return rs.pincesAvantEmpty() &&
+                (rs.getTeam() == ETeam.JAUNE && rs.grandChenaux().chenalVertEmpty() || rs.grandChenaux().chenalRougeEmpty()
         );
     }
 
     @Override
     public void execute() {
         try {
+            rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            Point entry = entryPoint();
+            final Point entry = entryPoint();
+            if (rs.getStrategy() != EStrategy.BASIC_SUD && tableUtils.distance(entry) > 100) {
+                mv.pathTo(entry);
+            }
 
             double targetx = 434;
             double targety = 1200 - 570;
             if (ETeam.JAUNE == rs.getTeam()) {
                 targetx = 3000 - targetx;
             }
-            Point target = new Point(targetx, targety);
-
-            rs.enableAvoidance();
-            mv.pathTo(entry);
-            rs.disableAvoidance();
+            final Point target = new Point(targetx, targety);
 
             if (rs.getTeam() == ETeam.BLEU) {
-                mv.gotoPointMM(220, 1110, true);
-                mv.gotoOrientationDeg(-66);
-
                 pincesAvantService.setEnabled(true, true, true, false);
                 rs.enablePincesAvant();
+
+                if (rs.getStrategy() != EStrategy.BASIC_SUD) {
+                    mv.gotoPointMM(220, 1110, true);
+                    mv.gotoOrientationDeg(-66);
+
+                } else {
+                    // attente d'ouverture des servos
+                    ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 2);
+                }
+
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
 
                 mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
                 mv.gotoPointMM(target, false, true, SensDeplacement.AVANT);
-
                 rs.bouee(3).prise(true);
                 rs.bouee(4).prise(true);
 
-                servos.ascenseurAvantRoulage(false);
-
                 mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-                rs.enableAvoidance();
+                servos.ascenseurAvantRoulage(false);
                 mv.pathTo(910, 1070);
                 servos.ascenseurAvantBas(false);
 
@@ -117,24 +130,28 @@ public class PriseBoueesSud extends AbstractNerellAction {
                 rs.bouee(8).prise(true);
 
             } else {
-                mv.gotoPointMM(3000 - 220, 1110, true);
-                mv.gotoOrientationDeg(-180 + 66);
-
                 pincesAvantService.setEnabled(false, true, true, true);
                 rs.enablePincesAvant();
+
+                if (rs.getStrategy() != EStrategy.BASIC_SUD) {
+                    mv.gotoPointMM(3000 - 220, 1110, true);
+                    mv.gotoOrientationDeg(-180 + 66);
+
+                } else {
+                    // attente d'ouverture des servos
+                    ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 2);
+                }
+
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 2);
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 4);
 
                 mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
                 mv.gotoPointMM(target, false, true, SensDeplacement.AVANT);
-
                 rs.bouee(15).prise(true);
                 rs.bouee(16).prise(true);
 
-                servos.ascenseurAvantRoulage(false);
-
                 mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-                rs.enableAvoidance();
+                servos.ascenseurAvantRoulage(false);
                 mv.pathTo(3000 - 910, 1070);
                 servos.ascenseurAvantBas(false);
 

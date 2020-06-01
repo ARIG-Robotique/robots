@@ -352,7 +352,7 @@ public class NerellOrdonanceur {
                     trajectoryManager.gotoPointMM(3000 - 200, 1200, true);
                     trajectoryManager.gotoOrientationDeg(0);
                 }
-            } else { // BASIC
+            } else if (nerellStatus.getStrategy() == EStrategy.BASIC_NORD) { // BASIC
                 // Aligne vers les bouées au nord du port
                 if (nerellStatus.getTeam() == ETeam.BLEU) {
                     trajectoryManager.gotoPointMM(220, 1290, true);
@@ -360,6 +360,23 @@ public class NerellOrdonanceur {
                 } else {
                     trajectoryManager.gotoPointMM(3000 - 220, 1290, true);
                     trajectoryManager.gotoOrientationDeg(180 - 66);
+                }
+            } else if (nerellStatus.getStrategy() == EStrategy.BASIC_SUD) {
+                // Aligne vers les bouées au sud du port
+                if (nerellStatus.getTeam() == ETeam.BLEU) {
+                    trajectoryManager.gotoPointMM(220, 1110, true);
+                    trajectoryManager.gotoOrientationDeg(-66);
+                } else {
+                    trajectoryManager.gotoPointMM(3000 - 220, 1110, true);
+                    trajectoryManager.gotoOrientationDeg(-180 + 66);
+                }
+            } else { // Au centre orienté vers le logo au centre de la table
+                if (nerellStatus.getTeam() == ETeam.BLEU) {
+                    trajectoryManager.gotoPointMM(200, 1200, true);
+                    trajectoryManager.gotoOrientationDeg(0);
+                } else {
+                    trajectoryManager.gotoPointMM(3000 - 200, 1200, true);
+                    trajectoryManager.gotoOrientationDeg(0);
                 }
             }
 
