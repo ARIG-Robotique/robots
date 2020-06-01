@@ -286,7 +286,7 @@ public class ServosService {
     public void controlBatteryVolts() {
         final double tension = getTension();
         if (tension < IConstantesUtiles.SEUIL_BATTERY_VOLTS && tension > 0) {
-            log.warn("La tension de la carte sd21 a dépassé le seuil avec une valeur {}", tension);
+            log.warn("La tension de la carte sd21 est en dessous du seuil : {} < {}", tension, IConstantesUtiles.SEUIL_BATTERY_VOLTS);
             ioService.disableAlim12VPuissance();
             ioService.disableAlim5VPuissance();
         }
