@@ -125,6 +125,9 @@ public class NerellStatus extends AbstractRobotStatus {
         r.put("phare", phare);
         r.put("mancheAAir1", mancheAAir1);
         r.put("mancheAAir2", mancheAAir2);
+        r.put("ecueilEquipePris", ecueilEquipePris);
+        r.put("ecueilCommunEquipePris", ecueilCommunEquipePris);
+        r.put("ecueilCommunAdversePris", ecueilCommunAdversePris);
         r.put("girouette", directionGirouette);
         r.put("couleursEcueilEquipe", couleursEcueilEquipe);
         r.put("couleursEcueilCommunEquipe", couleursEcueilCommunEquipe);
@@ -172,7 +175,9 @@ public class NerellStatus extends AbstractRobotStatus {
         return bouees.get(numero - 1);
     }
 
-    private boolean ecueilEquipePrit = false;
+    private boolean ecueilEquipePris = false;
+    private boolean ecueilCommunEquipePris = false;
+    private boolean ecueilCommunAdversePris = false;
 
     @Setter
     @Accessors(fluent = true)

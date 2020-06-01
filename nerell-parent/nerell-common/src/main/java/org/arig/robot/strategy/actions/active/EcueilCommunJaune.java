@@ -44,6 +44,10 @@ public class EcueilCommunJaune extends AbstractEcueil {
 
     @Override
     protected void onComplete() {
-
+        if (rs.getTeam() == ETeam.JAUNE) {
+            rs.setEcueilCommunEquipePris(true);
+        } else {
+            rs.setEcueilCommunAdversePris(true);
+        }
     }
 }

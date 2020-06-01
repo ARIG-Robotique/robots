@@ -46,6 +46,6 @@ public class EcueilEquipe extends AbstractEcueil {
 
     @Override
     protected void onComplete() {
-        rs.setEcueilEquipePrit(true);
+        rs.setEcueilEquipePris(true);
     }
 }
