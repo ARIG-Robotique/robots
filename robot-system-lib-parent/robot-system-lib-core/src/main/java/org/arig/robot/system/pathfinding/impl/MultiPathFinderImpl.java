@@ -45,13 +45,6 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
     }
 
     @Override
-    public void init() {
-        if (algoFunction == null) {
-            definePathFinder();
-        }
-    }
-
-    @Override
     public Chemin findPath(Point from, Point to) throws NoPathFoundException {
         Assert.notNull(workGraph, "Le graph de la carte doit être initialisé");
         Assert.notNull(algoFunction, "L'algorithme doit être initialisé");
@@ -264,7 +257,8 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
 
     public void setAlgorithm(PathFinderAlgorithm algorithm) {
         this.algorithm = algorithm;
-        algoFunction = null;
+        definePathFinder();
+        log.info("Pathfinding algorithm changed to {}", algorithm);
     }
 
     private static final double ROOT_THREE_BY_TWO = Math.sqrt(3) / 2;

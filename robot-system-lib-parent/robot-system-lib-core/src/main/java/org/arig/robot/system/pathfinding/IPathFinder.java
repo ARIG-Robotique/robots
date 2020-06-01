@@ -11,11 +11,6 @@ import java.util.List;
 public interface IPathFinder {
 
     /**
-     * Initialise le path finder si nécéssaire
-     */
-    void init();
-
-    /**
      * Méthode pour réaliser une detection de chemin a emprunter.
      *
      * @param from Point d'origine

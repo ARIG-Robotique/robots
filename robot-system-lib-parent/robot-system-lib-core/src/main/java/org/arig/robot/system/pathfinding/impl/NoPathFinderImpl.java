@@ -16,10 +16,6 @@ import java.util.List;
 public class NoPathFinderImpl extends AbstractPathFinder {
 
     @Override
-    public void init() {
-    }
-
-    @Override
     public void setObstacles(final List<Shape> obstacles) {
     }
 

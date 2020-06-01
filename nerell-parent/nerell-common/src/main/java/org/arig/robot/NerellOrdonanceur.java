@@ -190,7 +190,6 @@ public class NerellOrdonanceur {
             String fileResourcePath = String.format("classpath:maps/sail_the_world-%s.png", nerellStatus.getTeam().name());
             final InputStream imgMap = patternResolver.getResource(fileResourcePath).getInputStream();
             pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
-            pathFinder.init();
 
 //        ecranService.displayMessage("Définition des zones 'mortes' de la carte.");
 //        // Exclusion de toutes la zone pente et distributeur personel
