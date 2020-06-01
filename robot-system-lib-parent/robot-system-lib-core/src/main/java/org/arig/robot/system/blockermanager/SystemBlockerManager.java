@@ -53,7 +53,7 @@ public class SystemBlockerManager implements ISystemBlockerManager {
     @Override
     public void process() {
         if (cmdRobot.isType(TypeConsigne.DIST, TypeConsigne.XY) && !trajectoryManager.isTrajetAtteint() &&
-                derivateDistance.filter(encoders.getDistance()) < seuilDistancePulse) {
+                derivateDistance.filter(Math.abs(encoders.getDistance())) < seuilDistancePulse) {
             countErrorDistance++;
 
         } else {
@@ -62,7 +62,7 @@ public class SystemBlockerManager implements ISystemBlockerManager {
         }
 
         if (cmdRobot.isType(TypeConsigne.ANGLE, TypeConsigne.XY)  && !trajectoryManager.isTrajetAtteint() &&
-                derivateOrientation.filter(encoders.getOrientation()) < seuilOrientationPulse) {
+                derivateOrientation.filter(Math.abs(encoders.getOrientation())) < seuilOrientationPulse) {
             countErrorOrientation++;
 
         } else {
