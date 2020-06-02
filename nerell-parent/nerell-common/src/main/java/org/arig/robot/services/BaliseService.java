@@ -7,6 +7,7 @@ import org.arig.robot.model.ETeam;
 import org.arig.robot.model.NerellStatus;
 import org.arig.robot.model.balise.EtalonnageBalise;
 import org.arig.robot.model.balise.StatutBalise;
+import org.arig.robot.model.communication.balise.enums.BoueeDetectee;
 import org.arig.robot.model.communication.balise.enums.CouleurDetectee;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,12 +101,12 @@ public class BaliseService {
 
     public boolean lectureCouleurBouees() {
         if (statut != null && statut.getDetection() != null && !ArrayUtils.isEmpty(statut.getDetection().getBouees())) {
-            CouleurDetectee[] bouees = statut.getDetection().getBouees();
+            BoueeDetectee[] bouees = statut.getDetection().getBouees();
             for (int i = 0; i < bouees.length; i++) {
                 // les bouees sont lues en partant de la plus proche de la balise
                 // BLEU : 12=>7
                 // JAUNE : 5=>10
-                if (bouees[i] == CouleurDetectee.UNKNOWN) {
+                if (bouees[i] == BoueeDetectee.ABSENT) {
                     int numBouee = rs.getTeam() == ETeam.BLEU ? 12 - i : 5 + i;
                     rs.bouee(numBouee).prise(true);
                 }
