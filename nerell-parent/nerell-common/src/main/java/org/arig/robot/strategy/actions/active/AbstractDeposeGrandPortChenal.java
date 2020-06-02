@@ -76,13 +76,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
 
     @Override
     public int order() {
-        Chenaux chenauxFuture = getChenauxFuture();
-
-        if (!rs.pincesAvantEmpty() && rs.phare()) {
-            chenauxFuture.addVert(rs.pincesAvant());
-        }
-
-        int order = chenauxFuture.score() - rs.grandChenaux().score();
+        int order = getChenauxFuture().score() - rs.grandChenaux().score();
         return order + tableUtils.alterOrder(entryPoint());
     }
 
