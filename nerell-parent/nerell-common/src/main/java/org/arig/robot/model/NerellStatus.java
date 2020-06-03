@@ -33,18 +33,39 @@ public class NerellStatus extends AbstractRobotStatus {
             case 1:
                 team = ETeam.JAUNE;
                 setCouleursEcueilEquipe(new ECouleurBouee[]{ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT});
+
+                // Conf 1
+                //setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT});
+                //setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT});
+
+                // Conf 2
+                //setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT});
+                //setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
+
+                // Conf 3
                 setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
                 setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.VERT});
                 break;
             case 2:
                 team = ETeam.BLEU;
                 setCouleursEcueilEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE});
+
+                // Conf 1
+                //setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT});
+                //setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT});
+
+                // Conf 2
+                //setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
+                //setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.ROUGE, ECouleurBouee.VERT});
+
+                // Conf 3
                 setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT, ECouleurBouee.VERT});
                 setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.ROUGE, ECouleurBouee.VERT, ECouleurBouee.VERT});
                 break;
             default:
                 team = ETeam.UNKNOWN;
                 setCouleursEcueilEquipe(new ECouleurBouee[]{ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU});
+
                 setCouleursEcueilCommunEquipe(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.VERT});
                 setCouleursEcueilCommunAdverse(new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.VERT});
         }
