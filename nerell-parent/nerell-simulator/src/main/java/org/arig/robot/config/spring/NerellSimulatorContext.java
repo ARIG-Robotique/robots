@@ -2,6 +2,7 @@ package org.arig.robot.config.spring;
 
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.communication.bouchon.BouchonI2CManager;
 import org.arig.robot.constants.IConstantesI2CSimulator;
@@ -10,6 +11,7 @@ import org.arig.robot.model.RobotName;
 import org.arig.robot.model.bouchon.BouchonEncoderValues;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
+import org.arig.robot.services.VisionBaliseBouchon;
 import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.*;
@@ -114,9 +116,13 @@ public class NerellSimulatorContext {
 
     @Bean
     public IVisionBalise visionBalise(Environment env) {
-        final String host = env.getRequiredProperty("balise.socket.host");
-        final Integer port = env.getRequiredProperty("balise.socket.port", Integer.class);
-        return new VisionBaliseOverSocket(host, port);
+        if (StringUtils.equalsIgnoreCase(env.getProperty("balise.impl", String.class, "bouchon"), "bouchon")) {
+            return new VisionBaliseBouchon();
+        } else {
+            final String host = env.getRequiredProperty("balise.socket.host");
+            final Integer port = env.getRequiredProperty("balise.socket.port", Integer.class);
+            return new VisionBaliseOverSocket(host, port);
+        }
     }
 
     @Bean

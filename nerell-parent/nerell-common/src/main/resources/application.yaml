@@ -58,6 +58,7 @@ robot:
     title: Nerell Simulateur
 
 balise:
+  impl: BOUCHON
   socket:
     host: localhost
     port: 9042
