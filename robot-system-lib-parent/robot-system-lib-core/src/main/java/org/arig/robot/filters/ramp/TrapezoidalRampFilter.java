@@ -2,6 +2,9 @@ package org.arig.robot.filters.ramp;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.AbstractRobotStatus;
+import org.checkerframework.checker.units.qual.A;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +16,9 @@ import java.util.Map;
  */
 @Slf4j
 public class TrapezoidalRampFilter extends AbstractGainFactorRampFilter {
+
+    @Autowired
+    private AbstractRobotStatus rs;
 
     private double posToDecel;
     private double currentVitesse;
@@ -75,7 +81,7 @@ public class TrapezoidalRampFilter extends AbstractGainFactorRampFilter {
 
         if (input > 0 && currentVitesse >= 0) {
             // Distance a parcourir en avant
-            if (input < getStepVitesseAccel()) {
+            if (!rs.isSimulateur() && input < getStepVitesseAccel()) {
                 // Distance restante très proche
                 currentVitesse = input;
 
@@ -97,7 +103,7 @@ public class TrapezoidalRampFilter extends AbstractGainFactorRampFilter {
 
         } else if (input < 0 && currentVitesse <= 0) {
             // Distance a parcourir en arrière
-            if (input > -getStepVitesseAccel()) {
+            if (!rs.isSimulateur() && input > -getStepVitesseAccel()) {
                 // Distance restante très proche
                 currentVitesse = input;
 
