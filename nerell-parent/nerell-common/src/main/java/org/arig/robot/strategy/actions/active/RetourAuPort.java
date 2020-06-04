@@ -82,10 +82,8 @@ public class RetourAuPort extends AbstractNerellAction {
     public void execute() {
         boolean coordProjection = false;
         try {
-            rs.enableAvoidance();
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-
             final Point entry = entryPoint();
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
             mv.pathTo(entry);
             setScore(coordProjection = true);
 

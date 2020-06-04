@@ -80,10 +80,8 @@ public class ManchesAAir extends AbstractNerellAction {
     @Override
     public void execute() {
         try {
-            rs.enableAvoidance();
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-
             final Point entry = entryPoint();
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
             mv.pathTo(entry);
 
             final double y = entry.getY();

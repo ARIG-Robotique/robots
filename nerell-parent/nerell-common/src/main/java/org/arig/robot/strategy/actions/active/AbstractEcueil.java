@@ -58,7 +58,6 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
     @Override
     public final void execute() {
         try {
-            rs.enableAvoidance();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             final Point entry = entryPoint();

@@ -95,12 +95,11 @@ public class DeposePetitPort extends AbstractNerellAction {
     @Override
     public void execute() {
         try {
-            rs.enableAvoidance();
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-
             final Point entry = entryPoint();
             final double x = entry.getX();
             final double baseYStep = 240;
+
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
             mv.pathTo(entry);
             rs.disableAvoidance();
 

@@ -92,7 +92,6 @@ public class MouvementController {
                                    @RequestParam("y") final double y,
                                    @RequestParam("sens") final SensDeplacement sens
     ) throws NoPathFoundException, AvoidingException {
-        rs.enableAvoidance();
         trajectoryManager.pathTo(x, y, sens != null ? sens : SensDeplacement.AUTO);
         rs.disableAvoidance();
     }

@@ -77,12 +77,13 @@ public class PriseBoueesNord extends AbstractNerellAction {
     @Override
     public void execute() {
         try {
-            rs.enableAvoidance();
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-
             final Point entry = entryPoint();
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
             if (rs.getStrategy() != EStrategy.BASIC_NORD && tableUtils.distance(entry) > 100) {
                 mv.pathTo(entry);
+            } else {
+                // Le path active l'évittement en auto, pas de path, pas d'evittement
+                rs.enableAvoidance();
             }
 
             double targetx = 434;

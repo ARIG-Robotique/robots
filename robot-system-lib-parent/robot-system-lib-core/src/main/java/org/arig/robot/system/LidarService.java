@@ -72,11 +72,15 @@ public class LidarService implements ILidarService, InitializingBean {
     }
 
     @Override
-    synchronized public boolean waitCleanup() throws InterruptedException {
+    synchronized public boolean waitCleanup() {
         cleanup.set(true);
 
         while (cleanup.get()) {
-            wait(1000);
+            try {
+                wait(1000);
+            } catch (InterruptedException e) {
+                log.error("Attente de cleanup interrompu", e);
+            }
         }
 
         return !cleanup.get();

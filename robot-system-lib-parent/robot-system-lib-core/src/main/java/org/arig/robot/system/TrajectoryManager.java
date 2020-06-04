@@ -484,12 +484,9 @@ public class TrajectoryManager implements ITrajectoryManager {
 
     @Override
     public void pathTo(final double targetXmm, final double targetYmm, final SensDeplacement sens, boolean frein) throws NoPathFoundException, AvoidingException {
-        try {
-            if (!lidarService.waitCleanup()) {
-                throw new AvoidingException("Timeout du lidar");
-            }
-        } catch (InterruptedException e) {
-            throw new AvoidingException(e);
+        rs.enableAvoidance();
+        if (!lidarService.waitCleanup()) {
+            throw new AvoidingException("Timeout du lidar");
         }
 
         boolean trajetOk = false;
@@ -531,9 +528,6 @@ public class TrajectoryManager implements ITrajectoryManager {
                 boolean firstPoint = true;
                 while (c.hasNext()) {
                     final Point targetPoint = c.next().multiplied(divisor);
-
-                    // Toujours activer l'évittement en Path
-                    rs.enableAvoidance();
 
                     // Alignement en rotation sur le premier point, puis enchainement sans freinage jusqu'au dernier
                     // point si le frein du path est actif
@@ -1049,7 +1043,7 @@ public class TrajectoryManager implements ITrajectoryManager {
     private void checkCancelMouvement() throws AvoidingException {
         if (cancelMouvement.get()) {
             cancelMouvement.set(false);
-            throw new AvoidingException();
+            throw new AvoidingException("Annulation du mouvement");
         }
     }
 }

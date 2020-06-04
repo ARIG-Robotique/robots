@@ -92,7 +92,6 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
 
             final Point entry = entryPoint();
             if (tableUtils.distance(entry) > 100) {
-                rs.enableAvoidance();
                 mv.pathTo(entry);
             }
             rs.disableAvoidance();
