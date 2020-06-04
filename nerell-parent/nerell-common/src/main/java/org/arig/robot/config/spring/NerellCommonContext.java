@@ -23,6 +23,7 @@ import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motion.OdometrieLineaire;
 import org.arig.robot.system.pathfinding.IPathFinder;
+import org.arig.robot.system.pathfinding.impl.GameMultiPathFinderImpl;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.system.pathfinding.impl.NoPathFinderImpl;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -139,7 +140,7 @@ public class NerellCommonContext {
         boolean enable = env.getProperty("robot.pathfinding.enable", Boolean.class, true);
 
         if (enable) {
-            MultiPathFinderImpl pf = new MultiPathFinderImpl();
+            MultiPathFinderImpl pf = new GameMultiPathFinderImpl();
             pf.setAlgorithm(IConstantesNerellConfig.pathFindingAlgo);
             pf.setSaveImages(env.getProperty("robot.pathfinding.saveImages", Boolean.class, true));
             return pf;

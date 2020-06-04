@@ -22,4 +22,6 @@ public class Bouee implements Serializable {
 
     @JsonProperty("prise")
     private boolean prise = false;
+
+    private final Point pt;
 }

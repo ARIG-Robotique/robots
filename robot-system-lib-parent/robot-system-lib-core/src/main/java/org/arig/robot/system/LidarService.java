@@ -136,27 +136,7 @@ public class LidarService implements ILidarService, InitializingBean {
             collisionsShape.add(new Cercle(pt, pathFindingTailleObstacle / 2));
 //            collisionsShape.add(new org.arig.robot.model.Rectangle(pt.getX() - pathFindingTailleObstacle / 2., pt.getY() - pathFindingTailleObstacle / 2., pathFindingTailleObstacle, pathFindingTailleObstacle));
 
-
-            int r1 = (int) (Math.cos(Math.toRadians(22.5)) * pathFindingTailleObstacle / 2 / 10);
-            int r2 = (int) (Math.sin(Math.toRadians(22.5)) * pathFindingTailleObstacle / 2 / 10);
-
-            Polygon obstacle = new Polygon();
-            obstacle.addPoint(r2, r1);
-            obstacle.addPoint(r1, r2);
-            obstacle.addPoint(r1, -r2);
-            obstacle.addPoint(r2, -r1);
-            obstacle.addPoint(-r2, -r1);
-            obstacle.addPoint(-r1, -r2);
-            obstacle.addPoint(-r1, r2);
-            obstacle.addPoint(-r2, r1);
-            obstacle.translate((int) pt.getX() / 10, (int) pt.getY() / 10);
-
-//            Rectangle obstacle = new Rectangle(
-//                    (int) Math.round(pt.getX() / 10. - pathFindingSeuilProximite / 10. / 2.),
-//                    (int) Math.round(pt.getY() / 10. - pathFindingSeuilProximite / 10. / 2.),
-//                    (int) Math.round(pathFindingSeuilProximite / 10.),
-//                    (int) Math.round(pathFindingSeuilProximite / 10.)
-//            );
+            Polygon obstacle = tableUtils.createPolygonObstacle(pt, pathFindingTailleObstacle);
 
             if (CollectionUtils.isEmpty(lines)) {
                 log.info("Ajout polygon : {} {}", pt, obstacle.toString());

@@ -139,22 +139,22 @@ public class NerellStatus extends AbstractRobotStatus {
 
     @Getter(AccessLevel.NONE)
     private List<Bouee> bouees = Arrays.asList(
-            new Bouee(ECouleurBouee.ROUGE),
-            new Bouee(ECouleurBouee.VERT),
-            new Bouee(ECouleurBouee.ROUGE),
-            new Bouee(ECouleurBouee.VERT),
-            new Bouee(ECouleurBouee.ROUGE),
-            new Bouee(ECouleurBouee.VERT),
-            new Bouee(ECouleurBouee.ROUGE),
-            new Bouee(ECouleurBouee.VERT),
-            new Bouee(ECouleurBouee.ROUGE),
-            new Bouee(ECouleurBouee.VERT),
-            new Bouee(ECouleurBouee.ROUGE),
-            new Bouee(ECouleurBouee.VERT),
-            new Bouee(ECouleurBouee.VERT),
-            new Bouee(ECouleurBouee.ROUGE),
-            new Bouee(ECouleurBouee.VERT),
-            new Bouee(ECouleurBouee.ROUGE)
+            new Bouee(ECouleurBouee.ROUGE, new Point(300, 2000 - 400)),
+            new Bouee(ECouleurBouee.VERT, new Point(450, 2000 - 510)),
+            new Bouee(ECouleurBouee.ROUGE, new Point(450, 2000 - 1080)),
+            new Bouee(ECouleurBouee.VERT, new Point(300, 2000 - 1200)),
+            new Bouee(ECouleurBouee.ROUGE, new Point(670, 2000 - 100)),
+            new Bouee(ECouleurBouee.VERT, new Point(950, 2000 - 400)),
+            new Bouee(ECouleurBouee.ROUGE, new Point(1100, 2000 - 800)),
+            new Bouee(ECouleurBouee.VERT, new Point(1270, 2000 - 1200)),
+            new Bouee(ECouleurBouee.ROUGE, new Point(1730, 2000 - 1200)),
+            new Bouee(ECouleurBouee.VERT, new Point(1900, 2000 - 800)),
+            new Bouee(ECouleurBouee.ROUGE, new Point(2050, 2000 - 400)),
+            new Bouee(ECouleurBouee.VERT, new Point(2330, 2000 - 100)),
+            new Bouee(ECouleurBouee.VERT, new Point(2700, 2000 - 400)),
+            new Bouee(ECouleurBouee.ROUGE, new Point(2550, 2000 - 510)),
+            new Bouee(ECouleurBouee.VERT, new Point(2550, 2000 - 1080)),
+            new Bouee(ECouleurBouee.ROUGE, new Point(2700, 2000 - 1200))
     );
 
     public Bouee bouee(int numero) {

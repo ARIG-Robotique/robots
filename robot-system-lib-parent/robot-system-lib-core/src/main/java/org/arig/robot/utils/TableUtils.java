@@ -87,6 +87,33 @@ public class TableUtils {
         return inTable && !inPersistantDeadZones && !inDynamicDeadZones;
     }
 
+    public Polygon createPolygonObstacle(Point pt, double tailleObstacle) {
+        int r1 = (int) (Math.cos(Math.toRadians(22.5)) * tailleObstacle / 2 / 10);
+        int r2 = (int) (Math.sin(Math.toRadians(22.5)) * tailleObstacle / 2 / 10);
+
+        Polygon obstacle = new Polygon();
+        obstacle.addPoint(r2, r1);
+        obstacle.addPoint(r1, r2);
+        obstacle.addPoint(r1, -r2);
+        obstacle.addPoint(r2, -r1);
+        obstacle.addPoint(-r2, -r1);
+        obstacle.addPoint(-r1, -r2);
+        obstacle.addPoint(-r1, r2);
+        obstacle.addPoint(-r2, r1);
+        obstacle.translate((int) pt.getX() / 10, (int) pt.getY() / 10);
+
+        return obstacle;
+    }
+
+    public Rectangle createRectangleObstacle(Point pt, double tailleObstacle) {
+        return new Rectangle(
+            (int) Math.round(pt.getX() / 10. - tailleObstacle / 10. / 2.),
+            (int) Math.round(pt.getY() / 10. - tailleObstacle / 10. / 2.),
+            (int) Math.round(tailleObstacle / 10.),
+            (int) Math.round(tailleObstacle / 10.)
+        );
+    }
+
     /**
      * Définition d'un point (dans le repère table) en fonction d'une distance
      * et d'un angle par rapport à la position du robot

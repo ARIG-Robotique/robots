@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service
+@Service("pincesAvantService")
 public class PincesAvantServiceBouchon extends AbstractPincesAvantService {
 
     @Autowired
