@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
-import org.arig.robot.model.NerellStatus;
+import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
@@ -33,7 +33,7 @@ public class TasksScheduler implements InitializingBean {
     private IMonitoringWrapper monitoringWrapper;
 
     @Autowired
-    private NerellStatus rs;
+    private NerellRobotStatus rs;
 
     @Autowired
     private StrategyManager strategyManager;

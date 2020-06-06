@@ -1,7 +1,6 @@
 package org.arig.robot.services;
 
-import org.arig.robot.model.AbstractRobotStatus;
-import org.arig.robot.model.NerellStatus;
+import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.balise.EtalonnageBalise;
 import org.arig.robot.model.balise.StatutBalise;
 import org.arig.robot.model.balise.StatutBalise.DetectionResult;
@@ -15,7 +14,7 @@ import java.util.Random;
 public class VisionBaliseBouchon implements IVisionBalise {
 
     @Autowired
-    private NerellStatus rs;
+    private NerellRobotStatus rs;
 
     private DetectionResult detectionResult = new DetectionResult();
 

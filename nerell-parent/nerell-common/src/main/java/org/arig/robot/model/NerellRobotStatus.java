@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class NerellStatus extends AbstractRobotStatus {
+public class NerellRobotStatus extends AbstractRobotStatus {
 
-    public NerellStatus(final int matchTimeMs) {
+    public NerellRobotStatus(final int matchTimeMs) {
         super(matchTimeMs);
     }
 

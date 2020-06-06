@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.NerellOrdonanceur;
-import org.arig.robot.model.NerellStatus;
+import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.nerell.utils.shell.providers.ActionsProvider;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.strategy.IAction;
@@ -27,7 +27,7 @@ public class ActionsCommands {
     private IIOService ioService;
     private NerellOrdonanceur nerellOrdonanceur;
     private List<IAction> actions;
-    private final NerellStatus rs;
+    private final NerellRobotStatus rs;
 
     @ShellMethodAvailability
     public Availability alimentationOk() {

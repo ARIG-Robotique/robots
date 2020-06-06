@@ -9,7 +9,7 @@ import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.CommandeRobot;
-import org.arig.robot.model.NerellStatus;
+import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.system.ILidarService;
 import org.arig.robot.system.ITrajectoryManager;
@@ -150,8 +150,8 @@ public class NerellCommonContext {
     }
 
     @Bean
-    public NerellStatus robotStatus() {
-        return new NerellStatus(IConstantesNerellConfig.matchTimeMs);
+    public NerellRobotStatus robotStatus() {
+        return new NerellRobotStatus(IConstantesNerellConfig.matchTimeMs);
     }
 
     @Bean

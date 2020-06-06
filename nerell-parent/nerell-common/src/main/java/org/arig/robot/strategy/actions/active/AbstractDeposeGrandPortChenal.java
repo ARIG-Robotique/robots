@@ -5,7 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.*;
+import org.arig.robot.model.Bouee;
+import org.arig.robot.model.Chenaux;
+import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.ETeam;
+import org.arig.robot.model.NerellRobotStatus;
+import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.services.IPincesAvantService;
@@ -26,7 +31,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
     private ITrajectoryManager mv;
 
     @Autowired
-    protected NerellStatus rs;
+    protected NerellRobotStatus rs;
 
     @Autowired
     private IPincesArriereService pincesArriereService;

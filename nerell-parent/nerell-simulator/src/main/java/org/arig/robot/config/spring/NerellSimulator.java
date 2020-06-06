@@ -6,7 +6,7 @@ import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.IGainFactorRampFilter;
-import org.arig.robot.model.NerellStatus;
+import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,7 +25,7 @@ public class NerellSimulator {
         System.setProperty(IConstantesConfig.keyExecutionId, execId);
 
         ConfigurableApplicationContext context = SpringApplication.run(NerellSimulator.class, args);
-        NerellStatus rs = context.getBean(NerellStatus.class);
+        NerellRobotStatus rs = context.getBean(NerellRobotStatus.class);
         rs.setSimulateur();
 
         IGainFactorRampFilter rampDistance = context.getBean("rampDistance", IGainFactorRampFilter.class);

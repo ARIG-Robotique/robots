@@ -6,7 +6,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.NerellStatus;
+import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class AbstractEcueil extends AbstractNerellAction {
 
     @Autowired
-    protected NerellStatus rs;
+    protected NerellRobotStatus rs;
 
     @Autowired
     protected TableUtils tableUtils;

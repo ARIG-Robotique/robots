@@ -6,7 +6,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ETeam;
-import org.arig.robot.model.NerellStatus;
+import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
@@ -23,7 +23,7 @@ public class RetourAuPort extends AbstractNerellAction {
     private ITrajectoryManager mv;
 
     @Autowired
-    private NerellStatus rs;
+    private NerellRobotStatus rs;
 
     @Autowired
     private TableUtils tableUtils;

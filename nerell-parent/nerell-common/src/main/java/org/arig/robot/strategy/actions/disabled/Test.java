@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.NerellStatus;
+import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.services.IPincesArriereService;
@@ -26,7 +26,7 @@ public class Test extends AbstractAction {
     private IPincesArriereService pincesArriereService;
 
     @Autowired
-    private NerellStatus rs;
+    private NerellRobotStatus rs;
 
     @Autowired
     private ServosService servos;

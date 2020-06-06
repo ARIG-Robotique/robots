@@ -6,7 +6,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.*;
+import org.arig.robot.model.Chenaux;
+import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.ETeam;
+import org.arig.robot.model.NerellRobotStatus;
+import org.arig.robot.model.Point;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.services.ServosService;
@@ -33,7 +37,7 @@ public class DeposePetitPort extends AbstractNerellAction {
     private IPincesArriereService pincesArriereService;
 
     @Autowired
-    private NerellStatus rs;
+    private NerellRobotStatus rs;
 
     @Autowired
     private ServosService servos;

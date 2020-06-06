@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
-import org.arig.robot.model.NerellStatus;
+import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.balise.EtalonnageBalise;
 import org.arig.robot.model.balise.StatutBalise;
 import org.arig.robot.model.communication.balise.enums.BoueeDetectee;
@@ -27,7 +27,7 @@ public class BaliseService {
     private IVisionBalise balise;
 
     @Autowired
-    private NerellStatus rs;
+    private NerellRobotStatus rs;
 
     private StatutBalise statut;
     private boolean detectionStarted = false;

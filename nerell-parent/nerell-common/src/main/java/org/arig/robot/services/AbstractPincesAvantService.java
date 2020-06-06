@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.NerellStatus;
+import org.arig.robot.model.NerellRobotStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
@@ -18,7 +18,7 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
     private IIOService io;
 
     @Autowired
-    private NerellStatus rs;
+    private NerellRobotStatus rs;
 
     @Autowired
     private ServosService servosService;

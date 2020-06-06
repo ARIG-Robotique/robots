@@ -1,7 +1,11 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.*;
+import org.arig.robot.model.Bouee;
+import org.arig.robot.model.Chenaux;
+import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.ETeam;
+import org.arig.robot.model.Point;
 import org.springframework.stereotype.Component;
 
 @Slf4j
