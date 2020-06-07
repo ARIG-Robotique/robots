@@ -19,10 +19,6 @@ import java.util.stream.Stream;
 @Service
 public class BaliseService {
 
-    private static final int PHOTO_NATIVE_WIDTH = 2592;
-    private static final double PHOTO_RATIO = 0.5;
-    private static final int PHOTO_WORK_WIDTH = (int) Math.round(PHOTO_NATIVE_WIDTH * PHOTO_RATIO);
-
     @Autowired
     private IVisionBalise balise;
 
@@ -59,7 +55,7 @@ public class BaliseService {
 
     public String getPhoto() {
         log.info("Prise d'une photo");
-        return balise.getPhoto(PHOTO_WORK_WIDTH);
+        return balise.getPhoto();
     }
 
     public void lectureGirouette() {
@@ -134,25 +130,7 @@ public class BaliseService {
 
     public EtalonnageBalise etalonnage(int[][] ecueil, int[][] bouees) {
         log.info("Démarrage de l'étalonnage");
-
-        // scale les coordonnées car on bosse sur une image plus petite
-        return balise.etalonnage(scalePoints(ecueil), scalePoints(bouees));
+        return balise.etalonnage(ecueil, bouees);
     }
 
-    private int[][] scalePoints(int[][] points) {
-        if (points == null) {
-            return null;
-        }
-
-        int[][] scaled = new int[points.length][];
-
-        for (int i = 0; i < points.length; i++) {
-            scaled[i] = new int[]{
-                    (int) Math.round(points[i][0] / PHOTO_RATIO),
-                    (int) Math.round(points[i][1] / PHOTO_RATIO)
-            };
-        }
-
-        return scaled;
-    }
 }

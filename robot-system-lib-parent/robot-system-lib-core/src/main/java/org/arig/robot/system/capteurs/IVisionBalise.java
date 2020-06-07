@@ -6,7 +6,7 @@ import org.arig.robot.model.balise.StatutBalise;
 public interface IVisionBalise {
 
     StatutBalise getStatut();
-    String getPhoto(int width);
+    String getPhoto();
     boolean startDetection();
     EtalonnageBalise etalonnage(int[][] ecueil, int[][] bouees);
     void openSocket() throws Exception;

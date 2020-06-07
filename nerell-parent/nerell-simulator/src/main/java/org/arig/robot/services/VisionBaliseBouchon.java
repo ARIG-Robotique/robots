@@ -44,7 +44,7 @@ public class VisionBaliseBouchon implements IVisionBalise {
     }
 
     @Override
-    public String getPhoto(int width) {
+    public String getPhoto() {
         return "";
     }
 

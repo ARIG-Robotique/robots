@@ -79,10 +79,10 @@ public class VisionBaliseOverSocket extends AbstractSocketClient<BaliseAction> i
     }
 
     @Override
-    public String getPhoto(int width) {
+    public String getPhoto() {
         try {
             openIfNecessary();
-            PhotoResponse response = sendToSocketAndGet(new PhotoQuery(width), PhotoResponse.class);
+            PhotoResponse response = sendToSocketAndGet(new PhotoQuery(), PhotoResponse.class);
             return response.getDatas();
 
         } catch (Exception e) {
