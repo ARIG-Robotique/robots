@@ -61,7 +61,7 @@ public class VisionBaliseOverSocketTest {
     @Test
     @SneakyThrows
     public void testGetPhoto() {
-        String imgStr = visionBalise.getPhoto(600);
+        String imgStr = visionBalise.getPhoto();
         byte[] img = Base64.getDecoder().decode(imgStr);
         File dest = new File("img.jpg");
         FileUtils.writeByteArrayToFile(dest, img);
