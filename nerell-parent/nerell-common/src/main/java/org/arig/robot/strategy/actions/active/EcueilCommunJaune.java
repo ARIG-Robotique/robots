@@ -2,6 +2,7 @@ package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,14 @@ public class EcueilCommunJaune extends AbstractEcueil {
         double x = 2150;
         double y = 1770;
         return new Point(x, y);
+    }
+
+    @Override
+    public int order() {
+        if (rs.getTeam() == ETeam.BLEU && rs.getStrategy() == EStrategy.AGGRESSIVE) {
+            return 1000;
+        }
+        return super.order();
     }
 
     @Override

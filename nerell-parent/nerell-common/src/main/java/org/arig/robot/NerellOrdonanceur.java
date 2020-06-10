@@ -338,10 +338,10 @@ public class NerellOrdonanceur {
             if (nerellRobotStatus.getStrategy() == EStrategy.AGGRESSIVE) {
                 if (nerellRobotStatus.getTeam() == ETeam.BLEU) {
                     trajectoryManager.gotoPointMM(200, 1200, true);
-                    trajectoryManager.gotoOrientationDeg(0);
+                    trajectoryManager.alignFrontTo(1025, 1400);
                 } else {
                     trajectoryManager.gotoPointMM(3000 - 200, 1200, true);
-                    trajectoryManager.gotoOrientationDeg(0);
+                    trajectoryManager.alignFrontTo(3000 - 1025, 1400);
                 }
             } else if (nerellRobotStatus.getStrategy() == EStrategy.FINALE) {
                 if (nerellRobotStatus.getTeam() == ETeam.BLEU) {

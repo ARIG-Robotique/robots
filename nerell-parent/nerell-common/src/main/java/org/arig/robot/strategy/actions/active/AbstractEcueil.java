@@ -41,7 +41,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
     protected abstract void onComplete();
 
     @Override
-    public final int order() {
+    public int order() {
         int order = nbBoueesDispo() * 2 + (int) Math.ceil(nbBoueesDispo() / 2.0) * 2; // Sur chenal, bien trié (X bouées, X/2 paires)
         return order + tableUtils.alterOrder(entryPoint());
     }
