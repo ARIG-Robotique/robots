@@ -133,7 +133,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
         }
     }
 
-    double getYDepose(double yRef, boolean avant) {
+    private double getYDepose(double yRef, boolean avant) {
         int coef = 61 + 32; // Offset pour Y en fonction du type de dépose
         if (avant) {
             coef += 30;
