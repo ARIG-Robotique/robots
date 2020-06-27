@@ -103,7 +103,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
 
                 } else {
                     // attente d'ouverture des servos
-                    ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 2);
+                    ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 3);
                 }
 
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 2);
@@ -134,7 +134,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
 
                 } else {
                     // attente d'ouverture des servos
-                    ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 2);
+                    ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 3);
                 }
 
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
