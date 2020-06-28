@@ -94,17 +94,16 @@ public class PriseBoueesNord extends AbstractNerellAction {
             final Point target = new Point(targetx, targety);
 
             if (rs.getTeam() == ETeam.BLEU) {
-                pincesAvantService.setEnabled(false, true, true, true);
-                rs.enablePincesAvant();
-
                 if (rs.getStrategy() != EStrategy.BASIC_NORD) {
                     mv.gotoPointMM(220, 1290, true);
                     mv.gotoOrientationDeg(66);
-
-                } else {
-                    // attente d'ouverture des servos
-                    ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 3);
                 }
+
+                pincesAvantService.setEnabled(false, true, true, true);
+                rs.enablePincesAvant();
+
+                // attente d'ouverture des servos
+                ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 3);
 
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 2);
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 4);
@@ -125,17 +124,16 @@ public class PriseBoueesNord extends AbstractNerellAction {
                 rs.bouee(6).prise(true);
 
             } else {
-                pincesAvantService.setEnabled(true, true, true, false);
-                rs.enablePincesAvant();
-
                 if (rs.getStrategy() != EStrategy.BASIC_NORD) {
                     mv.gotoPointMM(3000 - 220, 1290, true);
                     mv.gotoOrientationDeg(180 - 66);
-
-                } else {
-                    // attente d'ouverture des servos
-                    ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 3);
                 }
+
+                pincesAvantService.setEnabled(true, true, true, false);
+                rs.enablePincesAvant();
+
+                // attente d'ouverture des servos
+                ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 3);
 
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
