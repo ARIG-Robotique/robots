@@ -10,7 +10,7 @@ import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.enums.SensDeplacement;
+import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.AbstractPincesAvantService.Side;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.services.ServosService;
@@ -95,7 +95,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
 
             if (rs.getTeam() == ETeam.BLEU) {
                 if (rs.getStrategy() != EStrategy.BASIC_NORD) {
-                    mv.gotoPointMM(220, 1290, true);
+                    mv.gotoPoint(220, 1290);
                     mv.gotoOrientationDeg(66);
                 }
 
@@ -109,23 +109,23 @@ public class PriseBoueesNord extends AbstractNerellAction {
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 4);
 
                 mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
-                mv.gotoPointMM(target, false, true, SensDeplacement.AVANT);
+                mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 rs.bouee(1).prise(true);
                 rs.bouee(2).prise(true);
 
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
                 mv.gotoOrientationDeg(0);
                 servosService.pinceAvantOuvert(0, false);
-                mv.gotoPointMM(640, targety, false, SensDeplacement.AVANT);
+                mv.gotoPoint(640, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 rs.bouee(5).prise(true);
 
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
-                mv.gotoPointMM(940, 1662, true, SensDeplacement.AVANT);
+                mv.gotoPoint(940, 1662, GotoOption.AVANT);
                 rs.bouee(6).prise(true);
 
             } else {
                 if (rs.getStrategy() != EStrategy.BASIC_NORD) {
-                    mv.gotoPointMM(3000 - 220, 1290, true);
+                    mv.gotoPoint(3000 - 220, 1290);
                     mv.gotoOrientationDeg(180 - 66);
                 }
 
@@ -139,18 +139,18 @@ public class PriseBoueesNord extends AbstractNerellAction {
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
 
                 mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
-                mv.gotoPointMM(target, false, true, SensDeplacement.AVANT);
+                mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 rs.bouee(13).prise(true);
                 rs.bouee(14).prise(true);
 
-                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT,4);
+                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 4);
                 mv.gotoOrientationDeg(180);
                 servosService.pinceAvantOuvert(3, false);
-                mv.gotoPointMM(3000 - 640, targety, false, SensDeplacement.AVANT);
+                mv.gotoPoint(3000 - 640, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 rs.bouee(12).prise(true);
 
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 2);
-                mv.gotoPointMM(3000 - 940, 1662, true, SensDeplacement.AVANT);
+                mv.gotoPoint(3000 - 940, 1662, GotoOption.AVANT);
                 rs.bouee(11).prise(true);
             }
 

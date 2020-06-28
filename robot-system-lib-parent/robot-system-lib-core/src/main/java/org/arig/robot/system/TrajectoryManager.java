@@ -12,6 +12,7 @@ import org.arig.robot.model.Chemin;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
+import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.model.enums.TypeConsigne;
@@ -33,6 +34,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -177,6 +180,7 @@ public class TrajectoryManager implements ITrajectoryManager {
 
     /**
      * Process. Cette méthode permet de réaliser les fonctions lié aux déplacements.
+     *
      * @param timeStepMs
      */
     @Override
@@ -258,7 +262,7 @@ public class TrajectoryManager implements ITrajectoryManager {
             double consDist = calculDistance(dX, dY);
             double consOrient = calculAngleConsigne(dX, dY);
 
-            switch(cmdRobot.getSensDeplacement()) {
+            switch (cmdRobot.getSensDeplacement()) {
                 case DEMI_TOUR:
                     if (Math.abs(consOrient) > trajectoryManagerConfig.getStartAngleDemiTour()) {
                         // Calcul du coef d'annulation de la distance
@@ -448,42 +452,14 @@ public class TrajectoryManager implements ITrajectoryManager {
     }
 
     @Override
-    public void pathTo(final Point pt) throws NoPathFoundException, AvoidingException {
-        pathTo(pt, SensDeplacement.AUTO, true);
+    public void pathTo(final Point pt, final GotoOption... flags) throws NoPathFoundException, AvoidingException {
+        pathTo(pt.getX(), pt.getY(), flags);
     }
 
     @Override
-    public void pathTo(final Point pt, boolean frein) throws NoPathFoundException, AvoidingException {
-        pathTo(pt, SensDeplacement.AUTO, frein);
-    }
+    public void pathTo(final double targetXmm, final double targetYmm, final GotoOption... flags) throws NoPathFoundException, AvoidingException {
+        final EnumSet<GotoOption> options = getMvtOptions(flags);
 
-    @Override
-    public void pathTo(final Point pt, final SensDeplacement sens) throws NoPathFoundException, AvoidingException {
-        pathTo(pt.getX(), pt.getY(), sens, true);
-    }
-
-    @Override
-    public void pathTo(final Point pt, final SensDeplacement sens, boolean frein) throws NoPathFoundException, AvoidingException {
-        pathTo(pt.getX(), pt.getY(), sens, frein);
-    }
-
-    @Override
-    public void pathTo(final double targetXmm, final double targetYmm) throws NoPathFoundException, AvoidingException {
-        pathTo(targetXmm, targetYmm, SensDeplacement.AUTO, true);
-    }
-
-    @Override
-    public void pathTo(final double targetXmm, final double targetYmm, boolean frein) throws NoPathFoundException, AvoidingException {
-        pathTo(targetXmm, targetYmm, SensDeplacement.AUTO, frein);
-    }
-
-    @Override
-    public void pathTo(final double targetXmm, final double targetYmm, final SensDeplacement sens) throws NoPathFoundException, AvoidingException {
-       pathTo(targetXmm, targetYmm, sens, true);
-    }
-
-    @Override
-    public void pathTo(final double targetXmm, final double targetYmm, final SensDeplacement sens, boolean frein) throws NoPathFoundException, AvoidingException {
         rs.enableAvoidance();
         if (!lidarService.waitCleanup()) {
             throw new AvoidingException("Timeout du lidar");
@@ -530,14 +506,21 @@ public class TrajectoryManager implements ITrajectoryManager {
                     final Point targetPoint = c.next().multiplied(divisor);
 
                     // Alignement en rotation sur le premier point, puis enchainement sans freinage jusqu'au dernier
-                    // point si le frein du path est actif
-                    gotoPointMM(targetPoint.getX(), targetPoint.getY(), firstPoint, frein && !c.hasNext(), sens);
+                    final EnumSet<GotoOption> localOptions = options.clone();
+                    localOptions.add(GotoOption.NO_CATCH_REFRESH_PATH);
+                    if (c.hasNext()) {
+                        localOptions.add(GotoOption.SANS_ARRET);
+                    }
+                    if (!firstPoint) {
+                        localOptions.add(GotoOption.SANS_ORIENTATION);
+                    }
+                    gotoPoint(targetPoint.getX(), targetPoint.getY(), localOptions);
 
                     // Après un point de passage ce n'est plus le premier point
                     firstPoint = false;
                 }
 
-                if (!frein) {
+                if (options.contains(GotoOption.SANS_ARRET)) {
                     trajetOk = true;
 
                 } else {
@@ -575,93 +558,48 @@ public class TrajectoryManager implements ITrajectoryManager {
         } while (!trajetOk);
     }
 
-    @Override
-    public void gotoPointMM(final Point pt, final boolean avecOrientation) throws AvoidingException {
-        gotoPointMM(pt.getX(), pt.getY(), avecOrientation);
+    private EnumSet<GotoOption> getMvtOptions(final GotoOption... flags) {
+        final EnumSet<GotoOption> options = EnumSet.noneOf(GotoOption.class);
+        options.addAll(Arrays.asList(flags));
+        return options;
     }
 
     @Override
-    public void gotoPointMM(final Point pt, final boolean avecOrientation, final SensDeplacement sens) throws AvoidingException {
-        gotoPointMM(pt.getX(), pt.getY(), avecOrientation, sens);
-    }
-
-    @Override
-    public void gotoPointMM(final Point pt, final boolean avecOrientation, final boolean avecArret) throws AvoidingException {
-        gotoPointMM(pt.getX(), pt.getY(), avecOrientation, avecArret);
-    }
-
-    @Override
-    public void gotoPointMM(final Point pt, final boolean avecOrientation, final boolean avecArret, final SensDeplacement sens) throws AvoidingException {
-        gotoPointMM(pt.getX(), pt.getY(), avecOrientation, avecArret, sens);
-    }
-
-    /**
-     * Méthode permettant de donner une consigne de position sur un point avec arret sur celui-ci en mode de déplacement AUTO.
-     *
-     * @param x position sur l'axe X
-     * @param y position sur l'axe Y
-     * @param avecOrientation Activation de l'orientation avant la translation
-     */
-    @Override
-    public void gotoPointMM(final double x, final double y, final boolean avecOrientation) throws AvoidingException {
-        gotoPointMM(x, y, avecOrientation, true, SensDeplacement.AUTO);
-    }
-
-    /**
-     * Méthode permettant de donner une consigne de position sur un point avec arret sur celui-ci.
-     *
-     * @param x position sur l'axe X
-     * @param y position sur l'axe Y
-     * @param avecOrientation Activation de l'orientation avant la translation
-     * @param sens Permet de définir le sens de déplacement souhaiter
-     */
-    @Override
-    public void gotoPointMM(final double x, final double y, final boolean avecOrientation, final SensDeplacement sens) throws AvoidingException {
-        gotoPointMM(x, y, avecOrientation, true, sens);
+    public void gotoPoint(final Point pt, final GotoOption... flags) throws AvoidingException {
+        gotoPoint(pt.getX(), pt.getY(), getMvtOptions(flags));
     }
 
     /**
      * Méthode permettant de donner une consigne de position sur un point
      *
-     * @param x         position sur l'axe X
-     * @param y         position sur l'axe Y
-     * @param avecOrientation Activation de l'orientation avant la translation. Si true la marche avant est prioritaire.
-     * @param avecArret demande d'arret sur le point
+     * @param x     position sur l'axe X
+     * @param y     position sur l'axe Y
+     * @param flags options de déplacement
      */
     @Override
-    public void gotoPointMM(final double x, final double y, final boolean avecOrientation, final boolean avecArret) throws AvoidingException  {
-        gotoPointMM(x, y, avecOrientation, avecArret, SensDeplacement.AUTO);
+    public void gotoPoint(final double x, final double y, final GotoOption... flags) throws AvoidingException {
+        gotoPoint(x, y, getMvtOptions(flags));
     }
 
-    /**
-     * Méthode permettant de donner une consigne de position sur un point
-     *
-     * @param x         position sur l'axe X
-     * @param y         position sur l'axe Y
-     * @param avecOrientation Activation de l'orientation avant la translation. Si true la marche avant est prioritaire.
-     * @param avecArret demande d'arret sur le point
-     * @param sens Permet de définir le sens de déplacement souhaiter
-     */
-    @Override
-    public void gotoPointMM(final double x, final double y, final boolean avecOrientation, final boolean avecArret, final SensDeplacement sens) throws AvoidingException  {
-        log.info("Va au point X = {}mm ; Y = {}mm {}", x, y, avecArret ? "et arrete toi" : "sans arret");
+    private void gotoPoint(final double x, final double y, final EnumSet<GotoOption> options) throws AvoidingException {
+        log.info("Va au point X = {}mm ; Y = {}mm {}", x, y, !options.contains(GotoOption.SANS_ARRET) ? "et arrete toi" : "sans arret");
 
-        if (avecOrientation) {
+        if (!options.contains(GotoOption.SANS_ORIENTATION)) {
             boolean avoidanceEnabled = rs.isAvoidanceEnabled();
 
             // Alignement sur le point
             rs.disableAvoidance();
 
             final SensDeplacement realSens;
-            switch (sens) {
-                case ARRIERE: realSens = SensDeplacement.ARRIERE;break;
-                case AVANT: realSens = SensDeplacement.AVANT;break;
-                default:
-                    double dX = conv.mmToPulse(x) - currentPosition.getPt().getX();
-                    double dY = conv.mmToPulse(y) - currentPosition.getPt().getY();
-                    double angle = calculAngleConsigne(dX, dY);
-                    realSens = Math.abs(angle) < conv.degToPulse(90) ? SensDeplacement.AVANT : SensDeplacement.ARRIERE;
-                    break;
+            if (options.contains(GotoOption.AVANT)) {
+                realSens = SensDeplacement.AVANT;
+            } else if (options.contains(GotoOption.ARRIERE)) {
+                realSens = SensDeplacement.ARRIERE;
+            } else {
+                double dX = conv.mmToPulse(x) - currentPosition.getPt().getX();
+                double dY = conv.mmToPulse(y) - currentPosition.getPt().getY();
+                double angle = calculAngleConsigne(dX, dY);
+                realSens = Math.abs(angle) < conv.degToPulse(90) ? SensDeplacement.AVANT : SensDeplacement.ARRIERE;
             }
 
             if (realSens == SensDeplacement.ARRIERE) {
@@ -680,14 +618,22 @@ public class TrajectoryManager implements ITrajectoryManager {
             cmdRobot.getPosition().setAngle(0);
             cmdRobot.getPosition().getPt().setX(conv.mmToPulse(x));
             cmdRobot.getPosition().getPt().setY(conv.mmToPulse(y));
-            cmdRobot.setFrein(avecArret);
+            cmdRobot.setFrein(!options.contains(GotoOption.SANS_ARRET));
             cmdRobot.setTypes(TypeConsigne.XY);
-            cmdRobot.setSensDeplacement(sens);
+            cmdRobot.setSensDeplacement(options.contains(GotoOption.AVANT) ? SensDeplacement.AVANT : options.contains(GotoOption.ARRIERE) ? SensDeplacement.ARRIERE : SensDeplacement.AUTO);
 
             prepareNextMouvement();
         }
 
-        waitMouvement();
+        if (options.contains(GotoOption.NO_CATCH_REFRESH_PATH)) {
+            waitMouvement();
+        } else {
+            try {
+                waitMouvement();
+            } catch (RefreshPathFindingException e) {
+                throw new AvoidingException(e);
+            }
+        }
     }
 
     /**
@@ -696,12 +642,12 @@ public class TrajectoryManager implements ITrajectoryManager {
      * @param angle the angle
      */
     @Override
-    public void gotoOrientationDeg(final double angle) throws AvoidingException  {
+    public void gotoOrientationDeg(final double angle) throws AvoidingException {
         gotoOrientationDeg(angle, SensRotation.AUTO);
     }
 
     @Override
-    public void gotoOrientationDeg(double angle, SensRotation sensRotation) throws AvoidingException  {
+    public void gotoOrientationDeg(double angle, SensRotation sensRotation) throws AvoidingException {
         gotoOrientationDegByType(angle, sensRotation, TypeConsigne.DIST, TypeConsigne.ANGLE);
     }
 
@@ -715,7 +661,7 @@ public class TrajectoryManager implements ITrajectoryManager {
         gotoOrientationDegByType(angle, sensRotation, TypeConsigne.ANGLE);
     }
 
-    private void gotoOrientationDegByType(double angle, SensRotation sensRotation, TypeConsigne ... types) throws AvoidingException  {
+    private void gotoOrientationDegByType(double angle, SensRotation sensRotation, TypeConsigne... types) throws AvoidingException {
         log.info("Aligne toi sur l'angle {}° du repère dans le sens {}", angle, sensRotation.name());
 
         double newOrient = calculAngleDelta(conv.pulseToDeg(currentPosition.getAngle()), angle, sensRotation);
@@ -730,7 +676,7 @@ public class TrajectoryManager implements ITrajectoryManager {
      * @param y the y
      */
     @Override
-    public void alignFrontTo(final double x, final double y) throws AvoidingException  {
+    public void alignFrontTo(final double x, final double y) throws AvoidingException {
         log.info("Aligne ton avant sur le point X = {}mm ; Y = {}mm", x, y);
         alignFrontToAvecDecalage(x, y, 0);
     }
@@ -743,7 +689,7 @@ public class TrajectoryManager implements ITrajectoryManager {
      * @param decalageDeg valeur du déclage angulaire par rapport au point X,Y
      */
     @Override
-    public void alignFrontToAvecDecalage(final double x, final double y, final double decalageDeg) throws AvoidingException  {
+    public void alignFrontToAvecDecalage(final double x, final double y, final double decalageDeg) throws AvoidingException {
         if (decalageDeg != 0) {
             log.info("Décalage de {}° par rapport au point X = {}mm ; Y = {}mm", decalageDeg, x, y);
         }
@@ -770,7 +716,7 @@ public class TrajectoryManager implements ITrajectoryManager {
      * @param y the y
      */
     @Override
-    public void alignBackTo(final double x, final double y) throws AvoidingException  {
+    public void alignBackTo(final double x, final double y) throws AvoidingException {
         log.info("Aligne ton cul sur le point X = {}mm ; Y = {}mm", x, y);
 
         synchronized (this) {
@@ -801,16 +747,16 @@ public class TrajectoryManager implements ITrajectoryManager {
      * @param distance the distance
      */
     @Override
-    public void avanceMM(final double distance) throws AvoidingException  {
+    public void avanceMM(final double distance) throws AvoidingException {
         cmdAvanceMMByType(distance, TypeConsigne.DIST, TypeConsigne.ANGLE);
     }
 
     @Override
-    public void avanceMMSansAngle(final double distance) throws AvoidingException  {
+    public void avanceMMSansAngle(final double distance) throws AvoidingException {
         cmdAvanceMMByType(distance, TypeConsigne.DIST);
     }
 
-    private void cmdAvanceMMByType(final double distance, TypeConsigne... types) throws AvoidingException  {
+    private void cmdAvanceMMByType(final double distance, TypeConsigne... types) throws AvoidingException {
         if (distance > 0) {
             log.info("{} de {}mm en mode : {}", distance > 0 ? "Avance" : "Recul", distance, StringUtils.join(types, ", "));
         }
@@ -843,13 +789,13 @@ public class TrajectoryManager implements ITrajectoryManager {
      * @param distance the distance
      */
     @Override
-    public void reculeMM(final double distance) throws AvoidingException  {
+    public void reculeMM(final double distance) throws AvoidingException {
         log.info("Recul de {}mm", Math.abs(distance));
         avanceMM(-distance);
     }
 
     @Override
-    public void reculeMMSansAngle(final double distance) throws AvoidingException  {
+    public void reculeMMSansAngle(final double distance) throws AvoidingException {
         log.info("Recul de {}mm sans angle", Math.abs(distance));
         avanceMMSansAngle(-distance);
     }
@@ -869,7 +815,7 @@ public class TrajectoryManager implements ITrajectoryManager {
         tourneDegByType(angle, TypeConsigne.ANGLE);
     }
 
-    private void tourneDegByType(final double angle, TypeConsigne ... types) throws AvoidingException {
+    private void tourneDegByType(final double angle, TypeConsigne... types) throws AvoidingException {
         log.info("Tourne de {}° en mode : {}", angle, StringUtils.join(types, ", "));
 
         boolean isAvoidance = rs.isAvoidanceEnabled();

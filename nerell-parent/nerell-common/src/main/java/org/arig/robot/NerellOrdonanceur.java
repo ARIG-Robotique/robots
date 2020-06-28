@@ -337,44 +337,44 @@ public class NerellOrdonanceur {
         try {
             if (nerellRobotStatus.getStrategy() == EStrategy.AGGRESSIVE) {
                 if (nerellRobotStatus.getTeam() == ETeam.BLEU) {
-                    trajectoryManager.gotoPointMM(200, 1200, true);
+                    trajectoryManager.gotoPoint(200, 1200);
                     trajectoryManager.alignFrontTo(1025, 1400);
                 } else {
-                    trajectoryManager.gotoPointMM(3000 - 200, 1200, true);
+                    trajectoryManager.gotoPoint(3000 - 200, 1200);
                     trajectoryManager.alignFrontTo(3000 - 1025, 1400);
                 }
             } else if (nerellRobotStatus.getStrategy() == EStrategy.FINALE) {
                 if (nerellRobotStatus.getTeam() == ETeam.BLEU) {
-                    trajectoryManager.gotoPointMM(200, 1200, true);
+                    trajectoryManager.gotoPoint(200, 1200);
                     trajectoryManager.gotoOrientationDeg(0);
                 } else {
-                    trajectoryManager.gotoPointMM(3000 - 200, 1200, true);
+                    trajectoryManager.gotoPoint(3000 - 200, 1200);
                     trajectoryManager.gotoOrientationDeg(0);
                 }
             } else if (nerellRobotStatus.getStrategy() == EStrategy.BASIC_NORD) { // BASIC
                 // Aligne vers les bouées au nord du port
                 if (nerellRobotStatus.getTeam() == ETeam.BLEU) {
-                    trajectoryManager.gotoPointMM(220, 1290, true);
+                    trajectoryManager.gotoPoint(220, 1290);
                     trajectoryManager.gotoOrientationDeg(66);
                 } else {
-                    trajectoryManager.gotoPointMM(3000 - 220, 1290, true);
+                    trajectoryManager.gotoPoint(3000 - 220, 1290);
                     trajectoryManager.gotoOrientationDeg(180 - 66);
                 }
             } else if (nerellRobotStatus.getStrategy() == EStrategy.BASIC_SUD) {
                 // Aligne vers les bouées au sud du port
                 if (nerellRobotStatus.getTeam() == ETeam.BLEU) {
-                    trajectoryManager.gotoPointMM(220, 1110, true);
+                    trajectoryManager.gotoPoint(220, 1110);
                     trajectoryManager.gotoOrientationDeg(-66);
                 } else {
-                    trajectoryManager.gotoPointMM(3000 - 220, 1110, true);
+                    trajectoryManager.gotoPoint(3000 - 220, 1110);
                     trajectoryManager.gotoOrientationDeg(-180 + 66);
                 }
             } else { // Au centre orienté vers le logo au centre de la table
                 if (nerellRobotStatus.getTeam() == ETeam.BLEU) {
-                    trajectoryManager.gotoPointMM(200, 1200, true);
+                    trajectoryManager.gotoPoint(200, 1200);
                     trajectoryManager.gotoOrientationDeg(0);
                 } else {
-                    trajectoryManager.gotoPointMM(3000 - 200, 1200, true);
+                    trajectoryManager.gotoPoint(3000 - 200, 1200);
                     trajectoryManager.gotoOrientationDeg(0);
                 }
             }
@@ -420,9 +420,9 @@ public class NerellOrdonanceur {
                 trajectoryManager.avanceMM(150);
 
                 if (nerellRobotStatus.getTeam() == ETeam.BLEU) {
-                    trajectoryManager.gotoPointMM(200, 1200, true);
+                    trajectoryManager.gotoPoint(200, 1200);
                 } else {
-                    trajectoryManager.gotoPointMM(3000 - 200, 1200, true);
+                    trajectoryManager.gotoPoint(3000 - 200, 1200);
                 }
             }
         } catch (AvoidingException e) {

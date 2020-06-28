@@ -11,7 +11,7 @@ import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.enums.SensDeplacement;
+import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
@@ -45,7 +45,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
     @Getter
     private boolean completed = false;
 
-    private SensDeplacement sensEntry = SensDeplacement.AUTO;
+    private GotoOption sensEntry = GotoOption.AUTO;
 
     abstract ECouleurBouee getCouleurChenal();
 
@@ -70,12 +70,12 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
             final Point alternateEntry = getPointAlternateEntry();
 
             if (tableUtils.distance(alternateEntry) < tableUtils.distance(central)) {
-                sensEntry = SensDeplacement.AVANT;
+                sensEntry = GotoOption.AVANT;
                 return alternateEntry;
             }
         }
 
-        sensEntry = SensDeplacement.ARRIERE;
+        sensEntry = GotoOption.ARRIERE;
         return central;
     }
 
@@ -110,7 +110,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
             boolean deposeArriere = false;
             if (!rs.pincesArriereEmpty()) {
                 deposeArriere = true;
-                mv.gotoPointMM(xRef, getYDepose(yRef, false), false, sensEntry);
+                mv.gotoPoint(xRef, getYDepose(yRef, false), sensEntry, GotoOption.SANS_ORIENTATION);
                 mv.gotoOrientationDeg(getPositionChenal() == EPosition.NORD ? -90 : 90);
                 pincesArriereService.deposeGrandChenal(getCouleurChenal()); // TODO Dépose partiel
             }
@@ -119,11 +119,11 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
                 if (deposeArriere) {
                     mv.avanceMM(35);
                 }
-                mv.gotoPointMM(xRef, getYDepose(yRef, true), true, SensDeplacement.AVANT);
+                mv.gotoPoint(xRef, getYDepose(yRef, true), GotoOption.AVANT);
                 pincesAvantService.deposeGrandChenal(getCouleurChenal()); // TODO Dépose partiel
             }
 
-            mv.gotoPointMM(xRef, yRef, false);
+            mv.gotoPoint(xRef, yRef, GotoOption.SANS_ORIENTATION);
             pincesAvantService.finaliseDepose();
             completed = true;
 

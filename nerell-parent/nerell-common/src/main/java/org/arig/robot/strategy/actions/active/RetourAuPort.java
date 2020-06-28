@@ -9,6 +9,7 @@ import org.arig.robot.model.ETeam;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
+import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.TableUtils;
@@ -93,7 +94,7 @@ public class RetourAuPort extends AbstractNerellAction {
             if (rs.getTeam() == ETeam.JAUNE) {
                 finalPoint.setX(3000 - finalPoint.getX());
             }
-            mv.gotoPointMM(finalPoint, false);
+            mv.gotoPoint(finalPoint, GotoOption.SANS_ORIENTATION);
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();

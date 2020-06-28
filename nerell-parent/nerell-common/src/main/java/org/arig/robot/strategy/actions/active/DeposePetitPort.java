@@ -12,12 +12,12 @@ import org.arig.robot.model.ETeam;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
+import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
-import org.arig.robot.strategy.actions.active.AbstractDeposeGrandPortChenal.EPosition;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
@@ -148,11 +148,11 @@ public class DeposePetitPort extends AbstractNerellAction {
 
                 mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
 
-                mv.gotoPointMM(x, 540, false);
+                mv.gotoPoint(x, 540, GotoOption.SANS_ORIENTATION);
                 servos.moustachesPoussette(true);
                 servos.moustachesOuvert(false);
 
-                mv.gotoPointMM(x, baseYStep, false);
+                mv.gotoPoint(x, baseYStep, GotoOption.SANS_ORIENTATION);
                 moustacheFaites = true;
 
                 rs.petitChenaux().addRouge(ECouleurBouee.ROUGE);
@@ -170,7 +170,7 @@ public class DeposePetitPort extends AbstractNerellAction {
 
             } else if (!rs.pincesAvantEmpty()) {
                 // déposes suivantes
-                mv.gotoPointMM(x, baseYStep + step * 70, false);
+                mv.gotoPoint(x, baseYStep + step * 70, GotoOption.SANS_ORIENTATION);
                 mv.gotoOrientationDeg(-90);
             }
 
@@ -189,7 +189,7 @@ public class DeposePetitPort extends AbstractNerellAction {
 
             if (!rs.pincesArriereEmpty()) {
                 // Dépose stock arrière si il y en as
-                mv.gotoPointMM(x, baseYStep + (deposePinceDone ? 80 : 150) + step * 70, false);
+                mv.gotoPointMM(x, baseYStep + (deposePinceDone ? 80 : 150) + step * 70, GotoOption.SANS_ORIENTATION);
                 mv.gotoOrientationDeg(90);
                 pincesArriereService.deposePetitPort();
                 deposePinceDone = true;
