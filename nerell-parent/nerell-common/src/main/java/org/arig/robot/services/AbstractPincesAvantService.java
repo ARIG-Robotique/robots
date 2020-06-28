@@ -56,7 +56,20 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
 
     @Override
     public void finaliseDepose() {
-        servosService.pincesAvantFerme(false);
+        boolean hasBouee = false;
+        for (int i = 0; i < 4; i++) {
+            if (rs.pincesAvant()[i] == null ) {
+                servosService.pinceAvantFerme(i, false);
+            } else {
+                hasBouee = true;
+            }
+        }
+
+        if (hasBouee) {
+            servosService.ascenseurAvantOuvertureMoustache(false);
+        } else {
+            servosService.ascenseurAvantBas(false);
+        }
     }
 
     @Override
