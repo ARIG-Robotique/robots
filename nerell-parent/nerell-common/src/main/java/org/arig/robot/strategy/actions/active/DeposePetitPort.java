@@ -116,7 +116,7 @@ public class DeposePetitPort extends AbstractNerellAction {
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            GotoOption sensEntry = GotoOption.AVANT.AVANT;
+            GotoOption sensEntry = GotoOption.AVANT;
             if (moustacheFaites && rs.pincesAvantEmpty()) {
                 sensEntry = GotoOption.ARRIERE;
             }

@@ -34,16 +34,16 @@ public class PriseBoueesNord extends AbstractNerellAction {
     @Autowired
     private NerellRobotStatus rs;
 
-    @Getter
-    private boolean completed = false;
-
-    private boolean firstExecution = true;
-
     @Autowired
     private ServosService servosService;
 
     @Autowired
     private TableUtils tableUtils;
+
+    @Getter
+    private boolean completed = false;
+
+    private boolean firstExecution = true;
 
     @Override
     public String name() {
