@@ -150,7 +150,7 @@ public interface IConstantesNerellConfig {
     // ---------------------- //
     // Paramètre path finding //
     // ---------------------- //
-    PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.ANYA16;
+    PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.LAZY_THETA_STAR;
     int pathFindingAngle = 45;
     int pathFindingSeuilProximite = 480;
     int pathFindingTailleObstacle = IConstantesNerellConfig.pathFindingSeuilProximite * 2 + 50;
