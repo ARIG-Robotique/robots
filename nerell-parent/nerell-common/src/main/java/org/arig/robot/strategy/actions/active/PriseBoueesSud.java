@@ -43,6 +43,8 @@ public class PriseBoueesSud extends AbstractNerellAction {
     @Getter
     private boolean completed = false;
 
+    private boolean firstExecution = true;
+
     @Override
     public String name() {
         return "Prise bouées sud";
@@ -61,7 +63,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
     @Override
     public int order() {
-        if (rs.getStrategy() == EStrategy.BASIC_SUD) {
+        if (rs.getStrategy() == EStrategy.BASIC_SUD && firstExecution) {
             return 1000;
         }
         return 6 + (rs.isEcueilEquipePris() ? 0 : 10) + tableUtils.alterOrder(entryPoint());
@@ -76,6 +78,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
     @Override
     public void execute() {
+        firstExecution = false;
         try {
             final Point entry = entryPoint();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);

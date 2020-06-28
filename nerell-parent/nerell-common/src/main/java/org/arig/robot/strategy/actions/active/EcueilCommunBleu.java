@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class EcueilCommunBleu extends AbstractEcueil {
 
+    private boolean firstExecution = true;
+
     @Override
     public String name() {
         return "Ecueil commun bleu";
@@ -25,7 +27,7 @@ public class EcueilCommunBleu extends AbstractEcueil {
 
     @Override
     public int order() {
-        if (rs.getTeam() == ETeam.JAUNE && rs.getStrategy() == EStrategy.AGGRESSIVE) {
+        if (rs.getTeam() == ETeam.JAUNE && rs.getStrategy() == EStrategy.AGGRESSIVE && firstExecution) {
             return 1000;
         }
         return super.order();
@@ -53,6 +55,11 @@ public class EcueilCommunBleu extends AbstractEcueil {
     @Override
     protected ECouleurBouee[] bouees() {
         return rs.getTeam() == ETeam.BLEU ? rs.getCouleursEcueilCommunEquipe() : rs.getCouleursEcueilCommunAdverse();
+    }
+
+    @Override
+    protected void onStart() {
+        firstExecution = false;
     }
 
     @Override

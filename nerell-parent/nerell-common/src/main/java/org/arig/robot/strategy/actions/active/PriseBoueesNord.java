@@ -37,6 +37,8 @@ public class PriseBoueesNord extends AbstractNerellAction {
     @Getter
     private boolean completed = false;
 
+    private boolean firstExecution = true;
+
     @Autowired
     private ServosService servosService;
 
@@ -61,7 +63,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
 
     @Override
     public int order() {
-        if (rs.getStrategy() == EStrategy.BASIC_NORD) {
+        if (rs.getStrategy() == EStrategy.BASIC_NORD && firstExecution) {
             return 1000;
         }
 
@@ -76,6 +78,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
 
     @Override
     public void execute() {
+        firstExecution = false;
         try {
             final Point entry = entryPoint();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);

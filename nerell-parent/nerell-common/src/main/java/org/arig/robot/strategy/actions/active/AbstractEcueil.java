@@ -41,6 +41,8 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
 
     protected abstract void onComplete();
 
+    protected void onStart() {}
+
     @Override
     public int order() {
         int order = nbBoueesDispo() * 2 + (int) Math.ceil(nbBoueesDispo() / 2.0) * 2; // Sur chenal, bien trié (X bouées, X/2 paires)
@@ -59,6 +61,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
     @Override
     public final void execute() {
         try {
+            onStart();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             final Point entry = entryPoint();
