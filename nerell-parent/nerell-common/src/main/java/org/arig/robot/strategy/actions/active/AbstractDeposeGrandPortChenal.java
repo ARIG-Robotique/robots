@@ -47,15 +47,15 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
 
     private GotoOption sensEntry = GotoOption.AUTO;
 
-    abstract ECouleurBouee getCouleurChenal();
+    protected abstract ECouleurBouee getCouleurChenal();
 
-    abstract EPosition getPositionChenal();
+    protected abstract EPosition getPositionChenal();
 
-    abstract Bouee getBoueeAlternateEntry();
+    protected abstract Bouee getBoueeAlternateEntry();
 
-    abstract Point getPointAlternateEntry();
+    protected abstract Point getPointAlternateEntry();
 
-    abstract Chenaux getChenauxFuture();
+    protected abstract Chenaux getChenauxFuture();
 
     @Override
     protected Point entryPoint() {

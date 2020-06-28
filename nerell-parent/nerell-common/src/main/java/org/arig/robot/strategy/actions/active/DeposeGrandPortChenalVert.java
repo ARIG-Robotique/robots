@@ -18,12 +18,12 @@ public class DeposeGrandPortChenalVert extends AbstractDeposeGrandPortChenal {
     }
 
     @Override
-    ECouleurBouee getCouleurChenal() {
+    protected ECouleurBouee getCouleurChenal() {
         return ECouleurBouee.VERT;
     }
 
     @Override
-    EPosition getPositionChenal() {
+    protected EPosition getPositionChenal() {
         if (rs.getTeam() == ETeam.BLEU) {
             return EPosition.NORD;
         } else {
@@ -32,7 +32,7 @@ public class DeposeGrandPortChenalVert extends AbstractDeposeGrandPortChenal {
     }
 
     @Override
-    Bouee getBoueeAlternateEntry() {
+    protected Bouee getBoueeAlternateEntry() {
         if (rs.getTeam() == ETeam.BLEU) {
             return rs.bouee(1);
         } else {
@@ -41,7 +41,7 @@ public class DeposeGrandPortChenalVert extends AbstractDeposeGrandPortChenal {
     }
 
     @Override
-    Point getPointAlternateEntry() {
+    protected Point getPointAlternateEntry() {
         if (rs.getTeam() == ETeam.BLEU) {
             return new Point(Phare.ENTRY_X, Phare.ENTRY_Y);
         } else {
@@ -50,7 +50,7 @@ public class DeposeGrandPortChenalVert extends AbstractDeposeGrandPortChenal {
     }
 
     @Override
-    Chenaux getChenauxFuture() {
+    protected Chenaux getChenauxFuture() {
         Chenaux chenaux = rs.grandChenaux().with(null, rs.pincesArriere());
         if (!rs.pincesAvantEmpty() && rs.phare()) {
             chenaux.addVert(rs.pincesAvant());
