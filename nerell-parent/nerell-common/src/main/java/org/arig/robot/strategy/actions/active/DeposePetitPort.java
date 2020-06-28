@@ -13,7 +13,6 @@ import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.services.ServosService;
@@ -117,9 +116,9 @@ public class DeposePetitPort extends AbstractNerellAction {
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
-            SensDeplacement sensEntry = SensDeplacement.AVANT;
+            GotoOption sensEntry = GotoOption.AVANT.AVANT;
             if (moustacheFaites && rs.pincesAvantEmpty()) {
-                sensEntry = SensDeplacement.ARRIERE;
+                sensEntry = GotoOption.ARRIERE;
             }
             mv.pathTo(entry, sensEntry);
             rs.disableAvoidance();
@@ -189,7 +188,7 @@ public class DeposePetitPort extends AbstractNerellAction {
 
             if (!rs.pincesArriereEmpty()) {
                 // Dépose stock arrière si il y en as
-                mv.gotoPointMM(x, baseYStep + (deposePinceDone ? 80 : 150) + step * 70, GotoOption.SANS_ORIENTATION);
+                mv.gotoPoint(x, baseYStep + (deposePinceDone ? 80 : 150) + step * 70, GotoOption.SANS_ORIENTATION);
                 mv.gotoOrientationDeg(90);
                 pincesArriereService.deposePetitPort();
                 deposePinceDone = true;
