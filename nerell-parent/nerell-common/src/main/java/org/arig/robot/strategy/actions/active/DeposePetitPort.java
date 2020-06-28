@@ -11,13 +11,18 @@ import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.Position;
+import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
+import org.arig.robot.strategy.actions.active.AbstractDeposeGrandPortChenal.EPosition;
 import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -43,6 +48,13 @@ public class DeposePetitPort extends AbstractNerellAction {
     private ServosService servos;
 
     @Autowired
+    private ConvertionRobotUnit conv;
+
+    @Autowired
+    @Qualifier("currentPosition")
+    private Position position;
+
+    @Autowired
     private TableUtils tableUtils;
 
     @Getter
@@ -60,7 +72,7 @@ public class DeposePetitPort extends AbstractNerellAction {
     @Override
     protected Point entryPoint() {
         double x = 1800;
-        double y = 610;
+        double y = 620;
         if (ETeam.JAUNE == rs.getTeam()) {
             x = 3000 - x;
         }
@@ -104,10 +116,16 @@ public class DeposePetitPort extends AbstractNerellAction {
             final double baseYStep = 240;
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-            mv.pathTo(entry);
+
+            SensDeplacement sensEntry = SensDeplacement.AVANT;
+            if (moustacheFaites && rs.pincesAvantEmpty()) {
+                sensEntry = SensDeplacement.ARRIERE;
+            }
+            mv.pathTo(entry, sensEntry);
             rs.disableAvoidance();
 
             boolean deposePinceDone = false;
+            boolean moustacheAtStart = moustacheFaites;
 
             // première dépose
             // gestion des bouées devant et sur les côtés
@@ -121,8 +139,8 @@ public class DeposePetitPort extends AbstractNerellAction {
                 }
                 servos.moustachesOuvert(true);
 
-                // ouvre ce qui est vide pour ne pas faire tomber les deux bouées de devant
-                for (int i = 0; i < 4; i++) {
+                // ouvre les deux pinces centrale si vide pour ne pas faire tomber les deux bouées de devant
+                for (int i = 1; i < 3; i++) {
                     if (rs.pincesAvant()[i] == null) {
                         servos.pinceAvantOuvert(i, false);
                     }
@@ -135,6 +153,7 @@ public class DeposePetitPort extends AbstractNerellAction {
                 servos.moustachesOuvert(false);
 
                 mv.gotoPointMM(x, baseYStep, false);
+                moustacheFaites = true;
 
                 rs.petitChenaux().addRouge(ECouleurBouee.ROUGE);
                 rs.petitChenaux().addVert(ECouleurBouee.VERT);
@@ -148,26 +167,29 @@ public class DeposePetitPort extends AbstractNerellAction {
                 rs.petitChenaux().addRouge(ECouleurBouee.VERT);
 
                 mv.gotoOrientationDeg(-90);
-                moustacheFaites = true;
 
             } else if (!rs.pincesAvantEmpty()) {
                 // déposes suivantes
-                mv.gotoPointMM(x, baseYStep + step * 80, false);
+                mv.gotoPointMM(x, baseYStep + step * 70, false);
                 mv.gotoOrientationDeg(-90);
             }
 
             if (!rs.pincesAvantEmpty()) {
                 pincesAvantService.deposePetitPort();
                 step++;
-                mv.reculeMM(150);
+                mv.reculeMM(80);
                 pincesAvantService.finaliseDepose();
                 deposePinceDone = true;
             }
 
+            if (!moustacheAtStart && moustacheFaites) {
+                mv.reculeMM(deposePinceDone ? 70 : 150);
+                servos.moustachesFerme(false);
+            }
+
             if (!rs.pincesArriereEmpty()) {
                 // Dépose stock arrière si il y en as
-                mv.gotoPointMM(x, baseYStep + 150 + step * 80, false);
-                servos.moustachesFerme(false);
+                mv.gotoPointMM(x, baseYStep + (deposePinceDone ? 80 : 150) + step * 70, false);
                 mv.gotoOrientationDeg(90);
                 pincesArriereService.deposePetitPort();
                 deposePinceDone = true;
@@ -183,6 +205,13 @@ public class DeposePetitPort extends AbstractNerellAction {
             }
 
         } catch (NoPathFoundException | AvoidingException e) {
+            if (conv.pulseToDeg(position.getAngle()) < 0) {
+                try {
+                    mv.reculeMM(200);
+                } catch (AvoidingException eRecul) {
+                    log.warn("Condition d'échappement en erreur sur le recul");
+                }
+            }
             updateValidTime();
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         } finally {
