@@ -64,7 +64,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
         if (rs.getStrategy() == EStrategy.BASIC_SUD) {
             return 1000;
         }
-        return 6 + (rs.isEcueilEquipePris() ? 0 : 10);
+        return 6 + (rs.isEcueilEquipePris() ? 0 : 10) + tableUtils.alterOrder(entryPoint());
     }
 
     @Override

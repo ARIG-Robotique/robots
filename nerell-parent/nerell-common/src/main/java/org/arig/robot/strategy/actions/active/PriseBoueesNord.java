@@ -65,7 +65,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
             return 1000;
         }
 
-        return 6 + (rs.isEcueilCommunEquipePris() ? 0 : 10);
+        return 6 + (rs.isEcueilCommunEquipePris() ? 0 : 10) + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
