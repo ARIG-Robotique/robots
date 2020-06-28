@@ -8,7 +8,7 @@ import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.ActionSuperviseur;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
-import org.arig.robot.model.enums.SensDeplacement;
+import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.ILidarService;
@@ -90,18 +90,18 @@ public class MouvementController {
     @PostMapping(value = "/path")
     public void cheminVersPosition(@RequestParam("x") final double x,
                                    @RequestParam("y") final double y,
-                                   @RequestParam("sens") final SensDeplacement sens
+                                   @RequestParam("sens") final GotoOption sens
     ) throws NoPathFoundException, AvoidingException {
-        trajectoryManager.pathTo(x, y, sens != null ? sens : SensDeplacement.AUTO);
+        trajectoryManager.pathTo(x, y, sens != null ? sens : GotoOption.AUTO);
         rs.disableAvoidance();
     }
 
     @PostMapping(value = "/position")
     public void allerEnPosition(@RequestParam("x") final double x,
                                 @RequestParam("y") final double y,
-                                @RequestParam("sens") final SensDeplacement sens
+                                @RequestParam("sens") final GotoOption sens
     ) throws AvoidingException {
-        trajectoryManager.gotoPointMM(x, y, true, sens != null ? sens : SensDeplacement.AUTO);
+        trajectoryManager.gotoPoint(x, y, sens != null ? sens : GotoOption.AUTO);
     }
 
     @PostMapping(value = "/face")

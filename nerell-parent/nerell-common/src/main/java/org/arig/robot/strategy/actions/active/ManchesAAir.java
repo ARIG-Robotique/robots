@@ -8,7 +8,7 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.enums.SensDeplacement;
+import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
@@ -90,11 +90,11 @@ public class ManchesAAir extends AbstractNerellAction {
                 if (rs.getTeam() == ETeam.BLEU) {
                     mv.gotoOrientationDegSansDistance(150);
                     servos.brasGaucheMancheAAir(true);
-                    mv.gotoPointMM(xManche2, y, true, SensDeplacement.ARRIERE);
+                    mv.gotoPoint(xManche2, y, GotoOption.ARRIERE);
                 } else {
                     mv.gotoOrientationDegSansDistance(30);
                     servos.brasDroitMancheAAir(true);
-                    mv.gotoPointMM(3000 - xManche2, y, true, SensDeplacement.ARRIERE);
+                    mv.gotoPoint(3000 - xManche2, y, GotoOption.ARRIERE);
                 }
                 rs.mancheAAir1(true);
             }
@@ -105,14 +105,14 @@ public class ManchesAAir extends AbstractNerellAction {
                         mv.gotoOrientationDegSansDistance(180);
                         servos.brasGaucheMancheAAir(true);
                     }
-                    mv.gotoPointMM(xFinManche2, y, false, SensDeplacement.ARRIERE);
+                    mv.gotoPoint(xFinManche2, y, GotoOption.SANS_ORIENTATION, GotoOption.ARRIERE);
                     mv.gotoOrientationDegSansDistance(-160, SensRotation.TRIGO);
                 } else {
                     if (!manche1Before) {
                         mv.gotoOrientationDegSansDistance(0);
                         servos.brasDroitMancheAAir(true);
                     }
-                    mv.gotoPointMM(3000 - xFinManche2, y, false, SensDeplacement.ARRIERE);
+                    mv.gotoPoint(3000 - xFinManche2, y, GotoOption.SANS_ORIENTATION, GotoOption.ARRIERE);
                     mv.gotoOrientationDegSansDistance(-20, SensRotation.HORAIRE);
                 }
                 rs.mancheAAir2(true);

@@ -7,7 +7,7 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.enums.SensDeplacement;
+import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
@@ -63,21 +63,21 @@ public class Test extends AbstractAction {
             // Récupération des élements dans la pince avant
             rs.enablePincesAvant();
             mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientationUltraHaute);
-            mv.gotoPointMM(1200,1200, true, SensDeplacement.AVANT);
+            mv.gotoPoint(1200,1200, GotoOption.AVANT);
             rs.disablePincesAvant();
 
             // Récupération de l'ecueil
             mv.setVitesse(IConstantesNerellConfig.vitesseUltraHaute, IConstantesNerellConfig.vitesseOrientationUltraHaute);
-            mv.gotoPointMM(400,1200, true, SensDeplacement.AVANT);
+            mv.gotoPoint(400,1200, GotoOption.AVANT);
             pincesArriereService.preparePriseEcueil();
-            mv.gotoPointMM(250,1200, true, SensDeplacement.ARRIERE);
+            mv.gotoPoint(250,1200, GotoOption.ARRIERE);
             rs.enableCalageBordure();
             mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientationBasse);
             mv.reculeMMSansAngle(60);
             pincesArriereService.finalisePriseEcueil(ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU);
 
             mv.setVitesse(IConstantesNerellConfig.vitesseUltraHaute, IConstantesNerellConfig.vitesseOrientationUltraHaute);
-            mv.gotoPointMM(1200,1200, false, SensDeplacement.AVANT);
+            mv.gotoPoint(1200,1200, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
             mv.gotoOrientationDeg(180);
             pincesArriereService.deposePetitPort();
             mv.avanceMM(35);
@@ -89,7 +89,7 @@ public class Test extends AbstractAction {
                 mv.reculeMM(120);
                 servos.pincesAvantFerme(false);
             }
-            mv.gotoPointMM(800, 1200, false);
+            mv.gotoPoint(800, 1200);
 
             completed = true;
         } catch (AvoidingException e) {
