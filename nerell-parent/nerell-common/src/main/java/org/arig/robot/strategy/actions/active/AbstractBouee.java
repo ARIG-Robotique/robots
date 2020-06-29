@@ -17,7 +17,6 @@ import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.utils.TableUtils;
-import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -66,35 +65,40 @@ public abstract class AbstractBouee extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !bouee.prise();
+        return isTimeValid() && !bouee.prise() && getPinceCible() != 0;
     }
 
     @Override
     public void execute() {
         try {
+            final int pinceCible = getPinceCible();
+            final double distanceAproche = 250;
+            final double offsetPince = getOffsetPince(pinceCible);
+
+            log.info("Prise de la bouee {} {} dans la pince avant {}", numeroBouee, bouee.couleur(), pinceCible);
+
             final Point entry = entryPoint();
+
+            // point d'approche quelque part autour de la bouée
+            // FIXME : si on fait le tour à cause d'un évittement ça fout tout en vrac
+            final Point pointApproche = tableUtils.eloigner(entry, -distanceAproche);
+
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+            mv.pathTo(pointApproche, GotoOption.AVANT);
 
-            mv.pathTo(entry, GotoOption.AVANT);
-
-            if (bouee.couleur() == ECouleurBouee.ROUGE) {
-                pincesAvantService.setEnabled(true, true, false, false);
-            } else {
-                pincesAvantService.setEnabled(false, false, true, true);
-            }
+            // active les pinces
+            pincesAvantService.setEnabled(pinceCible == 1, pinceCible == 2, pinceCible == 3, pinceCible == 4);
+            pincesAvantService.setExpected(bouee.couleur() == ECouleurBouee.ROUGE ? Side.LEFT : Side.RIGHT, bouee.couleur(), pinceCible);
             rs.enablePincesAvant();
 
-            // attente d'ouverture des servos
-            ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 3);
-
-            if (bouee.couleur() == ECouleurBouee.ROUGE) {
-                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 2);
-            } else {
-                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 4);
-            }
-
+            // aligne la bonne pince sur la bouée
             mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
-            mv.avanceMM(100); // TODO Faire le vrai déplacement
+
+            final double offsetOrientation = Math.toDegrees(Math.sin(offsetPince / distanceAproche));
+            mv.alignFrontToAvecDecalage(entry.getX(), entry.getY(), offsetOrientation);
+
+            // prise
+            mv.avanceMM(distanceAproche);
             bouee.prise(true);
 
             completed = true;
@@ -103,6 +107,41 @@ public abstract class AbstractBouee extends AbstractNerellAction {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         } finally {
             rs.disablePincesAvant();
+        }
+    }
+
+    private int getPinceCible() {
+        if (bouee.couleur() == ECouleurBouee.ROUGE) {
+            if (rs.pincesAvant()[1] == null) {
+                return 2;
+            }
+            if (rs.pincesAvant()[0] == null) {
+                return 1;
+            }
+        } else {
+            if (rs.pincesAvant()[2] == null) {
+                return 3;
+            }
+            if (rs.pincesAvant()[3] == null) {
+                return 4;
+            }
+        }
+        return 0;
+    }
+
+    private double getOffsetPince(int pinceCible) {
+        // TODO bons offsets de chaque pince
+        switch (pinceCible) {
+            case 1:
+                return -150;
+            case 2:
+                return -75;
+            case 3:
+                return 75;
+            case 4:
+                return 150;
+            default:
+                return 0;
         }
     }
 }

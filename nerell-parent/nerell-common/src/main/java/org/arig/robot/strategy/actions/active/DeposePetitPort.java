@@ -123,6 +123,13 @@ public class DeposePetitPort extends AbstractNerellAction {
             mv.pathTo(entry, sensEntry);
             rs.disableAvoidance();
 
+            // on a shooté la bouée
+            if (rs.getTeam() == ETeam.JAUNE) {
+                rs.bouee(8).prise(true);
+            } else {
+                rs.bouee(9).prise(true);
+            }
+
             boolean deposePinceDone = false;
             boolean moustacheAtStart = moustacheFaites;
 
