@@ -20,7 +20,7 @@ public abstract class AbstractAction implements IAction {
     @Getter
     private boolean completed = false;
 
-    protected abstract Point entryPoint();
+    public abstract Point entryPoint();
 
     protected boolean isTimeValid() {
         return validTime.isBefore(LocalDateTime.now());

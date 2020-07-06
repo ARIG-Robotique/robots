@@ -39,7 +39,7 @@ public class DeposePetitPort extends AbstractNerellAction {
     }
 
     @Override
-    protected Point entryPoint() {
+    public Point entryPoint() {
         double x = 1800;
         double y = 620;
         if (ETeam.JAUNE == rs.getTeam()) {

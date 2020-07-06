@@ -21,7 +21,7 @@ public class RetourAuPort extends AbstractNerellAction {
     }
 
     @Override
-    protected Point entryPoint() {
+    public Point entryPoint() {
         int offset = 575; // Empirique
 
         double x = 460;

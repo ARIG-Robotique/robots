@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class AntiblocagePort extends AbstractNerellAction {
 
     @Override
-    protected Point entryPoint() {
+    public Point entryPoint() {
         double x = 460;
         double y = 1200;
         if (ETeam.JAUNE == rs.getTeam()) {

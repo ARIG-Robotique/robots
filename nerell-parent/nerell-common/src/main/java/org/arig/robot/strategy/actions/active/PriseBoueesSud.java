@@ -31,7 +31,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
     }
 
     @Override
-    protected Point entryPoint() {
+    public Point entryPoint() {
         double x = 225;
         double y = 1200;
         if (ETeam.JAUNE == rs.getTeam()) {

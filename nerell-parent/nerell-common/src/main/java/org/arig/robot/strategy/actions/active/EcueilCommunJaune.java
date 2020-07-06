@@ -19,7 +19,7 @@ public class EcueilCommunJaune extends AbstractEcueil {
     }
 
     @Override
-    protected Point entryPoint() {
+    public Point entryPoint() {
         double x = 2150;
         double y = 1770;
         return new Point(x, y);

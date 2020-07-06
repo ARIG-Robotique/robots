@@ -25,7 +25,7 @@ public class ManchesAAir extends AbstractNerellAction {
     }
 
     @Override
-    protected Point entryPoint() {
+    public Point entryPoint() {
         double x = !rs.mancheAAir1() ? xManche1 : xManche2;
         double y = 220;
         if (ETeam.JAUNE == rs.getTeam()) {

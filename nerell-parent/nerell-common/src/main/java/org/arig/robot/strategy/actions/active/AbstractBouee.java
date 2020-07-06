@@ -38,7 +38,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
     }
 
     @Override
-    protected Point entryPoint() {
+    public Point entryPoint() {
         return bouee.pt();
     }
 

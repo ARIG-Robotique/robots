@@ -38,7 +38,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
     protected abstract Chenaux getChenauxFuture();
 
     @Override
-    protected Point entryPoint() {
+    public Point entryPoint() {
         double x = 460;
         double y = 1200;
         if (ETeam.JAUNE == rs.getTeam()) {
