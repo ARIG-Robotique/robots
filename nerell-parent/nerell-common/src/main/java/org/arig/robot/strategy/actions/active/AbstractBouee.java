@@ -1,7 +1,6 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
@@ -9,14 +8,11 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Bouee;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.AbstractPincesAvantService.Side;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
-import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -26,19 +22,7 @@ import javax.annotation.PostConstruct;
 public abstract class AbstractBouee extends AbstractNerellAction {
 
     @Autowired
-    private ITrajectoryManager mv;
-
-    @Autowired
-    private NerellRobotStatus rs;
-
-    @Autowired
-    private TableUtils tableUtils;
-
-    @Autowired
     private IPincesAvantService pincesAvantService;
-
-    @Getter
-    private boolean completed = false;
 
     private final int numeroBouee;
     private Bouee bouee;
@@ -101,7 +85,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
             mv.avanceMM(distanceAproche);
             bouee.prise(true);
 
-            completed = true;
+            complete();
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'éxécution de l'action : {}", e.toString());

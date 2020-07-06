@@ -1,37 +1,21 @@
 package org.arig.robot.strategy.actions.active;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
-import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 public abstract class AbstractEcueil extends AbstractNerellAction {
 
     @Autowired
-    protected NerellRobotStatus rs;
-
-    @Autowired
-    protected TableUtils tableUtils;
-
-    @Autowired
-    private ITrajectoryManager mv;
-
-    @Autowired
     private IPincesArriereService pincesArriereService;
-
-    @Getter
-    private boolean completed = false;
 
     protected abstract double orientationPourPrise();
 
@@ -77,7 +61,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             mv.reculeMMSansAngle(60);
             pincesArriereService.finalisePriseEcueil(bouees());
 
-            completed = true; // Action terminé, on laisse le path finding reprendre la main pour le dégagement si on se fait bloqué
+            complete(); // Action terminé, on laisse le path finding reprendre la main pour le dégagement si on se fait bloqué
             onComplete();
 
             rs.enableAvoidance();

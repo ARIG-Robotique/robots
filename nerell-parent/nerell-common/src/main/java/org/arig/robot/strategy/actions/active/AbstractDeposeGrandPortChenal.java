@@ -1,22 +1,14 @@
 package org.arig.robot.strategy.actions.active;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.Bouee;
-import org.arig.robot.model.Chenaux;
-import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.ETeam;
-import org.arig.robot.model.NerellRobotStatus;
-import org.arig.robot.model.Point;
+import org.arig.robot.model.*;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
-import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
@@ -28,22 +20,10 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
     }
 
     @Autowired
-    private ITrajectoryManager mv;
-
-    @Autowired
-    protected NerellRobotStatus rs;
-
-    @Autowired
     private IPincesArriereService pincesArriereService;
 
     @Autowired
     private IPincesAvantService pincesAvantService;
-
-    @Autowired
-    private TableUtils tableUtils;
-
-    @Getter
-    private boolean completed = false;
 
     private GotoOption sensEntry = GotoOption.AUTO;
 
@@ -125,7 +105,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
 
             mv.gotoPoint(xRef, yRef, GotoOption.SANS_ORIENTATION);
             pincesAvantService.finaliseDepose();
-            completed = true;
+            complete();
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
