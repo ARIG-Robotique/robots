@@ -28,7 +28,6 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
     private boolean[] enabled = new boolean[]{true, true, true, true};
 
     private boolean[] previousStateLat = new boolean[]{false, false, false, false};
-    private boolean[] previousStateSup = new boolean[]{false, false, false, false};
 
     @Override
     public boolean deposeGrandChenal(ECouleurBouee couleurChenal) {
@@ -128,22 +127,14 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
                 io.presencePinceAvantLat4()
         };
 
-        final boolean[] newStateSup = new boolean[]{
-                io.presencePinceAvantSup1(),
-                io.presencePinceAvantSup2(),
-                io.presencePinceAvantSup3(),
-                io.presencePinceAvantSup4()
-        };
-
         for (int i = 0; i < newStateLat.length; i++) {
-            if (rs.pincesAvant()[i] == null && ((!previousStateLat[i] && newStateLat[i]) || (!previousStateSup[i] && newStateSup[i]))) {
+            if (rs.pincesAvant()[i] == null && !previousStateLat[i] && newStateLat[i]) {
                 servosService.pinceAvantPrise(i, false);
                 registerBouee(i);
             }
         }
 
         previousStateLat = newStateLat;
-        previousStateSup = newStateSup;
     }
 
     private void clearExpected() {
