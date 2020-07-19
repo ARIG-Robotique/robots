@@ -1,14 +1,13 @@
-package org.arig.robot.system.gamepad.nintendoswitch.joycon;
+package org.arig.robot.system.gamepad.nintendoswitch;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
-class JoyConStick {
+@NoArgsConstructor
+public class ControllerStick {
 
     @Getter
     private float horizontal = 0.0f;

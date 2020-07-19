@@ -4,6 +4,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.system.gamepad.nintendoswitch.ControllerButton;
+import org.arig.robot.system.gamepad.nintendoswitch.ControllerConstants;
+import org.arig.robot.system.gamepad.nintendoswitch.ControllerEventListener;
+import org.arig.robot.system.gamepad.nintendoswitch.ControllerStick;
 import org.arig.robot.system.gamepad.nintendoswitch.NintendoSwitchHID;
 
 import java.util.ArrayList;
@@ -15,52 +19,52 @@ import java.util.Map;
 @Accessors(fluent = true)
 public class JoyConLeft extends JoyCon {
 
-    private final JoyConEventListener eventListener;
+    private final ControllerEventListener eventListener;
     private int lastShared;
     private int lastLeft;
     @Getter(AccessLevel.PROTECTED)
-    private Map<JoyConButton, Boolean> inputs;
-    private Map<JoyConButton, Boolean> oldInputs;
+    private Map<ControllerButton, Boolean> inputs;
+    private Map<ControllerButton, Boolean> oldInputs;
     @Getter(AccessLevel.PROTECTED)
     private byte battery;
-    private JoyConStick stick;
+    private ControllerStick stick;
     private int[] stickCalXLeft;
     private int[] stickCalYLeft;
 
-    private static final List<JoyConButton> sharedButtons = new ArrayList<>();
-    private static final List<JoyConButton> leftButtons = new ArrayList<>();
+    private static final List<ControllerButton> sharedButtons = new ArrayList<>();
+    private static final List<ControllerButton> leftButtons = new ArrayList<>();
     static {
         // Shared register
-        sharedButtons.add(JoyConConstants.minus);
-        sharedButtons.add(JoyConConstants.leftStick);
-        sharedButtons.add(JoyConConstants.capture);
+        sharedButtons.add(ControllerConstants.minus);
+        sharedButtons.add(ControllerConstants.leftStick);
+        sharedButtons.add(ControllerConstants.capture);
 
         // Left register
-        leftButtons.add(JoyConConstants.down);
-        leftButtons.add(JoyConConstants.up);
-        leftButtons.add(JoyConConstants.right);
-        leftButtons.add(JoyConConstants.left);
-        leftButtons.add(JoyConConstants.sr);
-        leftButtons.add(JoyConConstants.sl);
-        leftButtons.add(JoyConConstants.l);
-        leftButtons.add(JoyConConstants.zl);
+        leftButtons.add(ControllerConstants.down);
+        leftButtons.add(ControllerConstants.up);
+        leftButtons.add(ControllerConstants.right);
+        leftButtons.add(ControllerConstants.left);
+        leftButtons.add(ControllerConstants.sr);
+        leftButtons.add(ControllerConstants.sl);
+        leftButtons.add(ControllerConstants.l);
+        leftButtons.add(ControllerConstants.zl);
     }
 
-    public JoyConLeft(JoyConEventListener eventListener) {
+    public JoyConLeft(ControllerEventListener eventListener) {
         super(NintendoSwitchHID.JOYCON_LEFT, "Left");
 
         this.eventListener = eventListener;
         lastShared = 0;
         lastLeft = 0;
         battery = 0;
-        stick = new JoyConStick();
+        stick = new ControllerStick();
         inputs = new HashMap<>();
         stickCalXLeft = new int[3];
         stickCalYLeft = new int[3];
     }
 
     @Override
-    protected JoyConEventListener eventListener() {
+    protected ControllerEventListener eventListener() {
         return eventListener;
     }
 

@@ -3,33 +3,33 @@ package org.arig.robot.listener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.services.IServosServices;
-import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyConConstants;
-import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyConEvent;
-import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyConEventListener;
+import org.arig.robot.system.gamepad.nintendoswitch.ControllerConstants;
+import org.arig.robot.system.gamepad.nintendoswitch.ControllerEvent;
+import org.arig.robot.system.gamepad.nintendoswitch.ControllerEventListener;
 
 @Slf4j
 @RequiredArgsConstructor
-public class JoyConLeftEventListener implements JoyConEventListener {
+public class JoyConLeftEventListener implements ControllerEventListener {
 
     private final IServosServices servosServices;
 
     @Override
-    public void handleInput(final JoyConEvent event) {
+    public void handleInput(final ControllerEvent event) {
         event.getNewInputs().forEach((button, enable) -> {
             if (!enable) {
                 return;
             }
 
-            if (button == JoyConConstants.l) {
+            if (button == ControllerConstants.l) {
                 servosServices.blocageGaucheOuvert();
             }
-            if (button == JoyConConstants.zl) {
+            if (button == ControllerConstants.zl) {
                 servosServices.blocageGaucheFerme();
             }
-            if (button == JoyConConstants.down) {
+            if (button == ControllerConstants.down) {
                 servosServices.fourcheHaut();
             }
-            if (button == JoyConConstants.up) {
+            if (button == ControllerConstants.up) {
                 servosServices.fourcheBas();
             }
         });

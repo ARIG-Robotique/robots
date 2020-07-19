@@ -3,36 +3,36 @@ package org.arig.robot.listener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.services.IServosServices;
-import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyConConstants;
-import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyConEvent;
-import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyConEventListener;
+import org.arig.robot.system.gamepad.nintendoswitch.ControllerConstants;
+import org.arig.robot.system.gamepad.nintendoswitch.ControllerEvent;
+import org.arig.robot.system.gamepad.nintendoswitch.ControllerEventListener;
 
 @Slf4j
 @RequiredArgsConstructor
-public class JoyConRightEventListener implements JoyConEventListener {
+public class JoyConRightEventListener implements ControllerEventListener {
 
     private final IServosServices servosServices;
 
     @Override
-    public void handleInput(final JoyConEvent event) {
+    public void handleInput(final ControllerEvent event) {
         event.getNewInputs().forEach((button, enable) -> {
             if (!enable) {
                 return;
             }
 
-            if (button == JoyConConstants.r) {
+            if (button == ControllerConstants.r) {
                 servosServices.blocageDroitOuvert();
             }
-            if (button == JoyConConstants.zr) {
+            if (button == ControllerConstants.zr) {
                 servosServices.blocageDroitFerme();
             }
-            if (button == JoyConConstants.x) {
+            if (button == ControllerConstants.x) {
                 servosServices.translateurCentre();
             }
-            if (button == JoyConConstants.y) {
+            if (button == ControllerConstants.y) {
                 servosServices.transleteurGauche();
             }
-            if (button == JoyConConstants.a) {
+            if (button == ControllerConstants.a) {
                 servosServices.translateurDroite();
             }
         });

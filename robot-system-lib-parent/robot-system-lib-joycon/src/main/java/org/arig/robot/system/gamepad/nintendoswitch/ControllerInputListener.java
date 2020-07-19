@@ -1,27 +1,27 @@
-package org.arig.robot.system.gamepad.nintendoswitch.joycon;
+package org.arig.robot.system.gamepad.nintendoswitch;
 
 import lombok.RequiredArgsConstructor;
 import purejavahidapi.HidDevice;
 import purejavahidapi.InputReportListener;
 
 @RequiredArgsConstructor
-public class JoyConInputListener implements InputReportListener {
+public class ControllerInputListener implements InputReportListener {
 
     private float lastHorizontal = 0f;
     private float lastVertical = 0f;
 
-    private final JoyCon joyCon;
+    private final Controller controller;
 
     @Override
     public void onInputReport(final HidDevice source, final byte reportID, final byte[] reportData, final int reportLength) {
         // Input code case
         if (reportID == 0x30) {
-            joyCon.processData(reportData);
-            if (joyCon.eventListener() != null) {
-                if (!joyCon.inputs().isEmpty() || (joyCon.horizontal() != this.lastHorizontal || joyCon.vertical() != this.lastVertical)) {
-                    joyCon.eventListener().handleInput(JoyConEvent.fromJoyCon(joyCon));
-                    this.lastHorizontal = joyCon.horizontal();
-                    this.lastVertical = joyCon.vertical();
+            controller.processData(reportData);
+            if (controller.eventListener() != null) {
+                if (!controller.inputs().isEmpty() || (controller.horizontal() != this.lastHorizontal || controller.vertical() != this.lastVertical)) {
+                    controller.eventListener().handleInput(ControllerEvent.fromController(controller));
+                    this.lastHorizontal = controller.horizontal();
+                    this.lastVertical = controller.vertical();
                 }
             }
 
@@ -39,7 +39,7 @@ public class JoyConInputListener implements InputReportListener {
                     }
                     factory_stick_cal[i - 19] = c;
                 }
-                joyCon.saveCalibration(factory_stick_cal);
+                controller.saveCalibration(factory_stick_cal);
             }
         }
     }
