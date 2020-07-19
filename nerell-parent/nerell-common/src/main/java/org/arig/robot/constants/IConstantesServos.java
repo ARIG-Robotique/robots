@@ -28,7 +28,7 @@ public interface IConstantesServos {
     int WAIT_BRAS_DROIT = 440;
     int WAIT_BRAS_GAUCHE = WAIT_BRAS_DROIT;
     int WAIT_ASCENSEUR_AVANT = 380;
-    int WAIT_PINCE_AVANT = 380;
+    int WAIT_PINCE_AVANT = 300;
     int WAIT_ASCENSEUR_ARRIERE = 620;
     int WAIT_PIVOT_ARRIERE = 350;
     int WAIT_PINCE_ARRIERE = 400;
