@@ -32,7 +32,7 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
 
     @Override
     public boolean deposeGrandChenal(ECouleurBouee couleurChenal) {
-        servosService.ascenseurAvantBas(true);
+        servosService.ascenseurAvantRoulage(true);
         servosService.pincesAvantOuvert(true);
         if (couleurChenal == ECouleurBouee.ROUGE) {
             rs.grandChenaux().addRouge(rs.pincesAvant());
@@ -46,7 +46,7 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
 
     @Override
     public boolean deposePetitPort() {
-        servosService.ascenseurAvantBas(true);
+        servosService.ascenseurAvantRoulage(true);
         servosService.pincesAvantOuvert(true);
         rs.petitChenaux().addRouge(ArrayUtils.subarray(rs.pincesAvant(), 0, 2));
         rs.petitChenaux().addVert(ArrayUtils.subarray(rs.pincesAvant(), 2, 4));
