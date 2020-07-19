@@ -27,7 +27,8 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
 
     private boolean[] enabled = new boolean[]{true, true, true, true};
 
-    private boolean[] previousState = new boolean[]{false, false, false, false};
+    private boolean[] previousStateLat = new boolean[]{false, false, false, false};
+    private boolean[] previousStateSup = new boolean[]{false, false, false, false};
 
     @Override
     public boolean deposeGrandChenal(ECouleurBouee couleurChenal) {
@@ -58,7 +59,8 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
     public void finaliseDepose() {
         boolean hasBouee = false;
         for (int i = 0; i < 4; i++) {
-            if (rs.pincesAvant()[i] == null ) {
+            if (rs.pincesAvant()[i] == null) {
+                // TODO Gestion de la fermeture avec le capteur supérieur
                 servosService.pinceAvantFerme(i, false);
             } else {
                 hasBouee = true;
@@ -119,21 +121,29 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
      */
     @Override
     public void process() {
-        final boolean[] newState = new boolean[]{
-                io.presencePinceAvant1(),
-                io.presencePinceAvant2(),
-                io.presencePinceAvant3(),
-                io.presencePinceAvant4()
+        final boolean[] newStateLat = new boolean[]{
+                io.presencePinceAvantLat1(),
+                io.presencePinceAvantLat2(),
+                io.presencePinceAvantLat3(),
+                io.presencePinceAvantLat4()
         };
 
-        for (int i = 0; i < newState.length; i++) {
-            if (rs.pincesAvant()[i] == null && !previousState[i] && newState[i]) {
+        final boolean[] newStateSup = new boolean[]{
+                io.presencePinceAvantSup1(),
+                io.presencePinceAvantSup2(),
+                io.presencePinceAvantSup3(),
+                io.presencePinceAvantSup4()
+        };
+
+        for (int i = 0; i < newStateLat.length; i++) {
+            if (rs.pincesAvant()[i] == null && ((!previousStateLat[i] && newStateLat[i]) || (!previousStateSup[i] && newStateSup[i]))) {
                 servosService.pinceAvantPrise(i, false);
                 registerBouee(i);
             }
         }
 
-        previousState = newState;
+        previousStateLat = newStateLat;
+        previousStateSup = newStateSup;
     }
 
     private void clearExpected() {

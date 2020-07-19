@@ -24,19 +24,19 @@ public class IOServiceBouchon implements IIOService {
 
     @Setter
     @Accessors(fluent = true)
-    private boolean contentPinceAvant1 = false;
+    private boolean contentPinceAvantLat1 = false;
 
     @Setter
     @Accessors(fluent = true)
-    private boolean contentPinceAvant2 = false;
+    private boolean contentPinceAvantLat2 = false;
 
     @Setter
     @Accessors(fluent = true)
-    private boolean contentPinceAvant3 = false;
+    private boolean contentPinceAvantLat3 = false;
 
     @Setter
     @Accessors(fluent = true)
-    private boolean contentPinceAvant4 = false;
+    private boolean contentPinceAvantLat4 = false;
 
     // --------------------------------------------------------- //
     // --------------------- INFOS TECHNIQUE ------------------- //
@@ -73,23 +73,43 @@ public class IOServiceBouchon implements IIOService {
     // Numerique
 
     @Override
-    public boolean presencePinceAvant1() {
-        return contentPinceAvant1;
+    public boolean presencePinceAvantLat1() {
+        return contentPinceAvantLat1;
     }
 
     @Override
-    public boolean presencePinceAvant2() {
-        return contentPinceAvant2;
+    public boolean presencePinceAvantLat2() {
+        return contentPinceAvantLat2;
     }
 
     @Override
-    public boolean presencePinceAvant3() {
-        return contentPinceAvant3;
+    public boolean presencePinceAvantLat3() {
+        return contentPinceAvantLat3;
     }
 
     @Override
-    public boolean presencePinceAvant4() {
-        return contentPinceAvant4;
+    public boolean presencePinceAvantLat4() {
+        return contentPinceAvantLat4;
+    }
+
+    @Override
+    public boolean presencePinceAvantSup1() {
+        return false;
+    }
+
+    @Override
+    public boolean presencePinceAvantSup2() {
+        return false;
+    }
+
+    @Override
+    public boolean presencePinceAvantSup3() {
+        return false;
+    }
+
+    @Override
+    public boolean presencePinceAvantSup4() {
+        return false;
     }
 
     @Override

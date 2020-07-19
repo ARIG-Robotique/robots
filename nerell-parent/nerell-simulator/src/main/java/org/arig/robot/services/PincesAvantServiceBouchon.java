@@ -21,10 +21,10 @@ public class PincesAvantServiceBouchon extends AbstractPincesAvantService {
         }
 
         switch(pinceNumber) {
-            case 1 : io.contentPinceAvant1(true);break;
-            case 2 : io.contentPinceAvant2(true);break;
-            case 3 : io.contentPinceAvant3(true);break;
-            case 4 : io.contentPinceAvant4(true);break;
+            case 1 : io.contentPinceAvantLat1(true);break;
+            case 2 : io.contentPinceAvantLat2(true);break;
+            case 3 : io.contentPinceAvantLat3(true);break;
+            case 4 : io.contentPinceAvantLat4(true);break;
             default: throw new IllegalArgumentException("Position de pinces inexistantes");
         }
 
@@ -33,10 +33,10 @@ public class PincesAvantServiceBouchon extends AbstractPincesAvantService {
 
     @Override
     public void disable() {
-        io.contentPinceAvant1(false);
-        io.contentPinceAvant2(false);
-        io.contentPinceAvant3(false);
-        io.contentPinceAvant4(false);
+        io.contentPinceAvantLat1(false);
+        io.contentPinceAvantLat2(false);
+        io.contentPinceAvantLat3(false);
+        io.contentPinceAvantLat4(false);
 
         super.disable();
     }

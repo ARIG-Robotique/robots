@@ -54,10 +54,14 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     // Input : Numerique
     private GpioPinDigitalInput inCalageBordureDroit;
     private GpioPinDigitalInput inCalageBordureGauche;
-    private GpioPinDigitalInput inPresencePinceAvant1;
-    private GpioPinDigitalInput inPresencePinceAvant2;
-    private GpioPinDigitalInput inPresencePinceAvant3;
-    private GpioPinDigitalInput inPresencePinceAvant4;
+    private GpioPinDigitalInput inPresencePinceAvantLat1;
+    private GpioPinDigitalInput inPresencePinceAvantLat2;
+    private GpioPinDigitalInput inPresencePinceAvantLat3;
+    private GpioPinDigitalInput inPresencePinceAvantLat4;
+    private GpioPinDigitalInput inPresencePinceAvantSup1;
+    private GpioPinDigitalInput inPresencePinceAvantSup2;
+    private GpioPinDigitalInput inPresencePinceAvantSup3;
+    private GpioPinDigitalInput inPresencePinceAvantSup4;
     private GpioPinDigitalInput inPresencePinceArriere1;
     private GpioPinDigitalInput inPresencePinceArriere2;
     private GpioPinDigitalInput inPresencePinceArriere3;
@@ -135,10 +139,14 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         outAlimPuissance12V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
 
         // PCF1
-        inPresencePinceAvant1 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
-        inPresencePinceAvant2 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
-        inPresencePinceAvant3 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
-        inPresencePinceAvant4 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
+        inPresencePinceAvantLat1 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
+        inPresencePinceAvantLat2 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
+        inPresencePinceAvantLat3 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
+        inPresencePinceAvantLat4 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
+        inPresencePinceAvantSup1 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
+        inPresencePinceAvantSup2 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
+        inPresencePinceAvantSup3 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
+        inPresencePinceAvantSup4 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
 
         // PCF2
         inTirette = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
@@ -210,23 +218,43 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     // Numerique
 
     @Override
-    public boolean presencePinceAvant1() {
-        return inPresencePinceAvant1.isLow();
+    public boolean presencePinceAvantLat1() {
+        return inPresencePinceAvantLat1.isLow();
     }
 
     @Override
-    public boolean presencePinceAvant2() {
-        return inPresencePinceAvant2.isLow();
+    public boolean presencePinceAvantLat2() {
+        return inPresencePinceAvantLat2.isLow();
     }
 
     @Override
-    public boolean presencePinceAvant3() {
-        return inPresencePinceAvant3.isLow();
+    public boolean presencePinceAvantLat3() {
+        return inPresencePinceAvantLat3.isLow();
     }
 
     @Override
-    public boolean presencePinceAvant4() {
-        return inPresencePinceAvant4.isLow();
+    public boolean presencePinceAvantLat4() {
+        return inPresencePinceAvantLat4.isLow();
+    }
+
+    @Override
+    public boolean presencePinceAvantSup1() {
+        return inPresencePinceAvantSup1.isLow();
+    }
+
+    @Override
+    public boolean presencePinceAvantSup2() {
+        return inPresencePinceAvantSup2.isLow();
+    }
+
+    @Override
+    public boolean presencePinceAvantSup3() {
+        return inPresencePinceAvantSup3.isLow();
+    }
+
+    @Override
+    public boolean presencePinceAvantSup4() {
+        return inPresencePinceAvantSup4.isLow();
     }
 
     @Override

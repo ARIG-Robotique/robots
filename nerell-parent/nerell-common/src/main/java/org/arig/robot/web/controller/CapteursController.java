@@ -42,10 +42,14 @@ public class CapteursController extends AbstractCapteursController implements In
         numeriqueInfos.put("Alim. Puissance 12V", ioService::alimPuissance12VOk);
         numeriqueInfos.put("Bordure arrière droite", ioService::calageBordureDroit);
         numeriqueInfos.put("Bordure arrière gauche", ioService::calageBordureGauche);
-        numeriqueInfos.put("Presence pince avant 1", ioService::presencePinceAvant1);
-        numeriqueInfos.put("Presence pince avant 2", ioService::presencePinceAvant2);
-        numeriqueInfos.put("Presence pince avant 3", ioService::presencePinceAvant3);
-        numeriqueInfos.put("Presence pince avant 4", ioService::presencePinceAvant4);
+        numeriqueInfos.put("Presence pince avant lat 1", ioService::presencePinceAvantLat1);
+        numeriqueInfos.put("Presence pince avant lat 2", ioService::presencePinceAvantLat2);
+        numeriqueInfos.put("Presence pince avant lat 3", ioService::presencePinceAvantLat3);
+        numeriqueInfos.put("Presence pince avant lat 4", ioService::presencePinceAvantLat4);
+        numeriqueInfos.put("Presence pince avant sup 1", ioService::presencePinceAvantSup1);
+        numeriqueInfos.put("Presence pince avant sup 2", ioService::presencePinceAvantSup2);
+        numeriqueInfos.put("Presence pince avant sup 3", ioService::presencePinceAvantSup3);
+        numeriqueInfos.put("Presence pince avant sup 4", ioService::presencePinceAvantSup4);
         numeriqueInfos.put("Presence pince arrière 1", ioService::presencePinceArriere1);
         numeriqueInfos.put("Presence pince arrière 2", ioService::presencePinceArriere2);
         numeriqueInfos.put("Presence pince arrière 3", ioService::presencePinceArriere3);

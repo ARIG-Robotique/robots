@@ -17,10 +17,15 @@ public interface IIOService {
     // --------------------------------------------------------- //
 
     // Numerique
-    boolean presencePinceAvant1();
-    boolean presencePinceAvant2();
-    boolean presencePinceAvant3();
-    boolean presencePinceAvant4();
+    boolean presencePinceAvantLat1();
+    boolean presencePinceAvantLat2();
+    boolean presencePinceAvantLat3();
+    boolean presencePinceAvantLat4();
+
+    boolean presencePinceAvantSup1();
+    boolean presencePinceAvantSup2();
+    boolean presencePinceAvantSup3();
+    boolean presencePinceAvantSup4();
 
     boolean presencePinceArriere1();
     boolean presencePinceArriere2();
