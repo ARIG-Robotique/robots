@@ -28,6 +28,7 @@ import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
+import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -71,6 +72,9 @@ public class NerellOrdonanceur {
     private ITrajectoryManager trajectoryManager;
 
     @Autowired
+    private IOdometrie odometrie;
+
+    @Autowired
     private IPathFinder pathFinder;
 
     @Autowired
@@ -93,10 +97,6 @@ public class NerellOrdonanceur {
 
     @Autowired
     private AbstractMotor motorPavillon;
-
-    @Autowired
-    @Qualifier("currentPosition")
-    private Position position;
 
     private String launchExecId;
 
@@ -390,22 +390,22 @@ public class NerellOrdonanceur {
             nerellRobotStatus.disableAvoidance();
             if (nerellRobotStatus.isSimulateur() || skip) {
                 if (nerellRobotStatus.getTeam() == ETeam.BLEU) {
-                    position.setPt(new Point(conv.mmToPulse(200), conv.mmToPulse(1200)));
-                    position.setAngle(conv.degToPulse(0));
+                    odometrie.updatePosition(conv.mmToPulse(200), conv.mmToPulse(1200));
+                    odometrie.updateAngle(conv.degToPulse(0));
                 } else {
-                    position.setPt(new Point(conv.mmToPulse(3000 - 200), conv.mmToPulse(1200)));
-                    position.setAngle(conv.degToPulse(180));
+                    odometrie.updatePosition(conv.mmToPulse(3000 - 200), conv.mmToPulse(1200));
+                    odometrie.updateAngle(conv.degToPulse(180));
                 }
             } else {
                 nerellRobotStatus.enableCalageBordure();
                 trajectoryManager.reculeMMSansAngle(1000);
 
                 if (nerellRobotStatus.getTeam() == ETeam.BLEU) {
-                    position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstCallageY));
-                    position.setAngle(conv.degToPulse(0));
+                    odometrie.updateX(conv.mmToPulse(IConstantesNerellConfig.dstCallageY));
+                    odometrie.updateAngle(conv.degToPulse(0));
                 } else {
-                    position.getPt().setX(conv.mmToPulse(3000 - IConstantesNerellConfig.dstCallageY));
-                    position.setAngle(conv.degToPulse(180));
+                    odometrie.updateX(conv.mmToPulse(3000 - IConstantesNerellConfig.dstCallageY));
+                    odometrie.updateAngle(conv.degToPulse(180));
                 }
 
                 trajectoryManager.avanceMM(150);
@@ -414,8 +414,8 @@ public class NerellOrdonanceur {
                 nerellRobotStatus.enableCalageBordure();
                 trajectoryManager.reculeMMSansAngle(1000);
 
-                position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstCallageY));
-                position.setAngle(conv.degToPulse(-90));
+                odometrie.updateY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstCallageY));
+                odometrie.updateAngle(conv.degToPulse(-90));
 
                 trajectoryManager.avanceMM(150);
 

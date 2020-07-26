@@ -41,7 +41,7 @@ public class OdometrieLineaire extends AbstractOdometrie {
      */
     @Override
     protected void process() {
-        double newTheta = getPosition().getAngle() + encoders.getOrientation();
+        double newTheta = getCurrentPosition().getAngle() + encoders.getOrientation();
 
         // Ajustement a PI près
         if (newTheta > conv.getPiPulse()) {
@@ -56,17 +56,21 @@ public class OdometrieLineaire extends AbstractOdometrie {
         final double dY = encoders.getDistance() * Math.sin(thetaRad);
 
         // Sauvegarde nouvelle position (en pulse)
-        getPosition().setAngle(newTheta);
-        getPosition().addDeltaX(dX);
-        getPosition().addDeltaY(dY);
+        getCurrentPosition().setAngle(newTheta);
+        getCurrentPosition().addDeltaX(dX);
+        getCurrentPosition().addDeltaY(dY);
 
-        if (correctionCentrifuge) {
+        corrigePosition.setAngle(newTheta);
+        corrigePosition.addDeltaX(dX);
+        corrigePosition.addDeltaY(dY);
+
+        if (correctionCentrifuge && corrfuge != 0) {
             double courbureRad = conv.pulseToRad(encoders.getOrientation());
-            double corrX = (dY * courbureRad) * corrfuge;
-            double corrY = -(dX * courbureRad) * corrfuge;
+            double corrX = -(dY * courbureRad) * corrfuge;
+            double corrY = (dX * courbureRad) * corrfuge;
 
-            getPosition().addDeltaX(corrX);
-            getPosition().addDeltaY(corrY);
+            corrigePosition.addDeltaX(corrX);
+            corrigePosition.addDeltaY(corrY);
         }
     }
 }

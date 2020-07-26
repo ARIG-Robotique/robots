@@ -18,7 +18,7 @@ public interface IConstantesNerellConfig {
     double calageTimeMs = 200;
 
     // Durée du match //
-    int matchTimeMs = 100000;
+    int matchTimeMs = 40000;
 
     // Temps écoulé pour la balise
     int baliseElapsedTimeMs = 50000;
@@ -121,9 +121,8 @@ public interface IConstantesNerellConfig {
     double approcheSansFreinDistanceMm = 50;
     double approcheSansFreinOrientationDeg = 5;
     double startAngleDemiTourDeg = 75;
-    double startAngleLimitVitesseDistance = 15;
+    double startAngleLimitVitesseDistance = 2; // En valeur absolu pour la comparaison, donc angle * 2
 
-    // TODO : A déterminer de manière empirique
     double seuilErreurOrientationDeg = 1;
     double seuilErreurDistanceMm = 1;
 

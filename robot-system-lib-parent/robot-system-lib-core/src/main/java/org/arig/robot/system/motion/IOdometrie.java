@@ -1,5 +1,7 @@
 package org.arig.robot.system.motion;
 
+import org.arig.robot.model.Point;
+import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.TypeOdometrie;
 
 /**
@@ -9,24 +11,15 @@ import org.arig.robot.model.enums.TypeOdometrie;
  */
 public interface IOdometrie {
 
-    /**
-     * Gets the type.
-     *
-     * @return the type
-     */
     TypeOdometrie getType();
 
-    /**
-     * Inits the odometrie.
-     *
-     * @param x     the x
-     * @param y     the y
-     * @param angle the angle
-     */
-    void initOdometrie(final double x, final double y, final int angle);
+    Position getCurrentPosition();
 
-    /**
-     * Calcul position.
-     */
+    void updatePosition(final Point pt);
+    void updatePosition(final double x, final double y);
+    void updateX(final double x);
+    void updateY(final double y);
+    void updateAngle(final double angle);
+
     void calculPosition();
 }

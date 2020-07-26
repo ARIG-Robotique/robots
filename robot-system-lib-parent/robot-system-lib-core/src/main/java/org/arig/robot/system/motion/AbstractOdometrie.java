@@ -1,7 +1,7 @@
 package org.arig.robot.system.motion;
 
-import lombok.AccessLevel;
 import lombok.Getter;
+import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.TypeOdometrie;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
@@ -23,8 +23,10 @@ public abstract class AbstractOdometrie implements IOdometrie, InitializingBean 
 
     @Autowired
     @Qualifier("currentPosition")
-    @Getter(AccessLevel.PROTECTED)
-    private Position position;
+    @Getter
+    private Position currentPosition;
+
+    protected final Position corrigePosition = new Position();
 
     @Autowired
     private ConvertionRobotUnit conv;
@@ -38,12 +40,38 @@ public abstract class AbstractOdometrie implements IOdometrie, InitializingBean 
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        initOdometrie(0, 0, 0);
+        updatePosition(0, 0);
+        updateAngle(0);
     }
 
     @Override
-    public void initOdometrie(final double x, final double y, final int angle) {
-        position.updatePosition(x, y, angle);
+    public void updatePosition(final double x, final double y) {
+        updateX(x);
+        updateY(y);
+    }
+
+    @Override
+    public void updatePosition(final Point pt) {
+        updateX(pt.getX());
+        updateY(pt.getY());
+    }
+
+    @Override
+    public void updateX(final double x) {
+        currentPosition.getPt().setX(x);
+        corrigePosition.getPt().setX(x);
+    }
+
+    @Override
+    public void updateY(final double y) {
+        currentPosition.getPt().setY(y);
+        corrigePosition.getPt().setY(y);
+    }
+
+    @Override
+    public void updateAngle(final double angle) {
+        currentPosition.setAngle(angle);
+        corrigePosition.setAngle(angle);
     }
 
     protected abstract void process();
@@ -63,9 +91,12 @@ public abstract class AbstractOdometrie implements IOdometrie, InitializingBean 
         // Construction du monitoring
         MonitorTimeSerie serie = new MonitorTimeSerie()
                 .measurementName("odometrie")
-                .addField("X", conv.pulseToMm(getPosition().getPt().getX()))
-                .addField("Y", conv.pulseToMm(getPosition().getPt().getY()))
-                .addField("angle", conv.pulseToDeg(getPosition().getAngle()))
+                .addField("xCorr", conv.pulseToMm(corrigePosition.getPt().getX()))
+                .addField("yCorr", conv.pulseToMm(corrigePosition.getPt().getY()))
+                .addField("angleCorr", conv.pulseToDeg(corrigePosition.getAngle()))
+                .addField("x", conv.pulseToMm(getCurrentPosition().getPt().getX()))
+                .addField("y", conv.pulseToMm(getCurrentPosition().getPt().getY()))
+                .addField("angle", conv.pulseToDeg(getCurrentPosition().getAngle()))
                 .addField("type", type.ordinal());
 
         monitoringWrapper.addTimeSeriePoint(serie);
