@@ -82,7 +82,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
             mv.alignFrontToAvecDecalage(entry.getX(), entry.getY(), offsetOrientation);
 
             // prise
-            mv.avanceMM(distanceAproche);
+            mv.avanceMM(15);
             bouee.prise(true);
 
             complete();
