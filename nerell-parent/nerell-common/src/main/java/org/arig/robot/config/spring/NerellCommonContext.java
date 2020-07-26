@@ -115,7 +115,9 @@ public class NerellCommonContext {
 
     @Bean
     public IOdometrie odometrie() {
-        return new OdometrieLineaire();
+        OdometrieLineaire odom = new OdometrieLineaire(true);
+        odom.corrfuge(0.5);
+        return odom;
     }
 
     @Bean
