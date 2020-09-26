@@ -49,7 +49,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !bouee.prise() && getPinceCible() != 0;
+        return isTimeValid() && !bouee.prise() && getPinceCible() != 0 && rs.getRemainingTime() > IConstantesNerellConfig.invalidPriseRemainingTime;
     }
 
     @Override
