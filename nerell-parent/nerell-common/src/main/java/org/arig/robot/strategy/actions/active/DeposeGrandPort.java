@@ -84,7 +84,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
 
             mv.gotoPoint(entry, GotoOption.ARRIERE);
 
-            if (step > 3) {
+            if (step > 2) {
                 complete();
             }
 

@@ -2,7 +2,6 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.NerellRobotStatus;
@@ -60,7 +59,11 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
         servosService.ascenseurAvantRoulage(true);
         servosService.pincesAvantOuvert(true);
 
-        CollectionUtils.addAll(rs.grandPort(), rs.pincesAvant());
+        for (ECouleurBouee eCouleurBouee : rs.pincesAvant()) {
+            if (eCouleurBouee != null) {
+                rs.grandPort().add(eCouleurBouee);
+            }
+        }
         rs.clearPincesAvant();
     }
 

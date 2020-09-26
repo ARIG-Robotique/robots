@@ -11,6 +11,7 @@ import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.AbstractPincesAvantService.Side;
+import org.arig.robot.services.IIOService;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public abstract class AbstractBouee extends AbstractNerellAction {
 
     @Autowired
     private IPincesAvantService pincesAvantService;
+
+    @Autowired
+    private IIOService io;
 
     private final int numeroBouee;
     private Bouee bouee;
@@ -96,17 +100,17 @@ public abstract class AbstractBouee extends AbstractNerellAction {
 
     private int getPinceCible() {
         if (bouee.couleur() == ECouleurBouee.ROUGE) {
-            if (rs.pincesAvant()[1] == null) {
+            if (!io.presencePinceAvantSup2()) {
                 return 2;
             }
-            if (rs.pincesAvant()[0] == null) {
+            if (!io.presencePinceAvantSup1()) {
                 return 1;
             }
         } else {
-            if (rs.pincesAvant()[2] == null) {
+            if (!io.presencePinceAvantSup3()) {
                 return 3;
             }
-            if (rs.pincesAvant()[3] == null) {
+            if (!io.presencePinceAvantSup4()) {
                 return 4;
             }
         }
