@@ -136,10 +136,10 @@ public class DeposePetitPort extends AbstractNerellAction {
 
                 mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientationBasse);
 
-                mv.tourneDeg(10);
+                mv.tourneDeg(15);
                 rs.petitChenaux().addVert(ECouleurBouee.ROUGE);
 
-                mv.tourneDeg(-20);
+                mv.tourneDeg(-30);
                 rs.petitChenaux().addRouge(ECouleurBouee.VERT);
 
                 mv.gotoOrientationDeg(-90);
