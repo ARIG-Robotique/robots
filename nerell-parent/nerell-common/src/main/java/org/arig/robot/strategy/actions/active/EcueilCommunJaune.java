@@ -1,17 +1,19 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.enums.GotoOption;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class EcueilCommunJaune extends AbstractEcueil {
-
-    private boolean firstExecution = true;
 
     @Override
     public String name() {
@@ -26,8 +28,13 @@ public class EcueilCommunJaune extends AbstractEcueil {
     }
 
     @Override
+    public Point aggressiveIntermediaryPoint()  {
+        return new Point(1270, 1460);
+    }
+
+    @Override
     public int order() {
-        if (rs.getTeam() == ETeam.BLEU && rs.getStrategy() == EStrategy.AGGRESSIVE && firstExecution) {
+        if (rs.getTeam() == ETeam.BLEU && rs.getStrategy() == EStrategy.AGGRESSIVE && isFirstExecution()) {
             return 1000;
         }
         return super.order();
@@ -38,7 +45,7 @@ public class EcueilCommunJaune extends AbstractEcueil {
         if (rs.getTeam() == ETeam.JAUNE) {
             return super.isValid() && rs.bouee(11).prise() && rs.bouee(12).prise();
         } else {
-            return super.isValid();
+            return super.isValid() && rs.getRemainingTime() < 40000;
         }
     }
 
@@ -58,8 +65,8 @@ public class EcueilCommunJaune extends AbstractEcueil {
     }
 
     @Override
-    protected void onStart() {
-        firstExecution = false;
+    protected void onAgressiveMvtDone() {
+        rs.bouee(11).prise(true);
     }
 
     @Override

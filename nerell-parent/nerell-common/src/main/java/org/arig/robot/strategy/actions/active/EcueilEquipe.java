@@ -30,6 +30,11 @@ public class EcueilEquipe extends AbstractEcueil {
     }
 
     @Override
+    public Point aggressiveIntermediaryPoint() {
+        return null;
+    }
+
+    @Override
     protected byte nbBoueesDispo() {
         return 5;
     }
@@ -42,6 +47,10 @@ public class EcueilEquipe extends AbstractEcueil {
     @Override
     protected ECouleurBouee[] bouees() {
         return rs.getCouleursEcueilEquipe();
+    }
+
+    @Override
+    protected void onAgressiveMvtDone() {
     }
 
     @Override

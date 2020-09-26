@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class EcueilCommunBleu extends AbstractEcueil {
 
-    private boolean firstExecution = true;
-
     @Override
     public String name() {
         return "Ecueil commun bleu";
@@ -26,8 +24,13 @@ public class EcueilCommunBleu extends AbstractEcueil {
     }
 
     @Override
+    public Point aggressiveIntermediaryPoint() {
+        return new Point(3000 - 1270, 1460);
+    }
+
+    @Override
     public int order() {
-        if (rs.getTeam() == ETeam.JAUNE && rs.getStrategy() == EStrategy.AGGRESSIVE && firstExecution) {
+        if (rs.getTeam() == ETeam.JAUNE && rs.getStrategy() == EStrategy.AGGRESSIVE && isFirstExecution()) {
             return 1000;
         }
         return super.order();
@@ -38,7 +41,7 @@ public class EcueilCommunBleu extends AbstractEcueil {
         if (rs.getTeam() == ETeam.BLEU) {
             return super.isValid() && rs.bouee(5).prise() && rs.bouee(6).prise();
         } else {
-            return super.isValid();
+            return super.isValid() && rs.getRemainingTime() < 40000;
         }
     }
 
@@ -58,8 +61,8 @@ public class EcueilCommunBleu extends AbstractEcueil {
     }
 
     @Override
-    protected void onStart() {
-        firstExecution = false;
+    protected void onAgressiveMvtDone() {
+        rs.bouee(6).prise(true);
     }
 
     @Override

@@ -1,20 +1,23 @@
 package org.arig.robot.strategy.actions.active;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 @Slf4j
 public abstract class AbstractEcueil extends AbstractNerellAction {
+
+    @Getter
+    private boolean firstExecution = true;
 
     @Autowired
     private IPincesArriereService pincesArriereService;
@@ -27,8 +30,9 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
 
     protected abstract void onComplete();
 
-    protected void onStart() {
-    }
+    protected abstract void onAgressiveMvtDone();
+
+    public abstract Point aggressiveIntermediaryPoint();
 
     @Override
     public int order() {
@@ -48,13 +52,26 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
     @Override
     public final void execute() {
         try {
-            onStart();
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-
             final Point entry = entryPoint();
             final double orientation = orientationPourPrise();
-            mv.pathTo(entry);
-            rs.disableAvoidance();
+
+            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+            if (rs.getStrategy() == EStrategy.AGGRESSIVE && firstExecution && aggressiveIntermediaryPoint() != null) {
+                firstExecution = false;
+
+                rs.enableAvoidance();
+                mv.gotoPoint(aggressiveIntermediaryPoint());
+                mv.gotoPoint(entry);
+
+                onAgressiveMvtDone();
+
+            } else {
+                firstExecution = false;
+
+                mv.pathTo(entry);
+                rs.disableAvoidance();
+            }
+
             mv.gotoOrientationDeg(orientation);
 
             pincesArriereService.preparePriseEcueil();
@@ -66,11 +83,11 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
 
             // on en profite pour recaller un axe
             if (orientation == -90) {
-                position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstCallageY));
+//                position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstCallageY));
             } else if (orientation == 180) {
-                position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstCallageY));
+//                position.getPt().setX(conv.mmToPulse(3000 - IConstantesNerellConfig.dstCallageY));
             } else if (orientation == 0) {
-                position.getPt().setX(3000 - conv.mmToPulse(IConstantesNerellConfig.dstCallageY));
+//                position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstCallageY));
             }
 
             pincesArriereService.finalisePriseEcueil(bouees());
