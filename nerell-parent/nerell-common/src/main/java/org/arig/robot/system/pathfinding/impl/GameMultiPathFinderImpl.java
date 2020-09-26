@@ -31,7 +31,7 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
 //                continue;
 //            }
             // ignore la bouée devant l'ecueil adverse en aggressif
-            if (rs.getStrategy() == EStrategy.AGGRESSIVE && ((rs.getTeam() == ETeam.BLEU && nb == 11) || (rs.getTeam() == ETeam.JAUNE && nb == 6))) {
+            if ((rs.getTeam() == ETeam.BLEU && nb == 11) || (rs.getTeam() == ETeam.JAUNE && nb == 6)) {
                 continue;
             }
 
