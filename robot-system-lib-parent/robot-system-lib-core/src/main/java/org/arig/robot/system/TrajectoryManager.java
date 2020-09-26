@@ -508,9 +508,9 @@ public class TrajectoryManager implements ITrajectoryManager {
                     // Alignement en rotation sur le premier point, puis enchainement sans freinage jusqu'au dernier
                     final EnumSet<GotoOption> localOptions = options.clone();
                     localOptions.add(GotoOption.NO_CATCH_REFRESH_PATH);
-                    /*if (c.hasNext()) {
+                    if (c.hasNext()) {
                         localOptions.add(GotoOption.SANS_ARRET);
-                    }*/
+                    }
                     if (!firstPoint) {
                         localOptions.add(GotoOption.SANS_ORIENTATION);
                     }
