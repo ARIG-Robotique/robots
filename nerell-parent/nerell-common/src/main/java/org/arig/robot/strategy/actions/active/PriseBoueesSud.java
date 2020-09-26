@@ -1,6 +1,5 @@
 package org.arig.robot.strategy.actions.active;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
@@ -8,15 +7,13 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
-import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.AbstractPincesAvantService.Side;
 import org.arig.robot.services.IPincesAvantService;
-import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
-import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.utils.TableUtils;
+import org.arig.robot.strategy.actions.active.Bouee8;
+import org.arig.robot.strategy.actions.active.Bouee9;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,22 +23,13 @@ import org.springframework.stereotype.Component;
 public class PriseBoueesSud extends AbstractNerellAction {
 
     @Autowired
-    private ITrajectoryManager mv;
-
-    @Autowired
     private IPincesAvantService pincesAvantService;
 
     @Autowired
-    private NerellRobotStatus rs;
+    private Bouee8 bouee8;
 
     @Autowired
-    private ServosService servos;
-
-    @Autowired
-    private TableUtils tableUtils;
-
-    @Getter
-    private boolean completed = false;
+    private Bouee9 bouee9;
 
     private boolean firstExecution = true;
 
@@ -51,7 +39,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
     }
 
     @Override
-    protected Point entryPoint() {
+    public Point entryPoint() {
         double x = 225;
         double y = 1200;
         if (ETeam.JAUNE == rs.getTeam()) {
@@ -116,21 +104,10 @@ public class PriseBoueesSud extends AbstractNerellAction {
                 rs.bouee(3).prise(true);
                 rs.bouee(4).prise(true);
 
-                mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-                servos.ascenseurAvantRoulage(false);
-                mv.pathTo(910, 1070);
-                servos.ascenseurAvantBas(false);
+                rs.disablePincesAvant();
 
-                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 2);
-                mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
-                mv.gotoPoint(1093, 1146);
-                rs.bouee(7).prise(true);
-
-                servos.pinceAvantOuvert(3, false);
-                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 4);
-                mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
-                mv.gotoPoint(1330, 933);
-                rs.bouee(8).prise(true);
+                bouee8.execute();
+                bouee9.execute();
 
             } else {
                 if (rs.getStrategy() != EStrategy.BASIC_SUD) {
@@ -152,28 +129,17 @@ public class PriseBoueesSud extends AbstractNerellAction {
                 rs.bouee(15).prise(true);
                 rs.bouee(16).prise(true);
 
-                mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-                servos.ascenseurAvantRoulage(false);
-                mv.pathTo(3000 - 910, 1070);
-                servos.ascenseurAvantBas(false);
+                rs.disablePincesAvant();
 
-                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
-                mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
-                mv.gotoPoint(3000 - 1093, 1146);
-                rs.bouee(10).prise(true);
-
-                servos.pinceAvantOuvert(0, false);
-                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
-                mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
-                mv.gotoPoint(3000 - 1330, 933);
-                rs.bouee(9).prise(true);
+                bouee9.execute();
+                bouee8.execute();
             }
 
         } catch (AvoidingException | NoPathFoundException e) {
             updateValidTime();
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         } finally {
-            completed = true;
+            complete();
             rs.disablePincesAvant();
         }
     }

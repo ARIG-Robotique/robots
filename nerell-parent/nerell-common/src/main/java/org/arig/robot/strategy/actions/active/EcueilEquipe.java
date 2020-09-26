@@ -19,7 +19,7 @@ public class EcueilEquipe extends AbstractEcueil {
     }
 
     @Override
-    protected Point entryPoint() {
+    public Point entryPoint() {
         double x = ENTRY_X;
         double y = ENTRY_Y;
         if (ETeam.JAUNE == rs.getTeam()) {

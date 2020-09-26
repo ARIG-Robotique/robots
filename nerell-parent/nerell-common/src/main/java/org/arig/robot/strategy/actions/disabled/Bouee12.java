@@ -1,5 +1,6 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.disabled;
 
+import org.arig.robot.strategy.actions.active.AbstractBouee;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -29,7 +29,7 @@ public class InvalidWhenNotRunAfter10SecondsAndCompletedAfter2ExecutionAction ex
     }
 
     @Override
-    protected Point entryPoint() {
+    public Point entryPoint() {
         return null;
     }
 

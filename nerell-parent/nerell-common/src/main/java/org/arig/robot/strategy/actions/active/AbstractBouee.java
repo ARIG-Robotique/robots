@@ -1,7 +1,6 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
@@ -9,15 +8,11 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Bouee;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.AbstractPincesAvantService.Side;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
-import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.utils.TableUtils;
-import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -27,19 +22,7 @@ import javax.annotation.PostConstruct;
 public abstract class AbstractBouee extends AbstractNerellAction {
 
     @Autowired
-    private ITrajectoryManager mv;
-
-    @Autowired
-    private NerellRobotStatus rs;
-
-    @Autowired
-    private TableUtils tableUtils;
-
-    @Autowired
     private IPincesAvantService pincesAvantService;
-
-    @Getter
-    private boolean completed = false;
 
     private final int numeroBouee;
     private Bouee bouee;
@@ -55,7 +38,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
     }
 
     @Override
-    protected Point entryPoint() {
+    public Point entryPoint() {
         return bouee.pt();
     }
 
@@ -66,43 +49,71 @@ public abstract class AbstractBouee extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !bouee.prise();
+        return isTimeValid() && !bouee.prise() && getPinceCible() != 0;
     }
 
     @Override
     public void execute() {
         try {
+            final int pinceCible = getPinceCible();
+            final double distanceAproche = 250;
+            final double offsetPince = getOffsetPince(pinceCible);
+
+            log.info("Prise de la bouee {} {} dans la pince avant {}", numeroBouee, bouee.couleur(), pinceCible);
+
             final Point entry = entryPoint();
+
+            // point d'approche quelque part autour de la bouée
+            // FIXME : si on fait le tour à cause d'un évittement ça fout tout en vrac
+            final Point pointApproche = tableUtils.eloigner(entry, -distanceAproche);
+
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+            mv.pathTo(pointApproche, GotoOption.AVANT);
 
-            mv.pathTo(entry, GotoOption.AVANT);
-
-            if (bouee.couleur() == ECouleurBouee.ROUGE) {
-                pincesAvantService.setEnabled(true, true, false, false);
-            } else {
-                pincesAvantService.setEnabled(false, false, true, true);
-            }
+            // active les pinces
+            pincesAvantService.setEnabled(pinceCible == 1, pinceCible == 2, pinceCible == 3, pinceCible == 4);
+            pincesAvantService.setExpected(bouee.couleur() == ECouleurBouee.ROUGE ? Side.LEFT : Side.RIGHT, bouee.couleur(), pinceCible);
             rs.enablePincesAvant();
 
-            // attente d'ouverture des servos
-            ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 3);
-
-            if (bouee.couleur() == ECouleurBouee.ROUGE) {
-                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 2);
-            } else {
-                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 4);
-            }
-
+            // aligne la bonne pince sur la bouée
             mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
-            mv.avanceMM(100); // TODO Faire le vrai déplacement
+
+            final double offsetOrientation = Math.toDegrees(Math.sin(offsetPince / distanceAproche));
+            mv.alignFrontToAvecDecalage(entry.getX(), entry.getY(), offsetOrientation);
+
+            // prise
+            mv.avanceMM(180);
             bouee.prise(true);
 
-            completed = true;
+            complete();
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         } finally {
             rs.disablePincesAvant();
         }
+    }
+
+    private int getPinceCible() {
+        if (bouee.couleur() == ECouleurBouee.ROUGE) {
+            if (rs.pincesAvant()[1] == null) {
+                return 2;
+            }
+            if (rs.pincesAvant()[0] == null) {
+                return 1;
+            }
+        } else {
+            if (rs.pincesAvant()[2] == null) {
+                return 3;
+            }
+            if (rs.pincesAvant()[3] == null) {
+                return 4;
+            }
+        }
+        return 0;
+    }
+
+    private double getOffsetPince(int pinceCible) {
+        return IConstantesNerellConfig.dstDeposeAvantX[pinceCible - 1];
     }
 }

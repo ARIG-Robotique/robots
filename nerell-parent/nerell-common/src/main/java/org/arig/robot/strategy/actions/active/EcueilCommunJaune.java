@@ -19,7 +19,7 @@ public class EcueilCommunJaune extends AbstractEcueil {
     }
 
     @Override
-    protected Point entryPoint() {
+    public Point entryPoint() {
         double x = 2150;
         double y = 1770;
         return new Point(x, y);
@@ -64,6 +64,9 @@ public class EcueilCommunJaune extends AbstractEcueil {
 
     @Override
     protected void onComplete() {
+        // on shooté la bouée
+        rs.bouee(12).prise(true);
+
         if (rs.getTeam() == ETeam.JAUNE) {
             rs.setEcueilCommunEquipePris(true);
         } else {

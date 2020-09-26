@@ -1,6 +1,5 @@
 package org.arig.robot.strategy.actions.active;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.arig.robot.constants.IConstantesNerellConfig;
@@ -9,19 +8,12 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Chenaux;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
-import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.services.IPincesAvantService;
-import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
-import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -32,32 +24,10 @@ import java.util.List;
 public class DeposePetitPort extends AbstractNerellAction {
 
     @Autowired
-    private ITrajectoryManager mv;
-
-    @Autowired
     private IPincesAvantService pincesAvantService;
 
     @Autowired
     private IPincesArriereService pincesArriereService;
-
-    @Autowired
-    private NerellRobotStatus rs;
-
-    @Autowired
-    private ServosService servos;
-
-    @Autowired
-    private ConvertionRobotUnit conv;
-
-    @Autowired
-    @Qualifier("currentPosition")
-    private Position position;
-
-    @Autowired
-    private TableUtils tableUtils;
-
-    @Getter
-    private boolean completed = false;
 
     private boolean moustacheFaites = false;
 
@@ -69,7 +39,7 @@ public class DeposePetitPort extends AbstractNerellAction {
     }
 
     @Override
-    protected Point entryPoint() {
+    public Point entryPoint() {
         double x = 1800;
         double y = 620;
         if (ETeam.JAUNE == rs.getTeam()) {
@@ -122,6 +92,13 @@ public class DeposePetitPort extends AbstractNerellAction {
             }
             mv.pathTo(entry, sensEntry);
             rs.disableAvoidance();
+
+            // on a shooté la bouée
+            if (rs.getTeam() == ETeam.JAUNE) {
+                rs.bouee(8).prise(true);
+            } else {
+                rs.bouee(9).prise(true);
+            }
 
             boolean deposePinceDone = false;
             boolean moustacheAtStart = moustacheFaites;
@@ -200,7 +177,7 @@ public class DeposePetitPort extends AbstractNerellAction {
             }
 
             if (step > 3) {
-                completed = true;
+                complete();
             }
 
         } catch (NoPathFoundException | AvoidingException e) {

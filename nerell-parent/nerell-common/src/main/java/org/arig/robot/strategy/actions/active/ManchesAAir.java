@@ -1,40 +1,19 @@
 package org.arig.robot.strategy.actions.active;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ETeam;
-import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.SensRotation;
-import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
-import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.utils.TableUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class ManchesAAir extends AbstractNerellAction {
-
-    @Autowired
-    private ITrajectoryManager mv;
-
-    @Autowired
-    private NerellRobotStatus rs;
-
-    @Autowired
-    private ServosService servos;
-
-    @Autowired
-    private TableUtils tableUtils;
-
-    @Getter
-    private boolean completed = false;
 
     private final int xManche1 = 225;
     private final int xManche2 = 450;
@@ -46,7 +25,7 @@ public class ManchesAAir extends AbstractNerellAction {
     }
 
     @Override
-    protected Point entryPoint() {
+    public Point entryPoint() {
         double x = !rs.mancheAAir1() ? xManche1 : xManche2;
         double y = 220;
         if (ETeam.JAUNE == rs.getTeam()) {
@@ -121,7 +100,10 @@ public class ManchesAAir extends AbstractNerellAction {
             updateValidTime();
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         } finally {
-            completed = rs.mancheAAir1() && rs.mancheAAir2();
+            if (rs.mancheAAir1() && rs.mancheAAir2()) {
+                complete();
+            }
+
             servos.brasDroitFerme(false);
             servos.brasGaucheFerme(false);
         }

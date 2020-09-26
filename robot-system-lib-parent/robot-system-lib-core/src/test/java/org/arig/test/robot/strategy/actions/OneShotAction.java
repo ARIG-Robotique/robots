@@ -16,7 +16,7 @@ public class OneShotAction extends AbstractAction {
     }
 
     @Override
-    protected Point entryPoint() {
+    public Point entryPoint() {
         return null;
     }
 
