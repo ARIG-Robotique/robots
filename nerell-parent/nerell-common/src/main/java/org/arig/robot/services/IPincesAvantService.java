@@ -8,6 +8,8 @@ public interface IPincesAvantService {
 
     boolean deposePetitPort();
 
+    void deposeGrandPort();
+
     void finaliseDepose();
 
     void setExpected(Side cote, ECouleurBouee bouee, int pinceNumber);
