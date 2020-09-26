@@ -8,12 +8,15 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 @Slf4j
 public abstract class AbstractEcueil extends AbstractNerellAction {
@@ -26,6 +29,13 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
 
     @Autowired
     private ITrajectoryManager mv;
+
+    @Autowired
+    @Qualifier("currentPosition")
+    private Position position;
+
+    @Autowired
+    private ConvertionRobotUnit conv;
 
     @Autowired
     private IPincesArriereService pincesArriereService;
@@ -41,7 +51,8 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
 
     protected abstract void onComplete();
 
-    protected void onStart() {}
+    protected void onStart() {
+    }
 
     @Override
     public int order() {
@@ -65,9 +76,10 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             final Point entry = entryPoint();
+            final double orientation = orientationPourPrise();
             mv.pathTo(entry);
             rs.disableAvoidance();
-            mv.gotoOrientationDeg(orientationPourPrise());
+            mv.gotoOrientationDeg(orientation);
 
             pincesArriereService.preparePriseEcueil();
             mv.reculeMM(60);
@@ -75,6 +87,16 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
             rs.enableCalageBordure();
             mv.reculeMMSansAngle(60);
+
+            // on en profite pour recaller un axe
+            if (orientation == -90) {
+                position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstCallageY));
+            } else if (orientation == 180) {
+                position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstCallageY));
+            } else if (orientation == 0) {
+                position.getPt().setX(3000 - conv.mmToPulse(IConstantesNerellConfig.dstCallageY));
+            }
+
             pincesArriereService.finalisePriseEcueil(bouees());
 
             completed = true; // Action terminé, on laisse le path finding reprendre la main pour le dégagement si on se fait bloqué
