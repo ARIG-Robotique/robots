@@ -6,7 +6,7 @@ jar {
     enabled = true
 }
 
-bootJar  {
+bootJar {
     classifier = 'exec'
 }
 
