@@ -12,8 +12,6 @@ import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.AbstractPincesAvantService.Side;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
-import org.arig.robot.strategy.actions.active.Bouee8;
-import org.arig.robot.strategy.actions.active.Bouee9;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

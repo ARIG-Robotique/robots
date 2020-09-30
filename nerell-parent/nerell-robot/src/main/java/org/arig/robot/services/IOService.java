@@ -8,7 +8,7 @@ import com.pi4j.io.i2c.I2CBus;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
-import org.arig.robot.constants.IConstantesI2C;
+import org.arig.robot.constants.IConstantesI2CNerell;
 import org.arig.robot.model.NerellRobotStatus;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -126,9 +126,9 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
         // Config PCF8574 //
         // -------------- //
-        pcfAlim = new PCF8574GpioProvider(bus, IConstantesI2C.PCF_ALIM_ADDRESS, true);
-        pcf1 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF1_ADDRESS, true);
-        pcf2 = new PCF8574GpioProvider(bus, IConstantesI2C.PCF2_ADDRESS, true);
+        pcfAlim = new PCF8574GpioProvider(bus, IConstantesI2CNerell.PCF_ALIM_ADDRESS, true);
+        pcf1 = new PCF8574GpioProvider(bus, IConstantesI2CNerell.PCF1_ADDRESS, true);
+        pcf2 = new PCF8574GpioProvider(bus, IConstantesI2CNerell.PCF2_ADDRESS, true);
 
         // Alim
         inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_04);

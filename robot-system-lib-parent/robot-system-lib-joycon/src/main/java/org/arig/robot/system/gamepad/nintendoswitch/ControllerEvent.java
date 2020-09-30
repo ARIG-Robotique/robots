@@ -2,7 +2,6 @@ package org.arig.robot.system.gamepad.nintendoswitch;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyCon;
 
 import java.util.Map;
 

@@ -12,7 +12,6 @@ cache:
 
 before_install:
   - sudo apt update
-  - sudo apt install -y openjfx
 
 before_script:
   - sudo pip install pre-commit

@@ -11,7 +11,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.communication.raspi.RaspiI2CManager;
-import org.arig.robot.constants.IConstantesI2C;
+import org.arig.robot.constants.IConstantesI2CNerell;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.RobotName;
@@ -73,33 +73,33 @@ public class NerellRobotContext {
     @Bean
     public II2CManager i2cManager(I2CBus i2cBus) throws I2CException {
         final RaspiI2CManager manager = new RaspiI2CManager(i2cBus);
-        manager.registerDevice(IConstantesI2C.SERVO_DEVICE_NAME, IConstantesI2C.SD21_ADDRESS);
-        manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_DROIT, IConstantesI2C.CODEUR_DROIT_ADDRESS);
-        manager.registerDevice(IConstantesI2C.CODEUR_MOTEUR_GAUCHE, IConstantesI2C.CODEUR_GAUCHE_ADDRESS);
+        manager.registerDevice(IConstantesI2CNerell.SERVO_DEVICE_NAME, IConstantesI2CNerell.SD21_ADDRESS);
+        manager.registerDevice(IConstantesI2CNerell.CODEUR_MOTEUR_DROIT, IConstantesI2CNerell.CODEUR_DROIT_ADDRESS);
+        manager.registerDevice(IConstantesI2CNerell.CODEUR_MOTEUR_GAUCHE, IConstantesI2CNerell.CODEUR_GAUCHE_ADDRESS);
 
         // Enregistrement juste pour le scan.
-        manager.registerDevice(IConstantesI2C.PCF_ALIM_DEVICE_NAME, IConstantesI2C.PCF_ALIM_ADDRESS);
-        manager.registerDevice(IConstantesI2C.PCF1_DEVICE_NAME, IConstantesI2C.PCF1_ADDRESS);
-        manager.registerDevice(IConstantesI2C.PCF2_DEVICE_NAME, IConstantesI2C.PCF2_ADDRESS);
-        manager.registerDevice(IConstantesI2C.PCA9685_DEVICE_NAME, IConstantesI2C.PCA9685_ADDRESS);
+        manager.registerDevice(IConstantesI2CNerell.PCF_ALIM_DEVICE_NAME, IConstantesI2CNerell.PCF_ALIM_ADDRESS);
+        manager.registerDevice(IConstantesI2CNerell.PCF1_DEVICE_NAME, IConstantesI2CNerell.PCF1_ADDRESS);
+        manager.registerDevice(IConstantesI2CNerell.PCF2_DEVICE_NAME, IConstantesI2CNerell.PCF2_ADDRESS);
+        manager.registerDevice(IConstantesI2CNerell.PCA9685_DEVICE_NAME, IConstantesI2CNerell.PCA9685_ADDRESS);
 
         return manager;
     }
 
     @Bean
     public SD21Servos servos() {
-        return new SD21Servos(IConstantesI2C.SERVO_DEVICE_NAME);
+        return new SD21Servos(IConstantesI2CNerell.SERVO_DEVICE_NAME);
     }
 
     @Bean
     public ARIG2WheelsEncoders encoders() {
-        return new ARIG2WheelsEncoders(IConstantesI2C.CODEUR_MOTEUR_GAUCHE, IConstantesI2C.CODEUR_MOTEUR_DROIT);
+        return new ARIG2WheelsEncoders(IConstantesI2CNerell.CODEUR_MOTEUR_GAUCHE, IConstantesI2CNerell.CODEUR_MOTEUR_DROIT);
     }
 
     @Bean
     @SneakyThrows
     public PCA9685GpioProvider pca9685GpioControler(I2CBus bus) {
-        final PCA9685GpioProvider gpioProvider = new PCA9685GpioProvider(bus, IConstantesI2C.PCA9685_ADDRESS, new BigDecimal(200));
+        final PCA9685GpioProvider gpioProvider = new PCA9685GpioProvider(bus, IConstantesI2CNerell.PCA9685_ADDRESS, new BigDecimal(200));
 
         final GpioController gpio = GpioFactory.getInstance();
         // Moteur Gauche

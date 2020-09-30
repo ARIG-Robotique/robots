@@ -6,7 +6,6 @@ import org.arig.robot.listener.JoyConRightEventListener;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.services.IServosServices;
 import org.arig.robot.services.ServosServices;
-import org.arig.robot.system.gamepad.nintendoswitch.ControllerEvent;
 import org.arig.robot.system.gamepad.nintendoswitch.ControllerEventListener;
 import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyConLeft;
 import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyConRight;

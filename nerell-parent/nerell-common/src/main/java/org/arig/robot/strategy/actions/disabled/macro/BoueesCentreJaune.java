@@ -3,8 +3,8 @@ package org.arig.robot.strategy.actions.disabled.macro;
 import org.arig.robot.strategy.actions.AbstractMacroNerellAction;
 import org.arig.robot.strategy.actions.active.Bouee10;
 import org.arig.robot.strategy.actions.active.Bouee11;
-import org.arig.robot.strategy.actions.disabled.Bouee12;
 import org.arig.robot.strategy.actions.active.Bouee9;
+import org.arig.robot.strategy.actions.disabled.Bouee12;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

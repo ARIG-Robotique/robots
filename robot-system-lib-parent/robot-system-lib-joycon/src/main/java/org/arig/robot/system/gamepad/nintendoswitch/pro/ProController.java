@@ -1,6 +1,5 @@
 package org.arig.robot.system.gamepad.nintendoswitch.pro;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
