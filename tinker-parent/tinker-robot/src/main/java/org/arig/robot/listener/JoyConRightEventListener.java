@@ -37,6 +37,6 @@ public class JoyConRightEventListener implements ControllerEventListener {
             }
         });
 
-        log.info("Right Stick : Accel {}", event.getVertical());
+        //log.info("Right Stick : Accel {}", event.getVertical());
     }
 }

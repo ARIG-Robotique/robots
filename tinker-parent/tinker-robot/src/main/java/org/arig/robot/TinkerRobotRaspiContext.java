@@ -13,6 +13,7 @@ import org.arig.robot.communication.raspi.RaspiI2CManager;
 import org.arig.robot.constants.IConstantesI2CTinker;
 import org.arig.robot.constants.IConstantesServosTinker;
 import org.arig.robot.exception.I2CException;
+import org.arig.robot.system.motors.PropulsionsMD22Motors;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -33,6 +34,7 @@ public class TinkerRobotRaspiContext {
     public II2CManager i2cManager(I2CBus i2cBus) throws I2CException {
         final RaspiI2CManager manager = new RaspiI2CManager(i2cBus);
         manager.registerDevice(IConstantesI2CTinker.PCA9685_DEVICE_NAME, IConstantesI2CTinker.PCA9685_ADDRESS);
+        manager.registerDevice(IConstantesI2CTinker.MD22_DEVICE_NAME, IConstantesI2CTinker.MD22_ADDRESS);
 
         return manager;
     }
@@ -40,7 +42,8 @@ public class TinkerRobotRaspiContext {
     @Bean
     @SneakyThrows
     public PCA9685GpioProvider pca9685GpioControler(I2CBus bus) {
-        final PCA9685GpioProvider gpioProvider = new PCA9685GpioProvider(bus, IConstantesI2CTinker.PCA9685_ADDRESS, PCA9685GpioProvider.ANALOG_SERVO_FREQUENCY);
+        final PCA9685GpioProvider gpioProvider = new PCA9685GpioProvider(bus, IConstantesI2CTinker.PCA9685_ADDRESS,
+                PCA9685GpioProvider.ANALOG_SERVO_FREQUENCY);
 
         final GpioController gpio = GpioFactory.getInstance();
 
@@ -50,5 +53,12 @@ public class TinkerRobotRaspiContext {
         gpio.provisionPwmOutputPin(gpioProvider, IConstantesServosTinker.TRANSLATEUR);
 
         return gpioProvider;
+    }
+
+    @Bean
+    public PropulsionsMD22Motors md22Motors() {
+        PropulsionsMD22Motors motors = new PropulsionsMD22Motors(IConstantesI2CTinker.MD22_DEVICE_NAME, (byte) 1, (short) 0);
+        motors.assignMotors(1, 2);
+        return motors;
     }
 }

@@ -10,6 +10,7 @@ import org.arig.robot.system.gamepad.nintendoswitch.ControllerEventListener;
 import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyConLeft;
 import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyConRight;
 import org.arig.robot.system.gamepad.nintendoswitch.pro.ProController;
+import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,8 +33,8 @@ public class TinkerRobotContext {
     }
 
     @Bean
-    public JoyConLeftEventListener leftEventListener(IServosServices servosServices) {
-        return new JoyConLeftEventListener(servosServices);
+    public JoyConLeftEventListener leftEventListener(IServosServices servosServices, AbstractPropulsionsMotors motors) {
+        return new JoyConLeftEventListener(servosServices, motors);
     }
 
     @Bean

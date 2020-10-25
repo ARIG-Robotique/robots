@@ -2,6 +2,14 @@ description = "ARIG Association - Tinker Robot"
 
 apply plugin: 'org.springframework.boot'
 
+jar {
+    enabled = true
+}
+
+bootJar {
+    classifier = 'exec'
+}
+
 dependencies {
     compile project(':robot-system-lib-parent:robot-system-lib-raspi')
     compile project(':robot-system-lib-parent:robot-system-lib-joycon')
