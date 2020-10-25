@@ -26,10 +26,10 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
         int[] boueesAvoided = new int[]{5, 6, 7, 8, 9, 10, 11, 12};
         for (int nb : boueesAvoided) {
             // ignore la bouée devant le petit port
-//            if ((rs.getTeam() == ETeam.BLEU && nb == 9) || (rs.getTeam() == ETeam.JAUNE && nb == 8)) {
-//                continue;
-//            }
-            // ignore la bouée devant l'ecueil adverse en aggressif
+            if ((rs.getTeam() == ETeam.BLEU && nb == 9) || (rs.getTeam() == ETeam.JAUNE && nb == 8)) {
+                continue;
+            }
+            // ignore la bouée devant l'ecueil adverse
             if ((rs.getTeam() == ETeam.BLEU && nb == 11) || (rs.getTeam() == ETeam.JAUNE && nb == 6)) {
                 continue;
             }

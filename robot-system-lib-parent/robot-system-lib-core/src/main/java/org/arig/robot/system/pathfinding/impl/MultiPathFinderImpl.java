@@ -37,6 +37,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
 
     private boolean algoFiltered = false;
 
+    private List<Shape> obstacles;
     private BufferedImage tableImage;
     private GridGraph workGraph;
 
@@ -122,13 +123,30 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
     }
 
     @Override
-    public boolean isBlocked(Point point) {
-        return workGraph.isBlocked((int) point.getX(), (int) point.getY());
+    public boolean isBlocked(Point pointCm) {
+        return workGraph.isBlocked((int) pointCm.getX(), (int) pointCm.getY());
+    }
+
+    @Override
+    public boolean isBlockedByObstacle(Point pointCm) {
+        if (CollectionUtils.isEmpty(obstacles)) {
+            return false;
+        }
+
+        for (Shape obstacle : obstacles) {
+            if (obstacle.contains((int) pointCm.getX(), (int) pointCm.getY(), 1, 1)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
     public void setObstacles(final List<Shape> obstacles) {
         log.info("Ajout de {} obstacles", obstacles.size());
+
+        this.obstacles = obstacles;
 
         if (CollectionUtils.isEmpty(obstacles)) {
             makeGraphFromBufferedImage(tableImage);

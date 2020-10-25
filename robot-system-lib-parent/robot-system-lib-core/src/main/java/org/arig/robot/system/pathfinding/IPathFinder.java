@@ -27,7 +27,9 @@ public interface IPathFinder {
      */
     void construitGraphDepuisImageNoirEtBlanc(InputStream is);
 
-    boolean isBlocked(Point point);
+    boolean isBlocked(Point pointCm);
+
+    boolean isBlockedByObstacle(Point pointCm);
 
     /**
      * Ajout d'un obstacle sur la map.

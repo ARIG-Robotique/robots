@@ -476,9 +476,16 @@ public class TrajectoryManager implements ITrajectoryManager {
             );
             Point ptToCm = new Point(targetXmm / divisor, targetYmm / divisor);
             try {
-                // si c'est une nouvelle tentative et qu'on est dans le noir, on recule
-                if (nbCollisionDetected > 0 && pathFinder.isBlocked(ptFromCm)) {
-                    reculeMM(100);
+                // si c'est une nouvelle tentative et qu'on est dans le noir, on recule ou avance selon le sens déplacement
+                if (nbCollisionDetected > 0 && pathFinder.isBlockedByObstacle(ptFromCm)) {
+                    double dX = conv.mmToPulse(targetXmm) - currentPosition.getPt().getX();
+                    double dY = conv.mmToPulse(targetYmm) - currentPosition.getPt().getY();
+                    double angle = calculAngleConsigne(dX, dY);
+                    if (Math.abs(angle) < conv.degToPulse(90)) {
+                        reculeMM(100);
+                    } else {
+                        avanceMM(100);
+                    }
 
                     ptFromCm = new Point(
                             conv.pulseToMm(currentPosition.getPt().getX()) / divisor,
