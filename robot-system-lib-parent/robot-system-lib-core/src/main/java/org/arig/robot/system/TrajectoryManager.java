@@ -509,7 +509,7 @@ public class TrajectoryManager implements ITrajectoryManager {
                     final EnumSet<GotoOption> localOptions = options.clone();
                     localOptions.add(GotoOption.NO_CATCH_REFRESH_PATH);
                     if (c.hasNext()) {
-                        localOptions.add(GotoOption.SANS_ARRET);
+                        //localOptions.add(GotoOption.SANS_ARRET);
                     }
                     if (!firstPoint) {
                         localOptions.add(GotoOption.SANS_ORIENTATION);

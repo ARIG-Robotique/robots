@@ -83,11 +83,11 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
 
             // on en profite pour recaller un axe
             if (orientation == -90) {
-//                position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstCallageY));
+                position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstCallageY));
             } else if (orientation == 180) {
-//                position.getPt().setX(conv.mmToPulse(3000 - IConstantesNerellConfig.dstCallageY));
+                position.getPt().setX(conv.mmToPulse(3000 - IConstantesNerellConfig.dstCallageY));
             } else if (orientation == 0) {
-//                position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstCallageY));
+                position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstCallageY));
             }
 
             pincesArriereService.finalisePriseEcueil(bouees());
