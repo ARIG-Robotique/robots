@@ -82,7 +82,7 @@ public class DeposePetitPort extends AbstractNerellAction {
         try {
             final Point entry = entryPoint();
             final double x = entry.getX();
-            final double baseYStep = 240;
+            final double baseYStep = 260;
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
