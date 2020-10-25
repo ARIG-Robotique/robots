@@ -92,7 +92,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
                 rs.enablePincesAvant();
 
                 // attente d'ouverture des servos
-                ThreadUtils.sleep(IConstantesNerellConfig.i2cReadTimeMs * 3);
+                ThreadUtils.sleep(400);
 
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
