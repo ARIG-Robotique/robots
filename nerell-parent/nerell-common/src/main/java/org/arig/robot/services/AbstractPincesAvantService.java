@@ -134,10 +134,10 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
     @Override
     public void process() {
         final boolean[] newStateLat = new boolean[]{
-                io.presencePinceAvantLat1(),
-                io.presencePinceAvantLat2(),
-                io.presencePinceAvantLat3(),
-                io.presencePinceAvantLat4()
+                io.presencePinceAvantLat1() || io.presencePinceAvantSup1(),
+                io.presencePinceAvantLat2() || io.presencePinceAvantSup2(),
+                io.presencePinceAvantLat3() || io.presencePinceAvantSup3(),
+                io.presencePinceAvantLat4() || io.presencePinceAvantSup4()
         };
 
         for (int i = 0; i < newStateLat.length; i++) {
