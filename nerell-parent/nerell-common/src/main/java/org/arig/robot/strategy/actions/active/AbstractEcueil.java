@@ -100,6 +100,9 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);
 
         } catch (NoPathFoundException | AvoidingException e) {
+            // blocage potentiel sur un gobelet devant le robot, la finalisation de prise permet de remonter l'ascenseur
+            pincesArriereService.finalisePriseEcueil(bouees());
+
             updateValidTime();
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         }
