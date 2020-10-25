@@ -104,6 +104,9 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
                     mv.avanceMM(35);
                 }
                 mv.gotoPoint(xRef, getYDepose(yRef, true), GotoOption.AVANT);
+                if (!deposeArriere) {
+                    mv.gotoOrientationDeg(getPositionChenal() == EPosition.NORD ? 90 : -90);
+                }
                 pincesAvantService.deposeGrandChenal(getCouleurChenal()); // TODO Dépose partiel
             }
 
