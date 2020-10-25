@@ -85,14 +85,12 @@ public class ManchesAAir extends AbstractNerellAction {
                         servos.brasGaucheMancheAAir(true);
                     }
                     mv.gotoPoint(xFinManche2, y, GotoOption.SANS_ORIENTATION, GotoOption.ARRIERE);
-                    mv.gotoOrientationDegSansDistance(-160, SensRotation.TRIGO);
                 } else {
                     if (!manche1Before) {
                         mv.gotoOrientationDegSansDistance(0);
                         servos.brasDroitMancheAAir(true);
                     }
                     mv.gotoPoint(3000 - xFinManche2, y, GotoOption.SANS_ORIENTATION, GotoOption.ARRIERE);
-                    mv.gotoOrientationDegSansDistance(-20, SensRotation.HORAIRE);
                 }
                 rs.mancheAAir2(true);
             }
