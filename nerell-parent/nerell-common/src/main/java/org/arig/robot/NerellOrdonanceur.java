@@ -11,6 +11,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IConstantesUtiles;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.I2CException;
+import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
@@ -189,6 +190,12 @@ public class NerellOrdonanceur {
             String fileResourcePath = String.format("classpath:maps/sail_the_world-%s.png", nerellRobotStatus.getTeam().name());
             final InputStream imgMap = patternResolver.getResource(fileResourcePath).getInputStream();
             pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
+            try {
+                // path bidon pour que l'init de l'algo se fasse
+                pathFinder.findPath(new Point(150, 100), new Point(150, 110));
+            } catch (NoPathFoundException e) {
+                log.warn(e.getMessage());
+            }
 
 //        ecranService.displayMessage("Définition des zones 'mortes' de la carte.");
 //        // Exclusion de toutes la zone pente et distributeur personel
@@ -201,11 +208,11 @@ public class NerellOrdonanceur {
 //            tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 300, 2000));
 //        }
 
-        // Initialisation Mouvement Manager
-        ecranService.displayMessage("Initialisation du contrôleur de mouvement");
-        trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseUltraLente, IConstantesNerellConfig.vitesseOrientationBasse);
-        trajectoryManager.init();
-        nerellRobotStatus.enableAsserv();
+            // Initialisation Mouvement Manager
+            ecranService.displayMessage("Initialisation du contrôleur de mouvement");
+            trajectoryManager.setVitesse(IConstantesNerellConfig.vitesseUltraLente, IConstantesNerellConfig.vitesseOrientationBasse);
+            trajectoryManager.init();
+            nerellRobotStatus.enableAsserv();
 
             ecranService.displayMessage("Calage bordure");
             calageBordure(ecranService.config().isSkipCalageBordure());
