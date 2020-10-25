@@ -288,8 +288,6 @@ public class NerellOrdonanceur {
             ecranService.displayMessage(String.format("FIN - Durée match %s ms", nerellRobotStatus.getElapsedTime()));
 
             motorPavillon.speed(motorPavillon.getStopSpeed()); // Ecrit par Nils le 22/03/2020 à 09:47:26
-            servosService.pincesAvantOuvert(false);
-            servosService.pincesArriereOuvert(true);
             ioService.disableAlim5VPuissance();
 
             // On envoi les datas collecté
@@ -312,11 +310,11 @@ public class NerellOrdonanceur {
 
             // Remise en place
             ioService.enableAlim5VPuissance();
-            servosService.pincesAvantFerme(false);
-            servosService.pincesArriereFerme(false);
+            servosService.pincesAvantOuvert(false);
+            servosService.pincesArriereOuvert(false);
             servosService.brasDroitFerme(false);
             servosService.brasGaucheFerme(false);
-            servosService.ascenseurAvantBas(false);
+            servosService.ascenseurAvantRoulage(false);
             servosService.ascenseurArriereHaut(false);
             servosService.pivotArriereFerme(false);
             servosService.moustachesFerme(false);
@@ -324,6 +322,9 @@ public class NerellOrdonanceur {
             while (ioService.tirette()) {
                 ThreadUtils.sleep(1000);
             }
+            servosService.pincesAvantFerme(false);
+            servosService.pincesArriereFerme(false);
+            ThreadUtils.sleep(1000);
         } finally {
             lidar.stopScan();
 
