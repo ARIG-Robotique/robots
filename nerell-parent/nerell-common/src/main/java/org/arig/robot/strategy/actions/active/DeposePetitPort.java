@@ -176,7 +176,7 @@ public class DeposePetitPort extends AbstractNerellAction {
                 mv.reculeMM(150);
             }
 
-            if (step > 3) {
+            if (step > 2) {
                 complete();
             }
 
