@@ -60,4 +60,8 @@ public class VisionBaliseBouchon implements IVisionBalise {
     @Override
     public void end() {
     }
+
+    @Override
+    public void idle() {
+    }
 }

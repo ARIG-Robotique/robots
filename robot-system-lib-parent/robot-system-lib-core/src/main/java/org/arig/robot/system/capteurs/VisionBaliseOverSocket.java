@@ -7,6 +7,8 @@ import org.arig.robot.communication.socket.balise.EtalonnageQuery;
 import org.arig.robot.communication.socket.balise.EtalonnageResponse;
 import org.arig.robot.communication.socket.balise.ExitQuery;
 import org.arig.robot.communication.socket.balise.ExitResponse;
+import org.arig.robot.communication.socket.balise.IdleQuery;
+import org.arig.robot.communication.socket.balise.IdleResponse;
 import org.arig.robot.communication.socket.balise.PhotoQuery;
 import org.arig.robot.communication.socket.balise.PhotoResponse;
 import org.arig.robot.communication.socket.balise.StatusQuery;
@@ -38,6 +40,17 @@ public class VisionBaliseOverSocket extends AbstractSocketClient<BaliseAction> i
             }
         }
         super.end();
+    }
+
+    @Override
+    public void idle() {
+        if (isOpen()) {
+            try {
+                sendToSocketAndGet(new IdleQuery(), IdleResponse.class);
+            } catch (Exception e) {
+                log.warn("Erreur de lecture", e);
+            }
+        }
     }
 
     @Override

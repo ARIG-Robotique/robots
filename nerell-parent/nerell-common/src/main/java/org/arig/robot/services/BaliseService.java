@@ -133,4 +133,7 @@ public class BaliseService {
         return balise.etalonnage(ecueil, bouees);
     }
 
+    public void idle() {
+        balise.idle();
+    }
 }

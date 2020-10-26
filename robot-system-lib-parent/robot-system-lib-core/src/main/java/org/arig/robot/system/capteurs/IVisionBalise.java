@@ -12,5 +12,6 @@ public interface IVisionBalise {
     void openSocket() throws Exception;
     boolean isOpen();
     void end();
+    void idle();
 
 }

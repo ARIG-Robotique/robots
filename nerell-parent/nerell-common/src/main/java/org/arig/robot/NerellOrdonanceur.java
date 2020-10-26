@@ -290,6 +290,8 @@ public class NerellOrdonanceur {
                 ThreadUtils.sleep(200);
             }
             nerellRobotStatus.stopMatch();
+            baliseService.idle();
+            nerellRobotStatus.disableBalise();
             ioService.disableAlim12VPuissance();
             lidar.stopScan();
             ecranService.displayMessage(String.format("FIN - Durée match %s ms", nerellRobotStatus.getElapsedTime()));

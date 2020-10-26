@@ -5,5 +5,6 @@ public enum BaliseAction {
     PHOTO,
     ETALONNAGE,
     DETECTION,
+    IDLE,
     EXIT
 }
