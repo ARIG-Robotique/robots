@@ -155,6 +155,7 @@ public interface IConstantesNerellConfig {
     int pathFindingSeuilProximite = 480;
     int pathFindingTailleObstacle = IConstantesNerellConfig.pathFindingSeuilProximite * 2 + 50;
     int pathFindingTailleBouee = 420;
+    int pathFindingTailleBoueePort = 480;
 
     int lidarClusterSizeMm = 50;
     int lidarOffsetPointMm = 30; // "recule" les points détectés pour prendre en compte qu'on ne detecte que les faces avant

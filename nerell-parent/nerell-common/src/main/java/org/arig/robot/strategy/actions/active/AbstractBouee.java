@@ -60,7 +60,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
     public void execute() {
         try {
             final int pinceCible = getPinceCible();
-            final double distanceAproche = 250;
+            final double distanceAproche = IConstantesNerellConfig.pathFindingTailleBouee / 2.0 + 10;
             final double offsetPince = getOffsetPince(pinceCible);
 
             log.info("Prise de la bouee {} {} dans la pince avant {}", numeroBouee, bouee.couleur(), pinceCible);
