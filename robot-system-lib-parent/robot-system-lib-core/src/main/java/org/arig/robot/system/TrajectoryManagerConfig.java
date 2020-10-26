@@ -27,4 +27,6 @@ public class TrajectoryManagerConfig {
      * Si l'angle du point suivant est inférieur un coef visant a limiter la vitesse est calculé
      */
     private final double startAngleLimitSpeedDistance;
+
+    private final double sampleTimeS;
 }

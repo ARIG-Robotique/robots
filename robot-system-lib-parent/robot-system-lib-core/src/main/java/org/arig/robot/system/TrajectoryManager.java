@@ -420,7 +420,8 @@ public class TrajectoryManager implements ITrajectoryManager {
             fenetreApprocheDistance = trajectoryManagerConfig.getFenetreApprocheAvecFreinDistance();
             fenetreApprocheOrientation = trajectoryManagerConfig.getFenetreApprocheAvecFreinOrientation();
         } else {
-            fenetreApprocheDistance = trajectoryManagerConfig.getFenetreApprocheSansFreinDistance();
+            //fenetreApprocheDistance = trajectoryManagerConfig.getFenetreApprocheSansFreinDistance();
+            fenetreApprocheDistance = (long) (conv.mmToPulse(vitesseDistance()) * trajectoryManagerConfig.getSampleTimeS() * 4);
             fenetreApprocheOrientation = trajectoryManagerConfig.getFenetreApprocheSansFreinOrientation();
         }
 

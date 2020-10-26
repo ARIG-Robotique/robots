@@ -74,6 +74,7 @@ public class NerellCommonContext {
                 .fenetreApprocheSansFreinOrientation(conv.degToPulse(IConstantesNerellConfig.approcheSansFreinOrientationDeg))
                 .startAngleDemiTour(conv.degToPulse(IConstantesNerellConfig.startAngleDemiTourDeg))
                 .startAngleLimitSpeedDistance(conv.degToPulse(IConstantesNerellConfig.startAngleLimitVitesseDistance))
+                .sampleTimeS(IConstantesNerellConfig.asservTimeS)
                 .build();
 
         return new TrajectoryManager(config);
