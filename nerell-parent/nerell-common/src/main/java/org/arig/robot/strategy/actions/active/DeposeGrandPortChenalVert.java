@@ -18,7 +18,7 @@ public class DeposeGrandPortChenalVert extends AbstractDeposeGrandPortChenal {
 
     @Override
     protected Bouee getBoueeBloquante() {
-        if (rs.getTeam() == ETeam.BLEU) {
+        if (rs.getTeam() == ETeam.JAUNE) {
             return rs.bouee(16);
         } else {
             return rs.bouee(1);
