@@ -103,7 +103,7 @@ public class BaliseService {
                 // BLEU : 12=>7
                 // JAUNE : 5=>10
                 int numBouee = rs.getTeam() == ETeam.BLEU ? 12 - i : 5 + i;
-                rs.bouee(numBouee).prise(bouees[i] == BoueeDetectee.ABSENT);
+                rs.bouee(numBouee).setPresente(bouees[i] == BoueeDetectee.PRESENT);
             }
 
             return true;

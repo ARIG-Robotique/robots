@@ -93,18 +93,18 @@ public class PriseBoueesNord extends AbstractNerellAction {
 
                 mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.bouee(1).prise(true);
-                rs.bouee(2).prise(true);
+                rs.bouee(1).setPrise();
+                rs.bouee(2).setPrise();
 
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
                 mv.gotoOrientationDeg(0);
                 servos.pinceAvantOuvert(0, false);
                 mv.gotoPoint(640, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.bouee(5).prise(true);
+                rs.bouee(5).setPrise();
 
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
                 mv.gotoPoint(940, 1662, GotoOption.AVANT);
-                rs.bouee(6).prise(true);
+                rs.bouee(6).setPrise();
 
             } else {
                 if (rs.getStrategy() != EStrategy.BASIC_NORD) {
@@ -123,18 +123,18 @@ public class PriseBoueesNord extends AbstractNerellAction {
 
                 mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.bouee(13).prise(true);
-                rs.bouee(14).prise(true);
+                rs.bouee(13).setPrise();
+                rs.bouee(14).setPrise();
 
                 pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 4);
                 mv.gotoOrientationDeg(180);
                 servos.pinceAvantOuvert(3, false);
                 mv.gotoPoint(3000 - 640, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.bouee(12).prise(true);
+                rs.bouee(12).setPrise();
 
                 pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 2);
                 mv.gotoPoint(3000 - 940, 1662, GotoOption.AVANT);
-                rs.bouee(11).prise(true);
+                rs.bouee(11).setPrise();
             }
 
         } catch (AvoidingException | NoPathFoundException e) {

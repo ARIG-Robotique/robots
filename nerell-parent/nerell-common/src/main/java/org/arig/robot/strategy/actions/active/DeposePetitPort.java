@@ -95,9 +95,9 @@ public class DeposePetitPort extends AbstractNerellAction {
 
             // on a shooté la bouée
             if (rs.getTeam() == ETeam.JAUNE) {
-                rs.bouee(8).prise(true);
+                rs.bouee(8).setPrise();
             } else {
-                rs.bouee(9).prise(true);
+                rs.bouee(9).setPrise();
             }
 
             boolean deposePinceDone = false;

@@ -99,8 +99,8 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
                 mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.bouee(3).prise(true);
-                rs.bouee(4).prise(true);
+                rs.bouee(3).setPrise();
+                rs.bouee(4).setPrise();
 
                 rs.disablePincesAvant();
 
@@ -124,8 +124,8 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
                 mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.bouee(15).prise(true);
-                rs.bouee(16).prise(true);
+                rs.bouee(15).setPrise();
+                rs.bouee(16).setPrise();
 
                 rs.disablePincesAvant();
 

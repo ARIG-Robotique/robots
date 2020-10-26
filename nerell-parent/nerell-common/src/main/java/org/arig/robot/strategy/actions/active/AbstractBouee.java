@@ -53,7 +53,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !bouee.prise() && getPinceCible() != 0 && rs.getRemainingTime() > IConstantesNerellConfig.invalidPriseRemainingTime;
+        return isTimeValid() && bouee.presente() && getPinceCible() != 0 && rs.getRemainingTime() > IConstantesNerellConfig.invalidPriseRemainingTime;
     }
 
     @Override
@@ -87,7 +87,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
 
             // prise
             mv.avanceMM(180);
-            bouee.prise(true);
+            bouee.setPrise();
 
             complete();
         } catch (NoPathFoundException | AvoidingException e) {

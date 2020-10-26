@@ -35,7 +35,7 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
             }
 
             Bouee bouee = rs.bouee(nb);
-            if (!bouee.prise()) {
+            if (bouee.presente()) {
                 obstacles.add(tableUtils.createPolygonObstacle(bouee.pt(),
                         nb <= 4 || nb >= 13 ? IConstantesNerellConfig.pathFindingTailleBoueePort : IConstantesNerellConfig.pathFindingTailleBouee));
             }

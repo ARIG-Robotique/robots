@@ -55,7 +55,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rs.inPort() && (!rs.pincesArriereEmpty() || !rs.pincesAvantEmpty()) && getBoueeBloquante().prise();
+        return isTimeValid() && !rs.inPort() && (!rs.pincesArriereEmpty() || !rs.pincesAvantEmpty()) && !getBoueeBloquante().presente();
     }
 
     @Override
