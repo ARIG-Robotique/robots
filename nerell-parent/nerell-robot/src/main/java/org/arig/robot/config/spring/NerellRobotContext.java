@@ -93,7 +93,9 @@ public class NerellRobotContext {
 
     @Bean
     public ARIG2WheelsEncoders encoders() {
-        return new ARIG2WheelsEncoders(IConstantesI2CNerell.CODEUR_MOTEUR_GAUCHE, IConstantesI2CNerell.CODEUR_MOTEUR_DROIT);
+        ARIG2WheelsEncoders codeurs = new ARIG2WheelsEncoders(IConstantesI2CNerell.CODEUR_MOTEUR_GAUCHE, IConstantesI2CNerell.CODEUR_MOTEUR_DROIT);
+        codeurs.setCoefs(IConstantesNerellConfig.coefRoueGauche, IConstantesNerellConfig.coefRoueDroite);
+        return codeurs;
     }
 
     @Bean

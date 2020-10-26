@@ -47,11 +47,14 @@ public interface IConstantesNerellConfig {
     // Configuration des convertions //
     // ----------------------------- //
 
+    double coefRoueGauche = 1.00097117794486;
+    double coefRoueDroite = 0.999030704771434;
+
     // 40000 p => 1524.5 mm : 40000 / 1524.5 = 26,238110856
-    double countPerMm = 26.238110856;
+    double countPerMm = 26.2902569559638;
 
     // 51325 p => 360° : 51325 / 360 = 142,569444444
-    double countPerDeg = 142.569444444;
+    double countPerDeg = 142.777777777778;
 
     // ------------------------ //
     // Configuration des rampes //
