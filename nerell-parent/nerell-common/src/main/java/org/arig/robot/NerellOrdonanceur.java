@@ -304,7 +304,11 @@ public class NerellOrdonanceur {
             log.info("Création du fichier de fin d'éxécution {}", execFile.getAbsolutePath());
 
             // Attente remise de la tirette pour ejecter le stock
-            ecranService.displayMessage("FIN - Remettre la tirette et AU pour ejection");
+            ecranService.displayMessage(
+                    String.format("FIN - Remettre la tirette et AU pour ejection - Score %s",
+                            nerellRobotStatus.calculerPoints())
+            );
+
             while (!ioService.tirette() || !ioService.auOk()) {
                 ThreadUtils.sleep(1000);
             }
