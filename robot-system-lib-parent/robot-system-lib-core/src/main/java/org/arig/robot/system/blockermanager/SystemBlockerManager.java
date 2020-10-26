@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public class SystemBlockerManager implements ISystemBlockerManager {
 
-    private static final byte MAX_ERROR_DISTANCE = 10;
-    private static final byte MAX_ERROR_ORIENTATION = 10;
+    private static final byte MAX_ERROR_DISTANCE = 5;
+    private static final byte MAX_ERROR_ORIENTATION = 5;
 
     @Autowired
     private CommandeRobot cmdRobot;
