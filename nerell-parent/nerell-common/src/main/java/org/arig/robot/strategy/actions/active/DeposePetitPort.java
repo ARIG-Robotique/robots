@@ -79,6 +79,8 @@ public class DeposePetitPort extends AbstractNerellAction {
 
     @Override
     public void execute() {
+        boolean inPort = false;
+
         try {
             final Point entry = entryPoint();
             final double x = entry.getX();
@@ -92,6 +94,7 @@ public class DeposePetitPort extends AbstractNerellAction {
             }
             mv.pathTo(entry, sensEntry);
             rs.disableAvoidance();
+            inPort = true;
 
             // on a shooté la bouée
             if (rs.getTeam() == ETeam.JAUNE) {
@@ -173,6 +176,7 @@ public class DeposePetitPort extends AbstractNerellAction {
             }
 
             if (!deposePinceDone) {
+                inPort = false;
                 mv.reculeMM(150);
             }
 
@@ -181,7 +185,7 @@ public class DeposePetitPort extends AbstractNerellAction {
             }
 
         } catch (NoPathFoundException | AvoidingException e) {
-            if (conv.pulseToDeg(position.getAngle()) < 0) {
+            if (conv.pulseToDeg(position.getAngle()) < 0 && inPort) {
                 try {
                     mv.reculeMM(200);
                 } catch (AvoidingException eRecul) {

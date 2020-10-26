@@ -64,7 +64,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             final Point entry = entryPoint();
-            final Point entry2 = new Point(entry.getX(), getYDepose(entry.getY(), rs.pincesArriereEmpty()));
+            final Point entry2 = new Point(entry.getX(), getYDepose(entry.getY(), rs.pincesArriereEmpty(), rs.pincesArriereEmpty() ^ rs.pincesAvantEmpty()));
 
             if (tableUtils.distance(entry2) > 100) {
                 mv.pathTo(entry2);
@@ -84,7 +84,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
             if (!rs.pincesAvantEmpty()) {
                 if (deposeArriere) {
                     mv.avanceMM(35);
-                    mv.gotoPoint(entry.getX(), getYDepose(entry.getY(), true), GotoOption.AVANT);
+                    mv.gotoPoint(entry.getX(), getYDepose(entry.getY(), true, false), GotoOption.AVANT);
                 }
                 else {
                     mv.gotoOrientationDeg(getPositionChenal() == EPosition.NORD ? 90 : -90);
@@ -102,10 +102,18 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
         }
     }
 
-    private double getYDepose(double yRef, boolean avant) {
-        int coef = 61 + 32; // Offset pour Y en fonction du type de dépose
+    private double getYDepose(double yRef, boolean avant, boolean onlyOne) {
+        int coef = 93; // Offset pour Y en fonction du type de dépose
+        // TODO refactor moi !
         if (avant) {
             coef += 30;
+            if (onlyOne) {
+                coef += 30;
+            }
+        } else {
+            if (onlyOne) {
+                coef -= 30;
+            }
         }
 
         if (getPositionChenal() == EPosition.NORD) {
