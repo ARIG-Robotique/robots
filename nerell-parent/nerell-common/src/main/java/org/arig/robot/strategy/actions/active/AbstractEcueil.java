@@ -60,7 +60,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
                 firstExecution = false;
 
                 rs.enableAvoidance();
-                mv.gotoPoint(aggressiveIntermediaryPoint());
+                mv.gotoPoint(aggressiveIntermediaryPoint(), GotoOption.SANS_ARRET);
                 mv.gotoPoint(entry);
 
                 onAgressiveMvtDone();
@@ -82,13 +82,13 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             mv.reculeMMSansAngle(60);
 
             // on en profite pour recaller un axe
-            if (orientation == -90) {
-//                position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstCallageY));
+            /*if (orientation == -90) {
+                position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstCallageY));
             } else if (orientation == 180) {
-//                position.getPt().setX(conv.mmToPulse(3000 - IConstantesNerellConfig.dstCallageY));
+                position.getPt().setX(conv.mmToPulse(3000 - IConstantesNerellConfig.dstCallageY));
             } else if (orientation == 0) {
-//                position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstCallageY));
-            }
+                position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstCallageY));
+            }*/
 
             pincesArriereService.finalisePriseEcueil(bouees());
 
