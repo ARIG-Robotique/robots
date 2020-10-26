@@ -197,16 +197,8 @@ public class NerellOrdonanceur {
                 log.warn(e.getMessage());
             }
 
-//        ecranService.displayMessage("Définition des zones 'mortes' de la carte.");
-//        // Exclusion de toutes la zone pente et distributeur personel
-//        tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 3000, 457)); // Pente + petit distrib
-//        if (robotStatus.getTeam() == Team.BLEU) {
-//            // Zone départ adverse Jaune
-//            tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(2700, 0, 300, 2000));
-//        } else {
-//            // Zone d&part adverse Bleu
-//            tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(0, 0, 300, 2000));
-//        }
+            // Exclusion du petit port pour l'évittement
+            tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(890, 0, 1200, 300));
 
             // Initialisation Mouvement Manager
             ecranService.displayMessage("Initialisation du contrôleur de mouvement");
