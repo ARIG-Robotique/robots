@@ -5,7 +5,10 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.NerellRobotStatus;
+import org.arig.robot.system.pathfinding.IPathFinder;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
 
 @Slf4j
 public abstract class AbstractPincesAvantService implements IPincesAvantService {
@@ -23,6 +26,9 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
     @Autowired
     private ServosService servosService;
 
+    @Autowired
+    private IPathFinder pathFinder;
+
     private MutablePair<ECouleurBouee, ECouleurBouee> expected = new MutablePair<>();
 
     private boolean[] enabled = new boolean[]{true, true, true, true};
@@ -39,6 +45,8 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
             rs.grandChenaux().addVert(rs.pincesAvant());
         }
         rs.clearPincesAvant();
+
+        pathFinder.setObstacles(new ArrayList<>());
 
         return true;
     }

@@ -1,6 +1,7 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.Bouee;
 import org.arig.robot.model.Chenaux;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
@@ -13,6 +14,15 @@ public class DeposeGrandPortChenalVert extends AbstractDeposeGrandPortChenal {
     @Override
     public String name() {
         return "Dépose grand port chenal vert";
+    }
+
+    @Override
+    protected Bouee getBoueeBloquante() {
+        if (rs.getTeam() == ETeam.BLEU) {
+            return rs.bouee(16);
+        } else {
+            return rs.bouee(1);
+        }
     }
 
     @Override
