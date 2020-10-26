@@ -36,6 +36,11 @@ public class Phare extends AbstractNerellAction {
     @Override
     public int order() {
         int order = 13;
+
+        if (rs.isEcueilCommunEquipePris()) {
+            order += 30;
+        }
+
         return order + tableUtils.alterOrder(entryPoint());
     }
 

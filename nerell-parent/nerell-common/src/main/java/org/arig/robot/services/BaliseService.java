@@ -115,7 +115,7 @@ public class BaliseService {
     }
 
     public void lectureEcueilAdverse() {
-        if (statut != null && statut.getDetection() != null) {
+        if (statut != null && statut.getDetection() != null && !rs.isEcueilCommunAdversePris()) {
             byte nbBouees = (byte) Stream.of(statut.getDetection().getEcueil())
                     .filter(c -> c != CouleurDetectee.UNKNOWN)
                     .count();
