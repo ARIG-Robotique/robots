@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 @Slf4j
 @Configuration
@@ -43,7 +44,7 @@ public class TinkerRobotRaspiContext {
     @SneakyThrows
     public PCA9685GpioProvider pca9685GpioControler(I2CBus bus) {
         final PCA9685GpioProvider gpioProvider = new PCA9685GpioProvider(bus, IConstantesI2CTinker.PCA9685_ADDRESS,
-                PCA9685GpioProvider.ANALOG_SERVO_FREQUENCY);
+                new BigDecimal(60));
 
         final GpioController gpio = GpioFactory.getInstance();
 

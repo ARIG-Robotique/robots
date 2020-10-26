@@ -17,14 +17,14 @@ public class JoyConScheduler {
 
     @Scheduled(fixedDelay = 3000)
     public void leftConnection() {
-        if (!joyConLeft.connected() && !pro.connected()) {
+        if (!joyConLeft.connected() && !joyConRight.connected() && !pro.connected()) {
             joyConLeft.open();
         }
     }
 
     @Scheduled(fixedDelay = 3000)
     public void rightConnection() {
-        if (!joyConRight.connected() && !pro.connected()) {
+        if (!joyConRight.connected() && !joyConLeft.connected() && !pro.connected()) {
             joyConRight.open();
         }
     }

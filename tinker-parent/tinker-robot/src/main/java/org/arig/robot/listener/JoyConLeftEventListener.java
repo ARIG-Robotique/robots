@@ -8,6 +8,8 @@ import org.arig.robot.system.gamepad.nintendoswitch.ControllerEvent;
 import org.arig.robot.system.gamepad.nintendoswitch.ControllerEventListener;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 @Slf4j
 @RequiredArgsConstructor
 public class JoyConLeftEventListener implements ControllerEventListener {
@@ -22,27 +24,29 @@ public class JoyConLeftEventListener implements ControllerEventListener {
                 return;
             }
 
-            if (button == ControllerConstants.l) {
-                servosServices.blocageGaucheOuvert();
-            }
-            if (button == ControllerConstants.zl) {
-                servosServices.blocageGaucheFerme();
-            }
-            if (button == ControllerConstants.down) {
-                servosServices.fourcheHaut();
+            if (button == ControllerConstants.right) {
+                servosServices.toggleFourche();
             }
             if (button == ControllerConstants.up) {
-                servosServices.fourcheBas();
+                servosServices.toggleBlocageGauche();
+            }
+            if (button == ControllerConstants.down) {
+                servosServices.toggleBlocageDroit();
+            }
+            if (button == ControllerConstants.sl) {
+                servosServices.translateurGauche();
+            }
+            if (button == ControllerConstants.sr) {
+                servosServices.translateurDroite();
             }
         });
 
-        float h = event.getHorizontal();
-        float v = event.getVertical();
+        float h = -event.getVertical();
+        float v = event.getHorizontal();
 
         int g = (int) ((v + h) * 127);
         int d = (int) ((v - h) * 127);
 
-        log.info("Gauche {} ; Droite {}", g, d);
         motors.moteurDroit(d);
         motors.moteurGauche(g);
     }

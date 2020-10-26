@@ -4,11 +4,14 @@ public interface IServosServices {
 
     void fourcheHaut();
     void fourcheBas();
+    void toggleFourche();
     void blocageDroitOuvert();
     void blocageDroitFerme();
+    void toggleBlocageDroit();
     void blocageGaucheOuvert();
     void blocageGaucheFerme();
-    void translateurDroite();
-    void transleteurGauche();
+    void toggleBlocageGauche();
+    void translateurGauche();
     void translateurCentre();
+    void translateurDroite();
 }

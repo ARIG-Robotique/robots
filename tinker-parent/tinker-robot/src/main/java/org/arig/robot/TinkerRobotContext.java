@@ -1,5 +1,6 @@
 package org.arig.robot;
 
+import com.pi4j.gpio.extension.pca.PCA9685GpioProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.listener.JoyConLeftEventListener;
 import org.arig.robot.listener.JoyConRightEventListener;
@@ -28,8 +29,8 @@ public class TinkerRobotContext {
     }
 
     @Bean
-    public IServosServices servosServices() {
-        return new ServosServices();
+    public IServosServices servosServices(PCA9685GpioProvider pca9685GpioProvider) {
+        return new ServosServices(pca9685GpioProvider);
     }
 
     @Bean
@@ -38,8 +39,8 @@ public class TinkerRobotContext {
     }
 
     @Bean
-    public JoyConRightEventListener rightEventListener(IServosServices servosServices) {
-        return new JoyConRightEventListener(servosServices);
+    public JoyConRightEventListener rightEventListener(IServosServices servosServices, AbstractPropulsionsMotors motors) {
+        return new JoyConRightEventListener(servosServices, motors);
     }
 
     @Bean
