@@ -102,10 +102,8 @@ public class BaliseService {
                 // les bouees sont lues en partant de la plus proche de la balise
                 // BLEU : 12=>7
                 // JAUNE : 5=>10
-                if (bouees[i] == BoueeDetectee.ABSENT) {
-                    int numBouee = rs.getTeam() == ETeam.BLEU ? 12 - i : 5 + i;
-                    rs.bouee(numBouee).prise(true);
-                }
+                int numBouee = rs.getTeam() == ETeam.BLEU ? 12 - i : 5 + i;
+                rs.bouee(numBouee).prise(bouees[i] == BoueeDetectee.ABSENT);
             }
 
             return true;

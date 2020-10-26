@@ -50,7 +50,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
     }
 
     @Override
-    public final void execute() {
+    public void execute() {
         try {
             final Point entry = entryPoint();
             final double orientation = orientationPourPrise();
