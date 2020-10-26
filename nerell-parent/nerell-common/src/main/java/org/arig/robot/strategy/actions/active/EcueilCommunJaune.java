@@ -45,7 +45,7 @@ public class EcueilCommunJaune extends AbstractEcueil {
         if (rs.getTeam() == ETeam.JAUNE) {
             return super.isValid() && rs.bouee(11).prise() && rs.bouee(12).prise();
         } else {
-            return super.isValid() && rs.getRemainingTime() < 40000;
+            return super.isValid() && (rs.getStrategy() == EStrategy.AGGRESSIVE || rs.getRemainingTime() < 40000);
         }
     }
 
