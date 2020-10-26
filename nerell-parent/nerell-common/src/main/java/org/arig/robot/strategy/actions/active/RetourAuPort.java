@@ -68,7 +68,7 @@ public class RetourAuPort extends AbstractNerellAction {
         try {
             final Point entry = entryPoint();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-            mv.pathTo(entry);
+            mv.pathTo(entry, GotoOption.SANS_ARRET);
             setScore(coordProjection = true);
 
             // Finalisation de la rentré dans le port après avoir compter les points
