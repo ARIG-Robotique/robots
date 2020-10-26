@@ -187,7 +187,7 @@ public class NerellOrdonanceur {
             nerellRobotStatus.enableBalise();
 
             ecranService.displayMessage("Initialisation pathfinder");
-            String fileResourcePath = String.format("classpath:maps/sail_the_world-%s.png", nerellRobotStatus.getTeam().name());
+            String fileResourcePath = String.format("classpath:maps/sail_the_world-%s-nochenal.png", nerellRobotStatus.getTeam().name());
             final InputStream imgMap = patternResolver.getResource(fileResourcePath).getInputStream();
             pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
             try {

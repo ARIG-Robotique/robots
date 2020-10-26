@@ -23,7 +23,7 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
     @Override
     public void setObstacles(final List<Shape> obstacles) {
         // Ajout des obstacles en fonctions des bouées
-        int[] boueesAvoided = new int[]{5, 6, 7, 8, 9, 10, 11, 12};
+        int[] boueesAvoided = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
         for (int nb : boueesAvoided) {
             // ignore la bouée devant le petit port
             if ((rs.getTeam() == ETeam.BLEU && nb == 9) || (rs.getTeam() == ETeam.JAUNE && nb == 8)) {
@@ -39,6 +39,37 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
                 obstacles.add(tableUtils.createPolygonObstacle(bouee.pt(), IConstantesNerellConfig.pathFindingTailleBouee));
             }
         }
+
+        // ajoute les grand chenaux
+        if (rs.getTeam() == ETeam.BLEU && !rs.grandChenaux().chenalVertEmpty()) {
+            obstacles.add(buildChenal(new Point(330, 2000 - 515)));
+        }
+        if (rs.getTeam() == ETeam.BLEU && !rs.grandChenaux().chenalRougeEmpty()) {
+            obstacles.add(buildChenal(new Point(330, 2000 - 1085)));
+        }
+        if (rs.getTeam() == ETeam.JAUNE && !rs.grandChenaux().chenalVertEmpty()) {
+            obstacles.add(buildChenal(new Point(3000 - 330, 2000 - 1085)));
+        }
+        if (rs.getTeam() == ETeam.JAUNE && !rs.grandChenaux().chenalRougeEmpty()) {
+            obstacles.add(buildChenal(new Point(3000 - 330, 2000 - 515)));
+        }
+
         super.setObstacles(obstacles);
+    }
+
+    private Polygon buildChenal(Point pt) {
+        Polygon chenal = new Polygon();
+        chenal.addPoint(12, 27);
+        chenal.addPoint(33, 6);
+        chenal.addPoint(33, -6);
+        chenal.addPoint(12, -27);
+        chenal.addPoint(-12, -27);
+        chenal.addPoint(-33, -6);
+        chenal.addPoint(-33, 6);
+        chenal.addPoint(-12, 27);
+
+        chenal.translate((int) pt.getX() / 10, (int) pt.getY() / 10);
+
+        return chenal;
     }
 }

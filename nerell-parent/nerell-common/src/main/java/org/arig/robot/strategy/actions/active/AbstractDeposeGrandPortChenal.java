@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.Bouee;
 import org.arig.robot.model.Chenaux;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
@@ -29,38 +28,20 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
     @Autowired
     private IPincesAvantService pincesAvantService;
 
-    private GotoOption sensEntry = GotoOption.AUTO;
-
     protected abstract ECouleurBouee getCouleurChenal();
 
     protected abstract EPosition getPositionChenal();
-
-    protected abstract Bouee getBoueeAlternateEntry();
-
-    protected abstract Point getPointAlternateEntry();
 
     protected abstract Chenaux getChenauxFuture();
 
     @Override
     public Point entryPoint() {
-        double x = 460;
+        double x = 225;
         double y = 1200;
         if (ETeam.JAUNE == rs.getTeam()) {
             x = 3000 - x;
         }
-        final Point central = new Point(x, y);
-
-        if (getBoueeAlternateEntry().prise()) {
-            final Point alternateEntry = getPointAlternateEntry();
-
-            if (tableUtils.distance(alternateEntry) < tableUtils.distance(central)) {
-                sensEntry = GotoOption.AVANT;
-                return alternateEntry;
-            }
-        }
-
-        sensEntry = GotoOption.ARRIERE;
-        return central;
+        return new Point(x, y);
     }
 
     @Override
@@ -80,21 +61,19 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             final Point entry = entryPoint();
-            if (tableUtils.distance(entry) > 100) {
-                mv.pathTo(entry);
-            }
-            rs.disableAvoidance();
+            final Point entry2 = new Point(entry.getX(), getYDepose(entry.getY(), rs.pincesArriereEmpty()));
 
-            double xRef = 225;
-            double yRef = 1200;
-            if (rs.getTeam() == ETeam.JAUNE) {
-                xRef = 3000 - xRef;
+            if (tableUtils.distance(entry2) > 100) {
+                mv.pathTo(entry2);
+                rs.disableAvoidance();
+            } else {
+                rs.disableAvoidance();
+                mv.gotoPoint(entry2, GotoOption.SANS_ORIENTATION);
             }
 
             boolean deposeArriere = false;
             if (!rs.pincesArriereEmpty()) {
                 deposeArriere = true;
-                mv.gotoPoint(xRef, getYDepose(yRef, false), sensEntry, GotoOption.SANS_ORIENTATION);
                 mv.gotoOrientationDeg(getPositionChenal() == EPosition.NORD ? -90 : 90);
                 pincesArriereService.deposeGrandChenal(getCouleurChenal()); // TODO Dépose partiel
             }
@@ -102,15 +81,15 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
             if (!rs.pincesAvantEmpty()) {
                 if (deposeArriere) {
                     mv.avanceMM(35);
+                    mv.gotoPoint(entry.getX(), getYDepose(entry.getY(), true), GotoOption.AVANT);
                 }
-                mv.gotoPoint(xRef, getYDepose(yRef, true), GotoOption.AVANT);
-                if (!deposeArriere) {
+                else {
                     mv.gotoOrientationDeg(getPositionChenal() == EPosition.NORD ? 90 : -90);
                 }
                 pincesAvantService.deposeGrandChenal(getCouleurChenal()); // TODO Dépose partiel
             }
 
-            mv.gotoPoint(xRef, yRef, GotoOption.SANS_ORIENTATION);
+            mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);
             pincesAvantService.finaliseDepose();
             complete();
 
