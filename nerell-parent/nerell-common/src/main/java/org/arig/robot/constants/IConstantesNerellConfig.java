@@ -49,10 +49,10 @@ public interface IConstantesNerellConfig {
     // ----------------------------- //
 
     // 40000 p => 1524.5 mm : 40000 / 1524.5 = 26,238110856
-    double countPerMm = 1.0;
+    double countPerMm = 26.238110856;
 
     // 51325 p => 360° : 51325 / 360 = 142,569444444
-    double countPerDeg = 1.0;
+    double countPerDeg = 142.569444444;
 
     // ------------------------ //
     // Configuration des rampes //
@@ -62,11 +62,11 @@ public interface IConstantesNerellConfig {
     double gainVitesseRampeDistanceSimulateur = 3;
     double gainVitesseRampeOrientationSimulateur = gainVitesseRampeDistanceSimulateur * 2;
 
-    double rampAccDistance = 300.0; // en mm/s2
-    double rampDecDistance = 100.0; // en mm/s2
+    double rampAccDistance = 1000.0; // en mm/s2
+    double rampDecDistance = 1000.0; // en mm/s2
 
-    double rampAccOrientation = 300.0; // en mm/s2
-    double rampDecOrientation = 100.0; // en mm/s2
+    double rampAccOrientation = 1000.0; // en mm/s2
+    double rampDecOrientation = 1000.0; // en mm/s2
 
     // -------------------------- //
     // Configuration des vitesses //
@@ -86,8 +86,8 @@ public interface IConstantesNerellConfig {
     long vitesseSuperLente = 200;
     long vitesseUltraLente = 100;
 
-    long vitessePath = vitesseLente;
-    long vitesseOrientation = vitesseOrientationBasse;
+    long vitessePath = vitesseUltraHaute;
+    long vitesseOrientation = vitesseOrientationUltraHaute;
 
     // -------------- //
     // Parametres PID //
