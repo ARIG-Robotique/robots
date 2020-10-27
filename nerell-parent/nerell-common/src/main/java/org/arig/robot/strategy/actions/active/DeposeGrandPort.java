@@ -75,7 +75,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
             mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
 
             do {
-                double x = offsetX();
+                double x = offsetX(false);
                 if (!rs.pincesAvantEmpty()) {
                     if (rs.getTeam() == ETeam.BLEU) {
                         mv.gotoPoint(x, y);
@@ -87,7 +87,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
                     pincesAvantService.deposeGrandPort();
                     step++;
                 }
-                x = offsetX();
+                x = offsetX(true);
                 if (!rs.pincesArriereEmpty()) {
                     if (rs.getTeam() == ETeam.BLEU) {
                         mv.gotoPoint(x, y);
@@ -114,7 +114,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
         }
     }
 
-    private int offsetX() {
-        return 210 + step * 120;
+    private int offsetX(boolean arriere) {
+        return 210 + step * 120 + (arriere ? 60 : 0);
     }
 }
