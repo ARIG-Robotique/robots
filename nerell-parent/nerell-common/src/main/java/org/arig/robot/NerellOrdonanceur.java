@@ -29,6 +29,7 @@ import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.system.ITrajectoryManager;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
+import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
 import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -214,7 +215,7 @@ public class NerellOrdonanceur {
             calageBordure(ecranService.config().isSkipCalageBordure());
 
             ecranService.displayMessage("Démarrage du lidar");
-            lidar.startScan();
+            lidar.startScan(RPLidarA2TelemeterOverSocket.MAX_MOTOR_PWM);
 
             ScanInfos lidarDatas = lidar.grabDatas();
             if (lidarDatas.getScan().isEmpty()) {
