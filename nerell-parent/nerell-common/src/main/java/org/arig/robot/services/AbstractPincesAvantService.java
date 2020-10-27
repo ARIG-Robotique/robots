@@ -3,9 +3,11 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
+import org.arig.robot.constants.IConstantesServosNerell;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.system.pathfinding.IPathFinder;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -141,21 +143,38 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
      */
     @Override
     public void process() {
-        final boolean[] newStateLat = new boolean[]{
+        // on bloque les pinces qu'il faut
+        final boolean[] firstState = getNewState();
+        for (int i = 0; i < firstState.length; i++) {
+            if (firstState[i]) {
+                servosService.pinceAvantPrise(i, false);
+            }
+        }
+
+        // après attente on regarde ce qui est vraiment là
+        ThreadUtils.sleep(IConstantesServosNerell.WAIT_PINCE_AVANT);
+        final boolean[] newState = getNewState();
+
+        for (int i = 0; i < newState.length; i++) {
+            if (!newState[i] && firstState[i]) {
+                // finalement y'a rien...
+                log.info("Perte d'une bouée en position {}", i);
+                servosService.pinceAvantFerme(i, false);
+            } else if (newState[i] && !previousStateLat[i]) {
+                registerBouee(i);
+            }
+        }
+
+        previousStateLat = newState;
+    }
+
+    private boolean[] getNewState() {
+        return new boolean[]{
                 io.presencePinceAvantLat1() || io.presencePinceAvantSup1(),
                 io.presencePinceAvantLat2() || io.presencePinceAvantSup2(),
                 io.presencePinceAvantLat3() || io.presencePinceAvantSup3(),
                 io.presencePinceAvantLat4() || io.presencePinceAvantSup4()
         };
-
-        for (int i = 0; i < newStateLat.length; i++) {
-            if (rs.pincesAvant()[i] == null && !previousStateLat[i] && newStateLat[i]) {
-                servosService.pinceAvantPrise(i, false);
-                registerBouee(i);
-            }
-        }
-
-        previousStateLat = newStateLat;
     }
 
     private void clearExpected() {
