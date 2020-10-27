@@ -55,7 +55,8 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rs.inPort() && (!rs.pincesArriereEmpty() || !rs.pincesAvantEmpty()) && !getBoueeBloquante().presente();
+        return isTimeValid() && !rs.inPort() && !getBoueeBloquante().presente() &&
+                (!rs.pincesArriereEmpty() || !rs.pincesAvantEmpty() && rs.isDoubleDepose());
     }
 
     @Override
@@ -64,7 +65,8 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             final Point entry = entryPoint();
-            final Point entry2 = new Point(entry.getX(), getYDepose(entry.getY(), rs.pincesArriereEmpty(), rs.pincesArriereEmpty() ^ rs.pincesAvantEmpty()));
+            boolean onlyOne = !rs.isDoubleDepose() || (rs.pincesArriereEmpty() ^ rs.pincesAvantEmpty());
+            final Point entry2 = new Point(entry.getX(), getYDepose(entry.getY(), rs.pincesArriereEmpty(), onlyOne));
 
             if (tableUtils.distance(entry2) > 100) {
                 mv.pathTo(entry2);
@@ -81,12 +83,11 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
                 pincesArriereService.deposeGrandChenal(getCouleurChenal()); // TODO Dépose partiel
             }
 
-            if (!rs.pincesAvantEmpty()) {
+            if (!rs.pincesAvantEmpty() && rs.isDoubleDepose()) {
                 if (deposeArriere) {
                     mv.avanceMM(35);
                     mv.gotoPoint(entry.getX(), getYDepose(entry.getY(), true, false), GotoOption.AVANT);
-                }
-                else {
+                } else {
                     mv.gotoOrientationDeg(getPositionChenal() == EPosition.NORD ? 90 : -90);
                 }
                 pincesAvantService.deposeGrandChenal(getCouleurChenal()); // TODO Dépose partiel
@@ -103,17 +104,15 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
     }
 
     private double getYDepose(double yRef, boolean avant, boolean onlyOne) {
-        int coef = 93; // Offset pour Y en fonction du type de dépose
-        // TODO refactor moi !
+        // offset de base par rapport au milieu du port
+        int coef = 93;
+        // offset pour dépose avant
         if (avant) {
             coef += 30;
-            if (onlyOne) {
-                coef += 30;
-            }
-        } else {
-            if (onlyOne) {
-                coef -= 30;
-            }
+        }
+        // offset si c'est la seule dépose
+        if (onlyOne) {
+            coef += avant ? 30 : -30;
         }
 
         if (getPositionChenal() == EPosition.NORD) {

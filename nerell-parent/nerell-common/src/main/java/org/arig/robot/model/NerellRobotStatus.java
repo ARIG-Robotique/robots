@@ -57,6 +57,8 @@ public class NerellRobotStatus extends AbstractRobotStatus {
         }
     }
 
+    private boolean doubleDepose;
+
     @Override
     public void stopMatch() {
         super.stopMatch();

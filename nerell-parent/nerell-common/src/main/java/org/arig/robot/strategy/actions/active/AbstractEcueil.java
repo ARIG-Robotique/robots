@@ -77,7 +77,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             pincesArriereService.preparePriseEcueil();
             mv.reculeMM(60);
 
-            mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
             rs.enableCalageBordure();
             mv.reculeMMSansAngle(120);
 

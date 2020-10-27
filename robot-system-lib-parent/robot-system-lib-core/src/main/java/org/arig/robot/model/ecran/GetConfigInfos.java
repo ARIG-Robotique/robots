@@ -11,6 +11,7 @@ public class GetConfigInfos implements Serializable {
     boolean exit;
     int team;
     int strategy;
+    boolean doubleDepose;
     boolean startCalibration;
     boolean modeManuel;
     boolean skipCalageBordure;

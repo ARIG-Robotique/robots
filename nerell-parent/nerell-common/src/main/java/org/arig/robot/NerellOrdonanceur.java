@@ -148,6 +148,10 @@ public class NerellOrdonanceur {
             if (!ioService.alimPuissance12VOk() || !ioService.alimPuissance5VOk()) {
                 log.warn("Alimentation puissance NOK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
                 while (!ioService.alimPuissance12VOk() && !ioService.alimPuissance5VOk()) {
+                    if (ecranService.config().isExit()) {
+                        log.info("Arret du programme");
+                        return;
+                    }
                     ThreadUtils.sleep(500);
                 }
             }
@@ -229,6 +233,7 @@ public class NerellOrdonanceur {
 
             SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.RISING);
             SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.FALLING);
+            ChangeFilter<Boolean> doubleDeposeFilter = new ChangeFilter<>(nerellRobotStatus.isDoubleDepose());
             ChangeFilter<Integer> strategyChangeFilter = new ChangeFilter<>(-1);
             boolean manuel = ecranService.config().isModeManuel();
             while (!ioService.tirette()) {
@@ -246,6 +251,10 @@ public class NerellOrdonanceur {
                 // Si on est pas en manuel, gestion de la strategy
                 if (!manuel && !ecranService.config().isSkipCalageBordure()) {
                     ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
+                    if (doubleDeposeFilter.filter(ecranService.config().isDoubleDepose())) {
+                        nerellRobotStatus.setDoubleDepose(ecranService.config().isDoubleDepose());
+                        log.info((nerellRobotStatus.isDoubleDepose() ? "Activation" : "Désactivation") + " double dépose");
+                    }
                     if (strategyChangeFilter.filter(ecranService.config().getStrategy())) {
                         nerellRobotStatus.setStrategy(ecranService.config().getStrategy());
                         log.info("Strategy {}", nerellRobotStatus.getStrategy().name());
