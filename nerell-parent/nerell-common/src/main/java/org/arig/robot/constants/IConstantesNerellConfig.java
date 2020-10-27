@@ -27,7 +27,7 @@ public interface IConstantesNerellConfig {
     int pavillonRemainingTimeMs = 5000;
 
     // Temps pour rendre le port prioritaire
-    int invalidPriseRemainingTime = 20000;
+    int invalidPriseRemainingTime = 18000;
 
     // Temps pour rendre valide le retour au port
     int validRetourPortRemainingTime = 10000;
