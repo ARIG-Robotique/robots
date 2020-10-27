@@ -152,7 +152,9 @@ public interface IConstantesNerellConfig {
     // ---------------------- //
     PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.ANYA16;
     int pathFindingAngle = 45;
+    int pathFindingAngleSafe = 50;
     int pathFindingSeuilProximite = 480;
+    int pathFindingSeuilProximiteSafe = 540;
     int pathFindingTailleObstacle = IConstantesNerellConfig.pathFindingSeuilProximite * 2 + 50;
     int pathFindingTailleBouee = 420;
     int pathFindingTailleBoueePort = 480;

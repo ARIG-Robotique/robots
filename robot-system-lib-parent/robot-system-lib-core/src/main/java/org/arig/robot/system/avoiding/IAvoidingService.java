@@ -7,4 +7,6 @@ public interface IAvoidingService {
      */
     void process();
 
+    void setSafeAvoidance(boolean enabled);
+
 }

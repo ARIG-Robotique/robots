@@ -19,4 +19,9 @@ public class AvoidingServiceBouchon implements IAvoidingService {
             lidarService.refreshObstacles();
         }
     }
+
+    @Override
+    public void setSafeAvoidance(boolean enabled) {
+
+    }
 }

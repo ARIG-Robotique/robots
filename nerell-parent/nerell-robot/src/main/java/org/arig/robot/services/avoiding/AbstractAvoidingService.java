@@ -1,6 +1,7 @@
 package org.arig.robot.services.avoiding;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.Setter;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.NerellRobotStatus;
@@ -35,6 +36,9 @@ public abstract class AbstractAvoidingService implements IAvoidingService {
     @Autowired
     protected NerellRobotStatus rs;
 
+    @Setter
+    private boolean safeAvoidance = true;
+
     protected abstract void processAvoiding();
 
     public final void process() {
@@ -50,8 +54,9 @@ public abstract class AbstractAvoidingService implements IAvoidingService {
     }
 
     protected boolean hasProximite() {
+        int seuil = safeAvoidance ? IConstantesNerellConfig.pathFindingSeuilProximiteSafe : IConstantesNerellConfig.pathFindingSeuilProximite;
         return lidarService.getDetectedPointsMm().parallelStream()
-                .anyMatch(pt -> checkValidPointForSeuil(pt, IConstantesNerellConfig.pathFindingSeuilProximite));
+                .anyMatch(pt -> checkValidPointForSeuil(pt, seuil));
     }
 
     protected boolean needLowSpeed() {
@@ -76,10 +81,11 @@ public abstract class AbstractAvoidingService implements IAvoidingService {
             dA += 360;
         }
 
+        int angle = safeAvoidance ? IConstantesNerellConfig.pathFindingAngleSafe : IConstantesNerellConfig.pathFindingAngle;
         if (cmdRobot.getConsigne().getDistance() > 0) {
-            return Math.abs(dA) <= IConstantesNerellConfig.pathFindingAngle;
+            return Math.abs(dA) <= angle;
         } else {
-            return Math.abs(dA) >= 180 - IConstantesNerellConfig.pathFindingAngle;
+            return Math.abs(dA) >= 180 - angle;
         }
     }
 

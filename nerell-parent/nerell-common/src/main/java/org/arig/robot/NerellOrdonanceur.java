@@ -28,6 +28,7 @@ import org.arig.robot.services.EcranService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
 import org.arig.robot.system.motors.AbstractMotor;
@@ -95,6 +96,9 @@ public class NerellOrdonanceur {
 
     @Autowired
     private AbstractMotor motorPavillon;
+
+    @Autowired
+    private IAvoidingService avoidingService;
 
     @Autowired
     @Qualifier("currentPosition")
@@ -234,7 +238,6 @@ public class NerellOrdonanceur {
 
             SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.RISING);
             SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.FALLING);
-            ChangeFilter<Boolean> doubleDeposeFilter = new ChangeFilter<>(nerellRobotStatus.isDoubleDepose());
             ChangeFilter<Integer> strategyChangeFilter = new ChangeFilter<>(-1);
             boolean manuel = ecranService.config().isModeManuel();
             while (!ioService.tirette()) {
@@ -252,16 +255,15 @@ public class NerellOrdonanceur {
                 // Si on est pas en manuel, gestion de la strategy
                 if (!manuel && !ecranService.config().isSkipCalageBordure()) {
                     ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
-                    if (doubleDeposeFilter.filter(ecranService.config().isDoubleDepose())) {
-                        nerellRobotStatus.setDoubleDepose(ecranService.config().isDoubleDepose());
-                        log.info((nerellRobotStatus.isDoubleDepose() ? "Activation" : "Désactivation") + " double dépose");
-                    }
+                    nerellRobotStatus.setDoubleDepose(ecranService.config().isDoubleDepose());
                     if (strategyChangeFilter.filter(ecranService.config().getStrategy())) {
                         nerellRobotStatus.setStrategy(ecranService.config().getStrategy());
                         log.info("Strategy {}", nerellRobotStatus.getStrategy().name());
                         positionStrategy();
                     }
                 }
+
+                avoidingService.setSafeAvoidance(ecranService.config().isSafeAvoidance());
 
                 if (ecranService.config().isExit()) {
                     log.info("Arret du programme");
