@@ -58,6 +58,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
     @Override
     public boolean isValid() {
         return rs.pincesAvantEmpty() &&
+                rs.getRemainingTime() > IConstantesNerellConfig.invalidPriseRemainingTime &&
                 (rs.getTeam() == ETeam.JAUNE && rs.grandChenaux().chenalVertEmpty() || rs.grandChenaux().chenalRougeEmpty()
         );
     }
@@ -104,8 +105,12 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
                 rs.disablePincesAvant();
 
-                bouee8.execute();
-                bouee9.execute();
+                if (bouee8.isValid()) {
+                    bouee8.execute();
+                }
+                if (bouee9.isValid()) {
+                    bouee9.execute();
+                }
 
             } else {
                 if (rs.getStrategy() != EStrategy.BASIC_SUD) {
@@ -129,8 +134,12 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
                 rs.disablePincesAvant();
 
-                bouee9.execute();
-                bouee8.execute();
+                if (bouee9.isValid()) {
+                    bouee9.execute();
+                }
+                if (bouee8.isValid()) {
+                    bouee8.execute();
+                }
             }
 
         } catch (AvoidingException | NoPathFoundException e) {

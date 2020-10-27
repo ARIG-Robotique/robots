@@ -53,6 +53,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
     @Override
     public boolean isValid() {
         return rs.pincesAvantEmpty() &&
+                rs.getRemainingTime() > IConstantesNerellConfig.invalidPriseRemainingTime &&
                 (rs.getTeam() == ETeam.BLEU && rs.grandChenaux().chenalVertEmpty() || rs.grandChenaux().chenalRougeEmpty());
     }
 
