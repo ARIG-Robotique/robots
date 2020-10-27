@@ -258,7 +258,7 @@ public class NerellOrdonanceur {
                     return;
                 }
 
-                ThreadUtils.sleep(manuel ? 10000 : 500);
+                ThreadUtils.sleep(manuel ? 4000 : 500);
             }
 
             ecranService.displayMessage("!!! ... ATTENTE DEPART TIRETTE ... !!!");
