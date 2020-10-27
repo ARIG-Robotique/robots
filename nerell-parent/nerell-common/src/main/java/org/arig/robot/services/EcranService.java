@@ -111,7 +111,7 @@ public class EcranService {
         stateInfos.setI2c(ii2CManager.status());
         stateInfos.setLidar(lidarService.isConnected());
         stateInfos.setBalise(baliseService.isConnected());
-        stateInfos.setPhare(false); // TODO
+        stateInfos.setPhare(true); // TODO
         stateInfos.setAu(ioService.auOk());
         stateInfos.setAlim12v(ioService.alimPuissance12VOk());
         stateInfos.setAlim5vp(ioService.alimPuissance5VOk());

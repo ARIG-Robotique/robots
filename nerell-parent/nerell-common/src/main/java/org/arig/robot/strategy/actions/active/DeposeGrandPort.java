@@ -33,7 +33,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
 
     @Override
     public Point entryPoint() {
-        double X = 460;
+        double X = 230;
         double Y = 1200;
         if (ETeam.JAUNE == rs.getTeam()) {
             X = 3000 - X;
@@ -67,39 +67,46 @@ public class DeposeGrandPort extends AbstractNerellAction {
     public void execute() {
         try {
             final Point entry = entryPoint();
-            final double y = entry.getY();
+            final Point entry2 = new Point(computeX(entry.getX(), !rs.pincesAvantEmpty()), entry.getY());
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-            mv.pathTo(entry);
+
+            if (tableUtils.distance(entry2) > 200) {
+                mv.pathTo(entry2, !rs.pincesAvantEmpty() ? GotoOption.AVANT : GotoOption.ARRIERE);
+                rs.disableAvoidance();
+            } else {
+                rs.disableAvoidance();
+                mv.gotoPoint(entry2, GotoOption.SANS_ORIENTATION, !rs.pincesAvantEmpty() ? GotoOption.AVANT : GotoOption.ARRIERE);
+            }
 
             mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
 
             do {
-                double x = offsetX(false);
                 if (!rs.pincesAvantEmpty()) {
                     if (rs.getTeam() == ETeam.BLEU) {
-                        mv.gotoPoint(x, y);
                         mv.gotoOrientationDeg(180);
                     } else {
-                        mv.gotoPoint(3000 - x, y);
                         mv.gotoOrientationDeg(0);
                     }
                     pincesAvantService.deposeGrandPort();
                     step++;
                 }
-                x = offsetX(true);
                 if (!rs.pincesArriereEmpty()) {
+                    final Point entry3 = new Point(computeX(entry.getX(), false), entry.getY());
+                    mv.gotoPoint(entry3, GotoOption.SANS_ORIENTATION);
                     if (rs.getTeam() == ETeam.BLEU) {
-                        mv.gotoPoint(x, y);
                         mv.gotoOrientationDeg(0);
                     } else {
-                        mv.gotoPoint(3000 - x, y);
                         mv.gotoOrientationDeg(180);
                     }
                     pincesArriereService.deposeGrandPort();
                     step++;
                 }
-                mv.gotoPoint(entry);
+                if (rs.getTeam() == ETeam.BLEU) {
+                    mv.gotoPoint(500, entry.getY());
+                } else {
+                    mv.gotoPoint(2500, entry.getY());
+                }
             } while (!rs.pincesAvantEmpty() && !rs.pincesArriereEmpty());
 
             if (step > 2) {
@@ -114,7 +121,14 @@ public class DeposeGrandPort extends AbstractNerellAction {
         }
     }
 
-    private int offsetX(boolean arriere) {
-        return 210 + step * 120 + (arriere ? 60 : 0);
+    private double computeX(double baseX, boolean avant) {
+        int coef = step * 120 + (avant ? 0 : 60);
+
+        if (rs.getTeam() == ETeam.JAUNE) {
+            return baseX - coef;
+        } else {
+            return baseX + coef;
+        }
     }
+
 }
