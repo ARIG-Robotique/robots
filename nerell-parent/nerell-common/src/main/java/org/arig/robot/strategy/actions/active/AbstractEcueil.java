@@ -79,16 +79,33 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
 
             mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
             rs.enableCalageBordure();
-            mv.reculeMMSansAngle(60);
+            mv.reculeMMSansAngle(120);
 
             // on en profite pour recaller un axe
-            /*if (orientation == -90) {
-                position.getPt().setY(conv.mmToPulse(2000 - IConstantesNerellConfig.dstCallageY));
-            } else if (orientation == 180) {
-                position.getPt().setX(conv.mmToPulse(3000 - IConstantesNerellConfig.dstCallageY));
-            } else if (orientation == 0) {
-                position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstCallageY));
-            }*/
+            final double robotX = position.getPt().getX();
+            final double robotY = position.getPt().getY();
+            if (orientation == -90) {
+                final double realY = conv.mmToPulse(2000 - IConstantesNerellConfig.dstCallageY);
+                if (Math.abs(realY - robotY) > conv.mmToPulse(10)) {
+                    log.warn("RECALAGE REQUIS : yRobot = {} ; yReel = {}",
+                            conv.pulseToMm(robotY), conv.pulseToMm(realY));
+
+                    position.getPt().setY(realY);
+                    position.setAngle(conv.degToPulse(orientation));
+                }
+
+            } else if (orientation == 180 || orientation == 0) {
+                final double realX = orientation == 180
+                    ? conv.mmToPulse(3000 - IConstantesNerellConfig.dstCallageY)
+                    : conv.mmToPulse(IConstantesNerellConfig.dstCallageY);
+
+                if (Math.abs(realX - robotX) > conv.mmToPulse(10)) {
+                    log.warn("RECALAGE REQUIS : xRobot = {} ; xReel = {}",
+                            conv.pulseToMm(robotX), conv.pulseToMm(realX));
+                    position.getPt().setX(realX);
+                    position.setAngle(conv.degToPulse(orientation));
+                }
+            }
 
             pincesArriereService.finalisePriseEcueil(bouees());
 
