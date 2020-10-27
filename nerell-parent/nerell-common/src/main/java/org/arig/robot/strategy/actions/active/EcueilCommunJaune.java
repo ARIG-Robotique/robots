@@ -15,6 +15,9 @@ public class EcueilCommunJaune extends AbstractEcueil {
     @Autowired
     private Bouee11 bouee11;
 
+    @Autowired
+    private Bouee10 bouee10;
+
     @Override
     public String name() {
         return "Ecueil commun jaune";
@@ -71,10 +74,13 @@ public class EcueilCommunJaune extends AbstractEcueil {
 
     @Override
     public void execute() {
-        if (rs.getStrategy() != EStrategy.AGGRESSIVE && rs.bouee(11).presente() && bouee11.isValid()) {
+        if (rs.getStrategy() != EStrategy.AGGRESSIVE && bouee11.isValid()) {
             bouee11.execute();
         }
         super.execute();
+        if (isCompleted() && bouee11.isValid()) {
+            bouee11.execute();
+        }
     }
 
     @Override

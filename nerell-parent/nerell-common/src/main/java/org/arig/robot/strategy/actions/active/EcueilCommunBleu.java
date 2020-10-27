@@ -5,8 +5,8 @@ import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
-import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
@@ -14,6 +14,9 @@ public class EcueilCommunBleu extends AbstractEcueil {
 
     @Autowired
     private Bouee6 bouee6;
+
+    @Autowired
+    private Bouee7 bouee7;
 
     @Override
     public String name() {
@@ -71,10 +74,13 @@ public class EcueilCommunBleu extends AbstractEcueil {
 
     @Override
     public void execute() {
-        if (rs.getStrategy() != EStrategy.AGGRESSIVE && rs.bouee(6).presente() && bouee6.isValid()) {
+        if (rs.getStrategy() != EStrategy.AGGRESSIVE && bouee6.isValid()) {
             bouee6.execute();
         }
         super.execute();
+        if (isCompleted() && bouee7.isValid()) {
+            bouee7.execute();
+        }
     }
 
     @Override
