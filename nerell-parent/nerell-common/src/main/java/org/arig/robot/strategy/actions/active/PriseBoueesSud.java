@@ -105,6 +105,9 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
                 rs.disablePincesAvant();
 
+                // en cas d'erreur sur bouee 9 ou 8
+                complete();
+
                 if (bouee8.isValid()) {
                     bouee8.execute();
                 }
@@ -133,6 +136,9 @@ public class PriseBoueesSud extends AbstractNerellAction {
                 rs.bouee(16).setPrise();
 
                 rs.disablePincesAvant();
+
+                // en cas d'erreur sur bouee 9 ou 8
+                complete();
 
                 if (bouee9.isValid()) {
                     bouee9.execute();
