@@ -57,7 +57,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
     public boolean isValid() {
         return isTimeValid() && !rs.inPort() &&
                 (!getBoueeBloquante().presente() || rs.getRemainingTime() < IConstantesNerellConfig.invalidPriseRemainingTime) &&
-                (!rs.pincesArriereEmpty() || !rs.pincesAvantEmpty() && rs.isDoubleDepose());
+                (!rs.pincesArriereEmpty() || !rs.pincesAvantEmpty());
     }
 
     @Override
@@ -84,7 +84,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
                 pincesArriereService.deposeGrandChenal(getCouleurChenal()); // TODO Dépose partiel
             }
 
-            if (!rs.pincesAvantEmpty() && rs.isDoubleDepose()) {
+            if (!rs.pincesAvantEmpty() && (!deposeArriere || rs.isDoubleDepose())) {
                 if (deposeArriere) {
                     mv.avanceMM(35);
                     mv.gotoPoint(entry.getX(), getYDepose(entry.getY(), true, false), GotoOption.AVANT);

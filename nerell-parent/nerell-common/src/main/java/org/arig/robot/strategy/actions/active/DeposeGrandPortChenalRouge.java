@@ -41,8 +41,11 @@ public class DeposeGrandPortChenalRouge extends AbstractDeposeGrandPortChenal {
 
     @Override
     protected Chenaux getChenauxFuture() {
-        Chenaux chenaux = rs.grandChenaux().with(rs.pincesArriere(), null);
-        if (!rs.pincesAvantEmpty() && rs.phare() && rs.isDoubleDepose()) {
+        Chenaux chenaux = rs.grandChenaux().with(null, null);
+        if (!rs.pincesArriereEmpty()) {
+            chenaux.addRouge(rs.pincesArriere());
+        }
+        if (!rs.pincesAvantEmpty() && (rs.pincesArriereEmpty() || rs.isDoubleDepose())) {
             chenaux.addRouge(rs.pincesAvant());
         }
         return chenaux;

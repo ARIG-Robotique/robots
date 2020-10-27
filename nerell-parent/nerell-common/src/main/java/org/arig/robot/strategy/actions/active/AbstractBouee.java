@@ -80,7 +80,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
             rs.enablePincesAvant();
 
             // aligne la bonne pince sur la bouée
-            mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
 
             final double offsetOrientation = Math.toDegrees(Math.sin(offsetPince / distanceAproche));
             mv.alignFrontToAvecDecalage(entry.getX(), entry.getY(), offsetOrientation);

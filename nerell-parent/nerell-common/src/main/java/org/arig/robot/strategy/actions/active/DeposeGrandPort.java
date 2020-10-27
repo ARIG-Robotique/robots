@@ -102,6 +102,8 @@ public class DeposeGrandPort extends AbstractNerellAction {
                     pincesArriereService.deposeGrandPort();
                     step++;
                 }
+
+                mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
                 if (rs.getTeam() == ETeam.BLEU) {
                     mv.gotoPoint(500, entry.getY());
                 } else {
