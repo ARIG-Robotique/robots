@@ -10,5 +10,7 @@ public interface IPincesArriereService {
 
     boolean deposeGrandChenal(ECouleurBouee couleurChenal);
 
+    void deposeGrandPort();
+
     boolean deposePetitPort();
 }

@@ -8,20 +8,21 @@ import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
+import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * TODO depose arriere ?
- */
 @Slf4j
 @Component
 public class DeposeGrandPort extends AbstractNerellAction {
 
     @Autowired
     private IPincesAvantService pincesAvantService;
+
+    @Autowired
+    private IPincesArriereService pincesArriereService;
 
     private int step = 0;
 
@@ -42,13 +43,19 @@ public class DeposeGrandPort extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rs.inPort() && !rs.pincesAvantEmpty() && !rs.grandChenaux().chenalRougeEmpty() && !rs.grandChenaux().chenalVertEmpty();
+        return isTimeValid() && !rs.inPort() && (!rs.pincesAvantEmpty() || !rs.pincesArriereEmpty())
+                && !rs.grandChenaux().chenalRougeEmpty() && !rs.grandChenaux().chenalVertEmpty();
     }
 
     @Override
     public int order() {
         int order = 0;
         for (ECouleurBouee eCouleurBouee : rs.pincesAvant()) {
+            if (eCouleurBouee != null) {
+                order++;
+            }
+        }
+        for (ECouleurBouee eCouleurBouee : rs.pincesArriere()) {
             if (eCouleurBouee != null) {
                 order++;
             }
@@ -61,26 +68,39 @@ public class DeposeGrandPort extends AbstractNerellAction {
         try {
             final Point entry = entryPoint();
             final double y = entry.getY();
-            final double x = 210 + step * 80;
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-            mv.pathTo(entry, GotoOption.AVANT);
+            mv.pathTo(entry);
 
             mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
 
-            if (rs.getTeam() == ETeam.BLEU) {
-                mv.gotoOrientationDeg(180);
-                mv.gotoPoint(x, y);
-
-            } else {
-                mv.gotoOrientationDeg(0);
-                mv.gotoPoint(3000-x, y);
-            }
-
-            pincesAvantService.deposeGrandPort();
-            step++;
-
-            mv.gotoPoint(entry, GotoOption.ARRIERE);
+            do {
+                double x = offsetX();
+                if (!rs.pincesAvantEmpty()) {
+                    if (rs.getTeam() == ETeam.BLEU) {
+                        mv.gotoPoint(x, y);
+                        mv.gotoOrientationDeg(180);
+                    } else {
+                        mv.gotoPoint(3000 - x, y);
+                        mv.gotoOrientationDeg(0);
+                    }
+                    pincesAvantService.deposeGrandPort();
+                    step++;
+                }
+                x = offsetX();
+                if (!rs.pincesArriereEmpty()) {
+                    if (rs.getTeam() == ETeam.BLEU) {
+                        mv.gotoPoint(x, y);
+                        mv.gotoOrientationDeg(0);
+                    } else {
+                        mv.gotoPoint(3000 - x, y);
+                        mv.gotoOrientationDeg(180);
+                    }
+                    pincesArriereService.deposeGrandPort();
+                    step++;
+                }
+                mv.gotoPoint(entry);
+            } while (!rs.pincesAvantEmpty() && !rs.pincesArriereEmpty());
 
             if (step > 2) {
                 complete();
@@ -92,5 +112,9 @@ public class DeposeGrandPort extends AbstractNerellAction {
         } finally {
             pincesAvantService.finaliseDepose();
         }
+    }
+
+    private int offsetX() {
+        return 210 + step * 120;
     }
 }

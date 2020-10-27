@@ -77,6 +77,18 @@ public abstract class AbstractPincesArriereService implements IPincesArriereServ
         return true;
     }
 
+    @Override
+    public void deposeGrandPort() {
+        deposeTable();
+
+        for (ECouleurBouee eCouleurBouee : rs.pincesArriere()) {
+            if (eCouleurBouee != null) {
+                rs.grandPort().add(eCouleurBouee);
+            }
+        }
+        rs.clearPincesArriere();
+    }
+
     /**
      * Déposer la pince arrière dans le petit port
      */
