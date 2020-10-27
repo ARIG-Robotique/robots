@@ -23,7 +23,7 @@ public class NerellScheduler {
     @Autowired
     private ISystemBlockerManager systemBlockerManager;
 
-    @Scheduled(fixedDelay = 100)
+    @Scheduled(fixedDelay = 50)
     public void obstacleAvoidanceTask() {
         if (rs.isAvoidanceEnabled()) {
             avoidingService.process();
