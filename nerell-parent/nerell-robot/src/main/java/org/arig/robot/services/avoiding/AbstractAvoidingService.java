@@ -44,12 +44,19 @@ public abstract class AbstractAvoidingService implements IAvoidingService {
             lidarService.refreshObstacles();
         }
 
+        trajectoryManager.setLowSpeed(needLowSpeed());
+
         processAvoiding();
     }
 
     protected boolean hasProximite() {
         return lidarService.getDetectedPointsMm().parallelStream()
                 .anyMatch(pt -> checkValidPointForSeuil(pt, IConstantesNerellConfig.pathFindingSeuilProximite));
+    }
+
+    protected boolean needLowSpeed() {
+        return lidarService.getDetectedPointsMm().parallelStream()
+                .anyMatch(pt -> checkValidPointForSeuil(pt, IConstantesNerellConfig.pathFindingSeuilProximite * 2));
     }
 
     private boolean checkValidPointForSeuil(Point pt, int seuilMm) {

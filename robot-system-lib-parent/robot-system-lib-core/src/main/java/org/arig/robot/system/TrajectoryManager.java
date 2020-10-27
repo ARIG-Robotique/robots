@@ -104,6 +104,9 @@ public class TrajectoryManager implements ITrajectoryManager {
      **/
     private AtomicBoolean obstacleFound = new AtomicBoolean(false);
 
+    /** Boolean si un obstacle est proche pour réduire la vitesse */
+    private AtomicBoolean obstacleLowSpeed = new AtomicBoolean(false);
+
     /**
      * Boolean si un calage bordure est demandé (consigne distance angle = 0)
      */
@@ -919,10 +922,15 @@ public class TrajectoryManager implements ITrajectoryManager {
         applyVitesse(vDistance, vOrientation);
     }
 
+    @Override
+    public void setLowSpeed(final boolean lowSpeed) {
+        this.obstacleLowSpeed.set(lowSpeed);
+    }
+
     private void applyVitesse(long vDistance, long vOrientation) {
         synchronized (this) {
-            cmdRobot.getVitesse().setDistance(vDistance);
-            cmdRobot.getVitesse().setOrientation(vOrientation);
+            cmdRobot.getVitesse().setDistance(obstacleLowSpeed.get() ? vDistance / 2 : vDistance);
+            cmdRobot.getVitesse().setOrientation(obstacleLowSpeed.get() ? vOrientation / 2 : vOrientation);
         }
     }
 

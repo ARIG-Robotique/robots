@@ -56,6 +56,8 @@ public interface ITrajectoryManager {
 
     void setVitesse(long vDistance, long vOrientation);
 
+    void setLowSpeed(boolean lowSpeed);
+
     void waitMouvement() throws AvoidingException;
 
     boolean isTrajetAtteint();
