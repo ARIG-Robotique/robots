@@ -104,7 +104,9 @@ public class TrajectoryManager implements ITrajectoryManager {
      **/
     private AtomicBoolean obstacleFound = new AtomicBoolean(false);
 
-    /** Boolean si un obstacle est proche pour réduire la vitesse */
+    /**
+     * Boolean si un obstacle est proche pour réduire la vitesse
+     */
     private AtomicBoolean obstacleLowSpeed = new AtomicBoolean(false);
 
     /**
@@ -482,19 +484,15 @@ public class TrajectoryManager implements ITrajectoryManager {
             try {
                 // si c'est une nouvelle tentative et qu'on est dans le noir, on recule ou avance selon le sens déplacement
                 if (nbCollisionDetected > 0 && pathFinder.isBlockedByObstacle(ptFromCm)) {
-                    double dX = conv.mmToPulse(targetXmm) - currentPosition.getPt().getX();
-                    double dY = conv.mmToPulse(targetYmm) - currentPosition.getPt().getY();
-                    double angle = calculAngleConsigne(dX, dY);
-                    if (Math.abs(angle) < conv.degToPulse(90)) {
-                        reculeMM(100);
+                    if (degagementPath(targetXmm, targetYmm)) {
+                        ptFromCm = new Point(
+                                conv.pulseToMm(currentPosition.getPt().getX()) / divisor,
+                                conv.pulseToMm(currentPosition.getPt().getY()) / divisor
+                        );
                     } else {
-                        avanceMM(100);
+                        log.warn("Impossible de se dégager de l'obstacle");
+                        throw new AvoidingException();
                     }
-
-                    ptFromCm = new Point(
-                            conv.pulseToMm(currentPosition.getPt().getX()) / divisor,
-                            conv.pulseToMm(currentPosition.getPt().getY()) / divisor
-                    );
                 }
 
                 log.info("Demande de chemin vers X = {}mm ; Y = {}mm", targetXmm, targetYmm);
@@ -567,6 +565,36 @@ public class TrajectoryManager implements ITrajectoryManager {
                 }
             }
         } while (!trajetOk);
+    }
+
+    /**
+     * Dégagement d'adversaire pendant un path
+     */
+    private boolean degagementPath(final double targetXmm, final double targetYmm) throws AvoidingException {
+        // direction générale du déplacement
+        double dX = conv.mmToPulse(targetXmm) - currentPosition.getPt().getX();
+        double dY = conv.mmToPulse(targetYmm) - currentPosition.getPt().getY();
+        double angle = calculAngleConsigne(dX, dY);
+
+        int dir = 1;
+        if (Math.abs(angle) < conv.degToPulse(90)) {
+            dir = -1;
+        }
+
+        // vérifie qu'un point correspondant au bord du robot est toujours dans la table
+        Point pointTest = new Point();
+        pointTest.setX(dir * 250 * Math.cos(Math.toRadians(conv.pulseToDeg(currentPosition.getAngle()))));
+        pointTest.setY(dir * 250 * Math.sin(Math.toRadians(conv.pulseToDeg(currentPosition.getAngle()))));
+        pointTest.addDeltaX(conv.pulseToMm(currentPosition.getPt().getX()));
+        pointTest.addDeltaY(conv.pulseToMm(currentPosition.getPt().getY()));
+
+        if (tableUtils.isInPhysicalTable(pointTest)) {
+            log.info("Dégagement d'obstacle");
+            avanceMM(dir * 100);
+            return true;
+        }
+
+        return false;
     }
 
     private EnumSet<GotoOption> getMvtOptions(final GotoOption... flags) {

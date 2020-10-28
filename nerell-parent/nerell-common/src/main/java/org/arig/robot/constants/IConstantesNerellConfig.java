@@ -33,10 +33,9 @@ public interface IConstantesNerellConfig {
     int validRetourPortRemainingTime = 10000;
 
     // Valeurs min / max en mm des axes du repères
-    int minX = 50;
-    int minY = 50;
-    int maxX = 3000 - 50;
-    int maxY = 2000 - 50;
+    int tableWidth = 3000;
+    int tableHeight = 2000;
+    int tableBorder = 50;
 
     // -------------------------------- //
     // Configuration moteurs propulsion //

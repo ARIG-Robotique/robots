@@ -49,8 +49,7 @@ public class NerellCommonContext {
 
     @Bean
     public TableUtils tableUtils() {
-        return new TableUtils(IConstantesNerellConfig.minX, IConstantesNerellConfig.maxX,
-                IConstantesNerellConfig.minY, IConstantesNerellConfig.maxY);
+        return new TableUtils(IConstantesNerellConfig.tableWidth, IConstantesNerellConfig.tableHeight, IConstantesNerellConfig.tableBorder);
     }
 
     @Bean

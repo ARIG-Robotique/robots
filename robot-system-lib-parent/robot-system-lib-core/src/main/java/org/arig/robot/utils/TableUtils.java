@@ -23,15 +23,14 @@ public class TableUtils {
     @Qualifier("currentPosition")
     private Position position;
 
-    private final int minXmm, maxXmm, minYmm, maxYmm;
+    private final int tableWidth, tableHeight, tableBorder;
     private List<Rectangle.Double> persistentDeadZones = new ArrayList<>();
     private List<Rectangle.Double> dynamicDeadZones = new ArrayList<>();
 
-    public TableUtils(int minXmm, int maxXmm, int minYmm, int maxYmm) {
-        this.minXmm = minXmm;
-        this.maxXmm = maxXmm;
-        this.minYmm = minYmm;
-        this.maxYmm = maxYmm;
+    public TableUtils(int tableWidth, int tableHeight, int tableBorder) {
+        this.tableWidth = tableWidth;
+        this.tableHeight = tableHeight;
+        this.tableBorder = tableBorder;
     }
 
     public void clearDynamicDeadZones() {
@@ -68,8 +67,8 @@ public class TableUtils {
      * @return true si le point est sur la table
      */
     public boolean isInTable(Point pt) {
-        boolean inTable = pt.getX() > minXmm && pt.getX() < maxXmm
-                && pt.getY() > minYmm && pt.getY() < maxYmm;
+        boolean inTable = pt.getX() > tableBorder && pt.getX() < tableWidth - tableBorder
+                && pt.getY() > tableBorder && pt.getY() < tableHeight - tableBorder;
 
         boolean inPersistantDeadZones = false;
         if (CollectionUtils.isNotEmpty(persistentDeadZones)) {
@@ -85,6 +84,14 @@ public class TableUtils {
         }
 
         return inTable && !inPersistantDeadZones && !inDynamicDeadZones;
+    }
+
+    /**
+     * Controle que le point est dans la table, sans prise en compte des dead zones
+     */
+    public boolean isInPhysicalTable(Point pt) {
+        return pt.getX() > 0 && pt.getX() < tableWidth
+                && pt.getY() > 0 && pt.getY() < tableHeight;
     }
 
     public Polygon createPolygonObstacle(Point pt, double tailleObstacle) {
