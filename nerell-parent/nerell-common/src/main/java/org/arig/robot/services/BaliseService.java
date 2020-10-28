@@ -64,7 +64,7 @@ public class BaliseService {
         }
     }
 
-    public boolean lectureCouleurEcueil() {
+    public boolean lectureCouleurEcueilAdverse() {
         boolean valid = false;
 
         if (statut != null && statut.getDetection() != null && !ArrayUtils.isEmpty(statut.getDetection().getEcueil())) {
@@ -95,6 +95,37 @@ public class BaliseService {
         return valid;
     }
 
+    public boolean lectureCouleurEcueilEquipe() {
+        boolean valid = false;
+
+        if (statut != null && statut.getDetection() != null && !ArrayUtils.isEmpty(statut.getDetection().getEcueil())) {
+            valid = Stream.of(statut.getDetection().getEcueil())
+                    .allMatch(c -> c != CouleurDetectee.UNKNOWN);
+
+            if (valid) {
+                final CouleurDetectee[] detection = statut.getDetection().getEcueil();
+                final ECouleurBouee[] couleursAdverse = new ECouleurBouee[5];
+                final ECouleurBouee[] couleursEquipe = new ECouleurBouee[5];
+
+                // Récupération de gauche a droite par la balise.
+                // Les pinces arrières sont dans l'autre sens, on inverse le tableau
+                for (int i = 0; i < 5; i++) {
+                    if (detection[4 - i] == CouleurDetectee.RED) {
+                        couleursEquipe[i] = ECouleurBouee.ROUGE;
+                        couleursAdverse[4 - i] = ECouleurBouee.VERT;
+                    } else {
+                        couleursEquipe[i] = ECouleurBouee.VERT;
+                        couleursAdverse[4 - i] = ECouleurBouee.ROUGE;
+                    }
+                }
+                rs.setCouleursEcueilCommunAdverse(couleursAdverse);
+                rs.setCouleursEcueilCommunEquipe(couleursEquipe);
+            }
+        }
+
+        return valid;
+    }
+
     public boolean lectureCouleurBouees() {
         if (statut != null && statut.getDetection() != null && !ArrayUtils.isEmpty(statut.getDetection().getBouees())) {
             BoueeDetectee[] bouees = statut.getDetection().getBouees();
@@ -112,7 +143,7 @@ public class BaliseService {
         return false;
     }
 
-    public void lectureEcueilAdverse() {
+    /*public void lectureEcueilAdverse() {
         if (statut != null && statut.getDetection() != null && !rs.isEcueilCommunAdversePris()) {
             byte nbBouees = (byte) Stream.of(statut.getDetection().getEcueil())
                     .filter(c -> c != CouleurDetectee.UNKNOWN)
@@ -124,7 +155,21 @@ public class BaliseService {
                 rs.setEcueilCommunBleuDispo(nbBouees);
             }
         }
-    }
+    }*/
+
+    /*public void lectureEcueilEquipe() {
+        if (statut != null && statut.getDetection() != null && !rs.isEcueilCommunEquipePris()) {
+            byte nbBouees = (byte) Stream.of(statut.getDetection().getEcueil())
+                    .filter(c -> c != CouleurDetectee.UNKNOWN)
+                    .count();
+
+            if (rs.getTeam() == ETeam.BLEU) {
+                rs.setEcueilCommunBleuDispo(nbBouees);
+            } else {
+                rs.setEcueilCommunJauneDispo(nbBouees);
+            }
+        }
+    }*/
 
     public EtalonnageBalise etalonnage(int[][] ecueil, int[][] bouees) {
         log.info("Démarrage de l'étalonnage");
