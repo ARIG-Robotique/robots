@@ -35,18 +35,38 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
 
     private boolean[] enabled = new boolean[]{true, true, true, true};
 
-    private boolean[] previousStateLat = new boolean[]{false, false, false, false};
+    private boolean[] previousState = new boolean[]{false, false, false, false};
 
     @Override
-    public boolean deposeGrandChenal(ECouleurBouee couleurChenal) {
+    public boolean deposeGrandChenal(final ECouleurBouee couleurChenal, final boolean partielle) {
         servosService.ascenseurAvantRoulage(true);
-        servosService.pincesAvantOuvert(true);
-        if (couleurChenal == ECouleurBouee.ROUGE) {
-            rs.grandChenaux().addRouge(rs.pincesAvant());
+
+        if (partielle) {
+            for (int i = 0; i < rs.pincesAvant().length; i++) {
+                final ECouleurBouee couleurPince = rs.pincesAvant()[i];
+                if (couleurPince == couleurChenal || couleurPince == ECouleurBouee.INCONNU) {
+                    servosService.pinceAvantOuvert(i, false);
+
+                    if (couleurChenal == ECouleurBouee.ROUGE) {
+                        rs.grandChenaux().addRouge(couleurPince);
+                    } else {
+                        rs.grandChenaux().addVert(couleurPince);
+                    }
+                    rs.pinceAvant(i, null);
+                }
+            }
+
+            ThreadUtils.sleep(IConstantesServosNerell.WAIT_PINCE_AVANT);
+
         } else {
-            rs.grandChenaux().addVert(rs.pincesAvant());
+            servosService.pincesAvantOuvert(true);
+            if (couleurChenal == ECouleurBouee.ROUGE) {
+                rs.grandChenaux().addRouge(rs.pincesAvant());
+            } else {
+                rs.grandChenaux().addVert(rs.pincesAvant());
+            }
+            rs.clearPincesAvant();
         }
-        rs.clearPincesAvant();
 
         pathFinder.setObstacles(new ArrayList<>());
 
@@ -160,12 +180,12 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
                 // finalement y'a rien...
                 log.info("Perte d'une bouée en position {}", i);
                 servosService.pinceAvantFerme(i, false);
-            } else if (newState[i] && !previousStateLat[i]) {
+            } else if (newState[i] && !previousState[i]) {
                 registerBouee(i);
             }
         }
 
-        previousStateLat = newState;
+        previousState = newState;
     }
 
     private boolean[] getNewState() {

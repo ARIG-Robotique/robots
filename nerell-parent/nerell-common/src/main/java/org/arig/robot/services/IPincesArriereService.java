@@ -8,7 +8,7 @@ public interface IPincesArriereService {
 
     boolean finalisePriseEcueil(ECouleurBouee... bouees);
 
-    boolean deposeGrandChenal(ECouleurBouee couleurChenal);
+    boolean deposeGrandChenal(ECouleurBouee couleurChenal, boolean partielle);
 
     void deposeGrandPort();
 

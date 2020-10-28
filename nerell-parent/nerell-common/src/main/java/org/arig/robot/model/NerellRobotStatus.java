@@ -59,6 +59,8 @@ public class NerellRobotStatus extends AbstractRobotStatus {
 
     private boolean doubleDepose;
 
+    private boolean deposePartielle;
+
     @Override
     public void stopMatch() {
         super.stopMatch();
@@ -96,6 +98,13 @@ public class NerellRobotStatus extends AbstractRobotStatus {
 
     public void disableBalise() {
         baliseEnabled = false;
+    }
+
+    @Setter(AccessLevel.NONE)
+    private boolean deposePartielleDone = false;
+
+    public void deposePartielleDone() {
+        deposePartielleDone = true;
     }
 
     @Override

@@ -4,7 +4,7 @@ import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.services.AbstractPincesAvantService.Side;
 
 public interface IPincesAvantService {
-    boolean deposeGrandChenal(ECouleurBouee couleurChenal);
+    boolean deposeGrandChenal(ECouleurBouee couleurChenal, boolean partielle);
 
     boolean deposePetitPort();
 

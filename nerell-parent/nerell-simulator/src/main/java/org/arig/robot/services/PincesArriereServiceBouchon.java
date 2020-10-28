@@ -20,10 +20,10 @@ public class PincesArriereServiceBouchon extends AbstractPincesArriereService {
     }
 
     @Override
-    public boolean deposeGrandChenal(final ECouleurBouee couleurChenal) {
+    public boolean deposeGrandChenal(final ECouleurBouee couleurChenal, final boolean partielle) {
         io.contentPinceArriere(false);
 
-        return super.deposeGrandChenal(couleurChenal);
+        return super.deposeGrandChenal(couleurChenal, partielle);
     }
 
     @Override

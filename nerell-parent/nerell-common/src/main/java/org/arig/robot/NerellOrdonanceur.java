@@ -255,7 +255,8 @@ public class NerellOrdonanceur {
                 // Si on est pas en manuel, gestion de la strategy
                 if (!manuel && !ecranService.config().isSkipCalageBordure()) {
                     ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
-                    nerellRobotStatus.setDoubleDepose(ecranService.config().isDoubleDepose());
+                    nerellRobotStatus.setDoubleDepose(ecranService.config().isDoubleDepose() || ecranService.config().isDeposePartielle());
+                    nerellRobotStatus.setDeposePartielle(ecranService.config().isDeposePartielle());
                     if (strategyChangeFilter.filter(ecranService.config().getStrategy())) {
                         nerellRobotStatus.setStrategy(ecranService.config().getStrategy());
                         log.info("Strategy {}", nerellRobotStatus.getStrategy().name());

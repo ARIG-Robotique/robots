@@ -49,15 +49,48 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
 
     @Override
     public int order() {
-        int order = getChenauxFuture().score() - rs.grandChenaux().score();
+        int order;
+
+        if (rs.isDeposePartielleDone()) {
+            order = 1000;
+
+        } else if (rs.isDeposePartielle()) {
+            Chenaux chenaux = rs.grandChenaux().with(null, null);
+            for (ECouleurBouee couleur : rs.pincesAvant()) {
+                if (couleur == ECouleurBouee.ROUGE) {
+                    chenaux.addRouge(couleur);
+                } else if (couleur == ECouleurBouee.VERT) {
+                    chenaux.addVert(couleur);
+                }
+            }
+            for (ECouleurBouee couleur : rs.pincesArriere()) {
+                if (couleur == ECouleurBouee.ROUGE) {
+                    chenaux.addRouge(couleur);
+                } else if (couleur == ECouleurBouee.VERT) {
+                    chenaux.addVert(couleur);
+                }
+            }
+            order = chenaux.score() - rs.grandChenaux().score();
+
+        } else {
+            order = getChenauxFuture().score() - rs.grandChenaux().score();
+        }
+
         return order + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rs.inPort() &&
-                (!getBoueeBloquante().presente() || rs.getRemainingTime() < IConstantesNerellConfig.invalidPriseRemainingTime) &&
-                (!rs.pincesArriereEmpty() || !rs.pincesAvantEmpty());
+        if (!isTimeValid() || rs.inPort()) {
+            return false;
+
+        } else if (rs.isDeposePartielle()) {
+            return !rs.pincesArriereEmpty() && !rs.pincesAvantEmpty();
+
+        } else {
+            return (!getBoueeBloquante().presente() || rs.getRemainingTime() < IConstantesNerellConfig.invalidPriseRemainingTime) &&
+                    (!rs.pincesArriereEmpty() || !rs.pincesAvantEmpty());
+        }
     }
 
     @Override
@@ -81,7 +114,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
             if (!rs.pincesArriereEmpty()) {
                 deposeArriere = true;
                 mv.gotoOrientationDeg(getPositionChenal() == EPosition.NORD ? -90 : 90);
-                pincesArriereService.deposeGrandChenal(getCouleurChenal()); // TODO Dépose partiel
+                pincesArriereService.deposeGrandChenal(getCouleurChenal(), rs.isDeposePartielle());
             }
 
             if (!rs.pincesAvantEmpty() && (!deposeArriere || rs.isDoubleDepose())) {
@@ -91,7 +124,11 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
                 } else {
                     mv.gotoOrientationDeg(getPositionChenal() == EPosition.NORD ? 90 : -90);
                 }
-                pincesAvantService.deposeGrandChenal(getCouleurChenal()); // TODO Dépose partiel
+                pincesAvantService.deposeGrandChenal(getCouleurChenal(), rs.isDeposePartielle());
+            }
+
+            if (rs.isDeposePartielle()) {
+                rs.deposePartielleDone();
             }
 
             mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);

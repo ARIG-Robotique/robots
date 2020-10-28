@@ -1,8 +1,10 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IConstantesServosNerell;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.NerellRobotStatus;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
@@ -63,23 +65,39 @@ public abstract class AbstractPincesArriereService implements IPincesArriereServ
      * @param couleurChenal Couleur du chenal dans lequel a lieu la dépose
      */
     @Override
-    public boolean deposeGrandChenal(final ECouleurBouee couleurChenal) {
-        deposeTable();
+    public boolean deposeGrandChenal(final ECouleurBouee couleurChenal, final boolean partielle) {
+        if (partielle) {
+            deposeTable(couleurChenal);
 
-        if (couleurChenal == ECouleurBouee.ROUGE) {
-            rs.grandChenaux().addRouge(rs.pincesArriere());
+            for (int i = 0; i < rs.pincesArriere().length; i++) {
+                final ECouleurBouee couleurPince = rs.pincesArriere()[i];
+                if (couleurPince == couleurChenal || couleurPince == ECouleurBouee.INCONNU) {
+                    if (couleurChenal == ECouleurBouee.ROUGE) {
+                        rs.grandChenaux().addRouge(couleurPince);
+                    } else {
+                        rs.grandChenaux().addVert(couleurPince);
+                    }
+                    rs.pinceArriere(i, null);
+                }
+            }
+
         } else {
-            rs.grandChenaux().addVert(rs.pincesArriere());
-        }
+            deposeTable(null);
 
-        rs.clearPincesArriere();
+            if (couleurChenal == ECouleurBouee.ROUGE) {
+                rs.grandChenaux().addRouge(rs.pincesArriere());
+            } else {
+                rs.grandChenaux().addVert(rs.pincesArriere());
+            }
+            rs.clearPincesArriere();
+        }
 
         return true;
     }
 
     @Override
     public void deposeGrandPort() {
-        deposeTable();
+        deposeTable(null);
 
         for (ECouleurBouee eCouleurBouee : rs.pincesArriere()) {
             if (eCouleurBouee != null) {
@@ -94,7 +112,7 @@ public abstract class AbstractPincesArriereService implements IPincesArriereServ
      */
     @Override
     public boolean deposePetitPort() {
-        deposeTable();
+        deposeTable(null);
 
         rs.petitChenaux().addVert(rs.pincesArriere()[0], rs.pincesArriere()[1]);
         if (rs.pincesArriere()[2] != null) {
@@ -107,10 +125,27 @@ public abstract class AbstractPincesArriereService implements IPincesArriereServ
         return true;
     }
 
-    private void deposeTable() {
+    /**
+     * @param couleurBouee couleur pour une dépose partielle ou null
+     */
+    private void deposeTable(final ECouleurBouee couleurBouee) {
         srv.pivotArriereOuvert(true);
         srv.ascenseurArriereTable(true);
-        srv.pincesArriereOuvert(true);
+
+        if (couleurBouee == null) {
+            // dépose tout
+            srv.pincesArriereOuvert(true);
+        } else {
+            // dépose la bonne couleur et les inconnus
+            for (int i = 0; i < rs.pincesArriere().length; i++) {
+                final ECouleurBouee couleurPince = rs.pincesArriere()[i];
+                if (couleurPince == couleurBouee || couleurPince == ECouleurBouee.INCONNU) {
+                    srv.pinceArriereOuvert(i, false);
+                }
+            }
+            ThreadUtils.sleep(IConstantesServosNerell.WAIT_PINCE_ARRIERE);
+        }
+
         srv.ascenseurArriereEcueil(true);
         srv.pivotArriereFerme(false);
         srv.pincesArriereFerme(false);
