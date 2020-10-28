@@ -110,6 +110,8 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
         // offset pour dépose avant
         if (avant) {
             coef += 30;
+        } else {
+            coef -= 5;
         }
         // offset si c'est la seule dépose
         if (onlyOne) {
