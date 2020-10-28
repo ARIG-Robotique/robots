@@ -285,7 +285,8 @@ public class NerellOrdonanceur {
             while (nerellRobotStatus.matchRunning()) {
 
                 // Déclenchement du pavillon
-                if (nerellRobotStatus.getRemainingTime() <= IConstantesNerellConfig.pavillonRemainingTimeMs && !nerellRobotStatus.pavillon()) {
+                if (nerellRobotStatus.getRemainingTime() <= IConstantesNerellConfig.pavillonRemainingTimeMs
+                        && !nerellRobotStatus.pavillon() && ioService.auOk()) {
                     log.info("Activation du pavillon");
                     motorPavillon.speed(motorPavillon.getMaxSpeed() / 2);
                     nerellRobotStatus.pavillon(true);
