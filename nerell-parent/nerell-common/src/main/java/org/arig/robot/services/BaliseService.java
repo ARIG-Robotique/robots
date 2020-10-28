@@ -131,9 +131,9 @@ public class BaliseService {
             BoueeDetectee[] bouees = statut.getDetection().getBouees();
             for (int i = 0; i < bouees.length; i++) {
                 // les bouees sont lues en partant de la plus proche de la balise
-                // BLEU : 12=>7
-                // JAUNE : 5=>10
-                int numBouee = rs.getTeam() == ETeam.BLEU ? 12 - i : 5 + i;
+                // BLEU : 11=>7
+                // JAUNE : 6=>10
+                int numBouee = rs.getTeam() == ETeam.BLEU ? 11 - i : 6 + i;
                 rs.bouee(numBouee).setPresente(bouees[i] == BoueeDetectee.PRESENT);
             }
 
