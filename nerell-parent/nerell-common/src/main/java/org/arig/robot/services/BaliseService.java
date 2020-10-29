@@ -173,6 +173,7 @@ public class BaliseService {
 
     public EtalonnageBalise etalonnage(int[][] ecueil, int[][] bouees) {
         log.info("Démarrage de l'étalonnage");
+        detectionStarted = false;
         return balise.etalonnage(ecueil, bouees);
     }
 
