@@ -1,7 +1,7 @@
 package org.arig.robot.services.avoiding;
 
-import lombok.extern.slf4j.Slf4j;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.NerellRobotStatus;

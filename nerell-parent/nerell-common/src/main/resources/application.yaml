@@ -10,7 +10,7 @@ robot:
 
   # Système d'évittement
   avoidance:
-      implementation: SEMI_FULL
+      implementation: SEMI_COMPLETE
 
   # Config
   pathfinding:

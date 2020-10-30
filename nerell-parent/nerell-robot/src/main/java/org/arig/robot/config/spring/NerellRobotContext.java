@@ -169,7 +169,7 @@ public class NerellRobotContext {
                 return new BasicAvoidingService();
             case NOT_BASIC:
                 return new NotBasicAvoidingService();
-            case SEMI_FULL:
+            case SEMI_COMPLETE:
                 return new SemiCompleteAvoidingService();
             case FULL:
             default:

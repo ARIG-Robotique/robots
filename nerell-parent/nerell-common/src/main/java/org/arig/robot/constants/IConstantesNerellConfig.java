@@ -140,7 +140,7 @@ public interface IConstantesNerellConfig {
     // Paramètre Avoiding service //
     // -------------------------- //
     enum AvoidingSelection {
-        BASIC, FULL, NOT_BASIC, SEMI_FULL
+        BASIC, FULL, NOT_BASIC, SEMI_COMPLETE
     }
 
     int avoidanceWaitTimeMs = 1000;
