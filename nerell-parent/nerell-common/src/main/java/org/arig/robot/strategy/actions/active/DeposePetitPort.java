@@ -29,6 +29,12 @@ public class DeposePetitPort extends AbstractNerellAction {
     @Autowired
     private IPincesArriereService pincesArriereService;
 
+    @Autowired
+    private Bouee8 bouee8;
+
+    @Autowired
+    private Bouee9 bouee9;
+
     private boolean moustacheFaites = false;
 
     private int step = 0;
@@ -82,6 +88,12 @@ public class DeposePetitPort extends AbstractNerellAction {
         boolean inPort = false;
 
         try {
+            if (rs.getTeam() == ETeam.JAUNE && bouee8.isValid()) {
+                bouee8.execute();
+            } else if (rs.getTeam() == ETeam.BLEU && bouee9.isValid()) {
+                bouee9.execute();
+            }
+
             final Point entry = entryPoint();
             final double x = entry.getX();
             final double baseYStep = 260;

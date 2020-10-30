@@ -61,7 +61,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
 
                 rs.enableAvoidance();
                 mv.gotoPoint(aggressiveIntermediaryPoint(), GotoOption.SANS_ARRET);
-                mv.gotoPoint(entry);
+                mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);
 
                 onAgressiveMvtDone();
 

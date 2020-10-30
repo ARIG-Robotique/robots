@@ -32,6 +32,10 @@ public class EcueilCommunBleu extends AbstractEcueil {
 
     @Override
     public Point aggressiveIntermediaryPoint() {
+        if (rs.getTeam() == ETeam.BLEU) {
+            // Pas l'eceuil adverse
+            return null;
+        }
         return new Point(3000 - 1270, 1460);
     }
 
