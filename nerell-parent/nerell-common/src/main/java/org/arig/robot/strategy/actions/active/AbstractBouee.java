@@ -60,7 +60,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
     public void execute() {
         try {
             final int pinceCible = getPinceCible();
-            final double distanceAproche = IConstantesNerellConfig.pathFindingTailleBouee / 2.0 + 10;
+            final double distanceApproche = IConstantesNerellConfig.pathFindingTailleBouee / 2.0 + 10;
             final double offsetPince = getOffsetPince(pinceCible);
 
             log.info("Prise de la bouee {} {} dans la pince avant {}", numeroBouee, bouee.couleur(), pinceCible);
@@ -69,7 +69,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
 
             // point d'approche quelque part autour de la bouée
             // FIXME : si on fait le tour à cause d'un évittement ça fout tout en vrac
-            final Point pointApproche = tableUtils.eloigner(entry, -distanceAproche);
+            final Point pointApproche = tableUtils.eloigner(entry, -distanceApproche);
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
             mv.pathTo(pointApproche, GotoOption.AVANT);
@@ -82,7 +82,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
             // aligne la bonne pince sur la bouée
             mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
 
-            final double offsetOrientation = Math.toDegrees(Math.sin(offsetPince / distanceAproche));
+            final double offsetOrientation = Math.toDegrees(Math.sin(offsetPince / distanceApproche));
             mv.alignFrontToAvecDecalage(entry.getX(), entry.getY(), offsetOrientation);
 
             // prise
