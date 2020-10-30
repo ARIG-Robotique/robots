@@ -140,6 +140,10 @@ public class NerellOrdonanceur {
             if (!ioService.auOk()) {
                 ecranService.displayMessage("L'arrêt d'urgence est coupé", LogLevel.WARN);
                 while (!ioService.auOk()) {
+                    if (ecranService.config().isExit()) {
+                        log.info("Arret du programme");
+                        return;
+                    }
                     ThreadUtils.sleep(500);
                 }
             }

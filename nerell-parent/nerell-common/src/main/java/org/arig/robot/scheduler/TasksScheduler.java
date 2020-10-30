@@ -155,7 +155,7 @@ public class TasksScheduler implements InitializingBean {
                 baliseService.lectureCouleurBouees();
 
                 // Lecture de l'ecueil adverse
-                //baliseService.lectureEcueilAdverse();
+                baliseService.lectureEcueilAdverse();
             } else {
                 // Lecture couleur écueil
                 baliseService.lectureCouleurEcueilEquipe();
