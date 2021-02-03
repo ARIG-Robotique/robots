@@ -26,11 +26,11 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
         int[] boueesAvoided = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
         for (int nb : boueesAvoided) {
             // ignore la bouée devant le petit port
-            if ((rs.getTeam() == ETeam.BLEU && nb == 9) || (rs.getTeam() == ETeam.JAUNE && nb == 8)) {
+            if ((rs.team() == ETeam.BLEU && nb == 9) || (rs.team() == ETeam.JAUNE && nb == 8)) {
                 continue;
             }
             // ignore la bouée devant l'ecueil adverse
-            if ((rs.getTeam() == ETeam.BLEU && nb == 11) || (rs.getTeam() == ETeam.JAUNE && nb == 6)) {
+            if ((rs.team() == ETeam.BLEU && nb == 11) || (rs.team() == ETeam.JAUNE && nb == 6)) {
                 continue;
             }
 
@@ -42,16 +42,16 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
         }
 
         // ajoute les grand chenaux
-        if (rs.getTeam() == ETeam.BLEU && !rs.grandChenaux().chenalVertEmpty()) {
+        if (rs.team() == ETeam.BLEU && !rs.grandChenaux().chenalVertEmpty()) {
             obstacles.add(buildChenal(new Point(330, 2000 - 515)));
         }
-        if (rs.getTeam() == ETeam.BLEU && !rs.grandChenaux().chenalRougeEmpty()) {
+        if (rs.team() == ETeam.BLEU && !rs.grandChenaux().chenalRougeEmpty()) {
             obstacles.add(buildChenal(new Point(330, 2000 - 1085)));
         }
-        if (rs.getTeam() == ETeam.JAUNE && !rs.grandChenaux().chenalVertEmpty()) {
+        if (rs.team() == ETeam.JAUNE && !rs.grandChenaux().chenalVertEmpty()) {
             obstacles.add(buildChenal(new Point(3000 - 330, 2000 - 1085)));
         }
-        if (rs.getTeam() == ETeam.JAUNE && !rs.grandChenaux().chenalRougeEmpty()) {
+        if (rs.team() == ETeam.JAUNE && !rs.grandChenaux().chenalRougeEmpty()) {
             obstacles.add(buildChenal(new Point(3000 - 330, 2000 - 515)));
         }
 

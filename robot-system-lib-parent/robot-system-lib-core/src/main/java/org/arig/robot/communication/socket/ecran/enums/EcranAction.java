@@ -5,6 +5,5 @@ public enum EcranAction {
     UPDATE_STATE,
     UPDATE_MATCH,
     UPDATE_PHOTO,
-    UPDATE_ETALONNAGE,
     EXIT
 }

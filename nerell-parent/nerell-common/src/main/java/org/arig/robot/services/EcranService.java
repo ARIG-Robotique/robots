@@ -5,13 +5,14 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.communication.II2CManager;
+import org.arig.robot.communication.socket.balise.EtalonnageResponse;
+import org.arig.robot.communication.socket.balise.PhotoResponse;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.NerellRobotStatus;
-import org.arig.robot.model.balise.EtalonnageBalise;
 import org.arig.robot.model.ecran.GetConfigInfos;
-import org.arig.robot.model.ecran.UpdateEtalonnageData;
 import org.arig.robot.model.ecran.UpdateMatchInfos;
+import org.arig.robot.model.ecran.UpdatePhotoInfos;
 import org.arig.robot.model.ecran.UpdateStateInfos;
 import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.ILidarService;
@@ -19,10 +20,6 @@ import org.arig.robot.system.capteurs.IEcran;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Service;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -61,7 +58,7 @@ public class EcranService {
     private final SignalEdgeFilter doEtalonnageFilter = new SignalEdgeFilter(false, Type.RISING);
 
     public void process() {
-        if (rs.isMatchEnabled() && !matchHasRunned) {
+        if (rs.matchEnabled() && !matchHasRunned) {
             matchHasRunned = true;
         }
 
@@ -74,19 +71,19 @@ public class EcranService {
             if (baliseService.isConnected()) {
                 if (updatePhotoFilter.filter(config.isUpdatePhoto())) {
                     // sur front montant de "updatePhoto" on prend une photo et l'envoie à l'écran
-                    ecran.updatePhoto(baliseService.getPhoto());
-                }
-                else if (doEtalonnageFilter.filter(config().isEtalonnageBalise())) {
-                    // sur front montant de "etalonnageBalise" on lance l'étalonnage
-                    EtalonnageBalise result = baliseService.etalonnage(config.getPosEcueil(), config.getPosBouees());
-                    if (result != null) {
-                        ecran.updateEtalonnage(
-                                new UpdateEtalonnageData(
-                                        convertColors(result.getEcueil()),
-                                        convertColors(result.getBouees())
-                                )
-                        );
-                    }
+                    PhotoResponse photo = baliseService.getPhoto();
+                    UpdatePhotoInfos query = new UpdatePhotoInfos();
+                    query.setMessage(photo == null ? "Erreur inconnue" : photo.getErrorMessage());
+                    query.setPhoto(photo == null ? null : photo.getDatas());
+                    ecran.updatePhoto(query);
+
+                } else if (doEtalonnageFilter.filter(config.isEtalonnageBalise())) {
+                    // sur front montant de "etalonnageBalise" on lance l'étalonnage et envoie le résultat à l'écran
+                    EtalonnageResponse etalonnage = baliseService.etalonnage();
+                    UpdatePhotoInfos query = new UpdatePhotoInfos();
+                    query.setMessage(etalonnage == null ? "Erreur inconnue" : etalonnage.getErrorMessage());
+                    query.setPhoto(etalonnage == null ? null : etalonnage.getDatas());
+                    ecran.updatePhoto(query);
                 }
             }
         }
@@ -123,25 +120,11 @@ public class EcranService {
 
     private void updateMatch() {
         matchInfos.setScore(rs.calculerPoints());
-        if (rs.isMatchEnabled()) {
+        if (rs.matchEnabled()) {
             matchInfos.setMessage(String.format("%s (%s restantes) - %s s", strategyManager.getCurrentAction(), strategyManager.actionsCount(), rs.getRemainingTime() / 1000));
         }
 
         ecran.updateMatch(matchInfos);
     }
 
-    private List<String> convertColors(int[][] colors) {
-        if (colors == null) {
-            return null;
-        }
-
-        List<String> hex = new ArrayList<>();
-
-        for (int[] ints : colors) {
-            int color = Color.HSBtoRGB(ints[0] / 179f, 1,1);//ints[1] / 255f, ints[2] / 255f);
-            hex.add("#" + Integer.toHexString(color));
-        }
-
-        return hex;
-    }
 }

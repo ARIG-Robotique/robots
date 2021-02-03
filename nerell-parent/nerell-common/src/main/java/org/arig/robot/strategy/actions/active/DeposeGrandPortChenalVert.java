@@ -18,7 +18,7 @@ public class DeposeGrandPortChenalVert extends AbstractDeposeGrandPortChenal {
 
     @Override
     protected Bouee getBoueeBloquante() {
-        if (rs.getTeam() == ETeam.JAUNE) {
+        if (rs.team() == ETeam.JAUNE) {
             return rs.bouee(16);
         } else {
             return rs.bouee(1);
@@ -32,7 +32,7 @@ public class DeposeGrandPortChenalVert extends AbstractDeposeGrandPortChenal {
 
     @Override
     protected EPosition getPositionChenal() {
-        if (rs.getTeam() == ETeam.BLEU) {
+        if (rs.team() == ETeam.BLEU) {
             return EPosition.NORD;
         } else {
             return EPosition.SUD;
@@ -45,7 +45,7 @@ public class DeposeGrandPortChenalVert extends AbstractDeposeGrandPortChenal {
         if (!rs.pincesArriereEmpty()) {
             chenaux.addVert(rs.pincesArriere());
         }
-        if (!rs.pincesAvantEmpty() && (rs.pincesArriereEmpty() || rs.isDoubleDepose())) {
+        if (!rs.pincesAvantEmpty() && (rs.pincesArriereEmpty() || rs.doubleDepose())) {
             chenaux.addVert(rs.pincesAvant());
         }
         return chenaux;

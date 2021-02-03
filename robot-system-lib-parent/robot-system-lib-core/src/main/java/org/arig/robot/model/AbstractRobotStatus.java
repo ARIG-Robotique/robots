@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 
@@ -11,24 +12,16 @@ import java.util.Map;
 
 @Slf4j
 @Data
+@Accessors(fluent = true)
 public abstract class AbstractRobotStatus {
 
     private final int matchTimeMs;
-
-    public AbstractRobotStatus() {
-        this(0);
-    }
 
     public AbstractRobotStatus(final int matchTimeMs) {
         this.matchTimeMs = matchTimeMs;
     }
 
-    @Setter(AccessLevel.NONE)
     private boolean simulateur = false;
-
-    public void setSimulateur() {
-        simulateur = true;
-    }
 
     private ETeam team = ETeam.UNKNOWN;
 

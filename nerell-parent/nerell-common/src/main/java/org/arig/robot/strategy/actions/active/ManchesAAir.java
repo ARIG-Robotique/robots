@@ -27,7 +27,7 @@ public class ManchesAAir extends AbstractNerellAction {
     public Point entryPoint() {
         double x = !rs.mancheAAir1() ? xManche1 : xManche2;
         double y = 220;
-        if (ETeam.JAUNE == rs.getTeam()) {
+        if (ETeam.JAUNE == rs.team()) {
             x = 3000 - x;
         }
 
@@ -43,7 +43,7 @@ public class ManchesAAir extends AbstractNerellAction {
             order += 10;
         }
 
-        if (rs.isEcueilEquipePris()) {
+        if (rs.ecueilEquipePris()) {
             order += 30;
         }
 
@@ -65,7 +65,7 @@ public class ManchesAAir extends AbstractNerellAction {
             final double y = entry.getY();
             boolean manche1Before = !rs.mancheAAir1();
             if (manche1Before) {
-                if (rs.getTeam() == ETeam.BLEU) {
+                if (rs.team() == ETeam.BLEU) {
                     mv.gotoOrientationDegSansDistance(150);
                     servos.brasGaucheMancheAAir(true);
                     mv.gotoPoint(xManche2, y, GotoOption.ARRIERE);
@@ -78,7 +78,7 @@ public class ManchesAAir extends AbstractNerellAction {
             }
 
             if (!rs.mancheAAir2()) {
-                if (rs.getTeam() == ETeam.BLEU) {
+                if (rs.team() == ETeam.BLEU) {
                     if (!manche1Before) {
                         mv.gotoOrientationDegSansDistance(180);
                         servos.brasGaucheMancheAAir(true);

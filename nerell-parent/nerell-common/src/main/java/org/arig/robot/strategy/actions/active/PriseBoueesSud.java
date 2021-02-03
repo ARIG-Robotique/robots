@@ -40,7 +40,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
     public Point entryPoint() {
         double x = 225;
         double y = 1200;
-        if (ETeam.JAUNE == rs.getTeam()) {
+        if (ETeam.JAUNE == rs.team()) {
             x = 3000 - x;
         }
 
@@ -49,17 +49,17 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
     @Override
     public int order() {
-        if (rs.getStrategy() == EStrategy.BASIC_SUD && firstExecution) {
+        if (rs.strategy() == EStrategy.BASIC_SUD && firstExecution) {
             return 1000;
         }
-        return 6 + (rs.isEcueilEquipePris() ? 0 : 10) + tableUtils.alterOrder(entryPoint());
+        return 6 + (rs.ecueilEquipePris() ? 0 : 10) + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
     public boolean isValid() {
         return rs.pincesAvantEmpty() &&
                 rs.getRemainingTime() > IConstantesNerellConfig.invalidPriseRemainingTime &&
-                (rs.getTeam() == ETeam.JAUNE && rs.grandChenaux().chenalVertEmpty() || rs.grandChenaux().chenalRougeEmpty()
+                (rs.team() == ETeam.JAUNE && rs.grandChenaux().chenalVertEmpty() || rs.grandChenaux().chenalRougeEmpty()
         );
     }
 
@@ -69,7 +69,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
         try {
             final Point entry = entryPoint();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-            if (rs.getStrategy() != EStrategy.BASIC_SUD && tableUtils.distance(entry) > 100) {
+            if (rs.strategy() != EStrategy.BASIC_SUD && tableUtils.distance(entry) > 100) {
                 mv.pathTo(entry);
             } else {
                 // Le path active l'évittement en auto, pas de path, pas d'evittement
@@ -78,13 +78,13 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
             double targetx = 434;
             double targety = 1200 - 570;
-            if (ETeam.JAUNE == rs.getTeam()) {
+            if (ETeam.JAUNE == rs.team()) {
                 targetx = 3000 - targetx;
             }
             final Point target = new Point(targetx, targety);
 
-            if (rs.getTeam() == ETeam.BLEU) {
-                if (rs.getStrategy() != EStrategy.BASIC_SUD) {
+            if (rs.team() == ETeam.BLEU) {
+                if (rs.strategy() != EStrategy.BASIC_SUD) {
                     mv.gotoPoint(220, 1110);
                     mv.gotoOrientationDeg(-66);
                 }
@@ -116,7 +116,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
                 }
 
             } else {
-                if (rs.getStrategy() != EStrategy.BASIC_SUD) {
+                if (rs.strategy() != EStrategy.BASIC_SUD) {
                     mv.gotoPoint(3000 - 220, 1110);
                     mv.gotoOrientationDeg(-180 + 66);
                 }

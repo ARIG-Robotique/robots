@@ -5,14 +5,13 @@ import org.arig.robot.communication.socket.ecran.EmptyResponse;
 import org.arig.robot.communication.socket.ecran.ExitQuery;
 import org.arig.robot.communication.socket.ecran.GetConfigQuery;
 import org.arig.robot.communication.socket.ecran.GetConfigResponse;
-import org.arig.robot.communication.socket.ecran.UpdateEtalonnageQuery;
 import org.arig.robot.communication.socket.ecran.UpdateMatchQuery;
 import org.arig.robot.communication.socket.ecran.UpdatePhotoQuery;
 import org.arig.robot.communication.socket.ecran.UpdateStateQuery;
 import org.arig.robot.communication.socket.ecran.enums.EcranAction;
 import org.arig.robot.model.ecran.GetConfigInfos;
-import org.arig.robot.model.ecran.UpdateEtalonnageData;
 import org.arig.robot.model.ecran.UpdateMatchInfos;
+import org.arig.robot.model.ecran.UpdatePhotoInfos;
 import org.arig.robot.model.ecran.UpdateStateInfos;
 
 import java.io.File;
@@ -22,7 +21,7 @@ import java.io.IOException;
 public class EcranOverSocket extends AbstractSocketClient<EcranAction> implements IEcran {
 
     public EcranOverSocket(String hostname, Integer port) throws Exception {
-        super(hostname, port);
+        super(hostname, port, 1000);
     }
 
     public EcranOverSocket(File socketFile) throws Exception {
@@ -84,23 +83,11 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
     }
 
     @Override
-    public void updatePhoto(String photo) {
+    public void updatePhoto(UpdatePhotoInfos datas) {
         try {
             openIfNecessary();
             UpdatePhotoQuery query = new UpdatePhotoQuery();
-            query.setDatas(photo);
-            sendToSocketAndGet(query, EmptyResponse.class);
-        } catch (Exception e) {
-            log.error("Erreur de lecture", e);
-        }
-    }
-
-    @Override
-    public void updateEtalonnage(UpdateEtalonnageData etalonnage) {
-        try {
-            openIfNecessary();
-            UpdateEtalonnageQuery query = new UpdateEtalonnageQuery();
-            query.setDatas(etalonnage);
+            query.setDatas(datas);
             sendToSocketAndGet(query, EmptyResponse.class);
         } catch (Exception e) {
             log.error("Erreur de lecture", e);

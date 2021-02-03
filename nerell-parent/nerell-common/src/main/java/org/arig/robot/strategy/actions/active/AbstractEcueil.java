@@ -56,7 +56,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             final double orientation = orientationPourPrise();
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-            if (rs.getStrategy() == EStrategy.AGGRESSIVE && firstExecution && aggressiveIntermediaryPoint() != null) {
+            if (rs.strategy() == EStrategy.AGGRESSIVE && firstExecution && aggressiveIntermediaryPoint() != null) {
                 firstExecution = false;
 
                 rs.enableAvoidance();

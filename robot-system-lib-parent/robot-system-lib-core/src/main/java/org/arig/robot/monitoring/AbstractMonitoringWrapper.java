@@ -65,7 +65,7 @@ public abstract class AbstractMonitoringWrapper implements IMonitoringWrapper {
 
     @Override
     public void addTimeSeriePoint(MonitorTimeSerie point) {
-        if (robotStatus == null || robotStatus.isForceMonitoring() || robotStatus.isMatchEnabled()) {
+        if (robotStatus == null || robotStatus.forceMonitoring() || robotStatus.matchEnabled()) {
             forceAddTimeSeriePoint(point);
         }
     }
@@ -79,7 +79,7 @@ public abstract class AbstractMonitoringWrapper implements IMonitoringWrapper {
 
     @Override
     public void addMouvementPoint(final AbstractMonitorMouvement point) {
-        if (robotStatus == null || robotStatus.isForceMonitoring() || robotStatus.isMatchEnabled()) {
+        if (robotStatus == null || robotStatus.forceMonitoring() || robotStatus.matchEnabled()) {
             forceAddMouvementPoint(point);
         }
     }

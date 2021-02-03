@@ -41,7 +41,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
     public Point entryPoint() {
         double x = 225;
         double y = 1200;
-        if (ETeam.JAUNE == rs.getTeam()) {
+        if (ETeam.JAUNE == rs.team()) {
             x = 3000 - x;
         }
         return new Point(x, y);
@@ -51,10 +51,10 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
     public int order() {
         int order;
 
-        if (rs.isDeposePartielleDone()) {
+        if (rs.deposePartielleDone()) {
             order = 1000;
 
-        } else if (rs.isDeposePartielle()) {
+        } else if (rs.deposePartielle()) {
             Chenaux chenaux = rs.grandChenaux().with(null, null);
             for (ECouleurBouee couleur : rs.pincesAvant()) {
                 if (couleur == ECouleurBouee.ROUGE) {
@@ -84,7 +84,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
         if (!isTimeValid() || rs.inPort()) {
             return false;
 
-        } else if (rs.isDeposePartielle()) {
+        } else if (rs.deposePartielle()) {
             return !rs.pincesArriereEmpty() && !rs.pincesAvantEmpty();
 
         } else {
@@ -99,7 +99,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
             final Point entry = entryPoint();
-            boolean onlyOne = !rs.isDoubleDepose() || (rs.pincesArriereEmpty() ^ rs.pincesAvantEmpty());
+            boolean onlyOne = !rs.doubleDepose() || (rs.pincesArriereEmpty() ^ rs.pincesAvantEmpty());
             final Point entry2 = new Point(entry.getX(), getYDepose(entry.getY(), rs.pincesArriereEmpty(), onlyOne));
 
             if (tableUtils.distance(entry2) > 100) {
@@ -114,21 +114,21 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
             if (!rs.pincesArriereEmpty()) {
                 deposeArriere = true;
                 mv.gotoOrientationDeg(getPositionChenal() == EPosition.NORD ? -90 : 90);
-                pincesArriereService.deposeGrandChenal(getCouleurChenal(), rs.isDeposePartielle());
+                pincesArriereService.deposeGrandChenal(getCouleurChenal(), rs.deposePartielle());
             }
 
-            if (!rs.pincesAvantEmpty() && (!deposeArriere || rs.isDoubleDepose())) {
+            if (!rs.pincesAvantEmpty() && (!deposeArriere || rs.doubleDepose())) {
                 if (deposeArriere) {
                     mv.avanceMM(35);
                     mv.gotoPoint(entry.getX(), getYDepose(entry.getY(), true, false), GotoOption.AVANT);
                 } else {
                     mv.gotoOrientationDeg(getPositionChenal() == EPosition.NORD ? 90 : -90);
                 }
-                pincesAvantService.deposeGrandChenal(getCouleurChenal(), rs.isDeposePartielle());
+                pincesAvantService.deposeGrandChenal(getCouleurChenal(), rs.deposePartielle());
             }
 
-            if (rs.isDeposePartielle()) {
-                rs.deposePartielleDone();
+            if (rs.deposePartielle()) {
+                rs.deposePartielleDone(true);
             }
 
             mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);

@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
+import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
 import org.arig.robot.utils.EcueilUtils;
 
 import java.util.ArrayList;
@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Data
+@Accessors(fluent = true)
 @EqualsAndHashCode(callSuper = true)
 public class NerellRobotStatus extends AbstractRobotStatus {
 
@@ -27,13 +28,21 @@ public class NerellRobotStatus extends AbstractRobotStatus {
         super(matchTimeMs);
     }
 
+    @Override
     public void setTeam(int value) {
         super.setTeam(value);
 
         final int tirageEcueil = 1;
-        setCouleursEcueilEquipe(EcueilUtils.tirageEquipe(getTeam()));
-        setCouleursEcueilCommunEquipe(EcueilUtils.tirageCommunEquipe(getTeam(), tirageEcueil));
-        setCouleursEcueilCommunAdverse(EcueilUtils.tirageCommunAdverse(getTeam(), tirageEcueil));
+        couleursEcueilEquipe(EcueilUtils.tirageEquipe(team()));
+        couleursEcueilCommunEquipe(EcueilUtils.tirageCommunEquipe(team(), tirageEcueil));
+        couleursEcueilCommunAdverse(EcueilUtils.tirageCommunAdverse(team(), tirageEcueil));
+    }
+
+    @Override
+    public void stopMatch() {
+        super.stopMatch();
+
+        this.disableBalise();
     }
 
     private EStrategy strategy = EStrategy.BASIC_NORD;
@@ -61,15 +70,7 @@ public class NerellRobotStatus extends AbstractRobotStatus {
 
     private boolean deposePartielle;
 
-    @Override
-    public void stopMatch() {
-        super.stopMatch();
-
-        this.disableBalise();
-    }
-
-
-    private DirectionGirouette directionGirouette = DirectionGirouette.UNKNOWN;
+    private EDirectionGirouette directionGirouette = EDirectionGirouette.UNKNOWN;
 
     private ECouleurBouee[] couleursEcueilEquipe = new ECouleurBouee[]{ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU};
     private ECouleurBouee[] couleursEcueilCommunEquipe = new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.VERT};
@@ -100,38 +101,6 @@ public class NerellRobotStatus extends AbstractRobotStatus {
         baliseEnabled = false;
     }
 
-    @Setter(AccessLevel.NONE)
-    private boolean deposePartielleDone = false;
-
-    public void deposePartielleDone() {
-        deposePartielleDone = true;
-    }
-
-    @Override
-    public Map<String, Object> gameStatus() {
-        Map<String, Object> r = new HashMap<>();
-        r.put("bouees", bouees.stream().map(Bouee::prise).collect(Collectors.toList()));
-        r.put("grandPort", grandPort);
-        r.put("grandChenalVert", grandChenaux.chenalVert);
-        r.put("grandChenalRouge", grandChenaux.chenalRouge);
-        r.put("petitPort", petitPort);
-        r.put("petitChenalVert", petitChenaux.chenalVert);
-        r.put("petitChenalRouge", petitChenaux.chenalRouge);
-        r.put("pincesAvant", pincesAvant);
-        r.put("pincesArriere", pincesArriere);
-        r.put("phare", phare);
-        r.put("mancheAAir1", mancheAAir1);
-        r.put("mancheAAir2", mancheAAir2);
-        r.put("ecueilEquipePris", ecueilEquipePris);
-        r.put("ecueilCommunEquipePris", ecueilCommunEquipePris);
-        r.put("ecueilCommunAdversePris", ecueilCommunAdversePris);
-        r.put("girouette", directionGirouette);
-        r.put("couleursEcueilEquipe", couleursEcueilEquipe);
-        r.put("couleursEcueilCommunEquipe", couleursEcueilCommunEquipe);
-        r.put("couleursEcueilCommunAdverse", couleursEcueilCommunAdverse);
-        return r;
-    }
-
     /**
      * STATUT
      */
@@ -149,6 +118,7 @@ public class NerellRobotStatus extends AbstractRobotStatus {
     // -----------  -----------------------  ----------- //
 
     @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private List<Bouee> bouees = Arrays.asList(
             new Bouee(ECouleurBouee.ROUGE, new Point(300, 2000 - 400)),
             new Bouee(ECouleurBouee.VERT, new Point(450, 2000 - 510)),
@@ -172,61 +142,40 @@ public class NerellRobotStatus extends AbstractRobotStatus {
         return bouees.get(numero - 1);
     }
 
+    private List<Bouee> hautFond = new ArrayList<>();
+
     private boolean ecueilEquipePris = false;
     private boolean ecueilCommunEquipePris = false;
     private boolean ecueilCommunAdversePris = false;
-
-    @Setter
-    @Accessors(fluent = true)
     private boolean mancheAAir1 = false;
-
-    @Setter
-    @Accessors(fluent = true)
     private boolean mancheAAir2 = false;
-
-    @Setter
-    @Accessors(fluent = true)
     private boolean phare = false;
-
-    @Setter
-    @Accessors(fluent = true)
     private boolean bonPort = false;
-
-    @Setter
-    @Accessors(fluent = true)
     private boolean mauvaisPort = false;
+    private boolean pavillon = false;
+    private boolean deposePartielleDone = false;
 
     public boolean inPort() {
         return bonPort || mauvaisPort;
     }
 
-    @Setter
-    @Accessors(fluent = true)
-    private boolean pavillon = false;
-
-    @Accessors(fluent = true)
     @Setter(AccessLevel.NONE)
     private List<ECouleurBouee> grandPort = new ArrayList<>();
 
-    @Accessors(fluent = true)
     @Setter(AccessLevel.NONE)
     private List<ECouleurBouee> petitPort = new ArrayList<>();
 
-    @Accessors(fluent = true)
     @Setter(AccessLevel.NONE)
     private GrandChenaux grandChenaux = new GrandChenaux();
 
-    @Accessors(fluent = true)
     @Setter(AccessLevel.NONE)
     private PetitChenaux petitChenaux = new PetitChenaux();
 
     // De gauche a droite, dans le sens du robot
-    @Setter(AccessLevel.NONE)
     @Accessors(fluent = true)
     private ECouleurBouee[] pincesArriere = new ECouleurBouee[]{null, null, null, null, null};
 
     // De gauche à droite, dans le sens du robot
-    @Setter(AccessLevel.NONE)
     @Accessors(fluent = true)
     private ECouleurBouee[] pincesAvant = new ECouleurBouee[]{null, null, null, null};
 
@@ -247,21 +196,21 @@ public class NerellRobotStatus extends AbstractRobotStatus {
     }
 
     public boolean pincesArriereEmpty() {
-        return Arrays.stream(pincesArriere).filter(Objects::nonNull).count() == 0;
+        return Arrays.stream(pincesArriere).noneMatch(Objects::nonNull);
     }
 
     public boolean pincesAvantEmpty() {
-        return Arrays.stream(pincesAvant).filter(Objects::nonNull).count() == 0;
+        return Arrays.stream(pincesAvant).noneMatch(Objects::nonNull);
     }
 
     public int calculerPoints() {
-        int points = 2 + (phare ? 13 : 0); // phare
+        int points = 2 + (phare ? 13 : 0);
         points += grandPort.size();
         points += petitPort.size();
         points += grandChenaux.score();
         points += petitChenaux.score();
         points += (mancheAAir1 && mancheAAir2) ? 15 : (mancheAAir1 || mancheAAir2) ? 5 : 0;
-        points += bonPort ? 10 : (mauvaisPort ? 5 : 0);
+        points += bonPort ? 20 : (mauvaisPort ? 6 : 0);
         points += pavillon ? 10 : 0;
         return points;
     }
@@ -275,8 +224,34 @@ public class NerellRobotStatus extends AbstractRobotStatus {
         r.put("Grand chenaux", grandChenaux.score());
         r.put("Petit chenaux", petitChenaux.score());
         r.put("Manche à air", (mancheAAir1 && mancheAAir2) ? 15 : (mancheAAir1 || mancheAAir2) ? 5 : 0);
-        r.put("Port", bonPort ? 10 : (mauvaisPort ? 5 : 0));
+        r.put("Port", bonPort ? 20 : (mauvaisPort ? 6 : 0));
         r.put("Pavillon", pavillon ? 10 : 0);
+        return r;
+    }
+
+    @Override
+    public Map<String, Object> gameStatus() {
+        Map<String, Object> r = new HashMap<>();
+        r.put("bouees", bouees.stream().map(Bouee::prise).collect(Collectors.toList()));
+        r.put("hautFond", new ArrayList<>(hautFond));
+        r.put("grandPort", grandPort);
+        r.put("grandChenalVert", grandChenaux.chenalVert);
+        r.put("grandChenalRouge", grandChenaux.chenalRouge);
+        r.put("petitPort", petitPort);
+        r.put("petitChenalVert", petitChenaux.chenalVert);
+        r.put("petitChenalRouge", petitChenaux.chenalRouge);
+        r.put("pincesAvant", pincesAvant);
+        r.put("pincesArriere", pincesArriere);
+        r.put("phare", phare);
+        r.put("mancheAAir1", mancheAAir1);
+        r.put("mancheAAir2", mancheAAir2);
+        r.put("ecueilEquipePris", ecueilEquipePris);
+        r.put("ecueilCommunEquipePris", ecueilCommunEquipePris);
+        r.put("ecueilCommunAdversePris", ecueilCommunAdversePris);
+        r.put("girouette", directionGirouette);
+        r.put("couleursEcueilEquipe", couleursEcueilEquipe);
+        r.put("couleursEcueilCommunEquipe", couleursEcueilCommunEquipe);
+        r.put("couleursEcueilCommunAdverse", couleursEcueilCommunAdverse);
         return r;
     }
 }

@@ -25,7 +25,7 @@ public class CalageBordureService {
     private CommandeRobot cmdRobot;
 
     public void process() {
-        if (rs.isCalageBordure()) {
+        if (rs.calageBordure()) {
             boolean done;
 
             if (cmdRobot.isType(TypeConsigne.DIST) && cmdRobot.isType(TypeConsigne.ANGLE)) {

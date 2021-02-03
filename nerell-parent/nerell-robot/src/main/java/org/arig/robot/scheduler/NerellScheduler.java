@@ -25,21 +25,21 @@ public class NerellScheduler {
 
     @Scheduled(fixedDelay = 50)
     public void obstacleAvoidanceTask() {
-        if (rs.isAvoidanceEnabled()) {
+        if (rs.avoidanceEnabled()) {
             avoidingService.process();
         }
     }
 
     @Scheduled(fixedDelay = 500)
     public void systemBlockerManagerTask() {
-        if (rs.isMatchEnabled()) {
+        if (rs.matchEnabled()) {
             systemBlockerManager.process();
         }
     }
 
     @Scheduled(fixedDelay = 5000)
     public void systemCheckTensionTaks() {
-        if (rs.isMatchEnabled()) {
+        if (rs.matchEnabled()) {
             servosService.controlBatteryVolts();
         }
     }

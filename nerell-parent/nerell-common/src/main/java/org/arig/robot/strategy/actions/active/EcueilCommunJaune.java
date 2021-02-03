@@ -32,7 +32,7 @@ public class EcueilCommunJaune extends AbstractEcueil {
 
     @Override
     public Point aggressiveIntermediaryPoint()  {
-        if (rs.getTeam() == ETeam.JAUNE) {
+        if (rs.team() == ETeam.JAUNE) {
             // Pas l'eceuil adverse
             return null;
         }
@@ -41,7 +41,7 @@ public class EcueilCommunJaune extends AbstractEcueil {
 
     @Override
     public int order() {
-        if (rs.getTeam() == ETeam.BLEU && rs.getStrategy() == EStrategy.AGGRESSIVE && isFirstExecution()) {
+        if (rs.team() == ETeam.BLEU && rs.strategy() == EStrategy.AGGRESSIVE && isFirstExecution()) {
             return 1000;
         }
         return super.order();
@@ -49,10 +49,10 @@ public class EcueilCommunJaune extends AbstractEcueil {
 
     @Override
     public boolean isValid() {
-        if (rs.getTeam() == ETeam.JAUNE) {
+        if (rs.team() == ETeam.JAUNE) {
             return super.isValid() && !rs.bouee(11).presente() && !rs.bouee(12).presente();
         } else {
-            return super.isValid() && (rs.getStrategy() == EStrategy.AGGRESSIVE || rs.getRemainingTime() < 40000);
+            return super.isValid() && (rs.strategy() == EStrategy.AGGRESSIVE || rs.getRemainingTime() < 40000);
         }
     }
 
@@ -63,12 +63,12 @@ public class EcueilCommunJaune extends AbstractEcueil {
 
     @Override
     protected byte nbBoueesDispo() {
-        return rs.getEcueilCommunJauneDispo();
+        return rs.ecueilCommunJauneDispo();
     }
 
     @Override
     protected ECouleurBouee[] bouees() {
-        return rs.getTeam() == ETeam.JAUNE ? rs.getCouleursEcueilCommunEquipe() : rs.getCouleursEcueilCommunAdverse();
+        return rs.team() == ETeam.JAUNE ? rs.couleursEcueilCommunEquipe() : rs.couleursEcueilCommunAdverse();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class EcueilCommunJaune extends AbstractEcueil {
 
     @Override
     public void execute() {
-        if (rs.getStrategy() != EStrategy.AGGRESSIVE && bouee11.isValid()) {
+        if (rs.strategy() != EStrategy.AGGRESSIVE && bouee11.isValid()) {
             bouee11.execute();
         }
         super.execute();
@@ -91,12 +91,12 @@ public class EcueilCommunJaune extends AbstractEcueil {
     protected void onComplete() {
         // on shooté la bouée
         rs.bouee(12).setPrise();
-        rs.setEcueilCommunJauneDispo((byte) 0);
+        rs.ecueilCommunJauneDispo((byte) 0);
 
-        if (rs.getTeam() == ETeam.JAUNE) {
-            rs.setEcueilCommunEquipePris(true);
+        if (rs.team() == ETeam.JAUNE) {
+            rs.ecueilCommunEquipePris(true);
         } else {
-            rs.setEcueilCommunAdversePris(true);
+            rs.ecueilCommunAdversePris(true);
         }
     }
 }

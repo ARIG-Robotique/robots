@@ -16,7 +16,7 @@ public class AntiblocagePort extends AbstractNerellAction {
     public Point entryPoint() {
         double x = 460;
         double y = 1200;
-        if (ETeam.JAUNE == rs.getTeam()) {
+        if (ETeam.JAUNE == rs.team()) {
             x = 3000 - x;
         }
         return new Point(x, y);

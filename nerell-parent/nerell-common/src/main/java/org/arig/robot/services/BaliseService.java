@@ -2,17 +2,26 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.arig.robot.communication.socket.balise.DetectionResponse;
+import org.arig.robot.communication.socket.balise.EtalonnageResponse;
+import org.arig.robot.communication.socket.balise.PhotoResponse;
+import org.arig.robot.model.Bouee;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.NerellRobotStatus;
-import org.arig.robot.model.balise.EtalonnageBalise;
+import org.arig.robot.model.Point;
 import org.arig.robot.model.balise.StatutBalise;
-import org.arig.robot.model.communication.balise.enums.BoueeDetectee;
-import org.arig.robot.model.communication.balise.enums.CouleurDetectee;
+import org.arig.robot.model.communication.balise.enums.ECouleurDetectee;
+import org.arig.robot.model.communication.balise.enums.EPresenceBouee;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -43,52 +52,56 @@ public class BaliseService {
         }
     }
 
+    public void heartbeat() {
+        balise.heartbeat();
+    }
+
     public void updateStatus() {
         statut = balise.getStatut();
     }
 
     public void startDetection() {
         if (!detectionStarted) {
-            detectionStarted = balise.startDetection();
+            DetectionResponse response = balise.startDetection();
+            this.detectionStarted = response != null && response.isOk();
         }
     }
 
-    public String getPhoto() {
+    public PhotoResponse getPhoto() {
         log.info("Prise d'une photo");
         return balise.getPhoto();
     }
 
     public void lectureGirouette() {
         if (statut != null && statut.getDetection() != null) {
-            rs.setDirectionGirouette(statut.getDetection().getDirection());
+            rs.directionGirouette(statut.getDetection().getGirouette());
         }
     }
 
     public boolean lectureCouleurEcueilEquipe() {
         boolean valid = false;
 
-        if (statut != null && statut.getDetection() != null && !ArrayUtils.isEmpty(statut.getDetection().getEcueil())) {
-            valid = Stream.of(statut.getDetection().getEcueil())
-                    .allMatch(c -> c != CouleurDetectee.UNKNOWN);
+        if (statut != null && statut.getDetection() != null && !ArrayUtils.isEmpty(statut.getDetection().getEcueilEquipe())) {
+            valid = Stream.of(statut.getDetection().getEcueilEquipe())
+                    .allMatch(c -> c != ECouleurDetectee.UNKNOWN);
 
             if (valid) {
-                final CouleurDetectee[] detection = statut.getDetection().getEcueil();
+                final ECouleurDetectee[] detection = statut.getDetection().getEcueilEquipe();
                 final ECouleurBouee[] couleursAdverse = new ECouleurBouee[5];
                 final ECouleurBouee[] couleursEquipe = new ECouleurBouee[5];
 
-                // Récupération de gauche a droite par la balise.
                 // Les pinces arrières sont dans l'autre sens, on inverse le tableau
                 for (int i = 0; i < 5; i++) {
-                    if (detection[4 - i] == CouleurDetectee.RED) {
-                        couleursEquipe[i] = ECouleurBouee.ROUGE;
-                        couleursAdverse[4 - i] = ECouleurBouee.VERT;
+                    if (detection[i] == ECouleurDetectee.RED) {
+                        couleursEquipe[4 - i] = ECouleurBouee.ROUGE;
+                        couleursAdverse[i] = ECouleurBouee.VERT;
                     } else {
-                        couleursEquipe[i] = ECouleurBouee.VERT;
-                        couleursAdverse[4 - i] = ECouleurBouee.ROUGE;
+                        couleursEquipe[4 - i] = ECouleurBouee.VERT;
+                        couleursAdverse[i] = ECouleurBouee.ROUGE;
                     }
                 }
-                rs.setCouleursEcueilCommunAdverse(couleursAdverse);
-                rs.setCouleursEcueilCommunEquipe(couleursEquipe);
+                rs.couleursEcueilCommunAdverse(couleursAdverse);
+                rs.couleursEcueilCommunEquipe(couleursEquipe);
             }
         }
 
@@ -97,13 +110,9 @@ public class BaliseService {
 
     public boolean lectureCouleurBouees() {
         if (statut != null && statut.getDetection() != null && !ArrayUtils.isEmpty(statut.getDetection().getBouees())) {
-            BoueeDetectee[] bouees = statut.getDetection().getBouees();
-            for (int i = 1; i < bouees.length; i++) {
-                // les bouees sont lues en partant de la plus proche de la balise
-                // BLEU : 11=>7
-                // JAUNE : 6=>10
-                int numBouee = rs.getTeam() == ETeam.BLEU ? 11 - (i - 1) : 6 + (i - 1);
-                rs.bouee(numBouee).setPresente(bouees[i] == BoueeDetectee.PRESENT);
+            EPresenceBouee[] bouees = statut.getDetection().getBouees();
+            for (int i = 0; i < bouees.length; i++) {
+                rs.bouee(12 - i).setPresente(bouees[i] == EPresenceBouee.PRESENT);
             }
 
             return true;
@@ -112,37 +121,61 @@ public class BaliseService {
         return false;
     }
 
-//    public void lectureEcueilAdverse() {
-//        if (statut != null && statut.getDetection() != null && !rs.isEcueilCommunAdversePris()) {
-//            byte nbBouees = (byte) Stream.of(statut.getDetection().getEcueil())
-//                    .filter(c -> c != CouleurDetectee.UNKNOWN)
-//                    .count();
-//
-//            if (rs.getTeam() == ETeam.BLEU) {
-//                rs.setEcueilCommunJauneDispo(nbBouees);
-//            } else {
-//                rs.setEcueilCommunBleuDispo(nbBouees);
-//            }
-//        }
-//    }
-
-    // implémentation qui se base sur la lecture des bouées de la table
     public void lectureEcueilAdverse() {
-        if (statut != null && statut.getDetection() != null && !ArrayUtils.isEmpty(statut.getDetection().getBouees()) && !rs.isEcueilCommunAdversePris()) {
-            if (statut.getDetection().getBouees()[0] == BoueeDetectee.ABSENT) {
-                if (rs.getTeam() == ETeam.BLEU) {
-                    rs.setEcueilCommunJauneDispo((byte) 0);
-                } else {
-                    rs.setEcueilCommunBleuDispo((byte) 0);
-                }
+        if (statut != null && statut.getDetection() != null && !rs.ecueilCommunAdversePris()) {
+            byte nbBouees = (byte) Stream.of(statut.getDetection().getEcueilAdverse())
+                    .filter(c -> c != ECouleurDetectee.UNKNOWN)
+                    .count();
+
+            if (rs.team() == ETeam.BLEU) {
+                rs.ecueilCommunJauneDispo(nbBouees);
+            } else {
+                rs.ecueilCommunBleuDispo(nbBouees);
             }
         }
     }
 
-    public EtalonnageBalise etalonnage(int[][] ecueil, int[][] bouees) {
+    public void lectureHautFond() {
+        if (statut != null && statut.getDetection() != null) {
+
+            // construit les bouées détectées, avec un flag pour savoir si elles sont nouvelles ou pas
+            final List<MutablePair<Bouee, Boolean>> hautFondDetecte = Stream.of(statut.getDetection().getHautFond())
+                    .map(b -> {
+                        ECouleurBouee couleur = b.getCol() == ECouleurDetectee.GREEN ? ECouleurBouee.VERT :
+                                b.getCol() == ECouleurDetectee.RED ? ECouleurBouee.ROUGE : ECouleurBouee.INCONNU;
+                        return new MutablePair<>(new Bouee(couleur, new Point(b.getPos()[0], 2000 - b.getPos()[1])), false);
+                    })
+                    .collect(Collectors.toList());
+
+            final List<Bouee> nouveauHautFond = new ArrayList<>();
+
+            // conserve les bouées qui n'ont pas bougé (delta < 1cm)
+            rs.hautFond().forEach(bouee -> {
+                Optional<MutablePair<Bouee, Boolean>> boueeExistante = hautFondDetecte.stream()
+                        .filter(pair -> pair.getKey().couleur() == bouee.couleur() &&
+                                Math.abs(pair.getKey().pt().getX() - bouee.pt().getX()) < 10 &&
+                                Math.abs(pair.getKey().pt().getY() - bouee.pt().getY()) < 10)
+                        .findFirst();
+
+                if (boueeExistante.isPresent()) {
+                    boueeExistante.get().setValue(true);
+                    nouveauHautFond.add(bouee);
+                }
+            });
+
+            // ajoute les bouées qui ont bougé
+            hautFondDetecte.stream()
+                    .filter(pair -> !pair.getValue())
+                    .forEach(pair -> nouveauHautFond.add(pair.getKey()));
+
+            rs.hautFond(nouveauHautFond);
+        }
+    }
+
+    public EtalonnageResponse etalonnage() {
         log.info("Démarrage de l'étalonnage");
         detectionStarted = false;
-        return balise.etalonnage(ecueil, bouees);
+        return balise.etalonnage();
     }
 
     public void idle() {

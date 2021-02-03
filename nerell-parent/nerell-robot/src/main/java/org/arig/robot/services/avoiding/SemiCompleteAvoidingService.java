@@ -20,7 +20,7 @@ public class SemiCompleteAvoidingService extends AbstractAvoidingService {
 
     @Override
     protected void processAvoiding() {
-        if (!rs.isAvoidanceEnabled()) {
+        if (!rs.avoidanceEnabled()) {
             return;
         }
 

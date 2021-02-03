@@ -22,7 +22,7 @@ public class EcueilEquipe extends AbstractEcueil {
     public Point entryPoint() {
         double x = ENTRY_X;
         double y = ENTRY_Y;
-        if (ETeam.JAUNE == rs.getTeam()) {
+        if (ETeam.JAUNE == rs.team()) {
             x = 3000 - x;
         }
 
@@ -41,12 +41,12 @@ public class EcueilEquipe extends AbstractEcueil {
 
     @Override
     protected double orientationPourPrise() {
-        return rs.getTeam() == ETeam.BLEU ? 0 : 180;
+        return rs.team() == ETeam.BLEU ? 0 : 180;
     }
 
     @Override
     protected ECouleurBouee[] bouees() {
-        return rs.getCouleursEcueilEquipe();
+        return rs.couleursEcueilEquipe();
     }
 
     @Override
@@ -55,6 +55,6 @@ public class EcueilEquipe extends AbstractEcueil {
 
     @Override
     protected void onComplete() {
-        rs.setEcueilEquipePris(true);
+        rs.ecueilEquipePris(true);
     }
 }

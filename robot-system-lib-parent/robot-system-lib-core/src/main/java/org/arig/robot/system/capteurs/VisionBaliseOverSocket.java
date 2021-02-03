@@ -3,6 +3,8 @@ package org.arig.robot.system.capteurs;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.socket.balise.DetectionQuery;
 import org.arig.robot.communication.socket.balise.DetectionResponse;
+import org.arig.robot.communication.socket.balise.EchoQuery;
+import org.arig.robot.communication.socket.balise.EchoResponse;
 import org.arig.robot.communication.socket.balise.EtalonnageQuery;
 import org.arig.robot.communication.socket.balise.EtalonnageResponse;
 import org.arig.robot.communication.socket.balise.ExitQuery;
@@ -14,7 +16,6 @@ import org.arig.robot.communication.socket.balise.PhotoResponse;
 import org.arig.robot.communication.socket.balise.StatusQuery;
 import org.arig.robot.communication.socket.balise.StatusResponse;
 import org.arig.robot.communication.socket.balise.enums.BaliseAction;
-import org.arig.robot.model.balise.EtalonnageBalise;
 import org.arig.robot.model.balise.StatutBalise;
 
 import java.io.File;
@@ -23,7 +24,7 @@ import java.io.File;
 public class VisionBaliseOverSocket extends AbstractSocketClient<BaliseAction> implements IVisionBalise {
 
     public VisionBaliseOverSocket(String hostname, Integer port) {
-        super(hostname, port);
+        super(hostname, port, 5000);
     }
 
     public VisionBaliseOverSocket(File socketFile) {
@@ -54,11 +55,21 @@ public class VisionBaliseOverSocket extends AbstractSocketClient<BaliseAction> i
     }
 
     @Override
-    public EtalonnageBalise etalonnage(int[][] ecueil, int[][] bouees) {
+    public void heartbeat() {
+        if (isOpen()) {
+            try {
+                sendToSocketAndGet(new EchoQuery("hello"), EchoResponse.class);
+            } catch (Exception e) {
+                log.warn("Erreur de lecture", e);
+            }
+        }
+    }
+
+    @Override
+    public EtalonnageResponse etalonnage() {
         try {
             openIfNecessary();
-            EtalonnageResponse response = sendToSocketAndGet(new EtalonnageQuery(ecueil, bouees), EtalonnageResponse.class);
-            return response.getDatas();
+            return sendToSocketAndGet(new EtalonnageQuery(), EtalonnageResponse.class);
 
         } catch (Exception e) {
             log.warn("Erreur de récupération de l'étalonnage", e);
@@ -67,15 +78,14 @@ public class VisionBaliseOverSocket extends AbstractSocketClient<BaliseAction> i
     }
 
     @Override
-    public boolean startDetection() {
+    public DetectionResponse startDetection() {
         try {
             openIfNecessary();
-            sendToSocketAndGet(new DetectionQuery(), DetectionResponse.class);
-            return true;
+            return sendToSocketAndGet(new DetectionQuery(), DetectionResponse.class);
         } catch (Exception e) {
             log.warn("Erreur de récupération de la detection", e);
+            return null;
         }
-        return false;
     }
 
     @Override
@@ -92,15 +102,14 @@ public class VisionBaliseOverSocket extends AbstractSocketClient<BaliseAction> i
     }
 
     @Override
-    public String getPhoto() {
+    public PhotoResponse getPhoto() {
         try {
             openIfNecessary();
-            PhotoResponse response = sendToSocketAndGet(new PhotoQuery(), PhotoResponse.class);
-            return response.getDatas();
+            return sendToSocketAndGet(new PhotoQuery(), PhotoResponse.class);
 
         } catch (Exception e) {
-            log.warn("Erreur de lecture", e);
-            return "";
+            log.warn("Erreur de recupération de la photo", e);
+            return null;
         }
     }
 }

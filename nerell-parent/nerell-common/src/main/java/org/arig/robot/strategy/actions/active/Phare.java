@@ -26,7 +26,7 @@ public class Phare extends AbstractNerellAction {
     public Point entryPoint() {
         double x = ENTRY_X;
         double y = ENTRY_Y;
-        if (ETeam.JAUNE == rs.getTeam()) {
+        if (ETeam.JAUNE == rs.team()) {
             x = 3000 - x;
         }
 
@@ -37,7 +37,7 @@ public class Phare extends AbstractNerellAction {
     public int order() {
         int order = 13;
 
-        if (rs.isEcueilCommunEquipePris()) {
+        if (rs.ecueilCommunEquipePris()) {
             order += 30;
         }
 
