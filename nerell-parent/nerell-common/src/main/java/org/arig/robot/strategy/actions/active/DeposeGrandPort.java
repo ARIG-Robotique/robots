@@ -35,7 +35,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
     public Point entryPoint() {
         double X = 230;
         double Y = 1200;
-        if (ETeam.JAUNE == rs.getTeam()) {
+        if (ETeam.JAUNE == rs.team()) {
             X = 3000 - X;
         }
         return new Point(X, Y);
@@ -84,7 +84,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
             boolean pinceAvantDepose = false;
             do {
                 if (!rs.pincesAvantEmpty()) {
-                    if (rs.getTeam() == ETeam.BLEU) {
+                    if (rs.team() == ETeam.BLEU) {
                         mv.gotoOrientationDeg(180);
                     } else {
                         mv.gotoOrientationDeg(0);
@@ -99,7 +99,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
                     if (pinceAvantDepose) {
                         pincesAvantService.finaliseDepose();
                     }
-                    if (rs.getTeam() == ETeam.BLEU) {
+                    if (rs.team() == ETeam.BLEU) {
                         mv.gotoOrientationDeg(0);
                     } else {
                         mv.gotoOrientationDeg(180);
@@ -109,7 +109,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
                 }
 
                 mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-                if (rs.getTeam() == ETeam.BLEU) {
+                if (rs.team() == ETeam.BLEU) {
                     mv.gotoPoint(500, entry.getY());
                 } else {
                     mv.gotoPoint(2500, entry.getY());
@@ -131,7 +131,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
     private double computeX(double baseX, boolean avant) {
         int coef = step * 120 + (avant ? 0 : 60);
 
-        if (rs.getTeam() == ETeam.JAUNE) {
+        if (rs.team() == ETeam.JAUNE) {
             return baseX - coef;
         } else {
             return baseX + coef;

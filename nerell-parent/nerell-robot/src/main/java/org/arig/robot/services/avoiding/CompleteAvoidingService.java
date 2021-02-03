@@ -34,7 +34,7 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
             hasObstacle = true;
 
             // On rafraichit le path
-            if (rs.isAvoidanceEnabled()) {
+            if (rs.avoidanceEnabled()) {
                 trajectoryManager.refreshPathFinding();
             }
 
@@ -42,7 +42,7 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
             hasObstacle = false;
 
             // On rafraichit le path
-            if (rs.isAvoidanceEnabled()) {
+            if (rs.avoidanceEnabled()) {
                 trajectoryManager.refreshPathFinding();
             }
         }

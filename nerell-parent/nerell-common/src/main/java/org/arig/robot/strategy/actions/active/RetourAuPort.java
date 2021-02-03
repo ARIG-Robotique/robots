@@ -6,7 +6,7 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
+import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.stereotype.Component;
@@ -26,13 +26,13 @@ public class RetourAuPort extends AbstractNerellAction {
 
         double x = 460;
         double centerY = 1200;
-        if (rs.getTeam() == ETeam.JAUNE) {
+        if (rs.team() == ETeam.JAUNE) {
             x = 3000 - x;
         }
         final Point north = new Point(x, centerY + offset);
         final Point south = new Point(x, centerY - offset);
 
-        switch (rs.getDirectionGirouette()) {
+        switch (rs.directionGirouette()) {
             case UP:
                 return north;
             case DOWN:
@@ -48,7 +48,7 @@ public class RetourAuPort extends AbstractNerellAction {
     @Override
     public int order() {
         int order;
-        if (rs.getDirectionGirouette() == DirectionGirouette.UNKNOWN) {
+        if (rs.directionGirouette() == EDirectionGirouette.UNKNOWN) {
             order = 5;
         } else {
             order = 10;
@@ -74,7 +74,7 @@ public class RetourAuPort extends AbstractNerellAction {
             // Finalisation de la rentré dans le port après avoir compter les points
             Point finalPoint = new Point(entry);
             finalPoint.setX(215);
-            if (rs.getTeam() == ETeam.JAUNE) {
+            if (rs.team() == ETeam.JAUNE) {
                 finalPoint.setX(3000 - finalPoint.getX());
             }
             mv.gotoPoint(finalPoint, GotoOption.SANS_ORIENTATION);
@@ -89,7 +89,7 @@ public class RetourAuPort extends AbstractNerellAction {
     }
 
     private void setScore(boolean coordProjection) {
-        if (coordProjection && rs.getDirectionGirouette() != DirectionGirouette.UNKNOWN) {
+        if (coordProjection && rs.directionGirouette() != EDirectionGirouette.UNKNOWN) {
             rs.bonPort(true);
         } else if (coordProjection) {
             rs.mauvaisPort(true);

@@ -624,7 +624,7 @@ public class TrajectoryManager implements ITrajectoryManager {
         log.info("Va au point X = {}mm ; Y = {}mm {}", x, y, !options.contains(GotoOption.SANS_ARRET) ? "et arrete toi" : "sans arret");
 
         if (!options.contains(GotoOption.SANS_ORIENTATION)) {
-            boolean avoidanceEnabled = rs.isAvoidanceEnabled();
+            boolean avoidanceEnabled = rs.avoidanceEnabled();
 
             // Alignement sur le point
             rs.disableAvoidance();
@@ -857,7 +857,7 @@ public class TrajectoryManager implements ITrajectoryManager {
     private void tourneDegByType(final double angle, TypeConsigne... types) throws AvoidingException {
         log.info("Tourne de {}° en mode : {}", angle, StringUtils.join(types, ", "));
 
-        boolean isAvoidance = rs.isAvoidanceEnabled();
+        boolean isAvoidance = rs.avoidanceEnabled();
         try {
             synchronized (this) {
                 rs.disableAvoidance();

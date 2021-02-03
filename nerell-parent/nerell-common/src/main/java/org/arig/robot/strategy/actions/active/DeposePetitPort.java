@@ -48,7 +48,7 @@ public class DeposePetitPort extends AbstractNerellAction {
     public Point entryPoint() {
         double x = 1800;
         double y = 620;
-        if (ETeam.JAUNE == rs.getTeam()) {
+        if (ETeam.JAUNE == rs.team()) {
             x = 3000 - x;
         }
 
@@ -88,9 +88,9 @@ public class DeposePetitPort extends AbstractNerellAction {
         boolean inPort = false;
 
         try {
-            if (rs.getTeam() == ETeam.JAUNE && bouee8.isValid()) {
+            if (rs.team() == ETeam.JAUNE && bouee8.isValid()) {
                 bouee8.execute();
-            } else if (rs.getTeam() == ETeam.BLEU && bouee9.isValid()) {
+            } else if (rs.team() == ETeam.BLEU && bouee9.isValid()) {
                 bouee9.execute();
             }
 
@@ -109,7 +109,7 @@ public class DeposePetitPort extends AbstractNerellAction {
             inPort = true;
 
             // on a shooté la bouée
-            if (rs.getTeam() == ETeam.JAUNE) {
+            if (rs.team() == ETeam.JAUNE) {
                 rs.bouee(8).setPrise();
             } else {
                 rs.bouee(9).setPrise();

@@ -6,5 +6,6 @@ public enum BaliseAction {
     ETALONNAGE,
     DETECTION,
     IDLE,
-    EXIT
+    EXIT,
+    ECHO
 }

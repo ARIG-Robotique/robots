@@ -35,7 +35,7 @@ public class RPLidarA2TelemeterOverSocket extends AbstractSocketClient<LidarActi
     public static short DEFAULT_MOTOR_PWM = 660;
 
     public RPLidarA2TelemeterOverSocket(String hostname, Integer port) throws Exception {
-        super(hostname, port);
+        super(hostname, port, 1000);
     }
 
     public RPLidarA2TelemeterOverSocket(File socketFile) throws Exception {

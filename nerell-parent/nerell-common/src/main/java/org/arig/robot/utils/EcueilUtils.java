@@ -2,21 +2,21 @@ package org.arig.robot.utils;
 
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
-import org.arig.robot.model.communication.balise.enums.CouleurDetectee;
+import org.arig.robot.model.communication.balise.enums.ECouleurDetectee;
 
 public enum EcueilUtils {
     ;
 
-    public static CouleurDetectee[] couleurDetectees(ECouleurBouee[] bouees) {
-        CouleurDetectee[] r = new CouleurDetectee[bouees.length];
+    public static ECouleurDetectee[] couleurDetectees(ECouleurBouee[] bouees) {
+        ECouleurDetectee[] r = new ECouleurDetectee[bouees.length];
         for (int i = 0 ; i < bouees.length ; i++) {
             ECouleurBouee b = bouees[i];
             if (b == ECouleurBouee.ROUGE) {
-                r[i] = CouleurDetectee.RED;
+                r[i] = ECouleurDetectee.RED;
             } else if (b == ECouleurBouee.VERT) {
-                r[i] = CouleurDetectee.GREEN;
+                r[i] = ECouleurDetectee.GREEN;
             } else {
-                r[i] = CouleurDetectee.UNKNOWN;
+                r[i] = ECouleurDetectee.UNKNOWN;
             }
         }
         return r;

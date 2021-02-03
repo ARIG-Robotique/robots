@@ -176,18 +176,19 @@ public class NerellOrdonanceur {
             }
 
             ecranService.displayMessage("Connexion à la balise");
-            short tries = 3;
-            do {
-                baliseService.tryConnect();
-                tries--;
-            } while (!baliseService.isConnected() && tries > 0);
+            baliseService.tryConnect();
 
             ecranService.displayMessage("Choix équipe et lancement calage bordure");
             ChangeFilter<Integer> teamChangeFilter = new ChangeFilter<>(-1);
             do {
                 if (teamChangeFilter.filter(ecranService.config().getTeam())) {
                     nerellRobotStatus.setTeam(ecranService.config().getTeam());
-                    log.info("Team {}", nerellRobotStatus.getTeam().name());
+                    log.info("Team {}", nerellRobotStatus.team().name());
+                }
+                if (!baliseService.isConnected()) {
+                    baliseService.tryConnect();
+                } else {
+                    baliseService.heartbeat();
                 }
                 if (ecranService.config().isExit()) {
                     log.info("Arret du programme");
@@ -196,11 +197,8 @@ public class NerellOrdonanceur {
                 ThreadUtils.sleep(500);
             } while (!ecranService.config().isStartCalibration());
 
-            ecranService.displayMessage("Activation de la balise");
-            nerellRobotStatus.enableBalise();
-
             ecranService.displayMessage("Initialisation pathfinder");
-            String fileResourcePath = String.format("classpath:maps/sail_the_world-%s-nochenal.png", nerellRobotStatus.getTeam().name());
+            String fileResourcePath = String.format("classpath:maps/sail_the_world-%s-nochenal.png", nerellRobotStatus.team().name());
             final InputStream imgMap = patternResolver.getResource(fileResourcePath).getInputStream();
             pathFinder.construitGraphDepuisImageNoirEtBlanc(imgMap);
             try {
@@ -233,8 +231,8 @@ public class NerellOrdonanceur {
                     lidarDatas = lidar.grabDatas();
                 }
 
-                for (int i = 0; i < 10; i++) {
-                    ecranService.displayMessage(String.format("Attente %ss pour remettre la capot si besoin", 10 - i));
+                for (int i = 0; i < 5; i++) {
+                    ecranService.displayMessage(String.format("Attente %ss pour remettre la capot si besoin", 5 - i));
                     ThreadUtils.sleep(1000);
                 }
             }
@@ -259,16 +257,22 @@ public class NerellOrdonanceur {
                 // Si on est pas en manuel, gestion de la strategy
                 if (!manuel && !ecranService.config().isSkipCalageBordure()) {
                     ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
-                    nerellRobotStatus.setDoubleDepose(ecranService.config().isDoubleDepose() || ecranService.config().isDeposePartielle());
-                    nerellRobotStatus.setDeposePartielle(ecranService.config().isDeposePartielle());
+                    nerellRobotStatus.doubleDepose(ecranService.config().isDoubleDepose() || ecranService.config().isDeposePartielle());
+                    nerellRobotStatus.deposePartielle(ecranService.config().isDeposePartielle());
                     if (strategyChangeFilter.filter(ecranService.config().getStrategy())) {
                         nerellRobotStatus.setStrategy(ecranService.config().getStrategy());
-                        log.info("Strategy {}", nerellRobotStatus.getStrategy().name());
+                        log.info("Strategy {}", nerellRobotStatus.strategy().name());
                         positionStrategy();
                     }
                 }
 
                 avoidingService.setSafeAvoidance(ecranService.config().isSafeAvoidance());
+
+                if (!baliseService.isConnected()) {
+                    baliseService.tryConnect();
+                } else {
+                    baliseService.heartbeat();
+                }
 
                 if (ecranService.config().isExit()) {
                     log.info("Arret du programme");
@@ -277,6 +281,9 @@ public class NerellOrdonanceur {
 
                 ThreadUtils.sleep(manuel ? 4000 : 500);
             }
+
+            ecranService.displayMessage("Activation de la balise");
+            nerellRobotStatus.enableBalise();
 
             ecranService.displayMessage("!!! ... ATTENTE DEPART TIRETTE ... !!!");
             while (ioService.tirette()) {
@@ -359,34 +366,34 @@ public class NerellOrdonanceur {
 
     public void positionStrategy() {
         try {
-            if (nerellRobotStatus.getStrategy() == EStrategy.AGGRESSIVE) {
-                if (nerellRobotStatus.getTeam() == ETeam.BLEU) {
+            if (nerellRobotStatus.strategy() == EStrategy.AGGRESSIVE) {
+                if (nerellRobotStatus.team() == ETeam.BLEU) {
                     trajectoryManager.gotoPoint(200, 1200);
                     trajectoryManager.alignFrontTo(1025, 1400);
                 } else {
                     trajectoryManager.gotoPoint(3000 - 200, 1200);
                     trajectoryManager.alignFrontTo(3000 - 1025, 1400);
                 }
-            } else if (nerellRobotStatus.getStrategy() == EStrategy.FINALE) {
-                if (nerellRobotStatus.getTeam() == ETeam.BLEU) {
+            } else if (nerellRobotStatus.strategy() == EStrategy.FINALE) {
+                if (nerellRobotStatus.team() == ETeam.BLEU) {
                     trajectoryManager.gotoPoint(200, 1200);
                     trajectoryManager.gotoOrientationDeg(0);
                 } else {
                     trajectoryManager.gotoPoint(3000 - 200, 1200);
                     trajectoryManager.gotoOrientationDeg(0);
                 }
-            } else if (nerellRobotStatus.getStrategy() == EStrategy.BASIC_NORD) { // BASIC
+            } else if (nerellRobotStatus.strategy() == EStrategy.BASIC_NORD) { // BASIC
                 // Aligne vers les bouées au nord du port
-                if (nerellRobotStatus.getTeam() == ETeam.BLEU) {
+                if (nerellRobotStatus.team() == ETeam.BLEU) {
                     trajectoryManager.gotoPoint(220, 1290);
                     trajectoryManager.gotoOrientationDeg(66);
                 } else {
                     trajectoryManager.gotoPoint(3000 - 220, 1290);
                     trajectoryManager.gotoOrientationDeg(180 - 66);
                 }
-            } else if (nerellRobotStatus.getStrategy() == EStrategy.BASIC_SUD) {
+            } else if (nerellRobotStatus.strategy() == EStrategy.BASIC_SUD) {
                 // Aligne vers les bouées au sud du port
-                if (nerellRobotStatus.getTeam() == ETeam.BLEU) {
+                if (nerellRobotStatus.team() == ETeam.BLEU) {
                     trajectoryManager.gotoPoint(220, 1110);
                     trajectoryManager.gotoOrientationDeg(-66);
                 } else {
@@ -394,7 +401,7 @@ public class NerellOrdonanceur {
                     trajectoryManager.gotoOrientationDeg(-180 + 66);
                 }
             } else { // Au centre orienté vers le logo au centre de la table
-                if (nerellRobotStatus.getTeam() == ETeam.BLEU) {
+                if (nerellRobotStatus.team() == ETeam.BLEU) {
                     trajectoryManager.gotoPoint(200, 1200);
                     trajectoryManager.gotoOrientationDeg(0);
                 } else {
@@ -412,8 +419,8 @@ public class NerellOrdonanceur {
     public void calageBordure(boolean skip) {
         try {
             nerellRobotStatus.disableAvoidance();
-            if (nerellRobotStatus.isSimulateur() || skip) {
-                if (nerellRobotStatus.getTeam() == ETeam.BLEU) {
+            if (nerellRobotStatus.simulateur() || skip) {
+                if (nerellRobotStatus.team() == ETeam.BLEU) {
                     position.setPt(new Point(conv.mmToPulse(200), conv.mmToPulse(1200)));
                     position.setAngle(conv.degToPulse(0));
                 } else {
@@ -424,7 +431,7 @@ public class NerellOrdonanceur {
                 nerellRobotStatus.enableCalageBordure();
                 trajectoryManager.reculeMMSansAngle(1000);
 
-                if (nerellRobotStatus.getTeam() == ETeam.BLEU) {
+                if (nerellRobotStatus.team() == ETeam.BLEU) {
                     position.getPt().setX(conv.mmToPulse(IConstantesNerellConfig.dstCallageY));
                     position.setAngle(conv.degToPulse(0));
                 } else {
@@ -443,7 +450,7 @@ public class NerellOrdonanceur {
 
                 trajectoryManager.avanceMM(150);
 
-                if (nerellRobotStatus.getTeam() == ETeam.BLEU) {
+                if (nerellRobotStatus.team() == ETeam.BLEU) {
                     trajectoryManager.gotoPoint(200, 1200);
                 } else {
                     trajectoryManager.gotoPoint(3000 - 200, 1200);

@@ -6,6 +6,11 @@ import java.util.Collections;
 import java.util.Map;
 
 public class TestRobotStatus extends AbstractRobotStatus {
+
+    public TestRobotStatus() {
+        super(0);
+    }
+
     @Override
     public int calculerPoints() {
         return 2;

@@ -61,6 +61,6 @@ public class CapteursController extends AbstractCapteursController implements In
         // NOP en 2020
 
         // Capteurs informations Text
-        textInfos.put("Equipe", () -> rs.getTeam().name());
+        textInfos.put("Equipe", () -> rs.team().name());
     }
 }

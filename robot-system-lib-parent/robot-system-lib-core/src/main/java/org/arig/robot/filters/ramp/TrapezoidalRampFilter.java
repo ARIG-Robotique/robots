@@ -80,7 +80,7 @@ public class TrapezoidalRampFilter extends AbstractGainFactorRampFilter {
 
         if (input > 0 && currentVitesse >= 0) {
             // Distance a parcourir en avant
-            if (!rs.isSimulateur() && input < getStepVitesseAccel()) {
+            if (!rs.simulateur() && input < getStepVitesseAccel()) {
                 // Distance restante très proche
                 currentVitesse = input;
 
@@ -102,7 +102,7 @@ public class TrapezoidalRampFilter extends AbstractGainFactorRampFilter {
 
         } else if (input < 0 && currentVitesse <= 0) {
             // Distance a parcourir en arrière
-            if (!rs.isSimulateur() && input > -getStepVitesseAccel()) {
+            if (!rs.simulateur() && input > -getStepVitesseAccel()) {
                 // Distance restante très proche
                 currentVitesse = input;
 

@@ -5,7 +5,7 @@ import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.NerellRobotStatus;
-import org.arig.robot.model.communication.balise.enums.DirectionGirouette;
+import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.BaliseService;
@@ -73,7 +73,7 @@ public class TasksScheduler implements InitializingBean {
                 if (ellapsedCalage >= IConstantesNerellConfig.calageTimeMs * 1000000) {
                     lastTimeCalage = timeStartCalage;
 
-                    if (rs.isCalageBordure()) {
+                    if (rs.calageBordure()) {
                         calageBordure.process();
                     }
                 }
@@ -84,10 +84,10 @@ public class TasksScheduler implements InitializingBean {
                 if (ellapsedAsserv >= IConstantesNerellConfig.asservTimeMs * 1000000) {
                     lastTimeAsserv = timeStartAsserv;
 
-                    if (rs.isAsservEnabled()) {
+                    if (rs.asservEnabled()) {
                         trajectoryManager.process(TimeUnit.MICROSECONDS.toMillis(ellapsedAsserv));
                     } else {
-                        if (!rs.isCaptureEnabled()) {
+                        if (!rs.captureEnabled()) {
                             trajectoryManager.stop();
                         }
                     }
@@ -134,7 +134,7 @@ public class TasksScheduler implements InitializingBean {
 
     @Scheduled(fixedDelay = 2000)
     public void updateBaliseStatus() {
-        if (!rs.isBaliseEnabled()) {
+        if (!rs.baliseEnabled()) {
             return;
         }
 
@@ -145,17 +145,15 @@ public class TasksScheduler implements InitializingBean {
             baliseService.startDetection();
             baliseService.updateStatus();
 
-            if (rs.isMatchEnabled()) {
+            if (rs.matchEnabled()) {
                 // Lecture Girouette
-                if (rs.getElapsedTime() >= IConstantesNerellConfig.baliseElapsedTimeMs && rs.getDirectionGirouette() == DirectionGirouette.UNKNOWN) {
+                if (rs.getElapsedTime() >= IConstantesNerellConfig.baliseElapsedTimeMs && rs.directionGirouette() == EDirectionGirouette.UNKNOWN) {
                     baliseService.lectureGirouette();
                 }
 
-                // Lecture couleur bouée
                 baliseService.lectureCouleurBouees();
-
-                // Lecture de l'ecueil adverse
                 baliseService.lectureEcueilAdverse();
+                baliseService.lectureHautFond();
             } else {
                 // Lecture couleur écueil
                 baliseService.lectureCouleurEcueilEquipe();
@@ -165,14 +163,14 @@ public class TasksScheduler implements InitializingBean {
 
     @Scheduled(fixedDelay = 1)
     public void strategyTask() {
-        if (rs.isMatchEnabled()) {
+        if (rs.matchEnabled()) {
             strategyManager.execute();
         }
     }
 
     @Scheduled(fixedDelay = 200)
     public void pincesAvantTask() {
-        boolean pincesEnabled = rs.isPincesAvantEnabled();
+        boolean pincesEnabled = rs.pincesAvantEnabled();
 
         if (Boolean.TRUE.equals(risingEnablePinces.filter(pincesEnabled))) {
             pincesAvant.activate();

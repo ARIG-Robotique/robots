@@ -13,6 +13,7 @@
     </extension>
     <option name="SPRING_BOOT_MAIN_CLASS" value="org.arig.robot.config.spring.NerellSimulator" />
     <option name="ACTIVE_PROFILES" value="default,monitoring,simulateur,damien" />
+    <option name="VM_PARAMETERS" value="-DdisableEcran" />
     <option name="WORKING_DIRECTORY" value="file://$MODULE_WORKING_DIR$" />
     <option name="ALTERNATIVE_JRE_PATH" value="Oracle 1.8" />
     <method v="2">

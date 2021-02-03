@@ -14,7 +14,7 @@ public class NotBasicAvoidingService extends AbstractAvoidingService {
 
     @Override
     protected void processAvoiding() {
-        if (!rs.isAvoidanceEnabled()) {
+        if (!rs.avoidanceEnabled()) {
             return;
         }
 

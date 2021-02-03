@@ -3,6 +3,7 @@ package org.arig.test.robot.system.capteurs;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.arig.robot.communication.socket.balise.PhotoResponse;
 import org.arig.robot.model.balise.StatutBalise;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.junit.AfterClass;
@@ -61,7 +62,7 @@ public class VisionBaliseOverSocketTest {
     @Test
     @SneakyThrows
     public void testGetPhoto() {
-        String imgStr = visionBalise.getPhoto();
+        String imgStr = visionBalise.getPhoto().getDatas();
         byte[] img = Base64.getDecoder().decode(imgStr);
         File dest = new File("img.jpg");
         FileUtils.writeByteArrayToFile(dest, img);

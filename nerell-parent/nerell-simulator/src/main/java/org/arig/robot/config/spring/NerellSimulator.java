@@ -26,7 +26,7 @@ public class NerellSimulator {
 
         ConfigurableApplicationContext context = SpringApplication.run(NerellSimulator.class, args);
         NerellRobotStatus rs = context.getBean(NerellRobotStatus.class);
-        rs.setSimulateur();
+        rs.simulateur(true);
 
         IGainFactorRampFilter rampDistance = context.getBean("rampDistance", IGainFactorRampFilter.class);
         rampDistance.setGain(IConstantesNerellConfig.gainVitesseRampeDistanceSimulateur);

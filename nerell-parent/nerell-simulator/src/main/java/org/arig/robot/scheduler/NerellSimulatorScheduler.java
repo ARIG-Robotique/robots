@@ -20,7 +20,7 @@ public class NerellSimulatorScheduler {
 
     @Scheduled(fixedDelay = 100)
     public void obstacleAvoidanceTask() {
-        if (rs.isAvoidanceEnabled()) {
+        if (rs.avoidanceEnabled()) {
             avoidingService.process();
         }
     }

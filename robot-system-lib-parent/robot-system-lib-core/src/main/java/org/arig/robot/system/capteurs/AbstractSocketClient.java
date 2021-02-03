@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 @Slf4j
@@ -27,15 +28,17 @@ public class AbstractSocketClient<T extends Enum> {
     private File socketFile;
     private Integer port;
     private String hostname;
+    private int timeout;
 
     private OutputStreamWriter out;
     private BufferedReader in;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public AbstractSocketClient(final String hostname, final Integer port) {
+    public AbstractSocketClient(final String hostname, final Integer port, final int timeout) {
         this.unixSocket = false;
         this.hostname = hostname;
         this.port = port;
+        this.timeout = timeout;
     }
 
     public AbstractSocketClient(final File socketFile) {
@@ -55,7 +58,8 @@ public class AbstractSocketClient<T extends Enum> {
         if (!unixSocket) {
             Assert.isTrue(StringUtils.isNotBlank(hostname), "Le hostname est obligatoire en mode INET");
             Assert.isTrue(port != null && port > 0, "Le port est obligatoire en mode INET");
-            socket = new Socket(this.hostname, this.port);
+            socket = new Socket();
+            socket.connect(new InetSocketAddress(this.hostname, this.port), this.timeout);
 
         } else {
             Assert.notNull(socketFile, "Le fichier pour la socket est obligatoire en mode unix");
@@ -78,7 +82,7 @@ public class AbstractSocketClient<T extends Enum> {
     }
 
     public boolean isOpen() {
-        return socket != null;
+        return socket != null && socket.isConnected();
     }
 
     public void end() {
@@ -110,6 +114,9 @@ public class AbstractSocketClient<T extends Enum> {
                 out.flush();
 
                 String res = in.readLine();
+                if (res == null) {
+                    throw new IOException("Null result");
+                }
                 R rawResponse = objectMapper.readValue(res, responseClazz);
                 if (rawResponse.isError()) {
                     throw new IllegalStateException(rawResponse.getErrorMessage());
