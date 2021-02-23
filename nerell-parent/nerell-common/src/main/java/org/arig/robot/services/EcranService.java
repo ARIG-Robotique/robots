@@ -5,10 +5,6 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.communication.II2CManager;
-import org.arig.robot.communication.socket.balise.EtalonnageResponse;
-import org.arig.robot.communication.socket.balise.PhotoResponse;
-import org.arig.robot.filters.common.SignalEdgeFilter;
-import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.ecran.GetConfigInfos;
 import org.arig.robot.model.ecran.UpdateMatchInfos;
@@ -54,8 +50,6 @@ public class EcranService {
 
     private final UpdateStateInfos stateInfos = new UpdateStateInfos();
     private final UpdateMatchInfos matchInfos = new UpdateMatchInfos();
-    private final SignalEdgeFilter updatePhotoFilter = new SignalEdgeFilter(false, Type.RISING);
-    private final SignalEdgeFilter doEtalonnageFilter = new SignalEdgeFilter(false, Type.RISING);
 
     public void process() {
         if (rs.matchEnabled() && !matchHasRunned) {
@@ -67,25 +61,7 @@ public class EcranService {
 
         } else {
             updateStatus();
-
-            if (baliseService.isConnected()) {
-                if (updatePhotoFilter.filter(config.isUpdatePhoto())) {
-                    // sur front montant de "updatePhoto" on prend une photo et l'envoie à l'écran
-                    PhotoResponse photo = baliseService.getPhoto();
-                    UpdatePhotoInfos query = new UpdatePhotoInfos();
-                    query.setMessage(photo == null ? "Erreur inconnue" : photo.getErrorMessage());
-                    query.setPhoto(photo == null ? null : photo.getDatas());
-                    ecran.updatePhoto(query);
-
-                } else if (doEtalonnageFilter.filter(config.isEtalonnageBalise())) {
-                    // sur front montant de "etalonnageBalise" on lance l'étalonnage et envoie le résultat à l'écran
-                    EtalonnageResponse etalonnage = baliseService.etalonnage();
-                    UpdatePhotoInfos query = new UpdatePhotoInfos();
-                    query.setMessage(etalonnage == null ? "Erreur inconnue" : etalonnage.getErrorMessage());
-                    query.setPhoto(etalonnage == null ? null : etalonnage.getDatas());
-                    ecran.updatePhoto(query);
-                }
-            }
+            config = ecran.configInfos();
         }
     }
 
@@ -104,6 +80,10 @@ public class EcranService {
         }
     }
 
+    public void updatePhoto(UpdatePhotoInfos query) {
+        ecran.updatePhoto(query);
+    }
+
     private void updateStatus() {
         stateInfos.setI2c(ii2CManager.status());
         stateInfos.setLidar(lidarService.isConnected());
@@ -115,7 +95,6 @@ public class EcranService {
         stateInfos.setTirette(ioService.tirette());
 
         ecran.updateState(stateInfos);
-        config = ecran.configInfos();
     }
 
     private void updateMatch() {
