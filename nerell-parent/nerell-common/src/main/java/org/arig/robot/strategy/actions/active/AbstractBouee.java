@@ -16,8 +16,6 @@ import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
-
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AbstractBouee extends AbstractNerellAction {
@@ -26,24 +24,18 @@ public abstract class AbstractBouee extends AbstractNerellAction {
     private IPincesAvantService pincesAvantService;
 
     @Autowired
-    private IIOService io;
+    protected IIOService io;
 
-    private final int numeroBouee;
-    private Bouee bouee;
-
-    @PostConstruct
-    public void init() {
-        bouee = rs.bouee(numeroBouee);
-    }
+    abstract public Bouee bouee();
 
     @Override
     public String name() {
-        return "Bouee " + numeroBouee;
+        return "Bouee " + bouee().numero();
     }
 
     @Override
     public Point entryPoint() {
-        return bouee.pt();
+        return bouee().pt();
     }
 
     @Override
@@ -53,17 +45,19 @@ public abstract class AbstractBouee extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && bouee.presente() && getPinceCible() != 0 && rs.getRemainingTime() > IConstantesNerellConfig.invalidPriseRemainingTime;
+        final Bouee bouee = bouee();
+        return isTimeValid() && bouee.presente() && getPinceCible(bouee) != 0 && rs.getRemainingTime() > IConstantesNerellConfig.invalidPriseRemainingTime;
     }
 
     @Override
     public void execute() {
         try {
-            final int pinceCible = getPinceCible();
+            final Bouee bouee = bouee();
+            final int pinceCible = getPinceCible(bouee);
             final double distanceApproche = IConstantesNerellConfig.pathFindingTailleBouee / 2.0 + 10;
             final double offsetPince = getOffsetPince(pinceCible);
 
-            log.info("Prise de la bouee {} {} dans la pince avant {}", numeroBouee, bouee.couleur(), pinceCible);
+            log.info("Prise de la bouee {} {} dans la pince avant {}", bouee.numero(), bouee.couleur(), pinceCible);
 
             final Point entry = entryPoint();
 
@@ -98,7 +92,8 @@ public abstract class AbstractBouee extends AbstractNerellAction {
         }
     }
 
-    private int getPinceCible() {
+    private int getPinceCible(final Bouee bouee) {
+        // FIXME obsolète avec le capteur couleur ?
         if (bouee.couleur() == ECouleurBouee.ROUGE) {
             if (!io.presencePinceAvantSup2()) {
                 return 2;

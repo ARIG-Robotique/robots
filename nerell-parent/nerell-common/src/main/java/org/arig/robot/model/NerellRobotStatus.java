@@ -120,22 +120,22 @@ public class NerellRobotStatus extends AbstractRobotStatus {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private List<Bouee> bouees = Arrays.asList(
-            new Bouee(ECouleurBouee.ROUGE, new Point(300, 2000 - 400)),
-            new Bouee(ECouleurBouee.VERT, new Point(450, 2000 - 510)),
-            new Bouee(ECouleurBouee.ROUGE, new Point(450, 2000 - 1080)),
-            new Bouee(ECouleurBouee.VERT, new Point(300, 2000 - 1200)),
-            new Bouee(ECouleurBouee.ROUGE, new Point(670, 2000 - 100)),
-            new Bouee(ECouleurBouee.VERT, new Point(950, 2000 - 400)),
-            new Bouee(ECouleurBouee.ROUGE, new Point(1100, 2000 - 800)),
-            new Bouee(ECouleurBouee.VERT, new Point(1270, 2000 - 1200)),
-            new Bouee(ECouleurBouee.ROUGE, new Point(1730, 2000 - 1200)),
-            new Bouee(ECouleurBouee.VERT, new Point(1900, 2000 - 800)),
-            new Bouee(ECouleurBouee.ROUGE, new Point(2050, 2000 - 400)),
-            new Bouee(ECouleurBouee.VERT, new Point(2330, 2000 - 100)),
-            new Bouee(ECouleurBouee.VERT, new Point(2700, 2000 - 400)),
-            new Bouee(ECouleurBouee.ROUGE, new Point(2550, 2000 - 510)),
-            new Bouee(ECouleurBouee.VERT, new Point(2550, 2000 - 1080)),
-            new Bouee(ECouleurBouee.ROUGE, new Point(2700, 2000 - 1200))
+            new Bouee(1, ECouleurBouee.ROUGE, new Point(300, 2000 - 400)),
+            new Bouee(2, ECouleurBouee.VERT, new Point(450, 2000 - 510)),
+            new Bouee(3, ECouleurBouee.ROUGE, new Point(450, 2000 - 1080)),
+            new Bouee(4, ECouleurBouee.VERT, new Point(300, 2000 - 1200)),
+            new Bouee(5, ECouleurBouee.ROUGE, new Point(670, 2000 - 100)),
+            new Bouee(6, ECouleurBouee.VERT, new Point(950, 2000 - 400)),
+            new Bouee(7, ECouleurBouee.ROUGE, new Point(1100, 2000 - 800)),
+            new Bouee(8, ECouleurBouee.VERT, new Point(1270, 2000 - 1200)),
+            new Bouee(9, ECouleurBouee.ROUGE, new Point(1730, 2000 - 1200)),
+            new Bouee(10, ECouleurBouee.VERT, new Point(1900, 2000 - 800)),
+            new Bouee(11, ECouleurBouee.ROUGE, new Point(2050, 2000 - 400)),
+            new Bouee(12, ECouleurBouee.VERT, new Point(2330, 2000 - 100)),
+            new Bouee(13, ECouleurBouee.VERT, new Point(2700, 2000 - 400)),
+            new Bouee(14, ECouleurBouee.ROUGE, new Point(2550, 2000 - 510)),
+            new Bouee(15, ECouleurBouee.VERT, new Point(2550, 2000 - 1080)),
+            new Bouee(16, ECouleurBouee.ROUGE, new Point(2700, 2000 - 1200))
     );
 
     public Bouee bouee(int numero) {

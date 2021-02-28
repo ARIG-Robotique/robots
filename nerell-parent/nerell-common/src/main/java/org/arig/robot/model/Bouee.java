@@ -23,6 +23,8 @@ public class Bouee implements Serializable {
         PRISE // prise par le robot
     }
 
+    private final int numero;
+
     @JsonProperty("couleur")
     @Setter(value = AccessLevel.NONE)
     private final ECouleurBouee couleur;

@@ -143,7 +143,7 @@ public class BaliseService {
                     .map(b -> {
                         ECouleurBouee couleur = b.getCol() == ECouleurDetectee.GREEN ? ECouleurBouee.VERT :
                                 b.getCol() == ECouleurDetectee.RED ? ECouleurBouee.ROUGE : ECouleurBouee.INCONNU;
-                        return new MutablePair<>(new Bouee(couleur, new Point(b.getPos()[0], 2000 - b.getPos()[1])), false);
+                        return new MutablePair<>(new Bouee(0, couleur, new Point(b.getPos()[0], 2000 - b.getPos()[1])), false);
                     })
                     .collect(Collectors.toList());
 
