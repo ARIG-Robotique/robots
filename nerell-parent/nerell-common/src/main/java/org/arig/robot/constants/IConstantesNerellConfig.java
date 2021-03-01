@@ -164,4 +164,7 @@ public interface IConstantesNerellConfig {
     // ----------------- //
     // Paramètres métier //
     // ----------------- //
+
+    int WAIT_ASPIRATION = 300;
+    int WAIT_EXPIRATION = 300;
 }

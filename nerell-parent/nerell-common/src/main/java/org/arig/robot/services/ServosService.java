@@ -1,5 +1,6 @@
 package org.arig.robot.services;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Triple;
 import org.arig.robot.constants.IConstantesServosNerell;
@@ -234,28 +235,34 @@ public class ServosService {
         setPosition(IConstantesServosNerell.PIVOT_ARRIERE, IConstantesServosNerell.POS_PIVOT_ARRIERE_OUVERT, wait);
     }
 
+    @Deprecated
     public void pincesAvantPrise(boolean wait) {
         setPositionBatch(IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_PINCES_AVANT).get(IConstantesServosNerell.POS_BATCH_PINCES_AVANT_PRISE), wait);
     }
 
+    @Deprecated
     public void pinceAvantPrise(int index, boolean wait) {
         int[] config = IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_PINCES_AVANT).get(IConstantesServosNerell.POS_BATCH_PINCES_AVANT_PRISE)[index];
         setPosition((byte) config[0], config[1], wait);
     }
 
+    @Deprecated
     public void pincesAvantFerme(boolean wait) {
         setPositionBatch(IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_PINCES_AVANT).get(IConstantesServosNerell.POS_BATCH_PINCES_AVANT_FERME), wait);
     }
 
+    @Deprecated
     public void pinceAvantFerme(int index, boolean wait) {
         int[] config = IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_PINCES_AVANT).get(IConstantesServosNerell.POS_BATCH_PINCES_AVANT_FERME)[index];
         setPosition((byte) config[0], config[1], wait);
     }
 
+    @Deprecated
     public void pincesAvantOuvert(boolean wait) {
         setPositionBatch(IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_PINCES_AVANT).get(IConstantesServosNerell.POS_BATCH_PINCES_AVANT_OUVERT), wait);
     }
 
+    @Deprecated
     public void pinceAvantOuvert(int index, boolean wait) {
         int[] config = IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_PINCES_AVANT).get(IConstantesServosNerell.POS_BATCH_PINCES_AVANT_OUVERT)[index];
         setPosition((byte) config[0], config[1], wait);

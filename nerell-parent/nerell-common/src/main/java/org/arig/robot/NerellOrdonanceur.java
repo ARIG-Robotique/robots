@@ -484,7 +484,6 @@ public class NerellOrdonanceur {
 
         ioService.enableAlim5VPuissance();
 
-        servosService.pincesAvantOuvert(false);
         servosService.pincesArriereOuvert(false);
         servosService.brasDroitFerme(false);
         servosService.brasGaucheFerme(false);
@@ -496,7 +495,6 @@ public class NerellOrdonanceur {
         while (ioService.tirette()) {
             ThreadUtils.sleep(1000);
         }
-        servosService.pincesAvantFerme(false);
         servosService.pincesArriereFerme(false);
         ThreadUtils.sleep(1000);
 
