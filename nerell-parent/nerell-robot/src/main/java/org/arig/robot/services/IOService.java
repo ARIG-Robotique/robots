@@ -14,6 +14,8 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 
 import java.io.IOException;
 
@@ -238,6 +240,26 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     }
 
     @Override
+    public boolean presenceVentouse1() {
+        return false; // TODO
+    }
+
+    @Override
+    public boolean presenceVentouse2() {
+        return false; // TODO
+    }
+
+    @Override
+    public boolean presenceVentouse3() {
+        return false; // TODO
+    }
+
+    @Override
+    public boolean presenceVentouse4() {
+        return false; // TODO
+    }
+
+    @Override
     public boolean presencePinceAvantSup1() {
         return inPresencePinceAvantSup1.isLow();
     }
@@ -292,6 +314,46 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         return inCalageBordureGauche.isLow();
     }
 
+    @Override
+    public ECouleurBouee couleurBouee1() {
+        return ECouleurBouee.INCONNU; // TODO
+    }
+
+    @Override
+    public ECouleurBouee couleurBouee2() {
+        return ECouleurBouee.INCONNU; // TODO
+    }
+
+    @Override
+    public ECouleurBouee couleurBouee3() {
+        return ECouleurBouee.INCONNU; // TODO
+    }
+
+    @Override
+    public ECouleurBouee couleurBouee4() {
+        return ECouleurBouee.INCONNU; // TODO
+    }
+
+    @Override
+    public ColorData couleurRaw1() {
+        return new ColorData().r(0).g(0).b(0); // TODO
+    }
+
+    @Override
+    public ColorData couleurRaw2() {
+        return new ColorData().r(0).g(0).b(0); // TODO
+    }
+
+    @Override
+    public ColorData couleurRaw3() {
+        return new ColorData().r(0).g(0).b(0); // TODO
+    }
+
+    @Override
+    public ColorData couleurRaw4() {
+        return new ColorData().r(0).g(0).b(0); // TODO
+    }
+
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
@@ -318,5 +380,49 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     public void disableAlim12VPuissance() {
         log.info("Desactivation puissance 12V");
         outAlimPuissance12V.high();
+    }
+
+    // ----------------------------------------------------------- //
+    // -------------------------- BUSINESS ----------------------- //
+    // ----------------------------------------------------------- //
+
+    @Override
+    public void enablePompe1() {
+        // TODO
+    }
+
+    @Override
+    public void enablePompe2() {
+        // TODO
+    }
+
+    @Override
+    public void enablePompe3() {
+        // TODO
+    }
+
+    @Override
+    public void enablePompe4() {
+        // TODO
+    }
+
+    @Override
+    public void disablePompe1() {
+        // TODO
+    }
+
+    @Override
+    public void disablePompe2() {
+        // TODO
+    }
+
+    @Override
+    public void disablePompe3() {
+        // TODO
+    }
+
+    @Override
+    public void disablePompe4() {
+        // TODO
     }
 }
