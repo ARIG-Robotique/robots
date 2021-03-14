@@ -4,6 +4,8 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.i2c.I2CBus;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
@@ -56,10 +58,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     // Input : Numerique
     private GpioPinDigitalInput inCalageBordureDroit;
     private GpioPinDigitalInput inCalageBordureGauche;
-    private GpioPinDigitalInput inPresencePinceAvantLat1;
-    private GpioPinDigitalInput inPresencePinceAvantLat2;
-    private GpioPinDigitalInput inPresencePinceAvantLat3;
-    private GpioPinDigitalInput inPresencePinceAvantLat4;
     private GpioPinDigitalInput inPresencePinceAvantSup1;
     private GpioPinDigitalInput inPresencePinceAvantSup2;
     private GpioPinDigitalInput inPresencePinceAvantSup3;
@@ -72,6 +70,9 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 
     // Référence sur les PIN Output
     // ----------------------------
+
+    // GPIO
+    private GpioPinDigitalOutput outCmdLedCapteurRGB;
 
     // PCF
     private GpioPinDigitalOutput outAlimPuissance5V;
@@ -126,6 +127,9 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
 //        inIrq5 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_15);
 //        inIrq6 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_06);
 
+        // Output
+        outCmdLedCapteurRGB = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, PinState.LOW); // TODO
+
         // Config PCF8574 //
         // -------------- //
         pcfAlim = new PCF8574GpioProvider(bus, IConstantesI2CNerell.PCF_ALIM_ADDRESS, true);
@@ -141,10 +145,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
         outAlimPuissance12V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
 
         // PCF1
-        inPresencePinceAvantLat1 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
-        inPresencePinceAvantLat2 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
-        inPresencePinceAvantLat3 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
-        inPresencePinceAvantLat4 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
         inPresencePinceAvantSup1 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
         inPresencePinceAvantSup2 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
         inPresencePinceAvantSup3 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
@@ -218,26 +218,6 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     // --------------------------------------------------------- //
 
     // Numerique
-
-    @Override
-    public boolean presencePinceAvantLat1() {
-        return inPresencePinceAvantLat1.isLow();
-    }
-
-    @Override
-    public boolean presencePinceAvantLat2() {
-        return inPresencePinceAvantLat2.isLow();
-    }
-
-    @Override
-    public boolean presencePinceAvantLat3() {
-        return inPresencePinceAvantLat3.isLow();
-    }
-
-    @Override
-    public boolean presencePinceAvantLat4() {
-        return inPresencePinceAvantLat4.isLow();
-    }
 
     @Override
     public boolean presenceVentouse1() {
@@ -357,6 +337,18 @@ public class IOService implements IIOService, InitializingBean, DisposableBean {
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
+
+    @Override
+    public void enableLedCapteurCouleur() {
+        log.info("Led blanche capteur couleur allumé");
+        outCmdLedCapteurRGB.high();
+    }
+
+    @Override
+    public void disableLedCapteurCouleur() {
+        log.info("Led blanche capteur couleur eteinte");
+        outCmdLedCapteurRGB.low();
+    }
 
     @Override
     public void enableAlim5VPuissance() {

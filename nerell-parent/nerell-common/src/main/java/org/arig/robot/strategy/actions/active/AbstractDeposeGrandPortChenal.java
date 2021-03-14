@@ -119,7 +119,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
 
             if (!rs.pincesAvantEmpty() && (!deposeArriere || rs.doubleDepose())) {
                 if (deposeArriere) {
-                    mv.avanceMM(35);
+                    mv.avanceMM(35); // FIXME nouvelle face avant
                     mv.gotoPoint(entry.getX(), getYDepose(entry.getY(), true, false), GotoOption.AVANT);
                 } else {
                     mv.gotoOrientationDeg(getPositionChenal() == EPosition.NORD ? 90 : -90);

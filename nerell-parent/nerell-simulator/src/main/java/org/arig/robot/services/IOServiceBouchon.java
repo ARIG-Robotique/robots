@@ -11,34 +11,19 @@ public class IOServiceBouchon implements IIOService {
 
     @Setter
     @Accessors(fluent = true)
-    private boolean au = false;
+    private boolean au = true;
 
     @Setter
     @Accessors(fluent = true)
     private boolean tirette = false;
 
+    private boolean ledCapteurCouleur = false;
     private boolean alim5V = false;
     private boolean alim12V = false;
 
     @Setter
     @Accessors(fluent = true)
     private boolean contentPinceArriere = false;
-
-    @Setter
-    @Accessors(fluent = true)
-    private boolean contentPinceAvantLat1 = false;
-
-    @Setter
-    @Accessors(fluent = true)
-    private boolean contentPinceAvantLat2 = false;
-
-    @Setter
-    @Accessors(fluent = true)
-    private boolean contentPinceAvantLat3 = false;
-
-    @Setter
-    @Accessors(fluent = true)
-    private boolean contentPinceAvantLat4 = false;
 
     // --------------------------------------------------------- //
     // --------------------- INFOS TECHNIQUE ------------------- //
@@ -73,26 +58,6 @@ public class IOServiceBouchon implements IIOService {
     // --------------------------------------------------------- //
 
     // Numerique
-
-    @Override
-    public boolean presencePinceAvantLat1() {
-        return contentPinceAvantLat1;
-    }
-
-    @Override
-    public boolean presencePinceAvantLat2() {
-        return contentPinceAvantLat2;
-    }
-
-    @Override
-    public boolean presencePinceAvantLat3() {
-        return contentPinceAvantLat3;
-    }
-
-    @Override
-    public boolean presencePinceAvantLat4() {
-        return contentPinceAvantLat4;
-    }
 
     @Override
     public boolean presenceVentouse1() {
@@ -212,6 +177,16 @@ public class IOServiceBouchon implements IIOService {
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
+
+    @Override
+    public void enableLedCapteurCouleur() {
+        ledCapteurCouleur = true;
+    }
+
+    @Override
+    public void disableLedCapteurCouleur() {
+        ledCapteurCouleur = false;
+    }
 
     @Override
     public void enableAlim5VPuissance() {

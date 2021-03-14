@@ -21,9 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class AbstractBouee extends AbstractNerellAction {
 
     @Autowired
-    private IPincesAvantService pincesAvantService;
-
-    @Autowired
     protected IIOService io;
 
     abstract public Bouee bouee();
@@ -52,6 +49,8 @@ public abstract class AbstractBouee extends AbstractNerellAction {
     @Override
     public void execute() {
         try {
+            rs.enablePincesAvant();
+
             final Bouee bouee = bouee();
             final int pinceCible = getPinceCible(bouee);
             final double distanceApproche = IConstantesNerellConfig.pathFindingTailleBouee / 2.0 + 10;
@@ -68,11 +67,6 @@ public abstract class AbstractBouee extends AbstractNerellAction {
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
             mv.pathTo(pointApproche, GotoOption.AVANT);
 
-            // active les pinces
-            pincesAvantService.setEnabled(pinceCible == 1, pinceCible == 2, pinceCible == 3, pinceCible == 4);
-            pincesAvantService.setExpected(bouee.couleur() == ECouleurBouee.ROUGE ? Side.LEFT : Side.RIGHT, bouee.couleur(), pinceCible);
-            rs.enablePincesAvant();
-
             // aligne la bonne pince sur la bouée
             mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
 
@@ -87,8 +81,6 @@ public abstract class AbstractBouee extends AbstractNerellAction {
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
-        } finally {
-            rs.disablePincesAvant();
         }
     }
 

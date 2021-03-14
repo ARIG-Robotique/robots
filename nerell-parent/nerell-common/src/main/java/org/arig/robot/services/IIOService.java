@@ -20,15 +20,6 @@ public interface IIOService {
     // --------------------------------------------------------- //
 
     // Numerique
-    @Deprecated
-    boolean presencePinceAvantLat1();
-    @Deprecated
-    boolean presencePinceAvantLat2();
-    @Deprecated
-    boolean presencePinceAvantLat3();
-    @Deprecated
-    boolean presencePinceAvantLat4();
-
     boolean presenceVentouse1();
     boolean presenceVentouse2();
     boolean presenceVentouse3();
@@ -62,6 +53,9 @@ public interface IIOService {
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
+
+    void enableLedCapteurCouleur();
+    void disableLedCapteurCouleur();
 
     void enableAlim5VPuissance();
     void disableAlim5VPuissance();

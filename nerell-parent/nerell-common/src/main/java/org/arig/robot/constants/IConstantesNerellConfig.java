@@ -132,7 +132,7 @@ public interface IConstantesNerellConfig {
 
     double dstCallageY = 151.0; // dos du robot <=> milieu du robot
     double dstDeposeArriereY = 223.5; // milieu de gobelets arrière, posés au sol <=> milieu du robot
-    double dstDeposeAvantY = 125; // milieu des gobelets avant <=> milieu du robot
+    double dstDeposeAvantY = 125; // milieu des gobelets avant <=> milieu du robot // FIXME nouvelle face avant
     double[] dstDeposeAvantX = new double[]{-130, -55, 55, 130};
     double dstBrasMancheAAirX = 210; // distance minimale pour pousser la manche à air
 
@@ -164,4 +164,8 @@ public interface IConstantesNerellConfig {
     // ----------------- //
     // Paramètres métier //
     // ----------------- //
+
+    int WAIT_LED = 50;
+    int WAIT_ASPIRATION = 300;
+    int WAIT_EXPIRATION = 300;
 }

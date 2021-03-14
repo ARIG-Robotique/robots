@@ -179,9 +179,5 @@ public class TasksScheduler implements InitializingBean {
         if (pincesEnabled) {
             pincesAvant.process();
         }
-
-        if (Boolean.TRUE.equals(fallingEnablePinces.filter(pincesEnabled))) {
-            pincesAvant.disable();
-        }
     }
 }

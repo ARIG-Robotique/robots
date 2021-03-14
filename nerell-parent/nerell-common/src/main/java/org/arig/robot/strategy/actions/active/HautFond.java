@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.Bouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.services.IIOService;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class HautFond extends AbstractNerellAction {
+
+    private static final int X = 800;
+    private static final int Y = 2000 - 175; // TODO distance minimale de rasage du bord nord
 
     @Autowired
     protected IIOService io;
@@ -31,9 +35,9 @@ public class HautFond extends AbstractNerellAction {
     @Override
     public Point entryPoint() {
         if (rs.team() == ETeam.BLEU) {
-            return new Point(800, 2750);
+            return new Point(X, Y);
         } else {
-            return new Point(2200, 2750);
+            return new Point(3000 - X, Y);
         }
     }
 
@@ -50,10 +54,18 @@ public class HautFond extends AbstractNerellAction {
     @Override
     public void execute() {
         try {
+            rs.enablePincesAvant();
+
             final Point entry = entryPoint();
 
+            // calcule le Y qui permettra de rencontrer le plus de bouées
+            // médiane : https://stackoverflow.com/a/49215170
+            final int nbHautFond = rs.hautFond().size();
+            final double medianY = rs.hautFond().stream().map(Bouee::pt).mapToDouble(Point::getY).sorted()
+                    .skip((nbHautFond - 1) / 2).limit(2 - nbHautFond % 2).average().orElse(entry.getY());
+
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
-            mv.pathTo(entry);
+            mv.pathTo(entry.getX(), Math.min(entry.getY(), medianY));
 
             mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
 
@@ -64,9 +76,7 @@ public class HautFond extends AbstractNerellAction {
             }
 
             // on ratisse en laissant l'évitement actif
-            mv.avanceMM(3000 - entry.getX() * 2);
-
-            // TODO pas de todo en fait, quand il y aura le service de prise automatique
+            mv.avanceMM(3000 - X * 2);
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();

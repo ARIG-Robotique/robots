@@ -129,7 +129,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
     }
 
     private double computeX(double baseX, boolean avant) {
-        int coef = step * 120 + (avant ? 0 : 60);
+        int coef = step * 120 + (avant ? 0 : 60); // FIXME nouvelle face avant
 
         if (rs.team() == ETeam.JAUNE) {
             return baseX - coef;

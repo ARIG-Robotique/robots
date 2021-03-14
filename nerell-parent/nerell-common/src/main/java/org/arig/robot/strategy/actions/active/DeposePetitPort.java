@@ -96,7 +96,7 @@ public class DeposePetitPort extends AbstractNerellAction {
 
             final Point entry = entryPoint();
             final double x = entry.getX();
-            final double baseYStep = 260;
+            final double baseYStep = 260; // FIXME nouvelle face avant
 
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
 
@@ -115,6 +115,8 @@ public class DeposePetitPort extends AbstractNerellAction {
                 rs.bouee(9).setPrise();
             }
 
+            rs.disablePincesAvant();
+
             boolean deposePinceDone = false;
             boolean moustacheAtStart = moustacheFaites;
 
@@ -123,19 +125,8 @@ public class DeposePetitPort extends AbstractNerellAction {
             if (!moustacheFaites) {
                 mv.gotoOrientationDeg(-90);
 
-                if (rs.pincesAvantEmpty()) {
-                    servos.ascenseurAvantBas(true);
-                } else {
-                    servos.ascenseurAvantOuvertureMoustache(true);
-                }
+                servos.ascenseursAvantHaut(true);
                 servos.moustachesOuvert(true);
-
-                // ouvre les deux pinces centrale si vide pour ne pas faire tomber les deux bouées de devant
-                for (int i = 1; i < 3; i++) {
-                    if (rs.pincesAvant()[i] == null) {
-                        servos.pinceAvantOuvert(i, false);
-                    }
-                }
 
                 mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
 

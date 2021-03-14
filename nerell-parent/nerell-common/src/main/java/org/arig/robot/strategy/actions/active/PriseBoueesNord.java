@@ -4,24 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.services.AbstractPincesAvantService.Side;
-import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
-import org.arig.robot.utils.ThreadUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class PriseBoueesNord extends AbstractNerellAction {
-
-    @Autowired
-    private IPincesAvantService pincesAvantService;
 
     private boolean firstExecution = true;
 
@@ -61,6 +53,8 @@ public class PriseBoueesNord extends AbstractNerellAction {
     public void execute() {
         firstExecution = false;
         try {
+            rs.enablePincesAvant();
+
             final Point entry = entryPoint();
             mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
             if (rs.strategy() != EStrategy.BASIC_NORD && tableUtils.distance(entry) > 100) {
@@ -83,27 +77,15 @@ public class PriseBoueesNord extends AbstractNerellAction {
                     mv.gotoOrientationDeg(66);
                 }
 
-                pincesAvantService.setEnabled(false, true, true, true);
-                rs.enablePincesAvant();
-
-                // attente d'ouverture des servos
-                ThreadUtils.sleep(400);
-
-                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 2);
-                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 4);
-
                 mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 rs.bouee(1).setPrise();
                 rs.bouee(2).setPrise();
 
-                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
                 mv.gotoOrientationDeg(0);
-                servos.pinceAvantOuvert(0, false);
                 mv.gotoPoint(640, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 rs.bouee(5).setPrise();
 
-                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
                 mv.gotoPoint(940, 1662, GotoOption.AVANT);
                 rs.bouee(6).setPrise();
 
@@ -113,27 +95,15 @@ public class PriseBoueesNord extends AbstractNerellAction {
                     mv.gotoOrientationDeg(180 - 66);
                 }
 
-                pincesAvantService.setEnabled(true, true, true, false);
-                rs.enablePincesAvant();
-
-                // attente d'ouverture des servos
-                ThreadUtils.sleep(400);
-
-                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 1);
-                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 3);
-
                 mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 rs.bouee(13).setPrise();
                 rs.bouee(14).setPrise();
 
-                pincesAvantService.setExpected(Side.RIGHT, ECouleurBouee.VERT, 4);
                 mv.gotoOrientationDeg(180);
-                servos.pinceAvantOuvert(3, false);
                 mv.gotoPoint(3000 - 640, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 rs.bouee(12).setPrise();
 
-                pincesAvantService.setExpected(Side.LEFT, ECouleurBouee.ROUGE, 2);
                 mv.gotoPoint(3000 - 940, 1662, GotoOption.AVANT);
                 rs.bouee(11).setPrise();
             }
@@ -143,7 +113,6 @@ public class PriseBoueesNord extends AbstractNerellAction {
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         } finally {
             complete();
-            rs.disablePincesAvant();
         }
     }
 }

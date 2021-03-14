@@ -73,7 +73,7 @@ public class ServosCommands {
             priseAvant();
         }
 
-        servosService.ascenseurAvantOuvertureMoustache(true);
+        servosService.ascenseursAvantHaut(true);
         servosService.moustachesOuvert(true);
         ThreadUtils.sleep(5000);
 
@@ -146,27 +146,6 @@ public class ServosCommands {
         }
     }
 
-    @ShellMethod("Configuration ascenseur avant")
-    public void configWaitAscenseurAvant(int wait, boolean prise, boolean depose) {
-        if (prise) {
-            servosService.ascenseurAvantBas(true);
-            servosService.pincesAvantOuvert(true);
-            ThreadUtils.sleep(5000);
-            servosService.pincesAvantPrise(true);
-        }
-
-        for (int i = 0 ; i < nbLoop ; i++) {
-            servosService.ascenseurAvantOuvertureMoustache(false);
-            ThreadUtils.sleep(wait);
-            servosService.ascenseurAvantBas(false);
-            ThreadUtils.sleep(wait);
-        }
-
-        if (depose) {
-            servosService.pincesAvantOuvert(false);
-        }
-    }
-
     @ShellMethod("Configuration ascenseur arriere")
     public void configWaitAscenseurArriere(int wait, boolean prise, boolean depose) {
         if (prise) {
@@ -201,16 +180,6 @@ public class ServosCommands {
             servosService.pivotArriereOuvert(false);
             ThreadUtils.sleep(wait);
             servosService.pivotArriereFerme(false);
-            ThreadUtils.sleep(wait);
-        }
-    }
-
-    @ShellMethod("Configuration pince avant")
-    public void configWaitPinceAvant(int wait) {
-        for (int i = 0 ; i < nbLoop ; i++) {
-            servosService.pincesAvantOuvert(false);
-            ThreadUtils.sleep(wait);
-            servosService.pincesAvantFerme(false);
             ThreadUtils.sleep(wait);
         }
     }

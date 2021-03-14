@@ -42,10 +42,10 @@ public class CapteursController extends AbstractCapteursController implements In
         numeriqueInfos.put("Alim. Puissance 12V", ioService::alimPuissance12VOk);
         numeriqueInfos.put("Bordure arrière droite", ioService::calageBordureDroit);
         numeriqueInfos.put("Bordure arrière gauche", ioService::calageBordureGauche);
-        numeriqueInfos.put("Presence pince avant lat 1", ioService::presencePinceAvantLat1);
-        numeriqueInfos.put("Presence pince avant lat 2", ioService::presencePinceAvantLat2);
-        numeriqueInfos.put("Presence pince avant lat 3", ioService::presencePinceAvantLat3);
-        numeriqueInfos.put("Presence pince avant lat 4", ioService::presencePinceAvantLat4);
+        numeriqueInfos.put("Presence ventouse 1", ioService::presenceVentouse1);
+        numeriqueInfos.put("Presence ventouse 2", ioService::presenceVentouse2);
+        numeriqueInfos.put("Presence ventouse 3", ioService::presenceVentouse3);
+        numeriqueInfos.put("Presence ventouse 4", ioService::presenceVentouse4);
         numeriqueInfos.put("Presence pince avant sup 1", ioService::presencePinceAvantSup1);
         numeriqueInfos.put("Presence pince avant sup 2", ioService::presencePinceAvantSup2);
         numeriqueInfos.put("Presence pince avant sup 3", ioService::presencePinceAvantSup3);
