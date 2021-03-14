@@ -13,11 +13,14 @@ public interface IConstantesServosNerell {
     byte SPEED_MOUSTACHE_POUSSETTE = 20;
     byte SPEED_MOUSTACHE = 0;
     byte SPEED_BRAS = 0;
+    @Deprecated
     byte SPEED_ASCENSEUR_AVANT = 0;
+    @Deprecated
     byte SPEED_PINCE_AVANT = 0;
     byte SPEED_ASCENSEUR_ARRIERE = 0;
     byte SPEED_PIVOT_ARRIERE = 0;
     byte SPEED_PINCE_ARRIERE = 0;
+    byte SPEED_ASCENSEURS_AVANT = 0;
 
     // Tempo servos //
     // ------------ //
@@ -27,11 +30,14 @@ public interface IConstantesServosNerell {
     int WAIT_MOUSTACHE_GAUCHE = WAIT_MOUSTACHE_DROITE;
     int WAIT_BRAS_DROIT = 440;
     int WAIT_BRAS_GAUCHE = WAIT_BRAS_DROIT;
+    @Deprecated
     int WAIT_ASCENSEUR_AVANT = 380;
+    @Deprecated
     int WAIT_PINCE_AVANT = 300;
     int WAIT_ASCENSEUR_ARRIERE = 620;
     int WAIT_PIVOT_ARRIERE = 350;
     int WAIT_PINCE_ARRIERE = 400;
+    int WAIT_ASCENSEURS_AVANT = 300; // TODO
 
     // Constantes d'identification Servo //
     // --------------------------------- //
@@ -39,9 +45,13 @@ public interface IConstantesServosNerell {
     byte MOUSTACHE_DROITE = 15;
     byte BRAS_GAUCHE = 9;
     byte BRAS_DROIT = 2;
+    @Deprecated
     byte PINCE_AVANT_1 = 12;
+    @Deprecated
     byte PINCE_AVANT_2 = 8;
+    @Deprecated
     byte PINCE_AVANT_3 = 14;
+    @Deprecated
     byte PINCE_AVANT_4 = 7;
     byte PINCE_ARRIERE_1 = 17;
     byte PIVOT_ARRIERE = 16;
@@ -49,8 +59,13 @@ public interface IConstantesServosNerell {
     byte PINCE_ARRIERE_3 = 19;
     byte PINCE_ARRIERE_4 = 18;
     byte PINCE_ARRIERE_5 = 21;
+    @Deprecated
     byte ASCENSEUR_AVANT = 1;
     byte ASCENSEUR_ARRIERE = 10;
+    byte ASCENSEUR_AVANT_1 = 0; // TODO
+    byte ASCENSEUR_AVANT_2 = 0; // TODO
+    byte ASCENSEUR_AVANT_3 = 0; // TODO
+    byte ASCENSEUR_AVANT_4 = 0; // TODO
 
     // Constantes de position //
     // ---------------------- //
@@ -67,20 +82,35 @@ public interface IConstantesServosNerell {
     int POS_BRAS_DROIT_MANCHE_AIR = 2110;
     int POS_BRAS_DROIT_PHARE = 2210;
     int POS_BRAS_DROIT_FERME = 1150;
+    @Deprecated
     int POS_ASCENSEUR_AVANT_OUVERTURE_MOUSTACHE = 1880;
+    @Deprecated
     int POS_ASCENSEUR_AVANT_ROULAGE = 1500;
+    @Deprecated
     int POS_ASCENSEUR_AVANT_BAS = 1280;
+    @Deprecated
     int POS_PINCE_AVANT_1_OUVERT = 1770;
+    @Deprecated
     int POS_PINCE_AVANT_1_PRISE = 1540;
+    @Deprecated
     int POS_PINCE_AVANT_1_FERME = 1100;
+    @Deprecated
     int POS_PINCE_AVANT_2_OUVERT = 1300;
+    @Deprecated
     int POS_PINCE_AVANT_2_PRISE = 1560;
+    @Deprecated
     int POS_PINCE_AVANT_2_FERME = 1880;
+    @Deprecated
     int POS_PINCE_AVANT_3_OUVERT = 1690;
+    @Deprecated
     int POS_PINCE_AVANT_3_PRISE = 1480;
+    @Deprecated
     int POS_PINCE_AVANT_3_FERME = 1140;
+    @Deprecated
     int POS_PINCE_AVANT_4_OUVERT = 1340;
+    @Deprecated
     int POS_PINCE_AVANT_4_PRISE = 1590;
+    @Deprecated
     int POS_PINCE_AVANT_4_FERME = 2040;
     int POS_ASCENSEUR_ARRIERE_HAUT = 640;
     int POS_ASCENSEUR_ARRIERE_TABLE = 2240;
@@ -97,22 +127,37 @@ public interface IConstantesServosNerell {
     int POS_PINCE_ARRIERE_4_FERME = 2200;
     int POS_PINCE_ARRIERE_5_OUVERT = 1380;
     int POS_PINCE_ARRIERE_5_FERME = 580;
+    int POS_ASCENSEUR_AVANT_1_BAS = 1500; // TODO
+    int POS_ASCENSEUR_AVANT_1_HAUT = 1500; // TODO
+    int POS_ASCENSEUR_AVANT_2_BAS = 1500; // TODO
+    int POS_ASCENSEUR_AVANT_2_HAUT = 1500; // TODO
+    int POS_ASCENSEUR_AVANT_3_BAS = 1500; // TODO
+    int POS_ASCENSEUR_AVANT_3_HAUT = 1500; // TODO
+    int POS_ASCENSEUR_AVANT_4_BAS = 1500; // TODO
+    int POS_ASCENSEUR_AVANT_4_HAUT = 1500; // TODO
 
     // Constantes de groupes //
     // --------------------- //
 
+    @Deprecated
     byte BATCH_PINCES_AVANT = 1;
     byte BATCH_PINCES_ARRIERE = 2;
     byte BATCH_MOUSTACHES = 3;
+    byte BATCH_ASCENSEURS_AVANT = 4;
 
+    @Deprecated
     byte POS_BATCH_PINCES_AVANT_FERME = 1;
+    @Deprecated
     byte POS_BATCH_PINCES_AVANT_PRISE = 2;
+    @Deprecated
     byte POS_BATCH_PINCES_AVANT_OUVERT = 3;
     byte POS_BATCH_PINCES_ARRIERE_FERME = 4;
     byte POS_BATCH_PINCES_ARRIERE_OUVERT = 5;
     byte POS_BATCH_MOUSTACHES_FERME = 6;
     byte POS_BATCH_MOUSTACHES_OUVERT = 7;
     byte POS_BATCH_MOUSTACHES_POUSETTE = 8;
+    byte POS_BATCH_ASCENSEURS_AVANT_BAS = 9;
+    byte POS_BATCH_ASCENSEURS_AVANT_HAUT = 10;
 
     Map<Byte, Triple<Integer, Integer, Integer>> MIN_TIME_MAX = ImmutableMap.<Byte, Triple<Integer, Integer, Integer>>builder()
             .put(MOUSTACHE_DROITE, Triple.of(POS_MOUSTACHE_DROITE_FERME, WAIT_MOUSTACHE_DROITE, POS_MOUSTACHE_DROITE_OUVERT))
@@ -131,6 +176,10 @@ public interface IConstantesServosNerell {
             .put(PINCE_ARRIERE_3, Triple.of(POS_PINCE_ARRIERE_3_FERME, WAIT_PINCE_ARRIERE, POS_PINCE_ARRIERE_3_OUVERT))
             .put(PINCE_ARRIERE_4, Triple.of(POS_PINCE_ARRIERE_4_FERME, WAIT_PINCE_ARRIERE, POS_PINCE_ARRIERE_4_OUVERT))
             .put(PINCE_ARRIERE_5, Triple.of(POS_PINCE_ARRIERE_5_FERME, WAIT_PINCE_ARRIERE, POS_PINCE_ARRIERE_5_OUVERT))
+            .put(ASCENSEUR_AVANT_1, Triple.of(POS_ASCENSEUR_AVANT_1_BAS, WAIT_ASCENSEURS_AVANT, POS_ASCENSEUR_AVANT_1_HAUT))
+            .put(ASCENSEUR_AVANT_2, Triple.of(POS_ASCENSEUR_AVANT_2_BAS, WAIT_ASCENSEURS_AVANT, POS_ASCENSEUR_AVANT_2_HAUT))
+            .put(ASCENSEUR_AVANT_3, Triple.of(POS_ASCENSEUR_AVANT_3_BAS, WAIT_ASCENSEURS_AVANT, POS_ASCENSEUR_AVANT_3_HAUT))
+            .put(ASCENSEUR_AVANT_4, Triple.of(POS_ASCENSEUR_AVANT_4_BAS, WAIT_ASCENSEURS_AVANT, POS_ASCENSEUR_AVANT_4_HAUT))
             .build();
 
     Map<Byte, Map<Byte, int[][]>> BATCH_CONFIG = ImmutableMap.<Byte, Map<Byte, int[][]>>builder()
@@ -182,6 +231,20 @@ public interface IConstantesServosNerell {
                     .put(POS_BATCH_MOUSTACHES_POUSETTE, new int[][]{
                             new int[]{IConstantesServosNerell.MOUSTACHE_DROITE, IConstantesServosNerell.POS_MOUSTACHE_DROITE_POUSSETTE},
                             new int[]{IConstantesServosNerell.MOUSTACHE_GAUCHE, IConstantesServosNerell.POS_MOUSTACHE_GAUCHE_POUSSETTE}
+                    })
+                    .build())
+            .put(BATCH_ASCENSEURS_AVANT, ImmutableMap.<Byte, int[][]>builder()
+                    .put(POS_BATCH_ASCENSEURS_AVANT_BAS, new int[][]{
+                            new int[]{IConstantesServosNerell.ASCENSEUR_AVANT_1, IConstantesServosNerell.POS_ASCENSEUR_AVANT_1_BAS},
+                            new int[]{IConstantesServosNerell.ASCENSEUR_AVANT_2, IConstantesServosNerell.POS_ASCENSEUR_AVANT_2_BAS},
+                            new int[]{IConstantesServosNerell.ASCENSEUR_AVANT_3, IConstantesServosNerell.POS_ASCENSEUR_AVANT_3_BAS},
+                            new int[]{IConstantesServosNerell.ASCENSEUR_AVANT_4, IConstantesServosNerell.POS_ASCENSEUR_AVANT_4_BAS},
+                    })
+                    .put(POS_BATCH_ASCENSEURS_AVANT_HAUT, new int[][]{
+                            new int[]{IConstantesServosNerell.ASCENSEUR_AVANT_1, IConstantesServosNerell.POS_ASCENSEUR_AVANT_1_HAUT},
+                            new int[]{IConstantesServosNerell.ASCENSEUR_AVANT_2, IConstantesServosNerell.POS_ASCENSEUR_AVANT_2_HAUT},
+                            new int[]{IConstantesServosNerell.ASCENSEUR_AVANT_3, IConstantesServosNerell.POS_ASCENSEUR_AVANT_3_HAUT},
+                            new int[]{IConstantesServosNerell.ASCENSEUR_AVANT_4, IConstantesServosNerell.POS_ASCENSEUR_AVANT_4_HAUT},
                     })
                     .build())
             .build();

@@ -16,7 +16,8 @@ public class ServosController extends AbstractServosController {
     private static final String POUSSETTE = "Poussette";
     private static final String MANCHE_A_AIR = "Manche à air";
     private static final String PHARE = "Phare";
-    private static final String PRISE = "Prise";
+    private static final String BAS = "Bas";
+    private static final String HAUT = "Haut";
 
     private static List<ServoGroup> servoConfigs = new ArrayList<>();
 
@@ -104,45 +105,33 @@ public class ServosController extends AbstractServosController {
         );
 
         servoConfigs.add(new ServoGroup()
-                .setId(IConstantesServosNerell.BATCH_PINCES_AVANT)
-                .setName("Pinces avants")
-                .batch("Tout ouvert", IConstantesServosNerell.POS_BATCH_PINCES_AVANT_OUVERT)
-                .batch("Tout prise", IConstantesServosNerell.POS_BATCH_PINCES_AVANT_PRISE)
-                .batch("Tout fermé", IConstantesServosNerell.POS_BATCH_PINCES_AVANT_FERME)
+                .setId(IConstantesServosNerell.BATCH_ASCENSEURS_AVANT)
+                .setName("Ascenseurs avants")
+                .batch("Tout bas", IConstantesServosNerell.POS_BATCH_ASCENSEURS_AVANT_BAS)
+                .batch("Tout haut", IConstantesServosNerell.POS_BATCH_ASCENSEURS_AVANT_HAUT)
                 .servo(new ServoConfig()
-                        .setId(IConstantesServosNerell.ASCENSEUR_AVANT)
-                        .setName("Ascenseur avant")
-                        .position("Ouverture Moustache", IConstantesServosNerell.POS_ASCENSEUR_AVANT_OUVERTURE_MOUSTACHE)
-                        .position("Roulage", IConstantesServosNerell.POS_ASCENSEUR_AVANT_ROULAGE)
-                        .position("Bas", IConstantesServosNerell.POS_ASCENSEUR_AVANT_BAS)
+                        .setId(IConstantesServosNerell.ASCENSEUR_AVANT_1)
+                        .setName("Ascenseur avant 1")
+                        .position(BAS, IConstantesServosNerell.POS_ASCENSEUR_AVANT_1_BAS)
+                        .position(HAUT, IConstantesServosNerell.POS_ASCENSEUR_AVANT_1_HAUT)
                 )
                 .servo(new ServoConfig()
-                        .setId(IConstantesServosNerell.PINCE_AVANT_1)
-                        .setName("Pince avant 1")
-                        .position(OUVERT, IConstantesServosNerell.POS_PINCE_AVANT_1_OUVERT)
-                        .position(PRISE, IConstantesServosNerell.POS_PINCE_AVANT_1_PRISE)
-                        .position(FERME, IConstantesServosNerell.POS_PINCE_AVANT_1_FERME)
+                        .setId(IConstantesServosNerell.ASCENSEUR_AVANT_2)
+                        .setName("Ascenseur avant 2")
+                        .position(BAS, IConstantesServosNerell.POS_ASCENSEUR_AVANT_2_BAS)
+                        .position(HAUT, IConstantesServosNerell.POS_ASCENSEUR_AVANT_2_HAUT)
                 )
                 .servo(new ServoConfig()
-                        .setId(IConstantesServosNerell.PINCE_AVANT_2)
-                        .setName("Pince avant 2")
-                        .position(OUVERT, IConstantesServosNerell.POS_PINCE_AVANT_2_OUVERT)
-                        .position(PRISE, IConstantesServosNerell.POS_PINCE_AVANT_2_PRISE)
-                        .position(FERME, IConstantesServosNerell.POS_PINCE_AVANT_2_FERME)
+                        .setId(IConstantesServosNerell.ASCENSEUR_AVANT_3)
+                        .setName("Ascenseur avant 3")
+                        .position(BAS, IConstantesServosNerell.POS_ASCENSEUR_AVANT_3_BAS)
+                        .position(HAUT, IConstantesServosNerell.POS_ASCENSEUR_AVANT_3_HAUT)
                 )
                 .servo(new ServoConfig()
-                        .setId(IConstantesServosNerell.PINCE_AVANT_3)
-                        .setName("Pince avant 3")
-                        .position(OUVERT, IConstantesServosNerell.POS_PINCE_AVANT_3_OUVERT)
-                        .position(PRISE, IConstantesServosNerell.POS_PINCE_AVANT_3_PRISE)
-                        .position(FERME, IConstantesServosNerell.POS_PINCE_AVANT_3_FERME)
-                )
-                .servo(new ServoConfig()
-                        .setId(IConstantesServosNerell.PINCE_AVANT_4)
-                        .setName("Pince avant 4")
-                        .position(OUVERT, IConstantesServosNerell.POS_PINCE_AVANT_4_OUVERT)
-                        .position(PRISE, IConstantesServosNerell.POS_PINCE_AVANT_4_PRISE)
-                        .position(FERME, IConstantesServosNerell.POS_PINCE_AVANT_4_FERME)
+                        .setId(IConstantesServosNerell.ASCENSEUR_AVANT_4)
+                        .setName("Ascenseur avant 4")
+                        .position(BAS, IConstantesServosNerell.POS_ASCENSEUR_AVANT_4_BAS)
+                        .position(HAUT, IConstantesServosNerell.POS_ASCENSEUR_AVANT_4_HAUT)
                 )
         );
     }

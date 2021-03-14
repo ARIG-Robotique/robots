@@ -50,6 +50,10 @@ public class ServosService {
         servos.setPositionAndSpeed(IConstantesServosNerell.PINCE_ARRIERE_4, IConstantesServosNerell.POS_PINCE_ARRIERE_4_FERME, IConstantesServosNerell.SPEED_PINCE_ARRIERE);
         servos.setPositionAndSpeed(IConstantesServosNerell.PINCE_ARRIERE_5, IConstantesServosNerell.POS_PINCE_ARRIERE_5_FERME, IConstantesServosNerell.SPEED_PINCE_ARRIERE);
         servos.setPositionAndSpeed(IConstantesServosNerell.PIVOT_ARRIERE, IConstantesServosNerell.POS_PIVOT_ARRIERE_FERME, IConstantesServosNerell.SPEED_PIVOT_ARRIERE);
+        servos.setPositionAndSpeed(IConstantesServosNerell.ASCENSEUR_AVANT_1, IConstantesServosNerell.POS_ASCENSEUR_AVANT_1_HAUT, IConstantesServosNerell.SPEED_ASCENSEURS_AVANT);
+        servos.setPositionAndSpeed(IConstantesServosNerell.ASCENSEUR_AVANT_2, IConstantesServosNerell.POS_ASCENSEUR_AVANT_2_HAUT, IConstantesServosNerell.SPEED_ASCENSEURS_AVANT);
+        servos.setPositionAndSpeed(IConstantesServosNerell.ASCENSEUR_AVANT_3, IConstantesServosNerell.POS_ASCENSEUR_AVANT_3_HAUT, IConstantesServosNerell.SPEED_ASCENSEURS_AVANT);
+        servos.setPositionAndSpeed(IConstantesServosNerell.ASCENSEUR_AVANT_4, IConstantesServosNerell.POS_ASCENSEUR_AVANT_4_HAUT, IConstantesServosNerell.SPEED_ASCENSEURS_AVANT);
     }
 
     //*******************************************//
@@ -58,50 +62,6 @@ public class ServosService {
 
     public boolean isMoustachesOuvert() {
         return servos.getPosition(IConstantesServosNerell.MOUSTACHE_DROITE) == IConstantesServosNerell.POS_MOUSTACHE_DROITE_OUVERT;
-    }
-
-    public boolean isMoustachesFerme() {
-        return servos.getPosition(IConstantesServosNerell.MOUSTACHE_DROITE) == IConstantesServosNerell.POS_MOUSTACHE_DROITE_FERME;
-    }
-
-    public boolean isAscenseurAvantHaut() {
-        return servos.getPosition(IConstantesServosNerell.ASCENSEUR_AVANT) == IConstantesServosNerell.POS_ASCENSEUR_AVANT_OUVERTURE_MOUSTACHE;
-    }
-
-    public boolean isAscenseurAvantBas() {
-        return servos.getPosition(IConstantesServosNerell.ASCENSEUR_AVANT) == IConstantesServosNerell.POS_ASCENSEUR_AVANT_BAS;
-    }
-
-    public boolean isPincesAvantOuvert() {
-        return servos.getPosition(IConstantesServosNerell.PINCE_AVANT_1) == IConstantesServosNerell.POS_PINCE_AVANT_1_OUVERT;
-    }
-
-    public boolean isPincesAvantFerme() {
-        return servos.getPosition(IConstantesServosNerell.PINCE_AVANT_1) == IConstantesServosNerell.POS_PINCE_AVANT_1_FERME;
-    }
-
-    public boolean isAscenseurArriereHaut() {
-        return servos.getPosition(IConstantesServosNerell.ASCENSEUR_ARRIERE) == IConstantesServosNerell.POS_ASCENSEUR_ARRIERE_HAUT;
-    }
-
-    public boolean isAscenseurArriereBas() {
-        return servos.getPosition(IConstantesServosNerell.ASCENSEUR_ARRIERE) == IConstantesServosNerell.POS_ASCENSEUR_ARRIERE_ECUEIL;
-    }
-
-    public boolean isPivotArriereFerme() {
-        return servos.getPosition(IConstantesServosNerell.PIVOT_ARRIERE) == IConstantesServosNerell.POS_PIVOT_ARRIERE_FERME;
-    }
-
-    public boolean isPivotArriereOuvert() {
-        return servos.getPosition(IConstantesServosNerell.PIVOT_ARRIERE) == IConstantesServosNerell.POS_PIVOT_ARRIERE_OUVERT;
-    }
-
-    public boolean isPincesArriereOuvert() {
-        return servos.getPosition(IConstantesServosNerell.PINCE_ARRIERE_1) == IConstantesServosNerell.POS_PINCE_ARRIERE_1_OUVERT;
-    }
-
-    public boolean isPincesArriereFerme() {
-        return servos.getPosition(IConstantesServosNerell.PINCE_ARRIERE_1) == IConstantesServosNerell.POS_PINCE_ARRIERE_1_FERME;
     }
 
     //*******************************************//
@@ -120,7 +80,8 @@ public class ServosService {
         }
     }
 
-    private void setPositionBatch(int[][] servosPos, boolean wait) {
+    private void setPositionBatch(byte groupId, byte posId, boolean wait) {
+        int[][] servosPos = IConstantesServosNerell.BATCH_CONFIG.get(groupId).get(posId);
         int currentPosition = servos.getPosition((byte) servosPos[0][0]);
 
         for (int[] servoPos : servosPos) {
@@ -132,7 +93,8 @@ public class ServosService {
         }
     }
 
-    private void setPositionBatchAndSpeed(int[][] servosPos, byte speed, boolean wait) {
+    private void setPositionBatchAndSpeed(byte groupId, byte posId, byte speed, boolean wait) {
+        int[][] servosPos = IConstantesServosNerell.BATCH_CONFIG.get(groupId).get(posId);
         int currentPosition = servos.getPosition((byte) servosPos[0][0]);
 
         for (int[] servoPos : servosPos) {
@@ -142,6 +104,11 @@ public class ServosService {
         if (wait && currentPosition != servosPos[0][1]) {
             ThreadUtils.sleep(computeWaitTime((byte) servosPos[0][0], currentPosition, servosPos[0][1]));
         }
+    }
+
+    private void setSinglePositionBatch(byte groupId, byte posId, int index, boolean wait) {
+        int[] config = IConstantesServosNerell.BATCH_CONFIG.get(groupId).get(posId)[index];
+        setPosition((byte) config[0], config[1], wait);
     }
 
     private int computeWaitTime(byte servo, int currentPosition, int position) {
@@ -162,15 +129,27 @@ public class ServosService {
     }
 
     public void moustachesOuvert(boolean wait) {
-        setPositionBatchAndSpeed(IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_MOUSTACHES).get(IConstantesServosNerell.POS_BATCH_MOUSTACHES_OUVERT), IConstantesServosNerell.SPEED_MOUSTACHE, wait);
+        setPositionBatchAndSpeed(
+                IConstantesServosNerell.BATCH_MOUSTACHES,
+                IConstantesServosNerell.POS_BATCH_MOUSTACHES_OUVERT,
+                IConstantesServosNerell.SPEED_MOUSTACHE,
+                wait);
     }
 
     public void moustachesFerme(boolean wait) {
-        setPositionBatchAndSpeed(IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_MOUSTACHES).get(IConstantesServosNerell.POS_BATCH_MOUSTACHES_FERME), IConstantesServosNerell.SPEED_MOUSTACHE, wait);
+        setPositionBatchAndSpeed(
+                IConstantesServosNerell.BATCH_MOUSTACHES,
+                IConstantesServosNerell.POS_BATCH_MOUSTACHES_FERME,
+                IConstantesServosNerell.SPEED_MOUSTACHE,
+                wait);
     }
 
     public void moustachesPoussette(boolean wait) {
-        setPositionBatchAndSpeed(IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_MOUSTACHES).get(IConstantesServosNerell.POS_BATCH_MOUSTACHES_POUSETTE), IConstantesServosNerell.SPEED_MOUSTACHE_POUSSETTE, false);
+        setPositionBatchAndSpeed(
+                IConstantesServosNerell.BATCH_MOUSTACHES,
+                IConstantesServosNerell.POS_BATCH_MOUSTACHES_POUSETTE,
+                IConstantesServosNerell.SPEED_MOUSTACHE_POUSSETTE,
+                false);
 
         if (wait) {
             // Position poussette est toujours avec une tempo fixe
@@ -202,14 +181,17 @@ public class ServosService {
         setPosition(IConstantesServosNerell.BRAS_DROIT, IConstantesServosNerell.POS_BRAS_DROIT_FERME, wait);
     }
 
+    @Deprecated
     public void ascenseurAvantOuvertureMoustache(boolean wait) {
         setPosition(IConstantesServosNerell.ASCENSEUR_AVANT, IConstantesServosNerell.POS_ASCENSEUR_AVANT_OUVERTURE_MOUSTACHE, wait);
     }
 
+    @Deprecated
     public void ascenseurAvantRoulage(boolean wait) {
         setPosition(IConstantesServosNerell.ASCENSEUR_AVANT, IConstantesServosNerell.POS_ASCENSEUR_AVANT_ROULAGE, wait);
     }
 
+    @Deprecated
     public void ascenseurAvantBas(boolean wait) {
         setPosition(IConstantesServosNerell.ASCENSEUR_AVANT, IConstantesServosNerell.POS_ASCENSEUR_AVANT_BAS, wait);
     }
@@ -234,49 +216,87 @@ public class ServosService {
         setPosition(IConstantesServosNerell.PIVOT_ARRIERE, IConstantesServosNerell.POS_PIVOT_ARRIERE_OUVERT, wait);
     }
 
+    @Deprecated
     public void pincesAvantPrise(boolean wait) {
-        setPositionBatch(IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_PINCES_AVANT).get(IConstantesServosNerell.POS_BATCH_PINCES_AVANT_PRISE), wait);
+        setPositionBatch(IConstantesServosNerell.BATCH_PINCES_AVANT, IConstantesServosNerell.POS_BATCH_PINCES_AVANT_PRISE, wait);
     }
 
+    @Deprecated
     public void pinceAvantPrise(int index, boolean wait) {
-        int[] config = IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_PINCES_AVANT).get(IConstantesServosNerell.POS_BATCH_PINCES_AVANT_PRISE)[index];
-        setPosition((byte) config[0], config[1], wait);
+        setSinglePositionBatch(
+                IConstantesServosNerell.BATCH_PINCES_AVANT,
+                IConstantesServosNerell.POS_BATCH_PINCES_AVANT_PRISE,
+                index, wait);
     }
 
+    @Deprecated
     public void pincesAvantFerme(boolean wait) {
-        setPositionBatch(IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_PINCES_AVANT).get(IConstantesServosNerell.POS_BATCH_PINCES_AVANT_FERME), wait);
+        setPositionBatch(IConstantesServosNerell.BATCH_PINCES_AVANT, IConstantesServosNerell.POS_BATCH_PINCES_AVANT_FERME, wait);
     }
 
+    @Deprecated
     public void pinceAvantFerme(int index, boolean wait) {
-        int[] config = IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_PINCES_AVANT).get(IConstantesServosNerell.POS_BATCH_PINCES_AVANT_FERME)[index];
-        setPosition((byte) config[0], config[1], wait);
+        setSinglePositionBatch(
+                IConstantesServosNerell.BATCH_PINCES_AVANT,
+                IConstantesServosNerell.POS_BATCH_PINCES_AVANT_FERME,
+                index, wait);
     }
 
+    @Deprecated
     public void pincesAvantOuvert(boolean wait) {
-        setPositionBatch(IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_PINCES_AVANT).get(IConstantesServosNerell.POS_BATCH_PINCES_AVANT_OUVERT), wait);
+        setPositionBatch(IConstantesServosNerell.BATCH_PINCES_AVANT, IConstantesServosNerell.POS_BATCH_PINCES_AVANT_OUVERT, wait);
     }
 
+    @Deprecated
     public void pinceAvantOuvert(int index, boolean wait) {
-        int[] config = IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_PINCES_AVANT).get(IConstantesServosNerell.POS_BATCH_PINCES_AVANT_OUVERT)[index];
-        setPosition((byte) config[0], config[1], wait);
+        setSinglePositionBatch(
+                IConstantesServosNerell.BATCH_PINCES_AVANT,
+                IConstantesServosNerell.POS_BATCH_PINCES_AVANT_OUVERT,
+                index, wait);
     }
 
     public void pincesArriereFerme(boolean wait) {
-        setPositionBatch(IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_PINCES_ARRIERE).get(IConstantesServosNerell.POS_BATCH_PINCES_ARRIERE_FERME), wait);
+        setPositionBatch(IConstantesServosNerell.BATCH_PINCES_ARRIERE, IConstantesServosNerell.POS_BATCH_PINCES_ARRIERE_FERME, wait);
     }
 
     public void pinceArriereFerme(int index, boolean wait) {
-        int[] config = IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_PINCES_ARRIERE).get(IConstantesServosNerell.POS_BATCH_PINCES_ARRIERE_FERME)[index];
-        setPosition((byte) config[0], config[1], wait);
+        setSinglePositionBatch(
+                IConstantesServosNerell.BATCH_PINCES_ARRIERE,
+                IConstantesServosNerell.POS_BATCH_PINCES_ARRIERE_FERME,
+                index, wait);
     }
 
     public void pincesArriereOuvert(boolean wait) {
-        setPositionBatch(IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_PINCES_ARRIERE).get(IConstantesServosNerell.POS_BATCH_PINCES_ARRIERE_OUVERT), wait);
+        setPositionBatch(IConstantesServosNerell.BATCH_PINCES_ARRIERE, IConstantesServosNerell.POS_BATCH_PINCES_ARRIERE_OUVERT, wait);
     }
 
     public void pinceArriereOuvert(int index, boolean wait) {
-        int[] config = IConstantesServosNerell.BATCH_CONFIG.get(IConstantesServosNerell.BATCH_PINCES_ARRIERE).get(IConstantesServosNerell.POS_BATCH_PINCES_ARRIERE_OUVERT)[index];
-        setPosition((byte) config[0], config[1], wait);
+        setSinglePositionBatch(
+                IConstantesServosNerell.BATCH_PINCES_ARRIERE,
+                IConstantesServosNerell.POS_BATCH_PINCES_ARRIERE_OUVERT,
+                index, wait);
+    }
+
+    public void ascenseursAvantBas(boolean wait) {
+        setPositionBatch(IConstantesServosNerell.BATCH_ASCENSEURS_AVANT, IConstantesServosNerell.POS_BATCH_ASCENSEURS_AVANT_BAS, wait);
+    }
+
+    public void ascenseurAvantBas(int index, boolean wait) {
+        setSinglePositionBatch(
+                IConstantesServosNerell.BATCH_ASCENSEURS_AVANT,
+                IConstantesServosNerell.POS_BATCH_ASCENSEURS_AVANT_BAS,
+                index, wait);
+    }
+
+    public void ascenseursAvantHaut(boolean wait) {
+        setPositionBatch(IConstantesServosNerell.BATCH_ASCENSEURS_AVANT, IConstantesServosNerell.POS_BATCH_ASCENSEURS_AVANT_HAUT, wait);
+    }
+
+    public void ascenseurAvantHaut(int index, boolean wait) {
+        setSinglePositionBatch(
+                IConstantesServosNerell.BATCH_ASCENSEURS_AVANT,
+                IConstantesServosNerell.POS_BATCH_ASCENSEURS_AVANT_HAUT,
+                index, wait);
     }
 
     //*******************************************//
