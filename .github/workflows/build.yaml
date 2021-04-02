@@ -27,7 +27,7 @@ jobs:
         run: ./gradlew build
 
       - name: Notify slack success
-        if: success() && github.ref == 'refs/heads/dev'
+        if: steps.build.outcome == 'success' && github.ref == 'refs/heads/dev'
         uses: voxmedia/github-action-slack-notify-build@v1.1.2
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -37,8 +37,8 @@ jobs:
           color: good
 
       - name: Notify slack fail
-        if: (failure() || cancelled()) && github.ref == 'refs/heads/dev'
-        uses: voxmedia/github-action-slack-notify-build@v1
+        if: steps.build.outcome == 'failure' && github.ref == 'refs/heads/dev'
+        uses: voxmedia/github-action-slack-notify-build@v1.1.2
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         with:
