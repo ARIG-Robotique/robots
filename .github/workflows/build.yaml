@@ -1,6 +1,9 @@
 name: build
 
-on: [push]
+on:
+  - push
+  - pull_request
+  - workflow_dispatch
 
 jobs:
   build:
@@ -8,15 +11,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up JDK 11
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
-    - name: Build with Gradle
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_OUTPUT: ${{ secrets.AWS_DEFAULT_OUTPUT }}
-        AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-      run: ./gradlew build
+      - uses: actions/checkout@v1
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Build with Gradle
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_OUTPUT: ${{ secrets.AWS_DEFAULT_OUTPUT }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+        run: ./gradlew build
+
+      - name: Notify slack success
+        if: success() && github.ref == 'refs/heads/dev'
+        uses: voxmedia/github-action-slack-notify-build@v1.1.2
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        with:
+          channel: builds
+          status: SUCCESS
+          color: good
+
+      - name: Notify slack fail
+        if: (failure() || cancelled()) && github.ref == 'refs/heads/dev'
+        uses: voxmedia/github-action-slack-notify-build@v1
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        with:
+          channel: builds
+          status: FAILED
+          color: danger
