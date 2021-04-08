@@ -21,7 +21,7 @@ plugins {
 // Configuration de tous les projets
 configure(allprojects) { project ->
 	group = 'org.arig.robot'
-	version = '2020-SNAPSHOT'
+	version = '2021-SNAPSHOT'
 
 	// Variable de configuration
 	ext {
