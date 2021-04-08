@@ -64,7 +64,7 @@ public class TinyLidar  {
             i2cManager.sendData(deviceName, READ_DATA_REGISTER);
 
             // On lit 2 octets
-            final byte[] datas = i2cManager.getDatas(deviceName, 2);
+            final byte[] datas = i2cManager.getData(deviceName, 2);
             int res = ((short) ((datas[0] << 8) + (datas[1] & 0xFF)));
 
             // Si la distance est supérieur à 9 c'est OK
@@ -95,7 +95,7 @@ public class TinyLidar  {
     public void printInformations() {
         try {
             i2cManager.sendData(deviceName, QUERY_SETTINGS_REGISTER);
-            final byte[] datas = i2cManager.getDatas(deviceName, 23); // Cf docs
+            final byte[] datas = i2cManager.getData(deviceName, 23); // Cf docs
 
             final String operationMode;
             switch (datas[0]) {

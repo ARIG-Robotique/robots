@@ -52,5 +52,5 @@ public interface II2CManager {
      *
      * @return the datas
      */
-    byte[] getDatas(final String deviceName, final int size) throws I2CException;
+    byte[] getData(final String deviceName, final int size) throws I2CException;
 }

@@ -39,7 +39,7 @@ public abstract class AbstractAlimentationSensor implements IAlimentationSensor 
     public void printVersion() throws I2CException {
         try {
             i2cManager.sendData(deviceName, COMMAND_GET_VERSION);
-            final byte[] data = i2cManager.getDatas(deviceName, 10); // Format : YYYY.MM.DD
+            final byte[] data = i2cManager.getData(deviceName, 10); // Format : YYYY.MM.DD
             final String version = new String(data, StandardCharsets.UTF_8);
             log.info("Carte {} version {}, {} channels", deviceName, version, alimentations.length);
         } catch (I2CException e) {

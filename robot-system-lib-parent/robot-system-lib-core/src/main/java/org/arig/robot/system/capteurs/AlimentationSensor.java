@@ -12,7 +12,7 @@ public class AlimentationSensor extends AbstractAlimentationSensor {
 
     @Override
     protected void getData() throws I2CException {
-        final byte[] data = i2cManager.getDatas(deviceName, (alimentations.length * 4) + 1);
+        final byte[] data = i2cManager.getData(deviceName, (alimentations.length * 4) + 1);
 
         int faultByte = alimentations.length * 4;
         for (int channel = 0 ; channel < alimentations.length ; channel++) {

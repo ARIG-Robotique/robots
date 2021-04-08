@@ -49,7 +49,7 @@ public class BouchonI2CManager extends AbstractI2CManager<BouchonI2CDevice> {
     }
 
     @Override
-    public byte[] getDatas(String deviceName, int size) throws I2CException {
+    public byte[] getData(String deviceName, int size) throws I2CException {
         byte[] result = new byte[size];
         for (int i = 0 ; i < size ; i++) {
             result[i] = 0;

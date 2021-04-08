@@ -227,7 +227,7 @@ public class SD21Servos implements InitializingBean {
         try {
             i2cManager.sendData(deviceName, SD21Servos.BATTERY_VOLTS_REGISTER);
 
-            final byte[] rawVolts = i2cManager.getDatas(deviceName, 1);
+            final byte[] rawVolts = i2cManager.getData(deviceName, 1);
 
             final double volts;
 

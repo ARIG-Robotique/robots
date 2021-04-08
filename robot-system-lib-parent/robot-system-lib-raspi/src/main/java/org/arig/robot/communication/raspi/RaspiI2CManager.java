@@ -104,7 +104,7 @@ public class RaspiI2CManager extends AbstractI2CManager<I2CDevice> {
     }
 
     @Override
-    public byte[] getDatas(String deviceName, int size) throws I2CException {
+    public byte[] getData(String deviceName, int size) throws I2CException {
         try {
             byte [] result = new byte[size];
             int res = getDevice(deviceName).read(result, 0, size);

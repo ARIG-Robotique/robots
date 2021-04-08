@@ -23,7 +23,7 @@ public class DummyI2CManager extends AbstractI2CManager<Byte> {
     }
 
     @Override
-    public byte[] getDatas(String deviceName, int size) {
+    public byte[] getData(String deviceName, int size) {
         byte [] result = new byte[size];
         for (int i = 0 ; i < size ; i++) {
             result[i] = getData(deviceName);
