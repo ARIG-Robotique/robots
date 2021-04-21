@@ -75,7 +75,7 @@ public class RaspiI2CManager extends AbstractI2CManager<I2CDevice> {
     }
 
     @Override
-    public void sendData(String deviceName, byte... datas) throws I2CException {
+    public void sendData(String deviceName, byte... data) throws I2CException {
         try {
             getDevice(deviceName).write(datas, 0, datas.length);
         } catch (IOException e) {

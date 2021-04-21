@@ -10,8 +10,8 @@ public interface IEcran {
     void end();
 
     GetConfigInfos configInfos();
-    void updateState(UpdateStateInfos datas);
-    void updateMatch(UpdateMatchInfos datas);
+    void updateState(UpdateStateInfos data);
+    void updateMatch(UpdateMatchInfos data);
     void updatePhoto(UpdatePhotoInfos photo);
 
 }

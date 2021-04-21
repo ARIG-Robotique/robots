@@ -61,10 +61,10 @@ public class LidarCommands {
     @SneakyThrows
     @ShellMethodAvailability("lidarCmdAvailable")
     @ShellMethod("Grab des données")
-    public void grabDatas() {
+    public void grabData() {
         int cpt = 0;
         do {
-            final ScanInfos scanInfos = lidar.grabDatas();
+            final ScanInfos scanInfos = lidar.grabData();
             StringBuilder res = new StringBuilder();
             for (int i = 0 ; i < Math.min(10, scanInfos.getScan().size()) ; i++) {
                 Scan s = scanInfos.getScan().get(i);
@@ -77,7 +77,7 @@ public class LidarCommands {
                 res.append(s.getDistanceMm());
                 res.append(" mm");
             }
-            log.info("{} datas ignoré, {} datas acquise (sample : {})", scanInfos.getIgnored(), scanInfos.getScan().size(), res.toString());
+            log.info("{} data ignoré, {} data acquise (sample : {})", scanInfos.getIgnored(), scanInfos.getScan().size(), res);
             Thread.sleep(50);
         } while(++cpt < 100);
     }

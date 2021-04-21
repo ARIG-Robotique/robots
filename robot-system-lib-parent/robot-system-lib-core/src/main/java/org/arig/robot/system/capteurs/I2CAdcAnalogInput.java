@@ -79,8 +79,8 @@ public class I2CAdcAnalogInput {
             throw new I2CException(message, e);
         }
 
-        final byte[] datas = i2cManager.getData(deviceName, 2);
-        short res = ((short) ((datas[0] << 8) + (datas[1] & 0xFF)));
+        final byte[] data = i2cManager.getData(deviceName, 2);
+        short res = ((short) ((data[0] << 8) + (data[1] & 0xFF)));
         if (log.isDebugEnabled()) {
             log.debug("Résultat de la lecture analogique du capteur {} = {}", capteurId, res);
         }

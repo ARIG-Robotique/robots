@@ -45,7 +45,7 @@ public class VisionBaliseBouchon implements IVisionBalise {
         EtalonnageResponse response = new EtalonnageResponse();
         response.setStatus(StatusResponse.OK);
         response.setAction(BaliseAction.ETALONNAGE);
-        response.setDatas("");
+        response.setData("");
         return response;
     }
 
@@ -61,7 +61,7 @@ public class VisionBaliseBouchon implements IVisionBalise {
         PhotoResponse response = new PhotoResponse();
         response.setStatus(StatusResponse.OK);
         response.setAction(BaliseAction.PHOTO);
-        response.setDatas("");
+        response.setData("");
         return response;
     }
 

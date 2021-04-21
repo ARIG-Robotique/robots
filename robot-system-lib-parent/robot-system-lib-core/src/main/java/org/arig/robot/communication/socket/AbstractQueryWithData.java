@@ -9,17 +9,17 @@ import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public abstract class AbstractQueryWithDatas<T extends Enum, D extends Serializable> extends AbstractQuery<T> {
+public abstract class AbstractQueryWithData<T extends Enum, D extends Serializable> extends AbstractQuery<T> {
 
     @JsonInclude(content = JsonInclude.Include.NON_NULL)
-    private D datas;
+    private D data;
 
-    protected AbstractQueryWithDatas(T action) {
+    protected AbstractQueryWithData(T action) {
         super(action);
     }
 
     @JsonIgnore
-    protected boolean hasDatas() {
-        return datas != null;
+    protected boolean hasData() {
+        return data != null;
     }
 }

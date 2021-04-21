@@ -77,7 +77,7 @@ public class LidarTelemeterBouchon implements ILidarTelemeter {
     }
 
     @Override
-    public ScanInfos grabDatas() {
+    public ScanInfos grabData() {
         ScanInfos r = new ScanInfos();
         r.setIgnored((short) 359);
 

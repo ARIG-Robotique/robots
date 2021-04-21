@@ -2,13 +2,13 @@ package org.arig.robot.communication.socket.lidar;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.arig.robot.communication.socket.AbstractQueryWithDatas;
+import org.arig.robot.communication.socket.AbstractQueryWithData;
 import org.arig.robot.communication.socket.lidar.enums.LidarAction;
 import org.arig.robot.model.lidar.SpeedInfos;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class StartScanQuery extends AbstractQueryWithDatas<LidarAction, SpeedInfos> {
+public class StartScanQuery extends AbstractQueryWithData<LidarAction, SpeedInfos> {
 
     public StartScanQuery() {
         this(LidarAction.START_SCAN);
@@ -23,9 +23,9 @@ public class StartScanQuery extends AbstractQueryWithDatas<LidarAction, SpeedInf
             return;
         }
 
-        if (!hasDatas()) {
-            setDatas(new SpeedInfos());
+        if (!hasData()) {
+            setData(new SpeedInfos());
         }
-        getDatas().setSpeed(speed);
+        getData().setSpeed(speed);
     }
 }

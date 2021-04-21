@@ -19,5 +19,5 @@ public interface ILidarTelemeter {
     void startScan(Short speed);
     void stopScan();
     void setSpeed(Short speed);
-    ScanInfos grabDatas();
+    ScanInfos grabData();
 }

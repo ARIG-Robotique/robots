@@ -189,7 +189,7 @@ public class TCS34725ColorSensor {
     /**
      * Reads the raw red, green, blue and clear channel values
      *
-     * @return The read datas
+     * @return The read data
      */
     public ColorData getColorData() {
         if (!initialised) {
@@ -341,8 +341,8 @@ public class TCS34725ColorSensor {
     private int read16(byte reg) {
         try {
             i2cManager.sendData(deviceName, (byte) (TCS34725_COMMAND_BIT | reg));
-            final byte[] datas = i2cManager.getData(deviceName, 2);
-            return (datas[1] << 8) + (datas[0] & 0xFF);
+            final byte[] data = i2cManager.getData(deviceName, 2);
+            return (data[1] << 8) + (data[0] & 0xFF);
         } catch (I2CException e) {
             log.error("Erreur de lecture du capteur de couleur {} : {}", deviceName, e.toString());
             return TCS34725_INVALID_VALUE;

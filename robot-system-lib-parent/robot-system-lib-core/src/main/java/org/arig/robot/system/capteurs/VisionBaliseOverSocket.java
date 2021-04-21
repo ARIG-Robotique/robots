@@ -93,7 +93,7 @@ public class VisionBaliseOverSocket extends AbstractSocketClient<BaliseAction> i
         try {
             openIfNecessary();
             StatusResponse response = sendToSocketAndGet(new StatusQuery(), StatusResponse.class);
-            return response.getDatas();
+            return response.getData();
 
         } catch (Exception e) {
             log.warn("Erreur de recupération du statut", e);

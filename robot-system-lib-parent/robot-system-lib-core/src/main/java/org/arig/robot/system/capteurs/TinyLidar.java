@@ -64,8 +64,8 @@ public class TinyLidar  {
             i2cManager.sendData(deviceName, READ_DATA_REGISTER);
 
             // On lit 2 octets
-            final byte[] datas = i2cManager.getData(deviceName, 2);
-            int res = ((short) ((datas[0] << 8) + (datas[1] & 0xFF)));
+            final byte[] data = i2cManager.getData(deviceName, 2);
+            int res = ((short) ((data[0] << 8) + (data[1] & 0xFF)));
 
             // Si la distance est supérieur à 9 c'est OK
             if (res > 9) {
@@ -95,20 +95,20 @@ public class TinyLidar  {
     public void printInformations() {
         try {
             i2cManager.sendData(deviceName, QUERY_SETTINGS_REGISTER);
-            final byte[] datas = i2cManager.getData(deviceName, 23); // Cf docs
+            final byte[] data = i2cManager.getData(deviceName, 23); // Cf docs
 
             final String operationMode;
-            switch (datas[0]) {
+            switch (data[0]) {
                 case 0x43: operationMode = "Continuous"; break;
                 case 0x4c: operationMode = "Single Step / Ultra Low Power"; break;
                 case 0x52: operationMode = "Real time"; break;
                 default: operationMode = UNKNOWN_RESULT;
             }
 
-            final String watchDog = (datas[14] & 0x01) == 0 ? "OFF" : "ON";
+            final String watchDog = (data[14] & 0x01) == 0 ? "OFF" : "ON";
 
             final String led;
-            switch ((datas[14] & 0x06) >> 1) {
+            switch ((data[14] & 0x06) >> 1) {
                 case 0: led = "OFF"; break;
                 case 1: led = "ON"; break;
                 case 2: led = "Measurement"; break;
@@ -116,7 +116,7 @@ public class TinyLidar  {
             }
 
             final String presetConfig;
-            switch (datas[1]) {
+            switch (data[1]) {
                 case 0x53: presetConfig = "High Speed"; break;
                 case 0x52: presetConfig = "Long Range"; break;
                 case 0x41: presetConfig = "High Accuracy"; break;
@@ -125,16 +125,16 @@ public class TinyLidar  {
                 default: presetConfig = UNKNOWN_RESULT;
             }
 
-            final double signalRate = ((datas[2] << 8) | (datas[3] & 0xFF)) / 65536.0 + 0.005;
-            final int timingBudget = (datas[5] << 8) | (datas[6] & 0xFF);
+            final double signalRate = ((data[2] << 8) | (data[3] & 0xFF)) / 65536.0 + 0.005;
+            final int timingBudget = (data[5] << 8) | (data[6] & 0xFF);
 
-            final int preRange = datas[7] == 14 ? 14 : 18;
-            final int finalRange = datas[7] == 14 ? 10 : 14;
+            final int preRange = data[7] == 14 ? 14 : 18;
+            final int finalRange = data[7] == 14 ? 10 : 14;
 
-            final String offsetCal = ((datas[14] & 0x08) == 8) ? "Custom" : "Default";
+            final String offsetCal = ((data[14] & 0x08) == 8) ? "Custom" : "Default";
 
-            final int calOffset = (int) ((datas[15] << 24 | datas[16] << 16 | datas[17] << 8 | datas[18]) / 1000.0);
-            final double xtalk = (datas[19] << 24 | datas[20] << 16 | datas[21] << 8 | datas[22]) / 65536.0;
+            final int calOffset = (int) ((data[15] << 24 | data[16] << 16 | data[17] << 8 | data[18]) / 1000.0);
+            final double xtalk = (data[19] << 24 | data[20] << 16 | data[21] << 8 | data[22]) / 65536.0;
 
             log.info("tinyLidar {} configuration :", deviceName);
             log.info(" * Current operation mode       : {}", operationMode);
@@ -142,12 +142,12 @@ public class TinyLidar  {
             log.info(" * LED Indicator                : {}", led);
             log.info(" * Current Preset Configuration : {}", presetConfig);
             log.info(" * Signal Rate limit            : {} MCPS", signalRate);
-            log.info(" * Sigma Estimate Limit         : {} mm", datas[4]);
+            log.info(" * Sigma Estimate Limit         : {} mm", data[4]);
             log.info(" * Timing budget                : {} ms", timingBudget);
             log.info(" * Pre Range VCSEL Period       : {}", preRange);
             log.info(" * Final Range VCSEL Period     : {}", finalRange);
-            log.info(" * Firmware Version             : {}.{}.{}", datas[8], datas[9], datas[10]);
-            log.info(" * ST Pal API Version           : {}.{}.{}", datas[11], datas[12], datas[13]);
+            log.info(" * Firmware Version             : {}.{}.{}", data[8], data[9], data[10]);
+            log.info(" * ST Pal API Version           : {}.{}.{}", data[11], data[12], data[13]);
             log.info(" * Offset Cal / value           : {} / {} mm", offsetCal, calOffset);
             log.info(" * XTalk                        : {} MCPS", xtalk);
 

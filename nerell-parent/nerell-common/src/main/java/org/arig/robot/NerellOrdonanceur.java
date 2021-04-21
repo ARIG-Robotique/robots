@@ -198,7 +198,7 @@ public class NerellOrdonanceur {
                 PhotoResponse photo = baliseService.getPhoto();
                 UpdatePhotoInfos query = new UpdatePhotoInfos();
                 query.setMessage(photo == null ? "Erreur inconnue" : photo.getErrorMessage());
-                query.setPhoto(photo == null ? null : photo.getDatas());
+                query.setPhoto(photo == null ? null : photo.getData());
                 ecranService.updatePhoto(query);
 
             } else if (doEtalonnageFilter.filter(ecranService.config().isEtalonnageBalise())) {
@@ -206,7 +206,7 @@ public class NerellOrdonanceur {
                 EtalonnageResponse etalonnage = baliseService.etalonnage();
                 UpdatePhotoInfos query = new UpdatePhotoInfos();
                 query.setMessage(etalonnage == null ? "Erreur inconnue" : etalonnage.getErrorMessage());
-                query.setPhoto(etalonnage == null ? null : etalonnage.getDatas());
+                query.setPhoto(etalonnage == null ? null : etalonnage.getData());
                 ecranService.updatePhoto(query);
             }
         }
@@ -342,12 +342,12 @@ public class NerellOrdonanceur {
         ecranService.displayMessage("Démarrage du lidar");
         lidar.startScan(RPLidarA2TelemeterOverSocket.MAX_MOTOR_PWM);
 
-        ScanInfos lidarDatas = lidar.grabDatas();
-        if (lidarDatas.getScan().isEmpty()) {
+        ScanInfos lidarData = lidar.grabData();
+        if (lidarData.getScan().isEmpty()) {
             ecranService.displayMessage("Le capot du lidar est présent");
-            while (lidarDatas.getScan().isEmpty()) {
+            while (lidarData.getScan().isEmpty()) {
                 ThreadUtils.sleep(1000);
-                lidarDatas = lidar.grabDatas();
+                lidarData = lidar.grabData();
             }
 
             for (int i = 0; i < 5; i++) {

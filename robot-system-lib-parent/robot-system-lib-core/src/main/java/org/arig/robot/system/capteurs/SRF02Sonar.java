@@ -118,8 +118,8 @@ public class SRF02Sonar {
             i2cManager.sendData(deviceName, RANGE_HIGH_BYTE_REGISTER);
 
             // Step 4 : On lit 2 octets
-            final byte[] datas = i2cManager.getData(deviceName, 2);
-            int res = ((short) ((datas[0] << 8) + (datas[1] & 0xFF)));
+            final byte[] data = i2cManager.getData(deviceName, 2);
+            int res = ((short) ((data[0] << 8) + (data[1] & 0xFF)));
             if (log.isDebugEnabled()) {
                 String unit = null;
                 switch (rangeUnit) {

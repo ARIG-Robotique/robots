@@ -7,8 +7,8 @@ import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public abstract class AbstractResponseWithDatas<T extends Enum, D extends Serializable> extends AbstractResponse<T> {
+public abstract class AbstractResponseWithData<T extends Enum, D extends Serializable> extends AbstractResponse<T> {
 
-    private D datas;
+    private D data;
 
 }

@@ -46,7 +46,7 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
         try {
             openIfNecessary();
             GetConfigResponse rawResponse = sendToSocketAndGet(new GetConfigQuery(), GetConfigResponse.class);
-            r = rawResponse.getDatas();
+            r = rawResponse.getData();
         } catch (Exception e) {
             log.error("Erreur de lecture", e);
             r = new GetConfigInfos();
@@ -59,11 +59,11 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
     }
 
     @Override
-    public void updateState(UpdateStateInfos datas) {
+    public void updateState(UpdateStateInfos data) {
         try {
             openIfNecessary();
             UpdateStateQuery query = new UpdateStateQuery();
-            query.setDatas(datas);
+            query.setData(data);
             sendToSocketAndGet(query, EmptyResponse.class);
         } catch (Exception e) {
             log.error("Erreur de lecture", e);
@@ -71,11 +71,11 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
     }
 
     @Override
-    public void updateMatch(UpdateMatchInfos datas) {
+    public void updateMatch(UpdateMatchInfos data) {
         try {
             openIfNecessary();
             UpdateMatchQuery query = new UpdateMatchQuery();
-            query.setDatas(datas);
+            query.setData(data);
             sendToSocketAndGet(query, EmptyResponse.class);
         } catch (Exception e) {
             log.error("Erreur de lecture", e);
@@ -83,11 +83,11 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
     }
 
     @Override
-    public void updatePhoto(UpdatePhotoInfos datas) {
+    public void updatePhoto(UpdatePhotoInfos data) {
         try {
             openIfNecessary();
             UpdatePhotoQuery query = new UpdatePhotoQuery();
-            query.setDatas(datas);
+            query.setData(data);
             sendToSocketAndGet(query, EmptyResponse.class);
         } catch (Exception e) {
             log.error("Erreur de lecture", e);

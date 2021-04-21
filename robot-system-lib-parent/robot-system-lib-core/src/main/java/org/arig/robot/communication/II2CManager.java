@@ -32,9 +32,9 @@ public interface II2CManager {
      * Send data.
      *
      * @param deviceName the address
-     * @param datas      the datas
+     * @param data       the data
      */
-    void sendData(final String deviceName, final byte... datas) throws I2CException;
+    void sendData(final String deviceName, final byte... data) throws I2CException;
 
     /**
      * Gets the data.
@@ -46,11 +46,11 @@ public interface II2CManager {
     byte getData(final String deviceName) throws I2CException;
 
     /**
-     * Gets the datas.
+     * Gets the data.
      *
      * @param deviceName the address
      *
-     * @return the datas
+     * @return the data
      */
     byte[] getData(final String deviceName, final int size) throws I2CException;
 }

@@ -104,7 +104,7 @@ public class LidarService implements ILidarService, InitializingBean {
 
     @Override
     public void refreshDetectedPoints() {
-        ScanInfos lidarScan = lidar.grabDatas();
+        ScanInfos lidarScan = lidar.grabData();
 
         List<Point> detectedPointsMm = new ArrayList<>();
 
