@@ -73,7 +73,7 @@ public class RPLidarA2TelemeterOverSocketTest {
         do {
             log.info("Récupération scan {} / 100", nb);
 
-            ScanInfos scans = rpLidar.grabDatas();
+            ScanInfos scans = rpLidar.grabData();
             Assert.assertNotNull(scans);
             Assert.assertNotNull(scans.getIgnored());
             Assert.assertNotNull(scans.getScan());
