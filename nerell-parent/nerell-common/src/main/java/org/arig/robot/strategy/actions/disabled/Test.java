@@ -11,7 +11,7 @@ import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.services.ServosService;
 import org.arig.robot.strategy.AbstractAction;
-import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.services.TrajectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class Test extends AbstractAction {
 
     @Autowired
-    private ITrajectoryManager mv;
+    private TrajectoryManager mv;
 
     @Autowired
     private IPincesArriereService pincesArriereService;

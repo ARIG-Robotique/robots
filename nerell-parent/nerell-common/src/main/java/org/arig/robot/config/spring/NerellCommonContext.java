@@ -3,6 +3,8 @@ package org.arig.robot.config.spring;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.NerellOrdonanceur;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.IConstantesServosNerell;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.common.LimiterFilter.LimiterType;
 import org.arig.robot.filters.pid.IPidFilter;
@@ -11,19 +13,17 @@ import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Position;
-import org.arig.robot.system.ILidarService;
-import org.arig.robot.system.ITrajectoryManager;
-import org.arig.robot.system.LidarService;
-import org.arig.robot.system.TrajectoryManager;
-import org.arig.robot.system.TrajectoryManagerConfig;
+import org.arig.robot.model.RobotConfig;
+import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.arig.robot.system.motion.AsservissementPolaireDistanceOrientation;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motion.OdometrieLineaire;
+import org.arig.robot.system.pathfinding.GameMultiPathFinderImpl;
 import org.arig.robot.system.pathfinding.IPathFinder;
-import org.arig.robot.system.pathfinding.impl.GameMultiPathFinderImpl;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.system.pathfinding.impl.NoPathFinderImpl;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -32,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 
 @Slf4j
@@ -43,28 +42,25 @@ public class NerellCommonContext {
     private Environment env;
 
     @Bean
-    public ConvertionRobotUnit convertisseur() {
-        return new ConvertionRobotUnit(IConstantesNerellConfig.countPerMm, IConstantesNerellConfig.countPerDeg);
-    }
+    public RobotConfig robotConfig(ConvertionRobotUnit conv) {
+        return new RobotConfig()
+                .asservTimeMs(IConstantesNerellConfig.asservTimeMs)
+                .calageTimeMs(IConstantesNerellConfig.calageTimeMs)
+                .i2cReadTimeMs(IConstantesNerellConfig.i2cReadTimeMs)
 
-    @Bean
-    public TableUtils tableUtils() {
-        return new TableUtils(IConstantesNerellConfig.tableWidth, IConstantesNerellConfig.tableHeight, IConstantesNerellConfig.tableBorder);
-    }
+                .pathFindingTailleObstacle(IConstantesNerellConfig.pathFindingTailleObstacle)
+                .lidarOffsetPointMm(IConstantesNerellConfig.lidarOffsetPointMm)
+                .lidarClusterSizeMm(IConstantesNerellConfig.lidarClusterSizeMm)
+                .avoidanceWaitTimeMs(IConstantesNerellConfig.avoidanceWaitTimeMs)
+                .pathFindingSeuilProximite(IConstantesNerellConfig.pathFindingSeuilProximite)
+                .pathFindingSeuilProximiteSafe(IConstantesNerellConfig.pathFindingSeuilProximiteSafe)
+                .pathFindingAngle(IConstantesNerellConfig.pathFindingAngle)
+                .pathFindingAngleSafe(IConstantesNerellConfig.pathFindingAngleSafe)
 
-    @Bean
-    public ILidarService lidarService() {
-        return new LidarService(
-                IConstantesNerellConfig.pathFindingTailleObstacle,
-                IConstantesNerellConfig.lidarOffsetPointMm,
-                IConstantesNerellConfig.lidarClusterSizeMm
-        );
-    }
+                .seuilAlimentationServos(IConstantesServosNerell.SEUIL_ALIMENTATION_VOLTS)
+                .servosMinTimeMax(IConstantesServosNerell.MIN_TIME_MAX)
+                .servosBatch(IConstantesServosNerell.BATCH_CONFIG)
 
-    @Bean
-    @Primary
-    public ITrajectoryManager trajectoryManager(ConvertionRobotUnit conv) {
-        final TrajectoryManagerConfig config = TrajectoryManagerConfig.builder()
                 .fenetreArretDistance(conv.mmToPulse(IConstantesNerellConfig.arretDistanceMm))
                 .fenetreApprocheAvecFreinDistance(conv.mmToPulse(IConstantesNerellConfig.approcheAvecFreinDistanceMm))
                 .fenetreApprocheSansFreinDistance(conv.mmToPulse(IConstantesNerellConfig.approcheSansFreinDistanceMm))
@@ -73,10 +69,24 @@ public class NerellCommonContext {
                 .fenetreApprocheSansFreinOrientation(conv.degToPulse(IConstantesNerellConfig.approcheSansFreinOrientationDeg))
                 .startAngleDemiTour(conv.degToPulse(IConstantesNerellConfig.startAngleDemiTourDeg))
                 .startAngleLimitSpeedDistance(conv.degToPulse(IConstantesNerellConfig.startAngleLimitVitesseDistance))
-                .sampleTimeS(IConstantesNerellConfig.asservTimeS)
-                .build();
+                .sampleTimeS(IConstantesNerellConfig.asservTimeS);
+    }
 
-        return new TrajectoryManager(config);
+    @Bean
+    public IMonitoringWrapper monitoringWrapper(Environment env) {
+        MonitoringJsonWrapper mjw = new MonitoringJsonWrapper();
+        mjw.setEnabled(env.getProperty("robot.monitoring.points.enable", Boolean.class, true));
+        return mjw;
+    }
+
+    @Bean
+    public ConvertionRobotUnit convertisseur() {
+        return new ConvertionRobotUnit(IConstantesNerellConfig.countPerMm, IConstantesNerellConfig.countPerDeg);
+    }
+
+    @Bean
+    public TableUtils tableUtils() {
+        return new TableUtils(IEurobotConfig.tableWidth, IEurobotConfig.tableHeight, IEurobotConfig.tableBorder);
     }
 
     @Bean
@@ -151,7 +161,7 @@ public class NerellCommonContext {
 
     @Bean
     public NerellRobotStatus robotStatus() {
-        return new NerellRobotStatus(IConstantesNerellConfig.matchTimeMs);
+        return new NerellRobotStatus();
     }
 
     @Bean

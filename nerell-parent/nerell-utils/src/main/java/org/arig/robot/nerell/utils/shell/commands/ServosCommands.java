@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.NerellRobotStatus;
-import org.arig.robot.services.IIOService;
+import org.arig.robot.services.INerellIOService;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.services.ServosService;
@@ -26,7 +26,7 @@ public class ServosCommands {
 
     private final NerellRobotStatus rs;
     private final ServosService servosService;
-    private final IIOService ioService;
+    private final INerellIOService ioService;
     private final IPincesAvantService pincesAvantService;
     private final IPincesArriereService pincesArriereService;
 

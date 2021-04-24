@@ -1,10 +1,15 @@
 package org.arig.robot.strategy;
 
 import org.arig.robot.model.Point;
+import org.arig.robot.utils.TableUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public abstract class AbstractMacroAction extends AbstractAction {
+
+    @Autowired
+    protected TableUtils tableUtils;
 
     protected List<AbstractAction> actions;
 

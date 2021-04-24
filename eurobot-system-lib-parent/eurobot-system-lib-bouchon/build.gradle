@@ -1,0 +1,6 @@
+description = "ARIG Association - Eurobot System Librairie - Bouchon : Implémentation bouchon pour tester sans devices."
+
+dependencies {
+    compile project(':eurobot-system-lib-parent:eurobot-system-lib-core')
+    compile project(':robot-system-lib-parent:robot-system-lib-bouchon')
+}

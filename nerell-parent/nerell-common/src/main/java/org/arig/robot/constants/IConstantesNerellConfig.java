@@ -17,26 +17,6 @@ public interface IConstantesNerellConfig {
     int i2cReadTimeMs = 50;
     double calageTimeMs = 200;
 
-    // Durée du match //
-    int matchTimeMs = 100000;
-
-    // Temps écoulé pour la balise
-    int baliseElapsedTimeMs = 50000;
-
-    // Temps restant pour le déclenchement du pavillon
-    int pavillonRemainingTimeMs = 5000;
-
-    // Temps pour rendre le port prioritaire
-    int invalidPriseRemainingTime = 18000;
-
-    // Temps pour rendre valide le retour au port
-    int validRetourPortRemainingTime = 10000;
-
-    // Valeurs min / max en mm des axes du repères
-    int tableWidth = 3000;
-    int tableHeight = 2000;
-    int tableBorder = 50;
-
     // -------------------------------- //
     // Configuration moteurs propulsion //
     // -------------------------------- //
@@ -139,9 +119,6 @@ public interface IConstantesNerellConfig {
     // -------------------------- //
     // Paramètre Avoiding service //
     // -------------------------- //
-    enum AvoidingSelection {
-        BASIC, FULL, NOT_BASIC, SEMI_COMPLETE
-    }
 
     int avoidanceWaitTimeMs = 1000;
     int avoidancePathRefreshTimeMs = 2000;
@@ -155,8 +132,6 @@ public interface IConstantesNerellConfig {
     int pathFindingSeuilProximite = 480;
     int pathFindingSeuilProximiteSafe = 540;
     int pathFindingTailleObstacle = IConstantesNerellConfig.pathFindingSeuilProximite * 2 + 50;
-    int pathFindingTailleBouee = 420;
-    int pathFindingTailleBoueePort = 480;
 
     int lidarClusterSizeMm = 50;
     int lidarOffsetPointMm = 30; // "recule" les points détectés pour prendre en compte qu'on ne detecte que les faces avant

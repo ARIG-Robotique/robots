@@ -14,12 +14,8 @@ import java.util.ArrayList;
 @Slf4j
 public abstract class AbstractPincesAvantService implements IPincesAvantService {
 
-    public enum Side {
-        LEFT, RIGHT
-    }
-
     @Autowired
-    private IIOService io;
+    private INerellIOService io;
 
     @Autowired
     private NerellRobotStatus rs;

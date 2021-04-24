@@ -5,7 +5,7 @@ import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,7 +19,7 @@ public class SystemBlockerManager implements ISystemBlockerManager {
     private CommandeRobot cmdRobot;
 
     @Autowired
-    private ITrajectoryManager trajectoryManager;
+    private TrajectoryManager trajectoryManager;
 
     @Autowired
     private Abstract2WheelsEncoders encoders;

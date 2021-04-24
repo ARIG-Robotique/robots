@@ -7,6 +7,8 @@ import java.util.Map;
 
 public interface IConstantesServosNerell {
 
+    double SEUIL_ALIMENTATION_VOLTS = 3;
+
     // Constantes de vitesse //
     // --------------------- //
 
@@ -17,6 +19,7 @@ public interface IConstantesServosNerell {
     byte SPEED_PIVOT_ARRIERE = 0;
     byte SPEED_PINCE_ARRIERE = 0;
     byte SPEED_ASCENSEURS_AVANT = 0;
+    byte SPEED_PAVILLON = 0;
 
     // Tempo servos //
     // ------------ //
@@ -30,6 +33,7 @@ public interface IConstantesServosNerell {
     int WAIT_PIVOT_ARRIERE = 350;
     int WAIT_PINCE_ARRIERE = 400;
     int WAIT_ASCENSEURS_AVANT = 300; // TODO
+    int WAIT_PAVILLON = 300;
 
     // Constantes d'identification Servo //
     // --------------------------------- //
@@ -44,10 +48,11 @@ public interface IConstantesServosNerell {
     byte PINCE_ARRIERE_4 = 18;
     byte PINCE_ARRIERE_5 = 21;
     byte ASCENSEUR_ARRIERE = 10;
-    byte ASCENSEUR_AVANT_1 = 0; // TODO
-    byte ASCENSEUR_AVANT_2 = 0; // TODO
-    byte ASCENSEUR_AVANT_3 = 0; // TODO
-    byte ASCENSEUR_AVANT_4 = 0; // TODO
+    byte ASCENSEUR_AVANT_1 = 1; // TODO
+    byte ASCENSEUR_AVANT_2 = 3; // TODO
+    byte ASCENSEUR_AVANT_3 = 4; // TODO
+    byte ASCENSEUR_AVANT_4 = 5; // TODO
+    byte PAVILLON = 6; // TODO
 
     // Constantes de position //
     // ---------------------- //
@@ -87,6 +92,8 @@ public interface IConstantesServosNerell {
     int POS_ASCENSEUR_AVANT_3_HAUT = 1500; // TODO
     int POS_ASCENSEUR_AVANT_4_BAS = 1500; // TODO
     int POS_ASCENSEUR_AVANT_4_HAUT = 1500; // TODO
+    int POS_PAVILLON_HAUT = 1500; // TODO
+    int POS_PAVILLON_BAS = 1500; // TODO
 
     // Constantes de groupes //
     // --------------------- //
@@ -119,6 +126,7 @@ public interface IConstantesServosNerell {
             .put(ASCENSEUR_AVANT_2, Triple.of(POS_ASCENSEUR_AVANT_2_BAS, WAIT_ASCENSEURS_AVANT, POS_ASCENSEUR_AVANT_2_HAUT))
             .put(ASCENSEUR_AVANT_3, Triple.of(POS_ASCENSEUR_AVANT_3_BAS, WAIT_ASCENSEURS_AVANT, POS_ASCENSEUR_AVANT_3_HAUT))
             .put(ASCENSEUR_AVANT_4, Triple.of(POS_ASCENSEUR_AVANT_4_BAS, WAIT_ASCENSEURS_AVANT, POS_ASCENSEUR_AVANT_4_HAUT))
+            .put(PAVILLON, Triple.of(POS_PAVILLON_BAS, WAIT_PAVILLON, POS_PAVILLON_HAUT))
             .build();
 
     Map<Byte, Map<Byte, int[][]>> BATCH_CONFIG = ImmutableMap.<Byte, Map<Byte, int[][]>>builder()

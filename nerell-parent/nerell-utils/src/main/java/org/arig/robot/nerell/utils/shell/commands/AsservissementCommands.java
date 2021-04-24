@@ -13,7 +13,7 @@ import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.arig.robot.services.IIOService;
+import org.arig.robot.services.INerellIOService;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -36,7 +36,7 @@ import java.util.List;
 public class AsservissementCommands {
 
     private final IMonitoringWrapper monitoringWrapper;
-    private final IIOService ioService;
+    private final INerellIOService ioService;
     private final NerellRobotStatus rs;
     private final ConvertionRobotUnit convRobot;
     private final CommandeRobot cmdRobot;

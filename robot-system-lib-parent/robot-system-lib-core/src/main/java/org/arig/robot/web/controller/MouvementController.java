@@ -10,9 +10,9 @@ import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.SensRotation;
+import org.arig.robot.services.LidarService;
 import org.arig.robot.strategy.StrategyManager;
-import org.arig.robot.system.ILidarService;
-import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -52,11 +52,11 @@ public class MouvementController {
     private ConvertionRobotUnit conv;
 
     @Autowired
-    private ILidarService lidarService;
+    private LidarService lidarService;
 
     @Autowired
     @Qualifier("trajectoryManager")
-    private ITrajectoryManager trajectoryManager;
+    private TrajectoryManager trajectoryManager;
 
     @Autowired
     private StrategyManager strategyManager;

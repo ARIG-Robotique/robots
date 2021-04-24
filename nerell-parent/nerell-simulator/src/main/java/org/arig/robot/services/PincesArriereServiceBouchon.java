@@ -1,16 +1,14 @@
 package org.arig.robot.services;
 
-import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.ECouleurBouee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Slf4j
-@Service
+@Service("pincesArriereService")
 public class PincesArriereServiceBouchon extends AbstractPincesArriereService {
 
     @Autowired
-    private IOServiceBouchon io;
+    private NerellIOServiceBouchon io;
 
     @Override
     public boolean finalisePriseEcueil(final ECouleurBouee... bouees) {

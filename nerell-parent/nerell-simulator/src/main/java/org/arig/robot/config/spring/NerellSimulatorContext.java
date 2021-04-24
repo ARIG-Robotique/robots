@@ -9,9 +9,6 @@ import org.arig.robot.constants.IConstantesI2CSimulator;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.bouchon.BouchonEncoderValues;
-import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.arig.robot.monitoring.MonitoringJsonWrapper;
-import org.arig.robot.services.VisionBaliseBouchon;
 import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.EcranOverSocket;
@@ -19,12 +16,11 @@ import org.arig.robot.system.capteurs.IEcran;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
+import org.arig.robot.system.capteurs.VisionBaliseBouchon;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
-import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
-import org.arig.robot.system.motors.BouchonMotor;
 import org.arig.robot.system.motors.BouchonPropulsionsMotors;
 import org.arig.robot.system.process.EcranProcess;
 import org.arig.robot.system.servos.SD21Servos;
@@ -49,14 +45,9 @@ public class NerellSimulatorContext {
 
     @Bean
     public RobotName robotName() {
-        return new RobotName().name("Nerell (simulator)").version("latest");
-    }
-
-    @Bean
-    public IMonitoringWrapper monitoringWrapper(Environment env) {
-        MonitoringJsonWrapper mjw = new MonitoringJsonWrapper();
-        mjw.setEnabled(env.getProperty("monitoring.points.enable", Boolean.class, true));
-        return mjw;
+        return new RobotName()
+                .name("Nerell (simulator)")
+                .version("latest");
     }
 
     @Bean
@@ -79,11 +70,6 @@ public class NerellSimulatorContext {
     }
 
     @Bean
-    public AbstractMotor motorPavillon() {
-        return new BouchonMotor(PCA9685_OFFSET, PCA9685_MIN, PCA9685_MAX);
-    }
-
-    @Bean
     @SneakyThrows
     public ARIG2WheelsEncoders encoders(ResourcePatternResolver patternResolver) {
         InputStream is = patternResolver.getResource("classpath:nerell-propulsions.csv").getInputStream();
@@ -91,7 +77,7 @@ public class NerellSimulatorContext {
         List<BouchonEncoderValues> values = lines.parallelStream()
                 .filter(l -> !l.startsWith("#"))
                 .map(l -> {
-                    String [] v = l.split(";");
+                    String[] v = l.split(";");
                     return new BouchonEncoderValues()
                             .vitesseMoteur(Integer.parseInt(v[0]))
                             .gauche(Double.parseDouble(v[1]))

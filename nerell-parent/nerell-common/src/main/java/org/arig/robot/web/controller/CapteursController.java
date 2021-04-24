@@ -4,8 +4,7 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.NerellRobotStatus;
-import org.arig.robot.services.IIOService;
-import org.springframework.beans.factory.InitializingBean;
+import org.arig.robot.services.INerellIOService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,13 +13,13 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-public class CapteursController extends AbstractCapteursController implements InitializingBean {
+public class CapteursController extends AbstractCapteursController {
 
     @Autowired
     private NerellRobotStatus rs;
 
     @Autowired
-    private IIOService ioService;
+    private INerellIOService ioService;
 
     @Getter
     @Accessors(fluent = true)
@@ -36,10 +35,8 @@ public class CapteursController extends AbstractCapteursController implements In
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        // Capteurs informations numérique
-        numeriqueInfos.put("Arret d'urgence", ioService::auOk);
-        numeriqueInfos.put("Alim. Puissance 5V", ioService::alimPuissance5VOk);
-        numeriqueInfos.put("Alim. Puissance 12V", ioService::alimPuissance12VOk);
+        super.afterPropertiesSet();
+
         numeriqueInfos.put("Bordure arrière droite", ioService::calageBordureDroit);
         numeriqueInfos.put("Bordure arrière gauche", ioService::calageBordureGauche);
         numeriqueInfos.put("Presence ventouse 1", ioService::presenceVentouse1);
@@ -55,12 +52,7 @@ public class CapteursController extends AbstractCapteursController implements In
         numeriqueInfos.put("Presence pince arrière 3", ioService::presencePinceArriere3);
         numeriqueInfos.put("Presence pince arrière 4", ioService::presencePinceArriere4);
         numeriqueInfos.put("Presence pince arrière 5", ioService::presencePinceArriere5);
-        numeriqueInfos.put("Tirette", ioService::tirette);
 
-        // Capteurs informations analogique
-        // NOP en 2020
-
-        // Capteurs informations Text
         textInfos.put("Equipe", () -> rs.team().name());
     }
 }

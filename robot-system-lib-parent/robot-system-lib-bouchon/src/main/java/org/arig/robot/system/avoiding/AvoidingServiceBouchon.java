@@ -1,7 +1,7 @@
 package org.arig.robot.system.avoiding;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.system.ILidarService;
+import org.arig.robot.services.LidarService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class AvoidingServiceBouchon implements IAvoidingService {
 
     @Autowired
-    private ILidarService lidarService;
+    private LidarService lidarService;
 
     @Override
     public void process() {

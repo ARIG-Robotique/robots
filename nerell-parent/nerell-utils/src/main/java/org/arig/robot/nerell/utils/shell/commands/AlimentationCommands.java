@@ -2,7 +2,7 @@ package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.services.IIOService;
+import org.arig.robot.services.INerellIOService;
 import org.arig.robot.services.ServosService;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
@@ -14,7 +14,7 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 @AllArgsConstructor
 public class AlimentationCommands {
 
-    private final IIOService ioService;
+    private final INerellIOService ioService;
     private final ServosService servosService;
 
     public Availability auOK() {

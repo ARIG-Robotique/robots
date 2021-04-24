@@ -1,16 +1,16 @@
 package org.arig.robot.system.capteurs;
 
-import org.arig.robot.communication.socket.balise.DetectionResponse;
 import org.arig.robot.communication.socket.balise.EtalonnageResponse;
 import org.arig.robot.communication.socket.balise.PhotoResponse;
-import org.arig.robot.model.balise.StatutBalise;
 
-public interface IVisionBalise {
+import java.io.Serializable;
 
-    StatutBalise getStatut();
+public interface IVisionBalise<T extends Serializable> {
+
+    T getStatut();
     PhotoResponse getPhoto();
-    DetectionResponse startDetection();
     EtalonnageResponse etalonnage();
+    boolean startDetection();
     void openSocket() throws Exception;
     boolean isOpen();
     void end();

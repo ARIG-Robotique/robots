@@ -23,21 +23,6 @@ public abstract class AbstractRobotStatus {
 
     private boolean simulateur = false;
 
-    private ETeam team = ETeam.UNKNOWN;
-
-    public void setTeam(int value) {
-        switch (value) {
-            case 1:
-                team = ETeam.JAUNE;
-                break;
-            case 2:
-                team = ETeam.BLEU;
-                break;
-            default:
-                team = ETeam.UNKNOWN;
-        }
-    }
-
     @Setter(AccessLevel.NONE)
     private boolean forceMonitoring = false;
 

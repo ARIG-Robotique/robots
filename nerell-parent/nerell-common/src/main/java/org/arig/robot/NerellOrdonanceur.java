@@ -10,11 +10,12 @@ import org.arig.robot.communication.socket.balise.EtalonnageResponse;
 import org.arig.robot.communication.socket.balise.PhotoResponse;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.constants.IConstantesNerellConfig;
-import org.arig.robot.constants.IConstantesUtiles;
+import org.arig.robot.constants.IConstantesServosNerell;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.exceptions.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
@@ -29,13 +30,12 @@ import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.EcranService;
-import org.arig.robot.services.IIOService;
+import org.arig.robot.services.INerellIOService;
 import org.arig.robot.services.ServosService;
-import org.arig.robot.system.ITrajectoryManager;
+import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
-import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
@@ -66,7 +66,7 @@ public class NerellOrdonanceur {
     private NerellRobotStatus nerellRobotStatus;
 
     @Autowired
-    private IIOService ioService;
+    private INerellIOService ioService;
 
     @Autowired
     private II2CManager i2CManager;
@@ -75,7 +75,7 @@ public class NerellOrdonanceur {
     private ServosService servosService;
 
     @Autowired
-    private ITrajectoryManager trajectoryManager;
+    private TrajectoryManager trajectoryManager;
 
     @Autowired
     private IPathFinder pathFinder;
@@ -97,9 +97,6 @@ public class NerellOrdonanceur {
 
     @Autowired
     private EcranService ecranService;
-
-    @Autowired
-    private AbstractMotor motorPavillon;
 
     @Autowired
     private IAvoidingService avoidingService;
@@ -274,7 +271,7 @@ public class NerellOrdonanceur {
         ThreadUtils.sleep(500);
 
         double tension = servosService.getTension();
-        if (tension < IConstantesUtiles.SEUIL_BATTERY_VOLTS && tension > 0) {
+        if (tension < IConstantesServosNerell.SEUIL_ALIMENTATION_VOLTS && tension > 0) {
             ecranService.displayMessage("/!\\ PROBLEME DE TENSION SERVOS /!\\", LogLevel.ERROR);
             throw new ExitProgram(true);
         }
@@ -428,10 +425,10 @@ public class NerellOrdonanceur {
         while (nerellRobotStatus.matchRunning()) {
 
             // Déclenchement du pavillon
-            if (nerellRobotStatus.getRemainingTime() <= IConstantesNerellConfig.pavillonRemainingTimeMs
+            if (nerellRobotStatus.getRemainingTime() <= IEurobotConfig.pavillonRemainingTimeMs
                     && !nerellRobotStatus.pavillon() && ioService.auOk()) {
                 log.info("Activation du pavillon");
-                motorPavillon.speed(motorPavillon.getMaxSpeed() / 2);
+                servosService.pavillonHaut();
                 nerellRobotStatus.pavillon(true);
             }
 
@@ -446,7 +443,6 @@ public class NerellOrdonanceur {
         lidar.stopScan();
         ecranService.displayMessage(String.format("FIN - Durée match %s ms", nerellRobotStatus.getElapsedTime()));
 
-        motorPavillon.speed(motorPavillon.getStopSpeed());
         ioService.disableAlim5VPuissance();
     }
 

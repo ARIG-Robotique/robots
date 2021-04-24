@@ -3,13 +3,14 @@ package org.arig.robot.strategy.actions.active;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.services.IPincesArriereService;
+import org.arig.robot.services.AbstractPincesArriereService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,7 +21,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
     private boolean firstExecution = true;
 
     @Autowired
-    private IPincesArriereService pincesArriereService;
+    private AbstractPincesArriereService pincesArriereService;
 
     protected abstract double orientationPourPrise();
 
@@ -42,7 +43,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        if (rs.getRemainingTime() < IConstantesNerellConfig.invalidPriseRemainingTime) {
+        if (rs.getRemainingTime() < IEurobotConfig.invalidPriseRemainingTime) {
             return false;
         }
 
@@ -98,8 +99,8 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
 
             } else if (orientation == 180 || orientation == 0) {
                 final double realX = orientation == 180
-                    ? conv.mmToPulse(3000 - IConstantesNerellConfig.dstCallageY)
-                    : conv.mmToPulse(IConstantesNerellConfig.dstCallageY);
+                        ? conv.mmToPulse(3000 - IConstantesNerellConfig.dstCallageY)
+                        : conv.mmToPulse(IConstantesNerellConfig.dstCallageY);
 
                 if (Math.abs(realX - robotX) > conv.mmToPulse(10)) {
                     log.warn("RECALAGE REQUIS : xRobot = {} ; xReel = {}",

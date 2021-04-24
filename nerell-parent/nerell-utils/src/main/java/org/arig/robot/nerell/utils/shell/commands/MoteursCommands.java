@@ -2,7 +2,7 @@ package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.arig.robot.model.AbstractRobotStatus;
-import org.arig.robot.services.IIOService;
+import org.arig.robot.services.INerellIOService;
 import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.springframework.shell.Availability;
@@ -17,7 +17,7 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 public class MoteursCommands {
 
     private final AbstractRobotStatus rs;
-    private final IIOService ioService;
+    private final INerellIOService ioService;
     private final AbstractPropulsionsMotors propulsionsMotors;
     private final AbstractMotor motorPavillon;
 

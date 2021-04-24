@@ -2,6 +2,7 @@ package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.EStrategy;
@@ -45,7 +46,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
     @Override
     public boolean isValid() {
         return rs.pincesAvantEmpty() &&
-                rs.getRemainingTime() > IConstantesNerellConfig.invalidPriseRemainingTime &&
+                rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime &&
                 (rs.team() == ETeam.BLEU && rs.grandChenaux().chenalVertEmpty() || rs.grandChenaux().chenalRougeEmpty());
     }
 

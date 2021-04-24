@@ -15,13 +15,11 @@ import org.arig.robot.constants.IConstantesI2CNerell;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.RobotName;
-import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.arig.robot.monitoring.MonitoringJsonWrapper;
-import org.arig.robot.services.avoiding.BasicAvoidingService;
-import org.arig.robot.services.avoiding.CompleteAvoidingService;
-import org.arig.robot.services.avoiding.NotBasicAvoidingService;
-import org.arig.robot.services.avoiding.SemiCompleteAvoidingService;
 import org.arig.robot.system.avoiding.IAvoidingService;
+import org.arig.robot.system.avoiding.impl.BasicAvoidingService;
+import org.arig.robot.system.avoiding.impl.BasicRetryAvoidingService;
+import org.arig.robot.system.avoiding.impl.CompleteAvoidingService;
+import org.arig.robot.system.avoiding.impl.SemiCompleteAvoidingService;
 import org.arig.robot.system.capteurs.EcranOverSocket;
 import org.arig.robot.system.capteurs.IEcran;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
@@ -29,9 +27,7 @@ import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
-import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
-import org.arig.robot.system.motors.PCA9685Motor;
 import org.arig.robot.system.motors.PropulsionsPCA9685Motors;
 import org.arig.robot.system.process.EcranProcess;
 import org.arig.robot.system.process.RPLidarBridgeProcess;
@@ -49,20 +45,11 @@ import java.math.BigDecimal;
 @Configuration
 public class NerellRobotContext {
 
-    protected RobotName robotName() {
-        return new RobotName().name("Nerell (The Big One)").version("2020 (Sail the World)");
-    }
-
     @Bean
     public RobotName robotNameBean() {
-        return robotName();
-    }
-
-    @Bean
-    public IMonitoringWrapper monitoringWrapper(Environment env) {
-        MonitoringJsonWrapper mjw = new MonitoringJsonWrapper();
-        mjw.setEnabled(env.getProperty("robot.monitoring.points.enable", Boolean.class, true));
-        return mjw;
+        return new RobotName()
+                .name("Nerell (The Big One)")
+                .version("2021 (Sail the World)");
     }
 
     @Bean(destroyMethod = "close")
@@ -126,11 +113,6 @@ public class NerellRobotContext {
     }
 
     @Bean
-    public AbstractMotor motorPavillon() {
-        return new PCA9685Motor(PCA9685Pin.PWM_15, PCA9685Pin.PWM_14);
-    }
-
-    @Bean
     public RPLidarBridgeProcess rplidarBridgeProcess() {
         return new RPLidarBridgeProcess("/opt/rplidar_bridge");
     }
@@ -163,12 +145,13 @@ public class NerellRobotContext {
 
     @Bean
     public IAvoidingService avoidingService(Environment env) {
-        IConstantesNerellConfig.AvoidingSelection avoidingImplementation = env.getProperty("robot.avoidance.implementation", IConstantesNerellConfig.AvoidingSelection.class, IConstantesNerellConfig.AvoidingSelection.FULL);
-        switch (avoidingImplementation) {
+        IAvoidingService.Mode mode = env.getProperty("robot.avoidance.implementation", IAvoidingService.Mode.class, IAvoidingService.Mode.BASIC);
+
+        switch (mode) {
             case BASIC:
                 return new BasicAvoidingService();
-            case NOT_BASIC:
-                return new NotBasicAvoidingService();
+            case BASIC_RETRY:
+                return new BasicRetryAvoidingService();
             case SEMI_COMPLETE:
                 return new SemiCompleteAvoidingService();
             case FULL:

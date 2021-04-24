@@ -2,4 +2,5 @@ description = "ARIG Association - Nerell Common"
 
 dependencies {
 	compile project(':robot-system-lib-parent:robot-system-lib-core')
+	compile project(':eurobot-system-lib-parent:eurobot-system-lib-core')
 }

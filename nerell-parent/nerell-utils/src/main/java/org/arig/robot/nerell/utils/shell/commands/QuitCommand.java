@@ -1,7 +1,7 @@
 package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
-import org.arig.robot.services.IIOService;
+import org.arig.robot.services.INerellIOService;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.motors.AbstractMotor;
 import org.springframework.shell.ExitRequest;
@@ -14,7 +14,7 @@ import org.springframework.shell.standard.commands.Quit;
 public class QuitCommand implements Quit.Command {
 
     private final ILidarTelemeter lidar;
-    private final IIOService ioService;
+    private final INerellIOService ioService;
     private final AbstractMotor motorPavillon;
 
     @ShellMethod(value = "Exit the shell.", key = {"quit", "exit"})

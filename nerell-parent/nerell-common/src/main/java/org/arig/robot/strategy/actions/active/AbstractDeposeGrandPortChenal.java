@@ -2,6 +2,7 @@ package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Bouee;
@@ -10,8 +11,8 @@ import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.services.IPincesArriereService;
-import org.arig.robot.services.IPincesAvantService;
+import org.arig.robot.services.AbstractPincesArriereService;
+import org.arig.robot.services.AbstractPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,10 +25,10 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
     }
 
     @Autowired
-    private IPincesArriereService pincesArriereService;
+    private AbstractPincesArriereService pincesArriereService;
 
     @Autowired
-    private IPincesAvantService pincesAvantService;
+    private AbstractPincesAvantService pincesAvantService;
 
     protected abstract Bouee getBoueeBloquante();
 
@@ -88,7 +89,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
             return !rs.pincesArriereEmpty() && !rs.pincesAvantEmpty();
 
         } else {
-            return (!getBoueeBloquante().presente() || rs.getRemainingTime() < IConstantesNerellConfig.invalidPriseRemainingTime) &&
+            return (!getBoueeBloquante().presente() || rs.getRemainingTime() < IEurobotConfig.invalidPriseRemainingTime) &&
                     (!rs.pincesArriereEmpty() || !rs.pincesAvantEmpty());
         }
     }

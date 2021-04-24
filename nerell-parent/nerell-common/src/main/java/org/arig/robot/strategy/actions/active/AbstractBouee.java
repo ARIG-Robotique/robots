@@ -4,13 +4,14 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Bouee;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.services.IIOService;
+import org.arig.robot.services.INerellIOService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class AbstractBouee extends AbstractNerellAction {
 
     @Autowired
-    protected IIOService io;
+    protected INerellIOService io;
 
     abstract public Bouee bouee();
 
@@ -41,7 +42,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
     @Override
     public boolean isValid() {
         final Bouee bouee = bouee();
-        return isTimeValid() && bouee.presente() && getPinceCible(bouee) != 0 && rs.getRemainingTime() > IConstantesNerellConfig.invalidPriseRemainingTime;
+        return isTimeValid() && bouee.presente() && getPinceCible(bouee) != 0 && rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime;
     }
 
     @Override
@@ -51,7 +52,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
 
             final Bouee bouee = bouee();
             final int pinceCible = getPinceCible(bouee);
-            final double distanceApproche = IConstantesNerellConfig.pathFindingTailleBouee / 2.0 + 10;
+            final double distanceApproche = IEurobotConfig.pathFindingTailleBouee / 2.0 + 10;
             final double offsetPince = getOffsetPince(pinceCible);
 
             log.info("Prise de la bouee {} {} dans la pince avant {}", bouee.numero(), bouee.couleur(), pinceCible);

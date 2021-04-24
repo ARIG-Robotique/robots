@@ -18,7 +18,7 @@ public abstract class AbstractPincesArriereService implements IPincesArriereServ
     private NerellRobotStatus rs;
 
     @Autowired
-    private IIOService io;
+    private INerellIOService io;
 
     /**
      * Prises des bouees dans un écueil

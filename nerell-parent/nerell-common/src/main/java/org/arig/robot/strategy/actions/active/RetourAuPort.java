@@ -2,6 +2,7 @@ package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ETeam;
@@ -59,7 +60,7 @@ public class RetourAuPort extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rs.inPort() && rs.getRemainingTime() < IConstantesNerellConfig.validRetourPortRemainingTime;
+        return isTimeValid() && !rs.inPort() && rs.getRemainingTime() < IEurobotConfig.validRetourPortRemainingTime;
     }
 
     @Override

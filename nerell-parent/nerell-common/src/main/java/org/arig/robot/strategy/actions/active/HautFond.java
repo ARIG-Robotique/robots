@@ -7,7 +7,7 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Bouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
-import org.arig.robot.services.IIOService;
+import org.arig.robot.services.INerellIOService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ public class HautFond extends AbstractNerellAction {
     private static final int Y = 2000 - 175; // TODO distance minimale de rasage du bord nord
 
     @Autowired
-    protected IIOService io;
+    protected INerellIOService io;
 
     @Override
     public String name() {
