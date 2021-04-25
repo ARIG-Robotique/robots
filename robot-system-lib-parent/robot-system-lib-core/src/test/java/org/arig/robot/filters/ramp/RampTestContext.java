@@ -1,10 +1,10 @@
 package org.arig.robot.filters.ramp;
 
 import org.arig.robot.model.AbstractRobotStatus;
+import org.arig.robot.model.TestRobotStatus;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.model.TestRobotStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

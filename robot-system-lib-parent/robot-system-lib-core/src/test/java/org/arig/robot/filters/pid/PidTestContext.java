@@ -1,7 +1,5 @@
 package org.arig.robot.filters.pid;
 
-import org.arig.robot.filters.pid.DerivateInputPidFilter;
-import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.springframework.context.annotation.Bean;

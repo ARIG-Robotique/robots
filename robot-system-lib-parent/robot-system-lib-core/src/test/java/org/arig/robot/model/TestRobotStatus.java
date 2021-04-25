@@ -1,7 +1,5 @@
 package org.arig.robot.model;
 
-import org.arig.robot.model.AbstractRobotStatus;
-
 import java.util.Collections;
 import java.util.Map;
 

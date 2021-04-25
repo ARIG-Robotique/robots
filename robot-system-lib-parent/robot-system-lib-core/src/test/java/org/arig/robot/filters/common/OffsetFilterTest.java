@@ -1,6 +1,5 @@
 package org.arig.robot.filters.common;
 
-import org.arig.robot.filters.common.OffsetFilter;
 import org.arig.robot.filters.common.OffsetFilter.OffsetType;
 import org.junit.Assert;
 import org.junit.Before;

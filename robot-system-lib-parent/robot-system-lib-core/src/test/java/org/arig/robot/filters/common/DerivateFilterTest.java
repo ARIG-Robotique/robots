@@ -1,7 +1,6 @@
 package org.arig.robot.filters.common;
 
 import org.arig.robot.filters.IFilter;
-import org.arig.robot.filters.common.DerivateFilter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;

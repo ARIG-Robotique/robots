@@ -1,6 +1,5 @@
 package org.arig.robot.filters.chain;
 
-import org.arig.robot.filters.chain.SerialChainFilter;
 import org.arig.robot.filters.common.IntegralFilter;
 import org.arig.robot.filters.common.ProportionalFilter;
 import org.junit.Assert;

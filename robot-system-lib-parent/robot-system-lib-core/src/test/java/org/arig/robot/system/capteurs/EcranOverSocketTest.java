@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.ecran.GetConfigInfos;
 import org.arig.robot.model.ecran.UpdateMatchInfos;
 import org.arig.robot.model.ecran.UpdateStateInfos;
-import org.arig.robot.system.capteurs.EcranOverSocket;
 import org.arig.robot.utils.ThreadUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;

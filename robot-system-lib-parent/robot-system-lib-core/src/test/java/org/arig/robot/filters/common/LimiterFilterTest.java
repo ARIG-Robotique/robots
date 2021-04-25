@@ -2,7 +2,6 @@ package org.arig.robot.filters.common;
 
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.filters.IFilter;
-import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.common.LimiterFilter.LimiterType;
 import org.junit.Assert;
 import org.junit.BeforeClass;

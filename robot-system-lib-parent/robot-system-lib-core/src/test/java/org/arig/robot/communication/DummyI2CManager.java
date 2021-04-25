@@ -1,7 +1,6 @@
 package org.arig.robot.communication;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.AbstractI2CManager;
 import org.arig.robot.exception.I2CException;
 
 /**

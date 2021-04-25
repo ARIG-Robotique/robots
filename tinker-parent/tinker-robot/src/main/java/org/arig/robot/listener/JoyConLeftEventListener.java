@@ -8,8 +8,6 @@ import org.arig.robot.system.gamepad.nintendoswitch.ControllerEvent;
 import org.arig.robot.system.gamepad.nintendoswitch.ControllerEventListener;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 @Slf4j
 @RequiredArgsConstructor
 public class JoyConLeftEventListener implements ControllerEventListener {

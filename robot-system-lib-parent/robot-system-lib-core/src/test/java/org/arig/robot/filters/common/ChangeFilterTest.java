@@ -1,6 +1,5 @@
 package org.arig.robot.filters.common;
 
-import org.arig.robot.filters.common.ChangeFilter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;

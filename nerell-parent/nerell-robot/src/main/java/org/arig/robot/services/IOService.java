@@ -11,13 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
 import org.arig.robot.constants.IConstantesI2CNerell;
+import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.NerellRobotStatus;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 
 import java.io.IOException;
 

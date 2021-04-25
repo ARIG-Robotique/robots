@@ -10,9 +10,7 @@ import org.arig.robot.model.Bouee;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.services.AbstractPincesAvantService.Side;
 import org.arig.robot.services.IIOService;
-import org.arig.robot.services.IPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 

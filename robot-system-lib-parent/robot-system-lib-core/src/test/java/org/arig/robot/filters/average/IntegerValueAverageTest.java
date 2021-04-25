@@ -1,6 +1,5 @@
 package org.arig.robot.filters.average;
 
-import org.arig.robot.filters.average.IntegerValueAverage;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
