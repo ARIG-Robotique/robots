@@ -3,12 +3,18 @@ package org.arig.robot.config.spring;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.arig.robot.communication.I2CManagerDevice;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.communication.bouchon.BouchonI2CManager;
 import org.arig.robot.constants.IConstantesI2CSimulator;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.bouchon.BouchonEncoderValues;
+import org.arig.robot.model.bouchon.BouchonI2CDevice;
+import org.arig.robot.model.bouchon.BouchonI2CMultiplexer;
+import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringJsonWrapper;
+import org.arig.robot.services.VisionBaliseBouchon;
 import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.EcranOverSocket;
@@ -53,7 +59,15 @@ public class NerellSimulatorContext {
     @Bean
     public II2CManager i2cManager() throws I2CException {
         final BouchonI2CManager manager = new BouchonI2CManager();
-        manager.registerDevice("DUMMY I2C", 0x00);
+        BouchonI2CDevice simpleMultiplexerI2C = new BouchonI2CDevice().address(0x10);
+        BouchonI2CDevice simpleDevice = new BouchonI2CDevice().address(0x12);
+        BouchonI2CDevice simpleMultiplexedDevice = new BouchonI2CDevice().address(0x14);
+
+        manager.registerMultiplexerDevice("Multiplexeur", new BouchonI2CMultiplexer());
+        manager.registerDevice(I2CManagerDevice.<BouchonI2CDevice>builder().deviceName("Multiplexeur").device(simpleMultiplexerI2C).scanCmd(new byte[]{0x2A}).build());
+        manager.registerDevice(I2CManagerDevice.<BouchonI2CDevice>builder().deviceName("Simple device").device(simpleDevice).build());
+        manager.registerDevice(I2CManagerDevice.<BouchonI2CDevice>builder().deviceName("Simple device multiplexé").device(simpleMultiplexedDevice).multiplexerDeviceName("Multiplexeur").multiplexerChannel((byte) 2).build());
+
         return manager;
     }
 
