@@ -15,6 +15,7 @@
     <option name="ACTIVE_PROFILES" value="default,monitoring,simulateur,greg" />
     <option name="WORKING_DIRECTORY" value="file://$MODULE_WORKING_DIR$" />
     <option name="ALTERNATIVE_JRE_PATH" value="Oracle 1.8" />
+    <option name="SHORTEN_COMMAND_LINE" value="NONE" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
