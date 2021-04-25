@@ -5,15 +5,16 @@ import com.pi4j.gpio.extension.pca.PCA9685Pin;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.i2c.I2CBus;
+import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.communication.I2CManagerDevice;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.communication.raspi.RaspiI2CManager;
 import org.arig.robot.constants.IConstantesI2CNerell;
 import org.arig.robot.constants.IConstantesNerellConfig;
-import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.avoiding.impl.BasicAvoidingService;
@@ -58,17 +59,45 @@ public class NerellRobotContext {
     }
 
     @Bean
-    public II2CManager i2cManager(I2CBus i2cBus) throws I2CException {
-        final RaspiI2CManager manager = new RaspiI2CManager(i2cBus);
-        manager.registerDevice(IConstantesI2CNerell.SERVO_DEVICE_NAME, IConstantesI2CNerell.SD21_ADDRESS);
-        manager.registerDevice(IConstantesI2CNerell.CODEUR_MOTEUR_DROIT, IConstantesI2CNerell.CODEUR_DROIT_ADDRESS);
-        manager.registerDevice(IConstantesI2CNerell.CODEUR_MOTEUR_GAUCHE, IConstantesI2CNerell.CODEUR_GAUCHE_ADDRESS);
+    public II2CManager i2cManager(I2CBus i2cBus) throws IOException {
+        final RaspiI2CManager manager = new RaspiI2CManager();
 
-        // Enregistrement juste pour le scan.
-        manager.registerDevice(IConstantesI2CNerell.PCF_ALIM_DEVICE_NAME, IConstantesI2CNerell.PCF_ALIM_ADDRESS);
-        manager.registerDevice(IConstantesI2CNerell.PCF1_DEVICE_NAME, IConstantesI2CNerell.PCF1_ADDRESS);
-        manager.registerDevice(IConstantesI2CNerell.PCF2_DEVICE_NAME, IConstantesI2CNerell.PCF2_ADDRESS);
-        manager.registerDevice(IConstantesI2CNerell.PCA9685_DEVICE_NAME, IConstantesI2CNerell.PCA9685_ADDRESS);
+        final I2CManagerDevice<I2CDevice> pca9685 = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(IConstantesI2CNerell.PCA9685_DEVICE_NAME)
+                .device(i2cBus.getDevice(IConstantesI2CNerell.PCA9685_ADDRESS))
+                .build();
+        final I2CManagerDevice<I2CDevice> pcfAlim = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(IConstantesI2CNerell.PCF_ALIM_DEVICE_NAME)
+                .device(i2cBus.getDevice(IConstantesI2CNerell.PCF_ALIM_ADDRESS))
+                .build();
+        final I2CManagerDevice<I2CDevice> pcf1 = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(IConstantesI2CNerell.PCF1_DEVICE_NAME)
+                .device(i2cBus.getDevice(IConstantesI2CNerell.PCF1_ADDRESS))
+                .build();
+        final I2CManagerDevice<I2CDevice> pcf2 = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(IConstantesI2CNerell.PCF2_DEVICE_NAME)
+                .device(i2cBus.getDevice(IConstantesI2CNerell.PCF2_ADDRESS))
+                .build();
+        final I2CManagerDevice<I2CDevice> sd21 = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(IConstantesI2CNerell.SERVO_DEVICE_NAME)
+                .device(i2cBus.getDevice(IConstantesI2CNerell.SD21_ADDRESS))
+                .build();
+        final I2CManagerDevice<I2CDevice> codeurMoteurDroit = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(IConstantesI2CNerell.CODEUR_MOTEUR_DROIT)
+                .device(i2cBus.getDevice(IConstantesI2CNerell.CODEUR_DROIT_ADDRESS))
+                .build();
+        final I2CManagerDevice<I2CDevice> codeurMoteurGauche = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(IConstantesI2CNerell.CODEUR_MOTEUR_GAUCHE)
+                .device(i2cBus.getDevice(IConstantesI2CNerell.CODEUR_GAUCHE_ADDRESS))
+                .build();
+
+        manager.registerDevice(sd21);
+        manager.registerDevice(codeurMoteurDroit);
+        manager.registerDevice(codeurMoteurGauche);
+        manager.registerDevice(pcfAlim);
+        manager.registerDevice(pcf1);
+        manager.registerDevice(pcf2);
+        manager.registerDevice(pca9685);
 
         return manager;
     }

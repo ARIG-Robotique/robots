@@ -9,8 +9,5 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(fluent = true, chain = true)
 public class BouchonI2CDevice {
-
     private int address;
-    private String name;
-
 }

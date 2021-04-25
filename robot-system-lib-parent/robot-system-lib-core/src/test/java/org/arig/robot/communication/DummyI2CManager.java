@@ -1,20 +1,18 @@
 package org.arig.robot.communication;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.exception.I2CException;
 
 /**
  * @author gdepuille on 15/03/15.
  */
 @Slf4j
 public class DummyI2CManager extends AbstractI2CManager<Byte> {
-    @Override
-    protected void scan() throws I2CException {
-        log.info("Dummy scan !");
-    }
 
     @Override
-    public void sendData(String deviceName, byte... datas) {}
+    protected void scanDevice(final I2CManagerDevice<Byte> device) { }
+
+    @Override
+    public void sendData(String deviceName, byte... data) {}
 
     @Override
     public byte getData(String deviceName) {

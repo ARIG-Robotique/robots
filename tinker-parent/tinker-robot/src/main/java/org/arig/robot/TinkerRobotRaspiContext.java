@@ -4,15 +4,16 @@ import com.pi4j.gpio.extension.pca.PCA9685GpioProvider;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.i2c.I2CBus;
+import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.communication.I2CManagerDevice;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.communication.raspi.RaspiI2CManager;
 import org.arig.robot.constants.IConstantesI2CTinker;
 import org.arig.robot.constants.IConstantesServosTinker;
-import org.arig.robot.exception.I2CException;
 import org.arig.robot.system.motors.PropulsionsMD22Motors;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,10 +33,20 @@ public class TinkerRobotRaspiContext {
     }
 
     @Bean
-    public II2CManager i2cManager(I2CBus i2cBus) throws I2CException {
-        final RaspiI2CManager manager = new RaspiI2CManager(i2cBus);
-        manager.registerDevice(IConstantesI2CTinker.PCA9685_DEVICE_NAME, IConstantesI2CTinker.PCA9685_ADDRESS);
-        manager.registerDevice(IConstantesI2CTinker.MD22_DEVICE_NAME, IConstantesI2CTinker.MD22_ADDRESS);
+    public II2CManager i2cManager(I2CBus i2cBus) throws IOException {
+        final RaspiI2CManager manager = new RaspiI2CManager();
+
+        final I2CManagerDevice<I2CDevice> pca9685 = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(IConstantesI2CTinker.PCA9685_DEVICE_NAME)
+                .device(i2cBus.getDevice(IConstantesI2CTinker.PCA9685_ADDRESS))
+                .build();
+        final I2CManagerDevice<I2CDevice> md22 = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(IConstantesI2CTinker.MD22_DEVICE_NAME)
+                .device(i2cBus.getDevice(IConstantesI2CTinker.MD22_ADDRESS))
+                .build();
+
+        manager.registerDevice(pca9685);
+        manager.registerDevice(md22);
 
         return manager;
     }
