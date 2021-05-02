@@ -12,7 +12,7 @@ import org.springframework.util.Assert;
 public abstract class AbstractPincesArriereService implements IPincesArriereService {
 
     @Autowired
-    private ServosService srv;
+    private NerellServosService srv;
 
     @Autowired
     private NerellRobotStatus rs;

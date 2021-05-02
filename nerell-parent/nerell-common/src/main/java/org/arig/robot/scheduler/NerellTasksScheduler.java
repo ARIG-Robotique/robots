@@ -9,7 +9,7 @@ import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.EcranService;
 import org.arig.robot.services.AbstractPincesAvantService;
-import org.arig.robot.services.ServosService;
+import org.arig.robot.services.NerellServosService;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class NerellTasksScheduler {
     private IAvoidingService avoidingService;
 
     @Autowired
-    private ServosService servosService;
+    private NerellServosService servosService;
 
     @Autowired
     private ISystemBlockerManager systemBlockerManager;

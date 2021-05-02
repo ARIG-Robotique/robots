@@ -21,7 +21,7 @@ public abstract class AbstractPincesAvantService implements IPincesAvantService 
     private NerellRobotStatus rs;
 
     @Autowired
-    private ServosService servosService;
+    private NerellServosService servosService;
 
     @Autowired
     private IPathFinder pathFinder;

@@ -12,7 +12,7 @@ public class NerellUtils {
 
     public static void main(String ... args) {
         // Définition d'un ID unique pour le nommage des fichiers
-        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(IConstantesConfig.executiondIdFormat));
         System.setProperty(IConstantesConfig.keyExecutionId, execId);
 
         SpringApplication.run(NerellUtils.class, args);

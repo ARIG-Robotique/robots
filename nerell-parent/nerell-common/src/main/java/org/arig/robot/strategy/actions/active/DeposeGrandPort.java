@@ -69,7 +69,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
             final Point entry = entryPoint();
             final Point entry2 = new Point(computeX(entry.getX(), !rs.pincesAvantEmpty()), entry.getY());
 
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             if (tableUtils.distance(entry2) > 200) {
                 mv.pathTo(entry2, !rs.pincesAvantEmpty() ? GotoOption.AVANT : GotoOption.ARRIERE);
@@ -79,7 +79,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
                 mv.gotoPoint(entry2, GotoOption.SANS_ORIENTATION, !rs.pincesAvantEmpty() ? GotoOption.AVANT : GotoOption.ARRIERE);
             }
 
-            mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(robotConfig.vitesse(1), robotConfig.vitesseOrientation());
 
             boolean pinceAvantDepose = false;
             do {
@@ -108,7 +108,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
                     step++;
                 }
 
-                mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+                mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
                 if (rs.team() == ETeam.BLEU) {
                     mv.gotoPoint(500, entry.getY());
                 } else {

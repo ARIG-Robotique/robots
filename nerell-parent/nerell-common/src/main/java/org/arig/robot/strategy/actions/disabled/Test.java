@@ -2,38 +2,24 @@ package org.arig.robot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.IPincesArriereService;
-import org.arig.robot.services.ServosService;
-import org.arig.robot.strategy.AbstractAction;
-import org.arig.robot.services.TrajectoryManager;
+import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class Test extends AbstractAction {
-
-    @Autowired
-    private TrajectoryManager mv;
+public class Test extends AbstractNerellAction {
 
     @Autowired
     private IPincesArriereService pincesArriereService;
 
-    @Autowired
-    private NerellRobotStatus rs;
-
-    @Autowired
-    private ServosService servos;
-
     @Getter
     private boolean completed = false;
-
 
     @Override
     public String name() {
@@ -62,21 +48,21 @@ public class Test extends AbstractAction {
 
             // Récupération des élements dans la pince avant
             rs.enablePincesAvant();
-            mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientationUltraHaute);
+            mv.setVitesse(robotConfig.vitesse(3), robotConfig.vitesseOrientation(10));
             mv.gotoPoint(1200,1200, GotoOption.AVANT);
             rs.disablePincesAvant();
 
             // Récupération de l'ecueil
-            mv.setVitesse(IConstantesNerellConfig.vitesseUltraHaute, IConstantesNerellConfig.vitesseOrientationUltraHaute);
+            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation(10));
             mv.gotoPoint(400,1200, GotoOption.AVANT);
             pincesArriereService.preparePriseEcueil();
             mv.gotoPoint(250,1200, GotoOption.ARRIERE);
             rs.enableCalageBordure();
-            mv.setVitesse(IConstantesNerellConfig.vitesseLente, IConstantesNerellConfig.vitesseOrientationBasse);
+            mv.setVitesse(robotConfig.vitesse(3), robotConfig.vitesseOrientation(3));
             mv.reculeMMSansAngle(60);
             pincesArriereService.finalisePriseEcueil(ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU);
 
-            mv.setVitesse(IConstantesNerellConfig.vitesseUltraHaute, IConstantesNerellConfig.vitesseOrientationUltraHaute);
+            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation(10));
             mv.gotoPoint(1200,1200, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
             mv.gotoOrientationDeg(180);
             pincesArriereService.deposePetitPort();

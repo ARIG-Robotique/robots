@@ -45,7 +45,7 @@ public class AsservissementCommands {
     private final IPidFilter pidOrientation;
 
     private void startMonitoring() {
-        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(IConstantesConfig.executiondIdFormat));
         System.setProperty(IConstantesConfig.keyExecutionId, execId);
         rs.enableForceMonitoring();
         monitoringWrapper.cleanAllPoints();
@@ -59,8 +59,8 @@ public class AsservissementCommands {
         final String execId = System.getProperty(IConstantesConfig.keyExecutionId);
 
         final File execFile = new File("./logs/" + execId + ".exec");
-        DateTimeFormatter execIdPattern = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        DateTimeFormatter savePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter execIdPattern = DateTimeFormatter.ofPattern(IConstantesConfig.executiondIdFormat);
+        DateTimeFormatter savePattern = DateTimeFormatter.ofPattern(IConstantesConfig.executiondDateFormat);
         List<String> lines = new ArrayList<>();
         lines.add(LocalDateTime.parse(execId, execIdPattern).format(savePattern));
         lines.add(LocalDateTime.now().format(savePattern));

@@ -25,7 +25,7 @@ import java.util.Optional;
 public class ActionsCommands {
 
     private INerellIOService ioService;
-    private NerellOrdonanceur nerellOrdonanceur;
+    private NerellOrdonanceur ordonanceur;
     private List<IAction> actions;
     private final NerellRobotStatus rs;
 
@@ -38,7 +38,7 @@ public class ActionsCommands {
     @ShellMethod("Calage bordure")
     @SneakyThrows
     public void calageBordure() {
-        nerellOrdonanceur.calageBordure(false);
+        ordonanceur.calageBordure(false);
     }
 
     @ShellMethod("Activation des services")

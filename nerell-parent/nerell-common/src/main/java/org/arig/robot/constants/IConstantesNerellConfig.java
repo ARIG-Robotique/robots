@@ -51,22 +51,12 @@ public interface IConstantesNerellConfig {
     // Configuration des vitesses //
     // -------------------------- //
 
-    long vitesseOrientationUltraHaute = 1000;
-    long vitesseOrientationSuperHaute = 800;
-    long vitesseOrientationBasse = 300;
-    long vitesseOrientationSuperBasse = 150;
+    long vitesseOrientationMax = 1000;
+    long vitesseOrientationMin = 150;
 
-    long vitesseUltraHaute = 1000;
-    long vitesseSuperHaute = 800;
-    long vitesseHaute = 600;
-    long vitesseMoyenneHaute = 500;
-    long vitesseMoyenneBasse = 400;
-    long vitesseLente = 300;
-    long vitesseSuperLente = 200;
-    long vitesseUltraLente = 100;
+    long vitesseMax = 1000;
+    long vitesseMin = 100;
 
-    long vitessePath = vitesseUltraHaute;
-    long vitesseOrientation = vitesseOrientationUltraHaute;
 
     // -------------- //
     // Parametres PID //

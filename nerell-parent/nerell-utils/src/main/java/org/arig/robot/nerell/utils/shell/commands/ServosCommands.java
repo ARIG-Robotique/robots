@@ -7,7 +7,7 @@ import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.services.INerellIOService;
 import org.arig.robot.services.IPincesArriereService;
 import org.arig.robot.services.IPincesAvantService;
-import org.arig.robot.services.ServosService;
+import org.arig.robot.services.NerellServosService;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -25,7 +25,7 @@ import java.util.Objects;
 public class ServosCommands {
 
     private final NerellRobotStatus rs;
-    private final ServosService servosService;
+    private final NerellServosService servosService;
     private final INerellIOService ioService;
     private final IPincesAvantService pincesAvantService;
     private final IPincesArriereService pincesArriereService;

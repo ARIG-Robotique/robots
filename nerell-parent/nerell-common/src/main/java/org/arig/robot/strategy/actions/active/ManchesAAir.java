@@ -59,7 +59,7 @@ public class ManchesAAir extends AbstractNerellAction {
     public void execute() {
         try {
             final Point entry = entryPoint();
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry);
 
             final double y = entry.getY();

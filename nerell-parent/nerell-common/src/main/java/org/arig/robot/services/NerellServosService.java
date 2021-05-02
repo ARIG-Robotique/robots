@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class ServosService extends AbstractServosService {
+public class NerellServosService extends AbstractServosService {
 
     @Autowired
     private SD21Servos servos;

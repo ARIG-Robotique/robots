@@ -61,6 +61,8 @@ public class NerellCommonContext {
                 .servosMinTimeMax(IConstantesServosNerell.MIN_TIME_MAX)
                 .servosBatch(IConstantesServosNerell.BATCH_CONFIG)
 
+                .vitesse(IConstantesNerellConfig.vitesseMin, IConstantesNerellConfig.vitesseMax, 10)
+                .vitesseOrientation(IConstantesNerellConfig.vitesseOrientationMin, IConstantesNerellConfig.vitesseOrientationMax, 10)
                 .fenetreArretDistance(conv.mmToPulse(IConstantesNerellConfig.arretDistanceMm))
                 .fenetreApprocheAvecFreinDistance(conv.mmToPulse(IConstantesNerellConfig.approcheAvecFreinDistanceMm))
                 .fenetreApprocheSansFreinDistance(conv.mmToPulse(IConstantesNerellConfig.approcheSansFreinDistanceMm))
@@ -167,7 +169,7 @@ public class NerellCommonContext {
     @Bean
     @DependsOn({"ecran", "rplidar"})
     public NerellOrdonanceur ordonanceur() {
-        return NerellOrdonanceur.getInstance();
+        return new NerellOrdonanceur();
     }
 
     @Bean

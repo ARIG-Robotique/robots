@@ -46,7 +46,7 @@ import java.math.BigDecimal;
 public class NerellRobotContext {
 
     @Bean
-    public RobotName robotNameBean() {
+    public RobotName robotName() {
         return new RobotName()
                 .name("Nerell (The Big One)")
                 .version("2021 (Sail the World)");

@@ -64,10 +64,10 @@ public class HautFond extends AbstractNerellAction {
             final double medianY = rs.hautFond().stream().map(Bouee::pt).mapToDouble(Point::getY).sorted()
                     .skip((nbHautFond - 1) / 2).limit(2 - nbHautFond % 2).average().orElse(entry.getY());
 
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry.getX(), Math.min(entry.getY(), medianY));
 
-            mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(robotConfig.vitesse(1), robotConfig.vitesseOrientation());
 
             if (rs.team() == ETeam.BLEU) {
                 mv.gotoOrientationDeg(0);

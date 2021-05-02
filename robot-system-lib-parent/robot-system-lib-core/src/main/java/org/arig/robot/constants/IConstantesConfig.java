@@ -8,6 +8,9 @@ public interface IConstantesConfig {
     // Clé pour la récupération de l'identifiant d'éxécution
     String keyExecutionId = "execution.id";
 
+    String executiondIdFormat = "yyyyMMddHHmmss";
+    String executiondDateFormat = "yyyy-MM-dd HH:mm:ss";
+
     // Paramètre VM pour ne pas lancer l'écran (pour débug local)
     String disableEcran = "disableEcran";
 }

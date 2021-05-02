@@ -21,7 +21,7 @@ public class NerellSimulator {
     @SneakyThrows
     public static void main(final String[] args) {
         // Définition d'un ID unique pour le nommage des fichiers
-        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(IConstantesConfig.executiondIdFormat));
         System.setProperty(IConstantesConfig.keyExecutionId, execId);
 
         ConfigurableApplicationContext context = SpringApplication.run(NerellSimulator.class, args);
@@ -44,7 +44,7 @@ public class NerellSimulator {
         context.getBean(BouchonARIG2WheelsEncoders.class).printLimiterValues();
 
         // Démarrage de l'ordonancement de match
-        NerellOrdonanceur.getInstance().run();
+        context.getBean(NerellOrdonanceur.class).run();
         context.close();
         System.exit(0);
     }

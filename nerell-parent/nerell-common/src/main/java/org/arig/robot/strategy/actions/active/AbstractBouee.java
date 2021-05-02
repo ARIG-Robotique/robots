@@ -63,11 +63,11 @@ public abstract class AbstractBouee extends AbstractNerellAction {
             // FIXME : si on fait le tour à cause d'un évittement ça fout tout en vrac
             final Point pointApproche = tableUtils.eloigner(entry, -distanceApproche);
 
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(pointApproche, GotoOption.AVANT);
 
             // aligne la bonne pince sur la bouée
-            mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(robotConfig.vitesse(1), robotConfig.vitesseOrientation());
 
             final double offsetOrientation = Math.toDegrees(Math.sin(offsetPince / distanceApproche));
             mv.alignFrontToAvecDecalage(entry.getX(), entry.getY(), offsetOrientation);

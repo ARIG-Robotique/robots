@@ -97,7 +97,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
     @Override
     public void execute() {
         try {
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             final Point entry = entryPoint();
             boolean onlyOne = !rs.doubleDepose() || (rs.pincesArriereEmpty() ^ rs.pincesAvantEmpty());

@@ -98,7 +98,7 @@ public class DeposePetitPort extends AbstractNerellAction {
             final double x = entry.getX();
             final double baseYStep = 260; // FIXME nouvelle face avant
 
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             GotoOption sensEntry = GotoOption.AVANT;
             if (moustacheFaites && rs.pincesAvantEmpty()) {
@@ -128,7 +128,7 @@ public class DeposePetitPort extends AbstractNerellAction {
                 servos.ascenseursAvantHaut(true);
                 servos.moustachesOuvert(true);
 
-                mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
+                mv.setVitesse(robotConfig.vitesse(1), robotConfig.vitesseOrientation());
 
                 mv.gotoPoint(x, 540, GotoOption.SANS_ORIENTATION);
                 servos.moustachesPoussette(true);
@@ -140,7 +140,7 @@ public class DeposePetitPort extends AbstractNerellAction {
                 rs.petitChenaux().addRouge(ECouleurBouee.ROUGE);
                 rs.petitChenaux().addVert(ECouleurBouee.VERT);
 
-                mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientationBasse);
+                mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation(3));
 
                 mv.tourneDeg(15);
                 rs.petitChenaux().addVert(ECouleurBouee.ROUGE);

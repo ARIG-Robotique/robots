@@ -42,6 +42,51 @@ public class RobotConfig {
     /**
      * mouvement
      */
+    private long vitesseMax;
+    private long vitesseMin;
+    private int vitesseDefRatio;
+    private long vitesseOrientationMax;
+    private long vitesseOrientationMin;
+    private int vitesseOrientationDefRatio;
+
+    public RobotConfig vitesse(long min, long max, int defRatio) {
+        this.vitesseMin = min;
+        this.vitesseMax = max;
+        this.vitesseDefRatio = defRatio;
+        return this;
+    }
+
+    public long vitesse() {
+        return vitesse(vitesseDefRatio);
+    }
+
+    /**
+     * Pour un nombre en 1 et 10 retourne une vitesse entre min et max
+     */
+    public long vitesse(int ratio) {
+        ratio = Math.min(10, Math.max(1, ratio)) - 1;
+        return ratio / 9 * (vitesseMax - vitesseMin) + vitesseMin;
+    }
+
+    public RobotConfig vitesseOrientation(long min, long max, int defRatio) {
+        this.vitesseOrientationMin = min;
+        this.vitesseOrientationMax = max;
+        this.vitesseOrientationDefRatio = defRatio;
+        return this;
+    }
+
+    public long vitesseOrientation() {
+        return vitesseOrientation(vitesseOrientationDefRatio);
+    }
+
+    /**
+     * Pour un nombre en 1 et 10 retourne une vitesse entre min et max
+     */
+    public long vitesseOrientation(int ratio) {
+        ratio = Math.min(10, Math.max(1, ratio)) - 1;
+        return ratio / 9 * (vitesseOrientationMax - vitesseOrientationMin) + vitesseOrientationMin;
+    }
+
     /* Fenetre d'arret / approche distance (en pulse) */
     private double fenetreApprocheSansFreinDistance;
     private double fenetreApprocheAvecFreinDistance;

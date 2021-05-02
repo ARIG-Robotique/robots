@@ -3,7 +3,7 @@ package org.arig.robot.nerell.utils.shell.commands;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.services.INerellIOService;
-import org.arig.robot.services.ServosService;
+import org.arig.robot.services.NerellServosService;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -15,7 +15,7 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 public class AlimentationCommands {
 
     private final INerellIOService ioService;
-    private final ServosService servosService;
+    private final NerellServosService servosService;
 
     public Availability auOK() {
         return ioService.auOk() ? Availability.available() : Availability.unavailable("Arret d'urgence non OK");

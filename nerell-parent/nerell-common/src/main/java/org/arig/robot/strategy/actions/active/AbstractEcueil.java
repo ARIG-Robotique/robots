@@ -56,7 +56,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             final Point entry = entryPoint();
             final double orientation = orientationPourPrise();
 
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             if (rs.strategy() == EStrategy.AGGRESSIVE && firstExecution && aggressiveIntermediaryPoint() != null) {
                 firstExecution = false;
 
@@ -80,7 +80,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             rs.enableCalageBordure();
             mv.reculeMM(60);
 
-            mv.setVitesse(IConstantesNerellConfig.vitesseSuperLente, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(robotConfig.vitesse(1), robotConfig.vitesseOrientation());
             rs.enableCalageBordure();
             mv.reculeMMSansAngle(120);
 
@@ -116,7 +116,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             onComplete();
 
             rs.enableAvoidance();
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);
 
         } catch (NoPathFoundException | AvoidingException e) {

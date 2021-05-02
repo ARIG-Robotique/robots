@@ -5,7 +5,7 @@ import org.arig.robot.model.RobotName;
 public class NerellUtilsContext extends NerellRobotContext {
 
     @Override
-    protected RobotName robotName() {
+    public RobotName robotName() {
         final RobotName rn = super.robotName();
         rn.name("Nerell Shell");
 

@@ -68,7 +68,7 @@ public class RetourAuPort extends AbstractNerellAction {
         boolean coordProjection = false;
         try {
             final Point entry = entryPoint();
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry, GotoOption.SANS_ARRET);
             setScore(coordProjection = true);
 

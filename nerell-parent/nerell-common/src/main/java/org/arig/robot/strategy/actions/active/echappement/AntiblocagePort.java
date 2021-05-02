@@ -43,7 +43,7 @@ public class AntiblocagePort extends AbstractNerellAction {
     @Override
     public void execute() {
         try {
-            mv.setVitesse(IConstantesNerellConfig.vitessePath, IConstantesNerellConfig.vitesseOrientation);
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.gotoPoint(entryPoint());
         } catch (AvoidingException e) {
             updateValidTime();
