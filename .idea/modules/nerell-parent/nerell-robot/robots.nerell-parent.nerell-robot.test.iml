@@ -21,6 +21,7 @@
     <orderEntry type="module" module-name="robots.robot-system-lib-parent.robot-system-lib-core.main" />
     <orderEntry type="library" name="Gradle: com.pi4j:pi4j-gpio-extension:1.2-jdk9-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: com.pi4j:pi4j-core:1.2-jdk9-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="robots.eurobot-system-lib-parent.eurobot-system-lib-core.main" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-json:2.1.18.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter:2.1.18.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-reactor-netty:2.1.18.RELEASE" level="project" />

@@ -15,12 +15,14 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="robots.nerell-parent.nerell-simulator.main" />
+    <orderEntry type="module" module-name="robots.eurobot-system-lib-parent.eurobot-system-lib-bouchon.main" />
     <orderEntry type="module" module-name="robots.robot-system-lib-parent.robot-system-lib-bouchon.main" />
     <orderEntry type="module" module-name="robots.nerell-parent.nerell-common.main" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-webflux:2.1.18.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-test:2.1.18.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: io.projectreactor:reactor-test:3.2.21.RELEASE" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.projectlombok:lombok:1.18.16" level="project" />
+    <orderEntry type="module" module-name="robots.eurobot-system-lib-parent.eurobot-system-lib-core.main" />
     <orderEntry type="module" module-name="robots.robot-system-lib-parent.robot-system-lib-core.main" />
     <orderEntry type="library" name="Gradle: commons-io:commons-io:2.6" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-json:2.1.18.RELEASE" level="project" />
