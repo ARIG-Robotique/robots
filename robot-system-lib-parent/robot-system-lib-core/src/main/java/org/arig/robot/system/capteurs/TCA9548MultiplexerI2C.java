@@ -37,6 +37,11 @@ public class TCA9548MultiplexerI2C implements II2CMultiplexerDevice {
     }
 
     public void disable() {
-        selectChannel((byte) 0);
+        try {
+            i2cManager.sendData(deviceName, (byte) 0x00);
+            lastSelectedChannel = 0;
+        } catch (I2CException e) {
+            log.error("Impossible de désactiver le multiplexeur {}", deviceName);
+        }
     }
 }
