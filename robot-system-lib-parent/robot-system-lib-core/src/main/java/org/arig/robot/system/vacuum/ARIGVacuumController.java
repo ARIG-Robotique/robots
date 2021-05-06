@@ -70,6 +70,10 @@ public class ARIGVacuumController {
         return new VacuumPumpData();
     }
 
+    /**
+     * Passe toute la gestion du vide en `DISABLED`.
+     * Voir #disable(byte)
+     */
     public void disableAll() {
         for (int idx = 0 ; idx < NB_PUMPS ; idx++) {
             states[idx] = VacuumPumpState.DISABLED;
@@ -78,6 +82,13 @@ public class ARIGVacuumController {
         sendToController();
     }
 
+    /**
+     * Passage à l'état `DISABLED` d'une gestion de vide.
+     * Etat de haute impédance pour l'electrovanne et la pome à vide.
+     *
+     * La lecture des IO (ADC, TOR) est inactive.
+     * @param pompeNb Numéro de pompe a piloter
+     */
     public void disable(byte pompeNb) {
         if (checkPompe(pompeNb)) {
             log.info("Désactivation de la pompe {}", pompeNb);
@@ -88,6 +99,11 @@ public class ARIGVacuumController {
         }
     }
 
+    /**
+     * La gestion du vide pour le circuit `pompeNb` est actif. Le capteur TOR déclenche la prise.
+     * La conversion analogique / numérique est en marche et l'état de présence sera calculé.
+     * @param pompeNb Numéro de pompe a piloter
+     */
     public void on(byte pompeNb) {
         if (checkPompe(pompeNb)) {
             log.info("Désactivation de la pompe {}", pompeNb);
@@ -98,6 +114,11 @@ public class ARIGVacuumController {
         }
     }
 
+    /**
+     * La gestion du vide pour le circuit `pompeNb` est inactif.
+     * Lors du changement d'état vers ce mode l'électrovanne est ouverte afin d'injecter de l'air dans le circuit.
+     * @param pompeNb Numéro de pompe a piloter
+     */
     public void off(byte pompeNb) {
         if (checkPompe(pompeNb)) {
             log.info("Désactivation de la pompe {}", pompeNb);
