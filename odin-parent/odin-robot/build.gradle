@@ -1,0 +1,16 @@
+description = "ARIG Association - Odin Robot"
+
+apply plugin: 'org.springframework.boot'
+
+jar {
+    enabled = true
+}
+
+bootJar {
+    classifier = 'exec'
+}
+
+dependencies {
+    compile project(':robot-system-lib-parent:robot-system-lib-raspi')
+    compile project(':odin-parent:odin-common')
+}

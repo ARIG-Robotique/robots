@@ -1,0 +1,5 @@
+description = "ARIG Association - Odin Common"
+
+dependencies {
+	compile project(':eurobot-system-lib-parent:eurobot-system-lib-core')
+}

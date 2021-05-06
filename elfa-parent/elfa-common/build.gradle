@@ -1,5 +1,0 @@
-description = "ARIG Association - Elfa Common"
-
-dependencies {
-	compile project(':robot-system-lib-parent:robot-system-lib-core')
-}

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.1
+Type=Application
+Encoding=UTF-8
+Name=Odin Debug
+Comment=Odin - Eurobot Cup
+Icon=/home/pi/robot-icon.png
+Exec=bash -lc 'cd /home/pi/odin && . debug.sh'
+Terminal=true

@@ -1,11 +1,10 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.EStrategy;
+import org.arig.robot.model.ENerellStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
@@ -43,7 +42,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
     @Override
     public int order() {
-        if (rs.strategy() == EStrategy.BASIC_SUD && firstExecution) {
+        if (rs.strategy() == ENerellStrategy.BASIC_SUD && firstExecution) {
             return 1000;
         }
         return 6 + (rs.ecueilEquipePris() ? 0 : 10) + tableUtils.alterOrder(entryPoint());
@@ -64,7 +63,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
             final Point entry = entryPoint();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            if (rs.strategy() != EStrategy.BASIC_SUD && tableUtils.distance(entry) > 100) {
+            if (rs.strategy() != ENerellStrategy.BASIC_SUD && tableUtils.distance(entry) > 100) {
                 mv.pathTo(entry);
             } else {
                 // Le path active l'évittement en auto, pas de path, pas d'evittement
@@ -79,7 +78,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
             final Point target = new Point(targetx, targety);
 
             if (rs.team() == ETeam.BLEU) {
-                if (rs.strategy() != EStrategy.BASIC_SUD) {
+                if (rs.strategy() != ENerellStrategy.BASIC_SUD) {
                     mv.gotoPoint(220, 1110);
                     mv.gotoOrientationDeg(-66);
                 }
@@ -102,7 +101,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
                 }
 
             } else {
-                if (rs.strategy() != EStrategy.BASIC_SUD) {
+                if (rs.strategy() != ENerellStrategy.BASIC_SUD) {
                     mv.gotoPoint(3000 - 220, 1110);
                     mv.gotoOrientationDeg(-180 + 66);
                 }

@@ -1,0 +1,64 @@
+---
+# Spring properties
+spring:
+  main:
+    web-application-type: NONE
+
+robot:
+  ui:
+    title: Odin Robot
+
+  # Système d'évittement
+  avoidance:
+      implementation: SEMI_COMPLETE
+
+  # Config
+  pathfinding:
+    enable: True
+    saveImages: True
+
+  # Monitoring
+  monitoring:
+    points:
+      enable: True
+
+# Logging
+logging:
+  file: ./logs/${execution.id}-traces.log
+  pattern:
+    file: "%d{ISO8601};%p;%t;%c;%m%n"
+
+---
+
+# Spring properties
+spring:
+  profiles: monitoring
+
+  main:
+    web-application-type: REACTIVE
+
+# Server config
+server:
+  port: 8080
+
+---
+
+# Spring properties
+spring:
+  profiles: simulateur
+
+robot:
+  ui:
+    title: Odin Simulateur
+
+---
+
+# Spring properties
+spring:
+  profiles: greg
+
+---
+
+# Spring properties
+spring:
+  profiles: damien

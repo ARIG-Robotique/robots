@@ -16,7 +16,7 @@ import java.util.Objects;
 @EqualsAndHashCode(callSuper = true)
 public class NerellRobotStatus extends EurobotStatus {
 
-    private EStrategy strategy = EStrategy.BASIC_NORD;
+    private ENerellStrategy strategy = ENerellStrategy.BASIC_NORD;
 
     @Override
     public void stopMatch() {
@@ -28,16 +28,16 @@ public class NerellRobotStatus extends EurobotStatus {
     public void setStrategy(int value) {
         switch (value) {
             case 0:
-                strategy = EStrategy.BASIC_NORD;
+                strategy = ENerellStrategy.BASIC_NORD;
                 break;
             case 1:
-                strategy = EStrategy.BASIC_SUD;
+                strategy = ENerellStrategy.BASIC_SUD;
                 break;
             case 2:
-                strategy = EStrategy.AGGRESSIVE;
+                strategy = ENerellStrategy.AGGRESSIVE;
                 break;
             case 3:
-                strategy = EStrategy.FINALE;
+                strategy = ENerellStrategy.FINALE;
                 break;
             default:
                 throw new IllegalArgumentException("Strategy invalide");

@@ -7,7 +7,7 @@ import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.EStrategy;
+import org.arig.robot.model.ENerellStrategy;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.AbstractPincesArriereService;
@@ -57,7 +57,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             final double orientation = orientationPourPrise();
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            if (rs.strategy() == EStrategy.AGGRESSIVE && firstExecution && aggressiveIntermediaryPoint() != null) {
+            if (rs.strategy() == ENerellStrategy.AGGRESSIVE && firstExecution && aggressiveIntermediaryPoint() != null) {
                 firstExecution = false;
 
                 rs.enableAvoidance();

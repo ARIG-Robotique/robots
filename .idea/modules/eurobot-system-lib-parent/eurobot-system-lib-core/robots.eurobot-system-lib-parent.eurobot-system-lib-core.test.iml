@@ -9,6 +9,7 @@
     <output-test url="file://$MODULE_DIR$/../../../../eurobot-system-lib-parent/eurobot-system-lib-core/out/test/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../../eurobot-system-lib-parent/eurobot-system-lib-core/src/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../../../eurobot-system-lib-parent/eurobot-system-lib-core/src/test/generated_tests" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/../../../../eurobot-system-lib-parent/eurobot-system-lib-core/src/test/java" isTestSource="true" />
     </content>
     <orderEntry type="inheritedJdk" />

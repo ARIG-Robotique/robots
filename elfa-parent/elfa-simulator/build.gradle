@@ -1,6 +1,0 @@
-description = "ARIG Association - Elfa Simulator"
-
-dependencies {
-	compile project(':elfa-parent:elfa-common')
-	compile project(':robot-system-lib-parent:robot-system-lib-bouchon')
-}

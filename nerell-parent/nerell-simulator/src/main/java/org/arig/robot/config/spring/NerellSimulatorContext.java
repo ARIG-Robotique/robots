@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.communication.I2CManagerDevice;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.communication.bouchon.BouchonI2CManager;
-import org.arig.robot.constants.IConstantesI2CSimulator;
+import org.arig.robot.constants.IConstantesI2CNerellSimulator;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.bouchon.BouchonEncoderValues;
@@ -70,7 +70,7 @@ public class NerellSimulatorContext {
 
     @Bean
     public SD21Servos servos() {
-        return new SD21Servos(IConstantesI2CSimulator.SERVO_DEVICE_NAME);
+        return new SD21Servos(IConstantesI2CNerellSimulator.SERVO_DEVICE_NAME);
     }
 
     @Bean
@@ -96,7 +96,7 @@ public class NerellSimulatorContext {
                 })
                 .collect(Collectors.toList());
 
-        return new BouchonARIG2WheelsEncoders(IConstantesI2CSimulator.CODEUR_MOTEUR_GAUCHE, IConstantesI2CSimulator.CODEUR_MOTEUR_DROIT, values);
+        return new BouchonARIG2WheelsEncoders(IConstantesI2CNerellSimulator.CODEUR_MOTEUR_GAUCHE, IConstantesI2CNerellSimulator.CODEUR_MOTEUR_DROIT, values);
     }
 
     @Bean

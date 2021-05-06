@@ -9,7 +9,7 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
-import org.arig.robot.model.EStrategy;
+import org.arig.robot.model.ENerellStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
@@ -200,7 +200,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
      */
     public void positionStrategy() {
         try {
-            if (nerellRobotStatus.strategy() == EStrategy.AGGRESSIVE) {
+            if (nerellRobotStatus.strategy() == ENerellStrategy.AGGRESSIVE) {
                 if (nerellRobotStatus.team() == ETeam.BLEU) {
                     trajectoryManager.gotoPoint(200, 1200);
                     trajectoryManager.alignFrontTo(1025, 1400);
@@ -208,7 +208,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                     trajectoryManager.gotoPoint(3000 - 200, 1200);
                     trajectoryManager.alignFrontTo(3000 - 1025, 1400);
                 }
-            } else if (nerellRobotStatus.strategy() == EStrategy.FINALE) {
+            } else if (nerellRobotStatus.strategy() == ENerellStrategy.FINALE) {
                 if (nerellRobotStatus.team() == ETeam.BLEU) {
                     trajectoryManager.gotoPoint(200, 1200);
                     trajectoryManager.gotoOrientationDeg(0);
@@ -216,7 +216,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                     trajectoryManager.gotoPoint(3000 - 200, 1200);
                     trajectoryManager.gotoOrientationDeg(0);
                 }
-            } else if (nerellRobotStatus.strategy() == EStrategy.BASIC_NORD) { // BASIC
+            } else if (nerellRobotStatus.strategy() == ENerellStrategy.BASIC_NORD) { // BASIC
                 // Aligne vers les bouées au nord du port
                 if (nerellRobotStatus.team() == ETeam.BLEU) {
                     trajectoryManager.gotoPoint(220, 1290);
@@ -225,7 +225,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                     trajectoryManager.gotoPoint(3000 - 220, 1290);
                     trajectoryManager.gotoOrientationDeg(180 - 66);
                 }
-            } else if (nerellRobotStatus.strategy() == EStrategy.BASIC_SUD) {
+            } else if (nerellRobotStatus.strategy() == ENerellStrategy.BASIC_SUD) {
                 // Aligne vers les bouées au sud du port
                 if (nerellRobotStatus.team() == ETeam.BLEU) {
                     trajectoryManager.gotoPoint(220, 1110);

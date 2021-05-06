@@ -1,6 +1,6 @@
 package org.arig.robot.config.spring;
 
-import org.arig.robot.nerell.utils.ShellInputReader;
+import org.arig.robot.nerell.utils.NerellShellInputReader;
 import org.jline.reader.LineReader;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
@@ -20,7 +20,7 @@ public class NerellUtilsShellContext {
     }
 
     @Bean
-    public ShellInputReader shellInputReader(@Lazy LineReader lineReader) {
-        return new ShellInputReader(lineReader);
+    public NerellShellInputReader shellInputReader(@Lazy LineReader lineReader) {
+        return new NerellShellInputReader(lineReader);
     }
 }

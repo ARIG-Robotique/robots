@@ -2,7 +2,7 @@ package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.EStrategy;
+import org.arig.robot.model.ENerellStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class EcueilCommunJaune extends AbstractEcueil {
 
     @Override
     public int order() {
-        if (rs.team() == ETeam.BLEU && rs.strategy() == EStrategy.AGGRESSIVE && isFirstExecution()) {
+        if (rs.team() == ETeam.BLEU && rs.strategy() == ENerellStrategy.AGGRESSIVE && isFirstExecution()) {
             return 1000;
         }
         return super.order();
@@ -52,7 +52,7 @@ public class EcueilCommunJaune extends AbstractEcueil {
         if (rs.team() == ETeam.JAUNE) {
             return super.isValid() && !rs.bouee(11).presente() && !rs.bouee(12).presente();
         } else {
-            return super.isValid() && (rs.strategy() == EStrategy.AGGRESSIVE || rs.getRemainingTime() < 40000);
+            return super.isValid() && (rs.strategy() == ENerellStrategy.AGGRESSIVE || rs.getRemainingTime() < 40000);
         }
     }
 
@@ -78,7 +78,7 @@ public class EcueilCommunJaune extends AbstractEcueil {
 
     @Override
     public void execute() {
-        if (rs.strategy() != EStrategy.AGGRESSIVE && bouee11.isValid()) {
+        if (rs.strategy() != ENerellStrategy.AGGRESSIVE && bouee11.isValid()) {
             bouee11.execute();
         }
         super.execute();

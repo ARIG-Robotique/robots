@@ -1,11 +1,10 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.EStrategy;
+import org.arig.robot.model.ENerellStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
@@ -36,7 +35,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
 
     @Override
     public int order() {
-        if (rs.strategy() == EStrategy.BASIC_NORD && firstExecution) {
+        if (rs.strategy() == ENerellStrategy.BASIC_NORD && firstExecution) {
             return 1000;
         }
 
@@ -58,7 +57,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
 
             final Point entry = entryPoint();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            if (rs.strategy() != EStrategy.BASIC_NORD && tableUtils.distance(entry) > 100) {
+            if (rs.strategy() != ENerellStrategy.BASIC_NORD && tableUtils.distance(entry) > 100) {
                 mv.pathTo(entry);
             } else {
                 // Le path active l'évittement en auto, pas de path, pas d'evittement
@@ -73,7 +72,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
             final Point target = new Point(targetx, targety);
 
             if (rs.team() == ETeam.BLEU) {
-                if (rs.strategy() != EStrategy.BASIC_NORD) {
+                if (rs.strategy() != ENerellStrategy.BASIC_NORD) {
                     mv.gotoPoint(220, 1290);
                     mv.gotoOrientationDeg(66);
                 }
@@ -91,7 +90,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
                 rs.bouee(6).setPrise();
 
             } else {
-                if (rs.strategy() != EStrategy.BASIC_NORD) {
+                if (rs.strategy() != ENerellStrategy.BASIC_NORD) {
                     mv.gotoPoint(3000 - 220, 1290);
                     mv.gotoOrientationDeg(180 - 66);
                 }
