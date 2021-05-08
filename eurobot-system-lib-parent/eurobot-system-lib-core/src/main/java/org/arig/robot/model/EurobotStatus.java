@@ -11,6 +11,9 @@ import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
 import org.arig.robot.utils.EcueilUtils;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,7 +24,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Data
 @Accessors(fluent = true)
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class EurobotStatus extends AbstractRobotStatus {
 
     public EurobotStatus() {
@@ -31,16 +34,7 @@ public class EurobotStatus extends AbstractRobotStatus {
     private ETeam team = ETeam.UNKNOWN;
 
     public void setTeam(int value) {
-        switch (value) {
-            case 1:
-                team = ETeam.JAUNE;
-                break;
-            case 2:
-                team = ETeam.BLEU;
-                break;
-            default:
-                team = ETeam.UNKNOWN;
-        }
+        team = ETeam.values()[value];
 
         final int tirageEcueil = 1;
         couleursEcueilEquipe(EcueilUtils.tirageEquipe(team()));
@@ -76,6 +70,7 @@ public class EurobotStatus extends AbstractRobotStatus {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private List<Bouee> bouees = Arrays.asList(
+            null,
             new Bouee(1, ECouleurBouee.ROUGE, new Point(300, 2000 - 400)),
             new Bouee(2, ECouleurBouee.VERT, new Point(450, 2000 - 510)),
             new Bouee(3, ECouleurBouee.ROUGE, new Point(450, 2000 - 1080)),
@@ -94,11 +89,31 @@ public class EurobotStatus extends AbstractRobotStatus {
             new Bouee(16, ECouleurBouee.ROUGE, new Point(2700, 2000 - 1200))
     );
 
-    public Bouee bouee(int numero) {
-        return bouees.get(numero - 1);
+    public void boueePrise(int numero) {
+        bouees.get(numero).setPrise();
+    }
+
+    public void boueePresente(int numero, boolean presente) {
+        bouees.get(numero).setPresente(presente);
+    }
+
+    public boolean boueePresente(int numero) {
+        return bouees.get(numero).presente();
+    }
+
+    public Point boueePt(int numero) {
+        return bouees.get(numero).pt();
+    }
+
+    public ECouleurBouee boueeCouleur(int numero) {
+        return bouees.get(numero).couleur();
     }
 
     private List<Bouee> hautFond = new ArrayList<>();
+
+    public boolean hautFondEmpty() {
+        return hautFond.isEmpty();
+    }
 
     private boolean ecueilEquipePris = false;
     private boolean ecueilCommunEquipePris = false;
@@ -116,16 +131,68 @@ public class EurobotStatus extends AbstractRobotStatus {
     }
 
     @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     private List<ECouleurBouee> grandPort = new ArrayList<>();
 
+    public void deposeGrandPort(ECouleurBouee bouee) {
+        grandPort.add(bouee);
+    }
+
     @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     private List<ECouleurBouee> petitPort = new ArrayList<>();
 
-    @Setter(AccessLevel.NONE)
-    private GrandChenaux grandChenaux = new GrandChenaux();
+    public void deposePetitPort(ECouleurBouee bouee) {
+        petitPort.add(bouee);
+    }
 
     @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    protected GrandChenaux grandChenaux = new GrandChenaux();
+
+    public boolean grandChenalVertEmpty() {
+        return grandChenaux.chenalVertEmpty();
+    }
+
+    public boolean grandChenalRougeEmpty() {
+        return grandChenaux.chenalRougeEmpty();
+    }
+
+    public void deposeGrandChenalVert(ECouleurBouee... bouees) {
+        grandChenaux.addVert(bouees);
+    }
+
+    public void deposeGrandChenalRouge(ECouleurBouee... bouees) {
+        grandChenaux.addRouge(bouees);
+    }
+
+    public Chenaux cloneGrandChenaux() {
+        return grandChenaux.copy();
+    }
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     private PetitChenaux petitChenaux = new PetitChenaux();
+
+    public boolean petitChenalVertEmpty() {
+        return petitChenaux.chenalVertEmpty();
+    }
+
+    public boolean petitChenalRougeEmpty() {
+        return petitChenaux.chenalRougeEmpty();
+    }
+
+    public void deposePetitChenalVert(ECouleurBouee... bouees) {
+        petitChenaux.addVert(bouees);
+    }
+
+    public void deposePetitChenalRouge(ECouleurBouee... bouees) {
+        petitChenaux.addRouge(bouees);
+    }
+
+    public Chenaux clonePetitChenaux() {
+        return petitChenaux.copy();
+    }
 
     public int calculerPoints() {
         int points = 2 + (phare ? 13 : 0);
@@ -156,7 +223,7 @@ public class EurobotStatus extends AbstractRobotStatus {
     @Override
     public Map<String, Object> gameStatus() {
         Map<String, Object> r = new HashMap<>();
-        r.put("bouees", bouees.stream().map(Bouee::prise).collect(Collectors.toList()));
+        r.put("bouees", bouees.stream().map(b -> !b.presente()).collect(Collectors.toList()));
         r.put("hautFond", new ArrayList<>(hautFond));
         r.put("grandPort", grandPort);
         r.put("grandChenalVert", grandChenaux.chenalVert);
@@ -176,4 +243,101 @@ public class EurobotStatus extends AbstractRobotStatus {
         r.put("couleursEcueilCommunAdverse", couleursEcueilCommunAdverse);
         return r;
     }
+
+    /**
+     * SERIALIZATION
+     * Implémentation custom
+     */
+
+    public void writeObject(ObjectOutputStream os) throws IOException {
+        os.writeByte(team.ordinal());
+
+        os.writeBoolean(ecueilEquipePris);
+        os.writeBoolean(ecueilCommunEquipePris);
+        os.writeBoolean(ecueilCommunAdversePris);
+        os.writeBoolean(mancheAAir1);
+        os.writeBoolean(mancheAAir2);
+        os.writeBoolean(phare);
+
+        os.writeByte(bouees.size()); // pas utilisé mais au cas ou
+        for (Bouee bouee : bouees) {
+            if (bouee != null) {
+                os.writeByte(bouee.state().ordinal());
+            }
+        }
+
+        os.writeByte(grandPort.size());
+        for (ECouleurBouee bouee : grandPort) {
+            os.writeByte(bouee.ordinal());
+        }
+
+        os.writeByte(petitPort.size());
+        for (ECouleurBouee bouee : petitPort) {
+            os.writeByte(bouee.ordinal());
+        }
+
+        grandChenaux.writeObject(os);
+        petitChenaux.writeObject(os);
+
+        os.writeByte(directionGirouette.ordinal());
+        for (ECouleurBouee bouee : couleursEcueilCommunEquipe) {
+            os.writeByte(bouee.ordinal());
+        }
+
+        os.writeByte(hautFond.size());
+        for (Bouee bouee : hautFond) {
+            os.writeByte(bouee.couleur().ordinal());
+            os.writeShort((int) bouee.pt().getX());
+            os.writeShort((int) bouee.pt().getY());
+        }
+    }
+
+    public void readObject(ObjectInputStream is) throws IOException {
+        setTeam(is.readByte());
+
+        ecueilEquipePris = is.readBoolean();
+        ecueilCommunEquipePris = is.readBoolean();
+        ecueilCommunAdversePris = is.readBoolean();
+        mancheAAir1 = is.readBoolean();
+        mancheAAir2 = is.readBoolean();
+        phare = is.readBoolean();
+
+        byte nbBoues = is.readByte(); // pas utilisé mais au cas ou
+        for (Bouee bouee : bouees) {
+            if (bouee != null) {
+                bouee.state(Bouee.EState.values()[is.readByte()]);
+            }
+        }
+
+        grandPort.clear();
+        byte nbGrandPort = is.readByte();
+        for (byte i = 0; i < nbGrandPort; i++) {
+            grandPort.add(ECouleurBouee.values()[is.readByte()]);
+        }
+
+        petitPort.clear();
+        byte nbPetitPort = is.readByte();
+        for (byte i = 0; i < nbPetitPort; i++) {
+            petitPort.add(ECouleurBouee.values()[is.readByte()]);
+        }
+
+        grandChenaux.readObject(is);
+        petitChenaux.readObject(is);
+
+        directionGirouette = EDirectionGirouette.values()[is.readByte()];
+        for (byte i = 0; i < 5; i++) {
+            ECouleurBouee bouee = ECouleurBouee.values()[is.readByte()];
+            couleursEcueilCommunEquipe[i] = bouee;
+            couleursEcueilCommunAdverse[4 - i] = bouee == ECouleurBouee.INCONNU ? ECouleurBouee.INCONNU : bouee == ECouleurBouee.VERT ? ECouleurBouee.ROUGE : ECouleurBouee.VERT;
+        }
+
+        hautFond.clear();
+        byte nbHautFond = is.readByte();
+        for (byte i = 0; i < nbHautFond; i++) {
+            ECouleurBouee couleur = ECouleurBouee.values()[is.readByte()];
+            Point pt = new Point(is.readShort(), is.readShort());
+            hautFond.add(new Bouee(0, couleur, pt));
+        }
+    }
+
 }

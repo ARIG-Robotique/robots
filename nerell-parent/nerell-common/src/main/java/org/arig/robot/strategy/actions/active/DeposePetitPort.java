@@ -56,13 +56,14 @@ public class DeposePetitPort extends AbstractNerellAction {
 
     @Override
     public int order() {
-        Chenaux chenauxFuture = rs.petitChenaux().with(
-                ArrayUtils.subarray(rs.pincesAvant(), 0, 2),
-                ArrayUtils.subarray(rs.pincesAvant(), 2, 4)
-        );
+        Chenaux chenauxFuture = rs.clonePetitChenaux();
+        int currentScoreChenaux = chenauxFuture.score();
         List<ECouleurBouee> petitPortFutur = new ArrayList<>();
 
-        if (!rs.pincesArriereEmpty() && rs.grandChenaux().deposeArriereImpossible()) {
+        chenauxFuture.addRouge(ArrayUtils.subarray(rs.pincesAvant(), 0, 2));
+        chenauxFuture.addVert(ArrayUtils.subarray(rs.pincesAvant(), 2, 4));
+
+        if (!rs.pincesArriereEmpty() && !rs.deposeArriereGrandChenalPossible()) {
             chenauxFuture.addVert(ArrayUtils.subarray(rs.pincesArriere(), 0, 2));
             petitPortFutur.add(rs.pincesArriere()[2]);
             chenauxFuture.addRouge(ArrayUtils.subarray(rs.pincesArriere(), 3, 4));
@@ -73,7 +74,7 @@ public class DeposePetitPort extends AbstractNerellAction {
             chenauxFuture.addVert(ECouleurBouee.ROUGE, ECouleurBouee.VERT);
         }
 
-        int order = chenauxFuture.score() + petitPortFutur.size() - rs.petitChenaux().score();
+        int order = chenauxFuture.score() + petitPortFutur.size() - currentScoreChenaux;
         return order + tableUtils.alterOrder(entryPoint());
     }
 
@@ -109,9 +110,9 @@ public class DeposePetitPort extends AbstractNerellAction {
 
             // on a shooté la bouée
             if (rs.team() == ETeam.JAUNE) {
-                rs.bouee(8).setPrise();
+                rs.boueePrise(8);
             } else {
-                rs.bouee(9).setPrise();
+                rs.boueePrise(9);
             }
 
             rs.disablePincesAvant();
@@ -136,16 +137,16 @@ public class DeposePetitPort extends AbstractNerellAction {
                 mv.gotoPoint(x, baseYStep, GotoOption.SANS_ORIENTATION);
                 moustacheFaites = true;
 
-                rs.petitChenaux().addRouge(ECouleurBouee.ROUGE);
-                rs.petitChenaux().addVert(ECouleurBouee.VERT);
+                rs.deposePetitChenalRouge(ECouleurBouee.ROUGE);
+                rs.deposePetitChenalVert(ECouleurBouee.VERT);
 
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation(30));
 
                 mv.tourneDeg(15);
-                rs.petitChenaux().addVert(ECouleurBouee.ROUGE);
+                rs.deposePetitChenalVert(ECouleurBouee.ROUGE);
 
                 mv.tourneDeg(-30);
-                rs.petitChenaux().addRouge(ECouleurBouee.VERT);
+                rs.deposePetitChenalRouge(ECouleurBouee.VERT);
 
                 mv.gotoOrientationDeg(-90);
 

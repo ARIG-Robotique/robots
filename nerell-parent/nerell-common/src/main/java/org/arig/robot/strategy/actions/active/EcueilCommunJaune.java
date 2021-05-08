@@ -50,7 +50,7 @@ public class EcueilCommunJaune extends AbstractEcueil {
     @Override
     public boolean isValid() {
         if (rs.team() == ETeam.JAUNE) {
-            return super.isValid() && !rs.bouee(11).presente() && !rs.bouee(12).presente();
+            return super.isValid() && !rs.boueePresente(11) && !rs.boueePresente(12);
         } else {
             return super.isValid() && (rs.strategy() == ENerellStrategy.AGGRESSIVE || rs.getRemainingTime() < 40000);
         }
@@ -73,7 +73,7 @@ public class EcueilCommunJaune extends AbstractEcueil {
 
     @Override
     protected void onAgressiveMvtDone() {
-        rs.bouee(11).setPrise();
+        rs.boueePrise(11);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class EcueilCommunJaune extends AbstractEcueil {
     @Override
     protected void onComplete() {
         // on shooté la bouée
-        rs.bouee(12).setPrise();
+        rs.boueePrise(12);
         rs.ecueilCommunJauneDispo((byte) 0);
 
         if (rs.team() == ETeam.JAUNE) {

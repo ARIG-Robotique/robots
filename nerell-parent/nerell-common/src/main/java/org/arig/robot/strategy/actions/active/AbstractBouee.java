@@ -1,13 +1,10 @@
 package org.arig.robot.strategy.actions.active;
 
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.Bouee;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
@@ -16,22 +13,25 @@ import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AbstractBouee extends AbstractNerellAction {
 
     @Autowired
     protected INerellIOService io;
 
-    abstract public Bouee bouee();
+    protected int bouee;
+
+    protected AbstractBouee(int bouee) {
+        this.bouee = bouee;
+    }
 
     @Override
     public String name() {
-        return "Bouee " + bouee().numero();
+        return "Bouee " + bouee;
     }
 
     @Override
     public Point entryPoint() {
-        return bouee().pt();
+        return rs.boueePt(bouee);
     }
 
     @Override
@@ -41,8 +41,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        final Bouee bouee = bouee();
-        return isTimeValid() && bouee.presente() && getPinceCible(bouee) != 0 && rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime;
+        return isTimeValid() && rs.boueePresente(bouee) && getPinceCible() != 0 && rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime;
     }
 
     @Override
@@ -50,12 +49,11 @@ public abstract class AbstractBouee extends AbstractNerellAction {
         try {
             rs.enablePincesAvant();
 
-            final Bouee bouee = bouee();
-            final int pinceCible = getPinceCible(bouee);
+            final int pinceCible = getPinceCible();
             final double distanceApproche = IEurobotConfig.pathFindingTailleBouee / 2.0 + 10;
             final double offsetPince = getOffsetPince(pinceCible);
 
-            log.info("Prise de la bouee {} {} dans la pince avant {}", bouee.numero(), bouee.couleur(), pinceCible);
+            log.info("Prise de la bouee {} {} dans la pince avant {}", bouee, rs.boueeCouleur(bouee), pinceCible);
 
             final Point entry = entryPoint();
 
@@ -74,7 +72,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
 
             // prise
             mv.avanceMM(180);
-            bouee.setPrise();
+            rs.boueePrise(bouee);
 
             complete();
         } catch (NoPathFoundException | AvoidingException e) {
@@ -83,9 +81,9 @@ public abstract class AbstractBouee extends AbstractNerellAction {
         }
     }
 
-    private int getPinceCible(final Bouee bouee) {
+    private int getPinceCible() {
         // FIXME obsolète avec le capteur couleur ?
-        if (bouee.couleur() == ECouleurBouee.ROUGE) {
+        if (rs.boueeCouleur(bouee) == ECouleurBouee.ROUGE) {
             if (!io.presenceVentouse2()) {
                 return 2;
             }

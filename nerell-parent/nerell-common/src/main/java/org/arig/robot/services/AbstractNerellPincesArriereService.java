@@ -73,9 +73,9 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
                 final ECouleurBouee couleurPince = rs.pincesArriere()[i];
                 if (couleurPince == couleurChenal || couleurPince == ECouleurBouee.INCONNU) {
                     if (couleurChenal == ECouleurBouee.ROUGE) {
-                        rs.grandChenaux().addRouge(couleurPince);
+                        rs.deposeGrandChenalRouge(couleurPince);
                     } else {
-                        rs.grandChenaux().addVert(couleurPince);
+                        rs.deposeGrandChenalVert(couleurPince);
                     }
                     rs.pinceArriere(i, null);
                 }
@@ -85,9 +85,9 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
             deposeTable(null);
 
             if (couleurChenal == ECouleurBouee.ROUGE) {
-                rs.grandChenaux().addRouge(rs.pincesArriere());
+                rs.deposeGrandChenalRouge(rs.pincesArriere());
             } else {
-                rs.grandChenaux().addVert(rs.pincesArriere());
+                rs.deposeGrandChenalVert(rs.pincesArriere());
             }
             rs.clearPincesArriere();
         }
@@ -101,7 +101,7 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
 
         for (ECouleurBouee eCouleurBouee : rs.pincesArriere()) {
             if (eCouleurBouee != null) {
-                rs.grandPort().add(eCouleurBouee);
+                rs.deposeGrandPort(eCouleurBouee);
             }
         }
         rs.clearPincesArriere();
@@ -114,11 +114,11 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
     public boolean deposePetitPort() {
         deposeTable(null);
 
-        rs.petitChenaux().addVert(rs.pincesArriere()[0], rs.pincesArriere()[1]);
+        rs.deposePetitChenalVert(rs.pincesArriere()[0], rs.pincesArriere()[1]);
         if (rs.pincesArriere()[2] != null) {
-            rs.petitPort().add(rs.pincesArriere()[2]);
+            rs.deposePetitPort(rs.pincesArriere()[2]);
         }
-        rs.petitChenaux().addRouge(rs.pincesArriere()[3], rs.pincesArriere()[4]);
+        rs.deposePetitChenalRouge(rs.pincesArriere()[3], rs.pincesArriere()[4]);
 
         rs.clearPincesArriere();
 

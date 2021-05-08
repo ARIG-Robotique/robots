@@ -2,7 +2,6 @@ package org.arig.robot.system.pathfinding;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
-import org.arig.robot.model.Bouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
@@ -35,24 +34,23 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
                 continue;
             }
 
-            Bouee bouee = rs.bouee(nb);
-            if (rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime && bouee.presente()) {
-                obstacles.add(tableUtils.createPolygonObstacle(bouee.pt(),
+            if (rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime && rs.boueePresente(nb)) {
+                obstacles.add(tableUtils.createPolygonObstacle(rs.boueePt(nb),
                         nb <= 4 || nb >= 13 ? IEurobotConfig.pathFindingTailleBoueePort : IEurobotConfig.pathFindingTailleBouee));
             }
         }
 
         // ajoute les grand chenaux
-        if (rs.team() == ETeam.BLEU && !rs.grandChenaux().chenalVertEmpty()) {
+        if (rs.team() == ETeam.BLEU && !rs.grandChenalVertEmpty()) {
             obstacles.add(buildChenal(new Point(330, 2000 - 515)));
         }
-        if (rs.team() == ETeam.BLEU && !rs.grandChenaux().chenalRougeEmpty()) {
+        if (rs.team() == ETeam.BLEU && !rs.grandChenalRougeEmpty()) {
             obstacles.add(buildChenal(new Point(330, 2000 - 1085)));
         }
-        if (rs.team() == ETeam.JAUNE && !rs.grandChenaux().chenalVertEmpty()) {
+        if (rs.team() == ETeam.JAUNE && !rs.grandChenalVertEmpty()) {
             obstacles.add(buildChenal(new Point(3000 - 330, 2000 - 1085)));
         }
-        if (rs.team() == ETeam.JAUNE && !rs.grandChenaux().chenalRougeEmpty()) {
+        if (rs.team() == ETeam.JAUNE && !rs.grandChenalRougeEmpty()) {
             obstacles.add(buildChenal(new Point(3000 - 330, 2000 - 515)));
         }
 

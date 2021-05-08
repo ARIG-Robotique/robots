@@ -43,9 +43,9 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
                     disablePompe(i);
 
                     if (couleurChenal == ECouleurBouee.ROUGE) {
-                        rs.grandChenaux().addRouge(couleurPince);
+                        rs.deposeGrandChenalRouge(couleurPince);
                     } else {
-                        rs.grandChenaux().addVert(couleurPince);
+                        rs.deposeGrandChenalVert(couleurPince);
                     }
                     rs.pinceAvant(i, null);
                 }
@@ -60,9 +60,9 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
             ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
 
             if (couleurChenal == ECouleurBouee.ROUGE) {
-                rs.grandChenaux().addRouge(rs.pincesAvant());
+                rs.deposeGrandChenalRouge(rs.pincesAvant());
             } else {
-                rs.grandChenaux().addVert(rs.pincesAvant());
+                rs.deposeGrandChenalVert(rs.pincesAvant());
             }
             rs.clearPincesAvant();
         }
@@ -82,8 +82,8 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
         }
         ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
 
-        rs.petitChenaux().addRouge(ArrayUtils.subarray(rs.pincesAvant(), 0, 2));
-        rs.petitChenaux().addVert(ArrayUtils.subarray(rs.pincesAvant(), 2, 4));
+        rs.deposePetitChenalRouge(ArrayUtils.subarray(rs.pincesAvant(), 0, 2));
+        rs.deposePetitChenalVert(ArrayUtils.subarray(rs.pincesAvant(), 2, 4));
         rs.clearPincesAvant();
 
         return true;
@@ -101,7 +101,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
 
         for (ECouleurBouee eCouleurBouee : rs.pincesAvant()) {
             if (eCouleurBouee != null) {
-                rs.grandPort().add(eCouleurBouee);
+                rs.deposeGrandPort(eCouleurBouee);
             }
         }
         rs.clearPincesAvant();
