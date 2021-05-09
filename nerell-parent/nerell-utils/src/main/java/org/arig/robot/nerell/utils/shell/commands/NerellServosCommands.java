@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.services.INerellIOService;
-import org.arig.robot.services.IPincesArriereService;
-import org.arig.robot.services.IPincesAvantService;
+import org.arig.robot.services.INerellPincesArriereService;
+import org.arig.robot.services.INerellPincesAvantService;
 import org.arig.robot.services.NerellServosService;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
@@ -27,8 +27,8 @@ public class NerellServosCommands {
     private final NerellRobotStatus rs;
     private final NerellServosService servosService;
     private final INerellIOService ioService;
-    private final IPincesAvantService pincesAvantService;
-    private final IPincesArriereService pincesArriereService;
+    private final INerellPincesAvantService pincesAvantService;
+    private final INerellPincesArriereService pincesArriereService;
 
     private final int nbLoop = 3;
 

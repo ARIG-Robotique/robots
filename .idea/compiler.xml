@@ -29,6 +29,7 @@
         <module name="robots.eurobot-system-lib-parent.eurobot-system-lib-bouchon.main" />
         <module name="robots.nerell-parent.nerell-utils.test" />
         <module name="robots.odin-parent.main" />
+        <module name="robots.nerell-parent.nerell-simulator.test" />
         <module name="robots.tinker-parent.tinker-robot.test" />
         <module name="robots.nerell-parent.nerell-utils.main" />
         <module name="robots.odin-parent.odin-utils.main" />

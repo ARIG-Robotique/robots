@@ -10,7 +10,7 @@ import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ENerellStrategy;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.services.AbstractPincesArriereService;
+import org.arig.robot.services.AbstractNerellPincesArriereService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,7 +21,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
     private boolean firstExecution = true;
 
     @Autowired
-    private AbstractPincesArriereService pincesArriereService;
+    private AbstractNerellPincesArriereService pincesArriereService;
 
     protected abstract double orientationPourPrise();
 

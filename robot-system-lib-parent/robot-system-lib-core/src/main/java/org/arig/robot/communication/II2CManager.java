@@ -29,6 +29,14 @@ public interface II2CManager {
     void reset() throws I2CException;
 
     /**
+     * Enregistrement des multiplexeurs
+     *
+     * @param multiplexerDeviceName Nom du multiplexeur
+     * @param multiplexerDevice Implémentation du multiplexeur
+     */
+    void registerMultiplexerDevice(String multiplexerDeviceName, II2CMultiplexerDevice multiplexerDevice);
+
+    /**
      * Send data.
      *
      * @param deviceName the address

@@ -24,8 +24,8 @@ public class BouchonARIG2WheelsEncoders extends ARIG2WheelsEncoders {
     private final Random rand = new Random();
     private final List<BouchonEncoderValues> values;
 
-    public BouchonARIG2WheelsEncoders(final String deviceNameGauche, final String deviceNameDroit, final List<BouchonEncoderValues> values) {
-        super(deviceNameGauche, deviceNameDroit);
+    public BouchonARIG2WheelsEncoders(final List<BouchonEncoderValues> values) {
+        super("Codeur Gauche", "Codeur Droit");
         this.values = values;
     }
 

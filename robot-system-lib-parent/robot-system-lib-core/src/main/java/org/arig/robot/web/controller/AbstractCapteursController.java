@@ -15,9 +15,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-@RequestMapping("/capteurs")
+@RequestMapping(AbstractCapteursController.ROOT_PATH)
 @Profile(IConstantesConfig.profileMonitoring)
 public abstract class AbstractCapteursController implements InitializingBean {
+
+    protected static final String ROOT_PATH = "/capteurs";
 
     @Autowired
     private IIOService ioService;
@@ -27,6 +29,8 @@ public abstract class AbstractCapteursController implements InitializingBean {
     protected final Map<String, DoubleValue> analogiqueInfos = new LinkedHashMap<>();
 
     protected final Map<String, StringValue> textInfos = new LinkedHashMap<>();
+
+    protected final Map<String, StringValue> couleursInfos = new LinkedHashMap<>();
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -42,6 +46,7 @@ public abstract class AbstractCapteursController implements InitializingBean {
         all.put("numerique", numerique());
         all.put("analogique", analogique());
         all.put("text", text());
+        all.put("couleurs", couleurs());
         return all;
     }
 
@@ -57,6 +62,11 @@ public abstract class AbstractCapteursController implements InitializingBean {
 
     @GetMapping(value = "/text")
     public final Map<String, String> text() {
+        return extractValue(textInfos);
+    }
+
+    @GetMapping(value = "/couleurs")
+    public final Map<String, String> couleurs() {
         return extractValue(textInfos);
     }
 

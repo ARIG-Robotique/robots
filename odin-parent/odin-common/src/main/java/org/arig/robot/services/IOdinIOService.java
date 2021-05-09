@@ -10,21 +10,21 @@ public interface IOdinIOService extends IIOService {
     // --------------------------------------------------------- //
 
     // Numerique
-    boolean presenceVentouse1();
-    boolean presenceVentouse2();
-    boolean presenceVentouse3();
-    boolean presenceVentouse4();
+    boolean presenceVentouseAvant1();
+    boolean presenceVentouseAvant2();
+    boolean presenceVentouseArriere1();
+    boolean presenceVentouseArriere2();
 
     // Analogique
-    ECouleurBouee couleurBouee1();
-    ECouleurBouee couleurBouee2();
-    ECouleurBouee couleurBouee3();
-    ECouleurBouee couleurBouee4();
+    ECouleurBouee couleurBoueeAvant1();
+    ECouleurBouee couleurBoueeAvant2();
+    ECouleurBouee couleurBoueeArriere1();
+    ECouleurBouee couleurBoueeArriere2();
 
-    ColorData couleurRaw1();
-    ColorData couleurRaw2();
-    ColorData couleurRaw3();
-    ColorData couleurRaw4();
+    ColorData couleurRawAvant1();
+    ColorData couleurRawAvant2();
+    ColorData couleurRawArriere1();
+    ColorData couleurRawArriere2();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
@@ -37,14 +37,14 @@ public interface IOdinIOService extends IIOService {
     // -------------------------- BUSINESS ----------------------- //
     // ----------------------------------------------------------- //
 
-    void enablePompe1();
-    void enablePompe2();
-    void enablePompe3();
-    void enablePompe4();
+    void enablePompeAvant1();
+    void enablePompeAvant2();
+    void enablePompeArriere1();
+    void enablePompeArriere2();
 
-    void disablePompe1();
-    void disablePompe2();
-    void disablePompe3();
-    void disablePompe4();
+    void disablePompeAvant1();
+    void disablePompeAvant2();
+    void disablePompeArriere1();
+    void disablePompeArriere2();
 
 }

@@ -7,7 +7,7 @@ public class AbstractIOServiceBouchon implements IIOService {
 
     @Setter
     @Accessors(fluent = true)
-    private boolean au = true;
+    private boolean au = false;
 
     @Setter
     @Accessors(fluent = true)

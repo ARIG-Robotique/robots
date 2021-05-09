@@ -15,7 +15,7 @@ import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.ecran.UpdatePhotoInfos;
 import org.arig.robot.services.BaliseService;
-import org.arig.robot.services.EcranService;
+import org.arig.robot.services.NerellEcranService;
 import org.arig.robot.services.NerellServosService;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     private BaliseService baliseService;
 
     @Autowired
-    private EcranService ecranService;
+    private NerellEcranService ecranService;
 
     @Override
     public String getPathfinderMap() {

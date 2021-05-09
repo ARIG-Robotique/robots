@@ -140,6 +140,7 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
      * @param multiplexerDeviceName Nom du device I2C multiplexeur
      * @param multiplexerDevice     Implementation a enregistrer
      */
+    @Override
     public final void registerMultiplexerDevice(String multiplexerDeviceName, II2CMultiplexerDevice multiplexerDevice) {
         Assert.hasText(multiplexerDeviceName, "Le nom du multiplexeur doit être spécifié");
         Assert.notNull(multiplexerDevice, "Implementation du multiplexeur doit être spécifié");

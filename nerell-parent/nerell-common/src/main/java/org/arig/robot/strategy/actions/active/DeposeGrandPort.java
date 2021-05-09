@@ -1,15 +1,14 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.services.IPincesArriereService;
-import org.arig.robot.services.IPincesAvantService;
+import org.arig.robot.services.INerellPincesArriereService;
+import org.arig.robot.services.INerellPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,10 +18,10 @@ import org.springframework.stereotype.Component;
 public class DeposeGrandPort extends AbstractNerellAction {
 
     @Autowired
-    private IPincesAvantService pincesAvantService;
+    private INerellPincesAvantService pincesAvantService;
 
     @Autowired
-    private IPincesArriereService pincesArriereService;
+    private INerellPincesArriereService pincesArriereService;
 
     private int step = 0;
 

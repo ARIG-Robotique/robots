@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.NerellOrdonanceur;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IConstantesServosNerell;
-import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.common.LimiterFilter.LimiterType;
 import org.arig.robot.filters.pid.IPidFilter;
@@ -27,7 +26,6 @@ import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.system.pathfinding.impl.NoPathFinderImpl;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -84,11 +82,6 @@ public class NerellCommonContext {
     @Bean
     public ConvertionRobotUnit convertisseur() {
         return new ConvertionRobotUnit(IConstantesNerellConfig.countPerMm, IConstantesNerellConfig.countPerDeg);
-    }
-
-    @Bean
-    public TableUtils tableUtils() {
-        return new TableUtils(IEurobotConfig.tableWidth, IEurobotConfig.tableHeight, IEurobotConfig.tableBorder);
     }
 
     @Bean

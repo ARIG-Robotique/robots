@@ -43,6 +43,10 @@ public class SD21Servos implements InitializingBean {
         }
     }
 
+    public SD21Servos() {
+        this("SD21");
+    }
+
     /**
      * Instantiates a new s d21 servos.
      *

@@ -27,6 +27,7 @@ public interface IConstantesOdinConfig {
     // Configuration des convertions //
     // ----------------------------- //
 
+    // TODO Configuration a faire
     // 40000 p => 1524.5 mm : 40000 / 1524.5 = 26,238110856
     double countPerMm = 26.238110856;
 
@@ -61,7 +62,7 @@ public interface IConstantesOdinConfig {
     // -------------- //
     // Parametres PID //
     // -------------- //
-
+    // TODO Configuration a faire
     double kcrDistance = 21.5;
     double tcrDistance = 0.04;
     double kpDistance = 9;   // 6.5;   // 12.90

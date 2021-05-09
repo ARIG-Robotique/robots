@@ -6,9 +6,9 @@ import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
+import org.arig.robot.services.AbstractNerellPincesAvantService;
 import org.arig.robot.services.BaliseService;
-import org.arig.robot.services.EcranService;
-import org.arig.robot.services.AbstractPincesAvantService;
+import org.arig.robot.services.NerellEcranService;
 import org.arig.robot.services.NerellServosService;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
@@ -33,13 +33,13 @@ public class NerellTasksScheduler {
     private ISystemBlockerManager systemBlockerManager;
 
     @Autowired
-    private EcranService ecranService;
+    private NerellEcranService ecranService;
 
     @Autowired
     private BaliseService baliseService;
 
     @Autowired
-    private AbstractPincesAvantService pincesAvant;
+    private AbstractNerellPincesAvantService pincesAvant;
 
     private final SignalEdgeFilter risingEnablePinces = new SignalEdgeFilter(false, Type.RISING);
 

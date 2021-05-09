@@ -24,4 +24,25 @@ public interface IConstantesI2COdin {
 
     String SERVO_DEVICE_NAME = "SD21";
     int SD21_ADDRESS = 0x61;
+
+    String PUMP_CONTROLLER_DEVICE_NAME = "Controlleurs Pompes";
+    int PUMP_CONTROLLER_ADDRESS = 0x26;
+
+    String ALIM_MESURE_DEVICE_NAME = "Mesure alimentation";
+    int ALIM_MESURE_ADDRESS = 0x20;
+
+    String MULTIPLEXEUR_I2C_NAME = "Mux TCA";
+    int MULTIPLEXEUR_I2C_ADDRESS = 0x70;
+
+    String COULEUR_AVANT_1_NAME = "Couleurs avant 1";
+    byte COULEUR_AVANT_1_MUX_CHANNEL = 0;
+
+    String COULEUR_AVANT_2_NAME = "Couleurs avant 2";
+    byte COULEUR_AVANT_2_MUX_CHANNEL = 1;
+
+    String COULEUR_ARRIERE_1_NAME = "Couleurs arriere 1";
+    byte COULEUR_ARRIERE_1_MUX_CHANNEL = 2;
+
+    String COULEUR_ARRIERE_2_NAME = "Couleurs arriere 2";
+    byte COULEUR_ARRIERE_2_MUX_CHANNEL = 3;
 }
