@@ -96,8 +96,7 @@ public class BaliseService extends AbstractBaliseService {
     }
 
     public void lectureHautFond() {
-        if (statut != null && statut.getDetection() != null) {
-
+        if (statut != null && statut.getDetection() != null && statut.getDetection().getHautFond() != null) {
             // construit les bouées détectées, avec un flag pour savoir si elles sont nouvelles ou pas
             final List<MutablePair<Bouee, Boolean>> hautFondDetecte = Stream.of(statut.getDetection().getHautFond())
                     .map(b -> {
