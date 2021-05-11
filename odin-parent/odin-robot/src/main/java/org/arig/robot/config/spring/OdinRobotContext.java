@@ -21,6 +21,7 @@ import org.arig.robot.system.avoiding.impl.BasicAvoidingService;
 import org.arig.robot.system.avoiding.impl.BasicRetryAvoidingService;
 import org.arig.robot.system.avoiding.impl.CompleteAvoidingService;
 import org.arig.robot.system.avoiding.impl.SemiCompleteAvoidingService;
+import org.arig.robot.system.capteurs.ARIG2ChannelsAlimentationSensor;
 import org.arig.robot.system.capteurs.EcranOverSocket;
 import org.arig.robot.system.capteurs.IEcran;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
@@ -33,6 +34,7 @@ import org.arig.robot.system.motors.PropulsionsPCA9685Motors;
 import org.arig.robot.system.process.EcranProcess;
 import org.arig.robot.system.process.RPLidarBridgeProcess;
 import org.arig.robot.system.servos.SD21Servos;
+import org.arig.robot.system.vacuum.ARIGVacuumController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -93,10 +95,12 @@ public class OdinRobotContext {
         final I2CManagerDevice<I2CDevice> alimMesure = I2CManagerDevice.<I2CDevice>builder()
                 .deviceName(IConstantesI2COdin.ALIM_MESURE_DEVICE_NAME)
                 .device(i2cBus.getDevice(IConstantesI2COdin.ALIM_MESURE_ADDRESS))
+                .scanCmd(new byte[]{0x00})
                 .build();
         final I2CManagerDevice<I2CDevice> controlleurPompes = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.PUMP_CONTROLLER_DEVICE_NAME)
-                .device(i2cBus.getDevice(IConstantesI2COdin.PUMP_CONTROLLER_ADDRESS))
+                .deviceName(IConstantesI2COdin.VACUUM_CONTROLLER_DEVICE_NAME)
+                .device(i2cBus.getDevice(IConstantesI2COdin.VACUUM_CONTROLLER_ADDRESS))
+                .scanCmd(new byte[]{0x00})
                 .build();
         final I2CManagerDevice<I2CDevice> mux = I2CManagerDevice.<I2CDevice>builder()
                 .deviceName(IConstantesI2COdin.MULTIPLEXEUR_I2C_NAME)
@@ -153,6 +157,16 @@ public class OdinRobotContext {
     @Bean
     public ARIG2WheelsEncoders encoders() {
         return new ARIG2WheelsEncoders(IConstantesI2COdin.CODEUR_MOTEUR_GAUCHE, IConstantesI2COdin.CODEUR_MOTEUR_DROIT);
+    }
+
+    @Bean
+    public ARIGVacuumController vacuumController() {
+        return new ARIGVacuumController(IConstantesI2COdin.VACUUM_CONTROLLER_DEVICE_NAME);
+    }
+
+    @Bean
+    public ARIG2ChannelsAlimentationSensor alimentationSensor() {
+        return new ARIG2ChannelsAlimentationSensor(IConstantesI2COdin.ALIM_MESURE_DEVICE_NAME);
     }
 
     @Bean

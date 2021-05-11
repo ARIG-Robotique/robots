@@ -5,6 +5,8 @@ import org.arig.robot.communication.II2CManager;
 import org.arig.robot.exception.I2CException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.nio.charset.StandardCharsets;
+
 @Slf4j
 public class ARIGVacuumController {
 
@@ -61,7 +63,7 @@ public class ARIGVacuumController {
         }
     }
 
-    public VacuumPumpData getData(byte pompeNb) {
+    public VacuumPumpData getData(int pompeNb) {
         if (checkPompe(pompeNb)) {
             return pumpData[pompeNb - 1];
         }
@@ -89,7 +91,7 @@ public class ARIGVacuumController {
      * La lecture des IO (ADC, TOR) est inactive.
      * @param pompeNb Numéro de pompe a piloter
      */
-    public void disable(byte pompeNb) {
+    public void disable(int pompeNb) {
         if (checkPompe(pompeNb)) {
             log.info("Désactivation de la pompe {}", pompeNb);
             if (states[pompeNb - 1] != VacuumPumpState.DISABLED) {
@@ -104,9 +106,9 @@ public class ARIGVacuumController {
      * La conversion analogique / numérique est en marche et l'état de présence sera calculé.
      * @param pompeNb Numéro de pompe a piloter
      */
-    public void on(byte pompeNb) {
+    public void on(int pompeNb) {
         if (checkPompe(pompeNb)) {
-            log.info("Désactivation de la pompe {}", pompeNb);
+            log.info("Activation de la pompe {}", pompeNb);
             if (states[pompeNb - 1] != VacuumPumpState.ON) {
                 states[pompeNb - 1] = VacuumPumpState.ON;
                 sendToController();
@@ -119,7 +121,7 @@ public class ARIGVacuumController {
      * Lors du changement d'état vers ce mode l'électrovanne est ouverte afin d'injecter de l'air dans le circuit.
      * @param pompeNb Numéro de pompe a piloter
      */
-    public void off(byte pompeNb) {
+    public void off(int pompeNb) {
         if (checkPompe(pompeNb)) {
             log.info("Désactivation de la pompe {}", pompeNb);
             if (states[pompeNb - 1] != VacuumPumpState.OFF) {
@@ -132,8 +134,9 @@ public class ARIGVacuumController {
     public void printVersion() {
         try {
             i2cManager.sendData(deviceName, VERSION_REGISTER);
-            final byte[] version = i2cManager.getData(deviceName, 10);
-            log.info("ARIG Vacuum Controller (V : {})", version);
+            final byte[] data = i2cManager.getData(deviceName, 10);
+            final String version = new String(data, StandardCharsets.UTF_8);
+            log.info("ARIG Vacuum Controller version {}, {} pompes", version, NB_PUMPS);
         } catch (I2CException e) {
             log.error("Erreur lors de la récupération de la version de la carte ARIG Vacuum controller");
         }
@@ -159,7 +162,7 @@ public class ARIGVacuumController {
         return new byte[size];
     }
 
-    private boolean checkPompe(final byte pompeNb) {
+    private boolean checkPompe(final int pompeNb) {
         final boolean result = pompeNb >= 1 && pompeNb <= NB_PUMPS;
         if (!result) {
             log.warn("Numéro de pompe invalide : {}", pompeNb);
