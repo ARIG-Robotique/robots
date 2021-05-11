@@ -8,7 +8,10 @@
   <component name="NewModuleRootManager">
     <output-test url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-simulator/out/test/classes" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-simulator/src/test" />
+    <content url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-simulator/src/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-simulator/src/test/generated_tests" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../../nerell-parent/nerell-simulator/src/test/java" isTestSource="true" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="robots.nerell-parent.nerell-simulator.main" />

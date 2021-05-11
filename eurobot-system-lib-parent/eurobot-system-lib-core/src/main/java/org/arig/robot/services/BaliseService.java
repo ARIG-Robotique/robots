@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
-@Service
 public class BaliseService extends AbstractBaliseService {
 
     @Autowired

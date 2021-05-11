@@ -24,11 +24,9 @@ import org.arig.robot.system.avoiding.impl.SemiCompleteAvoidingService;
 import org.arig.robot.system.capteurs.EcranOverSocket;
 import org.arig.robot.system.capteurs.IEcran;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
-import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
 import org.arig.robot.system.capteurs.TCA9548MultiplexerI2C;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
-import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.PropulsionsPCA9685Motors;
@@ -231,13 +229,6 @@ public class OdinRobotContext {
     public IEcran ecran() throws Exception {
         final File socketFile = new File(EcranProcess.socketPath);
         return new EcranOverSocket(socketFile);
-    }
-
-    @Bean
-    public IVisionBalise visionBalise(Environment env) {
-        final String host = env.getRequiredProperty("balise.socket.host");
-        final Integer port = env.getRequiredProperty("balise.socket.port", Integer.class);
-        return new VisionBaliseOverSocket(host, port);
     }
 
     @Bean

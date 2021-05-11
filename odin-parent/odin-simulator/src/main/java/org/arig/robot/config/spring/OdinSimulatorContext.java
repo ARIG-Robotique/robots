@@ -116,17 +116,6 @@ public class OdinSimulatorContext {
     }
 
     @Bean
-    public IVisionBalise visionBalise(Environment env) {
-        if (StringUtils.equalsIgnoreCase(env.getProperty("balise.impl", String.class, "bouchon"), "bouchon")) {
-            return new VisionBaliseBouchon();
-        } else {
-            final String host = env.getRequiredProperty("balise.socket.host");
-            final Integer port = env.getRequiredProperty("balise.socket.port", Integer.class);
-            return new VisionBaliseOverSocket(host, port);
-        }
-    }
-
-    @Bean
     public IAvoidingService avoidingService() {
         return new AvoidingServiceBouchon();
     }
