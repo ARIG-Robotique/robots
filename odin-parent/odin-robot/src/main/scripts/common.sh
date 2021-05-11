@@ -23,7 +23,7 @@ JAVA_HOME=/opt/bellsoft-jre-11.0.6
 
 PATH=${JAVA_HOME}/bin:${PATH}
 java -version
-JVM_ARGS="-XX:+UseG1GC -XX:MaxGCPauseMillis=10 -Xlog:gc:./gc.log -Xmx256m -Xms256m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m --add-exports java.base/jdk.internal.misc=ALL-UNNAMED --add-exports java.base/jdk.internal.ref=ALL-UNNAMED"
+JVM_ARGS="-XX:+UseG1GC -XX:MaxGCPauseMillis=10 -Xlog:gc:./gc.log -Xmx1024m -Xms1024m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m --add-exports java.base/jdk.internal.misc=ALL-UNNAMED --add-exports java.base/jdk.internal.ref=ALL-UNNAMED"
 DEBUG_ARGS="-Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:8787"
 
 echo "  - JVM Args   : ${JVM_ARGS}"
