@@ -24,7 +24,7 @@ public abstract class AbstractAlimentationSensor implements IAlimentationSensor 
 
     protected final AlimentationSensorValue[] alimentations;
 
-    protected AbstractAlimentationSensor(String deviceName, byte nbChannels) {
+    protected AbstractAlimentationSensor(String deviceName, int nbChannels) {
         if (nbChannels > 8) {
             throw new IllegalArgumentException("Le nombre de canaux doit être inférieur ou égal à 8");
         }

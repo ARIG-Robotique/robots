@@ -4,10 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.I2CException;
 
 @Slf4j
-public class AlimentationSensor extends AbstractAlimentationSensor {
+public class ARIG2ChannelsAlimentationSensor extends AbstractAlimentationSensor {
 
-    public AlimentationSensor(final String deviceName, final byte nbChannels) {
-        super(deviceName, nbChannels);
+    public ARIG2ChannelsAlimentationSensor(final String deviceName) {
+        super(deviceName, 2);
     }
 
     @Override

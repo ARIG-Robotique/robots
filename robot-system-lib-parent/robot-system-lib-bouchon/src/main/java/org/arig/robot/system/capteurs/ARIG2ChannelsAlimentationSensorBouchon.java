@@ -2,10 +2,10 @@ package org.arig.robot.system.capteurs;
 
 import org.arig.robot.model.capteurs.AlimentationSensorValue;
 
-public class AlimentationSensorBouchon extends AbstractAlimentationSensor {
+public class ARIG2ChannelsAlimentationSensorBouchon extends AbstractAlimentationSensor {
 
-    public AlimentationSensorBouchon(final String deviceName, final byte nbChannels) {
-        super(deviceName, nbChannels);
+    public ARIG2ChannelsAlimentationSensorBouchon(final String deviceName) {
+        super(deviceName, 2);
     }
 
     public void mock(int channel, AlimentationSensorValue mock) {
