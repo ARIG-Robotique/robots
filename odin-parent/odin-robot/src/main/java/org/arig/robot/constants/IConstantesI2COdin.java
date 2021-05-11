@@ -25,8 +25,8 @@ public interface IConstantesI2COdin {
     String SERVO_DEVICE_NAME = "SD21";
     int SD21_ADDRESS = 0x61;
 
-    String PUMP_CONTROLLER_DEVICE_NAME = "Controlleurs Pompes";
-    int PUMP_CONTROLLER_ADDRESS = 0x26;
+    String VACUUM_CONTROLLER_DEVICE_NAME = "Vacuum ctrl";
+    int VACUUM_CONTROLLER_ADDRESS = 0x26;
 
     String ALIM_MESURE_DEVICE_NAME = "Mesure alimentation";
     int ALIM_MESURE_ADDRESS = 0x20;

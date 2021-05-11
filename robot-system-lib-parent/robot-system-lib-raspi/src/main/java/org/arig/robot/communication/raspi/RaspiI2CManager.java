@@ -51,7 +51,7 @@ public class RaspiI2CManager extends AbstractI2CManager<I2CDevice> {
             throw new I2CException(message);
 
         } catch (IOException e) {
-            String message = String.format("Erreur de lecture de la carte %s : %s", deviceName, e.toString());
+            String message = String.format("Erreur de lecture de la carte %s : %s", deviceName, e);
             log.error(message);
             throw new I2CException(message, e);
         }

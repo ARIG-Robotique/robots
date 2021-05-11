@@ -10,12 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public class TCA9548MultiplexerI2C implements II2CMultiplexerDevice {
 
+    private static byte DISABLED_MUX = -1;
+
     @Autowired
     private II2CManager i2cManager;
 
     private final String deviceName;
 
-    private byte lastSelectedChannel = -1;
+    private byte lastSelectedChannel = DISABLED_MUX;
 
     public TCA9548MultiplexerI2C(final String deviceName) {
         this.deviceName = deviceName;
@@ -39,7 +41,7 @@ public class TCA9548MultiplexerI2C implements II2CMultiplexerDevice {
     public void disable() {
         try {
             i2cManager.sendData(deviceName, (byte) 0x00);
-            lastSelectedChannel = 0;
+            lastSelectedChannel = DISABLED_MUX;
         } catch (I2CException e) {
             log.error("Impossible de désactiver le multiplexeur {}", deviceName);
         }

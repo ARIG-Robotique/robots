@@ -68,7 +68,7 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
                 scanDevice(d);
                 log.info("Scan du device {} [OK]", d.deviceName());
             } catch (IOException | I2CException e) {
-                log.warn("Impossible de communiquer avec le périphérique {} : {}", d.deviceName(), e);
+                log.warn("Impossible de communiquer avec le périphérique {}", d.deviceName());
                 deviceNotFound.add(d.deviceName());
             }
         };
@@ -87,7 +87,7 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
                     .collect(Collectors.toList())
                     .forEach(processScan);
 
-            log.info("Désactivation de tous les multiplexeur");
+            log.info("Désactivation de tous les multiplexeurs");
             getMultiplexerDeviceMap().forEach((k, v) -> v.disable());
         }
 

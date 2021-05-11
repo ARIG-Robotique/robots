@@ -17,7 +17,7 @@ public class I2CManagerDevice<D> {
     private final Byte multiplexerChannel;
 
     public boolean isMultiplexed() {
-        return StringUtils.isNotBlank(multiplexerDeviceName) && multiplexerChannel > 0;
+        return StringUtils.isNotBlank(multiplexerDeviceName);
     }
 
     @Override
