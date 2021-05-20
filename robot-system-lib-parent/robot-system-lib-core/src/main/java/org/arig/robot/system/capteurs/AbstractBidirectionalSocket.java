@@ -5,7 +5,7 @@ import org.arig.robot.communication.socket.AbstractQuery;
 import org.arig.robot.communication.socket.AbstractResponse;
 
 import java.io.IOException;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.Executor;
 
 /**
  * Wrapper pour communication full-duplex avec deux sockets
@@ -22,7 +22,7 @@ public abstract class AbstractBidirectionalSocket<T extends Enum<T>> extends Abs
 
     private final AbstractSocketClient<T> client;
 
-    public AbstractBidirectionalSocket(final int serverPort, final String hostname, final int port, final int timeout, final ThreadPoolExecutor executor) {
+    public AbstractBidirectionalSocket(final int serverPort, final String hostname, final int port, final int timeout, final Executor executor) {
         super(serverPort, executor);
 
         client = new AbstractSocketClient<T>(hostname, port, timeout) {

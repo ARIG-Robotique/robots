@@ -25,10 +25,10 @@ import java.util.stream.Collectors;
 @Data
 @Accessors(fluent = true)
 @EqualsAndHashCode(callSuper = false)
-public class EurobotStatus extends AbstractRobotStatus {
+public class EurobotStatus extends AbstractRobotStatus<EStatusEvent> {
 
     public EurobotStatus() {
-        super(IEurobotConfig.matchTimeMs);
+        super(IEurobotConfig.matchTimeMs, EStatusEvent.class);
     }
 
     private ETeam team = ETeam.UNKNOWN;
@@ -340,4 +340,54 @@ public class EurobotStatus extends AbstractRobotStatus {
         }
     }
 
+    @Override
+    public void integrateJournal(List<EventLog<EStatusEvent>> journal) {
+        for (EventLog<EStatusEvent> event : journal) {
+            byte value = event.getValue();
+            switch (event.getEvent()) {
+                case ECUEIL_EQUIPE_PRIS:
+                    ecueilEquipePris = true;
+                    break;
+                case ECUEIL_COMMUN_EQUIPE_PRIS:
+                    ecueilCommunEquipePris = true;
+                    break;
+                case ECUEIL_COMMUN_ADVERSE_PRIS:
+                    ecueilCommunAdversePris = true;
+                    break;
+                case MANCHE_AIR_1:
+                    mancheAAir1 = true;
+                    break;
+                case MANCHE_AIR_2:
+                    mancheAAir2 = true;
+                    break;
+                case PHARE:
+                    phare = true;
+                    break;
+                case PAVILLON:
+                    pavillon = true;
+                    break;
+                case BOUEE_PRISE:
+                    boueePrise(value);
+                    break;
+                case DEPOSE_GRAND_PORT:
+                    deposeGrandPort(ECouleurBouee.values()[value]);
+                    break;
+                case DEPOSE_PETIT_PORT:
+                    deposePetitPort(ECouleurBouee.values()[value]);
+                    break;
+                case DEPOSE_GRAND_CHENAL_ROUGE:
+                    deposeGrandChenalRouge(ECouleurBouee.values()[value]);
+                    break;
+                case DEPOSE_GRAND_CHENAL_VERT:
+                    deposeGrandChenalVert(ECouleurBouee.values()[value]);
+                    break;
+                case DEPOSE_PETIT_CHENAL_ROUGE:
+                    deposePetitChenalRouge(ECouleurBouee.values()[value]);
+                    break;
+                case DEPOSE_PETIT_CHENAL_VERT:
+                    deposePetitChenalVert(ECouleurBouee.values()[value]);
+                    break;
+            }
+        }
+    }
 }

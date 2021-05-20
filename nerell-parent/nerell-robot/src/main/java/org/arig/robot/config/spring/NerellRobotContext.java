@@ -16,6 +16,7 @@ import org.arig.robot.communication.raspi.RaspiI2CManager;
 import org.arig.robot.constants.IConstantesI2CNerell;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.RobotName;
+import org.arig.robot.system.RobotGroupOverSocket;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.avoiding.impl.BasicAvoidingService;
 import org.arig.robot.system.avoiding.impl.BasicRetryAvoidingService;
@@ -44,6 +45,7 @@ import org.springframework.core.env.Environment;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.concurrent.ExecutorService;
 
 @Slf4j
 @Configuration
@@ -235,6 +237,16 @@ public class NerellRobotContext {
         final String host = env.getRequiredProperty("balise.socket.host");
         final Integer port = env.getRequiredProperty("balise.socket.port", Integer.class);
         return new VisionBaliseOverSocket(host, port);
+    }
+
+    @Bean
+    public RobotGroupOverSocket robotGroupOverSocket(Environment env, ExecutorService taskExecutor) throws IOException {
+        final Integer serverPort = env.getRequiredProperty("robot.server.port", Integer.class);
+        final String odinHost = env.getRequiredProperty("odin.socket.host");
+        final Integer odinPort = env.getRequiredProperty("odin.socket.port", Integer.class);
+        RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(serverPort, odinHost, odinPort, taskExecutor);
+        robotGroupOverSocket.openSocket();
+        return robotGroupOverSocket;
     }
 
     @Bean

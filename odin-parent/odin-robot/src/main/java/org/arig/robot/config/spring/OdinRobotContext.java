@@ -16,6 +16,7 @@ import org.arig.robot.communication.raspi.RaspiI2CManager;
 import org.arig.robot.constants.IConstantesI2COdin;
 import org.arig.robot.constants.IConstantesOdinConfig;
 import org.arig.robot.model.RobotName;
+import org.arig.robot.system.RobotGroupOverSocket;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.avoiding.impl.BasicAvoidingService;
 import org.arig.robot.system.avoiding.impl.BasicRetryAvoidingService;
@@ -43,6 +44,7 @@ import org.springframework.core.env.Environment;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.concurrent.ExecutorService;
 
 @Slf4j
 @Configuration
@@ -243,6 +245,14 @@ public class OdinRobotContext {
     public IEcran ecran() throws Exception {
         final File socketFile = new File(EcranProcess.socketPath);
         return new EcranOverSocket(socketFile);
+    }
+
+    @Bean
+    public RobotGroupOverSocket robotGroupOverSocket(Environment env, ExecutorService taskExecutor) {
+        final Integer serverPort = env.getRequiredProperty("robot.server.port", Integer.class);
+        final String nerellHost = env.getRequiredProperty("nerell.socket.host");
+        final Integer nerellPort = env.getRequiredProperty("nerell.socket.port", Integer.class);
+        return new RobotGroupOverSocket(serverPort, nerellHost, nerellPort, taskExecutor);
     }
 
     @Bean

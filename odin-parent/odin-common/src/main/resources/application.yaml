@@ -22,6 +22,15 @@ robot:
     points:
       enable: True
 
+  server:
+    port: 9101
+
+# Nerell
+nerell:
+  socket:
+    host: nerell
+    port: 9100
+
 # Logging
 logging:
   file: ./logs/${execution.id}-traces.log

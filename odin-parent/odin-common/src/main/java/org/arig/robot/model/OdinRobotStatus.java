@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @Accessors(fluent = true)
 @EqualsAndHashCode(callSuper = true)
-public class OdinRobotStatus extends EurobotStatus {
+public class OdinRobotStatus extends EurobotStatusJournalized {
 
     private EOdinStrategy strategy = EOdinStrategy.BASIC_NORD;
 

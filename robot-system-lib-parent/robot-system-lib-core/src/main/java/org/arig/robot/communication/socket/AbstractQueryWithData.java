@@ -18,6 +18,11 @@ public abstract class AbstractQueryWithData<T extends Enum, D extends Serializab
         super(action);
     }
 
+    protected AbstractQueryWithData(T action, D data) {
+        super(action);
+        setData(data);
+    }
+
     @JsonIgnore
     protected boolean hasData() {
         return data != null;

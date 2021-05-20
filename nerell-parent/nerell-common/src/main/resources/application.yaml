@@ -22,6 +22,15 @@ robot:
     points:
       enable: True
 
+  server:
+    port: 9100
+
+# Odin
+odin:
+  socket:
+    host: odin
+    port: 9101
+
 # Balise de vision
 balise:
   socket:

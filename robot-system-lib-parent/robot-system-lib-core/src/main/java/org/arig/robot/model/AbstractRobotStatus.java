@@ -8,17 +8,35 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @Data
 @Accessors(fluent = true)
-public abstract class AbstractRobotStatus {
+public abstract class AbstractRobotStatus<T extends Enum<T>> {
 
     private final int matchTimeMs;
 
-    public AbstractRobotStatus(final int matchTimeMs) {
+    private final Class<T> journalEventEnum;
+
+    @Getter
+    protected final List<EventLog<T>> journal = Collections.synchronizedList(new ArrayList<>());
+
+    public AbstractRobotStatus(final int matchTimeMs, Class<T> journalEventEnum) {
         this.matchTimeMs = matchTimeMs;
+        this.journalEventEnum = journalEventEnum;
+    }
+
+    public void clearJournal() {
+        journal.clear();
     }
 
     private boolean simulateur = false;
@@ -134,10 +152,84 @@ public abstract class AbstractRobotStatus {
         calageBordure = false;
     }
 
+    private String currentAction = null;
+
     public abstract int calculerPoints();
 
     public abstract Map<String, ?> gameStatus();
 
     public abstract Map<String, Integer> scoreStatus();
+
+    public abstract void writeObject(ObjectOutputStream os) throws IOException;
+
+    public abstract void readObject(ObjectInputStream is) throws IOException;
+
+    public abstract void integrateJournal(List<EventLog<T>> journal);
+
+    public byte[] serializeStatus() {
+        try (
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(baos);
+        ) {
+            writeObject(oos);
+            return baos.toByteArray();
+        } catch (IOException e) {
+            log.warn(e.getMessage());
+            return null;
+        }
+    }
+
+    public void deserializeStatus(byte[] data) {
+        try (
+                ByteArrayInputStream bais = new ByteArrayInputStream(data);
+                ObjectInputStream ois = new ObjectInputStream(bais);
+        ) {
+            readObject(ois);
+        } catch (IOException e) {
+            log.warn(e.getMessage());
+        }
+    }
+
+    public byte[] serializeJournal() {
+        try (
+                final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                final ObjectOutputStream oos = new ObjectOutputStream(baos);
+        ) {
+            final List<EventLog<T>> journalCopy = new ArrayList<>(journal);
+            journal.clear();
+
+            oos.writeByte(journalCopy.size());
+            for (EventLog<?> event : journalCopy) {
+                oos.writeByte(event.getEvent().ordinal());
+                oos.writeByte(event.getValue());
+            }
+
+            return baos.toByteArray();
+        } catch (IOException e) {
+            log.warn(e.getMessage());
+            return null;
+        }
+    }
+
+    public void deserializeJournal(final byte[] data) {
+        try (
+                final ByteArrayInputStream bais = new ByteArrayInputStream(data);
+                final ObjectInputStream ois = new ObjectInputStream(bais);
+        ) {
+            final List<EventLog<T>> journal = new ArrayList<>();
+
+            byte length = ois.readByte();
+            for (byte i = 0; i < length; i++) {
+                byte event = ois.readByte();
+                byte value = ois.readByte();
+
+                journal.add(new EventLog<>(journalEventEnum.getEnumConstants()[event], value));
+            }
+
+            integrateJournal(journal);
+        } catch (IOException e) {
+            log.warn(e.getMessage());
+        }
+    }
 
 }

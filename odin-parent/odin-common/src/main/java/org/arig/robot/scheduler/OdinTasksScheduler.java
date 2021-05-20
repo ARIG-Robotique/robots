@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.services.OdinEcranService;
 import org.arig.robot.services.OdinServosService;
+import org.arig.robot.system.RobotGroupOverSocket;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class OdinTasksScheduler {
     @Autowired
     private OdinEcranService ecranService;
 
+    @Autowired
+    private RobotGroupOverSocket group;
+
     @Scheduled(fixedRate = 1000)
     public void ecranTask() {
         ecranService.process();
@@ -53,6 +57,13 @@ public class OdinTasksScheduler {
         if (rs.matchEnabled()) {
             // TODO Cabler la nouvelle carte
             servosService.controlBatteryVolts();
+        }
+    }
+
+    @Scheduled(fixedDelay = 2000) // TODO délai ?
+    public void sendEventLog() {
+        if (rs.matchEnabled()) {
+            group.sendEventLog();
         }
     }
 }

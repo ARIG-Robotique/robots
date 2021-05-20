@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 @Slf4j
 public abstract class AbstractSocketClient<T extends Enum<T>> {
@@ -60,6 +61,7 @@ public abstract class AbstractSocketClient<T extends Enum<T>> {
             Assert.isTrue(port != null && port > 0, "Le port est obligatoire en mode INET");
             socket = new Socket();
             socket.connect(new InetSocketAddress(this.hostname, this.port), this.timeout);
+            socket.setSoTimeout(this.timeout);
             log.info("Connexion INET au serveur {}:{}", this.hostname, this.port);
 
         } else {
@@ -128,6 +130,9 @@ public abstract class AbstractSocketClient<T extends Enum<T>> {
             } else {
                 throw new IllegalStateException("Socket non ouverte");
             }
+        } catch (SocketTimeoutException e) {
+            log.warn("Timeout lors de la requete");
+            throw new IllegalStateException("Timeout lors de la requete");
         } catch (IOException e) {
             log.warn("Connexion perdu");
             end(true);
