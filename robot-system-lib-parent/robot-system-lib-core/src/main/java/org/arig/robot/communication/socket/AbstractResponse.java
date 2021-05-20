@@ -6,7 +6,7 @@ import org.arig.robot.communication.socket.enums.StatusResponse;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class AbstractResponse<T extends Enum> {
+public abstract class AbstractResponse<T extends Enum<T>> {
 
     private T action;
     private StatusResponse status;

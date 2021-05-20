@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class AbstractQuery<T extends Enum> {
+public abstract class AbstractQuery<T extends Enum<T>> {
 
     private final T action;
 

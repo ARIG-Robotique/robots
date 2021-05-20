@@ -1,4 +1,4 @@
-package org.arig.robot.system.capteurs;
+package org.arig.robot.system.communication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
@@ -20,7 +20,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 @Slf4j
-public class AbstractSocketClient<T extends Enum> {
+public abstract class AbstractSocketClient<T extends Enum<T>> {
 
     private final boolean unixSocket;
 
@@ -53,13 +53,14 @@ public class AbstractSocketClient<T extends Enum> {
         }
     }
 
-    public void openSocket() throws Exception {
+    public void openSocket() throws IOException {
         // Ouverture de la socket
         if (!unixSocket) {
             Assert.isTrue(StringUtils.isNotBlank(hostname), "Le hostname est obligatoire en mode INET");
             Assert.isTrue(port != null && port > 0, "Le port est obligatoire en mode INET");
             socket = new Socket();
             socket.connect(new InetSocketAddress(this.hostname, this.port), this.timeout);
+            log.info("Connexion INET au serveur {}:{}", this.hostname, this.port);
 
         } else {
             Assert.notNull(socketFile, "Le fichier pour la socket est obligatoire en mode unix");
@@ -67,6 +68,7 @@ public class AbstractSocketClient<T extends Enum> {
             Assert.isTrue(socketFile.canRead(), "Le fichier socket n'est pas lisible");
             Assert.isTrue(socketFile.canWrite(), "Le fichier socket n'est pas inscriptible");
             socket = AFUNIXSocket.connectTo(new AFUNIXSocketAddress(socketFile));
+            log.info("Connexion UNIX au fichier {}", socketFile.getAbsolutePath());
         }
         socket.setKeepAlive(true);
 
@@ -108,7 +110,7 @@ public class AbstractSocketClient<T extends Enum> {
         try {
             if (isOpen()) {
                 String q = objectMapper.writeValueAsString(query);
-                log.debug(q);
+                log.debug("Requête : {}", q);
 
                 out.write(q + "\r\n");
                 out.flush();
@@ -117,6 +119,7 @@ public class AbstractSocketClient<T extends Enum> {
                 if (res == null) {
                     throw new IOException("Null result");
                 }
+                log.debug("Réponse : {}", res);
                 R rawResponse = objectMapper.readValue(res, responseClazz);
                 if (rawResponse.isError()) {
                     throw new IllegalStateException(rawResponse.getErrorMessage());

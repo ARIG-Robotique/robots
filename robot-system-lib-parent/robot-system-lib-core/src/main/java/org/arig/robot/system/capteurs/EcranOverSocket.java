@@ -13,6 +13,7 @@ import org.arig.robot.model.ecran.GetConfigInfos;
 import org.arig.robot.model.ecran.UpdateMatchInfos;
 import org.arig.robot.model.ecran.UpdatePhotoInfos;
 import org.arig.robot.model.ecran.UpdateStateInfos;
+import org.arig.robot.system.communication.AbstractSocketClient;
 
 import java.io.File;
 import java.io.IOException;
