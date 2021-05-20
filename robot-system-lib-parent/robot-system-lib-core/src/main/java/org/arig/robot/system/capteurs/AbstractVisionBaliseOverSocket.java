@@ -16,6 +16,7 @@ import org.arig.robot.communication.socket.balise.PhotoQuery;
 import org.arig.robot.communication.socket.balise.PhotoResponse;
 import org.arig.robot.communication.socket.balise.StatutQuery;
 import org.arig.robot.communication.socket.balise.enums.BaliseAction;
+import org.arig.robot.system.communication.AbstractSocketClient;
 
 import java.io.File;
 import java.io.Serializable;
