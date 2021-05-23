@@ -86,17 +86,17 @@ public abstract class AbstractBouee extends AbstractNerellAction {
     private int getPinceCible(final Bouee bouee) {
         // FIXME obsolète avec le capteur couleur ?
         if (bouee.couleur() == ECouleurBouee.ROUGE) {
-            if (!io.presencePinceAvantSup2()) {
+            if (!io.presenceVentouse2()) {
                 return 2;
             }
-            if (!io.presencePinceAvantSup1()) {
+            if (!io.presenceVentouse1()) {
                 return 1;
             }
         } else {
-            if (!io.presencePinceAvantSup3()) {
+            if (!io.presenceVentouse3()) {
                 return 3;
             }
-            if (!io.presencePinceAvantSup4()) {
+            if (!io.presenceVentouse4()) {
                 return 4;
             }
         }

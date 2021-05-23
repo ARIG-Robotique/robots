@@ -12,7 +12,6 @@ import org.arig.robot.model.balise.StatutBalise;
 import org.arig.robot.model.communication.balise.enums.ECouleurDetectee;
 import org.arig.robot.model.communication.balise.enums.EPresenceBouee;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;

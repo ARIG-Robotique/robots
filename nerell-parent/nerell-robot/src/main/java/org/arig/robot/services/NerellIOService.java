@@ -34,7 +34,6 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
     // Controlleur GPIO
     private GpioController gpio;
     private PCF8574GpioProvider pcfAlim;
-    private PCF8574GpioProvider pcf1;
     private PCF8574GpioProvider pcf2;
 
     // Référence sur les PIN Inputs
@@ -88,13 +87,6 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
             log.warn("Problème de shutdown du PCF ALim : {}", e.getMessage());
         }
         try {
-            if (pcf1 != null) {
-                pcf1.shutdown();
-            }
-        } catch (Exception e) {
-            log.warn("Problème de shutdown du PCF 1 : {}", e.getMessage());
-        }
-        try {
             if (pcf2 != null) {
                 pcf2.shutdown();
             }
@@ -128,12 +120,11 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
 //        inIrq6 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_06);
 
         // Output
-        outCmdLedCapteurRGB = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, PinState.LOW); // TODO
+        outCmdLedCapteurRGB = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, PinState.LOW);
 
         // Config PCF8574 //
         // -------------- //
         pcfAlim = new PCF8574GpioProvider(bus, IConstantesI2CNerell.PCF_ALIM_ADDRESS, true);
-        pcf1 = new PCF8574GpioProvider(bus, IConstantesI2CNerell.PCF1_ADDRESS, true);
         pcf2 = new PCF8574GpioProvider(bus, IConstantesI2CNerell.PCF2_ADDRESS, true);
 
         // Alim
@@ -143,12 +134,6 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
 
         outAlimPuissance5V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_00);
         outAlimPuissance12V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
-
-        // PCF1
-        inPresencePinceAvantSup1 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
-        inPresencePinceAvantSup2 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
-        inPresencePinceAvantSup3 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
-        inPresencePinceAvantSup4 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
 
         // PCF2
         inTirette = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
@@ -160,18 +145,11 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
         inCalageBordureGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
         inCalageBordureDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
 
+        disableLedCapteurCouleur();
     }
 
     @Override
     public void refreshAllPcf() {
-        try {
-            if (!pcf1.isShutdown()) {
-                pcf1.readAll();
-            }
-        } catch (IOException e) {
-            log.error("Erreur lecture PCF 1 : " + e.getMessage(), e);
-        }
-
         try {
             if (!pcf2.isShutdown()) {
                 pcf2.readAll();
@@ -237,26 +215,6 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
     @Override
     public boolean presenceVentouse4() {
         return false; // TODO
-    }
-
-    @Override
-    public boolean presencePinceAvantSup1() {
-        return inPresencePinceAvantSup1.isLow();
-    }
-
-    @Override
-    public boolean presencePinceAvantSup2() {
-        return inPresencePinceAvantSup2.isLow();
-    }
-
-    @Override
-    public boolean presencePinceAvantSup3() {
-        return inPresencePinceAvantSup3.isLow();
-    }
-
-    @Override
-    public boolean presencePinceAvantSup4() {
-        return inPresencePinceAvantSup4.isLow();
     }
 
     @Override

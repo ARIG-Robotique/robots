@@ -37,32 +37,32 @@ public interface IConstantesServosNerell {
 
     // Constantes d'identification Servo //
     // --------------------------------- //
-    byte MOUSTACHE_GAUCHE = 13;
-    byte MOUSTACHE_DROITE = 15;
-    byte BRAS_GAUCHE = 9;
-    byte BRAS_DROIT = 2;
-    byte PINCE_ARRIERE_1 = 17;
+    byte MOUSTACHE_GAUCHE = 4;
+    byte MOUSTACHE_DROITE = 3;
+    byte BRAS_GAUCHE = 6;
+    byte BRAS_DROIT = 1;
+    byte ASCENSEUR_AVANT_1 = 10;
+    byte ASCENSEUR_AVANT_2 = 9;
+    byte ASCENSEUR_AVANT_3 = 8;
+    byte ASCENSEUR_AVANT_4 = 7;
+    byte ASCENSEUR_ARRIERE = 2;
+    byte PAVILLON = 15;
     byte PIVOT_ARRIERE = 16;
+    byte PINCE_ARRIERE_1 = 17;
     byte PINCE_ARRIERE_2 = 20;
     byte PINCE_ARRIERE_3 = 19;
     byte PINCE_ARRIERE_4 = 18;
     byte PINCE_ARRIERE_5 = 21;
-    byte ASCENSEUR_ARRIERE = 10;
-    byte ASCENSEUR_AVANT_1 = 1; // TODO
-    byte ASCENSEUR_AVANT_2 = 3; // TODO
-    byte ASCENSEUR_AVANT_3 = 4; // TODO
-    byte ASCENSEUR_AVANT_4 = 5; // TODO
-    byte PAVILLON = 6; // TODO
 
     // Constantes de position //
     // ---------------------- //
 
     int POS_MOUSTACHE_GAUCHE_OUVERT = 1980;
     int POS_MOUSTACHE_GAUCHE_POUSSETTE = 1320;
-    int POS_MOUSTACHE_GAUCHE_FERME = 730;
+    int POS_MOUSTACHE_GAUCHE_FERME = 960;
     int POS_MOUSTACHE_DROITE_OUVERT = 990;
     int POS_MOUSTACHE_DROITE_POUSSETTE = 1510;
-    int POS_MOUSTACHE_DROITE_FERME = 2180;
+    int POS_MOUSTACHE_DROITE_FERME = 1980;
     int POS_BRAS_GAUCHE_MANCHE_AIR = 1050;
     int POS_BRAS_GAUCHE_PHARE = 960;
     int POS_BRAS_GAUCHE_FERME = 1980;
@@ -84,16 +84,16 @@ public interface IConstantesServosNerell {
     int POS_PINCE_ARRIERE_4_FERME = 2200;
     int POS_PINCE_ARRIERE_5_OUVERT = 1380;
     int POS_PINCE_ARRIERE_5_FERME = 580;
-    int POS_ASCENSEUR_AVANT_1_BAS = 1500; // TODO
-    int POS_ASCENSEUR_AVANT_1_HAUT = 1500; // TODO
-    int POS_ASCENSEUR_AVANT_2_BAS = 1500; // TODO
-    int POS_ASCENSEUR_AVANT_2_HAUT = 1500; // TODO
-    int POS_ASCENSEUR_AVANT_3_BAS = 1500; // TODO
-    int POS_ASCENSEUR_AVANT_3_HAUT = 1500; // TODO
-    int POS_ASCENSEUR_AVANT_4_BAS = 1500; // TODO
-    int POS_ASCENSEUR_AVANT_4_HAUT = 1500; // TODO
-    int POS_PAVILLON_HAUT = 1500; // TODO
-    int POS_PAVILLON_BAS = 1500; // TODO
+    int POS_ASCENSEUR_AVANT_1_BAS = 1130;
+    int POS_ASCENSEUR_AVANT_1_HAUT = 1900;
+    int POS_ASCENSEUR_AVANT_2_BAS = 2040;
+    int POS_ASCENSEUR_AVANT_2_HAUT = 1250;
+    int POS_ASCENSEUR_AVANT_3_BAS = 1120;
+    int POS_ASCENSEUR_AVANT_3_HAUT = 1880;
+    int POS_ASCENSEUR_AVANT_4_BAS = 1910;
+    int POS_ASCENSEUR_AVANT_4_HAUT = 1140;
+    int POS_PAVILLON_HAUT = 1970;
+    int POS_PAVILLON_BAS = 1050;
 
     // Constantes de groupes //
     // --------------------- //

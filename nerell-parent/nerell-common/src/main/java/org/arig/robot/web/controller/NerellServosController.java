@@ -52,6 +52,12 @@ public class NerellServosController extends AbstractServosController {
                         .position(PHARE, IConstantesServosNerell.POS_BRAS_GAUCHE_PHARE)
                         .position(FERME, IConstantesServosNerell.POS_BRAS_GAUCHE_FERME)
                 )
+                .servo(new ServoConfig()
+                        .setId(IConstantesServosNerell.PAVILLON)
+                        .setName("Pavillon")
+                        .position(HAUT, IConstantesServosNerell.POS_PAVILLON_HAUT)
+                        .position(BAS, IConstantesServosNerell.POS_PAVILLON_BAS)
+                )
         );
 
         servoConfigs.add(new ServoGroup()

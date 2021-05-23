@@ -223,10 +223,10 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
 
     private boolean[] getNewState() {
         return new boolean[]{
-                io.presenceVentouse1() || io.presencePinceAvantSup1(),
-                io.presenceVentouse2() || io.presencePinceAvantSup2(),
-                io.presenceVentouse3() || io.presencePinceAvantSup3(),
-                io.presenceVentouse4() || io.presencePinceAvantSup4()
+                io.presenceVentouse1(),
+                io.presenceVentouse2(),
+                io.presenceVentouse3(),
+                io.presenceVentouse4()
         };
     }
 

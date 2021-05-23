@@ -39,8 +39,8 @@ public class BoueeHautFond extends AbstractBouee {
      */
     private void selectBouee() {
         // FIXME obsolète avec le capteur couleur ?
-        final boolean rougeDispo = !io.presencePinceAvantSup1() || !io.presencePinceAvantSup2();
-        final boolean vertDispo = !io.presencePinceAvantSup3() || !io.presencePinceAvantSup4();
+        final boolean rougeDispo = !io.presenceVentouse1() || !io.presenceVentouse2();
+        final boolean vertDispo = !io.presenceVentouse3() || !io.presenceVentouse4();
 
         bouee = null;
         double dst = 9999;

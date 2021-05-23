@@ -2,7 +2,6 @@ package org.arig.robot.config.spring;
 
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.communication.I2CManagerDevice;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.communication.bouchon.BouchonI2CManager;
@@ -16,10 +15,7 @@ import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.EcranOverSocket;
 import org.arig.robot.system.capteurs.IEcran;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
-import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
-import org.arig.robot.system.capteurs.VisionBaliseBouchon;
-import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
@@ -29,7 +25,6 @@ import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
 import java.io.File;

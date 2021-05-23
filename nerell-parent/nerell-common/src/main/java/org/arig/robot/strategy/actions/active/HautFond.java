@@ -43,10 +43,10 @@ public class HautFond extends AbstractNerellAction {
     @Override
     public int order() {
         int libre = 0;
-        if (!io.presencePinceAvantSup1()) libre++;
-        if (!io.presencePinceAvantSup2()) libre++;
-        if (!io.presencePinceAvantSup3()) libre++;
-        if (!io.presencePinceAvantSup4()) libre++;
+        if (!io.presenceVentouse1()) libre++;
+        if (!io.presenceVentouse2()) libre++;
+        if (!io.presenceVentouse3()) libre++;
+        if (!io.presenceVentouse4()) libre++;
         return Math.min(libre, rs.hautFond().size()) + tableUtils.alterOrder(entryPoint());
     }
 
