@@ -57,8 +57,9 @@ public class NerellServosCommands {
             nbBouees = Arrays.stream(rs.pincesAvant()).filter(Objects::nonNull).count();
         }
 
-        rs.disablePincesAvant();
         ThreadUtils.sleep(2000);
+        rs.disablePincesAvant();
+        ThreadUtils.sleep(500);
     }
 
     private void deposeAvant() {
@@ -142,6 +143,16 @@ public class NerellServosCommands {
             servosService.brasDroitPhare(false);
             ThreadUtils.sleep(wait);
             servosService.brasDroitFerme(false);
+            ThreadUtils.sleep(wait);
+        }
+    }
+
+    @ShellMethod("Configuration ascenseurs avant")
+    public void configWaitAscenseurAvant(int wait, int nb) {
+        for (int i = 0 ; i < nbLoop ; i++) {
+            servosService.ascenseurAvantBas(nb, false);
+            ThreadUtils.sleep(wait);
+            servosService.ascenseurAvantHaut(nb, false);
             ThreadUtils.sleep(wait);
         }
     }

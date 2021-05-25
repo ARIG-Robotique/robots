@@ -32,7 +32,7 @@ public interface IConstantesServosNerell {
     int WAIT_ASCENSEUR_ARRIERE = 620;
     int WAIT_PIVOT_ARRIERE = 350;
     int WAIT_PINCE_ARRIERE = 400;
-    int WAIT_ASCENSEURS_AVANT = 300; // TODO
+    int WAIT_ASCENSEURS_AVANT = 350;
     int WAIT_PAVILLON = 300;
 
     // Constantes d'identification Servo //
