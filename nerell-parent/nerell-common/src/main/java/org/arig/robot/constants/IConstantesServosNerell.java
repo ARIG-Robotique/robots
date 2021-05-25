@@ -93,6 +93,7 @@ public interface IConstantesServosNerell {
     int POS_ASCENSEUR_AVANT_4_BAS = 1910;
     int POS_ASCENSEUR_AVANT_4_HAUT = 1140;
     int POS_PAVILLON_HAUT = 1970;
+    int POS_PAVILLON_FIN_MATCH = 1380;
     int POS_PAVILLON_BAS = 1050;
 
     // Constantes de groupes //

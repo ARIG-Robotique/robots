@@ -80,6 +80,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         nerellServosService.ascenseurArriereHaut(false);
         nerellServosService.pivotArriereFerme(false);
         nerellServosService.moustachesFerme(false);
+        nerellServosService.pavillonFinMatch();
         ecranService.displayMessage("FIN - Attente béquille et enlever la tirette");
         while (ioService.tirette()) {
             ThreadUtils.sleep(1000);

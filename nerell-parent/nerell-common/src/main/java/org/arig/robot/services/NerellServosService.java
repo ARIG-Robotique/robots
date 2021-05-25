@@ -170,4 +170,8 @@ public class NerellServosService extends AbstractServosService {
         setPosition(IConstantesServosNerell.PAVILLON, IConstantesServosNerell.POS_PAVILLON_HAUT, false);
     }
 
+    public void pavillonFinMatch() {
+        setPosition(IConstantesServosNerell.PAVILLON, IConstantesServosNerell.POS_PAVILLON_FIN_MATCH, false);
+    }
+
 }
