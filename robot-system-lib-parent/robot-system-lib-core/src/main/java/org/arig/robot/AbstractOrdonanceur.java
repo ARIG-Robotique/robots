@@ -279,7 +279,7 @@ public abstract class AbstractOrdonanceur {
      */
     private void initMouvement() {
         ecranService.displayMessage("Initialisation du contrôleur de mouvement");
-        trajectoryManager.setVitesse(robotConfig.vitesse(1), robotConfig.vitesseOrientation(1));
+        trajectoryManager.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation(10));
         trajectoryManager.init();
         robotStatus.enableAsserv();
     }

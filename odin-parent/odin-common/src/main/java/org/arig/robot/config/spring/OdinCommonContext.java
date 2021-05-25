@@ -58,8 +58,8 @@ public class OdinCommonContext {
                 .servosMinTimeMax(IConstantesServosOdin.MIN_TIME_MAX)
                 //.servosBatch(IConstantesServosOdin.BATCH_CONFIG)
 
-                .vitesse(IConstantesOdinConfig.vitesseMin, IConstantesOdinConfig.vitesseMax, 10)
-                .vitesseOrientation(IConstantesOdinConfig.vitesseOrientationMin, IConstantesOdinConfig.vitesseOrientationMax, 10)
+                .vitesse(IConstantesOdinConfig.vitesseMin, IConstantesOdinConfig.vitesseMax, 100)
+                .vitesseOrientation(IConstantesOdinConfig.vitesseOrientationMin, IConstantesOdinConfig.vitesseOrientationMax, 100)
                 .fenetreArretDistance(conv.mmToPulse(IConstantesOdinConfig.arretDistanceMm))
                 .fenetreApprocheAvecFreinDistance(conv.mmToPulse(IConstantesOdinConfig.approcheAvecFreinDistanceMm))
                 .fenetreApprocheSansFreinDistance(conv.mmToPulse(IConstantesOdinConfig.approcheSansFreinDistanceMm))

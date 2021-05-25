@@ -41,7 +41,7 @@ public class OdinTest extends AbstractOdinAction {
             rs.disableAvoidance();
 
             // TODO Test comme Nerell a faire
-            mv.setVitesse(robotConfig.vitesse(3), robotConfig.vitesseOrientation(10));
+            mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
             mv.gotoPoint(1200,1200, GotoOption.AVANT);
             mv.gotoPoint(100, 1200, GotoOption.AVANT);
             mv.gotoOrientationDeg(0);

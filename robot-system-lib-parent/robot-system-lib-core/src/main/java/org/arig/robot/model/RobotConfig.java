@@ -61,11 +61,13 @@ public class RobotConfig {
     }
 
     /**
-     * Pour un nombre en 1 et 10 retourne une vitesse entre min et max
+     * Pour un nombre entre 0 et 100 retourne une vitesse proportionnelle entre min et max
+     *
+     * @param value Pourcentage de la vitesse
      */
-    public long vitesse(int ratio) {
-        ratio = Math.min(10, Math.max(1, ratio)) - 1;
-        return ratio / 9 * (vitesseMax - vitesseMin) + vitesseMin;
+    public long vitesse(int value) {
+        double pct = (double) value / 100;
+        return (long) (((vitesseMax - vitesseMin) * pct) + vitesseMin);
     }
 
     public RobotConfig vitesseOrientation(long min, long max, int defRatio) {
@@ -80,11 +82,11 @@ public class RobotConfig {
     }
 
     /**
-     * Pour un nombre en 1 et 10 retourne une vitesse entre min et max
+     * Pour un nombre en 0 et 100 retourne une vitesse proportionnelle entre min et max
      */
-    public long vitesseOrientation(int ratio) {
-        ratio = Math.min(10, Math.max(1, ratio)) - 1;
-        return ratio / 9 * (vitesseOrientationMax - vitesseOrientationMin) + vitesseOrientationMin;
+    public long vitesseOrientation(int value) {
+        double pct = (double) value / 100;
+        return (long) (((vitesseOrientationMax - vitesseOrientationMin) * pct) + vitesseOrientationMin);
     }
 
     /* Fenetre d'arret / approche distance (en pulse) */

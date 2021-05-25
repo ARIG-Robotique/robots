@@ -48,21 +48,21 @@ public class NerellTest extends AbstractNerellAction {
 
             // Récupération des élements dans la pince avant
             rs.enablePincesAvant();
-            mv.setVitesse(robotConfig.vitesse(3), robotConfig.vitesseOrientation(10));
+            mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
             mv.gotoPoint(1200,1200, GotoOption.AVANT);
             rs.disablePincesAvant();
 
             // Récupération de l'ecueil
-            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation(10));
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.gotoPoint(400,1200, GotoOption.AVANT);
             pincesArriereService.preparePriseEcueil();
             mv.gotoPoint(250,1200, GotoOption.ARRIERE);
             rs.enableCalageBordure();
-            mv.setVitesse(robotConfig.vitesse(3), robotConfig.vitesseOrientation(3));
+            mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation(30));
             mv.reculeMMSansAngle(60);
             pincesArriereService.finalisePriseEcueil(ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU);
 
-            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation(10));
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.gotoPoint(1200,1200, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
             mv.gotoOrientationDeg(180);
             pincesArriereService.deposePetitPort();

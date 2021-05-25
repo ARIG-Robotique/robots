@@ -77,7 +77,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
                     mv.gotoOrientationDeg(66);
                 }
 
-                mv.setVitesse(robotConfig.vitesse(1), robotConfig.vitesseOrientation());
+                mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 rs.bouee(1).setPrise();
                 rs.bouee(2).setPrise();
@@ -95,7 +95,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
                     mv.gotoOrientationDeg(180 - 66);
                 }
 
-                mv.setVitesse(robotConfig.vitesse(1), robotConfig.vitesseOrientation());
+                mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 rs.bouee(13).setPrise();
                 rs.bouee(14).setPrise();

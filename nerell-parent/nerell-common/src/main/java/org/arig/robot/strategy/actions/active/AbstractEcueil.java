@@ -80,7 +80,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             rs.enableCalageBordure();
             mv.reculeMM(60);
 
-            mv.setVitesse(robotConfig.vitesse(1), robotConfig.vitesseOrientation());
+            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
             rs.enableCalageBordure();
             mv.reculeMMSansAngle(120);
 

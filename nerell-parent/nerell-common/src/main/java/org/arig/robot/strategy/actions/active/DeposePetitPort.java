@@ -127,7 +127,7 @@ public class DeposePetitPort extends AbstractNerellAction {
                 servos.ascenseursAvantHaut(true);
                 servos.moustachesOuvert(true);
 
-                mv.setVitesse(robotConfig.vitesse(1), robotConfig.vitesseOrientation());
+                mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
 
                 mv.gotoPoint(x, 540, GotoOption.SANS_ORIENTATION);
                 servos.moustachesPoussette(true);
@@ -139,7 +139,7 @@ public class DeposePetitPort extends AbstractNerellAction {
                 rs.petitChenaux().addRouge(ECouleurBouee.ROUGE);
                 rs.petitChenaux().addVert(ECouleurBouee.VERT);
 
-                mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation(3));
+                mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation(30));
 
                 mv.tourneDeg(15);
                 rs.petitChenaux().addVert(ECouleurBouee.ROUGE);
