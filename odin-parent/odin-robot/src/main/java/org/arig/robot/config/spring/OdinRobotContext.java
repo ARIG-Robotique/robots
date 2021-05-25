@@ -30,6 +30,7 @@ import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
 import org.arig.robot.system.capteurs.TCA9548MultiplexerI2C;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
+import org.arig.robot.system.group.IRobotGroup;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.PropulsionsPCA9685Motors;
 import org.arig.robot.system.process.EcranProcess;
@@ -248,11 +249,13 @@ public class OdinRobotContext {
     }
 
     @Bean
-    public RobotGroupOverSocket robotGroupOverSocket(Environment env, ExecutorService taskExecutor) {
+    public IRobotGroup robotGroup(Environment env, ExecutorService taskExecutor) throws IOException {
         final Integer serverPort = env.getRequiredProperty("robot.server.port", Integer.class);
         final String nerellHost = env.getRequiredProperty("nerell.socket.host");
         final Integer nerellPort = env.getRequiredProperty("nerell.socket.port", Integer.class);
-        return new RobotGroupOverSocket(serverPort, nerellHost, nerellPort, taskExecutor);
+        RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(serverPort, nerellHost, nerellPort, taskExecutor);
+        robotGroupOverSocket.openSocket();
+        return robotGroupOverSocket;
     }
 
     @Bean

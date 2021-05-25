@@ -59,6 +59,18 @@ public class EurobotStatusJournalized extends EurobotStatus {
     }
 
     @Override
+    public void bonPort() {
+        journal.add(new EventLog<>(EStatusEvent.PORT, (byte) (EPort.BON.ordinal())));
+        super.bonPort();
+    }
+
+    @Override
+    public void mauvaisPort() {
+        journal.add(new EventLog<>(EStatusEvent.PORT, (byte) (EPort.MAUVAIS.ordinal())));
+        super.mauvaisPort();
+    }
+
+    @Override
     public void boueePrise(int numero) {
         journal.add(new EventLog<>(EStatusEvent.BOUEE_PRISE, (byte) (numero)));
         super.boueePrise(numero);

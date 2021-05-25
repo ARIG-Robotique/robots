@@ -22,6 +22,8 @@ import org.arig.robot.system.capteurs.VisionBaliseBouchon;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
+import org.arig.robot.system.group.IRobotGroup;
+import org.arig.robot.system.group.RobotGroupBouchon;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.BouchonPropulsionsMotors;
 import org.arig.robot.system.process.EcranProcess;
@@ -113,6 +115,11 @@ public class NerellSimulatorContext {
     @Bean
     public ILidarTelemeter rplidar() {
         return new LidarTelemeterBouchon();
+    }
+
+    @Bean
+    public IRobotGroup robotGroup() {
+        return new RobotGroupBouchon();
     }
 
     @Bean

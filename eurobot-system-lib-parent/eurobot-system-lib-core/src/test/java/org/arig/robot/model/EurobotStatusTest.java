@@ -43,7 +43,7 @@ public class EurobotStatusTest {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
-        status1.writeObject(oos); // on n'appelle pas oos.writeObject(status) pour ne pas embarquer les metadata
+        status1.writeStatus(oos); // on n'appelle pas oos.writeObject(status) pour ne pas embarquer les metadata
         oos.close();
 
         // debug
@@ -60,7 +60,7 @@ public class EurobotStatusTest {
 
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
         ObjectInputStream ois = new ObjectInputStream(bais);
-        status2.readObject(ois);
+        status2.readStatus(ois);
 
         Assert.assertEquals(status1, status2);
     }

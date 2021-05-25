@@ -160,18 +160,18 @@ public abstract class AbstractRobotStatus<T extends Enum<T>> {
 
     public abstract Map<String, Integer> scoreStatus();
 
-    public abstract void writeObject(ObjectOutputStream os) throws IOException;
+    public abstract void writeStatus(ObjectOutputStream os) throws IOException;
 
-    public abstract void readObject(ObjectInputStream is) throws IOException;
+    public abstract void readStatus(ObjectInputStream is) throws IOException;
 
-    public abstract void integrateJournal(List<EventLog<T>> journal);
+    public abstract void integrateJournal(List<EventLog<T>> journal, boolean self);
 
     public byte[] serializeStatus() {
         try (
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(baos);
         ) {
-            writeObject(oos);
+            writeStatus(oos);
             return baos.toByteArray();
         } catch (IOException e) {
             log.warn(e.getMessage());
@@ -184,7 +184,12 @@ public abstract class AbstractRobotStatus<T extends Enum<T>> {
                 ByteArrayInputStream bais = new ByteArrayInputStream(data);
                 ObjectInputStream ois = new ObjectInputStream(bais);
         ) {
-            readObject(ois);
+            readStatus(ois);
+
+            // nouveaux event depuis qu'on a envoyé le journal à l'autre robot
+            if (!journal.isEmpty()) {
+                integrateJournal(journal, true);
+            }
         } catch (IOException e) {
             log.warn(e.getMessage());
         }
@@ -226,7 +231,7 @@ public abstract class AbstractRobotStatus<T extends Enum<T>> {
                 journal.add(new EventLog<>(journalEventEnum.getEnumConstants()[event], value));
             }
 
-            integrateJournal(journal);
+            integrateJournal(journal, false);
         } catch (IOException e) {
             log.warn(e.getMessage());
         }

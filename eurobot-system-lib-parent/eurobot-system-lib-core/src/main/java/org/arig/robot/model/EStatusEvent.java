@@ -8,6 +8,7 @@ public enum EStatusEvent {
     MANCHE_AIR_2,
     PHARE,
     PAVILLON,
+    PORT,
     BOUEE_PRISE,
     DEPOSE_GRAND_PORT,
     DEPOSE_PETIT_PORT,

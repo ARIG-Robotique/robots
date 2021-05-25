@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.model.AbstractRobotStatus;
-import org.arig.robot.system.group.AbstractRobotGroupOverSocket;
+import org.arig.robot.system.group.IRobotGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class StrategyManager {
     private AbstractRobotStatus rs;
 
     @Autowired
-    private AbstractRobotGroupOverSocket group;
+    private IRobotGroup group;
 
     private List<IAction> completedActions = new ArrayList<>();
 

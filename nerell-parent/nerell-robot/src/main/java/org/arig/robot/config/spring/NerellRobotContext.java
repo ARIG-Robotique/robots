@@ -16,6 +16,7 @@ import org.arig.robot.communication.raspi.RaspiI2CManager;
 import org.arig.robot.constants.IConstantesI2CNerell;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.RobotName;
+import org.arig.robot.model.balise.StatutBalise;
 import org.arig.robot.system.RobotGroupOverSocket;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.avoiding.impl.BasicAvoidingService;
@@ -31,6 +32,7 @@ import org.arig.robot.system.capteurs.TCA9548MultiplexerI2C;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
+import org.arig.robot.system.group.IRobotGroup;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.PropulsionsPCA9685Motors;
 import org.arig.robot.system.process.EcranProcess;
@@ -233,14 +235,14 @@ public class NerellRobotContext {
     }
 
     @Bean
-    public IVisionBalise visionBalise(Environment env) {
+    public IVisionBalise<StatutBalise> visionBalise(Environment env) {
         final String host = env.getRequiredProperty("balise.socket.host");
         final Integer port = env.getRequiredProperty("balise.socket.port", Integer.class);
         return new VisionBaliseOverSocket(host, port);
     }
 
     @Bean
-    public RobotGroupOverSocket robotGroupOverSocket(Environment env, ExecutorService taskExecutor) throws IOException {
+    public IRobotGroup robotGroup(Environment env, ExecutorService taskExecutor) throws IOException {
         final Integer serverPort = env.getRequiredProperty("robot.server.port", Integer.class);
         final String odinHost = env.getRequiredProperty("odin.socket.host");
         final Integer odinPort = env.getRequiredProperty("odin.socket.port", Integer.class);

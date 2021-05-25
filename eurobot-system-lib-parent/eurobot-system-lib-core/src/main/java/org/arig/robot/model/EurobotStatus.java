@@ -33,6 +33,8 @@ public class EurobotStatus extends AbstractRobotStatus<EStatusEvent> {
 
     private ETeam team = ETeam.UNKNOWN;
 
+    private boolean twoRobots = false;
+
     public void setTeam(int value) {
         team = ETeam.values()[value];
 
@@ -121,13 +123,25 @@ public class EurobotStatus extends AbstractRobotStatus<EStatusEvent> {
     private boolean mancheAAir1 = false;
     private boolean mancheAAir2 = false;
     private boolean phare = false;
-    private boolean bonPort = false;
-    private boolean mauvaisPort = false;
     private boolean pavillon = false;
     private boolean deposePartielleDone = false;
 
+    @Setter(AccessLevel.NONE)
+    private EPort port = EPort.AUCUN;
+
+    @Setter(AccessLevel.NONE)
+    private EPort otherPort = EPort.AUCUN;
+
+    public void bonPort() {
+        port = EPort.BON;
+    }
+
+    public void mauvaisPort() {
+        port = EPort.MAUVAIS;
+    }
+
     public boolean inPort() {
-        return bonPort || mauvaisPort;
+        return port != EPort.AUCUN;
     }
 
     @Setter(AccessLevel.NONE)
@@ -201,7 +215,12 @@ public class EurobotStatus extends AbstractRobotStatus<EStatusEvent> {
         points += grandChenaux.score();
         points += petitChenaux.score();
         points += (mancheAAir1 && mancheAAir2) ? 15 : (mancheAAir1 || mancheAAir2) ? 5 : 0;
-        points += bonPort ? 20 : (mauvaisPort ? 6 : 0);
+        if (twoRobots) {
+            points += port == EPort.BON ? 10 : (port == EPort.MAUVAIS ? 3 : 0);
+            points += otherPort == EPort.BON ? 10 : (otherPort == EPort.MAUVAIS ? 3 : 0);
+        } else {
+            points += port == EPort.BON ? 20 : (port == EPort.MAUVAIS ? 6 : 0);
+        }
         points += pavillon ? 10 : 0;
         return points;
     }
@@ -215,7 +234,12 @@ public class EurobotStatus extends AbstractRobotStatus<EStatusEvent> {
         r.put("Grand chenaux", grandChenaux.score());
         r.put("Petit chenaux", petitChenaux.score());
         r.put("Manche à air", (mancheAAir1 && mancheAAir2) ? 15 : (mancheAAir1 || mancheAAir2) ? 5 : 0);
-        r.put("Port", bonPort ? 20 : (mauvaisPort ? 6 : 0));
+        if (twoRobots) {
+            r.put("Port 1", port == EPort.BON ? 10 : (port == EPort.MAUVAIS ? 3 : 0));
+            r.put("Port 2", otherPort == EPort.BON ? 10 : (port == EPort.MAUVAIS ? 3 : 0));
+        } else {
+            r.put("Port", port == EPort.BON ? 20 : (port == EPort.MAUVAIS ? 6 : 0));
+        }
         r.put("Pavillon", pavillon ? 10 : 0);
         return r;
     }
@@ -249,7 +273,7 @@ public class EurobotStatus extends AbstractRobotStatus<EStatusEvent> {
      * Implémentation custom
      */
 
-    public void writeObject(ObjectOutputStream os) throws IOException {
+    public void writeStatus(ObjectOutputStream os) throws IOException {
         os.writeByte(team.ordinal());
 
         os.writeBoolean(ecueilEquipePris);
@@ -258,6 +282,8 @@ public class EurobotStatus extends AbstractRobotStatus<EStatusEvent> {
         os.writeBoolean(mancheAAir1);
         os.writeBoolean(mancheAAir2);
         os.writeBoolean(phare);
+
+        os.writeByte(port.ordinal());
 
         os.writeByte(bouees.size()); // pas utilisé mais au cas ou
         for (Bouee bouee : bouees) {
@@ -292,7 +318,7 @@ public class EurobotStatus extends AbstractRobotStatus<EStatusEvent> {
         }
     }
 
-    public void readObject(ObjectInputStream is) throws IOException {
+    public void readStatus(ObjectInputStream is) throws IOException {
         setTeam(is.readByte());
 
         ecueilEquipePris = is.readBoolean();
@@ -301,6 +327,8 @@ public class EurobotStatus extends AbstractRobotStatus<EStatusEvent> {
         mancheAAir1 = is.readBoolean();
         mancheAAir2 = is.readBoolean();
         phare = is.readBoolean();
+
+        otherPort = EPort.values()[is.readByte()];
 
         byte nbBoues = is.readByte(); // pas utilisé mais au cas ou
         for (Bouee bouee : bouees) {
@@ -341,7 +369,7 @@ public class EurobotStatus extends AbstractRobotStatus<EStatusEvent> {
     }
 
     @Override
-    public void integrateJournal(List<EventLog<EStatusEvent>> journal) {
+    public void integrateJournal(List<EventLog<EStatusEvent>> journal, boolean self) {
         for (EventLog<EStatusEvent> event : journal) {
             byte value = event.getValue();
             switch (event.getEvent()) {
@@ -365,6 +393,13 @@ public class EurobotStatus extends AbstractRobotStatus<EStatusEvent> {
                     break;
                 case PAVILLON:
                     pavillon = true;
+                    break;
+                case PORT:
+                    if (self) {
+                        port = EPort.values()[value];
+                    } else {
+                        otherPort = EPort.values()[value];
+                    }
                     break;
                 case BOUEE_PRISE:
                     boueePrise(value);

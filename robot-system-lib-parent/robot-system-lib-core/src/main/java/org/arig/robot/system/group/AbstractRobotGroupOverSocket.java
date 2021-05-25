@@ -9,18 +9,16 @@ import org.arig.robot.communication.socket.group.EventLogQuery;
 import org.arig.robot.communication.socket.group.EventLogResponse;
 import org.arig.robot.communication.socket.group.enums.GroupAction;
 import org.arig.robot.model.AbstractRobotStatus;
-import org.arig.robot.model.EventLog;
 import org.arig.robot.system.capteurs.AbstractBidirectionalSocket;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
 import java.util.concurrent.Executor;
 
 @Slf4j
-public class AbstractRobotGroupOverSocket extends AbstractBidirectionalSocket<GroupAction> {
+public class AbstractRobotGroupOverSocket extends AbstractBidirectionalSocket<GroupAction> implements IRobotGroup {
 
     @Autowired
-    private AbstractRobotStatus rs;
+    private AbstractRobotStatus<?> rs;
 
     public AbstractRobotGroupOverSocket(int serverPort, String otherHost, int otherPort, Executor executor) {
         super(serverPort, otherHost, otherPort, 2000, executor);
@@ -56,6 +54,7 @@ public class AbstractRobotGroupOverSocket extends AbstractBidirectionalSocket<Gr
         }
     }
 
+    @Override
     public String getCurrentAction() {
         if (!isOpen()) {
             return null;
@@ -70,6 +69,7 @@ public class AbstractRobotGroupOverSocket extends AbstractBidirectionalSocket<Gr
         }
     }
 
+    @Override
     public void sendEventLog() {
         if (!isOpen()) {
             return;

@@ -176,7 +176,7 @@ public abstract class AbstractOrdonanceur {
      * Emet ExitProgram à la demande de l'écran
      */
     protected void exitFromScreen() {
-        if (ecranService.config().isExit()) {
+        if (ecranService.config() != null && ecranService.config().isExit()) {
             log.info("Arret du programme");
             throw new ExitProgram(false);
         }
