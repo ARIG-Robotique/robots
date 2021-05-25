@@ -107,7 +107,8 @@ public class NerellTasksScheduler {
         }
 
         if (pincesEnabled) {
-            pincesAvant.process();
+            pincesAvant.processBouee();
+            pincesAvant.processCouleurBouee();
         }
     }
 }

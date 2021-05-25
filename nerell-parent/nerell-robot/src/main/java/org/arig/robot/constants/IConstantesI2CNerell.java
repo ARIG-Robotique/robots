@@ -28,7 +28,7 @@ public interface IConstantesI2CNerell {
     String MULTIPLEXEUR_I2C_NAME = "Mux TCA";
     int MULTIPLEXEUR_I2C_ADDRESS = 0x70;
 
-    String COULEUR_1_NAME = "Couleurs  1";
+    String COULEUR_1_NAME = "Couleurs 1";
     byte COULEUR_1_MUX_CHANNEL = 2;
 
     String COULEUR_2_NAME = "Couleurs 2";

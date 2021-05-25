@@ -125,6 +125,8 @@ public class TCS34725ColorSensor {
     @Autowired
     private II2CManager i2cManager;
 
+    @Getter
+    @Accessors(fluent = true)
     private final String deviceName;
 
     private boolean initialised;

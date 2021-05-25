@@ -21,7 +21,7 @@ public class AbstractIOServiceBouchon implements IIOService {
     // --------------------------------------------------------- //
 
     @Override
-    public void refreshAllPcf() {
+    public void refreshAllIO() {
     }
 
     @Override

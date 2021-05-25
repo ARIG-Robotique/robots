@@ -6,7 +6,7 @@ public interface IIOService {
     // --------------------- INFOS TECHNIQUE ------------------- //
     // --------------------------------------------------------- //
 
-    void refreshAllPcf();
+    void refreshAllIO();
     boolean auOk();
     boolean alimPuissance5VOk();
     boolean alimPuissance12VOk();

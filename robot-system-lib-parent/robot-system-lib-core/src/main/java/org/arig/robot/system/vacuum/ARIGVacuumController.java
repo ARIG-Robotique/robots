@@ -44,7 +44,7 @@ public class ARIGVacuumController {
     }
 
     public void readAllValues() {
-        log.info("Lecture de toutes les pompes");
+        log.debug("Lecture de toutes les pompes");
         byte[] data = readFromController(READ_ALL_PUMPS, 8);
         for (int idx = 0 , bits = 0 ; idx < NB_PUMPS ; idx++, bits += 2) {
             pumpData[idx].vacuum(((data[bits] & 0x0F) << 8) + (data[bits + 1] & 0xFF));
@@ -55,7 +55,7 @@ public class ARIGVacuumController {
 
     public void readData(byte pompeNb) {
         if (checkPompe(pompeNb)) {
-            log.info("Lecture de la pompe {}", pompeNb);
+            log.debug("Lecture de la pompe {}", pompeNb);
             byte[] data = readFromController((byte) (READ_ALL_PUMPS + pompeNb), 2);
             pumpData[pompeNb - 1].vacuum(((data[0] & 0x0F) << 8) + (data[1] & 0xFF));
             pumpData[pompeNb - 1].presence((data[0] >> 7 & 0x01) == 1);

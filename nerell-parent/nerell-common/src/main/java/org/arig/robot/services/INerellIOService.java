@@ -27,11 +27,6 @@ public interface INerellIOService extends IIOService {
     ECouleurBouee couleurBouee3();
     ECouleurBouee couleurBouee4();
 
-    ColorData couleurRaw1();
-    ColorData couleurRaw2();
-    ColorData couleurRaw3();
-    ColorData couleurRaw4();
-
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //

@@ -30,10 +30,10 @@ public class NerellServosService extends AbstractServosService {
         servos.setPositionAndSpeed(IConstantesServosNerell.PINCE_ARRIERE_4, IConstantesServosNerell.POS_PINCE_ARRIERE_4_FERME, IConstantesServosNerell.SPEED_PINCE_ARRIERE);
         servos.setPositionAndSpeed(IConstantesServosNerell.PINCE_ARRIERE_5, IConstantesServosNerell.POS_PINCE_ARRIERE_5_FERME, IConstantesServosNerell.SPEED_PINCE_ARRIERE);
         servos.setPositionAndSpeed(IConstantesServosNerell.PIVOT_ARRIERE, IConstantesServosNerell.POS_PIVOT_ARRIERE_FERME, IConstantesServosNerell.SPEED_PIVOT_ARRIERE);
-        servos.setPositionAndSpeed(IConstantesServosNerell.ASCENSEUR_AVANT_1, IConstantesServosNerell.POS_ASCENSEUR_AVANT_1_HAUT, IConstantesServosNerell.SPEED_ASCENSEURS_AVANT);
-        servos.setPositionAndSpeed(IConstantesServosNerell.ASCENSEUR_AVANT_2, IConstantesServosNerell.POS_ASCENSEUR_AVANT_2_HAUT, IConstantesServosNerell.SPEED_ASCENSEURS_AVANT);
-        servos.setPositionAndSpeed(IConstantesServosNerell.ASCENSEUR_AVANT_3, IConstantesServosNerell.POS_ASCENSEUR_AVANT_3_HAUT, IConstantesServosNerell.SPEED_ASCENSEURS_AVANT);
-        servos.setPositionAndSpeed(IConstantesServosNerell.ASCENSEUR_AVANT_4, IConstantesServosNerell.POS_ASCENSEUR_AVANT_4_HAUT, IConstantesServosNerell.SPEED_ASCENSEURS_AVANT);
+        servos.setPositionAndSpeed(IConstantesServosNerell.ASCENSEUR_AVANT_1, IConstantesServosNerell.POS_ASCENSEUR_AVANT_1_BAS, IConstantesServosNerell.SPEED_ASCENSEURS_AVANT);
+        servos.setPositionAndSpeed(IConstantesServosNerell.ASCENSEUR_AVANT_2, IConstantesServosNerell.POS_ASCENSEUR_AVANT_2_BAS, IConstantesServosNerell.SPEED_ASCENSEURS_AVANT);
+        servos.setPositionAndSpeed(IConstantesServosNerell.ASCENSEUR_AVANT_3, IConstantesServosNerell.POS_ASCENSEUR_AVANT_3_BAS, IConstantesServosNerell.SPEED_ASCENSEURS_AVANT);
+        servos.setPositionAndSpeed(IConstantesServosNerell.ASCENSEUR_AVANT_4, IConstantesServosNerell.POS_ASCENSEUR_AVANT_4_BAS, IConstantesServosNerell.SPEED_ASCENSEURS_AVANT);
         servos.setPositionAndSpeed(IConstantesServosNerell.PAVILLON, IConstantesServosNerell.POS_PAVILLON_BAS, IConstantesServosNerell.SPEED_PAVILLON);
     }
 

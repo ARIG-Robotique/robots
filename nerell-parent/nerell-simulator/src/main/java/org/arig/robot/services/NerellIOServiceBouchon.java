@@ -84,26 +84,6 @@ public class NerellIOServiceBouchon extends AbstractIOServiceBouchon implements 
         return ECouleurBouee.INCONNU;
     }
 
-    @Override
-    public ColorData couleurRaw1() {
-        return new ColorData().r(0).g(0).b(0);
-    }
-
-    @Override
-    public ColorData couleurRaw2() {
-        return new ColorData().r(0).g(0).b(0);
-    }
-
-    @Override
-    public ColorData couleurRaw3() {
-        return new ColorData().r(0).g(0).b(0);
-    }
-
-    @Override
-    public ColorData couleurRaw4() {
-        return new ColorData().r(0).g(0).b(0);
-    }
-
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //

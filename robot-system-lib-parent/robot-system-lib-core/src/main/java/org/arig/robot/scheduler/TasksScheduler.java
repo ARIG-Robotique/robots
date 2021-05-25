@@ -90,7 +90,7 @@ public class TasksScheduler implements InitializingBean {
                 if (ellapsedI2C >= robotConfig.i2cReadTimeMs() * 1000000) {
                     lastTimeI2C = timeStartI2C;
 
-                    ioService.refreshAllPcf();
+                    ioService.refreshAllIO();
 
                     MonitorTimeSerie serie = new MonitorTimeSerie()
                             .measurementName("tasks")

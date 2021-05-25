@@ -10,6 +10,8 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
 @Slf4j
 public abstract class AbstractNerellPincesAvantService implements INerellPincesAvantService {
@@ -111,12 +113,17 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
     }
 
     /**
-     * Sur activation en descends tous les ascenseurs vides
+     * Sur activation on descends tous les ascenseurs vides
      */
     @Override
     public void activate() {
         if (servosService.isMoustachesOuvert()) {
             servosService.moustachesFerme(true);
+        }
+
+        // Aspiration des nouvelles bouéés
+        for (int i = 0; i < 4; i++) {
+            enablePompe(i);
         }
 
         previousState = getNewState();
@@ -134,54 +141,31 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
      * Prise automatique sur la table
      */
     @Override
-    public void process() {
+    public void processBouee() {
         // première lecteur des capteurs
         final boolean[] firstState = getNewState();
         final boolean hasSome = firstState[0] || firstState[1] || firstState[2] || firstState[3];
 
         if (hasSome) {
-            // aspiration des nouvelles bouéés
-            for (int i = 0; i < 4; i++) {
-                if (!previousState[i] && firstState[i]) {
-                    enablePompe(i);
-                }
-            }
-
-            // après attente on regarde ce qui est vraiment là
-            ThreadUtils.sleep(IConstantesNerellConfig.WAIT_ASPIRATION);
-
             final boolean[] newState = getNewState();
-            final boolean needLed = newState[0] && !previousState[0] ||
-                    newState[1] && !previousState[1] ||
-                    newState[2] && !previousState[2] ||
-                    newState[3] && !previousState[3];
-
-            // allume la led une fois pour toutes
-            if (needLed) {
-                io.enableLedCapteurCouleur();
-                ThreadUtils.sleep(IConstantesNerellConfig.WAIT_LED);
-            }
-
             for (int i = 0; i < 4; i++) {
                 if (!newState[i] && firstState[i]) {
                     // perte pendant la prise
-                    log.info("Perte d'une bouée en position {}", i);
+                    log.warn("Perte d'une bouée en position {}", i);
                     disablePompe(i);
 
                 } else if (previousState[i] && !newState[i]) {
                     // perte pendant deux executions
-                    log.info("Perte d'une bouée en position {}", i);
+                    log.warn("Perte d'une bouée en position {}", i);
                     disablePompe(i);
                     rs.pinceAvant(0, null);
 
                 } else if (!previousState[i] && newState[i]) {
                     // nouvelles bouée
-                    registerBouee(i);
+                    registerBouee(i, ECouleurBouee.INCONNU);
                     servosService.ascenseurAvantHaut(i, false);
                 }
             }
-
-            io.disableLedCapteurCouleur();
 
             previousState = newState;
 
@@ -189,13 +173,28 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
             for (int i = 0; i < 4; i++) {
                 if (previousState[i]) {
                     // perte pendant deux executions
-                    log.info("Perte d'une bouée en position {}", i);
+                    log.warn("Perte d'une bouée en position {}", i);
                     disablePompe(i);
                     rs.pinceAvant(0, null);
                 }
             }
 
             previousState = firstState;
+        }
+    }
+
+    @Override
+    public void processCouleurBouee() {
+        if (Arrays.stream(rs.pincesAvant()).filter(c -> c == ECouleurBouee.INCONNU).count() > 0) {
+            io.enableLedCapteurCouleur();
+            ThreadUtils.sleep(IConstantesNerellConfig.WAIT_LED);
+
+            for (int i = 0; i < 4; i++) {
+                if (rs.pincesAvant()[i] == ECouleurBouee.INCONNU) {
+                    registerBouee(i, getCouleurBouee(i));
+                }
+            }
+            io.disableLedCapteurCouleur();
         }
     }
 
@@ -230,18 +229,19 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
         };
     }
 
-    private void registerBouee(int index) {
-        ECouleurBouee couleurBouee = ECouleurBouee.INCONNU;
+    private void registerBouee(int index, ECouleurBouee couleurBouee) {
+        rs.pinceAvant(index, couleurBouee);
+    }
 
+    private ECouleurBouee getCouleurBouee(int index) {
         // @formatter:off
         switch (index) {
-            case 0: couleurBouee = io.couleurBouee1(); break;
-            case 1: couleurBouee = io.couleurBouee2(); break;
-            case 2: couleurBouee = io.couleurBouee3(); break;
-            case 3: couleurBouee = io.couleurBouee4(); break;
+            case 0: return io.couleurBouee1();
+            case 1: return io.couleurBouee2();
+            case 2: return io.couleurBouee3();
+            case 3: return io.couleurBouee4();
+            default: return ECouleurBouee.INCONNU;
         }
         // @formatter:on
-
-        rs.pinceAvant(index, couleurBouee);
     }
 }

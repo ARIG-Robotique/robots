@@ -12,8 +12,9 @@ import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
 import org.arig.robot.constants.IConstantesI2CNerell;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.NerellRobotStatus;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
+import org.arig.robot.system.vacuum.ARIGVacuumController;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,22 @@ import java.io.IOException;
 public class NerellIOService implements INerellIOService, InitializingBean, DisposableBean {
 
     @Autowired
-    private NerellRobotStatus rs;
+    private I2CBus bus;
 
     @Autowired
-    private I2CBus bus;
+    private ARIGVacuumController vacuumController;
+
+    @Autowired
+    private TCS34725ColorSensor couleur1;
+
+    @Autowired
+    private TCS34725ColorSensor couleur2;
+
+    @Autowired
+    private TCS34725ColorSensor couleur3;
+
+    @Autowired
+    private TCS34725ColorSensor couleur4;
 
     // Controlleur GPIO
     private GpioController gpio;
@@ -40,13 +53,13 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
     // ----------------------------
 
     // IRQ
-    private GpioPinDigitalInput inIrqAlim;
-    private GpioPinDigitalInput inIrqPcf1;
-    private GpioPinDigitalInput inIrq1;
-    private GpioPinDigitalInput inIrq3;
-    private GpioPinDigitalInput inIrq4;
-    private GpioPinDigitalInput inIrq5;
-    private GpioPinDigitalInput inIrq6;
+//    private GpioPinDigitalInput inIrqAlim;
+//    private GpioPinDigitalInput inIrqPcf1;
+//    private GpioPinDigitalInput inIrq1;
+//    private GpioPinDigitalInput inIrq3;
+//    private GpioPinDigitalInput inIrq4;
+//    private GpioPinDigitalInput inIrq5;
+//    private GpioPinDigitalInput inIrq6;
 
     // Technique
     private GpioPinDigitalInput inAu;
@@ -57,10 +70,6 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
     // Input : Numerique
     private GpioPinDigitalInput inCalageBordureDroit;
     private GpioPinDigitalInput inCalageBordureGauche;
-    private GpioPinDigitalInput inPresencePinceAvantSup1;
-    private GpioPinDigitalInput inPresencePinceAvantSup2;
-    private GpioPinDigitalInput inPresencePinceAvantSup3;
-    private GpioPinDigitalInput inPresencePinceAvantSup4;
     private GpioPinDigitalInput inPresencePinceArriere1;
     private GpioPinDigitalInput inPresencePinceArriere2;
     private GpioPinDigitalInput inPresencePinceArriere3;
@@ -149,7 +158,7 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
     }
 
     @Override
-    public void refreshAllPcf() {
+    public void refreshAllIO() {
         try {
             if (!pcf2.isShutdown()) {
                 pcf2.readAll();
@@ -165,6 +174,8 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
         } catch (IOException e) {
             log.error("Erreur lecture PCF Alim : " + e.getMessage(), e);
         }
+
+        vacuumController.readAllValues();
     }
 
     // --------------------------------------------------------- //
@@ -199,22 +210,22 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
 
     @Override
     public boolean presenceVentouse1() {
-        return false; // TODO
+        return vacuumController.getData(1).presence();
     }
 
     @Override
     public boolean presenceVentouse2() {
-        return false; // TODO
+        return vacuumController.getData(2).presence();
     }
 
     @Override
     public boolean presenceVentouse3() {
-        return false; // TODO
+        return vacuumController.getData(3).presence();
     }
 
     @Override
     public boolean presenceVentouse4() {
-        return false; // TODO
+        return vacuumController.getData(4).presence();
     }
 
     @Override
@@ -252,44 +263,40 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
         return inCalageBordureGauche.isLow();
     }
 
+    // Couleur
+    private ECouleurBouee computeCouleurBouee(TCS34725ColorSensor capteur) {
+        int delta = 15;
+        final ColorData c = capteur.getColorData();
+        final ECouleurBouee result;
+        if (c.g() > c.r() + delta && c.g() > c.b() + delta) {
+            result = ECouleurBouee.VERT;
+        } else if (c.r() > c.b() + delta && c.r() > c.g() + delta) {
+            result = ECouleurBouee.ROUGE;
+        } else {
+            result = ECouleurBouee.INCONNU;
+        }
+        log.info("{} R: {}, G: {}, B: {}, Bouée: {}", capteur.deviceName(), c.r(), c.g(), c.b(), result.name());
+        return result;
+    }
+
     @Override
     public ECouleurBouee couleurBouee1() {
-        return ECouleurBouee.INCONNU; // TODO
+        return computeCouleurBouee(couleur1);
     }
 
     @Override
     public ECouleurBouee couleurBouee2() {
-        return ECouleurBouee.INCONNU; // TODO
+        return computeCouleurBouee(couleur2);
     }
 
     @Override
     public ECouleurBouee couleurBouee3() {
-        return ECouleurBouee.INCONNU; // TODO
+        return computeCouleurBouee(couleur3);
     }
 
     @Override
     public ECouleurBouee couleurBouee4() {
-        return ECouleurBouee.INCONNU; // TODO
-    }
-
-    @Override
-    public ColorData couleurRaw1() {
-        return new ColorData().r(0).g(0).b(0); // TODO
-    }
-
-    @Override
-    public ColorData couleurRaw2() {
-        return new ColorData().r(0).g(0).b(0); // TODO
-    }
-
-    @Override
-    public ColorData couleurRaw3() {
-        return new ColorData().r(0).g(0).b(0); // TODO
-    }
-
-    @Override
-    public ColorData couleurRaw4() {
-        return new ColorData().r(0).g(0).b(0); // TODO
+        return computeCouleurBouee(couleur4);
     }
 
     // --------------------------------------------------------- //
@@ -298,13 +305,13 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
 
     @Override
     public void enableLedCapteurCouleur() {
-        log.info("Led blanche capteur couleur allumé");
+        log.debug("Led blanche capteur couleur allumé");
         outCmdLedCapteurRGB.high();
     }
 
     @Override
     public void disableLedCapteurCouleur() {
-        log.info("Led blanche capteur couleur eteinte");
+        log.debug("Led blanche capteur couleur eteinte");
         outCmdLedCapteurRGB.low();
     }
 
@@ -338,41 +345,41 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
 
     @Override
     public void enablePompe1() {
-        // TODO
+        vacuumController.on(1);
     }
 
     @Override
     public void enablePompe2() {
-        // TODO
+        vacuumController.on(2);
     }
 
     @Override
     public void enablePompe3() {
-        // TODO
+        vacuumController.on(3);
     }
 
     @Override
     public void enablePompe4() {
-        // TODO
+        vacuumController.on(4);
     }
 
     @Override
     public void disablePompe1() {
-        // TODO
+        vacuumController.off(1);
     }
 
     @Override
     public void disablePompe2() {
-        // TODO
+        vacuumController.off(2);
     }
 
     @Override
     public void disablePompe3() {
-        // TODO
+        vacuumController.off(3);
     }
 
     @Override
     public void disablePompe4() {
-        // TODO
+        vacuumController.off(4);
     }
 }

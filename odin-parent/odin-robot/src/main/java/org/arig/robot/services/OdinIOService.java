@@ -163,7 +163,7 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
     }
 
     @Override
-    public void refreshAllPcf() {
+    public void refreshAllIO() {
         try {
             if (!pcf1.isShutdown()) {
                 pcf1.readAll();
@@ -295,13 +295,13 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
 
     @Override
     public void enableLedCapteurCouleur() {
-        log.info("Led blanche capteur couleur allumé");
+        log.debug("Led blanche capteur couleur allumé");
         outCmdLedCapteurRGB.high();
     }
 
     @Override
     public void disableLedCapteurCouleur() {
-        log.info("Led blanche capteur couleur eteinte");
+        log.debug("Led blanche capteur couleur eteinte");
         outCmdLedCapteurRGB.low();
     }
 
