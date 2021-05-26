@@ -1,6 +1,7 @@
 package org.arig.robot.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IConstantesServosNerell;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
@@ -12,6 +13,8 @@ import org.arig.robot.services.NerellEcranService;
 import org.arig.robot.services.NerellServosService;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
+import org.arig.robot.system.vacuum.ARIGVacuumController;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -40,6 +43,9 @@ public class NerellTasksScheduler {
 
     @Autowired
     private AbstractNerellPincesAvantService pincesAvant;
+
+    @Autowired
+    private ARIGVacuumController vacuumController;
 
     private final SignalEdgeFilter risingEnablePinces = new SignalEdgeFilter(false, Type.RISING);
 
@@ -107,8 +113,11 @@ public class NerellTasksScheduler {
         }
 
         if (pincesEnabled) {
-            pincesAvant.processBouee();
-            pincesAvant.processCouleurBouee();
+            vacuumController.readAllValues();
+            if(pincesAvant.processBouee()) {
+                ThreadUtils.sleep(IConstantesServosNerell.WAIT_ASCENSEURS_AVANT);
+                pincesAvant.processCouleurBouee();
+            }
         }
     }
 }

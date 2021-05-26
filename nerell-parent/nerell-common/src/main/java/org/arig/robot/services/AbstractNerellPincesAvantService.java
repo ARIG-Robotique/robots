@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 @Slf4j
 public abstract class AbstractNerellPincesAvantService implements INerellPincesAvantService {
@@ -40,7 +39,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
             for (int i = 0; i < 4; i++) {
                 final ECouleurBouee couleurPince = rs.pincesAvant()[i];
                 if (couleurPince == couleurChenal || couleurPince == ECouleurBouee.INCONNU) {
-                    disablePompe(i);
+                    releasePompe(i);
 
                     if (couleurChenal == ECouleurBouee.ROUGE) {
                         rs.grandChenaux().addRouge(couleurPince);
@@ -55,7 +54,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
 
         } else {
             for (int i = 0; i < 4; i++) {
-                disablePompe(i);
+                releasePompe(i);
             }
             ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
 
@@ -78,7 +77,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
 
         servosService.ascenseursAvantBas(true);
         for (int i = 0; i < 4; i++) {
-            disablePompe(i);
+            releasePompe(i);
         }
         ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
 
@@ -95,7 +94,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
 
         servosService.ascenseursAvantBas(true);
         for (int i = 0; i < 4; i++) {
-            disablePompe(i);
+            releasePompe(i);
         }
         ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
 
@@ -107,11 +106,6 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
         rs.clearPincesAvant();
     }
 
-    @Override
-    public void finaliseDepose() {
-        rs.enablePincesAvant();
-    }
-
     /**
      * Sur activation on descends tous les ascenseurs vides
      */
@@ -121,7 +115,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
             servosService.moustachesFerme(true);
         }
 
-        // Aspiration des nouvelles bouéés
+        // Aspiration des nouvelles bouées
         for (int i = 0; i < 4; i++) {
             enablePompe(i);
         }
@@ -141,61 +135,39 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
      * Prise automatique sur la table
      */
     @Override
-    public void processBouee() {
-        // première lecteur des capteurs
-        final boolean[] firstState = getNewState();
-        final boolean hasSome = firstState[0] || firstState[1] || firstState[2] || firstState[3];
+    public boolean processBouee() {
+        // première lecture des capteurs
+        final boolean[] newState = getNewState();
+        boolean needReadColor = false;
+        for (int i = 0; i < 4; i++) {
+            if (previousState[i] && !newState[i]) {
+                // perte bouée
+                registerBouee(i, null);
+                servosService.ascenseurAvantBas(i, false);
 
-        if (hasSome) {
-            final boolean[] newState = getNewState();
-            for (int i = 0; i < 4; i++) {
-                if (!newState[i] && firstState[i]) {
-                    // perte pendant la prise
-                    log.warn("Perte d'une bouée en position {}", i);
-                    disablePompe(i);
-
-                } else if (previousState[i] && !newState[i]) {
-                    // perte pendant deux executions
-                    log.warn("Perte d'une bouée en position {}", i);
-                    disablePompe(i);
-                    rs.pinceAvant(0, null);
-
-                } else if (!previousState[i] && newState[i]) {
-                    // nouvelles bouée
-                    registerBouee(i, ECouleurBouee.INCONNU);
-                    servosService.ascenseurAvantHaut(i, false);
-                }
+            } else if (!previousState[i] && newState[i]) {
+                // nouvelles bouée
+                registerBouee(i, ECouleurBouee.INCONNU);
+                servosService.ascenseurAvantHaut(i, false);
+                needReadColor = true;
             }
-
-            previousState = newState;
-
-        } else {
-            for (int i = 0; i < 4; i++) {
-                if (previousState[i]) {
-                    // perte pendant deux executions
-                    log.warn("Perte d'une bouée en position {}", i);
-                    disablePompe(i);
-                    rs.pinceAvant(0, null);
-                }
-            }
-
-            previousState = firstState;
         }
+
+        previousState = newState;
+        return needReadColor;
     }
 
     @Override
     public void processCouleurBouee() {
-        if (Arrays.stream(rs.pincesAvant()).filter(c -> c == ECouleurBouee.INCONNU).count() > 0) {
-            io.enableLedCapteurCouleur();
-            ThreadUtils.sleep(IConstantesNerellConfig.WAIT_LED);
+        io.enableLedCapteurCouleur();
+        ThreadUtils.sleep(IConstantesNerellConfig.WAIT_LED);
 
-            for (int i = 0; i < 4; i++) {
-                if (rs.pincesAvant()[i] == ECouleurBouee.INCONNU) {
-                    registerBouee(i, getCouleurBouee(i));
-                }
+        for (int i = 0; i < 4; i++) {
+            if (rs.pincesAvant()[i] == ECouleurBouee.INCONNU) {
+                registerBouee(i, getCouleurBouee(i));
             }
-            io.disableLedCapteurCouleur();
         }
+        io.disableLedCapteurCouleur();
     }
 
     private void enablePompe(int i) {
@@ -209,13 +181,13 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
         // @formatter:on
     }
 
-    private void disablePompe(int i) {
+    private void releasePompe(int i) {
         // @formatter:off
         switch (i) {
-            case 0: io.disablePompe1(); break;
-            case 1: io.disablePompe2(); break;
-            case 2: io.disablePompe3(); break;
-            case 3: io.disablePompe4(); break;
+            case 0: io.releasePompe1(); break;
+            case 1: io.releasePompe2(); break;
+            case 2: io.releasePompe3(); break;
+            case 3: io.releasePompe4(); break;
         }
         // @formatter:on
     }

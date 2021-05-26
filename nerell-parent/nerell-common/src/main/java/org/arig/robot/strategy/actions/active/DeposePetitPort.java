@@ -159,7 +159,6 @@ public class DeposePetitPort extends AbstractNerellAction {
                 pincesAvantService.deposePetitPort();
                 step++;
                 mv.reculeMM(80);
-                pincesAvantService.finaliseDepose();
                 deposePinceDone = true;
             }
 
@@ -197,7 +196,6 @@ public class DeposePetitPort extends AbstractNerellAction {
             updateValidTime();
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
         } finally {
-            pincesAvantService.finaliseDepose();
             servos.moustachesFerme(false);
         }
     }

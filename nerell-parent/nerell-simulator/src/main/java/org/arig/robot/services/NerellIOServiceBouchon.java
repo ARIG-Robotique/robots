@@ -117,18 +117,18 @@ public class NerellIOServiceBouchon extends AbstractIOServiceBouchon implements 
     }
 
     @Override
-    public void disablePompe1() {
+    public void releasePompe1() {
     }
 
     @Override
-    public void disablePompe2() {
+    public void releasePompe2() {
     }
 
     @Override
-    public void disablePompe3() {
+    public void releasePompe3() {
     }
 
     @Override
-    public void disablePompe4() {
+    public void releasePompe4() {
     }
 }

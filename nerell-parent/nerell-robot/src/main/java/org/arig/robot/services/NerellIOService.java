@@ -174,8 +174,6 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
         } catch (IOException e) {
             log.error("Erreur lecture PCF Alim : " + e.getMessage(), e);
         }
-
-        vacuumController.readAllValues();
     }
 
     // --------------------------------------------------------- //
@@ -265,7 +263,7 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
 
     // Couleur
     private ECouleurBouee computeCouleurBouee(TCS34725ColorSensor capteur) {
-        int delta = 15;
+        int delta = 42;
         final ColorData c = capteur.getColorData();
         final ECouleurBouee result;
         if (c.g() > c.r() + delta && c.g() > c.b() + delta) {
@@ -364,22 +362,22 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
     }
 
     @Override
-    public void disablePompe1() {
+    public void releasePompe1() {
         vacuumController.off(1);
     }
 
     @Override
-    public void disablePompe2() {
+    public void releasePompe2() {
         vacuumController.off(2);
     }
 
     @Override
-    public void disablePompe3() {
+    public void releasePompe3() {
         vacuumController.off(3);
     }
 
     @Override
-    public void disablePompe4() {
+    public void releasePompe4() {
         vacuumController.off(4);
     }
 }

@@ -64,8 +64,6 @@ public class NerellServosCommands {
 
     private void deposeAvant() {
         pincesAvantService.deposePetitPort();
-        ThreadUtils.sleep(5000);
-        pincesAvantService.finaliseDepose();
     }
 
     @ShellMethod("Cycle poussette (avec ou sans prise avant)")

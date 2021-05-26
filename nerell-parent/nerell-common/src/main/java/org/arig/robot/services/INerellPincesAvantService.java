@@ -9,11 +9,9 @@ public interface INerellPincesAvantService {
 
     void deposeGrandPort();
 
-    void finaliseDepose();
-
     void activate();
 
-    void processBouee();
+    boolean processBouee();
 
     void processCouleurBouee();
 }

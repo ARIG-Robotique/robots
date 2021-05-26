@@ -43,9 +43,9 @@ public interface INerellIOService extends IIOService {
     void enablePompe3();
     void enablePompe4();
 
-    void disablePompe1();
-    void disablePompe2();
-    void disablePompe3();
-    void disablePompe4();
+    void releasePompe1();
+    void releasePompe2();
+    void releasePompe3();
+    void releasePompe4();
 
 }

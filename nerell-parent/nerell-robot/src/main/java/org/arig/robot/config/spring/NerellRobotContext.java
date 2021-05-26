@@ -28,6 +28,8 @@ import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
 import org.arig.robot.system.capteurs.TCA9548MultiplexerI2C;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor.Gain;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor.IntegrationTime;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
@@ -173,22 +175,22 @@ public class NerellRobotContext {
 
     @Bean
     public TCS34725ColorSensor couleur1() {
-        return new TCS34725ColorSensor(IConstantesI2CNerell.COULEUR_1_NAME);
+        return new TCS34725ColorSensor(IConstantesI2CNerell.COULEUR_1_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
     }
 
     @Bean
     public TCS34725ColorSensor couleur2() {
-        return new TCS34725ColorSensor(IConstantesI2CNerell.COULEUR_2_NAME);
+        return new TCS34725ColorSensor(IConstantesI2CNerell.COULEUR_2_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
     }
 
     @Bean
     public TCS34725ColorSensor couleur3() {
-        return new TCS34725ColorSensor(IConstantesI2CNerell.COULEUR_3_NAME);
+        return new TCS34725ColorSensor(IConstantesI2CNerell.COULEUR_3_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
     }
 
     @Bean
     public TCS34725ColorSensor couleur4() {
-        return new TCS34725ColorSensor(IConstantesI2CNerell.COULEUR_4_NAME);
+        return new TCS34725ColorSensor(IConstantesI2CNerell.COULEUR_4_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
     }
 
     @Bean

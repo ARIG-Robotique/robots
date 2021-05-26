@@ -80,7 +80,6 @@ public class DeposeGrandPort extends AbstractNerellAction {
 
             mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
 
-            boolean pinceAvantDepose = false;
             do {
                 if (!rs.pincesAvantEmpty()) {
                     if (rs.team() == ETeam.BLEU) {
@@ -89,15 +88,11 @@ public class DeposeGrandPort extends AbstractNerellAction {
                         mv.gotoOrientationDeg(0);
                     }
                     pincesAvantService.deposeGrandPort();
-                    pinceAvantDepose = true;
                     step++;
                 }
                 if (!rs.pincesArriereEmpty()) {
                     final Point entry3 = new Point(computeX(entry.getX(), false), entry.getY());
                     mv.gotoPoint(entry3, GotoOption.SANS_ORIENTATION);
-                    if (pinceAvantDepose) {
-                        pincesAvantService.finaliseDepose();
-                    }
                     if (rs.team() == ETeam.BLEU) {
                         mv.gotoOrientationDeg(0);
                     } else {
@@ -122,8 +117,6 @@ public class DeposeGrandPort extends AbstractNerellAction {
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
-        } finally {
-            pincesAvantService.finaliseDepose();
         }
     }
 

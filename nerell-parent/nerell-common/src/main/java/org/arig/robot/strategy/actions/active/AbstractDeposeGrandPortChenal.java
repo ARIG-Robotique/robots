@@ -132,7 +132,6 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
             }
 
             mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);
-            pincesAvantService.finaliseDepose();
             complete();
 
         } catch (NoPathFoundException | AvoidingException e) {
