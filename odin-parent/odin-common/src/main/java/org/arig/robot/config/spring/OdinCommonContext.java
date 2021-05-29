@@ -56,7 +56,7 @@ public class OdinCommonContext {
 
                 .seuilAlimentationServos(IConstantesServosOdin.SEUIL_ALIMENTATION_VOLTS)
                 .servosMinTimeMax(IConstantesServosOdin.MIN_TIME_MAX)
-                //.servosBatch(IConstantesServosOdin.BATCH_CONFIG)
+                .servosBatch(IConstantesServosOdin.BATCH_CONFIG)
 
                 .vitesse(IConstantesOdinConfig.vitesseMin, IConstantesOdinConfig.vitesseMax, 100)
                 .vitesseOrientation(IConstantesOdinConfig.vitesseOrientationMin, IConstantesOdinConfig.vitesseOrientationMax, 100)

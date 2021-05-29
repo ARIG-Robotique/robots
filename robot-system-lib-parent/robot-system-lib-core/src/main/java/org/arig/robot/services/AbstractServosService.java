@@ -51,6 +51,18 @@ public abstract class AbstractServosService {
         }
     }
 
+    protected void setPositionAndSpeed(byte servo, int position, byte speed, boolean wait) {
+        if (!wait) {
+            servos.setPositionAndSpeed(servo, position, speed);
+        } else {
+            int currentPosition = servos.getPosition(servo);
+            if (currentPosition != position) {
+                servos.setPositionAndSpeed(servo, position, speed);
+                ThreadUtils.sleep(computeWaitTime(servo, currentPosition, position));
+            }
+        }
+    }
+
     protected void setPositionBatch(byte groupId, byte posId, boolean wait) {
         int[][] servosPos = robotConfig.servosBatch().get(groupId).get(posId);
         int currentPosition = servos.getPosition((byte) servosPos[0][0]);
