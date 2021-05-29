@@ -13,11 +13,8 @@ public interface IConstantesI2COdin {
     String PCF_ALIM_DEVICE_NAME = "Carte alimentation";
     int PCF_ALIM_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3D;
 
-    String PCF1_DEVICE_NAME = "PCF 1 (Inputs Pololu)";
+    String PCF1_DEVICE_NAME = "PCF 1 (Inputs)";
     int PCF1_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3B;
-
-    String PCF2_DEVICE_NAME = "PCF 2 (Inputs µSwitch)";
-    int PCF2_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3F;
 
     String PCA9685_DEVICE_NAME = "PCA9685";
     int PCA9685_ADDRESS = 0x40;

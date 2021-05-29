@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
 import org.arig.robot.constants.IConstantesI2CNerell;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
@@ -263,7 +264,7 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
 
     // Couleur
     private ECouleurBouee computeCouleurBouee(TCS34725ColorSensor capteur) {
-        int delta = 42;
+        int delta = IEurobotConfig.deltaCapteurCouleur;
         final ColorData c = capteur.getColorData();
         final ECouleurBouee result;
         if (c.g() > c.r() + delta && c.g() > c.b() + delta) {

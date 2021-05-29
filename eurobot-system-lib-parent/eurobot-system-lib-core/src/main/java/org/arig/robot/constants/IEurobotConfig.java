@@ -25,4 +25,6 @@ public interface IEurobotConfig {
     int pathFindingTailleBouee = 420;
     int pathFindingTailleBoueePort = 480;
 
+    int deltaCapteurCouleur = 42;
+
 }

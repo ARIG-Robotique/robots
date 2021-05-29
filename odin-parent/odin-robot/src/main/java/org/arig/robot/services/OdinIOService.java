@@ -11,9 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
 import org.arig.robot.constants.IConstantesI2COdin;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.OdinRobotStatus;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
+import org.arig.robot.system.vacuum.ARIGVacuumController;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,28 +28,39 @@ import java.io.IOException;
 public class OdinIOService implements IOdinIOService, InitializingBean, DisposableBean {
 
     @Autowired
-    private OdinRobotStatus rs;
+    private I2CBus bus;
 
     @Autowired
-    private I2CBus bus;
+    private ARIGVacuumController vacuumController;
+
+    @Autowired
+    private TCS34725ColorSensor couleur1;
+
+    @Autowired
+    private TCS34725ColorSensor couleur2;
+
+    @Autowired
+    private TCS34725ColorSensor couleur3;
+
+    @Autowired
+    private TCS34725ColorSensor couleur4;
 
     // Controlleur GPIO
     private GpioController gpio;
     private PCF8574GpioProvider pcfAlim;
     private PCF8574GpioProvider pcf1;
-    private PCF8574GpioProvider pcf2;
 
     // Référence sur les PIN Inputs
     // ----------------------------
 
     // IRQ
-    private GpioPinDigitalInput inIrqAlim;
-    private GpioPinDigitalInput inIrqPcf1;
-    private GpioPinDigitalInput inIrq1;
-    private GpioPinDigitalInput inIrq3;
-    private GpioPinDigitalInput inIrq4;
-    private GpioPinDigitalInput inIrq5;
-    private GpioPinDigitalInput inIrq6;
+//    private GpioPinDigitalInput inIrqAlim;
+//    private GpioPinDigitalInput inIrqPcf1;
+//    private GpioPinDigitalInput inIrq1;
+//    private GpioPinDigitalInput inIrq3;
+//    private GpioPinDigitalInput inIrq4;
+//    private GpioPinDigitalInput inIrq5;
+//    private GpioPinDigitalInput inIrq6;
 
     // Technique
     private GpioPinDigitalInput inAu;
@@ -58,15 +71,6 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
     // Input : Numerique
     private GpioPinDigitalInput inCalageBordureDroit;
     private GpioPinDigitalInput inCalageBordureGauche;
-    private GpioPinDigitalInput inPresencePinceAvantSup1;
-    private GpioPinDigitalInput inPresencePinceAvantSup2;
-    private GpioPinDigitalInput inPresencePinceAvantSup3;
-    private GpioPinDigitalInput inPresencePinceAvantSup4;
-    private GpioPinDigitalInput inPresencePinceArriere1;
-    private GpioPinDigitalInput inPresencePinceArriere2;
-    private GpioPinDigitalInput inPresencePinceArriere3;
-    private GpioPinDigitalInput inPresencePinceArriere4;
-    private GpioPinDigitalInput inPresencePinceArriere5;
 
     // Référence sur les PIN Output
     // ----------------------------
@@ -93,13 +97,6 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
             }
         } catch (Exception e) {
             log.warn("Problème de shutdown du PCF 1 : {}", e.getMessage());
-        }
-        try {
-            if (pcf2 != null) {
-                pcf2.shutdown();
-            }
-        } catch (Exception e) {
-            log.warn("Problème de shutdown du PCF 2 : {}", e.getMessage());
         }
         try {
             if (gpio != null) {
@@ -134,7 +131,6 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
         // -------------- //
         pcfAlim = new PCF8574GpioProvider(bus, IConstantesI2COdin.PCF_ALIM_ADDRESS, true);
         pcf1 = new PCF8574GpioProvider(bus, IConstantesI2COdin.PCF1_ADDRESS, true);
-        pcf2 = new PCF8574GpioProvider(bus, IConstantesI2COdin.PCF2_ADDRESS, true);
 
         // Alim
         inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_04);
@@ -145,21 +141,9 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
         outAlimPuissance12V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
 
         // PCF1
-        inPresencePinceAvantSup1 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
-        inPresencePinceAvantSup2 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
-        inPresencePinceAvantSup3 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
-        inPresencePinceAvantSup4 = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
-
-        // PCF2
-        inTirette = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
-        inPresencePinceArriere1 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
-        inPresencePinceArriere2 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_07);
-        inPresencePinceArriere3 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
-        inPresencePinceArriere4 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
-        inPresencePinceArriere5 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
-        inCalageBordureGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
-        inCalageBordureDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
-
+        inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
+        inCalageBordureGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
+        inCalageBordureDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
     }
 
     @Override
@@ -170,14 +154,6 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
             }
         } catch (IOException e) {
             log.error("Erreur lecture PCF 1 : " + e.getMessage(), e);
-        }
-
-        try {
-            if (!pcf2.isShutdown()) {
-                pcf2.readAll();
-            }
-        } catch (IOException e) {
-            log.error("Erreur lecture PCF 2 : " + e.getMessage(), e);
         }
 
         try {
@@ -220,23 +196,23 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
     // Numerique
 
     @Override
-    public boolean presenceVentouseAvant1() {
-        return false; // TODO
+    public boolean presenceVentouseAvantGauche() {
+        return vacuumController.getData(1).presence(); // TODO
     }
 
     @Override
-    public boolean presenceVentouseAvant2() {
-        return false; // TODO
+    public boolean presenceVentouseAvantDroit() {
+        return vacuumController.getData(2).presence(); // TODO
     }
 
     @Override
-    public boolean presenceVentouseArriere1() {
-        return false; // TODO
+    public boolean presenceVentouseArriereGauche() {
+        return vacuumController.getData(3).presence(); // TODO
     }
 
     @Override
-    public boolean presenceVentouseArriere2() {
-        return false; // TODO
+    public boolean presenceVentouseArriereDroit() {
+        return vacuumController.getData(4).presence(); // TODO
     }
 
     @Override
@@ -249,44 +225,40 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
         return inCalageBordureGauche.isLow();
     }
 
-    @Override
-    public ECouleurBouee couleurBoueeAvant1() {
-        return ECouleurBouee.INCONNU; // TODO
+    // Couleur
+    private ECouleurBouee computeCouleurBouee(TCS34725ColorSensor capteur) {
+        int delta = IEurobotConfig.deltaCapteurCouleur;
+        final ColorData c = capteur.getColorData();
+        final ECouleurBouee result;
+        if (c.g() > c.r() + delta && c.g() > c.b() + delta) {
+            result = ECouleurBouee.VERT;
+        } else if (c.r() > c.b() + delta && c.r() > c.g() + delta) {
+            result = ECouleurBouee.ROUGE;
+        } else {
+            result = ECouleurBouee.INCONNU;
+        }
+        log.info("{} R: {}, G: {}, B: {}, Bouée: {}", capteur.deviceName(), c.r(), c.g(), c.b(), result.name());
+        return result;
     }
 
     @Override
-    public ECouleurBouee couleurBoueeAvant2() {
-        return ECouleurBouee.INCONNU; // TODO
+    public ECouleurBouee couleurBoueeAvantGauche() {
+        return computeCouleurBouee(couleur1); // TODO
     }
 
     @Override
-    public ECouleurBouee couleurBoueeArriere1() {
-        return ECouleurBouee.INCONNU; // TODO
+    public ECouleurBouee couleurBoueeAvantDroit() {
+        return computeCouleurBouee(couleur2); // TODO
     }
 
     @Override
-    public ECouleurBouee couleurBoueeArriere2() {
-        return ECouleurBouee.INCONNU; // TODO
+    public ECouleurBouee couleurBoueeArriereGauche() {
+        return computeCouleurBouee(couleur3); // TODO
     }
 
     @Override
-    public ColorData couleurRawAvant1() {
-        return new ColorData().r(0).g(0).b(0); // TODO
-    }
-
-    @Override
-    public ColorData couleurRawAvant2() {
-        return new ColorData().r(0).g(0).b(0); // TODO
-    }
-
-    @Override
-    public ColorData couleurRawArriere1() {
-        return new ColorData().r(0).g(0).b(0); // TODO
-    }
-
-    @Override
-    public ColorData couleurRawArriere2() {
-        return new ColorData().r(0).g(0).b(0); // TODO
+    public ECouleurBouee couleurBoueeArriereDroit() {
+        return computeCouleurBouee(couleur4); // TODO
     }
 
     // --------------------------------------------------------- //
@@ -334,42 +306,42 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
     // ----------------------------------------------------------- //
 
     @Override
-    public void enablePompeAvant1() {
-        // TODO
+    public void enablePompeAvantGauche() {
+        vacuumController.on(1); // TODO
     }
 
     @Override
-    public void enablePompeAvant2() {
-        // TODO
+    public void enablePompeAvantDroit() {
+        vacuumController.on(2); // TODO
     }
 
     @Override
-    public void enablePompeArriere1() {
-        // TODO
+    public void enablePompeArriereGauche() {
+        vacuumController.on(3); // TODO
     }
 
     @Override
-    public void enablePompeArriere2() {
-        // TODO
+    public void enablePompeArriereDroit() {
+        vacuumController.on(4); // TODO
     }
 
     @Override
-    public void disablePompeAvant1() {
-        // TODO
+    public void releasePompeAvantGauche() {
+        vacuumController.off(1); // TODO
     }
 
     @Override
-    public void disablePompeAvant2() {
-        // TODO
+    public void releasePompeAvantDroit() {
+        vacuumController.off(2); // TODO
     }
 
     @Override
-    public void disablePompeArriere1() {
-        // TODO
+    public void releasePompeArriereGauche() {
+        vacuumController.off(3); // TODO
     }
 
     @Override
-    public void disablePompeArriere2() {
-        // TODO
+    public void releasePompeArriereDroit() {
+        vacuumController.off(4); // TODO
     }
 }

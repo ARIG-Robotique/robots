@@ -1,7 +1,6 @@
 package org.arig.robot.services;
 
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 
 public interface IOdinIOService extends IIOService {
 
@@ -10,21 +9,16 @@ public interface IOdinIOService extends IIOService {
     // --------------------------------------------------------- //
 
     // Numerique
-    boolean presenceVentouseAvant1();
-    boolean presenceVentouseAvant2();
-    boolean presenceVentouseArriere1();
-    boolean presenceVentouseArriere2();
+    boolean presenceVentouseAvantGauche();
+    boolean presenceVentouseAvantDroit();
+    boolean presenceVentouseArriereGauche();
+    boolean presenceVentouseArriereDroit();
 
     // Analogique
-    ECouleurBouee couleurBoueeAvant1();
-    ECouleurBouee couleurBoueeAvant2();
-    ECouleurBouee couleurBoueeArriere1();
-    ECouleurBouee couleurBoueeArriere2();
-
-    ColorData couleurRawAvant1();
-    ColorData couleurRawAvant2();
-    ColorData couleurRawArriere1();
-    ColorData couleurRawArriere2();
+    ECouleurBouee couleurBoueeAvantGauche();
+    ECouleurBouee couleurBoueeAvantDroit();
+    ECouleurBouee couleurBoueeArriereGauche();
+    ECouleurBouee couleurBoueeArriereDroit();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
@@ -37,14 +31,14 @@ public interface IOdinIOService extends IIOService {
     // -------------------------- BUSINESS ----------------------- //
     // ----------------------------------------------------------- //
 
-    void enablePompeAvant1();
-    void enablePompeAvant2();
-    void enablePompeArriere1();
-    void enablePompeArriere2();
+    void enablePompeAvantGauche();
+    void enablePompeAvantDroit();
+    void enablePompeArriereGauche();
+    void enablePompeArriereDroit();
 
-    void disablePompeAvant1();
-    void disablePompeAvant2();
-    void disablePompeArriere1();
-    void disablePompeArriere2();
+    void releasePompeAvantGauche();
+    void releasePompeAvantDroit();
+    void releasePompeArriereGauche();
+    void releasePompeArriereDroit();
 
 }
