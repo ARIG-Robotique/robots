@@ -79,10 +79,6 @@ public class OdinRobotContext {
                 .deviceName(IConstantesI2COdin.PCF1_DEVICE_NAME)
                 .device(i2cBus.getDevice(IConstantesI2COdin.PCF1_ADDRESS))
                 .build();
-        final I2CManagerDevice<I2CDevice> pcf2 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.PCF2_DEVICE_NAME)
-                .device(i2cBus.getDevice(IConstantesI2COdin.PCF2_ADDRESS))
-                .build();
         final I2CManagerDevice<I2CDevice> sd21 = I2CManagerDevice.<I2CDevice>builder()
                 .deviceName(IConstantesI2COdin.SERVO_DEVICE_NAME)
                 .device(i2cBus.getDevice(IConstantesI2COdin.SD21_ADDRESS))
@@ -139,7 +135,6 @@ public class OdinRobotContext {
         manager.registerDevice(sd21);
         manager.registerDevice(pcfAlim);
         manager.registerDevice(pcf1);
-        manager.registerDevice(pcf2);
         manager.registerDevice(pca9685);
         manager.registerDevice(alimMesure);
         manager.registerDevice(controlleurPompes);
