@@ -46,7 +46,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
     public boolean isValid() {
         return rs.pincesAvantEmpty() &&
                 rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime &&
-                (rs.team() == ETeam.BLEU && rs.grandChenaux().chenalVertEmpty() || rs.grandChenaux().chenalRougeEmpty());
+                (rs.team() == ETeam.BLEU && rs.grandChenalVertEmpty() || rs.grandChenalRougeEmpty());
     }
 
     @Override
@@ -79,15 +79,15 @@ public class PriseBoueesNord extends AbstractNerellAction {
 
                 mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.bouee(1).setPrise();
-                rs.bouee(2).setPrise();
+                rs.boueePrise(1);
+                rs.boueePrise(2);
 
                 mv.gotoOrientationDeg(0);
                 mv.gotoPoint(640, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.bouee(5).setPrise();
+                rs.boueePrise(5);
 
                 mv.gotoPoint(940, 1662, GotoOption.AVANT);
-                rs.bouee(6).setPrise();
+                rs.boueePrise(6);
 
             } else {
                 if (rs.strategy() != ENerellStrategy.BASIC_NORD) {
@@ -97,15 +97,15 @@ public class PriseBoueesNord extends AbstractNerellAction {
 
                 mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.bouee(13).setPrise();
-                rs.bouee(14).setPrise();
+                rs.boueePrise(13);
+                rs.boueePrise(14);
 
                 mv.gotoOrientationDeg(180);
                 mv.gotoPoint(3000 - 640, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.bouee(12).setPrise();
+                rs.boueePrise(12);
 
                 mv.gotoPoint(3000 - 940, 1662, GotoOption.AVANT);
-                rs.bouee(11).setPrise();
+                rs.boueePrise(11);
             }
 
         } catch (AvoidingException | NoPathFoundException e) {

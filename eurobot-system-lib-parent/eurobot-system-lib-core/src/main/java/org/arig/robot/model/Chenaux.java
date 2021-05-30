@@ -1,10 +1,17 @@
 package org.arig.robot.model;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
+@ToString()
+@EqualsAndHashCode()
 public abstract class Chenaux {
 
     protected ArrayList<ECouleurBouee> chenalVert = new ArrayList<>();
@@ -49,16 +56,36 @@ public abstract class Chenaux {
         }
     }
 
-    public Chenaux with(ECouleurBouee[] newChenalRouge, ECouleurBouee[] newChenalVert) {
+    public Chenaux copy() {
         Chenaux copy = newInstance();
         copy.chenalRouge.addAll(chenalRouge);
-        if (newChenalRouge != null) {
-            CollectionUtils.addAll(copy.chenalRouge, newChenalRouge);
-        }
         copy.chenalVert.addAll(chenalVert);
-        if (newChenalVert != null) {
-            CollectionUtils.addAll(copy.chenalVert, newChenalVert);
-        }
         return copy;
+    }
+
+    public void writeStatus(ObjectOutputStream os) throws IOException {
+        os.writeByte(chenalVert.size());
+        for (ECouleurBouee bouee : chenalVert) {
+            os.writeByte(bouee.ordinal());
+        }
+
+        os.writeByte(chenalRouge.size());
+        for (ECouleurBouee bouee : chenalRouge) {
+            os.writeByte(bouee.ordinal());
+        }
+    }
+
+    public void readStatus(ObjectInputStream is) throws IOException {
+        chenalVert.clear();
+        byte nbVert = is.readByte();
+        for (byte i = 0; i < nbVert; i++) {
+            chenalVert.add(ECouleurBouee.values()[is.readByte()]);
+        }
+
+        chenalRouge.clear();
+        byte nbRouge = is.readByte();
+        for (byte i = 0; i < nbRouge; i++) {
+            chenalRouge.add(ECouleurBouee.values()[is.readByte()]);
+        }
     }
 }

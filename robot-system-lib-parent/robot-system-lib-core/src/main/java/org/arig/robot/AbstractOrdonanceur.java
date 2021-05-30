@@ -22,6 +22,7 @@ import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
+import org.arig.robot.system.group.IRobotGroup;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
@@ -74,6 +75,9 @@ public abstract class AbstractOrdonanceur {
 
     @Autowired
     protected ILidarTelemeter lidar;
+
+    @Autowired
+    protected IRobotGroup group;
 
     @Autowired
     protected TableUtils tableUtils;
@@ -173,10 +177,19 @@ public abstract class AbstractOrdonanceur {
     }
 
     /**
+     * Tente de se connecter à l'autre robot
+     */
+    protected void connectGroup() {
+        if (!group.isOpen()) {
+            group.tryConnect();
+        }
+    }
+
+    /**
      * Emet ExitProgram à la demande de l'écran
      */
     protected void exitFromScreen() {
-        if (ecranService.config().isExit()) {
+        if (ecranService.config() != null && ecranService.config().isExit()) {
             log.info("Arret du programme");
             throw new ExitProgram(false);
         }

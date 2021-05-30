@@ -19,7 +19,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
@@ -29,7 +29,7 @@ public abstract class AbstractSocketServer<T extends Enum<T>> {
     private static final String DATA_UNPARSABLE = "DATA_UNPARSABLE";
 
     private final boolean unixSocket;
-    private final ThreadPoolExecutor executor;
+    private final Executor executor;
     private final AtomicBoolean stop = new AtomicBoolean(false);
 
     private ServerSocket server;
@@ -40,7 +40,7 @@ public abstract class AbstractSocketServer<T extends Enum<T>> {
     private BufferedReader in;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public AbstractSocketServer(final int port, final ThreadPoolExecutor executor) {
+    public AbstractSocketServer(final int port, final Executor executor) {
         this.unixSocket = false;
         this.executor = executor;
         this.port = port;
@@ -167,7 +167,7 @@ public abstract class AbstractSocketServer<T extends Enum<T>> {
             // parsing complet
             AbstractQuery<T> query;
             try {
-                query = objectMapper.readValue(q, queryClass);
+                query = objectMapper.convertValue(rawQuery, queryClass);
             } catch (Exception e) {
                 log.warn("Erreur de lecture du JSON", e);
                 sendError(DATA_UNPARSABLE, "Erreur de lecture du JSON");

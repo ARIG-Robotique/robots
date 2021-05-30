@@ -11,6 +11,8 @@ import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+
 @Component
 @Slf4j
 public class HautFond extends AbstractNerellAction {
@@ -28,7 +30,7 @@ public class HautFond extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        return !rs.hautFond().isEmpty();
+        return !rs.hautFondEmpty();
     }
 
     @Override
@@ -76,6 +78,9 @@ public class HautFond extends AbstractNerellAction {
 
             // on ratisse en laissant l'évitement actif
             mv.avanceMM(3000 - X * 2);
+
+            // on marque tout comme pris, l'information mise à jour sera fournie par la balise
+            rs.hautFond(Collections.emptyList());
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();

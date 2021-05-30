@@ -12,6 +12,7 @@ import org.arig.robot.model.ecran.UpdatePhotoInfos;
 import org.arig.robot.model.ecran.UpdateStateInfos;
 import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.capteurs.IEcran;
+import org.arig.robot.system.group.IRobotGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
 
@@ -32,6 +33,12 @@ public class AbstractEcranService {
 
     @Autowired
     private AbstractRobotStatus rs;
+
+    @Autowired
+    private IRobotGroup group;
+
+    @Autowired(required = false)
+    private AbstractBaliseService balise;
 
     @Autowired
     private IEcran ecran;
@@ -83,6 +90,8 @@ public class AbstractEcranService {
         stateInfos.setAlim12v(ioService.alimPuissance12VOk());
         stateInfos.setAlim5vp(ioService.alimPuissance5VOk());
         stateInfos.setTirette(ioService.tirette());
+        stateInfos.setBalise(balise != null && balise.isConnected());
+        stateInfos.setOtherRobot(group.isOpen());
     }
 
     public void updatePhoto(UpdatePhotoInfos query) {
@@ -92,7 +101,7 @@ public class AbstractEcranService {
     private void updateMatch() {
         matchInfos.setScore(rs.calculerPoints());
         if (rs.matchEnabled()) {
-            matchInfos.setMessage(String.format("%s (%s restantes) - %s s", strategyManager.getCurrentAction(), strategyManager.actionsCount(), rs.getRemainingTime() / 1000));
+            matchInfos.setMessage(String.format("%s (%s restantes) - %s s", rs.currentAction(), strategyManager.actionsCount(), rs.getRemainingTime() / 1000));
         }
 
         ecran.updateMatch(matchInfos);

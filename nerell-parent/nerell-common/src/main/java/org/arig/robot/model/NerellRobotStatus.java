@@ -106,4 +106,8 @@ public class NerellRobotStatus extends EurobotStatus {
         return Arrays.stream(pincesAvant).noneMatch(Objects::nonNull);
     }
 
+    public boolean deposeArriereGrandChenalPossible() {
+        return grandChenaux.chenalRouge.size() < 5 || grandChenaux.chenalVert.size() < 5;
+    }
+
 }

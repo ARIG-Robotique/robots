@@ -6,6 +6,7 @@ import org.arig.robot.services.OdinEcranService;
 import org.arig.robot.services.OdinServosService;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
+import org.arig.robot.system.group.IRobotGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -28,6 +29,9 @@ public class OdinTasksScheduler {
 
     @Autowired
     private OdinEcranService ecranService;
+
+    @Autowired
+    private IRobotGroup group;
 
     @Scheduled(fixedRate = 1000)
     public void ecranTask() {
@@ -53,6 +57,13 @@ public class OdinTasksScheduler {
         if (rs.matchEnabled()) {
             // TODO Cabler la nouvelle carte
             servosService.controlBatteryVolts();
+        }
+    }
+
+    @Scheduled(fixedDelay = 2000) // TODO délai ?
+    public void sendEventLog() {
+        if (rs.matchEnabled()) {
+            group.sendEventLog();
         }
     }
 }

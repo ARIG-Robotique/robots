@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -31,15 +30,15 @@ public class Bouee implements Serializable {
 
     private final Point pt;
 
-    @Setter(value = AccessLevel.NONE)
-    @Getter(value = AccessLevel.NONE)
     private EState state = EState.PRESENTE;
 
     /**
      * Marque la bouée comme prise
      */
     public void setPrise() {
-        state = EState.PRISE;
+        if (state == EState.PRESENTE) {
+            state = EState.PRISE;
+        }
     }
 
     /**
@@ -56,12 +55,4 @@ public class Bouee implements Serializable {
         return state == EState.PRESENTE;
     }
 
-    /**
-     * @deprecated retrocompat superviser
-     */
-    @Deprecated
-    @JsonProperty("prise")
-    public boolean prise() {
-        return !presente();
-    }
 }

@@ -80,7 +80,7 @@ public class MouvementController {
         pos.put("collisions", new ArrayList<>(lidarService.getCollisionsShape()));
         pos.put("matchTime", rs.getElapsedTime());
         pos.put("score", rs.calculerPoints());
-        pos.put("currentAction", strategyManager.getCurrentAction());
+        pos.put("currentAction", rs.currentAction());
         pos.put("actions", actions);
         pos.put("gameStatus", rs.gameStatus());
         pos.put("scoreStatus", rs.scoreStatus());

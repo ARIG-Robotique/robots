@@ -2,6 +2,7 @@ package org.arig.robot;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesOdinConfig;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
@@ -10,6 +11,7 @@ import org.arig.robot.model.EOdinStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.Point;
+import org.arig.robot.services.OdinServosService;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
@@ -19,6 +21,9 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Autowired
     private OdinRobotStatus odinRobotStatus;
+
+    @Autowired
+    private OdinServosService odinServosService;
 
     @Override
     public String getPathfinderMap() {
@@ -37,10 +42,18 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void inMatch() {
+        // Déclenchement du pavillon
+        if (robotStatus.getRemainingTime() <= IEurobotConfig.pavillonRemainingTimeMs
+                && !odinRobotStatus.pavillon() && ioService.auOk()) {
+            log.info("Activation du pavillon");
+            odinServosService.pavillonHaut();
+            odinRobotStatus.pavillon(true);
+        }
     }
 
     @Override
     public void afterMatch() {
+        group.sendEventLog();
     }
 
     @Override
@@ -60,6 +73,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 odinRobotStatus.setTeam(ecranService.config().getTeam());
                 log.info("Team {}", odinRobotStatus.team().name());
             }
+            connectGroup();
             ThreadUtils.sleep(500);
         } while (!ecranService.config().isStartCalibration());
     }
@@ -180,8 +194,6 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.RISING);
         SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.FALLING);
         ChangeFilter<Integer> strategyChangeFilter = new ChangeFilter<>(-1);
-        SignalEdgeFilter updatePhotoFilter = new SignalEdgeFilter(false, Type.RISING);
-        SignalEdgeFilter doEtalonnageFilter = new SignalEdgeFilter(false, Type.RISING);
 
         boolean manuel = ecranService.config().isModeManuel();
 
@@ -212,6 +224,8 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
             }
 
             avoidingService.setSafeAvoidance(ecranService.config().isSafeAvoidance());
+
+            connectGroup();
 
             ThreadUtils.sleep(manuel ? 4000 : 500);
         }

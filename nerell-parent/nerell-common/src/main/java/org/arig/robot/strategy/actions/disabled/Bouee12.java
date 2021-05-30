@@ -1,15 +1,13 @@
 package org.arig.robot.strategy.actions.disabled;
 
-import org.arig.robot.model.Bouee;
 import org.arig.robot.strategy.actions.active.AbstractBouee;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Bouee12 extends AbstractBouee {
 
-    @Override
-    public Bouee bouee() {
-        return rs.bouee(12);
+    public Bouee12() {
+        super(12);
     }
 
 }

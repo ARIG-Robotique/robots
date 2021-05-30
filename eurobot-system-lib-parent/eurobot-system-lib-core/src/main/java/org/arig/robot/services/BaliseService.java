@@ -71,7 +71,7 @@ public class BaliseService extends AbstractBaliseService {
         if (statut != null && statut.getDetection() != null && !ArrayUtils.isEmpty(statut.getDetection().getBouees())) {
             EPresenceBouee[] bouees = statut.getDetection().getBouees();
             for (int i = 0; i < bouees.length; i++) {
-                rs.bouee(12 - i).setPresente(bouees[i] == EPresenceBouee.PRESENT);
+                rs.boueePresente(12 - i, bouees[i] == EPresenceBouee.PRESENT);
             }
 
             return true;

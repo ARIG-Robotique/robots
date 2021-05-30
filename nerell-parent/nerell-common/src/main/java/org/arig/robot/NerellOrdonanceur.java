@@ -94,17 +94,23 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
      */
     private void choixEquipe() {
         ecranService.displayMessage("Choix équipe et lancement calage bordure");
+
         ChangeFilter<Integer> teamChangeFilter = new ChangeFilter<>(-1);
         SignalEdgeFilter updatePhotoFilter = new SignalEdgeFilter(false, Type.RISING);
         SignalEdgeFilter doEtalonnageFilter = new SignalEdgeFilter(false, Type.RISING);
+
         do {
             exitFromScreen();
+
             if (teamChangeFilter.filter(ecranService.config().getTeam())) {
                 nerellRobotStatus.setTeam(ecranService.config().getTeam());
                 log.info("Team {}", nerellRobotStatus.team().name());
             }
+
+            connectGroup();
             connectBalise();
             configBalise(updatePhotoFilter, doEtalonnageFilter);
+
             ThreadUtils.sleep(500);
         } while (!ecranService.config().isStartCalibration());
     }
@@ -293,6 +299,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
             avoidingService.setSafeAvoidance(ecranService.config().isSafeAvoidance());
 
+            connectGroup();
             connectBalise();
             configBalise(updatePhotoFilter, doEtalonnageFilter);
 

@@ -52,7 +52,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
     public boolean isValid() {
         return rs.pincesAvantEmpty() &&
                 rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime &&
-                (rs.team() == ETeam.JAUNE && rs.grandChenaux().chenalVertEmpty() || rs.grandChenaux().chenalRougeEmpty());
+                (rs.team() == ETeam.JAUNE && rs.grandChenalVertEmpty() || rs.grandChenalRougeEmpty());
     }
 
     @Override
@@ -85,8 +85,8 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
                 mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.bouee(3).setPrise();
-                rs.bouee(4).setPrise();
+                rs.boueePrise(3);
+                rs.boueePrise(4);
 
                 rs.disablePincesAvant();
 
@@ -108,8 +108,8 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
                 mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.bouee(15).setPrise();
-                rs.bouee(16).setPrise();
+                rs.boueePrise(15);
+                rs.boueePrise(16);
 
                 rs.disablePincesAvant();
 

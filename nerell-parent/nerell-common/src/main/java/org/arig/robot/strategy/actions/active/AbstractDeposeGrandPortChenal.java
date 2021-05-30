@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.Bouee;
 import org.arig.robot.model.Chenaux;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
@@ -29,13 +28,11 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
     @Autowired
     private AbstractNerellPincesAvantService pincesAvantService;
 
-    protected abstract Bouee getBoueeBloquante();
+    protected abstract int getBoueeBloquante();
 
     protected abstract ECouleurBouee getCouleurChenal();
 
     protected abstract EPosition getPositionChenal();
-
-    protected abstract Chenaux getChenauxFuture();
 
     @Override
     public Point entryPoint() {
@@ -55,25 +52,46 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
             order = 1000;
 
         } else if (rs.deposePartielle()) {
-            Chenaux chenaux = rs.grandChenaux().with(null, null);
+            Chenaux chenauxFuture = rs.cloneGrandChenaux();
+            int currentScoreChenaux = chenauxFuture.score();
+
             for (ECouleurBouee couleur : rs.pincesAvant()) {
                 if (couleur == ECouleurBouee.ROUGE) {
-                    chenaux.addRouge(couleur);
+                    chenauxFuture.addRouge(couleur);
                 } else if (couleur == ECouleurBouee.VERT) {
-                    chenaux.addVert(couleur);
+                    chenauxFuture.addVert(couleur);
                 }
             }
             for (ECouleurBouee couleur : rs.pincesArriere()) {
                 if (couleur == ECouleurBouee.ROUGE) {
-                    chenaux.addRouge(couleur);
+                    chenauxFuture.addRouge(couleur);
                 } else if (couleur == ECouleurBouee.VERT) {
-                    chenaux.addVert(couleur);
+                    chenauxFuture.addVert(couleur);
                 }
             }
-            order = chenaux.score() - rs.grandChenaux().score();
+            order = chenauxFuture.score() - currentScoreChenaux;
 
         } else {
-            order = getChenauxFuture().score() - rs.grandChenaux().score();
+            Chenaux chenauxFuture = rs.cloneGrandChenaux();
+            int currentScoreChenaux = chenauxFuture.score();
+
+            if (getCouleurChenal() == ECouleurBouee.ROUGE) {
+                if (!rs.pincesArriereEmpty()) {
+                    chenauxFuture.addRouge(rs.pincesArriere());
+                }
+                if (!rs.pincesAvantEmpty() && (rs.pincesArriereEmpty() || rs.doubleDepose())) {
+                    chenauxFuture.addRouge(rs.pincesAvant());
+                }
+            } else {
+                if (!rs.pincesArriereEmpty()) {
+                    chenauxFuture.addVert(rs.pincesArriere());
+                }
+                if (!rs.pincesAvantEmpty() && (rs.pincesArriereEmpty() || rs.doubleDepose())) {
+                    chenauxFuture.addVert(rs.pincesAvant());
+                }
+            }
+
+            order = chenauxFuture.score() - currentScoreChenaux;
         }
 
         return order + tableUtils.alterOrder(entryPoint());
@@ -88,7 +106,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
             return !rs.pincesArriereEmpty() && !rs.pincesAvantEmpty();
 
         } else {
-            return (!getBoueeBloquante().presente() || rs.getRemainingTime() < IEurobotConfig.invalidPriseRemainingTime) &&
+            return (!rs.boueePresente(getBoueeBloquante()) || rs.getRemainingTime() < IEurobotConfig.invalidPriseRemainingTime) &&
                     (!rs.pincesArriereEmpty() || !rs.pincesAvantEmpty());
         }
     }

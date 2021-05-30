@@ -43,7 +43,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
     @Override
     public boolean isValid() {
         return isTimeValid() && !rs.inPort() && (!rs.pincesAvantEmpty() || !rs.pincesArriereEmpty())
-                && !rs.grandChenaux().chenalRougeEmpty() && !rs.grandChenaux().chenalVertEmpty();
+                && !rs.grandChenalRougeEmpty() && !rs.grandChenalVertEmpty();
     }
 
     @Override

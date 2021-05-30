@@ -1,8 +1,6 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.Bouee;
-import org.arig.robot.model.Chenaux;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.springframework.stereotype.Component;
@@ -17,11 +15,11 @@ public class DeposeGrandPortChenalVert extends AbstractDeposeGrandPortChenal {
     }
 
     @Override
-    protected Bouee getBoueeBloquante() {
+    protected int getBoueeBloquante() {
         if (rs.team() == ETeam.JAUNE) {
-            return rs.bouee(16);
+            return 16;
         } else {
-            return rs.bouee(1);
+            return 1;
         }
     }
 
@@ -39,15 +37,4 @@ public class DeposeGrandPortChenalVert extends AbstractDeposeGrandPortChenal {
         }
     }
 
-    @Override
-    protected Chenaux getChenauxFuture() {
-        Chenaux chenaux = rs.grandChenaux().with(null, null);
-        if (!rs.pincesArriereEmpty()) {
-            chenaux.addVert(rs.pincesArriere());
-        }
-        if (!rs.pincesAvantEmpty() && (rs.pincesArriereEmpty() || rs.doubleDepose())) {
-            chenaux.addVert(rs.pincesAvant());
-        }
-        return chenaux;
-    }
 }

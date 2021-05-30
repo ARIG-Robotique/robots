@@ -17,4 +17,5 @@ public class UpdateStateInfos implements Serializable {
     boolean lidar = false;
     boolean phare = false;
     boolean balise = false;
+    boolean otherRobot = false;
 }
