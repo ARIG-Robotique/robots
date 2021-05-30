@@ -15,7 +15,7 @@ import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
-import org.arig.robot.system.vacuum.ARIGVacuumController;
+import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
     private I2CBus bus;
 
     @Autowired
-    private ARIGVacuumController vacuumController;
+    private AbstractARIGVacuumController vacuumController;
 
     @Autowired
     private TCS34725ColorSensor couleur1;

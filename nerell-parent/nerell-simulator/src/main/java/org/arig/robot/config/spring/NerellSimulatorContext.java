@@ -26,6 +26,8 @@ import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.BouchonPropulsionsMotors;
 import org.arig.robot.system.process.EcranProcess;
 import org.arig.robot.system.servos.SD21Servos;
+import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
+import org.arig.robot.system.vacuum.BouchonARIGVacuumController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -96,6 +98,11 @@ public class NerellSimulatorContext {
                 .collect(Collectors.toList());
 
         return new BouchonARIG2WheelsEncoders(values);
+    }
+
+    @Bean
+    public AbstractARIGVacuumController vacuumController() {
+        return new BouchonARIGVacuumController();
     }
 
     @Bean
