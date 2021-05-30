@@ -105,29 +105,29 @@ public class OdinRobotContext {
                 .deviceName(IConstantesI2COdin.MULTIPLEXEUR_I2C_NAME)
                 .device(i2cBus.getDevice(IConstantesI2COdin.MULTIPLEXEUR_I2C_ADDRESS))
                 .build();
-        final I2CManagerDevice<I2CDevice> couleurAvant1 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.COULEUR_AVANT_1_NAME)
+        final I2CManagerDevice<I2CDevice> couleurAvantGauche = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(IConstantesI2COdin.COULEUR_AVANT_GAUCHE_NAME)
                 .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
                 .multiplexerDeviceName(IConstantesI2COdin.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(IConstantesI2COdin.COULEUR_AVANT_1_MUX_CHANNEL)
+                .multiplexerChannel(IConstantesI2COdin.COULEUR_AVANT_GAUCHE_MUX_CHANNEL)
                 .build();
-        final I2CManagerDevice<I2CDevice> couleurAvant2 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.COULEUR_AVANT_2_NAME)
+        final I2CManagerDevice<I2CDevice> couleurAvantDroit = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(IConstantesI2COdin.COULEUR_AVANT_DROIT_NAME)
                 .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
                 .multiplexerDeviceName(IConstantesI2COdin.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(IConstantesI2COdin.COULEUR_AVANT_2_MUX_CHANNEL)
+                .multiplexerChannel(IConstantesI2COdin.COULEUR_AVANT_DROIT_MUX_CHANNEL)
                 .build();
-        final I2CManagerDevice<I2CDevice> couleurArriere1 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.COULEUR_ARRIERE_1_NAME)
+        final I2CManagerDevice<I2CDevice> couleurArriereGauche = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(IConstantesI2COdin.COULEUR_ARRIERE_GAUCHE_NAME)
                 .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
                 .multiplexerDeviceName(IConstantesI2COdin.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(IConstantesI2COdin.COULEUR_ARRIERE_1_MUX_CHANNEL)
+                .multiplexerChannel(IConstantesI2COdin.COULEUR_ARRIERE_GAUCHE_MUX_CHANNEL)
                 .build();
-        final I2CManagerDevice<I2CDevice> couleurArriere2 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.COULEUR_ARRIERE_2_NAME)
+        final I2CManagerDevice<I2CDevice> couleurArriereDroit = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(IConstantesI2COdin.COULEUR_ARRIERE_DROIT_NAME)
                 .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
                 .multiplexerDeviceName(IConstantesI2COdin.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(IConstantesI2COdin.COULEUR_ARRIERE_2_MUX_CHANNEL)
+                .multiplexerChannel(IConstantesI2COdin.COULEUR_ARRIERE_DROIT_MUX_CHANNEL)
                 .build();
 
         manager.registerDevice(codeurMoteurDroit);
@@ -139,10 +139,10 @@ public class OdinRobotContext {
         manager.registerDevice(alimMesure);
         manager.registerDevice(controlleurPompes);
         manager.registerDevice(mux);
-        manager.registerDevice(couleurAvant1);
-        manager.registerDevice(couleurAvant2);
-        manager.registerDevice(couleurArriere1);
-        manager.registerDevice(couleurArriere2);
+        manager.registerDevice(couleurAvantGauche);
+        manager.registerDevice(couleurAvantDroit);
+        manager.registerDevice(couleurArriereGauche);
+        manager.registerDevice(couleurArriereDroit);
 
         return manager;
     }
@@ -168,23 +168,23 @@ public class OdinRobotContext {
     }
 
     @Bean
-    public TCS34725ColorSensor couleurAvant1() {
-        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_AVANT_1_NAME);
+    public TCS34725ColorSensor couleurAvantGauche() {
+        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_AVANT_GAUCHE_NAME);
     }
 
     @Bean
-    public TCS34725ColorSensor couleurAvant2() {
-        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_AVANT_2_NAME);
+    public TCS34725ColorSensor couleurAvantDroit() {
+        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_AVANT_DROIT_NAME);
     }
 
     @Bean
-    public TCS34725ColorSensor couleurArriere1() {
-        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_ARRIERE_1_NAME);
+    public TCS34725ColorSensor couleurArriereGauche() {
+        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_ARRIERE_GAUCHE_NAME);
     }
 
     @Bean
-    public TCS34725ColorSensor couleurArriere2() {
-        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_ARRIERE_2_NAME);
+    public TCS34725ColorSensor couleurArriereDroit() {
+        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_ARRIERE_DROIT_NAME);
     }
 
     @Bean

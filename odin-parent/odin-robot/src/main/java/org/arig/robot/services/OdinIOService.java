@@ -15,7 +15,6 @@ import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
-import org.arig.robot.system.vacuum.ARIGVacuumController;
 import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -35,16 +34,16 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
     private AbstractARIGVacuumController vacuumController;
 
     @Autowired
-    private TCS34725ColorSensor couleur1;
+    private TCS34725ColorSensor couleurAvantGauche;
 
     @Autowired
-    private TCS34725ColorSensor couleur2;
+    private TCS34725ColorSensor couleurAvantDroit;
 
     @Autowired
-    private TCS34725ColorSensor couleur3;
+    private TCS34725ColorSensor couleurArriereGauche;
 
     @Autowired
-    private TCS34725ColorSensor couleur4;
+    private TCS34725ColorSensor couleurArriereDroit;
 
     // Controlleur GPIO
     private GpioController gpio;
@@ -244,22 +243,22 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
 
     @Override
     public ECouleurBouee couleurBoueeAvantGauche() {
-        return computeCouleurBouee(couleur1); // TODO
+        return computeCouleurBouee(couleurAvantGauche);
     }
 
     @Override
     public ECouleurBouee couleurBoueeAvantDroit() {
-        return computeCouleurBouee(couleur2); // TODO
+        return computeCouleurBouee(couleurAvantDroit);
     }
 
     @Override
     public ECouleurBouee couleurBoueeArriereGauche() {
-        return computeCouleurBouee(couleur3); // TODO
+        return computeCouleurBouee(couleurArriereGauche);
     }
 
     @Override
     public ECouleurBouee couleurBoueeArriereDroit() {
-        return computeCouleurBouee(couleur4); // TODO
+        return computeCouleurBouee(couleurArriereDroit);
     }
 
     // --------------------------------------------------------- //

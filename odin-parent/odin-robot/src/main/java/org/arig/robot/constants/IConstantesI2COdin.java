@@ -31,15 +31,15 @@ public interface IConstantesI2COdin {
     String MULTIPLEXEUR_I2C_NAME = "Mux TCA";
     int MULTIPLEXEUR_I2C_ADDRESS = 0x70;
 
-    String COULEUR_AVANT_1_NAME = "Couleurs avant 1";
-    byte COULEUR_AVANT_1_MUX_CHANNEL = 0;
+    String COULEUR_AVANT_GAUCHE_NAME = "Couleur avant gauche";
+    byte COULEUR_AVANT_GAUCHE_MUX_CHANNEL = 0;
 
-    String COULEUR_AVANT_2_NAME = "Couleurs avant 2";
-    byte COULEUR_AVANT_2_MUX_CHANNEL = 1;
+    String COULEUR_AVANT_DROIT_NAME = "Couleur avant droit";
+    byte COULEUR_AVANT_DROIT_MUX_CHANNEL = 1;
 
-    String COULEUR_ARRIERE_1_NAME = "Couleurs arriere 1";
-    byte COULEUR_ARRIERE_1_MUX_CHANNEL = 2;
+    String COULEUR_ARRIERE_GAUCHE_NAME = "Couleur arriere gauche";
+    byte COULEUR_ARRIERE_GAUCHE_MUX_CHANNEL = 2;
 
-    String COULEUR_ARRIERE_2_NAME = "Couleurs arriere 2";
-    byte COULEUR_ARRIERE_2_MUX_CHANNEL = 3;
+    String COULEUR_ARRIERE_DROIT_NAME = "Couleur arriere droit";
+    byte COULEUR_ARRIERE_DROIT_MUX_CHANNEL = 3;
 }
