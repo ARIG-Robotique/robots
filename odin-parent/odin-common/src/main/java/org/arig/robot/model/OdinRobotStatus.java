@@ -11,6 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 @EqualsAndHashCode(callSuper = true)
 public class OdinRobotStatus extends EurobotStatusJournalized {
 
+    public OdinRobotStatus() {
+        super(false);
+    }
+
     private EOdinStrategy strategy = EOdinStrategy.BASIC_NORD;
 
     @Override

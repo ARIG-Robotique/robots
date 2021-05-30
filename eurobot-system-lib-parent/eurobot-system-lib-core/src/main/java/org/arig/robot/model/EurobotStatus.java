@@ -27,13 +27,11 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = false)
 public class EurobotStatus extends AbstractRobotStatus<EStatusEvent> {
 
-    public EurobotStatus() {
-        super(IEurobotConfig.matchTimeMs, EStatusEvent.class);
+    public EurobotStatus(boolean mainRobot) {
+        super(IEurobotConfig.matchTimeMs, mainRobot, EStatusEvent.class);
     }
 
     private ETeam team = ETeam.UNKNOWN;
-
-    private boolean twoRobots = false;
 
     public void setTeam(int value) {
         team = ETeam.values()[value];
@@ -215,7 +213,7 @@ public class EurobotStatus extends AbstractRobotStatus<EStatusEvent> {
         points += grandChenaux.score();
         points += petitChenaux.score();
         points += (mancheAAir1 && mancheAAir2) ? 15 : (mancheAAir1 || mancheAAir2) ? 5 : 0;
-        if (twoRobots) {
+        if (twoRobots()) {
             points += port == EPort.BON ? 10 : (port == EPort.MAUVAIS ? 3 : 0);
             points += otherPort == EPort.BON ? 10 : (otherPort == EPort.MAUVAIS ? 3 : 0);
         } else {
@@ -234,7 +232,7 @@ public class EurobotStatus extends AbstractRobotStatus<EStatusEvent> {
         r.put("Grand chenaux", grandChenaux.score());
         r.put("Petit chenaux", petitChenaux.score());
         r.put("Manche à air", (mancheAAir1 && mancheAAir2) ? 15 : (mancheAAir1 || mancheAAir2) ? 5 : 0);
-        if (twoRobots) {
+        if (twoRobots()) {
             r.put("Port 1", port == EPort.BON ? 10 : (port == EPort.MAUVAIS ? 3 : 0));
             r.put("Port 2", otherPort == EPort.BON ? 10 : (port == EPort.MAUVAIS ? 3 : 0));
         } else {

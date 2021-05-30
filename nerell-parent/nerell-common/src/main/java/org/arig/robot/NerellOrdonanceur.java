@@ -297,6 +297,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 }
             }
 
+            robotStatus.twoRobots(ecranService.config().isTwoRobots());
             avoidingService.setSafeAvoidance(ecranService.config().isSafeAvoidance());
 
             connectGroup();

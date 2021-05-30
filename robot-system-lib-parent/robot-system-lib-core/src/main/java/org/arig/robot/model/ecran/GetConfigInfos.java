@@ -9,6 +9,7 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GetConfigInfos implements Serializable {
     boolean exit;
+    boolean twoRobots;
     int team;
     int strategy;
     boolean doubleDepose;

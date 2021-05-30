@@ -23,7 +23,7 @@ public class EurobotStatusTest {
     @SneakyThrows
     public void testSerialize() {
         // write
-        EurobotStatus status1 = new EurobotStatus();
+        EurobotStatus status1 = new EurobotStatus(true);
         status1.setTeam(1);
         status1.ecueilCommunEquipePris(true);
         status1.phare(true);
@@ -56,7 +56,7 @@ public class EurobotStatusTest {
         log.debug(baosContent.toString());
 
         // read
-        EurobotStatus status2 = new EurobotStatus();
+        EurobotStatus status2 = new EurobotStatus(true);
 
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
         ObjectInputStream ois = new ObjectInputStream(bais);

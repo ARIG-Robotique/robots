@@ -2,6 +2,10 @@ package org.arig.robot.model;
 
 public class EurobotStatusJournalized extends EurobotStatus {
 
+    public EurobotStatusJournalized(boolean mainRobot) {
+        super(mainRobot);
+    }
+
     @Override
     public EurobotStatus ecueilEquipePris(boolean ecueilEquipePris) {
         if (ecueilEquipePris) {

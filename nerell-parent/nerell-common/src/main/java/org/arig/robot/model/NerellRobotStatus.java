@@ -16,6 +16,10 @@ import java.util.Objects;
 @EqualsAndHashCode(callSuper = true)
 public class NerellRobotStatus extends EurobotStatus {
 
+    public NerellRobotStatus() {
+        super(true);
+    }
+
     private ENerellStrategy strategy = ENerellStrategy.BASIC_NORD;
 
     @Override

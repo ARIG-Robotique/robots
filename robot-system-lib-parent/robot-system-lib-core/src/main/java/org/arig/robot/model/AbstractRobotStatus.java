@@ -27,17 +27,22 @@ public abstract class AbstractRobotStatus<T extends Enum<T>> {
 
     private final Class<T> journalEventEnum;
 
+    private final boolean mainRobot;
+
     @Getter
     protected final List<EventLog<T>> journal = Collections.synchronizedList(new ArrayList<>());
 
-    public AbstractRobotStatus(final int matchTimeMs, Class<T> journalEventEnum) {
+    public AbstractRobotStatus(int matchTimeMs, boolean mainRobot, Class<T> journalEventEnum) {
         this.matchTimeMs = matchTimeMs;
+        this.mainRobot = mainRobot;
         this.journalEventEnum = journalEventEnum;
     }
 
     public void clearJournal() {
         journal.clear();
     }
+
+    private boolean twoRobots = false;
 
     private boolean simulateur = false;
 
