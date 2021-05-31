@@ -207,7 +207,14 @@ public class EurobotStatus extends AbstractRobotStatus<EStatusEvent> {
     }
 
     public int calculerPoints() {
-        int points = 2 + (phare ? 13 : 0);
+        int points = 0;
+
+        // le robot secondaire ne compte pas les points si la comm est ok
+        if (groupOk() && !mainRobot()) {
+            return points;
+        }
+
+        points += 2 + (phare ? 13 : 0);
         points += grandPort.size();
         points += petitPort.size();
         points += grandChenaux.score();

@@ -27,6 +27,9 @@ public abstract class AbstractRobotStatus<T extends Enum<T>> {
 
     private final Class<T> journalEventEnum;
 
+    /**
+     * Il s'agit du robot principal
+     */
     private final boolean mainRobot;
 
     @Getter
@@ -42,7 +45,15 @@ public abstract class AbstractRobotStatus<T extends Enum<T>> {
         journal.clear();
     }
 
+    /**
+     * Il y'a deux robots sur la table
+     */
     private boolean twoRobots = false;
+
+    /**
+     * Les deux robots communiquent
+     */
+    private boolean groupOk = true;
 
     private boolean simulateur = false;
 

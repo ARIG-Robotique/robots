@@ -181,7 +181,7 @@ public abstract class AbstractOrdonanceur {
      */
     protected void connectGroup() {
         if (!group.isOpen()) {
-            group.tryConnect();
+            robotStatus.groupOk(group.tryConnect());
         }
     }
 

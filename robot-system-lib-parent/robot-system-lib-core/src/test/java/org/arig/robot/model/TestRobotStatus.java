@@ -10,7 +10,7 @@ import java.util.Map;
 public class TestRobotStatus extends AbstractRobotStatus<ETestStatusEvent> {
 
     public TestRobotStatus() {
-        super(0, ETestStatusEvent.class);
+        super(0, true, ETestStatusEvent.class);
     }
 
     @Override

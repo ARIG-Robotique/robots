@@ -34,9 +34,6 @@ public class AbstractEcranService {
     @Autowired
     private AbstractRobotStatus rs;
 
-    @Autowired
-    private IRobotGroup group;
-
     @Autowired(required = false)
     private AbstractBaliseService balise;
 
@@ -91,7 +88,7 @@ public class AbstractEcranService {
         stateInfos.setAlim5vp(ioService.alimPuissance5VOk());
         stateInfos.setTirette(ioService.tirette());
         stateInfos.setBalise(balise != null && balise.isConnected());
-        stateInfos.setOtherRobot(group.isOpen());
+        stateInfos.setOtherRobot(rs.groupOk());
     }
 
     public void updatePhoto(UpdatePhotoInfos query) {
