@@ -53,7 +53,7 @@ public abstract class AbstractRobotStatus<T extends Enum<T>> {
     /**
      * Les deux robots communiquent
      */
-    private boolean groupOk = true;
+    private boolean groupOk = false;
 
     private boolean simulateur = false;
 
