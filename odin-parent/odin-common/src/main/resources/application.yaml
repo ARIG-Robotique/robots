@@ -5,9 +5,6 @@ spring:
     web-application-type: NONE
 
 robot:
-  ui:
-    title: Odin Robot
-
   # Système d'évittement
   avoidance:
       implementation: SEMI_COMPLETE
@@ -56,18 +53,24 @@ server:
 spring:
   profiles: simulateur
 
-robot:
-  ui:
-    title: Odin Simulateur
-
 ---
 
 # Spring properties
 spring:
   profiles: greg
 
+# Nerell
+nerell:
+  socket:
+    host: localhost
+
 ---
 
 # Spring properties
 spring:
   profiles: damien
+
+# Nerell
+nerell:
+  socket:
+    host: localhost

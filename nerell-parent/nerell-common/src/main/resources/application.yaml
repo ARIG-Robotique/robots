@@ -5,9 +5,6 @@ spring:
     web-application-type: NONE
 
 robot:
-  ui:
-    title: Nerell Robot
-
   # Système d'évittement
   avoidance:
       implementation: SEMI_COMPLETE
@@ -62,10 +59,6 @@ server:
 spring:
   profiles: simulateur
 
-robot:
-  ui:
-    title: Nerell Simulateur
-
 balise:
   impl: BOUCHON
   socket:
@@ -81,7 +74,12 @@ spring:
 # Balise de vision
 balise:
   socket:
-    host: 192.168.1.22
+    host: localhost
+
+# Odin
+odin:
+  socket:
+    host: localhost
 
 ---
 
@@ -93,3 +91,8 @@ spring:
 balise:
   socket:
     host: 192.168.1.1
+
+# Odin
+odin:
+  socket:
+    host: localhost

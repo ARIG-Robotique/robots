@@ -15,8 +15,10 @@ import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
+import org.arig.robot.system.RobotGroupOverSocket;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
+import org.arig.robot.system.group.IRobotGroup;
 import org.arig.robot.system.motion.AsservissementPolaireDistanceOrientation;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
@@ -31,6 +33,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
+
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
 
 @Slf4j
 @Configuration
@@ -157,6 +162,16 @@ public class NerellCommonContext {
     @Bean
     public NerellRobotStatus robotStatus() {
         return new NerellRobotStatus();
+    }
+
+    @Bean
+    public IRobotGroup robotGroup(Environment env, ExecutorService taskExecutor) throws IOException {
+        final Integer serverPort = env.getRequiredProperty("robot.server.port", Integer.class);
+        final String odinHost = env.getRequiredProperty("odin.socket.host");
+        final Integer odinPort = env.getRequiredProperty("odin.socket.port", Integer.class);
+        RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(serverPort, odinHost, odinPort, taskExecutor);
+        robotGroupOverSocket.openSocket();
+        return robotGroupOverSocket;
     }
 
     @Bean
