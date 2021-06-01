@@ -12,7 +12,6 @@ import org.arig.robot.model.ecran.UpdatePhotoInfos;
 import org.arig.robot.model.ecran.UpdateStateInfos;
 import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.capteurs.IEcran;
-import org.arig.robot.system.group.IRobotGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
 

@@ -10,7 +10,6 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 @Slf4j
 public abstract class AbstractNerellPincesAvantService implements INerellPincesAvantService {

@@ -4,7 +4,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.socket.AbstractQuery;
 import org.arig.robot.communication.socket.AbstractResponse;
-import org.arig.robot.system.communication.AbstractBidirectionalSocket;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;

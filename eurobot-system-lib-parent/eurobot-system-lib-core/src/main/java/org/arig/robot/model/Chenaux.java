@@ -2,7 +2,6 @@ package org.arig.robot.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

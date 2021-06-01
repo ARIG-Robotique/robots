@@ -1,8 +1,6 @@
 package org.arig.robot.model;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.utils.ConvertionRobotUnitTest;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

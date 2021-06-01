@@ -1,7 +1,6 @@
 package org.arig.robot.services;
 
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 
 public interface INerellIOService extends IIOService {
 

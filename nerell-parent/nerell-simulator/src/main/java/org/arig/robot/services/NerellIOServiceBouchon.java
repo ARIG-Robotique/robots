@@ -3,7 +3,6 @@ package org.arig.robot.services;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 import org.springframework.stereotype.Service;
 
 @Service("IOService")
