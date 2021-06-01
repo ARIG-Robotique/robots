@@ -218,7 +218,7 @@ public class OdinRobotContext {
 
     @Bean
     public RPLidarBridgeProcess rplidarBridgeProcess() {
-        return new RPLidarBridgeProcess("/opt/rplidar_bridge");
+        return new RPLidarBridgeProcess("/home/pi/rplidar_bridge");
     }
 
     @Bean
@@ -230,7 +230,7 @@ public class OdinRobotContext {
 
     @Bean
     public EcranProcess ecranProcess() {
-        return new EcranProcess("/opt/odin-gui/bin/odin-gui");
+        return new EcranProcess("/home/pi/odin-gui");
     }
 
     @Bean
