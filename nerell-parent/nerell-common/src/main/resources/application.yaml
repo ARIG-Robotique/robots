@@ -61,9 +61,6 @@ spring:
 
 balise:
   impl: BOUCHON
-  socket:
-    host: localhost
-    port: 9042
 
 ---
 
@@ -73,6 +70,7 @@ spring:
 
 # Balise de vision
 balise:
+  impl: SOCKET
   socket:
     host: localhost
 
