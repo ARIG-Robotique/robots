@@ -1,7 +1,12 @@
 package org.arig.robot.strategy;
 
+import org.arig.robot.model.AbstractRobotStatus;
+import org.arig.robot.model.ETestStatusEvent;
+import org.arig.robot.model.TestRobotStatus;
 import org.arig.robot.strategy.actions.InvalidWhenNotRunAfter10SecondsAndCompletedAfter2ExecutionAction;
 import org.arig.robot.strategy.actions.OneShotAction;
+import org.arig.robot.system.group.IRobotGroup;
+import org.arig.robot.system.group.RobotGroupTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,6 +19,16 @@ public class StrategyManagerTestContext {
     @Bean
     public StrategyManager strategyManager() {
         return new StrategyManager();
+    }
+
+    @Bean
+    public AbstractRobotStatus<ETestStatusEvent> robotStatus() {
+        return new TestRobotStatus();
+    }
+
+    @Bean
+    public IRobotGroup robotGroup() {
+        return new RobotGroupTest();
     }
 
     @Bean
