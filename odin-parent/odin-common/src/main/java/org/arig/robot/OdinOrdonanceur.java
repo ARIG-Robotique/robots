@@ -69,6 +69,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         ChangeFilter<Integer> teamChangeFilter = new ChangeFilter<>(-1);
         do {
             exitFromScreen();
+
             if (teamChangeFilter.filter(ecranService.config().getTeam())) {
                 odinRobotStatus.setTeam(ecranService.config().getTeam());
                 log.info("Team {}", odinRobotStatus.team().name());

@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
@@ -25,7 +26,6 @@ public class NerellRobotStatus extends EurobotStatus {
     @Override
     public void stopMatch() {
         super.stopMatch();
-
         this.disableBalise();
     }
 
@@ -49,7 +49,6 @@ public class NerellRobotStatus extends EurobotStatus {
     }
 
     private boolean doubleDepose;
-
     private boolean deposePartielle;
 
     @Setter(AccessLevel.NONE)
@@ -114,4 +113,11 @@ public class NerellRobotStatus extends EurobotStatus {
         return grandChenaux.chenalRouge.size() < 5 || grandChenaux.chenalVert.size() < 5;
     }
 
+    @Override
+    public Map<String, Object> gameStatus() {
+        Map<String, Object> r = super.gameStatus();
+        r.put("pincesAvant", pincesAvant);
+        r.put("pincesArriere", pincesArriere);
+        return r;
+    }
 }
