@@ -3,6 +3,7 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesServosOdin;
 import org.arig.robot.system.servos.SD21Servos;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,8 +73,12 @@ public class OdinServosService extends AbstractServosService {
         setPositionAndSpeed(
                 IConstantesServosOdin.POUSSOIR_AVANT_GAUCHE,
                 IConstantesServosOdin.POS_POUSSOIR_AVANT_GAUCHE_HAUT,
-                IConstantesServosOdin.SPEED_POUSSOIR_POUSSE,
-                wait);
+                IConstantesServosOdin.SPEED_POUSSOIR_POUSSETTE,
+                false);
+        if (wait) {
+            // Position poussoir haut est toujours avec une tempo fixe
+            ThreadUtils.sleep(IConstantesServosOdin.WAIT_POUSSOIR_POUSSETTE);
+        }
     }
 
     public void poussoirAvantGaucheBas(boolean wait) {
@@ -88,8 +93,12 @@ public class OdinServosService extends AbstractServosService {
         setPositionAndSpeed(
                 IConstantesServosOdin.POUSSOIR_AVANT_DROIT,
                 IConstantesServosOdin.POS_POUSSOIR_AVANT_DROIT_HAUT,
-                IConstantesServosOdin.SPEED_POUSSOIR_POUSSE,
-                wait);
+                IConstantesServosOdin.SPEED_POUSSOIR_POUSSETTE,
+                false);
+        if (wait) {
+            // Position poussoir haut est toujours avec une tempo fixe
+            ThreadUtils.sleep(IConstantesServosOdin.WAIT_POUSSOIR_POUSSETTE);
+        }
     }
 
     public void poussoirAvantDroitBas(boolean wait) {
@@ -104,8 +113,12 @@ public class OdinServosService extends AbstractServosService {
         setPositionBatchAndSpeed(
                 IConstantesServosOdin.BATCH_POUSSOIR_AVANT,
                 IConstantesServosOdin.POS_BATCH_POUSSOIR_AVANT_HAUT,
-                IConstantesServosOdin.SPEED_POUSSOIR_POUSSE,
-                wait);
+                IConstantesServosOdin.SPEED_POUSSOIR_POUSSETTE,
+                false);
+        if (wait) {
+            // Position poussoir haut est toujours avec une tempo fixe
+            ThreadUtils.sleep(IConstantesServosOdin.WAIT_POUSSOIR_POUSSETTE);
+        }
     }
 
     public void poussoirsAvantBas(boolean wait) {
@@ -120,8 +133,12 @@ public class OdinServosService extends AbstractServosService {
         setPositionAndSpeed(
                 IConstantesServosOdin.POUSSOIR_ARRIERE_GAUCHE,
                 IConstantesServosOdin.POS_POUSSOIR_ARRIERE_GAUCHE_HAUT,
-                IConstantesServosOdin.SPEED_POUSSOIR_POUSSE,
-                wait);
+                IConstantesServosOdin.SPEED_POUSSOIR_POUSSETTE,
+                false);
+        if (wait) {
+            // Position poussoir haut est toujours avec une tempo fixe
+            ThreadUtils.sleep(IConstantesServosOdin.WAIT_POUSSOIR_POUSSETTE);
+        }
     }
 
     public void poussoirArriereGaucheBas(boolean wait) {
@@ -136,8 +153,12 @@ public class OdinServosService extends AbstractServosService {
         setPositionAndSpeed(
                 IConstantesServosOdin.POUSSOIR_ARRIERE_DROIT,
                 IConstantesServosOdin.POS_POUSSOIR_ARRIERE_DROIT_HAUT,
-                IConstantesServosOdin.SPEED_POUSSOIR_POUSSE,
-                wait);
+                IConstantesServosOdin.SPEED_POUSSOIR_POUSSETTE,
+                false);
+        if (wait) {
+            // Position poussoir haut est toujours avec une tempo fixe
+            ThreadUtils.sleep(IConstantesServosOdin.WAIT_POUSSOIR_POUSSETTE);
+        }
     }
 
     public void poussoirArriereDroitBas(boolean wait) {
@@ -152,8 +173,12 @@ public class OdinServosService extends AbstractServosService {
         setPositionBatchAndSpeed(
                 IConstantesServosOdin.BATCH_POUSSOIR_ARRIERE,
                 IConstantesServosOdin.POS_BATCH_POUSSOIR_ARRIERE_HAUT,
-                IConstantesServosOdin.SPEED_POUSSOIR_POUSSE,
-                wait);
+                IConstantesServosOdin.SPEED_POUSSOIR_POUSSETTE,
+                false);
+        if (wait) {
+            // Position poussoir haut est toujours avec une tempo fixe
+            ThreadUtils.sleep(IConstantesServosOdin.WAIT_POUSSOIR_POUSSETTE);
+        }
     }
 
     public void poussoirsArriereBas(boolean wait) {

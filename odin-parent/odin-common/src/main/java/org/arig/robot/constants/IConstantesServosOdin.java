@@ -15,7 +15,7 @@ public interface IConstantesServosOdin {
     byte SPEED_BRAS = 0;
     byte SPEED_PAVILLON = 0;
     byte SPEED_POUSSOIR = 0;
-    byte SPEED_POUSSOIR_POUSSE = 20; // TODO
+    byte SPEED_POUSSOIR_POUSSETTE = 20; // TODO
 
     // Tempo servos //
     // ------------ //
@@ -23,6 +23,7 @@ public interface IConstantesServosOdin {
     int WAIT_BRAS = 440;
     int WAIT_PAVILLON = 300;
     int WAIT_POUSSOIR = 500; // TODO
+    int WAIT_POUSSOIR_POUSSETTE = 500; // TODO
 
     // Constantes d'identification Servo //
     // --------------------------------- //
