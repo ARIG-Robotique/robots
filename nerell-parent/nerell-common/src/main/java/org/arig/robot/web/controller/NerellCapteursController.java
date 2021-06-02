@@ -22,10 +22,6 @@ public class NerellCapteursController extends AbstractCapteursController {
 
         numeriqueInfos.put("Bordure arrière droite", ioService::calageBordureDroit);
         numeriqueInfos.put("Bordure arrière gauche", ioService::calageBordureGauche);
-        numeriqueInfos.put("Presence ventouse 1", ioService::presenceVentouse1);
-        numeriqueInfos.put("Presence ventouse 2", ioService::presenceVentouse2);
-        numeriqueInfos.put("Presence ventouse 3", ioService::presenceVentouse3);
-        numeriqueInfos.put("Presence ventouse 4", ioService::presenceVentouse4);
         numeriqueInfos.put("Presence pince arrière 1", ioService::presencePinceArriere1);
         numeriqueInfos.put("Presence pince arrière 2", ioService::presencePinceArriere2);
         numeriqueInfos.put("Presence pince arrière 3", ioService::presencePinceArriere3);

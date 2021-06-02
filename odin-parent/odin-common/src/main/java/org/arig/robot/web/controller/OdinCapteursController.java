@@ -38,10 +38,6 @@ public class OdinCapteursController extends AbstractCapteursController {
 
         numeriqueInfos.put("Bordure arrière droite", ioService::calageBordureDroit);
         numeriqueInfos.put("Bordure arrière gauche", ioService::calageBordureGauche);
-        numeriqueInfos.put("Presence ventouse avant gauche", ioService::presenceVentouseAvantGauche);
-        numeriqueInfos.put("Presence ventouse avant droit", ioService::presenceVentouseAvantDroit);
-        numeriqueInfos.put("Presence ventouse arriere gauche", ioService::presenceVentouseArriereGauche);
-        numeriqueInfos.put("Presence ventouse arriere droit", ioService::presenceVentouseArriereDroit);
 
         textInfos.put("Equipe", () -> rs.team().name());
     }
