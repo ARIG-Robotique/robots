@@ -70,7 +70,6 @@ public class EurobotStatus extends AbstractRobotStatus<EStatusEvent> {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private List<Bouee> bouees = Arrays.asList(
-            null,
             new Bouee(1, ECouleurBouee.ROUGE, new Point(300, 2000 - 400)),
             new Bouee(2, ECouleurBouee.VERT, new Point(450, 2000 - 510)),
             new Bouee(3, ECouleurBouee.ROUGE, new Point(450, 2000 - 1080)),
@@ -90,23 +89,23 @@ public class EurobotStatus extends AbstractRobotStatus<EStatusEvent> {
     );
 
     public void boueePrise(int numero) {
-        bouees.get(numero).setPrise();
+        bouees.get(numero - 1).setPrise();
     }
 
     public void boueePresente(int numero, boolean presente) {
-        bouees.get(numero).setPresente(presente);
+        bouees.get(numero - 1).setPresente(presente);
     }
 
     public boolean boueePresente(int numero) {
-        return bouees.get(numero).presente();
+        return bouees.get(numero - 1).presente();
     }
 
     public Point boueePt(int numero) {
-        return bouees.get(numero).pt();
+        return bouees.get(numero - 1).pt();
     }
 
     public ECouleurBouee boueeCouleur(int numero) {
-        return bouees.get(numero).couleur();
+        return bouees.get(numero - 1).couleur();
     }
 
     private List<Bouee> hautFond = new ArrayList<>();
