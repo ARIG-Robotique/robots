@@ -14,23 +14,12 @@ import java.util.Map;
 @Slf4j
 @RestController
 public class OdinCapteursController extends AbstractCapteursController {
+
     @Autowired
     private OdinRobotStatus rs;
 
     @Autowired
     private IOdinIOService ioService;
-
-    @Getter
-    @Accessors(fluent = true)
-    private final Map<String, BooleanValue> numeriqueInfos = new LinkedHashMap<>();
-
-    @Getter
-    @Accessors(fluent = true)
-    private final Map<String, DoubleValue> analogiqueInfos = new LinkedHashMap<>();
-
-    @Getter
-    @Accessors(fluent = true)
-    private final Map<String, StringValue> textInfos = new LinkedHashMap<>();
 
     @Override
     public void afterPropertiesSet() throws Exception {
