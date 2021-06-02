@@ -342,6 +342,17 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
     // -------------------------- BUSINESS ----------------------- //
     // ----------------------------------------------------------- //
 
+
+    @Override
+    public void disableAllPompe() {
+        vacuumController.disableAll();
+    }
+
+    @Override
+    public void enableAllPompe() {
+        vacuumController.onAll();
+    }
+
     @Override
     public void enablePompe1() {
         vacuumController.on(1);
@@ -360,6 +371,11 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
     @Override
     public void enablePompe4() {
         vacuumController.on(4);
+    }
+
+    @Override
+    public void releaseAllPompe() {
+        vacuumController.offAll();
     }
 
     @Override

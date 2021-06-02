@@ -75,9 +75,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
         rs.disablePincesAvant();
 
         servosService.ascenseursAvantBas(true);
-        for (int i = 0; i < 4; i++) {
-            releasePompe(i);
-        }
+        io.releaseAllPompe();
         ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
 
         rs.deposePetitChenalRouge(ArrayUtils.subarray(rs.pincesAvant(), 0, 2));
@@ -92,9 +90,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
         rs.disablePincesAvant();
 
         servosService.ascenseursAvantBas(true);
-        for (int i = 0; i < 4; i++) {
-            releasePompe(i);
-        }
+        io.releaseAllPompe();
         ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
 
         for (ECouleurBouee eCouleurBouee : rs.pincesAvant()) {
@@ -115,9 +111,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
         }
 
         // Aspiration des nouvelles bouées
-        for (int i = 0; i < 4; i++) {
-            enablePompe(i);
-        }
+        io.enableAllPompe();
 
         previousState = getNewState();
 
@@ -167,17 +161,6 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
             }
         }
         io.disableLedCapteurCouleur();
-    }
-
-    private void enablePompe(int i) {
-        // @formatter:off
-        switch (i) {
-            case 0: io.enablePompe1(); break;
-            case 1: io.enablePompe2(); break;
-            case 2: io.enablePompe3(); break;
-            case 3: io.enablePompe4(); break;
-        }
-        // @formatter:on
     }
 
     private void releasePompe(int i) {

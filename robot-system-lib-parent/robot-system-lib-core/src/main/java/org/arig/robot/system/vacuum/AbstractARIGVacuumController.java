@@ -50,6 +50,22 @@ public abstract class AbstractARIGVacuumController {
         sendToController();
     }
 
+    public void onAll() {
+        for (int idx = 0 ; idx < NB_PUMPS ; idx++) {
+            states[idx] = VacuumPumpState.ON;
+        }
+
+        sendToController();
+    }
+
+    public void offAll() {
+        for (int idx = 0 ; idx < NB_PUMPS ; idx++) {
+            states[idx] = VacuumPumpState.OFF;
+        }
+
+        sendToController();
+    }
+
     /**
      * Passage à l'état `DISABLED` d'une gestion de vide.
      * Etat de haute impédance pour l'electrovanne et la pome à vide.

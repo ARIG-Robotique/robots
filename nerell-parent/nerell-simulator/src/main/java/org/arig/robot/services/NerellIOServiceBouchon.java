@@ -99,6 +99,15 @@ public class NerellIOServiceBouchon extends AbstractIOServiceBouchon implements 
     // -------------------------- BUSINESS ----------------------- //
     // ----------------------------------------------------------- //
 
+
+    @Override
+    public void disableAllPompe() {
+    }
+
+    @Override
+    public void enableAllPompe() {
+    }
+
     @Override
     public void enablePompe1() {
     }
@@ -113,6 +122,10 @@ public class NerellIOServiceBouchon extends AbstractIOServiceBouchon implements 
 
     @Override
     public void enablePompe4() {
+    }
+
+    @Override
+    public void releaseAllPompe() {
     }
 
     @Override
