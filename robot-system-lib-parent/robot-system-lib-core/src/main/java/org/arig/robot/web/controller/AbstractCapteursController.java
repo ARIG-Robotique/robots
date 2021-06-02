@@ -67,7 +67,7 @@ public abstract class AbstractCapteursController implements InitializingBean {
 
     @GetMapping(value = "/couleurs")
     public final Map<String, String> couleurs() {
-        return extractValue(textInfos);
+        return extractValue(couleursInfos);
     }
 
     private <R> Map<String, R> extractValue(Map<String, ? extends GenericValue<R>> src) {
