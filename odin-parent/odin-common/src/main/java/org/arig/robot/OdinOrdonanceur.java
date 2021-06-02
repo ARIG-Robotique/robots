@@ -11,6 +11,7 @@ import org.arig.robot.model.EOdinStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.Point;
+import org.arig.robot.services.IOdinIOService;
 import org.arig.robot.services.OdinServosService;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Autowired
     private OdinServosService odinServosService;
+
+    @Autowired
+    private IOdinIOService odinIOService;
 
     @Override
     public String getPathfinderMap() {
@@ -53,11 +57,17 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void afterMatch() {
+        odinIOService.releaseAllPompe();
         group.sendEventLog();
     }
 
     @Override
     public void beforePowerOff() {
+        odinServosService.brasDroitFerme(false);
+        odinServosService.brasGaucheFerme(false);
+        odinServosService.poussoirsArriereBas(false);
+        odinServosService.poussoirsAvantBas(false);
+        odinIOService.disableAllPompe();
         ThreadUtils.sleep(1000);
     }
 

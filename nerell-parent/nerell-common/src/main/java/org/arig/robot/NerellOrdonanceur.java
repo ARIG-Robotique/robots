@@ -15,6 +15,7 @@ import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.ecran.UpdatePhotoInfos;
 import org.arig.robot.services.BaliseService;
+import org.arig.robot.services.INerellIOService;
 import org.arig.robot.services.NerellEcranService;
 import org.arig.robot.services.NerellServosService;
 import org.arig.robot.utils.ThreadUtils;
@@ -29,6 +30,9 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Autowired
     private NerellServosService nerellServosService;
+
+    @Autowired
+    private INerellIOService nerellIOService;
 
     @Autowired
     private BaliseService baliseService;
@@ -67,6 +71,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void afterMatch() {
+        nerellIOService.releaseAllPompe();
         baliseService.idle();
         nerellRobotStatus.disableBalise();
     }
@@ -85,6 +90,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         while (ioService.tirette()) {
             ThreadUtils.sleep(1000);
         }
+        nerellIOService.disableAllPompe();
         nerellServosService.pincesArriereFerme(false);
         ThreadUtils.sleep(1000);
     }
