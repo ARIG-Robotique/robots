@@ -67,6 +67,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         odinServosService.brasGaucheFerme(false);
         odinServosService.poussoirsArriereBas(false);
         odinServosService.poussoirsAvantBas(false);
+        odinServosService.pavillonFinMatch();
         odinIOService.disableAllPompe();
         ThreadUtils.sleep(1000);
     }

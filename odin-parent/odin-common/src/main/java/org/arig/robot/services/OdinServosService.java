@@ -64,6 +64,10 @@ public class OdinServosService extends AbstractServosService {
         setPosition(IConstantesServosOdin.PAVILLON, IConstantesServosOdin.POS_PAVILLON_HAUT, false);
     }
 
+    public void pavillonFinMatch() {
+        setPosition(IConstantesServosOdin.PAVILLON, IConstantesServosOdin.POS_PAVILLON_FIN_MATCH, false);
+    }
+
     public void poussoirAvantGaucheHaut(boolean wait) {
         setPositionAndSpeed(
                 IConstantesServosOdin.POUSSOIR_AVANT_GAUCHE,
