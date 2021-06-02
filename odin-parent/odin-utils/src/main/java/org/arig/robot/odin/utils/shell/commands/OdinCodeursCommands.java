@@ -100,5 +100,4 @@ public class OdinCodeursCommands {
         private final int vitesse;
         private final double gauche, droit;
     }
-
 }

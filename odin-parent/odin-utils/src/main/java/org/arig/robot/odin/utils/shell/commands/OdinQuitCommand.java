@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.arig.robot.services.IOdinIOService;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.motors.AbstractMotor;
+import org.arig.robot.system.vacuum.ARIGVacuumController;
 import org.springframework.shell.ExitRequest;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -15,17 +16,16 @@ public class OdinQuitCommand implements Quit.Command {
 
     private final ILidarTelemeter lidar;
     private final IOdinIOService ioService;
-    private final AbstractMotor motorPavillon;
+    private final ARIGVacuumController vacuumController;
 
     @ShellMethod(value = "Exit the shell.", key = {"quit", "exit"})
     public void quit() {
-
         // Stop le lidar en quittant
         lidar.stopScan();
         lidar.end();
 
-        // Stop le moteur du pavillon
-        motorPavillon.speed(motorPavillon.getStopSpeed());
+        // Désactivation des pompes
+        vacuumController.disableAll();
 
         // Stop les alimentations de puissance
         ioService.disableAlim12VPuissance();

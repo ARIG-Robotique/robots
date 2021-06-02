@@ -1,9 +1,9 @@
-package org.arig.robot.nerell.utils.shell.commands;
+package org.arig.robot.odin.utils.shell.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.arig.robot.model.AbstractRobotStatus;
-import org.arig.robot.services.INerellIOService;
-import org.arig.robot.services.NerellServosService;
+import org.arig.robot.services.IOdinIOService;
+import org.arig.robot.services.OdinServosService;
 import org.arig.robot.system.vacuum.ARIGVacuumController;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
@@ -15,12 +15,11 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 @ShellComponent
 @ShellCommandGroup("Vacuum")
 @RequiredArgsConstructor
-public class NerellVacuumCommands {
+public class OdinVacuumCommands {
 
     private final AbstractRobotStatus rs;
-    private final INerellIOService ioService;
+    private final IOdinIOService ioService;
     private final ARIGVacuumController vacuumController;
-    private final NerellServosService nerellServosService;
 
     public Availability alimentationOk() {
         return ioService.auOk() && ioService.alimPuissance5VOk() && ioService.alimPuissance12VOk()
@@ -48,12 +47,8 @@ public class NerellVacuumCommands {
     @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Pompe test")
     public void pumpTest(final int nb) {
-        nerellServosService.ascenseurAvantBas(nb - 1, true);
         vacuumController.on(nb);
         ThreadUtils.sleep(5000);
-        nerellServosService.ascenseurAvantHaut(nb - 1, true);
-        ThreadUtils.sleep(5000);
-        nerellServosService.ascenseurAvantBas(nb - 1, true);
         vacuumController.off(nb);
     }
 }

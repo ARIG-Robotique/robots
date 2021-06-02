@@ -19,7 +19,6 @@ public class OdinMoteursCommands {
     private final AbstractRobotStatus rs;
     private final IOdinIOService ioService;
     private final AbstractPropulsionsMotors propulsionsMotors;
-    private final AbstractMotor motorPavillon;
 
     public Availability alimentationOk() {
         return ioService.auOk() && ioService.alimPuissance5VOk() && ioService.alimPuissance12VOk()
@@ -38,11 +37,5 @@ public class OdinMoteursCommands {
     public void stopMoteursPropulsions() {
         propulsionsMotors.generateMouvement(propulsionsMotors.getStopSpeed(), propulsionsMotors.getStopSpeed());
         rs.disableCapture();
-    }
-
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Sortie du pavillon")
-    public void moteurPavillon(int value) {
-        motorPavillon.speed(value);
     }
 }

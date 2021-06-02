@@ -34,4 +34,6 @@ public class OdinAlimentationCommands {
         ioService.disableAlim5VPuissance();
         ioService.disableAlim12VPuissance();
     }
+
+    // TODO : Lecture tension / courant
 }
