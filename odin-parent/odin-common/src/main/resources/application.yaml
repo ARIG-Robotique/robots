@@ -7,7 +7,7 @@ spring:
 robot:
   # Système d'évittement
   avoidance:
-      implementation: SEMI_COMPLETE
+     implementation: SEMI_COMPLETE
 
   # Config
   pathfinding:
@@ -21,6 +21,11 @@ robot:
 
   server:
     port: 9101
+
+# Écran
+ecran:
+  binary: /home/pi/odin-gui
+  socket: /tmp/ecran-odin.sock
 
 # Nerell
 nerell:
@@ -52,6 +57,10 @@ server:
 # Spring properties
 spring:
   profiles: simulateur
+
+# Écran
+ecran:
+  binary: /opt/odin-gui
 
 ---
 

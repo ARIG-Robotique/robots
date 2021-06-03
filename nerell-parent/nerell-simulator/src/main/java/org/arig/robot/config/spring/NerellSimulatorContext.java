@@ -13,8 +13,6 @@ import org.arig.robot.model.bouchon.BouchonI2CDevice;
 import org.arig.robot.model.bouchon.BouchonI2CMultiplexer;
 import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
 import org.arig.robot.system.avoiding.IAvoidingService;
-import org.arig.robot.system.capteurs.EcranOverSocket;
-import org.arig.robot.system.capteurs.IEcran;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
@@ -24,17 +22,14 @@ import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.BouchonPropulsionsMotors;
-import org.arig.robot.system.process.EcranProcess;
 import org.arig.robot.system.servos.SD21Servos;
 import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
 import org.arig.robot.system.vacuum.BouchonARIGVacuumController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -103,18 +98,6 @@ public class NerellSimulatorContext {
     @Bean
     public AbstractARIGVacuumController vacuumController() {
         return new BouchonARIGVacuumController();
-    }
-
-    @Bean
-    public EcranProcess ecranProcess() {
-        return new EcranProcess("/opt/nerell-gui");
-    }
-
-    @Bean
-    @DependsOn("ecranProcess")
-    public IEcran ecran() throws Exception {
-        final File socketFile = new File(EcranProcess.socketPath);
-        return new EcranOverSocket(socketFile);
     }
 
     @Bean

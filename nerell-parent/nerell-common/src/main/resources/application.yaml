@@ -22,6 +22,11 @@ robot:
   server:
     port: 9100
 
+# Écran
+ecran:
+  binary: /home/pi/nerell-gui
+  socket: /tmp/ecran-nerell.sock
+
 # Odin
 odin:
   socket:
@@ -59,6 +64,11 @@ server:
 spring:
   profiles: simulateur
 
+# Écran
+ecran:
+  binary: /opt/nerell-gui
+
+# Balise de vision
 balise:
   impl: BOUCHON
 

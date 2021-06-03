@@ -1,5 +1,6 @@
 package org.arig.robot.system.process;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
 import org.springframework.beans.factory.DisposableBean;
@@ -12,18 +13,19 @@ import java.util.List;
 @Slf4j
 public class EcranProcess implements InitializingBean, DisposableBean {
 
-    public static final String socketPath = "/tmp/ecran.sock";
-
     private Process p;
     private final String executablePath;
+    @Getter
+    private final String socketPath;
     private final boolean debug;
 
-    public EcranProcess(String executablePath) {
-        this(executablePath, false);
+    public EcranProcess(String executablePath, String socketPath) {
+        this(executablePath, socketPath, false);
     }
 
-    public EcranProcess(String executablePath, boolean debug) {
+    public EcranProcess(String executablePath, String socketPath, boolean debug) {
         this.executablePath = executablePath;
+        this.socketPath = socketPath;
         this.debug = debug;
     }
 
@@ -61,6 +63,8 @@ public class EcranProcess implements InitializingBean, DisposableBean {
 
     @Override
     public void destroy() throws Exception {
-        p.destroyForcibly();
+        if (p != null) {
+            p.destroyForcibly();
+        }
     }
 }

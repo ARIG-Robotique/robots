@@ -22,8 +22,6 @@ import org.arig.robot.system.avoiding.impl.BasicRetryAvoidingService;
 import org.arig.robot.system.avoiding.impl.CompleteAvoidingService;
 import org.arig.robot.system.avoiding.impl.SemiCompleteAvoidingService;
 import org.arig.robot.system.capteurs.ARIG2ChannelsAlimentationSensor;
-import org.arig.robot.system.capteurs.EcranOverSocket;
-import org.arig.robot.system.capteurs.IEcran;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
 import org.arig.robot.system.capteurs.TCA9548MultiplexerI2C;
@@ -31,7 +29,6 @@ import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.PropulsionsPCA9685Motors;
-import org.arig.robot.system.process.EcranProcess;
 import org.arig.robot.system.process.RPLidarBridgeProcess;
 import org.arig.robot.system.servos.SD21Servos;
 import org.arig.robot.system.vacuum.ARIGVacuumController;
@@ -226,18 +223,6 @@ public class OdinRobotContext {
     public ILidarTelemeter rplidar() throws Exception {
         final File socketFile = new File(RPLidarBridgeProcess.socketPath);
         return new RPLidarA2TelemeterOverSocket(socketFile);
-    }
-
-    @Bean
-    public EcranProcess ecranProcess() {
-        return new EcranProcess("/home/pi/odin-gui");
-    }
-
-    @Bean
-    @DependsOn("ecranProcess")
-    public IEcran ecran() throws Exception {
-        final File socketFile = new File(EcranProcess.socketPath);
-        return new EcranOverSocket(socketFile);
     }
 
     @Bean

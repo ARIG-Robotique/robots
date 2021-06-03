@@ -18,6 +18,8 @@ import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.system.RobotGroupOverSocket;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
+import org.arig.robot.system.capteurs.EcranOverSocket;
+import org.arig.robot.system.capteurs.IEcran;
 import org.arig.robot.system.group.IRobotGroup;
 import org.arig.robot.system.motion.AsservissementPolaireDistanceOrientation;
 import org.arig.robot.system.motion.IAsservissementPolaire;
@@ -27,6 +29,7 @@ import org.arig.robot.system.pathfinding.GameMultiPathFinderImpl;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.system.pathfinding.impl.NoPathFinderImpl;
+import org.arig.robot.system.process.EcranProcess;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +37,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 
@@ -172,6 +176,19 @@ public class NerellCommonContext {
         RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(serverPort, odinHost, odinPort, taskExecutor);
         robotGroupOverSocket.openSocket();
         return robotGroupOverSocket;
+    }
+
+    @Bean
+    public EcranProcess ecranProcess(Environment env) {
+        final String ecranSocket = env.getRequiredProperty("ecran.socket");
+        final String ecranBinary = env.getRequiredProperty("ecran.binary");
+        return new EcranProcess(ecranBinary, ecranSocket);
+    }
+
+    @Bean
+    public IEcran ecran(EcranProcess ecranProcess) throws Exception {
+        final File socketFile = new File(ecranProcess.getSocketPath());
+        return new EcranOverSocket(socketFile);
     }
 
     @Bean
