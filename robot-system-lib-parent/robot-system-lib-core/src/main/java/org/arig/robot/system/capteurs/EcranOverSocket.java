@@ -16,16 +16,15 @@ import org.arig.robot.model.ecran.UpdateStateInfos;
 import org.arig.robot.system.communication.AbstractSocketClient;
 
 import java.io.File;
-import java.io.IOException;
 
 @Slf4j
 public class EcranOverSocket extends AbstractSocketClient<EcranAction> implements IEcran {
 
-    public EcranOverSocket(String hostname, Integer port) throws Exception {
+    public EcranOverSocket(String hostname, Integer port) {
         super(hostname, port, 1000);
     }
 
-    public EcranOverSocket(File socketFile) throws Exception {
+    public EcranOverSocket(File socketFile) {
         super(socketFile);
     }
 
@@ -34,7 +33,7 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
         if (isOpen()) {
             try {
                 sendToSocketAndGet(new ExitQuery(), EmptyResponse.class);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 log.warn("Impossible de fermer l'ecran");
             }
         }

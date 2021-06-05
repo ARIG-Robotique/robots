@@ -25,8 +25,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Slf4j
 public abstract class AbstractSocketServer<T extends Enum<T>> {
 
-    private static final String DATA_INVALID = "DATA_INVALID";
-    private static final String DATA_UNPARSABLE = "DATA_UNPARSABLE";
+    public static final String DATA_INVALID = "DATA_INVALID";
+    public static final String DATA_UNPARSABLE = "DATA_UNPARSABLE";
 
     private final boolean unixSocket;
     private final Executor executor;

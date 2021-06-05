@@ -1,5 +1,6 @@
 package org.arig.robot.system.communication;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -99,7 +100,6 @@ public abstract class AbstractSocketClient<T extends Enum<T>> {
                 socket.shutdownOutput();
                 socket.shutdownInput();
             } catch (IOException e) {
-                log.warn("Erreur de shutdown sur la socket", e);
             }
             closeQuietly(in);
             closeQuietly(out);
@@ -108,7 +108,7 @@ public abstract class AbstractSocketClient<T extends Enum<T>> {
         }
     }
 
-    protected <Q extends AbstractQuery<T>, R extends AbstractResponse<T>> R sendToSocketAndGet(Q query, Class<R> responseClazz) throws IOException {
+    protected <Q extends AbstractQuery<T>, R extends AbstractResponse<T>> R sendToSocketAndGet(Q query, Class<R> responseClazz) throws IllegalStateException {
         try {
             if (isOpen()) {
                 String q = objectMapper.writeValueAsString(query);
@@ -122,11 +122,21 @@ public abstract class AbstractSocketClient<T extends Enum<T>> {
                     throw new IOException("Null result");
                 }
                 log.debug("Réponse : {}", res);
-                R rawResponse = objectMapper.readValue(res, responseClazz);
-                if (rawResponse.isError()) {
-                    throw new IllegalStateException(rawResponse.getErrorMessage());
+
+                JsonNode rawReponse = objectMapper.readTree(res);
+                String strAction = rawReponse.get("action").asText();
+                if (StringUtils.isBlank(strAction)) {
+                    throw new IllegalStateException("Réponse vide");
                 }
-                return rawResponse;
+                if (strAction.equals(AbstractSocketServer.DATA_INVALID) || strAction.equals(AbstractSocketServer.DATA_UNPARSABLE)) {
+                    throw new IllegalStateException(rawReponse.get("errorMessage").asText());
+                }
+
+                R reponse = objectMapper.readValue(res, responseClazz);
+                if (reponse.isError()) {
+                    throw new IllegalStateException(reponse.getErrorMessage());
+                }
+                return reponse;
             } else {
                 throw new IllegalStateException("Socket non ouverte");
             }
@@ -134,9 +144,12 @@ public abstract class AbstractSocketClient<T extends Enum<T>> {
             log.warn("Timeout lors de la requete");
             throw new IllegalStateException("Timeout lors de la requete");
         } catch (IOException e) {
-            log.warn("Connexion perdu");
+            log.warn("Connexion perdue", e);
             end(true);
             throw new IllegalStateException("Socket perdu");
+        } catch (IllegalStateException e) {
+            log.warn(e.getMessage());
+            throw e;
         }
     }
 
