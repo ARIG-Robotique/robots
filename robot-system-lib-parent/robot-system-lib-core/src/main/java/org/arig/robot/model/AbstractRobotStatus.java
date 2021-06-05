@@ -8,41 +8,23 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @Data
 @Accessors(fluent = true)
-public abstract class AbstractRobotStatus<T extends Enum<T>> {
+public abstract class AbstractRobotStatus {
 
     private final int matchTimeMs;
-
-    private final Class<T> journalEventEnum;
 
     /**
      * Il s'agit du robot principal
      */
     private final boolean mainRobot;
 
-    @Getter
-    protected final List<EventLog<T>> journal = Collections.synchronizedList(new ArrayList<>());
-
-    public AbstractRobotStatus(int matchTimeMs, boolean mainRobot, Class<T> journalEventEnum) {
+    public AbstractRobotStatus(int matchTimeMs, boolean mainRobot) {
         this.matchTimeMs = matchTimeMs;
         this.mainRobot = mainRobot;
-        this.journalEventEnum = journalEventEnum;
-    }
-
-    public void clearJournal() {
-        journal.clear();
     }
 
     /**
@@ -175,82 +157,5 @@ public abstract class AbstractRobotStatus<T extends Enum<T>> {
     public abstract Map<String, ?> gameStatus();
 
     public abstract Map<String, Integer> scoreStatus();
-
-    public abstract void writeStatus(ObjectOutputStream os) throws IOException;
-
-    public abstract void readStatus(ObjectInputStream is) throws IOException;
-
-    public abstract void integrateJournal(List<EventLog<T>> journal, boolean self);
-
-    public byte[] serializeStatus() {
-        try (
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(baos);
-        ) {
-            writeStatus(oos);
-            return baos.toByteArray();
-        } catch (IOException e) {
-            log.warn(e.getMessage());
-            return null;
-        }
-    }
-
-    public void deserializeStatus(byte[] data) {
-        try (
-                ByteArrayInputStream bais = new ByteArrayInputStream(data);
-                ObjectInputStream ois = new ObjectInputStream(bais);
-        ) {
-            readStatus(ois);
-
-            // nouveaux event depuis qu'on a envoyé le journal à l'autre robot
-            if (!journal.isEmpty()) {
-                integrateJournal(journal, true);
-            }
-        } catch (IOException e) {
-            log.warn(e.getMessage());
-        }
-    }
-
-    public byte[] serializeJournal() {
-        try (
-                final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                final ObjectOutputStream oos = new ObjectOutputStream(baos);
-        ) {
-            final List<EventLog<T>> journalCopy = new ArrayList<>(journal);
-            journal.clear();
-
-            oos.writeByte(journalCopy.size());
-            for (EventLog<?> event : journalCopy) {
-                oos.writeByte(event.getEvent().ordinal());
-                oos.writeByte(event.getValue());
-            }
-
-            return baos.toByteArray();
-        } catch (IOException e) {
-            log.warn(e.getMessage());
-            return null;
-        }
-    }
-
-    public void deserializeJournal(final byte[] data) {
-        try (
-                final ByteArrayInputStream bais = new ByteArrayInputStream(data);
-                final ObjectInputStream ois = new ObjectInputStream(bais);
-        ) {
-            final List<EventLog<T>> journal = new ArrayList<>();
-
-            byte length = ois.readByte();
-            for (byte i = 0; i < length; i++) {
-                byte event = ois.readByte();
-                byte value = ois.readByte();
-
-                journal.add(new EventLog<>(journalEventEnum.getEnumConstants()[event], value));
-            }
-
-            integrateJournal(journal, false);
-        } catch (IOException e) {
-            log.warn(e.getMessage());
-        }
-    }
 
 }

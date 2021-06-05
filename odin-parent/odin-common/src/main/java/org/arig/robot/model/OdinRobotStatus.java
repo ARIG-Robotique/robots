@@ -13,7 +13,7 @@ import java.util.Objects;
 @Data
 @Accessors(fluent = true)
 @EqualsAndHashCode(callSuper = true)
-public class OdinRobotStatus extends EurobotStatusJournalized {
+public class OdinRobotStatus extends EurobotStatus {
 
     public OdinRobotStatus() {
         super(false);

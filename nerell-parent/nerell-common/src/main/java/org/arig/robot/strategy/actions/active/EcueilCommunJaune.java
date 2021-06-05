@@ -73,7 +73,7 @@ public class EcueilCommunJaune extends AbstractEcueil {
 
     @Override
     protected void onAgressiveMvtDone() {
-        rs.boueePrise(11);
+        group.boueePrise(11);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class EcueilCommunJaune extends AbstractEcueil {
     @Override
     protected void onComplete() {
         // on a shooté la bouée
-        rs.boueePrise(12);
+        group.boueePrise(12);
         rs.ecueilCommunJauneDispo((byte) 0);
 
         if (rs.team() == ETeam.JAUNE) {

@@ -18,8 +18,10 @@ public abstract class AbstractRobotGroupBouchon implements IRobotGroup {
     }
 
     @Override
-    public void sendEventLog() {
-
+    public <E extends Enum<E>> void sendEventLog(E event, byte[] data) {
     }
 
+    @Override
+    public void listen(Handler handler) {
+    }
 }

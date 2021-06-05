@@ -40,6 +40,7 @@ import org.springframework.core.env.Environment;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @Slf4j
 @Configuration
@@ -169,11 +170,11 @@ public class NerellCommonContext {
     }
 
     @Bean
-    public IRobotGroup robotGroup(Environment env, ExecutorService taskExecutor) throws IOException {
+    public IRobotGroup robotGroup(Environment env, ThreadPoolExecutor threadPoolTaskExecutor) throws IOException {
         final Integer serverPort = env.getRequiredProperty("robot.server.port", Integer.class);
         final String odinHost = env.getRequiredProperty("odin.socket.host");
         final Integer odinPort = env.getRequiredProperty("odin.socket.port", Integer.class);
-        RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(serverPort, odinHost, odinPort, taskExecutor);
+        RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(serverPort, odinHost, odinPort, threadPoolTaskExecutor);
         robotGroupOverSocket.openSocket();
         return robotGroupOverSocket;
     }

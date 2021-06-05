@@ -79,15 +79,14 @@ public class PriseBoueesNord extends AbstractNerellAction {
 
                 mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.boueePrise(1);
-                rs.boueePrise(2);
+                group.boueePrise(1, 2);
 
                 mv.gotoOrientationDeg(0);
                 mv.gotoPoint(640, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.boueePrise(5);
+                group.boueePrise(5);
 
                 mv.gotoPoint(940, 1662, GotoOption.AVANT);
-                rs.boueePrise(6);
+                group.boueePrise(6);
 
             } else {
                 if (rs.strategy() != ENerellStrategy.BASIC_NORD) {
@@ -97,15 +96,14 @@ public class PriseBoueesNord extends AbstractNerellAction {
 
                 mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.boueePrise(13);
-                rs.boueePrise(14);
+                group.boueePrise(13, 14);
 
                 mv.gotoOrientationDeg(180);
                 mv.gotoPoint(3000 - 640, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.boueePrise(12);
+                group.boueePrise(12);
 
                 mv.gotoPoint(3000 - 940, 1662, GotoOption.AVANT);
-                rs.boueePrise(11);
+                group.boueePrise(11);
             }
 
         } catch (AvoidingException | NoPathFoundException e) {

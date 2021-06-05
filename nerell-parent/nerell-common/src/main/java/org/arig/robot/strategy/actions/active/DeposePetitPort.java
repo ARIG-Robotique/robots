@@ -110,9 +110,9 @@ public class DeposePetitPort extends AbstractNerellAction {
 
             // on a shooté la bouée
             if (rs.team() == ETeam.JAUNE) {
-                rs.boueePrise(8);
+                group.boueePrise(8);
             } else {
-                rs.boueePrise(9);
+                group.boueePrise(9);
             }
 
             rs.disablePincesAvant(); // Pour ne pas faire de comptage supplémentaire si il reste des emplacements vide
@@ -136,12 +136,12 @@ public class DeposePetitPort extends AbstractNerellAction {
                 mv.gotoPoint(x, baseYStep, GotoOption.SANS_ORIENTATION);
                 moustacheFaites = true;
 
-                rs.deposePetitChenalRouge(ECouleurBouee.ROUGE);
-                rs.deposePetitChenalVert(ECouleurBouee.VERT);
+                group.deposePetitChenalRouge(ECouleurBouee.ROUGE);
+                group.deposePetitChenalVert(ECouleurBouee.VERT);
 
                 servos.moustachesOuvert(true); // En fait ici c'est pour "fermer" les bouée du fond
-                rs.deposePetitChenalVert(ECouleurBouee.ROUGE);
-                rs.deposePetitChenalRouge(ECouleurBouee.VERT);
+                group.deposePetitChenalVert(ECouleurBouee.ROUGE);
+                group.deposePetitChenalRouge(ECouleurBouee.VERT);
 
             } else if (!rs.pincesAvantEmpty()) {
                 // déposes suivantes

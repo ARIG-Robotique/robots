@@ -18,6 +18,7 @@ import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.INerellIOService;
 import org.arig.robot.services.NerellEcranService;
 import org.arig.robot.services.NerellServosService;
+import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
@@ -39,6 +40,9 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Autowired
     private NerellEcranService ecranService;
+
+    @Autowired
+    private RobotGroupService groupService;
 
     @Override
     public String getPathfinderMap() {
@@ -65,7 +69,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 && !nerellRobotStatus.pavillon() && ioService.auOk()) {
             log.info("Activation du pavillon");
             nerellServosService.pavillonHaut();
-            nerellRobotStatus.pavillon(true);
+            groupService.pavillon();
         }
     }
 
@@ -101,7 +105,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     private void choixEquipe() {
         ecranService.displayMessage("Choix équipe et lancement calage bordure");
 
-        ChangeFilter<Integer> teamChangeFilter = new ChangeFilter<>(-1);
+        ChangeFilter<Integer> teamChangeFilter = new ChangeFilter<>(ETeam.UNKNOWN.ordinal());
         SignalEdgeFilter updatePhotoFilter = new SignalEdgeFilter(false, Type.RISING);
         SignalEdgeFilter doEtalonnageFilter = new SignalEdgeFilter(false, Type.RISING);
 
@@ -109,7 +113,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             exitFromScreen();
 
             if (teamChangeFilter.filter(ecranService.config().getTeam())) {
-                nerellRobotStatus.setTeam(ecranService.config().getTeam());
+                groupService.team(ETeam.values()[ecranService.config().getTeam()]);
                 log.info("Team {}", nerellRobotStatus.team().name());
             }
 

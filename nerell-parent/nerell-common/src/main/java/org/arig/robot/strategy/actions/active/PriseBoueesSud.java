@@ -85,8 +85,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
                 mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.boueePrise(3);
-                rs.boueePrise(4);
+                group.boueePrise(3, 4);
 
                 // en cas d'erreur sur bouee 9 ou 8
                 complete();
@@ -106,8 +105,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
                 mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                rs.boueePrise(15);
-                rs.boueePrise(16);
+                group.boueePrise(15, 16);
 
                 // en cas d'erreur sur bouee 9 ou 8
                 complete();

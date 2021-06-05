@@ -13,6 +13,7 @@ import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.services.IOdinIOService;
 import org.arig.robot.services.OdinServosService;
+import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
@@ -25,6 +26,9 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Autowired
     private OdinServosService odinServosService;
+
+    @Autowired
+    private RobotGroupService groupService;
 
     @Autowired
     private IOdinIOService odinIOService;
@@ -51,14 +55,13 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 && !odinRobotStatus.pavillon() && ioService.auOk()) {
             log.info("Activation du pavillon");
             odinServosService.pavillonHaut();
-            odinRobotStatus.pavillon(true);
+            groupService.pavillon();
         }
     }
 
     @Override
     public void afterMatch() {
         odinIOService.releaseAllPompe();
-        group.sendEventLog();
     }
 
     @Override
@@ -77,12 +80,12 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
      */
     private void choixEquipe() {
         ecranService.displayMessage("Choix équipe et lancement calage bordure");
-        ChangeFilter<Integer> teamChangeFilter = new ChangeFilter<>(-1);
+        ChangeFilter<Integer> teamChangeFilter = new ChangeFilter<>(ETeam.UNKNOWN.ordinal());
         do {
             exitFromScreen();
 
             if (teamChangeFilter.filter(ecranService.config().getTeam())) {
-                odinRobotStatus.setTeam(ecranService.config().getTeam());
+                odinRobotStatus.setTeam(ETeam.values()[ecranService.config().getTeam()]);
                 log.info("Team {}", odinRobotStatus.team().name());
             }
             connectGroup();

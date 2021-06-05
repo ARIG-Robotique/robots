@@ -77,6 +77,8 @@ public class NerellRobotStatus extends EurobotStatus {
      * STATUT
      */
 
+    private boolean deposePartielleDone = false;
+
     // De gauche a droite, dans le sens du robot
     @Accessors(fluent = true)
     private ECouleurBouee[] pincesArriere = new ECouleurBouee[]{null, null, null, null, null};

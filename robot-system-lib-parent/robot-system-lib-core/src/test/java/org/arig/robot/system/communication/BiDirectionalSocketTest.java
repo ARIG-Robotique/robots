@@ -19,18 +19,25 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class BiDirectionalSocketTest {
 
     enum TestEnum {
-        ACTION
+        ACTION_WITH_REPONSE,
+        ACTION_WITHOUT_REPONSE
     }
 
-    static class TestQuery extends AbstractQuery<TestEnum> {
-        public TestQuery() {
-            super(TestEnum.ACTION);
+    static class TestQueryWithResponse extends AbstractQuery<TestEnum> {
+        public TestQueryWithResponse() {
+            super(TestEnum.ACTION_WITH_REPONSE);
+        }
+    }
+
+    static class TestQueryWithoutResponse extends AbstractQuery<TestEnum> {
+        public TestQueryWithoutResponse() {
+            super(TestEnum.ACTION_WITHOUT_REPONSE);
         }
     }
 
     static class TestResponse extends AbstractResponse<TestEnum> {
         public TestResponse() {
-            this.setAction(TestEnum.ACTION);
+            this.setAction(TestEnum.ACTION_WITH_REPONSE);
         }
     }
 
@@ -49,19 +56,34 @@ public class BiDirectionalSocketTest {
 
         @Override
         protected Class<? extends AbstractQuery<TestEnum>> getQueryClass(TestEnum action) {
-            return TestQuery.class;
+            switch (action) {
+                case ACTION_WITH_REPONSE:
+                    return TestQueryWithResponse.class;
+                default:
+                    return null;
+            }
         }
 
         @Override
         protected AbstractResponse<TestEnum> handleQuery(AbstractQuery<TestEnum> query) {
             receivedQueries.add(query.getAction());
-            return new TestResponse();
+            switch (query.getAction()) {
+                case ACTION_WITH_REPONSE:
+                    return new TestResponse();
+                default:
+                    return null;
+            }
         }
 
         @SneakyThrows
-        public void testQuery() {
-            TestResponse response = sendToSocketAndGet(new TestQuery(), TestResponse.class);
+        public void testQueryWithReponse() {
+            TestResponse response = sendToSocketAndGet(new TestQueryWithResponse(), TestResponse.class);
             receivedReponses.add(response.getAction());
+        }
+
+        @SneakyThrows
+        public void testQueryWithoutReponse() {
+            sendToSocketAndGet(new TestQueryWithoutResponse(), null);
         }
     }
 
@@ -81,13 +103,15 @@ public class BiDirectionalSocketTest {
         server.tryConnect();
         client.tryConnect();
 
-        client.testQuery();
-        Assertions.assertThat(server.receivedQueries).containsExactly(TestEnum.ACTION);
-        Assertions.assertThat(client.receivedReponses).containsExactly(TestEnum.ACTION);
+        client.testQueryWithReponse();
+        Assertions.assertThat(server.receivedQueries).containsExactly(TestEnum.ACTION_WITH_REPONSE);
+        Assertions.assertThat(client.receivedReponses).containsExactly(TestEnum.ACTION_WITH_REPONSE);
 
-        server.testQuery();
-        Assertions.assertThat(client.receivedQueries).containsExactly(TestEnum.ACTION);
-        Assertions.assertThat(server.receivedReponses).containsExactly(TestEnum.ACTION);
+        server.testQueryWithReponse();
+        Assertions.assertThat(client.receivedQueries).containsExactly(TestEnum.ACTION_WITH_REPONSE);
+        Assertions.assertThat(server.receivedReponses).containsExactly(TestEnum.ACTION_WITH_REPONSE);
+
+        client.testQueryWithoutReponse();
 
         client.end();
         server.end();

@@ -10,6 +10,9 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @Slf4j
 public abstract class AbstractNerellPincesAvantService implements INerellPincesAvantService {
@@ -26,6 +29,9 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
     @Autowired
     private IPathFinder pathFinder;
 
+    @Autowired
+    private RobotGroupService group;
+
     private boolean[] previousState = new boolean[]{false, false, false, false};
 
     @Override
@@ -41,9 +47,9 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
                     releasePompe(i);
 
                     if (couleurChenal == ECouleurBouee.ROUGE) {
-                        rs.deposeGrandChenalRouge(couleurPince);
+                        group.deposeGrandChenalRouge(couleurPince);
                     } else {
-                        rs.deposeGrandChenalVert(couleurPince);
+                        group.deposeGrandChenalVert(couleurPince);
                     }
                     rs.pinceAvant(i, null);
                 }
@@ -56,9 +62,9 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
             ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
 
             if (couleurChenal == ECouleurBouee.ROUGE) {
-                rs.deposeGrandChenalRouge(rs.pincesAvant());
+                group.deposeGrandChenalRouge(rs.pincesAvant());
             } else {
-                rs.deposeGrandChenalVert(rs.pincesAvant());
+                group.deposeGrandChenalVert(rs.pincesAvant());
             }
             rs.clearPincesAvant();
         }
@@ -76,8 +82,8 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
         io.releaseAllPompe();
         ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
 
-        rs.deposePetitChenalRouge(ArrayUtils.subarray(rs.pincesAvant(), 0, 2));
-        rs.deposePetitChenalVert(ArrayUtils.subarray(rs.pincesAvant(), 2, 4));
+        group.deposePetitChenalRouge(ArrayUtils.subarray(rs.pincesAvant(), 0, 2));
+        group.deposePetitChenalVert(ArrayUtils.subarray(rs.pincesAvant(), 2, 4));
         rs.clearPincesAvant();
 
         return true;
@@ -91,11 +97,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
         io.releaseAllPompe();
         ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
 
-        for (ECouleurBouee eCouleurBouee : rs.pincesAvant()) {
-            if (eCouleurBouee != null) {
-                rs.deposeGrandPort(eCouleurBouee);
-            }
-        }
+        group.deposeGrandPort(Stream.of(rs.pincesAvant()).filter(Objects::nonNull).toArray(ECouleurBouee[]::new));
         rs.clearPincesAvant();
     }
 
