@@ -74,7 +74,7 @@ public class ManchesAAir extends AbstractNerellAction {
                     servos.brasDroitMancheAAir(true);
                     mv.gotoPoint(3000 - xManche2, y, GotoOption.ARRIERE);
                 }
-                rs.mancheAAir1(true);
+                group.mancheAAir1();
             }
 
             if (!rs.mancheAAir2()) {
@@ -83,14 +83,14 @@ public class ManchesAAir extends AbstractNerellAction {
                         mv.gotoOrientationDegSansDistance(180);
                         servos.brasGaucheMancheAAir(true);
                     }
-                    rs.mancheAAir2(true); // on stocke l'info avant le déplacement, cas de blocage sur fin du mouvement
+                    group.mancheAAir2(); // on stocke l'info avant le déplacement, cas de blocage sur fin du mouvement
                     mv.gotoPoint(xFinManche2, y, GotoOption.SANS_ORIENTATION, GotoOption.ARRIERE);
                 } else {
                     if (!manche1Before) {
                         mv.gotoOrientationDegSansDistance(0);
                         servos.brasDroitMancheAAir(true);
                     }
-                    rs.mancheAAir2(true);
+                    group.mancheAAir2();
                     mv.gotoPoint(3000 - xFinManche2, y, GotoOption.SANS_ORIENTATION, GotoOption.ARRIERE);
                 }
             }

@@ -2,6 +2,10 @@ package org.arig.robot.system.group;
 
 public class RobotGroupTest implements IRobotGroup {
     @Override
+    public void listen(Handler handler) {
+    }
+
+    @Override
     public boolean isOpen() {
         return false;
     }
@@ -13,10 +17,10 @@ public class RobotGroupTest implements IRobotGroup {
 
     @Override
     public String getCurrentAction() {
-        return "EMPTY";
+        return null;
     }
 
     @Override
-    public void sendEventLog() {
+    public <E extends Enum<E>> void sendEventLog(E event, byte[] data) {
     }
 }

@@ -9,6 +9,7 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UpdateStateInfos implements Serializable {
     String message = "";
+    int team = 0;
     boolean au = false;
     boolean alim12v = false;
     boolean alim5vp = false;

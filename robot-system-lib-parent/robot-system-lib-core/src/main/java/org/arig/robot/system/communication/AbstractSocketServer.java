@@ -178,7 +178,7 @@ public abstract class AbstractSocketServer<T extends Enum<T>> {
             try {
                 response = handleQuery(query);
                 if (response == null) {
-                    throw new NullPointerException("Le handler n'a pas fourni de réponse");
+                    continue;
                 }
             } catch (Exception e) {
                 log.warn("Erreur d'éxécution", e);

@@ -72,7 +72,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
 
             // prise
             mv.avanceMM(180);
-            rs.boueePrise(bouee);
+            group.boueePrise(bouee);
 
             complete();
         } catch (NoPathFoundException | AvoidingException e) {

@@ -55,6 +55,6 @@ public class EcueilEquipe extends AbstractEcueil {
 
     @Override
     protected void onComplete() {
-        rs.ecueilEquipePris(true);
+        group.ecueilEquipePris();
     }
 }

@@ -6,22 +6,30 @@ import org.arig.robot.communication.socket.AbstractResponse;
 import org.arig.robot.communication.socket.group.CurrentActionQuery;
 import org.arig.robot.communication.socket.group.CurrentActionResponse;
 import org.arig.robot.communication.socket.group.EventLogQuery;
-import org.arig.robot.communication.socket.group.EventLogResponse;
 import org.arig.robot.communication.socket.group.enums.GroupAction;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.system.communication.AbstractBidirectionalSocket;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 @Slf4j
 public class AbstractRobotGroupOverSocket extends AbstractBidirectionalSocket<GroupAction> implements IRobotGroup {
 
     @Autowired
-    private AbstractRobotStatus<?> rs;
+    private AbstractRobotStatus rs;
+
+    private final List<Handler> handlers = new ArrayList<>();
 
     public AbstractRobotGroupOverSocket(int serverPort, String otherHost, int otherPort, Executor executor) {
         super(serverPort, otherHost, otherPort, 2000, executor);
+    }
+
+    @Override
+    public void listen(Handler handler) {
+        this.handlers.add(handler);
     }
 
     @Override
@@ -47,16 +55,18 @@ public class AbstractRobotGroupOverSocket extends AbstractBidirectionalSocket<Gr
             case CURRENT_ACTION:
                 return new CurrentActionResponse(rs.currentAction());
             case EVENT_LOG:
-                rs.deserializeJournal(((EventLogQuery) query).getData());
-                return new EventLogResponse(rs.serializeStatus());
+                int eventOrdinal = ((EventLogQuery) query).getEventOrdinal();
+                byte[] value = ((EventLogQuery) query).getValue();
+                handlers.forEach(h -> h.handle(eventOrdinal, value));
+                return null;
             default:
                 return null;
         }
     }
 
     @Override
-    public String getCurrentAction() {
-        if (!isOpen()) {
+    public synchronized String getCurrentAction() {
+        if (!rs.groupOk()) {
             return null;
         }
 
@@ -70,14 +80,13 @@ public class AbstractRobotGroupOverSocket extends AbstractBidirectionalSocket<Gr
     }
 
     @Override
-    public void sendEventLog() {
-        if (!isOpen()) {
+    public synchronized <E extends Enum<E>> void sendEventLog(E event, byte[] value) {
+        if (!rs.groupOk()) {
             return;
         }
 
         try {
-            EventLogResponse response = sendToSocketAndGet(new EventLogQuery(rs.serializeJournal()), EventLogResponse.class);
-            rs.deserializeStatus(response.getData());
+            sendToSocketAndGet(EventLogQuery.build(event, value), null);
         } catch (Exception e) {
             log.warn("Impossible d'échanger l'event log");
         }

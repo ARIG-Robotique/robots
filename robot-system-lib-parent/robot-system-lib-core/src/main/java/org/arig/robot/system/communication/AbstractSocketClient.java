@@ -117,6 +117,10 @@ public abstract class AbstractSocketClient<T extends Enum<T>> {
                 out.write(q + "\r\n");
                 out.flush();
 
+                if (responseClazz == null) {
+                    return null;
+                }
+
                 String res = in.readLine();
                 if (res == null) {
                     throw new IOException("Null result");

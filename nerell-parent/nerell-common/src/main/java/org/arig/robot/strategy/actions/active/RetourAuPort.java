@@ -93,9 +93,9 @@ public class RetourAuPort extends AbstractNerellAction {
 
     private void setScore(boolean coordProjection) {
         if (coordProjection && rs.directionGirouette() != EDirectionGirouette.UNKNOWN) {
-            rs.bonPort();
+            group.bonPort();
         } else if (coordProjection) {
-            rs.mauvaisPort();
+            group.mauvaisPort();
         }
     }
 }

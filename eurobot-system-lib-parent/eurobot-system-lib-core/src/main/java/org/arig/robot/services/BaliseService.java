@@ -25,6 +25,9 @@ public class BaliseService extends AbstractBaliseService {
     @Autowired
     private EurobotStatus rs;
 
+    @Autowired
+    private RobotGroupService group;
+
     private StatutBalise statut;
 
     public void updateStatus() {
@@ -33,7 +36,7 @@ public class BaliseService extends AbstractBaliseService {
 
     public void lectureGirouette() {
         if (statut != null && statut.getDetection() != null) {
-            rs.directionGirouette(statut.getDetection().getGirouette());
+            group.directionGirouette(statut.getDetection().getGirouette());
         }
     }
 
@@ -46,21 +49,18 @@ public class BaliseService extends AbstractBaliseService {
 
             if (valid) {
                 final ECouleurDetectee[] detection = statut.getDetection().getEcueilEquipe();
-                final ECouleurBouee[] couleursAdverse = new ECouleurBouee[5];
                 final ECouleurBouee[] couleursEquipe = new ECouleurBouee[5];
 
                 // Les pinces arrières sont dans l'autre sens, on inverse le tableau
                 for (int i = 0; i < 5; i++) {
                     if (detection[i] == ECouleurDetectee.RED) {
                         couleursEquipe[4 - i] = ECouleurBouee.ROUGE;
-                        couleursAdverse[i] = ECouleurBouee.VERT;
                     } else {
                         couleursEquipe[4 - i] = ECouleurBouee.VERT;
-                        couleursAdverse[i] = ECouleurBouee.ROUGE;
                     }
                 }
-                rs.couleursEcueilCommunAdverse(couleursAdverse);
-                rs.couleursEcueilCommunEquipe(couleursEquipe);
+
+                group.couleursEcueilCommun(couleursEquipe);
             }
         }
 
@@ -70,9 +70,16 @@ public class BaliseService extends AbstractBaliseService {
     public boolean lectureCouleurBouees() {
         if (statut != null && statut.getDetection() != null && !ArrayUtils.isEmpty(statut.getDetection().getBouees())) {
             EPresenceBouee[] bouees = statut.getDetection().getBouees();
+            List<Integer> changed = new ArrayList<>();
+
             for (int i = 0; i < bouees.length; i++) {
-                rs.boueePresente(12 - i, bouees[i] == EPresenceBouee.PRESENT);
+                int iBouee = 12 - i;
+                if (bouees[i] == EPresenceBouee.ABSENT && rs.boueePresente(iBouee)) {
+                    changed.add(iBouee);
+                }
             }
+
+            group.boueePrise(changed.stream().mapToInt(Integer::intValue).toArray());
 
             return true;
         }
@@ -106,9 +113,10 @@ public class BaliseService extends AbstractBaliseService {
                     .collect(Collectors.toList());
 
             final List<Bouee> nouveauHautFond = new ArrayList<>();
+            boolean changed = false;
 
             // conserve les bouées qui n'ont pas bougé (delta < 1cm)
-            rs.hautFond().forEach(bouee -> {
+            for (Bouee bouee : rs.hautFond()) {
                 Optional<MutablePair<Bouee, Boolean>> boueeExistante = hautFondDetecte.stream()
                         .filter(pair -> pair.getKey().couleur() == bouee.couleur() &&
                                 Math.abs(pair.getKey().pt().getX() - bouee.pt().getX()) < 10 &&
@@ -118,15 +126,22 @@ public class BaliseService extends AbstractBaliseService {
                 if (boueeExistante.isPresent()) {
                     boueeExistante.get().setValue(true);
                     nouveauHautFond.add(bouee);
+                } else {
+                    changed = true;
                 }
-            });
+            }
 
             // ajoute les bouées qui ont bougé
-            hautFondDetecte.stream()
-                    .filter(pair -> !pair.getValue())
-                    .forEach(pair -> nouveauHautFond.add(pair.getKey()));
+            for (MutablePair<Bouee, Boolean> pair : hautFondDetecte) {
+                if (!pair.getValue()) {
+                    nouveauHautFond.add(pair.getKey());
+                    changed = true;
+                }
+            }
 
-            rs.hautFond(nouveauHautFond);
+            if (changed) {
+                group.hautFond(nouveauHautFond);
+            }
         }
     }
 }

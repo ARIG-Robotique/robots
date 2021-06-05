@@ -4,6 +4,7 @@ import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
 import org.arig.robot.services.NerellServosService;
+import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -34,5 +35,8 @@ public abstract class AbstractNerellAction extends AbstractAction {
 
     @Autowired
     protected NerellServosService servos;
+
+    @Autowired
+    protected RobotGroupService group;
 
 }

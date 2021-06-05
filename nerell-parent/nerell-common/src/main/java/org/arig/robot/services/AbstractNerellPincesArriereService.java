@@ -8,6 +8,9 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
+import java.util.Objects;
+import java.util.stream.Stream;
+
 @Slf4j
 public abstract class AbstractNerellPincesArriereService implements INerellPincesArriereService {
 
@@ -19,6 +22,9 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
 
     @Autowired
     private INerellIOService io;
+
+    @Autowired
+    private RobotGroupService group;
 
     /**
      * Prises des bouees dans un écueil
@@ -73,9 +79,9 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
                 final ECouleurBouee couleurPince = rs.pincesArriere()[i];
                 if (couleurPince == couleurChenal || couleurPince == ECouleurBouee.INCONNU) {
                     if (couleurChenal == ECouleurBouee.ROUGE) {
-                        rs.deposeGrandChenalRouge(couleurPince);
+                        group.deposeGrandChenalRouge(couleurPince);
                     } else {
-                        rs.deposeGrandChenalVert(couleurPince);
+                        group.deposeGrandChenalVert(couleurPince);
                     }
                     rs.pinceArriere(i, null);
                 }
@@ -85,9 +91,9 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
             deposeTable(null);
 
             if (couleurChenal == ECouleurBouee.ROUGE) {
-                rs.deposeGrandChenalRouge(rs.pincesArriere());
+                group.deposeGrandChenalRouge(rs.pincesArriere());
             } else {
-                rs.deposeGrandChenalVert(rs.pincesArriere());
+                group.deposeGrandChenalVert(rs.pincesArriere());
             }
             rs.clearPincesArriere();
         }
@@ -99,11 +105,7 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
     public void deposeGrandPort() {
         deposeTable(null);
 
-        for (ECouleurBouee eCouleurBouee : rs.pincesArriere()) {
-            if (eCouleurBouee != null) {
-                rs.deposeGrandPort(eCouleurBouee);
-            }
-        }
+        group.deposeGrandPort(Stream.of(rs.pincesArriere()).filter(Objects::nonNull).toArray(ECouleurBouee[]::new));
         rs.clearPincesArriere();
     }
 
@@ -114,11 +116,11 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
     public boolean deposePetitPort() {
         deposeTable(null);
 
-        rs.deposePetitChenalVert(rs.pincesArriere()[0], rs.pincesArriere()[1]);
+        group.deposePetitChenalVert(rs.pincesArriere()[0], rs.pincesArriere()[1]);
         if (rs.pincesArriere()[2] != null) {
-            rs.deposePetitPort(rs.pincesArriere()[2]);
+            group.deposePetitPort(rs.pincesArriere()[2]);
         }
-        rs.deposePetitChenalRouge(rs.pincesArriere()[3], rs.pincesArriere()[4]);
+        group.deposePetitChenalRouge(rs.pincesArriere()[3], rs.pincesArriere()[4]);
 
         rs.clearPincesArriere();
 

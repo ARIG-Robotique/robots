@@ -17,7 +17,7 @@ public abstract class AbstractResponseWithData<T extends Enum<T>, D extends Seri
     private D data;
 
     public AbstractResponseWithData(T action, D data) {
-        setAction(action);
+        super(action);
         setStatus(StatusResponse.OK);
         setData(data);
     }

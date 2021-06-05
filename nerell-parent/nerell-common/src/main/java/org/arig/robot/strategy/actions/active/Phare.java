@@ -75,7 +75,7 @@ public class Phare extends AbstractNerellAction {
                 servos.brasDroitPhare(true);
                 mv.gotoOrientationDegSansDistance(-180 + 35, SensRotation.TRIGO);
             }
-            rs.phare(true);
+            group.phare();
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();

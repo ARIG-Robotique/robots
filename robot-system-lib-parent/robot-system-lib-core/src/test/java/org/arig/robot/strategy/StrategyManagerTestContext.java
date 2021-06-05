@@ -1,7 +1,6 @@
 package org.arig.robot.strategy;
 
 import org.arig.robot.model.AbstractRobotStatus;
-import org.arig.robot.model.ETestStatusEvent;
 import org.arig.robot.model.TestRobotStatus;
 import org.arig.robot.strategy.actions.InvalidWhenNotRunAfter10SecondsAndCompletedAfter2ExecutionAction;
 import org.arig.robot.strategy.actions.OneShotAction;
@@ -22,7 +21,7 @@ public class StrategyManagerTestContext {
     }
 
     @Bean
-    public AbstractRobotStatus<ETestStatusEvent> robotStatus() {
+    public AbstractRobotStatus robotStatus() {
         return new TestRobotStatus();
     }
 

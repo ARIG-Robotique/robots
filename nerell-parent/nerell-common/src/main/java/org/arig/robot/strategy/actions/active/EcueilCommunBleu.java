@@ -73,7 +73,7 @@ public class EcueilCommunBleu extends AbstractEcueil {
 
     @Override
     protected void onAgressiveMvtDone() {
-        rs.boueePrise(6);
+        group.boueePrise(6);
     }
 
     @Override
@@ -90,13 +90,13 @@ public class EcueilCommunBleu extends AbstractEcueil {
     @Override
     protected void onComplete() {
         // on a shooté la bouée
-        rs.boueePrise(5);
+        group.boueePrise(5);
         rs.ecueilCommunBleuDispo((byte) 0);
 
         if (rs.team() == ETeam.BLEU) {
-            rs.ecueilCommunEquipePris(true);
+            group.ecueilCommunEquipePris();
         } else {
-            rs.ecueilCommunAdversePris(true);
+            group.ecueilCommunAdversePris();
         }
     }
 }

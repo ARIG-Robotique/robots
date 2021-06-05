@@ -30,29 +30,14 @@ public class Bouee implements Serializable {
 
     private final Point pt;
 
-    private EState state = EState.PRESENTE;
+    @Setter(value = AccessLevel.NONE)
+    private boolean presente = true;
 
     /**
      * Marque la bouée comme prise
      */
     public void setPrise() {
-        if (state == EState.PRESENTE) {
-            state = EState.PRISE;
-        }
-    }
-
-    /**
-     * Change le statut de la bouée si pas marquée comme prise
-     */
-    public void setPresente(boolean present) {
-        if (state != EState.PRISE) {
-            state = present ? EState.PRESENTE : EState.ABSENTE;
-        }
-    }
-
-    @JsonProperty("presente")
-    public boolean presente() {
-        return state == EState.PRESENTE;
+        presente = false;
     }
 
 }
