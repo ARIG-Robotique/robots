@@ -1,12 +1,12 @@
-package org.arig.robot;
+package org.arig.robot.tinker;
 
 import com.pi4j.gpio.extension.pca.PCA9685GpioProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.listener.JoyConLeftEventListener;
-import org.arig.robot.listener.JoyConRightEventListener;
+import org.arig.robot.tinker.listener.JoyConLeftEventListener;
+import org.arig.robot.tinker.listener.JoyConRightEventListener;
 import org.arig.robot.model.RobotName;
-import org.arig.robot.services.IServosServices;
-import org.arig.robot.services.ServosServices;
+import org.arig.robot.tinker.services.IServosServices;
+import org.arig.robot.tinker.services.ServosServices;
 import org.arig.robot.system.gamepad.nintendoswitch.ControllerEventListener;
 import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyConLeft;
 import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyConRight;

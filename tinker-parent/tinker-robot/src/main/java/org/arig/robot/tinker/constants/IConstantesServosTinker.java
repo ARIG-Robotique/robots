@@ -1,4 +1,4 @@
-package org.arig.robot.constants;
+package org.arig.robot.tinker.constants;
 
 import com.pi4j.gpio.extension.pca.PCA9685Pin;
 import com.pi4j.io.gpio.Pin;

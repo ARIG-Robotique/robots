@@ -1,4 +1,4 @@
-package org.arig.robot.constants;
+package org.arig.robot.tinker.constants;
 
 public interface IConstantesI2CTinker {
 

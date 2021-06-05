@@ -1,4 +1,4 @@
-package org.arig.robot;
+package org.arig.robot.tinker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package org.arig.robot.services;
+package org.arig.robot.tinker.services;
 
 public interface IServosServices {
 

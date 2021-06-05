@@ -1,9 +1,9 @@
-package org.arig.robot.services;
+package org.arig.robot.tinker.services;
 
 import com.pi4j.gpio.extension.pca.PCA9685GpioProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesServosTinker;
+import org.arig.robot.tinker.constants.IConstantesServosTinker;
 
 @Slf4j
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package org.arig.robot;
+package org.arig.robot.tinker;
 
 import com.pi4j.gpio.extension.pca.PCA9685GpioProvider;
 import com.pi4j.io.gpio.GpioController;
@@ -12,8 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.I2CManagerDevice;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.communication.raspi.RaspiI2CManager;
-import org.arig.robot.constants.IConstantesI2CTinker;
-import org.arig.robot.constants.IConstantesServosTinker;
+import org.arig.robot.tinker.constants.IConstantesI2CTinker;
+import org.arig.robot.tinker.constants.IConstantesServosTinker;
 import org.arig.robot.system.motors.PropulsionsMD22Motors;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

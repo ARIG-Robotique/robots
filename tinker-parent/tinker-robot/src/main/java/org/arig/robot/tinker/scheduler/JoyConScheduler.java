@@ -1,4 +1,4 @@
-package org.arig.robot.scheduler;
+package org.arig.robot.tinker.scheduler;
 
 import lombok.RequiredArgsConstructor;
 import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyConLeft;

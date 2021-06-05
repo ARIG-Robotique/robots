@@ -1,7 +1,7 @@
-package org.arig.robot.clr;
+package org.arig.robot.tinker.clr;
 
 import lombok.RequiredArgsConstructor;
-import org.arig.robot.services.ServosServices;
+import org.arig.robot.tinker.services.ServosServices;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
