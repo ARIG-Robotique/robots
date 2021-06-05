@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.1
-Type=Application
-Encoding=UTF-8
-Name=Odin Monitoring
-Comment=Odin - Eurobot Cup
-Icon=/home/pi/robot-icon.png
-Exec=bash -lc 'cd /home/pi/odin && . monitoring.sh'
-Terminal=true
