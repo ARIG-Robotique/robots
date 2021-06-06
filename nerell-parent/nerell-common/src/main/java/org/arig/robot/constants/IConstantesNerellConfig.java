@@ -102,8 +102,8 @@ public interface IConstantesNerellConfig {
 
     double dstCallageY = 151.0; // dos du robot <=> milieu du robot
     double dstDeposeArriereY = 223.5; // milieu de gobelets arrière, posés au sol <=> milieu du robot
-    double dstDeposeAvantY = 125; // milieu des gobelets avant <=> milieu du robot // FIXME nouvelle face avant
-    double[] dstDeposeAvantX = new double[]{-130, -55, 55, 130};
+    double dstDeposeAvantY = 115; // milieu des gobelets avant <=> milieu du robot
+    double[] dstDeposeAvantX = new double[]{-114, -38, 38, 114};
     double dstBrasMancheAAirX = 210; // distance minimale pour pousser la manche à air
 
     // -------------------------- //
