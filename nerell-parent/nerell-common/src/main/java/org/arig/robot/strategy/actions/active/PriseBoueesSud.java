@@ -66,7 +66,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
             if (rs.strategy() != ENerellStrategy.BASIC_SUD && tableUtils.distance(entry) > 100) {
                 mv.pathTo(entry);
             } else {
-                // Le path active l'évittement en auto, pas de path, pas d'evittement
+                // Le path active l'évitement en auto, pas de path, pas d'évitement
                 rs.enableAvoidance();
             }
 
