@@ -57,6 +57,14 @@ public class NerellServosService extends AbstractServosService {
                 wait);
     }
 
+    public void moustachesOuvertSpecial(boolean wait) {
+        setPositionBatchAndSpeed(
+                IConstantesServosNerell.BATCH_MOUSTACHES,
+                IConstantesServosNerell.POS_BATCH_MOUSTACHES_OUVERT_SPECIAL,
+                IConstantesServosNerell.SPEED_MOUSTACHE,
+                wait);
+    }
+
     public void moustachesFerme(boolean wait) {
         setPositionBatchAndSpeed(
                 IConstantesServosNerell.BATCH_MOUSTACHES,

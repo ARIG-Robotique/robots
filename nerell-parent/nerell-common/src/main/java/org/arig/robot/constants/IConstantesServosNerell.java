@@ -58,9 +58,11 @@ public interface IConstantesServosNerell {
     // ---------------------- //
 
     int POS_MOUSTACHE_GAUCHE_OUVERT = 1980;
-    int POS_MOUSTACHE_GAUCHE_POUSSETTE = 1320;
+    int POS_MOUSTACHE_GAUCHE_OUVERT_SPECIAL = 2280;
+    int POS_MOUSTACHE_GAUCHE_POUSSETTE = 1420;
     int POS_MOUSTACHE_GAUCHE_FERME = 960;
     int POS_MOUSTACHE_DROITE_OUVERT = 990;
+    int POS_MOUSTACHE_DROITE_OUVERT_SPECIAL = 790;
     int POS_MOUSTACHE_DROITE_POUSSETTE = 1510;
     int POS_MOUSTACHE_DROITE_FERME = 1980;
     int POS_BRAS_GAUCHE_MANCHE_AIR = 1050;
@@ -107,13 +109,14 @@ public interface IConstantesServosNerell {
     byte POS_BATCH_PINCES_ARRIERE_OUVERT = 5;
     byte POS_BATCH_MOUSTACHES_FERME = 6;
     byte POS_BATCH_MOUSTACHES_OUVERT = 7;
-    byte POS_BATCH_MOUSTACHES_POUSETTE = 8;
-    byte POS_BATCH_ASCENSEURS_AVANT_BAS = 9;
-    byte POS_BATCH_ASCENSEURS_AVANT_HAUT = 10;
+    byte POS_BATCH_MOUSTACHES_OUVERT_SPECIAL = 8;
+    byte POS_BATCH_MOUSTACHES_POUSETTE = 9;
+    byte POS_BATCH_ASCENSEURS_AVANT_BAS = 10;
+    byte POS_BATCH_ASCENSEURS_AVANT_HAUT = 11;
 
     Map<Byte, Triple<Integer, Integer, Integer>> MIN_TIME_MAX = ImmutableMap.<Byte, Triple<Integer, Integer, Integer>>builder()
-            .put(MOUSTACHE_DROITE, Triple.of(POS_MOUSTACHE_DROITE_FERME, WAIT_MOUSTACHE_DROITE, POS_MOUSTACHE_DROITE_OUVERT))
-            .put(MOUSTACHE_GAUCHE, Triple.of(POS_MOUSTACHE_GAUCHE_FERME, WAIT_MOUSTACHE_GAUCHE, POS_MOUSTACHE_GAUCHE_OUVERT))
+            .put(MOUSTACHE_DROITE, Triple.of(POS_MOUSTACHE_DROITE_FERME, WAIT_MOUSTACHE_DROITE, POS_MOUSTACHE_DROITE_OUVERT_SPECIAL))
+            .put(MOUSTACHE_GAUCHE, Triple.of(POS_MOUSTACHE_GAUCHE_FERME, WAIT_MOUSTACHE_GAUCHE, POS_MOUSTACHE_GAUCHE_OUVERT_SPECIAL))
             .put(BRAS_DROIT, Triple.of(POS_BRAS_DROIT_FERME, WAIT_BRAS_DROIT, POS_BRAS_DROIT_PHARE))
             .put(BRAS_GAUCHE, Triple.of(POS_BRAS_GAUCHE_FERME, WAIT_BRAS_GAUCHE, POS_BRAS_GAUCHE_PHARE))
             .put(ASCENSEUR_ARRIERE, Triple.of(POS_ASCENSEUR_ARRIERE_TABLE, WAIT_ASCENSEUR_ARRIERE, POS_ASCENSEUR_ARRIERE_HAUT))
@@ -155,6 +158,10 @@ public interface IConstantesServosNerell {
                     .put(POS_BATCH_MOUSTACHES_OUVERT, new int[][]{
                             new int[]{IConstantesServosNerell.MOUSTACHE_DROITE, IConstantesServosNerell.POS_MOUSTACHE_DROITE_OUVERT},
                             new int[]{IConstantesServosNerell.MOUSTACHE_GAUCHE, IConstantesServosNerell.POS_MOUSTACHE_GAUCHE_OUVERT}
+                    })
+                    .put(POS_BATCH_MOUSTACHES_OUVERT_SPECIAL, new int[][]{
+                            new int[]{IConstantesServosNerell.MOUSTACHE_DROITE, IConstantesServosNerell.POS_MOUSTACHE_DROITE_OUVERT_SPECIAL},
+                            new int[]{IConstantesServosNerell.MOUSTACHE_GAUCHE, IConstantesServosNerell.POS_MOUSTACHE_GAUCHE_OUVERT_SPECIAL}
                     })
                     .put(POS_BATCH_MOUSTACHES_POUSETTE, new int[][]{
                             new int[]{IConstantesServosNerell.MOUSTACHE_DROITE, IConstantesServosNerell.POS_MOUSTACHE_DROITE_POUSSETTE},

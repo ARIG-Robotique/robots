@@ -12,6 +12,7 @@ import java.util.List;
 public class NerellServosController extends AbstractServosController {
 
     private static final String OUVERT = "Ouvert";
+    private static final String OUVERT_SPECIAL = "Ouvert Spé";
     private static final String FERME = "Fermé";
     private static final String POUSSETTE = "Poussette";
     private static final String MANCHE_A_AIR = "Manche à air";
@@ -24,20 +25,6 @@ public class NerellServosController extends AbstractServosController {
     static {
         servoConfigs.add(new ServoGroup()
                 .setName("Autres")
-                .servo(new ServoConfig()
-                        .setId(IConstantesServosNerell.MOUSTACHE_DROITE)
-                        .setName("Moustache droite")
-                        .position(OUVERT, IConstantesServosNerell.POS_MOUSTACHE_DROITE_OUVERT)
-                        .position(POUSSETTE, IConstantesServosNerell.POS_MOUSTACHE_DROITE_POUSSETTE)
-                        .position(FERME, IConstantesServosNerell.POS_MOUSTACHE_DROITE_FERME)
-                )
-                .servo(new ServoConfig()
-                        .setId(IConstantesServosNerell.MOUSTACHE_GAUCHE)
-                        .setName("Moustache gauche")
-                        .position(OUVERT, IConstantesServosNerell.POS_MOUSTACHE_GAUCHE_OUVERT)
-                        .position(POUSSETTE, IConstantesServosNerell.POS_MOUSTACHE_GAUCHE_POUSSETTE)
-                        .position(FERME, IConstantesServosNerell.POS_MOUSTACHE_GAUCHE_FERME)
-                )
                 .servo(new ServoConfig()
                         .setId(IConstantesServosNerell.BRAS_DROIT)
                         .setName("Bras droit")
@@ -57,6 +44,32 @@ public class NerellServosController extends AbstractServosController {
                         .setName("Pavillon")
                         .position(HAUT, IConstantesServosNerell.POS_PAVILLON_HAUT)
                         .position(BAS, IConstantesServosNerell.POS_PAVILLON_BAS)
+                        .position("FIN", IConstantesServosNerell.POS_PAVILLON_FIN_MATCH)
+                )
+        );
+
+        servoConfigs.add(new ServoGroup()
+                .setId(IConstantesServosNerell.BATCH_MOUSTACHES)
+                .setName("Moustaches")
+                .batch("Tout ouvert", IConstantesServosNerell.POS_BATCH_MOUSTACHES_OUVERT)
+                .batch("Tout ouvert spé", IConstantesServosNerell.POS_BATCH_MOUSTACHES_OUVERT_SPECIAL)
+                .batch("Tout poussette", IConstantesServosNerell.POS_BATCH_MOUSTACHES_POUSETTE)
+                .batch("Tout fermé", IConstantesServosNerell.POS_BATCH_MOUSTACHES_FERME)
+                .servo(new ServoConfig()
+                        .setId(IConstantesServosNerell.MOUSTACHE_DROITE)
+                        .setName("Moustache droite")
+                        .position(OUVERT, IConstantesServosNerell.POS_MOUSTACHE_DROITE_OUVERT)
+                        .position(OUVERT_SPECIAL, IConstantesServosNerell.POS_MOUSTACHE_DROITE_OUVERT_SPECIAL)
+                        .position(POUSSETTE, IConstantesServosNerell.POS_MOUSTACHE_DROITE_POUSSETTE)
+                        .position(FERME, IConstantesServosNerell.POS_MOUSTACHE_DROITE_FERME)
+                )
+                .servo(new ServoConfig()
+                        .setId(IConstantesServosNerell.MOUSTACHE_GAUCHE)
+                        .setName("Moustache gauche")
+                        .position(OUVERT, IConstantesServosNerell.POS_MOUSTACHE_GAUCHE_OUVERT)
+                        .position(OUVERT_SPECIAL, IConstantesServosNerell.POS_MOUSTACHE_GAUCHE_OUVERT_SPECIAL)
+                        .position(POUSSETTE, IConstantesServosNerell.POS_MOUSTACHE_GAUCHE_POUSSETTE)
+                        .position(FERME, IConstantesServosNerell.POS_MOUSTACHE_GAUCHE_FERME)
                 )
         );
 
