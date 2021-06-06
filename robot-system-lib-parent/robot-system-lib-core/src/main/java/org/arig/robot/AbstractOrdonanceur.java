@@ -166,7 +166,8 @@ public abstract class AbstractOrdonanceur {
             if (e.isWait()) {
                 ThreadUtils.sleep(10000);
             }
-
+        } catch (Exception e) {
+            log.error("Gros catch de fin, sans comprendre pourquoi", e);
         } finally {
             lidar.stopScan();
 
