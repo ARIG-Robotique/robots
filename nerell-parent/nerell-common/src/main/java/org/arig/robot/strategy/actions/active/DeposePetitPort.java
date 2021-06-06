@@ -153,7 +153,7 @@ public class DeposePetitPort extends AbstractNerellAction {
             if (!rs.pincesAvantEmpty()) {
                 pincesAvantService.deposePetitPort();
                 step++;
-                mv.reculeMM(80);
+                mv.reculeMM(rs.pincesArriereEmpty() ? 150 : 80);
                 deposePinceDone = true;
             }
 
