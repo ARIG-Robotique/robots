@@ -68,10 +68,11 @@ public class RetourAuPort extends AbstractNerellAction {
         try {
             final Point entry = entryPoint();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            mv.pathTo(entry, GotoOption.SANS_ARRET);
+            mv.pathTo(entry);
             setScore(coordProjection = true);
 
             // Finalisation de la rentré dans le port après avoir compter les points
+            // TODO : Si c'est le premier robot
             Point finalPoint = new Point(entry);
             finalPoint.setX(215);
             if (rs.team() == ETeam.JAUNE) {
