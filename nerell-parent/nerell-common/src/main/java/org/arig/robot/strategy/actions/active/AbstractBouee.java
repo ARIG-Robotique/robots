@@ -65,7 +65,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
             mv.pathTo(pointApproche, GotoOption.AVANT);
 
             // aligne la bonne pince sur la bouée
-            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
+            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
 
             final double offsetOrientation = Math.toDegrees(Math.sin(offsetPince / distanceApproche));
             mv.alignFrontToAvecDecalage(entry.getX(), entry.getY(), offsetOrientation);

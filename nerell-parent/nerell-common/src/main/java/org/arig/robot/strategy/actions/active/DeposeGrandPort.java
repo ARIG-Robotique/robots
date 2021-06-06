@@ -78,7 +78,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
                 mv.gotoPoint(entry2, GotoOption.SANS_ORIENTATION, !rs.pincesAvantEmpty() ? GotoOption.AVANT : GotoOption.ARRIERE);
             }
 
-            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
+            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
 
             do {
                 if (!rs.pincesAvantEmpty()) {

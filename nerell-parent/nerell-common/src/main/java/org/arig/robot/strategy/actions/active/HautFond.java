@@ -68,7 +68,7 @@ public class HautFond extends AbstractNerellAction {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry.getX(), Math.min(entry.getY(), medianY));
 
-            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
+            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
 
             if (rs.team() == ETeam.BLEU) {
                 mv.gotoOrientationDeg(0);
