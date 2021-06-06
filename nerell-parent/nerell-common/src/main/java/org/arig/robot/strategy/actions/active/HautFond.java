@@ -1,6 +1,7 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Bouee;
@@ -18,7 +19,7 @@ import java.util.Collections;
 public class HautFond extends AbstractNerellAction {
 
     private static final int X = 800;
-    private static final int Y = 2000 - 175; // TODO distance minimale de rasage du bord nord
+    private static final int Y = 1785;
 
     @Autowired
     protected INerellIOService io;
@@ -30,7 +31,7 @@ public class HautFond extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        return !rs.hautFondEmpty();
+        return isTimeValid() && !rs.hautFondEmpty() && rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime;
     }
 
     @Override
@@ -68,7 +69,7 @@ public class HautFond extends AbstractNerellAction {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry.getX(), Math.min(entry.getY(), medianY));
 
-            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
+            mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
 
             if (rs.team() == ETeam.BLEU) {
                 mv.gotoOrientationDeg(0);
@@ -77,14 +78,15 @@ public class HautFond extends AbstractNerellAction {
             }
 
             // on ratisse en laissant l'évitement actif
-            mv.avanceMM(3000 - X * 2);
+            mv.avanceMM(1000);
 
             // on marque tout comme pris, l'information mise à jour sera fournie par la balise
             rs.hautFond(Collections.emptyList());
 
         } catch (NoPathFoundException | AvoidingException e) {
-            updateValidTime();
             log.error("Erreur d'éxécution de l'action : {}", e.toString());
+        } finally {
+            updateValidTime();
         }
     }
 }
