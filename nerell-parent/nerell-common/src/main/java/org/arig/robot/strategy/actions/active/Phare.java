@@ -51,6 +51,7 @@ public class Phare extends AbstractNerellAction {
     @Override
     public void execute() {
         try {
+            rs.enablePincesAvant();
             final Point entry = entryPoint();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry);

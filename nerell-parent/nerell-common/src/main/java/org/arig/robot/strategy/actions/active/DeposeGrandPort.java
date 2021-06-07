@@ -68,6 +68,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
             final Point entry = entryPoint();
             final Point entry2 = new Point(computeX(entry.getX(), !rs.pincesAvantEmpty()), entry.getY());
 
+            rs.enablePincesAvant();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             if (tableUtils.distance(entry2) > 200) {

@@ -66,6 +66,8 @@ public class RetourAuPort extends AbstractNerellAction {
     public void execute() {
         boolean coordProjection = false;
         try {
+            rs.enablePincesAvant(); // Histoire de ne pas pousser une bouée qui va nous faire chié
+
             final Point entry = entryPoint();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry);

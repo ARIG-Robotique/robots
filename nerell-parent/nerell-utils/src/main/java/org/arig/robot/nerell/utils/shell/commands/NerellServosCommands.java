@@ -58,8 +58,6 @@ public class NerellServosCommands {
         }
 
         ThreadUtils.sleep(2000);
-        rs.disablePincesAvant();
-        ThreadUtils.sleep(500);
     }
 
     private void deposeAvant() {

@@ -7,6 +7,7 @@ import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.INerellPincesArriereService;
+import org.arig.robot.services.INerellPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,9 @@ public class NerellTest extends AbstractNerellAction {
 
     @Autowired
     private INerellPincesArriereService pincesArriereService;
+
+    @Autowired
+    private INerellPincesAvantService pincesAvantService;
 
     @Getter
     private boolean completed = false;
@@ -50,7 +54,6 @@ public class NerellTest extends AbstractNerellAction {
             rs.enablePincesAvant();
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
             mv.gotoPoint(1200,1200, GotoOption.AVANT);
-            rs.disablePincesAvant();
 
             // Récupération de l'ecueil
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
@@ -68,7 +71,7 @@ public class NerellTest extends AbstractNerellAction {
             pincesArriereService.deposePetitPort();
             mv.avanceMM(35);
             if (!rs.pincesAvantEmpty()) {
-                // TODO
+                pincesAvantService.deposePetitPort();
             }
             mv.gotoPoint(800, 1200);
 

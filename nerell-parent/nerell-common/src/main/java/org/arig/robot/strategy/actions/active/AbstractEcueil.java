@@ -56,6 +56,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             final Point entry = entryPoint();
             final double orientation = orientationPourPrise();
 
+            rs.enablePincesAvant();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             if (rs.strategy() == ENerellStrategy.AGGRESSIVE && firstExecution && aggressiveIntermediaryPoint() != null) {
                 firstExecution = false;
