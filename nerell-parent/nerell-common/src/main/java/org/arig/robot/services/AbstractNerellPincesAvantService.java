@@ -52,9 +52,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
             ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
 
         } else {
-            for (int i = 0; i < 4; i++) {
-                releasePompe(i);
-            }
+            io.releaseAllPompe();
             ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
 
             if (couleurChenal == ECouleurBouee.ROUGE) {
