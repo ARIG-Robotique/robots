@@ -82,14 +82,14 @@ public class EcueilCommunJaune extends AbstractEcueil {
             bouee11.execute();
         }
         super.execute();
-        if (isCompleted() && bouee11.isValid()) {
-            bouee11.execute();
+        if (isCompleted() && bouee10.isValid()) {
+            bouee10.execute();
         }
     }
 
     @Override
     protected void onComplete() {
-        // on shooté la bouée
+        // on a shooté la bouée
         rs.boueePrise(12);
         rs.ecueilCommunJauneDispo((byte) 0);
 

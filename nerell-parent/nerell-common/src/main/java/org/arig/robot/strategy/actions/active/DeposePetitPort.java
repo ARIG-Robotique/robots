@@ -115,8 +115,7 @@ public class DeposePetitPort extends AbstractNerellAction {
                 rs.boueePrise(9);
             }
 
-            rs.disablePincesAvant();
-
+            rs.disablePincesAvant(); // Pour ne pas faire de comptage supplémentaire si il reste des emplacements vide
             boolean deposePinceDone = false;
             boolean moustacheAtStart = moustacheFaites;
 
@@ -140,7 +139,7 @@ public class DeposePetitPort extends AbstractNerellAction {
                 rs.deposePetitChenalRouge(ECouleurBouee.ROUGE);
                 rs.deposePetitChenalVert(ECouleurBouee.VERT);
 
-                servos.moustachesOuvert(true);
+                servos.moustachesOuvert(true); // En fait ici c'est pour "fermer" les bouée du fond
                 rs.deposePetitChenalVert(ECouleurBouee.ROUGE);
                 rs.deposePetitChenalRouge(ECouleurBouee.VERT);
 

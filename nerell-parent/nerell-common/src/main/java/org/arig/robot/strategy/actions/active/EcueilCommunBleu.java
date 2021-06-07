@@ -89,7 +89,7 @@ public class EcueilCommunBleu extends AbstractEcueil {
 
     @Override
     protected void onComplete() {
-        // on shooté la bouée
+        // on a shooté la bouée
         rs.boueePrise(5);
         rs.ecueilCommunBleuDispo((byte) 0);
 
