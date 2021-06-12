@@ -48,8 +48,9 @@ public class NerellRobotStatus extends EurobotStatus {
         }
     }
 
-    private boolean doubleDepose;
-    private boolean deposePartielle;
+    private boolean doubleDepose = false;
+    private boolean deposePartielle = false;
+    private boolean etalonageBaliseOk = false;
 
     @Setter(AccessLevel.NONE)
     private boolean pincesAvantEnabled = false;

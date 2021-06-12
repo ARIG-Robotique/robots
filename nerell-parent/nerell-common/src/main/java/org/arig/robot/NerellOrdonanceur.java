@@ -58,7 +58,9 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     public void beforeMatch() {
         choixStrategie();
 
-        nerellRobotStatus.enableBalise();
+        if (nerellRobotStatus.etalonageBaliseOk()) {
+            nerellRobotStatus.enableBalise();
+        }
         nerellRobotStatus.enablePincesAvant();
     }
 
@@ -157,6 +159,8 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 query.setPhoto(etalonnage == null ? null : etalonnage.getData());
                 ecranService.updatePhoto(query);
             }
+
+            nerellRobotStatus.etalonageBaliseOk(ecranService.config().isEtalonnageOk());
         }
     }
 

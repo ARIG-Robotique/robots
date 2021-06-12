@@ -20,6 +20,7 @@ public class GetConfigInfos implements Serializable {
     boolean skipCalageBordure;
     boolean updatePhoto;
     boolean etalonnageBalise;
+    boolean etalonnageOk;
     int[][] posEcueil;
     int[][] posBouees;
 }
