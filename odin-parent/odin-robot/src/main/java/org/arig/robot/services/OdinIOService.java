@@ -64,8 +64,6 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
 
     // Technique
     private GpioPinDigitalInput inAu;
-    private GpioPinDigitalInput inAlimPuissance5V;
-    private GpioPinDigitalInput inAlimPuissance12V;
     private GpioPinDigitalInput inTirette;
 
     // Input : Numerique
@@ -125,7 +123,7 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
 //        inIrq6 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_06);
 
         // Output
-        outCmdLedCapteurRGB = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, PinState.LOW); // TODO
+        outCmdLedCapteurRGB = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, PinState.LOW);
 
         // Config PCF8574 //
         // -------------- //
@@ -133,17 +131,14 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
         pcf1 = new PCF8574GpioProvider(bus, IConstantesI2COdin.PCF1_ADDRESS, true);
 
         // Alim
-        inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_04);
-        inAlimPuissance5V = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_05);
-        inAlimPuissance12V = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_06);
-
-        outAlimPuissance5V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_00);
+        inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_00);
         outAlimPuissance12V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
+        outAlimPuissance5V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_02);
 
         // PCF1
-        inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
-        inCalageBordureGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
-        inCalageBordureDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
+        inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
+        inCalageBordureGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
+        inCalageBordureDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
     }
 
     @Override
@@ -176,12 +171,12 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
 
     @Override
     public boolean alimPuissance5VOk() {
-        return inAlimPuissance5V.isHigh();
+        return auOk() && outAlimPuissance5V.isLow(); // TODO carte mesure alim
     }
 
     @Override
     public boolean alimPuissance12VOk() {
-        return inAlimPuissance12V.isHigh();
+        return auOk() && outAlimPuissance5V.isLow(); // TODO carte mesure alim
     }
 
     @Override
@@ -197,22 +192,22 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
 
     @Override
     public boolean presenceVentouseAvantGauche() {
-        return vacuumController.getData(1).presence(); // TODO
+        return vacuumController.getData(2).presence();
     }
 
     @Override
     public boolean presenceVentouseAvantDroit() {
-        return vacuumController.getData(2).presence(); // TODO
+        return vacuumController.getData(3).presence();
     }
 
     @Override
     public boolean presenceVentouseArriereGauche() {
-        return vacuumController.getData(3).presence(); // TODO
+        return vacuumController.getData(1).presence();
     }
 
     @Override
     public boolean presenceVentouseArriereDroit() {
-        return vacuumController.getData(4).presence(); // TODO
+        return vacuumController.getData(4).presence();
     }
 
     @Override
@@ -317,22 +312,22 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
 
     @Override
     public void enablePompeAvantGauche() {
-        vacuumController.on(1); // TODO
+        vacuumController.on(2);
     }
 
     @Override
     public void enablePompeAvantDroit() {
-        vacuumController.on(2); // TODO
+        vacuumController.on(3);
     }
 
     @Override
     public void enablePompeArriereGauche() {
-        vacuumController.on(3); // TODO
+        vacuumController.on(1);
     }
 
     @Override
     public void enablePompeArriereDroit() {
-        vacuumController.on(4); // TODO
+        vacuumController.on(4);
     }
 
     @Override
@@ -342,21 +337,21 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
 
     @Override
     public void releasePompeAvantGauche() {
-        vacuumController.off(1); // TODO
+        vacuumController.off(2);
     }
 
     @Override
     public void releasePompeAvantDroit() {
-        vacuumController.off(2); // TODO
+        vacuumController.off(3);
     }
 
     @Override
     public void releasePompeArriereGauche() {
-        vacuumController.off(3); // TODO
+        vacuumController.off(1);
     }
 
     @Override
     public void releasePompeArriereDroit() {
-        vacuumController.off(4); // TODO
+        vacuumController.off(4);
     }
 }

@@ -26,6 +26,8 @@ import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
 import org.arig.robot.system.capteurs.TCA9548MultiplexerI2C;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor.Gain;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor.IntegrationTime;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.PropulsionsPCA9685Motors;
@@ -163,22 +165,22 @@ public class OdinRobotContext {
 
     @Bean
     public TCS34725ColorSensor couleurAvantGauche() {
-        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_AVANT_GAUCHE_NAME);
+        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_AVANT_GAUCHE_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
     }
 
     @Bean
     public TCS34725ColorSensor couleurAvantDroit() {
-        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_AVANT_DROIT_NAME);
+        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_AVANT_DROIT_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
     }
 
     @Bean
     public TCS34725ColorSensor couleurArriereGauche() {
-        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_ARRIERE_GAUCHE_NAME);
+        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_ARRIERE_GAUCHE_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
     }
 
     @Bean
     public TCS34725ColorSensor couleurArriereDroit() {
-        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_ARRIERE_DROIT_NAME);
+        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_ARRIERE_DROIT_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
     }
 
     @Bean

@@ -15,7 +15,7 @@ public interface IConstantesServosOdin {
     byte SPEED_BRAS = 0;
     byte SPEED_PAVILLON = 0;
     byte SPEED_POUSSOIR = 0;
-    byte SPEED_POUSSOIR_POUSSETTE = 20; // TODO
+    byte SPEED_POUSSOIR_POUSSETTE = 20;
 
     // Tempo servos //
     // ------------ //
@@ -27,34 +27,34 @@ public interface IConstantesServosOdin {
 
     // Constantes d'identification Servo //
     // --------------------------------- //
-    byte BRAS_GAUCHE = 1; // TODO
-    byte BRAS_DROIT = 2; // TODO
-    byte PAVILLON = 3; // TODO
-    byte POUSSOIR_AVANT_GAUCHE = 4; // TODO
-    byte POUSSOIR_AVANT_DROIT = 5; // TODO
-    byte POUSSOIR_ARRIERE_GAUCHE = 6; // TODO
-    byte POUSSOIR_ARRIERE_DROIT = 7; // TODO
+    byte BRAS_GAUCHE = 14;
+    byte BRAS_DROIT = 15;
+    byte PAVILLON = 21;
+    byte POUSSOIR_AVANT_GAUCHE = 20;
+    byte POUSSOIR_AVANT_DROIT = 19;
+    byte POUSSOIR_ARRIERE_GAUCHE = 17;
+    byte POUSSOIR_ARRIERE_DROIT = 18;
 
     // Constantes de position //
     // ---------------------- //
 
-    int POS_BRAS_GAUCHE_MANCHE_AIR = 1500; // TODO
-    int POS_BRAS_GAUCHE_PHARE = 1500; // TODO
-    int POS_BRAS_GAUCHE_FERME = 1500; // TODO
-    int POS_BRAS_DROIT_MANCHE_AIR = 1500; // TODO
-    int POS_BRAS_DROIT_PHARE = 1500; // TODO
-    int POS_BRAS_DROIT_FERME = 1500; // TODO
-    int POS_PAVILLON_HAUT = 1500; // TODO
-    int POS_PAVILLON_FIN_MATCH = 1500; // TODO
-    int POS_PAVILLON_BAS = 1500; // TODO
-    int POS_POUSSOIR_AVANT_GAUCHE_BAS = 1500; // TODO
-    int POS_POUSSOIR_AVANT_GAUCHE_HAUT = 1500; // TODO
-    int POS_POUSSOIR_AVANT_DROIT_BAS = 1500; // TODO
-    int POS_POUSSOIR_AVANT_DROIT_HAUT = 1500; // TODO
-    int POS_POUSSOIR_ARRIERE_GAUCHE_BAS = 1500; // TODO
-    int POS_POUSSOIR_ARRIERE_GAUCHE_HAUT = 1500; // TODO
-    int POS_POUSSOIR_ARRIERE_DROIT_BAS = 1500; // TODO
-    int POS_POUSSOIR_ARRIERE_DROIT_HAUT = 1500; // TODO
+    int POS_BRAS_GAUCHE_MANCHE_AIR = 1100;
+    int POS_BRAS_GAUCHE_PHARE = 1100; // TODO
+    int POS_BRAS_GAUCHE_FERME = 2110;
+    int POS_BRAS_DROIT_MANCHE_AIR = 1640;
+    int POS_BRAS_DROIT_PHARE = 1640; // TODO
+    int POS_BRAS_DROIT_FERME = 740;
+    int POS_PAVILLON_HAUT = 2340;
+    int POS_PAVILLON_FIN_MATCH = 2100;
+    int POS_PAVILLON_BAS = 1400;
+    int POS_POUSSOIR_AVANT_GAUCHE_BAS = 2410;
+    int POS_POUSSOIR_AVANT_GAUCHE_HAUT = 2010;
+    int POS_POUSSOIR_AVANT_DROIT_BAS = 652;
+    int POS_POUSSOIR_AVANT_DROIT_HAUT = 1032;
+    int POS_POUSSOIR_ARRIERE_GAUCHE_BAS = 710;
+    int POS_POUSSOIR_ARRIERE_GAUCHE_HAUT = 1080;
+    int POS_POUSSOIR_ARRIERE_DROIT_BAS = 2140;
+    int POS_POUSSOIR_ARRIERE_DROIT_HAUT = 1765;
 
     // Constantes de groupes //
     // --------------------- //

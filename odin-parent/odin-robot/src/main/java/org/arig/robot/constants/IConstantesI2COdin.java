@@ -11,10 +11,10 @@ public interface IConstantesI2COdin {
     int CODEUR_GAUCHE_ADDRESS = 0x32;
 
     String PCF_ALIM_DEVICE_NAME = "Carte alimentation";
-    int PCF_ALIM_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3D;
+    int PCF_ALIM_ADDRESS = PCF8574GpioProvider.PCF8574A_0x38;
 
     String PCF1_DEVICE_NAME = "PCF 1 (Inputs)";
-    int PCF1_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3B;
+    int PCF1_ADDRESS = PCF8574GpioProvider.PCF8574_0x27;
 
     String PCA9685_DEVICE_NAME = "PCA9685";
     int PCA9685_ADDRESS = 0x40;
@@ -32,14 +32,14 @@ public interface IConstantesI2COdin {
     int MULTIPLEXEUR_I2C_ADDRESS = 0x70;
 
     String COULEUR_AVANT_GAUCHE_NAME = "Couleur avant gauche";
-    byte COULEUR_AVANT_GAUCHE_MUX_CHANNEL = 0;
+    byte COULEUR_AVANT_GAUCHE_MUX_CHANNEL = 3;
 
     String COULEUR_AVANT_DROIT_NAME = "Couleur avant droit";
-    byte COULEUR_AVANT_DROIT_MUX_CHANNEL = 1;
+    byte COULEUR_AVANT_DROIT_MUX_CHANNEL = 2;
 
     String COULEUR_ARRIERE_GAUCHE_NAME = "Couleur arriere gauche";
-    byte COULEUR_ARRIERE_GAUCHE_MUX_CHANNEL = 2;
+    byte COULEUR_ARRIERE_GAUCHE_MUX_CHANNEL = 0;
 
     String COULEUR_ARRIERE_DROIT_NAME = "Couleur arriere droit";
-    byte COULEUR_ARRIERE_DROIT_MUX_CHANNEL = 3;
+    byte COULEUR_ARRIERE_DROIT_MUX_CHANNEL = 1;
 }

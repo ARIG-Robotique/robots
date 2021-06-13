@@ -1,6 +1,7 @@
 package org.arig.robot.odin.utils.shell.commands;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.services.IOdinIOService;
 import org.arig.robot.services.OdinServosService;
@@ -12,6 +13,7 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 
+@Slf4j
 @ShellComponent
 @ShellCommandGroup("Vacuum")
 @RequiredArgsConstructor
