@@ -115,5 +115,4 @@ public class TasksScheduler implements InitializingBean {
             strategyManager.execute();
         }
     }
-
 }

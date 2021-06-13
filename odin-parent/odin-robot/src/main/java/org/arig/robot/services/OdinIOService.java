@@ -212,12 +212,12 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
 
     @Override
     public boolean calageBordureDroit() {
-        return inCalageBordureDroit.isLow();
+        return inCalageBordureDroit.isHigh();
     }
 
     @Override
     public boolean calageBordureGauche() {
-        return inCalageBordureGauche.isLow();
+        return inCalageBordureGauche.isHigh();
     }
 
     // Couleur
