@@ -89,7 +89,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             final double robotX = position.getPt().getX();
             final double robotY = position.getPt().getY();
             if (orientation == -90) {
-                final double realY = conv.mmToPulse(2000 - IConstantesNerellConfig.dstCallageY);
+                final double realY = conv.mmToPulse(2000 - IConstantesNerellConfig.dstCallage);
                 if (Math.abs(realY - robotY) > conv.mmToPulse(10)) {
                     log.warn("RECALAGE REQUIS : yRobot = {} ; yReel = {}",
                             conv.pulseToMm(robotY), conv.pulseToMm(realY));
@@ -100,8 +100,8 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
 
             } else if (orientation == 180 || orientation == 0) {
                 final double realX = orientation == 180
-                        ? conv.mmToPulse(3000 - IConstantesNerellConfig.dstCallageY)
-                        : conv.mmToPulse(IConstantesNerellConfig.dstCallageY);
+                        ? conv.mmToPulse(3000 - IConstantesNerellConfig.dstCallage)
+                        : conv.mmToPulse(IConstantesNerellConfig.dstCallage);
 
                 if (Math.abs(realX - robotX) > conv.mmToPulse(10)) {
                     log.warn("RECALAGE REQUIS : xRobot = {} ; xReel = {}",

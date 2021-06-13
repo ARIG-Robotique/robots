@@ -115,10 +115,10 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 trajectoryManager.reculeMMSansAngle(1000);
 
                 if (odinRobotStatus.team() == ETeam.BLEU) {
-                    position.getPt().setX(conv.mmToPulse(IConstantesOdinConfig.dstCallageY));
+                    position.getPt().setX(conv.mmToPulse(IConstantesOdinConfig.dstCallage));
                     position.setAngle(conv.degToPulse(0));
                 } else {
-                    position.getPt().setX(conv.mmToPulse(3000 - IConstantesOdinConfig.dstCallageY));
+                    position.getPt().setX(conv.mmToPulse(3000 - IConstantesOdinConfig.dstCallage));
                     position.setAngle(conv.degToPulse(180));
                 }
 
@@ -128,7 +128,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 robotStatus.enableCalageBordure();
                 trajectoryManager.reculeMMSansAngle(1000);
 
-                position.getPt().setY(conv.mmToPulse(2000 - IConstantesOdinConfig.dstCallageY));
+                position.getPt().setY(conv.mmToPulse(2000 - IConstantesOdinConfig.dstCallage));
                 position.setAngle(conv.degToPulse(-90));
 
                 trajectoryManager.avanceMM(150);
@@ -193,7 +193,6 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                     trajectoryManager.gotoOrientationDeg(0);
                 }
             }
-
         } catch (AvoidingException e) {
             ecranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
             throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);

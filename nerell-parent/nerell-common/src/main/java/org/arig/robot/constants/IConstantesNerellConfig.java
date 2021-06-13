@@ -100,7 +100,7 @@ public interface IConstantesNerellConfig {
     // Paramètre Physiques        //
     // -------------------------- //
 
-    double dstCallageY = 151.0; // dos du robot <=> milieu du robot
+    double dstCallage = 151.0; // dos du robot <=> milieu du robot
     double dstDeposeArriereY = 223.5; // milieu de gobelets arrière, posés au sol <=> milieu du robot
     double dstDeposeAvantY = 115; // milieu des gobelets avant <=> milieu du robot
     double[] dstDeposeAvantX = new double[]{-114, -38, 38, 114};
