@@ -1,9 +1,11 @@
 package org.arig.robot.odin.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.model.CommandeRobot;
@@ -14,6 +16,7 @@ import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.IOdinIOService;
+import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -32,11 +35,12 @@ import java.util.List;
 @Slf4j
 @ShellComponent
 @ShellCommandGroup("Asservissement")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OdinAsservissementCommands {
 
     private final IMonitoringWrapper monitoringWrapper;
     private final IOdinIOService ioService;
+    private final TrajectoryManager trajectoryManager;
     private final OdinRobotStatus rs;
     private final ConvertionRobotUnit convRobot;
     private final CommandeRobot cmdRobot;
@@ -44,7 +48,14 @@ public class OdinAsservissementCommands {
     private final IPidFilter pidDistance;
     private final IPidFilter pidOrientation;
 
+    private boolean monitoringRun = false;
+
     private void startMonitoring() {
+        if (monitoringRun) {
+            endMonitoring();
+        }
+
+        monitoringRun = true;
         final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(IConstantesConfig.executiondIdFormat));
         System.setProperty(IConstantesConfig.keyExecutionId, execId);
         rs.enableForceMonitoring();
@@ -53,6 +64,7 @@ public class OdinAsservissementCommands {
 
     @SneakyThrows
     private void endMonitoring() {
+        monitoringRun = false;
         monitoringWrapper.save();
         rs.disableForceMonitoring();
 
@@ -86,33 +98,20 @@ public class OdinAsservissementCommands {
         pidOrientation.reset();
     }
 
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Asservissement du robot")
-    public void asservRobot(@NotNull TypeConsigne[] typeConsignes, @NotNull long distance, @NotNull long orientation, @NotNull long vitesseDistance, @NotNull long vitesseOrientation, @NotNull SensDeplacement sens) {
-        startMonitoring();
-
-        cmdRobot.setTypes(typeConsignes);
-        cmdRobot.setSensDeplacement(sens);
-        cmdRobot.getVitesse().setDistance(vitesseDistance);
-        cmdRobot.getVitesse().setOrientation(vitesseOrientation);
-        cmdRobot.getConsigne().setDistance((long) convRobot.mmToPulse(distance));
-        cmdRobot.getConsigne().setOrientation((long) convRobot.degToPulse(orientation));
-        cmdRobot.setFrein(true);
-
-        rs.enableAsserv();
+    @ShellMethod("Réglage des vitesses")
+    public void vitesseRobot(@NotNull long vitesseDistance, @NotNull long vitesseOrientation) {
+        trajectoryManager.setVitesse(vitesseDistance, vitesseOrientation);
     }
 
     @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Asservissement du robot en XY")
-    public void asservRobotXY(@NotNull double x, @NotNull double y, @NotNull double angle, @NotNull long vitesseDistance, @NotNull long vitesseOrientation, @NotNull SensDeplacement sens) {
+    @ShellMethod("Asservissement du robot")
+    public void asservRobot(@NotNull long distance, @NotNull long orientation, SensDeplacement sens, TypeConsigne[] typeConsignes) {
         startMonitoring();
 
-        cmdRobot.setTypes(TypeConsigne.XY);
-        cmdRobot.setSensDeplacement(sens);
-        cmdRobot.getVitesse().setDistance(vitesseDistance);
-        cmdRobot.getVitesse().setOrientation(vitesseOrientation);
-        final Point pt = new Point(convRobot.mmToPulse(x), convRobot.mmToPulse(y));
-        cmdRobot.setPosition(new Position(pt, convRobot.degToPulse(angle)));
+        cmdRobot.setTypes(ArrayUtils.getLength(typeConsignes) == 0 ? new TypeConsigne[]{TypeConsigne.DIST, TypeConsigne.ANGLE} : typeConsignes);
+        cmdRobot.setSensDeplacement(sens == null ? SensDeplacement.AUTO : sens);
+        cmdRobot.getConsigne().setDistance((long) convRobot.mmToPulse(distance));
+        cmdRobot.getConsigne().setOrientation((long) convRobot.degToPulse(orientation));
         cmdRobot.setFrein(true);
 
         rs.enableAsserv();
