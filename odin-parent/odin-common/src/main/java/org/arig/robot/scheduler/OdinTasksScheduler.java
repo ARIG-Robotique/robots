@@ -52,7 +52,7 @@ public class OdinTasksScheduler {
     public void systemCheckTensionTaks() {
         if (rs.matchEnabled()) {
             // TODO Cabler la nouvelle carte
-            servosService.controlBatteryVolts();
+            //servosService.controlBatteryVolts();
         }
     }
 }
