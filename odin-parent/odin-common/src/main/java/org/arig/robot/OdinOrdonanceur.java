@@ -83,12 +83,12 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         ChangeFilter<Integer> teamChangeFilter = new ChangeFilter<>(ETeam.UNKNOWN.ordinal());
         do {
             exitFromScreen();
+            connectGroup();
 
             if (teamChangeFilter.filter(ecranService.config().getTeam())) {
                 odinRobotStatus.setTeam(ETeam.values()[ecranService.config().getTeam()]);
                 log.info("Team {}", odinRobotStatus.team().name());
             }
-            connectGroup();
             ThreadUtils.sleep(500);
         } while (!ecranService.config().isStartCalibration());
     }
@@ -104,10 +104,10 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
             robotStatus.disableAvoidance();
             if (robotStatus.simulateur() || skip) {
                 if (odinRobotStatus.team() == ETeam.BLEU) {
-                    position.setPt(new Point(conv.mmToPulse(91), conv.mmToPulse(1200)));
+                    position.setPt(new Point(conv.mmToPulse(IConstantesOdinConfig.dstCallage), conv.mmToPulse(1200)));
                     position.setAngle(conv.degToPulse(0));
                 } else {
-                    position.setPt(new Point(conv.mmToPulse(3000 - 91), conv.mmToPulse(1200)));
+                    position.setPt(new Point(conv.mmToPulse(3000 - IConstantesOdinConfig.dstCallage), conv.mmToPulse(1200)));
                     position.setAngle(conv.degToPulse(180));
                 }
             } else {

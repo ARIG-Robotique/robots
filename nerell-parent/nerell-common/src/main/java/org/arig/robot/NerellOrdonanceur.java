@@ -113,15 +113,14 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
         do {
             exitFromScreen();
+            connectGroup();
+            connectBalise();
+            configBalise(updatePhotoFilter, doEtalonnageFilter);
 
             if (teamChangeFilter.filter(ecranService.config().getTeam())) {
                 groupService.team(ETeam.values()[ecranService.config().getTeam()]);
                 log.info("Team {}", nerellRobotStatus.team().name());
             }
-
-            connectGroup();
-            connectBalise();
-            configBalise(updatePhotoFilter, doEtalonnageFilter);
 
             ThreadUtils.sleep(500);
         } while (!ecranService.config().isStartCalibration());
@@ -175,10 +174,10 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             robotStatus.disableAvoidance();
             if (robotStatus.simulateur() || skip) {
                 if (nerellRobotStatus.team() == ETeam.BLEU) {
-                    position.setPt(new Point(conv.mmToPulse(200), conv.mmToPulse(1200)));
+                    position.setPt(new Point(conv.mmToPulse(IConstantesNerellConfig.dstCallage), conv.mmToPulse(1200)));
                     position.setAngle(conv.degToPulse(0));
                 } else {
-                    position.setPt(new Point(conv.mmToPulse(3000 - 200), conv.mmToPulse(1200)));
+                    position.setPt(new Point(conv.mmToPulse(3000 - IConstantesNerellConfig.dstCallage), conv.mmToPulse(1200)));
                     position.setAngle(conv.degToPulse(180));
                 }
             } else {
