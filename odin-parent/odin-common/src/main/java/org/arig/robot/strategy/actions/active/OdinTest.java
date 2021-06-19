@@ -3,6 +3,7 @@ package org.arig.robot.strategy.actions.active;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractOdinAction;
@@ -38,18 +39,17 @@ public class OdinTest extends AbstractOdinAction {
     @Override
     public void execute() {
         try {
-            rs.disableAvoidance();
+            rs.enableAvoidance();
 
-            // TODO Test comme Nerell a faire
-            mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
-            mv.gotoPoint(1200,1200, GotoOption.AVANT);
-            mv.gotoPoint(100, 1200, GotoOption.AVANT);
-            mv.gotoOrientationDeg(0);
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.pathTo(2050,1600, GotoOption.AVANT);
+            mv.pathTo(950, 800, GotoOption.AVANT);
+            mv.pathTo(2050, 800, GotoOption.AVANT);
+            mv.pathTo(950, 1600, GotoOption.AVANT);
 
-            completed = true;
-        } catch (AvoidingException e) {
+        } catch (AvoidingException | NoPathFoundException e) {
             updateValidTime();
-            log.error("Erreur d'éxécution de l'action : {}", e.toString());
+            log.error("Erreur d'éxécution de l'action : {}", e.getMessage());
         }
     }
 }
