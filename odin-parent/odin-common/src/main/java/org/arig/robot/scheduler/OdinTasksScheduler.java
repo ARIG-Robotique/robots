@@ -1,11 +1,16 @@
 package org.arig.robot.scheduler;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.OdinRobotStatus;
+import org.arig.robot.model.capteurs.AlimentationSensorValue;
+import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.OdinEcranService;
 import org.arig.robot.services.OdinServosService;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
+import org.arig.robot.system.capteurs.IAlimentationSensor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -21,13 +26,16 @@ public class OdinTasksScheduler {
     private IAvoidingService avoidingService;
 
     @Autowired
-    private OdinServosService servosService;
-
-    @Autowired
     private ISystemBlockerManager systemBlockerManager;
 
     @Autowired
     private OdinEcranService ecranService;
+
+    @Autowired
+    private IAlimentationSensor alimentationSensor;
+
+    @Autowired
+    protected IMonitoringWrapper monitoringWrapper;
 
     @Scheduled(fixedRate = 1000)
     public void ecranTask() {
@@ -48,11 +56,17 @@ public class OdinTasksScheduler {
         }
     }
 
-    @Scheduled(fixedDelay = 5000)
-    public void systemCheckTensionTaks() {
-        if (rs.matchEnabled()) {
-            // TODO Cabler la nouvelle carte
-            //servosService.controlBatteryVolts();
-        }
-    }
+//    @Scheduled(fixedDelay = 5000)
+//    public void systemCheckTensionTaks() {
+//        if (rs.matchEnabled()) {
+//            try {
+//                alimentationSensor.refresh();
+//                AlimentationSensorValue servo = alimentationSensor.get((byte) 0);
+//                AlimentationSensorValue moteur = alimentationSensor.get((byte) 0);
+//
+//            } catch (I2CException e) {
+//                log.warn("Erreur de refresh des infos alimentations");
+//            }
+//        }
+//    }
 }

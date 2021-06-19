@@ -150,7 +150,9 @@ public class OdinRobotContext {
 
     @Bean
     public ARIG2WheelsEncoders encoders() {
-        return new ARIG2WheelsEncoders(IConstantesI2COdin.CODEUR_MOTEUR_GAUCHE, IConstantesI2COdin.CODEUR_MOTEUR_DROIT);
+        final ARIG2WheelsEncoders encoders = new ARIG2WheelsEncoders(IConstantesI2COdin.CODEUR_MOTEUR_GAUCHE, IConstantesI2COdin.CODEUR_MOTEUR_DROIT);
+        encoders.setCoefs(IConstantesOdinConfig.coefCodeurGauche, IConstantesOdinConfig.coefCodeurDroit);
+        return encoders;
     }
 
     @Bean

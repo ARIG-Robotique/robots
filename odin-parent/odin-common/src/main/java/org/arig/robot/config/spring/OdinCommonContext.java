@@ -95,16 +95,8 @@ public class OdinCommonContext {
 
     @Bean
     public IAsservissementPolaire asservissement() {
-        // TODO Config pour Odin a faire
-        // Positive Min moteur Gauche : 102
-        // Negative Min moteur Gauche : -37
-        LimiterFilter limiterMoteurGauche = new LimiterFilter(35d, 4095d, LimiterType.MIRROR);
-
-        // TODO Config pour Odin a faire
-        // Positive Min moteur Droit : 93
-        // Negative Min moteur Droit : -78
-        LimiterFilter limiterMoteurDroit = new LimiterFilter(35d, 4095d, LimiterType.MIRROR);
-
+        LimiterFilter limiterMoteurGauche = new LimiterFilter(0d, 4095d, LimiterType.MIRROR);
+        LimiterFilter limiterMoteurDroit = new LimiterFilter(0d, 4095d, LimiterType.MIRROR);
         return new AsservissementPolaireDistanceOrientation(limiterMoteurGauche, limiterMoteurDroit);
     }
 

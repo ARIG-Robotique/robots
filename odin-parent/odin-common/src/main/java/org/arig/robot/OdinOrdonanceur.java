@@ -104,10 +104,10 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
             robotStatus.disableAvoidance();
             if (robotStatus.simulateur() || skip) {
                 if (odinRobotStatus.team() == ETeam.BLEU) {
-                    position.setPt(new Point(conv.mmToPulse(200), conv.mmToPulse(1200)));
+                    position.setPt(new Point(conv.mmToPulse(91), conv.mmToPulse(1200)));
                     position.setAngle(conv.degToPulse(0));
                 } else {
-                    position.setPt(new Point(conv.mmToPulse(3000 - 200), conv.mmToPulse(1200)));
+                    position.setPt(new Point(conv.mmToPulse(3000 - 91), conv.mmToPulse(1200)));
                     position.setAngle(conv.degToPulse(180));
                 }
             } else {
@@ -149,6 +149,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
      * Positionnement en fonction de la stratégie
      */
     public void positionStrategy() {
+        /*
         try {
             if (odinRobotStatus.strategy() == EOdinStrategy.AGGRESSIVE) {
                 if (odinRobotStatus.team() == ETeam.BLEU) {
@@ -197,6 +198,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
             ecranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
             throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);
         }
+        */
     }
 
     /**
