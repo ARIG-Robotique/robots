@@ -169,6 +169,12 @@ public abstract class AbstractOrdonanceur {
         } catch (Exception e) {
             log.error("Gros catch de fin, sans comprendre pourquoi", e);
         } finally {
+            // Désactivation des taches communicante
+            robotStatus.disableMainThread();
+            robotStatus.disableAvoidance();
+            robotStatus.disableAsserv();
+            ThreadUtils.sleep(500);
+
             lidar.stopScan();
 
             // On coupe le jus
@@ -191,8 +197,8 @@ public abstract class AbstractOrdonanceur {
      */
     protected void exitFromScreen() {
         if (ecranService.config() != null && ecranService.config().isExit()) {
-            log.info("Arret du programme");
-            throw new ExitProgram(false);
+            ecranService.displayMessage("Arret du programme");
+            throw new ExitProgram(true);
         }
     }
 

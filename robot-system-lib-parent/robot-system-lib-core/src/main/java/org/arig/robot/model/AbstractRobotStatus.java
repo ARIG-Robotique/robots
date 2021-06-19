@@ -28,6 +28,22 @@ public abstract class AbstractRobotStatus {
     }
 
     /**
+     * Indication de fonctionnement pour le thread principal
+     */
+    @Setter(AccessLevel.NONE)
+    private boolean mainThread = false;
+
+    public void enableMainThread() {
+        log.warn("Activation du monitoring en dehors du match");
+        mainThread = true;
+    }
+
+    public void disableMainThread() {
+        log.warn("Desactivation du monitoring en dehors du match");
+        mainThread = false;
+    }
+
+    /**
      * Il y'a deux robots sur la table
      */
     private boolean twoRobots = false;

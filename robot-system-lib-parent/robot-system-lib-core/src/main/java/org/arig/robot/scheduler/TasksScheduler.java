@@ -48,7 +48,8 @@ public class TasksScheduler implements InitializingBean {
             long lastTimeI2C = lastTimeAsserv;
             long lastTimeCalage = lastTimeAsserv;
 
-            while (true) {
+            rs.enableMainThread();
+            while (rs.mainThread()) {
                 long timeStartCalage = System.nanoTime();
                 long ellapsedCalage = timeStartCalage - lastTimeCalage;
 
@@ -105,7 +106,6 @@ public class TasksScheduler implements InitializingBean {
         });
 
         processThread.setName("process");
-
         processThread.start();
     }
 
