@@ -1,6 +1,9 @@
 package org.arig.robot.model;
 
 public enum EStatusEvent {
+    READY,
+    START,
+
     ECUEIL_EQUIPE_PRIS,
     ECUEIL_COMMUN_EQUIPE_PRIS,
     ECUEIL_COMMUN_ADVERSE_PRIS,

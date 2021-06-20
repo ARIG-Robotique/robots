@@ -1,5 +1,6 @@
 package org.arig.robot.services;
 
+import lombok.Getter;
 import org.arig.robot.model.Bouee;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.EPort;
@@ -30,6 +31,12 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
     @Autowired
     private ThreadPoolExecutor threadPoolTaskExecutor;
 
+    @Getter
+    private boolean ready;
+
+    @Getter
+    private boolean start;
+
     @Override
     public void afterPropertiesSet() {
         group.listen(this);
@@ -38,6 +45,12 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
     @Override
     public void handle(int eventOrdinal, byte[] value) {
         switch (EStatusEvent.values()[eventOrdinal]) {
+            case READY:
+                ready = true;
+                break;
+            case START:
+                start = true;
+                break;
             case TEAM:
                 rs.setTeam(ETeam.values()[value[0]]);
                 break;
@@ -113,6 +126,14 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
             bouees[i] = ECouleurBouee.values()[value[i]];
         }
         return bouees;
+    }
+
+    public void ready() {
+        sendEvent(EStatusEvent.READY);
+    }
+
+    public void start() {
+        sendEvent(EStatusEvent.START);
     }
 
     public void team(ETeam team) {

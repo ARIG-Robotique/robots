@@ -115,6 +115,11 @@ public abstract class AbstractOrdonanceur {
     public abstract void beforeMatch();
 
     /**
+     * Juste au début du match
+     */
+    public abstract void startMatch();
+
+    /**
      * Pendant le match
      */
     public abstract void inMatch();
@@ -154,7 +159,10 @@ public abstract class AbstractOrdonanceur {
 
             beforeMatch(); // impl
 
-            waitTirette();
+            ecranService.displayMessage("!!! ... ATTENTE DEPART TIRETTE ... !!!");
+            while (waitTirette()) {
+                ThreadUtils.sleep(1);
+            };
 
             match();
 
@@ -329,11 +337,8 @@ public abstract class AbstractOrdonanceur {
     /**
      * Attente du départ du match
      */
-    private void waitTirette() {
-        ecranService.displayMessage("!!! ... ATTENTE DEPART TIRETTE ... !!!");
-        while (ioService.tirette()) {
-            ThreadUtils.sleep(1);
-        }
+    protected boolean waitTirette() {
+        return ioService.tirette();
     }
 
     /**
@@ -342,6 +347,8 @@ public abstract class AbstractOrdonanceur {
     private void match() {
         // Début du compteur de temps pour le match
         robotStatus.startMatch();
+
+        startMatch(); // impl
 
         // Match de XX secondes.
         while (robotStatus.matchRunning()) {

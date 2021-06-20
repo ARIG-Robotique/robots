@@ -66,6 +66,13 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     }
 
     @Override
+    public void startMatch() {
+        if (robotStatus.groupOk()) {
+            groupService.start();
+        }
+    }
+
+    @Override
     public void inMatch() {
         // Déclenchement du pavillon
         if (robotStatus.getRemainingTime() <= IEurobotConfig.pavillonRemainingTimeMs
@@ -303,6 +310,10 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             configBalise(updatePhotoFilter, doEtalonnageFilter);
 
             ThreadUtils.sleep(manuel ? 4000 : 500);
+        }
+
+        if (robotStatus.groupOk()) {
+            groupService.ready();
         }
     }
 }

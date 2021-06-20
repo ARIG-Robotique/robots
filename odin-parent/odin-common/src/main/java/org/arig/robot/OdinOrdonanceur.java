@@ -50,6 +50,16 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
     }
 
     @Override
+    protected boolean waitTirette() {
+        return robotStatus.groupOk() ? !groupService.isStart() : ioService.tirette();
+    }
+
+    @Override
+    public void startMatch() {
+
+    }
+
+    @Override
     public void inMatch() {
         // Déclenchement du pavillon
         if (robotStatus.getRemainingTime() <= IEurobotConfig.pavillonRemainingTimeMs
@@ -218,7 +228,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
         boolean manuel = ecranService.config().isModeManuel();
 
-        while (!ioService.tirette()) {
+        while (robotStatus.groupOk() ? !groupService.isReady() : !ioService.tirette()) {
             exitFromScreen();
 
             if (manuelRisingEdge.filter(ecranService.config().isModeManuel())) {
