@@ -1,7 +1,9 @@
 package org.arig.robot.model;
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,6 +49,29 @@ public class OdinRobotStatus extends EurobotStatus {
 
     private boolean doubleDepose;
     private boolean deposePartielle;
+
+    @Setter(AccessLevel.NONE)
+    private boolean pincesAvantEnabled = false;
+
+    public void enablePincesAvant() {
+        pincesAvantEnabled = true;
+    }
+
+    public void disablePincesAvant() {
+        pincesAvantEnabled = false;
+    }
+
+
+    @Setter(AccessLevel.NONE)
+    private boolean pincesArriereEnabled = false;
+
+    public void enablePincesArriere() {
+        pincesArriereEnabled = true;
+    }
+
+    public void disablePincesArriere() {
+        pincesArriereEnabled = false;
+    }
 
     /**
      * STATUT
