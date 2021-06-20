@@ -43,6 +43,7 @@ public class AntiblocagePort extends AbstractNerellAction {
     @Override
     public void execute() {
         try {
+            rs.enableAvoidance(); // Pour eviter de se rentrer dans le robot secondaire
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.gotoPoint(entryPoint());
         } catch (AvoidingException e) {
