@@ -14,6 +14,7 @@ import org.arig.robot.model.ETeam;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.ecran.UpdatePhotoInfos;
+import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.INerellIOService;
 import org.arig.robot.services.NerellEcranService;
@@ -204,9 +205,9 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 trajectoryManager.avanceMM(150);
 
                 if (nerellRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(200, 1200);
+                    trajectoryManager.gotoPoint(200, 1600, GotoOption.ARRIERE);
                 } else {
-                    trajectoryManager.gotoPoint(3000 - 200, 1200);
+                    trajectoryManager.gotoPoint(3000 - 200, 1600, GotoOption.ARRIERE);
                 }
             }
         } catch (AvoidingException e) {
@@ -222,19 +223,11 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         try {
             if (nerellRobotStatus.strategy() == ENerellStrategy.AGGRESSIVE) {
                 if (nerellRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(200, 1200);
-                    trajectoryManager.alignFrontTo(1025, 1400);
+                    trajectoryManager.gotoPoint(280, 1345);
+                    trajectoryManager.alignFrontTo(2330, 1900);
                 } else {
-                    trajectoryManager.gotoPoint(3000 - 200, 1200);
-                    trajectoryManager.alignFrontTo(3000 - 1025, 1400);
-                }
-            } else if (nerellRobotStatus.strategy() == ENerellStrategy.FINALE) {
-                if (nerellRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(200, 1200);
-                    trajectoryManager.gotoOrientationDeg(0);
-                } else {
-                    trajectoryManager.gotoPoint(3000 - 200, 1200);
-                    trajectoryManager.gotoOrientationDeg(0);
+                    trajectoryManager.gotoPoint(3000 - 280, 1345);
+                    trajectoryManager.alignFrontTo(3000 - 2330, 1900);
                 }
             } else if (nerellRobotStatus.strategy() == ENerellStrategy.BASIC_NORD) { // BASIC
                 // Aligne vers les bouées au nord du port
@@ -253,14 +246,6 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 } else {
                     trajectoryManager.gotoPoint(3000 - 220, 1110);
                     trajectoryManager.gotoOrientationDeg(-180 + 66);
-                }
-            } else { // Au centre orienté vers le logo au centre de la table
-                if (nerellRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(200, 1200);
-                    trajectoryManager.gotoOrientationDeg(0);
-                } else {
-                    trajectoryManager.gotoPoint(3000 - 200, 1200);
-                    trajectoryManager.gotoOrientationDeg(0);
                 }
             }
 

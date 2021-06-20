@@ -11,6 +11,7 @@ import org.arig.robot.model.EOdinStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.IOdinIOService;
 import org.arig.robot.services.OdinServosService;
 import org.arig.robot.services.RobotGroupService;
@@ -134,9 +135,9 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 trajectoryManager.avanceMM(150);
 
                 if (odinRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(200, 1200);
+                    trajectoryManager.gotoPoint(255, 900, GotoOption.ARRIERE);
                 } else {
-                    trajectoryManager.gotoPoint(3000 - 200, 1200);
+                    trajectoryManager.gotoPoint(3000 - 255, 900, GotoOption.ARRIERE);
                 }
             }
         } catch (AvoidingException e) {
@@ -147,51 +148,57 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     /**
      * Positionnement en fonction de la stratégie
+     * @param oldStrat
      */
-    public void positionStrategy() {
+    public void positionStrategy(EOdinStrategy oldStrat) {
         try {
-            if (odinRobotStatus.strategy() == EOdinStrategy.AGGRESSIVE) {
+            EOdinStrategy newStrat = odinRobotStatus.strategy();
+            if (oldStrat != newStrat) {
                 if (odinRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(200, 1200);
-                    trajectoryManager.alignFrontTo(1025, 1400);
+                    if (oldStrat == EOdinStrategy.BASIC_NORD) {
+                        trajectoryManager.gotoPoint(255, 900);
+                        if (newStrat == EOdinStrategy.BASIC_SUD) {
+                            trajectoryManager.gotoPoint(580, 900);
+                            trajectoryManager.gotoPoint(580, 1500);
+                            trajectoryManager.gotoPoint(255, 1500);
+                        } else if (newStrat == EOdinStrategy.AGGRESSIVE) {
+                            // TODO
+                        }
+                    } else if (oldStrat == EOdinStrategy.BASIC_SUD) {
+                        trajectoryManager.gotoPoint(255, 1500);
+                        if (newStrat == EOdinStrategy.BASIC_NORD) {
+                            trajectoryManager.gotoPoint(580, 1500);
+                            trajectoryManager.gotoPoint(580, 900);
+                            trajectoryManager.gotoPoint(255, 900);
+                        } else if (newStrat == EOdinStrategy.AGGRESSIVE) {
+                            // TODO
+                        }
+                    } else if (oldStrat == EOdinStrategy.AGGRESSIVE) {
+                        // TODO
+                    }
                 } else {
-                    trajectoryManager.gotoPoint(3000 - 200, 1200);
-                    trajectoryManager.alignFrontTo(3000 - 1025, 1400);
+                    // TODO
                 }
-            } else if (odinRobotStatus.strategy() == EOdinStrategy.FINALE) {
-                if (odinRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(200, 1200);
-                    trajectoryManager.gotoOrientationDeg(0);
-                } else {
-                    trajectoryManager.gotoPoint(3000 - 200, 1200);
-                    trajectoryManager.gotoOrientationDeg(0);
-                }
-            } else if (odinRobotStatus.strategy() == EOdinStrategy.BASIC_NORD) { // BASIC
+            }
+
+            if (newStrat == EOdinStrategy.AGGRESSIVE) {
+                // TODO
+            } else if (newStrat == EOdinStrategy.BASIC_NORD) { // BASIC
                 // Aligne vers les bouées au nord du port
                 if (odinRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(220, 1290);
-                    trajectoryManager.gotoOrientationDeg(66);
+                    trajectoryManager.gotoPoint(255, 1005, GotoOption.ARRIERE);
                 } else {
-                    trajectoryManager.gotoPoint(3000 - 220, 1290);
-                    trajectoryManager.gotoOrientationDeg(180 - 66);
+                    trajectoryManager.gotoPoint(3000 - 255, 1005, GotoOption.ARRIERE);
                 }
-            } else if (odinRobotStatus.strategy() == EOdinStrategy.BASIC_SUD) {
+                trajectoryManager.gotoOrientationDeg(-90);
+            } else if (newStrat == EOdinStrategy.BASIC_SUD) {
                 // Aligne vers les bouées au sud du port
                 if (odinRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(220, 1110);
-                    trajectoryManager.gotoOrientationDeg(-66);
+                    trajectoryManager.gotoPoint(255, 1395, GotoOption.ARRIERE);
                 } else {
-                    trajectoryManager.gotoPoint(3000 - 220, 1110);
-                    trajectoryManager.gotoOrientationDeg(-180 + 66);
+                    trajectoryManager.gotoPoint(3000 - 255, 1395, GotoOption.ARRIERE);
                 }
-            } else { // Au centre orienté vers le logo au centre de la table
-                if (odinRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(200, 1200);
-                    trajectoryManager.gotoOrientationDeg(0);
-                } else {
-                    trajectoryManager.gotoPoint(3000 - 200, 1200);
-                    trajectoryManager.gotoOrientationDeg(0);
-                }
+                trajectoryManager.gotoOrientationDeg(90);
             }
         } catch (AvoidingException e) {
             ecranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
@@ -230,10 +237,11 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
                 odinRobotStatus.doubleDepose(ecranService.config().isDoubleDepose() || ecranService.config().isDeposePartielle());
                 odinRobotStatus.deposePartielle(ecranService.config().isDeposePartielle());
+                EOdinStrategy oldStrat = odinRobotStatus.strategy();
                 if (strategyChangeFilter.filter(ecranService.config().getStrategy())) {
                     odinRobotStatus.setStrategy(ecranService.config().getStrategy());
                     log.info("Strategy {}", odinRobotStatus.strategy().name());
-                    positionStrategy();
+                    positionStrategy(oldStrat);
                 }
             }
 
