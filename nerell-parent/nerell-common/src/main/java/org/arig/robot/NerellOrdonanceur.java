@@ -47,7 +47,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public String getPathfinderMap() {
-        return nerellRobotStatus.team().pathfinderMap();
+        return nerellRobotStatus.team().pathfinderMap("nerell");
     }
 
     @Override

@@ -36,7 +36,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public String getPathfinderMap() {
-        return odinRobotStatus.team().pathfinderMap();
+        return odinRobotStatus.team().pathfinderMap("odin");
     }
 
     @Override
