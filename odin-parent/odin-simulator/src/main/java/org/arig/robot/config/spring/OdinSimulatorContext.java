@@ -10,8 +10,11 @@ import org.arig.robot.model.RobotName;
 import org.arig.robot.model.bouchon.BouchonEncoderValues;
 import org.arig.robot.model.bouchon.BouchonI2CDevice;
 import org.arig.robot.model.bouchon.BouchonI2CMultiplexer;
+import org.arig.robot.model.capteurs.AlimentationSensorValue;
 import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
 import org.arig.robot.system.avoiding.IAvoidingService;
+import org.arig.robot.system.capteurs.ARIG2ChannelsAlimentationSensorBouchon;
+import org.arig.robot.system.capteurs.IAlimentationSensor;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
@@ -93,6 +96,11 @@ public class OdinSimulatorContext {
     @Bean
     public AbstractARIGVacuumController vacuumController() {
         return new BouchonARIGVacuumController();
+    }
+
+    @Bean
+    public IAlimentationSensor alimentationSensor() {
+        return new ARIG2ChannelsAlimentationSensorBouchon("alim sensor");
     }
 
     @Bean
