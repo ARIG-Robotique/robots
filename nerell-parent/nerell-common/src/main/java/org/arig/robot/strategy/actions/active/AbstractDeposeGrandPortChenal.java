@@ -155,7 +155,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
-            log.error("Erreur d'éxécution de l'action : {}", e.toString());
+            log.error("Erreur d'exécution de l'action : {}", e.toString());
         }
     }
 

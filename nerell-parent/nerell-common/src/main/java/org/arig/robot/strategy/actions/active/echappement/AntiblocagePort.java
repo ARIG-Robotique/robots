@@ -46,7 +46,7 @@ public class AntiblocagePort extends AbstractNerellAction {
             mv.gotoPoint(entryPoint());
         } catch (AvoidingException e) {
             updateValidTime();
-            log.error("Erreur d'éxécution de l'action : {}", e.toString());
+            log.error("Erreur exécution de l'action : {}", e.toString());
         }
     }
 }

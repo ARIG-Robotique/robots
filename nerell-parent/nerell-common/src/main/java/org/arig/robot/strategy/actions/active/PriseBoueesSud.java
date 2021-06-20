@@ -120,7 +120,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
         } catch (AvoidingException | NoPathFoundException e) {
             updateValidTime();
-            log.error("Erreur d'éxécution de l'action : {}", e.toString());
+            log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
             complete();
         }

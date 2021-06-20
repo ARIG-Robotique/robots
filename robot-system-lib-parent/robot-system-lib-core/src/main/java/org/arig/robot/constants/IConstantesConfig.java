@@ -5,7 +5,7 @@ public interface IConstantesConfig {
     // Profile de configuration pour le monitoring
     String profileMonitoring = "monitoring";
 
-    // Clé pour la récupération de l'identifiant d'éxécution
+    // Clé pour la récupération de l'identifiant d'exécution
     String keyExecutionId = "execution.id";
 
     String executiondIdFormat = "yyyyMMddHHmmss";

@@ -78,7 +78,7 @@ public class NerellAsservissementCommands {
         lines.add(LocalDateTime.now().format(savePattern));
         FileUtils.writeLines(execFile, lines);
 
-        log.info("Création du fichier de fin d'éxécution {}", execFile.getAbsolutePath());
+        log.info("Création du fichier de fin d'exécution {}", execFile.getAbsolutePath());
     }
 
     public Availability alimentationOk() {

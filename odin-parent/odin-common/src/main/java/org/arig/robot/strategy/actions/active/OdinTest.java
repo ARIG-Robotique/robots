@@ -49,7 +49,7 @@ public class OdinTest extends AbstractOdinAction {
 
         } catch (AvoidingException | NoPathFoundException e) {
             updateValidTime();
-            log.error("Erreur d'éxécution de l'action : {}", e.getMessage());
+            log.error("Erreur d'exécution de l'action : {}", e.getMessage());
         }
     }
 }

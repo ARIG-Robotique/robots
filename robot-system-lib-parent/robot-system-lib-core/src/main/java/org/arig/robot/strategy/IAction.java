@@ -15,7 +15,7 @@ public interface IAction {
     String name();
 
     /**
-     * Valeur indiquant l'ordre de priorité d'éxécution.
+     * Valeur indiquant l'ordre de priorité d'exécution.
      * Plus la valeur est grande plus cela est prioritaire.
      *
      * @return La valeur de l'ordre
@@ -23,7 +23,7 @@ public interface IAction {
     int order();
 
     /**
-     * Est-ce que toute les conditions sont réunies pour l'éxécution ?
+     * Est-ce que toute les conditions sont réunies pour l'exécution ?
      *
      * @return true si cette action peut être éxécuter
      */
@@ -37,7 +37,7 @@ public interface IAction {
     boolean isCompleted();
 
     /**
-     * Processus d'éxécution de l'action
+     * Processus d'exécution de l'action
      */
     void execute();
 

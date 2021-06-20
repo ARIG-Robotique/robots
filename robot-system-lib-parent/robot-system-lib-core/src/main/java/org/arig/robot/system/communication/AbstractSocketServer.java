@@ -181,7 +181,7 @@ public abstract class AbstractSocketServer<T extends Enum<T>> {
                     continue;
                 }
             } catch (Exception e) {
-                log.warn("Erreur d'éxécution", e);
+                log.warn("Erreur d'exécution", e);
                 sendError(action.name(), e.getMessage());
                 continue;
             }

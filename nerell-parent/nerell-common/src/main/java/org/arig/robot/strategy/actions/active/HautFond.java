@@ -93,7 +93,7 @@ public class HautFond extends AbstractNerellAction {
             rs.hautFond(Collections.emptyList());
 
         } catch (NoPathFoundException | AvoidingException e) {
-            log.error("Erreur d'éxécution de l'action : {}", e.toString());
+            log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
             updateValidTime();
         }

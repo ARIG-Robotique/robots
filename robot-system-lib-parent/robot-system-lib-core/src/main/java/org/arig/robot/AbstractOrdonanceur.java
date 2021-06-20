@@ -374,7 +374,7 @@ public abstract class AbstractOrdonanceur {
         lines.add(stopOrdonnanceur.format(savePattern));
         try {
             FileUtils.writeLines(execFile, lines);
-            log.info("Création du fichier de fin d'éxécution {}", execFile.getAbsolutePath());
+            log.info("Création du fichier de fin d'exécution {}", execFile.getAbsolutePath());
         } catch (IOException e) {
             log.warn(e.getMessage(), e);
         }
@@ -424,7 +424,7 @@ public abstract class AbstractOrdonanceur {
         lines.add(LocalDateTime.now().format(savePattern));
         FileUtils.writeLines(execFile, lines);
 
-        log.info("Création du fichier de fin d'éxécution {}", execFile.getAbsolutePath());
+        log.info("Création du fichier de fin d'exécution {}", execFile.getAbsolutePath());
 
         System.setProperty(IConstantesConfig.keyExecutionId, launchExecId);
     }

@@ -127,7 +127,7 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             servos.pivotArriereFerme(false);
 
             updateValidTime();
-            log.error("Erreur d'éxécution de l'action : {}", e.toString());
+            log.error("Erreur d'exécution de l'action : {}", e.toString());
         }
     }
 }
