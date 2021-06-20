@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.EPort;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
@@ -24,7 +25,7 @@ public class RetourAuPort extends AbstractNerellAction {
     public Point entryPoint() {
         int offset = 575; // Empirique
 
-        double x = 460;
+        double x = 460; // TODO Odin 440
         double centerY = 1200;
         if (rs.team() == ETeam.JAUNE) {
             x = 3000 - x;
@@ -49,9 +50,9 @@ public class RetourAuPort extends AbstractNerellAction {
     public int order() {
         int order;
         if (rs.directionGirouette() == EDirectionGirouette.UNKNOWN) {
-            order = 5;
+            order = rs.twoRobots() ? 3 : 6;
         } else {
-            order = 10;
+            order = rs.twoRobots() ? 10 : 20;
         }
 
         return order + tableUtils.alterOrder(entryPoint());
@@ -66,21 +67,22 @@ public class RetourAuPort extends AbstractNerellAction {
     public void execute() {
         boolean coordProjection = false;
         try {
-            rs.enablePincesAvant(); // Histoire de ne pas pousser une bouée qui va nous faire chié
+            rs.enablePincesAvant(); // Histoire de ne pas pousser une bouée qui va nous faire chier
 
             final Point entry = entryPoint();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry, GotoOption.AVANT);
             setScore(coordProjection = true);
 
-            // Finalisation de la rentré dans le port après avoir compter les points
-            // TODO : Si c'est le premier robot
-            Point finalPoint = new Point(entry);
-            finalPoint.setX(205);
-            if (rs.team() == ETeam.JAUNE) {
-                finalPoint.setX(3000 - finalPoint.getX());
+            // Finalisation de la rentrée dans le port après avoir compté les points
+            if (rs.otherPort() == EPort.AUCUN) {
+                Point finalPoint = new Point(entry);
+                finalPoint.setX(150);
+                if (rs.team() == ETeam.JAUNE) {
+                    finalPoint.setX(3000 - finalPoint.getX());
+                }
+                mv.gotoPoint(finalPoint, GotoOption.SANS_ORIENTATION);
             }
-            mv.gotoPoint(finalPoint, GotoOption.SANS_ORIENTATION);
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
