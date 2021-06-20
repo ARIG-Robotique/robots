@@ -27,4 +27,17 @@ public interface IEurobotConfig {
 
     int deltaCapteurCouleur = 42;
 
+    // Noms des actions
+    String ACTION_PRISE_BOUEE_NORD = "Bouées nord";
+    String ACTION_PRISE_BOUEE_SUD = "Bouées sud";
+    String ACTION_PRISE_BOUEE_INDEX = "Bouée %d"; // Usage avec java.lang.String#format(String, Object ...)
+    String ACTION_PHARE = "Phare";
+    String ACTION_MANCHE_A_AIR = "Manche à air";
+    String ACTION_DEPOSE_PETIT_PORT = "Dépose petit port";
+    String ACTION_DEPOSE_GRAND_PORT = "Dépose grand port";
+    String ACTION_DEPOSE_GRAND_PORT_ROUGE = "Dépose grand port rouge";
+    String ACTION_DEPOSE_GRAND_PORT_VERT = "Dépose grand port vert";
+    String ACTION_RETOUR_AU_PORT = "Retour au port";
+    String ACTION_ANTIBLOCAGE_PORT = "Antiblocage port";
+
 }

@@ -1,6 +1,7 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;
@@ -27,7 +28,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
 
     @Override
     public String name() {
-        return "Dépose grand port";
+        return IEurobotConfig.ACTION_DEPOSE_GRAND_PORT;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.arig.robot.strategy.actions.active.echappement;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
@@ -23,7 +24,7 @@ public class AntiblocagePort extends AbstractNerellAction {
 
     @Override
     public String name() {
-        return "Antiblocage port";
+        return IEurobotConfig.ACTION_ANTIBLOCAGE_PORT;
     }
 
     @Override

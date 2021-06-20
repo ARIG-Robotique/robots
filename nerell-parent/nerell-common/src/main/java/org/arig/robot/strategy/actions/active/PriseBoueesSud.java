@@ -26,7 +26,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
     @Override
     public String name() {
-        return "Prise bouées sud";
+        return IEurobotConfig.ACTION_PRISE_BOUEE_SUD;
     }
 
     @Override

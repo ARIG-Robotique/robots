@@ -1,6 +1,7 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ public class DeposeGrandPortChenalRouge extends AbstractDeposeGrandPortChenal {
 
     @Override
     public String name() {
-        return "Dépose grand port chenal rouge";
+        return IEurobotConfig.ACTION_DEPOSE_GRAND_PORT_ROUGE;
     }
 
     @Override

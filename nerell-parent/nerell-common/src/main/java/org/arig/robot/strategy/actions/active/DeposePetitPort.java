@@ -2,6 +2,7 @@ package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Chenaux;
@@ -40,7 +41,7 @@ public class DeposePetitPort extends AbstractNerellAction {
 
     @Override
     public String name() {
-        return "Dépose petit port";
+        return IEurobotConfig.ACTION_DEPOSE_PETIT_PORT;
     }
 
     @Override

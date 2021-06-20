@@ -26,7 +26,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
 
     @Override
     public String name() {
-        return "Bouee " + bouee;
+        return String.format(IEurobotConfig.ACTION_PRISE_BOUEE_INDEX, bouee);
     }
 
     @Override
