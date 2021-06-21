@@ -30,7 +30,7 @@ public interface IEurobotConfig {
     // Noms des actions
     String ACTION_PRISE_BOUEE_NORD = "Bouées nord";
     String ACTION_PRISE_BOUEE_SUD = "Bouées sud";
-    String ACTION_PRISE_BOUEE_PREFIXE = "Bouée %d"; // Usage avec java.lang.String#format(String, Object ...)
+    String ACTION_PRISE_BOUEE_PREFIXE = "Bouée "; // Usage avec java.lang.String#format(String, Object ...)
     String ACTION_PHARE = "Phare";
     String ACTION_MANCHE_A_AIR = "Manche à air";
     String ACTION_DEPOSE_PETIT_PORT = "Dépose petit port";
