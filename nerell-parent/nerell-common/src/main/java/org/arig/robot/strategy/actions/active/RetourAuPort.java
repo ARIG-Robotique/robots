@@ -18,7 +18,7 @@ public class RetourAuPort extends AbstractNerellAction {
 
     @Override
     public String name() {
-        return IEurobotConfig.ACTION_RETOUR_AU_PORT;
+        return IEurobotConfig.ACTION_RETOUR_AU_PORT_PREFIX + "Nerell";
     }
 
     @Override
