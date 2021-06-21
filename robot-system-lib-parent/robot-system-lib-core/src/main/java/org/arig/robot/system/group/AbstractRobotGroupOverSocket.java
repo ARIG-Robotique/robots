@@ -53,7 +53,10 @@ public class AbstractRobotGroupOverSocket extends AbstractBidirectionalSocket<Gr
     protected AbstractResponse<GroupAction> handleQuery(AbstractQuery<GroupAction> query) {
         switch (query.getAction()) {
             case CURRENT_ACTION:
-                return new CurrentActionResponse(rs.currentAction());
+                final CurrentActionResponse res = new CurrentActionResponse();
+                res.setAction(GroupAction.CURRENT_ACTION);
+                res.setData(rs.currentAction());
+                return res;
             case EVENT_LOG:
                 int eventOrdinal = ((EventLogQuery) query).getEventOrdinal();
                 byte[] value = ((EventLogQuery) query).getValue();
