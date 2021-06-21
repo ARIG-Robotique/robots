@@ -63,25 +63,13 @@ public class ManchesAAir extends AbstractOdinAction {
 
             final double angleRobot = conv.pulseToDeg(position.getAngle());
             if (Math.abs(angleRobot) <= 90) {
-                if (angleRobot < 0) {
-                    mv.gotoOrientationDegSansDistance(180);
-                    // On active avec le bras gauche
-                    servos.brasGaucheMancheAAir(true);
-                } else {
-                    mv.gotoOrientationDegSansDistance(0);
-                    // On active avec le bras droit
-                    servos.brasDroitMancheAAir(true);
-                }
+                mv.gotoOrientationDegSansDistance(0);
+                // On active avec le bras droit
+                servos.brasDroitMancheAAir(true);
             } else {
-                if (angleRobot < 0) {
-                    mv.gotoOrientationDegSansDistance(0);
-                    // On active avec le bras droit
-                    servos.brasDroitMancheAAir(true);
-                } else {
-                    mv.gotoOrientationDegSansDistance(180);
-                    // On active avec le bras gauche
-                    servos.brasGaucheMancheAAir(true);
-                }
+                mv.gotoOrientationDegSansDistance(180);
+                // On active avec le bras gauche
+                servos.brasGaucheMancheAAir(true);
             }
 
             final double y = entry.getY();
