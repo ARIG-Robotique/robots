@@ -9,16 +9,16 @@ import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.strategy.actions.AbstractNerellAction;
+import org.arig.robot.strategy.actions.AbstractOdinAction;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class RetourAuPort extends AbstractNerellAction {
+public class RetourAuPort extends AbstractOdinAction {
 
     @Override
     public String name() {
-        return IEurobotConfig.ACTION_RETOUR_AU_PORT_PREFIX + "Nerell";
+        return IEurobotConfig.ACTION_RETOUR_AU_PORT_PREFIX + "Odin";
     }
 
     @Override
@@ -67,17 +67,19 @@ public class RetourAuPort extends AbstractNerellAction {
     public void execute() {
         boolean coordProjection = false;
         try {
-            rs.enablePincesAvant(); // Histoire de ne pas pousser une bouée qui va nous faire chier
+            // Histoire de ne pas pousser une bouée qui va nous faire chier
+            rs.enablePincesAvant();
+            rs.enablePincesArriere();
 
             final Point entry = entryPoint();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            mv.pathTo(entry, GotoOption.AVANT);
+            mv.pathTo(entry);
             setScore(coordProjection = true);
 
             // Finalisation de la rentrée dans le port après avoir compté les points
             if (rs.otherPort() == EPort.AUCUN) {
                 Point finalPoint = new Point(entry);
-                finalPoint.setX(160);
+                finalPoint.setX(150);
                 if (rs.team() == ETeam.JAUNE) {
                     finalPoint.setX(3000 - finalPoint.getX());
                 }
