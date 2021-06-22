@@ -36,7 +36,7 @@ public class StrategyManager {
 
     public void execute() {
         if (rs.currentAction() != null) {
-            log.info("Recherche d'une statégie à éxécuter parmis les {} actions disponible", actionsCount());
+            log.info("Recherche d'une action à exécuter parmis les {} disponible(s)", actionsCount());
         }
 
         final String otherCurrentAction = group.getCurrentAction();

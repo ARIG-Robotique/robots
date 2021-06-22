@@ -8,9 +8,9 @@ package org.arig.robot.strategy;
 public interface IAction {
 
     /**
-     * Nom de la statégy
+     * Nom de l'action
      *
-     * @return Le nom de la stratégy
+     * @return Le nom de l'action
      */
     String name();
 
