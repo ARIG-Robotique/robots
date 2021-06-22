@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.system.group.IRobotGroup;
+import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -24,6 +25,9 @@ public class StrategyManager {
 
     @Autowired
     private AbstractRobotStatus rs;
+
+    @Autowired
+    private TableUtils tableUtils;
 
     @Autowired
     private IRobotGroup group;
@@ -54,6 +58,7 @@ public class StrategyManager {
         final IAction action = nextAction.get();
         rs.currentAction(action.name());
         log.info("Execution de l'action {}", action.name());
+        tableUtils.clearDynamicDeadZones();
         action.execute();
 
         if (action.isCompleted()) {

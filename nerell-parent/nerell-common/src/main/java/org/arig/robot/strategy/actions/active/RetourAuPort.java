@@ -67,7 +67,12 @@ public class RetourAuPort extends AbstractNerellAction {
     public void execute() {
         boolean coordProjection = false;
         try {
-            rs.enablePincesAvant(); // Histoire de ne pas pousser une bouée qui va nous faire chier
+            // Histoire de ne pas pousser une bouée qui va nous faire chier
+            rs.enablePincesAvant();
+
+            // Activation de la zone morte pour ne pas détecter l'autre robot
+            tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(0, 400, 400, 400)); // Port SUD
+            tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(0, 1500, 400, 400)); // Port NORD
 
             final Point entry = entryPoint();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
