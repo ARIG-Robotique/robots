@@ -71,6 +71,10 @@ public class RetourAuPort extends AbstractOdinAction {
             rs.enablePincesAvant();
             rs.enablePincesArriere();
 
+            // Activation de la zone morte pour ne pas détecter l'autre robot
+            tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(0, 400, 400, 400)); // Port SUD
+            tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(0, 1500, 400, 400)); // Port NORD
+
             final Point entry = entryPoint();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry);
