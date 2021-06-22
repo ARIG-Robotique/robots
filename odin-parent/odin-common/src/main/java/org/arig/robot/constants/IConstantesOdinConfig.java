@@ -116,7 +116,7 @@ public interface IConstantesOdinConfig {
     double dstCallage = 91.0; // dos du robot <=> milieu du robot
     double dstDeposeArriereY = 223.5; // TODO milieu de gobelets arrière, posés au sol <=> milieu du robot
     double dstDeposeAvantY = 125; //TODO  milieu des gobelets avant <=> milieu du robot
-    double[] dstDeposeAvantX = new double[]{-55, 55}; // TODO
+    double[] dstDeposeAvantX = new double[]{-55, 55};
     double dstBrasMancheAAirX = 210; // TODO distance minimale pour pousser la manche à air
 
     // -------------------------- //
