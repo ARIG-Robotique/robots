@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("pincesArriereService")
-public class PincesArriereServiceBouchon extends AbstractNerellPincesArriereService {
+public class NerellPincesArriereServiceBouchon extends AbstractNerellPincesArriereService {
 
     @Autowired
     private NerellIOServiceBouchon io;

@@ -37,6 +37,14 @@ public class OdinTasksScheduler {
     @Autowired
     protected IMonitoringWrapper monitoringWrapper;
 
+    @Autowired
+    private AbstractOdinPincesAvantService pincesAvant;
+
+    @Autowired
+    private AbstractARIGVacuumController vacuumController;
+
+    private final SignalEdgeFilter risingEnablePincesAvant = new SignalEdgeFilter(false, Type.RISING);
+
     @Scheduled(fixedRate = 1000)
     public void ecranTask() {
         ecranService.process();
@@ -69,4 +77,20 @@ public class OdinTasksScheduler {
 //            }
 //        }
 //    }
+
+    @Scheduled(fixedDelay = 200)
+    public void pincesAvantTask() {
+        boolean pincesEnabled = rs.pincesAvantEnabled();
+
+        if (Boolean.TRUE.equals(risingEnablePincesAvant.filter(pincesEnabled))) {
+            pincesAvant.activate();
+        }
+
+        if (pincesEnabled) {
+            vacuumController.readAllValues();
+            if(pincesAvant.processBouee()) {
+                pincesAvant.processCouleurBouee();
+            }
+        }
+    }
 }

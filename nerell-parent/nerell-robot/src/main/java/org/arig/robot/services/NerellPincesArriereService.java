@@ -3,5 +3,5 @@ package org.arig.robot.services;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PincesArriereService extends AbstractNerellPincesArriereService {
+public class NerellPincesArriereService extends AbstractNerellPincesArriereService {
 }
