@@ -36,7 +36,10 @@ public abstract class AbstractBouee extends AbstractNerellAction {
 
     @Override
     public int order() {
-        return 1 + tableUtils.alterOrder(entryPoint());
+        // 1 pt pour la bouee
+        // 1 pt pour la bonne couleur
+        // 2 pt pour la paire
+        return 4 + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
@@ -60,18 +63,14 @@ public abstract class AbstractBouee extends AbstractNerellAction {
             // point d'approche quelque part autour de la bouée
             // FIXME : si on fait le tour à cause d'un évittement ça fout tout en vrac
             final Point pointApproche = tableUtils.eloigner(entry, -distanceApproche);
+            final double offsetOrientation = Math.toDegrees(Math.sin(offsetPince / distanceApproche));
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(pointApproche, GotoOption.AVANT);
 
-            // aligne la bonne pince sur la bouée
+            // prise de la bouée
             mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
-
-            final double offsetOrientation = Math.toDegrees(Math.sin(offsetPince / distanceApproche));
-            mv.alignFrontToAvecDecalage(entry.getX(), entry.getY(), offsetOrientation);
-
-            // prise
-            mv.avanceMM(180);
+            mv.gotoPoint(tableUtils.getPointFromAngle(180, offsetOrientation), GotoOption.AVANT, GotoOption.SANS_ORIENTATION);
             group.boueePrise(bouee);
 
             complete();
@@ -82,7 +81,6 @@ public abstract class AbstractBouee extends AbstractNerellAction {
     }
 
     private int getPinceCible() {
-        // FIXME obsolète avec le capteur couleur ?
         if (rs.boueeCouleur(bouee) == ECouleurBouee.ROUGE) {
             if (!io.presenceVentouse2()) {
                 return 2;
