@@ -25,7 +25,7 @@ public class RetourAuPort extends AbstractOdinAction {
     public Point entryPoint() {
         int offset = 575; // Empirique
 
-        double x = 465;
+        double x = 550;
         double centerY = 1200;
         if (rs.team() == ETeam.JAUNE) {
             x = 3000 - x;
@@ -78,6 +78,8 @@ public class RetourAuPort extends AbstractOdinAction {
             final Point entry = entryPoint();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry);
+            entry.setX(465);
+            mv.gotoPoint(entry);
             setScore(coordProjection = true);
 
             // Finalisation de la rentrée dans le port après avoir compté les points
