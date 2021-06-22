@@ -49,7 +49,7 @@ public class ManchesAAir extends AbstractOdinAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && (!rs.mancheAAir1() || !rs.mancheAAir2());
+        return isTimeValid() && !rs.inPort() && (!rs.mancheAAir1() || !rs.mancheAAir2());
     }
 
     @Override
