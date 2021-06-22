@@ -254,7 +254,9 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
         if (bouees.length > 0) {
             byte[] data = new byte[bouees.length];
             for (int i = 0; i < bouees.length; i++) {
-                data[i] = (byte) bouees[i].ordinal();
+                if (bouees[i] != null) {
+                    data[i] = (byte) bouees[i].ordinal();
+                }
             }
             sendEvent(event, data);
         }
