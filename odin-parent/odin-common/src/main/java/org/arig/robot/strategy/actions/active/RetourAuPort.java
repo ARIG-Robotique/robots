@@ -60,7 +60,7 @@ public class RetourAuPort extends AbstractOdinAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rs.inPort() && rs.getRemainingTime() < IEurobotConfig.validRetourPortRemainingTime;
+        return isTimeValid() && !rs.inPort() && rs.getRemainingTime() < IEurobotConfig.validRetourPortRemainingTimeOdin;
     }
 
     @Override

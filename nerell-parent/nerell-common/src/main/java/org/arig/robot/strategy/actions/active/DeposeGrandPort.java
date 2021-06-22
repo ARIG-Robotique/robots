@@ -44,7 +44,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
     @Override
     public boolean isValid() {
         return isTimeValid() && !rs.inPort() && (!rs.pincesAvantEmpty() || !rs.pincesArriereEmpty())
-                && !rs.grandChenalRougeEmpty() && !rs.grandChenalVertEmpty();
+                && !rs.grandChenalRougeEmpty() && !rs.grandChenalVertEmpty() && rs.getRemainingTime() > IEurobotConfig.validRetourPortRemainingTimeNerell;
     }
 
     @Override

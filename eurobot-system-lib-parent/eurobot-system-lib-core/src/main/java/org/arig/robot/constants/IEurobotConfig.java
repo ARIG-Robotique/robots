@@ -15,7 +15,8 @@ public interface IEurobotConfig {
     int invalidPriseRemainingTime = 18000;
 
     // Temps pour rendre valide le retour au port
-    int validRetourPortRemainingTime = 10000;
+    int validRetourPortRemainingTimeNerell = 15000;
+    int validRetourPortRemainingTimeOdin = 10000;
 
     // Valeurs min / max en mm des axes du repères
     int tableWidth = 3000;
