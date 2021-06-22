@@ -1,16 +1,16 @@
 package org.arig.robot.scheduler;
 
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.exception.I2CException;
+import org.arig.robot.filters.common.SignalEdgeFilter;
+import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.OdinRobotStatus;
-import org.arig.robot.model.capteurs.AlimentationSensorValue;
 import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.services.AbstractOdinPincesAvantService;
 import org.arig.robot.services.OdinEcranService;
-import org.arig.robot.services.OdinServosService;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
 import org.arig.robot.system.capteurs.IAlimentationSensor;
+import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

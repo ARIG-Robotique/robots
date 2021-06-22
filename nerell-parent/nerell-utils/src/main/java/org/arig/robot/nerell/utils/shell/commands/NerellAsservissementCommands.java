@@ -9,7 +9,6 @@ import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.NerellRobotStatus;
-import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.model.enums.TypeConsigne;

@@ -3,7 +3,6 @@ package org.arig.robot.odin.utils.shell.commands;
 import lombok.AllArgsConstructor;
 import org.arig.robot.services.IOdinIOService;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
-import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.vacuum.ARIGVacuumController;
 import org.springframework.shell.ExitRequest;
 import org.springframework.shell.standard.ShellComponent;

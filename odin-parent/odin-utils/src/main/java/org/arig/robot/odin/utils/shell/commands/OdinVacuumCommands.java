@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.services.IOdinIOService;
-import org.arig.robot.services.OdinServosService;
 import org.arig.robot.system.vacuum.ARIGVacuumController;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;

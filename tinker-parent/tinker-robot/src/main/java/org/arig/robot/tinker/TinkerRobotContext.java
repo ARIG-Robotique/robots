@@ -2,16 +2,16 @@ package org.arig.robot.tinker;
 
 import com.pi4j.gpio.extension.pca.PCA9685GpioProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.tinker.listener.JoyConLeftEventListener;
-import org.arig.robot.tinker.listener.JoyConRightEventListener;
 import org.arig.robot.model.RobotName;
-import org.arig.robot.tinker.services.IServosServices;
-import org.arig.robot.tinker.services.ServosServices;
 import org.arig.robot.system.gamepad.nintendoswitch.ControllerEventListener;
 import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyConLeft;
 import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyConRight;
 import org.arig.robot.system.gamepad.nintendoswitch.pro.ProController;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
+import org.arig.robot.tinker.listener.JoyConLeftEventListener;
+import org.arig.robot.tinker.listener.JoyConRightEventListener;
+import org.arig.robot.tinker.services.IServosServices;
+import org.arig.robot.tinker.services.ServosServices;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -3,7 +3,6 @@ package org.arig.robot.odin.utils.shell.commands;
 import lombok.RequiredArgsConstructor;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.services.IOdinIOService;
-import org.arig.robot.system.motors.AbstractMotor;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;

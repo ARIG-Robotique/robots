@@ -1,6 +1,5 @@
 package org.arig.robot.odin.utils.shell.commands;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +9,6 @@ import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.OdinRobotStatus;
-import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.model.enums.TypeConsigne;
