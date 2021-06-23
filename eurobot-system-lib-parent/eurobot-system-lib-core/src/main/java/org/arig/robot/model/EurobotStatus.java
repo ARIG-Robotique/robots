@@ -127,22 +127,11 @@ public class EurobotStatus extends AbstractRobotStatus {
     private boolean mancheAAir2 = false;
     private boolean phare = false;
     private boolean pavillon = false;
-
-    @Setter(AccessLevel.NONE)
     private EPort port = EPort.AUCUN;
-
     private EPort otherPort = EPort.AUCUN;
 
-    public void bonPort() {
-        port = EPort.BON;
-    }
-
-    public void mauvaisPort() {
-        port = EPort.MAUVAIS;
-    }
-
     public boolean inPort() {
-        return port != EPort.AUCUN;
+        return port.isInPort();
     }
 
     @Setter(AccessLevel.NONE)
@@ -224,13 +213,29 @@ public class EurobotStatus extends AbstractRobotStatus {
         points += petitChenaux.score();
         points += (mancheAAir1 && mancheAAir2) ? 15 : (mancheAAir1 || mancheAAir2) ? 5 : 0;
         if (twoRobots()) {
-            points += port == EPort.BON ? 10 : (port == EPort.MAUVAIS ? 3 : 0);
-            points += otherPort == EPort.BON ? 10 : (otherPort == EPort.MAUVAIS ? 3 : 0);
+            if (port.isInPort() && otherPort.isInPort() && port != otherPort) {
+                // cas spécial ou chaque robot est dans un port différent
+                // 0 points
+            } else {
+                points += calculerPointsPort(port, 1);
+                points += calculerPointsPort(otherPort, 1);
+            }
         } else {
-            points += port == EPort.BON ? 20 : (port == EPort.MAUVAIS ? 6 : 0);
+            points += calculerPointsPort(port, 2);
         }
         points += pavillon ? 10 : 0;
         return points;
+    }
+
+    private int calculerPointsPort(EPort port, int mult) {
+        switch (port) {
+            case NORD:
+                return directionGirouette == EDirectionGirouette.UP ? 10 * mult : 3 * mult;
+            case SUD:
+                return directionGirouette == EDirectionGirouette.DOWN ? 10 * mult : 3 * mult;
+            default:
+                return 0;
+        }
     }
 
     @Override
@@ -243,10 +248,13 @@ public class EurobotStatus extends AbstractRobotStatus {
         r.put("Petit chenaux", petitChenaux.score());
         r.put("Manche à air", (mancheAAir1 && mancheAAir2) ? 15 : (mancheAAir1 || mancheAAir2) ? 5 : 0);
         if (twoRobots()) {
-            r.put("Port 1", port == EPort.BON ? 10 : (port == EPort.MAUVAIS ? 3 : 0));
-            r.put("Port 2", otherPort == EPort.BON ? 10 : (port == EPort.MAUVAIS ? 3 : 0));
+            if (port.isInPort() && otherPort.isInPort() && port != otherPort) {
+                r.put("Port", 0);
+            } else {
+                r.put("Port", calculerPointsPort(port, 1) +  calculerPointsPort(otherPort, 1));
+            }
         } else {
-            r.put("Port", port == EPort.BON ? 20 : (port == EPort.MAUVAIS ? 6 : 0));
+            r.put("Port", calculerPointsPort(port, 2));
         }
         r.put("Pavillon", pavillon ? 10 : 0);
         return r;

@@ -33,28 +33,33 @@ public class RetourAuPort extends AbstractOdinAction {
         final Point north = new Point(x, centerY + offset);
         final Point south = new Point(x, centerY - offset);
 
-        switch (rs.directionGirouette()) {
-            case UP:
+        switch (rs.otherPort()) {
+            case NORD:
+            case WIP_NORD:
                 return north;
-            case DOWN:
+
+            case SUD:
+            case WIP_SUD:
                 return south;
+
             default:
-                // Inconnu, on prend le plus court
-                double distanceNorth = tableUtils.distance(north);
-                double distanceSouth = tableUtils.distance(south);
-                return distanceNorth < distanceSouth ? north : south;
+                switch (rs.directionGirouette()) {
+                    case UP:
+                        return north;
+                    case DOWN:
+                        return south;
+                    default:
+                        // Inconnu, on prend le plus court
+                        double distanceNorth = tableUtils.distance(north);
+                        double distanceSouth = tableUtils.distance(south);
+                        return distanceNorth < distanceSouth ? north : south;
+                }
         }
     }
 
     @Override
     public int order() {
-        int order;
-        if (rs.directionGirouette() == EDirectionGirouette.UNKNOWN) {
-            order = rs.twoRobots() ? 3 : 6;
-        } else {
-            order = rs.twoRobots() ? 10 : 20;
-        }
-
+        int order = rs.twoRobots() ? 10 : 20;
         return order + tableUtils.alterOrder(entryPoint());
     }
 
@@ -65,7 +70,6 @@ public class RetourAuPort extends AbstractOdinAction {
 
     @Override
     public void execute() {
-        boolean coordProjection = false;
         try {
             // Histoire de ne pas pousser une bouée qui va nous faire chier
             rs.enablePincesAvant();
@@ -76,14 +80,18 @@ public class RetourAuPort extends AbstractOdinAction {
             tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(0, 1500, 400, 400)); // Port NORD
 
             final Point entry = entryPoint();
+            final EPort port = entry.getY() > 1200 ? EPort.NORD : EPort.SUD;
+            group.port(port == EPort.NORD ? EPort.WIP_NORD : EPort.WIP_SUD);
+
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry);
             entry.setX(465);
             mv.gotoPoint(entry);
-            setScore(coordProjection = true);
+
+            group.port(port);
 
             // Finalisation de la rentrée dans le port après avoir compté les points
-            if (rs.otherPort() == EPort.AUCUN) {
+            if (rs.otherPort() != port) {
                 Point finalPoint = new Point(entry);
                 finalPoint.setX(150);
                 if (rs.team() == ETeam.JAUNE) {
@@ -95,17 +103,12 @@ public class RetourAuPort extends AbstractOdinAction {
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
+
+            if (!rs.inPort()) {
+                group.port(EPort.AUCUN);
+            }
         } finally {
             complete();
-            setScore(coordProjection);
-        }
-    }
-
-    private void setScore(boolean coordProjection) {
-        if (coordProjection && rs.directionGirouette() != EDirectionGirouette.UNKNOWN) {
-            group.bonPort();
-        } else if (coordProjection) {
-            group.mauvaisPort();
         }
     }
 }

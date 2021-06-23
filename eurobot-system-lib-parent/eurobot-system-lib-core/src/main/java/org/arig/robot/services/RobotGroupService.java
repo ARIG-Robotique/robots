@@ -188,14 +188,9 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
         sendEvent(EStatusEvent.PAVILLON);
     }
 
-    public void bonPort() {
-        rs.bonPort();
-        sendEvent(EStatusEvent.PORT, EPort.BON);
-    }
-
-    public void mauvaisPort() {
-        rs.mauvaisPort();
-        sendEvent(EStatusEvent.PORT, EPort.MAUVAIS);
+    public void port(EPort port) {
+        rs.port(port);
+        sendEvent(EStatusEvent.PORT, port);
     }
 
     public void deposeGrandPort(ECouleurBouee... bouees) {
