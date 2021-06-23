@@ -16,8 +16,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.stream.Stream;
 
 @Service
 public class RobotGroupService implements InitializingBean, IRobotGroup.Handler {
@@ -250,13 +252,13 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
         sendEvent(EStatusEvent.HAUT_FOND, data);
     }
 
-    private void sendEventBouees(EStatusEvent event, ECouleurBouee... bouees) {
-        if (bouees.length > 0) {
-            byte[] data = new byte[bouees.length];
-            for (int i = 0; i < bouees.length; i++) {
-                if (bouees[i] != null) {
-                    data[i] = (byte) bouees[i].ordinal();
-                }
+    private void sendEventBouees(EStatusEvent event, ECouleurBouee[] bouees) {
+        ECouleurBouee[] boueesFiltered = Stream.of(bouees).filter(Objects::nonNull).toArray(ECouleurBouee[]::new);
+
+        if (boueesFiltered.length > 0) {
+            byte[] data = new byte[boueesFiltered.length];
+            for (int i = 0; i < boueesFiltered.length; i++) {
+                data[i] = (byte) boueesFiltered[i].ordinal();
             }
             sendEvent(event, data);
         }
