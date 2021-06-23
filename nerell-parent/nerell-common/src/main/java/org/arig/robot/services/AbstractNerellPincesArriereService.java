@@ -8,9 +8,6 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
-import java.util.Objects;
-import java.util.stream.Stream;
-
 @Slf4j
 public abstract class AbstractNerellPincesArriereService implements INerellPincesArriereService {
 
@@ -105,7 +102,7 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
     public void deposeGrandPort() {
         deposeTable(null);
 
-        group.deposeGrandPort(Stream.of(rs.pincesArriere()).filter(Objects::nonNull).toArray(ECouleurBouee[]::new));
+        group.deposeGrandPort(rs.pincesArriere());
         rs.clearPincesArriere();
     }
 
@@ -117,9 +114,7 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
         deposeTable(null);
 
         group.deposePetitChenalVert(rs.pincesArriere()[0], rs.pincesArriere()[1]);
-        if (rs.pincesArriere()[2] != null) {
-            group.deposePetitPort(rs.pincesArriere()[2]);
-        }
+        group.deposePetitPort(rs.pincesArriere()[2]);
         group.deposePetitChenalRouge(rs.pincesArriere()[3], rs.pincesArriere()[4]);
 
         rs.clearPincesArriere();

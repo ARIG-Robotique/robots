@@ -2,6 +2,7 @@ package org.arig.robot.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.arig.robot.utils.ArigCollectionUtils;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -40,19 +41,11 @@ public abstract class Chenaux {
     }
 
     public void addRouge(ECouleurBouee... bouees) {
-        for (ECouleurBouee bouee : bouees) {
-            if (bouee != null) {
-                chenalRouge.add(bouee);
-            }
-        }
+        ArigCollectionUtils.addAllIgnoreNull(chenalRouge, bouees);
     }
 
     public void addVert(ECouleurBouee... bouees) {
-        for (ECouleurBouee bouee : bouees) {
-            if (bouee != null) {
-                chenalVert.add(bouee);
-            }
-        }
+        ArigCollectionUtils.addAllIgnoreNull(chenalVert, bouees);
     }
 
     public Chenaux copy() {

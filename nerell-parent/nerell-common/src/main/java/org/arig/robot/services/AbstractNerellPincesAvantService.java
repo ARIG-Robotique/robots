@@ -10,8 +10,6 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 @Slf4j
 public abstract class AbstractNerellPincesAvantService implements INerellPincesAvantService {
@@ -96,7 +94,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
         io.releaseAllPompe();
         ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
 
-        group.deposeGrandPort(Stream.of(rs.pincesAvant()).filter(Objects::nonNull).toArray(ECouleurBouee[]::new));
+        group.deposeGrandPort(rs.pincesAvant());
         rs.clearPincesAvant();
     }
 

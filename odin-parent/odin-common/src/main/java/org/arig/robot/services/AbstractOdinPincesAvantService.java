@@ -7,9 +7,6 @@ import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Objects;
-import java.util.stream.Stream;
-
 @Slf4j
 public abstract class AbstractOdinPincesAvantService implements IOdinPincesAvantService {
 
@@ -31,7 +28,7 @@ public abstract class AbstractOdinPincesAvantService implements IOdinPincesAvant
         io.releaseAllPompe();
         ThreadUtils.sleep(IConstantesOdinConfig.WAIT_EXPIRATION);
 
-        group.deposeGrandPort(Stream.of(rs.pincesAvant()).filter(Objects::nonNull).toArray(ECouleurBouee[]::new));
+        group.deposeGrandPort(rs.pincesAvant());
         rs.clearPincesAvant();
     }
 

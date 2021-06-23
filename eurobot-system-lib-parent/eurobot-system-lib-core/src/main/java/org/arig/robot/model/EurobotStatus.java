@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
+import org.arig.robot.utils.ArigCollectionUtils;
 import org.arig.robot.utils.EcueilUtils;
 
 import java.util.ArrayList;
@@ -149,7 +150,7 @@ public class EurobotStatus extends AbstractRobotStatus {
     private List<ECouleurBouee> grandPort = new ArrayList<>();
 
     public void deposeGrandPort(ECouleurBouee... bouees) {
-        CollectionUtils.addAll(grandPort, bouees);
+        ArigCollectionUtils.addAllIgnoreNull(grandPort, bouees);
     }
 
     @Setter(AccessLevel.NONE)
@@ -157,7 +158,7 @@ public class EurobotStatus extends AbstractRobotStatus {
     private List<ECouleurBouee> petitPort = new ArrayList<>();
 
     public void deposePetitPort(ECouleurBouee... bouees) {
-        CollectionUtils.addAll(petitPort, bouees);
+        ArigCollectionUtils.addAllIgnoreNull(petitPort, bouees);
     }
 
     @Setter(AccessLevel.NONE)
