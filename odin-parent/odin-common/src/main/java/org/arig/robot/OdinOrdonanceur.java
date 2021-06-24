@@ -144,6 +144,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
                 trajectoryManager.avanceMM(150);
 
+                trajectoryManager.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
                 if (odinRobotStatus.team() == ETeam.BLEU) {
                     trajectoryManager.gotoPoint(255, 900, GotoOption.ARRIERE);
                 } else {
