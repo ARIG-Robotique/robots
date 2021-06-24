@@ -211,6 +211,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
                 trajectoryManager.avanceMM(150);
 
+                trajectoryManager.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
                 if (nerellRobotStatus.team() == ETeam.BLEU) {
                     trajectoryManager.gotoPoint(200, 1600, GotoOption.ARRIERE);
                 } else {
