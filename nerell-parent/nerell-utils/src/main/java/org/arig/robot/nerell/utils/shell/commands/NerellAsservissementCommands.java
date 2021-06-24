@@ -1,6 +1,6 @@
 package org.arig.robot.nerell.utils.shell.commands;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -33,7 +33,7 @@ import java.util.List;
 @Slf4j
 @ShellComponent
 @ShellCommandGroup("Asservissement")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class NerellAsservissementCommands {
 
     private final IMonitoringWrapper monitoringWrapper;
@@ -45,7 +45,6 @@ public class NerellAsservissementCommands {
     private final Position currentPosition;
     private final IPidFilter pidDistance;
     private final IPidFilter pidOrientation;
-
 
     private boolean monitoringRun = false;
 
