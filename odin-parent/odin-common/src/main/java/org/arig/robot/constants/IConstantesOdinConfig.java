@@ -143,7 +143,6 @@ public interface IConstantesOdinConfig {
     // Paramètres métier //
     // ----------------- //
 
-    int WAIT_LED = 50;
-    int WAIT_ASPIRATION = 300;
+    int WAIT_LED = 200;
     int WAIT_EXPIRATION = 300;
 }
