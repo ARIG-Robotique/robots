@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PriseBoueesSud extends AbstractNerellAction {
+public class NerellPriseBoueesSud extends AbstractNerellAction {
 
     @Autowired
     private NerellBouee8 bouee8;
