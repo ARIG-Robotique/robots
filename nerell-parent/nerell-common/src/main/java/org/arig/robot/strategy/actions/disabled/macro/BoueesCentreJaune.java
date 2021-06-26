@@ -1,10 +1,10 @@
 package org.arig.robot.strategy.actions.disabled.macro;
 
-import org.arig.robot.strategy.actions.AbstractMacroNerellAction;
-import org.arig.robot.strategy.actions.active.Bouee10;
-import org.arig.robot.strategy.actions.active.Bouee11;
-import org.arig.robot.strategy.actions.active.Bouee9;
-import org.arig.robot.strategy.actions.disabled.Bouee12;
+import org.arig.robot.strategy.actions.AbstractNerellMacroAction;
+import org.arig.robot.strategy.actions.active.NerellBouee10;
+import org.arig.robot.strategy.actions.active.NerellBouee11;
+import org.arig.robot.strategy.actions.active.NerellBouee9;
+import org.arig.robot.strategy.actions.disabled.NerellBouee12;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,19 +12,19 @@ import javax.annotation.PostConstruct;
 import java.util.Arrays;
 
 @Component
-public class BoueesCentreJaune extends AbstractMacroNerellAction {
+public class BoueesCentreJaune extends AbstractNerellMacroAction {
 
     @Autowired
-    private Bouee9 bouee9;
+    private NerellBouee9 bouee9;
 
     @Autowired
-    private Bouee10 bouee10;
+    private NerellBouee10 bouee10;
 
     @Autowired
-    private Bouee11 bouee11;
+    private NerellBouee11 bouee11;
 
     @Autowired
-    private Bouee12 bouee12;
+    private NerellBouee12 bouee12;
 
     @Override
     public String name() {

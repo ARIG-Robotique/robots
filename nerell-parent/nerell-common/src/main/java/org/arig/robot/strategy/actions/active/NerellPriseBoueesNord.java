@@ -9,24 +9,17 @@ import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PriseBoueesSud extends AbstractNerellAction {
-
-    @Autowired
-    private NerellBouee8 bouee8;
-
-    @Autowired
-    private NerellBouee9 bouee9;
+public class NerellPriseBoueesNord extends AbstractNerellAction {
 
     private boolean firstExecution = true;
 
     @Override
     public String name() {
-        return IEurobotConfig.ACTION_PRISE_BOUEE_SUD;
+        return IEurobotConfig.ACTION_PRISE_BOUEE_NORD;
     }
 
     @Override
@@ -42,17 +35,18 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
     @Override
     public int order() {
-        if (rsNerell.strategy() == ENerellStrategy.BASIC_SUD && firstExecution) {
+        if (rsNerell.strategy() == ENerellStrategy.BASIC_NORD && firstExecution) {
             return 1000;
         }
-        return 6 + (rsNerell.ecueilEquipePris() ? 0 : 10) + tableUtils.alterOrder(entryPoint());
+
+        return 6 + (rsNerell.ecueilCommunEquipePris() ? 0 : 10) + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
     public boolean isValid() {
         return rsNerell.pincesAvantEmpty() &&
                 rsNerell.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime &&
-                (rsNerell.team() == ETeam.JAUNE && rsNerell.grandChenalVertEmpty() || rsNerell.grandChenalRougeEmpty());
+                (rsNerell.team() == ETeam.BLEU && rsNerell.grandChenalVertEmpty() || rsNerell.grandChenalRougeEmpty());
     }
 
     @Override
@@ -63,7 +57,7 @@ public class PriseBoueesSud extends AbstractNerellAction {
 
             final Point entry = entryPoint();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            if (rsNerell.strategy() != ENerellStrategy.BASIC_SUD && tableUtils.distance(entry) > 100) {
+            if (rsNerell.strategy() != ENerellStrategy.BASIC_NORD && tableUtils.distance(entry) > 100) {
                 mv.pathTo(entry);
             } else {
                 // Le path active l'évitement en auto, pas de path, pas d'évitement
@@ -71,51 +65,45 @@ public class PriseBoueesSud extends AbstractNerellAction {
             }
 
             double targetx = 434;
-            double targety = 1200 - 570;
+            double targety = 1200 + 570;
             if (ETeam.JAUNE == rsNerell.team()) {
                 targetx = 3000 - targetx;
             }
             final Point target = new Point(targetx, targety);
 
             if (rsNerell.team() == ETeam.BLEU) {
-                if (rsNerell.strategy() != ENerellStrategy.BASIC_SUD) {
-                    mv.gotoPoint(220, 1110);
-                    mv.gotoOrientationDeg(-66);
+                if (rsNerell.strategy() != ENerellStrategy.BASIC_NORD) {
+                    mv.gotoPoint(220, 1290);
+                    mv.gotoOrientationDeg(66);
                 }
 
                 mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                group.boueePrise(3, 4);
+                group.boueePrise(1, 2);
 
-                // en cas d'erreur sur bouee 9 ou 8
-                complete();
+                mv.gotoOrientationDeg(0);
+                mv.gotoPoint(640, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
+                group.boueePrise(5);
 
-                if (bouee8.isValid()) {
-                    bouee8.execute();
-                }
-                if (bouee9.isValid()) {
-                    bouee9.execute();
-                }
+                mv.gotoPoint(940, 1662, GotoOption.AVANT);
+                group.boueePrise(6);
 
             } else {
-                if (rsNerell.strategy() != ENerellStrategy.BASIC_SUD) {
-                    mv.gotoPoint(3000 - 220, 1110);
-                    mv.gotoOrientationDeg(-180 + 66);
+                if (rsNerell.strategy() != ENerellStrategy.BASIC_NORD) {
+                    mv.gotoPoint(3000 - 220, 1290);
+                    mv.gotoOrientationDeg(180 - 66);
                 }
 
                 mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                group.boueePrise(15, 16);
+                group.boueePrise(13, 14);
 
-                // en cas d'erreur sur bouee 9 ou 8
-                complete();
+                mv.gotoOrientationDeg(180);
+                mv.gotoPoint(3000 - 640, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
+                group.boueePrise(12);
 
-                if (bouee9.isValid()) {
-                    bouee9.execute();
-                }
-                if (bouee8.isValid()) {
-                    bouee8.execute();
-                }
+                mv.gotoPoint(3000 - 940, 1662, GotoOption.AVANT);
+                group.boueePrise(11);
             }
 
         } catch (AvoidingException | NoPathFoundException e) {

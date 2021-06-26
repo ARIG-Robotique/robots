@@ -30,10 +30,10 @@ public class DeposePetitPort extends AbstractNerellAction {
     private INerellPincesArriereService pincesArriereService;
 
     @Autowired
-    private Bouee8 bouee8;
+    private NerellBouee8 bouee8;
 
     @Autowired
-    private Bouee9 bouee9;
+    private NerellBouee9 bouee9;
 
     private boolean moustacheFaites = false;
 
