@@ -58,6 +58,14 @@ public abstract class AbstractARIGVacuumController {
         sendToController();
     }
 
+    public void forceOnAll() {
+        for (int idx = 0 ; idx < NB_PUMPS ; idx++) {
+            states[idx] = VacuumPumpState.ON_FORCE;
+        }
+
+        sendToController();
+    }
+
     public void offAll() {
         for (int idx = 0 ; idx < NB_PUMPS ; idx++) {
             states[idx] = VacuumPumpState.OFF;
@@ -84,6 +92,16 @@ public abstract class AbstractARIGVacuumController {
      */
     public void on(int ... pompesNb) {
         changeState(VacuumPumpState.ON, pompesNb);
+    }
+
+    /**
+     * La gestion du vide pour le circuit `pompeNb` est actif. Le capteur TOR ne déclenche pas la prise, la pompe à
+     * vide est active tous le temps.
+     * La conversion analogique / numérique est en marche et l'état de présence sera calculé.
+     * @param pompesNb Numéro de pompe a piloter
+     */
+    public void onForce(int ... pompesNb) {
+        changeState(VacuumPumpState.ON_FORCE, pompesNb);
     }
 
     /**

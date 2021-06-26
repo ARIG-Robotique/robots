@@ -37,15 +37,17 @@ public interface INerellIOService extends IIOService {
     // -------------------------- BUSINESS ----------------------- //
     // ----------------------------------------------------------- //
 
-    void disableAllPompe();
+    void disableAllPompes();
 
-    void enableAllPompe();
+    void forceEnableAllPompes();
+
+    void enableAllPompes();
     void enablePompe1();
     void enablePompe2();
     void enablePompe3();
     void enablePompe4();
 
-    void releaseAllPompe();
+    void releaseAllPompes();
     void releasePompe1();
     void releasePompe2();
     void releasePompe3();

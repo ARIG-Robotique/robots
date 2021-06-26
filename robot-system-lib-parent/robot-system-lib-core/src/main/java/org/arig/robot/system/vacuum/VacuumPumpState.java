@@ -5,9 +5,10 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum VacuumPumpState {
-    DISABLED((byte) 0x03),
+    OFF((byte) 0x00),
     ON((byte) 0x01),
-    OFF((byte) 0x00);
+    ON_FORCE((byte) 0x02),
+    DISABLED((byte) 0x03);
 
     @Getter
     private final byte value;

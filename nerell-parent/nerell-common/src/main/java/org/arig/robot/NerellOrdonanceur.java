@@ -85,7 +85,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void afterMatch() {
-        nerellIOService.releaseAllPompe();
+        nerellIOService.releaseAllPompes();
         baliseService.idle();
         nerellRobotStatus.disableBalise();
     }
@@ -104,7 +104,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         while (ioService.tirette()) {
             ThreadUtils.sleep(1000);
         }
-        nerellIOService.disableAllPompe();
+        nerellIOService.disableAllPompes();
         nerellServosService.pincesArriereFerme(false);
         ThreadUtils.sleep(1000);
     }

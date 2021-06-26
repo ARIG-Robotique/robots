@@ -101,11 +101,16 @@ public class NerellIOServiceBouchon extends AbstractIOServiceBouchon implements 
 
 
     @Override
-    public void disableAllPompe() {
+    public void disableAllPompes() {
     }
 
     @Override
-    public void enableAllPompe() {
+    public void forceEnableAllPompes() {
+
+    }
+
+    @Override
+    public void enableAllPompes() {
     }
 
     @Override
@@ -125,7 +130,7 @@ public class NerellIOServiceBouchon extends AbstractIOServiceBouchon implements 
     }
 
     @Override
-    public void releaseAllPompe() {
+    public void releaseAllPompes() {
     }
 
     @Override

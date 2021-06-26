@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.services.IOdinIOService;
 import org.arig.robot.system.vacuum.ARIGVacuumController;
+import org.arig.robot.system.vacuum.VacuumPumpState;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -28,21 +29,14 @@ public class OdinVacuumCommands {
     }
 
     @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Pompe on")
-    public void pumpOn(final int nb) {
-        vacuumController.on(nb);
-    }
-
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Pompe off")
-    public void pumpOff(final int nb) {
-        vacuumController.off(nb);
-    }
-
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Pompe disable")
-    public void pumpDisable(final int nb) {
-        vacuumController.disable(nb);
+    @ShellMethod("Place une pompe dans un mode")
+    public void pumpState(final int nb, final VacuumPumpState state) {
+        switch(state) {
+            case OFF:      vacuumController.off(nb);break;
+            case ON:       vacuumController.on(nb);break;
+            case ON_FORCE: vacuumController.onForce(nb);break;
+            case DISABLED: vacuumController.disable(nb);break;
+        }
     }
 
     @ShellMethodAvailability("alimentationOk")
