@@ -349,11 +349,6 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
     }
 
     @Override
-    public void forceEnableAllPompes() {
-        vacuumController.forceOnAll();
-    }
-
-    @Override
     public void enableAllPompes() {
         vacuumController.onAll();
     }

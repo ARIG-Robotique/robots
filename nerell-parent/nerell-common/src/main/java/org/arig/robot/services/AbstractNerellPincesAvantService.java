@@ -35,7 +35,6 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
     public boolean deposeGrandChenal(final ECouleurBouee couleurChenal, final boolean partielle) {
         rs.disablePincesAvant();
 
-        io.forceEnableAllPompes();
         servosService.ascenseursAvantBas(true);
 
         if (partielle) {
@@ -76,7 +75,6 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
     public boolean deposePetitPort() {
         rs.disablePincesAvant();
 
-        io.forceEnableAllPompes();
         servosService.ascenseursAvantBas(true);
         io.releaseAllPompes();
         ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
@@ -92,7 +90,6 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
     public void deposeGrandPort() {
         rs.disablePincesAvant();
 
-        io.forceEnableAllPompes();
         servosService.ascenseursAvantBas(true);
         io.releaseAllPompes();
         ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
