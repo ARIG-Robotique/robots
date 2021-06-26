@@ -43,9 +43,13 @@ public class OdinDeposeGrandPort extends AbstractOdinAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rsOdin.inPort() && (!rsOdin.pincesAvantEmpty() || !rsOdin.pincesArriereEmpty())
-                && !rs.grandChenalRougeEmpty() && !rs.grandChenalVertEmpty()
+        boolean valid = isTimeValid() && !rsOdin.inPort() && (!rsOdin.pincesAvantEmpty() || !rsOdin.pincesArriereEmpty())
                 && rsOdin.getRemainingTime() > IEurobotConfig.validRetourPortRemainingTimeOdin;
+        if (rs.twoRobots()) {
+            valid = valid && !rs.grandChenalRougeEmpty() && !rs.grandChenalVertEmpty();
+        }
+
+        return valid;
     }
 
     @Override
