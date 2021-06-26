@@ -62,7 +62,18 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         if (nerellRobotStatus.etalonageBaliseOk()) {
             nerellRobotStatus.enableBalise();
         }
+
+        // Optimisation d'activation des pinces
         nerellRobotStatus.enablePincesAvant();
+
+        // Lancement d'une première lecture de couleurs pour initialiser les capteurs
+        nerellIOService.enableLedCapteurCouleur();
+        ThreadUtils.sleep(IConstantesNerellConfig.WAIT_LED);
+        nerellIOService.couleurBouee1();
+        nerellIOService.couleurBouee2();
+        nerellIOService.couleurBouee3();
+        nerellIOService.couleurBouee4();
+        nerellIOService.disableLedCapteurCouleur();
     }
 
     @Override
