@@ -26,7 +26,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
     public Point entryPoint() {
         double x = 225;
         double y = 1200;
-        if (ETeam.JAUNE == rs.team()) {
+        if (ETeam.JAUNE == rsNerell.team()) {
             x = 3000 - x;
         }
 
@@ -35,44 +35,44 @@ public class PriseBoueesNord extends AbstractNerellAction {
 
     @Override
     public int order() {
-        if (rs.strategy() == ENerellStrategy.BASIC_NORD && firstExecution) {
+        if (rsNerell.strategy() == ENerellStrategy.BASIC_NORD && firstExecution) {
             return 1000;
         }
 
-        return 6 + (rs.ecueilCommunEquipePris() ? 0 : 10) + tableUtils.alterOrder(entryPoint());
+        return 6 + (rsNerell.ecueilCommunEquipePris() ? 0 : 10) + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
     public boolean isValid() {
-        return rs.pincesAvantEmpty() &&
-                rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime &&
-                (rs.team() == ETeam.BLEU && rs.grandChenalVertEmpty() || rs.grandChenalRougeEmpty());
+        return rsNerell.pincesAvantEmpty() &&
+                rsNerell.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime &&
+                (rsNerell.team() == ETeam.BLEU && rsNerell.grandChenalVertEmpty() || rsNerell.grandChenalRougeEmpty());
     }
 
     @Override
     public void execute() {
         firstExecution = false;
         try {
-            rs.enablePincesAvant();
+            rsNerell.enablePincesAvant();
 
             final Point entry = entryPoint();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            if (rs.strategy() != ENerellStrategy.BASIC_NORD && tableUtils.distance(entry) > 100) {
+            if (rsNerell.strategy() != ENerellStrategy.BASIC_NORD && tableUtils.distance(entry) > 100) {
                 mv.pathTo(entry);
             } else {
                 // Le path active l'évitement en auto, pas de path, pas d'évitement
-                rs.enableAvoidance();
+                rsNerell.enableAvoidance();
             }
 
             double targetx = 434;
             double targety = 1200 + 570;
-            if (ETeam.JAUNE == rs.team()) {
+            if (ETeam.JAUNE == rsNerell.team()) {
                 targetx = 3000 - targetx;
             }
             final Point target = new Point(targetx, targety);
 
-            if (rs.team() == ETeam.BLEU) {
-                if (rs.strategy() != ENerellStrategy.BASIC_NORD) {
+            if (rsNerell.team() == ETeam.BLEU) {
+                if (rsNerell.strategy() != ENerellStrategy.BASIC_NORD) {
                     mv.gotoPoint(220, 1290);
                     mv.gotoOrientationDeg(66);
                 }
@@ -89,7 +89,7 @@ public class PriseBoueesNord extends AbstractNerellAction {
                 group.boueePrise(6);
 
             } else {
-                if (rs.strategy() != ENerellStrategy.BASIC_NORD) {
+                if (rsNerell.strategy() != ENerellStrategy.BASIC_NORD) {
                     mv.gotoPoint(3000 - 220, 1290);
                     mv.gotoOrientationDeg(180 - 66);
                 }

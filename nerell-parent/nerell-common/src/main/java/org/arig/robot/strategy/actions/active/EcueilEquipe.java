@@ -22,7 +22,7 @@ public class EcueilEquipe extends AbstractEcueil {
     public Point entryPoint() {
         double x = ENTRY_X;
         double y = ENTRY_Y;
-        if (ETeam.JAUNE == rs.team()) {
+        if (ETeam.JAUNE == rsNerell.team()) {
             x = 3000 - x;
         }
 
@@ -41,12 +41,12 @@ public class EcueilEquipe extends AbstractEcueil {
 
     @Override
     protected double orientationPourPrise() {
-        return rs.team() == ETeam.BLEU ? 0 : 180;
+        return rsNerell.team() == ETeam.BLEU ? 0 : 180;
     }
 
     @Override
     protected ECouleurBouee[] bouees() {
-        return rs.couleursEcueilEquipe();
+        return rsNerell.couleursEcueilEquipe();
     }
 
     @Override

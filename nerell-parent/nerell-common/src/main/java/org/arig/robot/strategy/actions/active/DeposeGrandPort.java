@@ -35,7 +35,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
     public Point entryPoint() {
         double X = 230;
         double Y = 1200;
-        if (ETeam.JAUNE == rs.team()) {
+        if (ETeam.JAUNE == rsNerell.team()) {
             X = 3000 - X;
         }
         return new Point(X, Y);
@@ -43,19 +43,19 @@ public class DeposeGrandPort extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rs.inPort() && (!rs.pincesAvantEmpty() || !rs.pincesArriereEmpty())
-                && !rs.grandChenalRougeEmpty() && !rs.grandChenalVertEmpty() && rs.getRemainingTime() > IEurobotConfig.validRetourPortRemainingTimeNerell;
+        return isTimeValid() && !rsNerell.inPort() && (!rsNerell.pincesAvantEmpty() || !rsNerell.pincesArriereEmpty())
+                && !rsNerell.grandChenalRougeEmpty() && !rsNerell.grandChenalVertEmpty() && rsNerell.getRemainingTime() > IEurobotConfig.validRetourPortRemainingTimeNerell;
     }
 
     @Override
     public int order() {
         int order = 0;
-        for (ECouleurBouee eCouleurBouee : rs.pincesAvant()) {
+        for (ECouleurBouee eCouleurBouee : rsNerell.pincesAvant()) {
             if (eCouleurBouee != null) {
                 order++;
             }
         }
-        for (ECouleurBouee eCouleurBouee : rs.pincesArriere()) {
+        for (ECouleurBouee eCouleurBouee : rsNerell.pincesArriere()) {
             if (eCouleurBouee != null) {
                 order++;
             }
@@ -67,25 +67,25 @@ public class DeposeGrandPort extends AbstractNerellAction {
     public void execute() {
         try {
             final Point entry = entryPoint();
-            final Point entry2 = new Point(computeX(entry.getX(), !rs.pincesAvantEmpty()), entry.getY());
+            final Point entry2 = new Point(computeX(entry.getX(), !rsNerell.pincesAvantEmpty()), entry.getY());
 
-            rs.enablePincesAvant();
+            rsNerell.enablePincesAvant();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
-            GotoOption sens = !rs.pincesAvantEmpty() ? GotoOption.AVANT : GotoOption.ARRIERE;
+            GotoOption sens = !rsNerell.pincesAvantEmpty() ? GotoOption.AVANT : GotoOption.ARRIERE;
             if (tableUtils.distance(entry2) > 200) {
                 mv.pathTo(entry2, sens);
-                rs.disableAvoidance();
+                rsNerell.disableAvoidance();
             } else {
-                rs.disableAvoidance();
+                rsNerell.disableAvoidance();
                 mv.gotoPoint(entry2, GotoOption.SANS_ORIENTATION, sens);
             }
 
             mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
 
             do {
-                if (!rs.pincesAvantEmpty()) {
-                    if (rs.team() == ETeam.BLEU) {
+                if (!rsNerell.pincesAvantEmpty()) {
+                    if (rsNerell.team() == ETeam.BLEU) {
                         mv.gotoOrientationDeg(180);
                     } else {
                         mv.gotoOrientationDeg(0);
@@ -93,10 +93,10 @@ public class DeposeGrandPort extends AbstractNerellAction {
                     pincesAvantService.deposeGrandPort();
                     step++;
                 }
-                if (!rs.pincesArriereEmpty()) {
+                if (!rsNerell.pincesArriereEmpty()) {
                     final Point entry3 = new Point(computeX(entry.getX(), false), entry.getY());
                     mv.gotoPoint(entry3, GotoOption.SANS_ORIENTATION);
-                    if (rs.team() == ETeam.BLEU) {
+                    if (rsNerell.team() == ETeam.BLEU) {
                         mv.gotoOrientationDeg(0);
                     } else {
                         mv.gotoOrientationDeg(180);
@@ -106,12 +106,12 @@ public class DeposeGrandPort extends AbstractNerellAction {
                 }
 
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-                if (rs.team() == ETeam.BLEU) {
+                if (rsNerell.team() == ETeam.BLEU) {
                     mv.gotoPoint(500, entry.getY());
                 } else {
                     mv.gotoPoint(2500, entry.getY());
                 }
-            } while (!rs.pincesAvantEmpty() && !rs.pincesArriereEmpty());
+            } while (!rsNerell.pincesAvantEmpty() && !rsNerell.pincesArriereEmpty());
 
             if (step > 2) {
                 complete();
@@ -126,7 +126,7 @@ public class DeposeGrandPort extends AbstractNerellAction {
     private double computeX(double baseX, boolean avant) {
         int coef = step * 120 + (avant ? 0 : 60); // FIXME nouvelle face avant
 
-        if (rs.team() == ETeam.JAUNE) {
+        if (rsNerell.team() == ETeam.JAUNE) {
             return baseX - coef;
         } else {
             return baseX + coef;

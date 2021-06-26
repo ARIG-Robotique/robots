@@ -39,7 +39,7 @@ public class OdinTest extends AbstractOdinAction {
     @Override
     public void execute() {
         try {
-            rs.enableAvoidance();
+            rsOdin.enableAvoidance();
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(2050,1600, GotoOption.AVANT);

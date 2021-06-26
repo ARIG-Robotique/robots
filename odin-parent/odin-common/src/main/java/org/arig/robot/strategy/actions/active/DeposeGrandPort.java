@@ -10,7 +10,6 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.AbstractOdinPincesArriereService;
 import org.arig.robot.services.AbstractOdinPincesAvantService;
-import org.arig.robot.services.IOdinPincesService;
 import org.arig.robot.strategy.actions.AbstractOdinAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,7 +35,7 @@ public class DeposeGrandPort extends AbstractOdinAction {
     public Point entryPoint() {
         double X = 230;
         double Y = 1200;
-        if (ETeam.JAUNE == rs.team()) {
+        if (ETeam.JAUNE == rsOdin.team()) {
             X = 3000 - X;
         }
         return new Point(X, Y);
@@ -44,19 +43,20 @@ public class DeposeGrandPort extends AbstractOdinAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rs.inPort() && (!rs.pincesAvantEmpty() || !rs.pincesArriereEmpty())
-                && !rs.grandChenalRougeEmpty() && !rs.grandChenalVertEmpty() && rs.getRemainingTime() > IEurobotConfig.validRetourPortRemainingTimeOdin;
+        return isTimeValid() && !rsOdin.inPort() && (!rsOdin.pincesAvantEmpty() || !rsOdin.pincesArriereEmpty())
+                && !rs.grandChenalRougeEmpty() && !rs.grandChenalVertEmpty()
+                && rsOdin.getRemainingTime() > IEurobotConfig.validRetourPortRemainingTimeOdin;
     }
 
     @Override
     public int order() {
         int order = 0;
-        for (ECouleurBouee eCouleurBouee : rs.pincesAvant()) {
+        for (ECouleurBouee eCouleurBouee : rsOdin.pincesAvant()) {
             if (eCouleurBouee != null) {
                 order++;
             }
         }
-        for (ECouleurBouee eCouleurBouee : rs.pincesArriere()) {
+        for (ECouleurBouee eCouleurBouee : rsOdin.pincesArriere()) {
             if (eCouleurBouee != null) {
                 order++;
             }
@@ -70,24 +70,24 @@ public class DeposeGrandPort extends AbstractOdinAction {
             final Point entry = entryPoint();
             final Point entry2 = new Point(computeX(entry.getX(), !rs.pincesAvantEmpty()), entry.getY());
 
-            rs.enablePincesAvant();
-            rs.enablePincesArriere();
+            rsOdin.enablePincesAvant();
+            rsOdin.enablePincesArriere();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
-            GotoOption sens = !rs.pincesAvantEmpty() ? GotoOption.AVANT : GotoOption.ARRIERE;
+            GotoOption sens = !rsOdin.pincesAvantEmpty() ? GotoOption.AVANT : GotoOption.ARRIERE;
             if (tableUtils.distance(entry2) > 200) {
                 mv.pathTo(entry2, sens);
-                rs.disableAvoidance();
+                rsOdin.disableAvoidance();
             } else {
-                rs.disableAvoidance();
+                rsOdin.disableAvoidance();
                 mv.gotoPoint(entry2, GotoOption.SANS_ORIENTATION, sens);
             }
 
             mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
 
             do {
-                if (!rs.pincesAvantEmpty()) {
-                    if (rs.team() == ETeam.BLEU) {
+                if (!rsOdin.pincesAvantEmpty()) {
+                    if (rsOdin.team() == ETeam.BLEU) {
                         mv.gotoOrientationDeg(180);
                     } else {
                         mv.gotoOrientationDeg(0);
@@ -96,10 +96,10 @@ public class DeposeGrandPort extends AbstractOdinAction {
                     step++;
                 }
 
-                if (!rs.pincesArriereEmpty()) {
+                if (!rsOdin.pincesArriereEmpty()) {
                     final Point entry3 = new Point(computeX(entry.getX(), false), entry.getY());
                     mv.gotoPoint(entry3, GotoOption.SANS_ORIENTATION);
-                    if (rs.team() == ETeam.BLEU) {
+                    if (rsOdin.team() == ETeam.BLEU) {
                         mv.gotoOrientationDeg(0);
                     } else {
                         mv.gotoOrientationDeg(180);
@@ -109,12 +109,12 @@ public class DeposeGrandPort extends AbstractOdinAction {
                 }
 
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-                if (rs.team() == ETeam.BLEU) {
+                if (rsOdin.team() == ETeam.BLEU) {
                     mv.gotoPoint(500, entry.getY());
                 } else {
                     mv.gotoPoint(2500, entry.getY());
                 }
-            } while (!rs.pincesAvantEmpty() && !rs.pincesArriereEmpty());
+            } while (!rsOdin.pincesAvantEmpty() && !rsOdin.pincesArriereEmpty());
 
             if (step > 2) {
                 complete();
@@ -129,11 +129,10 @@ public class DeposeGrandPort extends AbstractOdinAction {
     private double computeX(double baseX, boolean avant) {
         int coef = step * 120 + (avant ? 0 : 60); // FIXME nouvelle face avant
 
-        if (rs.team() == ETeam.JAUNE) {
+        if (rsOdin.team() == ETeam.JAUNE) {
             return baseX - coef;
         } else {
             return baseX + coef;
         }
     }
-
 }

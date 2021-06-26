@@ -26,7 +26,7 @@ public class Phare extends AbstractNerellAction {
     public Point entryPoint() {
         double x = ENTRY_X;
         double y = ENTRY_Y;
-        if (ETeam.JAUNE == rs.team()) {
+        if (ETeam.JAUNE == rsNerell.team()) {
             x = 3000 - x;
         }
 
@@ -37,7 +37,7 @@ public class Phare extends AbstractNerellAction {
     public int order() {
         int order = 13;
 
-        if (rs.ecueilCommunEquipePris()) {
+        if (rsNerell.ecueilCommunEquipePris()) {
             order += 30;
         }
 
@@ -46,13 +46,13 @@ public class Phare extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rs.phare() && !rs.inPort();
+        return isTimeValid() && !rsNerell.phare() && !rsNerell.inPort();
     }
 
     @Override
     public void execute() {
         try {
-            rs.enablePincesAvant();
+            rsNerell.enablePincesAvant();
             final Point entry = entryPoint();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry);
@@ -64,7 +64,7 @@ public class Phare extends AbstractNerellAction {
                 }
 
                 // On active avec le bras gauche
-                servos.brasGauchePhare(true);
+                servosNerell.brasGauchePhare(true);
                 mv.gotoOrientationDegSansDistance(-35, SensRotation.HORAIRE);
 
             } else {
@@ -73,7 +73,7 @@ public class Phare extends AbstractNerellAction {
                 }
 
                 // On active avec le bras droit
-                servos.brasDroitPhare(true);
+                servosNerell.brasDroitPhare(true);
                 mv.gotoOrientationDegSansDistance(-180 + 35, SensRotation.TRIGO);
             }
             group.phare();
@@ -83,8 +83,8 @@ public class Phare extends AbstractNerellAction {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
             complete();
-            servos.brasDroitFerme(false);
-            servos.brasGaucheFerme(false);
+            servosNerell.brasDroitFerme(false);
+            servosNerell.brasGaucheFerme(false);
         }
     }
 }

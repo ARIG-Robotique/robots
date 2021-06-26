@@ -31,7 +31,7 @@ public abstract class AbstractBouee extends AbstractOdinAction {
 
     @Override
     public Point entryPoint() {
-        return rs.boueePt(bouee);
+        return rsOdin.boueePt(bouee);
     }
 
     @Override
@@ -44,22 +44,22 @@ public abstract class AbstractBouee extends AbstractOdinAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && rs.boueePresente(bouee) && getPinceCible() != 0
-                && rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime;
+        return isTimeValid() && rsOdin.boueePresente(bouee) && getPinceCible() != 0
+                && rsOdin.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime;
     }
 
     @Override
     public void execute() {
         try {
-            rs.enablePincesAvant();
-            rs.enablePincesArriere();
+            rsOdin.enablePincesAvant();
+            rsOdin.enablePincesArriere();
 
             final int pinceCible = getPinceCible();
-            final double distanceApproche = IEurobotConfig.pathFindingTailleBouee / 2.0 + 10;
             final double offsetPince = getOffsetPince(pinceCible);
+            final double distanceApproche = IEurobotConfig.pathFindingTailleBouee / 2.0 + 10;
 
-            GotoOption sens = rs.boueeCouleur(bouee) == ECouleurBouee.VERT ? GotoOption.AVANT : GotoOption.ARRIERE;
-            log.info("Prise de la bouee {} {} dans la pince {} {}", bouee, rs.boueeCouleur(bouee), sens.name(), pinceCible);
+            GotoOption sens = rsOdin.boueeCouleur(bouee) == ECouleurBouee.VERT ? GotoOption.AVANT : GotoOption.ARRIERE;
+            log.info("Prise de la bouee {} {} dans la pince {} {}", bouee, rsOdin.boueeCouleur(bouee), sens.name(), pinceCible);
 
             final Point entry = entryPoint();
 
@@ -83,7 +83,7 @@ public abstract class AbstractBouee extends AbstractOdinAction {
     }
 
     private int getPinceCible() {
-        if (rs.boueeCouleur(bouee) == ECouleurBouee.VERT){
+        if (rsOdin.boueeCouleur(bouee) == ECouleurBouee.VERT){
             if (!io.presenceVentouseAvantGauche()) {
                 return 1;
             }
@@ -91,7 +91,7 @@ public abstract class AbstractBouee extends AbstractOdinAction {
                 return 2;
             }
         }
-        if (rs.boueeCouleur(bouee) == ECouleurBouee.ROUGE) {
+        if (rsOdin.boueeCouleur(bouee) == ECouleurBouee.ROUGE) {
             if (!io.presenceVentouseArriereGauche()) {
                 return 1;
             }

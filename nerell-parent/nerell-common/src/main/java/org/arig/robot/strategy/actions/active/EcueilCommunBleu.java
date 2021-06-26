@@ -32,7 +32,7 @@ public class EcueilCommunBleu extends AbstractEcueil {
 
     @Override
     public Point aggressiveIntermediaryPoint() {
-        if (rs.team() == ETeam.BLEU) {
+        if (rsNerell.team() == ETeam.BLEU) {
             // Pas l'eceuil adverse
             return null;
         }
@@ -41,7 +41,7 @@ public class EcueilCommunBleu extends AbstractEcueil {
 
     @Override
     public int order() {
-        if (rs.team() == ETeam.JAUNE && rs.strategy() == ENerellStrategy.AGGRESSIVE && isFirstExecution()) {
+        if (rsNerell.team() == ETeam.JAUNE && rsNerell.strategy() == ENerellStrategy.AGGRESSIVE && isFirstExecution()) {
             return 1000;
         }
         return super.order();
@@ -49,10 +49,10 @@ public class EcueilCommunBleu extends AbstractEcueil {
 
     @Override
     public boolean isValid() {
-        if (rs.team() == ETeam.BLEU) {
-            return super.isValid() && !rs.boueePresente(5) && !rs.boueePresente(6);
+        if (rsNerell.team() == ETeam.BLEU) {
+            return super.isValid() && !rsNerell.boueePresente(5) && !rsNerell.boueePresente(6);
         } else {
-            return super.isValid() && (rs.strategy() == ENerellStrategy.AGGRESSIVE || rs.getRemainingTime() < 40000);
+            return super.isValid() && (rsNerell.strategy() == ENerellStrategy.AGGRESSIVE || rsNerell.getRemainingTime() < 40000);
         }
     }
 
@@ -63,12 +63,12 @@ public class EcueilCommunBleu extends AbstractEcueil {
 
     @Override
     protected byte nbBoueesDispo() {
-        return rs.ecueilCommunBleuDispo();
+        return rsNerell.ecueilCommunBleuDispo();
     }
 
     @Override
     protected ECouleurBouee[] bouees() {
-        return rs.team() == ETeam.BLEU ? rs.couleursEcueilCommunEquipe() : rs.couleursEcueilCommunAdverse();
+        return rsNerell.team() == ETeam.BLEU ? rsNerell.couleursEcueilCommunEquipe() : rsNerell.couleursEcueilCommunAdverse();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class EcueilCommunBleu extends AbstractEcueil {
 
     @Override
     public void execute() {
-        if (rs.strategy() != ENerellStrategy.AGGRESSIVE && bouee6.isValid()) {
+        if (rsNerell.strategy() != ENerellStrategy.AGGRESSIVE && bouee6.isValid()) {
             bouee6.execute();
         }
         super.execute();
@@ -91,9 +91,9 @@ public class EcueilCommunBleu extends AbstractEcueil {
     protected void onComplete() {
         // on a shooté la bouée
         group.boueePrise(5);
-        rs.ecueilCommunBleuDispo((byte) 0);
+        rsNerell.ecueilCommunBleuDispo((byte) 0);
 
-        if (rs.team() == ETeam.BLEU) {
+        if (rsNerell.team() == ETeam.BLEU) {
             group.ecueilCommunEquipePris();
         } else {
             group.ecueilCommunAdversePris();

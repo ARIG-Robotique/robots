@@ -26,7 +26,7 @@ public class Phare extends AbstractOdinAction {
     public Point entryPoint() {
         double x = ENTRY_X;
         double y = ENTRY_Y;
-        if (ETeam.JAUNE == rs.team()) {
+        if (ETeam.JAUNE == rsOdin.team()) {
             x = 3000 - x;
         }
 
@@ -41,14 +41,14 @@ public class Phare extends AbstractOdinAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rs.phare() && !rs.inPort();
+        return isTimeValid() && !rsOdin.phare() && !rsOdin.inPort();
     }
 
     @Override
     public void execute() {
         try {
-            rs.enablePincesAvant();
-            rs.enablePincesArriere();
+            rsOdin.enablePincesAvant();
+            rsOdin.enablePincesArriere();
             final Point entry = entryPoint();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry);
@@ -60,7 +60,7 @@ public class Phare extends AbstractOdinAction {
                 }
 
                 // On active avec le bras gauche
-                servos.brasGauchePhare(true);
+                servosOdin.brasGauchePhare(true);
                 mv.gotoOrientationDegSansDistance(45, SensRotation.TRIGO);
 
             } else {
@@ -69,7 +69,7 @@ public class Phare extends AbstractOdinAction {
                 }
 
                 // On active avec le bras droit
-                servos.brasDroitPhare(true);
+                servosOdin.brasDroitPhare(true);
                 mv.gotoOrientationDegSansDistance(-180 + 45, SensRotation.HORAIRE);
             }
             group.phare();
@@ -79,8 +79,8 @@ public class Phare extends AbstractOdinAction {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
             complete();
-            servos.brasDroitFerme(false);
-            servos.brasGaucheFerme(false);
+            servosOdin.brasDroitFerme(false);
+            servosOdin.brasGaucheFerme(false);
         }
     }
 }

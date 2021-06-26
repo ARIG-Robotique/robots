@@ -31,7 +31,7 @@ public class HautFond extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rs.hautFondEmpty() && rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime;
+        return isTimeValid() && !rsNerell.hautFondEmpty() && rsNerell.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime;
     }
 
     @Override
@@ -60,20 +60,20 @@ public class HautFond extends AbstractNerellAction {
         if (!io.presenceVentouse2()) libre++;
         if (!io.presenceVentouse3()) libre++;
         if (!io.presenceVentouse4()) libre++;
-        return Math.min(libre, rs.hautFond().size()) + tableUtils.alterOrder(entryPoint());
+        return Math.min(libre, rsNerell.hautFond().size()) + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
     public void execute() {
         try {
-            rs.enablePincesAvant();
+            rsNerell.enablePincesAvant();
 
             final Point entry = entryPoint();
 
             // calcule le Y qui permettra de rencontrer le plus de bouées
             // médiane : https://stackoverflow.com/a/49215170
-            final int nbHautFond = rs.hautFond().size();
-            final double medianY = rs.hautFond().stream().map(Bouee::pt).mapToDouble(Point::getY).sorted()
+            final int nbHautFond = rsNerell.hautFond().size();
+            final double medianY = rsNerell.hautFond().stream().map(Bouee::pt).mapToDouble(Point::getY).sorted()
                     .skip((nbHautFond - 1) / 2).limit(2 - nbHautFond % 2).average().orElse(entry.getY());
             final double finalY = Math.min(entry.getY(), medianY);
 
@@ -89,7 +89,7 @@ public class HautFond extends AbstractNerellAction {
             mv.gotoPoint(finalPoint, GotoOption.AVANT);
 
             // on marque tout comme pris, l'information mise à jour sera fournie par la balise
-            rs.hautFond(Collections.emptyList());
+            rsNerell.hautFond(Collections.emptyList());
 
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());

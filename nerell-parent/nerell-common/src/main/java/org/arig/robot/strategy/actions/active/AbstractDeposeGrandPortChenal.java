@@ -38,7 +38,7 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
     public Point entryPoint() {
         double x = 225;
         double y = 1200;
-        if (ETeam.JAUNE == rs.team()) {
+        if (ETeam.JAUNE == rsNerell.team()) {
             x = 3000 - x;
         }
         return new Point(x, y);
@@ -48,21 +48,21 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
     public int order() {
         int order;
 
-        if (rs.deposePartielleDone()) {
+        if (rsNerell.deposePartielleDone()) {
             order = 1000;
 
-        } else if (rs.deposePartielle()) {
-            Chenaux chenauxFuture = rs.cloneGrandChenaux();
+        } else if (rsNerell.deposePartielle()) {
+            Chenaux chenauxFuture = rsNerell.cloneGrandChenaux();
             int currentScoreChenaux = chenauxFuture.score();
 
-            for (ECouleurBouee couleur : rs.pincesAvant()) {
+            for (ECouleurBouee couleur : rsNerell.pincesAvant()) {
                 if (couleur == ECouleurBouee.ROUGE) {
                     chenauxFuture.addRouge(couleur);
                 } else if (couleur == ECouleurBouee.VERT) {
                     chenauxFuture.addVert(couleur);
                 }
             }
-            for (ECouleurBouee couleur : rs.pincesArriere()) {
+            for (ECouleurBouee couleur : rsNerell.pincesArriere()) {
                 if (couleur == ECouleurBouee.ROUGE) {
                     chenauxFuture.addRouge(couleur);
                 } else if (couleur == ECouleurBouee.VERT) {
@@ -72,22 +72,22 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
             order = chenauxFuture.score() - currentScoreChenaux;
 
         } else {
-            Chenaux chenauxFuture = rs.cloneGrandChenaux();
+            Chenaux chenauxFuture = rsNerell.cloneGrandChenaux();
             int currentScoreChenaux = chenauxFuture.score();
 
             if (getCouleurChenal() == ECouleurBouee.ROUGE) {
-                if (!rs.pincesArriereEmpty()) {
-                    chenauxFuture.addRouge(rs.pincesArriere());
+                if (!rsNerell.pincesArriereEmpty()) {
+                    chenauxFuture.addRouge(rsNerell.pincesArriere());
                 }
-                if (!rs.pincesAvantEmpty() && (rs.pincesArriereEmpty() || rs.doubleDepose())) {
-                    chenauxFuture.addRouge(rs.pincesAvant());
+                if (!rsNerell.pincesAvantEmpty() && (rsNerell.pincesArriereEmpty() || rsNerell.doubleDepose())) {
+                    chenauxFuture.addRouge(rsNerell.pincesAvant());
                 }
             } else {
-                if (!rs.pincesArriereEmpty()) {
-                    chenauxFuture.addVert(rs.pincesArriere());
+                if (!rsNerell.pincesArriereEmpty()) {
+                    chenauxFuture.addVert(rsNerell.pincesArriere());
                 }
-                if (!rs.pincesAvantEmpty() && (rs.pincesArriereEmpty() || rs.doubleDepose())) {
-                    chenauxFuture.addVert(rs.pincesAvant());
+                if (!rsNerell.pincesAvantEmpty() && (rsNerell.pincesArriereEmpty() || rsNerell.doubleDepose())) {
+                    chenauxFuture.addVert(rsNerell.pincesAvant());
                 }
             }
 
@@ -99,55 +99,55 @@ public abstract class AbstractDeposeGrandPortChenal extends AbstractNerellAction
 
     @Override
     public boolean isValid() {
-        if (!isTimeValid() || rs.inPort()) {
+        if (!isTimeValid() || rsNerell.inPort()) {
             return false;
 
-        } else if (rs.deposePartielle()) {
-            return !rs.pincesArriereEmpty() && !rs.pincesAvantEmpty();
+        } else if (rsNerell.deposePartielle()) {
+            return !rsNerell.pincesArriereEmpty() && !rsNerell.pincesAvantEmpty();
 
         } else {
-            return (!rs.boueePresente(getBoueeBloquante()) || rs.getRemainingTime() < IEurobotConfig.invalidPriseRemainingTime) &&
-                    (!rs.pincesArriereEmpty() || !rs.pincesAvantEmpty());
+            return (!rsNerell.boueePresente(getBoueeBloquante()) || rsNerell.getRemainingTime() < IEurobotConfig.invalidPriseRemainingTime) &&
+                    (!rsNerell.pincesArriereEmpty() || !rsNerell.pincesAvantEmpty());
         }
     }
 
     @Override
     public void execute() {
         try {
-            rs.enablePincesAvant();
+            rsNerell.enablePincesAvant();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             final Point entry = entryPoint();
-            boolean onlyOne = !rs.doubleDepose() || (rs.pincesArriereEmpty() ^ rs.pincesAvantEmpty());
-            final Point entry2 = new Point(entry.getX(), getYDepose(entry.getY(), rs.pincesArriereEmpty(), onlyOne));
+            boolean onlyOne = !rsNerell.doubleDepose() || (rsNerell.pincesArriereEmpty() ^ rsNerell.pincesAvantEmpty());
+            final Point entry2 = new Point(entry.getX(), getYDepose(entry.getY(), rsNerell.pincesArriereEmpty(), onlyOne));
 
             if (tableUtils.distance(entry2) > 100) {
                 mv.pathTo(entry2);
-                rs.disableAvoidance();
+                rsNerell.disableAvoidance();
             } else {
-                rs.disableAvoidance();
+                rsNerell.disableAvoidance();
                 mv.gotoPoint(entry2, GotoOption.SANS_ORIENTATION);
             }
 
             boolean deposeArriere = false;
-            if (!rs.pincesArriereEmpty()) {
+            if (!rsNerell.pincesArriereEmpty()) {
                 deposeArriere = true;
                 mv.gotoOrientationDeg(getPositionChenal() == EPosition.NORD ? -90 : 90);
-                pincesArriereService.deposeGrandChenal(getCouleurChenal(), rs.deposePartielle());
+                pincesArriereService.deposeGrandChenal(getCouleurChenal(), rsNerell.deposePartielle());
             }
 
-            if (!rs.pincesAvantEmpty() && (!deposeArriere || rs.doubleDepose())) {
+            if (!rsNerell.pincesAvantEmpty() && (!deposeArriere || rsNerell.doubleDepose())) {
                 if (deposeArriere) {
                     mv.avanceMM(35); // FIXME nouvelle face avant
                     mv.gotoPoint(entry.getX(), getYDepose(entry.getY(), true, false), GotoOption.AVANT);
                 } else {
                     mv.gotoOrientationDeg(getPositionChenal() == EPosition.NORD ? 90 : -90);
                 }
-                pincesAvantService.deposeGrandChenal(getCouleurChenal(), rs.deposePartielle());
+                pincesAvantService.deposeGrandChenal(getCouleurChenal(), rsNerell.deposePartielle());
             }
 
-            if (rs.deposePartielle()) {
-                rs.deposePartielleDone(true);
+            if (rsNerell.deposePartielle()) {
+                rsNerell.deposePartielleDone(true);
             }
 
             mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);

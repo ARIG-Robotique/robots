@@ -43,11 +43,11 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        if (rs.getRemainingTime() < IEurobotConfig.invalidPriseRemainingTime) {
+        if (rsNerell.getRemainingTime() < IEurobotConfig.invalidPriseRemainingTime) {
             return false;
         }
 
-        return isTimeValid() && !rs.inPort() && rs.pincesArriereEmpty() && nbBoueesDispo() > 0;
+        return isTimeValid() && !rsNerell.inPort() && rsNerell.pincesArriereEmpty() && nbBoueesDispo() > 0;
     }
 
     @Override
@@ -56,12 +56,12 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             final Point entry = entryPoint();
             final double orientation = orientationPourPrise();
 
-            rs.enablePincesAvant();
+            rsNerell.enablePincesAvant();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            if (rs.strategy() == ENerellStrategy.AGGRESSIVE && firstExecution && aggressiveIntermediaryPoint() != null) {
+            if (rsNerell.strategy() == ENerellStrategy.AGGRESSIVE && firstExecution && aggressiveIntermediaryPoint() != null) {
                 firstExecution = false;
 
-                rs.enableAvoidance();
+                rsNerell.enableAvoidance();
                 mv.gotoPoint(aggressiveIntermediaryPoint(), GotoOption.SANS_ARRET);
                 mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);
 
@@ -71,18 +71,18 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
                 firstExecution = false;
 
                 mv.pathTo(entry);
-                rs.disableAvoidance();
+                rsNerell.disableAvoidance();
             }
 
             mv.gotoOrientationDeg(orientation);
 
             pincesArriereService.preparePriseEcueil();
 
-            rs.enableCalageBordure();
+            rsNerell.enableCalageBordure();
             mv.reculeMM(60);
 
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
-            rs.enableCalageBordure();
+            rsNerell.enableCalageBordure();
             mv.reculeMMSansAngle(120);
 
             // on en profite pour recaller un axe
@@ -116,15 +116,15 @@ public abstract class AbstractEcueil extends AbstractNerellAction {
             complete(); // Action terminé, on laisse le path finding reprendre la main pour le dégagement si on se fait bloqué
             onComplete();
 
-            rs.enableAvoidance();
+            rsNerell.enableAvoidance();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);
 
         } catch (NoPathFoundException | AvoidingException e) {
             // dégagement en cas de blocage
-            servos.ascenseurArriereHaut(true);
-            servos.pincesArriereFerme(false);
-            servos.pivotArriereFerme(false);
+            servosNerell.ascenseurArriereHaut(true);
+            servosNerell.pincesArriereFerme(false);
+            servosNerell.pivotArriereFerme(false);
 
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());

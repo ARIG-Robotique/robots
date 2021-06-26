@@ -5,12 +5,12 @@ import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
-import org.arig.robot.strategy.actions.AbstractNerellAction;
+import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class AntiblocagePort extends AbstractNerellAction {
+public class AntiblocagePort extends AbstractEurobotAction {
 
     @Override
     public Point entryPoint() {
@@ -43,7 +43,7 @@ public class AntiblocagePort extends AbstractNerellAction {
     @Override
     public void execute() {
         try {
-            rs.enableAvoidance(); // Pour eviter de se rentrer dans le robot secondaire
+            rs.enableAvoidance(); // Pour eviter de se rentrer dans l'autre robot
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.gotoPoint(entryPoint());
         } catch (AvoidingException e) {

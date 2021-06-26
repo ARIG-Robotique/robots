@@ -17,7 +17,7 @@ public class DeposeGrandPortChenalRouge extends AbstractDeposeGrandPortChenal {
 
     @Override
     protected int getBoueeBloquante() {
-        if (rs.team() == ETeam.BLEU) {
+        if (rsNerell.team() == ETeam.BLEU) {
             return 4;
         } else {
             return 13;
@@ -31,7 +31,7 @@ public class DeposeGrandPortChenalRouge extends AbstractDeposeGrandPortChenal {
 
     @Override
     protected EPosition getPositionChenal() {
-        if (rs.team() == ETeam.BLEU) {
+        if (rsNerell.team() == ETeam.BLEU) {
             return EPosition.SUD;
         } else {
             return EPosition.NORD;

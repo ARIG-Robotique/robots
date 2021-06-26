@@ -7,7 +7,6 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.EPort;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractOdinAction;
 import org.springframework.stereotype.Component;
@@ -27,13 +26,13 @@ public class RetourAuPort extends AbstractOdinAction {
 
         double x = 550;
         double centerY = 1200;
-        if (rs.team() == ETeam.JAUNE) {
+        if (rsOdin.team() == ETeam.JAUNE) {
             x = 3000 - x;
         }
         final Point north = new Point(x, centerY + offset);
         final Point south = new Point(x, centerY - offset);
 
-        switch (rs.otherPort()) {
+        switch (rsOdin.otherPort()) {
             case NORD:
             case WIP_NORD:
                 return north;
@@ -43,7 +42,7 @@ public class RetourAuPort extends AbstractOdinAction {
                 return south;
 
             default:
-                switch (rs.directionGirouette()) {
+                switch (rsOdin.directionGirouette()) {
                     case UP:
                         return north;
                     case DOWN:
@@ -59,21 +58,21 @@ public class RetourAuPort extends AbstractOdinAction {
 
     @Override
     public int order() {
-        int order = rs.twoRobots() ? 10 : 20;
+        int order = rsOdin.twoRobots() ? 10 : 20;
         return order + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rs.inPort() && rs.getRemainingTime() < IEurobotConfig.validRetourPortRemainingTimeOdin;
+        return isTimeValid() && !rsOdin.inPort() && rsOdin.getRemainingTime() < IEurobotConfig.validRetourPortRemainingTimeOdin;
     }
 
     @Override
     public void execute() {
         try {
             // Histoire de ne pas pousser une bouée qui va nous faire chier
-            rs.enablePincesAvant();
-            rs.enablePincesArriere();
+            rsOdin.enablePincesAvant();
+            rsOdin.enablePincesArriere();
 
             // Activation de la zone morte pour ne pas détecter l'autre robot
             tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(0, 400, 400, 400)); // Port SUD
@@ -91,10 +90,10 @@ public class RetourAuPort extends AbstractOdinAction {
             group.port(port);
 
             // Finalisation de la rentrée dans le port après avoir compté les points
-            if (rs.otherPort() != port) {
+            if (rsOdin.otherPort() != port) {
                 Point finalPoint = new Point(entry);
                 finalPoint.setX(150);
-                if (rs.team() == ETeam.JAUNE) {
+                if (rsOdin.team() == ETeam.JAUNE) {
                     finalPoint.setX(3000 - finalPoint.getX());
                 }
                 mv.gotoPoint(finalPoint, GotoOption.SANS_ORIENTATION);
@@ -104,7 +103,7 @@ public class RetourAuPort extends AbstractOdinAction {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
 
-            if (!rs.inPort()) {
+            if (!rsOdin.inPort()) {
                 group.port(EPort.AUCUN);
             }
         } finally {

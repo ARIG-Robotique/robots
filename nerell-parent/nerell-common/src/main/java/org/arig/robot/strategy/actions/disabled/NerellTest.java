@@ -48,10 +48,10 @@ public class NerellTest extends AbstractNerellAction {
     @Override
     public void execute() {
         try {
-            rs.disableAvoidance();
+            rsNerell.disableAvoidance();
 
             // Récupération des élements dans la pince avant
-            rs.enablePincesAvant();
+            rsNerell.enablePincesAvant();
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
             mv.gotoPoint(1200,1200, GotoOption.AVANT);
 
@@ -60,7 +60,7 @@ public class NerellTest extends AbstractNerellAction {
             mv.gotoPoint(400,1200, GotoOption.AVANT);
             pincesArriereService.preparePriseEcueil();
             mv.gotoPoint(250,1200, GotoOption.ARRIERE);
-            rs.enableCalageBordure();
+            rsNerell.enableCalageBordure();
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation(30));
             mv.reculeMMSansAngle(60);
             pincesArriereService.finalisePriseEcueil(ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU);
@@ -70,7 +70,7 @@ public class NerellTest extends AbstractNerellAction {
             mv.gotoOrientationDeg(180);
             pincesArriereService.deposePetitPort();
             mv.avanceMM(35);
-            if (!rs.pincesAvantEmpty()) {
+            if (!rsNerell.pincesAvantEmpty()) {
                 pincesAvantService.deposePetitPort();
             }
             mv.gotoPoint(800, 1200);
