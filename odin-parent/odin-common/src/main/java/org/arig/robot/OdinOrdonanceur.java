@@ -47,6 +47,19 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
     @Override
     public void beforeMatch() {
         choixStrategie();
+
+        // Optimisation d'activation des pinces
+        odinRobotStatus.enablePincesAvant();
+        odinRobotStatus.enablePincesArriere();
+
+        // Lancement d'une première lecture de couleurs pour initialiser les capteurs
+        odinIOService.enableLedCapteurCouleur();
+        ThreadUtils.sleep(IConstantesOdinConfig.WAIT_LED);
+        odinIOService.couleurBoueeAvantGauche();
+        odinIOService.couleurBoueeAvantDroit();
+        odinIOService.couleurBoueeArriereGauche();
+        odinIOService.couleurBoueeArriereDroit();
+        odinIOService.disableLedCapteurCouleur();
     }
 
     @Override
