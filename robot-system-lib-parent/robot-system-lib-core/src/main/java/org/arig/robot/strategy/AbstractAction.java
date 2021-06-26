@@ -6,6 +6,8 @@ import lombok.experimental.Accessors;
 import org.arig.robot.model.Point;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class AbstractAction implements IAction {
 
@@ -19,6 +21,10 @@ public abstract class AbstractAction implements IAction {
 
     @Getter
     private boolean completed = false;
+
+    @Getter
+    @Accessors(fluent = true)
+    public List<String> blockingActions = Collections.emptyList();
 
     public abstract Point entryPoint();
 

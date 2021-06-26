@@ -44,6 +44,7 @@ public class StrategyManager {
         Optional<IAction> nextAction = actions.stream()
                 .filter(IAction::isValid)
                 .filter(a -> !StringUtils.equals(otherCurrentAction, a.name()))
+                .filter(a -> !a.blockingActions().contains(otherCurrentAction))
                 .sorted(Comparator.comparingInt(IAction::order).reversed())
                 .findFirst();
 

@@ -1,5 +1,7 @@
 package org.arig.robot.strategy.actions.active;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
@@ -9,6 +11,9 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractOdinAction;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -23,6 +28,12 @@ public class OdinManchesAAir extends AbstractOdinAction {
     public String name() {
         return IEurobotConfig.ACTION_MANCHE_A_AIR;
     }
+
+    @Getter
+    @Accessors(fluent = true)
+    public List<String> blockingActions = Arrays.asList(
+            IEurobotConfig.ACTION_ECUEIL_EQUIPE
+    );
 
     @Override
     public Point entryPoint() {

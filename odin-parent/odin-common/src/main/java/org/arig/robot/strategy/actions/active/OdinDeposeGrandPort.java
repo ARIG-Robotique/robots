@@ -1,5 +1,7 @@
 package org.arig.robot.strategy.actions.active;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
@@ -13,6 +15,9 @@ import org.arig.robot.services.AbstractOdinPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractOdinAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -30,6 +35,13 @@ public class OdinDeposeGrandPort extends AbstractOdinAction {
     public String name() {
         return IEurobotConfig.ACTION_DEPOSE_GRAND_PORT;
     }
+
+    @Getter
+    @Accessors(fluent = true)
+    public List<String> blockingActions = Arrays.asList(
+            IEurobotConfig.ACTION_DEPOSE_GRAND_PORT_ROUGE,
+            IEurobotConfig.ACTION_DEPOSE_GRAND_PORT_VERT
+    );
 
     @Override
     public Point entryPoint() {
