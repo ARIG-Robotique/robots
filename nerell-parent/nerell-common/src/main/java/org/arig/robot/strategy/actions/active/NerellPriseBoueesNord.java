@@ -64,8 +64,8 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
                 rsNerell.enableAvoidance();
             }
 
-            double targetx = 434;
-            double targety = 1200 + 570;
+            double targetx = 436;
+            double targety = 1200 + 578;
             if (ETeam.JAUNE == rsNerell.team()) {
                 targetx = 3000 - targetx;
             }
@@ -82,10 +82,10 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
                 group.boueePrise(1, 2);
 
                 mv.gotoOrientationDeg(0);
-                mv.gotoPoint(640, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
+                mv.gotoPoint(770, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 group.boueePrise(5);
 
-                mv.gotoPoint(940, 1662, GotoOption.AVANT);
+                mv.gotoPoint(980, 1635, GotoOption.AVANT);
                 group.boueePrise(6);
 
             } else {
@@ -99,10 +99,10 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
                 group.boueePrise(13, 14);
 
                 mv.gotoOrientationDeg(180);
-                mv.gotoPoint(3000 - 640, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
+                mv.gotoPoint(3000 - 770, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 group.boueePrise(12);
 
-                mv.gotoPoint(3000 - 940, 1662, GotoOption.AVANT);
+                mv.gotoPoint(3000 - 980, 1635, GotoOption.AVANT);
                 group.boueePrise(11);
             }
 
