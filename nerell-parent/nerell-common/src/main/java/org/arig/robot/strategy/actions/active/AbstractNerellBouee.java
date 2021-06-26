@@ -68,8 +68,8 @@ public abstract class AbstractNerellBouee extends AbstractNerellAction {
             mv.pathTo(pointApproche, GotoOption.AVANT);
 
             // prise de la bouée
-            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
-            mv.gotoPoint(tableUtils.getPointFromAngle(180, offsetOrientation), GotoOption.AVANT, GotoOption.SANS_ORIENTATION);
+            mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
+            mv.gotoPoint(tableUtils.getPointFromAngle(distanceApproche, offsetOrientation), GotoOption.AVANT);
             group.boueePrise(bouee);
 
             complete();
