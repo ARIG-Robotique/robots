@@ -1,5 +1,7 @@
 package org.arig.robot.strategy;
 
+import java.util.List;
+
 /**
  * Contrat pour la définition des actions.
  *
@@ -28,6 +30,11 @@ public interface IAction {
      * @return true si cette action peut être éxécuter
      */
     boolean isValid();
+
+    /**
+     * Retourne le nom des actions de l'autre robot empechant d'executer cette action
+     */
+    List<String> blockingActions();
 
     /**
      * Renvoi l'information concernant la réalisation complète de l'action.

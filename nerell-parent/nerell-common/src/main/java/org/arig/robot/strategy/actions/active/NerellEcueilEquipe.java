@@ -1,6 +1,7 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
@@ -15,7 +16,7 @@ public class NerellEcueilEquipe extends AbstractNerellEcueil {
 
     @Override
     public String name() {
-        return "Ecueil equipe";
+        return IEurobotConfig.ACTION_ECUEIL_EQUIPE;
     }
 
     @Override
