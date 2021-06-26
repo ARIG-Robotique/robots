@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 public class NerellEcueilCommunBleu extends AbstractNerellEcueil {
 
     @Autowired
+    private NerellBouee5 bouee5;
+
+    @Autowired
     private NerellBouee6 bouee6;
 
     @Autowired
@@ -80,6 +83,9 @@ public class NerellEcueilCommunBleu extends AbstractNerellEcueil {
     public void execute() {
         if (rsNerell.strategy() != ENerellStrategy.AGGRESSIVE && bouee6.isValid()) {
             bouee6.execute();
+        }
+        if (bouee5.isValid()) {
+            bouee5.execute();
         }
         super.execute();
         if (isCompleted() && bouee7.isValid()) {

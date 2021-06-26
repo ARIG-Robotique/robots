@@ -26,13 +26,13 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
         int[] boueesAvoided = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
         for (int nb : boueesAvoided) {
             // ignore la bouée devant le petit port
-            if ((rs.team() == ETeam.BLEU && nb == 9) || (rs.team() == ETeam.JAUNE && nb == 8)) {
-                continue;
-            }
+//            if ((rs.team() == ETeam.BLEU && nb == 9) || (rs.team() == ETeam.JAUNE && nb == 8)) {
+//                continue;
+//            }
             // ignore la bouée devant l'ecueil adverse
-            if ((rs.team() == ETeam.BLEU && nb == 11) || (rs.team() == ETeam.JAUNE && nb == 6)) {
-                continue;
-            }
+//            if ((rs.team() == ETeam.BLEU && nb == 11) || (rs.team() == ETeam.JAUNE && nb == 6)) {
+//                continue;
+//            }
 
             if (rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime && rs.boueePresente(nb)) {
                 obstacles.add(tableUtils.createPolygonObstacle(rs.boueePt(nb),
