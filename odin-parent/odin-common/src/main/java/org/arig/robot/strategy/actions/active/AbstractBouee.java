@@ -5,6 +5,7 @@ import org.arig.robot.constants.IConstantesOdinConfig;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.IOdinIOService;
@@ -43,7 +44,8 @@ public abstract class AbstractBouee extends AbstractOdinAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && rs.boueePresente(bouee) && getPinceCible() != 0 && rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime;
+        return isTimeValid() && rs.boueePresente(bouee) && getPinceCible() != 0
+                && rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime;
     }
 
     @Override
@@ -56,21 +58,21 @@ public abstract class AbstractBouee extends AbstractOdinAction {
             final double distanceApproche = IEurobotConfig.pathFindingTailleBouee / 2.0 + 10;
             final double offsetPince = getOffsetPince(pinceCible);
 
-            log.info("Prise de la bouee {} {} dans la pince avant {}", bouee, rs.boueeCouleur(bouee), pinceCible);
+            GotoOption sens = rs.boueeCouleur(bouee) == ECouleurBouee.VERT ? GotoOption.AVANT : GotoOption.ARRIERE;
+            log.info("Prise de la bouee {} {} dans la pince {} {}", bouee, rs.boueeCouleur(bouee), sens.name(), pinceCible);
 
             final Point entry = entryPoint();
 
-            // point d'approche quelque part autour de la bouée
-            // FIXME : si on fait le tour à cause d'un évittement ça fout tout en vrac
+            // Point d'approche quelque part autour de la bouée
             final Point pointApproche = tableUtils.eloigner(entry, -distanceApproche);
             final double offsetOrientation = Math.toDegrees(Math.sin(offsetPince / distanceApproche));
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            mv.pathTo(pointApproche, GotoOption.AVANT);
+            mv.pathTo(pointApproche, sens);
 
             // prise de la bouée
             mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
-            mv.gotoPoint(tableUtils.getPointFromAngle(180, offsetOrientation), GotoOption.AVANT, GotoOption.SANS_ORIENTATION);
+            mv.gotoPoint(tableUtils.getPointFromAngle(180, offsetOrientation), sens, GotoOption.SANS_ORIENTATION);
             group.boueePrise(bouee);
 
             complete();
@@ -81,11 +83,21 @@ public abstract class AbstractBouee extends AbstractOdinAction {
     }
 
     private int getPinceCible() {
-        if (!io.presenceVentouseAvantGauche()) {
-            return 1;
+        if (rs.boueeCouleur(bouee) == ECouleurBouee.VERT){
+            if (!io.presenceVentouseAvantGauche()) {
+                return 1;
+            }
+            if (!io.presenceVentouseAvantDroit()) {
+                return 2;
+            }
         }
-        if (!io.presenceVentouseAvantDroit()) {
-            return 2;
+        if (rs.boueeCouleur(bouee) == ECouleurBouee.ROUGE) {
+            if (!io.presenceVentouseArriereGauche()) {
+                return 1;
+            }
+            if (!io.presenceVentouseArriereDroit()) {
+                return 2;
+            }
         }
         return 0;
     }

@@ -60,8 +60,7 @@ public abstract class AbstractBouee extends AbstractNerellAction {
 
             final Point entry = entryPoint();
 
-            // point d'approche quelque part autour de la bouée
-            // FIXME : si on fait le tour à cause d'un évittement ça fout tout en vrac
+            // Point d'approche quelque part autour de la bouée
             final Point pointApproche = tableUtils.eloigner(entry, -distanceApproche);
             final double offsetOrientation = Math.toDegrees(Math.sin(offsetPince / distanceApproche));
 
