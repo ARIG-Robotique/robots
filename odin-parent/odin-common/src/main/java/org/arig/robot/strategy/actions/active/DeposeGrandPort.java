@@ -68,7 +68,7 @@ public class DeposeGrandPort extends AbstractOdinAction {
     public void execute() {
         try {
             final Point entry = entryPoint();
-            final Point entry2 = new Point(computeX(entry.getX(), !rs.pincesAvantEmpty()), entry.getY());
+            final Point entry2 = new Point(computeX(entry.getX()), entry.getY());
 
             rsOdin.enablePincesAvant();
             rsOdin.enablePincesArriere();
@@ -97,7 +97,7 @@ public class DeposeGrandPort extends AbstractOdinAction {
                 }
 
                 if (!rsOdin.pincesArriereEmpty()) {
-                    final Point entry3 = new Point(computeX(entry.getX(), false), entry.getY());
+                    final Point entry3 = new Point(computeX(entry.getX()), entry.getY());
                     mv.gotoPoint(entry3, GotoOption.SANS_ORIENTATION);
                     if (rsOdin.team() == ETeam.BLEU) {
                         mv.gotoOrientationDeg(0);
@@ -126,8 +126,8 @@ public class DeposeGrandPort extends AbstractOdinAction {
         }
     }
 
-    private double computeX(double baseX, boolean avant) {
-        int coef = step * 120 + (avant ? 0 : 60); // FIXME nouvelle face avant
+    private double computeX(double baseX) {
+        int coef = step * 120;
 
         if (rsOdin.team() == ETeam.JAUNE) {
             return baseX - coef;
