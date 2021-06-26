@@ -33,12 +33,16 @@ public interface IOdinIOService extends IIOService {
     void disableAllPompe();
 
     void enableAllPompe();
+    void enablePompesAvant();
+    void enablePompesArriere();
     void enablePompeAvantGauche();
     void enablePompeAvantDroit();
     void enablePompeArriereGauche();
     void enablePompeArriereDroit();
 
     void releaseAllPompe();
+    void releasePompesAvant();
+    void releasePompesArriere();
     void releasePompeAvantGauche();
     void releasePompeAvantDroit();
     void releasePompeArriereGauche();

@@ -311,6 +311,16 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
     }
 
     @Override
+    public void enablePompesAvant() {
+        vacuumController.on(2, 3);
+    }
+
+    @Override
+    public void enablePompesArriere() {
+        vacuumController.on(1, 4);
+    }
+
+    @Override
     public void enablePompeAvantGauche() {
         vacuumController.on(2);
     }
@@ -333,6 +343,16 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
     @Override
     public void releaseAllPompe() {
         vacuumController.offAll();
+    }
+
+    @Override
+    public void releasePompesAvant() {
+        vacuumController.off(2, 3);
+    }
+
+    @Override
+    public void releasePompesArriere() {
+        vacuumController.off(1, 4);
     }
 
     @Override

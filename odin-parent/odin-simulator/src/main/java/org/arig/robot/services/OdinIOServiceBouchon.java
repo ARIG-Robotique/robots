@@ -63,6 +63,14 @@ public class OdinIOServiceBouchon extends AbstractIOServiceBouchon implements IO
     }
 
     @Override
+    public void enablePompesAvant() {
+    }
+
+    @Override
+    public void enablePompesArriere() {
+    }
+
+    @Override
     public void enablePompeAvantGauche() {
     }
 
@@ -80,6 +88,14 @@ public class OdinIOServiceBouchon extends AbstractIOServiceBouchon implements IO
 
     @Override
     public void releaseAllPompe() {
+    }
+
+    @Override
+    public void releasePompesAvant() {
+    }
+
+    @Override
+    public void releasePompesArriere() {
     }
 
     @Override

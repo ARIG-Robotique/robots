@@ -71,46 +71,28 @@ public abstract class AbstractARIGVacuumController {
      * Etat de haute impédance pour l'electrovanne et la pome à vide.
      *
      * La lecture des IO (ADC, TOR) est inactive.
-     * @param pompeNb Numéro de pompe a piloter
+     * @param pompesNb Numéro de pompe a piloter
      */
-    public void disable(int pompeNb) {
-        if (checkPompe(pompeNb)) {
-            log.info("Désactivation de la pompe {}", pompeNb);
-            if (states[pompeNb - 1] != VacuumPumpState.DISABLED) {
-                states[pompeNb - 1] = VacuumPumpState.DISABLED;
-                sendToController();
-            }
-        }
+    public void disable(int ... pompesNb) {
+        changeState(VacuumPumpState.DISABLED, pompesNb);
     }
 
     /**
      * La gestion du vide pour le circuit `pompeNb` est actif. Le capteur TOR déclenche la prise.
      * La conversion analogique / numérique est en marche et l'état de présence sera calculé.
-     * @param pompeNb Numéro de pompe a piloter
+     * @param pompesNb Numéro de pompe a piloter
      */
-    public void on(int pompeNb) {
-        if (checkPompe(pompeNb)) {
-            log.info("Activation de la pompe {}", pompeNb);
-            if (states[pompeNb - 1] != VacuumPumpState.ON) {
-                states[pompeNb - 1] = VacuumPumpState.ON;
-                sendToController();
-            }
-        }
+    public void on(int ... pompesNb) {
+        changeState(VacuumPumpState.ON, pompesNb);
     }
 
     /**
      * La gestion du vide pour le circuit `pompeNb` est inactif.
      * Lors du changement d'état vers ce mode l'électrovanne est ouverte afin d'injecter de l'air dans le circuit.
-     * @param pompeNb Numéro de pompe a piloter
+     * @param pompesNb Numéro de pompe a piloter
      */
-    public void off(int pompeNb) {
-        if (checkPompe(pompeNb)) {
-            log.info("Désactivation de la pompe {}", pompeNb);
-            if (states[pompeNb - 1] != VacuumPumpState.OFF) {
-                states[pompeNb - 1] = VacuumPumpState.OFF;
-                sendToController();
-            }
-        }
+    public void off(int ... pompesNb) {
+        changeState(VacuumPumpState.OFF, pompesNb);
     }
 
     public abstract void printVersion();
@@ -127,4 +109,20 @@ public abstract class AbstractARIGVacuumController {
         return result;
     }
 
+    private void changeState(VacuumPumpState newState, int ... pompesNb) {
+        boolean hasChanged = false;
+        for (int pompeNb : pompesNb) {
+            if (checkPompe(pompeNb)) {
+                log.info("Modification de la pompe {} -> {}", pompeNb, newState.name());
+                if (states[pompeNb - 1] != newState) {
+                    states[pompeNb - 1] = newState;
+                    hasChanged = true;
+                }
+            }
+        }
+
+        if (hasChanged) {
+            sendToController();
+        }
+    }
 }

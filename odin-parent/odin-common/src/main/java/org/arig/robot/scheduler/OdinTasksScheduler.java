@@ -5,6 +5,7 @@ import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.services.AbstractOdinPincesArriereService;
 import org.arig.robot.services.AbstractOdinPincesAvantService;
 import org.arig.robot.services.OdinEcranService;
 import org.arig.robot.system.avoiding.IAvoidingService;
@@ -41,9 +42,13 @@ public class OdinTasksScheduler {
     private AbstractOdinPincesAvantService pincesAvant;
 
     @Autowired
+    private AbstractOdinPincesArriereService pincesArriere;
+
+    @Autowired
     private AbstractARIGVacuumController vacuumController;
 
     private final SignalEdgeFilter risingEnablePincesAvant = new SignalEdgeFilter(false, Type.RISING);
+    private final SignalEdgeFilter risingEnablePincesArriere = new SignalEdgeFilter(false, Type.RISING);
 
     @Scheduled(fixedRate = 1000)
     public void ecranTask() {
@@ -79,17 +84,29 @@ public class OdinTasksScheduler {
 //    }
 
     @Scheduled(fixedDelay = 200)
-    public void pincesAvantTask() {
-        boolean pincesEnabled = rs.pincesAvantEnabled();
+    public void pincesTask() {
+        boolean pincesAvantEnabled = rs.pincesAvantEnabled();
+        boolean pincesArriereEnabled = rs.pincesArriereEnabled();
 
-        if (Boolean.TRUE.equals(risingEnablePincesAvant.filter(pincesEnabled))) {
+        if (Boolean.TRUE.equals(risingEnablePincesAvant.filter(pincesAvantEnabled))) {
             pincesAvant.activate();
         }
+        if (Boolean.TRUE.equals(risingEnablePincesArriere.filter(pincesArriereEnabled))) {
+            pincesArriere.activate();
+        }
 
-        if (pincesEnabled) {
+        if (pincesAvantEnabled || pincesArriereEnabled) {
             vacuumController.readAllValues();
-            if(pincesAvant.processBouee()) {
-                pincesAvant.processCouleurBouee();
+
+            if (pincesAvantEnabled) {
+                if(pincesAvant.processBouee()) {
+                    pincesAvant.processCouleurBouee();
+                }
+            }
+            if (pincesArriereEnabled) {
+                if(pincesArriere.processBouee()) {
+                    pincesArriere.processCouleurBouee();
+                }
             }
         }
     }

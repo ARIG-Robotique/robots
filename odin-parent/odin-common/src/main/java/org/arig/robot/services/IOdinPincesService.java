@@ -1,6 +1,6 @@
 package org.arig.robot.services;
 
-public interface IOdinPincesAvantService {
+public interface IOdinPincesService {
     void deposeGrandPort();
 
     void activate();
