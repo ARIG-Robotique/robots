@@ -71,8 +71,14 @@ public abstract class AbstractBouee extends AbstractOdinAction {
             mv.pathTo(pointApproche, sens);
 
             // prise de la bouée
-            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
-            mv.gotoPoint(tableUtils.getPointFromAngle(180, offsetOrientation), sens, GotoOption.SANS_ORIENTATION);
+            final Point pointPrise;
+            if (sens == GotoOption.AVANT) {
+                pointPrise = tableUtils.getPointFromAngle(220, offsetOrientation);
+            } else {
+                pointPrise = tableUtils.getPointFromAngle(220, offsetOrientation - 180);
+            }
+            mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
+            mv.gotoPoint(pointPrise, sens, GotoOption.SANS_ORIENTATION);
             group.boueePrise(bouee);
 
             complete();
@@ -93,16 +99,16 @@ public abstract class AbstractBouee extends AbstractOdinAction {
         }
         if (rsOdin.boueeCouleur(bouee) == ECouleurBouee.ROUGE) {
             if (!io.presenceVentouseArriereGauche()) {
-                return 1;
+                return 2;
             }
             if (!io.presenceVentouseArriereDroit()) {
-                return 2;
+                return 1;
             }
         }
         return 0;
     }
 
     private double getOffsetPince(int pinceCible) {
-        return IConstantesOdinConfig.dstDeposeAvantX[pinceCible - 1];
+        return IConstantesOdinConfig.dstDeposeX[pinceCible - 1];
     }
 }
