@@ -34,12 +34,12 @@ public abstract class AbstractRobotStatus {
     private boolean mainThread = false;
 
     public void enableMainThread() {
-        log.warn("Activation du monitoring en dehors du match");
+        log.info("Activation du thread principal de gestion de tâche");
         mainThread = true;
     }
 
     public void disableMainThread() {
-        log.warn("Desactivation du monitoring en dehors du match");
+        log.info("Desactivation du thread principal de gestion de tâche");
         mainThread = false;
     }
 
