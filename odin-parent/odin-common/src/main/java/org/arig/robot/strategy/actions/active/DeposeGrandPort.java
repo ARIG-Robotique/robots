@@ -8,7 +8,9 @@ import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.services.IOdinPincesAvantService;
+import org.arig.robot.services.AbstractOdinPincesArriereService;
+import org.arig.robot.services.AbstractOdinPincesAvantService;
+import org.arig.robot.services.IOdinPincesService;
 import org.arig.robot.strategy.actions.AbstractOdinAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +20,10 @@ import org.springframework.stereotype.Component;
 public class DeposeGrandPort extends AbstractOdinAction {
 
     @Autowired
-    private IOdinPincesAvantService pincesAvantService;
+    private AbstractOdinPincesAvantService pincesAvantService;
+
+    @Autowired
+    private AbstractOdinPincesArriereService pincesArriereService;
 
     private int step = 0;
 
@@ -66,6 +71,7 @@ public class DeposeGrandPort extends AbstractOdinAction {
             final Point entry2 = new Point(computeX(entry.getX(), !rs.pincesAvantEmpty()), entry.getY());
 
             rs.enablePincesAvant();
+            rs.enablePincesArriere();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             if (tableUtils.distance(entry2) > 200) {
@@ -88,8 +94,7 @@ public class DeposeGrandPort extends AbstractOdinAction {
                     pincesAvantService.deposeGrandPort();
                     step++;
                 }
-                /* TODO dépose arriere */
-                /*
+
                 if (!rs.pincesArriereEmpty()) {
                     final Point entry3 = new Point(computeX(entry.getX(), false), entry.getY());
                     mv.gotoPoint(entry3, GotoOption.SANS_ORIENTATION);
@@ -101,7 +106,6 @@ public class DeposeGrandPort extends AbstractOdinAction {
                     pincesArriereService.deposeGrandPort();
                     step++;
                 }
-                */
 
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
                 if (rs.team() == ETeam.BLEU) {
