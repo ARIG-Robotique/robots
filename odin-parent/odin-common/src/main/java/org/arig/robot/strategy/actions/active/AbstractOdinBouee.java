@@ -88,7 +88,7 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
         }
     }
 
-    private int getPinceCible() {
+    protected int getPinceCible() {
         if (rsOdin.boueeCouleur(bouee) == ECouleurBouee.VERT){
             if (!io.presenceVentouseAvantGauche()) {
                 return 1;
@@ -108,7 +108,7 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
         return 0;
     }
 
-    private double getOffsetPince(int pinceCible) {
+    protected double getOffsetPince(int pinceCible) {
         return IConstantesOdinConfig.dstDeposeX[pinceCible - 1];
     }
 }

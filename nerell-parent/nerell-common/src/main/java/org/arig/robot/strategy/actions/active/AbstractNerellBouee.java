@@ -79,7 +79,7 @@ public abstract class AbstractNerellBouee extends AbstractNerellAction {
         }
     }
 
-    private int getPinceCible() {
+    protected int getPinceCible() {
         if (rsNerell.boueeCouleur(bouee) == ECouleurBouee.ROUGE) {
             if (!io.presenceVentouse2()) {
                 return 2;
@@ -98,7 +98,7 @@ public abstract class AbstractNerellBouee extends AbstractNerellAction {
         return 0;
     }
 
-    private double getOffsetPince(int pinceCible) {
+    protected double getOffsetPince(int pinceCible) {
         return IConstantesNerellConfig.dstDeposeAvantX[pinceCible - 1];
     }
 }
