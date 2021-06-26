@@ -5,6 +5,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.GrandChenaux;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ThreadUtils;
@@ -42,18 +43,21 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
         servosService.ascenseursAvantBas(true);
 
         if (partielle) {
+            ECouleurBouee[] boueesPosees = new ECouleurBouee[]{null, null, null, null};
             for (int i = 0; i < 4; i++) {
                 final ECouleurBouee couleurPince = rs.pincesAvant()[i];
                 if (couleurPince == couleurChenal || couleurPince == ECouleurBouee.INCONNU) {
                     releasePompe(i);
 
-                    if (couleurChenal == ECouleurBouee.ROUGE) {
-                        group.deposeGrandChenalRouge(couleurPince);
-                    } else {
-                        group.deposeGrandChenalVert(couleurPince);
-                    }
+                    boueesPosees[i] = couleurChenal;
                     rs.pinceAvant(i, null);
                 }
+            }
+
+            if (couleurChenal == ECouleurBouee.ROUGE) {
+                group.deposeGrandChenalRouge(GrandChenaux.Line.B, boueesPosees);
+            } else {
+                group.deposeGrandChenalVert(GrandChenaux.Line.B, boueesPosees);
             }
 
             ThreadUtils.sleep(IConstantesNerellConfig.WAIT_POMPES);
@@ -63,12 +67,14 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
             ThreadUtils.sleep(IConstantesNerellConfig.WAIT_POMPES);
 
             if (couleurChenal == ECouleurBouee.ROUGE) {
-                group.deposeGrandChenalRouge(rs.pincesAvant());
+                group.deposeGrandChenalRouge(GrandChenaux.Line.B, rs.pincesAvant());
             } else {
-                group.deposeGrandChenalVert(rs.pincesAvant());
+                group.deposeGrandChenalVert(GrandChenaux.Line.B, rs.pincesAvant());
             }
             rs.clearPincesAvant();
         }
+
+        ThreadUtils.sleep(IConstantesNerellConfig.WAIT_POMPES);
 
         pathFinder.setObstacles(new ArrayList<>());
 

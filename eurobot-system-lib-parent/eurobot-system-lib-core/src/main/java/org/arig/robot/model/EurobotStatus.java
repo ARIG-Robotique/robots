@@ -162,12 +162,12 @@ public class EurobotStatus extends AbstractRobotStatus {
         return grandChenaux.chenalRougeEmpty();
     }
 
-    public void deposeGrandChenalVert(ECouleurBouee... bouees) {
-        grandChenaux.addVert(bouees);
+    public void deposeGrandChenalVert(GrandChenaux.Line line, ECouleurBouee... bouees) {
+        grandChenaux.addVert(line, bouees);
     }
 
-    public void deposeGrandChenalRouge(ECouleurBouee... bouees) {
-        grandChenaux.addRouge(bouees);
+    public void deposeGrandChenalRouge(GrandChenaux.Line line, ECouleurBouee... bouees) {
+        grandChenaux.addRouge(line, bouees);
     }
 
     public Chenaux cloneGrandChenaux() {

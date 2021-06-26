@@ -3,6 +3,7 @@ package org.arig.robot.model;
 import java.util.function.Predicate;
 
 public enum ECouleurBouee {
+    NULL,
     ROUGE,
     VERT,
     INCONNU;

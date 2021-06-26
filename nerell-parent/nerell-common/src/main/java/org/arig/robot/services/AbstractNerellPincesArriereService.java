@@ -3,6 +3,7 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesServosNerell;
 import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.GrandChenaux;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,25 +73,28 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
         if (partielle) {
             deposeTable(couleurChenal);
 
-            for (int i = 0; i < rs.pincesArriere().length; i++) {
+            ECouleurBouee[] boueesPosees = new ECouleurBouee[]{null, null, null, null, null};
+            for (int i = 0; i < 5; i++) {
                 final ECouleurBouee couleurPince = rs.pincesArriere()[i];
                 if (couleurPince == couleurChenal || couleurPince == ECouleurBouee.INCONNU) {
-                    if (couleurChenal == ECouleurBouee.ROUGE) {
-                        group.deposeGrandChenalRouge(couleurPince);
-                    } else {
-                        group.deposeGrandChenalVert(couleurPince);
-                    }
+                    boueesPosees[i] = couleurPince;
                     rs.pinceArriere(i, null);
                 }
+            }
+
+            if (couleurChenal == ECouleurBouee.ROUGE) {
+                group.deposeGrandChenalRouge(GrandChenaux.Line.A, boueesPosees);
+            } else {
+                group.deposeGrandChenalVert(GrandChenaux.Line.A, boueesPosees);
             }
 
         } else {
             deposeTable(null);
 
             if (couleurChenal == ECouleurBouee.ROUGE) {
-                group.deposeGrandChenalRouge(rs.pincesArriere());
+                group.deposeGrandChenalRouge(GrandChenaux.Line.A, rs.pincesArriere());
             } else {
-                group.deposeGrandChenalVert(rs.pincesArriere());
+                group.deposeGrandChenalVert(GrandChenaux.Line.A, rs.pincesArriere());
             }
             rs.clearPincesArriere();
         }
