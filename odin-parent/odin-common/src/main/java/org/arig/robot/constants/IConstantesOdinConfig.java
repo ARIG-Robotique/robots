@@ -143,5 +143,5 @@ public interface IConstantesOdinConfig {
     // ----------------- //
 
     int WAIT_LED = 200;
-    int WAIT_EXPIRATION = 300;
+    int WAIT_POMPES = 300;
 }

@@ -35,7 +35,7 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
         disableServicePinces();
 
         releasePompes();
-        ThreadUtils.sleep(IConstantesOdinConfig.WAIT_EXPIRATION);
+        ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
 
         group.deposeGrandPort(bouees());
         clearPinces();
