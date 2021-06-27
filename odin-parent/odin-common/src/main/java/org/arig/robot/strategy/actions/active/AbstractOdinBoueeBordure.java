@@ -5,7 +5,6 @@ import org.arig.robot.constants.IConstantesOdinConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.IOdinIOService;
@@ -40,7 +39,7 @@ public abstract class AbstractOdinBoueeBordure extends AbstractOdinBouee {
 
             final Point boueePt = entryPoint();
             final double decallageX = offsetPince * (sens == GotoOption.AVANT ? -1 : 1);
-            final Point entry = new Point( boueePt.getX() + decallageX,1600);
+            final Point entry = new Point( boueePt.getX() + decallageX,1690);
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             Point beforeEntry = beforeEntry();
             if (beforeEntry != null) {
@@ -54,7 +53,7 @@ public abstract class AbstractOdinBoueeBordure extends AbstractOdinBouee {
             mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation());
             mv.gotoPoint(entry.getX(), 1830, sens);
             group.boueePrise(bouee);
-            ThreadUtils.sleep(IConstantesOdinConfig.WAIT_EXPIRATION);
+            ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
             if (sens == GotoOption.AVANT) {
                 mv.reculeMM(100);
             } else {

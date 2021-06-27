@@ -52,11 +52,11 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
                 }
             }
 
-            ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
+            ThreadUtils.sleep(IConstantesNerellConfig.WAIT_POMPES);
 
         } else {
             io.releaseAllPompes();
-            ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
+            ThreadUtils.sleep(IConstantesNerellConfig.WAIT_POMPES);
 
             if (couleurChenal == ECouleurBouee.ROUGE) {
                 group.deposeGrandChenalRouge(rs.pincesAvant());
@@ -77,7 +77,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
 
         servosService.ascenseursAvantBas(true);
         io.releaseAllPompes();
-        ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
+        ThreadUtils.sleep(IConstantesNerellConfig.WAIT_POMPES);
 
         group.deposePetitChenalRouge(ArrayUtils.subarray(rs.pincesAvant(), 0, 2));
         group.deposePetitChenalVert(ArrayUtils.subarray(rs.pincesAvant(), 2, 4));
@@ -92,7 +92,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
 
         servosService.ascenseursAvantBas(true);
         io.releaseAllPompes();
-        ThreadUtils.sleep(IConstantesNerellConfig.WAIT_EXPIRATION);
+        ThreadUtils.sleep(IConstantesNerellConfig.WAIT_POMPES);
 
         group.deposeGrandPort(rs.pincesAvant());
         rs.clearPincesAvant();
