@@ -36,7 +36,7 @@ public abstract class AbstractNerellDeposeGrandPortChenal extends AbstractNerell
 
     @Override
     public Point entryPoint() {
-        double x = 225;
+        double x = 270;
         double y = 1200;
         if (ETeam.JAUNE == rsNerell.team()) {
             x = 3000 - x;
