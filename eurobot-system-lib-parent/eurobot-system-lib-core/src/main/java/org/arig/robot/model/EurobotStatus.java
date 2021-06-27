@@ -126,6 +126,7 @@ public class EurobotStatus extends AbstractRobotStatus {
     private boolean mancheAAir2 = false;
     private boolean phare = false;
     private boolean pavillon = false;
+    private boolean pavillonSelf = false;
     private EPort port = EPort.AUCUN;
     private EPort otherPort = EPort.AUCUN;
 

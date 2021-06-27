@@ -87,10 +87,11 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     public void inMatch() {
         // Déclenchement du pavillon
         if (robotStatus.getRemainingTime() <= IEurobotConfig.pavillonRemainingTimeMs
-                && !nerellRobotStatus.pavillon() && ioService.auOk()) {
+                && !nerellRobotStatus.pavillonSelf() && ioService.auOk()) {
             log.info("Activation du pavillon");
             nerellServosService.pavillonHaut();
             groupService.pavillon();
+            nerellRobotStatus.pavillonSelf(true);
         }
     }
 

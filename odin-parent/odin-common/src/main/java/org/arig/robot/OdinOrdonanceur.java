@@ -76,10 +76,11 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
     public void inMatch() {
         // Déclenchement du pavillon
         if (robotStatus.getRemainingTime() <= IEurobotConfig.pavillonRemainingTimeMs
-                && !odinRobotStatus.pavillon() && ioService.auOk()) {
+                && !odinRobotStatus.pavillonSelf() && ioService.auOk()) {
             log.info("Activation du pavillon");
             odinServosService.pavillonHaut();
             groupService.pavillon();
+            odinRobotStatus.pavillonSelf(true);
         }
     }
 
