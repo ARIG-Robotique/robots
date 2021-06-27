@@ -9,6 +9,7 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
+import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.strategy.actions.AbstractOdinAction;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +23,7 @@ public class OdinManchesAAir extends AbstractOdinAction {
 
     private final int xManche1 = 170;
     private final int xManche2 = 500;
-    private final int xFinManche2 = 760;
-    private final int xEndAction = 720;
+    private final int xFinManche2 = 680;
 
     @Override
     public String name() {
@@ -44,7 +44,7 @@ public class OdinManchesAAir extends AbstractOdinAction {
     @Override
     public Point entryPoint() {
         double x = !rsOdin.mancheAAir1() ? xManche1 : xManche2;
-        double y = 170;
+        double y = 160;
         if (ETeam.JAUNE == rsOdin.team()) {
             x = 3000 - x;
         }
@@ -79,11 +79,14 @@ public class OdinManchesAAir extends AbstractOdinAction {
             mv.pathTo(entry);
 
             final double angleRobot = conv.pulseToDeg(position.getAngle());
+            final boolean brasDroit;
             if (Math.abs(angleRobot) <= 90) {
+                brasDroit = true;
                 mv.gotoOrientationDegSansDistance(0);
                 // On active avec le bras droit
                 servosOdin.brasDroitMancheAAir(true);
             } else {
+                brasDroit = false;
                 mv.gotoOrientationDegSansDistance(180);
                 // On active avec le bras gauche
                 servosOdin.brasGaucheMancheAAir(true);
@@ -103,19 +106,18 @@ public class OdinManchesAAir extends AbstractOdinAction {
             if (!rsOdin.mancheAAir2()) {
                 if (rsOdin.team() == ETeam.BLEU) {
                     mv.gotoPoint(xFinManche2, y, GotoOption.SANS_ORIENTATION);
+                    // Fait en avant 90, -90 sinon
+                    mv.gotoOrientationDeg(brasDroit ? 90 : -90, SensRotation.TRIGO);
                 } else {
                     mv.gotoPoint(3000 - xFinManche2, y, GotoOption.SANS_ORIENTATION);
+                    // Fait en avant -90, 90 sinon
+                    mv.gotoOrientationDeg(!brasDroit ? 90 : -90, SensRotation.HORAIRE);
                 }
+
                 group.mancheAAir2();
 
                 servosOdin.brasDroitFerme(false);
                 servosOdin.brasGaucheFerme(false);
-
-                if (rsOdin.team() == ETeam.BLEU) {
-                    mv.gotoPoint(xEndAction, y, GotoOption.SANS_ORIENTATION);
-                } else {
-                    mv.gotoPoint(3000 - xEndAction, y, GotoOption.SANS_ORIENTATION);
-                }
             }
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
