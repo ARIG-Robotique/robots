@@ -25,7 +25,8 @@ public class NerellDeposeGrandPortChenalVert extends AbstractNerellDeposeGrandPo
     @Accessors(fluent = true)
     public List<String> blockingActions = Arrays.asList(
             IEurobotConfig.ACTION_DEPOSE_GRAND_PORT,
-            IEurobotConfig.ACTION_DEPOSE_GRAND_PORT_ROUGE
+            IEurobotConfig.ACTION_DEPOSE_GRAND_PORT_ROUGE,
+            IEurobotConfig.ACTION_NETTOYAGE_GRAND_PORT
     );
 
     @Override

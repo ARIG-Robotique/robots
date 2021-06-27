@@ -1,5 +1,7 @@
 package org.arig.robot.strategy.actions.active;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.arig.robot.constants.IEurobotConfig;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -43,6 +46,12 @@ public class DeposePetitPort extends AbstractNerellAction {
     public String name() {
         return IEurobotConfig.ACTION_DEPOSE_PETIT_PORT;
     }
+
+    @Getter
+    @Accessors(fluent = true)
+    public List<String> blockingActions = Arrays.asList(
+            IEurobotConfig.ACTION_NETTOYAGE_PETIT_PORT
+    );
 
     @Override
     public Point entryPoint() {
