@@ -1,5 +1,7 @@
 package org.arig.robot.constants;
 
+import java.awt.*;
+
 public interface IEurobotConfig {
 
     // Durée du match //
@@ -41,5 +43,10 @@ public interface IEurobotConfig {
     String ACTION_RETOUR_AU_PORT_PREFIX = "Retour au port ";
     String ACTION_ANTIBLOCAGE_PORT = "Antiblocage port";
     String ACTION_ECUEIL_EQUIPE = "Ecueil equipe";
+
+    Rectangle ZONE_GRAND_PORT_BLEU = new Rectangle(0, 850, 600, 700);
+    Rectangle ZONE_GRAND_PORT_JAUNE = new Rectangle(2400, 850, 600, 700);
+    Rectangle ZONE_ECUEIL_EQUIPE_BLEU = new Rectangle(0, 0, 800, 500);
+    Rectangle ZONE_ECUEIL_EQUIPE_JAUNE = new Rectangle(2200, 0, 800, 500);
 
 }

@@ -12,6 +12,7 @@ import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractOdinAction;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,6 +35,11 @@ public class OdinManchesAAir extends AbstractOdinAction {
     public List<String> blockingActions = Arrays.asList(
             IEurobotConfig.ACTION_ECUEIL_EQUIPE
     );
+
+    @Override
+    public Rectangle blockingZone() {
+        return rsOdin.team() == ETeam.BLEU ? IEurobotConfig.ZONE_ECUEIL_EQUIPE_BLEU : IEurobotConfig.ZONE_ECUEIL_EQUIPE_JAUNE;
+    }
 
     @Override
     public Point entryPoint() {

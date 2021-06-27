@@ -1,5 +1,6 @@
 package org.arig.robot.strategy;
 
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -35,6 +36,8 @@ public interface IAction {
      * Retourne le nom des actions de l'autre robot empechant d'executer cette action
      */
     List<String> blockingActions();
+
+    Rectangle blockingZone();
 
     /**
      * Renvoi l'information concernant la réalisation complète de l'action.

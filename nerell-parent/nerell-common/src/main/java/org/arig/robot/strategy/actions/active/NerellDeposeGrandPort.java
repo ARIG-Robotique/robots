@@ -16,6 +16,7 @@ import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,6 +43,11 @@ public class NerellDeposeGrandPort extends AbstractNerellAction {
             IEurobotConfig.ACTION_DEPOSE_GRAND_PORT_ROUGE,
             IEurobotConfig.ACTION_DEPOSE_GRAND_PORT_VERT
     );
+
+    @Override
+    public Rectangle blockingZone() {
+        return rsNerell.team() == ETeam.BLEU ? IEurobotConfig.ZONE_GRAND_PORT_BLEU : IEurobotConfig.ZONE_GRAND_PORT_JAUNE;
+    }
 
     @Override
     public Point entryPoint() {

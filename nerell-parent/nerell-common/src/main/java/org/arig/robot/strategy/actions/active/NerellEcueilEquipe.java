@@ -1,11 +1,17 @@
 package org.arig.robot.strategy.actions.active;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.springframework.stereotype.Component;
+
+import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -17,6 +23,17 @@ public class NerellEcueilEquipe extends AbstractNerellEcueil {
     @Override
     public String name() {
         return IEurobotConfig.ACTION_ECUEIL_EQUIPE;
+    }
+
+    @Getter
+    @Accessors(fluent = true)
+    public List<String> blockingActions = Arrays.asList(
+            IEurobotConfig.ACTION_MANCHE_A_AIR
+    );
+
+    @Override
+    public Rectangle blockingZone() {
+        return rsNerell.team() == ETeam.BLEU ? IEurobotConfig.ZONE_ECUEIL_EQUIPE_BLEU : IEurobotConfig.ZONE_ECUEIL_EQUIPE_JAUNE;
     }
 
     @Override
