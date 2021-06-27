@@ -54,12 +54,14 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
             rsOdin.enablePincesAvant();
             rsOdin.enablePincesArriere();
 
+            final GotoOption sens = rsOdin.boueeCouleur(bouee) == ECouleurBouee.VERT ? GotoOption.AVANT : GotoOption.ARRIERE;
+
             final int pinceCible = getPinceCible();
             final double offsetPince = getOffsetPince(pinceCible);
             final double distanceApproche = IEurobotConfig.pathFindingTailleBouee / 2.0 + 10;
 
-            GotoOption sens = rsOdin.boueeCouleur(bouee) == ECouleurBouee.VERT ? GotoOption.AVANT : GotoOption.ARRIERE;
-            log.info("Prise de la bouee {} {} dans la pince {} {}", bouee, rsOdin.boueeCouleur(bouee), sens.name(), pinceCible);
+            log.info("Prise de la bouee {} {} dans la pince {} {}",
+                    bouee, rsOdin.boueeCouleur(bouee), sens.name(), pinceCible);
 
             final Point entry = entryPoint();
 
@@ -72,13 +74,14 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
 
             // prise de la bouée
             final Point pointPrise;
-            if (sens == GotoOption.AVANT) {
-                pointPrise = tableUtils.getPointFromAngle(220, offsetOrientation);
+            if (sens == GotoOption.ARRIERE) {
+                // Prise avec la face arrière, donc en mode mirroir
+                pointPrise = tableUtils.getPointFromAngle(-distanceApproche, -offsetOrientation);
             } else {
-                pointPrise = tableUtils.getPointFromAngle(220, offsetOrientation - 180);
+                pointPrise = tableUtils.getPointFromAngle(distanceApproche, offsetOrientation);
             }
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
-            mv.gotoPoint(pointPrise, sens, GotoOption.SANS_ORIENTATION);
+            mv.gotoPoint(pointPrise, sens);
             group.boueePrise(bouee);
 
             complete();
@@ -99,10 +102,10 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
         }
         if (rsOdin.boueeCouleur(bouee) == ECouleurBouee.ROUGE) {
             if (!io.presenceVentouseArriereGauche()) {
-                return 2;
+                return 1;
             }
             if (!io.presenceVentouseArriereDroit()) {
-                return 1;
+                return 2;
             }
         }
         return 0;
