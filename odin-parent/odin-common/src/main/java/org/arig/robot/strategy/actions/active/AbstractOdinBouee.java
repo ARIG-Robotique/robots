@@ -10,6 +10,7 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.IOdinIOService;
 import org.arig.robot.strategy.actions.AbstractOdinAction;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
@@ -76,12 +77,13 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
             final Point pointPrise;
             if (sens == GotoOption.ARRIERE) {
                 // Prise avec la face arrière, donc en mode mirroir
-                pointPrise = tableUtils.getPointFromAngle(-distanceApproche, -offsetOrientation);
+                pointPrise = tableUtils.getPointFromAngle(-distanceApproche + 70, -offsetOrientation);
             } else {
-                pointPrise = tableUtils.getPointFromAngle(distanceApproche, offsetOrientation);
+                pointPrise = tableUtils.getPointFromAngle(distanceApproche + 70, offsetOrientation);
             }
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
             mv.gotoPoint(pointPrise, sens);
+            ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
             group.boueePrise(bouee);
 
             complete();
