@@ -43,6 +43,8 @@ public interface IEurobotConfig {
     String ACTION_RETOUR_AU_PORT_PREFIX = "Retour au port ";
     String ACTION_ANTIBLOCAGE_PORT = "Antiblocage port";
     String ACTION_ECUEIL_EQUIPE = "Ecueil equipe";
+    String ACTION_NETTOYAGE_GRAND_PORT = "Netoyage grand port";
+    String ACTION_NETTOYAGE_PETIT_PORT = "Netoyage petit port";
 
     Rectangle ZONE_GRAND_PORT_BLEU = new Rectangle(0, 850, 600, 700);
     Rectangle ZONE_GRAND_PORT_JAUNE = new Rectangle(2400, 850, 600, 700);
