@@ -49,7 +49,7 @@ public class StrategyManager {
                 .filter(IAction::isValid)
                 .filter(a -> !StringUtils.equals(otherCurrentAction, a.name()))
                 .filter(a -> !a.blockingActions().contains(otherCurrentAction))
-                .filter(a -> lidarService.hasObstacleInZone(a.blockingZone()))
+                .filter(a -> !lidarService.hasObstacleInZone(a.blockingZone()))
                 .sorted(Comparator.comparingInt(IAction::order).reversed())
                 .findFirst();
 
