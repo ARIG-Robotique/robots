@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-//@Component
+@Component
 public class OdinNettoyageGrandPort extends AbstractOdinAction {
 
     @Autowired
@@ -52,6 +52,7 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
     @Override
     public void execute() {
         try {
+            // TODO Optim d'entry point avec distance comme pour le phare et les dépose chenaux de Nerell
             final Point entry = entryPoint();
             rsOdin.disableAvoidance();
 
@@ -63,21 +64,28 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
 
             mv.gotoPoint(entry.getX(), entry.getY() - 200, GotoOption.AVANT);
             ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+            group.boueePrise(4);
 
             mv.gotoPoint(408, 927, GotoOption.ARRIERE);
             ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+            group.boueePrise(3);
+
+            if (rs.boueePresente(2) || rsOdin.boueePresente(1)) {
+                mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+                mv.gotoPoint(412, 1390, GotoOption.AVANT);
+
+                mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
+                mv.gotoPoint(412, 1430, GotoOption.AVANT);
+                ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+                group.boueePrise(2);
+
+                mv.gotoPoint(337, 1593, GotoOption.ARRIERE);
+                ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+                group.boueePrise(1);
+            }
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            mv.gotoPoint(412, 1390, GotoOption.AVANT);
 
-            mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
-            mv.gotoPoint(412, 1430, GotoOption.AVANT);
-            ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
-
-            mv.gotoPoint(337, 1593, GotoOption.ARRIERE);
-            ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
-
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             // Dépose verte
             mv.gotoPoint(180, 1490, GotoOption.AVANT);
             mv.gotoPoint(150, 1490, GotoOption.AVANT);
