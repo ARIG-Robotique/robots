@@ -22,13 +22,9 @@ public class NerellRetourAuPort extends AbstractNerellAction {
 
     @Override
     public Point entryPoint() {
-        int offset = 575; // Empirique
-
-        double x = 465;
-        double centerY = 1200;
-        if (rsNerell.team() == ETeam.JAUNE) {
-            x = 3000 - x;
-        }
+        final int offset = 575; // Empirique
+        final double x = getX(465);
+        final double centerY = 1200;
         final Point north = new Point(x, centerY + offset);
         final Point south = new Point(x, centerY - offset);
 
@@ -92,13 +88,8 @@ public class NerellRetourAuPort extends AbstractNerellAction {
             group.port(port);
 
             // Finalisation de la rentrée dans le port après avoir compté les points
-            if (rsNerell.otherPort() != port) {
-                Point finalPoint = new Point(entry);
-                finalPoint.setX(160);
-                if (rsNerell.team() == ETeam.JAUNE) {
-                    finalPoint.setX(3000 - finalPoint.getX());
-                }
-                mv.gotoPoint(finalPoint, GotoOption.SANS_ORIENTATION);
+            if (rsNerell.otherPort() == EPort.AUCUN) {
+                mv.gotoPoint(getX(160), entry.getY(), GotoOption.SANS_ORIENTATION);
             }
 
         } catch (NoPathFoundException | AvoidingException e) {

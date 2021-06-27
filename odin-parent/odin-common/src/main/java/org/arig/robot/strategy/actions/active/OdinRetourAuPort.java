@@ -22,13 +22,9 @@ public class OdinRetourAuPort extends AbstractOdinAction {
 
     @Override
     public Point entryPoint() {
-        int offset = 575; // Empirique
-
-        double x = 550;
-        double centerY = 1200;
-        if (rsOdin.team() == ETeam.JAUNE) {
-            x = 3000 - x;
-        }
+        final int offset = 575; // Empirique
+        final double x = getX(550);
+        final double centerY = 1200;
         final Point north = new Point(x, centerY + offset);
         final Point south = new Point(x, centerY - offset);
 
@@ -89,19 +85,53 @@ public class OdinRetourAuPort extends AbstractOdinAction {
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry);
-            entry.setX(465);
-            mv.gotoPoint(entry);
 
-            group.port(port);
+            // si nerell est déjà au port, positionnement spécial
+            if (rsOdin.otherPort() != EPort.AUCUN) {
+                mv.gotoPoint(getX(465), port == EPort.NORD ? 1700 : 700);
 
-            // Finalisation de la rentrée dans le port après avoir compté les points
-            if (rsOdin.otherPort() != port) {
-                Point finalPoint = new Point(entry);
-                finalPoint.setX(150);
-                if (rsOdin.team() == ETeam.JAUNE) {
-                    finalPoint.setX(3000 - finalPoint.getX());
+                final double angleRobot = Math.abs(conv.pulseToDeg(position.getAngle()));
+                double angleDecallage = 15;
+                // c'est d'une lourdeur ! mais mon cerveau fatigué n'a pas trouvé la formule
+                if (rsOdin.team() == ETeam.BLEU) {
+                    if (port == EPort.NORD) {
+                        if (angleRobot < 90) {
+                            mv.gotoOrientationDeg(-angleDecallage);
+                        } else {
+                            mv.gotoOrientationDeg(180 - angleDecallage);
+                        }
+                    } else {
+                        if (angleRobot < 90) {
+                            mv.gotoOrientationDeg(angleDecallage);
+                        } else {
+                            mv.gotoOrientationDeg(-180 + angleDecallage);
+                        }
+                    }
+                } else {
+                    if (port == EPort.NORD) {
+                        if (angleRobot < 90) {
+                            mv.gotoOrientationDeg(angleDecallage);
+                        } else {
+                            mv.gotoOrientationDeg(-180 + angleDecallage);
+                        }
+                    } else {
+                        if (angleRobot < 90) {
+                            mv.gotoOrientationDeg(-angleDecallage);
+                        } else {
+                            mv.gotoOrientationDeg(180 - angleDecallage);
+                        }
+                    }
                 }
-                mv.gotoPoint(finalPoint, GotoOption.SANS_ORIENTATION);
+
+                group.port(port);
+
+            } else {
+                mv.gotoPoint(getX(450), entry.getY());
+
+                group.port(port);
+
+                // Finalisation de la rentrée dans le port après avoir compté les points
+                mv.gotoPoint(getX(150), entry.getY(), GotoOption.SANS_ORIENTATION);
             }
 
         } catch (NoPathFoundException | AvoidingException e) {
