@@ -30,14 +30,30 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
     protected abstract void registerBouee(int index, ECouleurBouee couleurBouee);
     protected abstract ECouleurBouee getCouleurBouee(int index);
 
-    @Override
-    public void deposeGrandPort() {
+    private void depose() {
         disableServicePinces();
-
         releasePompes();
         ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+    }
 
+    @Override
+    public void deposeGrandPort() {
+        depose();
         group.deposeGrandPort(bouees());
+        clearPinces();
+    }
+
+    @Override
+    public void deposeGrandChenalRouge() {
+        depose();
+        group.deposeGrandChenalRouge(bouees());
+        clearPinces();
+    }
+
+    @Override
+    public void deposeGrandChenalVert() {
+        depose();
+        group.deposeGrandChenalVert(bouees());
         clearPinces();
     }
 

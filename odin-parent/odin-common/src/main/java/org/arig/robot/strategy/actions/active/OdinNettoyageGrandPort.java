@@ -31,12 +31,7 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
 
     @Override
     public Point entryPoint() {
-        double X = 255;
-        double Y = 1000;
-        if (ETeam.JAUNE == rsOdin.team()) {
-            X = 3000 - X;
-        }
-        return new Point(X, Y);
+        return new Point(getX(255), 1000);
     }
 
     @Override
@@ -54,53 +49,84 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
         try {
             // TODO Optim d'entry point avec distance comme pour le phare et les dépose chenaux de Nerell
             final Point entry = entryPoint();
+
             rsOdin.disableAvoidance();
 
             rsOdin.enablePincesAvant();
             rsOdin.enablePincesArriere();
 
+            // prise 4/16
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
-            // FIXME Gestion entry point à définir
-
-            mv.gotoPoint(entry.getX(), entry.getY() - 200, GotoOption.AVANT);
+            mv.gotoPoint(getX(255), 800, GotoOption.AVANT);
             ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
-            group.boueePrise(4);
+            if (rsOdin.team() == ETeam.BLEU) {
+                group.boueePrise(4); // vert avant gauche
+            } else {
+                group.boueePrise(16); // rouge avant droite
+            }
 
-            mv.gotoPoint(408, 927, GotoOption.ARRIERE);
+            // prise 3/15
+            mv.gotoPoint(getX(408), 927, GotoOption.ARRIERE);
             ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
-            group.boueePrise(3);
+            if (rsOdin.team() == ETeam.BLEU) {
+                group.boueePrise(3); // rouge arriere gauche
+            } else {
+                group.boueePrise(15); // vert arriere droite
+            }
 
-            if (rs.boueePresente(2) || rsOdin.boueePresente(1)) {
+            if (rsOdin.team() == ETeam.BLEU && (rs.boueePresente(2) || rsOdin.boueePresente(1)) ||
+                    rsOdin.team() == ETeam.JAUNE && (rs.boueePresente(14) || rsOdin.boueePresente(13))) {
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-                mv.gotoPoint(412, 1390, GotoOption.AVANT);
+                mv.gotoPoint(getX(412), 1390, GotoOption.AVANT);
 
+                // prise 2/14
                 mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
-                mv.gotoPoint(412, 1430, GotoOption.AVANT);
+                mv.gotoPoint(getX(412), 1430, GotoOption.AVANT);
                 ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
-                group.boueePrise(2);
+                if (rsOdin.team() == ETeam.BLEU) {
+                    group.boueePrise(2); // vert avant droite
+                } else {
+                    group.boueePrise(14); // rouge avant gauche
+                }
 
-                mv.gotoPoint(337, 1593, GotoOption.ARRIERE);
+                // prise 1/13
+                mv.gotoPoint(getX(337), 1593, GotoOption.ARRIERE);
                 ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
-                group.boueePrise(1);
+                if (rsOdin.team() == ETeam.BLEU) {
+                    group.boueePrise(1); // rouge arriere droite
+                } else {
+                    group.boueePrise(13); // vert arriere gauche
+                }
             }
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
-            // Dépose verte
-            mv.gotoPoint(180, 1490, GotoOption.AVANT);
-            mv.gotoPoint(150, 1490, GotoOption.AVANT);
-            pincesAvantService.deposeGrandPort(); // FIXME a changer en chenal
-            ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
-            mv.gotoPoint(250,1490, GotoOption.ARRIERE);
+            // Dépose nord (face avant)
+            if (!rsOdin.pincesAvantEmpty()) {
+                mv.gotoPoint(getX(180), 1490, GotoOption.AVANT);
+                mv.gotoPoint(getX(150), 1490, GotoOption.AVANT);
+                if (rsOdin.team() == ETeam.BLEU) {
+                    pincesAvantService.deposeGrandChenalVert();
+                } else {
+                    pincesAvantService.deposeGrandChenalRouge();
+                }
+                mv.gotoPoint(getX(250), 1490, GotoOption.ARRIERE);
+            }
 
-            // Dépose rouge
-            mv.gotoPoint(180, 920, GotoOption.ARRIERE);
-            mv.gotoPoint(150, 920, GotoOption.ARRIERE);
-            pincesArriereService.deposeGrandPort(); // FIXME a changer en chenal
-            ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
-            mv.gotoPoint(250,920, GotoOption.AVANT);
+            // Dépose sud (face arrière)
+            if (!rsOdin.pincesArriereEmpty()) {
+                mv.gotoPoint(getX(180), 920, GotoOption.ARRIERE);
+                mv.gotoPoint(getX(150), 920, GotoOption.ARRIERE);
+                if (rsOdin.team() == ETeam.BLEU) {
+                    pincesAvantService.deposeGrandChenalRouge();
+                } else {
+                    pincesAvantService.deposeGrandChenalVert();
+                }
+                mv.gotoPoint(getX(250), 920, GotoOption.AVANT);
+            }
 
             complete();
+
         } catch (AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
