@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.model.AbstractRobotStatus;
+import org.arig.robot.services.LidarService;
 import org.arig.robot.system.group.IRobotGroup;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class StrategyManager {
     @Autowired
     private IRobotGroup group;
 
+    @Autowired
+    private LidarService lidarService;
+
     private List<IAction> completedActions = new ArrayList<>();
 
     public void execute() {
@@ -45,6 +49,7 @@ public class StrategyManager {
                 .filter(IAction::isValid)
                 .filter(a -> !StringUtils.equals(otherCurrentAction, a.name()))
                 .filter(a -> !a.blockingActions().contains(otherCurrentAction))
+                .filter(a -> lidarService.hasObstacleInZone(a.blockingZone()))
                 .sorted(Comparator.comparingInt(IAction::order).reversed())
                 .findFirst();
 

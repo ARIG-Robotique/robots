@@ -123,6 +123,14 @@ public class LidarService implements InitializingBean {
         refreshObstacles(null);
     }
 
+    public boolean hasObstacleInZone(Rectangle zone) {
+        if (zone == null) {
+            return false;
+        }
+        return detectedPointsMm.stream()
+                .anyMatch(s -> zone.contains(s.getX(), s.getY()));
+    }
+
     synchronized public void refreshObstacles(final List<Line2D> lines) {
         List<org.arig.robot.model.Shape> collisionsShape = new ArrayList<>();
         List<java.awt.Shape> obstacles = new ArrayList<>();
