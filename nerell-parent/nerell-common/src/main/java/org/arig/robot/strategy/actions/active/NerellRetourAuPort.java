@@ -74,11 +74,16 @@ public class NerellRetourAuPort extends AbstractNerellAction {
             rsNerell.enablePincesAvant();
 
             // Activation de la zone morte pour ne pas détecter l'autre robot
-            tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(0, 400, 400, 400)); // Port SUD
-            tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(0, 1500, 400, 400)); // Port NORD
+            if (rsNerell.team() == ETeam.BLEU) {
+                tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(0, 500, 400, 400)); // Port SUD
+                tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(0, 1500, 400, 400)); // Port NORD
+            } else {
+                tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(2600, 500, 400, 400)); // Port SUD
+                tableUtils.addDynamicDeadZone(new java.awt.Rectangle.Double(2600, 1500, 400, 400)); // Port NORD
+            }
 
             final Point entry = entryPoint();
-            final EPort port = entry.getY() > 1200 ? EPort.NORD : EPort.SUD;;
+            final EPort port = entry.getY() > 1200 ? EPort.NORD : EPort.SUD;
             group.port(port == EPort.NORD ? EPort.WIP_NORD : EPort.WIP_SUD);
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
