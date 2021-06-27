@@ -46,8 +46,8 @@ public interface IEurobotConfig {
     String ACTION_NETTOYAGE_GRAND_PORT = "Netoyage grand port";
     String ACTION_NETTOYAGE_PETIT_PORT = "Netoyage petit port";
 
-    Rectangle ZONE_GRAND_PORT_BLEU = new Rectangle(0, 850, 600, 700);
-    Rectangle ZONE_GRAND_PORT_JAUNE = new Rectangle(2400, 850, 600, 700);
+    Rectangle ZONE_GRAND_PORT_BLEU = new Rectangle(0, 850, 900, 700);
+    Rectangle ZONE_GRAND_PORT_JAUNE = new Rectangle(2400, 850, 900, 700);
     Rectangle ZONE_ECUEIL_EQUIPE_BLEU = new Rectangle(0, 0, 800, 500);
     Rectangle ZONE_ECUEIL_EQUIPE_JAUNE = new Rectangle(2200, 0, 800, 500);
 
