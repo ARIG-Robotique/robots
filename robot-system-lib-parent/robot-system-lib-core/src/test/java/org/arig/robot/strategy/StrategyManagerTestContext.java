@@ -1,6 +1,5 @@
 package org.arig.robot.strategy;
 
-import org.arig.robot.communication.socket.lidar.enums.LidarAction;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
