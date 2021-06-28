@@ -55,10 +55,11 @@ public class NerellServosCommands {
     private void priseAvant() {
         rs.enablePincesAvant();
 
-        long nbBouees = 0;
         StopWatch watch = new StopWatch();
         watch.reset();
         watch.start();
+
+        long nbBouees = 0;
         while(nbBouees != 4) {
             nbBouees = Arrays.stream(rs.pincesAvant()).filter(Objects::nonNull).count();
 
@@ -68,7 +69,7 @@ public class NerellServosCommands {
             }
         }
 
-        ThreadUtils.sleep(IConstantesNerellConfig.TIME_BEFORE_READ_COLOR * 2);
+        ThreadUtils.sleep(IConstantesNerellConfig.TIME_BEFORE_READ_COLOR * 4);
     }
 
     private void deposeAvant() {

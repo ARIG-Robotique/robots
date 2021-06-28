@@ -2,6 +2,8 @@ package org.arig.robot.odin.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
+import org.arig.robot.constants.IConstantesOdinConfig;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.services.IOdinIOService;
 import org.arig.robot.services.OdinPincesArriereService;
@@ -16,6 +18,7 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @ShellComponent
@@ -51,23 +54,40 @@ public class OdinServosCommands {
     private void priseAvant() {
         rs.enablePincesAvant();
 
+        StopWatch watch = new StopWatch();
+        watch.reset();
+        watch.start();
+
         long nbBouees = 0;
         while(nbBouees != 2) {
             nbBouees = Arrays.stream(rs.pincesAvant()).filter(Objects::nonNull).count();
+
+            if (watch.getTime(TimeUnit.SECONDS) > 5) {
+                log.warn("Echappement car trop long");
+                break;
+            }
         }
 
-        ThreadUtils.sleep(2000);
+        ThreadUtils.sleep(IConstantesOdinConfig.TIME_BEFORE_READ_COLOR * 4);
     }
 
     private void priseArriere() {
         rs.enablePincesArriere();
 
+        StopWatch watch = new StopWatch();
+        watch.reset();
+        watch.start();
         long nbBouees = 0;
         while(nbBouees != 2) {
             nbBouees = Arrays.stream(rs.pincesArriere()).filter(Objects::nonNull).count();
+
+            if (watch.getTime(TimeUnit.SECONDS) > 5) {
+                log.warn("Echappement car trop long");
+                break;
+            }
         }
 
-        ThreadUtils.sleep(2000);
+        ThreadUtils.sleep(IConstantesOdinConfig.TIME_BEFORE_READ_COLOR * 4);
     }
 
     private void deposeAvant() {
@@ -79,15 +99,23 @@ public class OdinServosCommands {
     }
 
     @ShellMethod("Prise avant puis dépose")
-    public void cyclePriseAvantPuisDepose() {
-        priseAvant();
-        deposeAvant();
+    public void cyclePriseAvantPuisDepose(int nb) {
+        int cpt = 0;
+        do {
+            priseAvant();
+            deposeAvant();
+            cpt++;
+        } while(cpt < nb);
     }
 
     @ShellMethod("Prise arriere puis dépose")
-    public void cyclePriseArrierePuisDepose() {
-        priseArriere();
-        deposeArriere();
+    public void cyclePriseArrierePuisDepose(int nb) {
+        int cpt = 0;
+        do {
+            priseArriere();
+            deposeArriere();
+            cpt++;
+        } while(cpt < nb);
     }
 
     @ShellMethod("Configuration attente bras gauche")
