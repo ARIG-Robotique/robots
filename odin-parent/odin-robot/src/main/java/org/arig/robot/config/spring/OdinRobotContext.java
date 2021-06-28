@@ -95,7 +95,7 @@ public class OdinRobotContext {
         final I2CManagerDevice<I2CDevice> controlleurPompes = I2CManagerDevice.<I2CDevice>builder()
                 .deviceName(IConstantesI2COdin.VACUUM_CONTROLLER_DEVICE_NAME)
                 .device(i2cBus.getDevice(IConstantesI2COdin.VACUUM_CONTROLLER_ADDRESS))
-                .scanCmd(new byte[]{0x00})
+                .scanCmd(new byte[]{0x00, 0x00})
                 .build();
         final I2CManagerDevice<I2CDevice> mux = I2CManagerDevice.<I2CDevice>builder()
                 .deviceName(IConstantesI2COdin.MULTIPLEXEUR_I2C_NAME)

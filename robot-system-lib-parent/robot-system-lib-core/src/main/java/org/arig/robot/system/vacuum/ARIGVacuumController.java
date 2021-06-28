@@ -45,7 +45,7 @@ public class ARIGVacuumController extends AbstractARIGVacuumController {
 
     public void printVersion() {
         try {
-            i2cManager.sendData(deviceName, VERSION_REGISTER);
+            i2cManager.sendData(deviceName, VERSION_REGISTER, VERSION_REGISTER);
             final byte[] data = i2cManager.getData(deviceName, 10);
             final String version = new String(data, StandardCharsets.UTF_8);
             log.info("ARIG Vacuum Controller version {}, {} pompes", version, NB_PUMPS);
@@ -66,7 +66,7 @@ public class ARIGVacuumController extends AbstractARIGVacuumController {
 
     protected byte[] readFromController(byte register, int size) {
         try {
-            i2cManager.sendData(deviceName, register);
+            i2cManager.sendData(deviceName, register, register);
             return i2cManager.getData(deviceName, size);
         } catch (I2CException e) {
             log.error("Erreur lors de la récupération du registre {} : {}", register, e.toString());
