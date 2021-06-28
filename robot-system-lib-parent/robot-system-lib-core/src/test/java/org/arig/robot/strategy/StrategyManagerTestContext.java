@@ -1,12 +1,19 @@
 package org.arig.robot.strategy;
 
+import org.arig.robot.communication.socket.lidar.enums.LidarAction;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.Position;
+import org.arig.robot.model.RobotConfig;
 import org.arig.robot.model.TestRobotStatus;
+import org.arig.robot.services.LidarService;
 import org.arig.robot.strategy.actions.InvalidWhenNotRunAfter10SecondsAndCompletedAfter2ExecutionAction;
 import org.arig.robot.strategy.actions.OneShotAction;
+import org.arig.robot.system.capteurs.ILidarTelemeter;
+import org.arig.robot.system.capteurs.LidarTelemeterMock;
 import org.arig.robot.system.group.IRobotGroup;
 import org.arig.robot.system.group.RobotGroupTest;
+import org.arig.robot.system.pathfinding.IPathFinder;
+import org.arig.robot.system.pathfinding.impl.NoPathFinderImpl;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.context.annotation.Bean;
@@ -46,6 +53,26 @@ public class StrategyManagerTestContext {
     @Bean(name = "currentPosition")
     public Position currentPosition()  {
         return new Position();
+    }
+
+    @Bean
+    public ILidarTelemeter lidarTelemeter() {
+        return new LidarTelemeterMock();
+    }
+
+    @Bean
+    public RobotConfig robotConfig() {
+        return new RobotConfig();
+    }
+
+    @Bean
+    public IPathFinder pathFinder() {
+        return new NoPathFinderImpl();
+    }
+
+    @Bean
+    public LidarService lidarService() {
+        return new LidarService();
     }
 
     @Bean
