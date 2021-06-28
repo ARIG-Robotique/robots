@@ -7,6 +7,8 @@ import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.stream.Stream;
+
 @Slf4j
 public abstract class AbstractOdinPincesService implements IOdinPincesService {
 
@@ -105,6 +107,11 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
 
     @Override
     public void processCouleurBouee() {
+        if (Stream.of(bouees()).filter(c -> c == ECouleurBouee.INCONNU).count() == 0) {
+            // Pas d'inconnu, pas de lecture
+            return;
+        }
+
         io.enableLedCapteurCouleur();
         ThreadUtils.sleep(IConstantesOdinConfig.WAIT_LED);
 

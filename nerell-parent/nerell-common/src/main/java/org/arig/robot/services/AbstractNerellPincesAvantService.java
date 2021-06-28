@@ -10,6 +10,7 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.stream.Stream;
 
 @Slf4j
 public abstract class AbstractNerellPincesAvantService implements INerellPincesAvantService {
@@ -161,6 +162,11 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
 
     @Override
     public void processCouleurBouee() {
+        if (Stream.of(rs.pincesAvant()).filter(c -> c == ECouleurBouee.INCONNU).count() == 0) {
+            // Pas d'inconnu, pas de lecture
+            return;
+        }
+
         io.enableLedCapteurCouleur();
         ThreadUtils.sleep(IConstantesNerellConfig.WAIT_LED);
 
