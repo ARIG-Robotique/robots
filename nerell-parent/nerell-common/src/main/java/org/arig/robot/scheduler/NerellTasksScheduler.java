@@ -123,7 +123,7 @@ public class NerellTasksScheduler {
                 timerLectureCouleur.start();
             }
 
-            if (timerLectureCouleur.getTime(TimeUnit.MILLISECONDS) > IConstantesNerellConfig.lectureCouleurWaitTimeMs) {
+            if (timerLectureCouleur.getTime(TimeUnit.MILLISECONDS) > IConstantesNerellConfig.TIME_BEFORE_READ_COLOR) {
                 timerLectureCouleur.reset();
                 pincesAvant.processCouleurBouee();
             }
