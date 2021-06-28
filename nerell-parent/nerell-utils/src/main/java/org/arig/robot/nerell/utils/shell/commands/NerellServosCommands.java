@@ -2,6 +2,8 @@ package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
+import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.services.INerellIOService;
@@ -17,6 +19,7 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @ShellComponent
@@ -53,11 +56,19 @@ public class NerellServosCommands {
         rs.enablePincesAvant();
 
         long nbBouees = 0;
+        StopWatch watch = new StopWatch();
+        watch.reset();
+        watch.start();
         while(nbBouees != 4) {
             nbBouees = Arrays.stream(rs.pincesAvant()).filter(Objects::nonNull).count();
+
+            if (watch.getTime(TimeUnit.SECONDS) > 5) {
+                log.warn("Echappement car trop long");
+                break;
+            }
         }
 
-        ThreadUtils.sleep(2000);
+        ThreadUtils.sleep(IConstantesNerellConfig.TIME_BEFORE_READ_COLOR * 2);
     }
 
     private void deposeAvant() {
@@ -98,9 +109,13 @@ public class NerellServosCommands {
     }
 
     @ShellMethod("Prise avant puis dépose")
-    public void cyclePriseAvantPuisDepose() {
-        priseAvant();
-        deposeAvant();
+    public void cyclePriseAvantPuisDepose(int nb) {
+        int cpt = 0;
+        do {
+            priseAvant();
+            deposeAvant();
+            cpt++;
+        } while(cpt < nb);
     }
 
     @ShellMethod("Configuration attente moustaches")
