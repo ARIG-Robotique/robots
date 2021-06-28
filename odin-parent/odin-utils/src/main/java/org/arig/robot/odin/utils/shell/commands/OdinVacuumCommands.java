@@ -46,4 +46,9 @@ public class OdinVacuumCommands {
         ThreadUtils.sleep(5000);
         vacuumController.off(nb);
     }
+
+    @ShellMethod("Pompe version")
+    public void pumpVersion() {
+        vacuumController.printVersion();
+    }
 }

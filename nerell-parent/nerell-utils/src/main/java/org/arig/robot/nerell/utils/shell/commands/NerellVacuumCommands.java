@@ -51,4 +51,9 @@ public class NerellVacuumCommands {
         nerellServosService.ascenseurAvantBas(nb - 1, true);
         vacuumController.off(nb);
     }
+
+    @ShellMethod("Pompe version")
+    public void pumpVersion() {
+        vacuumController.printVersion();
+    }
 }
