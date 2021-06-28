@@ -41,7 +41,7 @@ public abstract class AbstractOdinBoueeBordure extends AbstractOdinBouee {
             final double decallageX = offsetPince * (sens == GotoOption.AVANT ? -1 : 1);
             final Point entry = new Point( boueePt.getX() + decallageX,1690);
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            Point beforeEntry = beforeEntry();
+            final Point beforeEntry = beforeEntry();
             if (beforeEntry != null) {
                 mv.pathTo(beforeEntry);
                 mv.gotoPoint(entry, sens);
@@ -53,6 +53,7 @@ public abstract class AbstractOdinBoueeBordure extends AbstractOdinBouee {
             mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation());
             mv.gotoPoint(entry.getX(), 1830, sens);
             group.boueePrise(bouee);
+            complete();
             ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
             if (sens == GotoOption.AVANT) {
                 mv.reculeMM(100);
@@ -65,7 +66,6 @@ public abstract class AbstractOdinBoueeBordure extends AbstractOdinBouee {
                 mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);
             }
 
-            complete();
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
