@@ -1,6 +1,8 @@
 package org.arig.robot.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
+import org.arig.robot.constants.IConstantesOdinConfig;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.OdinRobotStatus;
@@ -15,6 +17,8 @@ import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -46,6 +50,9 @@ public class OdinTasksScheduler {
 
     @Autowired
     private AbstractARIGVacuumController vacuumController;
+
+    private StopWatch timerLectureCouleurAvant = new StopWatch();
+    private StopWatch timerLectureCouleurArriere = new StopWatch();
 
     private final SignalEdgeFilter risingEnablePincesAvant = new SignalEdgeFilter(false, Type.RISING);
     private final SignalEdgeFilter risingEnablePincesArriere = new SignalEdgeFilter(false, Type.RISING);
@@ -100,13 +107,24 @@ public class OdinTasksScheduler {
 
             if (pincesAvantEnabled) {
                 if(pincesAvant.processBouee()) {
-                    pincesAvant.processCouleurBouee();
+                    timerLectureCouleurAvant.reset();
+                    timerLectureCouleurAvant.start();
                 }
             }
+            if (timerLectureCouleurAvant.getTime(TimeUnit.MILLISECONDS) > IConstantesOdinConfig.TIME_BEFORE_READ_COLOR) {
+                timerLectureCouleurAvant.reset();
+                pincesAvant.processCouleurBouee();
+            }
+
             if (pincesArriereEnabled) {
                 if(pincesArriere.processBouee()) {
-                    pincesArriere.processCouleurBouee();
+                    timerLectureCouleurArriere.reset();
+                    timerLectureCouleurArriere.start();
                 }
+            }
+            if (timerLectureCouleurArriere.getTime(TimeUnit.MILLISECONDS) > IConstantesOdinConfig.TIME_BEFORE_READ_COLOR) {
+                timerLectureCouleurArriere.reset();
+                pincesArriere.processCouleurBouee();
             }
         }
     }
