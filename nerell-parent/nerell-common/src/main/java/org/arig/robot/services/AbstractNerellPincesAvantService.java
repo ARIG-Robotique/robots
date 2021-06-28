@@ -29,6 +29,9 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
     @Autowired
     private RobotGroupService group;
 
+    @Autowired
+    private EurobotTableService eurobotTableService;
+
     private boolean[] previousState = new boolean[]{false, false, false, false};
 
     @Override
@@ -136,8 +139,17 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
                 servosService.ascenseurAvantBas(i, false);
 
             } else if (!previousState[i] && newState[i]) {
-                // nouvelles bouée
-                registerBouee(i, ECouleurBouee.INCONNU);
+                // nouvelle bouée
+                final ECouleurBouee couleur;
+                final Integer bouee = eurobotTableService.estimateBoueeFromPosition();
+                if (bouee != null) {
+                    couleur = rs.boueeCouleur(bouee);
+                    group.boueePrise(bouee);
+                } else {
+                    couleur = ECouleurBouee.INCONNU;
+                }
+
+                registerBouee(i, couleur);
                 servosService.ascenseurAvantHaut(i, false);
                 needReadColor = true;
             }

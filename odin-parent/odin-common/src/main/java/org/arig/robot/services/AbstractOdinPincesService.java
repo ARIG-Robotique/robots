@@ -19,6 +19,9 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
     @Autowired
     private RobotGroupService group;
 
+    @Autowired
+    private EurobotTableService eurobotTableService;
+
     private boolean[] previousState = new boolean[]{false, false};
 
     protected abstract void disableServicePinces();
@@ -81,8 +84,17 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
                 registerBouee(i, null);
 
             } else if (!previousState[i] && newState[i]) {
-                // nouvelles bouée
-                registerBouee(i, ECouleurBouee.INCONNU);
+                // nouvelle bouée
+                final ECouleurBouee couleur;
+                final Integer bouee = eurobotTableService.estimateBoueeFromPosition();
+                if (bouee != null) {
+                    couleur = rs.boueeCouleur(bouee);
+                    group.boueePrise(bouee);
+                } else {
+                    couleur = ECouleurBouee.INCONNU;
+                }
+
+                registerBouee(i, couleur);
                 needReadColor = true;
             }
         }
