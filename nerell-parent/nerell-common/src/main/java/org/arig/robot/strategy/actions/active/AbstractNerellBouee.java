@@ -10,6 +10,7 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.INerellIOService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
@@ -71,6 +72,7 @@ public abstract class AbstractNerellBouee extends AbstractNerellAction {
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
             mv.gotoPoint(tableUtils.getPointFromAngle(distanceApproche, offsetOrientation), GotoOption.AVANT);
             group.boueePrise(bouee);
+            ThreadUtils.sleep(IConstantesNerellConfig.WAIT_POMPES);
 
             complete();
         } catch (NoPathFoundException | AvoidingException e) {
