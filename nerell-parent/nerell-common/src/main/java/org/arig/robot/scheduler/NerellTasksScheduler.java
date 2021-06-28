@@ -1,7 +1,8 @@
 package org.arig.robot.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesServosNerell;
+import org.apache.commons.lang3.time.StopWatch;
+import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
@@ -14,10 +15,11 @@ import org.arig.robot.services.NerellServosService;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
 import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
-import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -46,6 +48,8 @@ public class NerellTasksScheduler {
 
     @Autowired
     private AbstractARIGVacuumController vacuumController;
+
+    private StopWatch timerLectureCouleur = new StopWatch();
 
     private final SignalEdgeFilter risingEnablePinces = new SignalEdgeFilter(false, Type.RISING);
 
@@ -114,8 +118,13 @@ public class NerellTasksScheduler {
 
         if (pincesEnabled) {
             vacuumController.readAllValues();
-            if(pincesAvant.processBouee()) {
-                ThreadUtils.sleep(IConstantesServosNerell.WAIT_ASCENSEURS_AVANT);
+            if (pincesAvant.processBouee()) {
+                timerLectureCouleur.reset();
+                timerLectureCouleur.start();
+            }
+
+            if (timerLectureCouleur.getTime(TimeUnit.MILLISECONDS) > IConstantesNerellConfig.lectureCouleurWaitTimeMs) {
+                timerLectureCouleur.reset();
                 pincesAvant.processCouleurBouee();
             }
         }

@@ -132,4 +132,6 @@ public interface IConstantesNerellConfig {
 
     int WAIT_LED = 200;
     int WAIT_POMPES = 300;
+
+    int lectureCouleurWaitTimeMs = 500; // FIXME à qualifier
 }
