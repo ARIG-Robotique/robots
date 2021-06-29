@@ -118,9 +118,9 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
                 mv.gotoPoint(getX(180), 920, GotoOption.ARRIERE);
                 mv.gotoPoint(getX(150), 920, GotoOption.ARRIERE);
                 if (rsOdin.team() == ETeam.BLEU) {
-                    pincesAvantService.deposeGrandChenalRouge();
+                    pincesArriereService.deposeGrandChenalRouge();
                 } else {
-                    pincesAvantService.deposeGrandChenalVert();
+                    pincesArriereService.deposeGrandChenalVert();
                 }
                 mv.gotoPoint(getX(250), 920, GotoOption.AVANT);
             }
