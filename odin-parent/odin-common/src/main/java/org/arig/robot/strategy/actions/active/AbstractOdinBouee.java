@@ -79,7 +79,7 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
                 // Prise avec la face arrière, donc en mode mirroir
                 pointPrise = tableUtils.getPointFromAngle(-distanceApproche + 70, -offsetOrientation);
             } else {
-                pointPrise = tableUtils.getPointFromAngle(distanceApproche + 70, -offsetOrientation);
+                pointPrise = tableUtils.getPointFromAngle(distanceApproche + 70, offsetOrientation);
             }
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
             mv.gotoPoint(pointPrise, sens);
