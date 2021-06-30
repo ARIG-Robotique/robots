@@ -27,6 +27,26 @@ public class OdinIOServiceBouchon extends AbstractIOServiceBouchon implements IO
     }
 
     @Override
+    public boolean presenceAvantGauche() {
+        return false;
+    }
+
+    @Override
+    public boolean presenceAvantDroit() {
+        return false;
+    }
+
+    @Override
+    public boolean presenceArriereGauche() {
+        return false;
+    }
+
+    @Override
+    public boolean presenceArriereDroit() {
+        return false;
+    }
+
+    @Override
     public ECouleurBouee couleurBoueeAvantGauche() {
         return ECouleurBouee.INCONNU;
     }

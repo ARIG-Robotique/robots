@@ -27,6 +27,11 @@ import java.io.IOException;
 @Service("IOService")
 public class NerellIOService implements INerellIOService, InitializingBean, DisposableBean {
 
+    private static final int POMPE_AVANT_1 = 1;
+    private static final int POMPE_AVANT_2 = 2;
+    private static final int POMPE_AVANT_3 = 3;
+    private static final int POMPE_AVANT_4 = 4;
+
     @Autowired
     private I2CBus bus;
 
@@ -175,6 +180,8 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
         } catch (IOException e) {
             log.error("Erreur lecture PCF Alim : " + e.getMessage(), e);
         }
+
+        vacuumController.readAllValues();
     }
 
     // --------------------------------------------------------- //
@@ -209,22 +216,42 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
 
     @Override
     public boolean presenceVentouse1() {
-        return vacuumController.getData(1).presence();
+        return vacuumController.getData(POMPE_AVANT_1).presence();
     }
 
     @Override
     public boolean presenceVentouse2() {
-        return vacuumController.getData(2).presence();
+        return vacuumController.getData(POMPE_AVANT_2).presence();
     }
 
     @Override
     public boolean presenceVentouse3() {
-        return vacuumController.getData(3).presence();
+        return vacuumController.getData(POMPE_AVANT_3).presence();
     }
 
     @Override
     public boolean presenceVentouse4() {
-        return vacuumController.getData(4).presence();
+        return vacuumController.getData(POMPE_AVANT_4).presence();
+    }
+
+    @Override
+    public boolean presence1() {
+        return vacuumController.getData(POMPE_AVANT_1).tor();
+    }
+
+    @Override
+    public boolean presence2() {
+        return vacuumController.getData(POMPE_AVANT_2).tor();
+    }
+
+    @Override
+    public boolean presence3() {
+        return vacuumController.getData(POMPE_AVANT_3).tor();
+    }
+
+    @Override
+    public boolean presence4() {
+        return vacuumController.getData(POMPE_AVANT_4).tor();
     }
 
     @Override
@@ -355,22 +382,22 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
 
     @Override
     public void enablePompe1() {
-        vacuumController.on(1);
+        vacuumController.on(POMPE_AVANT_1);
     }
 
     @Override
     public void enablePompe2() {
-        vacuumController.on(2);
+        vacuumController.on(POMPE_AVANT_2);
     }
 
     @Override
     public void enablePompe3() {
-        vacuumController.on(3);
+        vacuumController.on(POMPE_AVANT_3);
     }
 
     @Override
     public void enablePompe4() {
-        vacuumController.on(4);
+        vacuumController.on(POMPE_AVANT_4);
     }
 
     @Override
@@ -380,21 +407,21 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
 
     @Override
     public void releasePompe1() {
-        vacuumController.off(1);
+        vacuumController.off(POMPE_AVANT_1);
     }
 
     @Override
     public void releasePompe2() {
-        vacuumController.off(2);
+        vacuumController.off(POMPE_AVANT_2);
     }
 
     @Override
     public void releasePompe3() {
-        vacuumController.off(3);
+        vacuumController.off(POMPE_AVANT_3);
     }
 
     @Override
     public void releasePompe4() {
-        vacuumController.off(4);
+        vacuumController.off(POMPE_AVANT_4);
     }
 }

@@ -27,6 +27,11 @@ import java.io.IOException;
 @Service("IOService")
 public class OdinIOService implements IOdinIOService, InitializingBean, DisposableBean {
 
+    private static final int POMPES_AVANT_GAUCHE = 2;
+    private static final int POMPES_AVANT_DROIT = 3;
+    private static final int POMPES_ARRIERE_GAUCHE = 1;
+    private static final int POMPES_ARRIERE_DROIT = 4;
+
     @Autowired
     private I2CBus bus;
 
@@ -158,6 +163,8 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
         } catch (IOException e) {
             log.error("Erreur lecture PCF Alim : " + e.getMessage(), e);
         }
+
+        vacuumController.readAllValues();
     }
 
     // --------------------------------------------------------- //
@@ -192,22 +199,42 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
 
     @Override
     public boolean presenceVentouseAvantGauche() {
-        return vacuumController.getData(2).presence();
+        return vacuumController.getData(POMPES_AVANT_GAUCHE).presence();
     }
 
     @Override
     public boolean presenceVentouseAvantDroit() {
-        return vacuumController.getData(3).presence();
+        return vacuumController.getData(POMPES_AVANT_DROIT).presence();
     }
 
     @Override
     public boolean presenceVentouseArriereGauche() {
-        return vacuumController.getData(1).presence();
+        return vacuumController.getData(POMPES_ARRIERE_GAUCHE).presence();
     }
 
     @Override
     public boolean presenceVentouseArriereDroit() {
-        return vacuumController.getData(4).presence();
+        return vacuumController.getData(POMPES_ARRIERE_DROIT).presence();
+    }
+
+    @Override
+    public boolean presenceAvantGauche() {
+        return vacuumController.getData(POMPES_AVANT_GAUCHE).tor();
+    }
+
+    @Override
+    public boolean presenceAvantDroit() {
+        return vacuumController.getData(POMPES_AVANT_DROIT).tor();
+    }
+
+    @Override
+    public boolean presenceArriereGauche() {
+        return vacuumController.getData(POMPES_ARRIERE_GAUCHE).tor();
+    }
+
+    @Override
+    public boolean presenceArriereDroit() {
+        return vacuumController.getData(POMPES_ARRIERE_DROIT).tor();
     }
 
     @Override
@@ -312,32 +339,32 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
 
     @Override
     public void enablePompesAvant() {
-        vacuumController.on(2, 3);
+        vacuumController.on(POMPES_AVANT_GAUCHE, POMPES_AVANT_DROIT);
     }
 
     @Override
     public void enablePompesArriere() {
-        vacuumController.on(1, 4);
+        vacuumController.on(POMPES_ARRIERE_GAUCHE, POMPES_ARRIERE_DROIT);
     }
 
     @Override
     public void enablePompeAvantGauche() {
-        vacuumController.on(2);
+        vacuumController.on(POMPES_AVANT_GAUCHE);
     }
 
     @Override
     public void enablePompeAvantDroit() {
-        vacuumController.on(3);
+        vacuumController.on(POMPES_AVANT_DROIT);
     }
 
     @Override
     public void enablePompeArriereGauche() {
-        vacuumController.on(1);
+        vacuumController.on(POMPES_ARRIERE_GAUCHE);
     }
 
     @Override
     public void enablePompeArriereDroit() {
-        vacuumController.on(4);
+        vacuumController.on(POMPES_ARRIERE_DROIT);
     }
 
     @Override
@@ -347,31 +374,31 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
 
     @Override
     public void releasePompesAvant() {
-        vacuumController.off(2, 3);
+        vacuumController.off(POMPES_AVANT_GAUCHE, POMPES_AVANT_DROIT);
     }
 
     @Override
     public void releasePompesArriere() {
-        vacuumController.off(1, 4);
+        vacuumController.off(POMPES_ARRIERE_GAUCHE, POMPES_ARRIERE_DROIT);
     }
 
     @Override
     public void releasePompeAvantGauche() {
-        vacuumController.off(2);
+        vacuumController.off(POMPES_AVANT_GAUCHE);
     }
 
     @Override
     public void releasePompeAvantDroit() {
-        vacuumController.off(3);
+        vacuumController.off(POMPES_AVANT_DROIT);
     }
 
     @Override
     public void releasePompeArriereGauche() {
-        vacuumController.off(1);
+        vacuumController.off(POMPES_ARRIERE_GAUCHE);
     }
 
     @Override
     public void releasePompeArriereDroit() {
-        vacuumController.off(4);
+        vacuumController.off(POMPES_ARRIERE_DROIT);
     }
 }

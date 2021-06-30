@@ -14,6 +14,11 @@ public interface IOdinIOService extends IIOService {
     boolean presenceVentouseArriereGauche();
     boolean presenceVentouseArriereDroit();
 
+    boolean presenceAvantGauche();
+    boolean presenceAvantDroit();
+    boolean presenceArriereGauche();
+    boolean presenceArriereDroit();
+
     // Analogique
     ECouleurBouee couleurBoueeAvantGauche();
     ECouleurBouee couleurBoueeAvantDroit();

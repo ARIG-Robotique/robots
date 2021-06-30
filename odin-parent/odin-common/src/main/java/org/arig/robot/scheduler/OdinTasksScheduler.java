@@ -103,8 +103,6 @@ public class OdinTasksScheduler {
         }
 
         if (pincesAvantEnabled || pincesArriereEnabled) {
-            vacuumController.readAllValues();
-
             if (pincesAvantEnabled) {
                 if(pincesAvant.processBouee()) {
                     timerLectureCouleurAvant.reset();

@@ -39,6 +39,26 @@ public class NerellIOServiceBouchon extends AbstractIOServiceBouchon implements 
     }
 
     @Override
+    public boolean presence1() {
+        return false;
+    }
+
+    @Override
+    public boolean presence2() {
+        return false;
+    }
+
+    @Override
+    public boolean presence3() {
+        return false;
+    }
+
+    @Override
+    public boolean presence4() {
+        return false;
+    }
+
+    @Override
     public boolean presencePinceArriere1() {
         return contentPinceArriere;
     }

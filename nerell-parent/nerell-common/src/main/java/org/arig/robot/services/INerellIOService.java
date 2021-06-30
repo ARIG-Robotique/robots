@@ -14,6 +14,11 @@ public interface INerellIOService extends IIOService {
     boolean presenceVentouse3();
     boolean presenceVentouse4();
 
+    boolean presence1();
+    boolean presence2();
+    boolean presence3();
+    boolean presence4();
+
     boolean presencePinceArriere1();
     boolean presencePinceArriere2();
     boolean presencePinceArriere3();

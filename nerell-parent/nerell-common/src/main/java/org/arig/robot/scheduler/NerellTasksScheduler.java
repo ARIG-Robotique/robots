@@ -117,7 +117,6 @@ public class NerellTasksScheduler {
         }
 
         if (pincesEnabled) {
-            vacuumController.readAllValues();
             if (pincesAvant.processBouee()) {
                 timerLectureCouleur.reset();
                 timerLectureCouleur.start();

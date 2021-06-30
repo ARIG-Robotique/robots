@@ -20,6 +20,14 @@ public class NerellCapteursController extends AbstractCapteursController {
     public void afterPropertiesSet() throws Exception {
         super.afterPropertiesSet();
 
+        numeriqueInfos.put("Presence pince avant 1", ioService::presence1);
+        numeriqueInfos.put("Presence pince avant 2", ioService::presence2);
+        numeriqueInfos.put("Presence pince avant 3", ioService::presence3);
+        numeriqueInfos.put("Presence pince avant 4", ioService::presence4);
+        numeriqueInfos.put("Presence ventouse pince avant 1", ioService::presenceVentouse1);
+        numeriqueInfos.put("Presence ventouse pince avant 2", ioService::presenceVentouse2);
+        numeriqueInfos.put("Presence ventouse pince avant 3", ioService::presenceVentouse3);
+        numeriqueInfos.put("Presence ventouse pince avant 4", ioService::presenceVentouse4);
         numeriqueInfos.put("Bordure arrière droite", ioService::calageBordureDroit);
         numeriqueInfos.put("Bordure arrière gauche", ioService::calageBordureGauche);
         numeriqueInfos.put("Presence pince arrière 1", ioService::presencePinceArriere1);
