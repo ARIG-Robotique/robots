@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesOdinConfig;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
@@ -56,6 +57,12 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
             rsOdin.enablePincesArriere();
 
             // prise 4/16
+            if (rsOdin.team() == ETeam.BLEU) {
+                pincesAvantService.setExpected(ECouleurBouee.VERT);
+            } else {
+                pincesAvantService.setExpected(ECouleurBouee.ROUGE);
+            }
+
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
             mv.gotoPoint(getX(255), 800, GotoOption.AVANT);
             ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
@@ -66,6 +73,12 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
             }
 
             // prise 3/15
+            if (rsOdin.team() == ETeam.BLEU) {
+                pincesArriereService.setExpected(ECouleurBouee.ROUGE);
+            } else {
+                pincesArriereService.setExpected(ECouleurBouee.VERT);
+            }
+
             mv.gotoPoint(getX(408), 927, GotoOption.ARRIERE);
             ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
             if (rsOdin.team() == ETeam.BLEU) {
@@ -80,6 +93,12 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
                 mv.gotoPoint(getX(412), 1390, GotoOption.AVANT);
 
                 // prise 2/14
+                if (rsOdin.team() == ETeam.BLEU) {
+                    pincesAvantService.setExpected(ECouleurBouee.VERT);
+                } else {
+                    pincesAvantService.setExpected(ECouleurBouee.ROUGE);
+                }
+
                 mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
                 mv.gotoPoint(getX(412), 1430, GotoOption.AVANT);
                 ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
@@ -90,6 +109,12 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
                 }
 
                 // prise 1/13
+                if (rsOdin.team() == ETeam.BLEU) {
+                    pincesArriereService.setExpected(ECouleurBouee.ROUGE);
+                } else {
+                    pincesArriereService.setExpected(ECouleurBouee.VERT);
+                }
+
                 mv.gotoPoint(getX(337), 1593, GotoOption.ARRIERE);
                 ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
                 if (rsOdin.team() == ETeam.BLEU) {
@@ -130,6 +155,9 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
         } catch (AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
+        } finally {
+            pincesArriereService.setExpected(null);
+            pincesAvantService.setExpected(null);
         }
     }
 }

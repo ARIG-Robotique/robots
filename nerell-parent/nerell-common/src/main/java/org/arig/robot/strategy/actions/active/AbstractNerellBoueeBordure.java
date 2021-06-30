@@ -28,11 +28,13 @@ public abstract class AbstractNerellBoueeBordure extends AbstractNerellBouee {
             rsNerell.enablePincesAvant();
             log.info("Prise de la bouee {} {}", bouee, rsNerell.boueeCouleur(bouee));
 
+            final int pinceCible = getPinceCible();
             final Point boueePt = entryPoint();
-            final double decallageX = getOffsetPince(getPinceCible()) * -1;
-            final Point entry = new Point( boueePt.getX() + decallageX,1600);
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            final double decallageX = getOffsetPince(pinceCible) * -1;
+            final Point entry = new Point(boueePt.getX() + decallageX, 1600);
             final Point beforeEntry = beforeEntry();
+
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             if (beforeEntry != null) {
                 mv.pathTo(beforeEntry, GotoOption.AVANT);
                 mv.gotoPoint(entry, GotoOption.AVANT);
@@ -41,6 +43,12 @@ public abstract class AbstractNerellBoueeBordure extends AbstractNerellBouee {
             }
 
             // prise de la bouée
+            if (pinceCible <= 2) {
+                pincesAvantService.setExpected(rsNerell.boueeCouleur(bouee), null);
+            } else {
+                pincesAvantService.setExpected(null, rsNerell.boueeCouleur(bouee));
+            }
+
             mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
             mv.gotoPoint(entry.getX(), 1840, GotoOption.AVANT);
             group.boueePrise(bouee);
@@ -56,6 +64,8 @@ public abstract class AbstractNerellBoueeBordure extends AbstractNerellBouee {
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
+        } finally {
+            pincesAvantService.setExpected(null, null);
         }
     }
 }

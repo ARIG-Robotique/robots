@@ -9,6 +9,7 @@ import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.INerellIOService;
+import org.arig.robot.services.INerellPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public abstract class AbstractNerellBouee extends AbstractNerellAction {
 
     @Autowired
     protected INerellIOService io;
+
+    @Autowired
+    protected INerellPincesAvantService pincesAvantService;
 
     protected int bouee;
 
@@ -69,6 +73,12 @@ public abstract class AbstractNerellBouee extends AbstractNerellAction {
             mv.pathTo(pointApproche, GotoOption.AVANT);
 
             // prise de la bouée
+            if (pinceCible <= 2) {
+                pincesAvantService.setExpected(rsNerell.boueeCouleur(bouee), null);
+            } else {
+                pincesAvantService.setExpected(null, rsNerell.boueeCouleur(bouee));
+            }
+
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
             mv.gotoPoint(tableUtils.getPointFromAngle(distanceApproche, offsetOrientation), GotoOption.AVANT);
             group.boueePrise(bouee);
@@ -78,6 +88,8 @@ public abstract class AbstractNerellBouee extends AbstractNerellAction {
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
+        } finally {
+            pincesAvantService.setExpected(null, null);
         }
     }
 

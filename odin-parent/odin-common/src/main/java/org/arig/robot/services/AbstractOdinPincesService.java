@@ -1,5 +1,6 @@
 package org.arig.robot.services;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesOdinConfig;
 import org.arig.robot.model.ECouleurBouee;
@@ -21,8 +22,8 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
     @Autowired
     private RobotGroupService group;
 
-    @Autowired
-    private EurobotTableService eurobotTableService;
+    @Setter
+    private ECouleurBouee expected = null;
 
     private boolean[] previousState = new boolean[]{false, false};
 
@@ -87,16 +88,7 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
 
             } else if (!previousState[i] && newState[i]) {
                 // nouvelle bouée
-                final ECouleurBouee couleur;
-                final Integer bouee = eurobotTableService.estimateBoueeFromPosition();
-                if (bouee != null) {
-                    couleur = rs.boueeCouleur(bouee);
-                    group.boueePrise(bouee);
-                } else {
-                    couleur = ECouleurBouee.INCONNU;
-                }
-
-                registerBouee(i, couleur);
+                registerBouee(i, getExpected());
                 needReadColor = true;
             }
         }
@@ -121,5 +113,14 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
             }
         }
         io.disableLedCapteurCouleur();
+    }
+
+    protected ECouleurBouee getExpected() {
+        ECouleurBouee couleur = ECouleurBouee.INCONNU;
+        if (expected != null) {
+            couleur = expected;
+            expected = null;
+        }
+        return couleur;
     }
 }

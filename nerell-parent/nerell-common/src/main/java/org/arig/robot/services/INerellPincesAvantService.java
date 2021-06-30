@@ -14,4 +14,6 @@ public interface INerellPincesAvantService {
     boolean processBouee();
 
     void processCouleurBouee();
+
+    void setExpected(ECouleurBouee gauche, ECouleurBouee droite);
 }

@@ -4,11 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ENerellStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
+import org.arig.robot.services.INerellPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -17,6 +20,9 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
 
     private boolean firstExecution = true;
 
+    @Autowired
+    private INerellPincesAvantService pincesAvantService;
+
     @Override
     public String name() {
         return IEurobotConfig.ACTION_PRISE_BOUEE_NORD;
@@ -24,13 +30,7 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
 
     @Override
     public Point entryPoint() {
-        double x = 225;
-        double y = 1200;
-        if (ETeam.JAUNE == rsNerell.team()) {
-            x = 3000 - x;
-        }
-
-        return new Point(x, y);
+        return new Point(getX(225), 1200);
     }
 
     @Override
@@ -65,10 +65,7 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
             }
 
             double targetx = 436;
-            double targety = 1200 + 578;
-            if (ETeam.JAUNE == rsNerell.team()) {
-                targetx = 3000 - targetx;
-            }
+            double targety = getX(1200 + 578);
             final Point target = new Point(targetx, targety);
 
             if (rsNerell.team() == ETeam.BLEU) {
@@ -78,13 +75,16 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
                 }
 
                 mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
+                pincesAvantService.setExpected(ECouleurBouee.ROUGE, ECouleurBouee.VERT);
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 group.boueePrise(1, 2);
 
                 mv.gotoOrientationDeg(0);
+                pincesAvantService.setExpected(ECouleurBouee.ROUGE, null);
                 mv.gotoPoint(770, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 group.boueePrise(5);
 
+                pincesAvantService.setExpected(null, ECouleurBouee.VERT);
                 mv.gotoPoint(980, 1635, GotoOption.AVANT);
                 group.boueePrise(6);
 
@@ -95,13 +95,16 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
                 }
 
                 mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
+                pincesAvantService.setExpected(ECouleurBouee.ROUGE, ECouleurBouee.VERT);
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 group.boueePrise(13, 14);
 
                 mv.gotoOrientationDeg(180);
+                pincesAvantService.setExpected(null, ECouleurBouee.VERT);
                 mv.gotoPoint(3000 - 770, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 group.boueePrise(12);
 
+                pincesAvantService.setExpected(ECouleurBouee.ROUGE, null);
                 mv.gotoPoint(3000 - 980, 1635, GotoOption.AVANT);
                 group.boueePrise(11);
             }
@@ -111,6 +114,7 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
             complete();
+            pincesAvantService.setExpected(null, null);
         }
     }
 }

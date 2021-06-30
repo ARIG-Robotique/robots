@@ -1,5 +1,7 @@
 package org.arig.robot.services;
 
+import org.arig.robot.model.ECouleurBouee;
+
 public interface IOdinPincesService {
     void deposeGrandPort();
 
@@ -12,4 +14,6 @@ public interface IOdinPincesService {
     boolean processBouee();
 
     void processCouleurBouee();
+
+    void setExpected(ECouleurBouee bouee);
 }

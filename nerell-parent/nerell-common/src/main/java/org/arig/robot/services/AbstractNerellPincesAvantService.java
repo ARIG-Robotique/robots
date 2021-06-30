@@ -2,6 +2,7 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.NerellRobotStatus;
@@ -30,8 +31,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
     @Autowired
     private RobotGroupService group;
 
-    @Autowired
-    private EurobotTableService eurobotTableService;
+    private MutablePair<ECouleurBouee, ECouleurBouee> expected = new MutablePair<>();
 
     private boolean[] previousState = new boolean[]{false, false, false, false};
 
@@ -141,16 +141,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
 
             } else if (!previousState[i] && newState[i]) {
                 // nouvelle bouée
-                final ECouleurBouee couleur;
-                final Integer bouee = eurobotTableService.estimateBoueeFromPosition();
-                if (bouee != null) {
-                    couleur = rs.boueeCouleur(bouee);
-                    group.boueePrise(bouee);
-                } else {
-                    couleur = ECouleurBouee.INCONNU;
-                }
-
-                registerBouee(i, couleur);
+                registerBouee(i, getExpected(i));
                 servosService.ascenseurAvantHaut(i, false);
                 needReadColor = true;
             }
@@ -176,6 +167,28 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
             }
         }
         io.disableLedCapteurCouleur();
+    }
+
+    @Override
+    public void setExpected(ECouleurBouee gauche, ECouleurBouee droite) {
+        expected.setRight(gauche);
+        expected.setLeft(droite);
+    }
+
+    private ECouleurBouee getExpected(int index) {
+        ECouleurBouee couleur = ECouleurBouee.INCONNU;
+        if (index < 2) {
+            if (expected.getLeft() != null) {
+                couleur = expected.getLeft();
+                expected.setLeft(null);
+            }
+        } else {
+            if (expected.getRight() != null) {
+                couleur = expected.getRight();
+                expected.setRight(null);
+            }
+        }
+        return couleur;
     }
 
     private void releasePompe(int i) {
