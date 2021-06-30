@@ -1,6 +1,7 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.arig.robot.model.RobotConfig;
 import org.arig.robot.system.servos.SD21Servos;
@@ -18,6 +19,10 @@ public abstract class AbstractServosService {
 
     @Autowired
     private RobotConfig robotConfig;
+
+    protected void logPositionServo(final String servoName, final String positionName, final boolean wait) {
+        log.info("{} -> {}{}", servoName, positionName, wait ? " avec attente" : StringUtils.EMPTY);
+    }
 
     /* **************************************** */
     /* Méthode pour le positionnement d'origine */
@@ -115,6 +120,7 @@ public abstract class AbstractServosService {
     //* Autres                                  *//
     //*******************************************//
 
+    @Deprecated
     public void controlBatteryVolts() {
         final double tension = getTension();
         if (tension < robotConfig.seuilAlimentationServos() && tension > 0) {
@@ -124,8 +130,8 @@ public abstract class AbstractServosService {
         }
     }
 
+    @Deprecated
     public double getTension() {
         return servos.getTension();
     }
-
 }
