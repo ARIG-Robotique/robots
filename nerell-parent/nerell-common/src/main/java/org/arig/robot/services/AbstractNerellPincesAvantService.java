@@ -171,8 +171,8 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
 
     @Override
     public void setExpected(ECouleurBouee gauche, ECouleurBouee droite) {
-        expected.setRight(gauche);
-        expected.setLeft(droite);
+        expected.setLeft(gauche);
+        expected.setRight(droite);
     }
 
     private ECouleurBouee getExpected(int index) {
