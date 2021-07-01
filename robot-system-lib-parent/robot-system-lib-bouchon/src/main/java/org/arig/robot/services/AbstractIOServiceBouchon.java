@@ -1,5 +1,6 @@
 package org.arig.robot.services;
 
+import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -13,8 +14,13 @@ public class AbstractIOServiceBouchon implements IIOService {
     @Accessors(fluent = true)
     private boolean tirette = false;
 
-    private boolean alim5V = false;
-    private boolean alim12V = false;
+    @Getter
+    @Accessors(fluent = true)
+    private boolean alimServos = false;
+
+    @Getter
+    @Accessors(fluent = true)
+    private boolean alimMoteurs = false;
 
     // --------------------------------------------------------- //
     // --------------------- INFOS TECHNIQUE ------------------- //
@@ -27,16 +33,6 @@ public class AbstractIOServiceBouchon implements IIOService {
     @Override
     public boolean auOk() {
         return au;
-    }
-
-    @Override
-    public boolean alimPuissance5VOk() {
-        return alim5V;
-    }
-
-    @Override
-    public boolean alimPuissance12VOk() {
-        return alim12V;
     }
 
     @Override
@@ -63,23 +59,23 @@ public class AbstractIOServiceBouchon implements IIOService {
     // --------------------------------------------------------- //
 
     @Override
-    public void enableAlim5VPuissance() {
-        alim5V = true;
+    public void enableAlimServos() {
+        alimServos = true;
     }
 
     @Override
-    public void disableAlim5VPuissance() {
-        alim5V = false;
+    public void disableAlimServos() {
+        alimServos = false;
     }
 
     @Override
-    public void enableAlim12VPuissance() {
-        alim12V = true;
+    public void enableAlimMoteurs() {
+        alimMoteurs = true;
     }
 
     @Override
-    public void disableAlim12VPuissance() {
-        alim12V = false;
+    public void disableAlimMoteurs() {
+        alimMoteurs = false;
     }
 
 }

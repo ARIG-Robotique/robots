@@ -2,6 +2,7 @@ package org.arig.robot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
+import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.IIOService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public abstract class AbstractCapteursController implements InitializingBean {
     @Autowired
     private IIOService ioService;
 
+    @Autowired
+    private AbstractEnergyService energyService;
+
     protected final Map<String, BooleanValue> numeriqueInfos = new LinkedHashMap<>();
 
     protected final Map<String, DoubleValue> analogiqueInfos = new LinkedHashMap<>();
@@ -35,9 +39,12 @@ public abstract class AbstractCapteursController implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         numeriqueInfos.put("Arret d'urgence", ioService::auOk);
-        numeriqueInfos.put("Alim. Puissance 5V", ioService::alimPuissance5VOk);
-        numeriqueInfos.put("Alim. Puissance 12V", ioService::alimPuissance12VOk);
+        numeriqueInfos.put("Alim. Servos", energyService::checkServos);
+        numeriqueInfos.put("Alim. Moteurs", energyService::checkMoteurs);
         numeriqueInfos.put("Tirette", ioService::tirette);
+
+        analogiqueInfos.put("Tension Servos", energyService::tensionServos);
+        analogiqueInfos.put("Tension Moteurs", energyService::tensionMoteurs);
     }
 
     @GetMapping

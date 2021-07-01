@@ -8,13 +8,14 @@ import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
+import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.AbstractNerellPincesAvantService;
 import org.arig.robot.services.BaliseService;
+import org.arig.robot.services.IIOService;
 import org.arig.robot.services.NerellEcranService;
 import org.arig.robot.services.NerellServosService;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
-import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -32,7 +33,7 @@ public class NerellTasksScheduler {
     private IAvoidingService avoidingService;
 
     @Autowired
-    private NerellServosService servosService;
+    private IIOService ioService;
 
     @Autowired
     private ISystemBlockerManager systemBlockerManager;
@@ -44,10 +45,11 @@ public class NerellTasksScheduler {
     private BaliseService baliseService;
 
     @Autowired
-    private AbstractNerellPincesAvantService pincesAvant;
+    private AbstractEnergyService energyService;
 
     @Autowired
-    private AbstractARIGVacuumController vacuumController;
+    private AbstractNerellPincesAvantService pincesAvant;
+
 
     private StopWatch timerLectureCouleur = new StopWatch();
 
@@ -75,7 +77,12 @@ public class NerellTasksScheduler {
     @Scheduled(fixedDelay = 5000)
     public void systemCheckTensionTaks() {
         if (rs.matchEnabled()) {
-            servosService.controlBatteryVolts();
+            if (!energyService.checkServos()) {
+                ioService.disableAlimServos();
+            }
+            if (!energyService.checkMoteurs()) {
+                ioService.disableAlimMoteurs();
+            }
         }
     }
 

@@ -7,8 +7,10 @@ import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.AbstractOdinPincesArriereService;
 import org.arig.robot.services.AbstractOdinPincesAvantService;
+import org.arig.robot.services.IIOService;
 import org.arig.robot.services.OdinEcranService;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
@@ -37,7 +39,10 @@ public class OdinTasksScheduler {
     private OdinEcranService ecranService;
 
     @Autowired
-    private IAlimentationSensor alimentationSensor;
+    private IIOService ioService;
+
+    @Autowired
+    private AbstractEnergyService energyService;
 
     @Autowired
     protected IMonitoringWrapper monitoringWrapper;
@@ -47,9 +52,6 @@ public class OdinTasksScheduler {
 
     @Autowired
     private AbstractOdinPincesArriereService pincesArriere;
-
-    @Autowired
-    private AbstractARIGVacuumController vacuumController;
 
     private StopWatch timerLectureCouleurAvant = new StopWatch();
     private StopWatch timerLectureCouleurArriere = new StopWatch();
@@ -76,19 +78,17 @@ public class OdinTasksScheduler {
         }
     }
 
-//    @Scheduled(fixedDelay = 5000)
-//    public void systemCheckTensionTaks() {
-//        if (rs.matchEnabled()) {
-//            try {
-//                alimentationSensor.refresh();
-//                AlimentationSensorValue servo = alimentationSensor.get((byte) 0);
-//                AlimentationSensorValue moteur = alimentationSensor.get((byte) 0);
-//
-//            } catch (I2CException e) {
-//                log.warn("Erreur de refresh des infos alimentations");
-//            }
-//        }
-//    }
+    @Scheduled(fixedDelay = 5000)
+    public void systemCheckTensionTaks() {
+        if (rs.matchEnabled()) {
+            if (!energyService.checkServos()) {
+                ioService.disableAlimServos();
+            }
+            if (!energyService.checkMoteurs()) {
+                ioService.disableAlimMoteurs();
+            }
+        }
+    }
 
     @Scheduled(fixedDelay = 200)
     public void pincesTask() {

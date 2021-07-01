@@ -25,13 +25,13 @@ public class NerellAlimentationCommands {
     @ShellMethod("Activation des alimentations")
     public void enableAlimentation() {
         servosService.cyclePreparation();
-        ioService.enableAlim5VPuissance();
-        ioService.enableAlim12VPuissance();
+        ioService.enableAlimServos();
+        ioService.enableAlimMoteurs();
     }
 
     @ShellMethod("Désactivation des alimentations")
     public void disableAlimentation() {
-        ioService.disableAlim5VPuissance();
-        ioService.disableAlim12VPuissance();
+        ioService.disableAlimServos();
+        ioService.disableAlimMoteurs();
     }
 }

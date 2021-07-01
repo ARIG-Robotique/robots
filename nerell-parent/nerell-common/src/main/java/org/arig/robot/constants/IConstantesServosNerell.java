@@ -7,8 +7,6 @@ import java.util.Map;
 
 public interface IConstantesServosNerell {
 
-    double SEUIL_ALIMENTATION_VOLTS = 3;
-
     // Constantes de vitesse //
     // --------------------- //
 

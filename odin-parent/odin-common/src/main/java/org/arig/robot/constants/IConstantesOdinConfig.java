@@ -4,6 +4,10 @@ import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 
 public interface IConstantesOdinConfig {
 
+    // Seuil de detection pour l'alimentation
+    double seuilAlimentationServosVolts = 3;
+    double seuilAlimentationMoteursVolts = 10;
+
     // Nb Thread Pool Scheduler
     int nbThreadScheduledExecutor = 20;
 

@@ -31,9 +31,14 @@ public class RobotConfig {
     private int pathFindingAngleSafe;
 
     /**
+     * moteurs
+     */
+    double seuilTensionMoteurs;
+
+    /**
      * servos
      */
-    double seuilAlimentationServos;
+    double seuilTensionServos;
     // Map<IdServo, Triple<PosMin, Temps, PosMax>>
     Map<Byte, Triple<Integer, Integer, Integer>> servosMinTimeMax;
     // Map<IdBatch, Map<BatchPos, [IdServo, Pos]>>

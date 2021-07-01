@@ -27,8 +27,8 @@ public class OdinQuitCommand implements Quit.Command {
         vacuumController.disableAll();
 
         // Stop les alimentations de puissance
-        ioService.disableAlim12VPuissance();
-        ioService.disableAlim5VPuissance();
+        ioService.disableAlimMoteurs();
+        ioService.disableAlimServos();
 
         throw new ExitRequest();
     }

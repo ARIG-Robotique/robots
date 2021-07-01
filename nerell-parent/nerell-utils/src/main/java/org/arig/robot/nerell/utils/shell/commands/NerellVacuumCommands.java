@@ -1,7 +1,7 @@
 package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.RequiredArgsConstructor;
-import org.arig.robot.model.AbstractRobotStatus;
+import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.INerellIOService;
 import org.arig.robot.services.NerellServosService;
 import org.arig.robot.system.vacuum.ARIGVacuumController;
@@ -18,13 +18,13 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 @RequiredArgsConstructor
 public class NerellVacuumCommands {
 
-    private final AbstractRobotStatus rs;
     private final INerellIOService ioService;
+    private final AbstractEnergyService energyService;
     private final ARIGVacuumController vacuumController;
     private final NerellServosService nerellServosService;
 
     public Availability alimentationOk() {
-        return ioService.auOk() && ioService.alimPuissance5VOk() && ioService.alimPuissance12VOk()
+        return ioService.auOk() && energyService.checkServos() && energyService.checkMoteurs()
                 ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
     }
 

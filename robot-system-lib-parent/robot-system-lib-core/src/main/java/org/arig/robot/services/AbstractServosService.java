@@ -30,11 +30,6 @@ public abstract class AbstractServosService {
 
     public void cyclePreparation() {
         log.info("Servos en position initiale");
-        servos.printVersion();
-
-        ioService.enableAlim5VPuissance();
-        while (!ioService.alimPuissance5VOk()) ;
-
         homes();
     }
 
@@ -114,24 +109,5 @@ public abstract class AbstractServosService {
 
         double wait = time * Math.abs(position - currentPosition) / (max * 1. - min);
         return (int) Math.round(wait);
-    }
-
-    //*******************************************//
-    //* Autres                                  *//
-    //*******************************************//
-
-    @Deprecated
-    public void controlBatteryVolts() {
-        final double tension = getTension();
-        if (tension < robotConfig.seuilAlimentationServos() && tension > 0) {
-            log.warn("La tension de la carte sd21 est en dessous du seuil : {} < {}", tension, robotConfig.seuilAlimentationServos());
-            ioService.disableAlim12VPuissance();
-            ioService.disableAlim5VPuissance();
-        }
-    }
-
-    @Deprecated
-    public double getTension() {
-        return servos.getTension();
     }
 }

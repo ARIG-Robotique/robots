@@ -177,16 +177,6 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
     }
 
     @Override
-    public boolean alimPuissance5VOk() {
-        return auOk() && outAlimPuissance5V.isLow(); // TODO carte mesure alim
-    }
-
-    @Override
-    public boolean alimPuissance12VOk() {
-        return auOk() && outAlimPuissance5V.isLow(); // TODO carte mesure alim
-    }
-
-    @Override
     public boolean tirette() {
         return inTirette.isLow();
     }
@@ -300,25 +290,25 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
     }
 
     @Override
-    public void enableAlim5VPuissance() {
+    public void enableAlimServos() {
         log.info("Activation puissance 5V");
         outAlimPuissance5V.low();
     }
 
     @Override
-    public void disableAlim5VPuissance() {
+    public void disableAlimServos() {
         log.info("Desactivation puissance 5V");
         outAlimPuissance5V.high();
     }
 
     @Override
-    public void enableAlim12VPuissance() {
+    public void enableAlimMoteurs() {
         log.info("Activation puissance 12V");
         outAlimPuissance12V.low();
     }
 
     @Override
-    public void disableAlim12VPuissance() {
+    public void disableAlimMoteurs() {
         log.info("Desactivation puissance 12V");
         outAlimPuissance12V.high();
     }

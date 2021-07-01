@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.NerellOrdonanceur;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.nerell.utils.shell.providers.NerellActionsProvider;
+import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.INerellIOService;
 import org.arig.robot.strategy.IAction;
 import org.springframework.shell.Availability;
@@ -25,13 +26,14 @@ import java.util.Optional;
 public class NerellActionsCommands {
 
     private INerellIOService ioService;
+    private final AbstractEnergyService energyService;
     private NerellOrdonanceur ordonanceur;
     private List<IAction> actions;
     private final NerellRobotStatus rs;
 
     @ShellMethodAvailability
     public Availability alimentationOk() {
-        return ioService.auOk() && ioService.alimPuissance5VOk() && ioService.alimPuissance12VOk()
+        return ioService.auOk() && energyService.checkServos() && energyService.checkMoteurs()
                 ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
     }
 

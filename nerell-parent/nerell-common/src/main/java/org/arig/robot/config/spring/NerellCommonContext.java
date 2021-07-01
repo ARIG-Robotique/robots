@@ -64,7 +64,8 @@ public class NerellCommonContext {
                 .pathFindingAngle(IConstantesNerellConfig.pathFindingAngle)
                 .pathFindingAngleSafe(IConstantesNerellConfig.pathFindingAngleSafe)
 
-                .seuilAlimentationServos(IConstantesServosNerell.SEUIL_ALIMENTATION_VOLTS)
+                .seuilTensionServos(IConstantesNerellConfig.seuilAlimentationServosVolts)
+                .seuilTensionMoteurs(0) // Pas de mesure sur Nerell
                 .servosMinTimeMax(IConstantesServosNerell.MIN_TIME_MAX)
                 .servosBatch(IConstantesServosNerell.BATCH_CONFIG)
 
