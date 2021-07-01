@@ -16,6 +16,7 @@ import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.AbstractEcranService;
+import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.AbstractServosService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.TrajectoryManager;
@@ -51,6 +52,9 @@ public abstract class AbstractOrdonanceur {
 
     @Autowired
     protected AbstractRobotStatus robotStatus;
+
+    @Autowired
+    protected AbstractEnergyService energyService;
 
     @Autowired
     protected IIOService ioService;
@@ -186,8 +190,8 @@ public abstract class AbstractOrdonanceur {
             lidar.stopScan();
 
             // On coupe le jus
-            ioService.disableAlim5VPuissance();
-            ioService.disableAlim12VPuissance();
+            ioService.disableAlimServos();
+            ioService.disableAlimMoteurs();
         }
     }
 
@@ -258,23 +262,18 @@ public abstract class AbstractOrdonanceur {
         servosService.cyclePreparation();
 
         ecranService.displayMessage("Activation puissances 5V et 12V");
-        ioService.enableAlim5VPuissance();
-        ioService.enableAlim12VPuissance();
-        if (!ioService.alimPuissance12VOk() || !ioService.alimPuissance5VOk()) {
-            log.warn("Alimentation puissance NOK (12V : {} ; 5V : {})", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk());
-            while (!ioService.alimPuissance12VOk() && !ioService.alimPuissance5VOk()) {
+        ioService.enableAlimServos();
+        ioService.enableAlimMoteurs();
+        ThreadUtils.sleep(500);
+        if (!energyService.checkMoteurs() || !energyService.checkServos()) {
+            ecranService.displayMessage(String.format("Alimentation NOK (Moteurs : %s V ; Servos : %s V)", energyService.tensionMoteurs(), energyService.tensionServos()));
+            while (!energyService.checkMoteurs() && !energyService.checkServos()) {
                 exitFromScreen();
                 ThreadUtils.sleep(500);
             }
         }
-        ecranService.displayMessage(String.format("Alimentation puissance OK (12V : %s ; 5V : %s)", ioService.alimPuissance12VOk(), ioService.alimPuissance5VOk()));
+        ecranService.displayMessage(String.format("Alimentation OK (Moteurs : %s V ; Servos : %s V)", energyService.tensionMoteurs(), energyService.tensionServos()));
         ThreadUtils.sleep(500);
-
-        double tension = servosService.getTension();
-        if (tension < robotConfig.seuilAlimentationServos() && tension > 0) {
-            ecranService.displayMessage("/!\\ PROBLEME DE TENSION SERVOS /!\\", LogLevel.ERROR);
-            throw new ExitProgram(true);
-        }
     }
 
     /**
@@ -360,11 +359,11 @@ public abstract class AbstractOrdonanceur {
 
         afterMatch(); // impl
 
-        ioService.disableAlim12VPuissance();
+        ioService.disableAlimMoteurs();
         lidar.stopScan();
         ecranService.displayMessage(String.format("FIN - Durée match %s ms", robotStatus.getElapsedTime()));
 
-        ioService.disableAlim5VPuissance();
+        ioService.disableAlimServos();
     }
 
     /**
@@ -400,11 +399,11 @@ public abstract class AbstractOrdonanceur {
             ThreadUtils.sleep(1000);
         }
 
-        ioService.enableAlim5VPuissance();
+        ioService.enableAlimServos();
 
         beforePowerOff(); // impl
 
-        ioService.disableAlim5VPuissance();
+        ioService.disableAlimServos();
     }
 
     protected void startMonitoring() {

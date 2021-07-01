@@ -63,7 +63,8 @@ public class OdinCommonContext {
                 .pathFindingAngle(IConstantesOdinConfig.pathFindingAngle)
                 .pathFindingAngleSafe(IConstantesOdinConfig.pathFindingAngleSafe)
 
-                .seuilAlimentationServos(IConstantesServosOdin.SEUIL_ALIMENTATION_VOLTS)
+                .seuilTensionServos(IConstantesOdinConfig.seuilAlimentationServosVolts)
+                .seuilTensionMoteurs(IConstantesOdinConfig.seuilAlimentationMoteursVolts)
                 .servosMinTimeMax(IConstantesServosOdin.MIN_TIME_MAX)
                 .servosBatch(IConstantesServosOdin.BATCH_CONFIG)
 

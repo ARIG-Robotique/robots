@@ -34,7 +34,10 @@ public class AbstractEcranService {
     private AbstractRobotStatus rs;
 
     @Autowired(required = false)
-    private AbstractBaliseService balise;
+    private AbstractBaliseService baliseService;
+
+    @Autowired
+    private AbstractEnergyService energyService;
 
     @Autowired
     private IEcran ecran;
@@ -83,10 +86,10 @@ public class AbstractEcranService {
         stateInfos.setLidar(lidarService.isConnected());
         stateInfos.setPhare(true); // TODO
         stateInfos.setAu(ioService.auOk());
-        stateInfos.setAlim12v(ioService.alimPuissance12VOk());
-        stateInfos.setAlim5vp(ioService.alimPuissance5VOk());
+        stateInfos.setAlim12v(energyService.checkMoteurs(false));
+        stateInfos.setAlim5vp(energyService.checkServos(false));
         stateInfos.setTirette(ioService.tirette());
-        stateInfos.setBalise(balise != null && balise.isConnected());
+        stateInfos.setBalise(baliseService != null && baliseService.isConnected());
         stateInfos.setOtherRobot(rs.groupOk());
     }
 

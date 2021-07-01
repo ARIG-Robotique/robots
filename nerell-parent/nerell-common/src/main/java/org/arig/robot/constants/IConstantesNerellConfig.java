@@ -4,6 +4,9 @@ import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 
 public interface IConstantesNerellConfig {
 
+    // Seuil de detection pour l'alimentation
+    double seuilAlimentationServosVolts = 3;
+
     // Nb Thread Pool Scheduler
     int nbThreadScheduledExecutor = 20;
 

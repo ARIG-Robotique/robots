@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.arig.robot.model.AbstractRobotStatus;
+import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.IOdinIOService;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
@@ -32,11 +33,12 @@ public class OdinCodeursCommands {
     private final Abstract2WheelsEncoders wheelsEncoders;
     private final AbstractPropulsionsMotors propulsionsMotors;
     private final IOdinIOService ioService;
+    private final AbstractEnergyService energyService;
 
     private final List<InfoCapturePropulsions> infosPropulsions = new ArrayList<>();
 
     public Availability alimentationOk() {
-        return ioService.auOk() && ioService.alimPuissance5VOk() && ioService.alimPuissance12VOk()
+        return ioService.auOk() && energyService.checkServos() && energyService.checkMoteurs()
                 ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
     }
 

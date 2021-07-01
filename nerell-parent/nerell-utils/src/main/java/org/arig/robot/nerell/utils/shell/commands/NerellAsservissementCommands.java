@@ -13,6 +13,7 @@ import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.SensDeplacement;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.INerellIOService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -38,6 +39,7 @@ public class NerellAsservissementCommands {
 
     private final IMonitoringWrapper monitoringWrapper;
     private final INerellIOService ioService;
+    private final AbstractEnergyService energyService;
     private final TrajectoryManager trajectoryManager;
     private final NerellRobotStatus rs;
     private final ConvertionRobotUnit convRobot;
@@ -80,7 +82,7 @@ public class NerellAsservissementCommands {
     }
 
     public Availability alimentationOk() {
-        return ioService.auOk() && ioService.alimPuissance5VOk() && ioService.alimPuissance12VOk()
+        return ioService.auOk() && energyService.checkServos() && energyService.checkMoteurs()
                 ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
     }
 

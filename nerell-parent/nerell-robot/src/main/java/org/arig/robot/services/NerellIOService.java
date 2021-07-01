@@ -193,12 +193,10 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
         return inAu.isLow();
     }
 
-    @Override
     public boolean alimPuissance5VOk() {
         return inAlimPuissance5V.isHigh();
     }
 
-    @Override
     public boolean alimPuissance12VOk() {
         return inAlimPuissance12V.isHigh();
     }
@@ -342,25 +340,25 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
     }
 
     @Override
-    public void enableAlim5VPuissance() {
+    public void enableAlimServos() {
         log.info("Activation puissance 5V");
         outAlimPuissance5V.low();
     }
 
     @Override
-    public void disableAlim5VPuissance() {
+    public void disableAlimServos() {
         log.info("Desactivation puissance 5V");
         outAlimPuissance5V.high();
     }
 
     @Override
-    public void enableAlim12VPuissance() {
+    public void enableAlimMoteurs() {
         log.info("Activation puissance 12V");
         outAlimPuissance12V.low();
     }
 
     @Override
-    public void disableAlim12VPuissance() {
+    public void disableAlimMoteurs() {
         log.info("Desactivation puissance 12V");
         outAlimPuissance12V.high();
     }

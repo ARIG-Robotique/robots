@@ -8,8 +8,6 @@ public interface IIOService {
 
     void refreshAllIO();
     boolean auOk();
-    boolean alimPuissance5VOk();
-    boolean alimPuissance12VOk();
     boolean tirette();
 
     // --------------------------------------------------------- //
@@ -24,9 +22,9 @@ public interface IIOService {
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
 
-    void enableAlim5VPuissance();
-    void disableAlim5VPuissance();
-    void enableAlim12VPuissance();
-    void disableAlim12VPuissance();
+    void enableAlimServos();
+    void disableAlimServos();
+    void enableAlimMoteurs();
+    void disableAlimMoteurs();
 
 }

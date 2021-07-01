@@ -6,6 +6,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.constants.IConstantesNerellConfig;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.NerellRobotStatus;
+import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.INerellIOService;
 import org.arig.robot.services.INerellPincesArriereService;
 import org.arig.robot.services.INerellPincesAvantService;
@@ -30,19 +31,15 @@ public class NerellServosCommands {
     private final NerellRobotStatus rs;
     private final NerellServosService servosService;
     private final INerellIOService ioService;
+    private final AbstractEnergyService energyService;
     private final INerellPincesAvantService pincesAvantService;
     private final INerellPincesArriereService pincesArriereService;
 
     private final int nbLoop = 3;
 
     public Availability alimentationOk() {
-        return ioService.auOk() && ioService.alimPuissance5VOk() && ioService.alimPuissance12VOk()
+        return ioService.auOk() && energyService.checkServos() && energyService.checkMoteurs()
                 ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
-    }
-
-    @ShellMethod("Récupèration de tension des servos")
-    public void getTension() {
-        final double tension = servosService.getTension();
     }
 
     @ShellMethodAvailability("alimentationOk")

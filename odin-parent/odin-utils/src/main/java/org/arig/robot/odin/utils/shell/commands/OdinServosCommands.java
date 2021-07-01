@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.constants.IConstantesOdinConfig;
 import org.arig.robot.model.OdinRobotStatus;
+import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.IOdinIOService;
 import org.arig.robot.services.OdinPincesArriereService;
 import org.arig.robot.services.OdinPincesAvantService;
@@ -29,19 +30,15 @@ public class OdinServosCommands {
     private final OdinRobotStatus rs;
     private final OdinServosService servosService;
     private final IOdinIOService ioService;
+    private final AbstractEnergyService energyService;
     private final OdinPincesAvantService pincesAvantService;
     private final OdinPincesArriereService pincesArriereService;
 
     private final int nbLoop = 3;
 
     public Availability alimentationOk() {
-        return ioService.auOk() && ioService.alimPuissance5VOk() && ioService.alimPuissance12VOk()
+        return ioService.auOk() && energyService.checkServos() && energyService.checkMoteurs()
                 ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
-    }
-
-    @ShellMethod("Récupèration de tension des servos")
-    public void getTension() {
-        final double tension = servosService.getTension();
     }
 
     @ShellMethodAvailability("alimentationOk")
