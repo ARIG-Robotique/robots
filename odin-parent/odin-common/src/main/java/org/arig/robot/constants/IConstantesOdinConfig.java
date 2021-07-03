@@ -42,8 +42,12 @@ public interface IConstantesOdinConfig {
     // 785.39816339745 mm => 180° : 785.39816339745 * 27.740367953379 / 180 = 121.040189125
     //double countPerDeg = 121.04018912529;
     //double countPerDeg = 120.139145534;
-    double countPerDeg = 119.719707124;
+    //double countPerDeg = 119.719707124;
     //double countPerDeg = 119.6199407014400000;
+    //double countPerDeg = 119.666123381539;
+    //double countPerDeg = 119.658051385;
+    //double countPerDeg = 119.649979388444;
+    double countPerDeg = 119.654015387;
 
     //double coefCodeurDroit = 1.0;
     //double coefCodeurGauche = 1.0;
