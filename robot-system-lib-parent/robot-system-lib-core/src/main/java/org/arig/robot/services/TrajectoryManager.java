@@ -689,6 +689,10 @@ public class TrajectoryManager {
         tourneDegByType(newOrient, types);
     }
 
+    public void alignFrontTo(final Point point) throws AvoidingException {
+        alignFrontTo(point.getX(), point.getY());
+    }
+
     /**
      * Méthode permettant d'aligner le robot face a un point
      *
@@ -698,6 +702,10 @@ public class TrajectoryManager {
     public void alignFrontTo(final double x, final double y) throws AvoidingException {
         log.info("Aligne ton avant sur le point X = {}mm ; Y = {}mm", x, y);
         alignFrontToAvecDecalage(x, y, 0);
+    }
+
+    public void alignFrontToAvecDecalage(final Point point, final double decalageDeg) throws AvoidingException {
+        alignFrontToAvecDecalage(point.getX(), point.getY(), decalageDeg);
     }
 
     /**
@@ -725,6 +733,10 @@ public class TrajectoryManager {
         }
 
         waitMouvement();
+    }
+
+    public void alignBackTo(final Point point) throws AvoidingException {
+        alignBackTo(point.getX(), point.getY());
     }
 
     /**
