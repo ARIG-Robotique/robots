@@ -76,8 +76,7 @@ public interface IConstantesOdinConfig {
     long vitesseOrientationMin = 150;
 
     long vitesseMax = 1000;
-    long vitesseMin = 50;
-
+    long vitesseMin = 100;
 
     // -------------- //
     // Parametres PID //
