@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
 import org.arig.robot.utils.ArigCollectionUtils;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Data
@@ -154,6 +156,30 @@ public class EurobotStatus extends AbstractRobotStatus {
     @Getter(AccessLevel.NONE)
     protected GrandChenaux grandChenaux = new GrandChenaux();
 
+    public void deposeGrandChenalVert(GrandChenaux.Line line, int index, ECouleurBouee bouee) {
+        log.info("Dépose grand chenal vert {} : {} at {}", line, bouee, index);
+        grandChenaux.addVert(line, index, bouee);
+    }
+
+    public void deposeGrandChenalRouge(GrandChenaux.Line line, int index, ECouleurBouee bouee) {
+        log.info("Dépose grand chenal rouge {} : {} at {}", line, bouee, index);
+        grandChenaux.addRouge(line, index, bouee);
+    }
+
+    public void deposeGrandChenalVert(GrandChenaux.Line line, ECouleurBouee... bouees) {
+        log.info("Dépose grand chenal vert {} : {}", line, Stream.of(bouees)
+                .map(b -> b == null ? "null" : b.name())
+                .collect(Collectors.joining(",")));
+        grandChenaux.addVert(line, bouees);
+    }
+
+    public void deposeGrandChenalRouge(GrandChenaux.Line line, ECouleurBouee... bouees) {
+        log.info("Dépose grand chenal rouge {} : {}", line, Stream.of(bouees)
+                .map(b -> b == null ? "null" : b.name())
+                .collect(Collectors.joining(",")));
+        grandChenaux.addRouge(line, bouees);
+    }
+
     public boolean grandChenalVertEmpty() {
         return grandChenaux.chenalVertEmpty();
     }
@@ -162,16 +188,16 @@ public class EurobotStatus extends AbstractRobotStatus {
         return grandChenaux.chenalRougeEmpty();
     }
 
-    public void deposeGrandChenalVert(ECouleurBouee... bouees) {
-        grandChenaux.addVert(bouees);
-    }
-
-    public void deposeGrandChenalRouge(ECouleurBouee... bouees) {
-        grandChenaux.addRouge(bouees);
-    }
-
     public Chenaux cloneGrandChenaux() {
         return grandChenaux.copy();
+    }
+
+    public List<ECouleurBouee> getGrandChenalVert(GrandChenaux.Line line) {
+        return grandChenaux.getVert(line);
+    }
+
+    public List<ECouleurBouee> getGrandChenalRouge(GrandChenaux.Line line) {
+        return grandChenaux.getRouge(line);
     }
 
     @Setter(AccessLevel.NONE)

@@ -3,6 +3,7 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesServosNerell;
 import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.GrandChenaux;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,17 +70,15 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
      */
     @Override
     public boolean deposeGrandChenal(final ECouleurBouee couleurChenal, final boolean partielle) {
+        ECouleurBouee[] boueesPosees = new ECouleurBouee[]{null, null, null, null, null};
+
         if (partielle) {
             deposeTable(couleurChenal);
 
-            for (int i = 0; i < rs.pincesArriere().length; i++) {
+            for (int i = 0; i < 5; i++) {
                 final ECouleurBouee couleurPince = rs.pincesArriere()[i];
                 if (couleurPince == couleurChenal || couleurPince == ECouleurBouee.INCONNU) {
-                    if (couleurChenal == ECouleurBouee.ROUGE) {
-                        group.deposeGrandChenalRouge(couleurPince);
-                    } else {
-                        group.deposeGrandChenalVert(couleurPince);
-                    }
+                    boueesPosees[i] = couleurPince;
                     rs.pinceArriere(i, null);
                 }
             }
@@ -87,12 +86,14 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
         } else {
             deposeTable(null);
 
-            if (couleurChenal == ECouleurBouee.ROUGE) {
-                group.deposeGrandChenalRouge(rs.pincesArriere());
-            } else {
-                group.deposeGrandChenalVert(rs.pincesArriere());
-            }
+            System.arraycopy(rs.pincesArriere(), 0, boueesPosees, 0, 5);
             rs.clearPincesArriere();
+        }
+
+        if (couleurChenal == ECouleurBouee.ROUGE) {
+            group.deposeGrandChenalRouge(GrandChenaux.Line.A, boueesPosees);
+        } else {
+            group.deposeGrandChenalVert(GrandChenaux.Line.A, boueesPosees);
         }
 
         return true;

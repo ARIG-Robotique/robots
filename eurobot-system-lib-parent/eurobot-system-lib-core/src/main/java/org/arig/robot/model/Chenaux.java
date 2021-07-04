@@ -4,9 +4,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.arig.robot.utils.ArigCollectionUtils;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -53,31 +50,5 @@ public abstract class Chenaux {
         copy.chenalRouge.addAll(chenalRouge);
         copy.chenalVert.addAll(chenalVert);
         return copy;
-    }
-
-    public void writeStatus(ObjectOutputStream os) throws IOException {
-        os.writeByte(chenalVert.size());
-        for (ECouleurBouee bouee : chenalVert) {
-            os.writeByte(bouee.ordinal());
-        }
-
-        os.writeByte(chenalRouge.size());
-        for (ECouleurBouee bouee : chenalRouge) {
-            os.writeByte(bouee.ordinal());
-        }
-    }
-
-    public void readStatus(ObjectInputStream is) throws IOException {
-        chenalVert.clear();
-        byte nbVert = is.readByte();
-        for (byte i = 0; i < nbVert; i++) {
-            chenalVert.add(ECouleurBouee.values()[is.readByte()]);
-        }
-
-        chenalRouge.clear();
-        byte nbRouge = is.readByte();
-        for (byte i = 0; i < nbRouge; i++) {
-            chenalRouge.add(ECouleurBouee.values()[is.readByte()]);
-        }
     }
 }

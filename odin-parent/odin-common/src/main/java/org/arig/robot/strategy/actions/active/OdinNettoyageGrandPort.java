@@ -131,9 +131,9 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
                 mv.gotoPoint(getX(180), 1490, GotoOption.AVANT);
                 mv.gotoPoint(getX(150), 1490, GotoOption.AVANT);
                 if (rsOdin.team() == ETeam.BLEU) {
-                    pincesAvantService.deposeGrandChenalVert();
+                    pincesAvantService.deposeFondGrandChenalVert();
                 } else {
-                    pincesAvantService.deposeGrandChenalRouge();
+                    pincesAvantService.deposeFondGrandChenalRouge();
                 }
                 mv.gotoPoint(getX(250), 1490, GotoOption.ARRIERE);
             }
@@ -143,9 +143,9 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
                 mv.gotoPoint(getX(180), 920, GotoOption.ARRIERE);
                 mv.gotoPoint(getX(150), 920, GotoOption.ARRIERE);
                 if (rsOdin.team() == ETeam.BLEU) {
-                    pincesArriereService.deposeGrandChenalRouge();
+                    pincesArriereService.deposeFondGrandChenalRouge();
                 } else {
-                    pincesArriereService.deposeGrandChenalVert();
+                    pincesArriereService.deposeFondGrandChenalVert();
                 }
                 mv.gotoPoint(getX(250), 920, GotoOption.AVANT);
             }

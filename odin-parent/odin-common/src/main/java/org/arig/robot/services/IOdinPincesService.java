@@ -1,13 +1,16 @@
 package org.arig.robot.services;
 
 import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.GrandChenaux;
 
 public interface IOdinPincesService {
     void deposeGrandPort();
 
-    void deposeGrandChenalRouge();
+    void deposeFondGrandChenalRouge();
 
-    void deposeGrandChenalVert();
+    void deposeFondGrandChenalVert();
+
+    void deposeGrandChenal(ECouleurBouee chenal, GrandChenaux.Line line, int idxGauche, int idxDroite);
 
     void activate();
 

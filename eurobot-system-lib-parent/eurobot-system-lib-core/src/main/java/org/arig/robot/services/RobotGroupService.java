@@ -7,6 +7,7 @@ import org.arig.robot.model.EPort;
 import org.arig.robot.model.EStatusEvent;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.EurobotStatus;
+import org.arig.robot.model.GrandChenaux;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
 import org.arig.robot.system.group.IRobotGroup;
@@ -97,11 +98,25 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
             case DEPOSE_PETIT_PORT:
                 rs.deposePetitPort(getBouees(value));
                 break;
+            case DEPOSE_UNITAIRE_GRAND_CHENAL_VERT:
+                rs.deposeGrandChenalVert(
+                        GrandChenaux.Line.values()[value[0]],
+                        value[1],
+                        ECouleurBouee.values()[value[2]]
+                );
+                break;
+            case DEPOSE_UNITAIRE_GRAND_CHENAL_ROUGE:
+                rs.deposeGrandChenalRouge(
+                        GrandChenaux.Line.values()[value[0]],
+                        value[1],
+                        ECouleurBouee.values()[value[2]]
+                );
+                break;
             case DEPOSE_GRAND_CHENAL_ROUGE:
-                rs.deposeGrandChenalRouge(getBouees(value));
+                rs.deposeGrandChenalRouge(GrandChenaux.Line.values()[value[0]], getBouees(value, 1));
                 break;
             case DEPOSE_GRAND_CHENAL_VERT:
-                rs.deposeGrandChenalVert(getBouees(value));
+                rs.deposeGrandChenalVert(GrandChenaux.Line.values()[value[0]], getBouees(value, 1));
                 break;
             case DEPOSE_PETIT_CHENAL_ROUGE:
                 rs.deposePetitChenalRouge(getBouees(value));
@@ -123,9 +138,14 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
     }
 
     private ECouleurBouee[] getBouees(byte[] value) {
-        ECouleurBouee[] bouees = new ECouleurBouee[value.length];
-        for (int i = 0; i < value.length; i++) {
-            bouees[i] = ECouleurBouee.values()[value[i]];
+        return getBouees(value, 0);
+    }
+
+    private ECouleurBouee[] getBouees(byte[] value, int start) {
+        ECouleurBouee[] bouees = new ECouleurBouee[value.length - start];
+        for (int i = start; i < value.length; i++) {
+            ECouleurBouee bouee = ECouleurBouee.values()[value[i]];
+            bouees[i - start] = bouee == ECouleurBouee.NULL ? null : bouee;
         }
         return bouees;
     }
@@ -203,14 +223,30 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
         sendEventBouees(EStatusEvent.DEPOSE_PETIT_PORT, bouees);
     }
 
-    public void deposeGrandChenalVert(ECouleurBouee... bouees) {
-        rs.deposeGrandChenalVert(bouees);
-        sendEventBouees(EStatusEvent.DEPOSE_GRAND_CHENAL_VERT, bouees);
+    public void deposeGrandChenalVert(GrandChenaux.Line line, int index, ECouleurBouee bouee) {
+        if (bouee != null) {
+            rs.deposeGrandChenalVert(line, index, bouee);
+            byte[] data = new byte[]{(byte) line.ordinal(), (byte) index, (byte) bouee.ordinal()};
+            sendEvent(EStatusEvent.DEPOSE_UNITAIRE_GRAND_CHENAL_VERT, data);
+        }
     }
 
-    public void deposeGrandChenalRouge(ECouleurBouee... bouees) {
-        rs.deposeGrandChenalRouge(bouees);
-        sendEventBouees(EStatusEvent.DEPOSE_GRAND_CHENAL_ROUGE, bouees);
+    public void deposeGrandChenalRouge(GrandChenaux.Line line, int index, ECouleurBouee bouee) {
+        if (bouee != null) {
+            rs.deposeGrandChenalRouge(line, index, bouee);
+            byte[] data = new byte[]{(byte) line.ordinal(), (byte) index, (byte) bouee.ordinal()};
+            sendEvent(EStatusEvent.DEPOSE_UNITAIRE_GRAND_CHENAL_ROUGE, data);
+        }
+    }
+
+    public void deposeGrandChenalVert(GrandChenaux.Line line, ECouleurBouee... bouees) {
+        rs.deposeGrandChenalVert(line, bouees);
+        sendEventGrandChenal(EStatusEvent.DEPOSE_GRAND_CHENAL_VERT, line, bouees);
+    }
+
+    public void deposeGrandChenalRouge(GrandChenaux.Line line, ECouleurBouee... bouees) {
+        rs.deposeGrandChenalRouge(line, bouees);
+        sendEventGrandChenal(EStatusEvent.DEPOSE_GRAND_CHENAL_ROUGE, line, bouees);
     }
 
     public void deposePetitChenalVert(ECouleurBouee... bouees) {
@@ -245,6 +281,17 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
             data[3 + i * 3] = (byte) Math.round(hautFond.get(i).pt().getY() / 10.0);
         }
         sendEvent(EStatusEvent.HAUT_FOND, data);
+    }
+
+    private void sendEventGrandChenal(EStatusEvent event, GrandChenaux.Line line, ECouleurBouee... bouees) {
+        byte[] data = new byte[1 + bouees.length];
+        data[0] = (byte) line.ordinal();
+        for (int i = 0; i < bouees.length; i++) {
+            if (bouees[i] != null) {
+                data[i + 1] = (byte) bouees[i].ordinal();
+            }
+        }
+        sendEvent(event, data);
     }
 
     private void sendEventBouees(EStatusEvent event, ECouleurBouee[] bouees) {

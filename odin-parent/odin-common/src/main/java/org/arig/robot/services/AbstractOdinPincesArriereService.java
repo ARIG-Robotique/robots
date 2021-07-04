@@ -15,10 +15,11 @@ public abstract class AbstractOdinPincesArriereService extends AbstractOdinPince
     }
 
     @Override
-    protected void releasePompe(final int nb) {
-        if (nb == 0) {
+    protected void releasePompe(boolean gauche, boolean droite) {
+        if (gauche) {
             io.releasePompeArriereGauche();
-        } else if (nb == 1) {
+        }
+        if (droite) {
             io.releasePompeArriereDroit();
         }
     }
@@ -49,6 +50,22 @@ public abstract class AbstractOdinPincesArriereService extends AbstractOdinPince
     @Override
     protected void registerBouee(int index, ECouleurBouee couleurBouee) {
         rs.pinceArriere(index, couleurBouee);
+    }
+
+    @Override
+    protected void pousser(boolean gauche, boolean droite) {
+        if (gauche && droite) {
+            servos.poussoirArriereGaucheHaut(false);
+            servos.poussoirArriereDroitHaut(true);
+            servos.poussoirArriereGaucheBas(false);
+            servos.poussoirArriereDroitBas(true);
+        } else if (gauche) {
+            servos.poussoirArriereGaucheHaut(true);
+            servos.poussoirArriereGaucheBas(true);
+        } else {
+            servos.poussoirArriereDroitHaut(true);
+            servos.poussoirArriereDroitBas(true);
+        }
     }
 
     @Override

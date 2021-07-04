@@ -4,6 +4,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesOdinConfig;
 import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.GrandChenaux;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
     protected OdinRobotStatus rs;
 
     @Autowired
+    protected OdinServosService servos;
+
+    @Autowired
     private RobotGroupService group;
 
     @Setter
@@ -28,13 +32,23 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
     private boolean[] previousState = new boolean[]{false, false};
 
     protected abstract void disableServicePinces();
+
     protected abstract void releasePompes();
-    protected abstract void releasePompe(int nb);
+
+    protected abstract void releasePompe(boolean gauche, boolean droite);
+
     protected abstract void enablePompes();
+
     protected abstract ECouleurBouee[] bouees();
+
     protected abstract void clearPinces();
+
     protected abstract boolean[] getNewState();
+
     protected abstract void registerBouee(int index, ECouleurBouee couleurBouee);
+
+    protected abstract void pousser(boolean gauche, boolean droite);
+
     protected abstract ECouleurBouee getCouleurBouee(int index);
 
     private void depose() {
@@ -51,17 +65,56 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
     }
 
     @Override
-    public void deposeGrandChenalRouge() {
+    public void deposeFondGrandChenalRouge() {
         depose();
-        group.deposeGrandChenalRouge(bouees());
+        group.deposeGrandChenalRouge(GrandChenaux.Line.C, bouees());
         clearPinces();
     }
 
     @Override
-    public void deposeGrandChenalVert() {
+    public void deposeFondGrandChenalVert() {
         depose();
-        group.deposeGrandChenalVert(bouees());
+        group.deposeGrandChenalVert(GrandChenaux.Line.C, bouees());
         clearPinces();
+    }
+
+    @Override
+    public void deposeGrandChenal(ECouleurBouee chenal, GrandChenaux.Line line, int idxGauche, int idxDroite) {
+        disableServicePinces();
+
+        if (idxGauche != -1 && idxDroite != -1) {
+            releasePompes();
+            ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+            pousser(true, true);
+        } else if (idxGauche != -1) {
+            releasePompe(true, false);
+            ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+            pousser(true, false);
+        } else {
+            releasePompe(false, true);
+            ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+            pousser(false, true);
+        }
+
+        if (chenal == ECouleurBouee.VERT) {
+            if (idxGauche != -1) {
+                group.deposeGrandChenalVert(line, idxGauche, bouees()[0]);
+                bouees()[0] = null;
+            }
+            if (idxDroite != -1) {
+                group.deposeGrandChenalVert(line, idxDroite, bouees()[1]);
+                bouees()[1] = null;
+            }
+        } else {
+            if (idxGauche != -1) {
+                group.deposeGrandChenalRouge(line, idxGauche, bouees()[0]);
+                bouees()[0] = null;
+            }
+            if (idxDroite != -1) {
+                group.deposeGrandChenalRouge(line, idxDroite, bouees()[1]);
+                bouees()[1] = null;
+            }
+        }
     }
 
     /**
@@ -79,9 +132,9 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
      */
     @Override
     public void deactivate() {
-        for (int i = 0 ; i < 2 ; i++) {
+        for (int i = 0; i < 2; i++) {
             if (bouees()[i] == null) {
-                releasePompe(i);
+                releasePompe(i == 0, i == 1);
             }
         }
     }
