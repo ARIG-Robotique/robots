@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.OdinOrdonanceur;
-import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.odin.utils.shell.providers.OdinActionsProvider;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.IOdinIOService;

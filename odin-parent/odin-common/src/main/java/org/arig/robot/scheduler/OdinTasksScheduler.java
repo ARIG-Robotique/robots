@@ -14,8 +14,6 @@ import org.arig.robot.services.IIOService;
 import org.arig.robot.services.OdinEcranService;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
-import org.arig.robot.system.capteurs.IAlimentationSensor;
-import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

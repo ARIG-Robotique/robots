@@ -8,7 +8,6 @@ import org.arig.robot.model.EPort;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.stereotype.Component;
 

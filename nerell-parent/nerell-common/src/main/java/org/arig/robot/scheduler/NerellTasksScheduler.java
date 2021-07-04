@@ -13,7 +13,6 @@ import org.arig.robot.services.AbstractNerellPincesAvantService;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.IIOService;
 import org.arig.robot.services.NerellEcranService;
-import org.arig.robot.services.NerellServosService;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,7 +3,6 @@ package org.arig.robot.strategy.actions.active.echappement;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
-import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.stereotype.Component;
@@ -14,12 +13,7 @@ public class AntiblocagePort extends AbstractEurobotAction {
 
     @Override
     public Point entryPoint() {
-        double x = 460;
-        double y = 1200;
-        if (ETeam.JAUNE == rs.team()) {
-            x = 3000 - x;
-        }
-        return new Point(x, y);
+        return new Point(getX(460), 1200);
     }
 
     @Override
