@@ -8,6 +8,7 @@ import org.arig.robot.model.EPort;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
+import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,7 @@ public class NerellRetourAuPort extends AbstractNerellAction {
     @Override
     public Point entryPoint() {
         final int offset = 575; // Empirique
-        final double x = getX(465);
+        final double x = getX(455);
         final double centerY = 1200;
         final Point north = new Point(x, centerY + offset);
         final Point south = new Point(x, centerY - offset);
@@ -83,19 +84,28 @@ public class NerellRetourAuPort extends AbstractNerellAction {
             group.port(port == EPort.NORD ? EPort.WIP_NORD : EPort.WIP_SUD);
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            mv.pathTo(entry, GotoOption.ARRIERE, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
-
-            group.port(port);
 
             // Finalisation de la rentrée dans le port après avoir compté les points
             if (rsNerell.otherPort() == EPort.AUCUN) {
-                // Premier arrivé calage sur la bordure
-                mv.gotoPoint(getX(160), entry.getY(), GotoOption.SANS_ORIENTATION);
-                rs.enableCalageBordure();
-                mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
-                mv.reculeMMSansAngle(1000);
+                // Premier arrivé
+                mv.pathTo(entry, GotoOption.ARRIERE, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                group.port(port);
+                mv.gotoPoint(getX(270), entry.getY(), GotoOption.SANS_ORIENTATION);
+
+            } else {
+                // Deuxieme arrivé
+                final double entryYSecond = port == EPort.NORD ? 1775 : 640;
+                mv.pathTo(entry.getX(), entryYSecond, GotoOption.AVANT, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                group.port(port);
+                mv.gotoOrientationDeg(rs.team() == ETeam.BLEU ? 180 : 0);
+                if ((rs.team() == ETeam.BLEU && port == EPort.NORD) || (rs.team() == ETeam.JAUNE && port == EPort.SUD)) {
+                    servosNerell.moustacheGaucheOuvert(false);
+                } else {
+                    servosNerell.moustacheDroiteOuvert(false);
+                }
             }
 
+            complete();
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
@@ -103,8 +113,6 @@ public class NerellRetourAuPort extends AbstractNerellAction {
             if (!rsNerell.inPort()) {
                 group.port(EPort.AUCUN);
             }
-        } finally {
-            complete();
         }
     }
 }

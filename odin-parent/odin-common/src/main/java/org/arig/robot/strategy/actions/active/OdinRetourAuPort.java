@@ -22,8 +22,8 @@ public class OdinRetourAuPort extends AbstractOdinAction {
 
     @Override
     public Point entryPoint() {
-        final int offset = 575; // Empirique
-        final double x = getX(550);
+        final int offset = 410; // Empirique
+        final double x = getX(680);
         final double centerY = 1200;
         final Point north = new Point(x, centerY + offset);
         final Point south = new Point(x, centerY - offset);
@@ -84,56 +84,29 @@ public class OdinRetourAuPort extends AbstractOdinAction {
             group.port(port == EPort.NORD ? EPort.WIP_NORD : EPort.WIP_SUD);
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            mv.pathTo(entry, GotoOption.AVANT, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
 
-            // si nerell est déjà au port, positionnement spécial
-            if (rsOdin.otherPort() != EPort.AUCUN) {
-                mv.gotoPoint(getX(465), port == EPort.NORD ? 1700 : 700);
-
-                final double angleRobot = Math.abs(conv.pulseToDeg(position.getAngle()));
-                double angleDecallage = 15;
-                // c'est d'une lourdeur ! mais mon cerveau fatigué n'a pas trouvé la formule
-                if (rsOdin.team() == ETeam.BLEU) {
-                    if (port == EPort.NORD) {
-                        if (angleRobot < 90) {
-                            mv.gotoOrientationDeg(-angleDecallage);
-                        } else {
-                            mv.gotoOrientationDeg(180 - angleDecallage);
-                        }
-                    } else {
-                        if (angleRobot < 90) {
-                            mv.gotoOrientationDeg(angleDecallage);
-                        } else {
-                            mv.gotoOrientationDeg(-180 + angleDecallage);
-                        }
-                    }
-                } else {
-                    if (port == EPort.NORD) {
-                        if (angleRobot < 90) {
-                            mv.gotoOrientationDeg(angleDecallage);
-                        } else {
-                            mv.gotoOrientationDeg(-180 + angleDecallage);
-                        }
-                    } else {
-                        if (angleRobot < 90) {
-                            mv.gotoOrientationDeg(-angleDecallage);
-                        } else {
-                            mv.gotoOrientationDeg(180 - angleDecallage);
-                        }
-                    }
-                }
-
+            // Finalisation de la rentrée dans le port après avoir compté les points
+            if (rsOdin.otherPort() == EPort.AUCUN) {
+                // Premier arrivé on rentre dans la zone
+                final double entryYFirst = port == EPort.NORD ? 1770 : 650;
+                mv.pathTo(entry.getX(), entryYFirst, GotoOption.ARRIERE, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                mv.gotoPoint(getX(160), entryYFirst, GotoOption.SANS_ORIENTATION);
                 group.port(port);
-
+                mv.gotoOrientationDeg(rs.team() == ETeam.BLEU ? 0 : 180);
             } else {
-                mv.gotoPoint(getX(450), entry.getY());
-
+                // Deuxieme arrivé, bisous Nerell
+                mv.pathTo(entry.getX(), entry.getY(), GotoOption.ARRIERE, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                mv.gotoPoint(getX(550), entry.getY(), GotoOption.ARRIERE);
+                mv.gotoOrientationDeg(90);
+                if (rs.team() == ETeam.BLEU) {
+                    servosOdin.brasGaucheMancheAAir(false);
+                } else {
+                    servosOdin.brasDroitMancheAAir(false);
+                }
                 group.port(port);
-
-                // Finalisation de la rentrée dans le port après avoir compté les points
-                mv.gotoPoint(getX(150), entry.getY(), GotoOption.SANS_ORIENTATION);
             }
 
+            complete();
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
@@ -141,8 +114,6 @@ public class OdinRetourAuPort extends AbstractOdinAction {
             if (!rsOdin.inPort()) {
                 group.port(EPort.AUCUN);
             }
-        } finally {
-            complete();
         }
     }
 }
