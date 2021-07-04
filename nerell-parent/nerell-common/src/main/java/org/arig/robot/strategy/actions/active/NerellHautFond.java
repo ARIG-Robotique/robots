@@ -85,6 +85,12 @@ public class NerellHautFond extends AbstractNerellAction {
             mv.pathTo(entry);
 
             // on ratisse en laissant l'évitement actif
+            if (finalPoint.getX() > entry.getX()) {
+                servosNerell.moustacheGaucheOuvert(false);
+            } else {
+                servosNerell.moustacheDroiteOuvert(false);
+            }
+
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
             mv.gotoPoint(finalPoint, GotoOption.AVANT);
 
@@ -95,6 +101,8 @@ public class NerellHautFond extends AbstractNerellAction {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
             updateValidTime();
+
+            servosNerell.moustachesFerme(false);
         }
     }
 }
