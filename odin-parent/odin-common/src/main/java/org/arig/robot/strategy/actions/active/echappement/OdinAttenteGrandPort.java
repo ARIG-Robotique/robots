@@ -50,7 +50,7 @@ public class OdinAttenteGrandPort extends AbstractOdinAction {
 
     @Override
     public boolean isValid() {
-        return true;
+        return isTimeValid() && !rsOdin.inPort();
     }
 
     @Override
