@@ -103,7 +103,7 @@ public abstract class AbstractNerellDeposeGrandPortChenal extends AbstractNerell
             return false;
 
         } else if (rsNerell.deposePartielle()) {
-            return !rsNerell.pincesArriereEmpty() && !rsNerell.pincesAvantEmpty();
+            return !rsNerell.pincesArriereEmpty() || !rsNerell.pincesAvantEmpty();
 
         } else {
             return (!rsNerell.boueePresente(getBoueeBloquante()) || rsNerell.getRemainingTime() < IEurobotConfig.invalidPriseRemainingTime) &&
