@@ -11,6 +11,8 @@ public interface IOdinPincesService {
 
     void activate();
 
+    void deactivate();
+
     boolean processBouee();
 
     void processCouleurBouee();

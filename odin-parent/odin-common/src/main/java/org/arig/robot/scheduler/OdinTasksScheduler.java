@@ -57,7 +57,9 @@ public class OdinTasksScheduler {
     private StopWatch timerLectureCouleurArriere = new StopWatch();
 
     private final SignalEdgeFilter risingEnablePincesAvant = new SignalEdgeFilter(false, Type.RISING);
+    private final SignalEdgeFilter fallingEnablePincesAvant = new SignalEdgeFilter(false, Type.FALLING);
     private final SignalEdgeFilter risingEnablePincesArriere = new SignalEdgeFilter(false, Type.RISING);
+    private final SignalEdgeFilter fallingEnablePincesArriere = new SignalEdgeFilter(false, Type.FALLING);
 
     @Scheduled(fixedRate = 1000)
     public void ecranTask() {
@@ -97,9 +99,14 @@ public class OdinTasksScheduler {
 
         if (Boolean.TRUE.equals(risingEnablePincesAvant.filter(pincesAvantEnabled))) {
             pincesAvant.activate();
+        } else if (Boolean.TRUE.equals(fallingEnablePincesAvant.filter(pincesAvantEnabled))) {
+            pincesAvant.deactivate();
         }
+
         if (Boolean.TRUE.equals(risingEnablePincesArriere.filter(pincesArriereEnabled))) {
             pincesArriere.activate();
+        } else if (Boolean.TRUE.equals(fallingEnablePincesArriere.filter(pincesArriereEnabled))) {
+            pincesArriere.deactivate();
         }
 
         if (pincesAvantEnabled || pincesArriereEnabled) {

@@ -54,6 +54,7 @@ public class NerellTasksScheduler {
     private StopWatch timerLectureCouleur = new StopWatch();
 
     private final SignalEdgeFilter risingEnablePinces = new SignalEdgeFilter(false, Type.RISING);
+    private final SignalEdgeFilter fallingEnablePinces = new SignalEdgeFilter(false, Type.FALLING);
 
     @Scheduled(fixedRate = 1000)
     public void ecranTask() {
@@ -121,6 +122,8 @@ public class NerellTasksScheduler {
 
         if (Boolean.TRUE.equals(risingEnablePinces.filter(pincesEnabled))) {
             pincesAvant.activate();
+        } else if (Boolean.TRUE.equals(fallingEnablePinces.filter(pincesEnabled))) {
+            pincesAvant.deactivate();
         }
 
         if (pincesEnabled) {

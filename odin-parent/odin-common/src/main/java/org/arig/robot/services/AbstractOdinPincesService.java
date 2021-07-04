@@ -29,6 +29,7 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
 
     protected abstract void disableServicePinces();
     protected abstract void releasePompes();
+    protected abstract void releasePompe(int nb);
     protected abstract void enablePompes();
     protected abstract ECouleurBouee[] bouees();
     protected abstract void clearPinces();
@@ -64,13 +65,25 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
     }
 
     /**
-     * Sur activation on descends tous les ascenseurs vides
+     * Sur activation on actives toutes les pompes
      */
     @Override
     public void activate() {
         // Aspiration des nouvelles bouées
         enablePompes();
         previousState = getNewState();
+    }
+
+    /**
+     * Sur désactivation on désactive les pompes sans bouées
+     */
+    @Override
+    public void deactivate() {
+        for (int i = 0 ; i < 2 ; i++) {
+            if (bouees()[i] == null) {
+                releasePompe(i);
+            }
+        }
     }
 
     /**

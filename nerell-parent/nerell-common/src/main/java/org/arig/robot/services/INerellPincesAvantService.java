@@ -11,6 +11,8 @@ public interface INerellPincesAvantService {
 
     void activate();
 
+    void deactivate();
+
     boolean processBouee();
 
     void processCouleurBouee();

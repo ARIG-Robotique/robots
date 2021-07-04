@@ -15,6 +15,15 @@ public abstract class AbstractOdinPincesArriereService extends AbstractOdinPince
     }
 
     @Override
+    protected void releasePompe(final int nb) {
+        if (nb == 0) {
+            io.releasePompeArriereGauche();
+        } else if (nb == 1) {
+            io.releasePompeArriereDroit();
+        }
+    }
+
+    @Override
     protected void enablePompes() {
         io.enablePompesArriere();
     }

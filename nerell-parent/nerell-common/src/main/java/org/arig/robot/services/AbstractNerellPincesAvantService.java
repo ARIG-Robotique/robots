@@ -126,6 +126,18 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
     }
 
     /**
+     * Sur désactivation on éteins toutes les pompes vides
+     */
+    @Override
+    public void deactivate() {
+        for (int i = 0; i < 4; i++) {
+            if (rs.pincesAvant()[i] == null) {
+                releasePompe(i);
+            }
+        }
+    }
+
+    /**
      * Prise automatique sur la table
      */
     @Override
