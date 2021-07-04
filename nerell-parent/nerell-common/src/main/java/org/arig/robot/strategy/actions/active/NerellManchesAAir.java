@@ -3,6 +3,7 @@ package org.arig.robot.strategy.actions.active;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
@@ -95,9 +96,20 @@ public class NerellManchesAAir extends AbstractNerellAction {
                     mv.gotoPoint(3000 - xFinManche2, y, GotoOption.SANS_ORIENTATION, GotoOption.ARRIERE);
                 }
             }
+
+        } catch (MovementCancelledException e) {
+            log.warn("Blocage mécanique sur la manche à air");
+
+            if (!rs.mancheAAir1()) {
+                group.mancheAAir1();
+            } else if (!rs.mancheAAir2()) {
+                group.mancheAAir2();
+            }
+
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
+
         } finally {
             if (rsNerell.mancheAAir1() && rsNerell.mancheAAir2()) {
                 complete();

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.exception.RefreshPathFindingException;
@@ -1010,10 +1011,10 @@ public class TrajectoryManager {
         }
     }
 
-    private void checkCancelMouvement() throws AvoidingException {
+    private void checkCancelMouvement() throws MovementCancelledException {
         if (cancelMouvement.get()) {
             cancelMouvement.set(false);
-            throw new AvoidingException("Annulation du mouvement");
+            throw new MovementCancelledException();
         }
     }
 }
