@@ -44,7 +44,14 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        return rsNerell.pincesAvantEmpty() &&
+        final boolean boueePresente;
+        if (rsNerell.team() == ETeam.BLEU) {
+            boueePresente = rsNerell.boueePresente(1) || rsNerell.boueePresente(2);
+        } else {
+            boueePresente = rsNerell.boueePresente(13) || rsNerell.boueePresente(14);
+        }
+
+        return rsNerell.pincesAvantEmpty() && boueePresente &&
                 rsNerell.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime &&
                 (rsNerell.team() == ETeam.BLEU && rsNerell.grandChenalVertEmpty() || rsNerell.grandChenalRougeEmpty());
     }
