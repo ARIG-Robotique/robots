@@ -84,7 +84,7 @@ public class OdinRetourAuPort extends AbstractOdinAction {
             group.port(port == EPort.NORD ? EPort.WIP_NORD : EPort.WIP_SUD);
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            mv.pathTo(entry);
+            mv.pathTo(entry, GotoOption.AVANT, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
 
             // si nerell est déjà au port, positionnement spécial
             if (rsOdin.otherPort() != EPort.AUCUN) {

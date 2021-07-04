@@ -83,7 +83,7 @@ public class NerellRetourAuPort extends AbstractNerellAction {
             group.port(port == EPort.NORD ? EPort.WIP_NORD : EPort.WIP_SUD);
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            mv.pathTo(entry, GotoOption.AVANT);
+            mv.pathTo(entry, GotoOption.ARRIERE, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
 
             group.port(port);
 

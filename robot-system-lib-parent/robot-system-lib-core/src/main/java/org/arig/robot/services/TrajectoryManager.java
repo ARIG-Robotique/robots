@@ -504,9 +504,15 @@ public class TrajectoryManager {
                     // Alignement en rotation sur le premier point, puis enchainement sans freinage jusqu'au dernier
                     final EnumSet<GotoOption> localOptions = options.clone();
                     localOptions.add(GotoOption.NO_CATCH_REFRESH_PATH);
-                    //if (c.hasNext()) {
-                    //    localOptions.add(GotoOption.SANS_ARRET);
-                    //}
+
+                    // Si on est avec l'option SANS_ARRET_PASSAGE_ONLY_PATH, et que ce n'est pas le dernier point.
+                    // On réalise un enchainement de point avec frein sur le dernier
+                    if (c.hasNext() && options.contains(GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH)) {
+                        localOptions.add(GotoOption.SANS_ARRET);
+                    }
+
+                    // Ne pas faire d'orientation entre les points.
+                    // Uniquement le premier point est avec sur un path
                     if (!firstPoint) {
                         localOptions.add(GotoOption.SANS_ORIENTATION);
                     }
