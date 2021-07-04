@@ -70,11 +70,8 @@ public class NerellPriseBoueesSud extends AbstractNerellAction {
                 rsNerell.enableAvoidance();
             }
 
-            double targetx = 434;
+            double targetx = getX(434);
             double targety = 1200 - 570;
-            if (ETeam.JAUNE == rsNerell.team()) {
-                targetx = 3000 - targetx;
-            }
             final Point target = new Point(targetx, targety);
 
             if (rsNerell.team() == ETeam.BLEU) {
