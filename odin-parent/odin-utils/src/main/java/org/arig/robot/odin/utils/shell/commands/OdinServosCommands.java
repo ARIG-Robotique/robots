@@ -3,7 +3,7 @@ package org.arig.robot.odin.utils.shell.commands;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
-import org.arig.robot.constants.IConstantesOdinConfig;
+import org.arig.robot.constants.IOdinConstantesConfig;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.IOdinIOService;
@@ -65,7 +65,7 @@ public class OdinServosCommands {
             }
         }
 
-        ThreadUtils.sleep(IConstantesOdinConfig.TIME_BEFORE_READ_COLOR * 4);
+        ThreadUtils.sleep(IOdinConstantesConfig.TIME_BEFORE_READ_COLOR * 4);
     }
 
     private void priseArriere() {
@@ -84,7 +84,7 @@ public class OdinServosCommands {
             }
         }
 
-        ThreadUtils.sleep(IConstantesOdinConfig.TIME_BEFORE_READ_COLOR * 4);
+        ThreadUtils.sleep(IOdinConstantesConfig.TIME_BEFORE_READ_COLOR * 4);
     }
 
     private void deposeAvant() {

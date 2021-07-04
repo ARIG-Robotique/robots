@@ -1,6 +1,6 @@
 package org.arig.robot.config.spring;
 
-import org.arig.robot.constants.IConstantesOdinConfig;
+import org.arig.robot.constants.IOdinConstantesConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ public class OdinCommonSchedulerContext implements SchedulingConfigurer {
 
     @Bean(destroyMethod="shutdown")
     public ExecutorService taskExecutor() {
-        return Executors.newScheduledThreadPool(IConstantesOdinConfig.nbThreadScheduledExecutor);
+        return Executors.newScheduledThreadPool(IOdinConstantesConfig.nbThreadScheduledExecutor);
     }
 
     @Override

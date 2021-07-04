@@ -5,7 +5,7 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.Map;
 
-public interface IConstantesServosOdin {
+public interface IOdinConstantesServos {
 
     // Constantes de vitesse //
     // --------------------- //
@@ -78,22 +78,22 @@ public interface IConstantesServosOdin {
     Map<Byte, Map<Byte, int[][]>> BATCH_CONFIG = ImmutableMap.<Byte, Map<Byte, int[][]>>builder()
             .put(BATCH_POUSSOIR_AVANT, ImmutableMap.<Byte, int[][]>builder()
                     .put(POS_BATCH_POUSSOIR_AVANT_BAS, new int[][]{
-                            new int[]{IConstantesServosOdin.POUSSOIR_AVANT_GAUCHE, IConstantesServosOdin.POS_POUSSOIR_AVANT_GAUCHE_BAS},
-                            new int[]{IConstantesServosOdin.POUSSOIR_AVANT_DROIT, IConstantesServosOdin.POS_POUSSOIR_AVANT_DROIT_BAS}
+                            new int[]{IOdinConstantesServos.POUSSOIR_AVANT_GAUCHE, IOdinConstantesServos.POS_POUSSOIR_AVANT_GAUCHE_BAS},
+                            new int[]{IOdinConstantesServos.POUSSOIR_AVANT_DROIT, IOdinConstantesServos.POS_POUSSOIR_AVANT_DROIT_BAS}
                     })
                     .put(POS_BATCH_POUSSOIR_AVANT_HAUT, new int[][]{
-                            new int[]{IConstantesServosOdin.POUSSOIR_AVANT_GAUCHE, IConstantesServosOdin.POS_POUSSOIR_AVANT_GAUCHE_HAUT},
-                            new int[]{IConstantesServosOdin.POUSSOIR_AVANT_DROIT, IConstantesServosOdin.POS_POUSSOIR_AVANT_DROIT_HAUT}
+                            new int[]{IOdinConstantesServos.POUSSOIR_AVANT_GAUCHE, IOdinConstantesServos.POS_POUSSOIR_AVANT_GAUCHE_HAUT},
+                            new int[]{IOdinConstantesServos.POUSSOIR_AVANT_DROIT, IOdinConstantesServos.POS_POUSSOIR_AVANT_DROIT_HAUT}
                     })
                     .build())
             .put(BATCH_POUSSOIR_ARRIERE, ImmutableMap.<Byte, int[][]>builder()
                     .put(POS_BATCH_POUSSOIR_ARRIERE_BAS, new int[][]{
-                            new int[]{IConstantesServosOdin.POUSSOIR_ARRIERE_GAUCHE, IConstantesServosOdin.POS_POUSSOIR_ARRIERE_GAUCHE_BAS},
-                            new int[]{IConstantesServosOdin.POUSSOIR_ARRIERE_DROIT, IConstantesServosOdin.POS_POUSSOIR_ARRIERE_DROIT_BAS}
+                            new int[]{IOdinConstantesServos.POUSSOIR_ARRIERE_GAUCHE, IOdinConstantesServos.POS_POUSSOIR_ARRIERE_GAUCHE_BAS},
+                            new int[]{IOdinConstantesServos.POUSSOIR_ARRIERE_DROIT, IOdinConstantesServos.POS_POUSSOIR_ARRIERE_DROIT_BAS}
                     })
                     .put(POS_BATCH_POUSSOIR_ARRIERE_HAUT, new int[][]{
-                            new int[]{IConstantesServosOdin.POUSSOIR_ARRIERE_GAUCHE, IConstantesServosOdin.POS_POUSSOIR_ARRIERE_GAUCHE_HAUT},
-                            new int[]{IConstantesServosOdin.POUSSOIR_ARRIERE_DROIT, IConstantesServosOdin.POS_POUSSOIR_ARRIERE_DROIT_HAUT}
+                            new int[]{IOdinConstantesServos.POUSSOIR_ARRIERE_GAUCHE, IOdinConstantesServos.POS_POUSSOIR_ARRIERE_GAUCHE_HAUT},
+                            new int[]{IOdinConstantesServos.POUSSOIR_ARRIERE_DROIT, IOdinConstantesServos.POS_POUSSOIR_ARRIERE_DROIT_HAUT}
                     })
                     .build())
             .build();

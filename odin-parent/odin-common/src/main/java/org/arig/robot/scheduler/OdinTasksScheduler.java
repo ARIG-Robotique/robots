@@ -2,7 +2,7 @@ package org.arig.robot.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
-import org.arig.robot.constants.IConstantesOdinConfig;
+import org.arig.robot.constants.IOdinConstantesConfig;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.OdinRobotStatus;
@@ -114,7 +114,7 @@ public class OdinTasksScheduler {
                     timerLectureCouleurAvant.start();
                 }
             }
-            if (timerLectureCouleurAvant.getTime(TimeUnit.MILLISECONDS) > IConstantesOdinConfig.TIME_BEFORE_READ_COLOR) {
+            if (timerLectureCouleurAvant.getTime(TimeUnit.MILLISECONDS) > IOdinConstantesConfig.TIME_BEFORE_READ_COLOR) {
                 timerLectureCouleurAvant.reset();
                 pincesAvant.processCouleurBouee();
             }
@@ -125,7 +125,7 @@ public class OdinTasksScheduler {
                     timerLectureCouleurArriere.start();
                 }
             }
-            if (timerLectureCouleurArriere.getTime(TimeUnit.MILLISECONDS) > IConstantesOdinConfig.TIME_BEFORE_READ_COLOR) {
+            if (timerLectureCouleurArriere.getTime(TimeUnit.MILLISECONDS) > IOdinConstantesConfig.TIME_BEFORE_READ_COLOR) {
                 timerLectureCouleurArriere.reset();
                 pincesArriere.processCouleurBouee();
             }

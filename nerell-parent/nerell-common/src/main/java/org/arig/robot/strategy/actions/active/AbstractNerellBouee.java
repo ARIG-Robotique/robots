@@ -1,7 +1,7 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
@@ -83,7 +83,7 @@ public abstract class AbstractNerellBouee extends AbstractNerellAction {
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
             mv.gotoPoint(tableUtils.getPointFromAngle(distanceApproche, offsetOrientation), GotoOption.AVANT);
             group.boueePrise(bouee);
-            ThreadUtils.sleep(IConstantesNerellConfig.WAIT_POMPES);
+            ThreadUtils.sleep(INerellConstantesConfig.WAIT_POMPES);
 
             complete();
         } catch (NoPathFoundException | AvoidingException e) {
@@ -114,6 +114,6 @@ public abstract class AbstractNerellBouee extends AbstractNerellAction {
     }
 
     protected double getOffsetPince(int pinceCible) {
-        return IConstantesNerellConfig.dstDeposeAvantX[pinceCible - 1];
+        return INerellConstantesConfig.dstDeposeAvantX[pinceCible - 1];
     }
 }

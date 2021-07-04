@@ -3,7 +3,7 @@ package org.arig.robot.config.spring;
 import lombok.SneakyThrows;
 import org.arig.robot.NerellOrdonanceur;
 import org.arig.robot.constants.IConstantesConfig;
-import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.IGainFactorRampFilter;
 import org.arig.robot.model.NerellRobotStatus;
@@ -29,16 +29,16 @@ public class NerellSimulator {
         rs.simulateur(true);
 
         IGainFactorRampFilter rampDistance = context.getBean("rampDistance", IGainFactorRampFilter.class);
-        rampDistance.setGain(IConstantesNerellConfig.gainVitesseRampeDistanceSimulateur);
+        rampDistance.setGain(INerellConstantesConfig.gainVitesseRampeDistanceSimulateur);
 
         IGainFactorRampFilter rampOrientation = context.getBean("rampOrientation", IGainFactorRampFilter.class);
-        rampOrientation.setGain(IConstantesNerellConfig.gainVitesseRampeOrientationSimulateur);
+        rampOrientation.setGain(INerellConstantesConfig.gainVitesseRampeOrientationSimulateur);
 
         IPidFilter pidDistance = context.getBean("pidDistance", IPidFilter.class);
-        pidDistance.setTunings(IConstantesNerellConfig.kpDistanceSimu, IConstantesNerellConfig.kiDistanceSimu, IConstantesNerellConfig.kdDistanceSimu);
+        pidDistance.setTunings(INerellConstantesConfig.kpDistanceSimu, INerellConstantesConfig.kiDistanceSimu, INerellConstantesConfig.kdDistanceSimu);
 
         IPidFilter pidOrientation = context.getBean("pidOrientation", IPidFilter.class);
-        pidOrientation.setTunings(IConstantesNerellConfig.kpOrientationSimu, IConstantesNerellConfig.kiOrientationSimu, IConstantesNerellConfig.kdOrientationSimu);
+        pidOrientation.setTunings(INerellConstantesConfig.kpOrientationSimu, INerellConstantesConfig.kiOrientationSimu, INerellConstantesConfig.kdOrientationSimu);
 
         // Affichage des bornes pour le limiteur des moteurs
         context.getBean(BouchonARIG2WheelsEncoders.class).printLimiterValues();

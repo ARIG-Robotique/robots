@@ -5,7 +5,7 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.Map;
 
-public interface IConstantesServosNerell {
+public interface INerellConstantesServos {
 
     // Constantes de vitesse //
     // --------------------- //
@@ -134,50 +134,50 @@ public interface IConstantesServosNerell {
     Map<Byte, Map<Byte, int[][]>> BATCH_CONFIG = ImmutableMap.<Byte, Map<Byte, int[][]>>builder()
             .put(BATCH_PINCES_ARRIERE, ImmutableMap.<Byte, int[][]>builder()
                     .put(POS_BATCH_PINCES_ARRIERE_FERME, new int[][]{
-                            new int[]{IConstantesServosNerell.PINCE_ARRIERE_1, IConstantesServosNerell.POS_PINCE_ARRIERE_1_FERME},
-                            new int[]{IConstantesServosNerell.PINCE_ARRIERE_2, IConstantesServosNerell.POS_PINCE_ARRIERE_2_FERME},
-                            new int[]{IConstantesServosNerell.PINCE_ARRIERE_3, IConstantesServosNerell.POS_PINCE_ARRIERE_3_FERME},
-                            new int[]{IConstantesServosNerell.PINCE_ARRIERE_4, IConstantesServosNerell.POS_PINCE_ARRIERE_4_FERME},
-                            new int[]{IConstantesServosNerell.PINCE_ARRIERE_5, IConstantesServosNerell.POS_PINCE_ARRIERE_5_FERME}
+                            new int[]{INerellConstantesServos.PINCE_ARRIERE_1, INerellConstantesServos.POS_PINCE_ARRIERE_1_FERME},
+                            new int[]{INerellConstantesServos.PINCE_ARRIERE_2, INerellConstantesServos.POS_PINCE_ARRIERE_2_FERME},
+                            new int[]{INerellConstantesServos.PINCE_ARRIERE_3, INerellConstantesServos.POS_PINCE_ARRIERE_3_FERME},
+                            new int[]{INerellConstantesServos.PINCE_ARRIERE_4, INerellConstantesServos.POS_PINCE_ARRIERE_4_FERME},
+                            new int[]{INerellConstantesServos.PINCE_ARRIERE_5, INerellConstantesServos.POS_PINCE_ARRIERE_5_FERME}
                     })
                     .put(POS_BATCH_PINCES_ARRIERE_OUVERT, new int[][]{
-                            new int[]{IConstantesServosNerell.PINCE_ARRIERE_1, IConstantesServosNerell.POS_PINCE_ARRIERE_1_OUVERT},
-                            new int[]{IConstantesServosNerell.PINCE_ARRIERE_2, IConstantesServosNerell.POS_PINCE_ARRIERE_2_OUVERT},
-                            new int[]{IConstantesServosNerell.PINCE_ARRIERE_3, IConstantesServosNerell.POS_PINCE_ARRIERE_3_OUVERT},
-                            new int[]{IConstantesServosNerell.PINCE_ARRIERE_4, IConstantesServosNerell.POS_PINCE_ARRIERE_4_OUVERT},
-                            new int[]{IConstantesServosNerell.PINCE_ARRIERE_5, IConstantesServosNerell.POS_PINCE_ARRIERE_5_OUVERT}
+                            new int[]{INerellConstantesServos.PINCE_ARRIERE_1, INerellConstantesServos.POS_PINCE_ARRIERE_1_OUVERT},
+                            new int[]{INerellConstantesServos.PINCE_ARRIERE_2, INerellConstantesServos.POS_PINCE_ARRIERE_2_OUVERT},
+                            new int[]{INerellConstantesServos.PINCE_ARRIERE_3, INerellConstantesServos.POS_PINCE_ARRIERE_3_OUVERT},
+                            new int[]{INerellConstantesServos.PINCE_ARRIERE_4, INerellConstantesServos.POS_PINCE_ARRIERE_4_OUVERT},
+                            new int[]{INerellConstantesServos.PINCE_ARRIERE_5, INerellConstantesServos.POS_PINCE_ARRIERE_5_OUVERT}
                     })
                     .build())
             .put(BATCH_MOUSTACHES, ImmutableMap.<Byte, int[][]>builder()
                     .put(POS_BATCH_MOUSTACHES_FERME, new int[][]{
-                            new int[]{IConstantesServosNerell.MOUSTACHE_DROITE, IConstantesServosNerell.POS_MOUSTACHE_DROITE_FERME},
-                            new int[]{IConstantesServosNerell.MOUSTACHE_GAUCHE, IConstantesServosNerell.POS_MOUSTACHE_GAUCHE_FERME}
+                            new int[]{INerellConstantesServos.MOUSTACHE_DROITE, INerellConstantesServos.POS_MOUSTACHE_DROITE_FERME},
+                            new int[]{INerellConstantesServos.MOUSTACHE_GAUCHE, INerellConstantesServos.POS_MOUSTACHE_GAUCHE_FERME}
                     })
                     .put(POS_BATCH_MOUSTACHES_OUVERT, new int[][]{
-                            new int[]{IConstantesServosNerell.MOUSTACHE_DROITE, IConstantesServosNerell.POS_MOUSTACHE_DROITE_OUVERT},
-                            new int[]{IConstantesServosNerell.MOUSTACHE_GAUCHE, IConstantesServosNerell.POS_MOUSTACHE_GAUCHE_OUVERT}
+                            new int[]{INerellConstantesServos.MOUSTACHE_DROITE, INerellConstantesServos.POS_MOUSTACHE_DROITE_OUVERT},
+                            new int[]{INerellConstantesServos.MOUSTACHE_GAUCHE, INerellConstantesServos.POS_MOUSTACHE_GAUCHE_OUVERT}
                     })
                     .put(POS_BATCH_MOUSTACHES_OUVERT_SPECIAL, new int[][]{
-                            new int[]{IConstantesServosNerell.MOUSTACHE_DROITE, IConstantesServosNerell.POS_MOUSTACHE_DROITE_OUVERT_SPECIAL},
-                            new int[]{IConstantesServosNerell.MOUSTACHE_GAUCHE, IConstantesServosNerell.POS_MOUSTACHE_GAUCHE_OUVERT_SPECIAL}
+                            new int[]{INerellConstantesServos.MOUSTACHE_DROITE, INerellConstantesServos.POS_MOUSTACHE_DROITE_OUVERT_SPECIAL},
+                            new int[]{INerellConstantesServos.MOUSTACHE_GAUCHE, INerellConstantesServos.POS_MOUSTACHE_GAUCHE_OUVERT_SPECIAL}
                     })
                     .put(POS_BATCH_MOUSTACHES_POUSETTE, new int[][]{
-                            new int[]{IConstantesServosNerell.MOUSTACHE_DROITE, IConstantesServosNerell.POS_MOUSTACHE_DROITE_POUSSETTE},
-                            new int[]{IConstantesServosNerell.MOUSTACHE_GAUCHE, IConstantesServosNerell.POS_MOUSTACHE_GAUCHE_POUSSETTE}
+                            new int[]{INerellConstantesServos.MOUSTACHE_DROITE, INerellConstantesServos.POS_MOUSTACHE_DROITE_POUSSETTE},
+                            new int[]{INerellConstantesServos.MOUSTACHE_GAUCHE, INerellConstantesServos.POS_MOUSTACHE_GAUCHE_POUSSETTE}
                     })
                     .build())
             .put(BATCH_ASCENSEURS_AVANT, ImmutableMap.<Byte, int[][]>builder()
                     .put(POS_BATCH_ASCENSEURS_AVANT_BAS, new int[][]{
-                            new int[]{IConstantesServosNerell.ASCENSEUR_AVANT_1, IConstantesServosNerell.POS_ASCENSEUR_AVANT_1_BAS},
-                            new int[]{IConstantesServosNerell.ASCENSEUR_AVANT_2, IConstantesServosNerell.POS_ASCENSEUR_AVANT_2_BAS},
-                            new int[]{IConstantesServosNerell.ASCENSEUR_AVANT_3, IConstantesServosNerell.POS_ASCENSEUR_AVANT_3_BAS},
-                            new int[]{IConstantesServosNerell.ASCENSEUR_AVANT_4, IConstantesServosNerell.POS_ASCENSEUR_AVANT_4_BAS},
+                            new int[]{INerellConstantesServos.ASCENSEUR_AVANT_1, INerellConstantesServos.POS_ASCENSEUR_AVANT_1_BAS},
+                            new int[]{INerellConstantesServos.ASCENSEUR_AVANT_2, INerellConstantesServos.POS_ASCENSEUR_AVANT_2_BAS},
+                            new int[]{INerellConstantesServos.ASCENSEUR_AVANT_3, INerellConstantesServos.POS_ASCENSEUR_AVANT_3_BAS},
+                            new int[]{INerellConstantesServos.ASCENSEUR_AVANT_4, INerellConstantesServos.POS_ASCENSEUR_AVANT_4_BAS},
                     })
                     .put(POS_BATCH_ASCENSEURS_AVANT_HAUT, new int[][]{
-                            new int[]{IConstantesServosNerell.ASCENSEUR_AVANT_1, IConstantesServosNerell.POS_ASCENSEUR_AVANT_1_HAUT},
-                            new int[]{IConstantesServosNerell.ASCENSEUR_AVANT_2, IConstantesServosNerell.POS_ASCENSEUR_AVANT_2_HAUT},
-                            new int[]{IConstantesServosNerell.ASCENSEUR_AVANT_3, IConstantesServosNerell.POS_ASCENSEUR_AVANT_3_HAUT},
-                            new int[]{IConstantesServosNerell.ASCENSEUR_AVANT_4, IConstantesServosNerell.POS_ASCENSEUR_AVANT_4_HAUT},
+                            new int[]{INerellConstantesServos.ASCENSEUR_AVANT_1, INerellConstantesServos.POS_ASCENSEUR_AVANT_1_HAUT},
+                            new int[]{INerellConstantesServos.ASCENSEUR_AVANT_2, INerellConstantesServos.POS_ASCENSEUR_AVANT_2_HAUT},
+                            new int[]{INerellConstantesServos.ASCENSEUR_AVANT_3, INerellConstantesServos.POS_ASCENSEUR_AVANT_3_HAUT},
+                            new int[]{INerellConstantesServos.ASCENSEUR_AVANT_4, INerellConstantesServos.POS_ASCENSEUR_AVANT_4_HAUT},
                     })
                     .build())
             .build();

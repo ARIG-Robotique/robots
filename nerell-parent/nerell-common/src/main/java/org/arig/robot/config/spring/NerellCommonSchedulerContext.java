@@ -1,6 +1,6 @@
 package org.arig.robot.config.spring;
 
-import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.INerellConstantesConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +21,7 @@ public class NerellCommonSchedulerContext implements SchedulingConfigurer {
 
     @Bean(destroyMethod="shutdown")
     public ExecutorService taskExecutor() {
-        return Executors.newScheduledThreadPool(IConstantesNerellConfig.nbThreadScheduledExecutor);
+        return Executors.newScheduledThreadPool(INerellConstantesConfig.nbThreadScheduledExecutor);
     }
 
     @Override

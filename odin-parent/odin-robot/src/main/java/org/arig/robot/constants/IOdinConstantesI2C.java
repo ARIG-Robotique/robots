@@ -2,7 +2,7 @@ package org.arig.robot.constants;
 
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 
-public interface IConstantesI2COdin {
+public interface IOdinConstantesI2C {
 
     String CODEUR_MOTEUR_DROIT = "Codeur Moteur Droit";
     int CODEUR_DROIT_ADDRESS = 0x30;

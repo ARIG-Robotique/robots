@@ -1,7 +1,7 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesOdinConfig;
+import org.arig.robot.constants.IOdinConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;
@@ -60,7 +60,7 @@ public abstract class AbstractOdinBoueeBordure extends AbstractOdinBouee {
             mv.gotoPoint(entry.getX(), 1830, sens);
             group.boueePrise(bouee);
             complete();
-            ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+            ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
             if (sens == GotoOption.AVANT) {
                 mv.reculeMM(100);
             } else {

@@ -2,11 +2,10 @@ package org.arig.robot.constants;
 
 import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 
-public interface IConstantesOdinConfig {
+public interface INerellConstantesConfig {
 
     // Seuil de detection pour l'alimentation
     double seuilAlimentationServosVolts = 3;
-    double seuilAlimentationMoteursVolts = 10;
 
     // Nb Thread Pool Scheduler
     int nbThreadScheduledExecutor = 20;
@@ -16,7 +15,7 @@ public interface IConstantesOdinConfig {
 
     // Configuration asservissement //
     double asservTimeMs = 20;
-    double asservTimeS = IConstantesOdinConfig.asservTimeMs / 1000;
+    double asservTimeS = INerellConstantesConfig.asservTimeMs / 1000;
 
     int i2cReadTimeMs = 50;
     double calageTimeMs = 200;
@@ -31,35 +30,18 @@ public interface IConstantesOdinConfig {
     // Configuration des convertions //
     // ----------------------------- //
 
-    // Diam 47mm => périmètre 147.655 mm
-    // 4096 p => 147.65485471872 mm : 4096 / 147.65485471872 = 27.740367953379
-    //double countPerMm = 27.740367953379;
-    //double countPerMm = 27.533863974;
-    double countPerMm = 27.437735771;
-    //double countPerMm = 27.4148709911908000;
+    // 40000 p => 1524.5 mm : 40000 / 1524.5 = 26,238110856
+    double countPerMm = 26.238110856;
 
-    // Entraxe 250mm => périmètre 785.39816339745 mm (1 roue)
-    // 785.39816339745 mm => 180° : 785.39816339745 * 27.740367953379 / 180 = 121.040189125
-    //double countPerDeg = 121.04018912529;
-    //double countPerDeg = 120.139145534;
-    //double countPerDeg = 119.719707124;
-    //double countPerDeg = 119.6199407014400000;
-    //double countPerDeg = 119.666123381539;
-    //double countPerDeg = 119.658051385;
-    //double countPerDeg = 119.649979388444;
-    double countPerDeg = 119.654015387;
-
-    //double coefCodeurDroit = 1.0;
-    //double coefCodeurGauche = 1.0;
-    double coefCodeurDroit = 0.9979078108395320;
-    double coefCodeurGauche = 1.0020921891604700;
+    // 51325 p => 360° : 51325 / 360 = 142,569444444
+    double countPerDeg = 142.569444444;
 
     // ------------------------ //
     // Configuration des rampes //
     // ------------------------ //
-    double gainVitesseRampeDistance = 1.5;
+    double gainVitesseRampeDistance = 3;
     double gainVitesseRampeOrientation = gainVitesseRampeDistance * 2;
-    double gainVitesseRampeDistanceSimulateur = 1;
+    double gainVitesseRampeDistanceSimulateur = 3;
     double gainVitesseRampeOrientationSimulateur = gainVitesseRampeDistanceSimulateur * 2;
 
     double rampAccDistance = 1000.0; // en mm/s2
@@ -78,24 +60,25 @@ public interface IConstantesOdinConfig {
     long vitesseMax = 1000;
     long vitesseMin = 100;
 
+
     // -------------- //
     // Parametres PID //
     // -------------- //
-    // TODO Configuration a faire
+
     double kcrDistance = 21.5;
     double tcrDistance = 0.04;
-    double kpDistance = 30;   // 6.5;   // 12.90
+    double kpDistance = 9;   // 6.5;   // 12.90
     double kiDistance = 0; // 0.025; // 120
-    double kdDistance = 50;   // 150;   // 0.002
+    double kdDistance = 1;   // 150;   // 0.002
     double kpDistanceSimu = 12.9;
     double kiDistanceSimu = 0.0;
     double kdDistanceSimu = 0.008;
 
     double kcrOrientation = 10.0;
     double tcrOrientation = 0.05;
-    double kpOrientation = 10;    // 0.8;   // 5;
+    double kpOrientation = 4;    // 0.8;   // 5;
     double kiOrientation = 0; // 0.005; // 0.09;
-    double kdOrientation = 50;   // 80;    // 50;
+    double kdOrientation = 2;   // 80;    // 50;
     double kpOrientationSimu = 6.0;
     double kiOrientationSimu = 0.0;
     double kdOrientationSimu = 0.01;
@@ -120,10 +103,11 @@ public interface IConstantesOdinConfig {
     // Paramètre Physiques        //
     // -------------------------- //
 
-    double dstCallage = 91.0; // dos du robot <=> milieu du robot
-    double[] dstDeposeX = new double[]{-38, 38};
-    double dstDeposeY = 200; //TODO  milieu des gobelets avant <=> milieu du robot
-    double dstBrasMancheAAirX = 210; // TODO distance minimale pour pousser la manche à air
+    double dstCallage = 151.0; // dos du robot <=> milieu du robot
+    double dstDeposeArriereY = 223.5; // milieu de gobelets arrière, posés au sol <=> milieu du robot
+    double dstDeposeAvantY = 115; // milieu des gobelets avant <=> milieu du robot
+    double[] dstDeposeAvantX = new double[]{-114, -38, 38, 114};
+    double dstBrasMancheAAirX = 210; // distance minimale pour pousser la manche à air
 
     // -------------------------- //
     // Paramètre Avoiding service //
@@ -138,9 +122,9 @@ public interface IConstantesOdinConfig {
     PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.ANYA16;
     int pathFindingAngle = 45;
     int pathFindingAngleSafe = 50;
-    int pathFindingSeuilProximite = 440;
-    int pathFindingSeuilProximiteSafe = 500;
-    int pathFindingTailleObstacle = IConstantesOdinConfig.pathFindingSeuilProximite * 2 + 50;
+    int pathFindingSeuilProximite = 480;
+    int pathFindingSeuilProximiteSafe = 540;
+    int pathFindingTailleObstacle = INerellConstantesConfig.pathFindingSeuilProximite * 2 + 50;
 
     int lidarClusterSizeMm = 50;
     int lidarOffsetPointMm = 30; // "recule" les points détectés pour prendre en compte qu'on ne detecte que les faces avant
@@ -152,5 +136,5 @@ public interface IConstantesOdinConfig {
     int WAIT_LED = 200;
     int WAIT_POMPES = 300;
 
-    int TIME_BEFORE_READ_COLOR = 800;
+    int TIME_BEFORE_READ_COLOR = 1300;
 }

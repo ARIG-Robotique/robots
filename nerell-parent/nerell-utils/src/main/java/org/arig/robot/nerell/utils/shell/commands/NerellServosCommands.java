@@ -3,7 +3,7 @@ package org.arig.robot.nerell.utils.shell.commands;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
-import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.services.AbstractEnergyService;
@@ -66,7 +66,7 @@ public class NerellServosCommands {
             }
         }
 
-        ThreadUtils.sleep(IConstantesNerellConfig.TIME_BEFORE_READ_COLOR * 4);
+        ThreadUtils.sleep(INerellConstantesConfig.TIME_BEFORE_READ_COLOR * 4);
     }
 
     private void deposeAvant() {

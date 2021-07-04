@@ -1,7 +1,7 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesServosNerell;
+import org.arig.robot.constants.INerellConstantesServos;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.GrandChenaux;
 import org.arig.robot.model.NerellRobotStatus;
@@ -141,7 +141,7 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
                     srv.pinceArriereOuvert(i, false);
                 }
             }
-            ThreadUtils.sleep(IConstantesServosNerell.WAIT_PINCE_ARRIERE);
+            ThreadUtils.sleep(INerellConstantesServos.WAIT_PINCE_ARRIERE);
         }
 
         srv.ascenseurArriereEcueil(true);

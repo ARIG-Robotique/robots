@@ -3,7 +3,7 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
-import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.GrandChenaux;
 import org.arig.robot.model.NerellRobotStatus;
@@ -68,7 +68,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
             group.deposeGrandChenalVert(GrandChenaux.Line.B, boueesPosees);
         }
 
-        ThreadUtils.sleep(IConstantesNerellConfig.WAIT_POMPES);
+        ThreadUtils.sleep(INerellConstantesConfig.WAIT_POMPES);
 
         pathFinder.setObstacles(new ArrayList<>());
 
@@ -81,7 +81,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
 
         servosService.ascenseursAvantBas(true);
         io.releaseAllPompes();
-        ThreadUtils.sleep(IConstantesNerellConfig.WAIT_POMPES);
+        ThreadUtils.sleep(INerellConstantesConfig.WAIT_POMPES);
 
         group.deposePetitChenalRouge(ArrayUtils.subarray(rs.pincesAvant(), 0, 2));
         group.deposePetitChenalVert(ArrayUtils.subarray(rs.pincesAvant(), 2, 4));
@@ -96,7 +96,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
 
         servosService.ascenseursAvantBas(true);
         io.releaseAllPompes();
-        ThreadUtils.sleep(IConstantesNerellConfig.WAIT_POMPES);
+        ThreadUtils.sleep(INerellConstantesConfig.WAIT_POMPES);
 
         group.deposeGrandPort(rs.pincesAvant());
         rs.clearPincesAvant();
@@ -171,7 +171,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
         }
 
         io.enableLedCapteurCouleur();
-        ThreadUtils.sleep(IConstantesNerellConfig.WAIT_LED);
+        ThreadUtils.sleep(INerellConstantesConfig.WAIT_LED);
 
         for (int i = 0; i < 4; i++) {
             if (rs.pincesAvant()[i] == ECouleurBouee.INCONNU) {

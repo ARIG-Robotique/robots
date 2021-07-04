@@ -1,7 +1,7 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesOdinConfig;
+import org.arig.robot.constants.IOdinConstantesConfig;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
@@ -96,7 +96,7 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
             mv.gotoPoint(pointPrise, sens);
             group.boueePrise(bouee);
-            ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+            ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
 
             complete();
         } catch (NoPathFoundException | AvoidingException e) {
@@ -129,6 +129,6 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
     }
 
     protected double getOffsetPince(int pinceCible) {
-        return IConstantesOdinConfig.dstDeposeX[pinceCible - 1];
+        return IOdinConstantesConfig.dstDeposeX[pinceCible - 1];
     }
 }

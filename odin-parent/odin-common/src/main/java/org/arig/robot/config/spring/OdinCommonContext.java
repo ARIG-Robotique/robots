@@ -2,8 +2,8 @@ package org.arig.robot.config.spring;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.OdinOrdonanceur;
-import org.arig.robot.constants.IConstantesOdinConfig;
-import org.arig.robot.constants.IConstantesServosOdin;
+import org.arig.robot.constants.IOdinConstantesConfig;
+import org.arig.robot.constants.IOdinConstantesServos;
 import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.common.LimiterFilter.LimiterType;
 import org.arig.robot.filters.pid.IPidFilter;
@@ -50,35 +50,35 @@ public class OdinCommonContext {
     @Bean
     public RobotConfig robotConfig(ConvertionRobotUnit conv) {
         return new RobotConfig()
-                .asservTimeMs(IConstantesOdinConfig.asservTimeMs)
-                .calageTimeMs(IConstantesOdinConfig.calageTimeMs)
-                .i2cReadTimeMs(IConstantesOdinConfig.i2cReadTimeMs)
+                .asservTimeMs(IOdinConstantesConfig.asservTimeMs)
+                .calageTimeMs(IOdinConstantesConfig.calageTimeMs)
+                .i2cReadTimeMs(IOdinConstantesConfig.i2cReadTimeMs)
 
-                .pathFindingTailleObstacle(IConstantesOdinConfig.pathFindingTailleObstacle)
-                .lidarOffsetPointMm(IConstantesOdinConfig.lidarOffsetPointMm)
-                .lidarClusterSizeMm(IConstantesOdinConfig.lidarClusterSizeMm)
-                .avoidanceWaitTimeMs(IConstantesOdinConfig.avoidanceWaitTimeMs)
-                .pathFindingSeuilProximite(IConstantesOdinConfig.pathFindingSeuilProximite)
-                .pathFindingSeuilProximiteSafe(IConstantesOdinConfig.pathFindingSeuilProximiteSafe)
-                .pathFindingAngle(IConstantesOdinConfig.pathFindingAngle)
-                .pathFindingAngleSafe(IConstantesOdinConfig.pathFindingAngleSafe)
+                .pathFindingTailleObstacle(IOdinConstantesConfig.pathFindingTailleObstacle)
+                .lidarOffsetPointMm(IOdinConstantesConfig.lidarOffsetPointMm)
+                .lidarClusterSizeMm(IOdinConstantesConfig.lidarClusterSizeMm)
+                .avoidanceWaitTimeMs(IOdinConstantesConfig.avoidanceWaitTimeMs)
+                .pathFindingSeuilProximite(IOdinConstantesConfig.pathFindingSeuilProximite)
+                .pathFindingSeuilProximiteSafe(IOdinConstantesConfig.pathFindingSeuilProximiteSafe)
+                .pathFindingAngle(IOdinConstantesConfig.pathFindingAngle)
+                .pathFindingAngleSafe(IOdinConstantesConfig.pathFindingAngleSafe)
 
-                .seuilTensionServos(IConstantesOdinConfig.seuilAlimentationServosVolts)
-                .seuilTensionMoteurs(IConstantesOdinConfig.seuilAlimentationMoteursVolts)
-                .servosMinTimeMax(IConstantesServosOdin.MIN_TIME_MAX)
-                .servosBatch(IConstantesServosOdin.BATCH_CONFIG)
+                .seuilTensionServos(IOdinConstantesConfig.seuilAlimentationServosVolts)
+                .seuilTensionMoteurs(IOdinConstantesConfig.seuilAlimentationMoteursVolts)
+                .servosMinTimeMax(IOdinConstantesServos.MIN_TIME_MAX)
+                .servosBatch(IOdinConstantesServos.BATCH_CONFIG)
 
-                .vitesse(IConstantesOdinConfig.vitesseMin, IConstantesOdinConfig.vitesseMax, 100)
-                .vitesseOrientation(IConstantesOdinConfig.vitesseOrientationMin, IConstantesOdinConfig.vitesseOrientationMax, 100)
-                .fenetreArretDistance(conv.mmToPulse(IConstantesOdinConfig.arretDistanceMm))
-                .fenetreApprocheAvecFreinDistance(conv.mmToPulse(IConstantesOdinConfig.approcheAvecFreinDistanceMm))
-                .fenetreApprocheSansFreinDistance(conv.mmToPulse(IConstantesOdinConfig.approcheSansFreinDistanceMm))
-                .fenetreArretOrientation(conv.degToPulse(IConstantesOdinConfig.arretOrientDeg))
-                .fenetreApprocheAvecFreinOrientation(conv.degToPulse(IConstantesOdinConfig.approcheAvecFreinOrientationDeg))
-                .fenetreApprocheSansFreinOrientation(conv.degToPulse(IConstantesOdinConfig.approcheSansFreinOrientationDeg))
-                .startAngleDemiTour(conv.degToPulse(IConstantesOdinConfig.startAngleDemiTourDeg))
-                .startAngleLimitSpeedDistance(conv.degToPulse(IConstantesOdinConfig.startAngleLimitVitesseDistance))
-                .sampleTimeS(IConstantesOdinConfig.asservTimeS);
+                .vitesse(IOdinConstantesConfig.vitesseMin, IOdinConstantesConfig.vitesseMax, 100)
+                .vitesseOrientation(IOdinConstantesConfig.vitesseOrientationMin, IOdinConstantesConfig.vitesseOrientationMax, 100)
+                .fenetreArretDistance(conv.mmToPulse(IOdinConstantesConfig.arretDistanceMm))
+                .fenetreApprocheAvecFreinDistance(conv.mmToPulse(IOdinConstantesConfig.approcheAvecFreinDistanceMm))
+                .fenetreApprocheSansFreinDistance(conv.mmToPulse(IOdinConstantesConfig.approcheSansFreinDistanceMm))
+                .fenetreArretOrientation(conv.degToPulse(IOdinConstantesConfig.arretOrientDeg))
+                .fenetreApprocheAvecFreinOrientation(conv.degToPulse(IOdinConstantesConfig.approcheAvecFreinOrientationDeg))
+                .fenetreApprocheSansFreinOrientation(conv.degToPulse(IOdinConstantesConfig.approcheSansFreinOrientationDeg))
+                .startAngleDemiTour(conv.degToPulse(IOdinConstantesConfig.startAngleDemiTourDeg))
+                .startAngleLimitSpeedDistance(conv.degToPulse(IOdinConstantesConfig.startAngleLimitVitesseDistance))
+                .sampleTimeS(IOdinConstantesConfig.asservTimeS);
     }
 
     @Bean
@@ -90,7 +90,7 @@ public class OdinCommonContext {
 
     @Bean
     public ConvertionRobotUnit convertisseur() {
-        return new ConvertionRobotUnit(IConstantesOdinConfig.countPerMm, IConstantesOdinConfig.countPerDeg);
+        return new ConvertionRobotUnit(IOdinConstantesConfig.countPerMm, IOdinConstantesConfig.countPerDeg);
     }
 
     @Bean
@@ -119,7 +119,7 @@ public class OdinCommonContext {
     public IPidFilter pidDistance() {
         log.info("Configuration PID Distance");
         SimplePidFilter pid = new SimplePidFilter("distance");
-        pid.setTunings(IConstantesOdinConfig.kpDistance, IConstantesOdinConfig.kiDistance, IConstantesOdinConfig.kdDistance);
+        pid.setTunings(IOdinConstantesConfig.kpDistance, IOdinConstantesConfig.kiDistance, IOdinConstantesConfig.kdDistance);
         return pid;
     }
 
@@ -127,20 +127,20 @@ public class OdinCommonContext {
     public IPidFilter pidOrientation() {
         log.info("Configuration PID Orientation");
         SimplePidFilter pid = new SimplePidFilter("orientation");
-        pid.setTunings(IConstantesOdinConfig.kpOrientation, IConstantesOdinConfig.kiOrientation, IConstantesOdinConfig.kdOrientation);
+        pid.setTunings(IOdinConstantesConfig.kpOrientation, IOdinConstantesConfig.kiOrientation, IOdinConstantesConfig.kdOrientation);
         return pid;
     }
 
     @Bean(name = "rampDistance")
     public TrapezoidalRampFilter rampDistance() {
         log.info("Configuration TrapezoidalRampFilter Distance");
-        return new TrapezoidalRampFilter("distance", IConstantesOdinConfig.asservTimeMs, IConstantesOdinConfig.rampAccDistance, IConstantesOdinConfig.rampDecDistance, IConstantesOdinConfig.gainVitesseRampeDistance);
+        return new TrapezoidalRampFilter("distance", IOdinConstantesConfig.asservTimeMs, IOdinConstantesConfig.rampAccDistance, IOdinConstantesConfig.rampDecDistance, IOdinConstantesConfig.gainVitesseRampeDistance);
     }
 
     @Bean(name = "rampOrientation")
     public TrapezoidalRampFilter rampOrientation() {
         log.info("Configuration TrapezoidalRampFilter Orientation");
-        return new TrapezoidalRampFilter("orientation", IConstantesOdinConfig.asservTimeMs, IConstantesOdinConfig.rampAccOrientation, IConstantesOdinConfig.rampDecOrientation, IConstantesOdinConfig.gainVitesseRampeOrientation);
+        return new TrapezoidalRampFilter("orientation", IOdinConstantesConfig.asservTimeMs, IOdinConstantesConfig.rampAccOrientation, IOdinConstantesConfig.rampDecOrientation, IOdinConstantesConfig.gainVitesseRampeOrientation);
     }
 
     @Bean
@@ -149,7 +149,7 @@ public class OdinCommonContext {
 
         if (enable) {
             MultiPathFinderImpl pf = new GameMultiPathFinderImpl();
-            pf.setAlgorithm(IConstantesOdinConfig.pathFindingAlgo);
+            pf.setAlgorithm(IOdinConstantesConfig.pathFindingAlgo);
             pf.setSaveImages(env.getProperty("robot.pathfinding.saveImages", Boolean.class, true));
             return pf;
         } else {
@@ -194,8 +194,8 @@ public class OdinCommonContext {
     @Bean
     public ISystemBlockerManager systemBlockerManager(ConvertionRobotUnit conv) {
         return new SystemBlockerManager(
-                conv.mmToPulse(IConstantesOdinConfig.seuilErreurDistanceMm),
-                conv.degToPulse(IConstantesOdinConfig.seuilErreurOrientationDeg)
+                conv.mmToPulse(IOdinConstantesConfig.seuilErreurDistanceMm),
+                conv.degToPulse(IOdinConstantesConfig.seuilErreurOrientationDeg)
         );
     }
 }

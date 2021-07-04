@@ -10,7 +10,7 @@ import com.pi4j.io.i2c.I2CBus;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
-import org.arig.robot.constants.IConstantesI2COdin;
+import org.arig.robot.constants.IOdinConstantesI2C;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
@@ -132,8 +132,8 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
 
         // Config PCF8574 //
         // -------------- //
-        pcfAlim = new PCF8574GpioProvider(bus, IConstantesI2COdin.PCF_ALIM_ADDRESS, true);
-        pcf1 = new PCF8574GpioProvider(bus, IConstantesI2COdin.PCF1_ADDRESS, true);
+        pcfAlim = new PCF8574GpioProvider(bus, IOdinConstantesI2C.PCF_ALIM_ADDRESS, true);
+        pcf1 = new PCF8574GpioProvider(bus, IOdinConstantesI2C.PCF1_ADDRESS, true);
 
         // Alim
         inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_00);

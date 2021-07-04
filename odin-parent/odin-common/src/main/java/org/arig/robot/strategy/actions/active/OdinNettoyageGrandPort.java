@@ -1,7 +1,7 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesOdinConfig;
+import org.arig.robot.constants.IOdinConstantesConfig;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.ECouleurBouee;
@@ -65,7 +65,7 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
 
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
             mv.gotoPoint(getX(255), 800, GotoOption.AVANT);
-            ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+            ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
             if (rsOdin.team() == ETeam.BLEU) {
                 group.boueePrise(4); // vert avant gauche
             } else {
@@ -80,7 +80,7 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
             }
 
             mv.gotoPoint(getX(408), 927, GotoOption.ARRIERE);
-            ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+            ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
             if (rsOdin.team() == ETeam.BLEU) {
                 group.boueePrise(3); // rouge arriere gauche
             } else {
@@ -101,7 +101,7 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
 
                 mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
                 mv.gotoPoint(getX(412), 1430, GotoOption.AVANT);
-                ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+                ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
                 if (rsOdin.team() == ETeam.BLEU) {
                     group.boueePrise(2); // vert avant droite
                 } else {
@@ -116,7 +116,7 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
                 }
 
                 mv.gotoPoint(getX(337), 1593, GotoOption.ARRIERE);
-                ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+                ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
                 if (rsOdin.team() == ETeam.BLEU) {
                     group.boueePrise(1); // rouge arriere droite
                 } else {

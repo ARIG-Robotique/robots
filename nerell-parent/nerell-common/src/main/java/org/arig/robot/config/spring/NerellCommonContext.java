@@ -2,8 +2,8 @@ package org.arig.robot.config.spring;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.NerellOrdonanceur;
-import org.arig.robot.constants.IConstantesNerellConfig;
-import org.arig.robot.constants.IConstantesServosNerell;
+import org.arig.robot.constants.INerellConstantesConfig;
+import org.arig.robot.constants.INerellConstantesServos;
 import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.common.LimiterFilter.LimiterType;
 import org.arig.robot.filters.pid.IPidFilter;
@@ -51,35 +51,35 @@ public class NerellCommonContext {
     @Bean
     public RobotConfig robotConfig(ConvertionRobotUnit conv) {
         return new RobotConfig()
-                .asservTimeMs(IConstantesNerellConfig.asservTimeMs)
-                .calageTimeMs(IConstantesNerellConfig.calageTimeMs)
-                .i2cReadTimeMs(IConstantesNerellConfig.i2cReadTimeMs)
+                .asservTimeMs(INerellConstantesConfig.asservTimeMs)
+                .calageTimeMs(INerellConstantesConfig.calageTimeMs)
+                .i2cReadTimeMs(INerellConstantesConfig.i2cReadTimeMs)
 
-                .pathFindingTailleObstacle(IConstantesNerellConfig.pathFindingTailleObstacle)
-                .lidarOffsetPointMm(IConstantesNerellConfig.lidarOffsetPointMm)
-                .lidarClusterSizeMm(IConstantesNerellConfig.lidarClusterSizeMm)
-                .avoidanceWaitTimeMs(IConstantesNerellConfig.avoidanceWaitTimeMs)
-                .pathFindingSeuilProximite(IConstantesNerellConfig.pathFindingSeuilProximite)
-                .pathFindingSeuilProximiteSafe(IConstantesNerellConfig.pathFindingSeuilProximiteSafe)
-                .pathFindingAngle(IConstantesNerellConfig.pathFindingAngle)
-                .pathFindingAngleSafe(IConstantesNerellConfig.pathFindingAngleSafe)
+                .pathFindingTailleObstacle(INerellConstantesConfig.pathFindingTailleObstacle)
+                .lidarOffsetPointMm(INerellConstantesConfig.lidarOffsetPointMm)
+                .lidarClusterSizeMm(INerellConstantesConfig.lidarClusterSizeMm)
+                .avoidanceWaitTimeMs(INerellConstantesConfig.avoidanceWaitTimeMs)
+                .pathFindingSeuilProximite(INerellConstantesConfig.pathFindingSeuilProximite)
+                .pathFindingSeuilProximiteSafe(INerellConstantesConfig.pathFindingSeuilProximiteSafe)
+                .pathFindingAngle(INerellConstantesConfig.pathFindingAngle)
+                .pathFindingAngleSafe(INerellConstantesConfig.pathFindingAngleSafe)
 
-                .seuilTensionServos(IConstantesNerellConfig.seuilAlimentationServosVolts)
+                .seuilTensionServos(INerellConstantesConfig.seuilAlimentationServosVolts)
                 .seuilTensionMoteurs(0) // Pas de mesure sur Nerell
-                .servosMinTimeMax(IConstantesServosNerell.MIN_TIME_MAX)
-                .servosBatch(IConstantesServosNerell.BATCH_CONFIG)
+                .servosMinTimeMax(INerellConstantesServos.MIN_TIME_MAX)
+                .servosBatch(INerellConstantesServos.BATCH_CONFIG)
 
-                .vitesse(IConstantesNerellConfig.vitesseMin, IConstantesNerellConfig.vitesseMax, 100)
-                .vitesseOrientation(IConstantesNerellConfig.vitesseOrientationMin, IConstantesNerellConfig.vitesseOrientationMax, 100)
-                .fenetreArretDistance(conv.mmToPulse(IConstantesNerellConfig.arretDistanceMm))
-                .fenetreApprocheAvecFreinDistance(conv.mmToPulse(IConstantesNerellConfig.approcheAvecFreinDistanceMm))
-                .fenetreApprocheSansFreinDistance(conv.mmToPulse(IConstantesNerellConfig.approcheSansFreinDistanceMm))
-                .fenetreArretOrientation(conv.degToPulse(IConstantesNerellConfig.arretOrientDeg))
-                .fenetreApprocheAvecFreinOrientation(conv.degToPulse(IConstantesNerellConfig.approcheAvecFreinOrientationDeg))
-                .fenetreApprocheSansFreinOrientation(conv.degToPulse(IConstantesNerellConfig.approcheSansFreinOrientationDeg))
-                .startAngleDemiTour(conv.degToPulse(IConstantesNerellConfig.startAngleDemiTourDeg))
-                .startAngleLimitSpeedDistance(conv.degToPulse(IConstantesNerellConfig.startAngleLimitVitesseDistance))
-                .sampleTimeS(IConstantesNerellConfig.asservTimeS);
+                .vitesse(INerellConstantesConfig.vitesseMin, INerellConstantesConfig.vitesseMax, 100)
+                .vitesseOrientation(INerellConstantesConfig.vitesseOrientationMin, INerellConstantesConfig.vitesseOrientationMax, 100)
+                .fenetreArretDistance(conv.mmToPulse(INerellConstantesConfig.arretDistanceMm))
+                .fenetreApprocheAvecFreinDistance(conv.mmToPulse(INerellConstantesConfig.approcheAvecFreinDistanceMm))
+                .fenetreApprocheSansFreinDistance(conv.mmToPulse(INerellConstantesConfig.approcheSansFreinDistanceMm))
+                .fenetreArretOrientation(conv.degToPulse(INerellConstantesConfig.arretOrientDeg))
+                .fenetreApprocheAvecFreinOrientation(conv.degToPulse(INerellConstantesConfig.approcheAvecFreinOrientationDeg))
+                .fenetreApprocheSansFreinOrientation(conv.degToPulse(INerellConstantesConfig.approcheSansFreinOrientationDeg))
+                .startAngleDemiTour(conv.degToPulse(INerellConstantesConfig.startAngleDemiTourDeg))
+                .startAngleLimitSpeedDistance(conv.degToPulse(INerellConstantesConfig.startAngleLimitVitesseDistance))
+                .sampleTimeS(INerellConstantesConfig.asservTimeS);
     }
 
     @Bean
@@ -91,7 +91,7 @@ public class NerellCommonContext {
 
     @Bean
     public ConvertionRobotUnit convertisseur() {
-        return new ConvertionRobotUnit(IConstantesNerellConfig.countPerMm, IConstantesNerellConfig.countPerDeg);
+        return new ConvertionRobotUnit(INerellConstantesConfig.countPerMm, INerellConstantesConfig.countPerDeg);
     }
 
     @Bean
@@ -126,7 +126,7 @@ public class NerellCommonContext {
     public IPidFilter pidDistance() {
         log.info("Configuration PID Distance");
         SimplePidFilter pid = new SimplePidFilter("distance");
-        pid.setTunings(IConstantesNerellConfig.kpDistance, IConstantesNerellConfig.kiDistance, IConstantesNerellConfig.kdDistance);
+        pid.setTunings(INerellConstantesConfig.kpDistance, INerellConstantesConfig.kiDistance, INerellConstantesConfig.kdDistance);
         return pid;
     }
 
@@ -134,20 +134,20 @@ public class NerellCommonContext {
     public IPidFilter pidOrientation() {
         log.info("Configuration PID Orientation");
         SimplePidFilter pid = new SimplePidFilter("orientation");
-        pid.setTunings(IConstantesNerellConfig.kpOrientation, IConstantesNerellConfig.kiOrientation, IConstantesNerellConfig.kdOrientation);
+        pid.setTunings(INerellConstantesConfig.kpOrientation, INerellConstantesConfig.kiOrientation, INerellConstantesConfig.kdOrientation);
         return pid;
     }
 
     @Bean(name = "rampDistance")
     public TrapezoidalRampFilter rampDistance() {
         log.info("Configuration TrapezoidalRampFilter Distance");
-        return new TrapezoidalRampFilter("distance", IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccDistance, IConstantesNerellConfig.rampDecDistance, IConstantesNerellConfig.gainVitesseRampeDistance);
+        return new TrapezoidalRampFilter("distance", INerellConstantesConfig.asservTimeMs, INerellConstantesConfig.rampAccDistance, INerellConstantesConfig.rampDecDistance, INerellConstantesConfig.gainVitesseRampeDistance);
     }
 
     @Bean(name = "rampOrientation")
     public TrapezoidalRampFilter rampOrientation() {
         log.info("Configuration TrapezoidalRampFilter Orientation");
-        return new TrapezoidalRampFilter("orientation", IConstantesNerellConfig.asservTimeMs, IConstantesNerellConfig.rampAccOrientation, IConstantesNerellConfig.rampDecOrientation, IConstantesNerellConfig.gainVitesseRampeOrientation);
+        return new TrapezoidalRampFilter("orientation", INerellConstantesConfig.asservTimeMs, INerellConstantesConfig.rampAccOrientation, INerellConstantesConfig.rampDecOrientation, INerellConstantesConfig.gainVitesseRampeOrientation);
     }
 
     @Bean
@@ -156,7 +156,7 @@ public class NerellCommonContext {
 
         if (enable) {
             MultiPathFinderImpl pf = new GameMultiPathFinderImpl();
-            pf.setAlgorithm(IConstantesNerellConfig.pathFindingAlgo);
+            pf.setAlgorithm(INerellConstantesConfig.pathFindingAlgo);
             pf.setSaveImages(env.getProperty("robot.pathfinding.saveImages", Boolean.class, true));
             return pf;
         } else {
@@ -201,8 +201,8 @@ public class NerellCommonContext {
     @Bean
     public ISystemBlockerManager systemBlockerManager(ConvertionRobotUnit conv) {
         return new SystemBlockerManager(
-                conv.mmToPulse(IConstantesNerellConfig.seuilErreurDistanceMm),
-                conv.degToPulse(IConstantesNerellConfig.seuilErreurOrientationDeg)
+                conv.mmToPulse(INerellConstantesConfig.seuilErreurDistanceMm),
+                conv.degToPulse(INerellConstantesConfig.seuilErreurOrientationDeg)
         );
     }
 }

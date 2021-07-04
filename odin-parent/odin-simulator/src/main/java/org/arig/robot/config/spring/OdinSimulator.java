@@ -3,7 +3,7 @@ package org.arig.robot.config.spring;
 import lombok.SneakyThrows;
 import org.arig.robot.OdinOrdonanceur;
 import org.arig.robot.constants.IConstantesConfig;
-import org.arig.robot.constants.IConstantesOdinConfig;
+import org.arig.robot.constants.IOdinConstantesConfig;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.filters.ramp.IGainFactorRampFilter;
 import org.arig.robot.model.OdinRobotStatus;
@@ -29,16 +29,16 @@ public class OdinSimulator {
         rs.simulateur(true);
 
         IGainFactorRampFilter rampDistance = context.getBean("rampDistance", IGainFactorRampFilter.class);
-        rampDistance.setGain(IConstantesOdinConfig.gainVitesseRampeDistanceSimulateur);
+        rampDistance.setGain(IOdinConstantesConfig.gainVitesseRampeDistanceSimulateur);
 
         IGainFactorRampFilter rampOrientation = context.getBean("rampOrientation", IGainFactorRampFilter.class);
-        rampOrientation.setGain(IConstantesOdinConfig.gainVitesseRampeOrientationSimulateur);
+        rampOrientation.setGain(IOdinConstantesConfig.gainVitesseRampeOrientationSimulateur);
 
         IPidFilter pidDistance = context.getBean("pidDistance", IPidFilter.class);
-        pidDistance.setTunings(IConstantesOdinConfig.kpDistanceSimu, IConstantesOdinConfig.kiDistanceSimu, IConstantesOdinConfig.kdDistanceSimu);
+        pidDistance.setTunings(IOdinConstantesConfig.kpDistanceSimu, IOdinConstantesConfig.kiDistanceSimu, IOdinConstantesConfig.kdDistanceSimu);
 
         IPidFilter pidOrientation = context.getBean("pidOrientation", IPidFilter.class);
-        pidOrientation.setTunings(IConstantesOdinConfig.kpOrientationSimu, IConstantesOdinConfig.kiOrientationSimu, IConstantesOdinConfig.kdOrientationSimu);
+        pidOrientation.setTunings(IOdinConstantesConfig.kpOrientationSimu, IOdinConstantesConfig.kiOrientationSimu, IOdinConstantesConfig.kdOrientationSimu);
 
         // Affichage des bornes pour le limiteur des moteurs
         context.getBean(BouchonARIG2WheelsEncoders.class).printLimiterValues();

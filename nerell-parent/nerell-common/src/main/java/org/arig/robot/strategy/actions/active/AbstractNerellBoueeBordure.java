@@ -1,7 +1,7 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Point;
@@ -53,7 +53,7 @@ public abstract class AbstractNerellBoueeBordure extends AbstractNerellBouee {
             mv.gotoPoint(entry.getX(), 1840, GotoOption.AVANT);
             group.boueePrise(bouee);
             complete();
-            ThreadUtils.sleep(IConstantesNerellConfig.WAIT_POMPES);
+            ThreadUtils.sleep(INerellConstantesConfig.WAIT_POMPES);
             mv.reculeMM(100);
             if (beforeEntry != null) {
                 mv.gotoPoint(beforeEntry, GotoOption.SANS_ORIENTATION);

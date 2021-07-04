@@ -1,7 +1,7 @@
 package org.arig.robot;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesOdinConfig;
+import org.arig.robot.constants.IOdinConstantesConfig;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.filters.common.ChangeFilter;
@@ -54,7 +54,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
         // Lancement d'une première lecture de couleurs pour initialiser les capteurs
         odinIOService.enableLedCapteurCouleur();
-        ThreadUtils.sleep(IConstantesOdinConfig.WAIT_LED);
+        ThreadUtils.sleep(IOdinConstantesConfig.WAIT_LED);
         odinIOService.couleurBoueeAvantGauche();
         odinIOService.couleurBoueeAvantDroit();
         odinIOService.couleurBoueeArriereGauche();
@@ -129,10 +129,10 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
             robotStatus.disableAvoidance();
             if (robotStatus.simulateur() || skip) {
                 if (odinRobotStatus.team() == ETeam.BLEU) {
-                    position.setPt(new Point(conv.mmToPulse(IConstantesOdinConfig.dstCallage), conv.mmToPulse(1200)));
+                    position.setPt(new Point(conv.mmToPulse(IOdinConstantesConfig.dstCallage), conv.mmToPulse(1200)));
                     position.setAngle(conv.degToPulse(0));
                 } else {
-                    position.setPt(new Point(conv.mmToPulse(3000 - IConstantesOdinConfig.dstCallage), conv.mmToPulse(1200)));
+                    position.setPt(new Point(conv.mmToPulse(3000 - IOdinConstantesConfig.dstCallage), conv.mmToPulse(1200)));
                     position.setAngle(conv.degToPulse(180));
                 }
             } else {
@@ -140,10 +140,10 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 trajectoryManager.reculeMMSansAngle(1000);
 
                 if (odinRobotStatus.team() == ETeam.BLEU) {
-                    position.getPt().setX(conv.mmToPulse(IConstantesOdinConfig.dstCallage));
+                    position.getPt().setX(conv.mmToPulse(IOdinConstantesConfig.dstCallage));
                     position.setAngle(conv.degToPulse(0));
                 } else {
-                    position.getPt().setX(conv.mmToPulse(3000 - IConstantesOdinConfig.dstCallage));
+                    position.getPt().setX(conv.mmToPulse(3000 - IOdinConstantesConfig.dstCallage));
                     position.setAngle(conv.degToPulse(180));
                 }
 
@@ -153,7 +153,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 robotStatus.enableCalageBordure();
                 trajectoryManager.reculeMMSansAngle(1000);
 
-                position.getPt().setY(conv.mmToPulse(IConstantesOdinConfig.dstCallage));
+                position.getPt().setY(conv.mmToPulse(IOdinConstantesConfig.dstCallage));
                 position.setAngle(conv.degToPulse(90));
 
                 trajectoryManager.avanceMM(150);

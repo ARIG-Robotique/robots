@@ -2,7 +2,7 @@ package org.arig.robot.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
-import org.arig.robot.constants.IConstantesNerellConfig;
+import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
@@ -131,7 +131,7 @@ public class NerellTasksScheduler {
                 timerLectureCouleur.start();
             }
 
-            if (timerLectureCouleur.getTime(TimeUnit.MILLISECONDS) > IConstantesNerellConfig.TIME_BEFORE_READ_COLOR) {
+            if (timerLectureCouleur.getTime(TimeUnit.MILLISECONDS) > INerellConstantesConfig.TIME_BEFORE_READ_COLOR) {
                 timerLectureCouleur.reset();
                 pincesAvant.processCouleurBouee();
             }

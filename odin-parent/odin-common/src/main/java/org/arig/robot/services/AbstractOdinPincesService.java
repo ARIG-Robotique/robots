@@ -2,7 +2,7 @@ package org.arig.robot.services;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesOdinConfig;
+import org.arig.robot.constants.IOdinConstantesConfig;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.GrandChenaux;
 import org.arig.robot.model.OdinRobotStatus;
@@ -54,7 +54,7 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
     private void depose() {
         disableServicePinces();
         releasePompes();
-        ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+        ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
     }
 
     @Override
@@ -84,15 +84,15 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
 
         if (idxGauche != -1 && idxDroite != -1) {
             releasePompes();
-            ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+            ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
             pousser(true, true);
         } else if (idxGauche != -1) {
             releasePompe(true, false);
-            ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+            ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
             pousser(true, false);
         } else {
             releasePompe(false, true);
-            ThreadUtils.sleep(IConstantesOdinConfig.WAIT_POMPES);
+            ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
             pousser(false, true);
         }
 
@@ -171,7 +171,7 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
         }
 
         io.enableLedCapteurCouleur();
-        ThreadUtils.sleep(IConstantesOdinConfig.WAIT_LED);
+        ThreadUtils.sleep(IOdinConstantesConfig.WAIT_LED);
 
         for (int i = 0; i < 2; i++) {
             if (bouees()[i] == ECouleurBouee.INCONNU) {

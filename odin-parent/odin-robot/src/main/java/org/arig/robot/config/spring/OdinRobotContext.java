@@ -13,8 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.I2CManagerDevice;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.communication.raspi.RaspiI2CManager;
-import org.arig.robot.constants.IConstantesI2COdin;
-import org.arig.robot.constants.IConstantesOdinConfig;
+import org.arig.robot.constants.IOdinConstantesI2C;
+import org.arig.robot.constants.IOdinConstantesConfig;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.avoiding.impl.BasicAvoidingService;
@@ -64,66 +64,66 @@ public class OdinRobotContext {
         final RaspiI2CManager manager = new RaspiI2CManager();
 
         final I2CManagerDevice<I2CDevice> pca9685 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.PCA9685_DEVICE_NAME)
-                .device(i2cBus.getDevice(IConstantesI2COdin.PCA9685_ADDRESS))
+                .deviceName(IOdinConstantesI2C.PCA9685_DEVICE_NAME)
+                .device(i2cBus.getDevice(IOdinConstantesI2C.PCA9685_ADDRESS))
                 .build();
         final I2CManagerDevice<I2CDevice> pcfAlim = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.PCF_ALIM_DEVICE_NAME)
-                .device(i2cBus.getDevice(IConstantesI2COdin.PCF_ALIM_ADDRESS))
+                .deviceName(IOdinConstantesI2C.PCF_ALIM_DEVICE_NAME)
+                .device(i2cBus.getDevice(IOdinConstantesI2C.PCF_ALIM_ADDRESS))
                 .build();
         final I2CManagerDevice<I2CDevice> pcf1 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.PCF1_DEVICE_NAME)
-                .device(i2cBus.getDevice(IConstantesI2COdin.PCF1_ADDRESS))
+                .deviceName(IOdinConstantesI2C.PCF1_DEVICE_NAME)
+                .device(i2cBus.getDevice(IOdinConstantesI2C.PCF1_ADDRESS))
                 .build();
         final I2CManagerDevice<I2CDevice> sd21 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.SERVO_DEVICE_NAME)
-                .device(i2cBus.getDevice(IConstantesI2COdin.SD21_ADDRESS))
+                .deviceName(IOdinConstantesI2C.SERVO_DEVICE_NAME)
+                .device(i2cBus.getDevice(IOdinConstantesI2C.SD21_ADDRESS))
                 .build();
         final I2CManagerDevice<I2CDevice> codeurMoteurDroit = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.CODEUR_MOTEUR_DROIT)
-                .device(i2cBus.getDevice(IConstantesI2COdin.CODEUR_DROIT_ADDRESS))
+                .deviceName(IOdinConstantesI2C.CODEUR_MOTEUR_DROIT)
+                .device(i2cBus.getDevice(IOdinConstantesI2C.CODEUR_DROIT_ADDRESS))
                 .build();
         final I2CManagerDevice<I2CDevice> codeurMoteurGauche = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.CODEUR_MOTEUR_GAUCHE)
-                .device(i2cBus.getDevice(IConstantesI2COdin.CODEUR_GAUCHE_ADDRESS))
+                .deviceName(IOdinConstantesI2C.CODEUR_MOTEUR_GAUCHE)
+                .device(i2cBus.getDevice(IOdinConstantesI2C.CODEUR_GAUCHE_ADDRESS))
                 .build();
         final I2CManagerDevice<I2CDevice> alimMesure = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.ALIM_MESURE_DEVICE_NAME)
-                .device(i2cBus.getDevice(IConstantesI2COdin.ALIM_MESURE_ADDRESS))
+                .deviceName(IOdinConstantesI2C.ALIM_MESURE_DEVICE_NAME)
+                .device(i2cBus.getDevice(IOdinConstantesI2C.ALIM_MESURE_ADDRESS))
                 .scanCmd(new byte[]{0x00})
                 .build();
         final I2CManagerDevice<I2CDevice> controlleurPompes = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.VACUUM_CONTROLLER_DEVICE_NAME)
-                .device(i2cBus.getDevice(IConstantesI2COdin.VACUUM_CONTROLLER_ADDRESS))
+                .deviceName(IOdinConstantesI2C.VACUUM_CONTROLLER_DEVICE_NAME)
+                .device(i2cBus.getDevice(IOdinConstantesI2C.VACUUM_CONTROLLER_ADDRESS))
                 .scanCmd(new byte[]{0x00, 0x00})
                 .build();
         final I2CManagerDevice<I2CDevice> mux = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.MULTIPLEXEUR_I2C_NAME)
-                .device(i2cBus.getDevice(IConstantesI2COdin.MULTIPLEXEUR_I2C_ADDRESS))
+                .deviceName(IOdinConstantesI2C.MULTIPLEXEUR_I2C_NAME)
+                .device(i2cBus.getDevice(IOdinConstantesI2C.MULTIPLEXEUR_I2C_ADDRESS))
                 .build();
         final I2CManagerDevice<I2CDevice> couleurAvantGauche = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.COULEUR_AVANT_GAUCHE_NAME)
+                .deviceName(IOdinConstantesI2C.COULEUR_AVANT_GAUCHE_NAME)
                 .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
-                .multiplexerDeviceName(IConstantesI2COdin.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(IConstantesI2COdin.COULEUR_AVANT_GAUCHE_MUX_CHANNEL)
+                .multiplexerDeviceName(IOdinConstantesI2C.MULTIPLEXEUR_I2C_NAME)
+                .multiplexerChannel(IOdinConstantesI2C.COULEUR_AVANT_GAUCHE_MUX_CHANNEL)
                 .build();
         final I2CManagerDevice<I2CDevice> couleurAvantDroit = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.COULEUR_AVANT_DROIT_NAME)
+                .deviceName(IOdinConstantesI2C.COULEUR_AVANT_DROIT_NAME)
                 .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
-                .multiplexerDeviceName(IConstantesI2COdin.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(IConstantesI2COdin.COULEUR_AVANT_DROIT_MUX_CHANNEL)
+                .multiplexerDeviceName(IOdinConstantesI2C.MULTIPLEXEUR_I2C_NAME)
+                .multiplexerChannel(IOdinConstantesI2C.COULEUR_AVANT_DROIT_MUX_CHANNEL)
                 .build();
         final I2CManagerDevice<I2CDevice> couleurArriereGauche = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.COULEUR_ARRIERE_GAUCHE_NAME)
+                .deviceName(IOdinConstantesI2C.COULEUR_ARRIERE_GAUCHE_NAME)
                 .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
-                .multiplexerDeviceName(IConstantesI2COdin.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(IConstantesI2COdin.COULEUR_ARRIERE_GAUCHE_MUX_CHANNEL)
+                .multiplexerDeviceName(IOdinConstantesI2C.MULTIPLEXEUR_I2C_NAME)
+                .multiplexerChannel(IOdinConstantesI2C.COULEUR_ARRIERE_GAUCHE_MUX_CHANNEL)
                 .build();
         final I2CManagerDevice<I2CDevice> couleurArriereDroit = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(IConstantesI2COdin.COULEUR_ARRIERE_DROIT_NAME)
+                .deviceName(IOdinConstantesI2C.COULEUR_ARRIERE_DROIT_NAME)
                 .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
-                .multiplexerDeviceName(IConstantesI2COdin.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(IConstantesI2COdin.COULEUR_ARRIERE_DROIT_MUX_CHANNEL)
+                .multiplexerDeviceName(IOdinConstantesI2C.MULTIPLEXEUR_I2C_NAME)
+                .multiplexerChannel(IOdinConstantesI2C.COULEUR_ARRIERE_DROIT_MUX_CHANNEL)
                 .build();
 
         manager.registerDevice(codeurMoteurDroit);
@@ -145,57 +145,57 @@ public class OdinRobotContext {
 
     @Bean
     public SD21Servos servos() {
-        return new SD21Servos(IConstantesI2COdin.SERVO_DEVICE_NAME);
+        return new SD21Servos(IOdinConstantesI2C.SERVO_DEVICE_NAME);
     }
 
     @Bean
     public ARIG2WheelsEncoders encoders() {
-        final ARIG2WheelsEncoders encoders = new ARIG2WheelsEncoders(IConstantesI2COdin.CODEUR_MOTEUR_GAUCHE, IConstantesI2COdin.CODEUR_MOTEUR_DROIT);
-        encoders.setCoefs(IConstantesOdinConfig.coefCodeurGauche, IConstantesOdinConfig.coefCodeurDroit);
+        final ARIG2WheelsEncoders encoders = new ARIG2WheelsEncoders(IOdinConstantesI2C.CODEUR_MOTEUR_GAUCHE, IOdinConstantesI2C.CODEUR_MOTEUR_DROIT);
+        encoders.setCoefs(IOdinConstantesConfig.coefCodeurGauche, IOdinConstantesConfig.coefCodeurDroit);
         return encoders;
     }
 
     @Bean
     public ARIGVacuumController vacuumController() {
-        return new ARIGVacuumController(IConstantesI2COdin.VACUUM_CONTROLLER_DEVICE_NAME);
+        return new ARIGVacuumController(IOdinConstantesI2C.VACUUM_CONTROLLER_DEVICE_NAME);
     }
 
     @Bean
     public ARIG2ChannelsAlimentationSensor alimentationSensor() {
-        return new ARIG2ChannelsAlimentationSensor(IConstantesI2COdin.ALIM_MESURE_DEVICE_NAME);
+        return new ARIG2ChannelsAlimentationSensor(IOdinConstantesI2C.ALIM_MESURE_DEVICE_NAME);
     }
 
     @Bean
     public TCS34725ColorSensor couleurAvantGauche() {
-        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_AVANT_GAUCHE_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
+        return new TCS34725ColorSensor(IOdinConstantesI2C.COULEUR_AVANT_GAUCHE_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
     }
 
     @Bean
     public TCS34725ColorSensor couleurAvantDroit() {
-        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_AVANT_DROIT_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
+        return new TCS34725ColorSensor(IOdinConstantesI2C.COULEUR_AVANT_DROIT_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
     }
 
     @Bean
     public TCS34725ColorSensor couleurArriereGauche() {
-        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_ARRIERE_GAUCHE_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
+        return new TCS34725ColorSensor(IOdinConstantesI2C.COULEUR_ARRIERE_GAUCHE_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
     }
 
     @Bean
     public TCS34725ColorSensor couleurArriereDroit() {
-        return new TCS34725ColorSensor(IConstantesI2COdin.COULEUR_ARRIERE_DROIT_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
+        return new TCS34725ColorSensor(IOdinConstantesI2C.COULEUR_ARRIERE_DROIT_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
     }
 
     @Bean
     public TCA9548MultiplexerI2C mux(II2CManager i2CManager) {
-        final TCA9548MultiplexerI2C mux = new TCA9548MultiplexerI2C(IConstantesI2COdin.MULTIPLEXEUR_I2C_NAME);
-        i2CManager.registerMultiplexerDevice(IConstantesI2COdin.MULTIPLEXEUR_I2C_NAME, mux);
+        final TCA9548MultiplexerI2C mux = new TCA9548MultiplexerI2C(IOdinConstantesI2C.MULTIPLEXEUR_I2C_NAME);
+        i2CManager.registerMultiplexerDevice(IOdinConstantesI2C.MULTIPLEXEUR_I2C_NAME, mux);
         return mux;
     }
 
     @Bean
     @SneakyThrows
     public PCA9685GpioProvider pca9685GpioControler(I2CBus bus) {
-        final PCA9685GpioProvider gpioProvider = new PCA9685GpioProvider(bus, IConstantesI2COdin.PCA9685_ADDRESS, new BigDecimal(200));
+        final PCA9685GpioProvider gpioProvider = new PCA9685GpioProvider(bus, IOdinConstantesI2C.PCA9685_ADDRESS, new BigDecimal(200));
 
         final GpioController gpio = GpioFactory.getInstance();
         // Moteur Gauche
@@ -213,7 +213,7 @@ public class OdinRobotContext {
     public AbstractPropulsionsMotors motors() {
         // Configuration de la carte moteur propulsion.
         final PropulsionsPCA9685Motors motors = new PropulsionsPCA9685Motors(PCA9685Pin.PWM_02, PCA9685Pin.PWM_03, PCA9685Pin.PWM_00, PCA9685Pin.PWM_01);
-        motors.assignMotors(IConstantesOdinConfig.numeroMoteurGauche, IConstantesOdinConfig.numeroMoteurDroit);
+        motors.assignMotors(IOdinConstantesConfig.numeroMoteurGauche, IOdinConstantesConfig.numeroMoteurDroit);
         return motors;
     }
 

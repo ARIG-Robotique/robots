@@ -3,7 +3,7 @@ package org.arig.robot.tinker.constants;
 import com.pi4j.gpio.extension.pca.PCA9685Pin;
 import com.pi4j.io.gpio.Pin;
 
-public interface IConstantesServosTinker {
+public interface ITinkerConstantesServos {
 
     // Constantes d'identification Servo //
     // --------------------------------- //
