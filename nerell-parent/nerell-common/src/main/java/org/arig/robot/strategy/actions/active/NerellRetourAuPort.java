@@ -89,7 +89,11 @@ public class NerellRetourAuPort extends AbstractNerellAction {
 
             // Finalisation de la rentrée dans le port après avoir compté les points
             if (rsNerell.otherPort() == EPort.AUCUN) {
+                // Premier arrivé calage sur la bordure
                 mv.gotoPoint(getX(160), entry.getY(), GotoOption.SANS_ORIENTATION);
+                rs.enableCalageBordure();
+                mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+                mv.reculeMMSansAngle(1000);
             }
 
         } catch (NoPathFoundException | AvoidingException e) {
