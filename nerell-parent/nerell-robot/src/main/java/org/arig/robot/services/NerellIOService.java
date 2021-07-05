@@ -289,12 +289,13 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
 
     // Couleur
     private ECouleurBouee computeCouleurBouee(TCS34725ColorSensor capteur) {
-        int delta = IEurobotConfig.deltaCapteurCouleur;
+        int deltaRouge = IEurobotConfig.deltaCapteurCouleurRouge;
+        int deltaVert = IEurobotConfig.deltaCapteurCouleurVert;
         final ColorData c = capteur.getColorData();
         final ECouleurBouee result;
-        if (c.g() > c.r() + delta && c.g() > c.b() + delta) {
+        if (c.g() > c.r() + deltaVert && c.g() > c.b() + deltaVert) {
             result = ECouleurBouee.VERT;
-        } else if (c.r() > c.b() + delta && c.r() > c.g() + delta) {
+        } else if (c.r() > c.b() + deltaRouge && c.r() > c.g() + deltaRouge) {
             result = ECouleurBouee.ROUGE;
         } else {
             result = ECouleurBouee.INCONNU;

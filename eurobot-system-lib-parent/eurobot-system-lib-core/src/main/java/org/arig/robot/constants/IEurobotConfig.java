@@ -28,7 +28,8 @@ public interface IEurobotConfig {
     int pathFindingTailleBouee = 420;
     int pathFindingTailleBoueePort = 480;
 
-    int deltaCapteurCouleur = 42;
+    int deltaCapteurCouleurRouge = 42;
+    int deltaCapteurCouleurVert = 32;
 
     // Noms des actions
     String ACTION_PRISE_BOUEE_NORD = "Bouées nord";
