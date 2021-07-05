@@ -36,6 +36,7 @@ public class NerellHautFond extends AbstractNerellAction {
     @Override
     public boolean isValid() {
         return isTimeValid() && rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime &&
+                rsNerell.pincesAvantEmpty() &&
                 (baliseService.isConnected() ? !rs.hautFondEmpty() : !rs.hautFondPris());
     }
 
@@ -59,12 +60,11 @@ public class NerellHautFond extends AbstractNerellAction {
 
     @Override
     public int order() {
-        // TODO : Calcule de point avec les paires
         int libre = 0;
-        if (!io.presenceVentouse1()) libre++;
-        if (!io.presenceVentouse2()) libre++;
-        if (!io.presenceVentouse3()) libre++;
-        if (!io.presenceVentouse4()) libre++;
+        if (!io.presenceVentouse1()) libre += 3;
+        if (!io.presenceVentouse2()) libre += 3;
+        if (!io.presenceVentouse3()) libre += 3;
+        if (!io.presenceVentouse4()) libre += 3;
         return Math.min(libre, rsNerell.hautFond().size()) + tableUtils.alterOrder(entryPoint());
     }
 
