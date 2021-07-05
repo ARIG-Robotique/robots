@@ -93,13 +93,15 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
         if (getCouleurChenal() == ECouleurBouee.VERT) {
             if (result.idxGauche != -1) {
                 chenauxFuture.addVert(getPinces()[0]);
-            } else {
+            }
+            if (result.idxDroite != -1) {
                 chenauxFuture.addVert(getPinces()[1]);
             }
         } else {
             if (result.idxGauche != -1) {
                 chenauxFuture.addRouge(getPinces()[0]);
-            } else {
+            }
+            if (result.idxDroite != -1) {
                 chenauxFuture.addRouge(getPinces()[1]);
             }
         }
