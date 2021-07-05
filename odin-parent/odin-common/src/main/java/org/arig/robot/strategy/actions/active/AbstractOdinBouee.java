@@ -93,7 +93,7 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
                 pointPrise = tableUtils.getPointFromAngle(distanceApproche + 70, offsetOrientation);
                 pincesAvant.setExpected(rs.boueeCouleur(bouee));
             }
-            mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
+            mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation());
             mv.gotoPoint(pointPrise, sens);
             group.boueePrise(bouee);
             ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);

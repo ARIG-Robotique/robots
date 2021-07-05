@@ -50,6 +50,7 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
         try {
             // TODO Optim d'entry point avec distance comme pour le phare et les dépose chenaux de Nerell
             final Point entry = entryPoint();
+            final int pctVitessePriseBouee = 20;
 
             rsOdin.disableAvoidance();
 
@@ -63,7 +64,7 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
                 pincesAvantService.setExpected(ECouleurBouee.ROUGE);
             }
 
-            mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
+            mv.setVitesse(robotConfig.vitesse(pctVitessePriseBouee), robotConfig.vitesseOrientation());
             mv.gotoPoint(getX(255), 800, GotoOption.AVANT);
             ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
             if (rsOdin.team() == ETeam.BLEU) {
@@ -99,7 +100,7 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
                     pincesAvantService.setExpected(ECouleurBouee.ROUGE);
                 }
 
-                mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
+                mv.setVitesse(robotConfig.vitesse(pctVitessePriseBouee), robotConfig.vitesseOrientation());
                 mv.gotoPoint(getX(412), 1430, GotoOption.AVANT);
                 ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
                 if (rsOdin.team() == ETeam.BLEU) {

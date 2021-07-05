@@ -63,6 +63,7 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
             rsNerell.enablePincesAvant();
 
             final Point entry = entryPoint();
+            final int pctVitessePriseBouee = 20;
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             if (rsNerell.strategy() != ENerellStrategy.BASIC_NORD && tableUtils.distance(entry) > 100) {
                 mv.pathTo(entry);
@@ -81,7 +82,7 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
                     mv.gotoOrientationDeg(66);
                 }
 
-                mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
+                mv.setVitesse(robotConfig.vitesse(pctVitessePriseBouee), robotConfig.vitesseOrientation());
                 pincesAvantService.setExpected(ECouleurBouee.ROUGE, ECouleurBouee.VERT);
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 group.boueePrise(1, 2);
@@ -101,7 +102,7 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
                     mv.gotoOrientationDeg(180 - 66);
                 }
 
-                mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
+                mv.setVitesse(robotConfig.vitesse(pctVitessePriseBouee), robotConfig.vitesseOrientation());
                 pincesAvantService.setExpected(ECouleurBouee.ROUGE, ECouleurBouee.VERT);
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 group.boueePrise(13, 14);

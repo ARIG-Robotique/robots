@@ -49,7 +49,7 @@ public abstract class AbstractNerellBoueeBordure extends AbstractNerellBouee {
                 pincesAvantService.setExpected(null, rsNerell.boueeCouleur(bouee));
             }
 
-            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
+            mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation());
             mv.gotoPoint(entry.getX(), 1840, GotoOption.AVANT);
             group.boueePrise(bouee);
             complete();
