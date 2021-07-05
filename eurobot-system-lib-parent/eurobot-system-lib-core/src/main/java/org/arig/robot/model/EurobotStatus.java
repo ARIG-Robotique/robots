@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -48,6 +49,11 @@ public class EurobotStatus extends AbstractRobotStatus {
 
     private EDirectionGirouette directionGirouette = EDirectionGirouette.UNKNOWN;
 
+    public void directionGirouette(EDirectionGirouette directionGirouette) {
+        log.info("[RS] girouette {}", directionGirouette);
+        this.directionGirouette = directionGirouette;
+    }
+
     private ECouleurBouee[] couleursEcueilEquipe = new ECouleurBouee[]{ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU};
     @Setter(AccessLevel.NONE)
     private ECouleurBouee[] couleursEcueilCommunEquipe = new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.VERT};
@@ -55,6 +61,7 @@ public class EurobotStatus extends AbstractRobotStatus {
     private ECouleurBouee[] couleursEcueilCommunAdverse = new ECouleurBouee[]{ECouleurBouee.ROUGE, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.VERT};
 
     public void couleursEcueilCommun(ECouleurBouee[] couleurs) {
+        log.info("[RS] Ecueil commun {}", Stream.of(couleurs).map(Enum::name).collect(Collectors.joining(",")));
         for (int i = 0; i < couleurs.length; i++) {
             couleursEcueilCommunEquipe[i] = couleurs[i];
             couleursEcueilCommunAdverse[4 - i] = couleurs[i] == ECouleurBouee.INCONNU ? ECouleurBouee.INCONNU : couleurs[i] == ECouleurBouee.VERT ? ECouleurBouee.ROUGE : ECouleurBouee.VERT;
@@ -62,7 +69,18 @@ public class EurobotStatus extends AbstractRobotStatus {
     }
 
     private byte ecueilCommunBleuDispo = 5;
+
+    public void ecueilCommunBleuDispo(byte ecueilCommunBleuDispo) {
+        log.info("[RS] Ecueil commun bleu dispo {}", ecueilCommunBleuDispo);
+        this.ecueilCommunBleuDispo = ecueilCommunBleuDispo;
+    }
+
     private byte ecueilCommunJauneDispo = 5;
+
+    public void ecueilCommunJauneDispo(byte ecueilCommunJauneDispo) {
+        log.info("[RS] Ecueil commun jaune dispo {}", ecueilCommunJauneDispo);
+        this.ecueilCommunJauneDispo = ecueilCommunJauneDispo;
+    }
 
     /**
      * STATUT
@@ -102,6 +120,7 @@ public class EurobotStatus extends AbstractRobotStatus {
     );
 
     public void boueePrise(int... numeros) {
+        log.info("[RS] bouees prises {}", Stream.of(numeros).map(String::valueOf).collect(Collectors.joining(",")));
         for (int i : numeros) {
             bouees.get(i - 1).setPrise();
         }
@@ -121,21 +140,91 @@ public class EurobotStatus extends AbstractRobotStatus {
 
     private List<Bouee> hautFond = new ArrayList<>();
 
+    public void hautFond(List<Bouee> hautFond) {
+        log.info("[RS] haut fond {}", hautFond.stream().map(Bouee::couleur).map(Enum::name).collect(Collectors.joining(",")));
+        this.hautFond = hautFond;
+    }
+
     public boolean hautFondEmpty() {
         return hautFond.isEmpty();
     }
 
     private boolean hautFondPris = false;
+
+    public void hautFondPris(boolean hautFondPris) {
+        log.info("[RS] haut fond pris {}", hautFondPris);
+        this.hautFondPris = hautFondPris;
+    }
+
     private boolean ecueilEquipePris = false;
+
+    public void ecueilEquipePris(boolean ecueilEquipePris) {
+        log.info("[RS] ecueil equipe pris {}", ecueilEquipePris);
+        this.ecueilEquipePris = ecueilEquipePris;
+    }
+
     private boolean ecueilCommunEquipePris = false;
+
+    public void ecueilCommunEquipePris(boolean ecueilCommunEquipePris) {
+        log.info("[RS] ecueil commun equipe pris {}", ecueilCommunEquipePris);
+        this.ecueilCommunEquipePris = ecueilCommunEquipePris;
+    }
+
     private boolean ecueilCommunAdversePris = false;
+
+    public void ecueilCommunAdversePris(boolean ecueilCommunAdversePris) {
+        log.info("[RS] ecueil commun adverse pris {}", ecueilCommunAdversePris);
+        this.ecueilCommunAdversePris = ecueilCommunAdversePris;
+    }
+
     private boolean mancheAAir1 = false;
+
+    public void mancheAAir1(boolean mancheAAir1) {
+        log.info("[RS] manche à air 1 {}", mancheAAir1);
+        this.mancheAAir1 = mancheAAir1;
+    }
+
     private boolean mancheAAir2 = false;
+
+    public void mancheAAir2(boolean mancheAAir2) {
+        log.info("[RS] manche à aire 2 {}", mancheAAir2);
+        this.mancheAAir2 = mancheAAir2;
+    }
+
     private boolean phare = false;
+
+    public void phare(boolean phare) {
+        log.info("[RS] phare {}", phare);
+        this.phare = phare;
+    }
+
     private boolean pavillon = false;
+
+    public void pavillon(boolean pavillon) {
+        log.info("[RS] pavillon {}", pavillon);
+        this.pavillon = pavillon;
+    }
+
     private boolean pavillonSelf = false;
+
+    public void pavillonSelf(boolean pavillonSelf) {
+        log.info("[RS] pavillon (perso) {}", pavillonSelf);
+        this.pavillonSelf = pavillonSelf;
+    }
+
     private EPort port = EPort.AUCUN;
+
+    public void port(EPort port) {
+        log.info("[RS] port {}", port);
+        this.port = port;
+    }
+
     private EPort otherPort = EPort.AUCUN;
+
+    public void otherPort(EPort otherPort) {
+        log.info("[RS] other port {}", otherPort);
+        this.otherPort = otherPort;
+    }
 
     public boolean inPort() {
         return port.isInPort();
@@ -146,6 +235,7 @@ public class EurobotStatus extends AbstractRobotStatus {
     private List<ECouleurBouee> grandPort = new ArrayList<>();
 
     public void deposeGrandPort(ECouleurBouee... bouees) {
+        log.info("[RS] dépose grand port {}", Stream.of(bouees).filter(Objects::nonNull).map(Enum::name).collect(Collectors.joining(",")));
         ArigCollectionUtils.addAllIgnoreNull(grandPort, bouees);
     }
 
@@ -154,6 +244,7 @@ public class EurobotStatus extends AbstractRobotStatus {
     private List<ECouleurBouee> petitPort = new ArrayList<>();
 
     public void deposePetitPort(ECouleurBouee... bouees) {
+        log.info("[RS] dépose petit port {}", Stream.of(bouees).filter(Objects::nonNull).map(Enum::name).collect(Collectors.joining(",")));
         ArigCollectionUtils.addAllIgnoreNull(petitPort, bouees);
     }
 
@@ -162,24 +253,24 @@ public class EurobotStatus extends AbstractRobotStatus {
     protected GrandChenaux grandChenaux = new GrandChenaux();
 
     public void deposeGrandChenalVert(GrandChenaux.Line line, int index, ECouleurBouee bouee) {
-        log.info("Dépose grand chenal vert {} : {} at {}", line, bouee, index);
+        log.info("[RS] Dépose grand chenal vert {} : {} at {}", line, bouee, index);
         grandChenaux.addVert(line, index, bouee);
     }
 
     public void deposeGrandChenalRouge(GrandChenaux.Line line, int index, ECouleurBouee bouee) {
-        log.info("Dépose grand chenal rouge {} : {} at {}", line, bouee, index);
+        log.info("[RS] Dépose grand chenal rouge {} : {} at {}", line, bouee, index);
         grandChenaux.addRouge(line, index, bouee);
     }
 
     public void deposeGrandChenalVert(GrandChenaux.Line line, ECouleurBouee... bouees) {
-        log.info("Dépose grand chenal vert {} : {}", line, Stream.of(bouees)
+        log.info("[RS] Dépose grand chenal vert {} : {}", line, Stream.of(bouees)
                 .map(b -> b == null ? "null" : b.name())
                 .collect(Collectors.joining(",")));
         grandChenaux.addVert(line, bouees);
     }
 
     public void deposeGrandChenalRouge(GrandChenaux.Line line, ECouleurBouee... bouees) {
-        log.info("Dépose grand chenal rouge {} : {}", line, Stream.of(bouees)
+        log.info("[RS] Dépose grand chenal rouge {} : {}", line, Stream.of(bouees)
                 .map(b -> b == null ? "null" : b.name())
                 .collect(Collectors.joining(",")));
         grandChenaux.addRouge(line, bouees);
@@ -218,10 +309,12 @@ public class EurobotStatus extends AbstractRobotStatus {
     }
 
     public void deposePetitChenalVert(ECouleurBouee... bouees) {
+        log.info("[RS] dépose petit chenal vert {}", Stream.of(bouees).filter(Objects::nonNull).map(Enum::name).collect(Collectors.joining(",")));
         petitChenaux.addVert(bouees);
     }
 
     public void deposePetitChenalRouge(ECouleurBouee... bouees) {
+        log.info("[RS] dépose petit chenal rouge {}", Stream.of(bouees).filter(Objects::nonNull).map(Enum::name).collect(Collectors.joining(",")));
         petitChenaux.addRouge(bouees);
     }
 
@@ -282,7 +375,7 @@ public class EurobotStatus extends AbstractRobotStatus {
             if (port.isInPort() && otherPort.isInPort() && port != otherPort) {
                 r.put("Port", 0);
             } else {
-                r.put("Port", calculerPointsPort(port, 1) +  calculerPointsPort(otherPort, 1));
+                r.put("Port", calculerPointsPort(port, 1) + calculerPointsPort(otherPort, 1));
             }
         } else {
             r.put("Port", calculerPointsPort(port, 2));

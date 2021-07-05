@@ -60,7 +60,7 @@ public class BaliseService extends AbstractBaliseService {
                     }
                 }
 
-                group.couleursEcueilCommun(couleursEquipe);
+                rs.couleursEcueilCommun(couleursEquipe);
             }
         }
 

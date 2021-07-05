@@ -72,9 +72,6 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
             case GIROUETTE:
                 rs.directionGirouette(EDirectionGirouette.values()[value[0]]);
                 break;
-            case COULEUR_ECUEIL:
-                rs.couleursEcueilCommun(getBouees(value));
-                break;
             case HAUT_FOND_PRIS:
                 rs.hautFondPris(true);
                 break;
@@ -194,11 +191,6 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
     public void directionGirouette(EDirectionGirouette direction) {
         rs.directionGirouette(direction);
         sendEvent(EStatusEvent.GIROUETTE, direction);
-    }
-
-    public void couleursEcueilCommun(ECouleurBouee[] couleurs) {
-        rs.couleursEcueilCommun(couleurs);
-        sendEventBouees(EStatusEvent.COULEUR_ECUEIL, couleurs);
     }
 
     public void hautFondPris() {

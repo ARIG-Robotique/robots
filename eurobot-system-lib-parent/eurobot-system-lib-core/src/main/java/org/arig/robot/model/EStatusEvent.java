@@ -27,6 +27,5 @@ public enum EStatusEvent {
     CONFIG,
     TEAM,
     GIROUETTE,
-    COULEUR_ECUEIL,
     HAUT_FOND
 }
