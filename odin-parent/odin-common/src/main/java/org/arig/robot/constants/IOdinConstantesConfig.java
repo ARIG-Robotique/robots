@@ -6,7 +6,7 @@ public interface IOdinConstantesConfig {
 
     // Seuil de detection pour l'alimentation
     double seuilAlimentationServosVolts = 3;
-    double seuilAlimentationMoteursVolts = 10;
+    double seuilAlimentationMoteursVolts = 7;
 
     // Nb Thread Pool Scheduler
     int nbThreadScheduledExecutor = 20;
