@@ -51,8 +51,15 @@ public interface IOdinConstantesConfig {
 
     //double coefCodeurDroit = 1.0;
     //double coefCodeurGauche = 1.0;
-    double coefCodeurDroit = 0.9979078108395320;
-    double coefCodeurGauche = 1.0020921891604700;
+    //double coefCodeurDroit = 0.9979078108395320;
+    //double coefCodeurGauche = 1.0020921891604700;
+    //double coefCodeurDroit = 0.9998923972085614;
+    //double coefCodeurGauche = 1.0001076027914404;
+    //double coefCodeurDroit = 0.9977054644225423;
+    //double coefCodeurGauche = 1.0022945355774595;
+    double coefCodeurDroit = 0.9974800772898255;
+    double coefCodeurGauche = 1.0025199227101746;
+
 
     // ------------------------ //
     // Configuration des rampes //
