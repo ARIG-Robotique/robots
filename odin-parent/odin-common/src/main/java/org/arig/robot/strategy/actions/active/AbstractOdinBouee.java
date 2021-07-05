@@ -86,11 +86,11 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
             if (sens == GotoOption.ARRIERE) {
                 // Prise avec la face arrière, donc en mode mirroir
                 mv.alignBackTo(entry);
-                pointPrise = tableUtils.getPointFromAngle(-distanceApproche + 70, -offsetOrientation);
+                pointPrise = tableUtils.getPointFromAngle(-distanceApproche * 2, -offsetOrientation);
                 pincesArriere.setExpected(rs.boueeCouleur(bouee));
             } else {
                 mv.alignFrontTo(entry);
-                pointPrise = tableUtils.getPointFromAngle(distanceApproche + 70, offsetOrientation);
+                pointPrise = tableUtils.getPointFromAngle(distanceApproche * 2, offsetOrientation);
                 pincesAvant.setExpected(rs.boueeCouleur(bouee));
             }
             mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation());
