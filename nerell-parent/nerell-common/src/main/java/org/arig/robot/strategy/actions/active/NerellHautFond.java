@@ -7,6 +7,7 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Bouee;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
+import org.arig.robot.services.AbstractBaliseService;
 import org.arig.robot.services.INerellIOService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class NerellHautFond extends AbstractNerellAction {
     @Autowired
     protected INerellIOService io;
 
+    @Autowired
+    private AbstractBaliseService baliseService;
+
     @Override
     public String name() {
         return "Haut fond";
@@ -31,12 +35,13 @@ public class NerellHautFond extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rsNerell.hautFondEmpty() && rsNerell.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime;
+        return isTimeValid() && rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime &&
+                (baliseService.isConnected() ? !rs.hautFondEmpty() : !rs.hautFondPris());
     }
 
     @Override
     public Point entryPoint() {
-        if (position.getPt().getX() <= 1500) {
+        if (conv.pulseToMm(position.getPt().getX()) <= 1500) {
             return new Point(X, Y);
         } else {
             return new Point(3000 - X, Y);
@@ -44,7 +49,7 @@ public class NerellHautFond extends AbstractNerellAction {
     }
 
     private Point finalPoint(double finalY) {
-        if (position.getPt().getX() <= 1500) {
+        if (conv.pulseToMm(position.getPt().getX()) <= 1500) {
             return new Point(3000 - 1130, finalY);
         } else {
             return new Point(1130, finalY);
@@ -71,11 +76,17 @@ public class NerellHautFond extends AbstractNerellAction {
             final Point entry = entryPoint();
 
             // calcule le Y qui permettra de rencontrer le plus de bouées
-            // médiane : https://stackoverflow.com/a/49215170
-            final int nbHautFond = rsNerell.hautFond().size();
-            final double medianY = rsNerell.hautFond().stream().map(Bouee::pt).mapToDouble(Point::getY).sorted()
-                    .skip((nbHautFond - 1) / 2).limit(2 - nbHautFond % 2).average().orElse(entry.getY());
-            final double finalY = Math.min(entry.getY(), medianY);
+            final double finalY;
+
+            if (baliseService.isConnected()) {
+                // médiane : https://stackoverflow.com/a/49215170
+                final int nbHautFond = rsNerell.hautFond().size();
+                final double medianY = rsNerell.hautFond().stream().map(Bouee::pt).mapToDouble(Point::getY).sorted()
+                        .skip((nbHautFond - 1) / 2).limit(2 - nbHautFond % 2).average().orElse(entry.getY());
+                finalY = Math.min(entry.getY(), medianY);
+            } else {
+                finalY = entry.getY();
+            }
 
             entry.setY(finalY);
             final Point finalPoint = finalPoint(finalY);
@@ -94,8 +105,12 @@ public class NerellHautFond extends AbstractNerellAction {
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
             mv.gotoPoint(finalPoint, GotoOption.AVANT);
 
-            // on marque tout comme pris, l'information mise à jour sera fournie par la balise
-            rsNerell.hautFond(Collections.emptyList());
+            if (baliseService.isConnected()) {
+                // on marque tout comme pris, l'information mise à jour sera fournie par la balise
+                rsNerell.hautFond(Collections.emptyList());
+            } else {
+                group.hautFondPris();
+            }
 
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());

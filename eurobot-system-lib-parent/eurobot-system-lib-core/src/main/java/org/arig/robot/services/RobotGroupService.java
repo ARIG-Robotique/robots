@@ -63,6 +63,9 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
             case COULEUR_ECUEIL:
                 rs.couleursEcueilCommun(getBouees(value));
                 break;
+            case HAUT_FOND_PRIS:
+                rs.hautFondPris(true);
+                break;
             case ECUEIL_EQUIPE_PRIS:
                 rs.ecueilEquipePris(true);
                 break;
@@ -171,6 +174,11 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
     public void couleursEcueilCommun(ECouleurBouee[] couleurs) {
         rs.couleursEcueilCommun(couleurs);
         sendEventBouees(EStatusEvent.COULEUR_ECUEIL, couleurs);
+    }
+
+    public void hautFondPris() {
+        rs.hautFondPris(true);
+        sendEvent(EStatusEvent.HAUT_FOND_PRIS);
     }
 
     public void ecueilEquipePris() {

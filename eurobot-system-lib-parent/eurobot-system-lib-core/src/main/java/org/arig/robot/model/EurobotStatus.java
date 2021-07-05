@@ -121,6 +121,7 @@ public class EurobotStatus extends AbstractRobotStatus {
         return hautFond.isEmpty();
     }
 
+    private boolean hautFondPris = false;
     private boolean ecueilEquipePris = false;
     private boolean ecueilCommunEquipePris = false;
     private boolean ecueilCommunAdversePris = false;

@@ -4,6 +4,7 @@ public enum EStatusEvent {
     READY,
     START,
 
+    HAUT_FOND_PRIS,
     ECUEIL_EQUIPE_PRIS,
     ECUEIL_COMMUN_EQUIPE_PRIS,
     ECUEIL_COMMUN_ADVERSE_PRIS,
