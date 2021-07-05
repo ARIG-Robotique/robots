@@ -49,6 +49,13 @@ public class OdinPhare extends AbstractOdinAction {
     }
 
     @Override
+    public void refreshCompleted() {
+        if (rsOdin.phare()) {
+            complete();
+        }
+    }
+
+    @Override
     public void execute() {
         try {
             rsOdin.enablePincesAvant();

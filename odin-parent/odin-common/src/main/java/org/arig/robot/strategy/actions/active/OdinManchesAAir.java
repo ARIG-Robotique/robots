@@ -71,6 +71,13 @@ public class OdinManchesAAir extends AbstractOdinAction {
     }
 
     @Override
+    public void refreshCompleted() {
+        if (rsOdin.mancheAAir1() && rsOdin.mancheAAir2()) {
+            complete();
+        }
+    }
+
+    @Override
     public void execute() {
         try {
             rsOdin.enablePincesAvant();

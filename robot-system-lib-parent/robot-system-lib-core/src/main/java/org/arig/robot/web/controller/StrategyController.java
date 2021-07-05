@@ -32,14 +32,14 @@ public class StrategyController {
 
     @GetMapping
     public List<ActionSuperviseur> listStrategy() {
-        return strategyManager.getActions().stream()
+        return strategyManager.actions().stream()
                 .map(ActionSuperviseur::fromAction)
                 .collect(Collectors.toList());
     }
 
     @PostMapping(path = "/execute")
     public void execute(@RequestParam("uid") String uid) {
-        Optional<IAction> action = strategyManager.getActions().stream()
+        Optional<IAction> action = strategyManager.actions().stream()
                 .filter(a -> StringUtils.equalsIgnoreCase(a.uuid(), uid))
                 .findFirst();
 

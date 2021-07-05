@@ -46,6 +46,8 @@ public interface IAction {
      */
     boolean isCompleted();
 
+    void refreshCompleted();
+
     /**
      * Processus d'exécution de l'action
      */

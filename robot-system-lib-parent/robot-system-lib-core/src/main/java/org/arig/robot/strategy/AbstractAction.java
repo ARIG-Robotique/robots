@@ -3,6 +3,7 @@ package org.arig.robot.strategy;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.Point;
 
 import java.awt.*;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 public abstract class AbstractAction implements IAction {
 
     @Getter
@@ -41,6 +43,18 @@ public abstract class AbstractAction implements IAction {
         setValidTime(LocalDateTime.now().plusSeconds(2));
     }
 
-    protected void complete() { completed = true; }
+    protected void complete() {
+        complete(false);
+    }
 
+    protected void complete(boolean withLog) {
+        if (withLog) {
+            log.info("Action '{}' complete", name());
+        }
+        completed = true;
+    }
+
+    @Override
+    public void refreshCompleted() {
+    }
 }

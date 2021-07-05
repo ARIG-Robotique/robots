@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Ordonancement des actions a réaliser.
@@ -20,7 +21,6 @@ import java.util.Optional;
 @Slf4j
 public class StrategyManager {
 
-    @Getter
     @Autowired
     private List<IAction> actions;
 
@@ -36,7 +36,9 @@ public class StrategyManager {
     @Autowired
     private LidarService lidarService;
 
-    private List<IAction> completedActions = new ArrayList<>();
+    public synchronized List<IAction> actions() {
+        return actions;
+    }
 
     public void execute() {
         if (rs.currentAction() != null) {
@@ -45,7 +47,7 @@ public class StrategyManager {
 
         final String otherCurrentAction = group.getCurrentAction();
 
-        Optional<IAction> nextAction = actions.stream()
+        Optional<IAction> nextAction = actions().stream()
                 .filter(IAction::isValid)
                 .filter(a -> !StringUtils.equals(otherCurrentAction, a.name()))
                 .filter(a -> !a.blockingActions().contains(otherCurrentAction))
@@ -69,14 +71,20 @@ public class StrategyManager {
 
         if (action.isCompleted()) {
             log.info("L'action {} est terminé.", action.name());
-            actions.remove(action);
-            completedActions.add(action);
         }
+
+        // Purge des actions terminé par l'autre robot entre temps
+        log.info("Purge des actions terminés entre temps");
+        final List<IAction> completedActions = actions().stream()
+                .peek(IAction::refreshCompleted)
+                .filter(IAction::isCompleted)
+                .collect(Collectors.toList());
+        completedActions.forEach(a -> actions().remove(a));
 
         log.info("Il reste {} actions disponibles", actionsCount());
     }
 
     public int actionsCount() {
-        return actions.size();
+        return actions().size();
     }
 }

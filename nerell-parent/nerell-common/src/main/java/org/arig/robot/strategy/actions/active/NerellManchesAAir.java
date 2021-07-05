@@ -61,6 +61,13 @@ public class NerellManchesAAir extends AbstractNerellAction {
     }
 
     @Override
+    public void refreshCompleted() {
+        if (rsNerell.mancheAAir1() && rsNerell.mancheAAir2()) {
+            complete();
+        }
+    }
+
+    @Override
     public void execute() {
         try {
             rsNerell.enablePincesAvant();

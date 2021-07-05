@@ -63,7 +63,7 @@ public class MouvementController {
 
     @GetMapping
     public Map<String, Object> showPosition() {
-        List<ActionSuperviseur> actions = strategyManager.getActions().stream()
+        List<ActionSuperviseur> actions = strategyManager.actions().stream()
                 .map(ActionSuperviseur::fromAction)
                 .sorted(Comparator.comparingInt(ActionSuperviseur::getOrder).reversed())
                 .collect(Collectors.toList());

@@ -50,6 +50,13 @@ public class NerellPhare extends AbstractNerellAction {
     }
 
     @Override
+    public void refreshCompleted() {
+        if (rsNerell.phare()) {
+            complete();
+        }
+    }
+
+    @Override
     public void execute() {
         try {
             rsNerell.enablePincesAvant();

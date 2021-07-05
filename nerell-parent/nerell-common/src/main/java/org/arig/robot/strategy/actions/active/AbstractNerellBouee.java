@@ -53,6 +53,13 @@ public abstract class AbstractNerellBouee extends AbstractNerellAction {
     }
 
     @Override
+    public void refreshCompleted() {
+        if (!rsNerell.boueePresente(bouee)) {
+            complete();
+        }
+    }
+
+    @Override
     public void execute() {
         try {
             rsNerell.enablePincesAvant();

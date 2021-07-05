@@ -58,6 +58,13 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
     }
 
     @Override
+    public void refreshCompleted() {
+        if (!rsOdin.boueePresente(bouee)) {
+            complete();
+        }
+    }
+
+    @Override
     public void execute() {
         try {
             rsOdin.enablePincesAvant();
