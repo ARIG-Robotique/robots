@@ -267,6 +267,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 if (!robotStatus.groupOk()) {
                     odinRobotStatus.doubleDepose(ecranService.config().isDoubleDepose() || ecranService.config().isDeposePartielle());
                     odinRobotStatus.deposePartielle(ecranService.config().isDeposePartielle());
+                    odinRobotStatus.echangeEcueil(ecranService.config().isEchangeEcueil());
                     odinRobotStatus.strategy(EStrategy.values()[ecranService.config().getStrategy()]);
                 }
 

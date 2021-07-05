@@ -13,4 +13,5 @@ public class ReadWriteInfo {
     int strategy = 0;
     boolean doubleDepose = false;
     boolean deposePartielle = false;
+    boolean echangeEcueil = false;
 }

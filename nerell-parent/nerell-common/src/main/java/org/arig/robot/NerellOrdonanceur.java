@@ -311,6 +311,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
                 nerellRobotStatus.doubleDepose(ecranService.config().isDoubleDepose() || ecranService.config().isDeposePartielle());
                 nerellRobotStatus.deposePartielle(ecranService.config().isDeposePartielle());
+                nerellRobotStatus.echangeEcueil(ecranService.config().isEchangeEcueil());
                 nerellRobotStatus.strategy(EStrategy.values()[ecranService.config().getStrategy()]);
 
                 groupService.configuration();

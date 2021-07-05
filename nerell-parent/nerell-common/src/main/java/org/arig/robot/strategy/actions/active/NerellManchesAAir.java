@@ -11,6 +11,8 @@ import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.stereotype.Component;
 
+import java.awt.Rectangle;
+
 @Slf4j
 @Component
 public class NerellManchesAAir extends AbstractNerellAction {
@@ -22,6 +24,11 @@ public class NerellManchesAAir extends AbstractNerellAction {
     @Override
     public String name() {
         return IEurobotConfig.ACTION_MANCHE_A_AIR;
+    }
+
+    @Override
+    public Rectangle blockingZone() {
+        return rs.team() == ETeam.BLEU ? IEurobotConfig.ZONE_ECUEIL_EQUIPE_BLEU : IEurobotConfig.ZONE_ECUEIL_EQUIPE_JAUNE;
     }
 
     @Override

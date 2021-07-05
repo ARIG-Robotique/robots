@@ -61,6 +61,9 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
             case START:
                 start = true;
                 break;
+            case ECHANGE_READY:
+                rs.echangeReady(true);
+                break;
             case TEAM:
                 rs.setTeam(ETeam.values()[value[0]]);
                 break;
@@ -186,6 +189,11 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
                 (byte) (rs.deposePartielle() ? 1 : 0)
         };
         sendEvent(EStatusEvent.CONFIG, data);
+    }
+
+    public void echangeReady() {
+        rs.echangeReady(true);
+        sendEvent(EStatusEvent.ECHANGE_READY);
     }
 
     public void directionGirouette(EDirectionGirouette direction) {

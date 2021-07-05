@@ -149,4 +149,27 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
         srv.pincesArriereFerme(false);
         srv.ascenseurArriereHaut(false);
     }
+
+    @Override
+    public void finalizeDeposeTableEchange() {
+        srv.pivotArriereFerme(false);
+        srv.pincesArriereFerme(false);
+        srv.ascenseurArriereHaut(false);
+
+        if (!io.presencePinceArriere1()) {
+            rs.pinceArriere(0, null);
+        }
+        if (!io.presencePinceArriere2()) {
+            rs.pinceArriere(1, null);
+        }
+        if (!io.presencePinceArriere3()) {
+            rs.pinceArriere(2, null);
+        }
+        if (!io.presencePinceArriere4()) {
+            rs.pinceArriere(3, null);
+        }
+        if (!io.presencePinceArriere5()) {
+            rs.pinceArriere(4, null);
+        }
+    }
 }

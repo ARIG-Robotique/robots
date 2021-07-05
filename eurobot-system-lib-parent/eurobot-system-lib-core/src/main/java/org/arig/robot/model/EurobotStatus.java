@@ -46,6 +46,7 @@ public class EurobotStatus extends AbstractRobotStatus {
 
     private boolean doubleDepose = false;
     private boolean deposePartielle = false;
+    private boolean echangeEcueil = false;
 
     private EDirectionGirouette directionGirouette = EDirectionGirouette.UNKNOWN;
 
@@ -228,6 +229,13 @@ public class EurobotStatus extends AbstractRobotStatus {
 
     public boolean inPort() {
         return port.isInPort();
+    }
+
+    private boolean echangeReady = false;
+
+    public void echangeReady(boolean echangeReady) {
+        log.info("[RS] échange ready {}", echangeReady);
+        this.echangeReady = echangeReady;
     }
 
     @Setter(AccessLevel.NONE)

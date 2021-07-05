@@ -13,4 +13,6 @@ public interface INerellPincesArriereService {
     void deposeGrandPort();
 
     boolean deposePetitPort();
+
+    void finalizeDeposeTableEchange();
 }

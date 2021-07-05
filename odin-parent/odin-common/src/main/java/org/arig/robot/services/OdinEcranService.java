@@ -21,6 +21,7 @@ public class OdinEcranService extends AbstractEcranService {
             stateInfos.setStrategy(rs.strategy().ordinal());
             stateInfos.setDoubleDepose(rs.doubleDepose());
             stateInfos.setDeposePartielle(rs.deposePartielle());
+            stateInfos.setEchangeEcueil(rs.echangeEcueil());
         }
     }
 }
