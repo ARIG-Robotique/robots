@@ -66,6 +66,7 @@ public abstract class AbstractOdinBoueeBordure extends AbstractOdinBouee {
             } else {
                 mv.avanceMM(100);
             }
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             if (beforeEntry != null) {
                 mv.gotoPoint(beforeEntry, GotoOption.SANS_ORIENTATION);
             } else {

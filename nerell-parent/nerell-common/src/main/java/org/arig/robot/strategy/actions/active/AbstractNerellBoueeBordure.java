@@ -55,6 +55,7 @@ public abstract class AbstractNerellBoueeBordure extends AbstractNerellBouee {
             complete();
             ThreadUtils.sleep(INerellConstantesConfig.WAIT_POMPES);
             mv.reculeMM(100);
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             if (beforeEntry != null) {
                 mv.gotoPoint(beforeEntry, GotoOption.SANS_ORIENTATION);
             } else {
