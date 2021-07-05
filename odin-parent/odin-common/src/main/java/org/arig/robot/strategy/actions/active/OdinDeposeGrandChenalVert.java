@@ -49,11 +49,6 @@ public class OdinDeposeGrandChenalVert extends AbstractOdinDeposeGrandChenal {
     }
 
     @Override
-    protected ECouleurBouee[] getPinces() {
-        return rsOdin.pincesAvant();
-    }
-
-    @Override
     protected List<ECouleurBouee> getChenal(GrandChenaux.Line line) {
         return rs.getGrandChenalVert(line);
     }

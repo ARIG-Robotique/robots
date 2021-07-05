@@ -9,6 +9,7 @@ import org.arig.robot.model.Chenaux;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.GrandChenaux;
+import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.AbstractOdinPincesArriereService;
@@ -16,9 +17,9 @@ import org.arig.robot.services.AbstractOdinPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractOdinAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 @Slf4j
 public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
@@ -29,8 +30,18 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
     }
 
     @AllArgsConstructor
+    protected enum EFace {
+        AVANT(OdinRobotStatus::pincesAvant, ECouleurBouee.VERT),
+        ARRIERE(OdinRobotStatus::pincesArriere, ECouleurBouee.ROUGE);
+
+        Function<OdinRobotStatus, ECouleurBouee[]> pinces;
+        ECouleurBouee couleur;
+    }
+
+    @AllArgsConstructor
     class Result {
         GrandChenaux.Line line;
+        EFace face;
         int idxGauche;
         int idxDroite;
     }
@@ -47,13 +58,11 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
 
     protected abstract EPosition getPositionChenal();
 
-    protected abstract ECouleurBouee[] getPinces();
-
     protected abstract List<ECouleurBouee> getChenal(GrandChenaux.Line line);
 
     @Override
     public boolean isValid() {
-        if (Arrays.stream(getPinces()).noneMatch(Objects::nonNull)) {
+        if (rsOdin.pincesArriereEmpty() && rsOdin.pincesAvantEmpty()) {
             result = null;
             return false;
         }
@@ -89,20 +98,21 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
 
         Chenaux chenauxFuture = rs.cloneGrandChenaux();
         int currentScoreChenaux = chenauxFuture.score();
+        ECouleurBouee[] pinces = result.face.pinces.apply(rsOdin);
 
         if (getCouleurChenal() == ECouleurBouee.VERT) {
             if (result.idxGauche != -1) {
-                chenauxFuture.addVert(getPinces()[0]);
+                chenauxFuture.addVert(pinces[0]);
             }
             if (result.idxDroite != -1) {
-                chenauxFuture.addVert(getPinces()[1]);
+                chenauxFuture.addVert(pinces[1]);
             }
         } else {
             if (result.idxGauche != -1) {
-                chenauxFuture.addRouge(getPinces()[0]);
+                chenauxFuture.addRouge(pinces[0]);
             }
             if (result.idxDroite != -1) {
-                chenauxFuture.addRouge(getPinces()[1]);
+                chenauxFuture.addRouge(pinces[1]);
             }
         }
 
@@ -157,25 +167,70 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
     }
 
     Result getOptimalPosition() {
-        Result result = getOptimalPosition(GrandChenaux.Line.B);
-        if (result == null) {
-            result = getOptimalPosition(GrandChenaux.Line.A);
+        EFace face = null;
+        int nbBouees = 0;
+
+        // face pleine
+        for (EFace candidat : EFace.values()) {
+            if (Stream.of(candidat.pinces.apply(rsOdin)).allMatch(b -> b == getCouleurChenal())) {
+                face = candidat;
+                nbBouees = 2;
+                break;
+            }
         }
+
+        // face pas pleine
+        if (face == null) {
+            for (EFace candidat : EFace.values()) {
+                if (Stream.of(candidat.pinces.apply(rsOdin)).anyMatch(b -> b == getCouleurChenal() || b == ECouleurBouee.INCONNU)) {
+                    face = candidat;
+                    nbBouees = 1;
+                    break;
+                }
+            }
+        }
+
+        if (face == null) {
+            return null;
+        }
+
+        GrandChenaux.Line[] lines;
+        if (nbBouees == 2) {
+            lines = new GrandChenaux.Line[]{GrandChenaux.Line.B, GrandChenaux.Line.A};
+        } else {
+            lines = new GrandChenaux.Line[]{GrandChenaux.Line.A, GrandChenaux.Line.B};
+        }
+
+        Result result = null;
+        for (GrandChenaux.Line line : lines) {
+            result = getOptimalPosition(line, face);
+            if (result != null) {
+                break;
+            }
+        }
+
         return result;
     }
 
-    Result getOptimalPosition(GrandChenaux.Line line) {
+    Result getOptimalPosition(GrandChenaux.Line line, EFace face) {
+        ECouleurBouee[] pinces = face.pinces.apply(rsOdin);
+        ECouleurBouee couleurChenal = getCouleurChenal();
         List<ECouleurBouee> chenal = getChenal(line);
-        boolean hasGauche = getPinces()[0] != null;
-        boolean hasDroite = getPinces()[1] != null;
+        boolean hasGauche = pinces[0] == couleurChenal || pinces[0] == ECouleurBouee.INCONNU;
+        boolean hasDroite = pinces[1] == couleurChenal || pinces[1] == ECouleurBouee.INCONNU;
         int idxGauche = -1;
         int idxDroite = -1;
+
+        if (couleurChenal != face.couleur) {
+            boolean temp = hasDroite;
+            hasDroite = hasGauche;
+            hasGauche = temp;
+        }
 
         for (int i = 0; i < chenal.size(); i++) {
             // deux emplacements consécutifs
             if (hasGauche && hasDroite && i > 0 && chenal.get(i) == null && chenal.get(i - 1) == null) {
-                if (line == GrandChenaux.Line.A && getCouleurChenal() == ECouleurBouee.VERT ||
-                        line == GrandChenaux.Line.B && getCouleurChenal() == ECouleurBouee.ROUGE) {
+                if (line == GrandChenaux.Line.A) {
                     idxGauche = i;
                     idxDroite = i - 1;
                 } else {
@@ -211,14 +266,20 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
             return null;
         }
 
+        if (couleurChenal != face.couleur) {
+            int temp = idxGauche;
+            idxGauche = idxDroite;
+            idxDroite = temp;
+        }
+
         if (idxDroite != -1 || idxGauche != -1) {
-            return new Result(line, idxGauche, idxDroite);
+            return new Result(line, face, idxGauche, idxDroite);
         } else {
             return null;
         }
     }
 
-    int getXDepose() {
+    int getXDepose() throws AvoidingException {
         // x de la bouée
         int x = 120;
         if (result.idxGauche != -1) {
@@ -233,18 +294,29 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
         }
 
         // offset du robot
+        int offsetRobot;
         if (result.idxGauche != -1) {
             if (result.line == GrandChenaux.Line.A) {
-                x -= 38;
+                offsetRobot = -38;
             } else {
-                x += 38;
+                offsetRobot = 38;
             }
         } else {
             if (result.line == GrandChenaux.Line.A) {
-                x += 38;
+                offsetRobot = 38;
             } else {
-                x -= 38;
+                offsetRobot = -38;
             }
+        }
+
+        if (getCouleurChenal() != result.face.couleur) {
+            offsetRobot = -offsetRobot;
+        }
+
+        x += offsetRobot;
+
+        if (x < 150) {
+            throw new AvoidingException("Erreur de calcul de la position de dépose");
         }
 
         return getX(x);
@@ -253,9 +325,9 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
     int getYDepose() {
         if (result.line == GrandChenaux.Line.A) {
             if (getPositionChenal() == EPosition.NORD) {
-                return 1750;
+                return 1720;
             } else {
-                return 1200 - 550;
+                return 1200 - 520;
             }
         } else {
             if (getPositionChenal() == EPosition.NORD) {
