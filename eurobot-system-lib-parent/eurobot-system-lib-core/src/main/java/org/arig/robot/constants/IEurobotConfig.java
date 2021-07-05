@@ -42,6 +42,7 @@ public interface IEurobotConfig {
     String ACTION_DEPOSE_GRAND_PORT_VERT = "Dépose grand port vert";
     String ACTION_RETOUR_AU_PORT_PREFIX = "Retour au port ";
     String ACTION_ATTENTE_GRAND_PORT_PREFIX = "Attente grand port ";
+    String ACTION_ATTENTE_CENTRE_PREFIX = "Attente centre ";
     String ACTION_ANTIBLOCAGE_PORT = "Antiblocage port";
     String ACTION_ECUEIL_EQUIPE = "Ecueil equipe";
     String ACTION_NETTOYAGE_GRAND_PORT = "Netoyage grand port";
