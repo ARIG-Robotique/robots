@@ -176,7 +176,7 @@ public abstract class AbstractOrdonanceur {
 
         } catch (ExitProgram e) {
             if (e.isWait()) {
-                ThreadUtils.sleep(10000);
+                ThreadUtils.sleep(3000);
             }
         } catch (Exception e) {
             log.error("Gros catch de fin, sans comprendre pourquoi", e);
