@@ -2,18 +2,18 @@ package org.arig.robot.model.ecran;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.io.Serializable;
 
 @Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GetConfigInfos implements Serializable {
+public class GetConfigInfos extends ReadWriteInfo implements Serializable {
     boolean exit;
     boolean twoRobots;
-    int team;
-    int strategy;
-    boolean doubleDepose;
-    boolean deposePartielle;
     boolean safeAvoidance;
     boolean startCalibration;
     boolean modeManuel;
@@ -21,6 +21,4 @@ public class GetConfigInfos implements Serializable {
     boolean updatePhoto;
     boolean etalonnageBalise;
     boolean etalonnageOk;
-    int[][] posEcueil;
-    int[][] posBouees;
 }

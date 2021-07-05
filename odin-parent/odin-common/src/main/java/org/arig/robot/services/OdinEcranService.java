@@ -16,6 +16,11 @@ public class OdinEcranService extends AbstractEcranService {
     @Override
     public void updateStateInfo(UpdateStateInfos stateInfos) {
         super.updateStateInfo(stateInfos);
-        stateInfos.setTeam(rs.team().ordinal());
+        if (stateInfos.isOtherRobot()) {
+            stateInfos.setTeam(rs.team().ordinal());
+            stateInfos.setStrategy(rs.strategy().ordinal());
+            stateInfos.setDoubleDepose(rs.doubleDepose());
+            stateInfos.setDeposePartielle(rs.deposePartielle());
+        }
     }
 }

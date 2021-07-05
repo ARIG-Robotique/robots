@@ -1,6 +1,7 @@
 package org.arig.robot.model;
 
 public enum EStatusEvent {
+    CALAGE,
     READY,
     START,
 
@@ -23,6 +24,7 @@ public enum EStatusEvent {
     DEPOSE_PETIT_CHENAL_ROUGE,
     DEPOSE_PETIT_CHENAL_VERT,
 
+    CONFIG,
     TEAM,
     GIROUETTE,
     COULEUR_ECUEIL,

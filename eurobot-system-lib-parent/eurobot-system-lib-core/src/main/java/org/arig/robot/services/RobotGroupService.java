@@ -5,6 +5,7 @@ import org.arig.robot.model.Bouee;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.EPort;
 import org.arig.robot.model.EStatusEvent;
+import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.GrandChenaux;
@@ -35,6 +36,9 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
     private ThreadPoolExecutor threadPoolTaskExecutor;
 
     @Getter
+    private boolean calage;
+
+    @Getter
     private boolean ready;
 
     @Getter
@@ -48,6 +52,9 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
     @Override
     public void handle(int eventOrdinal, byte[] value) {
         switch (EStatusEvent.values()[eventOrdinal]) {
+            case CALAGE:
+                calage = true;
+                break;
             case READY:
                 ready = true;
                 break;
@@ -56,6 +63,11 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
                 break;
             case TEAM:
                 rs.setTeam(ETeam.values()[value[0]]);
+                break;
+            case CONFIG:
+                rs.strategy(EStrategy.values()[value[0]]);
+                rs.doubleDepose(value[1] > 0);
+                rs.deposePartielle(value[2] > 0);
                 break;
             case GIROUETTE:
                 rs.directionGirouette(EDirectionGirouette.values()[value[0]]);
@@ -153,6 +165,10 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
         return bouees;
     }
 
+    public void calage() {
+        sendEvent(EStatusEvent.CALAGE);
+    }
+
     public void ready() {
         sendEvent(EStatusEvent.READY);
     }
@@ -164,6 +180,15 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
     public void team(ETeam team) {
         rs.setTeam(team);
         sendEvent(EStatusEvent.TEAM, team);
+    }
+
+    public void configuration() {
+        byte[] data = new byte[]{
+                (byte) rs.strategy().ordinal(),
+                (byte) (rs.doubleDepose() ? 1 : 0),
+                (byte) (rs.deposePartielle() ? 1 : 0)
+        };
+        sendEvent(EStatusEvent.CONFIG, data);
     }
 
     public void directionGirouette(EDirectionGirouette direction) {
@@ -327,5 +352,4 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
             group.sendEventLog(event, data);
         }, threadPoolTaskExecutor);
     }
-
 }

@@ -7,7 +7,7 @@ import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.ENerellStrategy;
+import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.AbstractNerellPincesArriereService;
@@ -58,7 +58,7 @@ public abstract class AbstractNerellEcueil extends AbstractNerellAction {
 
             rsNerell.enablePincesAvant();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            if (rsNerell.strategy() == ENerellStrategy.AGGRESSIVE && firstExecution && aggressiveIntermediaryPoint() != null) {
+            if (rsNerell.strategy() == EStrategy.AGGRESSIVE && firstExecution && aggressiveIntermediaryPoint() != null) {
                 firstExecution = false;
 
                 rsNerell.enableAvoidance();

@@ -5,7 +5,7 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.ENerellStrategy;
+import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +66,7 @@ public class NerellEcueilCommunBleu extends AbstractNerellEcueil {
 
     @Override
     public int order() {
-        if (rsNerell.team() == ETeam.JAUNE && rsNerell.strategy() == ENerellStrategy.AGGRESSIVE && isFirstExecution()) {
+        if (rsNerell.team() == ETeam.JAUNE && rsNerell.strategy() == EStrategy.AGGRESSIVE && isFirstExecution()) {
             return 1000;
         }
         return super.order();
@@ -77,7 +77,7 @@ public class NerellEcueilCommunBleu extends AbstractNerellEcueil {
         if (rsNerell.team() == ETeam.BLEU) {
             return super.isValid() && !rsNerell.boueePresente(5) && !rsNerell.boueePresente(6);
         } else {
-            return super.isValid() && (rsNerell.strategy() == ENerellStrategy.AGGRESSIVE || rsNerell.getRemainingTime() < 40000);
+            return super.isValid() && (rsNerell.strategy() == EStrategy.AGGRESSIVE || rsNerell.getRemainingTime() < 40000);
         }
     }
 
@@ -103,7 +103,7 @@ public class NerellEcueilCommunBleu extends AbstractNerellEcueil {
 
     @Override
     public void execute() {
-        if (rsNerell.strategy() != ENerellStrategy.AGGRESSIVE && bouee6.isValid()) {
+        if (rsNerell.strategy() != EStrategy.AGGRESSIVE && bouee6.isValid()) {
             bouee6.execute();
         }
         if (bouee5.isValid()) {

@@ -3,11 +3,10 @@ package org.arig.robot.filters.common;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.arig.robot.filters.IFilter;
-import org.springframework.util.Assert;
+
+import java.util.Objects;
 
 public class ChangeFilter<T> implements IFilter<T, Boolean> {
-
-    public static final String INITIAL_VALUE_NULL_MESSAGE = "La valeur initiale ne peut être null";
 
     private final T initial;
 
@@ -21,7 +20,6 @@ public class ChangeFilter<T> implements IFilter<T, Boolean> {
     public ChangeFilter(T initial) {
         super();
 
-        Assert.notNull(initial, INITIAL_VALUE_NULL_MESSAGE);
         this.initial = initial;
         this.lastValue = initial;
     }
@@ -33,10 +31,8 @@ public class ChangeFilter<T> implements IFilter<T, Boolean> {
 
     @Override
     public Boolean filter(T value) {
-        Assert.notNull(value, FILTER_VALUE_NULL_MESSAGE);
-
         boolean result = false;
-        if (!value.equals(lastValue)) {
+        if (!Objects.equals(value, lastValue)) {
             lastValue = value;
             result = true;
         }

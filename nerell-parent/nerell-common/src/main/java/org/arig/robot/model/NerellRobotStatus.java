@@ -21,35 +21,12 @@ public class NerellRobotStatus extends EurobotStatus {
         super(true);
     }
 
-    private ENerellStrategy strategy = ENerellStrategy.BASIC_NORD;
-
     @Override
     public void stopMatch() {
         super.stopMatch();
         this.disableBalise();
     }
 
-    public void setStrategy(int value) {
-        switch (value) {
-            case 0:
-                strategy = ENerellStrategy.BASIC_NORD;
-                break;
-            case 1:
-                strategy = ENerellStrategy.BASIC_SUD;
-                break;
-            case 2:
-                strategy = ENerellStrategy.AGGRESSIVE;
-                break;
-            case 3:
-                strategy = ENerellStrategy.FINALE;
-                break;
-            default:
-                throw new IllegalArgumentException("Strategy invalide");
-        }
-    }
-
-    private boolean doubleDepose = false;
-    private boolean deposePartielle = false;
     private boolean etalonageBaliseOk = false;
 
     @Setter(AccessLevel.NONE)

@@ -21,34 +21,10 @@ public class OdinRobotStatus extends EurobotStatus {
         super(false);
     }
 
-    private EOdinStrategy strategy = EOdinStrategy.BASIC_NORD;
-
     @Override
     public void stopMatch() {
         super.stopMatch();
     }
-
-    public void setStrategy(int value) {
-        switch (value) {
-            case 0:
-                strategy = EOdinStrategy.BASIC_NORD;
-                break;
-            case 1:
-                strategy = EOdinStrategy.BASIC_SUD;
-                break;
-            case 2:
-                strategy = EOdinStrategy.AGGRESSIVE;
-                break;
-            case 3:
-                strategy = EOdinStrategy.FINALE;
-                break;
-            default:
-                throw new IllegalArgumentException("Strategy invalide");
-        }
-    }
-
-    private boolean doubleDepose;
-    private boolean deposePartielle;
 
     @Setter(AccessLevel.NONE)
     private boolean pincesAvantEnabled = false;

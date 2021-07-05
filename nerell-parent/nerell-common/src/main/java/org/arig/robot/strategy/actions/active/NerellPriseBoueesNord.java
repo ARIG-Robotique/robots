@@ -5,7 +5,7 @@ import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.ENerellStrategy;
+import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
@@ -35,7 +35,7 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
 
     @Override
     public int order() {
-        if (rsNerell.strategy() == ENerellStrategy.BASIC_NORD && firstExecution) {
+        if (rsNerell.strategy() == EStrategy.BASIC_NORD && firstExecution) {
             return 1000;
         }
 
@@ -65,7 +65,7 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
             final Point entry = entryPoint();
             final int pctVitessePriseBouee = 20;
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            if (rsNerell.strategy() != ENerellStrategy.BASIC_NORD && tableUtils.distance(entry) > 100) {
+            if (rsNerell.strategy() != EStrategy.BASIC_NORD && tableUtils.distance(entry) > 100) {
                 mv.pathTo(entry);
             } else {
                 // Le path active l'évitement en auto, pas de path, pas d'évitement
@@ -77,7 +77,7 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
             final Point target = new Point(targetx, targety);
 
             if (rsNerell.team() == ETeam.BLEU) {
-                if (rsNerell.strategy() != ENerellStrategy.BASIC_NORD) {
+                if (rsNerell.strategy() != EStrategy.BASIC_NORD) {
                     mv.gotoPoint(220, 1290);
                     mv.gotoOrientationDeg(66);
                 }
@@ -97,7 +97,7 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
                 group.boueePrise(6);
 
             } else {
-                if (rsNerell.strategy() != ENerellStrategy.BASIC_NORD) {
+                if (rsNerell.strategy() != EStrategy.BASIC_NORD) {
                     mv.gotoPoint(3000 - 220, 1290);
                     mv.gotoOrientationDeg(180 - 66);
                 }

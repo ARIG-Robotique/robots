@@ -33,6 +33,8 @@ public class EurobotStatus extends AbstractRobotStatus {
     @Setter(AccessLevel.NONE)
     private ETeam team = ETeam.UNKNOWN;
 
+    private EStrategy strategy = EStrategy.BASIC_NORD;
+
     public void setTeam(ETeam team) {
         this.team = team;
 
@@ -40,6 +42,9 @@ public class EurobotStatus extends AbstractRobotStatus {
         couleursEcueilEquipe(EcueilUtils.tirageEquipe(team()));
         couleursEcueilCommun(EcueilUtils.tirageCommunEquipe(team(), tirageEcueil));
     }
+
+    private boolean doubleDepose = false;
+    private boolean deposePartielle = false;
 
     private EDirectionGirouette directionGirouette = EDirectionGirouette.UNKNOWN;
 
