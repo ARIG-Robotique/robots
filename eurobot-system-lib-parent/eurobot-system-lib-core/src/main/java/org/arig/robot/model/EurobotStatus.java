@@ -284,8 +284,16 @@ public class EurobotStatus extends AbstractRobotStatus {
         grandChenaux.addRouge(line, bouees);
     }
 
+    public boolean grandChenalVertBordureEmpty() {
+        return grandChenaux.chenalVertBordureEmpty();
+    }
+
     public boolean grandChenalVertEmpty() {
         return grandChenaux.chenalVertEmpty();
+    }
+
+    public boolean grandChenalRougeBordureEmpty() {
+        return grandChenaux.chenalRougeBordureEmpty();
     }
 
     public boolean grandChenalRougeEmpty() {

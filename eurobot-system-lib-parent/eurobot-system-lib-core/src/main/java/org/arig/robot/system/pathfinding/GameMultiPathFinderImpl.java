@@ -25,19 +25,24 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
         // Ajout des obstacles en fonctions des bouées
         int[] boueesAvoided = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
         for (int nb : boueesAvoided) {
-            // ignore la bouée devant le petit port
-//            if ((rs.team() == ETeam.BLEU && nb == 9) || (rs.team() == ETeam.JAUNE && nb == 8)) {
-//                continue;
-//            }
-            // ignore la bouée devant l'ecueil adverse
-//            if ((rs.team() == ETeam.BLEU && nb == 11) || (rs.team() == ETeam.JAUNE && nb == 6)) {
-//                continue;
-//            }
-
             if (rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime && rs.boueePresente(nb)) {
                 obstacles.add(tableUtils.createPolygonObstacle(rs.boueePt(nb),
                         nb <= 4 || nb >= 13 ? IEurobotConfig.pathFindingTailleBoueePort : IEurobotConfig.pathFindingTailleBouee));
             }
+        }
+
+        // ajoute les bouee bordure grand chenaux
+        if (rs.team() == ETeam.BLEU && !rs.grandChenalVertBordureEmpty()) {
+            obstacles.add(tableUtils.createPolygonObstacle(new org.arig.robot.model.Point(35, 1485), IEurobotConfig.pathFindingTailleBouee));
+        }
+        if (rs.team() == ETeam.BLEU && !rs.grandChenalRougeBordureEmpty()) {
+            obstacles.add(tableUtils.createPolygonObstacle(new org.arig.robot.model.Point(35, 915), IEurobotConfig.pathFindingTailleBouee));
+        }
+        if (rs.team() == ETeam.JAUNE && !rs.grandChenalVertBordureEmpty()) {
+            obstacles.add(tableUtils.createPolygonObstacle(new org.arig.robot.model.Point(3000 - 35, 1485), IEurobotConfig.pathFindingTailleBouee));
+        }
+        if (rs.team() == ETeam.JAUNE && !rs.grandChenalRougeBordureEmpty()) {
+            obstacles.add(tableUtils.createPolygonObstacle(new org.arig.robot.model.Point(3000 - 35, 915), IEurobotConfig.pathFindingTailleBouee));
         }
 
         // ajoute les grand chenaux

@@ -55,9 +55,17 @@ public class GrandChenaux extends Chenaux {
         }
     }
 
+    public boolean chenalVertBordureEmpty() {
+        return chenalVert.get(0) == null && chenalVert.get(1) == null;
+    }
+
     @Override
     public boolean chenalVertEmpty() {
         return chenalVert.stream().skip(2).allMatch(Objects::isNull);
+    }
+
+    public boolean chenalRougeBordureEmpty() {
+        return chenalRouge.get(0) == null && chenalRouge.get(1) == null;
     }
 
     @Override
