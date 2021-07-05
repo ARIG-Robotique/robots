@@ -34,8 +34,7 @@ public class OdinAttenteGrandPort extends AbstractOdinAction {
     public List<String> blockingActions = Arrays.asList(
             IEurobotConfig.ACTION_DEPOSE_GRAND_PORT,
             IEurobotConfig.ACTION_DEPOSE_GRAND_PORT_VERT,
-            IEurobotConfig.ACTION_DEPOSE_GRAND_PORT_ROUGE,
-            IEurobotConfig.ACTION_NETTOYAGE_GRAND_PORT
+            IEurobotConfig.ACTION_DEPOSE_GRAND_PORT_ROUGE
     );
 
     @Override
