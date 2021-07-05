@@ -30,7 +30,7 @@ public class NerellEcueilCommunJaune extends AbstractNerellEcueil {
 
     @Override
     public String name() {
-        return "Ecueil commun jaune";
+        return IEurobotConfig.ACTION_ECUEIL_COMMUN_JAUNE;
     }
 
     @Getter

@@ -2,8 +2,8 @@ package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.constants.IEurobotConfig;
+import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;

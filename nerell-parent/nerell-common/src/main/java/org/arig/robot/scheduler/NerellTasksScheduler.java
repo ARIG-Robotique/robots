@@ -2,8 +2,8 @@ package org.arig.robot.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
-import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.constants.IEurobotConfig;
+import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.NerellRobotStatus;

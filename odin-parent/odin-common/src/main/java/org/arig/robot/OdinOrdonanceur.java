@@ -1,8 +1,8 @@
 package org.arig.robot;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IOdinConstantesConfig;
 import org.arig.robot.constants.IEurobotConfig;
+import org.arig.robot.constants.IOdinConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;

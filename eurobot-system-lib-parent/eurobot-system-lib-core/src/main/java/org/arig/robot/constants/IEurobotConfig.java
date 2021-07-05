@@ -45,6 +45,8 @@ public interface IEurobotConfig {
     String ACTION_ATTENTE_CENTRE_PREFIX = "Attente centre ";
     String ACTION_ANTIBLOCAGE_PORT = "Antiblocage port";
     String ACTION_ECUEIL_EQUIPE = "Ecueil equipe";
+    String ACTION_ECUEIL_COMMUN_JAUNE = "Ecueil commun jaune";
+    String ACTION_ECUEIL_COMMUN_BLEU = "Ecueil commun bleu";
     String ACTION_NETTOYAGE_GRAND_PORT = "Netoyage grand port";
     String ACTION_NETTOYAGE_PETIT_PORT = "Netoyage petit port";
 

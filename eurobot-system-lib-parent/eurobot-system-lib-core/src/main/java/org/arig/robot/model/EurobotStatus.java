@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
 import org.arig.robot.utils.ArigCollectionUtils;
