@@ -121,7 +121,7 @@ public class EurobotStatus extends AbstractRobotStatus {
     );
 
     public void boueePrise(int... numeros) {
-        log.info("[RS] bouees prises {}", Stream.of(numeros).map(String::valueOf).collect(Collectors.joining(",")));
+        log.info("[RS] bouees prises {}", Arrays.stream(numeros).mapToObj(String::valueOf).collect(Collectors.joining(",")));
         for (int i : numeros) {
             bouees.get(i - 1).setPrise();
         }
