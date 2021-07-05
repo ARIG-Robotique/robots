@@ -41,6 +41,10 @@ public class OdinPhare extends AbstractOdinAction {
 
     @Override
     public boolean isValid() {
+        if (rs.twoRobots() && !rsOdin.groupOk()) {
+            return false;
+        }
+
         return isTimeValid() && !rsOdin.phare() && !rsOdin.inPort();
     }
 

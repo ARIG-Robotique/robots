@@ -53,6 +53,10 @@ public class NerellManchesAAir extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
+        if (rs.twoRobots() && !rsNerell.groupOk()) {
+            return false;
+        }
+
         return isTimeValid() && !rsNerell.inPort() && (!rsNerell.mancheAAir1() || !rsNerell.mancheAAir2());
     }
 
