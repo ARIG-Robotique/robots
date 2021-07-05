@@ -47,7 +47,7 @@ public class OdinEchangeEcueil extends AbstractOdinAction {
 
     @Override
     public void refreshCompleted() {
-        if (!rs.echangeEcueil() || rs.groupOk()) {
+        if (!rs.echangeEcueil() || !rs.groupOk()) {
             complete();
         }
     }

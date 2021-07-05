@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 import java.awt.Rectangle;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Component
@@ -49,12 +48,12 @@ public class NerellEchangeEcueil extends AbstractNerellAction {
         return rs.echangeEcueil() && rs.groupOk() &&
                 rs.mancheAAir1() && rs.mancheAAir2() && !rsNerell.pincesArriereEmpty() &&
                 rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime &&
-                Objects.deepEquals(rsNerell.pincesArriere(), rs.couleursEcueilEquipe());
+                Arrays.deepEquals(rsNerell.pincesArriere(), rs.couleursEcueilEquipe());
     }
 
     @Override
     public void refreshCompleted() {
-        if (!rs.echangeEcueil() || rs.groupOk()) {
+        if (!rs.echangeEcueil() || !rs.groupOk()) {
             complete();
         }
     }

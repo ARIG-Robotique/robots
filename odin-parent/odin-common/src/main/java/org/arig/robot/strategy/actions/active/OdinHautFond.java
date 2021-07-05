@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 public class OdinHautFond extends AbstractOdinAction {
 
     private static final int X = 800;
-    private static final int Y = 1850;
+    private static final int Y = 1700;
 
     @Autowired
     protected IOdinIOService io;
