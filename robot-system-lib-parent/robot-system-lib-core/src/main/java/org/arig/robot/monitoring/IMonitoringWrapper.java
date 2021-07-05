@@ -3,6 +3,8 @@ package org.arig.robot.monitoring;
 import org.arig.robot.model.monitor.AbstractMonitorMouvement;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 
+import java.util.List;
+
 /**
  * @author gdepuille on 11/10/16.
  */
@@ -13,6 +15,10 @@ public interface IMonitoringWrapper {
     void cleanTimeSeriePoints();
 
     void cleanMouvementPoints();
+
+    List<MonitorTimeSerie> monitorTimeSeriePoints();
+
+    List<AbstractMonitorMouvement> monitorMouvementPoints();
 
     void addTimeSeriePoint(MonitorTimeSerie point);
 

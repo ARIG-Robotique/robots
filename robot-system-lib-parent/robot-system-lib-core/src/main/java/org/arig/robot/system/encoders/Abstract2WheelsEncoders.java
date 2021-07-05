@@ -29,8 +29,12 @@ public abstract class Abstract2WheelsEncoders {
     @Getter
     private double droit;
 
+    @Getter
     private double coefGauche;
+
+    @Getter
     private double coefDroit;
+
     private boolean alternate;
     private final String name;
 

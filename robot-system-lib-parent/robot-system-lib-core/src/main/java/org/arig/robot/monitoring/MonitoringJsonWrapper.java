@@ -40,8 +40,8 @@ public class MonitoringJsonWrapper extends AbstractMonitoringWrapper {
             final String fileName = env.getRequiredProperty(IConstantesConfig.keyExecutionId) + "-mouvement.json";
             final File f = new File(saveDirectory, fileName);
             final ObjectMapper om = new ObjectMapper();
-            log.info("Enregistrement de {} points de mouvement dans le fichier {}", getMonitorMouvementPoints().size(), f.getAbsolutePath());
-            om.writeValue(new BufferedOutputStream(new FileOutputStream(f)), getMonitorMouvementPoints());
+            log.info("Enregistrement de {} points de mouvement dans le fichier {}", monitorMouvementPoints().size(), f.getAbsolutePath());
+            om.writeValue(new BufferedOutputStream(new FileOutputStream(f)), monitorMouvementPoints());
         } catch (IOException e) {
             log.error("Impossible d'enregistrer le JSON des points de monitoring", e);
             throw new RuntimeException("Erreur d'enregistrement du monitoring", e);
@@ -59,8 +59,8 @@ public class MonitoringJsonWrapper extends AbstractMonitoringWrapper {
             final String fileName = env.getRequiredProperty(IConstantesConfig.keyExecutionId) + "-timeseries.json";
             final File f = new File(saveDirectory, fileName);
             final ObjectMapper om = new ObjectMapper();
-            log.info("Enregistrement de {} points time serie dans le fichier {}", getMonitorTimeSeriePoints().size(), f.getAbsolutePath());
-            om.writeValue(new BufferedOutputStream(new FileOutputStream(f)), getMonitorTimeSeriePoints());
+            log.info("Enregistrement de {} points time serie dans le fichier {}", monitorTimeSeriePoints().size(), f.getAbsolutePath());
+            om.writeValue(new BufferedOutputStream(new FileOutputStream(f)), monitorTimeSeriePoints());
         } catch (IOException e) {
             log.error("Impossible d'enregistrer le JSON des points de monitoring", e);
             throw new RuntimeException("Erreur d'enregistrement du monitoring", e);

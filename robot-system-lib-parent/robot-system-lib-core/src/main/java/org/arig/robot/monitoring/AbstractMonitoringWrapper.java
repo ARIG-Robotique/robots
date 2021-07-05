@@ -3,6 +3,7 @@ package org.arig.robot.monitoring;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.arig.robot.model.AbstractRobotStatus;
@@ -23,10 +24,12 @@ public abstract class AbstractMonitoringWrapper implements IMonitoringWrapper {
     @Autowired(required = false)
     private AbstractRobotStatus robotStatus = null;
 
-    @Getter(AccessLevel.PROTECTED)
+    @Getter(AccessLevel.PUBLIC)
+    @Accessors(fluent = true)
     private final List<MonitorTimeSerie> monitorTimeSeriePoints = Collections.synchronizedList(new ArrayList<>());
 
-    @Getter(AccessLevel.PROTECTED)
+    @Getter(AccessLevel.PUBLIC)
+    @Accessors(fluent = true)
     private final List<AbstractMonitorMouvement> monitorMouvementPoints = Collections.synchronizedList(new ArrayList<>());
 
     @Setter
