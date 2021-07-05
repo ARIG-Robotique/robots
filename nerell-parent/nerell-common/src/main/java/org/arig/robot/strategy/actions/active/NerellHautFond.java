@@ -30,7 +30,7 @@ public class NerellHautFond extends AbstractNerellAction {
 
     @Override
     public String name() {
-        return "Haut fond";
+        return IEurobotConfig.ACTION_PRISE_HAUT_FOND;
     }
 
     @Override

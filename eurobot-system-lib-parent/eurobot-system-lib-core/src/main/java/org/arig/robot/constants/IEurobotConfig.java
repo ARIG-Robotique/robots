@@ -35,6 +35,7 @@ public interface IEurobotConfig {
     String ACTION_PRISE_BOUEE_NORD = "Bouées nord";
     String ACTION_PRISE_BOUEE_SUD = "Bouées sud";
     String ACTION_PRISE_BOUEE_PREFIX = "Bouée ";
+    String ACTION_PRISE_HAUT_FOND = "Haut fond";
     String ACTION_PHARE = "Phare";
     String ACTION_MANCHE_A_AIR = "Manche à air";
     String ACTION_DEPOSE_PETIT_PORT = "Dépose petit port";
@@ -42,7 +43,6 @@ public interface IEurobotConfig {
     String ACTION_DEPOSE_GRAND_PORT_ROUGE = "Dépose grand port rouge";
     String ACTION_DEPOSE_GRAND_PORT_VERT = "Dépose grand port vert";
     String ACTION_RETOUR_AU_PORT_PREFIX = "Retour au port ";
-    String ACTION_ATTENTE_GRAND_PORT_PREFIX = "Attente grand port ";
     String ACTION_ATTENTE_CENTRE_PREFIX = "Attente centre ";
     String ACTION_ANTIBLOCAGE_PORT = "Antiblocage port";
     String ACTION_ECHANGE_ECUEIL = "Echange ecueil";
