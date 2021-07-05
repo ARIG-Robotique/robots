@@ -103,8 +103,8 @@ public interface IOdinConstantesConfig {
     // --------------------------- //
     // Paramètre mouvement manager //
     // --------------------------- //
-    double arretDistanceMm = 1;
-    double arretOrientDeg = 1;
+    double arretDistanceMm = 0.5;
+    double arretOrientDeg = 0.5;
     double approcheAvecFreinDistanceMm = 10;
     double approcheAvecFreinOrientationDeg = 5;
     double approcheSansFreinDistanceMm = 50;
