@@ -20,8 +20,6 @@ public abstract class AbstractNerellBoueeBordure extends AbstractNerellBouee {
         super(bouee);
     }
 
-    protected abstract Point beforeEntry();
-
     @Override
     public void execute() {
         try {
@@ -32,15 +30,9 @@ public abstract class AbstractNerellBoueeBordure extends AbstractNerellBouee {
             final Point boueePt = entryPoint();
             final double decallageX = getOffsetPince(pinceCible) * -1;
             final Point entry = new Point(boueePt.getX() + decallageX, 1600);
-            final Point beforeEntry = beforeEntry();
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            if (beforeEntry != null) {
-                mv.pathTo(beforeEntry, GotoOption.AVANT);
-                mv.gotoPoint(entry, GotoOption.AVANT);
-            } else {
-                mv.pathTo(entry, GotoOption.AVANT);
-            }
+            mv.pathTo(entry, GotoOption.AVANT);
 
             // prise de la bouée
             if (pinceCible <= 2) {
@@ -56,11 +48,7 @@ public abstract class AbstractNerellBoueeBordure extends AbstractNerellBouee {
             ThreadUtils.sleep(INerellConstantesConfig.WAIT_POMPES);
             mv.reculeMM(100);
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            if (beforeEntry != null) {
-                mv.gotoPoint(beforeEntry, GotoOption.SANS_ORIENTATION);
-            } else {
-                mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);
-            }
+            mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
