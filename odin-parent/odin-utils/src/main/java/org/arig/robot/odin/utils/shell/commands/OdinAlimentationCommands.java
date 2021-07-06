@@ -7,6 +7,7 @@ import org.arig.robot.model.capteurs.AlimentationSensorValue;
 import org.arig.robot.services.IOdinIOService;
 import org.arig.robot.services.OdinServosService;
 import org.arig.robot.system.capteurs.IAlimentationSensor;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -41,15 +42,18 @@ public class OdinAlimentationCommands {
 
     @SneakyThrows
     @ShellMethod("Lecture des alimentations")
-    public void readAlimentation() {
+    public void readAlimentation(int nbRead) {
         alimentationSensor.printVersion();
-        alimentationSensor.refresh();
-        for (byte i = 1 ; i <= 2 ; i++) {
-            log.info("Lecture channel {}", i);
-            AlimentationSensorValue v = alimentationSensor.get(i);
-            log.info(" * Tension {}V", v.tension());
-            log.info(" * Courant {}A", v.current());
-            log.info(" * Etat {}", v.fault() ? "en erreur" : "OK");
+        for (int read = 0 ; read < nbRead ; read++) {
+            log.info("Lecture {} / {}", read + 1, nbRead);
+            alimentationSensor.refresh();
+            for (byte i = 1; i <= 2; i++) {
+                AlimentationSensorValue v = alimentationSensor.get(i);
+                log.info("Lecture channel {} ({})\t{} V\t{} A",
+                        i, v.fault() ? "en erreur" : "OK", v.tension(), v.current());
+            }
+
+            ThreadUtils.sleep(200);
         }
     }
 }
