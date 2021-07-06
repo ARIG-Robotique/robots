@@ -89,7 +89,9 @@ public class OdinRetourAuPort extends AbstractOdinAction {
             if (rsOdin.otherPort() == EPort.AUCUN) {
                 // Premier arrivé on rentre dans la zone
                 final double entryYFirst = port == EPort.NORD ? 1770 : 650;
-                mv.pathTo(entry.getX(), entryYFirst, GotoOption.ARRIERE, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                if (tableUtils.distance(getX(160), entryYFirst) > 200) {
+                    mv.pathTo(entry.getX(), entryYFirst, GotoOption.ARRIERE, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                }
                 mv.gotoPoint(getX(160), entryYFirst, GotoOption.ARRIERE, GotoOption.SANS_ORIENTATION);
                 group.port(port);
                 mv.gotoOrientationDeg(rs.team() == ETeam.BLEU ? 0 : 180);

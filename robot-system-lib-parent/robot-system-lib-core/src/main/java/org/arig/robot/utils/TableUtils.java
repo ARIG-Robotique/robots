@@ -56,6 +56,10 @@ public class TableUtils {
         return dest.distance(pos);
     }
 
+    public double distance(double x, double y) {
+        return distance(new Point(x, y));
+    }
+
     public int alterOrder(Point dest) {
         return (int) -Math.ceil(distance(dest) / 100);
     }
