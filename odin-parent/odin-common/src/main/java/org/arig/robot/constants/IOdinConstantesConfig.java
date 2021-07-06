@@ -33,10 +33,11 @@ public interface IOdinConstantesConfig {
 
     // Diam 47mm => périmètre 147.655 mm
     // 4096 p => 147.65485471872 mm : 4096 / 147.65485471872 = 27.740367953379
-    //double countPerMm = 27.740367953379;
-    //double countPerMm = 27.533863974;
-    double countPerMm = 27.437735771;
-    //double countPerMm = 27.4148709911908000;
+    //double countPerMm = 27.437735771;
+    //double countPerMm = 27.4398089550455000;
+    //double countPerMm = 27.43369373401977;
+    //double countPerMm = 27.43521476748314;
+    double countPerMm = 27.43361732339368;
 
     // Entraxe 250mm => périmètre 785.39816339745 mm (1 roue)
     // 785.39816339745 mm => 180° : 785.39816339745 * 27.740367953379 / 180 = 121.040189125
@@ -47,19 +48,23 @@ public interface IOdinConstantesConfig {
     //double countPerDeg = 119.666123381539;
     //double countPerDeg = 119.658051385;
     //double countPerDeg = 119.649979388444;
-    double countPerDeg = 119.654015387;
+    //double countPerDeg = 119.654015387;
+    //double countPerDeg = 119.64038103943209;
+    //double countPerDeg = 119.63671933444043;
+    //double countPerDeg = 119.70623290737552;
+    //double countPerDeg = 119.70945955972493;
+    double countPerDeg = 119.68722222222223;
 
-    //double coefCodeurDroit = 1.0;
-    //double coefCodeurGauche = 1.0;
+    double coefCodeurDroit = 1.0;
+    double coefCodeurGauche = 1.0;
     //double coefCodeurDroit = 0.9979078108395320;
     //double coefCodeurGauche = 1.0020921891604700;
     //double coefCodeurDroit = 0.9998923972085614;
     //double coefCodeurGauche = 1.0001076027914404;
     //double coefCodeurDroit = 0.9977054644225423;
     //double coefCodeurGauche = 1.0022945355774595;
-    double coefCodeurDroit = 0.9974800772898255;
-    double coefCodeurGauche = 1.0025199227101746;
-
+    //double coefCodeurDroit = 0.9974800772898255;
+    //double coefCodeurGauche = 1.0025199227101746;
 
     // ------------------------ //
     // Configuration des rampes //

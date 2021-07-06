@@ -6,11 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.arig.robot.constants.IConstantesConfig;
+import org.arig.robot.constants.IOdinConstantesConfig;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.SensDeplacement;
+import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
@@ -62,6 +64,7 @@ public class OdinOdometrieCommands {
     @ShellMethod("Réglage coef roue")
     @ShellMethodAvailability("alimentationOk")
     public void odometrieCoefRoue(int nbCycle) {
+        encoders.reset();
         rs.enableAsserv();
         rs.disableAvoidance();
 
@@ -71,16 +74,15 @@ public class OdinOdometrieCommands {
 
         rs.enableForceMonitoring();
         monitoringWrapper.cleanAllPoints();
-        for (int i = 0 ; i < nbCycle ; i++) {
-            trajectoryManager.avanceMM(i == 0 ? 1000 : 800);
+        for (int cycle = 0 ; cycle < nbCycle ; cycle++) {
+            log.info("Cycle {} / {}", cycle + 1, nbCycle);
+            trajectoryManager.avanceMM(cycle == 0 ? 1000 : 800);
             trajectoryManager.tourneDeg(180);
             trajectoryManager.avanceMM(800);
             trajectoryManager.tourneDeg(-180);
         }
         rs.enableCalageBordure();
         trajectoryManager.reculeMMSansAngle(1000);
-
-        ThreadUtils.sleep(200);
         rs.disableForceMonitoring();
         rs.disableAsserv();
 
@@ -107,15 +109,126 @@ public class OdinOdometrieCommands {
         double oldGauche = encoders.getCoefGauche();
         double oldDroit = encoders.getCoefDroit();
 
-        log.info("Old coef gauche : {}", oldGauche);
-        log.info("Old coef droit  : {}", oldDroit);
-        log.info("Roue gauche     : {}", roueGauche);
-        log.info("Roue droite     : {}", roueDroite);
-        log.info("Distance        : {}", distance);
-        log.info("Delta D - G     : {}", delta);
-        log.info("Correction      : {}", correction);
+        log.info("Roue gauche : {} pulse", roueGauche);
+        log.info("Roue droite : {} pulse", roueDroite);
+        log.info("Distance    : {} pulse", distance);
+        log.info("Delta D - G : {} pulse", delta);
+        log.info("Correction  : {}", correction);
+        log.info("-------------------------------------------------");
+        log.info("Coef gauche : {} -> {}", oldGauche, oldGauche + correction);
+        log.info("Coef droit  : {} -> {}", oldDroit, oldDroit - correction);
+    }
 
-        log.info("New coef gauche : {}", oldGauche + correction);
-        log.info("New coef droit  : {}", oldDroit - correction);
+    @SneakyThrows
+    @ShellMethod("Réglage distance")
+    @ShellMethodAvailability("alimentationOk")
+    public void odometrieDistance() {
+        encoders.reset();
+        rs.enableAsserv();
+        rs.disableAvoidance();
+
+        trajectoryManager.setVitesse(100, 500);
+        rs.enableForceMonitoring();
+        monitoringWrapper.cleanAllPoints();
+        trajectoryManager.reculeMM(2800);
+        rs.enableCalageBordure();
+        trajectoryManager.reculeMMSansAngle(200);
+
+        rs.disableForceMonitoring();
+        rs.disableAsserv();
+
+        double roueDroite = 0;
+        double roueGauche = 0;
+
+        // Filtrage sur les métriques codeurs
+        List<MonitorTimeSerie> codeursData = monitoringWrapper.monitorTimeSeriePoints().stream()
+                .filter(m -> m.getMeasurementName().equals("encodeurs"))
+                .collect(Collectors.toList());
+
+        monitoringWrapper.cleanAllPoints();
+
+        for (MonitorTimeSerie d : codeursData) {
+            roueDroite += d.getFields().get("droit").doubleValue();
+            roueGauche += d.getFields().get("gauche").doubleValue();
+        }
+
+        double distance = (roueDroite + roueGauche) / 2;
+
+        log.info("Roue gauche  : {} pulse", roueGauche);
+        log.info("Roue droite  : {} pulse", roueDroite);
+        log.info("Distance Rob : {} pulse", distance);
+        log.info("Distance G   : {} mm", convRobot.pulseToMm(roueGauche));
+        log.info("Distance D   : {} mm", convRobot.pulseToMm(roueDroite));
+        log.info("Distance Rob : {} mm", convRobot.pulseToMm(distance));
+        log.info("-------------------------------------------------");
+        log.info("Count per mm : {}", distance / (2999 - 182)); // Distance de la table 2021
+    }
+
+    @SneakyThrows
+    @ShellMethod("Réglage rotation")
+    @ShellMethodAvailability("alimentationOk")
+    public void odometrieRotation(int nbCycle) {
+        boolean first = true;
+        int i = 0;
+        double newCountPerDegFirst = 0;
+        double newCountPerDegSecond = 0;
+        do {
+            encoders.reset();
+            rs.enableAsserv();
+            rs.disableAvoidance();
+
+            rs.enableCalageBordure();
+            trajectoryManager.setVitesse(100, 100);
+            trajectoryManager.reculeMMSansAngle(1000);
+
+            rs.enableForceMonitoring();
+            monitoringWrapper.cleanAllPoints();
+            trajectoryManager.avanceMM(100);
+            for (int cycle = 0; cycle < nbCycle; cycle++) {
+                log.info("Cycle {} / {}", cycle + 1, nbCycle);
+                trajectoryManager.tourneDeg(360 * (first ? 1 : -1));
+            }
+            trajectoryManager.gotoOrientationDeg(0);
+            rs.enableCalageBordure();
+            trajectoryManager.reculeMMSansAngle(1000);
+
+            rs.disableForceMonitoring();
+            rs.disableAsserv();
+
+            double roueDroite = 0;
+            double roueGauche = 0;
+
+            // Filtrage sur les métriques codeurs
+            List<MonitorTimeSerie> codeursData = monitoringWrapper.monitorTimeSeriePoints().stream()
+                    .filter(m -> m.getMeasurementName().equals("encodeurs"))
+                    .collect(Collectors.toList());
+
+            monitoringWrapper.cleanAllPoints();
+
+            for (MonitorTimeSerie d : codeursData) {
+                roueDroite += d.getFields().get("droit").doubleValue();
+                roueGauche += d.getFields().get("gauche").doubleValue();
+            }
+
+            double distance = Math.abs(roueDroite) + Math.abs(roueGauche);
+            if (first) {
+                newCountPerDegFirst = distance / (360 * nbCycle);
+            } else {
+                newCountPerDegSecond = distance / (360 * nbCycle);
+            }
+
+            log.info("Roue gauche     : {} pulse", roueGauche);
+            log.info("Roue droite     : {} pulse", roueDroite);
+            log.info("Distance totale : {} pulse", distance);
+
+            first = false;
+            i++;
+        } while (i < 2);
+        log.info("-------------------------------------------------");
+        log.info("Count per mm          : {}", IOdinConstantesConfig.countPerMm);
+        log.info("Count per deg         : {}", IOdinConstantesConfig.countPerDeg);
+        log.info("New Count per deg 1   : {}", newCountPerDegFirst);
+        log.info("New Count per deg 2   : {}", newCountPerDegSecond);
+        log.info("New Count per deg moy : {}", (newCountPerDegSecond + newCountPerDegFirst) / 2);
     }
 }
