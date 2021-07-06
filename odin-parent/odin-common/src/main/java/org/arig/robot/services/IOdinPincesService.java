@@ -12,6 +12,8 @@ public interface IOdinPincesService {
 
     void deposeGrandChenal(ECouleurBouee chenal, GrandChenaux.Line line, int idxGauche, int idxDroite);
 
+    void deposePetitChenal(ECouleurBouee chenal);
+
     void activate();
 
     void deactivate();
@@ -20,5 +22,5 @@ public interface IOdinPincesService {
 
     void processCouleurBouee();
 
-    void setExpected(ECouleurBouee bouee);
+    void setExpected(ECouleurBouee expected, int pinceNumber);
 }

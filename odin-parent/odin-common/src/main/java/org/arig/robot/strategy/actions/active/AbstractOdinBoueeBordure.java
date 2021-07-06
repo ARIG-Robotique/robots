@@ -43,9 +43,9 @@ public abstract class AbstractOdinBoueeBordure extends AbstractOdinBouee {
 
             // prise de la bouée
             if (sens == GotoOption.ARRIERE) {
-                pincesArriere.setExpected(rs.boueeCouleur(bouee));
+                pincesArriere.setExpected(rs.boueeCouleur(bouee), pinceCible);
             } else {
-                pincesAvant.setExpected(rs.boueeCouleur(bouee));
+                pincesAvant.setExpected(rs.boueeCouleur(bouee), pinceCible);
             }
 
             mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation());
@@ -65,8 +65,8 @@ public abstract class AbstractOdinBoueeBordure extends AbstractOdinBouee {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
-            pincesArriere.setExpected(null);
-            pincesAvant.setExpected(null);
+            pincesArriere.setExpected(null, 0);
+            pincesAvant.setExpected(null, 0);
         }
     }
 }

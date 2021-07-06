@@ -1,30 +1,21 @@
 package org.arig.robot.services;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.arig.robot.model.ECouleurBouee;
 import org.springframework.stereotype.Service;
 
+@Getter
+@Setter
+@Accessors(fluent = true)
 @Service("IOService")
 public class OdinIOServiceBouchon extends AbstractIOServiceBouchon implements IOdinIOService {
 
-    @Override
-    public boolean presenceVentouseAvantGauche() {
-        return false;
-    }
-
-    @Override
-    public boolean presenceVentouseAvantDroit() {
-        return false;
-    }
-
-    @Override
-    public boolean presenceVentouseArriereGauche() {
-        return false;
-    }
-
-    @Override
-    public boolean presenceVentouseArriereDroit() {
-        return false;
-    }
+    private boolean presenceVentouseAvantGauche = false;
+    private boolean presenceVentouseAvantDroit = false;
+    private boolean presenceVentouseArriereGauche = false;
+    private boolean presenceVentouseArriereDroit = false;
 
     @Override
     public boolean presenceAvantGauche() {

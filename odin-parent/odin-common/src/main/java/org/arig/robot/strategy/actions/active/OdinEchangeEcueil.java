@@ -40,7 +40,7 @@ public class OdinEchangeEcueil extends AbstractOdinAction {
 
     @Override
     public boolean isValid() {
-        return rs.echangeReady() &&
+        return isTimeValid() && !rsOdin.inPort() && rs.echangeReady() &&
                 rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime &&
                 rsOdin.pincesAvantEmpty() && rsOdin.pincesArriereEmpty();
     }

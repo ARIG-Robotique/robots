@@ -26,7 +26,6 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
     @Autowired
     private RobotGroupService group;
 
-    @Setter
     private ECouleurBouee expected = null;
 
     private boolean[] previousState = new boolean[]{false, false};
@@ -51,9 +50,26 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
 
     protected abstract ECouleurBouee getCouleurBouee(int index);
 
+    @Override
+    public void setExpected(ECouleurBouee expected, int pinceNumber) {
+        this.expected = expected;
+    }
+
     private void depose() {
         disableServicePinces();
         releasePompes();
+        ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
+    }
+
+    private void depose(boolean gauche, boolean droite) {
+        disableServicePinces();
+        if (gauche && droite) {
+            releasePompes();
+        } else if (gauche) {
+            releasePompe(true, false);
+        } else if (droite) {
+            releasePompe(false, true);
+        }
         ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
     }
 
@@ -82,19 +98,8 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
     public void deposeGrandChenal(ECouleurBouee chenal, GrandChenaux.Line line, int idxGauche, int idxDroite) {
         disableServicePinces();
 
-        if (idxGauche != -1 && idxDroite != -1) {
-            releasePompes();
-            ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
-            pousser(true, true);
-        } else if (idxGauche != -1) {
-            releasePompe(true, false);
-            ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
-            pousser(true, false);
-        } else {
-            releasePompe(false, true);
-            ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
-            pousser(false, true);
-        }
+        depose(idxGauche != -1, idxDroite != -1);
+        pousser(idxGauche != -1, idxDroite != -1);
 
         if (chenal == ECouleurBouee.VERT) {
             if (idxGauche != -1) {
@@ -115,6 +120,23 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
                 bouees()[1] = null;
             }
         }
+    }
+
+    @Override
+    public void deposePetitChenal(ECouleurBouee chenal) {
+        disableServicePinces();
+
+        ECouleurBouee[] bouees = bouees();
+
+        depose(bouees[0] != null, bouees[1] != null);
+        pousser(bouees[0] != null, bouees[1] != null);
+
+        if (chenal == ECouleurBouee.VERT) {
+            group.deposePetitChenalVert(bouees);
+        } else {
+            group.deposePetitChenalRouge(bouees);
+        }
+        clearPinces();
     }
 
     /**
