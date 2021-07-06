@@ -65,23 +65,19 @@ public class OdinPhare extends AbstractOdinAction {
             mv.pathTo(entry);
 
             final double angleRobot = conv.pulseToDeg(position.getAngle());
+            final SensRotation sensRotation;
             if (Math.abs(angleRobot) <= 90) {
-                if (angleRobot < 0) {
-                    mv.gotoOrientationDegSansDistance(0);
-                }
 
                 // On active avec le bras gauche
                 servosOdin.brasGauchePhare(true);
-                mv.gotoOrientationDegSansDistance(45, SensRotation.TRIGO);
+                sensRotation = angleRobot < 0 ? SensRotation.TRIGO : SensRotation.HORAIRE;
+                mv.gotoOrientationDegSansDistance(45, sensRotation);
 
             } else {
-                if (angleRobot < 0) {
-                    mv.gotoOrientationDegSansDistance(180);
-                }
-
                 // On active avec le bras droit
                 servosOdin.brasDroitPhare(true);
-                mv.gotoOrientationDegSansDistance(-180 + 45, SensRotation.HORAIRE);
+                sensRotation = angleRobot > 0 ? SensRotation.TRIGO : SensRotation.HORAIRE;
+                mv.gotoOrientationDegSansDistance(-180 + 45, sensRotation);
             }
             group.phare();
 
