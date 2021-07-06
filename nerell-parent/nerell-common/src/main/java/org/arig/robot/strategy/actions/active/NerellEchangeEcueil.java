@@ -107,7 +107,7 @@ public class NerellEchangeEcueil extends AbstractNerellAction {
 
                 group.echangeReady();
 
-                mv.gotoPoint(565, 690, GotoOption.AVANT);
+                mv.gotoPoint(580, 685, GotoOption.AVANT);
 
                 if (deposeExtremite) {
                     servosNerell.pivotArriereOuvert(false);
@@ -147,7 +147,7 @@ public class NerellEchangeEcueil extends AbstractNerellAction {
 
                 group.echangeReady();
 
-                mv.gotoPoint(3000 - 565, 690, GotoOption.AVANT);
+                mv.gotoPoint(2420, 685, GotoOption.AVANT);
 
                 if (deposeExtremite) {
                     servosNerell.pivotArriereOuvert(false);
