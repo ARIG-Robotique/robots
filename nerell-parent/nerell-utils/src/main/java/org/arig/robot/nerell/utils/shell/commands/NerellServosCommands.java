@@ -103,6 +103,14 @@ public class NerellServosCommands {
         ThreadUtils.sleep(5000);
         pincesArriereService.finalisePriseEcueil(ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU);
         ThreadUtils.sleep(2000);
+
+        ioService.enableLedCapteurCouleur();
+        ThreadUtils.sleep(1000);
+        ioService.couleurBoueeArriere2();
+        ioService.couleurBoueeArriere4();
+        ioService.disableLedCapteurCouleur();
+        ThreadUtils.sleep(1000);
+
         pincesArriereService.deposePetitPort();
     }
 
