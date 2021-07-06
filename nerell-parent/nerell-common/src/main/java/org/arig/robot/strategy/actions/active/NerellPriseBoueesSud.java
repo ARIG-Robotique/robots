@@ -52,9 +52,9 @@ public class NerellPriseBoueesSud extends AbstractNerellAction {
     public boolean isValid() {
         final boolean boueePresente;
         if (rsNerell.team() == ETeam.BLEU) {
-            boueePresente = rsNerell.boueePresente(1) || rsNerell.boueePresente(2);
+            boueePresente = rsNerell.boueePresente(3) || rsNerell.boueePresente(4);
         } else {
-            boueePresente = rsNerell.boueePresente(13) || rsNerell.boueePresente(14);
+            boueePresente = rsNerell.boueePresente(15) || rsNerell.boueePresente(16);
         }
 
         return rsNerell.pincesAvantEmpty() && boueePresente &&
