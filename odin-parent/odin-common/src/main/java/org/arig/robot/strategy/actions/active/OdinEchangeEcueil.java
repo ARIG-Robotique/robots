@@ -77,7 +77,7 @@ public class OdinEchangeEcueil extends AbstractOdinAction {
             mv.gotoOrientationDeg(rs.team() == ETeam.BLEU ? 95 : -95);
             mv.gotoPoint(getX(450), 200, rs.team() == ETeam.BLEU ? GotoOption.ARRIERE : GotoOption.AVANT);
             mv.gotoOrientationDeg(rs.team() == ETeam.BLEU ? 175 : -175);
-            mv.gotoPoint(getX(180), 230, rs.team() == ETeam.BLEU ? GotoOption.AVANT : GotoOption.ARRIERE);
+            mv.gotoPoint(getX(160), 230, rs.team() == ETeam.BLEU ? GotoOption.AVANT : GotoOption.ARRIERE);
             ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
             mv.gotoPoint(getX(230), 230, rs.team() == ETeam.BLEU ? GotoOption.ARRIERE : GotoOption.AVANT);
 
