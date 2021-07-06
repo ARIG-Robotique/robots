@@ -3,6 +3,7 @@ package org.arig.robot.strategy.actions.active;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IOdinConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.Point;
@@ -37,7 +38,7 @@ public abstract class AbstractOdinBoueeBordure extends AbstractOdinBouee {
 
             final Point boueePt = entryPoint();
             final double decallageX = offsetPince * (sens == GotoOption.AVANT ? -1 : 1);
-            final Point entry = new Point( boueePt.getX() + decallageX,1690);
+            final Point entry = new Point(boueePt.getX() + decallageX, 1690);
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry, sens);
 
@@ -49,15 +50,22 @@ public abstract class AbstractOdinBoueeBordure extends AbstractOdinBouee {
             }
 
             mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation());
-            mv.gotoPoint(entry.getX(), 1830, sens);
+            try {
+                mv.gotoPoint(entry.getX(), 1830, sens);
+            } catch (MovementCancelledException e) {
+                // cas de blocage sur la bordure
+            }
+
             group.boueePrise(bouee);
             complete();
+
             ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
             if (sens == GotoOption.AVANT) {
                 mv.reculeMM(100);
             } else {
                 mv.avanceMM(100);
             }
+
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);
 
@@ -68,5 +76,26 @@ public abstract class AbstractOdinBoueeBordure extends AbstractOdinBouee {
             pincesArriere.setExpected(null, 0);
             pincesAvant.setExpected(null, 0);
         }
+    }
+
+    @Override
+    protected int getPinceCible() {
+        if (rsOdin.boueeCouleur(bouee) == ECouleurBouee.VERT) {
+            if (!io.presenceVentouseAvantDroit()) {
+                return 2;
+            }
+            if (!io.presenceVentouseAvantGauche()) {
+                return 1;
+            }
+        }
+        if (rsOdin.boueeCouleur(bouee) == ECouleurBouee.ROUGE) {
+            if (!io.presenceVentouseArriereDroit()) {
+                return 2;
+            }
+            if (!io.presenceVentouseArriereGauche()) {
+                return 1;
+            }
+        }
+        return 0;
     }
 }

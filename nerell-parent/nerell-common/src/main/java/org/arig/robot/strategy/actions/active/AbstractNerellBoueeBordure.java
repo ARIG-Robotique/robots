@@ -3,7 +3,9 @@ package org.arig.robot.strategy.actions.active;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.INerellIOService;
@@ -29,7 +31,7 @@ public abstract class AbstractNerellBoueeBordure extends AbstractNerellBouee {
             final int pinceCible = getPinceCible();
             final Point boueePt = entryPoint();
             final double decallageX = getOffsetPince(pinceCible) * -1;
-            final Point entry = new Point(boueePt.getX() + decallageX, 1600);
+            final Point entry = new Point(boueePt.getX() + decallageX, 1700);
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry, GotoOption.AVANT);
@@ -42,11 +44,18 @@ public abstract class AbstractNerellBoueeBordure extends AbstractNerellBouee {
             }
 
             mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation());
-            mv.gotoPoint(entry.getX(), 1840, GotoOption.AVANT);
+            try {
+                mv.gotoPoint(entry.getX(), 1840, GotoOption.AVANT);
+            } catch (MovementCancelledException e) {
+                // cas de blocage sur la bordure
+            }
+
             group.boueePrise(bouee);
             complete();
+
             ThreadUtils.sleep(INerellConstantesConfig.WAIT_POMPES);
             mv.reculeMM(100);
+
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);
 
@@ -56,5 +65,25 @@ public abstract class AbstractNerellBoueeBordure extends AbstractNerellBouee {
         } finally {
             pincesAvantService.setExpected(null, null);
         }
+    }
+
+    @Override
+    protected int getPinceCible() {
+        if (rsNerell.boueeCouleur(bouee) == ECouleurBouee.ROUGE) {
+            if (!io.presenceVentouse1()) {
+                return 1;
+            }
+            if (!io.presenceVentouse2()) {
+                return 2;
+            }
+        } else {
+            if (!io.presenceVentouse4()) {
+                return 4;
+            }
+            if (!io.presenceVentouse3()) {
+                return 3;
+            }
+        }
+        return 0;
     }
 }
