@@ -5,7 +5,6 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
-import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
@@ -14,7 +13,7 @@ import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.strategy.actions.AbstractOdinAction;
 import org.springframework.stereotype.Component;
 
-import java.awt.*;
+import java.awt.Rectangle;
 import java.util.Arrays;
 import java.util.List;
 
@@ -103,15 +102,18 @@ public class OdinManchesAAir extends AbstractOdinAction {
             final double y = entry.getY();
             boolean manche1Before = !rsOdin.mancheAAir1();
             if (manche1Before) {
+                group.mancheAAir1();
+
                 if (rsOdin.team() == ETeam.BLEU) {
                     mv.gotoPoint(xManche2, y, GotoOption.SANS_ORIENTATION);
                 } else {
                     mv.gotoPoint(3000 - xManche2, y, GotoOption.SANS_ORIENTATION);
                 }
-                group.mancheAAir1();
             }
 
             if (!rsOdin.mancheAAir2()) {
+                group.mancheAAir2();
+
                 if (rsOdin.team() == ETeam.BLEU) {
                     mv.gotoPoint(xFinManche2, y, GotoOption.SANS_ORIENTATION);
                     // Fait en avant 90, -90 sinon
@@ -122,19 +124,8 @@ public class OdinManchesAAir extends AbstractOdinAction {
                     mv.gotoOrientationDeg(!brasDroit ? 90 : -90, SensRotation.HORAIRE);
                 }
 
-                group.mancheAAir2();
-
                 servosOdin.brasDroitFerme(false);
                 servosOdin.brasGaucheFerme(false);
-            }
-
-        } catch (MovementCancelledException e) {
-            log.warn("Blocage mécanique sur la manche à air");
-
-            if (!rs.mancheAAir1()) {
-                group.mancheAAir1();
-            } else if (!rs.mancheAAir2()) {
-                group.mancheAAir2();
             }
 
         } catch (NoPathFoundException | AvoidingException e) {

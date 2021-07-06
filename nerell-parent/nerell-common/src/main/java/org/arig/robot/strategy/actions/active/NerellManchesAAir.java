@@ -3,7 +3,6 @@ package org.arig.robot.strategy.actions.active;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
-import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
@@ -88,13 +87,14 @@ public class NerellManchesAAir extends AbstractNerellAction {
                 if (rsNerell.team() == ETeam.BLEU) {
                     mv.gotoOrientationDegSansDistance(150);
                     servosNerell.brasGaucheMancheAAir(true);
+                    group.mancheAAir1();
                     mv.gotoPoint(xManche2, y, GotoOption.ARRIERE);
                 } else {
                     mv.gotoOrientationDegSansDistance(30);
                     servosNerell.brasDroitMancheAAir(true);
+                    group.mancheAAir1();
                     mv.gotoPoint(3000 - xManche2, y, GotoOption.ARRIERE);
                 }
-                group.mancheAAir1();
             }
 
             if (!rsNerell.mancheAAir2()) {
@@ -113,15 +113,6 @@ public class NerellManchesAAir extends AbstractNerellAction {
                     group.mancheAAir2();
                     mv.gotoPoint(3000 - xFinManche2, y, GotoOption.SANS_ORIENTATION, GotoOption.ARRIERE);
                 }
-            }
-
-        } catch (MovementCancelledException e) {
-            log.warn("Blocage mécanique sur la manche à air");
-
-            if (!rs.mancheAAir1()) {
-                group.mancheAAir1();
-            } else if (!rs.mancheAAir2()) {
-                group.mancheAAir2();
             }
 
         } catch (NoPathFoundException | AvoidingException e) {
