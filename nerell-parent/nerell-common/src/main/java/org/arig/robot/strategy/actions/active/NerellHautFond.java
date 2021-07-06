@@ -97,8 +97,10 @@ public class NerellHautFond extends AbstractNerellAction {
 
             // on ratisse en laissant l'évitement actif
             if (finalPoint.getX() > entry.getX()) {
+                mv.gotoOrientationDeg(0);
                 servosNerell.moustacheGaucheOuvert(false);
             } else {
+                mv.gotoOrientationDeg(180);
                 servosNerell.moustacheDroiteOuvert(false);
             }
 
