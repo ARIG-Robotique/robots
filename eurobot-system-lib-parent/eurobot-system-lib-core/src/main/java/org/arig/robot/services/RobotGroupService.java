@@ -114,6 +114,9 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
             case DEPOSE_PETIT_PORT:
                 rs.deposePetitPort(getBouees(value));
                 break;
+            case STEPS_PETIT_PORT:
+                rs.incStepsPetitPort();
+                break;
             case DEPOSE_UNITAIRE_GRAND_CHENAL_VERT:
                 rs.deposeGrandChenalVert(
                         GrandChenaux.Line.values()[value[0]],
@@ -256,6 +259,11 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
     public void deposePetitPort(ECouleurBouee... bouees) {
         rs.deposePetitPort(bouees);
         sendEventBouees(EStatusEvent.DEPOSE_PETIT_PORT, bouees);
+    }
+
+    public void incStepsPetitPort() {
+        rs.incStepsPetitPort();
+        sendEvent(EStatusEvent.STEPS_PETIT_PORT);
     }
 
     public void deposeGrandChenalVert(GrandChenaux.Line line, int index, ECouleurBouee bouee) {

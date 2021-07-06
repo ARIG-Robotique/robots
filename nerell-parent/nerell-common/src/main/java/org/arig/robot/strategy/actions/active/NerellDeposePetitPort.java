@@ -24,7 +24,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class DeposePetitPort extends AbstractNerellAction {
+public class NerellDeposePetitPort extends AbstractNerellAction {
 
     @Autowired
     private INerellPincesAvantService pincesAvantService;
@@ -37,10 +37,6 @@ public class DeposePetitPort extends AbstractNerellAction {
 
     @Autowired
     private NerellBouee9 bouee9;
-
-    private boolean moustacheFaites = false;
-
-    private int step = 0;
 
     @Override
     public String name() {
@@ -55,13 +51,7 @@ public class DeposePetitPort extends AbstractNerellAction {
 
     @Override
     public Point entryPoint() {
-        double x = 1800;
-        double y = 620;
-        if (ETeam.JAUNE == rsNerell.team()) {
-            x = 3000 - x;
-        }
-
-        return new Point(x, y);
+        return new Point(getX(1800), 620);
     }
 
     @Override
@@ -79,7 +69,7 @@ public class DeposePetitPort extends AbstractNerellAction {
             chenauxFuture.addRouge(ArrayUtils.subarray(rsNerell.pincesArriere(), 3, 4));
         }
 
-        if (!moustacheFaites) {
+        if (rs.stepsPetitPort() == 0) {
             chenauxFuture.addRouge(ECouleurBouee.ROUGE, ECouleurBouee.VERT);
             chenauxFuture.addVert(ECouleurBouee.ROUGE, ECouleurBouee.VERT);
         }
@@ -90,7 +80,7 @@ public class DeposePetitPort extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rsNerell.inPort() && (!rsNerell.pincesAvantEmpty() || !rsNerell.pincesArriereEmpty() || !moustacheFaites);
+        return isTimeValid() && !rsNerell.inPort() && (!rsNerell.pincesAvantEmpty() || !rsNerell.pincesArriereEmpty() || rs.stepsPetitPort() == 0);
     }
 
     @Override
@@ -106,12 +96,12 @@ public class DeposePetitPort extends AbstractNerellAction {
 
             final Point entry = entryPoint();
             final double x = entry.getX();
-            final double baseYStep = 230;
+            final double baseYStep = 160;
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             GotoOption sensEntry = GotoOption.AVANT;
-            if (moustacheFaites && rsNerell.pincesAvantEmpty()) {
+            if (rs.stepsPetitPort() > 0 && rsNerell.pincesAvantEmpty()) {
                 sensEntry = GotoOption.ARRIERE;
             }
             mv.pathTo(entry, sensEntry);
@@ -127,11 +117,11 @@ public class DeposePetitPort extends AbstractNerellAction {
 
             rsNerell.disablePincesAvant(); // Pour ne pas faire de comptage supplémentaire si il reste des emplacements vide
             boolean deposePinceDone = false;
-            boolean moustacheAtStart = moustacheFaites;
+            boolean moustacheAtStart = rs.stepsPetitPort() > 0;
 
             // première dépose
             // gestion des bouées devant et sur les côtés
-            if (!moustacheFaites) {
+            if (rs.stepsPetitPort() == 0) {
                 mv.gotoOrientationDeg(-90);
 
                 servosNerell.ascenseursAvantHaut(true);
@@ -143,8 +133,8 @@ public class DeposePetitPort extends AbstractNerellAction {
                 servosNerell.moustachesPoussette(true);
                 servosNerell.moustachesOuvertSpecial(false);
 
-                mv.gotoPoint(x, baseYStep, GotoOption.SANS_ORIENTATION);
-                moustacheFaites = true;
+                mv.gotoPoint(x, baseYStep + 70, GotoOption.SANS_ORIENTATION);
+                group.incStepsPetitPort();
 
                 group.deposePetitChenalRouge(ECouleurBouee.ROUGE);
                 group.deposePetitChenalVert(ECouleurBouee.VERT);
@@ -155,29 +145,29 @@ public class DeposePetitPort extends AbstractNerellAction {
 
             } else if (!rsNerell.pincesAvantEmpty()) {
                 // déposes suivantes
-                mv.gotoPoint(x, baseYStep + step * 70, GotoOption.SANS_ORIENTATION);
+                mv.gotoPoint(x, baseYStep + rs.stepsPetitPort() * 70, GotoOption.SANS_ORIENTATION);
                 mv.gotoOrientationDeg(-90);
             }
 
             if (!rsNerell.pincesAvantEmpty()) {
                 pincesAvantService.deposePetitPort();
-                step++;
+                group.incStepsPetitPort();
                 mv.reculeMM(rsNerell.pincesArriereEmpty() ? 150 : 80);
                 deposePinceDone = true;
             }
 
-            if (!moustacheAtStart && moustacheFaites) {
+            if (!moustacheAtStart && rs.stepsPetitPort() > 0) {
                 mv.reculeMM(deposePinceDone ? 70 : 150);
                 servosNerell.moustachesFerme(false);
             }
 
             if (!rsNerell.pincesArriereEmpty()) {
                 // Dépose stock arrière si il y en as
-                mv.gotoPoint(x, baseYStep + (deposePinceDone ? 80 : 150) + step * 70, GotoOption.SANS_ORIENTATION);
+                mv.gotoPoint(x, baseYStep + (deposePinceDone ? 80 : 150) + rs.stepsPetitPort() * 70, GotoOption.SANS_ORIENTATION);
                 mv.gotoOrientationDeg(90);
                 pincesArriereService.deposePetitPort();
                 deposePinceDone = true;
-                step++;
+                group.incStepsPetitPort();
             }
 
             if (!deposePinceDone) {
@@ -185,7 +175,7 @@ public class DeposePetitPort extends AbstractNerellAction {
                 mv.reculeMM(150);
             }
 
-            if (step > 2) {
+            if (rs.stepsPetitPort() > 3) {
                 complete();
             }
 

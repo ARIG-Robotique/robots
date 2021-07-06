@@ -257,6 +257,14 @@ public class EurobotStatus extends AbstractRobotStatus {
     }
 
     @Setter(AccessLevel.NONE)
+    private int stepsPetitPort = 0;
+
+    public void incStepsPetitPort() {
+        log.info("[RS] inc steps petit port");
+        this.stepsPetitPort++;
+    }
+
+    @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     protected GrandChenaux grandChenaux = new GrandChenaux();
 
