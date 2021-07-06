@@ -267,7 +267,7 @@ public abstract class AbstractOrdonanceur {
         ThreadUtils.sleep(500);
         if (!energyService.checkMoteurs() || !energyService.checkServos()) {
             ecranService.displayMessage(String.format("Alimentation NOK (Moteurs : %s V ; Servos : %s V)", energyService.tensionMoteurs(), energyService.tensionServos()));
-            while (!energyService.checkMoteurs() && !energyService.checkServos()) {
+            while (!energyService.checkMoteurs() || !energyService.checkServos()) {
                 exitFromScreen();
                 ThreadUtils.sleep(500);
             }
