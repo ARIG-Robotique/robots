@@ -28,15 +28,21 @@ public interface INerellConstantesI2C {
     String MULTIPLEXEUR_I2C_NAME = "Mux TCA";
     int MULTIPLEXEUR_I2C_ADDRESS = 0x70;
 
-    String COULEUR_1_NAME = "Couleurs 1";
-    byte COULEUR_1_MUX_CHANNEL = 2;
+    String COULEUR_AV_1_NAME = "Couleur Av 1";
+    byte COULEUR_AV_1_MUX_CHANNEL = 2;
 
-    String COULEUR_2_NAME = "Couleurs 2";
-    byte COULEUR_2_MUX_CHANNEL = 3;
+    String COULEUR_AV_2_NAME = "Couleur Av 2";
+    byte COULEUR_AV_2_MUX_CHANNEL = 3;
 
-    String COULEUR_3_NAME = "Couleurs 3";
-    byte COULEUR_3_MUX_CHANNEL = 5;
+    String COULEUR_AV_3_NAME = "Couleur Av 3";
+    byte COULEUR_AV_3_MUX_CHANNEL = 5;
 
-    String COULEUR_4_NAME = "Couleurs 4";
-    byte COULEUR_4_MUX_CHANNEL = 4;
+    String COULEUR_AV_4_NAME = "Couleur Av 4";
+    byte COULEUR_AV_4_MUX_CHANNEL = 4;
+
+    String COULEUR_AR_2_NAME = "Couleur AR 2";
+    byte COULEUR_AR_2_MUX_CHANNEL = 1;
+
+    String COULEUR_AR_4_NAME = "Couleur AR 4";
+    byte COULEUR_AR_4_MUX_CHANNEL = 6;
 }

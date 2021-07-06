@@ -25,11 +25,14 @@ public interface INerellIOService extends IIOService {
     boolean presencePinceArriere4();
     boolean presencePinceArriere5();
 
-    // Analogique
-    ECouleurBouee couleurBouee1();
-    ECouleurBouee couleurBouee2();
-    ECouleurBouee couleurBouee3();
-    ECouleurBouee couleurBouee4();
+    // Couleurs
+    ECouleurBouee couleurBoueeAvant1();
+    ECouleurBouee couleurBoueeAvant2();
+    ECouleurBouee couleurBoueeAvant3();
+    ECouleurBouee couleurBoueeAvant4();
+
+    ECouleurBouee couleurBoueeArriere2();
+    ECouleurBouee couleurBoueeArriere4();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

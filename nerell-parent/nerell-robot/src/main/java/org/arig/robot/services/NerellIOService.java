@@ -39,16 +39,22 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
     private AbstractARIGVacuumController vacuumController;
 
     @Autowired
-    private TCS34725ColorSensor couleur1;
+    private TCS34725ColorSensor couleurAvant1;
 
     @Autowired
-    private TCS34725ColorSensor couleur2;
+    private TCS34725ColorSensor couleurAvant2;
 
     @Autowired
-    private TCS34725ColorSensor couleur3;
+    private TCS34725ColorSensor couleurAvant3;
 
     @Autowired
-    private TCS34725ColorSensor couleur4;
+    private TCS34725ColorSensor couleurAvant4;
+
+    @Autowired
+    private TCS34725ColorSensor couleurArriere2;
+
+    @Autowired
+    private TCS34725ColorSensor couleurArriere4;
 
     // Controlleur GPIO
     private GpioController gpio;
@@ -305,23 +311,33 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
     }
 
     @Override
-    public ECouleurBouee couleurBouee1() {
-        return computeCouleurBouee(couleur1);
+    public ECouleurBouee couleurBoueeAvant1() {
+        return computeCouleurBouee(couleurAvant1);
     }
 
     @Override
-    public ECouleurBouee couleurBouee2() {
-        return computeCouleurBouee(couleur2);
+    public ECouleurBouee couleurBoueeAvant2() {
+        return computeCouleurBouee(couleurAvant2);
     }
 
     @Override
-    public ECouleurBouee couleurBouee3() {
-        return computeCouleurBouee(couleur3);
+    public ECouleurBouee couleurBoueeAvant3() {
+        return computeCouleurBouee(couleurAvant3);
     }
 
     @Override
-    public ECouleurBouee couleurBouee4() {
-        return computeCouleurBouee(couleur4);
+    public ECouleurBouee couleurBoueeAvant4() {
+        return computeCouleurBouee(couleurAvant4);
+    }
+
+    @Override
+    public ECouleurBouee couleurBoueeArriere2() {
+        return computeCouleurBouee(couleurArriere2);
+    }
+
+    @Override
+    public ECouleurBouee couleurBoueeArriere4() {
+        return computeCouleurBouee(couleurArriere4);
     }
 
     // --------------------------------------------------------- //

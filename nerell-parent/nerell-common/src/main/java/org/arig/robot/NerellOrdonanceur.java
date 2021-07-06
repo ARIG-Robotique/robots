@@ -70,10 +70,12 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         // Lancement d'une première lecture de couleurs pour initialiser les capteurs
         nerellIOService.enableLedCapteurCouleur();
         ThreadUtils.sleep(INerellConstantesConfig.WAIT_LED);
-        nerellIOService.couleurBouee1();
-        nerellIOService.couleurBouee2();
-        nerellIOService.couleurBouee3();
-        nerellIOService.couleurBouee4();
+        nerellIOService.couleurBoueeAvant1();
+        nerellIOService.couleurBoueeAvant2();
+        nerellIOService.couleurBoueeAvant3();
+        nerellIOService.couleurBoueeAvant4();
+        nerellIOService.couleurBoueeArriere2();
+        nerellIOService.couleurBoueeArriere4();
         nerellIOService.disableLedCapteurCouleur();
     }
 

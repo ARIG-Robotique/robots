@@ -84,22 +84,32 @@ public class NerellIOServiceBouchon extends AbstractIOServiceBouchon implements 
     }
 
     @Override
-    public ECouleurBouee couleurBouee1() {
+    public ECouleurBouee couleurBoueeAvant1() {
         return ECouleurBouee.INCONNU;
     }
 
     @Override
-    public ECouleurBouee couleurBouee2() {
+    public ECouleurBouee couleurBoueeAvant2() {
         return ECouleurBouee.INCONNU;
     }
 
     @Override
-    public ECouleurBouee couleurBouee3() {
+    public ECouleurBouee couleurBoueeAvant3() {
         return ECouleurBouee.INCONNU;
     }
 
     @Override
-    public ECouleurBouee couleurBouee4() {
+    public ECouleurBouee couleurBoueeAvant4() {
+        return ECouleurBouee.INCONNU;
+    }
+
+    @Override
+    public ECouleurBouee couleurBoueeArriere2() {
+        return ECouleurBouee.INCONNU;
+    }
+
+    @Override
+    public ECouleurBouee couleurBoueeArriere4() {
         return ECouleurBouee.INCONNU;
     }
 

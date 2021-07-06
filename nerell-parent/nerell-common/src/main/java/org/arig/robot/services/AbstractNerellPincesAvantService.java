@@ -230,10 +230,10 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
     private ECouleurBouee getCouleurBouee(int index) {
         // @formatter:off
         switch (index) {
-            case 0: return io.couleurBouee1();
-            case 1: return io.couleurBouee2();
-            case 2: return io.couleurBouee3();
-            case 3: return io.couleurBouee4();
+            case 0: return io.couleurBoueeAvant1();
+            case 1: return io.couleurBoueeAvant2();
+            case 2: return io.couleurBoueeAvant3();
+            case 3: return io.couleurBoueeAvant4();
             default: return ECouleurBouee.INCONNU;
         }
         // @formatter:on

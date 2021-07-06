@@ -39,9 +39,10 @@ public class EurobotStatus extends AbstractRobotStatus {
     public void setTeam(ETeam team) {
         this.team = team;
 
-        final int tirageEcueil = 1;
         couleursEcueilEquipe(EcueilUtils.tirageEquipe(team()));
-        couleursEcueilCommun(EcueilUtils.tirageCommunEquipe(team(), tirageEcueil));
+
+        //final int tirageEcueil = 1;
+        //couleursEcueilCommun(EcueilUtils.tirageCommunEquipe(team(), tirageEcueil));
     }
 
     private boolean doubleDepose = false;
