@@ -88,7 +88,7 @@ public abstract class AbstractNerellBouee extends AbstractNerellAction {
 
             mv.alignFrontTo(entry);
             mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation());
-            mv.gotoPoint(tableUtils.getPointFromAngle(distanceApproche * 2, offsetOrientation), GotoOption.AVANT);
+            mv.gotoPoint(tableUtils.getPointFromAngle(distanceApproche * 1.5, offsetOrientation), GotoOption.AVANT);
             group.boueePrise(bouee);
             ThreadUtils.sleep(INerellConstantesConfig.WAIT_POMPES);
 
