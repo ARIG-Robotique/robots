@@ -57,28 +57,11 @@ public class NerellEcueilCommunJaune extends AbstractNerellEcueil {
     }
 
     @Override
-    public Point aggressiveIntermediaryPoint()  {
-        if (rsNerell.team() == ETeam.JAUNE) {
-            // Pas l'eceuil adverse
-            return null;
-        }
-        return new Point(1270, 1460);
-    }
-
-    @Override
-    public int order() {
-        if (rsNerell.team() == ETeam.BLEU && rsNerell.strategy() == EStrategy.AGGRESSIVE && isFirstExecution()) {
-            return 1000;
-        }
-        return super.order();
-    }
-
-    @Override
     public boolean isValid() {
         if (rsNerell.team() == ETeam.JAUNE) {
             return super.isValid() && !rsNerell.boueePresente(11) && !rsNerell.boueePresente(12);
         } else {
-            return super.isValid() && (rsNerell.strategy() == EStrategy.AGGRESSIVE || rsNerell.getRemainingTime() < 40000);
+            return super.isValid();
         }
     }
 
@@ -103,13 +86,8 @@ public class NerellEcueilCommunJaune extends AbstractNerellEcueil {
     }
 
     @Override
-    protected void onAgressiveMvtDone() {
-        group.boueePrise(11);
-    }
-
-    @Override
     public void execute() {
-        if (rsNerell.strategy() != EStrategy.AGGRESSIVE && bouee11.isValid()) {
+        if (bouee11.isValid()) {
             bouee11.execute();
         }
         if (bouee12.isValid()) {

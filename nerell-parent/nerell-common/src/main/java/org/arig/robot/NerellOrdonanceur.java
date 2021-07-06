@@ -254,13 +254,13 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         try {
             if (nerellRobotStatus.strategy() == EStrategy.AGGRESSIVE) {
                 if (nerellRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(280, 1345);
-                    trajectoryManager.alignFrontTo(2330, 1900);
+                    trajectoryManager.gotoPoint(270, 1285);
+                    trajectoryManager.gotoOrientationDeg(-5);
                 } else {
-                    trajectoryManager.gotoPoint(3000 - 280, 1345);
-                    trajectoryManager.alignFrontTo(3000 - 2330, 1900);
+                    trajectoryManager.gotoPoint(3000 - 270, 1285);
+                    trajectoryManager.gotoOrientationDeg(-175);
                 }
-            } else if (nerellRobotStatus.strategy() == EStrategy.BASIC_NORD) { // BASIC
+            } else if (nerellRobotStatus.strategy() == EStrategy.BASIC) { // BASIC
                 // Aligne vers les bouées au nord du port
                 if (nerellRobotStatus.team() == ETeam.BLEU) {
                     trajectoryManager.gotoPoint(220, 1290);
@@ -269,15 +269,8 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                     trajectoryManager.gotoPoint(3000 - 220, 1290);
                     trajectoryManager.gotoOrientationDeg(180 - 66);
                 }
-            } else if (nerellRobotStatus.strategy() == EStrategy.BASIC_SUD) {
-                // Aligne vers les bouées au sud du port
-                if (nerellRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(220, 1110);
-                    trajectoryManager.gotoOrientationDeg(-66);
-                } else {
-                    trajectoryManager.gotoPoint(3000 - 220, 1110);
-                    trajectoryManager.gotoOrientationDeg(-180 + 66);
-                }
+            } else if (nerellRobotStatus.strategy() == EStrategy.FINALE) {
+                // TODO
             }
 
         } catch (AvoidingException e) {

@@ -22,8 +22,6 @@ public class NerellPriseBoueesSud extends AbstractNerellAction {
     @Autowired
     private NerellBouee9 bouee9;
 
-    private boolean firstExecution = true;
-
     @Override
     public String name() {
         return IEurobotConfig.ACTION_PRISE_BOUEE_SUD;
@@ -31,20 +29,11 @@ public class NerellPriseBoueesSud extends AbstractNerellAction {
 
     @Override
     public Point entryPoint() {
-        double x = 225;
-        double y = 1200;
-        if (ETeam.JAUNE == rsNerell.team()) {
-            x = 3000 - x;
-        }
-
-        return new Point(x, y);
+        return new Point(getX(225), 1200);
     }
 
     @Override
     public int order() {
-        if (rsNerell.strategy() == EStrategy.BASIC_SUD && firstExecution) {
-            return 1000;
-        }
         return 6 + (rsNerell.ecueilEquipePris() ? 0 : 10) + tableUtils.alterOrder(entryPoint());
     }
 
@@ -64,14 +53,13 @@ public class NerellPriseBoueesSud extends AbstractNerellAction {
 
     @Override
     public void execute() {
-        firstExecution = false;
         try {
             rsNerell.enablePincesAvant();
 
             final Point entry = entryPoint();
             final int pctVitessePriseBouee = 20;
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            if (rsNerell.strategy() != EStrategy.BASIC_SUD && tableUtils.distance(entry) > 100) {
+            if (tableUtils.distance(entry) > 100) {
                 mv.pathTo(entry);
             } else {
                 // Le path active l'évitement en auto, pas de path, pas d'évitement
@@ -83,10 +71,8 @@ public class NerellPriseBoueesSud extends AbstractNerellAction {
             final Point target = new Point(targetx, targety);
 
             if (rsNerell.team() == ETeam.BLEU) {
-                if (rsNerell.strategy() != EStrategy.BASIC_SUD) {
-                    mv.gotoPoint(220, 1110);
-                    mv.gotoOrientationDeg(-66);
-                }
+                mv.gotoPoint(220, 1110);
+                mv.gotoOrientationDeg(-66);
 
                 mv.setVitesse(robotConfig.vitesse(pctVitessePriseBouee), robotConfig.vitesseOrientation());
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
@@ -103,10 +89,8 @@ public class NerellPriseBoueesSud extends AbstractNerellAction {
                 }
 
             } else {
-                if (rsNerell.strategy() != EStrategy.BASIC_SUD) {
-                    mv.gotoPoint(3000 - 220, 1110);
-                    mv.gotoOrientationDeg(-180 + 66);
-                }
+                mv.gotoPoint(3000 - 220, 1110);
+                mv.gotoOrientationDeg(-180 + 66);
 
                 mv.setVitesse(robotConfig.vitesse(pctVitessePriseBouee), robotConfig.vitesseOrientation());
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);

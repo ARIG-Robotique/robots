@@ -184,38 +184,32 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
     public void positionStrategy(EStrategy oldStrat) {
         ecranService.displayMessage("Mise en place");
         try {
-            EStrategy newStrat = odinRobotStatus.strategy();
+            final EStrategy newStrat = odinRobotStatus.strategy();
             if (oldStrat != newStrat) {
                 if (odinRobotStatus.team() == ETeam.BLEU) {
-                    if (oldStrat == EStrategy.BASIC_NORD) {
+                    if (oldStrat == EStrategy.BASIC) {
                         trajectoryManager.gotoPoint(255, 900);
-                        if (newStrat == EStrategy.BASIC_SUD) {
-                            trajectoryManager.gotoPoint(580, 900);
-                            trajectoryManager.gotoPoint(580, 1500);
-                            trajectoryManager.gotoPoint(255, 1500);
-                        } else if (newStrat == EStrategy.AGGRESSIVE) {
+                        if (newStrat == EStrategy.FINALE) {
                             // TODO
                         }
-                    } else if (oldStrat == EStrategy.BASIC_SUD) {
-                        trajectoryManager.gotoPoint(255, 1500);
-                        if (newStrat == EStrategy.BASIC_NORD) {
-                            trajectoryManager.gotoPoint(580, 1500);
-                            trajectoryManager.gotoPoint(580, 900);
-                            trajectoryManager.gotoPoint(255, 900);
+                    } else if (oldStrat == EStrategy.FINALE) {
+                        if (newStrat == EStrategy.BASIC) {
+                            // TODO
                         } else if (newStrat == EStrategy.AGGRESSIVE) {
                             // TODO
                         }
                     } else if (oldStrat == EStrategy.AGGRESSIVE) {
-                        // TODO
+                        trajectoryManager.gotoPoint(255, 900);
+                        if (newStrat == EStrategy.FINALE) {
+                            // TODO
+                        }
                     }
                 } else {
                     // TODO
                 }
             }
 
-            if (newStrat == EStrategy.AGGRESSIVE) {
-                // TODO
-            } else if (newStrat == EStrategy.BASIC_NORD) { // BASIC
+            if (newStrat == EStrategy.BASIC || newStrat == EStrategy.AGGRESSIVE) { // BASIC ou AGGRESSIVE
                 // Aligne vers les bouées au nord du port
                 if (odinRobotStatus.team() == ETeam.BLEU) {
                     trajectoryManager.gotoPoint(255, 1005, GotoOption.ARRIERE);
@@ -223,14 +217,8 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                     trajectoryManager.gotoPoint(3000 - 255, 1005, GotoOption.ARRIERE);
                 }
                 trajectoryManager.gotoOrientationDeg(-90);
-            } else if (newStrat == EStrategy.BASIC_SUD) {
-                // Aligne vers les bouées au sud du port
-                if (odinRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(255, 1395, GotoOption.ARRIERE);
-                } else {
-                    trajectoryManager.gotoPoint(3000 - 255, 1395, GotoOption.ARRIERE);
-                }
-                trajectoryManager.gotoOrientationDeg(90);
+            } else if (newStrat == EStrategy.FINALE) {
+                // TODO
             }
         } catch (AvoidingException e) {
             ecranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);

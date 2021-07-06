@@ -1,13 +1,11 @@
 package org.arig.robot.strategy.actions.active;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.AbstractNerellPincesArriereService;
@@ -17,9 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 public abstract class AbstractNerellEcueil extends AbstractNerellAction {
-
-    @Getter
-    private boolean firstExecution = true;
 
     @Autowired
     private AbstractNerellPincesArriereService pincesArriereService;
@@ -33,10 +28,6 @@ public abstract class AbstractNerellEcueil extends AbstractNerellAction {
     protected abstract byte nbBoueesDispo();
 
     protected abstract void onComplete();
-
-    protected abstract void onAgressiveMvtDone();
-
-    public abstract Point aggressiveIntermediaryPoint();
 
     @Override
     public int order() {
@@ -61,24 +52,11 @@ public abstract class AbstractNerellEcueil extends AbstractNerellAction {
 
             rsNerell.enablePincesAvant();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            if (rsNerell.strategy() == EStrategy.AGGRESSIVE && firstExecution && aggressiveIntermediaryPoint() != null) {
-                firstExecution = false;
 
-                rsNerell.enableAvoidance();
-                mv.gotoPoint(aggressiveIntermediaryPoint(), GotoOption.SANS_ARRET);
-                mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);
-
-                onAgressiveMvtDone();
-
-            } else {
-                firstExecution = false;
-
-                mv.pathTo(entry);
-                rsNerell.disableAvoidance();
-            }
+            mv.pathTo(entry);
+            rsNerell.disableAvoidance();
 
             mv.gotoOrientationDeg(orientation);
-
             pincesArriereService.preparePriseEcueil();
 
             rsNerell.enableCalageBordure();

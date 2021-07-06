@@ -35,7 +35,7 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
 
     @Override
     public int order() {
-        if (rsNerell.strategy() == EStrategy.BASIC_NORD && firstExecution) {
+        if (rsNerell.strategy() == EStrategy.BASIC && firstExecution) {
             return 1000;
         }
 
@@ -65,7 +65,7 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
             final Point entry = entryPoint();
             final int pctVitessePriseBouee = 20;
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            if (rsNerell.strategy() != EStrategy.BASIC_NORD && tableUtils.distance(entry) > 100) {
+            if (rsNerell.strategy() != EStrategy.BASIC && tableUtils.distance(entry) > 100) {
                 mv.pathTo(entry);
             } else {
                 // Le path active l'évitement en auto, pas de path, pas d'évitement
@@ -77,7 +77,7 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
             final Point target = new Point(targetx, targety);
 
             if (rsNerell.team() == ETeam.BLEU) {
-                if (rsNerell.strategy() != EStrategy.BASIC_NORD) {
+                if (rsNerell.strategy() != EStrategy.BASIC) {
                     mv.gotoPoint(220, 1290);
                     mv.gotoOrientationDeg(66);
                 }
@@ -97,7 +97,7 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
                 group.boueePrise(6);
 
             } else {
-                if (rsNerell.strategy() != EStrategy.BASIC_NORD) {
+                if (rsNerell.strategy() != EStrategy.BASIC) {
                     mv.gotoPoint(3000 - 220, 1290);
                     mv.gotoOrientationDeg(180 - 66);
                 }

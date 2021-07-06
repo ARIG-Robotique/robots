@@ -49,11 +49,6 @@ public class NerellEcueilEquipe extends AbstractNerellEcueil {
     }
 
     @Override
-    public Point aggressiveIntermediaryPoint() {
-        return null;
-    }
-
-    @Override
     protected byte nbBoueesDispo() {
         return 5;
     }
@@ -71,10 +66,6 @@ public class NerellEcueilEquipe extends AbstractNerellEcueil {
     @Override
     protected ECouleurBouee[] bouees() {
         return rsNerell.couleursEcueilEquipe();
-    }
-
-    @Override
-    protected void onAgressiveMvtDone() {
     }
 
     @Override
