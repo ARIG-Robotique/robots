@@ -141,7 +141,7 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
             int x = getXDepose();
             int y = getYDepose();
             log.info("Point de dépose {}x{}", x, y);
-            mv.gotoPoint(x, y, getCouleurChenal() == ECouleurBouee.VERT ? GotoOption.AVANT : GotoOption.ARRIERE);
+            mv.gotoPoint(x, y);
 
             if (result.line == GrandChenaux.Line.A && rs.team() == ETeam.BLEU ||
                     result.line == GrandChenaux.Line.B && rs.team() == ETeam.JAUNE) {
@@ -241,6 +241,11 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
             }
             // un seul emplacement
             if (chenal.get(i) == null) {
+                // dépriorise l'emplacement extrème
+                if (i == 4 && line == GrandChenaux.Line.A && (idxDroite != -1 || idxGauche != -1)) {
+                    break;
+                }
+
                 if (line == GrandChenaux.Line.A) {
                     if (hasDroite) {
                         idxGauche = -1;

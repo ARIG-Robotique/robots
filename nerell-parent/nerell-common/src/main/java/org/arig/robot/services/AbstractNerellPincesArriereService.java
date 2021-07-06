@@ -156,6 +156,20 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
         srv.pincesArriereFerme(false);
         srv.ascenseurArriereHaut(false);
 
+        // s'il reste une bouée en cas de blocage obstacle
+        // on lache tout pour pas la trimballer
+        int restant = 0;
+        if (io.presencePinceArriere1()) restant++;
+        if (io.presencePinceArriere2()) restant++;
+        if (io.presencePinceArriere3()) restant++;
+        if (io.presencePinceArriere4()) restant++;
+        if (io.presencePinceArriere5()) restant++;
+
+        if (restant == 1) {
+            srv.pincesArriereOuvert(true);
+            srv.pivotArriereFerme(true);
+        }
+
         if (!io.presencePinceArriere1()) {
             rs.pinceArriere(0, null);
         }
