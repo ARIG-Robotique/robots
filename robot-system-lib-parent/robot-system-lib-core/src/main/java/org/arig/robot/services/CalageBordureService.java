@@ -27,7 +27,9 @@ public class CalageBordureService {
         if (rs.calageBordure()) {
             boolean done;
 
-            if (cmdRobot.isType(TypeConsigne.DIST) && cmdRobot.isType(TypeConsigne.ANGLE)) {
+            if (!rs.matchEnabled() && !ioService.auOk()) {
+                done = true;
+            } else if (cmdRobot.isType(TypeConsigne.DIST) && cmdRobot.isType(TypeConsigne.ANGLE)) {
                 done = ioService.calageBordureDroit() || ioService.calageBordureGauche();
             } else {
                 done = ioService.calageBordureDroit() && ioService.calageBordureGauche();

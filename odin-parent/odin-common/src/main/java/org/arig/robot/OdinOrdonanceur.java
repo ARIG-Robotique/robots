@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.constants.IOdinConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
@@ -152,6 +153,11 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
                 robotStatus.enableCalageBordure();
                 trajectoryManager.reculeMMSansAngle(1000);
+
+                if (!ioService.auOk()) {
+                    ecranService.displayMessage("Echappement calage bordure car mauvais sens", LogLevel.ERROR);
+                    throw new ExitProgram(true);
+                }
 
                 position.getPt().setY(conv.mmToPulse(IOdinConstantesConfig.dstCallage));
                 position.setAngle(conv.degToPulse(90));

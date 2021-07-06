@@ -6,6 +6,7 @@ import org.arig.robot.communication.socket.balise.PhotoResponse;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
@@ -219,6 +220,11 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
                 robotStatus.enableCalageBordure();
                 trajectoryManager.reculeMMSansAngle(1000);
+
+                if (!ioService.auOk()) {
+                    ecranService.displayMessage("Echappement calage bordure car mauvais sens", LogLevel.ERROR);
+                    throw new ExitProgram(true);
+                }
 
                 position.getPt().setY(conv.mmToPulse(2000 - INerellConstantesConfig.dstCallage));
                 position.setAngle(conv.degToPulse(-90));
