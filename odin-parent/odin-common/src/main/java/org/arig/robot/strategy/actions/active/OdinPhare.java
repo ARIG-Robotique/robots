@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class OdinPhare extends AbstractOdinAction {
 
-    public static final double ENTRY_X = 230;
+    public static final double ENTRY_X = 225;
     public static final double ENTRY_Y = 1820;
 
     @Override
@@ -66,18 +66,21 @@ public class OdinPhare extends AbstractOdinAction {
 
             final double angleRobot = conv.pulseToDeg(position.getAngle());
             final SensRotation sensRotation;
+            final double angleDestination;
             if (Math.abs(angleRobot) <= 90) {
 
                 // On active avec le bras gauche
                 servosOdin.brasGauchePhare(true);
                 sensRotation = angleRobot < 0 ? SensRotation.TRIGO : SensRotation.HORAIRE;
-                mv.gotoOrientationDegSansDistance(45, sensRotation);
+                angleDestination = angleRobot < 0 ? 45 : -45;
+                mv.gotoOrientationDegSansDistance(angleDestination, sensRotation);
 
             } else {
                 // On active avec le bras droit
                 servosOdin.brasDroitPhare(true);
                 sensRotation = angleRobot > 0 ? SensRotation.TRIGO : SensRotation.HORAIRE;
-                mv.gotoOrientationDegSansDistance(-180 + 45, sensRotation);
+                angleDestination = angleRobot > 0 ? -135 : 135;
+                mv.gotoOrientationDegSansDistance(angleDestination, sensRotation);
             }
             group.phare();
 
