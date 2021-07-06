@@ -34,6 +34,12 @@ public abstract class AbstractNerellDeposeGrandPortChenal extends AbstractNerell
 
     protected abstract EPosition getPositionChenal();
 
+    /**
+     * Offset Y appliqué sur l'entry point, uniquement pour le calcul de points
+     * Pour optimiser quand les deux chenaux rapportent le même nombre de points
+     */
+    protected abstract double getTweakY();
+
     @Override
     public Point entryPoint() {
         double x = 270;
@@ -94,7 +100,7 @@ public abstract class AbstractNerellDeposeGrandPortChenal extends AbstractNerell
             order = chenauxFuture.score() - currentScoreChenaux;
         }
 
-        return order + tableUtils.alterOrder(entryPoint());
+        return order + tableUtils.alterOrder(entryPoint().offsettedY(getTweakY()));
     }
 
     @Override

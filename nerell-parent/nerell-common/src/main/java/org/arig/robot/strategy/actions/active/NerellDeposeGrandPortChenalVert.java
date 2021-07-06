@@ -57,4 +57,12 @@ public class NerellDeposeGrandPortChenalVert extends AbstractNerellDeposeGrandPo
         }
     }
 
+    @Override
+    protected double getTweakY() {
+        if (rs.team() == ETeam.BLEU) {
+            return 100;
+        } else {
+            return -100;
+        }
+    }
 }
