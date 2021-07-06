@@ -33,16 +33,16 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
 
         // ajoute les bouee bordure grand chenaux
         if (rs.team() == ETeam.BLEU && !rs.grandChenalVertBordureEmpty()) {
-            obstacles.add(tableUtils.createPolygonObstacle(new org.arig.robot.model.Point(35, 1485), IEurobotConfig.pathFindingTailleBouee));
+            obstacles.add(tableUtils.createPolygonObstacle(new org.arig.robot.model.Point(50, 1480), IEurobotConfig.pathFindingTailleBouee));
         }
         if (rs.team() == ETeam.BLEU && !rs.grandChenalRougeBordureEmpty()) {
-            obstacles.add(tableUtils.createPolygonObstacle(new org.arig.robot.model.Point(35, 915), IEurobotConfig.pathFindingTailleBouee));
+            obstacles.add(tableUtils.createPolygonObstacle(new org.arig.robot.model.Point(50, 910), IEurobotConfig.pathFindingTailleBouee));
         }
         if (rs.team() == ETeam.JAUNE && !rs.grandChenalVertBordureEmpty()) {
-            obstacles.add(tableUtils.createPolygonObstacle(new org.arig.robot.model.Point(3000 - 35, 1485), IEurobotConfig.pathFindingTailleBouee));
+            obstacles.add(tableUtils.createPolygonObstacle(new org.arig.robot.model.Point(3000 - 50, 1480), IEurobotConfig.pathFindingTailleBouee));
         }
         if (rs.team() == ETeam.JAUNE && !rs.grandChenalRougeBordureEmpty()) {
-            obstacles.add(tableUtils.createPolygonObstacle(new org.arig.robot.model.Point(3000 - 35, 915), IEurobotConfig.pathFindingTailleBouee));
+            obstacles.add(tableUtils.createPolygonObstacle(new org.arig.robot.model.Point(3000 - 50, 910), IEurobotConfig.pathFindingTailleBouee));
         }
 
         // ajoute les grand chenaux
@@ -61,7 +61,7 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
 
         // ajoute le haut fond
         if (!rs.hautFondPris()) {
-            obstacles.add(new Rectangle(1500 - 1, 2000 - 650, 2, 650));
+            obstacles.add(new Rectangle(150 - 1, 200 - 65, 2, 65));
         }
 
         super.setObstacles(obstacles);
