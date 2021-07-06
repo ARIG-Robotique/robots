@@ -8,7 +8,10 @@ import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.util.List;
 
 @Slf4j
@@ -25,6 +28,9 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
         // Ajout des obstacles en fonctions des bouées
         int[] boueesAvoided = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
         for (int nb : boueesAvoided) {
+            if (!rs.twoRobots() && (rs.team() == ETeam.BLEU ? nb == 9 : nb == 8)) {
+                continue;
+            }
             if (rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime && rs.boueePresente(nb)) {
                 obstacles.add(tableUtils.createPolygonObstacle(rs.boueePt(nb),
                         nb <= 4 || nb >= 13 ? IEurobotConfig.pathFindingTailleBoueePort : IEurobotConfig.pathFindingTailleBouee));
