@@ -11,6 +11,7 @@ import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.AbstractNerellPincesArriereService;
+import org.arig.robot.services.INerellPincesArriereService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,6 +25,8 @@ public abstract class AbstractNerellEcueil extends AbstractNerellAction {
     private AbstractNerellPincesArriereService pincesArriereService;
 
     protected abstract double orientationPourPrise();
+
+    protected abstract INerellPincesArriereService.EEcueil ecueil();
 
     protected abstract ECouleurBouee[] bouees();
 
@@ -111,7 +114,7 @@ public abstract class AbstractNerellEcueil extends AbstractNerellAction {
                 }
             }
 
-            pincesArriereService.finalisePriseEcueil(bouees());
+            pincesArriereService.finalisePriseEcueil(ecueil(), bouees());
 
             complete(); // Action terminé, on laisse le path finding reprendre la main pour le dégagement si on se fait bloqué
             onComplete();

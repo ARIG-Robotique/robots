@@ -101,7 +101,8 @@ public class NerellServosCommands {
 
         pincesArriereService.preparePriseEcueil();
         ThreadUtils.sleep(5000);
-        pincesArriereService.finalisePriseEcueil(ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU);
+        pincesArriereService.finalisePriseEcueil(INerellPincesArriereService.EEcueil.EQUIPE,
+                ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU);
         ThreadUtils.sleep(2000);
 
         ioService.enableLedCapteurCouleur();

@@ -1,13 +1,19 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
+import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.constants.INerellConstantesServos;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.GrandChenaux;
 import org.arig.robot.model.NerellRobotStatus;
+import org.arig.robot.utils.EcueilUtils;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
+
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 @Slf4j
 public abstract class AbstractNerellPincesArriereService implements INerellPincesArriereService {
@@ -24,6 +30,9 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
     @Autowired
     private RobotGroupService group;
 
+    private EEcueil pendingEcueil = null;
+    private StopWatch timerLectureCouleur = new StopWatch();
+
     /**
      * Prises des bouees dans un écueil
      */
@@ -37,7 +46,7 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
     }
 
     @Override
-    public boolean finalisePriseEcueil(ECouleurBouee... bouees) {
+    public boolean finalisePriseEcueil(EEcueil ecueil, ECouleurBouee... bouees) {
         Assert.isTrue(bouees.length == 5, "Paramètre bouees invalide");
 
         srv.pincesArriereFerme(true);
@@ -58,6 +67,12 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
         }
         if (io.presencePinceArriere5()) {
             rs.pinceArriere(4, bouees[4]);
+        }
+
+        if (ecueil != EEcueil.EQUIPE && Stream.of(bouees).anyMatch(b -> b == ECouleurBouee.INCONNU)) {
+            pendingEcueil = ecueil;
+            timerLectureCouleur.reset();
+            timerLectureCouleur.start();
         }
 
         return true;
@@ -185,5 +200,57 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
         if (!io.presencePinceArriere5()) {
             rs.pinceArriere(4, null);
         }
+    }
+
+    @Override
+    public void processCouleurBouee() {
+        if (pendingEcueil == null || timerLectureCouleur.getTime(TimeUnit.MILLISECONDS) < INerellConstantesConfig.TIME_BEFORE_READ_COLOR) {
+            return;
+        }
+
+        if (!io.presencePinceArriere2() || !io.presencePinceArriere4()) {
+            log.warn("Manque des bouées arrières pour déterminer le pattern de l'ecueil {}", pendingEcueil);
+            pendingEcueil = null;
+            timerLectureCouleur.reset();
+            return;
+        }
+
+        io.enableLedCapteurCouleur();
+        ThreadUtils.sleep(INerellConstantesConfig.WAIT_LED);
+
+        ECouleurBouee bouee2 = io.couleurBoueeArriere2();
+        ECouleurBouee bouee4 = io.couleurBoueeArriere4();
+
+        io.disableLedCapteurCouleur();
+
+        int pattern = 0;
+        if (bouee2 == ECouleurBouee.VERT && bouee4 == ECouleurBouee.ROUGE) {
+            pattern = 1;
+        } else if (bouee2 == ECouleurBouee.VERT && bouee4 == ECouleurBouee.VERT) {
+            pattern = 2;
+        } else if (bouee2 == ECouleurBouee.ROUGE && bouee4 == ECouleurBouee.VERT) {
+            pattern = 3;
+        }
+
+        if (pattern == 0) {
+            log.warn("Impossible de déterminer le pattern de l'ecueil {} (2: {}, 4: {})", pendingEcueil, bouee2, bouee4);
+            pendingEcueil = null;
+            timerLectureCouleur.reset();
+            return;
+        }
+
+        log.info("Pattern ecueil déterminé : {} (2: {}, 4: {})", pattern, bouee2, bouee4);
+        rs.couleursEcueilCommun(EcueilUtils.tirageCommunAdverse(rs.team(), pattern));
+
+        ECouleurBouee bouee3 = pendingEcueil == EEcueil.BLEU ? ECouleurBouee.VERT : ECouleurBouee.ROUGE;
+
+        rs.pinceArriere(2, bouee2);
+        if (io.presencePinceArriere3()) {
+            rs.pinceArriere(3, bouee3);
+        }
+        rs.pinceArriere(4, bouee4);
+
+        pendingEcueil = null;
+        timerLectureCouleur.reset();
     }
 }

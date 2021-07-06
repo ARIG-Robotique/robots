@@ -9,9 +9,10 @@ import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
 import org.arig.robot.services.AbstractEnergyService;
-import org.arig.robot.services.AbstractNerellPincesAvantService;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.IIOService;
+import org.arig.robot.services.INerellPincesArriereService;
+import org.arig.robot.services.INerellPincesAvantService;
 import org.arig.robot.services.NerellEcranService;
 import org.arig.robot.system.avoiding.IAvoidingService;
 import org.arig.robot.system.blockermanager.ISystemBlockerManager;
@@ -47,7 +48,10 @@ public class NerellTasksScheduler {
     private AbstractEnergyService energyService;
 
     @Autowired
-    private AbstractNerellPincesAvantService pincesAvant;
+    private INerellPincesAvantService pincesAvant;
+
+    @Autowired
+    private INerellPincesArriereService pincesArriere;
 
 
     private StopWatch timerLectureCouleur = new StopWatch();
@@ -116,16 +120,16 @@ public class NerellTasksScheduler {
     }
 
     @Scheduled(fixedDelay = 200)
-    public void pincesAvantTask() {
-        boolean pincesEnabled = rs.pincesAvantEnabled();
+    public void pincesTask() {
+        boolean pincesAvantEnabled = rs.pincesAvantEnabled();
 
-        if (Boolean.TRUE.equals(risingEnablePinces.filter(pincesEnabled))) {
+        if (Boolean.TRUE.equals(risingEnablePinces.filter(pincesAvantEnabled))) {
             pincesAvant.activate();
-        } else if (Boolean.TRUE.equals(fallingEnablePinces.filter(pincesEnabled))) {
+        } else if (Boolean.TRUE.equals(fallingEnablePinces.filter(pincesAvantEnabled))) {
             pincesAvant.deactivate();
         }
 
-        if (pincesEnabled) {
+        if (pincesAvantEnabled) {
             if (pincesAvant.processBouee()) {
                 timerLectureCouleur.reset();
                 timerLectureCouleur.start();
@@ -135,6 +139,10 @@ public class NerellTasksScheduler {
                 timerLectureCouleur.reset();
                 pincesAvant.processCouleurBouee();
             }
+        }
+
+        if (rs.matchRunning()) {
+            pincesArriere.processCouleurBouee();
         }
     }
 }

@@ -8,6 +8,7 @@ import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
+import org.arig.robot.services.INerellPincesArriereService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -89,6 +90,11 @@ public class NerellEcueilCommunBleu extends AbstractNerellEcueil {
     @Override
     protected byte nbBoueesDispo() {
         return rsNerell.ecueilCommunBleuDispo();
+    }
+
+    @Override
+    protected INerellPincesArriereService.EEcueil ecueil() {
+        return INerellPincesArriereService.EEcueil.BLEU;
     }
 
     @Override

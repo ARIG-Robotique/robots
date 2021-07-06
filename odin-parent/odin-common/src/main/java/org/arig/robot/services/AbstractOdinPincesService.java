@@ -187,7 +187,7 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
 
     @Override
     public void processCouleurBouee() {
-        if (Stream.of(bouees()).filter(c -> c == ECouleurBouee.INCONNU).count() == 0) {
+        if (Stream.of(bouees()).noneMatch(c -> c == ECouleurBouee.INCONNU)) {
             // Pas d'inconnu, pas de lecture
             return;
         }

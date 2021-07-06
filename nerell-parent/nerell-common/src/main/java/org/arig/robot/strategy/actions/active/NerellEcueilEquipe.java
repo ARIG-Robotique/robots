@@ -7,6 +7,7 @@ import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
+import org.arig.robot.services.INerellPincesArriereService;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
@@ -60,6 +61,11 @@ public class NerellEcueilEquipe extends AbstractNerellEcueil {
     @Override
     protected double orientationPourPrise() {
         return rsNerell.team() == ETeam.BLEU ? 0 : 180;
+    }
+
+    @Override
+    protected INerellPincesArriereService.EEcueil ecueil() {
+        return INerellPincesArriereService.EEcueil.EQUIPE;
     }
 
     @Override

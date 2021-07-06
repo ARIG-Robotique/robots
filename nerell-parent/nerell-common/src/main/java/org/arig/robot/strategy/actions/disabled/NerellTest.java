@@ -63,7 +63,8 @@ public class NerellTest extends AbstractNerellAction {
             rsNerell.enableCalageBordure();
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation(30));
             mv.reculeMMSansAngle(60);
-            pincesArriereService.finalisePriseEcueil(ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU);
+            pincesArriereService.finalisePriseEcueil(INerellPincesArriereService.EEcueil.EQUIPE,
+                    ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU, ECouleurBouee.INCONNU);
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.gotoPoint(1200,1200, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);

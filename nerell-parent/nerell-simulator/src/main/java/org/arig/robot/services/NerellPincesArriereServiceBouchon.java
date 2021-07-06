@@ -11,10 +11,10 @@ public class NerellPincesArriereServiceBouchon extends AbstractNerellPincesArrie
     private NerellIOServiceBouchon io;
 
     @Override
-    public boolean finalisePriseEcueil(final ECouleurBouee... bouees) {
+    public boolean finalisePriseEcueil(final EEcueil ecueil, final ECouleurBouee... bouees) {
         io.contentPinceArriere(true);
 
-        return super.finalisePriseEcueil(bouees);
+        return super.finalisePriseEcueil(ecueil, bouees);
     }
 
     @Override

@@ -4,9 +4,15 @@ import org.arig.robot.model.ECouleurBouee;
 
 public interface INerellPincesArriereService {
 
+    enum EEcueil {
+        JAUNE,
+        BLEU,
+        EQUIPE
+    }
+
     boolean preparePriseEcueil();
 
-    boolean finalisePriseEcueil(ECouleurBouee... bouees);
+    boolean finalisePriseEcueil(EEcueil ecueil, ECouleurBouee... bouees);
 
     boolean deposeGrandChenal(ECouleurBouee couleurChenal, boolean partielle);
 
@@ -15,4 +21,6 @@ public interface INerellPincesArriereService {
     boolean deposePetitPort();
 
     void finalizeDeposeTableEchange();
+
+    void processCouleurBouee();
 }
