@@ -59,6 +59,11 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
             obstacles.add(buildChenal(new Point(3000 - 330, 2000 - 515)));
         }
 
+        // ajoute le haut fond
+        if (!rs.hautFondPris()) {
+            obstacles.add(new Rectangle(1500 - 1, 2000 - 650, 2, 650));
+        }
+
         super.setObstacles(obstacles);
     }
 

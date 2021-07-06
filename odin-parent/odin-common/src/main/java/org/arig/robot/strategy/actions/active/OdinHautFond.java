@@ -11,6 +11,7 @@ import org.arig.robot.strategy.actions.AbstractOdinAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -31,8 +32,14 @@ public class OdinHautFond extends AbstractOdinAction {
 
     @Override
     public boolean isValid() {
+        int libre = 0;
+        if (!io.presenceVentouseAvantGauche()) libre++;
+        if (!io.presenceVentouseAvantDroit()) libre++;
+        if (!io.presenceVentouseArriereGauche()) libre++;
+        if (!io.presenceVentouseArriereDroit()) libre++;
+
         return isTimeValid() && rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime &&
-                (rsOdin.pincesAvantEmpty() || rsOdin.pincesArriereEmpty()) && !rs.hautFondPris();
+                libre >= 3 && !rs.hautFondPris();
     }
 
     @Override
@@ -59,11 +66,11 @@ public class OdinHautFond extends AbstractOdinAction {
     @Override
     public int order() {
         int libre = 0;
-        if (!io.presenceVentouseAvantGauche()) libre += 3;
-        if (!io.presenceVentouseAvantDroit()) libre += 3;
-        if (!io.presenceVentouseArriereGauche()) libre += 3;
-        if (!io.presenceVentouseArriereDroit()) libre += 3;
-        return Math.min(libre, rsOdin.hautFond().size()) + tableUtils.alterOrder(entryPoint());
+        if (!io.presenceVentouseAvantGauche()) libre++;
+        if (!io.presenceVentouseAvantDroit()) libre++;
+        if (!io.presenceVentouseArriereGauche()) libre++;
+        if (!io.presenceVentouseArriereDroit()) libre++;
+        return Math.min(libre, rsOdin.hautFond().size()) * 3 + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
@@ -106,7 +113,9 @@ public class OdinHautFond extends AbstractOdinAction {
             mv.tourneDeg(180);
             mv.gotoPoint(finalPoint, finalSens);
 
+            rsOdin.hautFond(Collections.emptyList());
             group.hautFondPris();
+
             complete();
 
         } catch (NoPathFoundException | AvoidingException e) {

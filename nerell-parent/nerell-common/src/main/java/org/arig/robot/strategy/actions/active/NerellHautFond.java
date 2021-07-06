@@ -105,12 +105,9 @@ public class NerellHautFond extends AbstractNerellAction {
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
             mv.gotoPoint(finalPoint, GotoOption.AVANT);
 
-            if (baliseService.isConnected()) {
-                // on marque tout comme pris, l'information mise à jour sera fournie par la balise
-                rsNerell.hautFond(Collections.emptyList());
-            } else {
-                group.hautFondPris();
-            }
+            // on marque tout comme pris, l'information mise à jour sera fournie par la balise
+            rsNerell.hautFond(Collections.emptyList());
+            group.hautFondPris();
 
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
