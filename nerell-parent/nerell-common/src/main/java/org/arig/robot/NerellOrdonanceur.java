@@ -189,6 +189,8 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             }
 
             nerellRobotStatus.etalonageBaliseOk(ecranService.config().isEtalonnageOk());
+        } else {
+            nerellRobotStatus.etalonageBaliseOk(false);
         }
     }
 

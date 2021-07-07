@@ -21,11 +21,6 @@ public class OdinRobotStatus extends EurobotStatus {
         super(false);
     }
 
-    @Override
-    public void stopMatch() {
-        super.stopMatch();
-    }
-
     @Setter(AccessLevel.NONE)
     private boolean pincesAvantEnabled = false;
 

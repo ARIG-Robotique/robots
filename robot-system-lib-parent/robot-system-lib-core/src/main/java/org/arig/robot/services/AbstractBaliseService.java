@@ -37,6 +37,7 @@ public abstract class AbstractBaliseService {
 
     public void startDetection() {
         if (!detectionStarted) {
+            log.info("Démarrage de la détection balise");
             this.detectionStarted = balise.startDetection();
         }
     }
@@ -47,12 +48,13 @@ public abstract class AbstractBaliseService {
     }
 
     public EtalonnageResponse etalonnage() {
-        log.info("Démarrage de l'étalonnage");
+        log.info("Étalonnage de la balise");
         detectionStarted = false;
         return balise.etalonnage();
     }
 
     public void idle() {
+        detectionStarted = false;
         balise.idle();
     }
 }

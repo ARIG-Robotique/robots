@@ -21,22 +21,18 @@ public class NerellRobotStatus extends EurobotStatus {
         super(true);
     }
 
-    @Override
-    public void stopMatch() {
-        super.stopMatch();
-        this.disableBalise();
-    }
-
     private boolean etalonageBaliseOk = false;
 
     @Setter(AccessLevel.NONE)
     private boolean pincesAvantEnabled = false;
 
     public void enablePincesAvant() {
+        log.info("[RS] activation des pinces avant");
         pincesAvantEnabled = true;
     }
 
     public void disablePincesAvant() {
+        log.info("[RS] désactivation des pinces avant");
         pincesAvantEnabled = false;
     }
 
@@ -44,10 +40,12 @@ public class NerellRobotStatus extends EurobotStatus {
     private boolean baliseEnabled = false;
 
     public void enableBalise() {
+        log.info("[RS] activation de la balise");
         baliseEnabled = true;
     }
 
     public void disableBalise() {
+        log.info("[RS] désactivation de la balise");
         baliseEnabled = false;
     }
 
