@@ -244,11 +244,11 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
 
         ECouleurBouee[] couleurEcueil = rs.team().name().equals(pendingEcueil.name()) ? rs.couleursEcueilCommunEquipe() : rs.couleursEcueilCommunAdverse();
 
-        rs.pinceArriere(2, couleurEcueil[2]);
+        rs.pinceArriere(1, couleurEcueil[1]);
         if (io.presencePinceArriere3()) {
-            rs.pinceArriere(3, couleurEcueil[3]);
+            rs.pinceArriere(2, couleurEcueil[2]);
         }
-        rs.pinceArriere(4, couleurEcueil[4]);
+        rs.pinceArriere(3, couleurEcueil[3]);
 
         pendingEcueil = null;
         timerLectureCouleur.reset();

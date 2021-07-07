@@ -22,7 +22,8 @@ public interface INerellConstantesServos {
     // Tempo servos //
     // ------------ //
 
-    int WAIT_MOUSTACHE_POUSSETTE = 1000;
+    int WAIT_MOUSTACHE_POUSSETTE = 800;
+    int WAIT_MOUSTACHE_POUSSETTE_SPECIAL = 500;
     int WAIT_MOUSTACHE_DROITE = 550;
     int WAIT_MOUSTACHE_GAUCHE = WAIT_MOUSTACHE_DROITE;
     int WAIT_BRAS_DROIT = 440;
@@ -109,8 +110,9 @@ public interface INerellConstantesServos {
     byte POS_BATCH_MOUSTACHES_OUVERT = 7;
     byte POS_BATCH_MOUSTACHES_OUVERT_SPECIAL = 8;
     byte POS_BATCH_MOUSTACHES_POUSETTE = 9;
-    byte POS_BATCH_ASCENSEURS_AVANT_BAS = 10;
-    byte POS_BATCH_ASCENSEURS_AVANT_HAUT = 11;
+    byte POS_BATCH_MOUSTACHES_POUSETTE_SPECIAL = 10;
+    byte POS_BATCH_ASCENSEURS_AVANT_BAS = 11;
+    byte POS_BATCH_ASCENSEURS_AVANT_HAUT = 12;
 
     Map<Byte, Triple<Integer, Integer, Integer>> MIN_TIME_MAX = ImmutableMap.<Byte, Triple<Integer, Integer, Integer>>builder()
             .put(MOUSTACHE_DROITE, Triple.of(POS_MOUSTACHE_DROITE_FERME, WAIT_MOUSTACHE_DROITE, POS_MOUSTACHE_DROITE_OUVERT_SPECIAL))
@@ -164,6 +166,10 @@ public interface INerellConstantesServos {
                     .put(POS_BATCH_MOUSTACHES_POUSETTE, new int[][]{
                             new int[]{INerellConstantesServos.MOUSTACHE_DROITE, INerellConstantesServos.POS_MOUSTACHE_DROITE_POUSSETTE},
                             new int[]{INerellConstantesServos.MOUSTACHE_GAUCHE, INerellConstantesServos.POS_MOUSTACHE_GAUCHE_POUSSETTE}
+                    })
+                    .put(POS_BATCH_MOUSTACHES_POUSETTE_SPECIAL, new int[][]{
+                            new int[]{INerellConstantesServos.MOUSTACHE_DROITE, INerellConstantesServos.POS_MOUSTACHE_DROITE_OUVERT},
+                            new int[]{INerellConstantesServos.MOUSTACHE_GAUCHE, INerellConstantesServos.POS_MOUSTACHE_GAUCHE_OUVERT}
                     })
                     .build())
             .put(BATCH_ASCENSEURS_AVANT, ImmutableMap.<Byte, int[][]>builder()

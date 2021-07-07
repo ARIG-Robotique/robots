@@ -69,8 +69,8 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
                 break;
             case CONFIG:
                 rs.strategy(EStrategy.values()[value[0]]);
-                rs.deposePartielle(value[2] > 0);
-                rs.echangeEcueil(value[3] > 0);
+                rs.deposePartielle(value[1] > 0);
+                rs.echangeEcueil(value[2] > 0);
                 break;
             case GIROUETTE:
                 rs.directionGirouette(EDirectionGirouette.values()[value[0]]);

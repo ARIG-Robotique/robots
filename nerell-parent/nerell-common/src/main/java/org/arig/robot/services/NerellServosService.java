@@ -90,6 +90,20 @@ public class NerellServosService extends AbstractServosService {
         }
     }
 
+    public void moustachesPoussetteSpecial(boolean wait) {
+        logPositionServo("Moustaches", "Poussette spécial", wait);
+        setPositionBatchAndSpeed(
+                INerellConstantesServos.BATCH_MOUSTACHES,
+                INerellConstantesServos.POS_BATCH_MOUSTACHES_POUSETTE_SPECIAL,
+                INerellConstantesServos.SPEED_MOUSTACHE_POUSSETTE,
+                false);
+
+        if (wait) {
+            // Position poussette est toujours avec une tempo fixe
+            ThreadUtils.sleep(INerellConstantesServos.WAIT_MOUSTACHE_POUSSETTE_SPECIAL);
+        }
+    }
+
     public void moustacheGaucheOuvert(boolean wait) {
         logPositionServo("Moustache gauche", "Ouvert", wait);
         setPosition(INerellConstantesServos.MOUSTACHE_GAUCHE, INerellConstantesServos.POS_MOUSTACHE_GAUCHE_OUVERT, wait);

@@ -139,7 +139,7 @@ public class NerellDeposePetitPort extends AbstractNerellAction {
                 group.deposePetitChenalRouge(ECouleurBouee.ROUGE);
                 group.deposePetitChenalVert(ECouleurBouee.VERT);
 
-                servosNerell.moustachesOuvert(true); // En fait ici c'est pour "fermer" les bouée du fond
+                servosNerell.moustachesPoussetteSpecial(rsNerell.pincesAvantEmpty());
                 group.deposePetitChenalVert(ECouleurBouee.ROUGE);
                 group.deposePetitChenalRouge(ECouleurBouee.VERT);
 
