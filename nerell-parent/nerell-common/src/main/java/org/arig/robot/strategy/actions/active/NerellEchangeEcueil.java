@@ -47,7 +47,7 @@ public class NerellEchangeEcueil extends AbstractNerellAction {
     public boolean isValid() {
         return isTimeValid() && !rsNerell.inPort() && rs.echangeEcueil() && rs.groupOk() &&
                 rs.mancheAAir1() && rs.mancheAAir2() && !rsNerell.pincesArriereEmpty() &&
-                rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime &&
+                rs.getRemainingTime() > 35000 &&
                 Arrays.deepEquals(rsNerell.pincesArriere(), rs.couleursEcueilEquipe());
     }
 
