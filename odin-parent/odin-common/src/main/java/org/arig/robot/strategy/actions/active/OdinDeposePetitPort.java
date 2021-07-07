@@ -96,7 +96,7 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
                 pincesAvantService.setExpected(ECouleurBouee.ROUGE, 1);
             }
 
-            mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation(10));
+            mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation(5));
             mv.gotoPoint(getX(1900), 230, GotoOption.AVANT);
 
             // deplacement bouée rouge
@@ -156,7 +156,7 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             } else {
                 servosOdin.brasDroitPhare(true);
             }
-            mv.setVitesse(robotConfig.vitesse(100), robotConfig.vitesseOrientation(10));
+            mv.setVitesse(robotConfig.vitesse(100), robotConfig.vitesseOrientation(5));
             if (rs.team() == ETeam.JAUNE) {
                 mv.gotoOrientationDeg(180, SensRotation.HORAIRE);
             } else {
