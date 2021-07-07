@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled;
+package org.arig.robot.strategy.actions.active;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
