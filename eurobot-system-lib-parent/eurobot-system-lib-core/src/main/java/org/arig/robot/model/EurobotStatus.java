@@ -43,7 +43,6 @@ public class EurobotStatus extends AbstractRobotStatus {
         //couleursEcueilCommun(EcueilUtils.tirageCommunEquipe(team, 1));
     }
 
-    private boolean doubleDepose = false;
     private boolean deposePartielle = false;
     private boolean echangeEcueil = false;
 

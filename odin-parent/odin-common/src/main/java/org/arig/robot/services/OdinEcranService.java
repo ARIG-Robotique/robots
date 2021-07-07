@@ -19,7 +19,6 @@ public class OdinEcranService extends AbstractEcranService {
         if (stateInfos.isOtherRobot()) {
             stateInfos.setTeam(rs.team().ordinal());
             stateInfos.setStrategy(rs.strategy().ordinal());
-            stateInfos.setDoubleDepose(rs.doubleDepose());
             stateInfos.setDeposePartielle(rs.deposePartielle());
             stateInfos.setEchangeEcueil(rs.echangeEcueil());
         }

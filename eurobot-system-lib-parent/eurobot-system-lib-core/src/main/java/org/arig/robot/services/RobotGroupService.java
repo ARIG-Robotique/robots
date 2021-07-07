@@ -69,7 +69,6 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
                 break;
             case CONFIG:
                 rs.strategy(EStrategy.values()[value[0]]);
-                rs.doubleDepose(value[1] > 0);
                 rs.deposePartielle(value[2] > 0);
                 rs.echangeEcueil(value[3] > 0);
                 break;
@@ -189,7 +188,6 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
     public void configuration() {
         byte[] data = new byte[]{
                 (byte) rs.strategy().ordinal(),
-                (byte) (rs.doubleDepose() ? 1 : 0),
                 (byte) (rs.deposePartielle() ? 1 : 0),
                 (byte) (rs.echangeEcueil() ? 1 : 0)
         };
