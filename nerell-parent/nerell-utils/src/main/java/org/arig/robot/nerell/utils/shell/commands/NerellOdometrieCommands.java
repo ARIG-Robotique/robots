@@ -1,39 +1,26 @@
-package org.arig.robot.odin.utils.shell.commands;
+package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.arig.robot.constants.IConstantesConfig;
-import org.arig.robot.constants.IOdinConstantesConfig;
+import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.filters.pid.IPidFilter;
 import org.arig.robot.model.CommandeRobot;
-import org.arig.robot.model.OdinRobotStatus;
+import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Position;
-import org.arig.robot.model.enums.SensDeplacement;
-import org.arig.robot.model.enums.SensRotation;
-import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.services.AbstractEnergyService;
-import org.arig.robot.services.IOdinIOService;
+import org.arig.robot.services.INerellIOService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.utils.ConvertionRobotUnit;
-import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import java.io.File;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,15 +28,19 @@ import java.util.stream.Collectors;
 @ShellComponent
 @ShellCommandGroup("Odométrie")
 @RequiredArgsConstructor
-public class OdinOdometrieCommands {
+public class NerellOdometrieCommands {
 
     private final IMonitoringWrapper monitoringWrapper;
-    private final IOdinIOService ioService;
+    private final INerellIOService ioService;
     private final AbstractEnergyService energyService;
     private final TrajectoryManager trajectoryManager;
-    private final OdinRobotStatus rs;
+    private final NerellRobotStatus rs;
     private final ARIG2WheelsEncoders encoders;
     private final ConvertionRobotUnit convRobot;
+    private final CommandeRobot cmdRobot;
+    private final Position currentPosition;
+    private final IPidFilter pidDistance;
+    private final IPidFilter pidOrientation;
 
     public Availability alimentationOk() {
         return ioService.auOk() && energyService.checkServos() && energyService.checkMoteurs()
@@ -120,7 +111,8 @@ public class OdinOdometrieCommands {
     @ShellMethodAvailability("alimentationOk")
     public void odometrieDistance() {
         double distanceEntreCalage = 2999; // Table Gite 2021
-        double distanceReel = distanceEntreCalage - (IOdinConstantesConfig.dstCallage * 2);
+        double dstCalageAvant = 103; // Distance calage avant
+        double distanceReel = distanceEntreCalage - INerellConstantesConfig.dstCallage - dstCalageAvant;
 
         encoders.reset();
         rs.enableAsserv();
@@ -160,7 +152,7 @@ public class OdinOdometrieCommands {
         log.info("Distance D   : {} mm", convRobot.pulseToMm(roueDroite));
         log.info("Distance Rob : {} mm", convRobot.pulseToMm(distance));
         log.info("-------------------------------------------------");
-        log.info("Count per mm : {}", distance / distanceReel); // Distance de la table 2021
+        log.info("Count per mm : {}", distance / distanceReel);
     }
 
     @SneakyThrows
@@ -224,8 +216,8 @@ public class OdinOdometrieCommands {
             i++;
         } while (i < 2);
         log.info("-------------------------------------------------");
-        log.info("Count per mm          : {}", IOdinConstantesConfig.countPerMm);
-        log.info("Count per deg         : {}", IOdinConstantesConfig.countPerDeg);
+        log.info("Count per mm          : {}", INerellConstantesConfig.countPerMm);
+        log.info("Count per deg         : {}", INerellConstantesConfig.countPerDeg);
         log.info("New Count per deg 1   : {}", newCountPerDegFirst);
         log.info("New Count per deg 2   : {}", newCountPerDegSecond);
         log.info("New Count per deg moy : {}", (newCountPerDegSecond + newCountPerDegFirst) / 2);

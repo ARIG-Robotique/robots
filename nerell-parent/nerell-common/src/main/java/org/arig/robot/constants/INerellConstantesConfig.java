@@ -31,10 +31,12 @@ public interface INerellConstantesConfig {
     // ----------------------------- //
 
     // 40000 p => 1524.5 mm : 40000 / 1524.5 = 26,238110856
-    double countPerMm = 26.238110856;
+    //double countPerMm = 26.238110856;
+    double countPerMm = 26.246265938069218;
 
     // 51325 p => 360° : 51325 / 360 = 142,569444444
-    double countPerDeg = 142.569444444;
+    //double countPerDeg = 142.569444444;
+    double countPerDeg = 142.5873611111111;
 
     // ------------------------ //
     // Configuration des rampes //
