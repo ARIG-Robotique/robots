@@ -13,8 +13,7 @@ public abstract class AbstractRobotGroupBouchon implements IRobotGroup {
     }
 
     @Override
-    public String getCurrentAction() {
-        return null;
+    public void setCurrentAction(String name) {
     }
 
     @Override

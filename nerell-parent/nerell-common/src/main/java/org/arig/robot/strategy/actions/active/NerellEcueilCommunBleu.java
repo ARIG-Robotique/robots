@@ -94,7 +94,7 @@ public class NerellEcueilCommunBleu extends AbstractNerellEcueil {
             bouee5.execute();
         }
         super.execute();
-        if (isCompleted() && bouee7.isValid()) {
+        if (isCompleted() && bouee7.isValid() && !bouee7.name().equals(rs.otherCurrentAction())) {
             bouee7.execute();
         }
     }

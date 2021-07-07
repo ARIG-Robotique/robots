@@ -31,7 +31,7 @@ public class AntiblocagePort extends AbstractEurobotAction {
         double x = conv.pulseToMm(position.getPt().getX());
         double y = conv.pulseToMm(position.getPt().getY());
 
-        return isTimeValid() && y >= 900 && y <= 1500 && (x <= 400 || x >= 2600);
+        return isTimeValid() && y >= 800 && y <= 1600 && (x <= 400 || x >= 2600);
     }
 
     @Override

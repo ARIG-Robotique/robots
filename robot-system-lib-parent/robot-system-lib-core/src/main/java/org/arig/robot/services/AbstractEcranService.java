@@ -3,6 +3,7 @@ package org.arig.robot.services;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.model.AbstractRobotStatus;
@@ -100,7 +101,20 @@ public class AbstractEcranService {
     private void updateMatch() {
         matchInfos.setScore(rs.calculerPoints());
         if (rs.matchEnabled()) {
-            matchInfos.setMessage(String.format("%s (%s restantes) - %s s", rs.currentAction(), strategyManager.actionsCount(), rs.getRemainingTime() / 1000));
+            if (rs.groupOk()) {
+                matchInfos.setMessage(String.format("%s / %s (%s restantes) - %ss",
+                        ObjectUtils.firstNonNull(rs.currentAction(), "AUCUNE"),
+                        ObjectUtils.firstNonNull(rs.otherCurrentAction(), "AUCUNE"),
+                        strategyManager.actionsCount(),
+                        rs.getRemainingTime() / 1000)
+                );
+            } else {
+                matchInfos.setMessage(String.format("%s (%s restantes) - %ss",
+                        ObjectUtils.firstNonNull(rs.currentAction(), "AUCUNE"),
+                        strategyManager.actionsCount(),
+                        rs.getRemainingTime() / 1000)
+                );
+            }
         }
 
         ecran.updateMatch(matchInfos);

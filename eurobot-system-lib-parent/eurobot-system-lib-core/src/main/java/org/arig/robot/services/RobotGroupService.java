@@ -16,6 +16,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -71,6 +72,13 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
                 rs.strategy(EStrategy.values()[value[0]]);
                 rs.deposePartielle(value[1] > 0);
                 rs.echangeEcueil(value[2] > 0);
+                break;
+            case CURRENT_ACTION:
+                String actionName = null;
+                if (value.length > 0) {
+                    actionName = new String(value, StandardCharsets.UTF_8);
+                }
+                rs.otherCurrentAction(actionName);
                 break;
             case GIROUETTE:
                 rs.directionGirouette(EDirectionGirouette.values()[value[0]]);
@@ -152,6 +160,15 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
                 }
                 rs.hautFond(hautFond);
                 break;
+        }
+    }
+
+    @Override
+    public void setCurrentAction(String name) {
+        if (name == null) {
+            sendEvent(EStatusEvent.CURRENT_ACTION);
+        } else {
+            sendEvent(EStatusEvent.CURRENT_ACTION, name.getBytes(StandardCharsets.UTF_8));
         }
     }
 

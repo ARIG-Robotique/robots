@@ -1,6 +1,5 @@
 package org.arig.robot.strategy;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.model.AbstractRobotStatus;
@@ -9,7 +8,6 @@ import org.arig.robot.system.group.IRobotGroup;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +43,7 @@ public class StrategyManager {
             log.info("Recherche d'une action à exécuter parmis les {} disponible(s)", actionsCount());
         }
 
-        final String otherCurrentAction = group.getCurrentAction();
+        final String otherCurrentAction = rs.otherCurrentAction();
 
         Optional<IAction> nextAction = actions().stream()
                 .filter(IAction::isValid)
@@ -60,11 +58,13 @@ public class StrategyManager {
                 log.warn("0/{} actions disponible pour le moment", actionsCount());
             }
             rs.currentAction(null);
+            group.setCurrentAction(null);
             return;
         }
 
         final IAction action = nextAction.get();
         rs.currentAction(action.name());
+        group.setCurrentAction(action.name());
         log.info("Execution de l'action {}", action.name());
         tableUtils.clearDynamicDeadZones();
         action.execute();

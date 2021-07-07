@@ -178,6 +178,8 @@ public abstract class AbstractRobotStatus {
 
     private String currentAction = null;
 
+    private String otherCurrentAction = null;
+
     public abstract int calculerPoints();
 
     public abstract Map<String, ?> gameStatus();
