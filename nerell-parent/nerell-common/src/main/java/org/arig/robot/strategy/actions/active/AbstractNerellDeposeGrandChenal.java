@@ -6,7 +6,6 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Chenaux;
 import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.AbstractNerellPincesArriereService;
@@ -15,7 +14,7 @@ import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
-public abstract class AbstractNerellDeposeGrandPortChenal extends AbstractNerellAction {
+public abstract class AbstractNerellDeposeGrandChenal extends AbstractNerellAction {
 
     protected enum EPosition {
         NORD,
@@ -42,12 +41,7 @@ public abstract class AbstractNerellDeposeGrandPortChenal extends AbstractNerell
 
     @Override
     public Point entryPoint() {
-        double x = 270;
-        double y = 1200;
-        if (ETeam.JAUNE == rsNerell.team()) {
-            x = 3000 - x;
-        }
-        return new Point(x, y);
+        return new Point(getX(270), 1200);
     }
 
     @Override
@@ -85,14 +79,14 @@ public abstract class AbstractNerellDeposeGrandPortChenal extends AbstractNerell
                 if (!rsNerell.pincesArriereEmpty()) {
                     chenauxFuture.addRouge(rsNerell.pincesArriere());
                 }
-                if (!rsNerell.pincesAvantEmpty() && (rsNerell.pincesArriereEmpty() || rsNerell.doubleDepose())) {
+                if (!rsNerell.pincesAvantEmpty()) {
                     chenauxFuture.addRouge(rsNerell.pincesAvant());
                 }
             } else {
                 if (!rsNerell.pincesArriereEmpty()) {
                     chenauxFuture.addVert(rsNerell.pincesArriere());
                 }
-                if (!rsNerell.pincesAvantEmpty() && (rsNerell.pincesArriereEmpty() || rsNerell.doubleDepose())) {
+                if (!rsNerell.pincesAvantEmpty()) {
                     chenauxFuture.addVert(rsNerell.pincesAvant());
                 }
             }
@@ -124,8 +118,7 @@ public abstract class AbstractNerellDeposeGrandPortChenal extends AbstractNerell
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             final Point entry = entryPoint();
-            boolean onlyOne = !rsNerell.doubleDepose() || (rsNerell.pincesArriereEmpty() ^ rsNerell.pincesAvantEmpty());
-            final Point entry2 = new Point(entry.getX(), getYDepose(entry.getY(), rsNerell.pincesArriereEmpty(), onlyOne));
+            final Point entry2 = new Point(entry.getX(), getYDepose(entry.getY(), rsNerell.pincesArriereEmpty()));
 
             if (tableUtils.distance(entry2) > 100) {
                 mv.pathTo(entry2);
@@ -142,10 +135,10 @@ public abstract class AbstractNerellDeposeGrandPortChenal extends AbstractNerell
                 pincesArriereService.deposeGrandChenal(getCouleurChenal(), rsNerell.deposePartielle());
             }
 
-            if (!rsNerell.pincesAvantEmpty() && (!deposeArriere || rsNerell.doubleDepose())) {
+            if (!rsNerell.pincesAvantEmpty()) {
                 if (deposeArriere) {
-                    mv.avanceMM(35); // FIXME nouvelle face avant
-                    mv.gotoPoint(entry.getX(), getYDepose(entry.getY(), true, false), GotoOption.AVANT);
+                    mv.avanceMM(35);
+                    mv.gotoPoint(entry.getX(), getYDepose(entry.getY(), true), GotoOption.AVANT);
                 } else {
                     mv.gotoOrientationDeg(getPositionChenal() == EPosition.NORD ? 90 : -90);
                 }
@@ -165,7 +158,7 @@ public abstract class AbstractNerellDeposeGrandPortChenal extends AbstractNerell
         }
     }
 
-    private double getYDepose(double yRef, boolean avant, boolean onlyOne) {
+    private double getYDepose(double yRef, boolean avant) {
         // offset de base par rapport au milieu du port
         int coef = 93;
         // offset pour dépose avant
@@ -173,10 +166,6 @@ public abstract class AbstractNerellDeposeGrandPortChenal extends AbstractNerell
             coef += 30;
         } else {
             coef -= 5;
-        }
-        // offset si c'est la seule dépose
-        if (onlyOne) {
-            coef += avant ? 30 : -30;
         }
 
         if (getPositionChenal() == EPosition.NORD) {

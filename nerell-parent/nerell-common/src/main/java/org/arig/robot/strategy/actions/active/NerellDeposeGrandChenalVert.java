@@ -14,18 +14,18 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class NerellDeposeGrandPortChenalRouge extends AbstractNerellDeposeGrandPortChenal {
+public class NerellDeposeGrandChenalVert extends AbstractNerellDeposeGrandChenal {
 
     @Override
     public String name() {
-        return IEurobotConfig.ACTION_DEPOSE_GRAND_PORT_ROUGE;
+        return IEurobotConfig.ACTION_DEPOSE_GRAND_PORT_VERT;
     }
 
     @Getter
     @Accessors(fluent = true)
     public List<String> blockingActions = Arrays.asList(
             IEurobotConfig.ACTION_DEPOSE_GRAND_PORT,
-            IEurobotConfig.ACTION_DEPOSE_GRAND_PORT_VERT,
+            IEurobotConfig.ACTION_DEPOSE_GRAND_PORT_ROUGE,
             IEurobotConfig.ACTION_NETTOYAGE_GRAND_PORT
     );
 
@@ -36,34 +36,33 @@ public class NerellDeposeGrandPortChenalRouge extends AbstractNerellDeposeGrandP
 
     @Override
     protected int getBoueeBloquante() {
-        if (rsNerell.team() == ETeam.BLEU) {
-            return 4;
+        if (rsNerell.team() == ETeam.JAUNE) {
+            return 16;
         } else {
-            return 13;
+            return 1;
         }
     }
 
     @Override
     protected ECouleurBouee getCouleurChenal() {
-        return ECouleurBouee.ROUGE;
+        return ECouleurBouee.VERT;
     }
 
     @Override
     protected EPosition getPositionChenal() {
         if (rsNerell.team() == ETeam.BLEU) {
-            return EPosition.SUD;
-        } else {
             return EPosition.NORD;
+        } else {
+            return EPosition.SUD;
         }
     }
 
     @Override
     protected double getTweakY() {
         if (rs.team() == ETeam.BLEU) {
-            return -100;
-        } else {
             return 100;
+        } else {
+            return -100;
         }
     }
-
 }
