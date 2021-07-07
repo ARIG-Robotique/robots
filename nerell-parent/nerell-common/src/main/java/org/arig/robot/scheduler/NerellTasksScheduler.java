@@ -114,7 +114,7 @@ public class NerellTasksScheduler {
                 baliseService.lectureHautFond();
             } else {
                 // Lecture couleur écueil
-                baliseService.lectureCouleurEcueilEquipe();
+                //baliseService.lectureCouleurEcueilEquipe();
             }
         }
     }

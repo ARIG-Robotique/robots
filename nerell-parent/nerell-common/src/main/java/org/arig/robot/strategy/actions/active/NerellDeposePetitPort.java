@@ -175,10 +175,6 @@ public class NerellDeposePetitPort extends AbstractNerellAction {
                 mv.reculeMM(150);
             }
 
-            if (rs.stepsPetitPort() > 3) {
-                complete();
-            }
-
         } catch (NoPathFoundException | AvoidingException e) {
             if (conv.pulseToDeg(position.getAngle()) < 0 && inPort) {
                 try {
@@ -191,6 +187,10 @@ public class NerellDeposePetitPort extends AbstractNerellAction {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
             servosNerell.moustachesFerme(false);
+
+            if (rs.stepsPetitPort() > 3) {
+                complete();
+            }
         }
     }
 }
