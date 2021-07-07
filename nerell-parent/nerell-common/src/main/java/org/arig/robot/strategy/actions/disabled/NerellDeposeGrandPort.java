@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
@@ -16,9 +15,11 @@ import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.awt.*;
+import java.awt.Rectangle;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @Slf4j
 @Component
@@ -30,7 +31,7 @@ public class NerellDeposeGrandPort extends AbstractNerellAction {
     @Autowired
     private INerellPincesArriereService pincesArriereService;
 
-    private int step = 0;
+    private int step = 2;
 
     @Override
     public String name() {
@@ -52,34 +53,22 @@ public class NerellDeposeGrandPort extends AbstractNerellAction {
 
     @Override
     public Point entryPoint() {
-        double X = 230;
-        double Y = 1200;
-        if (ETeam.JAUNE == rsNerell.team()) {
-            X = 3000 - X;
-        }
-        return new Point(X, Y);
+        return new Point(getX(230), 1200);
     }
 
     @Override
     public boolean isValid() {
         return isTimeValid() && !rsNerell.inPort() && (!rsNerell.pincesAvantEmpty() || !rsNerell.pincesArriereEmpty())
-                && !rsNerell.grandChenalRougeEmpty() && !rsNerell.grandChenalVertEmpty() && rsNerell.getRemainingTime() > IEurobotConfig.validRetourPortRemainingTimeNerell;
+                && !rsNerell.grandChenalRougeEmpty() && !rsNerell.grandChenalVertEmpty() &&
+                rsNerell.getRemainingTime() > IEurobotConfig.validRetourPortRemainingTimeNerell &&
+                rsNerell.getRemainingTime() < IEurobotConfig.validRetourPortRemainingTimeNerell * 2;
     }
 
     @Override
     public int order() {
-        int order = 0;
-        for (ECouleurBouee eCouleurBouee : rsNerell.pincesAvant()) {
-            if (eCouleurBouee != null) {
-                order++;
-            }
-        }
-        for (ECouleurBouee eCouleurBouee : rsNerell.pincesArriere()) {
-            if (eCouleurBouee != null) {
-                order++;
-            }
-        }
-        return order + tableUtils.alterOrder(entryPoint());
+        long nbAvant = Stream.of(rsNerell.pincesAvant()).filter(Objects::nonNull).count();
+        long nbArriere = Stream.of(rsNerell.pincesArriere()).filter(Objects::nonNull).count();
+        return (int) Math.max(nbArriere, nbAvant) + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
@@ -91,7 +80,10 @@ public class NerellDeposeGrandPort extends AbstractNerellAction {
             rsNerell.enablePincesAvant();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
-            GotoOption sens = !rsNerell.pincesAvantEmpty() ? GotoOption.AVANT : GotoOption.ARRIERE;
+            long nbAvant = Stream.of(rsNerell.pincesAvant()).filter(Objects::nonNull).count();
+            long nbArriere = Stream.of(rsNerell.pincesArriere()).filter(Objects::nonNull).count();
+            GotoOption sens = nbArriere >= nbAvant ? GotoOption.ARRIERE : GotoOption.AVANT;
+
             if (tableUtils.distance(entry2) > 200) {
                 mv.pathTo(entry2, sens);
                 rsNerell.disableAvoidance();
@@ -103,7 +95,7 @@ public class NerellDeposeGrandPort extends AbstractNerellAction {
             mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
 
             do {
-                if (!rsNerell.pincesAvantEmpty()) {
+                if (sens == GotoOption.AVANT) {
                     if (rsNerell.team() == ETeam.BLEU) {
                         mv.gotoOrientationDeg(180);
                     } else {
@@ -111,8 +103,7 @@ public class NerellDeposeGrandPort extends AbstractNerellAction {
                     }
                     pincesAvantService.deposeGrandPort();
                     step++;
-                }
-                if (!rsNerell.pincesArriereEmpty()) {
+                } else {
                     final Point entry3 = new Point(computeX(entry.getX(), false), entry.getY());
                     mv.gotoPoint(entry3, GotoOption.SANS_ORIENTATION);
                     if (rsNerell.team() == ETeam.BLEU) {
@@ -125,14 +116,10 @@ public class NerellDeposeGrandPort extends AbstractNerellAction {
                 }
 
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-                if (rsNerell.team() == ETeam.BLEU) {
-                    mv.gotoPoint(500, entry.getY());
-                } else {
-                    mv.gotoPoint(2500, entry.getY());
-                }
+                mv.gotoPoint(getX(500), entry.getY());
             } while (!rsNerell.pincesAvantEmpty() && !rsNerell.pincesArriereEmpty());
 
-            if (step > 2) {
+            if (step > 3) {
                 complete();
             }
 
@@ -143,7 +130,7 @@ public class NerellDeposeGrandPort extends AbstractNerellAction {
     }
 
     private double computeX(double baseX, boolean avant) {
-        int coef = step * 120 + (avant ? 0 : 60); // FIXME nouvelle face avant
+        int coef = step * 90 + (avant ? 0 : 60); // FIXME nouvelle face avant
 
         if (rsNerell.team() == ETeam.JAUNE) {
             return baseX - coef;

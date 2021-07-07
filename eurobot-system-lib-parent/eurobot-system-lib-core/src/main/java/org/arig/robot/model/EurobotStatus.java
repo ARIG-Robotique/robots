@@ -246,6 +246,10 @@ public class EurobotStatus extends AbstractRobotStatus {
         ArigCollectionUtils.addAllIgnoreNull(grandPort, bouees);
     }
 
+    public boolean grandPortEmpty() {
+        return grandPort.isEmpty();
+    }
+
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     private List<ECouleurBouee> petitPort = new ArrayList<>();

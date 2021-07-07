@@ -168,13 +168,11 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
 
     Result getOptimalPosition() {
         EFace face = null;
-        int nbBouees = 0;
 
         // face pleine
         for (EFace candidat : EFace.values()) {
             if (Stream.of(candidat.pinces.apply(rsOdin)).allMatch(b -> b == getCouleurChenal())) {
                 face = candidat;
-                nbBouees = 2;
                 break;
             }
         }
@@ -184,7 +182,6 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
             for (EFace candidat : EFace.values()) {
                 if (Stream.of(candidat.pinces.apply(rsOdin)).anyMatch(b -> b == getCouleurChenal() || b == ECouleurBouee.INCONNU)) {
                     face = candidat;
-                    nbBouees = 1;
                     break;
                 }
             }
@@ -195,10 +192,10 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
         }
 
         GrandChenaux.Line[] lines;
-        if (nbBouees == 2) {
+        if (rs.grandPortEmpty()) {
             lines = new GrandChenaux.Line[]{GrandChenaux.Line.B, GrandChenaux.Line.A};
         } else {
-            lines = new GrandChenaux.Line[]{GrandChenaux.Line.A, GrandChenaux.Line.B};
+            lines = new GrandChenaux.Line[]{GrandChenaux.Line.A};
         }
 
         Result result = null;
