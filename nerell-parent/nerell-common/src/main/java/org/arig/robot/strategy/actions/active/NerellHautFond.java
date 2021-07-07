@@ -7,7 +7,6 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Bouee;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.services.AbstractBaliseService;
 import org.arig.robot.services.INerellIOService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,6 @@ public class NerellHautFond extends AbstractNerellAction {
     @Autowired
     protected INerellIOService io;
 
-    @Autowired
-    private AbstractBaliseService baliseService;
-
     @Override
     public String name() {
         return IEurobotConfig.ACTION_PRISE_HAUT_FOND;
@@ -37,7 +33,7 @@ public class NerellHautFond extends AbstractNerellAction {
     public boolean isValid() {
         return isTimeValid() && rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime &&
                 rsNerell.pincesAvantEmpty() &&
-                (baliseService.isConnected() ? !rs.hautFondEmpty() : !rs.hautFondPris());
+                (rsNerell.baliseEnabled() ? !rs.hautFondEmpty() : !rs.hautFondPris());
     }
 
     @Override
@@ -78,7 +74,7 @@ public class NerellHautFond extends AbstractNerellAction {
             // calcule le Y qui permettra de rencontrer le plus de bouées
             final double finalY;
 
-            if (baliseService.isConnected()) {
+            if (rsNerell.baliseEnabled()) {
                 // médiane : https://stackoverflow.com/a/49215170
                 final int nbHautFond = rsNerell.hautFond().size();
                 final double medianY = rsNerell.hautFond().stream().map(Bouee::pt).mapToDouble(Point::getY).sorted()
