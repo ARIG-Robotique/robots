@@ -226,7 +226,7 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
         int pattern = 0;
         if (bouee2 == ECouleurBouee.VERT && bouee4 == ECouleurBouee.ROUGE) {
             pattern = 1;
-        } else if (bouee2 == ECouleurBouee.VERT && bouee4 == ECouleurBouee.VERT) {
+        } else if (bouee2 == bouee4) {
             pattern = 2;
         } else if (bouee2 == ECouleurBouee.ROUGE && bouee4 == ECouleurBouee.VERT) {
             pattern = 3;
@@ -240,15 +240,15 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
         }
 
         log.info("Pattern ecueil déterminé : {} (2: {}, 4: {})", pattern, bouee2, bouee4);
-        rs.couleursEcueilCommun(EcueilUtils.tirageCommunAdverse(rs.team(), pattern));
+        rs.couleursEcueilCommun(EcueilUtils.tirageCommunEquipe(rs.team(), pattern));
 
-        ECouleurBouee bouee3 = pendingEcueil == EEcueil.BLEU ? ECouleurBouee.VERT : ECouleurBouee.ROUGE;
+        ECouleurBouee[] couleurEcueil = rs.team().name().equals(pendingEcueil.name()) ? rs.couleursEcueilCommunEquipe() : rs.couleursEcueilCommunAdverse();
 
-        rs.pinceArriere(2, bouee2);
+        rs.pinceArriere(2, couleurEcueil[2]);
         if (io.presencePinceArriere3()) {
-            rs.pinceArriere(3, bouee3);
+            rs.pinceArriere(3, couleurEcueil[3]);
         }
-        rs.pinceArriere(4, bouee4);
+        rs.pinceArriere(4, couleurEcueil[4]);
 
         pendingEcueil = null;
         timerLectureCouleur.reset();
