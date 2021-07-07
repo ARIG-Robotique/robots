@@ -14,6 +14,7 @@ import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.AbstractOdinPincesArriereService;
 import org.arig.robot.services.AbstractOdinPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractOdinAction;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -87,7 +88,7 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
 
             tableUtils.addDynamicDeadZone(new Rectangle2D.Double(900, 0, 1200, 400));
 
-            // prise bouée verte
+            // prise bouée verte (jaune) rouge (bleu)
             rsOdin.enablePincesAvant();
 
             if (rs.team() == ETeam.JAUNE) {
@@ -99,7 +100,7 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation(5));
             mv.gotoPoint(getX(1900), 230, GotoOption.AVANT);
 
-            // deplacement bouée rouge
+            // deplacement bouée rouge (jaune) verte (bleu)
             if (rs.team() == ETeam.JAUNE) {
                 servosOdin.brasDroitPhare(true);
                 mv.gotoOrientationDeg(0, SensRotation.TRIGO);
@@ -113,7 +114,7 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation(100));
             mv.gotoOrientationDeg(-90);
 
-            // prise bouée rouge
+            // prise bouée rouge (jaune) verte (bleu)
             rs.enableCalageBordure(TypeCalage.CUSTOM); // calage sur présence ventouses
             if (rs.team() == ETeam.JAUNE) {
                 pincesAvantService.setExpected(ECouleurBouee.ROUGE, 1);
@@ -121,8 +122,9 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
                 pincesAvantService.setExpected(ECouleurBouee.VERT, 2);
             }
             mv.avanceMMSansAngle(100);
+            ThreadUtils.sleep(410); // double du scheduler de gestion du service
 
-            // depose bouée verte
+            // depose bouée verte (jaune) rouge (bleu)
             rsOdin.disablePincesAvant();
             if (rs.team() == ETeam.JAUNE) {
                 pincesAvantService.releasePompe(false, true);
@@ -138,7 +140,7 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             mv.gotoPoint(getX(1900), 230, GotoOption.ARRIERE);
             group.incStepsPetitPort();
 
-            // prise bouée rouge
+            // prise bouée rouge (jaune) vert (bleu)
             rsOdin.enablePincesAvant();
             if (rs.team() == ETeam.JAUNE) {
                 pincesAvantService.setExpected(ECouleurBouee.ROUGE, 2);
@@ -147,7 +149,7 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             }
             mv.gotoPoint(getX(1705), 370, GotoOption.AVANT);
 
-            // deplacement bouée verte
+            // deplacement bouée verte (jaune) rouge (bleu)
             mv.gotoOrientationDeg(-90);
             mv.gotoPoint(getX(1705), 230, GotoOption.AVANT);
 
@@ -171,7 +173,7 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
                 servosOdin.brasDroitFerme(true);
             }
 
-            // double dépose rouge
+            // double dépose rouge (jaune) vert (bleu)
             mv.setVitesse(robotConfig.vitesse(100), robotConfig.vitesseOrientation(100));
             mv.gotoPoint(getX(1700), 245, GotoOption.ARRIERE);
             mv.gotoOrientationDeg(-90);
@@ -188,6 +190,9 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
 
         } finally {
             tableUtils.clearDynamicDeadZones();
+
+            servosOdin.brasDroitFerme(false);
+            servosOdin.brasGaucheFerme(false);
         }
     }
 
@@ -237,9 +242,6 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             if (didSomething) {
                 group.incStepsPetitPort();
             }
-
-            servosOdin.brasDroitFerme(false);
-            servosOdin.brasGaucheFerme(false);
         }
     }
 
