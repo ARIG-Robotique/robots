@@ -29,6 +29,14 @@ public abstract class AbstractNerellEcueil extends AbstractNerellAction {
 
     protected abstract void onComplete();
 
+    protected Point entryForCalage() {
+        return null;
+    }
+
+    protected void executeCalage() throws AvoidingException {
+        // To be overrided
+    }
+
     @Override
     public int order() {
         int order = nbBoueesDispo() * 2 + (int) Math.ceil(nbBoueesDispo() / 2.0) * 2; // Sur chenal, bien trié (X bouées, X/2 paires)
@@ -53,7 +61,13 @@ public abstract class AbstractNerellEcueil extends AbstractNerellAction {
             rsNerell.enablePincesAvant();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
-            mv.pathTo(entry);
+            if (entryForCalage() != null) {
+                mv.pathTo(entryForCalage());
+                executeCalage();
+                mv.gotoPoint(entry);
+            } else {
+                mv.pathTo(entry);
+            }
             rsNerell.disableAvoidance();
 
             mv.gotoOrientationDeg(orientation);
@@ -71,25 +85,25 @@ public abstract class AbstractNerellEcueil extends AbstractNerellAction {
             final double robotY = position.getPt().getY();
             if (orientation == -90) {
                 final double realY = conv.mmToPulse(2000 - INerellConstantesConfig.dstCallage);
-                if (Math.abs(realY - robotY) > conv.mmToPulse(10)) {
+                //if (Math.abs(realY - robotY) > conv.mmToPulse(10)) {
                     log.warn("RECALAGE REQUIS : yRobot = {} ; yReel = {}",
                             conv.pulseToMm(robotY), conv.pulseToMm(realY));
 
                     position.getPt().setY(realY);
                     position.setAngle(conv.degToPulse(orientation));
-                }
+                //}
 
             } else if (orientation == 180 || orientation == 0) {
                 final double realX = orientation == 180
                         ? conv.mmToPulse(3000 - INerellConstantesConfig.dstCallage)
                         : conv.mmToPulse(INerellConstantesConfig.dstCallage);
 
-                if (Math.abs(realX - robotX) > conv.mmToPulse(10)) {
+                //if (Math.abs(realX - robotX) > conv.mmToPulse(10)) {
                     log.warn("RECALAGE REQUIS : xRobot = {} ; xReel = {}",
                             conv.pulseToMm(robotX), conv.pulseToMm(realX));
                     position.getPt().setX(realX);
                     position.setAngle(conv.degToPulse(orientation));
-                }
+                //}
             }
 
             pincesArriereService.finalisePriseEcueil(ecueil(), bouees());

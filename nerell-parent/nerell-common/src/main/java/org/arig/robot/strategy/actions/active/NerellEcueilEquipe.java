@@ -4,9 +4,12 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
+import org.arig.robot.constants.INerellConstantesConfig;
+import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.INerellPincesArriereService;
 import org.springframework.stereotype.Component;
 
@@ -18,8 +21,8 @@ import java.util.List;
 @Component
 public class NerellEcueilEquipe extends AbstractNerellEcueil {
 
-    public static final double ENTRY_X = 230;
-    public static final double ENTRY_Y = 400;
+    public static final int ENTRY_X = 230;
+    public static final int ENTRY_Y = 400;
 
     @Override
     public String name() {
@@ -39,13 +42,33 @@ public class NerellEcueilEquipe extends AbstractNerellEcueil {
 
     @Override
     public Point entryPoint() {
-        double x = ENTRY_X;
-        double y = ENTRY_Y;
-        if (ETeam.JAUNE == rsNerell.team()) {
-            x = 3000 - x;
-        }
+        return new Point(getX(ENTRY_X), ENTRY_Y);
+    }
 
-        return new Point(x, y);
+    @Override
+    protected Point entryForCalage() {
+        return new Point(getX(380), ENTRY_Y);
+    }
+
+    @Override
+    protected void executeCalage() throws AvoidingException {
+        mv.gotoPoint(entryForCalage().getX(), INerellConstantesConfig.dstCallage + 50, GotoOption.ARRIERE);
+
+        rs.enableCalageBordure();
+        mv.reculeMMSansAngle(200);
+
+        final double robotY = position.getPt().getY();
+        final double realY = conv.mmToPulse(INerellConstantesConfig.dstCallage);
+        //if (Math.abs(realY - robotY) > conv.mmToPulse(10)) {
+            log.warn("RECALAGE REQUIS : yRobot = {} ; yReel = {}",
+                    conv.pulseToMm(robotY), conv.pulseToMm(realY));
+
+            position.getPt().setY(realY);
+            position.setAngle(conv.degToPulse(90));
+        //}
+
+        // Pour l'enchainement de la suite on sort de la bordure
+        mv.avanceMM(50);
     }
 
     @Override
