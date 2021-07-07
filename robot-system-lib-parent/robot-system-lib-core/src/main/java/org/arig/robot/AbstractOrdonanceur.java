@@ -171,9 +171,11 @@ public abstract class AbstractOrdonanceur {
             beforeMatch(); // impl
 
             ecranService.displayMessage("!!! ... ATTENTE DEPART TIRETTE ... !!!");
+            robotStatus.waitTirette(true);
             while (waitTirette()) {
                 ThreadUtils.sleep(1);
-            };
+            }
+            robotStatus.waitTirette(false);
 
             match();
 

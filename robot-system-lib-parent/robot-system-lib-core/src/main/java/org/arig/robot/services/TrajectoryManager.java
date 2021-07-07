@@ -89,6 +89,9 @@ public class TrajectoryManager {
     private TableUtils tableUtils;
 
     @Autowired
+    private IIOService iioService;
+
+    @Autowired
     protected IMonitoringWrapper monitoringWrapper;
 
     @Getter
@@ -186,6 +189,11 @@ public class TrajectoryManager {
 
             long tStart = System.nanoTime();
             odom.calculPosition();
+
+            if (rs.waitTirette()) {
+                propulsionsMotors.generateMouvement(0,0);
+                return;
+            }
 
             long tCalcul1 = System.nanoTime();
             long tCalcul2 = tCalcul1;

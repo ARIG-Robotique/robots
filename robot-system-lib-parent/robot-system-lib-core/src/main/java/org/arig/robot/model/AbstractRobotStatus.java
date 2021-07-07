@@ -29,6 +29,11 @@ public abstract class AbstractRobotStatus {
     }
 
     /**
+     * Flag d'attente de la tirette
+     */
+    private boolean waitTirette = false;
+
+    /**
      * Indication de fonctionnement pour le thread principal
      */
     @Setter(AccessLevel.NONE)
