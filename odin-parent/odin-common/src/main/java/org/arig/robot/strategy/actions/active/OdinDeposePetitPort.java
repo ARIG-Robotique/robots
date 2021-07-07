@@ -237,6 +237,9 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             if (didSomething) {
                 group.incStepsPetitPort();
             }
+
+            servosOdin.brasDroitFerme(false);
+            servosOdin.brasGaucheFerme(false);
         }
     }
 
