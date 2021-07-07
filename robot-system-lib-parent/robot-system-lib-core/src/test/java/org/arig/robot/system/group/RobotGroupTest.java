@@ -16,8 +16,7 @@ public class RobotGroupTest implements IRobotGroup {
     }
 
     @Override
-    public String getCurrentAction() {
-        return null;
+    public void setCurrentAction(final String name) {
     }
 
     @Override
