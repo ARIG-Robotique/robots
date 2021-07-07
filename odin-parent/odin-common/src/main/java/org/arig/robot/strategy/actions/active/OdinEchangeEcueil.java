@@ -10,6 +10,7 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
+import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.strategy.actions.AbstractOdinAction;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Component;
@@ -78,8 +79,9 @@ public class OdinEchangeEcueil extends AbstractOdinAction {
             mv.gotoPoint(getX(450), 200, rs.team() == ETeam.BLEU ? GotoOption.ARRIERE : GotoOption.AVANT);
             mv.gotoOrientationDeg(rs.team() == ETeam.BLEU ? 175 : -175);
             mv.gotoPoint(getX(160), 230, rs.team() == ETeam.BLEU ? GotoOption.AVANT : GotoOption.ARRIERE);
-            ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
-            mv.gotoPoint(getX(230), 230, rs.team() == ETeam.BLEU ? GotoOption.ARRIERE : GotoOption.AVANT);
+            rs.enableCalageBordure(TypeCalage.CUSTOM); // calage sur présence ventouses
+            mv.avanceMMSansAngle(100);
+            mv.gotoPoint(getX(230), 230, rs.team() == ETeam.BLEU ? GotoOption.ARRIERE : GotoOption.AVANT, GotoOption.SANS_ORIENTATION);
 
             complete();
 
