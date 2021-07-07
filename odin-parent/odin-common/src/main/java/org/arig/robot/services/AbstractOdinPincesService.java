@@ -34,8 +34,6 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
 
     protected abstract void releasePompes();
 
-    protected abstract void releasePompe(boolean gauche, boolean droite);
-
     protected abstract void enablePompes();
 
     protected abstract ECouleurBouee[] bouees();

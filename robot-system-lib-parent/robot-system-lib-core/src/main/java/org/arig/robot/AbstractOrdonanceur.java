@@ -293,7 +293,7 @@ public abstract class AbstractOrdonanceur {
             }
 
             // Exclusion du petit port pour l'évittement
-            tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(890, 0, 1200, 300));
+            tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(900, 0, 1200, 300));
 
         } catch (IOException e) {
             ecranService.displayMessage("Erreur d'init du pathfinder", LogLevel.ERROR);

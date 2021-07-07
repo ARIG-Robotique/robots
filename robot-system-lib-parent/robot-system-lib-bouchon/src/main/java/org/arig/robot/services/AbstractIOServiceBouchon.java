@@ -54,6 +54,16 @@ public class AbstractIOServiceBouchon implements IIOService {
         return false;
     }
 
+    @Override
+    public boolean calageBordureCustomDroit() {
+        return false;
+    }
+
+    @Override
+    public boolean calageBordureCustomGauche() {
+        return false;
+    }
+
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //

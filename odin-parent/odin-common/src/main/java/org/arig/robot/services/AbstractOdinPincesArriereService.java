@@ -15,7 +15,7 @@ public abstract class AbstractOdinPincesArriereService extends AbstractOdinPince
     }
 
     @Override
-    protected void releasePompe(boolean gauche, boolean droite) {
+    public void releasePompe(boolean gauche, boolean droite) {
         if (gauche) {
             io.releasePompeArriereGauche();
         }

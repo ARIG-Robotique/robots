@@ -3,6 +3,7 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,15 +25,23 @@ public class CalageBordureService {
     private CommandeRobot cmdRobot;
 
     public void process() {
-        if (rs.calageBordure()) {
+        if (rs.calageBordure() != null) {
             boolean done;
 
             if (!rs.matchEnabled() && !ioService.auOk()) {
                 done = true;
             } else if (cmdRobot.isType(TypeConsigne.DIST) && cmdRobot.isType(TypeConsigne.ANGLE)) {
-                done = ioService.calageBordureDroit() || ioService.calageBordureGauche();
+                if (rs.calageBordure() == TypeCalage.STANDARD) {
+                    done = ioService.calageBordureDroit() || ioService.calageBordureGauche();
+                } else {
+                    done = ioService.calageBordureCustomDroit() || ioService.calageBordureCustomGauche();
+                }
             } else {
-                done = ioService.calageBordureDroit() && ioService.calageBordureGauche();
+                if (rs.calageBordure() == TypeCalage.STANDARD) {
+                    done = ioService.calageBordureDroit() && ioService.calageBordureGauche();
+                } else {
+                    done = ioService.calageBordureCustomDroit() && ioService.calageBordureCustomGauche();
+                }
             }
 
             if (done) {

@@ -33,7 +33,7 @@ public class OdinPincesAvantServiceBouchon extends AbstractOdinPincesAvantServic
     }
 
     @Override
-    protected void releasePompe(boolean gauche, boolean droite) {
+    public void releasePompe(boolean gauche, boolean droite) {
         super.releasePompe(gauche, droite);
 
         if (gauche) {

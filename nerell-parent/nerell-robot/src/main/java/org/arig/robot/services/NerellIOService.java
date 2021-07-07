@@ -293,6 +293,16 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
         return inCalageBordureGauche.isLow();
     }
 
+    @Override
+    public boolean calageBordureCustomDroit() {
+        return false;
+    }
+
+    @Override
+    public boolean calageBordureCustomGauche() {
+        return false;
+    }
+
     // Couleur
     private ECouleurBouee computeCouleurBouee(TCS34725ColorSensor capteur) {
         int deltaRouge = IEurobotConfig.deltaCapteurCouleurRouge;

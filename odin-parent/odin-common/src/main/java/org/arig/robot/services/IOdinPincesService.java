@@ -23,4 +23,6 @@ public interface IOdinPincesService {
     void processCouleurBouee();
 
     void setExpected(ECouleurBouee expected, int pinceNumber);
+
+    void releasePompe(boolean gauche, boolean droite);
 }

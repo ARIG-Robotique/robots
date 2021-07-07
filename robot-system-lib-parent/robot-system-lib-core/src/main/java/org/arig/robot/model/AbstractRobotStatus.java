@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
+import org.arig.robot.model.enums.TypeCalage;
 
 import java.util.Map;
 
@@ -154,16 +155,20 @@ public abstract class AbstractRobotStatus {
     }
 
     @Setter(AccessLevel.NONE)
-    private boolean calageBordure = false;
+    private TypeCalage calageBordure = null;
 
     public void enableCalageBordure() {
-        log.info("Activation calage bordure");
-        calageBordure = true;
+        enableCalageBordure(TypeCalage.STANDARD);
+    }
+
+    public void enableCalageBordure(TypeCalage type) {
+        log.info("Activation calage bordure {}", type);
+        calageBordure = type;
     }
 
     public void disableCalageBordure() {
         log.info("Désactivation calage bordure");
-        calageBordure = false;
+        calageBordure = null;
     }
 
     private String currentAction = null;

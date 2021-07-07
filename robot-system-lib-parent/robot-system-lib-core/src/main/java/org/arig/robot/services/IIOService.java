@@ -18,6 +18,9 @@ public interface IIOService {
     boolean calageBordureDroit();
     boolean calageBordureGauche();
 
+    boolean calageBordureCustomDroit();
+    boolean calageBordureCustomGauche();
+
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //

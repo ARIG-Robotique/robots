@@ -237,6 +237,16 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
         return inCalageBordureGauche.isHigh();
     }
 
+    @Override
+    public boolean calageBordureCustomDroit() {
+        return presenceVentouseAvantDroit();
+    }
+
+    @Override
+    public boolean calageBordureCustomGauche() {
+        return presenceVentouseAvantGauche();
+    }
+
     // Couleur
     private ECouleurBouee computeCouleurBouee(TCS34725ColorSensor capteur) {
         int deltaRouge = IEurobotConfig.deltaCapteurCouleurRouge;
