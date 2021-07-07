@@ -16,12 +16,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class NerellPriseBoueesAggressive extends AbstractNerellAction {
 
-    @Autowired
-    private NerellBouee8 bouee8;
-
-    @Autowired
-    private NerellBouee9 bouee9;
-
     @Override
     public String name() {
         return IEurobotConfig.ACTION_PRISE_BOUEE_AGGRESSIVE;
@@ -55,37 +49,18 @@ public class NerellPriseBoueesAggressive extends AbstractNerellAction {
             rsNerell.enablePincesAvant();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
-            mv.gotoPoint(entryPoint(), GotoOption.SANS_ARRET);
+            mv.gotoPoint(entryPoint(), GotoOption.SANS_ARRET, GotoOption.SANS_ORIENTATION);
 
             // On est sorti du port on active évitement
             rsNerell.enableAvoidance();
 
             // Rush bouée 7 (Bleu) ou 10 (Jaune)
-            mv.gotoPoint(getX(1200), 1140, GotoOption.SANS_ARRET);
+            mv.gotoPoint(getX(1200), 1140, GotoOption.SANS_ORIENTATION);
             rs.boueePrise(rsNerell.team() == ETeam.BLEU ? 7 : 10);
 
             // Rush bouée 10 (Bleu) ou 7 (Jaune)
-            mv.gotoPoint(getX(2030), 1250);
+            mv.gotoPoint(getX(2030), 1250, GotoOption.SANS_ORIENTATION);
             rs.boueePrise(rsNerell.team() == ETeam.BLEU ? 10 : 7);
-
-            // En cas d'erreur sur bouee 9 ou 8
-            complete();
-
-            if (rs.team() == ETeam.BLEU) {
-                if (bouee8.isValid()) {
-                    bouee8.execute();
-                }
-                if (bouee9.isValid()) {
-                    bouee9.execute();
-                }
-            } else {
-                if (bouee9.isValid()) {
-                    bouee9.execute();
-                }
-                if (bouee8.isValid()) {
-                    bouee8.execute();
-                }
-            }
 
         } catch (AvoidingException e) {
             updateValidTime();
