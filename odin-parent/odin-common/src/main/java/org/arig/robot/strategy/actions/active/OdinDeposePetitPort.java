@@ -84,7 +84,10 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             mv.pathTo(getX(1900), 550);
             mv.gotoOrientationDeg(-90);
 
-            // TODO si on pécho des bouées en venant
+            if (!rsOdin.pincesAvantEmpty() || !rsOdin.pincesArriereEmpty()) {
+                log.warn("Plus de place pour faire la danse");
+                return;
+            }
 
             tableUtils.addDynamicDeadZone(new Rectangle2D.Double(900, 0, 1200, 400));
 
