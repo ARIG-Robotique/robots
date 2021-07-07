@@ -55,17 +55,17 @@ public class NerellPriseBoueesAggressive extends AbstractNerellAction {
             rsNerell.enablePincesAvant();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
-            mv.gotoPoint(entryPoint(), GotoOption.SANS_ORIENTATION, GotoOption.SANS_ARRET);
+            mv.gotoPoint(entryPoint(), GotoOption.SANS_ARRET);
 
             // On est sorti du port on active évitement
             rsNerell.enableAvoidance();
 
             // Rush bouée 7 (Bleu) ou 10 (Jaune)
-            mv.gotoPoint(getX(1200), 1140, GotoOption.SANS_ORIENTATION, GotoOption.SANS_ARRET);
+            mv.gotoPoint(getX(1200), 1140, GotoOption.SANS_ARRET);
             rs.boueePrise(rsNerell.team() == ETeam.BLEU ? 7 : 10);
 
             // Rush bouée 10 (Bleu) ou 7 (Jaune)
-            mv.gotoPoint(getX(2030), 1250, GotoOption.SANS_ORIENTATION);
+            mv.gotoPoint(getX(2030), 1250);
             rs.boueePrise(rsNerell.team() == ETeam.BLEU ? 10 : 7);
 
             // En cas d'erreur sur bouee 9 ou 8
