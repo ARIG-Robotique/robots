@@ -97,10 +97,10 @@ public class OdinSimulatorContext {
         return new BouchonARIGVacuumController();
     }
 
-    @Bean
+    /*@Bean
     public IAlimentationSensor alimentationSensor() {
         return new ARIG2ChannelsAlimentationSensorBouchon("alim sensor");
-    }
+    }*/
 
     @Bean
     public ILidarTelemeter rplidar() {

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.system.capteurs.IAlimentationSensor;
+import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,37 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class OdinEnergyService extends AbstractEnergyService {
 
+    @Autowired
+    private SD21Servos sd21Servos;
+
+    @Autowired
+    private OdinIOService iioService;
+
+    @Override
+    public double tensionServos() {
+        if (iioService.auOk()) {
+            return sd21Servos.getTension();
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public double courantServos() {
+        return 0;
+    }
+
+    @Override
+    public double tensionMoteurs() {
+        return iioService.auOk() ? 12 : 0;
+    }
+
+    @Override
+    public double courantMoteurs() {
+        return 0;
+    }
+
+    /*
     private static final byte CHANNEL_SERVOS = 1;
     private static final byte CHANNEL_MOTEURS = 2;
 
@@ -63,5 +95,5 @@ public class OdinEnergyService extends AbstractEnergyService {
                 log.error("Refresh des infos d'alimentation impossible", e);
             }
         }
-    }
+    }*/
 }

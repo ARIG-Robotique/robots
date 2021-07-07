@@ -20,7 +20,7 @@ public class OdinAlimentationCommands {
 
     private final IOdinIOService ioService;
     private final OdinServosService servosService;
-    private final IAlimentationSensor alimentationSensor;
+    //private final IAlimentationSensor alimentationSensor;
 
     public Availability auOK() {
         return ioService.auOk() ? Availability.available() : Availability.unavailable("Arret d'urgence non OK");
@@ -40,7 +40,7 @@ public class OdinAlimentationCommands {
         ioService.disableAlimMoteurs();
     }
 
-    @SneakyThrows
+    /*@SneakyThrows
     @ShellMethod("Lecture des alimentations")
     public void readAlimentation(int nbRead) {
         alimentationSensor.printVersion();
@@ -55,5 +55,5 @@ public class OdinAlimentationCommands {
 
             ThreadUtils.sleep(200);
         }
-    }
+    }*/
 }

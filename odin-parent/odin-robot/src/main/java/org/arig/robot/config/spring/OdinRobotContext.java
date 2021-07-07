@@ -87,11 +87,11 @@ public class OdinRobotContext {
                 .deviceName(IOdinConstantesI2C.CODEUR_MOTEUR_GAUCHE)
                 .device(i2cBus.getDevice(IOdinConstantesI2C.CODEUR_GAUCHE_ADDRESS))
                 .build();
-        final I2CManagerDevice<I2CDevice> alimMesure = I2CManagerDevice.<I2CDevice>builder()
+        /*final I2CManagerDevice<I2CDevice> alimMesure = I2CManagerDevice.<I2CDevice>builder()
                 .deviceName(IOdinConstantesI2C.ALIM_MESURE_DEVICE_NAME)
                 .device(i2cBus.getDevice(IOdinConstantesI2C.ALIM_MESURE_ADDRESS))
                 .scanCmd(new byte[]{0x00})
-                .build();
+                .build();*/
         final I2CManagerDevice<I2CDevice> controlleurPompes = I2CManagerDevice.<I2CDevice>builder()
                 .deviceName(IOdinConstantesI2C.VACUUM_CONTROLLER_DEVICE_NAME)
                 .device(i2cBus.getDevice(IOdinConstantesI2C.VACUUM_CONTROLLER_ADDRESS))
@@ -132,7 +132,7 @@ public class OdinRobotContext {
         manager.registerDevice(pcfAlim);
         manager.registerDevice(pcf1);
         manager.registerDevice(pca9685);
-        manager.registerDevice(alimMesure);
+        //manager.registerDevice(alimMesure);
         manager.registerDevice(controlleurPompes);
         manager.registerDevice(mux);
         manager.registerDevice(couleurAvantGauche);
@@ -160,10 +160,12 @@ public class OdinRobotContext {
         return new ARIGVacuumController(IOdinConstantesI2C.VACUUM_CONTROLLER_DEVICE_NAME);
     }
 
+    /*
     @Bean
     public ARIG2ChannelsAlimentationSensor alimentationSensor() {
         return new ARIG2ChannelsAlimentationSensor(IOdinConstantesI2C.ALIM_MESURE_DEVICE_NAME);
     }
+    */
 
     @Bean
     public TCS34725ColorSensor couleurAvantGauche() {
