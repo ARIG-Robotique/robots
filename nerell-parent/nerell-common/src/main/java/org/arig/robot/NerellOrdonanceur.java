@@ -57,6 +57,12 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     }
 
     @Override
+    public void addDeadZones() {
+        // Exclusion du petit port pour l'évittement
+        tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(900 + (nerellRobotStatus.team() == ETeam.BLEU ? 0 : 600), 0, 600, 300));
+    }
+
+    @Override
     public void beforeMatch() {
         choixStrategie();
 

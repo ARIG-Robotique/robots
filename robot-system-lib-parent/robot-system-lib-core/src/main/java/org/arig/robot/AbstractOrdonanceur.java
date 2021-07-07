@@ -114,6 +114,11 @@ public abstract class AbstractOrdonanceur {
     public abstract void calageBordure(boolean skip);
 
     /**
+     * Ajout des dead zones
+     */
+    public abstract void addDeadZones();
+
+    /**
      * Avant le début du match
      */
     public abstract void beforeMatch();
@@ -160,6 +165,8 @@ public abstract class AbstractOrdonanceur {
             calageBordure(ecranService.config().isSkipCalageBordure()); // impl
 
             startLidar();
+
+            addDeadZones();
 
             beforeMatch(); // impl
 
@@ -291,10 +298,6 @@ public abstract class AbstractOrdonanceur {
             } catch (NoPathFoundException e) {
                 log.warn(e.getMessage());
             }
-
-            // Exclusion du petit port pour l'évittement
-            tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(900, 0, 1200, 300));
-
         } catch (IOException e) {
             ecranService.displayMessage("Erreur d'init du pathfinder", LogLevel.ERROR);
             throw new ExitProgram(true);
