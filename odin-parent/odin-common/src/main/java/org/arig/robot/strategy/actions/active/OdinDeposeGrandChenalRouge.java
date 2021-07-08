@@ -30,11 +30,6 @@ public class OdinDeposeGrandChenalRouge extends AbstractOdinDeposeGrandChenal {
     );
 
     @Override
-    public Rectangle blockingZone() {
-        return rs.team() == ETeam.BLEU ? IEurobotConfig.ZONE_GRAND_PORT_BLEU : IEurobotConfig.ZONE_GRAND_PORT_JAUNE;
-    }
-
-    @Override
     protected ECouleurBouee getCouleurChenal() {
         return ECouleurBouee.ROUGE;
     }

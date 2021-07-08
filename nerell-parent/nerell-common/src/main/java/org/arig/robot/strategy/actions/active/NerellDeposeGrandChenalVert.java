@@ -8,7 +8,6 @@ import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.ETeam;
 import org.springframework.stereotype.Component;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,11 +27,6 @@ public class NerellDeposeGrandChenalVert extends AbstractNerellDeposeGrandChenal
             IEurobotConfig.ACTION_DEPOSE_GRAND_PORT_ROUGE,
             IEurobotConfig.ACTION_NETTOYAGE_GRAND_PORT
     );
-
-    @Override
-    public Rectangle blockingZone() {
-        return rsNerell.team() == ETeam.BLEU ? IEurobotConfig.ZONE_GRAND_PORT_BLEU : IEurobotConfig.ZONE_GRAND_PORT_JAUNE;
-    }
 
     @Override
     protected int getBoueeBloquante() {

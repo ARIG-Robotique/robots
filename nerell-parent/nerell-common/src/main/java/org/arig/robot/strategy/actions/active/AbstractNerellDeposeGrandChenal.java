@@ -6,12 +6,15 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Chenaux;
 import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.ETeam;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.AbstractNerellPincesArriereService;
 import org.arig.robot.services.AbstractNerellPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.awt.Rectangle;
 
 @Slf4j
 public abstract class AbstractNerellDeposeGrandChenal extends AbstractNerellAction {
@@ -109,6 +112,11 @@ public abstract class AbstractNerellDeposeGrandChenal extends AbstractNerellActi
             return (!rsNerell.boueePresente(getBoueeBloquante()) || rsNerell.getRemainingTime() < IEurobotConfig.invalidPriseRemainingTime) &&
                     (!rsNerell.pincesArriereEmpty() || !rsNerell.pincesAvantEmpty());
         }
+    }
+
+    @Override
+    public Rectangle blockingZone() {
+        return rsNerell.team() == ETeam.BLEU ? IEurobotConfig.ZONE_GRAND_PORT_BLEU : IEurobotConfig.ZONE_GRAND_PORT_JAUNE;
     }
 
     @Override

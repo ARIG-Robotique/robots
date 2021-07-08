@@ -17,6 +17,7 @@ import org.arig.robot.services.AbstractOdinPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractOdinAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.awt.Rectangle;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -74,6 +75,23 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
         result = getOptimalPosition();
 
         return result != null;
+    }
+
+    @Override
+    public Rectangle blockingZone() {
+        if (result == null) {
+            return null;
+        }
+        if (result.line == GrandChenaux.Line.A) {
+            if (getCouleurChenal() == ECouleurBouee.VERT && rs.team() == ETeam.BLEU ||
+                    getCouleurChenal() == ECouleurBouee.ROUGE && rs.team() == ETeam.JAUNE) {
+                return rs.team() == ETeam.BLEU ? IEurobotConfig.ZONE_PHARE_BLEU : IEurobotConfig.ZONE_PHARE_JAUNE;
+            } else {
+                return rs.team() == ETeam.BLEU ? IEurobotConfig.ZONE_ECUEIL_EQUIPE_BLEU : IEurobotConfig.ZONE_ECUEIL_EQUIPE_JAUNE;
+            }
+        } else {
+            return rs.team() == ETeam.BLEU ? IEurobotConfig.ZONE_GRAND_PORT_BLEU : IEurobotConfig.ZONE_GRAND_PORT_JAUNE;
+        }
     }
 
     @Override
