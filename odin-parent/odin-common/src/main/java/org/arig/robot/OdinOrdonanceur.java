@@ -53,8 +53,6 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void beforeMatch() {
-        choixStrategie();
-
         // Lancement d'une première lecture de couleurs pour initialiser les capteurs
         odinIOService.enableLedCapteurCouleur();
         ThreadUtils.sleep(IOdinConstantesConfig.WAIT_LED);
@@ -62,6 +60,13 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         odinIOService.couleurBoueeAvantDroit();
         odinIOService.couleurBoueeArriereGauche();
         odinIOService.couleurBoueeArriereDroit();
+        odinIOService.disableLedCapteurCouleur();
+
+        choixStrategie();
+
+        // Visu après la tirette
+        odinIOService.enableLedCapteurCouleur();
+        ThreadUtils.sleep(IOdinConstantesConfig.WAIT_LED);
         odinIOService.disableLedCapteurCouleur();
     }
 

@@ -64,12 +64,6 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void beforeMatch() {
-        choixStrategie();
-
-        if (nerellRobotStatus.etalonageBaliseOk()) {
-            nerellRobotStatus.enableBalise();
-        }
-
         // Lancement d'une première lecture de couleurs pour initialiser les capteurs
         nerellIOService.enableLedCapteurCouleur();
         ThreadUtils.sleep(INerellConstantesConfig.WAIT_LED);
@@ -79,6 +73,17 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         nerellIOService.couleurBoueeAvant4();
         nerellIOService.couleurBoueeArriere2();
         nerellIOService.couleurBoueeArriere4();
+        nerellIOService.disableLedCapteurCouleur();
+
+        choixStrategie();
+
+        if (nerellRobotStatus.etalonageBaliseOk()) {
+            nerellRobotStatus.enableBalise();
+        }
+
+        // Visu après la tirette
+        nerellIOService.enableLedCapteurCouleur();
+        ThreadUtils.sleep(INerellConstantesConfig.WAIT_LED);
         nerellIOService.disableLedCapteurCouleur();
     }
 
