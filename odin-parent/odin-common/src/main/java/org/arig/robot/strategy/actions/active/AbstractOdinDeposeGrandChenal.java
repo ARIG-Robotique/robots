@@ -63,6 +63,11 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
 
     @Override
     public boolean isValid() {
+        if (!rsOdin.deposePartielle()) {
+            // Pas de tri, on interdit les déposes grand chenal sinon Nerell est bloqué pour ces déposes non triés
+            return false;
+        }
+
         if (rsOdin.pincesArriereEmpty() && rsOdin.pincesAvantEmpty()) {
             result = null;
             return false;
@@ -135,6 +140,13 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
         }
 
         return (chenauxFuture.score() - currentScoreChenaux) + tableUtils.alterOrder(entryPoint());
+    }
+
+    @Override
+    public void refreshCompleted() {
+        if (!rs.deposePartielle()) {
+            complete();
+        }
     }
 
     @Override
