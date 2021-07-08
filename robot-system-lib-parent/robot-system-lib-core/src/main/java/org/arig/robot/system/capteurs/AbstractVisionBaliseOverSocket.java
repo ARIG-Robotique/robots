@@ -31,7 +31,7 @@ public abstract class AbstractVisionBaliseOverSocket<T extends Serializable>
 
     public AbstractVisionBaliseOverSocket(String hostname, Integer port,
                                           Class<? extends AbstractResponseWithData<BaliseAction, T>> statutReponseType) {
-        super(hostname, port, 5000);
+        super(hostname, port, 10000);
         this.statutReponseType = statutReponseType;
     }
 
