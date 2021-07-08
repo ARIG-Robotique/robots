@@ -63,11 +63,6 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
 
     @Override
     public boolean isValid() {
-        if (!rsOdin.deposePartielle()) {
-            // Pas de tri, on interdit les déposes grand chenal sinon Nerell est bloqué pour ces déposes non triés
-            return false;
-        }
-
         if (rsOdin.pincesArriereEmpty() && rsOdin.pincesAvantEmpty()) {
             result = null;
             return false;
@@ -75,6 +70,17 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
         if (!isTimeValid() || rsOdin.inPort() || rsOdin.getRemainingTime() < IEurobotConfig.validRetourPortRemainingTimeOdin) {
             result = null;
             return false;
+        }
+
+        if (!rsOdin.deposePartielle()) {
+            // Pas de tri, on autorise seulement quand le chenal n'est pas vide. Cela signifie qu'une dépose non trié
+            // a été effectué, et donc qu'il y a au moins une ligne de vide.
+            // Sans cela Nerell est bloqué sur la dépose de ce chenal.
+            if ((getCouleurChenal() == ECouleurBouee.VERT && rsOdin.grandChenalVertEmpty())
+                || (getCouleurChenal() == ECouleurBouee.ROUGE && rsOdin.grandChenalRougeEmpty())) {
+                result = null;
+                return false;
+            }
         }
 
         result = getOptimalPosition();
