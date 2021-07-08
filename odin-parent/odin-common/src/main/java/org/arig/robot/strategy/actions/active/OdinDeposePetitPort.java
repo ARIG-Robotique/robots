@@ -79,6 +79,7 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
     }
 
     private void executeDanse() {
+        boolean started = false;
         try {
             //point d'entrée
             mv.pathTo(getX(1900), 550);
@@ -88,6 +89,8 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
                 log.warn("Plus de place pour faire la danse");
                 return;
             }
+
+            started = true;
 
             tableUtils.addDynamicDeadZone(new Rectangle2D.Double(900, 0, 1200, 400));
 
@@ -141,7 +144,6 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
 
             // degagement
             mv.gotoPoint(getX(1900), 230, GotoOption.ARRIERE);
-            group.incStepsPetitPort();
 
             // prise bouée rouge (jaune) vert (bleu)
             rsOdin.enablePincesAvant();
@@ -192,6 +194,10 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
 
         } finally {
+            if (started) {
+                group.incStepsPetitPort();
+            }
+
             tableUtils.clearDynamicDeadZones();
 
             servosOdin.brasDroitFerme(false);
