@@ -108,6 +108,9 @@ public class NerellHautFond extends AbstractNerellAction {
             rsNerell.hautFond(Collections.emptyList());
             group.hautFondPris();
 
+            mv.gotoOrientationDeg(-90);
+            mv.avanceMM(100);
+
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
