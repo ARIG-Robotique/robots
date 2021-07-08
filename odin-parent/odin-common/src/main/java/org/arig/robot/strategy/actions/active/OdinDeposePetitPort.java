@@ -104,7 +104,7 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             }
 
             mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation(5));
-            mv.gotoPoint(getX(1900), 230, GotoOption.AVANT);
+            mv.gotoPoint(getX(1900), 220, GotoOption.AVANT);
 
             // deplacement bouée rouge (jaune) verte (bleu)
             if (rs.team() == ETeam.JAUNE) {
@@ -127,7 +127,7 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             } else {
                 pincesAvantService.setExpected(ECouleurBouee.VERT, 2);
             }
-            mv.avanceMMSansAngle(100);
+            mv.avanceMMSansAngle(90);
             ThreadUtils.sleep(410); // double du scheduler de gestion du service
 
             // depose bouée verte (jaune) rouge (bleu)
@@ -143,7 +143,7 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             }
 
             // degagement
-            mv.gotoPoint(getX(1900), 230, GotoOption.ARRIERE);
+            mv.gotoPoint(getX(1900), 220, GotoOption.ARRIERE);
 
             // prise bouée rouge (jaune) vert (bleu)
             rsOdin.enablePincesAvant();
@@ -156,7 +156,7 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
 
             // deplacement bouée verte (jaune) rouge (bleu)
             mv.gotoOrientationDeg(-90);
-            mv.gotoPoint(getX(1705), 230, GotoOption.AVANT);
+            mv.gotoPoint(getX(1705), 220, GotoOption.AVANT);
 
             if (rs.team() == ETeam.JAUNE) {
                 servosOdin.brasGauchePhare(true);
@@ -169,7 +169,7 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             } else {
                 mv.gotoOrientationDeg(0, SensRotation.TRIGO);
             }
-            mv.gotoPoint(getX(1820), 230, GotoOption.AVANT);
+            mv.gotoPoint(getX(1820), 220, GotoOption.AVANT);
             if (rs.team() == ETeam.JAUNE) {
                 group.deposePetitChenalVert(ECouleurBouee.VERT);
                 servosOdin.brasGaucheFerme(true);
