@@ -80,6 +80,7 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
     @Override
     public void deposeFondGrandChenalRouge() {
         depose();
+        pousser(true, true);
         group.deposeGrandChenalRouge(GrandChenaux.Line.C, bouees());
         clearPinces();
     }
@@ -87,6 +88,7 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
     @Override
     public void deposeFondGrandChenalVert() {
         depose();
+        pousser(true, true);
         group.deposeGrandChenalVert(GrandChenaux.Line.C, bouees());
         clearPinces();
     }
