@@ -67,7 +67,13 @@ public class StrategyManager {
         group.setCurrentAction(action.name());
         log.info("Execution de l'action {}", action.name());
         tableUtils.clearDynamicDeadZones();
-        action.execute();
+
+        try {
+            action.execute();
+        } catch (Exception e) {
+            log.warn(e.getMessage(), e);
+            actions().remove(action);
+        }
 
         if (action.isCompleted()) {
             log.info("L'action {} est terminé.", action.name());
