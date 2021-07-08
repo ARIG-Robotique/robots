@@ -54,6 +54,7 @@ public class NerellEcueilEquipe extends AbstractNerellEcueil {
     protected void executeCalage() throws AvoidingException {
         mv.gotoPoint(entryForCalage().getX(), INerellConstantesConfig.dstCallage + 50, GotoOption.ARRIERE);
 
+        mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
         rs.enableCalageBordure();
         mv.reculeMMSansAngle(200);
 
@@ -66,6 +67,8 @@ public class NerellEcueilEquipe extends AbstractNerellEcueil {
             position.getPt().setY(realY);
             position.setAngle(conv.degToPulse(90));
         //}
+
+        mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
         // Pour l'enchainement de la suite on sort de la bordure
         mv.avanceMM(50);
