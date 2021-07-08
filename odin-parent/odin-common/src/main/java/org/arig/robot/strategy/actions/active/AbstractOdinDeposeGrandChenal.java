@@ -143,13 +143,6 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
     }
 
     @Override
-    public void refreshCompleted() {
-        if (!rs.deposePartielle()) {
-            complete();
-        }
-    }
-
-    @Override
     public void execute() {
         try {
             log.info("Depose grand chenal {} ligne {}", getCouleurChenal(), result.line);
