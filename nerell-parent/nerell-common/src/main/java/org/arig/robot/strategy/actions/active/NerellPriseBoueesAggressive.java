@@ -57,7 +57,7 @@ public class NerellPriseBoueesAggressive extends AbstractNerellAction {
             group.boueePrise(rsNerell.team() == ETeam.BLEU ? 7 : 10);
 
             // Rush bouée 10 (Bleu) ou 7 (Jaune)
-            mv.gotoPoint(getX(2030), 1260, GotoOption.SANS_ORIENTATION);
+            mv.gotoPoint(getX(2030), 1265, GotoOption.SANS_ORIENTATION);
             group.boueePrise(rsNerell.team() == ETeam.BLEU ? 10 : 7);
 
         } catch (AvoidingException e) {
