@@ -21,7 +21,6 @@ import org.arig.robot.system.avoiding.impl.BasicAvoidingService;
 import org.arig.robot.system.avoiding.impl.BasicRetryAvoidingService;
 import org.arig.robot.system.avoiding.impl.CompleteAvoidingService;
 import org.arig.robot.system.avoiding.impl.SemiCompleteAvoidingService;
-import org.arig.robot.system.capteurs.ARIG2ChannelsAlimentationSensor;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
 import org.arig.robot.system.capteurs.TCA9548MultiplexerI2C;

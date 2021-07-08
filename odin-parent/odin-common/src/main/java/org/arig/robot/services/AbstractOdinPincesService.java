@@ -1,6 +1,5 @@
 package org.arig.robot.services;
 
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IOdinConstantesConfig;
 import org.arig.robot.model.ECouleurBouee;

@@ -1,13 +1,9 @@
 package org.arig.robot.odin.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.capteurs.AlimentationSensorValue;
 import org.arig.robot.services.IOdinIOService;
 import org.arig.robot.services.OdinServosService;
-import org.arig.robot.system.capteurs.IAlimentationSensor;
-import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;

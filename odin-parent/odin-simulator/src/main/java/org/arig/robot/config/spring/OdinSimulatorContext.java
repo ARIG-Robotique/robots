@@ -12,8 +12,6 @@ import org.arig.robot.model.bouchon.BouchonI2CDevice;
 import org.arig.robot.model.bouchon.BouchonI2CMultiplexer;
 import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
 import org.arig.robot.system.avoiding.IAvoidingService;
-import org.arig.robot.system.capteurs.ARIG2ChannelsAlimentationSensorBouchon;
-import org.arig.robot.system.capteurs.IAlimentationSensor;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;

@@ -1,15 +1,9 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.StopWatch;
-import org.arig.robot.exception.I2CException;
-import org.arig.robot.system.capteurs.IAlimentationSensor;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
