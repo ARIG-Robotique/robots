@@ -36,12 +36,14 @@ public interface IOdinConstantesServos {
     // Constantes de position //
     // ---------------------- //
 
+    int POS_BRAS_GAUCHE_GOBELET = 1030;
     int POS_BRAS_GAUCHE_MANCHE_AIR = 1230;
     int POS_BRAS_GAUCHE_PHARE = 1100;
-    int POS_BRAS_GAUCHE_FERME = 2110;
+    int POS_BRAS_GAUCHE_FERME = 2050;
+    int POS_BRAS_DROIT_GOBELET = 1780;
     int POS_BRAS_DROIT_MANCHE_AIR = 1560;
     int POS_BRAS_DROIT_PHARE = 1660;
-    int POS_BRAS_DROIT_FERME = 720;
+    int POS_BRAS_DROIT_FERME = 780;
     int POS_PAVILLON_HAUT = 2340;
     int POS_PAVILLON_FIN_MATCH = 2100;
     int POS_PAVILLON_BAS = 1400;

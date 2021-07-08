@@ -52,6 +52,11 @@ public class OdinServosService extends AbstractServosService {
         setPosition(IOdinConstantesServos.BRAS_GAUCHE, IOdinConstantesServos.POS_BRAS_GAUCHE_FERME, wait);
     }
 
+    public void brasGaucheGobelet(boolean wait) {
+        logPositionServo("Bras gauche", "Gobelet", wait);
+        setPosition(IOdinConstantesServos.BRAS_GAUCHE, IOdinConstantesServos.POS_BRAS_GAUCHE_GOBELET, wait);
+    }
+
     public void brasDroitMancheAAir(boolean wait) {
         logPositionServo("Bras droit", "Manche a air", wait);
         setPosition(IOdinConstantesServos.BRAS_DROIT, IOdinConstantesServos.POS_BRAS_DROIT_MANCHE_AIR, wait);
@@ -65,6 +70,11 @@ public class OdinServosService extends AbstractServosService {
     public void brasDroitFerme(boolean wait) {
         logPositionServo("Bras droit", "Fermé", wait);
         setPosition(IOdinConstantesServos.BRAS_DROIT, IOdinConstantesServos.POS_BRAS_DROIT_FERME, wait);
+    }
+
+    public void brasDroitGobelet(boolean wait) {
+        logPositionServo("Bras droit", "Gobelet", wait);
+        setPosition(IOdinConstantesServos.BRAS_DROIT, IOdinConstantesServos.POS_BRAS_DROIT_GOBELET, wait);
     }
 
     public void pavillonHaut() {
