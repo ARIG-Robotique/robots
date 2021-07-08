@@ -78,6 +78,7 @@ public class OdinEchangeEcueil extends AbstractOdinAction {
             mv.gotoPoint(getX(450), 200, GotoOption.ARRIERE);
             mv.gotoPoint(getX(160), 230, GotoOption.AVANT);
             rs.enableCalageBordure(TypeCalage.CUSTOM); // calage sur présence ventouses
+            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
             mv.avanceMMSansAngle(100);
             mv.gotoPoint(getX(230), 230, GotoOption.ARRIERE);
 
