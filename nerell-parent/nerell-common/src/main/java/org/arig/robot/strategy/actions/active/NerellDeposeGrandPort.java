@@ -31,7 +31,7 @@ public class NerellDeposeGrandPort extends AbstractNerellAction {
     @Autowired
     private INerellPincesArriereService pincesArriereService;
 
-    private int step = 2;
+    private int step = 1;
 
     @Override
     public String name() {
