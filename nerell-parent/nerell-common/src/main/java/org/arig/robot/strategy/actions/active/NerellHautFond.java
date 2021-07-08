@@ -33,7 +33,7 @@ public class NerellHautFond extends AbstractNerellAction {
     public boolean isValid() {
         return isTimeValid() && rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime &&
                 rsNerell.pincesAvantEmpty() &&
-                (rsNerell.baliseEnabled() ? !rs.hautFondEmpty() : !rs.hautFondPris());
+                (rsNerell.baliseEnabled() ? rs.hautFond().size() > 1 : !rs.hautFondPris());
     }
 
     @Override
@@ -61,7 +61,8 @@ public class NerellHautFond extends AbstractNerellAction {
         if (!io.presenceVentouse2()) libre += 3;
         if (!io.presenceVentouse3()) libre += 3;
         if (!io.presenceVentouse4()) libre += 3;
-        return Math.min(libre, rsNerell.hautFond().size()) + tableUtils.alterOrder(entryPoint());
+        int hautFond = rsNerell.baliseEnabled() ? rsNerell.hautFond().size() : 6;
+        return Math.min(libre, hautFond) + tableUtils.alterOrder(entryPoint());
     }
 
     @Override

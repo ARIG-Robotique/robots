@@ -9,7 +9,7 @@ fi
 echo "$(date)"
 
 echo "Compilation ..."
-JAVA_HOME=~/apps/jdk-11 ./gradlew assemble
+JAVA_HOME=~/apps/jdk-11 ./gradlew assemble --offline
 
 HOME_DIR=/home/pi
 DESKTOP_DIR=${HOME_DIR}/Desktop

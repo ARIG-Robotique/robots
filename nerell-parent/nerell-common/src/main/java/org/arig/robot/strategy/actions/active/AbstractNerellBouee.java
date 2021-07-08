@@ -49,7 +49,8 @@ public abstract class AbstractNerellBouee extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && rsNerell.boueePresente(bouee) && getPinceCible() != 0 && rsNerell.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime;
+        return isTimeValid() && rsNerell.boueePresente(bouee) && getPinceCible() != -1 &&
+                rsNerell.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime;
     }
 
     @Override
@@ -80,7 +81,7 @@ public abstract class AbstractNerellBouee extends AbstractNerellAction {
             mv.pathTo(pointApproche, GotoOption.AVANT);
 
             // prise de la bouée
-            if (pinceCible <= 2) {
+            if (pinceCible <= 1) {
                 pincesAvantService.setExpected(rsNerell.boueeCouleur(bouee), null);
             } else {
                 pincesAvantService.setExpected(null, rsNerell.boueeCouleur(bouee));
@@ -104,23 +105,23 @@ public abstract class AbstractNerellBouee extends AbstractNerellAction {
     protected int getPinceCible() {
         if (rsNerell.boueeCouleur(bouee) == ECouleurBouee.ROUGE) {
             if (!io.presenceVentouse2()) {
-                return 2;
+                return 1;
             }
             if (!io.presenceVentouse1()) {
-                return 1;
+                return 0;
             }
         } else {
             if (!io.presenceVentouse3()) {
-                return 3;
+                return 2;
             }
             if (!io.presenceVentouse4()) {
-                return 4;
+                return 3;
             }
         }
-        return 0;
+        return -1;
     }
 
     protected double getOffsetPince(int pinceCible) {
-        return INerellConstantesConfig.dstDeposeAvantX[pinceCible - 1];
+        return INerellConstantesConfig.dstDeposeAvantX[pinceCible];
     }
 }

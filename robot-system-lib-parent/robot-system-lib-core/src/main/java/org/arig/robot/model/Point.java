@@ -49,6 +49,12 @@ public class Point implements Clusterable {
         return Math.sqrt(dX * dX + dY * dY);
     }
 
+    public double angle(Point other) {
+        double dY = other.getY() - x;
+        double dX = other.getX() - y;
+        return Math.toDegrees(Math.atan2(dY, dX));
+    }
+
     @Override
     public double[] getPoint() {
         return new double[]{x, y};

@@ -28,9 +28,9 @@ public abstract class AbstractOdinBoueeBordure extends AbstractOdinBouee {
             rsOdin.enablePincesAvant();
             rsOdin.enablePincesArriere();
 
-            GotoOption sens = rsOdin.boueeCouleur(bouee) == ECouleurBouee.VERT ? GotoOption.AVANT : GotoOption.ARRIERE;
-
-            final int pinceCible = getPinceCible();
+            final int pinceCibleTemp = getPinceCible(); // 0-1 à l'avant 2-3 à l'arriere
+            final int pinceCible = pinceCibleTemp <= 1 ? pinceCibleTemp : pinceCibleTemp - 2;
+            final GotoOption sens = pinceCibleTemp <= 1 ? GotoOption.AVANT : GotoOption.ARRIERE;
             final double offsetPince = getOffsetPince(pinceCible);
 
             log.info("Prise de la bouee {} {} dans la pince {} {}",
@@ -73,29 +73,8 @@ public abstract class AbstractOdinBoueeBordure extends AbstractOdinBouee {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
-            pincesArriere.setExpected(null, 0);
-            pincesAvant.setExpected(null, 0);
+            pincesArriere.setExpected(null, -1);
+            pincesAvant.setExpected(null, -1);
         }
-    }
-
-    @Override
-    protected int getPinceCible() {
-        if (rsOdin.boueeCouleur(bouee) == ECouleurBouee.VERT) {
-            if (!io.presenceVentouseAvantDroit()) {
-                return 2;
-            }
-            if (!io.presenceVentouseAvantGauche()) {
-                return 1;
-            }
-        }
-        if (rsOdin.boueeCouleur(bouee) == ECouleurBouee.ROUGE) {
-            if (!io.presenceVentouseArriereDroit()) {
-                return 2;
-            }
-            if (!io.presenceVentouseArriereGauche()) {
-                return 1;
-            }
-        }
-        return 0;
     }
 }

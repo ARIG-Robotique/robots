@@ -157,8 +157,8 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
-            pincesArriereService.setExpected(null, 0);
-            pincesAvantService.setExpected(null, 0);
+            pincesArriereService.setExpected(null, -1);
+            pincesAvantService.setExpected(null, -1);
         }
     }
 }

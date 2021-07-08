@@ -53,11 +53,22 @@ public class TableUtils {
         Point pos = new Point(position.getPt());
         pos.setX(conv.pulseToMm(pos.getX()));
         pos.setY(conv.pulseToMm(pos.getY()));
-        return dest.distance(pos);
+        return pos.distance(dest);
     }
 
     public double distance(double x, double y) {
         return distance(new Point(x, y));
+    }
+
+    public double angle(Point dest) {
+        Point pos = new Point(position.getPt());
+        pos.setX(conv.pulseToMm(pos.getX()));
+        pos.setY(conv.pulseToMm(pos.getY()));
+        return pos.angle(dest);
+    }
+
+    public double angle(double x, double y) {
+        return angle(new Point(x, y));
     }
 
     public int alterOrder(Point dest) {
@@ -165,11 +176,24 @@ public class TableUtils {
         double angle = Math.atan2(dY, dX);
         double dist = Math.sqrt(dX * dX + dY * dY);
 
-        Point ptObstacle = new Point();
-        ptObstacle.setX((dist + offset) * Math.cos(angle));
-        ptObstacle.setY((dist + offset) * Math.sin(angle));
-        ptObstacle.addDeltaX(currentX);
-        ptObstacle.addDeltaY(currentY);
-        return ptObstacle;
+        Point target = new Point();
+        target.setX((dist + offset) * Math.cos(angle));
+        target.setY((dist + offset) * Math.sin(angle));
+        target.addDeltaX(currentX);
+        target.addDeltaY(currentY);
+        return target;
+    }
+
+    public Point eloigner(double offset) {
+        double currentX = conv.pulseToMm(position.getPt().getX());
+        double currentY = conv.pulseToMm(position.getPt().getY());
+        double angle = conv.pulseToRad(position.getAngle());
+
+        Point target = new Point();
+        target.setX(offset * Math.cos(angle));
+        target.setY(offset * Math.sin(angle));
+        target.addDeltaX(currentX);
+        target.addDeltaY(currentY);
+        return target;
     }
 }

@@ -161,20 +161,29 @@ public abstract class AbstractOdinDeposeGrandChenal extends AbstractOdinAction {
             log.info("Point de dépose {}x{}", x, y);
             mv.gotoPoint(x, y);
 
-            if (result.line == GrandChenaux.Line.A && rs.team() == ETeam.BLEU ||
-                    result.line == GrandChenaux.Line.B && rs.team() == ETeam.JAUNE) {
-                mv.gotoOrientationDeg(-90);
-            } else {
-                mv.gotoOrientationDeg(90);
+            int orientation = -90; // BLEU, avant, VERT A
+            if (result.line == GrandChenaux.Line.B) {
+                orientation *= -1;
+            }
+            if (getCouleurChenal() == ECouleurBouee.ROUGE) {
+                orientation *= -1;
+            }
+            if (result.face == EFace.ARRIERE) {
+                orientation *= -1;
+            }
+            if (rs.team() == ETeam.JAUNE) {
+                orientation *= -1;
             }
 
-            if (getCouleurChenal() == ECouleurBouee.VERT) {
+            mv.gotoOrientationDeg(orientation);
+
+            if (result.face == EFace.AVANT) {
                 pincesAvantService.deposeGrandChenal(getCouleurChenal(), result.line, result.idxGauche, result.idxDroite);
             } else {
                 pincesArriereService.deposeGrandChenal(getCouleurChenal(), result.line, result.idxGauche, result.idxDroite);
             }
 
-            mv.gotoPoint(x, entry.getY(), getCouleurChenal() == ECouleurBouee.VERT ? GotoOption.ARRIERE : GotoOption.AVANT);
+            mv.gotoPoint(x, entry.getY());
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();

@@ -37,7 +37,7 @@ public abstract class AbstractNerellBoueeBordure extends AbstractNerellBouee {
             mv.pathTo(entry, GotoOption.AVANT);
 
             // prise de la bouée
-            if (pinceCible <= 2) {
+            if (pinceCible <= 1) {
                 pincesAvantService.setExpected(rsNerell.boueeCouleur(bouee), null);
             } else {
                 pincesAvantService.setExpected(null, rsNerell.boueeCouleur(bouee));
@@ -71,19 +71,19 @@ public abstract class AbstractNerellBoueeBordure extends AbstractNerellBouee {
     protected int getPinceCible() {
         if (rsNerell.boueeCouleur(bouee) == ECouleurBouee.ROUGE) {
             if (!io.presenceVentouse1()) {
-                return 1;
+                return 0;
             }
             if (!io.presenceVentouse2()) {
-                return 2;
+                return 1;
             }
         } else {
             if (!io.presenceVentouse4()) {
-                return 4;
-            }
-            if (!io.presenceVentouse3()) {
                 return 3;
             }
+            if (!io.presenceVentouse3()) {
+                return 2;
+            }
         }
-        return 0;
+        return -1;
     }
 }

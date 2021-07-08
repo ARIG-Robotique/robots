@@ -15,10 +15,10 @@ public class OdinPincesAvantServiceBouchon extends AbstractOdinPincesAvantServic
         super.setExpected(expected, pinceNumber);
 
         switch (pinceNumber) {
-            case 1:
+            case 0:
                 io.presenceVentouseAvantGauche(true);
                 break;
-            case 2:
+            case 1:
                 io.presenceVentouseAvantDroit(true);
                 break;
         }

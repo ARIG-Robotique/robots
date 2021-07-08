@@ -53,7 +53,7 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && rsOdin.boueePresente(bouee) && getPinceCible() != 0
+        return isTimeValid() && rsOdin.boueePresente(bouee) && getPinceCible() != -1
                 && rsOdin.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime;
     }
 
@@ -70,9 +70,9 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
             rsOdin.enablePincesAvant();
             rsOdin.enablePincesArriere();
 
-            final GotoOption sens = rsOdin.boueeCouleur(bouee) == ECouleurBouee.VERT ? GotoOption.AVANT : GotoOption.ARRIERE;
-
-            final int pinceCible = getPinceCible();
+            final int pinceCibleTemp = getPinceCible(); // 0-1 à l'avant 2-3 à l'arriere
+            final int pinceCible = pinceCibleTemp <= 1 ? pinceCibleTemp : pinceCibleTemp - 2;
+            final GotoOption sens = pinceCibleTemp <= 1 ? GotoOption.AVANT : GotoOption.ARRIERE;
             final double offsetPince = getOffsetPince(pinceCible);
             final double distanceApproche = IEurobotConfig.pathFindingTailleBouee / 2.0 + 10;
 
@@ -92,16 +92,16 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
             final Point pointPrise;
             if (sens == GotoOption.ARRIERE) {
                 // Prise avec la face arrière, donc en mode mirroir
-                mv.alignBackTo(entry);
-                pointPrise = tableUtils.getPointFromAngle(-distanceApproche * 1.5, -offsetOrientation);
+                mv.alignBackToAvecDecalage(entry, -offsetOrientation);
+                pointPrise = tableUtils.eloigner(-distanceApproche * 1.5);
                 pincesArriere.setExpected(rs.boueeCouleur(bouee), pinceCible);
             } else {
-                mv.alignFrontTo(entry);
-                pointPrise = tableUtils.getPointFromAngle(distanceApproche * 1.5, offsetOrientation);
+                mv.alignFrontToAvecDecalage(entry, offsetOrientation);
+                pointPrise = tableUtils.eloigner(distanceApproche * 1.5);
                 pincesAvant.setExpected(rs.boueeCouleur(bouee), pinceCible);
             }
             mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation());
-            mv.gotoPoint(pointPrise, sens);
+            mv.gotoPoint(pointPrise, sens, GotoOption.SANS_ORIENTATION);
             group.boueePrise(bouee);
             ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
 
@@ -110,32 +110,47 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
-            pincesArriere.setExpected(null, 0);
-            pincesAvant.setExpected(null, 0);
+            pincesArriere.setExpected(null, -1);
+            pincesAvant.setExpected(null, -1);
         }
     }
 
     protected int getPinceCible() {
-        if (rsOdin.boueeCouleur(bouee) == ECouleurBouee.VERT){
-            if (!io.presenceVentouseAvantGauche()) {
-                return 1;
+        ECouleurBouee couleurBouee = rs.boueeCouleur(bouee);
+        ECouleurBouee couleurInverse = couleurBouee == ECouleurBouee.VERT ? ECouleurBouee.ROUGE : ECouleurBouee.VERT;
+        Point bouePt = rs.boueePt(bouee);
+
+        // sens optimal
+        GotoOption sens = Math.abs(tableUtils.angle(bouePt)) < 90 ? GotoOption.AVANT : GotoOption.ARRIERE;
+
+        for (int i = 0; i < 2; i++) {
+            switch (sens) {
+                case AVANT:
+                    if (rsOdin.pincesAvant()[0] == null && rsOdin.pincesAvant()[1] != couleurInverse) {
+                        return 0; // AvG
+                    }
+                    if (rsOdin.pincesAvant()[1] == null && rsOdin.pincesAvant()[0] != couleurInverse) {
+                        return 1; // AvD
+                    }
+                    break;
+                case ARRIERE:
+                    if (rsOdin.pincesArriere()[0] == null && rsOdin.pincesArriere()[1] != couleurInverse) {
+                        return 2; // ArG
+                    }
+                    if (rsOdin.pincesArriere()[1] == null && rsOdin.pincesArriere()[0] != couleurInverse) {
+                        return 3; // ArD
+                    }
+                    break;
             }
-            if (!io.presenceVentouseAvantDroit()) {
-                return 2;
-            }
+
+            // sens pas optimal
+            sens = sens == GotoOption.AVANT ? GotoOption.ARRIERE : GotoOption.AVANT;
         }
-        if (rsOdin.boueeCouleur(bouee) == ECouleurBouee.ROUGE) {
-            if (!io.presenceVentouseArriereGauche()) {
-                return 1;
-            }
-            if (!io.presenceVentouseArriereDroit()) {
-                return 2;
-            }
-        }
-        return 0;
+
+        return -1;
     }
 
     protected double getOffsetPince(int pinceCible) {
-        return IOdinConstantesConfig.dstDeposeX[pinceCible - 1];
+        return IOdinConstantesConfig.dstDeposeX[pinceCible];
     }
 }

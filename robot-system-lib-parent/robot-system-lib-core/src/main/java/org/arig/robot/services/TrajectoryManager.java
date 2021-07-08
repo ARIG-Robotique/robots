@@ -762,6 +762,24 @@ public class TrajectoryManager {
      */
     public void alignBackTo(final double x, final double y) throws AvoidingException {
         log.info("Aligne ton cul sur le point X = {}mm ; Y = {}mm", x, y);
+        alignBackToAvecDecalage(x, y, 0);
+    }
+
+    public void alignBackToAvecDecalage(final Point point, final double decalageDeg) throws AvoidingException {
+        alignBackToAvecDecalage(point.getX(), point.getY(), decalageDeg);
+    }
+
+    /**
+     * Alignement sur un point avec un décalage en degré (dans le sens trigo)
+     *
+     * @param x           position sur l'axe X
+     * @param y           position sur l'axe Y
+     * @param decalageDeg valeur du déclage angulaire par rapport au point X,Y
+     */
+    public void alignBackToAvecDecalage(final double x, final double y, final double decalageDeg) throws AvoidingException {
+        if (decalageDeg != 0) {
+            log.info("Décalage de {}° par rapport au point X = {}mm ; Y = {}mm", decalageDeg, x, y);
+        }
 
         synchronized (this) {
             double dX = conv.mmToPulse(x) - currentPosition.getPt().getX();
@@ -776,7 +794,7 @@ public class TrajectoryManager {
 
             cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
             cmdRobot.getConsigne().setDistance(0);
-            cmdRobot.getConsigne().setOrientation((long) consOrient);
+            cmdRobot.getConsigne().setOrientation((long) (consOrient + conv.degToPulse(decalageDeg)));
             cmdRobot.setFrein(true);
 
             prepareNextMouvement();
