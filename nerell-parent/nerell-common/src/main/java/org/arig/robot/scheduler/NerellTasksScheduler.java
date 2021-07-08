@@ -10,7 +10,7 @@ import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.BaliseService;
-import org.arig.robot.services.IIOService;
+import org.arig.robot.services.INerellIOService;
 import org.arig.robot.services.INerellPincesArriereService;
 import org.arig.robot.services.INerellPincesAvantService;
 import org.arig.robot.services.NerellEcranService;
@@ -33,7 +33,7 @@ public class NerellTasksScheduler {
     private IAvoidingService avoidingService;
 
     @Autowired
-    private IIOService ioService;
+    private INerellIOService ioService;
 
     @Autowired
     private ISystemBlockerManager systemBlockerManager;
@@ -57,6 +57,7 @@ public class NerellTasksScheduler {
     private StopWatch timerLectureCouleur = new StopWatch();
 
     private final SignalEdgeFilter risingEnablePinces = new SignalEdgeFilter(false, Type.RISING);
+    private final SignalEdgeFilter fallingForcePinces = new SignalEdgeFilter(false, Type.FALLING);
     private final SignalEdgeFilter fallingEnablePinces = new SignalEdgeFilter(false, Type.FALLING);
 
     @Scheduled(fixedRate = 1000)
@@ -122,11 +123,16 @@ public class NerellTasksScheduler {
     @Scheduled(fixedDelay = 200)
     public void pincesTask() {
         boolean pincesAvantEnabled = rs.pincesAvantEnabled();
+        boolean pincesAvantForceMode = rs.pincesAvantForceOn();
 
         if (Boolean.TRUE.equals(risingEnablePinces.filter(pincesAvantEnabled))) {
             pincesAvant.activate();
         } else if (Boolean.TRUE.equals(fallingEnablePinces.filter(pincesAvantEnabled))) {
             pincesAvant.deactivate();
+        }
+
+        if (Boolean.TRUE.equals(fallingForcePinces.filter(pincesAvantForceMode)) && pincesAvantEnabled) {
+            ioService.enableAllPompes();
         }
 
         if (pincesAvantEnabled) {

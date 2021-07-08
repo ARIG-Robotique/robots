@@ -47,6 +47,12 @@ public interface INerellIOService extends IIOService {
 
     void disableAllPompes();
 
+    void enableForceAllPompes();
+    void enableForcePompe1();
+    void enableForcePompe2();
+    void enableForcePompe3();
+    void enableForcePompe4();
+
     void enableAllPompes();
     void enablePompe1();
     void enablePompe2();

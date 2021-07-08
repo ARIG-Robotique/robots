@@ -26,9 +26,17 @@ public class NerellRobotStatus extends EurobotStatus {
     @Setter(AccessLevel.NONE)
     private boolean pincesAvantEnabled = false;
 
+    @Setter(AccessLevel.NONE)
+    private boolean pincesAvantForceOn = false;
+
     public void enablePincesAvant() {
-        log.info("[RS] activation des pinces avant");
+        enablePincesAvant(false);
+    }
+
+    public void enablePincesAvant(boolean modeForce) {
+        log.info("[RS] activation des pinces avant (mode : {})", modeForce ? "FORCE" : "STANDARD");
         pincesAvantEnabled = true;
+        pincesAvantForceOn = modeForce;
     }
 
     public void disablePincesAvant() {

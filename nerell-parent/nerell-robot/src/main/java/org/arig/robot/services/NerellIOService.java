@@ -401,6 +401,31 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
     }
 
     @Override
+    public void enableForceAllPompes() {
+        vacuumController.forceOnAll();
+    }
+
+    @Override
+    public void enableForcePompe1() {
+        vacuumController.onForce(POMPE_AVANT_1);
+    }
+
+    @Override
+    public void enableForcePompe2() {
+        vacuumController.onForce(POMPE_AVANT_2);
+    }
+
+    @Override
+    public void enableForcePompe3() {
+        vacuumController.onForce(POMPE_AVANT_3);
+    }
+
+    @Override
+    public void enableForcePompe4() {
+        vacuumController.onForce(POMPE_AVANT_4);
+    }
+
+    @Override
     public void enableAllPompes() {
         vacuumController.onAll();
     }

@@ -112,7 +112,11 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
         }
 
         // Aspiration des nouvelles bouées
-        io.enableAllPompes();
+        if (rs.pincesAvantForceOn()) {
+            io.enableForceAllPompes();
+        } else {
+            io.enableAllPompes();
+        }
 
         previousState = getNewState();
 

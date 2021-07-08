@@ -135,6 +135,26 @@ public class NerellIOServiceBouchon extends AbstractIOServiceBouchon implements 
     }
 
     @Override
+    public void enableForceAllPompes() {
+    }
+
+    @Override
+    public void enableForcePompe1() {
+    }
+
+    @Override
+    public void enableForcePompe2() {
+    }
+
+    @Override
+    public void enableForcePompe3() {
+    }
+
+    @Override
+    public void enableForcePompe4() {
+    }
+
+    @Override
     public void enableAllPompes() {
     }
 
