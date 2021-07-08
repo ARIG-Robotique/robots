@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.constants.INerellConstantesConfig;
+import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.NerellRobotStatus;
@@ -57,7 +58,7 @@ public class NerellTasksScheduler {
     private StopWatch timerLectureCouleur = new StopWatch();
 
     private final SignalEdgeFilter risingEnablePinces = new SignalEdgeFilter(false, Type.RISING);
-    private final SignalEdgeFilter fallingForcePinces = new SignalEdgeFilter(false, Type.FALLING);
+    private final ChangeFilter<Boolean> changeModeForce = new ChangeFilter<Boolean>(false);
     private final SignalEdgeFilter fallingEnablePinces = new SignalEdgeFilter(false, Type.FALLING);
 
     @Scheduled(fixedRate = 1000)
@@ -125,14 +126,11 @@ public class NerellTasksScheduler {
         boolean pincesAvantEnabled = rs.pincesAvantEnabled();
         boolean pincesAvantForceMode = rs.pincesAvantForceOn();
 
-        if (Boolean.TRUE.equals(risingEnablePinces.filter(pincesAvantEnabled))) {
+        if (Boolean.TRUE.equals(risingEnablePinces.filter(pincesAvantEnabled))
+            || (pincesAvantEnabled && changeModeForce.filter(pincesAvantForceMode))) {
             pincesAvant.activate();
         } else if (Boolean.TRUE.equals(fallingEnablePinces.filter(pincesAvantEnabled))) {
             pincesAvant.deactivate();
-        }
-
-        if (Boolean.TRUE.equals(fallingForcePinces.filter(pincesAvantForceMode)) && pincesAvantEnabled) {
-            ioService.enableAllPompes();
         }
 
         if (pincesAvantEnabled) {

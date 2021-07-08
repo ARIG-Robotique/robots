@@ -45,7 +45,7 @@ public class NerellPriseBoueesAggressive extends AbstractNerellAction {
     public void execute() {
         try {
             rsNerell.enablePincesAvant(true);
-            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
+            mv.setVitesse(robotConfig.vitesse(70), robotConfig.vitesseOrientation());
 
             mv.gotoPoint(entryPoint(), GotoOption.SANS_ARRET, GotoOption.SANS_ORIENTATION);
 

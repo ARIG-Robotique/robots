@@ -112,9 +112,7 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
         }
 
         // Aspiration des nouvelles bouées
-        if (rs.pincesAvantForceOn()) {
-            io.enableForceAllPompes();
-        } else {
+        if (!rs.pincesAvantForceOn()) {
             io.enableAllPompes();
         }
 
@@ -125,6 +123,9 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
                 servosService.ascenseurAvantHaut(i, false);
             } else {
                 servosService.ascenseurAvantBas(i, false);
+                if (rs.pincesAvantForceOn()) {
+                    forceOnPompe(i);
+                }
             }
         }
     }
@@ -205,6 +206,17 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
             }
         }
         return couleur;
+    }
+
+    private void forceOnPompe(int i) {
+        // @formatter:off
+        switch (i) {
+            case 0: io.enableForcePompe1(); break;
+            case 1: io.enableForcePompe2(); break;
+            case 2: io.enableForcePompe3(); break;
+            case 3: io.enableForcePompe4(); break;
+        }
+        // @formatter:on
     }
 
     private void releasePompe(int i) {
