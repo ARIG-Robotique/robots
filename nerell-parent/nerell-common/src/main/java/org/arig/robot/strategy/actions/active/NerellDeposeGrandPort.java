@@ -94,30 +94,28 @@ public class NerellDeposeGrandPort extends AbstractNerellAction {
 
             mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
 
-            do {
-                if (sens == GotoOption.AVANT) {
-                    if (rsNerell.team() == ETeam.BLEU) {
-                        mv.gotoOrientationDeg(180);
-                    } else {
-                        mv.gotoOrientationDeg(0);
-                    }
-                    pincesAvantService.deposeGrandPort();
-                    step++;
+            if (sens == GotoOption.AVANT) {
+                if (rsNerell.team() == ETeam.BLEU) {
+                    mv.gotoOrientationDeg(180);
                 } else {
-                    final Point entry3 = new Point(computeX(entry.getX(), false), entry.getY());
-                    mv.gotoPoint(entry3, GotoOption.SANS_ORIENTATION);
-                    if (rsNerell.team() == ETeam.BLEU) {
-                        mv.gotoOrientationDeg(0);
-                    } else {
-                        mv.gotoOrientationDeg(180);
-                    }
-                    pincesArriereService.deposeGrandPort();
-                    step++;
+                    mv.gotoOrientationDeg(0);
                 }
+                pincesAvantService.deposeGrandPort();
+                step++;
+            } else {
+                final Point entry3 = new Point(computeX(entry.getX(), false), entry.getY());
+                mv.gotoPoint(entry3, GotoOption.SANS_ORIENTATION);
+                if (rsNerell.team() == ETeam.BLEU) {
+                    mv.gotoOrientationDeg(0);
+                } else {
+                    mv.gotoOrientationDeg(180);
+                }
+                pincesArriereService.deposeGrandPort();
+                step++;
+            }
 
-                mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-                mv.gotoPoint(getX(500), entry.getY());
-            } while (!rsNerell.pincesAvantEmpty() && !rsNerell.pincesArriereEmpty());
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.gotoPoint(getX(500), entry.getY());
 
             if (step > 3) {
                 complete();
