@@ -61,7 +61,6 @@ public class NerellPriseBoueesAggressive extends AbstractNerellAction {
             group.boueePrise(rsNerell.team() == ETeam.BLEU ? 10 : 7);
 
         } catch (AvoidingException e) {
-            updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
             complete();

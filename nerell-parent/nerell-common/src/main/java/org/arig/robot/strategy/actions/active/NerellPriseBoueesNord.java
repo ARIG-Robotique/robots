@@ -18,8 +18,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class NerellPriseBoueesNord extends AbstractNerellAction {
 
-    private boolean firstExecution = true;
-
     @Autowired
     private INerellPincesAvantService pincesAvantService;
 
@@ -35,10 +33,6 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
 
     @Override
     public int order() {
-        if (rsNerell.strategy() == EStrategy.BASIC && firstExecution) {
-            return 1000;
-        }
-
         return 6 + (rsNerell.ecueilCommunEquipePris() ? 0 : 10) + tableUtils.alterOrder(entryPoint());
     }
 
@@ -58,14 +52,13 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
 
     @Override
     public void execute() {
-        firstExecution = false;
         try {
             rsNerell.enablePincesAvant();
 
             final Point entry = entryPoint();
             final int pctVitessePriseBouee = 20;
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            if (rsNerell.strategy() != EStrategy.BASIC && tableUtils.distance(entry) > 100) {
+            if (tableUtils.distance(entry) > 100) {
                 mv.pathTo(entry);
             } else {
                 // Le path active l'évitement en auto, pas de path, pas d'évitement
@@ -77,44 +70,44 @@ public class NerellPriseBoueesNord extends AbstractNerellAction {
             final Point target = new Point(targetx, targety);
 
             if (rsNerell.team() == ETeam.BLEU) {
-                if (rsNerell.strategy() != EStrategy.BASIC) {
-                    mv.gotoPoint(220, 1290);
-                    mv.gotoOrientationDeg(66);
-                }
+                mv.gotoPoint(220, 1290);
+                mv.gotoOrientationDeg(66);
 
                 mv.setVitesse(robotConfig.vitesse(pctVitessePriseBouee), robotConfig.vitesseOrientation());
                 pincesAvantService.setExpected(ECouleurBouee.ROUGE, ECouleurBouee.VERT);
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 group.boueePrise(1, 2);
 
-                mv.gotoOrientationDeg(0);
-                pincesAvantService.setExpected(ECouleurBouee.ROUGE, null);
-                mv.gotoPoint(770, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                group.boueePrise(5);
+                if (rs.boueePresente(5) || rs.boueePresente(6)) {
+                    mv.gotoOrientationDeg(0);
+                    pincesAvantService.setExpected(ECouleurBouee.ROUGE, null);
+                    mv.gotoPoint(770, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
+                    group.boueePrise(5);
 
-                pincesAvantService.setExpected(null, ECouleurBouee.VERT);
-                mv.gotoPoint(980, 1635, GotoOption.AVANT);
-                group.boueePrise(6);
+                    pincesAvantService.setExpected(null, ECouleurBouee.VERT);
+                    mv.gotoPoint(980, 1635, GotoOption.AVANT);
+                    group.boueePrise(6);
+                }
 
             } else {
-                if (rsNerell.strategy() != EStrategy.BASIC) {
-                    mv.gotoPoint(3000 - 220, 1290);
-                    mv.gotoOrientationDeg(180 - 66);
-                }
+                mv.gotoPoint(3000 - 220, 1290);
+                mv.gotoOrientationDeg(180 - 66);
 
                 mv.setVitesse(robotConfig.vitesse(pctVitessePriseBouee), robotConfig.vitesseOrientation());
                 pincesAvantService.setExpected(ECouleurBouee.ROUGE, ECouleurBouee.VERT);
                 mv.gotoPoint(target, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
                 group.boueePrise(13, 14);
 
-                mv.gotoOrientationDeg(180);
-                pincesAvantService.setExpected(null, ECouleurBouee.VERT);
-                mv.gotoPoint(3000 - 770, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                group.boueePrise(12);
+                if (rs.boueePresente(12) || rs.boueePresente(11)) {
+                    mv.gotoOrientationDeg(180);
+                    pincesAvantService.setExpected(null, ECouleurBouee.VERT);
+                    mv.gotoPoint(3000 - 770, targety, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
+                    group.boueePrise(12);
 
-                pincesAvantService.setExpected(ECouleurBouee.ROUGE, null);
-                mv.gotoPoint(3000 - 980, 1635, GotoOption.AVANT);
-                group.boueePrise(11);
+                    pincesAvantService.setExpected(ECouleurBouee.ROUGE, null);
+                    mv.gotoPoint(3000 - 980, 1635, GotoOption.AVANT);
+                    group.boueePrise(11);
+                }
             }
 
         } catch (AvoidingException | NoPathFoundException e) {
