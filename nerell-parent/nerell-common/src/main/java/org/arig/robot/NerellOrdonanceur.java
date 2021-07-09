@@ -53,7 +53,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void afterInit() {
-        choixEquipe();
+        choixEquipeStrategy();
     }
 
     @Override
@@ -64,6 +64,8 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void beforeMatch() {
+        positionStrategy();
+
         // Lancement d'une première lecture de couleurs pour initialiser les capteurs
         nerellIOService.enableLedCapteurCouleur();
         ThreadUtils.sleep(INerellConstantesConfig.WAIT_LED);
@@ -75,7 +77,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         nerellIOService.couleurBoueeArriere4();
         nerellIOService.disableLedCapteurCouleur();
 
-        choixStrategie();
+        choixConfig();
 
         if (nerellRobotStatus.etalonageBaliseOk()) {
             nerellRobotStatus.enableBalise();
@@ -133,12 +135,13 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     }
 
     /**
-     * Etape du choix de l'équipe + config balise
+     * Etape du choix de l'équipe/stratégie + config balise
      */
-    private void choixEquipe() {
+    private void choixEquipeStrategy() {
         ecranService.displayMessage("Choix équipe et lancement calage bordure");
 
         ChangeFilter<Integer> teamChangeFilter = new ChangeFilter<>(ETeam.UNKNOWN.ordinal());
+        ChangeFilter<Integer> strategyChangeFilter = new ChangeFilter<>(null);
         SignalEdgeFilter updatePhotoFilter = new SignalEdgeFilter(false, Type.RISING);
         SignalEdgeFilter doEtalonnageFilter = new SignalEdgeFilter(false, Type.RISING);
 
@@ -152,6 +155,13 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 groupService.team(ETeam.values()[ecranService.config().getTeam()]);
                 log.info("Team {}", nerellRobotStatus.team().name());
             }
+
+            if (strategyChangeFilter.filter(ecranService.config().getStrategy())) {
+                groupService.strategy(EStrategy.values()[ecranService.config().getStrategy()]);
+                log.info("Strategy {}", nerellRobotStatus.strategy().name());
+            }
+
+            groupService.configuration();
 
             ThreadUtils.sleep(200);
         } while (!ecranService.config().isStartCalibration());
@@ -209,11 +219,17 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             robotStatus.disableAvoidance();
             if (robotStatus.simulateur() || skip) {
                 if (nerellRobotStatus.team() == ETeam.BLEU) {
-                    position.setPt(new Point(conv.mmToPulse(INerellConstantesConfig.dstCallage), conv.mmToPulse(1200)));
-                    position.setAngle(conv.degToPulse(0));
+                    position.setPt(new Point(
+                            conv.mmToPulse(INerellConstantesConfig.dstCallage + 150),
+                            conv.mmToPulse(2000 - INerellConstantesConfig.dstCallage - 150)
+                    ));
+                    position.setAngle(conv.degToPulse(-90));
                 } else {
-                    position.setPt(new Point(conv.mmToPulse(3000 - INerellConstantesConfig.dstCallage), conv.mmToPulse(1200)));
-                    position.setAngle(conv.degToPulse(180));
+                    position.setPt(new Point(
+                            conv.mmToPulse(3000 - INerellConstantesConfig.dstCallage - 150),
+                            conv.mmToPulse(2000 - INerellConstantesConfig.dstCallage - 150)
+                    ));
+                    position.setAngle(conv.degToPulse(-90));
                 }
             } else {
                 robotStatus.enableCalageBordure();
@@ -242,13 +258,6 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 position.setAngle(conv.degToPulse(-90));
 
                 trajectoryManager.avanceMM(150);
-
-                trajectoryManager.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-                if (nerellRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(200, 1600, GotoOption.ARRIERE);
-                } else {
-                    trajectoryManager.gotoPoint(3000 - 200, 1600, GotoOption.ARRIERE);
-                }
             }
         } catch (AvoidingException e) {
             ecranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
@@ -262,27 +271,48 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     public void positionStrategy() {
         ecranService.displayMessage("Mise en place");
         try {
-            if (nerellRobotStatus.strategy() == EStrategy.AGGRESSIVE) {
-                if (nerellRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(270, 1285);
-                    trajectoryManager.gotoOrientationDeg(-5);
-                } else {
-                    trajectoryManager.gotoPoint(3000 - 270, 1285);
-                    trajectoryManager.gotoOrientationDeg(-175);
-                }
-            } else if (nerellRobotStatus.strategy() == EStrategy.BASIC) { // BASIC
-                // Aligne vers les bouées au nord du port
-                if (nerellRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(220, 1290);
-                    trajectoryManager.gotoOrientationDeg(66);
-                } else {
-                    trajectoryManager.gotoPoint(3000 - 220, 1290);
-                    trajectoryManager.gotoOrientationDeg(180 - 66);
-                }
-            } else if (nerellRobotStatus.strategy() == EStrategy.FINALE) {
-                // TODO
-            }
+            trajectoryManager.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
+            switch (nerellRobotStatus.strategy()) {
+                case BASIC:
+                    // Aligne vers les bouées au nord du port
+//                    if (nerellRobotStatus.team() == ETeam.BLEU) {
+//                        trajectoryManager.gotoPoint(220, 1290, GotoOption.ARRIERE);
+//                        trajectoryManager.gotoOrientationDeg(66);
+//                    } else {
+//                        trajectoryManager.gotoPoint(3000 - 220, 1290, GotoOption.ARRIERE);
+//                        trajectoryManager.gotoOrientationDeg(180 - 66);
+//                    }
+//                    break;
+
+                case AGGRESSIVE:
+                    // Aligne vers le centre de la table
+                    if (nerellRobotStatus.team() == ETeam.BLEU) {
+                        trajectoryManager.gotoPoint(270, 1285, GotoOption.AVANT);
+                        trajectoryManager.gotoOrientationDeg(-5);
+                    } else {
+                        trajectoryManager.gotoPoint(3000 - 270, 1285, GotoOption.AVANT);
+                        trajectoryManager.gotoOrientationDeg(-175);
+                    }
+                    break;
+
+                case FINALE:
+                    // Aligne vers le centre de la table e faisant le tour
+                    if (nerellRobotStatus.team() == ETeam.BLEU) {
+                        trajectoryManager.gotoPoint(650, 2000 - 300);
+                        trajectoryManager.gotoPoint(650, 1090);
+                        groupService.waitInitStep(1);
+                        trajectoryManager.gotoPoint(245, 1090, GotoOption.ARRIERE);
+                        trajectoryManager.alignFrontTo(500, 1270);
+                    } else {
+                        trajectoryManager.gotoPoint(3000 - 650, 2000 - 300);
+                        trajectoryManager.gotoPoint(3000 - 650, 1090);
+                        groupService.waitInitStep(1);
+                        trajectoryManager.gotoPoint(3000 - 245, 1090, GotoOption.ARRIERE);
+                        trajectoryManager.alignFrontTo(3000 - 500, 1270);
+                    }
+                    break;
+            }
         } catch (AvoidingException e) {
             ecranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
             throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);
@@ -292,12 +322,11 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     /**
      * Etape du choix des options + config balise
      */
-    private void choixStrategie() {
-        ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
+    private void choixConfig() {
+        ecranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
 
         SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.RISING);
         SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.FALLING);
-        ChangeFilter<EStrategy> strategyChangeFilter = new ChangeFilter<>(null);
         SignalEdgeFilter updatePhotoFilter = new SignalEdgeFilter(false, Type.RISING);
         SignalEdgeFilter doEtalonnageFilter = new SignalEdgeFilter(false, Type.RISING);
 
@@ -308,33 +337,21 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
             if (manuelRisingEdge.filter(ecranService.config().isModeManuel())) {
                 manuel = true;
-                strategyChangeFilter.filter(null);
                 ecranService.displayMessage("!!!! Mode manuel !!!!");
                 startMonitoring();
             } else if (manuel && manuelFallingEdge.filter(ecranService.config().isModeManuel())) {
                 manuel = false;
                 endMonitoring();
-                ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
+                ecranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
             }
 
             // Si on est pas en manuel, gestion de la strategy
             if (!manuel && !ecranService.config().isSkipCalageBordure()) {
-                ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
+                ecranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
                 nerellRobotStatus.deposePartielle(ecranService.config().isDeposePartielle());
                 nerellRobotStatus.echangeEcueil(ecranService.config().isEchangeEcueil());
-                nerellRobotStatus.strategy(EStrategy.values()[ecranService.config().getStrategy()]);
 
                 groupService.configuration();
-
-                if (strategyChangeFilter.filter(nerellRobotStatus.strategy())) {
-                    log.info("Strategy {}", nerellRobotStatus.strategy().name());
-                    if (robotStatus.twoRobots()) {
-                        // compense le délai de comm pour le changement de stratégie
-                        // FIXME faire étape par étape avec acquittement
-                        ThreadUtils.sleep(2000);
-                    }
-                    positionStrategy();
-                }
             }
 
             robotStatus.twoRobots(ecranService.config().isTwoRobots());

@@ -1,6 +1,7 @@
 package org.arig.robot.services;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.Bouee;
 import org.arig.robot.model.ECouleurBouee;
 import org.arig.robot.model.EPort;
@@ -12,6 +13,7 @@ import org.arig.robot.model.GrandChenaux;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
 import org.arig.robot.system.group.IRobotGroup;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Stream;
 
+@Slf4j
 @Service
 public class RobotGroupService implements InitializingBean, IRobotGroup.Handler {
 
@@ -45,6 +48,9 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
     @Getter
     private boolean start;
 
+    @Getter
+    private int initStep = 0;
+
     @Override
     public void afterPropertiesSet() {
         group.listen(this);
@@ -55,6 +61,9 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
         switch (EStatusEvent.values()[eventOrdinal]) {
             case CALAGE:
                 calage = true;
+                break;
+            case INIT:
+                initStep = value[0];
                 break;
             case READY:
                 ready = true;
@@ -68,10 +77,12 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
             case TEAM:
                 rs.setTeam(ETeam.values()[value[0]]);
                 break;
-            case CONFIG:
+            case STRATEGY:
                 rs.strategy(EStrategy.values()[value[0]]);
-                rs.deposePartielle(value[1] > 0);
-                rs.echangeEcueil(value[2] > 0);
+                break;
+            case CONFIG:
+                rs.deposePartielle(value[0] > 0);
+                rs.echangeEcueil(value[1] > 0);
                 break;
             case CURRENT_ACTION:
                 String actionName = null;
@@ -189,6 +200,16 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
         sendEvent(EStatusEvent.CALAGE);
     }
 
+    public void initStep(int step) {
+        sendEvent(EStatusEvent.INIT, new byte[]{(byte) step});
+    }
+
+    public void waitInitStep(int step) {
+        do {
+            ThreadUtils.sleep(200);
+        } while (this.initStep != step);
+    }
+
     public void ready() {
         sendEvent(EStatusEvent.READY);
     }
@@ -202,9 +223,13 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
         sendEvent(EStatusEvent.TEAM, team);
     }
 
+    public void strategy(EStrategy strategy) {
+        rs.strategy(strategy);
+        sendEvent(EStatusEvent.STRATEGY, strategy);
+    }
+
     public void configuration() {
         byte[] data = new byte[]{
-                (byte) rs.strategy().ordinal(),
                 (byte) (rs.deposePartielle() ? 1 : 0),
                 (byte) (rs.echangeEcueil() ? 1 : 0)
         };

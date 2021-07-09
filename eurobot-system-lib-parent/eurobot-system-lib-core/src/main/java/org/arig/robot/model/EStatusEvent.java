@@ -2,6 +2,7 @@ package org.arig.robot.model;
 
 public enum EStatusEvent {
     CALAGE,
+    INIT,
     READY,
     START,
     ECHANGE_READY,
@@ -29,6 +30,7 @@ public enum EStatusEvent {
 
     CONFIG,
     TEAM,
+    STRATEGY,
     GIROUETTE,
     HAUT_FOND
 }

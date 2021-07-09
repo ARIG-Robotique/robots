@@ -8,6 +8,7 @@ import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
+import org.arig.robot.model.Bouee;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.OdinRobotStatus;
@@ -42,7 +43,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void afterInit() {
-        choixEquipe();
+        choixEquipeStrategy();
     }
 
     @Override
@@ -53,6 +54,8 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void beforeMatch() {
+        positionStrategy();
+
         // Lancement d'une première lecture de couleurs pour initialiser les capteurs
         odinIOService.enableLedCapteurCouleur();
         ThreadUtils.sleep(IOdinConstantesConfig.WAIT_LED);
@@ -62,7 +65,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         odinIOService.couleurBoueeArriereDroit();
         odinIOService.disableLedCapteurCouleur();
 
-        choixStrategie();
+        choixConfig();
 
         // Visu après la tirette
         odinIOService.enableLedCapteurCouleur();
@@ -109,21 +112,45 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
     }
 
     /**
-     * Etape du choix de l'équipe
+     * Etape du choix de l'équipe/stratégie
      */
-    private void choixEquipe() {
-        ecranService.displayMessage("Choix équipe et lancement calage bordure");
+    private void choixEquipeStrategy() {
         ChangeFilter<Integer> teamChangeFilter = new ChangeFilter<>(ETeam.UNKNOWN.ordinal());
+        ChangeFilter<Integer> strategyChangeFilter = new ChangeFilter<>(null);
+        ChangeFilter<Boolean> groupChangeFilter = new ChangeFilter<>(null);
+
+        boolean done;
         do {
             exitFromScreen();
             connectGroup();
 
-            if (teamChangeFilter.filter(ecranService.config().getTeam())) {
-                odinRobotStatus.setTeam(ETeam.values()[ecranService.config().getTeam()]);
-                log.info("Team {}", odinRobotStatus.team().name());
+            if (groupChangeFilter.filter(robotStatus.groupOk())) {
+                if (robotStatus.groupOk()) {
+                    ecranService.displayMessage("Attente configuration Nerell");
+                } else {
+                    ecranService.displayMessage("Choix équipe et lancement calage bordure");
+                }
             }
+
+            if (robotStatus.groupOk()) {
+                done = groupService.isCalage();
+
+            } else {
+                if (teamChangeFilter.filter(ecranService.config().getTeam())) {
+                    groupService.team(ETeam.values()[ecranService.config().getTeam()]);
+                    log.info("Team {}", odinRobotStatus.team().name());
+                }
+
+                if (strategyChangeFilter.filter(ecranService.config().getStrategy())) {
+                    groupService.strategy(EStrategy.values()[ecranService.config().getStrategy()]);
+                    log.info("Strategy {}", odinRobotStatus.strategy().name());
+                }
+
+                done = ecranService.config().isStartCalibration();
+            }
+
             ThreadUtils.sleep(200);
-        } while (!ecranService.config().isStartCalibration() && !groupService.isCalage());
+        } while (!done);
     }
 
     /**
@@ -137,11 +164,17 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
             robotStatus.disableAvoidance();
             if (robotStatus.simulateur() || skip) {
                 if (odinRobotStatus.team() == ETeam.BLEU) {
-                    position.setPt(new Point(conv.mmToPulse(IOdinConstantesConfig.dstCallage), conv.mmToPulse(1200)));
-                    position.setAngle(conv.degToPulse(0));
+                    position.setPt(new Point(
+                            conv.mmToPulse(IOdinConstantesConfig.dstCallage + 150),
+                            conv.mmToPulse(IOdinConstantesConfig.dstCallage + 150)
+                    ));
+                    position.setAngle(conv.degToPulse(90));
                 } else {
-                    position.setPt(new Point(conv.mmToPulse(3000 - IOdinConstantesConfig.dstCallage), conv.mmToPulse(1200)));
-                    position.setAngle(conv.degToPulse(180));
+                    position.setPt(new Point(
+                            conv.mmToPulse(3000 - IOdinConstantesConfig.dstCallage - 150),
+                            conv.mmToPulse(IOdinConstantesConfig.dstCallage + 150)
+                    ));
+                    position.setAngle(conv.degToPulse(90));
                 }
             } else {
                 robotStatus.enableCalageBordure();
@@ -170,13 +203,6 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 position.setAngle(conv.degToPulse(90));
 
                 trajectoryManager.avanceMM(150);
-
-                trajectoryManager.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-                if (odinRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(255, 900, GotoOption.ARRIERE);
-                } else {
-                    trajectoryManager.gotoPoint(3000 - 255, 900, GotoOption.ARRIERE);
-                }
             }
         } catch (AvoidingException e) {
             ecranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
@@ -186,46 +212,35 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     /**
      * Positionnement en fonction de la stratégie
-     * @param oldStrat
      */
-    public void positionStrategy(EStrategy oldStrat) {
+    public void positionStrategy() {
         ecranService.displayMessage("Mise en place");
         try {
-            final EStrategy newStrat = odinRobotStatus.strategy();
-            if (oldStrat != newStrat) {
-                if (odinRobotStatus.team() == ETeam.BLEU) {
-                    if (oldStrat == EStrategy.BASIC) {
-                        trajectoryManager.gotoPoint(255, 900);
-                        if (newStrat == EStrategy.FINALE) {
-                            // TODO
-                        }
-                    } else if (oldStrat == EStrategy.FINALE) {
-                        if (newStrat == EStrategy.BASIC) {
-                            // TODO
-                        } else if (newStrat == EStrategy.AGGRESSIVE) {
-                            // TODO
-                        }
-                    } else if (oldStrat == EStrategy.AGGRESSIVE) {
-                        trajectoryManager.gotoPoint(255, 900);
-                        if (newStrat == EStrategy.FINALE) {
-                            // TODO
-                        }
-                    }
-                } else {
-                    // TODO
-                }
-            }
+            trajectoryManager.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
-            if (newStrat == EStrategy.BASIC || newStrat == EStrategy.AGGRESSIVE) { // BASIC ou AGGRESSIVE
-                // Aligne vers les bouées au nord du port
-                if (odinRobotStatus.team() == ETeam.BLEU) {
-                    trajectoryManager.gotoPoint(255, 1005, GotoOption.ARRIERE);
-                } else {
-                    trajectoryManager.gotoPoint(3000 - 255, 1005, GotoOption.ARRIERE);
-                }
-                trajectoryManager.gotoOrientationDeg(-90);
-            } else if (newStrat == EStrategy.FINALE) {
-                // TODO
+            switch (odinRobotStatus.strategy()) {
+                case BASIC:
+                case AGGRESSIVE:
+                    // Aligne vers les bouées au nord du port
+                    if (odinRobotStatus.team() == ETeam.BLEU) {
+                        trajectoryManager.gotoPoint(255, 1005, GotoOption.ARRIERE);
+                    } else {
+                        trajectoryManager.gotoPoint(3000 - 255, 1005, GotoOption.ARRIERE);
+                    }
+                    trajectoryManager.gotoOrientationDeg(-90);
+                    break;
+
+                case FINALE:
+                    // Aligne vers les bouées au nord du port
+                    if (odinRobotStatus.team() == ETeam.BLEU) {
+                        trajectoryManager.gotoPoint(255, 1395, GotoOption.AVANT);
+                    } else {
+                        trajectoryManager.gotoPoint(3000 - 255, 1395, GotoOption.AVANT);
+                    }
+                    groupService.initStep(1);
+                    trajectoryManager.gotoOrientationDeg(90);
+                    break;
+
             }
         } catch (AvoidingException e) {
             ecranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
@@ -236,54 +251,48 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
     /**
      * Etape du choix des options + config balise
      */
-    private void choixStrategie() {
-        ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
+    private void choixConfig() {
+        if (robotStatus.groupOk()) {
+            ecranService.displayMessage("Attente démarrage Nerell");
 
-        SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.RISING);
-        SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.FALLING);
-        ChangeFilter<EStrategy> strategyChangeFilter = new ChangeFilter<>(null);
-
-        boolean manuel = ecranService.config().isModeManuel();
-        EStrategy oldStrat = odinRobotStatus.strategy();
-
-        while (robotStatus.groupOk() ? !groupService.isReady() : !ioService.tirette()) {
-            exitFromScreen();
-
-            if (manuelRisingEdge.filter(ecranService.config().isModeManuel())) {
-                manuel = true;
-                strategyChangeFilter.filter(null);
-                oldStrat = null;
-                ecranService.displayMessage("!!!! Mode manuel !!!!");
-                startMonitoring();
-            } else if (manuel && manuelFallingEdge.filter(ecranService.config().isModeManuel())) {
-                manuel = false;
-                endMonitoring();
-                ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
+            while (!groupService.isReady()) {
+                exitFromScreen();
+                robotStatus.twoRobots(true);
+                avoidingService.setSafeAvoidance(ecranService.config().isSafeAvoidance());
+                ThreadUtils.sleep(200);
             }
 
-            // Si on est pas en manuel, gestion de la strategy
-            if (!manuel && !ecranService.config().isSkipCalageBordure()) {
-                ecranService.displayMessage("Attente mise de la tirette, choix strategie ou mode manuel");
+        } else {
+            ecranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
 
-                if (!robotStatus.groupOk()) {
-                    odinRobotStatus.deposePartielle(ecranService.config().isDeposePartielle());
-                    odinRobotStatus.echangeEcueil(ecranService.config().isEchangeEcueil());
-                    odinRobotStatus.strategy(EStrategy.values()[ecranService.config().getStrategy()]);
+            SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.RISING);
+            SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.FALLING);
+
+            boolean manuel = ecranService.config().isModeManuel();
+
+            while (!ioService.tirette()) {
+                exitFromScreen();
+
+                if (manuelRisingEdge.filter(ecranService.config().isModeManuel())) {
+                    manuel = true;
+                    ecranService.displayMessage("!!!! Mode manuel !!!!");
+                    startMonitoring();
+                } else if (manuel && manuelFallingEdge.filter(ecranService.config().isModeManuel())) {
+                    manuel = false;
+                    endMonitoring();
+                    ecranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
                 }
 
-                if (strategyChangeFilter.filter(odinRobotStatus.strategy())) {
-                    log.info("Strategy {}", odinRobotStatus.strategy().name());
-                    positionStrategy(oldStrat);
-                    oldStrat = odinRobotStatus.strategy();
+                // Si on est pas en manuel, gestion de la config
+                if (!manuel && !ecranService.config().isSkipCalageBordure()) {
+                    ecranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
                 }
+
+                robotStatus.twoRobots(ecranService.config().isTwoRobots());
+                avoidingService.setSafeAvoidance(ecranService.config().isSafeAvoidance());
+
+                ThreadUtils.sleep(manuel ? 4000 : 200);
             }
-
-            robotStatus.twoRobots(ecranService.config().isTwoRobots());
-            avoidingService.setSafeAvoidance(ecranService.config().isSafeAvoidance());
-
-            connectGroup();
-
-            ThreadUtils.sleep(manuel ? 4000 : 200);
         }
     }
 }
