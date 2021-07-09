@@ -11,6 +11,7 @@ public interface INerellConstantesServos {
     // --------------------- //
 
     byte SPEED_MOUSTACHE_POUSSETTE = 20;
+    byte SPEED_MOUSTACHE_FERME_HAUT_FOND = 20;
     byte SPEED_MOUSTACHE = 0;
     byte SPEED_BRAS = 0;
     byte SPEED_ASCENSEUR_ARRIERE = 0;
@@ -23,6 +24,7 @@ public interface INerellConstantesServos {
     // ------------ //
 
     int WAIT_MOUSTACHE_POUSSETTE = 800;
+    int WAIT_MOUSTACHE_FERME_HAUT_FOND = 300;
     int WAIT_MOUSTACHE_POUSSETTE_SPECIAL = 500;
     int WAIT_MOUSTACHE_DROITE = 550;
     int WAIT_MOUSTACHE_GAUCHE = WAIT_MOUSTACHE_DROITE;
@@ -60,10 +62,12 @@ public interface INerellConstantesServos {
     int POS_MOUSTACHE_GAUCHE_OUVERT_SPECIAL = 2280;
     int POS_MOUSTACHE_GAUCHE_POUSSETTE = 1420;
     int POS_MOUSTACHE_GAUCHE_FERME = 960;
+    int POS_MOUSTACHE_GAUCHE_FERME_HAUT_FOND = 1810;
     int POS_MOUSTACHE_DROITE_OUVERT = 990;
     int POS_MOUSTACHE_DROITE_OUVERT_SPECIAL = 790;
     int POS_MOUSTACHE_DROITE_POUSSETTE = 1510;
     int POS_MOUSTACHE_DROITE_FERME = 1980;
+    int POS_MOUSTACHE_DROITE_FERME_HAUT_FOND = 1160;
     int POS_BRAS_GAUCHE_MANCHE_AIR = 1050;
     int POS_BRAS_GAUCHE_PHARE = 960;
     int POS_BRAS_GAUCHE_FERME = 1980;
@@ -107,12 +111,13 @@ public interface INerellConstantesServos {
     byte POS_BATCH_PINCES_ARRIERE_FERME = 4;
     byte POS_BATCH_PINCES_ARRIERE_OUVERT = 5;
     byte POS_BATCH_MOUSTACHES_FERME = 6;
-    byte POS_BATCH_MOUSTACHES_OUVERT = 7;
-    byte POS_BATCH_MOUSTACHES_OUVERT_SPECIAL = 8;
-    byte POS_BATCH_MOUSTACHES_POUSETTE = 9;
-    byte POS_BATCH_MOUSTACHES_POUSETTE_SPECIAL = 10;
-    byte POS_BATCH_ASCENSEURS_AVANT_BAS = 11;
-    byte POS_BATCH_ASCENSEURS_AVANT_HAUT = 12;
+    byte POS_BATCH_MOUSTACHES_FERME_HAUT_FOND = 7;
+    byte POS_BATCH_MOUSTACHES_OUVERT = 8;
+    byte POS_BATCH_MOUSTACHES_OUVERT_SPECIAL = 9;
+    byte POS_BATCH_MOUSTACHES_POUSETTE = 10;
+    byte POS_BATCH_MOUSTACHES_POUSETTE_SPECIAL = 11;
+    byte POS_BATCH_ASCENSEURS_AVANT_BAS = 12;
+    byte POS_BATCH_ASCENSEURS_AVANT_HAUT = 13;
 
     Map<Byte, Triple<Integer, Integer, Integer>> MIN_TIME_MAX = ImmutableMap.<Byte, Triple<Integer, Integer, Integer>>builder()
             .put(MOUSTACHE_DROITE, Triple.of(POS_MOUSTACHE_DROITE_FERME, WAIT_MOUSTACHE_DROITE, POS_MOUSTACHE_DROITE_OUVERT_SPECIAL))
@@ -154,6 +159,10 @@ public interface INerellConstantesServos {
                     .put(POS_BATCH_MOUSTACHES_FERME, new int[][]{
                             new int[]{INerellConstantesServos.MOUSTACHE_DROITE, INerellConstantesServos.POS_MOUSTACHE_DROITE_FERME},
                             new int[]{INerellConstantesServos.MOUSTACHE_GAUCHE, INerellConstantesServos.POS_MOUSTACHE_GAUCHE_FERME}
+                    })
+                    .put(POS_BATCH_MOUSTACHES_FERME_HAUT_FOND, new int[][]{
+                            new int[]{INerellConstantesServos.MOUSTACHE_DROITE, INerellConstantesServos.POS_MOUSTACHE_DROITE_FERME_HAUT_FOND},
+                            new int[]{INerellConstantesServos.MOUSTACHE_GAUCHE, INerellConstantesServos.POS_MOUSTACHE_GAUCHE_FERME_HAUT_FOND}
                     })
                     .put(POS_BATCH_MOUSTACHES_OUVERT, new int[][]{
                             new int[]{INerellConstantesServos.MOUSTACHE_DROITE, INerellConstantesServos.POS_MOUSTACHE_DROITE_OUVERT},

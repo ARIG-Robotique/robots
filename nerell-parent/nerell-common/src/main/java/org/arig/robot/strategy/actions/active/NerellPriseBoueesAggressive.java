@@ -49,7 +49,7 @@ public class NerellPriseBoueesAggressive extends AbstractNerellAction {
 
             mv.gotoPoint(entryPoint(), GotoOption.SANS_ARRET, GotoOption.SANS_ORIENTATION);
 
-            // On est sorti du port on active évitement
+            // On est sorti du port on active l'évitement
             rsNerell.enableAvoidance();
 
             // Rush bouée 7 (Bleu) ou 10 (Jaune)

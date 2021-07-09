@@ -14,6 +14,7 @@ public class NerellServosController extends AbstractServosController {
     private static final String OUVERT = "Ouvert";
     private static final String OUVERT_SPECIAL = "Ouvert Spé";
     private static final String FERME = "Fermé";
+    private static final String FERME_HAUT_FOND = "Fermé haut fond";
     private static final String POUSSETTE = "Poussette";
     private static final String MANCHE_A_AIR = "Manche à air";
     private static final String PHARE = "Phare";
@@ -54,6 +55,7 @@ public class NerellServosController extends AbstractServosController {
                 .batch("Tout ouvert", INerellConstantesServos.POS_BATCH_MOUSTACHES_OUVERT)
                 .batch("Tout ouvert spé", INerellConstantesServos.POS_BATCH_MOUSTACHES_OUVERT_SPECIAL)
                 .batch("Tout poussette", INerellConstantesServos.POS_BATCH_MOUSTACHES_POUSETTE)
+                .batch("Tous fermé haut fond", INerellConstantesServos.POS_BATCH_MOUSTACHES_FERME_HAUT_FOND)
                 .batch("Tout fermé", INerellConstantesServos.POS_BATCH_MOUSTACHES_FERME)
                 .servo(new ServoConfig()
                         .setId(INerellConstantesServos.MOUSTACHE_DROITE)
@@ -62,6 +64,7 @@ public class NerellServosController extends AbstractServosController {
                         .position(OUVERT_SPECIAL, INerellConstantesServos.POS_MOUSTACHE_DROITE_OUVERT_SPECIAL)
                         .position(POUSSETTE, INerellConstantesServos.POS_MOUSTACHE_DROITE_POUSSETTE)
                         .position(FERME, INerellConstantesServos.POS_MOUSTACHE_DROITE_FERME)
+                        .position(FERME_HAUT_FOND, INerellConstantesServos.POS_MOUSTACHE_DROITE_FERME_HAUT_FOND)
                 )
                 .servo(new ServoConfig()
                         .setId(INerellConstantesServos.MOUSTACHE_GAUCHE)
@@ -70,6 +73,7 @@ public class NerellServosController extends AbstractServosController {
                         .position(OUVERT_SPECIAL, INerellConstantesServos.POS_MOUSTACHE_GAUCHE_OUVERT_SPECIAL)
                         .position(POUSSETTE, INerellConstantesServos.POS_MOUSTACHE_GAUCHE_POUSSETTE)
                         .position(FERME, INerellConstantesServos.POS_MOUSTACHE_GAUCHE_FERME)
+                        .position(FERME_HAUT_FOND, INerellConstantesServos.POS_MOUSTACHE_GAUCHE_FERME_HAUT_FOND)
                 )
         );
 

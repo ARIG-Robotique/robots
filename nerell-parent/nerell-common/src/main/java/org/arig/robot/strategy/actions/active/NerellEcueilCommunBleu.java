@@ -19,6 +19,9 @@ import java.util.List;
 @Component
 public class NerellEcueilCommunBleu extends AbstractNerellEcueil {
 
+    public static final int ENTRY_X = 850;
+    public static final int ENTRY_Y = 1770;
+
     @Autowired
     private NerellBouee5 bouee5;
 
@@ -50,9 +53,7 @@ public class NerellEcueilCommunBleu extends AbstractNerellEcueil {
 
     @Override
     public Point entryPoint() {
-        double x = 850;
-        double y = 1770;
-        return new Point(x, y);
+        return new Point(ENTRY_X, ENTRY_Y);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class NerellEcueilCommunBleu extends AbstractNerellEcueil {
         if (rsNerell.team() == ETeam.BLEU) {
             return super.isValid() && !rsNerell.boueePresente(5) && !rsNerell.boueePresente(6);
         } else {
-            return super.isValid();
+            return super.isValid() && !rs.ecueilCommunAdversePris();
         }
     }
 

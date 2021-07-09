@@ -36,6 +36,7 @@ public interface IEurobotConfig {
     String ACTION_PRISE_BOUEE_SUD = "Bouées sud";
     String ACTION_PRISE_BOUEE_BASIC = "Bouées basic";
     String ACTION_PRISE_BOUEE_AGGRESSIVE = "Bouées aggressives";
+    String ACTION_PRISE_BOUEE_FINALE = "Bouées finale";
     String ACTION_PRISE_BOUEE_PREFIX = "Bouée ";
     String ACTION_PRISE_HAUT_FOND = "Haut fond";
     String ACTION_PHARE = "Phare";
