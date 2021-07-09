@@ -74,6 +74,9 @@ public class BaliseService extends AbstractBaliseService {
 
             for (int i = 0; i < bouees.length; i++) {
                 int iBouee = 12 - i;
+                if (iBouee == 12 || iBouee == 5) {
+                    continue;
+                }
                 if (bouees[i] == EPresenceBouee.ABSENT && rs.boueePresente(iBouee)) {
                     changed.add(iBouee);
                 }
