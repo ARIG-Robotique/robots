@@ -47,9 +47,9 @@ public class NerellHautFond extends AbstractNerellAction {
 
     private Point finalPoint(double finalY) {
         if (conv.pulseToMm(position.getPt().getX()) <= 1500) {
-            return new Point(3000 - 1130, finalY);
+            return new Point(3000 - 1300, finalY);
         } else {
-            return new Point(1130, finalY);
+            return new Point(1300, finalY);
         }
     }
 
@@ -108,14 +108,16 @@ public class NerellHautFond extends AbstractNerellAction {
             rsNerell.hautFond(Collections.emptyList());
             group.hautFondPris();
 
-            mv.gotoOrientationDeg(-90);
-            mv.avanceMM(100);
-
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
             updateValidTime();
 
+            try {
+                mv.reculeMM(80);
+            } catch (AvoidingException e) {
+                log.warn("La et bien on veut être safe mais ça ne veut pas");
+            }
             servosNerell.moustachesFerme(false);
         }
     }
