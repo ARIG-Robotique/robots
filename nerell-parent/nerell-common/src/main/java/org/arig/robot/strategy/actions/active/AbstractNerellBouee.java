@@ -87,9 +87,10 @@ public abstract class AbstractNerellBouee extends AbstractNerellAction {
                 pincesAvantService.setExpected(null, rsNerell.boueeCouleur(bouee));
             }
 
-            mv.alignFrontTo(entry);
+            mv.alignFrontToAvecDecalage(entry, offsetOrientation);
+            Point pointPrise = tableUtils.eloigner(distanceApproche * 1.5);
             mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation());
-            mv.gotoPoint(tableUtils.getPointFromAngle(distanceApproche * 1.5, offsetOrientation), GotoOption.AVANT);
+            mv.gotoPoint(pointPrise, GotoOption.AVANT, GotoOption.SANS_ORIENTATION);
             group.boueePrise(bouee);
             ThreadUtils.sleep(INerellConstantesConfig.WAIT_POMPES);
 
