@@ -65,7 +65,7 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
         return isTimeValid() && !rsOdin.inPort() &&
                 (rs.stepsPetitPort() == 0 ?
                         (rsOdin.pincesArriereEmpty() && rsOdin.pincesAvantEmpty()) : // traitement petit port
-                        (!rsOdin.pincesArriereEmpty() || !rsOdin.pincesAvantEmpty()) // depose
+                        rs.stepsPetitPort() < 4 && (!rsOdin.pincesArriereEmpty() || !rsOdin.pincesAvantEmpty()) // depose
                 );
     }
 
@@ -250,6 +250,10 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
         } finally {
             if (didSomething) {
                 group.incStepsPetitPort();
+
+                if (rs.stepsPetitPort() > 3) {
+                    complete();
+                }
             }
         }
     }

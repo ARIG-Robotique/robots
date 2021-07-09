@@ -80,7 +80,8 @@ public class NerellDeposePetitPort extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rsNerell.inPort() && (!rsNerell.pincesAvantEmpty() || !rsNerell.pincesArriereEmpty() || rs.stepsPetitPort() == 0);
+        return isTimeValid() && !rsNerell.inPort() && rs.stepsPetitPort() < 4 &&
+                (!rsNerell.pincesAvantEmpty() || !rsNerell.pincesArriereEmpty() || rs.stepsPetitPort() == 0);
     }
 
     @Override
