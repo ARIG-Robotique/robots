@@ -627,7 +627,9 @@ public class TrajectoryManager {
             boolean avoidanceEnabled = rs.avoidanceEnabled();
 
             // Alignement sur le point
-            rs.disableAvoidance();
+            if (avoidanceEnabled) {
+                rs.disableAvoidance();
+            }
 
             final SensDeplacement realSens;
             if (options.contains(GotoOption.AVANT)) {
