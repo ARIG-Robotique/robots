@@ -109,9 +109,19 @@ public class NerellServosService extends AbstractServosService {
         setPosition(INerellConstantesServos.MOUSTACHE_GAUCHE, INerellConstantesServos.POS_MOUSTACHE_GAUCHE_OUVERT, wait);
     }
 
+    public void moustacheGaucheOuvertSpe(boolean wait) {
+        logPositionServo("Moustache gauche", "Spé", wait);
+        setPosition(INerellConstantesServos.MOUSTACHE_GAUCHE, INerellConstantesServos.POS_MOUSTACHE_GAUCHE_OUVERT_SPECIAL, wait);
+    }
+
     public void moustacheDroiteOuvert(boolean wait) {
         logPositionServo("Moustache droite", "Ouvert", wait);
         setPosition(INerellConstantesServos.MOUSTACHE_DROITE, INerellConstantesServos.POS_MOUSTACHE_DROITE_OUVERT, wait);
+    }
+
+    public void moustacheDroiteOuvertSpe(boolean wait) {
+        logPositionServo("Moustache droite", "Spé", wait);
+        setPosition(INerellConstantesServos.MOUSTACHE_DROITE, INerellConstantesServos.POS_MOUSTACHE_DROITE_OUVERT_SPECIAL, wait);
     }
 
     public void brasGaucheMancheAAir(boolean wait) {

@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.Bouee;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.INerellIOService;
@@ -19,7 +18,7 @@ import java.util.Collections;
 public class NerellHautFond extends AbstractNerellAction {
 
     private static final int X = 800;
-    private static final int Y = 1785;
+    private static final int Y = 1720;
 
     @Autowired
     protected INerellIOService io;
@@ -61,8 +60,7 @@ public class NerellHautFond extends AbstractNerellAction {
         if (!io.presenceVentouse2()) libre += 3;
         if (!io.presenceVentouse3()) libre += 3;
         if (!io.presenceVentouse4()) libre += 3;
-        int hautFond = rsNerell.baliseEnabled() ? rsNerell.hautFond().size() : 6;
-        return Math.min(libre, hautFond) + tableUtils.alterOrder(entryPoint());
+        return libre + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
@@ -73,17 +71,7 @@ public class NerellHautFond extends AbstractNerellAction {
             final Point entry = entryPoint();
 
             // calcule le Y qui permettra de rencontrer le plus de bouées
-            final double finalY;
-
-            if (rsNerell.baliseEnabled()) {
-                // médiane : https://stackoverflow.com/a/49215170
-                final int nbHautFond = rsNerell.hautFond().size();
-                final double medianY = rsNerell.hautFond().stream().map(Bouee::pt).mapToDouble(Point::getY).sorted()
-                        .skip((nbHautFond - 1) / 2).limit(2 - nbHautFond % 2).average().orElse(entry.getY());
-                finalY = Math.min(entry.getY(), medianY);
-            } else {
-                finalY = entry.getY();
-            }
+            final double finalY = entry.getY();
 
             entry.setY(finalY);
             final Point finalPoint = finalPoint(finalY);
@@ -95,10 +83,10 @@ public class NerellHautFond extends AbstractNerellAction {
             // on ratisse en laissant l'évitement actif
             if (finalPoint.getX() > entry.getX()) {
                 mv.gotoOrientationDeg(0);
-                servosNerell.moustacheGaucheOuvert(false);
+                servosNerell.moustacheGaucheOuvertSpe(false);
             } else {
                 mv.gotoOrientationDeg(180);
-                servosNerell.moustacheDroiteOuvert(false);
+                servosNerell.moustacheDroiteOuvertSpe(false);
             }
 
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
