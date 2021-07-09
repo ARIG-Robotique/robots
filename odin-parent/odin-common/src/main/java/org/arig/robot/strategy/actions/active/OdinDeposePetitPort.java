@@ -82,6 +82,7 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
         boolean started = false;
         try {
             //point d'entrée
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(getX(1900), 550);
             mv.gotoOrientationDeg(-90);
 
