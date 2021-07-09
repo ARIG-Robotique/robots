@@ -110,9 +110,9 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             if (rs.team() == ETeam.JAUNE) {
                 servosOdin.brasDroitGobelet(true);
                 mv.gotoOrientationDeg(0, SensRotation.TRIGO);
-                servosOdin.brasDroitGobelet(true);
+                servosOdin.brasDroitFerme(true);
             } else {
-                servosOdin.brasGauchePhare(true);
+                servosOdin.brasGaucheGobelet(true);
                 mv.gotoOrientationDeg(180, SensRotation.HORAIRE);
                 servosOdin.brasGaucheFerme(true);
             }
