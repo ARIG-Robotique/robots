@@ -19,7 +19,7 @@ public class OdinBouee6 extends AbstractOdinBouee {
     @Accessors(fluent = true)
     public List<String> blockingActions = Arrays.asList(
             IEurobotConfig.ACTION_PRISE_BOUEE_PREFIX + "5",
-            IEurobotConfig.ACTION_PRISE_BOUEE_NORD,
+            IEurobotConfig.ACTION_PRISE_BOUEE_BASIC,
             IEurobotConfig.ACTION_ECUEIL_COMMUN_BLEU
     );
 
