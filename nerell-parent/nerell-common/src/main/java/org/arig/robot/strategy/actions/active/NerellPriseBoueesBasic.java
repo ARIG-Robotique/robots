@@ -11,6 +11,8 @@ import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.awt.geom.Rectangle2D;
+
 @Slf4j
 @Component
 public class NerellPriseBoueesBasic extends AbstractNerellAction {
@@ -69,6 +71,15 @@ public class NerellPriseBoueesBasic extends AbstractNerellAction {
             // Rush bouée 7 (Bleu) ou 10 (Jaune)
             mv.gotoPoint(getX(1200), 1143, GotoOption.SANS_ORIENTATION);
             group.boueePrise(rsNerell.team() == ETeam.BLEU ? 7 : 10);
+
+            // blocage avec Odin
+            if (IEurobotConfig.ACTION_NETTOYAGE_PETIT_PORT.equals(rs.otherCurrentAction())) {
+                if (rs.team() == ETeam.BLEU) {
+                    tableUtils.addDynamicDeadZone(new Rectangle2D.Double(0, 1380, 500, 300));
+                } else {
+                    tableUtils.addDynamicDeadZone(new Rectangle2D.Double(2500, 1380, 500, 300));
+                }
+            }
 
             if (rs.team() == ETeam.BLEU) {
                 if (bouee8.isValid()) {
