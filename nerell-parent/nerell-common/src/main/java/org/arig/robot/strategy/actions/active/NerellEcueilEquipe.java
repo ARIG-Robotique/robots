@@ -52,11 +52,11 @@ public class NerellEcueilEquipe extends AbstractNerellEcueil {
 
     @Override
     protected void executeCalage() throws AvoidingException {
-        mv.gotoPoint(entryForCalage().getX(), INerellConstantesConfig.dstCallage + 50, GotoOption.ARRIERE);
+        mv.gotoPoint(entryForCalage().getX(), INerellConstantesConfig.dstCallage + 40, GotoOption.ARRIERE);
 
         mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
         rs.enableCalageBordure();
-        mv.reculeMMSansAngle(200);
+        mv.reculeMMSansAngle(120);
 
         final double robotY = position.getPt().getY();
         final double realY = conv.mmToPulse(INerellConstantesConfig.dstCallage);
