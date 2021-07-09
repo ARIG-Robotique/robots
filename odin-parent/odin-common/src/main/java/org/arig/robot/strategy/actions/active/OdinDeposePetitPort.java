@@ -98,9 +98,9 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             rsOdin.enablePincesAvant();
 
             if (rs.team() == ETeam.JAUNE) {
-                pincesAvantService.setExpected(ECouleurBouee.VERT, 2);
+                pincesAvantService.setExpected(ECouleurBouee.VERT, 1);
             } else {
-                pincesAvantService.setExpected(ECouleurBouee.ROUGE, 1);
+                pincesAvantService.setExpected(ECouleurBouee.ROUGE, 0);
             }
 
             mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation(5));
@@ -123,9 +123,9 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             // prise bouée rouge (jaune) verte (bleu)
             rs.enableCalageBordure(TypeCalage.CUSTOM); // calage sur présence ventouses
             if (rs.team() == ETeam.JAUNE) {
-                pincesAvantService.setExpected(ECouleurBouee.ROUGE, 1);
+                pincesAvantService.setExpected(ECouleurBouee.ROUGE, 0);
             } else {
-                pincesAvantService.setExpected(ECouleurBouee.VERT, 2);
+                pincesAvantService.setExpected(ECouleurBouee.VERT, 1);
             }
             mv.avanceMMSansAngle(90);
             ThreadUtils.sleep(410); // double du scheduler de gestion du service
@@ -148,9 +148,9 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             // prise bouée rouge (jaune) vert (bleu)
             rsOdin.enablePincesAvant();
             if (rs.team() == ETeam.JAUNE) {
-                pincesAvantService.setExpected(ECouleurBouee.ROUGE, 2);
+                pincesAvantService.setExpected(ECouleurBouee.ROUGE, 1);
             } else {
-                pincesAvantService.setExpected(ECouleurBouee.VERT, 1);
+                pincesAvantService.setExpected(ECouleurBouee.VERT, 0);
             }
             mv.gotoPoint(getX(1705), 370, GotoOption.AVANT);
 

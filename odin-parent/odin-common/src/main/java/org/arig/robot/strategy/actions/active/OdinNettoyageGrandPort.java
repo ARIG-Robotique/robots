@@ -59,9 +59,9 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
 
             // prise 4/16
             if (rsOdin.team() == ETeam.BLEU) {
-                pincesAvantService.setExpected(ECouleurBouee.VERT, 1);
+                pincesAvantService.setExpected(ECouleurBouee.VERT, 0);
             } else {
-                pincesAvantService.setExpected(ECouleurBouee.ROUGE, 2);
+                pincesAvantService.setExpected(ECouleurBouee.ROUGE, 1);
             }
 
             mv.setVitesse(robotConfig.vitesse(pctVitessePriseBouee), robotConfig.vitesseOrientation());
@@ -75,9 +75,9 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
 
             // prise 3/15
             if (rsOdin.team() == ETeam.BLEU) {
-                pincesArriereService.setExpected(ECouleurBouee.ROUGE, 1);
+                pincesArriereService.setExpected(ECouleurBouee.ROUGE, 0);
             } else {
-                pincesArriereService.setExpected(ECouleurBouee.VERT, 2);
+                pincesArriereService.setExpected(ECouleurBouee.VERT, 1);
             }
 
             mv.gotoPoint(getX(408), 927, GotoOption.ARRIERE);
@@ -95,9 +95,9 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
 
                 // prise 2/14
                 if (rsOdin.team() == ETeam.BLEU) {
-                    pincesAvantService.setExpected(ECouleurBouee.VERT, 2);
+                    pincesAvantService.setExpected(ECouleurBouee.VERT, 1);
                 } else {
-                    pincesAvantService.setExpected(ECouleurBouee.ROUGE, 1);
+                    pincesAvantService.setExpected(ECouleurBouee.ROUGE, 0);
                 }
 
                 mv.setVitesse(robotConfig.vitesse(pctVitessePriseBouee), robotConfig.vitesseOrientation());
@@ -111,9 +111,9 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
 
                 // prise 1/13
                 if (rsOdin.team() == ETeam.BLEU) {
-                    pincesArriereService.setExpected(ECouleurBouee.ROUGE, 2);
+                    pincesArriereService.setExpected(ECouleurBouee.ROUGE, 1);
                 } else {
-                    pincesArriereService.setExpected(ECouleurBouee.VERT, 1);
+                    pincesArriereService.setExpected(ECouleurBouee.VERT, 0);
                 }
 
                 mv.gotoPoint(getX(337), 1593, GotoOption.ARRIERE);
