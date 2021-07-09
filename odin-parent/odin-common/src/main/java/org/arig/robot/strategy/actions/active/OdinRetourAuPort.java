@@ -84,20 +84,19 @@ public class OdinRetourAuPort extends AbstractOdinAction {
             group.port(port == EPort.NORD ? EPort.WIP_NORD : EPort.WIP_SUD);
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            if (tableUtils.distance(entry) > 200) {
+                mv.pathTo(entry, GotoOption.ARRIERE, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+            }
+            group.port(port);
 
             // Finalisation de la rentrée dans le port après avoir compté les points
-            if (rsOdin.otherPort() == EPort.AUCUN) {
+            if (!rs.otherPort().isInPort()) {
                 // Premier arrivé on rentre dans la zone
-                final double entryYFirst = port == EPort.NORD ? 1770 : 650;
-                if (tableUtils.distance(getX(160), entryYFirst) > 200) {
-                    mv.pathTo(entry.getX(), entryYFirst, GotoOption.ARRIERE, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
-                }
+                final double entryYFirst = port == EPort.NORD ? 1770 : 630;
                 mv.gotoPoint(getX(160), entryYFirst, GotoOption.ARRIERE, GotoOption.SANS_ORIENTATION);
-                group.port(port);
                 mv.gotoOrientationDeg(rs.team() == ETeam.BLEU ? 0 : 180);
             } else {
                 // Deuxieme arrivé, bisous Nerell
-                mv.pathTo(entry.getX(), entry.getY(), GotoOption.ARRIERE, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
                 mv.gotoPoint(getX(550), entry.getY(), GotoOption.ARRIERE);
                 mv.gotoOrientationDeg(90);
                 if (rs.team() == ETeam.BLEU) {
@@ -105,12 +104,10 @@ public class OdinRetourAuPort extends AbstractOdinAction {
                 } else {
                     servosOdin.brasDroitMancheAAir(false);
                 }
-                group.port(port);
             }
 
             complete();
         } catch (NoPathFoundException | AvoidingException e) {
-            updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
 
             if (!rsOdin.inPort()) {

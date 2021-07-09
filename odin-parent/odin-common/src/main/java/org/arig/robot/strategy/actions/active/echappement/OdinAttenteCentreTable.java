@@ -29,7 +29,7 @@ public class OdinAttenteCentreTable extends AbstractOdinAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rsOdin.inPort();
+        return isTimeValid() && !rsOdin.inPort() && rs.getRemainingTime() > IEurobotConfig.validRetourPortRemainingTimeNerell;
     }
 
     @Override

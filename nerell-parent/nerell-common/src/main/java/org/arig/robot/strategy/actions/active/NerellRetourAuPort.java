@@ -84,18 +84,16 @@ public class NerellRetourAuPort extends AbstractNerellAction {
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
+            mv.pathTo(entry, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+            group.port(port);
+
             // Finalisation de la rentrée dans le port après avoir compté les points
-            if (rsNerell.otherPort() == EPort.AUCUN) {
+            if (!rs.otherPort().isInPort()) {
                 // Premier arrivé
-                mv.pathTo(entry, GotoOption.ARRIERE, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
-                group.port(port);
-                mv.gotoPoint(getX(270), entry.getY(), GotoOption.SANS_ORIENTATION);
+                mv.gotoPoint(getX(270), entry.getY(),GotoOption.ARRIERE);
 
             } else {
                 // Deuxieme arrivé
-                final double entryYSecond = port == EPort.NORD ? 1775 : 640;
-                mv.pathTo(entry.getX(), entryYSecond, GotoOption.AVANT, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
-                group.port(port);
                 mv.gotoOrientationDeg(rs.team() == ETeam.BLEU ? 180 : 0);
                 if ((rs.team() == ETeam.BLEU && port == EPort.NORD) || (rs.team() == ETeam.JAUNE && port == EPort.SUD)) {
                     servosNerell.moustacheGaucheOuvert(false);
@@ -106,7 +104,6 @@ public class NerellRetourAuPort extends AbstractNerellAction {
 
             complete();
         } catch (NoPathFoundException | AvoidingException e) {
-            updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
 
             if (!rsNerell.inPort()) {
