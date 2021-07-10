@@ -106,8 +106,6 @@ public class OdinRetourAuPort extends AbstractOdinAction {
                 }
             }
             rs.disableAsserv();
-            ioService.disableAlimMoteurs();
-            ioService.disableAlimServos();
 
             complete();
         } catch (NoPathFoundException | AvoidingException e) {

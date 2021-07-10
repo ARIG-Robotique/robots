@@ -96,14 +96,12 @@ public class NerellRetourAuPort extends AbstractNerellAction {
                 // Deuxieme arrivé
                 mv.gotoOrientationDeg(rs.team() == ETeam.BLEU ? 180 : 0);
                 if ((rs.team() == ETeam.BLEU && port == EPort.NORD) || (rs.team() == ETeam.JAUNE && port == EPort.SUD)) {
-                    servosNerell.moustacheGaucheOuvert(false);
+                    servosNerell.moustacheGaucheOuvert(true);
                 } else {
-                    servosNerell.moustacheDroiteOuvert(false);
+                    servosNerell.moustacheDroiteOuvert(true);
                 }
             }
             rs.disableAsserv();
-            ioService.disableAlimMoteurs();
-            ioService.disableAlimServos();
 
             complete();
         } catch (NoPathFoundException | AvoidingException e) {
