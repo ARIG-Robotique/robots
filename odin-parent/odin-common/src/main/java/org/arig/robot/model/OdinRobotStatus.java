@@ -25,10 +25,12 @@ public class OdinRobotStatus extends EurobotStatus {
     private boolean pincesAvantEnabled = false;
 
     public void enablePincesAvant() {
+        log.info("[RS] activation des pinces avant");
         pincesAvantEnabled = true;
     }
 
     public void disablePincesAvant() {
+        log.info("[RS] désactivation des pinces avant");
         pincesAvantEnabled = false;
     }
 
@@ -37,10 +39,12 @@ public class OdinRobotStatus extends EurobotStatus {
     private boolean pincesArriereEnabled = false;
 
     public void enablePincesArriere() {
+        log.info("[RS] activation des pinces arriere");
         pincesArriereEnabled = true;
     }
 
     public void disablePincesArriere() {
+        log.info("[RS] désactivation des pinces arriere");
         pincesArriereEnabled = false;
     }
 
