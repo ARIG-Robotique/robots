@@ -42,9 +42,13 @@ public class OdinNettoyageGrandPort extends AbstractOdinAction {
 
     @Override
     public boolean isValid() {
+        if (rs.strategy() != EStrategy.FINALE) {
+            return true;
+        }
         return isTimeValid() && !rsOdin.inPort() &&
                 rs.getRemainingTime() > IEurobotConfig.invalidPriseRemainingTime &&
-                rsOdin.pincesArriereEmpty() && rsOdin.pincesArriereEmpty();
+                rs.grandChenalRougeEmpty() && rs.grandChenalVertEmpty() &&
+                rsOdin.pincesArriereEmpty() && rsOdin.pincesAvantEmpty();
     }
 
     @Override
