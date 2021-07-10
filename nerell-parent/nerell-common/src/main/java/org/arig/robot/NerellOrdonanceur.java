@@ -299,17 +299,21 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 case FINALE:
                     // Aligne vers le centre de la table e faisant le tour
                     if (nerellRobotStatus.team() == ETeam.BLEU) {
-                        trajectoryManager.gotoPoint(650, 2000 - 300);
+                        trajectoryManager.gotoPoint(650, 2000 - 350);
                         trajectoryManager.gotoPoint(650, 1090);
-                        groupService.waitInitStep(1);
+                        if (nerellRobotStatus.groupOk()) {
+                            groupService.waitInitStep(1);
+                        }
                         trajectoryManager.gotoPoint(245, 1090, GotoOption.ARRIERE);
-                        trajectoryManager.alignFrontTo(500, 1270);
+                        trajectoryManager.alignFrontTo(700, 1270);
                     } else {
-                        trajectoryManager.gotoPoint(3000 - 650, 2000 - 300);
+                        trajectoryManager.gotoPoint(3000 - 650, 2000 - 350);
                         trajectoryManager.gotoPoint(3000 - 650, 1090);
-                        groupService.waitInitStep(1);
+                        if (nerellRobotStatus.groupOk()) {
+                            groupService.waitInitStep(1);
+                        }
                         trajectoryManager.gotoPoint(3000 - 245, 1090, GotoOption.ARRIERE);
-                        trajectoryManager.alignFrontTo(3000 - 500, 1270);
+                        trajectoryManager.alignFrontTo(3000 - 700, 1270);
                     }
                     break;
             }
