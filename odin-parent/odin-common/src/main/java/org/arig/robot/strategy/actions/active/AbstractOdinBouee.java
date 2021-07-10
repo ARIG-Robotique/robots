@@ -87,6 +87,7 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(pointApproche, sens);
+            group.boueePrise(bouee);
 
             // prise de la bouée
             final Point pointPrise;
@@ -102,7 +103,6 @@ public abstract class AbstractOdinBouee extends AbstractOdinAction {
             }
             mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation());
             mv.gotoPoint(pointPrise, sens, GotoOption.SANS_ORIENTATION);
-            group.boueePrise(bouee);
             ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
 
             complete();

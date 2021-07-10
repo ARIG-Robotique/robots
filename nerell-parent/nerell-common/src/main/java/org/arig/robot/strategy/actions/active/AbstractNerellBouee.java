@@ -79,6 +79,7 @@ public abstract class AbstractNerellBouee extends AbstractNerellAction {
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(pointApproche, GotoOption.AVANT);
+            group.boueePrise(bouee);
 
             // prise de la bouée
             if (pinceCible <= 1) {
@@ -91,7 +92,6 @@ public abstract class AbstractNerellBouee extends AbstractNerellAction {
             Point pointPrise = tableUtils.eloigner(distanceApproche * 1.5);
             mv.setVitesse(robotConfig.vitesse(20), robotConfig.vitesseOrientation());
             mv.gotoPoint(pointPrise, GotoOption.AVANT, GotoOption.SANS_ORIENTATION);
-            group.boueePrise(bouee);
             ThreadUtils.sleep(INerellConstantesConfig.WAIT_POMPES);
 
             complete();
