@@ -55,7 +55,7 @@ public class OdinDeposePetitPort extends AbstractOdinAction {
             chenauxFuture2.addVert(rsOdin.pincesArriere());
             chenauxFuture2.addRouge(rsOdin.pincesAvant());
 
-            int order = Math.max(chenauxFuture1.score(), chenauxFuture2.score()) + -currentScoreChenaux;
+            int order = Math.max(chenauxFuture1.score(), chenauxFuture2.score()) - currentScoreChenaux;
             return order + tableUtils.alterOrder(entryPoint());
         }
     }

@@ -231,14 +231,15 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                     break;
 
                 case FINALE:
-                    // Aligne vers les bouées au nord du port
+                    // Aligne vers le centre de la table
                     if (odinRobotStatus.team() == ETeam.BLEU) {
-                        trajectoryManager.gotoPoint(255, 1395, GotoOption.AVANT);
+                        trajectoryManager.gotoPoint(160, 1370, GotoOption.AVANT);
+                        trajectoryManager.gotoOrientationDeg(-70);
                     } else {
-                        trajectoryManager.gotoPoint(3000 - 255, 1395, GotoOption.AVANT);
+                        trajectoryManager.gotoPoint(3000 - 160, 1370, GotoOption.AVANT);
+                        trajectoryManager.gotoOrientationDeg(-110);
                     }
                     groupService.initStep(1);
-                    trajectoryManager.gotoOrientationDeg(90);
                     break;
 
             }
