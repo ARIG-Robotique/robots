@@ -146,7 +146,7 @@ public class NerellDeposePetitPort extends AbstractNerellAction {
 
             } else if (!rsNerell.pincesAvantEmpty()) {
                 // déposes suivantes
-                mv.gotoPoint(x, baseYStep + rs.stepsPetitPort() * 70, GotoOption.SANS_ORIENTATION);
+                mv.gotoPoint(x, baseYStep + rs.stepsPetitPort() * 70, GotoOption.AVANT);
                 mv.gotoOrientationDeg(-90);
             }
 
