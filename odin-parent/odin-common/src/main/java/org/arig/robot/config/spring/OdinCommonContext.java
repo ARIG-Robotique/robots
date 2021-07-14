@@ -3,7 +3,6 @@ package org.arig.robot.config.spring;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.OdinOrdonanceur;
 import org.arig.robot.constants.IOdinConstantesConfig;
-import org.arig.robot.constants.IOdinConstantesServos;
 import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.common.LimiterFilter.LimiterType;
 import org.arig.robot.filters.pid.IPidFilter;
@@ -65,8 +64,6 @@ public class OdinCommonContext {
 
                 .seuilTensionServos(IOdinConstantesConfig.seuilAlimentationServosVolts)
                 .seuilTensionMoteurs(IOdinConstantesConfig.seuilAlimentationMoteursVolts)
-                .servosMinTimeMax(IOdinConstantesServos.MIN_TIME_MAX)
-                .servosBatch(IOdinConstantesServos.BATCH_CONFIG)
 
                 .vitesse(IOdinConstantesConfig.vitesseMin, IOdinConstantesConfig.vitesseMax, 100)
                 .vitesseOrientation(IOdinConstantesConfig.vitesseOrientationMin, IOdinConstantesConfig.vitesseOrientationMax, 100)

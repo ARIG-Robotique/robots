@@ -1,5 +1,6 @@
 package org.arig.robot.model.servos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -7,21 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Accessors(chain = true)
+@Accessors(chain = true, fluent = true)
 public class ServoGroup {
 
-    private int id;
+    @JsonProperty("id")
+    private byte id;
+    @JsonProperty("name")
     private String name;
-    private List<ServoPosition> batch = new ArrayList<>();
-    private List<ServoConfig> servos = new ArrayList<>();
+    @JsonProperty("servos")
+    private List<Servo> servos = new ArrayList<>();
+    @JsonProperty("batch")
+    private List<String> batch = new ArrayList<>();
 
-    public ServoGroup servo(ServoConfig s) {
+    public ServoGroup servo(Servo s) {
         servos.add(s);
         return this;
     }
 
-    public ServoGroup batch(String name, int position) {
-        batch.add(new ServoPosition(name, position));
+    public ServoGroup batch(String name) {
+        batch.add(name);
         return this;
     }
 

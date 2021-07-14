@@ -39,7 +39,6 @@ public abstract class AbstractBidirectionalSocket<T extends Enum<T>> extends Abs
             client.openSocket();
             return true;
         } catch (IOException e) {
-            log.warn("Impossible de se connecter");
             client.end(true);
             return false;
         }

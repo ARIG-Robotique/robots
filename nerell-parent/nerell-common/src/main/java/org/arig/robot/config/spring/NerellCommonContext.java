@@ -3,7 +3,6 @@ package org.arig.robot.config.spring;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.NerellOrdonanceur;
 import org.arig.robot.constants.INerellConstantesConfig;
-import org.arig.robot.constants.INerellConstantesServos;
 import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.common.LimiterFilter.LimiterType;
 import org.arig.robot.filters.pid.IPidFilter;
@@ -66,8 +65,6 @@ public class NerellCommonContext {
 
                 .seuilTensionServos(INerellConstantesConfig.seuilAlimentationServosVolts)
                 .seuilTensionMoteurs(0) // Pas de mesure sur Nerell
-                .servosMinTimeMax(INerellConstantesServos.MIN_TIME_MAX)
-                .servosBatch(INerellConstantesServos.BATCH_CONFIG)
 
                 .vitesse(INerellConstantesConfig.vitesseMin, INerellConstantesConfig.vitesseMax, 100)
                 .vitesseOrientation(INerellConstantesConfig.vitesseOrientationMin, INerellConstantesConfig.vitesseOrientationMax, 100)

@@ -2,9 +2,6 @@ package org.arig.robot.model;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.apache.commons.lang3.tuple.Triple;
-
-import java.util.Map;
 
 @Data
 @Accessors(fluent = true, chain = true)
@@ -39,11 +36,6 @@ public class RobotConfig {
      * servos
      */
     double seuilTensionServos;
-
-    // Map<IdServo, Triple<PosMin, Temps, PosMax>>
-    Map<Byte, Triple<Integer, Integer, Integer>> servosMinTimeMax;
-    // Map<IdBatch, Map<BatchPos, [IdServo, Pos]>>
-    Map<Byte, Map<Byte, int[][]>> servosBatch;
 
     /**
      * mouvement

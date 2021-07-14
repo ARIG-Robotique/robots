@@ -2,8 +2,8 @@ package org.arig.robot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
-import org.arig.robot.model.servos.ServoConfig;
 import org.arig.robot.model.servos.ServoGroup;
+import org.arig.robot.services.AbstractServosService;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -12,34 +12,25 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @Slf4j
+@RestController
 @RequestMapping("/servos")
 @Profile(IConstantesConfig.profileMonitoring)
-public abstract class AbstractServosController {
+public class ServosController {
 
     @Autowired
     protected SD21Servos sd21Servos;
 
-    protected abstract List<ServoGroup> servosConfig();
-
-    protected abstract int[][] getBatchPositions(Byte idGroupe, Byte position);
+    @Autowired
+    protected AbstractServosService servos;
 
     @GetMapping
     public final List<ServoGroup> config() {
-        return servosConfig();
-    }
-
-    @GetMapping(value = "/{idServo}")
-    public final ServoConfig getServoPositionAndSpeed(@PathVariable("idServo") final Byte idServo) {
-        return servosConfig().stream()
-                .map(ServoGroup::getServos)
-                .flatMap(List::stream)
-                .filter(s -> s.getId() == idServo)
-                .findFirst()
-                .orElse(null);
+        return servos.getGroups();
     }
 
     @PostMapping(value = "/{idServo}")
@@ -57,11 +48,9 @@ public abstract class AbstractServosController {
         }
     }
 
-    @PostMapping({"/groupe/{idBatch}", "/batch/{idBatch}"}) // rétro-compat groupe -> batch
-    public final void batchPosition(@PathVariable("idBatch") final Byte idBatch,
-                                    @RequestParam("position") final Byte position) {
-        for (int[] servoPos : getBatchPositions(idBatch, position)) {
-            sd21Servos.setPosition((byte) servoPos[0], servoPos[1]);
-        }
+    @PostMapping({"/batch"})
+    public final void batchPosition(@RequestParam("group") final String group,
+                                    @RequestParam("position") final String position) {
+        servos.setPositionBatch(group, position, false);
     }
 }

@@ -1,13 +1,18 @@
 package org.arig.robot.model.servos;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
-@AllArgsConstructor
+@Accessors(chain = true, fluent = true)
 public class ServoPosition {
 
+    @JsonProperty("name")
     private String name;
+    @JsonProperty("value")
     private int value;
+    @JsonProperty("speed")
+    private byte speed;
 
 }

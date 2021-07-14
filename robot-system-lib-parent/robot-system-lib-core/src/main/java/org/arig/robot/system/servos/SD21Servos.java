@@ -3,18 +3,12 @@ package org.arig.robot.system.servos;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.II2CManager;
 import org.arig.robot.exception.I2CException;
-import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * The Class SD21Servos.
- *
- * @author GregoryDepuille
- */
 @Slf4j
 public class SD21Servos implements InitializingBean {
 
@@ -91,24 +85,6 @@ public class SD21Servos implements InitializingBean {
     }
 
     /**
-     * Demande de mouvement avec attente théorique du déplacement
-     *
-     * @param servoNb     Numéro du servo moteur
-     * @param newPosition Nouvelle position
-     */
-    public void setPositionAndWait(final byte servoNb, final int newPosition) {
-        int currentSpeed = getSpeed(servoNb);
-        int oldPosition = getPosition(servoNb);
-
-        if (oldPosition == newPosition) {
-            return;
-        }
-
-        setPosition(servoNb, newPosition);
-        waitPosition(servoNb, oldPosition, newPosition, currentSpeed);
-    }
-
-    /**
      * Sets the speed.
      *
      * @param servoNb the servo nb
@@ -160,25 +136,6 @@ public class SD21Servos implements InitializingBean {
         } catch (I2CException e) {
             log.error("Erreur lors de la définition de la vitesse et de la position");
         }
-    }
-
-    /**
-     * Demande de mouvement et vitesse avec attente théorique du déplacement
-     *
-     * @param servoNb     Numéro du servo moteur
-     * @param newPosition Nouvelle position
-     * @param newSpeed    Nouvelle vitesse de déplacement
-     */
-    public void setPositionAndSpeedAndWait(final byte servoNb, final int newPosition, final byte newSpeed) {
-        int oldSpeed = getSpeed(servoNb);
-        int oldPosition = getPosition(servoNb);
-
-        if (oldPosition == newPosition && oldSpeed == newSpeed) {
-            return;
-        }
-
-        setPositionAndSpeed(servoNb, newPosition, newSpeed);
-        waitPosition(servoNb, newPosition, oldPosition, newSpeed);
     }
 
     /**
@@ -257,28 +214,4 @@ public class SD21Servos implements InitializingBean {
         return result;
     }
 
-    private void waitPosition(byte servoNb, int oldP, int newP, int speed) {
-        int waitTime = calculWaitTimeMs(oldP, newP, speed);
-        if (log.isDebugEnabled()) {
-            log.debug("Attente pour le mouvement servo {} {} -> {} à la vitesse de {} pendant {} ms", servoNb, oldP, newP, speed, waitTime);
-        }
-        ThreadUtils.sleep(waitTime);
-    }
-
-    /**
-     * Calcul du temps d'attente théorique pour le mouvement.
-     *
-     * @param start  Position de départ
-     * @param target Position d'arrivé
-     * @param speed  Valeur de vitesse configuré
-     * @return Le temps d'attente théorique en ms
-     */
-    private int calculWaitTimeMs(int start, int target, int speed) {
-        try {
-            return (Math.abs(target - start) / speed) * 25;
-        } catch (ArithmeticException e) {
-            log.warn("Valeur du registre de vitesse {} : {}", speed, e.toString());
-            return 0;
-        }
-    }
 }
