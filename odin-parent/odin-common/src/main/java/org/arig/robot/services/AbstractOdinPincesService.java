@@ -2,8 +2,7 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IOdinConstantesConfig;
-import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.GrandChenaux;
+import org.arig.robot.model.ECouleur;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
     @Autowired
     private RobotGroupService group;
 
-    private ECouleurBouee expected = null;
+    private ECouleur expected = null;
 
     private boolean[] previousState = new boolean[]{false, false};
 
@@ -35,107 +34,19 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
 
     protected abstract void enablePompes();
 
-    protected abstract ECouleurBouee[] bouees();
+    protected abstract ECouleur[] currentState();
 
     protected abstract void clearPinces();
 
     protected abstract boolean[] getNewState();
 
-    protected abstract void registerBouee(int index, ECouleurBouee couleurBouee);
+    protected abstract void register(int index, ECouleur couleur);
 
-    protected abstract void pousser(boolean gauche, boolean droite);
-
-    protected abstract ECouleurBouee getCouleurBouee(int index);
+    protected abstract ECouleur getCouleur(int index);
 
     @Override
-    public void setExpected(ECouleurBouee expected, int pinceNumber) {
+    public void setExpected(ECouleur expected, int indexPince) {
         this.expected = expected;
-    }
-
-    private void depose() {
-        disableServicePinces();
-        releasePompes();
-        ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
-    }
-
-    private void depose(boolean gauche, boolean droite) {
-        disableServicePinces();
-        if (gauche && droite) {
-            releasePompes();
-        } else if (gauche) {
-            releasePompe(true, false);
-        } else if (droite) {
-            releasePompe(false, true);
-        }
-        ThreadUtils.sleep(IOdinConstantesConfig.WAIT_POMPES);
-    }
-
-    @Override
-    public void deposeGrandPort() {
-        depose();
-        group.deposeGrandPort(bouees());
-        clearPinces();
-    }
-
-    @Override
-    public void deposeFondGrandChenalRouge() {
-        depose();
-        pousser(true, true);
-        group.deposeGrandChenalRouge(GrandChenaux.Line.C, bouees());
-        clearPinces();
-    }
-
-    @Override
-    public void deposeFondGrandChenalVert() {
-        depose();
-        pousser(true, true);
-        group.deposeGrandChenalVert(GrandChenaux.Line.C, bouees());
-        clearPinces();
-    }
-
-    @Override
-    public void deposeGrandChenal(ECouleurBouee chenal, GrandChenaux.Line line, int idxGauche, int idxDroite) {
-        disableServicePinces();
-
-        depose(idxGauche != -1, idxDroite != -1);
-        pousser(idxGauche != -1, idxDroite != -1);
-
-        if (chenal == ECouleurBouee.VERT) {
-            if (idxGauche != -1) {
-                group.deposeGrandChenalVert(line, idxGauche, bouees()[0]);
-                bouees()[0] = null;
-            }
-            if (idxDroite != -1) {
-                group.deposeGrandChenalVert(line, idxDroite, bouees()[1]);
-                bouees()[1] = null;
-            }
-        } else {
-            if (idxGauche != -1) {
-                group.deposeGrandChenalRouge(line, idxGauche, bouees()[0]);
-                bouees()[0] = null;
-            }
-            if (idxDroite != -1) {
-                group.deposeGrandChenalRouge(line, idxDroite, bouees()[1]);
-                bouees()[1] = null;
-            }
-        }
-    }
-
-    @Override
-    public void deposePetitChenal(ECouleurBouee chenal) {
-        disableServicePinces();
-
-        ECouleurBouee[] bouees = bouees();
-
-        depose(bouees[0] != null, bouees[1] != null);
-        pousser(bouees[0] != null, bouees[1] != null);
-
-        if (chenal == ECouleurBouee.VERT) {
-            group.deposePetitChenalVert(bouees);
-        } else {
-            group.deposePetitChenalRouge(bouees);
-        }
-        clearPinces();
     }
 
     /**
@@ -154,7 +65,7 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
     @Override
     public void deactivate() {
         for (int i = 0; i < 2; i++) {
-            if (bouees()[i] == null) {
+            if (currentState()[i] == null) {
                 releasePompe(i == 0, i == 1);
             }
         }
@@ -164,18 +75,18 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
      * Prise automatique sur la table
      */
     @Override
-    public boolean processBouee() {
+    public boolean process() {
         // première lecture des capteurs
         final boolean[] newState = getNewState();
         boolean needReadColor = false;
         for (int i = 0; i < 2; i++) {
             if (previousState[i] && !newState[i]) {
                 // perte bouée
-                registerBouee(i, null);
+                register(i, null);
 
             } else if (!previousState[i] && newState[i]) {
                 // nouvelle bouée
-                registerBouee(i, getExpected());
+                register(i, getExpected());
                 needReadColor = true;
             }
         }
@@ -185,8 +96,8 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
     }
 
     @Override
-    public void processCouleurBouee() {
-        if (Stream.of(bouees()).noneMatch(c -> c == ECouleurBouee.INCONNU)) {
+    public void processCouleur() {
+        if (Stream.of(currentState()).noneMatch(c -> c == ECouleur.INCONNU)) {
             // Pas d'inconnu, pas de lecture
             return;
         }
@@ -195,15 +106,15 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
         ThreadUtils.sleep(IOdinConstantesConfig.WAIT_LED);
 
         for (int i = 0; i < 2; i++) {
-            if (bouees()[i] == ECouleurBouee.INCONNU) {
-                registerBouee(i, getCouleurBouee(i));
+            if (currentState()[i] == ECouleur.INCONNU) {
+                register(i, getCouleur(i));
             }
         }
         io.disableLedCapteurCouleur();
     }
 
-    protected ECouleurBouee getExpected() {
-        ECouleurBouee couleur = ECouleurBouee.INCONNU;
+    protected ECouleur getExpected() {
+        ECouleur couleur = ECouleur.INCONNU;
         if (expected != null) {
             couleur = expected;
             expected = null;

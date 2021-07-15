@@ -2,7 +2,7 @@ package org.arig.robot.services;
 
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.ECouleur;
 import org.springframework.stereotype.Service;
 
 @Service("IOService")
@@ -84,33 +84,23 @@ public class NerellIOServiceBouchon extends AbstractIOServiceBouchon implements 
     }
 
     @Override
-    public ECouleurBouee couleurBoueeAvant1() {
-        return ECouleurBouee.INCONNU;
+    public ECouleur couleurAvant1() {
+        return ECouleur.INCONNU;
     }
 
     @Override
-    public ECouleurBouee couleurBoueeAvant2() {
-        return ECouleurBouee.INCONNU;
+    public ECouleur couleurAvant2() {
+        return ECouleur.INCONNU;
     }
 
     @Override
-    public ECouleurBouee couleurBoueeAvant3() {
-        return ECouleurBouee.INCONNU;
+    public ECouleur couleurAvant3() {
+        return ECouleur.INCONNU;
     }
 
     @Override
-    public ECouleurBouee couleurBoueeAvant4() {
-        return ECouleurBouee.INCONNU;
-    }
-
-    @Override
-    public ECouleurBouee couleurBoueeArriere2() {
-        return ECouleurBouee.INCONNU;
-    }
-
-    @Override
-    public ECouleurBouee couleurBoueeArriere4() {
-        return ECouleurBouee.INCONNU;
+    public ECouleur couleurAvant4() {
+        return ECouleur.INCONNU;
     }
 
     // --------------------------------------------------------- //

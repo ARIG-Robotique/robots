@@ -2,17 +2,14 @@ package org.arig.robot.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
-import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.NerellRobotStatus;
-import org.arig.robot.model.communication.balise.enums.EDirectionGirouette;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.INerellIOService;
-import org.arig.robot.services.INerellPincesArriereService;
 import org.arig.robot.services.INerellPincesAvantService;
 import org.arig.robot.services.NerellEcranService;
 import org.arig.robot.system.avoiding.IAvoidingService;
@@ -50,9 +47,6 @@ public class NerellTasksScheduler {
 
     @Autowired
     private INerellPincesAvantService pincesAvant;
-
-    @Autowired
-    private INerellPincesArriereService pincesArriere;
 
 
     private StopWatch timerLectureCouleur = new StopWatch();
@@ -104,20 +98,6 @@ public class NerellTasksScheduler {
         } else {
             baliseService.startDetection();
             baliseService.updateStatus();
-
-            if (rs.matchEnabled()) {
-                // Lecture Girouette
-                if (rs.getElapsedTime() >= IEurobotConfig.baliseElapsedTimeMs && rs.directionGirouette() == EDirectionGirouette.UNKNOWN) {
-                    baliseService.lectureGirouette();
-                }
-
-                baliseService.lectureCouleurBouees();
-                baliseService.lectureEcueilAdverse();
-                baliseService.lectureHautFond();
-            } else {
-                // Lecture couleur écueil
-                //baliseService.lectureCouleurEcueilEquipe();
-            }
         }
     }
 
@@ -134,19 +114,15 @@ public class NerellTasksScheduler {
         }
 
         if (pincesAvantEnabled) {
-            if (pincesAvant.processBouee()) {
+            if (pincesAvant.process()) {
                 timerLectureCouleur.reset();
                 timerLectureCouleur.start();
             }
 
             if (timerLectureCouleur.getTime(TimeUnit.MILLISECONDS) > INerellConstantesConfig.TIME_BEFORE_READ_COLOR) {
                 timerLectureCouleur.reset();
-                pincesAvant.processCouleurBouee();
+                pincesAvant.processCouleur();
             }
-        }
-
-        if (rs.matchRunning()) {
-            pincesArriere.processCouleurBouee();
         }
     }
 }

@@ -57,16 +57,16 @@ public abstract class AbstractOrdonanceur {
     protected AbstractEnergyService energyService;
 
     @Autowired
-    protected IIOService ioService;
+    protected IIOService io;
 
     @Autowired
-    protected AbstractServosService servosService;
+    protected AbstractServosService servos;
 
     @Autowired
     protected II2CManager i2CManager;
 
     @Autowired
-    protected TrajectoryManager trajectoryManager;
+    protected TrajectoryManager mv;
 
     @Autowired
     protected IPathFinder pathFinder;
@@ -199,8 +199,8 @@ public abstract class AbstractOrdonanceur {
             lidar.stopScan();
 
             // On coupe le jus
-            ioService.disableAlimServos();
-            ioService.disableAlimMoteurs();
+            io.disableAlimServos();
+            io.disableAlimMoteurs();
         }
     }
 
@@ -254,9 +254,9 @@ public abstract class AbstractOrdonanceur {
      * Attends le dévérouillage de l'AU
      */
     private void waitAu() {
-        if (!ioService.auOk()) {
+        if (!io.auOk()) {
             ecranService.displayMessage("L'arrêt d'urgence est coupé", LogLevel.WARN);
-            while (!ioService.auOk()) {
+            while (!io.auOk()) {
                 exitFromScreen();
                 ThreadUtils.sleep(500);
             }
@@ -268,11 +268,11 @@ public abstract class AbstractOrdonanceur {
      */
     private void waitPower() {
         ecranService.displayMessage("Position de préparation des servos moteurs");
-        servosService.cyclePreparation();
+        servos.cyclePreparation();
 
         ecranService.displayMessage("Activation puissances 5V et 12V");
-        ioService.enableAlimServos();
-        ioService.enableAlimMoteurs();
+        io.enableAlimServos();
+        io.enableAlimMoteurs();
         ThreadUtils.sleep(500);
         if (!energyService.checkMoteurs() || !energyService.checkServos()) {
             ecranService.displayMessage(String.format("Alimentation NOK (Moteurs : %s V ; Servos : %s V)", energyService.tensionMoteurs(), energyService.tensionServos()));
@@ -311,8 +311,8 @@ public abstract class AbstractOrdonanceur {
      */
     private void initMouvement() {
         ecranService.displayMessage("Initialisation du contrôleur de mouvement");
-        trajectoryManager.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
-        trajectoryManager.init();
+        mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+        mv.init();
         robotStatus.enableAsserv();
     }
 
@@ -342,7 +342,7 @@ public abstract class AbstractOrdonanceur {
      * Attente du départ du match
      */
     protected boolean waitTirette() {
-        return ioService.tirette();
+        return io.tirette();
     }
 
     /**
@@ -364,11 +364,11 @@ public abstract class AbstractOrdonanceur {
 
         afterMatch(); // impl
 
-        ioService.disableAlimMoteurs();
+        io.disableAlimMoteurs();
         lidar.stopScan();
         ecranService.displayMessage(String.format("FIN - Durée match %s ms", robotStatus.getElapsedTime()));
 
-        ioService.disableAlimServos();
+        io.disableAlimServos();
     }
 
     /**
@@ -400,15 +400,15 @@ public abstract class AbstractOrdonanceur {
                         robotStatus.calculerPoints())
         );
 
-        while (!ioService.tirette() || !ioService.auOk()) {
+        while (!io.tirette() || !io.auOk()) {
             ThreadUtils.sleep(1000);
         }
 
-        ioService.enableAlimServos();
+        io.enableAlimServos();
 
         beforePowerOff(); // impl
 
-        ioService.disableAlimServos();
+        io.disableAlimServos();
     }
 
     protected void startMonitoring() {

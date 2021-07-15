@@ -51,7 +51,7 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
             log.error("Erreur de lecture", e);
             r = new GetConfigInfos();
             r.setTeam(0);
-            r.setStrategy(-1);
+            r.setStrategy(0);
             r.setStartCalibration(false);
         }
 

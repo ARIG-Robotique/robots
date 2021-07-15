@@ -10,9 +10,8 @@ import com.pi4j.io.i2c.I2CBus;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
-import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.constants.INerellConstantesI2C;
-import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.ECouleur;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
@@ -49,12 +48,6 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
 
     @Autowired
     private TCS34725ColorSensor couleurAvant4;
-
-    @Autowired
-    private TCS34725ColorSensor couleurArriere2;
-
-    @Autowired
-    private TCS34725ColorSensor couleurArriere4;
 
     // Controlleur GPIO
     private GpioController gpio;
@@ -304,50 +297,30 @@ public class NerellIOService implements INerellIOService, InitializingBean, Disp
     }
 
     // Couleur
-    private ECouleurBouee computeCouleurBouee(TCS34725ColorSensor capteur) {
-        int deltaRouge = IEurobotConfig.deltaCapteurCouleurRouge;
-        int deltaVert = IEurobotConfig.deltaCapteurCouleurVert;
+    private ECouleur computeCouleur(TCS34725ColorSensor capteur) {
         final ColorData c = capteur.getColorData();
-        final ECouleurBouee result;
-        if (c.g() > c.r() + deltaVert && c.g() > c.b() + deltaVert) {
-            result = ECouleurBouee.VERT;
-        } else if (c.r() > c.b() + deltaRouge && c.r() > c.g() + deltaRouge) {
-            result = ECouleurBouee.ROUGE;
-        } else {
-            result = ECouleurBouee.INCONNU;
-        }
-        log.info("{} R: {}, G: {}, B: {}, Bouée: {}", capteur.deviceName(), c.r(), c.g(), c.b(), result.name());
-        return result;
+        log.info("{} R: {}, G: {}, B: {}", capteur.deviceName(), c.r(), c.g(), c.b());
+        return ECouleur.INCONNU;
     }
 
     @Override
-    public ECouleurBouee couleurBoueeAvant1() {
-        return computeCouleurBouee(couleurAvant1);
+    public ECouleur couleurAvant1() {
+        return computeCouleur(couleurAvant1);
     }
 
     @Override
-    public ECouleurBouee couleurBoueeAvant2() {
-        return computeCouleurBouee(couleurAvant2);
+    public ECouleur couleurAvant2() {
+        return computeCouleur(couleurAvant2);
     }
 
     @Override
-    public ECouleurBouee couleurBoueeAvant3() {
-        return computeCouleurBouee(couleurAvant3);
+    public ECouleur couleurAvant3() {
+        return computeCouleur(couleurAvant3);
     }
 
     @Override
-    public ECouleurBouee couleurBoueeAvant4() {
-        return computeCouleurBouee(couleurAvant4);
-    }
-
-    @Override
-    public ECouleurBouee couleurBoueeArriere2() {
-        return computeCouleurBouee(couleurArriere2);
-    }
-
-    @Override
-    public ECouleurBouee couleurBoueeArriere4() {
-        return computeCouleurBouee(couleurArriere4);
+    public ECouleur couleurAvant4() {
+        return computeCouleur(couleurAvant4);
     }
 
     // --------------------------------------------------------- //

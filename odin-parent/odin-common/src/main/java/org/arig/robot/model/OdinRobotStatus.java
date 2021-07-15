@@ -53,18 +53,18 @@ public class OdinRobotStatus extends EurobotStatus {
      */
 
     @Accessors(fluent = true)
-    private ECouleurBouee[] pincesArriere = new ECouleurBouee[]{null, null};
+    private ECouleur[] pincesArriere = new ECouleur[]{null, null};
 
     // De gauche à droite, dans le sens du robot
     @Accessors(fluent = true)
-    private ECouleurBouee[] pincesAvant = new ECouleurBouee[]{null, null};
+    private ECouleur[] pincesAvant = new ECouleur[]{null, null};
 
-    public void pinceArriere(int pos, ECouleurBouee bouee) {
+    public void pinceArriere(int pos, ECouleur bouee) {
         log.info("[RS] pince arrière {} {}", pos, bouee == null ? "null" : bouee.name());
         pincesArriere[pos] = bouee;
     }
 
-    public void pinceAvant(int pos, ECouleurBouee bouee) {
+    public void pinceAvant(int pos, ECouleur bouee) {
         log.info("[RS] pince avant {} {}", pos, bouee == null ? "null" : bouee.name());
         pincesAvant[pos] = bouee;
     }

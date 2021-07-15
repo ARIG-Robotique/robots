@@ -122,18 +122,6 @@ public class NerellRobotContext {
                 .multiplexerDeviceName(INerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
                 .multiplexerChannel(INerellConstantesI2C.COULEUR_AV_4_MUX_CHANNEL)
                 .build();
-        final I2CManagerDevice<I2CDevice> couleurArriere2 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(INerellConstantesI2C.COULEUR_AR_2_NAME)
-                .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
-                .multiplexerDeviceName(INerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(INerellConstantesI2C.COULEUR_AR_2_MUX_CHANNEL)
-                .build();
-        final I2CManagerDevice<I2CDevice> couleurArriere4 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(INerellConstantesI2C.COULEUR_AR_4_NAME)
-                .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
-                .multiplexerDeviceName(INerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(INerellConstantesI2C.COULEUR_AR_4_MUX_CHANNEL)
-                .build();
 
         manager.registerDevice(sd21);
         manager.registerDevice(codeurMoteurDroit);
@@ -147,8 +135,6 @@ public class NerellRobotContext {
         manager.registerDevice(couleurAvant2);
         manager.registerDevice(couleurAvant3);
         manager.registerDevice(couleurAvant4);
-        manager.registerDevice(couleurArriere2);
-        manager.registerDevice(couleurArriere4);
 
         return manager;
     }
@@ -203,16 +189,6 @@ public class NerellRobotContext {
     @Bean
     public TCS34725ColorSensor couleurAvant4() {
         return new TCS34725ColorSensor(INerellConstantesI2C.COULEUR_AV_4_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
-    }
-
-    @Bean
-    public TCS34725ColorSensor couleurArriere2() {
-        return new TCS34725ColorSensor(INerellConstantesI2C.COULEUR_AR_2_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
-    }
-
-    @Bean
-    public TCS34725ColorSensor couleurArriere4() {
-        return new TCS34725ColorSensor(INerellConstantesI2C.COULEUR_AR_4_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
     }
 
     @Bean

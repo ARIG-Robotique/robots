@@ -11,6 +11,4 @@ import lombok.Data;
 public class ReadWriteInfo {
     int team = 0;
     int strategy = 0;
-    boolean deposePartielle = false;
-    boolean echangeEcueil = false;
 }

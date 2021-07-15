@@ -1,6 +1,6 @@
 package org.arig.robot.services;
 
-import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.ECouleur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ public class OdinPincesAvantServiceBouchon extends AbstractOdinPincesAvantServic
     private OdinIOServiceBouchon io;
 
     @Override
-    public void setExpected(ECouleurBouee expected, int pinceNumber) {
+    public void setExpected(ECouleur expected, int pinceNumber) {
         super.setExpected(expected, pinceNumber);
 
         switch (pinceNumber) {

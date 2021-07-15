@@ -10,9 +10,8 @@ import com.pi4j.io.i2c.I2CBus;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
-import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.constants.IOdinConstantesI2C;
-import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.ECouleur;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
@@ -248,39 +247,29 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
     }
 
     // Couleur
-    private ECouleurBouee computeCouleurBouee(TCS34725ColorSensor capteur) {
-        int deltaRouge = IEurobotConfig.deltaCapteurCouleurRouge;
-        int deltaVert = IEurobotConfig.deltaCapteurCouleurVert;
+    private ECouleur computeCouleurBouee(TCS34725ColorSensor capteur) {
         final ColorData c = capteur.getColorData();
-        final ECouleurBouee result;
-        if (c.g() > c.r() + deltaVert && c.g() > c.b() + deltaVert) {
-            result = ECouleurBouee.VERT;
-        } else if (c.r() > c.b() + deltaRouge && c.r() > c.g() + deltaRouge) {
-            result = ECouleurBouee.ROUGE;
-        } else {
-            result = ECouleurBouee.INCONNU;
-        }
-        log.info("{} R: {}, G: {}, B: {}, Bouée: {}", capteur.deviceName(), c.r(), c.g(), c.b(), result.name());
-        return result;
+        log.info("{} R: {}, G: {}, B: {}", capteur.deviceName(), c.r(), c.g(), c.b());
+        return ECouleur.INCONNU;
     }
 
     @Override
-    public ECouleurBouee couleurBoueeAvantGauche() {
+    public ECouleur couleurAvantGauche() {
         return computeCouleurBouee(couleurAvantGauche);
     }
 
     @Override
-    public ECouleurBouee couleurBoueeAvantDroit() {
+    public ECouleur couleurAvantDroit() {
         return computeCouleurBouee(couleurAvantDroit);
     }
 
     @Override
-    public ECouleurBouee couleurBoueeArriereGauche() {
+    public ECouleur couleurArriereGauche() {
         return computeCouleurBouee(couleurArriereGauche);
     }
 
     @Override
-    public ECouleurBouee couleurBoueeArriereDroit() {
+    public ECouleur couleurArriereDroit() {
         return computeCouleurBouee(couleurArriereDroit);
     }
 

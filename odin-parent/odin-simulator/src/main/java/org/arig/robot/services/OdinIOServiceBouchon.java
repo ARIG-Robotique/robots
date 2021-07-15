@@ -3,7 +3,7 @@ package org.arig.robot.services;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.ECouleur;
 import org.springframework.stereotype.Service;
 
 @Getter
@@ -38,23 +38,23 @@ public class OdinIOServiceBouchon extends AbstractIOServiceBouchon implements IO
     }
 
     @Override
-    public ECouleurBouee couleurBoueeAvantGauche() {
-        return ECouleurBouee.INCONNU;
+    public ECouleur couleurAvantGauche() {
+        return ECouleur.INCONNU;
     }
 
     @Override
-    public ECouleurBouee couleurBoueeAvantDroit() {
-        return ECouleurBouee.INCONNU;
+    public ECouleur couleurAvantDroit() {
+        return ECouleur.INCONNU;
     }
 
     @Override
-    public ECouleurBouee couleurBoueeArriereGauche() {
-        return ECouleurBouee.INCONNU;
+    public ECouleur couleurArriereGauche() {
+        return ECouleur.INCONNU;
     }
 
     @Override
-    public ECouleurBouee couleurBoueeArriereDroit() {
-        return ECouleurBouee.INCONNU;
+    public ECouleur couleurArriereDroit() {
+        return ECouleur.INCONNU;
     }
 
     @Override

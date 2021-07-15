@@ -1,6 +1,6 @@
 package org.arig.robot.services;
 
-import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.ECouleur;
 
 public interface INerellIOService extends IIOService {
 
@@ -26,13 +26,10 @@ public interface INerellIOService extends IIOService {
     boolean presencePinceArriere5();
 
     // Couleurs
-    ECouleurBouee couleurBoueeAvant1();
-    ECouleurBouee couleurBoueeAvant2();
-    ECouleurBouee couleurBoueeAvant3();
-    ECouleurBouee couleurBoueeAvant4();
-
-    ECouleurBouee couleurBoueeArriere2();
-    ECouleurBouee couleurBoueeArriere4();
+    ECouleur couleurAvant1();
+    ECouleur couleurAvant2();
+    ECouleur couleurAvant3();
+    ECouleur couleurAvant4();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

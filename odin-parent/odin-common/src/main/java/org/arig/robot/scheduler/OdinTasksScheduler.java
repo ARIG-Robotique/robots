@@ -109,25 +109,25 @@ public class OdinTasksScheduler {
 
         if (pincesAvantEnabled || pincesArriereEnabled) {
             if (pincesAvantEnabled) {
-                if(pincesAvant.processBouee()) {
+                if(pincesAvant.process()) {
                     timerLectureCouleurAvant.reset();
                     timerLectureCouleurAvant.start();
                 }
             }
             if (timerLectureCouleurAvant.getTime(TimeUnit.MILLISECONDS) > IOdinConstantesConfig.TIME_BEFORE_READ_COLOR) {
                 timerLectureCouleurAvant.reset();
-                pincesAvant.processCouleurBouee();
+                pincesAvant.processCouleur();
             }
 
             if (pincesArriereEnabled) {
-                if(pincesArriere.processBouee()) {
+                if(pincesArriere.process()) {
                     timerLectureCouleurArriere.reset();
                     timerLectureCouleurArriere.start();
                 }
             }
             if (timerLectureCouleurArriere.getTime(TimeUnit.MILLISECONDS) > IOdinConstantesConfig.TIME_BEFORE_READ_COLOR) {
                 timerLectureCouleurArriere.reset();
-                pincesArriere.processCouleurBouee();
+                pincesArriere.processCouleur();
             }
         }
     }

@@ -1,6 +1,6 @@
 package org.arig.robot.services;
 
-import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.ECouleur;
 
 public abstract class AbstractOdinPincesAvantService extends AbstractOdinPincesService {
 
@@ -30,7 +30,7 @@ public abstract class AbstractOdinPincesAvantService extends AbstractOdinPincesS
     }
 
     @Override
-    protected ECouleurBouee[] bouees() {
+    protected ECouleur[] currentState() {
         return rs.pincesAvant();
     }
 
@@ -48,33 +48,17 @@ public abstract class AbstractOdinPincesAvantService extends AbstractOdinPincesS
     }
 
     @Override
-    protected void registerBouee(int index, ECouleurBouee couleurBouee) {
-        rs.pinceAvant(index, couleurBouee);
+    protected void register(int index, ECouleur couleur) {
+        rs.pinceAvant(index, couleur);
     }
 
     @Override
-    protected void pousser(boolean gauche, boolean droite) {
-        if (gauche && droite) {
-            servos.poussoirAvantGaucheHaut(false);
-            servos.poussoirAvantDroitHaut(true);
-            servos.poussoirAvantGaucheBas(false);
-            servos.poussoirAvantDroitBas(true);
-        } else if (gauche) {
-            servos.poussoirAvantGaucheHaut(true);
-            servos.poussoirAvantGaucheBas(true);
-        } else {
-            servos.poussoirAvantDroitHaut(true);
-            servos.poussoirAvantDroitBas(true);
-        }
-    }
-
-    @Override
-    protected ECouleurBouee getCouleurBouee(int index) {
+    protected ECouleur getCouleur(int index) {
         // @formatter:off
         switch (index) {
-            case 0: return io.couleurBoueeAvantGauche();
-            case 1: return io.couleurBoueeAvantDroit();
-            default: return ECouleurBouee.INCONNU;
+            case 0: return io.couleurAvantGauche();
+            case 1: return io.couleurAvantDroit();
+            default: return ECouleur.INCONNU;
         }
         // @formatter:on
     }

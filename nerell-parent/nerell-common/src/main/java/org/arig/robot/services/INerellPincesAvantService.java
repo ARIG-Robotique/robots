@@ -1,21 +1,15 @@
 package org.arig.robot.services;
 
-import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.ECouleur;
 
 public interface INerellPincesAvantService {
-    boolean deposeGrandChenal(ECouleurBouee couleurChenal, boolean partielle);
-
-    boolean deposePetitPort();
-
-    void deposeGrandPort();
-
     void activate();
 
     void deactivate();
 
-    boolean processBouee();
+    boolean process();
 
-    void processCouleurBouee();
+    void processCouleur();
 
-    void setExpected(ECouleurBouee gauche, ECouleurBouee droite);
+    void setExpected(ECouleur expected);
 }

@@ -1,6 +1,6 @@
 package org.arig.robot.services;
 
-import org.arig.robot.model.ECouleurBouee;
+import org.arig.robot.model.ECouleur;
 
 public interface IOdinIOService extends IIOService {
 
@@ -20,10 +20,10 @@ public interface IOdinIOService extends IIOService {
     boolean presenceArriereDroit();
 
     // Analogique
-    ECouleurBouee couleurBoueeAvantGauche();
-    ECouleurBouee couleurBoueeAvantDroit();
-    ECouleurBouee couleurBoueeArriereGauche();
-    ECouleurBouee couleurBoueeArriereDroit();
+    ECouleur couleurAvantGauche();
+    ECouleur couleurAvantDroit();
+    ECouleur couleurArriereGauche();
+    ECouleur couleurArriereDroit();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

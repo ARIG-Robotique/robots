@@ -1,14 +1,12 @@
 package org.arig.robot;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.constants.IOdinConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
-import org.arig.robot.model.Bouee;
 import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.OdinRobotStatus;
@@ -28,13 +26,13 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
     private OdinRobotStatus odinRobotStatus;
 
     @Autowired
-    private OdinServosService odinServosService;
+    private OdinServosService odinServos;
+
+    @Autowired
+    private IOdinIOService odinIO;
 
     @Autowired
     private RobotGroupService groupService;
-
-    @Autowired
-    private IOdinIOService odinIOService;
 
     @Override
     public String getPathfinderMap() {
@@ -57,57 +55,43 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         positionStrategy();
 
         // Lancement d'une première lecture de couleurs pour initialiser les capteurs
-        odinIOService.enableLedCapteurCouleur();
+        odinIO.enableLedCapteurCouleur();
         ThreadUtils.sleep(IOdinConstantesConfig.WAIT_LED);
-        odinIOService.couleurBoueeAvantGauche();
-        odinIOService.couleurBoueeAvantDroit();
-        odinIOService.couleurBoueeArriereGauche();
-        odinIOService.couleurBoueeArriereDroit();
-        odinIOService.disableLedCapteurCouleur();
+        odinIO.couleurAvantGauche();
+        odinIO.couleurAvantDroit();
+        odinIO.couleurArriereGauche();
+        odinIO.couleurArriereDroit();
+        odinIO.disableLedCapteurCouleur();
 
         choixConfig();
 
         // Visu après la tirette
-        odinIOService.enableLedCapteurCouleur();
+        odinIO.enableLedCapteurCouleur();
         ThreadUtils.sleep(IOdinConstantesConfig.WAIT_LED);
-        odinIOService.disableLedCapteurCouleur();
+        odinIO.disableLedCapteurCouleur();
     }
 
     @Override
     protected boolean waitTirette() {
-        return robotStatus.groupOk() ? !groupService.isStart() : ioService.tirette();
+        return robotStatus.groupOk() ? !groupService.isStart() : io.tirette();
     }
 
     @Override
     public void startMatch() {
-
     }
 
     @Override
     public void inMatch() {
-        // Déclenchement du pavillon
-        if (robotStatus.getRemainingTime() <= IEurobotConfig.pavillonRemainingTimeMs
-                && !odinRobotStatus.pavillonSelf() && ioService.auOk()) {
-            log.info("Activation du pavillon");
-            odinServosService.pavillonHaut();
-            groupService.pavillon();
-            odinRobotStatus.pavillonSelf(true);
-        }
     }
 
     @Override
     public void afterMatch() {
-        odinIOService.releaseAllPompe();
+        odinIO.releaseAllPompe();
     }
 
     @Override
     public void beforePowerOff() {
-        odinServosService.brasDroitFerme(false);
-        odinServosService.brasGaucheFerme(false);
-        odinServosService.poussoirsArriereBas(false);
-        odinServosService.poussoirsAvantBas(false);
-        odinServosService.pavillonFinMatch();
-        odinIOService.disableAllPompe();
+        odinIO.disableAllPompe();
         ThreadUtils.sleep(1000);
     }
 
@@ -178,7 +162,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 }
             } else {
                 robotStatus.enableCalageBordure();
-                trajectoryManager.reculeMMSansAngle(1000);
+                mv.reculeMMSansAngle(1000);
 
                 if (odinRobotStatus.team() == ETeam.BLEU) {
                     position.getPt().setX(conv.mmToPulse(IOdinConstantesConfig.dstCallage));
@@ -188,13 +172,13 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                     position.setAngle(conv.degToPulse(180));
                 }
 
-                trajectoryManager.avanceMM(150);
-                trajectoryManager.gotoOrientationDeg(90);
+                mv.avanceMM(150);
+                mv.gotoOrientationDeg(90);
 
                 robotStatus.enableCalageBordure();
-                trajectoryManager.reculeMMSansAngle(1000);
+                mv.reculeMMSansAngle(1000);
 
-                if (!ioService.auOk()) {
+                if (!io.auOk()) {
                     ecranService.displayMessage("Echappement calage bordure car mauvais sens", LogLevel.ERROR);
                     throw new ExitProgram(true);
                 }
@@ -202,7 +186,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 position.getPt().setY(conv.mmToPulse(IOdinConstantesConfig.dstCallage));
                 position.setAngle(conv.degToPulse(90));
 
-                trajectoryManager.avanceMM(150);
+                mv.avanceMM(150);
             }
         } catch (AvoidingException e) {
             ecranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
@@ -216,28 +200,28 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
     public void positionStrategy() {
         ecranService.displayMessage("Mise en place");
         try {
-            trajectoryManager.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             switch (odinRobotStatus.strategy()) {
                 case BASIC:
                 case AGGRESSIVE:
                     // Aligne vers les bouées au nord du port
                     if (odinRobotStatus.team() == ETeam.BLEU) {
-                        trajectoryManager.gotoPoint(255, 1005, GotoOption.ARRIERE);
+                        mv.gotoPoint(255, 1005, GotoOption.ARRIERE);
                     } else {
-                        trajectoryManager.gotoPoint(3000 - 255, 1005, GotoOption.ARRIERE);
+                        mv.gotoPoint(3000 - 255, 1005, GotoOption.ARRIERE);
                     }
-                    trajectoryManager.gotoOrientationDeg(-90);
+                    mv.gotoOrientationDeg(-90);
                     break;
 
                 case FINALE:
                     // Aligne vers le centre de la table
                     if (odinRobotStatus.team() == ETeam.BLEU) {
-                        trajectoryManager.gotoPoint(160, 1370, GotoOption.AVANT);
-                        trajectoryManager.gotoOrientationDeg(-70);
+                        mv.gotoPoint(160, 1370, GotoOption.AVANT);
+                        mv.gotoOrientationDeg(-70);
                     } else {
-                        trajectoryManager.gotoPoint(3000 - 160, 1370, GotoOption.AVANT);
-                        trajectoryManager.gotoOrientationDeg(-110);
+                        mv.gotoPoint(3000 - 160, 1370, GotoOption.AVANT);
+                        mv.gotoOrientationDeg(-110);
                     }
                     groupService.initStep(1);
                     break;
@@ -271,7 +255,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
             boolean manuel = ecranService.config().isModeManuel();
 
-            while (!ioService.tirette()) {
+            while (!io.tirette()) {
                 exitFromScreen();
 
                 if (manuelRisingEdge.filter(ecranService.config().isModeManuel())) {

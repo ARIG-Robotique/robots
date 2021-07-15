@@ -39,10 +39,4 @@ public interface INerellConstantesI2C {
 
     String COULEUR_AV_4_NAME = "Couleur Av 4";
     byte COULEUR_AV_4_MUX_CHANNEL = 4;
-
-    String COULEUR_AR_2_NAME = "Couleur AR 2";
-    byte COULEUR_AR_2_MUX_CHANNEL = 1;
-
-    String COULEUR_AR_4_NAME = "Couleur AR 4";
-    byte COULEUR_AR_4_MUX_CHANNEL = 6;
 }

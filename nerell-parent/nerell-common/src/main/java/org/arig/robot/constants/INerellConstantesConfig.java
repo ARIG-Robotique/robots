@@ -106,10 +106,6 @@ public interface INerellConstantesConfig {
     // -------------------------- //
 
     double dstCallage = 151.0; // dos du robot <=> milieu du robot
-    double dstDeposeArriereY = 223.5; // milieu de gobelets arrière, posés au sol <=> milieu du robot
-    double dstDeposeAvantY = 115; // milieu des gobelets avant <=> milieu du robot
-    double[] dstDeposeAvantX = new double[]{-114, -38, 38, 114};
-    double dstBrasMancheAAirX = 210; // distance minimale pour pousser la manche à air
 
     // -------------------------- //
     // Paramètre Avoiding service //

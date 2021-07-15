@@ -1,28 +1,17 @@
 package org.arig.robot.services;
 
-import org.arig.robot.model.ECouleurBouee;
-import org.arig.robot.model.GrandChenaux;
+import org.arig.robot.model.ECouleur;
 
 public interface IOdinPincesService {
-    void deposeGrandPort();
-
-    void deposeFondGrandChenalRouge();
-
-    void deposeFondGrandChenalVert();
-
-    void deposeGrandChenal(ECouleurBouee chenal, GrandChenaux.Line line, int idxGauche, int idxDroite);
-
-    void deposePetitChenal(ECouleurBouee chenal);
-
     void activate();
 
     void deactivate();
 
-    boolean processBouee();
+    boolean process();
 
-    void processCouleurBouee();
-
-    void setExpected(ECouleurBouee expected, int pinceNumber);
+    void processCouleur();
 
     void releasePompe(boolean gauche, boolean droite);
+
+    void setExpected(ECouleur expected, int pinceNumber);
 }
