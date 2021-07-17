@@ -1,10 +1,17 @@
 package org.arig.robot.system.capteurs;
 
+import com.google.common.collect.ImmutableMap;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.ecran.GetConfigInfos;
-import org.arig.robot.model.ecran.UpdateMatchInfos;
-import org.arig.robot.model.ecran.UpdateStateInfos;
+import org.arig.robot.communication.socket.AbstractResponseWithData;
+import org.arig.robot.communication.socket.ecran.enums.EcranAction;
+import org.arig.robot.model.ecran.AbstractEcranConfig;
+import org.arig.robot.model.ecran.AbstractEcranState;
+import org.arig.robot.model.ecran.EcranMatchInfo;
+import org.arig.robot.model.ecran.EcranParams;
 import org.arig.robot.utils.ThreadUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -15,19 +22,56 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @RunWith(BlockJUnit4ClassRunner.class)
 public class EcranOverSocketTest {
 
-    private static EcranOverSocket ecran;
+    enum TestTeam {
+        ROUGE, VERT
+    }
+
+    enum TestStrat {
+        STRAT_A, STRAT_B
+    }
+
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    @ToString(callSuper = true)
+    static class TestEcranConfig extends AbstractEcranConfig {
+        private TestTeam team;
+        private TestStrat strategy;
+    }
+
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    @ToString(callSuper = true)
+    static class TestEcranState extends AbstractEcranState {
+        private TestTeam team;
+        private TestStrat strategy;
+    }
+
+    static class TestConfigResponse extends AbstractResponseWithData<EcranAction, TestEcranConfig> {
+    }
+
+    static class TestEcranOverSocket extends AbstractEcranOverSocket<TestEcranConfig, TestEcranState> {
+        public TestEcranOverSocket(String hostname, Integer port) {
+            super(hostname, port, TestConfigResponse.class);
+        }
+    }
+
+    private static TestEcranOverSocket ecran;
 
     @BeforeClass
     @SneakyThrows
     public static void initTest() {
         String host = "localhost";
         Assume.assumeTrue("Contrôle par la présence de l'ecran", serverListening(host, 9000));
-        ecran = new EcranOverSocket(host, 9000);
+        ecran = new TestEcranOverSocket(host, 9000);
+        ecran.openSocket();
         Assert.assertTrue(ecran.isOpen());
     }
 
@@ -41,8 +85,17 @@ public class EcranOverSocketTest {
     @Test
     @SneakyThrows
     public void testCommEcran() {
-        final UpdateStateInfos state = new UpdateStateInfos();
-        final UpdateMatchInfos match = new UpdateMatchInfos();
+        final EcranParams params = new EcranParams();
+        final TestEcranState state = new TestEcranState();
+        final EcranMatchInfo match = new EcranMatchInfo();
+
+        params.setName("Test");
+        params.setPrimary(true);
+        params.setTeams(ImmutableMap.of(TestTeam.ROUGE.name(), "red", TestTeam.VERT.name(), "green"));
+        params.setStrategies(Stream.of(TestStrat.values()).map(Enum::name).collect(Collectors.toList()));
+        params.setOptions(Arrays.asList("option_1", "option_2"));
+        ecran.setParams(params);
+        ThreadUtils.sleep(500);
 
         state.setMessage("AU a débloquer");
         state.setI2c(true);
@@ -56,9 +109,6 @@ public class EcranOverSocketTest {
         ThreadUtils.sleep(500);
 
         state.setAlim5vp(true);
-        ecran.updateState(state);
-        ThreadUtils.sleep(500);
-
         state.setAlim12v(true);
         ecran.updateState(state);
         ThreadUtils.sleep(500);
@@ -66,16 +116,16 @@ public class EcranOverSocketTest {
         state.setMessage("Choix couleur, strategy et start calibration");
         ecran.updateState(state);
 
-        GetConfigInfos infos;
+        AbstractEcranConfig infos;
         do {
             infos = ecran.configInfos();
             log.info("Team {} ; Strategy {} ; Calibration {}", infos.getTeam(), infos.getStrategy(), infos.isStartCalibration());
             ThreadUtils.sleep(500);
-        } while(!infos.isStartCalibration());
+        } while (!infos.isStartCalibration());
 
         state.setMessage("Calibration en cours");
         ecran.updateState(state);
-        ThreadUtils.sleep(5000);
+        ThreadUtils.sleep(2000);
 
         state.setMessage("Attente présence tirette");
         ecran.updateState(state);
@@ -89,13 +139,17 @@ public class EcranOverSocketTest {
         state.setMessage("");
         state.setTirette(false);
         ecran.updateState(state);
-        ecran.updateMatch(match);
 
-        for (int i = 1 ; i <= 10 ; i++) {
+        for (int i = 1; i <= 10; i++) {
             match.setScore(i * 10);
+            match.setMessage("Action " + i);
             ecran.updateMatch(match);
             ThreadUtils.sleep(1000);
         }
+
+        state.setMessage("Attente remise tirette");
+        ecran.updateState(state);
+        ThreadUtils.sleep(2000);
     }
 
     public static boolean serverListening(String host, int port) {

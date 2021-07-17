@@ -22,13 +22,16 @@ public class EurobotStatus extends AbstractRobotStatus {
     }
 
     @Setter(AccessLevel.NONE)
-    private ETeam team = ETeam.UNKNOWN;
+    private ETeam team;
 
     private EStrategy strategy = EStrategy.BASIC;
 
     public void setTeam(ETeam team) {
         this.team = team;
     }
+
+    private boolean option1;
+    private boolean option2;
 
     /**
      * STATUT

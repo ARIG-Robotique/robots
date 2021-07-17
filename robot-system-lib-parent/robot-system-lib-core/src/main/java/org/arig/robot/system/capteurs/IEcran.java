@@ -1,17 +1,19 @@
 package org.arig.robot.system.capteurs;
 
-import org.arig.robot.model.ecran.GetConfigInfos;
-import org.arig.robot.model.ecran.UpdateMatchInfos;
-import org.arig.robot.model.ecran.UpdatePhotoInfos;
-import org.arig.robot.model.ecran.UpdateStateInfos;
+import org.arig.robot.model.ecran.AbstractEcranConfig;
+import org.arig.robot.model.ecran.EcranParams;
+import org.arig.robot.model.ecran.EcranMatchInfo;
+import org.arig.robot.model.ecran.EcranPhoto;
+import org.arig.robot.model.ecran.AbstractEcranState;
 
-public interface IEcran {
+public interface IEcran<CONFIG extends AbstractEcranConfig, STATE extends AbstractEcranState> {
 
     void end();
 
-    GetConfigInfos configInfos();
-    void updateState(UpdateStateInfos data);
-    void updateMatch(UpdateMatchInfos data);
-    void updatePhoto(UpdatePhotoInfos photo);
+    boolean setParams(EcranParams params);
+    CONFIG configInfos();
+    void updateState(STATE data);
+    void updateMatch(EcranMatchInfo data);
+    void updatePhoto(EcranPhoto photo);
 
 }

@@ -13,6 +13,10 @@ public interface IEurobotConfig {
     int tableHeight = 2000;
     int tableBorder = 50;
 
+    // Options de match
+    String OPTION_1 = "option1";
+    String OPTION_2 = "option2";
+
     // Noms des actions
 
     // Zones d'exclusion d'action

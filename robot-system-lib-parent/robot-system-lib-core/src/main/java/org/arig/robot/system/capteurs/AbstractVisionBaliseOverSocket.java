@@ -22,21 +22,21 @@ import java.io.File;
 import java.io.Serializable;
 
 @Slf4j
-public abstract class AbstractVisionBaliseOverSocket<T extends Serializable>
+public abstract class AbstractVisionBaliseOverSocket<STATUT extends Serializable>
         extends AbstractSocketClient<BaliseAction>
-        implements IVisionBalise<T> {
+        implements IVisionBalise<STATUT> {
 
     // type de retour de la méthode "getStatut"
-    private final Class<? extends AbstractResponseWithData<BaliseAction, T>> statutReponseType;
+    private final Class<? extends AbstractResponseWithData<BaliseAction, STATUT>> statutReponseType;
 
     public AbstractVisionBaliseOverSocket(String hostname, Integer port,
-                                          Class<? extends AbstractResponseWithData<BaliseAction, T>> statutReponseType) {
+                                          Class<? extends AbstractResponseWithData<BaliseAction, STATUT>> statutReponseType) {
         super(hostname, port, 10000);
         this.statutReponseType = statutReponseType;
     }
 
     public AbstractVisionBaliseOverSocket(File socketFile,
-                                          Class<? extends AbstractResponseWithData<BaliseAction, T>> statutReponseType) {
+                                          Class<? extends AbstractResponseWithData<BaliseAction, STATUT>> statutReponseType) {
         super(socketFile);
         this.statutReponseType = statutReponseType;
     }
@@ -100,10 +100,10 @@ public abstract class AbstractVisionBaliseOverSocket<T extends Serializable>
     }
 
     @Override
-    public T getStatut() {
+    public STATUT getStatut() {
         try {
             openIfNecessary();
-            AbstractResponseWithData<?, T> response = sendToSocketAndGet(new StatutQuery(), statutReponseType);
+            AbstractResponseWithData<?, STATUT> response = sendToSocketAndGet(new StatutQuery(), statutReponseType);
             return response.getData();
 
         } catch (Exception e) {

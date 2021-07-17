@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UpdatePhotoInfos implements Serializable {
-    String photo;
+public class EcranMatchInfo implements Serializable {
+    int score = 0;
     String message;
 }

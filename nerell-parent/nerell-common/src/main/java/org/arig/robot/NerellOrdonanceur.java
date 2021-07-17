@@ -3,6 +3,7 @@ package org.arig.robot;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.socket.balise.EtalonnageResponse;
 import org.arig.robot.communication.socket.balise.PhotoResponse;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.constants.INerellConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.ExitProgram;
@@ -13,7 +14,7 @@ import org.arig.robot.model.EStrategy;
 import org.arig.robot.model.ETeam;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.ecran.UpdatePhotoInfos;
+import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.INerellIOService;
 import org.arig.robot.services.NerellEcranService;
@@ -117,8 +118,8 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     private void choixEquipeStrategy() {
         ecranService.displayMessage("Choix équipe et lancement calage bordure");
 
-        ChangeFilter<Integer> teamChangeFilter = new ChangeFilter<>(ETeam.UNKNOWN.ordinal());
-        ChangeFilter<Integer> strategyChangeFilter = new ChangeFilter<>(null);
+        ChangeFilter<ETeam> teamChangeFilter = new ChangeFilter<>(null);
+        ChangeFilter<EStrategy> strategyChangeFilter = new ChangeFilter<>(null);
         SignalEdgeFilter updatePhotoFilter = new SignalEdgeFilter(false, Type.RISING);
         SignalEdgeFilter doEtalonnageFilter = new SignalEdgeFilter(false, Type.RISING);
 
@@ -129,14 +130,17 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             configBalise(updatePhotoFilter, doEtalonnageFilter);
 
             if (teamChangeFilter.filter(ecranService.config().getTeam())) {
-                groupService.team(ETeam.values()[ecranService.config().getTeam()]);
+                groupService.team(ecranService.config().getTeam());
                 log.info("Team {}", nerellRobotStatus.team().name());
             }
 
             if (strategyChangeFilter.filter(ecranService.config().getStrategy())) {
-                groupService.strategy(EStrategy.values()[ecranService.config().getStrategy()]);
+                groupService.strategy(ecranService.config().getStrategy());
                 log.info("Strategy {}", nerellRobotStatus.strategy().name());
             }
+
+            nerellRobotStatus.option1(ecranService.config().hasOption(IEurobotConfig.OPTION_1));
+            nerellRobotStatus.option2(ecranService.config().hasOption(IEurobotConfig.OPTION_2));
 
             groupService.configuration();
 
@@ -163,7 +167,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             if (updatePhotoFilter.filter(ecranService.config().isUpdatePhoto())) {
                 // sur front montant de "updatePhoto" on prend une photo et l'envoie à l'écran
                 PhotoResponse photo = baliseService.getPhoto();
-                UpdatePhotoInfos query = new UpdatePhotoInfos();
+                EcranPhoto query = new EcranPhoto();
                 query.setMessage(photo == null ? "Erreur inconnue" : photo.getErrorMessage());
                 query.setPhoto(photo == null ? null : photo.getData());
                 ecranService.updatePhoto(query);
@@ -171,7 +175,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             } else if (doEtalonnageFilter.filter(ecranService.config().isEtalonnageBalise())) {
                 // sur front montant de "etalonnageBalise" on lance l'étalonnage et envoie le résultat à l'écran
                 EtalonnageResponse etalonnage = baliseService.etalonnage();
-                UpdatePhotoInfos query = new UpdatePhotoInfos();
+                EcranPhoto query = new EcranPhoto();
                 query.setMessage(etalonnage == null ? "Erreur inconnue" : etalonnage.getErrorMessage());
                 query.setPhoto(etalonnage == null ? null : etalonnage.getData());
                 ecranService.updatePhoto(query);

@@ -6,11 +6,13 @@ import org.arig.robot.communication.socket.balise.PhotoResponse;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.Serializable;
+
 @Slf4j
-public abstract class AbstractBaliseService {
+public abstract class AbstractBaliseService<STATUT extends Serializable> {
 
     @Autowired
-    protected IVisionBalise balise;
+    protected IVisionBalise<STATUT> balise;
 
     private boolean detectionStarted = false;
 

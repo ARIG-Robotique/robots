@@ -7,7 +7,7 @@ import org.arig.robot.communication.socket.enums.StatusResponse;
 
 import java.io.Serializable;
 
-public abstract class AbstractVisionBaliseBouchon<T extends Serializable> implements IVisionBalise<T> {
+public abstract class AbstractVisionBaliseBouchon<STATUT extends Serializable> implements IVisionBalise<STATUT> {
 
     @Override
     public boolean startDetection() {

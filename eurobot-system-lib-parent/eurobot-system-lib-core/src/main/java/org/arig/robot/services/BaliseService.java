@@ -6,7 +6,7 @@ import org.arig.robot.model.balise.StatutBalise;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
-public class BaliseService extends AbstractBaliseService {
+public class BaliseService extends AbstractBaliseService<StatutBalise> {
 
     @Autowired
     private EurobotStatus rs;
@@ -17,7 +17,7 @@ public class BaliseService extends AbstractBaliseService {
     private StatutBalise statut;
 
     public void updateStatus() {
-        statut = (StatutBalise) balise.getStatut();
+        statut = balise.getStatut();
     }
 
 }
