@@ -12,6 +12,8 @@ import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
+import org.arig.robot.model.ecran.EcranConfig;
+import org.arig.robot.model.ecran.EcranState;
 import org.arig.robot.monitoring.IMonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.system.RobotGroupOverSocket;
@@ -177,7 +179,7 @@ public class OdinCommonContext {
     }
 
     @Bean
-    public IEcran ecran(EcranProcess ecranProcess) throws Exception {
+    public IEcran<EcranConfig, EcranState> ecran(EcranProcess ecranProcess) throws Exception {
         final File socketFile = new File(ecranProcess.getSocketPath());
         return new EcranOverSocket(socketFile);
     }

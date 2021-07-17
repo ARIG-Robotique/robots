@@ -1,6 +1,7 @@
 package org.arig.robot;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.constants.IOdinConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.ExitProgram;
@@ -13,6 +14,7 @@ import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.IOdinIOService;
+import org.arig.robot.services.OdinEcranService;
 import org.arig.robot.services.OdinServosService;
 import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.utils.ThreadUtils;
@@ -34,6 +36,9 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
     @Autowired
     private RobotGroupService groupService;
 
+    @Autowired
+    private OdinEcranService ecranService;
+
     @Override
     public String getPathfinderMap() {
         return odinRobotStatus.team().pathfinderMap("odin");
@@ -46,8 +51,6 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void addDeadZones() {
-        // Exclusion du petit port pour l'évittement
-        tableUtils.addPersistentDeadZone(new java.awt.Rectangle.Double(900 + (odinRobotStatus.team() == ETeam.BLEU ? 0 : 600), 0, 600, 300));
     }
 
     @Override
@@ -99,8 +102,8 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
      * Etape du choix de l'équipe/stratégie
      */
     private void choixEquipeStrategy() {
-        ChangeFilter<Integer> teamChangeFilter = new ChangeFilter<>(ETeam.UNKNOWN.ordinal());
-        ChangeFilter<Integer> strategyChangeFilter = new ChangeFilter<>(null);
+        ChangeFilter<ETeam> teamChangeFilter = new ChangeFilter<>(null);
+        ChangeFilter<EStrategy> strategyChangeFilter = new ChangeFilter<>(null);
         ChangeFilter<Boolean> groupChangeFilter = new ChangeFilter<>(null);
 
         boolean done;
@@ -121,14 +124,17 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
             } else {
                 if (teamChangeFilter.filter(ecranService.config().getTeam())) {
-                    groupService.team(ETeam.values()[ecranService.config().getTeam()]);
+                    odinRobotStatus.setTeam(ecranService.config().getTeam());
                     log.info("Team {}", odinRobotStatus.team().name());
                 }
 
                 if (strategyChangeFilter.filter(ecranService.config().getStrategy())) {
-                    groupService.strategy(EStrategy.values()[ecranService.config().getStrategy()]);
+                    odinRobotStatus.strategy(ecranService.config().getStrategy());
                     log.info("Strategy {}", odinRobotStatus.strategy().name());
                 }
+
+                odinRobotStatus.option1(ecranService.config().hasOption(IEurobotConfig.OPTION_1));
+                odinRobotStatus.option2(ecranService.config().hasOption(IEurobotConfig.OPTION_2));
 
                 done = ecranService.config().isStartCalibration();
             }

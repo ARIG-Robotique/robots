@@ -5,9 +5,9 @@ import org.arig.robot.communication.socket.balise.PhotoResponse;
 
 import java.io.Serializable;
 
-public interface IVisionBalise<T extends Serializable> {
+public interface IVisionBalise<STATUT extends Serializable> {
 
-    T getStatut();
+    STATUT getStatut();
     PhotoResponse getPhoto();
     EtalonnageResponse etalonnage();
     boolean startDetection();

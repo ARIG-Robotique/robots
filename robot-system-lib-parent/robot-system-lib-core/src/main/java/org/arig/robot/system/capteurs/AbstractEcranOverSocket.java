@@ -1,31 +1,41 @@
 package org.arig.robot.system.capteurs;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.communication.socket.AbstractResponseWithData;
 import org.arig.robot.communication.socket.ecran.EmptyResponse;
 import org.arig.robot.communication.socket.ecran.ExitQuery;
 import org.arig.robot.communication.socket.ecran.GetConfigQuery;
-import org.arig.robot.communication.socket.ecran.GetConfigResponse;
+import org.arig.robot.communication.socket.ecran.SetParamsQuery;
 import org.arig.robot.communication.socket.ecran.UpdateMatchQuery;
 import org.arig.robot.communication.socket.ecran.UpdatePhotoQuery;
 import org.arig.robot.communication.socket.ecran.UpdateStateQuery;
 import org.arig.robot.communication.socket.ecran.enums.EcranAction;
-import org.arig.robot.model.ecran.GetConfigInfos;
-import org.arig.robot.model.ecran.UpdateMatchInfos;
-import org.arig.robot.model.ecran.UpdatePhotoInfos;
-import org.arig.robot.model.ecran.UpdateStateInfos;
+import org.arig.robot.model.ecran.AbstractEcranConfig;
+import org.arig.robot.model.ecran.AbstractEcranState;
+import org.arig.robot.model.ecran.EcranParams;
+import org.arig.robot.model.ecran.EcranMatchInfo;
+import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.system.communication.AbstractSocketClient;
 
 import java.io.File;
 
 @Slf4j
-public class EcranOverSocket extends AbstractSocketClient<EcranAction> implements IEcran {
+public abstract class AbstractEcranOverSocket<CONFIG extends AbstractEcranConfig, STATE extends AbstractEcranState>
+        extends AbstractSocketClient<EcranAction>
+        implements IEcran<CONFIG, STATE> {
 
-    public EcranOverSocket(String hostname, Integer port) {
+    private final Class<? extends AbstractResponseWithData<EcranAction, CONFIG>> configInfosReponseType;
+
+    public AbstractEcranOverSocket(String hostname, Integer port,
+                                   Class<? extends AbstractResponseWithData<EcranAction, CONFIG>> configInfosReponseType) {
         super(hostname, port, 1000);
+        this.configInfosReponseType = configInfosReponseType;
     }
 
-    public EcranOverSocket(File socketFile) {
+    public AbstractEcranOverSocket(File socketFile,
+                                   Class<? extends AbstractResponseWithData<EcranAction, CONFIG>> configInfosReponseType) {
         super(socketFile);
+        this.configInfosReponseType = configInfosReponseType;
     }
 
     @Override
@@ -41,25 +51,33 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
     }
 
     @Override
-    public GetConfigInfos configInfos() {
-        GetConfigInfos r;
+    public boolean setParams(EcranParams params) {
         try {
             openIfNecessary();
-            GetConfigResponse rawResponse = sendToSocketAndGet(new GetConfigQuery(), GetConfigResponse.class);
-            r = rawResponse.getData();
+            SetParamsQuery query = new SetParamsQuery();
+            query.setData(params);
+            EmptyResponse rawResponse = sendToSocketAndGet(query, EmptyResponse.class);
+            return rawResponse.isOk();
         } catch (Exception e) {
             log.error("Erreur de lecture", e);
-            r = new GetConfigInfos();
-            r.setTeam(0);
-            r.setStrategy(0);
-            r.setStartCalibration(false);
+            return false;
         }
-
-        return r;
     }
 
     @Override
-    public void updateState(UpdateStateInfos data) {
+    public CONFIG configInfos() {
+        try {
+            openIfNecessary();
+            AbstractResponseWithData<EcranAction, CONFIG> rawResponse = sendToSocketAndGet(new GetConfigQuery(), configInfosReponseType);
+            return rawResponse.getData();
+        } catch (Exception e) {
+            log.error("Erreur de lecture", e);
+            return null;
+        }
+    }
+
+    @Override
+    public void updateState(STATE data) {
         try {
             openIfNecessary();
             UpdateStateQuery query = new UpdateStateQuery();
@@ -71,7 +89,7 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
     }
 
     @Override
-    public void updateMatch(UpdateMatchInfos data) {
+    public void updateMatch(EcranMatchInfo data) {
         try {
             openIfNecessary();
             UpdateMatchQuery query = new UpdateMatchQuery();
@@ -83,7 +101,7 @@ public class EcranOverSocket extends AbstractSocketClient<EcranAction> implement
     }
 
     @Override
-    public void updatePhoto(UpdatePhotoInfos data) {
+    public void updatePhoto(EcranPhoto data) {
         try {
             openIfNecessary();
             UpdatePhotoQuery query = new UpdatePhotoQuery();

@@ -68,6 +68,8 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
                 rs.strategy(EStrategy.values()[value[0]]);
                 break;
             case CONFIG:
+                rs.option1(value[0] > 0);
+                rs.option2(value[1] > 0);
                 break;
             case CURRENT_ACTION:
                 String actionName = null;
@@ -121,7 +123,10 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
     }
 
     public void configuration() {
-        byte[] data = new byte[]{};
+        byte[] data = new byte[]{
+                (byte) (rs.option1() ? 1 : 0),
+                (byte) (rs.option2() ? 1 : 0)
+        };
         sendEvent(EStatusEvent.CONFIG, data);
     }
 
