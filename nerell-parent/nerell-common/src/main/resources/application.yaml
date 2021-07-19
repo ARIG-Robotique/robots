@@ -66,7 +66,7 @@ spring:
 
 # Écran
 ecran:
-  binary: /opt/nerell-gui
+  binary: /opt/robots-gui
 
 # Balise de vision
 balise:
