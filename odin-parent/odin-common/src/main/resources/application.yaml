@@ -60,7 +60,7 @@ spring:
 
 # Écran
 ecran:
-  binary: /opt/odin-gui
+  binary: /opt/robots-gui
 
 ---
 
