@@ -24,7 +24,7 @@ robot:
 
 # Écran
 ecran:
-  binary: /home/pi/odin-gui
+  binary: /home/pi/robots-gui
   socket: /tmp/ecran-odin.sock
 
 # Nerell
