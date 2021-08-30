@@ -152,7 +152,7 @@ public abstract class AbstractNerellPincesArriereService implements INerellPince
             // dépose la bonne couleur et les inconnus
             for (int i = 0; i < rs.pincesArriere().length; i++) {
                 final ECouleurBouee couleurPince = rs.pincesArriere()[i];
-                if (couleurPince == couleurBouee || couleurPince == ECouleurBouee.INCONNU) {
+                if (couleurPince == couleurBouee || couleurPince == ECouleurBouee.INCONNU || couleurPince == null) {
                     srv.pinceArriereOuvert(i, false);
                 }
             }
