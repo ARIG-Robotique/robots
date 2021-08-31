@@ -5,21 +5,25 @@ import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Point;
-import org.arig.robot.strategy.actions.AbstractOdinAction;
+import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class OdinAttenteCentreTable extends AbstractOdinAction {
+public class NerellAttenteCentreTable extends AbstractNerellAction {
 
     @Override
     public Point entryPoint() {
-        return new Point(getX(1500), 1350);
+        if (rs.phare()) {
+            return new Point(getX(850), 1750); // face à l'écueil
+        } else {
+            return new Point(getX(450), 250); // face aux manches à air
+        }
     }
 
     @Override
     public String name() {
-        return IEurobotConfig.ACTION_ATTENTE_CENTRE_PREFIX + "Odin";
+        return IEurobotConfig.ACTION_ATTENTE_CENTRE_PREFIX + "Nerell";
     }
 
     @Override
@@ -29,7 +33,7 @@ public class OdinAttenteCentreTable extends AbstractOdinAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rsOdin.inPort() && rs.getRemainingTime() > IEurobotConfig.validRetourPortRemainingTimeNerell;
+        return isTimeValid() && !rsNerell.inPort() && rs.getRemainingTime() > IEurobotConfig.validRetourPortRemainingTimeNerell;
     }
 
     @Override
