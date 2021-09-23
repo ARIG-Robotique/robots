@@ -3,6 +3,7 @@ package org.arig.robot.strategy.actions.active;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.EPort;
 import org.arig.robot.model.ETeam;
@@ -23,7 +24,7 @@ public class NerellRetourAuPort extends AbstractNerellAction {
     @Override
     public Point entryPoint() {
         final int offset = 575; // Empirique
-        final double x = getX(455);
+        final double x = getX(430);
         final double centerY = 1200;
         final Point north = new Point(x, centerY + offset);
         final Point south = new Point(x, centerY - offset);
@@ -89,16 +90,22 @@ public class NerellRetourAuPort extends AbstractNerellAction {
 
             // Finalisation de la rentrée dans le port après avoir compté les points
             if (!rs.otherPort().isInPort()) {
-                // Premier arrivé
-                mv.gotoPoint(getX(270), entry.getY(),GotoOption.ARRIERE);
-
+                // Premier arrivé on rentre dans la zone
+                try {
+                    mv.gotoPoint(getX(270), entry.getY(), GotoOption.ARRIERE);
+                    rs.enableCalageBordure();
+                    mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+                    mv.reculeMMSansAngle(1000);
+                } catch (MovementCancelledException e) {
+                    log.info("Finalisation de la rentrée au port (1st) impossible. Mouvement annulé");
+                }
             } else {
-                // Deuxieme arrivé
-                mv.gotoOrientationDeg(rs.team() == ETeam.BLEU ? 180 : 0);
-                if ((rs.team() == ETeam.BLEU && port == EPort.NORD) || (rs.team() == ETeam.JAUNE && port == EPort.SUD)) {
-                    servosNerell.moustacheGaucheOuvert(true);
-                } else {
-                    servosNerell.moustacheDroiteOuvert(true);
+                // Deuxieme arrivé, bisous Odin
+                try {
+                    mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+                    mv.gotoPoint(getX(310), entry.getY(), GotoOption.AVANT);
+                } catch (MovementCancelledException e) {
+                    log.info("Finalisation de la rentrée au port (2nd) impossible. Mouvement annulé");
                 }
             }
             rs.disableAsserv();
