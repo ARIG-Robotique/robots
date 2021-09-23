@@ -3,6 +3,7 @@ package org.arig.robot.strategy.actions.active;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IEurobotConfig;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.EPort;
 import org.arig.robot.model.ETeam;
@@ -22,7 +23,7 @@ public class OdinRetourAuPort extends AbstractOdinAction {
 
     @Override
     public Point entryPoint() {
-        final int offset = 410; // Empirique
+        final int offset = 570; // Empirique
         final double x = getX(680);
         final double centerY = 1200;
         final Point north = new Point(x, centerY + offset);
@@ -92,17 +93,23 @@ public class OdinRetourAuPort extends AbstractOdinAction {
             // Finalisation de la rentrée dans le port après avoir compté les points
             if (!rs.otherPort().isInPort()) {
                 // Premier arrivé on rentre dans la zone
-                final double entryYFirst = port == EPort.NORD ? 1770 : 630;
-                mv.gotoPoint(getX(160), entryYFirst, GotoOption.ARRIERE, GotoOption.SANS_ORIENTATION);
-                mv.gotoOrientationDeg(rs.team() == ETeam.BLEU ? 0 : 180);
+                try {
+                    mv.gotoPoint(getX(160), entry.getY(), GotoOption.ARRIERE);
+                    rs.enableCalageBordure();
+                    mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+                    mv.reculeMMSansAngle(1000);
+                } catch (MovementCancelledException e) {
+                    log.info("Finalisation de la rentrée au port (1st) impossible. Mouvement annulé");
+                }
+
             } else {
                 // Deuxieme arrivé, bisous Nerell
-                mv.gotoPoint(getX(550), entry.getY(), GotoOption.ARRIERE);
-                mv.gotoOrientationDeg(90);
-                if (rs.team() == ETeam.BLEU) {
-                    servosOdin.brasGaucheMancheAAir(false);
-                } else {
-                    servosOdin.brasDroitMancheAAir(false);
+                try {
+                    mv.gotoPoint(getX(430), entry.getY(), GotoOption.ARRIERE);
+                    mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+                    mv.gotoPoint(getX(390), entry.getY(), GotoOption.ARRIERE);
+                } catch (MovementCancelledException e) {
+                    log.info("Finalisation de la rentrée au port (2nd) impossible. Mouvement annulé");
                 }
             }
             rs.disableAsserv();
