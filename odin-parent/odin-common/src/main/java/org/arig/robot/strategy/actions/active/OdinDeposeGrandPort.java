@@ -127,6 +127,7 @@ public class OdinDeposeGrandPort extends AbstractOdinAction {
             complete();
 
         } catch (MovementCancelledException e) {
+            log.info("Mouvement annulé, on termine l'action");
             complete();
 
         } catch (NoPathFoundException | AvoidingException e) {

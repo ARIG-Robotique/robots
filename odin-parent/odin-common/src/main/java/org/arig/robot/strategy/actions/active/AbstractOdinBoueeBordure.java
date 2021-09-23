@@ -54,6 +54,7 @@ public abstract class AbstractOdinBoueeBordure extends AbstractOdinBouee {
                 mv.gotoPoint(entry.getX(), 1830, sens);
             } catch (MovementCancelledException e) {
                 // cas de blocage sur la bordure
+                log.info("Blocage sur la bordure");
             }
 
             group.boueePrise(bouee);

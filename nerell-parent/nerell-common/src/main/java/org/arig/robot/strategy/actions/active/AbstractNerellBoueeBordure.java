@@ -48,6 +48,7 @@ public abstract class AbstractNerellBoueeBordure extends AbstractNerellBouee {
                 mv.gotoPoint(entry.getX(), 1840, GotoOption.AVANT);
             } catch (MovementCancelledException e) {
                 // cas de blocage sur la bordure
+                log.info("Blocage sur la bordure");
             }
 
             group.boueePrise(bouee);
