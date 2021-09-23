@@ -9,7 +9,6 @@ import org.arig.robot.model.ETeam;
 import org.arig.robot.model.GrandChenaux;
 import org.springframework.stereotype.Component;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 

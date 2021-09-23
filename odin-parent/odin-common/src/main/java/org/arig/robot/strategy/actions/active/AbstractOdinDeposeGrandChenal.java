@@ -11,7 +11,6 @@ import org.arig.robot.model.ETeam;
 import org.arig.robot.model.GrandChenaux;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.AbstractOdinPincesArriereService;
 import org.arig.robot.services.AbstractOdinPincesAvantService;
 import org.arig.robot.strategy.actions.AbstractOdinAction;
