@@ -85,44 +85,41 @@ public class OdinManchesAAir extends AbstractOdinAction {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry);
 
-            final double angleRobot = conv.pulseToDeg(position.getAngle());
-            final boolean brasDroit;
-            if (Math.abs(angleRobot) <= 90) {
-                brasDroit = true;
-                mv.gotoOrientationDegSansDistance(0);
-                // On active avec le bras droit
-                servosOdin.brasDroitMancheAAir(true);
-            } else {
-                brasDroit = false;
-                mv.gotoOrientationDegSansDistance(180);
-                // On active avec le bras gauche
-                servosOdin.brasGaucheMancheAAir(true);
-            }
+            mv.gotoOrientationDegSansDistance(rs.team() == ETeam.BLEU ? 0 : 180 );
 
             final double y = entry.getY();
             boolean manche1Before = !rsOdin.mancheAAir1();
             if (manche1Before) {
+                mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+                rs.enableCalageBordure();
+                mv.reculeMMSansAngle(500);
+                mv.setVitesse(robotConfig.vitesse(80), robotConfig.vitesseOrientation());
+
+                // On active avec le bras droit
+                if (rs.team() == ETeam.BLEU) {
+                    servosOdin.brasDroitMancheAAir(true);
+                } else {
+                    servosOdin.brasGaucheMancheAAir(true);
+                }
+
                 group.mancheAAir1();
 
-                if (rsOdin.team() == ETeam.BLEU) {
-                    mv.gotoPoint(xManche2, y, GotoOption.SANS_ORIENTATION);
-                } else {
-                    mv.gotoPoint(3000 - xManche2, y, GotoOption.SANS_ORIENTATION);
-                }
+                mv.gotoPoint(getX(xManche2), y, GotoOption.SANS_ORIENTATION);
             }
 
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             if (!rsOdin.mancheAAir2()) {
                 group.mancheAAir2();
 
-                if (rsOdin.team() == ETeam.BLEU) {
-                    mv.gotoPoint(xFinManche2, y, GotoOption.SANS_ORIENTATION);
-                    // Fait en avant 90, -90 sinon
-                    mv.gotoOrientationDeg(brasDroit ? 90 : -90, SensRotation.TRIGO);
+                // On active avec le bras droit
+                if (rs.team() == ETeam.BLEU) {
+                    servosOdin.brasDroitMancheAAir(true);
                 } else {
-                    mv.gotoPoint(3000 - xFinManche2, y, GotoOption.SANS_ORIENTATION);
-                    // Fait en avant -90, 90 sinon
-                    mv.gotoOrientationDeg(!brasDroit ? 90 : -90, SensRotation.HORAIRE);
+                    servosOdin.brasGaucheMancheAAir(true);
                 }
+
+                mv.gotoPoint(getX(xFinManche2), y, GotoOption.SANS_ORIENTATION);
+                mv.gotoOrientationDeg(90, SensRotation.AUTO);
 
                 servosOdin.brasDroitFerme(false);
                 servosOdin.brasGaucheFerme(false);
