@@ -187,7 +187,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                     position.setAngle(conv.degToPulse(180));
                 }
 
-                trajectoryManager.avanceMM(150);
+                trajectoryManager.avanceMM(odinRobotStatus.team() == ETeam.BLEU ? 300 : 150);
                 trajectoryManager.gotoOrientationDeg(90);
 
                 robotStatus.enableCalageBordure();
