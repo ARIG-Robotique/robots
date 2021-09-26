@@ -90,9 +90,11 @@ public class OdinManchesAAir extends AbstractOdinAction {
             final double y = entry.getY();
             boolean manche1Before = !rsOdin.mancheAAir1();
             if (manche1Before) {
-                mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
-                rs.enableCalageBordure();
-                mv.reculeMMSansAngle(500);
+                if (rsOdin.pincesArriereEmpty()) {
+                    mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+                    rs.enableCalageBordure();
+                    mv.reculeMMSansAngle(500);
+                }
                 mv.setVitesse(robotConfig.vitesse(80), robotConfig.vitesseOrientation());
 
                 // On active avec le bras droit
