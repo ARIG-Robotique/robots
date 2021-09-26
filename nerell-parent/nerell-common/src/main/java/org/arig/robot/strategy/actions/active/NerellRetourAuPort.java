@@ -85,7 +85,7 @@ public class NerellRetourAuPort extends AbstractNerellAction {
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
-            mv.pathTo(entry, GotoOption.AVANT, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+            mv.pathTo(entry, GotoOption.AVANT);
             group.port(port);
 
             // Finalisation de la rentrée dans le port après avoir compté les points
