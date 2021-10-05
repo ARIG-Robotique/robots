@@ -117,7 +117,8 @@ public abstract class AbstractRampFilter implements IRampFilter {
                 .addTag(MonitorTimeSerie.TAG_IMPLEMENTATION, rampImpl())
                 .addField("input", input)
                 .addField("output", output)
-                .addField("consigne", consigneVitesse);
+                .addField("consigne", consigneVitesse)
+                .addField("bypass", bypass ? 1 : 0);
 
         specificMonitoringFields().forEach(serie::addField);
 
