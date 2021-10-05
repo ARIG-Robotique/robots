@@ -74,13 +74,20 @@ public class TrapezoidalRampFilter extends AbstractGainFactorRampFilter {
      * Application du filtre de rampe.
      */
     @Override
-    public Long rampFilter(final Long input) {
+    public Long rampFilter(final Long input, final boolean bypass) {
         // Calcul de la distance de décéleration en fonction des parametres
         posToDecel = conv.mmToPulse(currentVitesse * currentVitesse / (2 * getRampDec()));
 
-        if (input > 0 && currentVitesse >= 0) {
+        if (bypass) {
+            currentVitesse = input;
+            if (currentVitesse > getConsigneVitesse()) {
+                currentVitesse = getConsigneVitesse();
+            } else if (currentVitesse < -getConsigneVitesse()) {
+                currentVitesse = -getConsigneVitesse();
+            }
+        } else if (input > 0 && currentVitesse >= 0) {
             // Distance a parcourir en avant
-            if (!rs.simulateur() && input < getStepVitesseAccel()) {
+            if (!rs.simulateur() && (input < getStepVitesseAccel() || input < getStepVitesseDecel())) {
                 // Distance restante très proche
                 currentVitesse = input;
 
@@ -102,7 +109,7 @@ public class TrapezoidalRampFilter extends AbstractGainFactorRampFilter {
 
         } else if (input < 0 && currentVitesse <= 0) {
             // Distance a parcourir en arrière
-            if (!rs.simulateur() && input > -getStepVitesseAccel()) {
+            if (!rs.simulateur() && (input > -getStepVitesseAccel() || input > -getStepVitesseDecel())) {
                 // Distance restante très proche
                 currentVitesse = input;
 

@@ -40,6 +40,8 @@ public class CommandeRobot {
     private ConsigneAsservissementPolaire consigne;
 
     private boolean frein;
+    private boolean bypassRampDistance;
+    private boolean bypassRampOrientation;
 
     private SensDeplacement sensDeplacement = SensDeplacement.AUTO;
 

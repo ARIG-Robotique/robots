@@ -447,6 +447,8 @@ public class TrajectoryManager {
         if (distApproche && orientApproche) {
             // Modification du type de consigne pour la stabilisation
             cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+            cmdRobot.setBypassRampDistance(true);
+            cmdRobot.setBypassRampOrientation(true);
 
             // Notification que le point de passage est atteint uniquement lors d'un enchainement sans arret
             if (!cmdRobot.isFrein()) {
@@ -660,6 +662,8 @@ public class TrajectoryManager {
             cmdRobot.getPosition().getPt().setX(conv.mmToPulse(x));
             cmdRobot.getPosition().getPt().setY(conv.mmToPulse(y));
             cmdRobot.setFrein(!options.contains(GotoOption.SANS_ARRET));
+            cmdRobot.setBypassRampDistance(false);
+            cmdRobot.setBypassRampOrientation(true);
             cmdRobot.setTypes(TypeConsigne.XY);
             cmdRobot.setSensDeplacement(options.contains(GotoOption.AVANT) ? SensDeplacement.AVANT : options.contains(GotoOption.ARRIERE) ? SensDeplacement.ARRIERE : SensDeplacement.AUTO);
 
@@ -745,6 +749,8 @@ public class TrajectoryManager {
             cmdRobot.getConsigne().setDistance(0);
             cmdRobot.getConsigne().setOrientation((long) (calculAngleConsigne(dX, dY) + conv.degToPulse(decalageDeg)));
             cmdRobot.setFrein(true);
+            cmdRobot.setBypassRampDistance(true);
+            cmdRobot.setBypassRampOrientation(false);
 
             prepareNextMouvement();
         }
@@ -798,6 +804,8 @@ public class TrajectoryManager {
             cmdRobot.getConsigne().setDistance(0);
             cmdRobot.getConsigne().setOrientation((long) (consOrient + conv.degToPulse(decalageDeg)));
             cmdRobot.setFrein(true);
+            cmdRobot.setBypassRampDistance(true);
+            cmdRobot.setBypassRampOrientation(false);
 
             prepareNextMouvement();
         }
@@ -828,6 +836,8 @@ public class TrajectoryManager {
             cmdRobot.getConsigne().setDistance((long) conv.mmToPulse(distance));
             cmdRobot.getConsigne().setOrientation(0);
             cmdRobot.setFrein(true);
+            cmdRobot.setBypassRampDistance(false);
+            cmdRobot.setBypassRampOrientation(true);
 
             MonitorMouvementTranslation mTr = new MonitorMouvementTranslation();
             mTr.setDistance(distance);
@@ -884,6 +894,8 @@ public class TrajectoryManager {
                 cmdRobot.getConsigne().setDistance(0);
                 cmdRobot.getConsigne().setOrientation((long) conv.degToPulse(angle));
                 cmdRobot.setFrein(true);
+                cmdRobot.setBypassRampDistance(true);
+                cmdRobot.setBypassRampOrientation(false);
 
                 MonitorMouvementRotation mRot = new MonitorMouvementRotation();
                 mRot.setAngle(angle);
