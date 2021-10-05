@@ -38,6 +38,9 @@ public abstract class AbstractRampFilter implements IRampFilter {
     @Getter(AccessLevel.PROTECTED)
     private double consigneVitesse;
 
+    @Setter
+    private boolean bypass = false;
+
     /**
      * Instantiates a new ramp.
      *
@@ -96,7 +99,7 @@ public abstract class AbstractRampFilter implements IRampFilter {
         Assert.notNull(input, FILTER_VALUE_NULL_MESSAGE);
 
         this.input = input;
-        this.output = rampFilter(input);
+        this.output = rampFilter(input, bypass);
         sendMonitoring();
         return this.output;
     }
@@ -123,7 +126,7 @@ public abstract class AbstractRampFilter implements IRampFilter {
 
     protected abstract String rampImpl();
 
-    protected abstract Long rampFilter(Long input);
+    protected abstract Long rampFilter(Long input, boolean bypass);
 
     protected abstract Map<String, Number> specificMonitoringFields();
 
