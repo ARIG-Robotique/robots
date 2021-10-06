@@ -10,7 +10,6 @@ import org.arig.robot.model.ecran.EcranParams;
 import org.arig.robot.model.ecran.EcranState;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

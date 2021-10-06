@@ -96,7 +96,7 @@ public abstract class AbstractPidFilter implements IPidFilter {
     }
 
     public void setSampleTime(double value, TimeUnit unit) {
-        setSampleTimeMs((double) unit.toMillis((long) value));
+        setSampleTimeMs(unit.toMillis((long) value));
     }
 
     @Override

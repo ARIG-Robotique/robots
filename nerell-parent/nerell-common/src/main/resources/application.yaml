@@ -41,7 +41,8 @@ balise:
 
 # Logging
 logging:
-  file: ./logs/${execution.id}-traces.log
+  file:
+    name: ./logs/${execution.id}-traces.log
   pattern:
     file: "%d{ISO8601};%p;%t;%c;%m%n"
 
@@ -49,7 +50,9 @@ logging:
 
 # Spring properties
 spring:
-  profiles: monitoring
+  config:
+    activate:
+      on-profile: monitoring
 
   main:
     web-application-type: REACTIVE
@@ -62,7 +65,9 @@ server:
 
 # Spring properties
 spring:
-  profiles: simulateur
+  config:
+    activate:
+      on-profile: simulateur
 
 # Écran
 ecran:
@@ -76,7 +81,9 @@ balise:
 
 # Spring properties
 spring:
-  profiles: greg
+  config:
+    activate:
+      on-profile: greg
 
 # Balise de vision
 balise:
@@ -93,7 +100,9 @@ odin:
 
 # Spring properties
 spring:
-  profiles: damien
+  config:
+    activate:
+      on-profile: damien
 
 # Balise de vision
 balise:

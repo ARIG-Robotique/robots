@@ -19,7 +19,7 @@ repos:
       - id: check-merge-conflict
         stages: ['commit']
       - id: end-of-file-fixer
-        exclude: '.*\.idea/.*'
+        exclude: '.*\.idea/.*|robots.iml'
         stages: ['commit']
       - id: trailing-whitespace
         stages: ['commit']
