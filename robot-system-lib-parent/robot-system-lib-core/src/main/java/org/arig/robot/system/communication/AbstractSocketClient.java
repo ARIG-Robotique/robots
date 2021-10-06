@@ -70,7 +70,7 @@ public abstract class AbstractSocketClient<T extends Enum<T>> {
             Assert.isTrue(socketFile.exists(), "Le fichier socket n'éxiste pas");
             Assert.isTrue(socketFile.canRead(), "Le fichier socket n'est pas lisible");
             Assert.isTrue(socketFile.canWrite(), "Le fichier socket n'est pas inscriptible");
-            socket = AFUNIXSocket.connectTo(new AFUNIXSocketAddress(socketFile));
+            socket = AFUNIXSocket.connectTo(AFUNIXSocketAddress.of(socketFile));
             log.info("Connexion UNIX au fichier {}", socketFile.getAbsolutePath());
         }
         socket.setKeepAlive(true);

@@ -1,7 +1,7 @@
 // Configuration pour le build
 buildscript {
 	ext {
-		springBootVersion = '2.1.18.RELEASE'
+		springBootVersion = '2.5.5'
 	}
 
 	repositories {
@@ -30,12 +30,12 @@ configure(allprojects) { project ->
 
 		// Dependencies versions
 		springShellVersion = '2.0.1.RELEASE'
-		apacheCommonsCollectionsVersion = '4.2'
+		apacheCommonsCollectionsVersion = '4.4'
 		apacheCommonsMathVersion = '3.6.1'
-		apacheCommonsIOVersion = '2.6'
-		googleGuavaVersion = '27.0.1-jre'
+		apacheCommonsIOVersion = '2.11.0'
+		googleGuavaVersion = '31.0.1-jre'
 		pi4jVersion = '1.2-jdk9-SNAPSHOT'
-		junixsocketVersion = '2.2.0'
+		junixsocketVersion = '2.4.0'
 		anyAnglePathFindingGitVersion = 'master-7b196baf6b-1'
 	}
 
