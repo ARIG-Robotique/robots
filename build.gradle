@@ -7,7 +7,6 @@ buildscript {
 	repositories {
 		mavenLocal()
 		mavenCentral()
-		jcenter()
 	}
 	dependencies {
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
@@ -66,7 +65,6 @@ configure(allprojects) { project ->
 	repositories {
 		mavenLocal()
 		mavenCentral()
-		jcenter()
 		maven { url 'https://repo.spring.io/milestone' }
 		maven { url 'https://repo.spring.io/libs-snapshot' }
 		maven { url 'https://jitpack.io' }
