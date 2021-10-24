@@ -2,8 +2,8 @@ package org.arig.robot.filters.ramp;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.common.DerivateFilter;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -38,9 +38,9 @@ public class TrapezoidalRampFilterTest extends AbstractRampTest {
             output1 = filtre1.filter((long) i);
             output2 = filtre2.filter((long) -i);
 
-            Assert.assertEquals(output1, Math.abs(output2), 0d);
-            Assert.assertTrue(output1 >= 0);
-            Assert.assertTrue(output2 <= 0);
+            Assertions.assertEquals(output1, Math.abs(output2), 0d);
+            Assertions.assertTrue(output1 >= 0);
+            Assertions.assertTrue(output2 <= 0);
         }
     }
 
@@ -66,19 +66,19 @@ public class TrapezoidalRampFilterTest extends AbstractRampTest {
 
             if (i > 945 || (i < 915 && i > 750) || (i < 515 && i > 350)) {
                 // Phase d'acceleration
-                Assert.assertEquals(1, dt, 0d);
+                Assertions.assertEquals(1, dt, 0d);
 
             } else if (i < 10) {
                 // Fin de la rampe (input < step)
-                Assert.assertEquals(0, output, 0d);
+                Assertions.assertEquals(0, output, 0d);
 
             } else if (i <= 200 || (i < 710 & i > 545)) {
                 // Il faut 200 points pour décélerer (vitesse ² / (2 * rampeDecel))
-                Assert.assertEquals(-1, dt, 0d);
+                Assertions.assertEquals(-1, dt, 0d);
 
             } else {
                 // Régime établi
-                Assert.assertEquals(0, dt, 0d);
+                Assertions.assertEquals(0, dt, 0d);
             }
         }
     }
@@ -105,18 +105,18 @@ public class TrapezoidalRampFilterTest extends AbstractRampTest {
 
             if (i > 945 || (i < 915 && i > 750) || (i < 515 && i > 350)) {
                 // Phase d'acceleration
-                Assert.assertEquals(1, dt, 0d);
+                Assertions.assertEquals(1, dt, 0d);
 
             } else if (i < 10) {
                 // Fin de la rampe (input < step) => Dépassement du point
-                Assert.assertEquals(-1, dt, 0d);
+                Assertions.assertEquals(-1, dt, 0d);
 
             } else if (i < 710 & i > 545) {
-                Assert.assertEquals(-1, dt, 0d);
+                Assertions.assertEquals(-1, dt, 0d);
 
             } else {
                 // Régime établi
-                Assert.assertEquals(0, dt, 0d);
+                Assertions.assertEquals(0, dt, 0d);
             }
         }
     }
@@ -137,19 +137,19 @@ public class TrapezoidalRampFilterTest extends AbstractRampTest {
 
             if (i > 95) {
                 // Phase d'acceleration
-                Assert.assertEquals(1, dt, 0d);
+                Assertions.assertEquals(1, dt, 0d);
 
             } else if (i < 10) {
                 // Fin de la rampe (input < step)
-                Assert.assertEquals(0, output, 0d);
+                Assertions.assertEquals(0, output, 0d);
 
             } else if (i <= 50) {
                 // Il faut 50 points pour décélerer (vitesse ² / (2 * rampeDecel))
-                Assert.assertEquals(-1, dt, 0d);
+                Assertions.assertEquals(-1, dt, 0d);
 
             } else {
                 // Régime établi
-                Assert.assertEquals(0, dt, 0d);
+                Assertions.assertEquals(0, dt, 0d);
             }
         }
     }
@@ -170,15 +170,15 @@ public class TrapezoidalRampFilterTest extends AbstractRampTest {
 
             if (i > 95) {
                 // Phase d'acceleration
-                Assert.assertEquals(1, dt, 0d);
+                Assertions.assertEquals(1, dt, 0d);
 
             } else if (i < 10) {
                 // Fin de la rampe (input < step)
-                Assert.assertEquals(0, output, 0d);
+                Assertions.assertEquals(0, output, 0d);
 
             } else {
                 // Pas de décelération sur le target quand il n'y a pas de frein
-                Assert.assertEquals(0, dt, 0d);
+                Assertions.assertEquals(0, dt, 0d);
             }
         }
     }

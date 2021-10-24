@@ -3,25 +3,20 @@ package org.arig.robot.filters.common;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.filters.IFilter;
 import org.arig.robot.filters.common.LimiterFilter.LimiterType;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(BlockJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class LimiterFilterTest {
 
     private static LimiterFilter simpleFilter;
     private static LimiterFilter mirrorFilter;
     private static LimiterFilter doubleMirrorFilter;
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-
-    @BeforeClass
+    @BeforeAll
     public static void initClass() {
         simpleFilter = new LimiterFilter(-10d, 10d);
         mirrorFilter = new LimiterFilter(2d, 10d, -10d, -20d);
@@ -30,43 +25,32 @@ public class LimiterFilterTest {
 
     @Test
     public void valueIsNull() {
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage(IFilter.FILTER_VALUE_NULL_MESSAGE);
-
-        simpleFilter.filter(null);
+        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> simpleFilter.filter(null));
+        Assertions.assertEquals(ex.getMessage(), IFilter.FILTER_VALUE_NULL_MESSAGE);
     }
 
     @Test
     public void testNewMinNull() {
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage(String.format(LimiterFilter.MIN_VALUE_NULL_MESSAGE, StringUtils.EMPTY));
-
-
-        new LimiterFilter(null, 10d);
+        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> new LimiterFilter(null, 10d));
+        Assertions.assertEquals(ex.getMessage(), String.format(LimiterFilter.MIN_VALUE_NULL_MESSAGE, StringUtils.EMPTY));
     }
 
     @Test
     public void testNewMinMaxNull() {
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage(String.format(LimiterFilter.MIN_VALUE_NULL_MESSAGE, StringUtils.EMPTY));
-
-        new LimiterFilter(null, null);
+        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> new LimiterFilter(null, null));
+        Assertions.assertEquals(ex.getMessage(), String.format(LimiterFilter.MIN_VALUE_NULL_MESSAGE, StringUtils.EMPTY));
     }
 
     @Test
     public void testNewMaxNull() {
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage(String.format(LimiterFilter.MAX_VALUE_NULL_MESSAGE, StringUtils.EMPTY));
-
-        new LimiterFilter(2d, null);
+        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> new LimiterFilter(2d, null));
+        Assertions.assertEquals(ex.getMessage(), String.format(LimiterFilter.MAX_VALUE_NULL_MESSAGE, StringUtils.EMPTY));
     }
 
     @Test
     public void testNewMaxGreaterThanMin() {
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage(LimiterFilter.MAX_GREATER_MIN_MESSAGE);
-
-        new LimiterFilter(2d, 1d);
+        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> new LimiterFilter(2d, 1d));
+        Assertions.assertEquals(ex.getMessage(), LimiterFilter.MAX_GREATER_MIN_MESSAGE);
     }
 
     @Test
@@ -80,7 +64,7 @@ public class LimiterFilterTest {
             } else {
                 expected = i;
             }
-            Assert.assertEquals(expected, simpleFilter.filter(i), 0);
+            Assertions.assertEquals(expected, simpleFilter.filter(i), 0);
         }
     }
 
@@ -97,7 +81,7 @@ public class LimiterFilterTest {
             } else {
                 expected = i;
             }
-            Assert.assertEquals(expected, mirrorFilter.filter(i), 0);
+            Assertions.assertEquals(expected, mirrorFilter.filter(i), 0);
         }
     }
 
@@ -112,7 +96,7 @@ public class LimiterFilterTest {
             } else {
                 expected = i;
             }
-            Assert.assertEquals(expected, doubleMirrorFilter.filter(i), 0);
+            Assertions.assertEquals(expected, doubleMirrorFilter.filter(i), 0);
         }
     }
 

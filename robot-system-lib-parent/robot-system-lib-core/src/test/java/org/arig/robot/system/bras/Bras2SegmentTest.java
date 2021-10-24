@@ -3,21 +3,21 @@ package org.arig.robot.system.bras;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.Point3D;
 import org.arig.robot.system.bras.impl.Bras2SegmentImpl;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /**
  * @author gdepuille on 04/01/14.
  */
 @Slf4j
-@RunWith(BlockJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class Bras2SegmentTest {
 
     private static Bras2SegmentImpl impl;
 
-    @BeforeClass
+    @BeforeAll
     public static void initClass() {
         impl = new Bras2SegmentImpl(new Point3D(0, 0, 1.5), 7, 3);
     }

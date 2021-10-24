@@ -12,8 +12,8 @@ import org.arig.robot.communication.socket.ecran.UpdateStateQuery;
 import org.arig.robot.communication.socket.ecran.enums.EcranAction;
 import org.arig.robot.model.ecran.AbstractEcranConfig;
 import org.arig.robot.model.ecran.AbstractEcranState;
-import org.arig.robot.model.ecran.EcranParams;
 import org.arig.robot.model.ecran.EcranMatchInfo;
+import org.arig.robot.model.ecran.EcranParams;
 import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.system.communication.AbstractSocketClient;
 

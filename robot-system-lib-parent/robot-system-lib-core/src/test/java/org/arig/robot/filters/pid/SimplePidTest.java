@@ -1,16 +1,16 @@
 package org.arig.robot.filters.pid;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /**
  * @author gdepuille on 15/03/15.
  */
 @Slf4j
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { PidTestContext.class })
 public class SimplePidTest extends AbstractPidTest {
 

@@ -1,41 +1,34 @@
 package org.arig.robot.filters.common;
 
 import org.arig.robot.filters.IFilter;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(BlockJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class ProportionalFilterTest {
 
     private static ProportionalFilter impl;
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-
-    @BeforeClass
+    @BeforeAll
     public static void initClass() {
         impl = new ProportionalFilter(2d);
     }
 
     @Test
     public void valueIsNull() {
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage(IFilter.FILTER_VALUE_NULL_MESSAGE);
-
-        impl.filter(null);
+        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> impl.filter(null));
+        Assertions.assertEquals(ex.getMessage(), IFilter.FILTER_VALUE_NULL_MESSAGE);
     }
 
     @Test
     public void testFilter() {
-        Assert.assertEquals(2d, impl.filter(1d), 0);
-        Assert.assertEquals(4d, impl.filter(2d), 0);
-        Assert.assertEquals(6d, impl.filter(3d), 0);
-        Assert.assertEquals(8d, impl.filter(4d), 0);
+        Assertions.assertEquals(2d, impl.filter(1d), 0);
+        Assertions.assertEquals(4d, impl.filter(2d), 0);
+        Assertions.assertEquals(6d, impl.filter(3d), 0);
+        Assertions.assertEquals(8d, impl.filter(4d), 0);
     }
 
     @Test

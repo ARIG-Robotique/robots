@@ -1,19 +1,19 @@
 package org.arig.robot.model;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @Slf4j
-@RunWith(BlockJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class TestRobotConfig {
 
     private static RobotConfig rc = new RobotConfig();
 
-    @BeforeClass
+    @BeforeAll
     public static void initClass() {
         rc.vitesseMin(100);
         rc.vitesseOrientationMin(100);
@@ -28,7 +28,7 @@ public class TestRobotConfig {
 
         for (int i = 0 ; i <= 100 ; i++) {
             log.info("PCT : {} : {} distance, {} orientation", i, rc.vitesse(i), rc.vitesseOrientation(i));
-            Assert.assertEquals(rc.vitesse(i), rc.vitesseOrientation(i));
+            Assertions.assertEquals(rc.vitesse(i), rc.vitesseOrientation(i));
         }
     }
 }
