@@ -7,6 +7,7 @@ buildscript {
 	repositories {
 		mavenLocal()
 		mavenCentral()
+		maven { url 'https://repo.spring.io/release' }
 	}
 	dependencies {
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
@@ -14,7 +15,10 @@ buildscript {
 }
 
 plugins {
-	id 'com.jfrog.bintray' version '1.8.5' apply false
+	id 'org.springframework.boot' version "${springBootVersion}" apply false
+	id 'org.springframework.experimental.aot' version '0.11.2' apply false
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
 }
 
 // Configuration de tous les projets
@@ -25,7 +29,7 @@ configure(allprojects) { project ->
 	// Variable de configuration
 	ext {
 		// Project dependencies
-		javaVersion = '11'
+		javaVersion = JavaVersion.VERSION_11
 		javaTestVersion = javaVersion
 
 		// Dependencies versions
@@ -65,8 +69,7 @@ configure(allprojects) { project ->
 	repositories {
 		mavenLocal()
 		mavenCentral()
-		maven { url 'https://repo.spring.io/milestone' }
-		maven { url 'https://repo.spring.io/libs-snapshot' }
+		maven { url 'https://repo.spring.io/release' }
 		maven { url 'https://jitpack.io' }
 	}
 
@@ -76,6 +79,11 @@ configure(allprojects) { project ->
 		testCompileOnly "org.projectlombok:lombok"
 		annotationProcessor "org.projectlombok:lombok"
 		testAnnotationProcessor "org.projectlombok:lombok"
+
+		compileOnly "org.springframework:spring-context-indexer"
+		testCompileOnly "org.springframework:spring-context-indexer"
+		annotationProcessor "org.springframework:spring-context-indexer"
+		testAnnotationProcessor "org.springframework:spring-context-indexer"
 
 		compile "org.springframework.boot:spring-boot-starter-webflux"
 

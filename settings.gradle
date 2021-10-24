@@ -1,3 +1,13 @@
+pluginManagement {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url 'https://repo.spring.io/release' }
+        jcenter()
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = "robots"
 
 include "robot-system-lib-parent"

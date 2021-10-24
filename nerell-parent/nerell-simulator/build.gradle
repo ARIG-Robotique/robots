@@ -1,8 +1,17 @@
 description = "ARIG Association - Nerell Simulator"
 
 apply plugin: 'org.springframework.boot'
+apply plugin: 'org.springframework.experimental.aot'
 
 dependencies {
 	compile project(':eurobot-system-lib-parent:eurobot-system-lib-bouchon')
 	compile project(':nerell-parent:nerell-common')
+}
+
+bootBuildImage {
+	builder = "paketobuildpacks/builder:tiny"
+	environment = [
+		"BP_NATIVE_IMAGE" : "true",
+		"BP_NATIVE_IMAGE_BUILD_ARGUMENTS" : "--allow-incomplete-classpath --trace-class-initialization=org.springframework.util.unit.DataSize"
+	]
 }

@@ -33,7 +33,7 @@ import org.springframework.boot.logging.LogLevel;
 public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Autowired
-    private NerellRobotStatus nerellRobotStatus;
+    public NerellRobotStatus nerellRobotStatus;
 
     @Autowired
     private NerellIOService nerellIO;
@@ -42,7 +42,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     private RobotGroupService groupService;
 
     @Autowired
-    private BaliseService baliseService;
+    public BaliseService baliseService;
 
     @Autowired
     private NerellEcranService nerellEcranService;
