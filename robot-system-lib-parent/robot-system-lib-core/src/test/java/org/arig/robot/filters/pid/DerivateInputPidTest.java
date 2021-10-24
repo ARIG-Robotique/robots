@@ -1,14 +1,14 @@
 package org.arig.robot.filters.pid;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Assert;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @Slf4j
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { PidTestContext.class })
 public class DerivateInputPidTest extends AbstractPidTest {
 
@@ -38,7 +38,7 @@ public class DerivateInputPidTest extends AbstractPidTest {
 
             double expected = error + errorSum - (input - inputPrec);
             inputPrec = input;
-            Assert.assertEquals(expected, output, 0);
+            Assertions.assertEquals(expected, output, 0);
         }
     }
 }

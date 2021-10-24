@@ -4,34 +4,37 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.arig.robot.model.balise.StatutBalise;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.File;
 import java.net.Socket;
 import java.util.Base64;
 
 @Slf4j
-@RunWith(BlockJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class VisionBaliseOverSocketTest {
 
     private static VisionBaliseOverSocket visionBalise;
 
-    @BeforeClass
+    @BeforeAll
     @SneakyThrows
     public static void initTest() {
-        Assume.assumeTrue("Contrôle par la présence de la balise vision", serverListening("localhost", 9042));
-        visionBalise = new VisionBaliseOverSocket("localhost", 9042);
-        visionBalise.openSocket();
-        Assert.assertTrue(visionBalise.isOpen());
+        Assumptions.assumingThat(serverListening("localhost", 9042),
+                () -> {
+                    visionBalise = new VisionBaliseOverSocket("localhost", 9042);
+                    visionBalise.openSocket();
+                    Assertions.assertTrue(visionBalise.isOpen());
+                }
+        );
     }
 
-    @AfterClass
+    @AfterAll
     public static void stopTest() {
         if (visionBalise != null) {
             visionBalise.end();

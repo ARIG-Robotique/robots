@@ -6,7 +6,7 @@ import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.awt.Shape;
+import java.awt.*;
 import java.util.List;
 
 @Slf4j

@@ -1,47 +1,40 @@
 package org.arig.robot.filters.common;
 
 import org.arig.robot.filters.IFilter;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(BlockJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class IntegralFilterTest {
 
     private static IntegralFilter impl;
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-
-    @BeforeClass
+    @BeforeAll
     public static void initClass() {
         impl = new IntegralFilter(2d);
     }
 
-    @Before
+    @BeforeEach
     public void beforeTest() {
         impl.reset();
     }
 
     @Test
     public void valueIsNull() {
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage(IFilter.FILTER_VALUE_NULL_MESSAGE);
-
-        impl.filter(null);
+        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> impl.filter(null));
+        Assertions.assertEquals(ex.getMessage(), IFilter.FILTER_VALUE_NULL_MESSAGE);
     }
 
     @Test
     public void testFilter() {
-        Assert.assertEquals(3d, impl.filter(1d), 0);
-        Assert.assertEquals(4d, impl.filter(1d), 0);
-        Assert.assertEquals(5d, impl.filter(1d), 0);
-        Assert.assertEquals(6d, impl.filter(1d), 0);
+        Assertions.assertEquals(3d, impl.filter(1d), 0);
+        Assertions.assertEquals(4d, impl.filter(1d), 0);
+        Assertions.assertEquals(5d, impl.filter(1d), 0);
+        Assertions.assertEquals(6d, impl.filter(1d), 0);
     }
 
     @Test
@@ -50,9 +43,9 @@ public class IntegralFilterTest {
         for (int i = 0 ; i < 10 ; i++) {
             res = impl.filter(1d);
         }
-        Assert.assertEquals(12d, res, 0);
+        Assertions.assertEquals(12d, res, 0);
 
         impl.reset();
-        Assert.assertEquals(2d, impl.filter(0d), 0);
+        Assertions.assertEquals(2d, impl.filter(0d), 0);
     }
 }

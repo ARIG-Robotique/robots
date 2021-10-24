@@ -2,13 +2,13 @@ package org.arig.robot.filters.chain;
 
 import org.arig.robot.filters.common.IntegralFilter;
 import org.arig.robot.filters.common.ProportionalFilter;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(BlockJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class SerialFilterChainTest {
 
     private static final double INIT_INTEGRAL = 10;
@@ -19,7 +19,7 @@ public class SerialFilterChainTest {
     private ProportionalFilter f2;
     private IntegralFilter f3;
 
-    @Before
+    @BeforeEach
     public void init() {
         f1 = new ProportionalFilter(2d);
         f2 = new ProportionalFilter(3d);
@@ -37,11 +37,11 @@ public class SerialFilterChainTest {
 
         // ((2 * 5) * 3) + 10
         double res = chain.filter(value);
-        Assert.assertEquals(40, res, 0);
+        Assertions.assertEquals(40, res, 0);
 
         // ((2 * 5) * 3) + 40
         res = chain.filter(value);
-        Assert.assertEquals(70, res, 0);
+        Assertions.assertEquals(70, res, 0);
     }
 
     @Test
@@ -49,10 +49,10 @@ public class SerialFilterChainTest {
         final double value = 5;
 
         double res = chain.filter(value);
-        Assert.assertEquals(40, res, 0);
-        Assert.assertNotEquals(INIT_INTEGRAL, f3.getSum());
+        Assertions.assertEquals(40, res, 0);
+        Assertions.assertNotEquals(INIT_INTEGRAL, f3.getSum());
 
         chain.reset();
-        Assert.assertEquals(INIT_INTEGRAL, f3.getSum(), 0);
+        Assertions.assertEquals(INIT_INTEGRAL, f3.getSum(), 0);
     }
  }

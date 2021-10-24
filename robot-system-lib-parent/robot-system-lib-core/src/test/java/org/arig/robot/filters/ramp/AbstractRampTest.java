@@ -3,21 +3,21 @@ package org.arig.robot.filters.ramp;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {RampTestContext.class})
 public abstract class AbstractRampTest {
 
@@ -26,7 +26,7 @@ public abstract class AbstractRampTest {
 
     protected abstract AbstractRampFilter getFiltre();
 
-    @Before
+    @BeforeEach
     public void before() {
         System.setProperty(IConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
         monitoringWrapper.cleanAllPoints();
@@ -34,7 +34,7 @@ public abstract class AbstractRampTest {
         getFiltre().reset();
     }
 
-    @After
+    @AfterEach
     public void after() {
         monitoringWrapper.save();
     }
@@ -43,13 +43,13 @@ public abstract class AbstractRampTest {
     @DirtiesContext
     public void testChangeSampleTime() {
         getFiltre().setSampleTimeMs(1000);
-        Assert.assertEquals(1, getFiltre().getSampleTimeS(), 0);
+        Assertions.assertEquals(1, getFiltre().getSampleTimeS(), 0);
 
         getFiltre().setSampleTimeMs(1500);
-        Assert.assertEquals(1.5, getFiltre().getSampleTimeS(), 0);
+        Assertions.assertEquals(1.5, getFiltre().getSampleTimeS(), 0);
 
         getFiltre().setSampleTime(10, TimeUnit.SECONDS);
-        Assert.assertEquals(10, getFiltre().getSampleTimeS(), 0);
+        Assertions.assertEquals(10, getFiltre().getSampleTimeS(), 0);
     }
 
 }

@@ -13,13 +13,13 @@ import org.arig.robot.model.ecran.AbstractEcranState;
 import org.arig.robot.model.ecran.EcranMatchInfo;
 import org.arig.robot.model.ecran.EcranParams;
 import org.arig.robot.utils.ThreadUtils;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.net.Socket;
 import java.util.Arrays;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
-@RunWith(BlockJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class EcranOverSocketTest {
 
     enum TestTeam {
@@ -65,17 +65,18 @@ public class EcranOverSocketTest {
 
     private static TestEcranOverSocket ecran;
 
-    @BeforeClass
+    @BeforeAll
     @SneakyThrows
     public static void initTest() {
         String host = "localhost";
-        Assume.assumeTrue("Contrôle par la présence de l'ecran", serverListening(host, 9000));
-        ecran = new TestEcranOverSocket(host, 9000);
-        ecran.openSocket();
-        Assert.assertTrue(ecran.isOpen());
+        Assumptions.assumingThat(serverListening(host, 9000), () -> {
+            ecran = new TestEcranOverSocket(host, 9000);
+            ecran.openSocket();
+            Assertions.assertTrue(ecran.isOpen());
+        });
     }
 
-    @AfterClass
+    @AfterAll
     public static void stopTest() {
         if (ecran != null) {
             ecran.end();

@@ -4,12 +4,12 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.I2CManagerDevice.I2CManagerDeviceBuilder;
 import org.arig.robot.exception.I2CException;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /**
  * The Class AbstractI2CManagerTest.
@@ -17,17 +17,17 @@ import org.junit.runners.BlockJUnit4ClassRunner;
  * @author gdepuille
  */
 @Slf4j
-@RunWith(BlockJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class AbstractI2CManagerTest {
 
     private static AbstractI2CManager<Byte> impl;
 
-    @BeforeClass
+    @BeforeAll
     public static void initClass() {
         impl = new DummyI2CManager();
     }
 
-    @Before
+    @BeforeEach
     @SneakyThrows
     public void initTest() {
         impl.reset();
@@ -62,26 +62,38 @@ public class AbstractI2CManagerTest {
         }
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testAlreadyRegisteredBoard() {
-        impl.registerDevice(impl.getDeviceMap().values().iterator().next());
+        Assertions.assertThrows(IllegalStateException.class,
+                () -> impl.registerDevice(impl.getDeviceMap().values().iterator().next())
+        );
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testRegisterBoardNull() {
-        impl.registerDevice(null);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> impl.registerDevice(null)
+        );
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testRegisterBoardNullDeviceName() {
-        I2CManagerDevice<Byte> d = I2CManagerDevice.<Byte>builder().device((byte) 1).build();
-        impl.registerDevice(d);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> {
+                    I2CManagerDevice<Byte> d = I2CManagerDevice.<Byte>builder().device((byte) 1).build();
+                    impl.registerDevice(d);
+                }
+        );
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testRegisterBoardEmptyDeviceName() {
-        I2CManagerDevice<Byte> d = I2CManagerDevice.<Byte>builder().device((byte) -1).deviceName("").build();
-        impl.registerDevice(d);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> {
+                    I2CManagerDevice<Byte> d = I2CManagerDevice.<Byte>builder().device((byte) -1).deviceName("").build();
+                    impl.registerDevice(d);
+                }
+        );
     }
 
     @Test
@@ -96,43 +108,41 @@ public class AbstractI2CManagerTest {
             impl.registerDevice(d);
         }
 
-        Assert.assertEquals(init + 3, impl.nbDeviceRegistered());
+        Assertions.assertEquals(init + 3, impl.nbDeviceRegistered());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testRegisterMultiplexedBoardWithoutChannel() {
-        impl.registerDevice(I2CManagerDevice.<Byte>builder()
-                .device((byte) 2)
-                .deviceName("Board multiplexe sans channel")
-                .multiplexerDeviceName("Board multiplexer")
-                .build()
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> impl.registerDevice(I2CManagerDevice.<Byte>builder()
+                                .device((byte) 2)
+                                .deviceName("Board multiplexe sans channel")
+                                .multiplexerDeviceName("Board multiplexer")
+                                .build())
         );
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
+    @SneakyThrows
     public void testExecuteScanWithoutMapping() {
-        try {
-            impl.reset();
-            impl.executeScan();
-        } catch (final I2CException e) {
-            Assert.fail("Pas la bonne exception : " + e);
-        }
+        impl.reset();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> impl.executeScan());
     }
 
     @Test
     public void textExecuteScan() throws I2CException {
         impl.executeScan();
-        Assert.assertTrue(impl.status());
+        Assertions.assertTrue(impl.status());
     }
 
-    @Test(expected = I2CException.class)
+    @Test
     public void testGetUnknownBoard() throws I2CException {
-        impl.getDevice("Unknown Board");
+        Assertions.assertThrows(I2CException.class, () -> impl.getDevice("Unknown Board"));
     }
 
     @Test
     public void testGetKnownBoard() throws I2CException {
         I2CManagerDevice<Byte> d = impl.getDevice("Board 2");
-        Assert.assertEquals(2, d.device(), 0);
+        Assertions.assertEquals(2, d.device(), 0);
     }
 }

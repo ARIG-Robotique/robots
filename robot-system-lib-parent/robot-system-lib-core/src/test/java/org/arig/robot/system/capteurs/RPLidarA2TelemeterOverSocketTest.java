@@ -7,13 +7,13 @@ import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.model.lidar.enums.HealthState;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.File;
 
@@ -21,22 +21,22 @@ import java.io.File;
  * @author gdepuille on 03/03/17.
  */
 @Slf4j
-@RunWith(BlockJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class RPLidarA2TelemeterOverSocketTest {
 
     private static RPLidarA2TelemeterOverSocket rpLidar;
 
-    @BeforeClass
+    @BeforeAll
     @SneakyThrows
     public static void initTest() {
         final File socketFile = new File("/tmp/lidar.sock");
-        Assume.assumeTrue("Contrôle initialisation RPLidar par la présence de la socket", socketFile.exists());
-
-        rpLidar = new RPLidarA2TelemeterOverSocket(socketFile);
-        rpLidar.printDeviceInfo();
+        Assumptions.assumingThat(socketFile.exists(), () -> {
+            rpLidar = new RPLidarA2TelemeterOverSocket(socketFile);
+            rpLidar.printDeviceInfo();
+        });
     }
 
-    @AfterClass
+    @AfterAll
     public static void stopTest() {
         if (rpLidar != null) {
             rpLidar.end();
@@ -46,24 +46,24 @@ public class RPLidarA2TelemeterOverSocketTest {
     @Test
     public void testDeviceInfos() {
         DeviceInfos infos = rpLidar.deviceInfo();
-        Assert.assertNotNull(infos);
-        Assert.assertEquals("1.20", infos.getFirmwareVersion());
-        Assert.assertEquals(2, (long) infos.getHardwareVersion());
-        Assert.assertEquals("CCD2FFC1E8839EF2C0E69EF714655405", infos.getSerialNumber());
+        Assertions.assertNotNull(infos);
+        Assertions.assertEquals("1.20", infos.getFirmwareVersion());
+        Assertions.assertEquals(2, (long) infos.getHardwareVersion());
+        Assertions.assertEquals("CCD2FFC1E8839EF2C0E69EF714655405", infos.getSerialNumber());
     }
 
     @Test
     public void testHealthInfo() {
         HealthInfos infos = rpLidar.healthInfo();
-        Assert.assertNotNull(infos);
-        Assert.assertEquals(HealthState.OK, infos.getState());
+        Assertions.assertNotNull(infos);
+        Assertions.assertEquals(HealthState.OK, infos.getState());
     }
 
     @Test
     public void testGrabData() {
         HealthInfos health = rpLidar.healthInfo();
         if (health.getState() != HealthState.OK) {
-            Assert.fail("Erreur de santé du RPLidar " + health.getState());
+            Assertions.fail("Erreur de santé du RPLidar " + health.getState());
         }
 
         rpLidar.startScan();
@@ -73,13 +73,13 @@ public class RPLidarA2TelemeterOverSocketTest {
             log.info("Récupération scan {} / 100", nb);
 
             ScanInfos scans = rpLidar.grabData();
-            Assert.assertNotNull(scans);
-            Assert.assertNotNull(scans.getIgnored());
-            Assert.assertNotNull(scans.getScan());
-            Assert.assertTrue(CollectionUtils.isNotEmpty(scans.getScan()));
+            Assertions.assertNotNull(scans);
+            Assertions.assertNotNull(scans.getIgnored());
+            Assertions.assertNotNull(scans.getScan());
+            Assertions.assertTrue(CollectionUtils.isNotEmpty(scans.getScan()));
 
             nb++;
-        } while(nb <= 100);
+        } while (nb <= 100);
 
         rpLidar.stopScan();
     }

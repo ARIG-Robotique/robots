@@ -4,20 +4,20 @@ import lombok.SneakyThrows;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.UUID;
 
 /**
  * @author gdepuille on 19/03/15.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { AsservissementPolaireTestContext.class })
 public class AsservissementPolaireTest {
 
@@ -30,13 +30,13 @@ public class AsservissementPolaireTest {
     @Autowired
     private IMonitoringWrapper monitoringWrapper;
 
-    @Before
+    @BeforeEach
     public void before() {
         System.setProperty(IConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
         monitoringWrapper.cleanAllPoints();
     }
 
-    @After
+    @AfterEach
     public void after() {
         monitoringWrapper.save();
     }

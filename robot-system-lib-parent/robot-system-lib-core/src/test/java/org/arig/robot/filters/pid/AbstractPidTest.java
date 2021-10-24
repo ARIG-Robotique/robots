@@ -6,26 +6,21 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
 import org.arig.robot.monitoring.IMonitoringWrapper;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.UUID;
 
 @Slf4j
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { PidTestContext.class })
 public abstract class AbstractPidTest {
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     @Autowired
     private IMonitoringWrapper monitoringWrapper;
@@ -35,7 +30,7 @@ public abstract class AbstractPidTest {
 
     protected abstract IPidFilter pid();
 
-    @Before
+    @BeforeEach
     public void before() {
         System.setProperty(IConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
         monitoringWrapper.cleanAllPoints();
@@ -43,7 +38,7 @@ public abstract class AbstractPidTest {
         hasIntegralLimiter = false;
     }
 
-    @After
+    @AfterEach
     public void after() {
         monitoringWrapper.save();
     }
@@ -63,7 +58,7 @@ public abstract class AbstractPidTest {
             error = consigne - input;
             output = pid().filter(input);
             log.info("Test P : consigne {}, mesure {}, output {}", consigne, input, output);
-            Assert.assertEquals(error, output, 0);
+            Assertions.assertEquals(error, output, 0);
         }
     }
 
@@ -88,7 +83,7 @@ public abstract class AbstractPidTest {
             log.info("Test PI : consigne {}, mesure {}, output {}", consigne, input, output);
 
             double expected = error + errorSum;
-            Assert.assertEquals(expected, output, 0);
+            Assertions.assertEquals(expected, output, 0);
         }
     }
 
@@ -114,7 +109,7 @@ public abstract class AbstractPidTest {
 
             double expected = error + errorSum + error - errorPrec;
             errorPrec = error;
-            Assert.assertEquals(expected, output, 0);
+            Assertions.assertEquals(expected, output, 0);
         }
     }
 }
