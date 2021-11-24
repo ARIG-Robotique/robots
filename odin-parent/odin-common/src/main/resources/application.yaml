@@ -92,3 +92,16 @@ spring:
 nerell:
   socket:
     host: localhost
+
+---
+
+# Spring properties
+spring:
+  config:
+    activate:
+      on-profile: mathieu
+
+# Nerell
+nerell:
+  socket:
+    host: localhost
