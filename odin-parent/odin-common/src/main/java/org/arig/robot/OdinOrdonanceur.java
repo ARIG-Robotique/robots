@@ -153,7 +153,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         try {
             robotStatus.disableAvoidance();
             if (robotStatus.simulateur() || skip) {
-                if (odinRobotStatus.team() == ETeam.BLEU) {
+                if (odinRobotStatus.team() == ETeam.JAUNE) {
                     position.setPt(new Point(
                             conv.mmToPulse(IOdinConstantesConfig.dstCallage + 150),
                             conv.mmToPulse(IOdinConstantesConfig.dstCallage + 150)
@@ -170,7 +170,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 robotStatus.enableCalageBordure();
                 mv.reculeMMSansAngle(1000);
 
-                if (odinRobotStatus.team() == ETeam.BLEU) {
+                if (odinRobotStatus.team() == ETeam.JAUNE) {
                     position.getPt().setX(conv.mmToPulse(IOdinConstantesConfig.dstCallage));
                     position.setAngle(conv.degToPulse(0));
                 } else {
@@ -212,7 +212,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 case BASIC:
                 case AGGRESSIVE:
                     // Aligne vers les bouées au nord du port
-                    if (odinRobotStatus.team() == ETeam.BLEU) {
+                    if (odinRobotStatus.team() == ETeam.JAUNE) {
                         mv.gotoPoint(255, 1005, GotoOption.ARRIERE);
                     } else {
                         mv.gotoPoint(3000 - 255, 1005, GotoOption.ARRIERE);
@@ -222,7 +222,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
                 case FINALE:
                     // Aligne vers le centre de la table
-                    if (odinRobotStatus.team() == ETeam.BLEU) {
+                    if (odinRobotStatus.team() == ETeam.JAUNE) {
                         mv.gotoPoint(160, 1370, GotoOption.AVANT);
                         mv.gotoOrientationDeg(-70);
                     } else {

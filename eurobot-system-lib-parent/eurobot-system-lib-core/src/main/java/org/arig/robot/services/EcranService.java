@@ -38,8 +38,8 @@ public class EcranService extends AbstractEcranService<EcranConfig, EcranState> 
     protected EcranParams getParams() {
         EcranParams ecranParams = new EcranParams();
         ecranParams.setTeams(ImmutableMap.of(
-                ETeam.BLEU.name(), "blue",
-                ETeam.JAUNE.name(), "yellow"
+                ETeam.JAUNE.name(), "yellow",
+                ETeam.VIOLET.name(), "purple"
         ));
         ecranParams.setStrategies(Stream.of(EStrategy.values()).map(Enum::name).collect(Collectors.toList()));
         ecranParams.setOptions(Arrays.asList(IEurobotConfig.OPTION_1, IEurobotConfig.OPTION_2));

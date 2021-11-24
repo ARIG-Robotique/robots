@@ -199,7 +199,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         try {
             robotStatus.disableAvoidance();
             if (robotStatus.simulateur() || skip) {
-                if (nerellRobotStatus.team() == ETeam.BLEU) {
+                if (nerellRobotStatus.team() == ETeam.JAUNE) {
                     position.setPt(new Point(
                             conv.mmToPulse(INerellConstantesConfig.dstCallage + 150),
                             conv.mmToPulse(2000 - INerellConstantesConfig.dstCallage - 150)
@@ -216,7 +216,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 robotStatus.enableCalageBordure();
                 mv.reculeMMSansAngle(1000);
 
-                if (nerellRobotStatus.team() == ETeam.BLEU) {
+                if (nerellRobotStatus.team() == ETeam.JAUNE) {
                     position.getPt().setX(conv.mmToPulse(INerellConstantesConfig.dstCallage));
                     position.setAngle(conv.degToPulse(0));
                 } else {
@@ -256,7 +256,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
             switch (nerellRobotStatus.strategy()) {
                 default:
-                    if (nerellRobotStatus.team() == ETeam.BLEU) {
+                    if (nerellRobotStatus.team() == ETeam.JAUNE) {
                         mv.gotoPoint(300, 1200);
                         mv.gotoOrientationDeg(0);
                     } else {
