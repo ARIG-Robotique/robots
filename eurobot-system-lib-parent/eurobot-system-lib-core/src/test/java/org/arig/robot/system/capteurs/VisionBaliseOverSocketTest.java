@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.arig.robot.model.balise.StatutBalise;
+import org.arig.robot.utils.SocketUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
@@ -13,29 +14,28 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.File;
-import java.net.Socket;
 import java.util.Base64;
 
 @Slf4j
 @ExtendWith(SpringExtension.class)
-public class VisionBaliseOverSocketTest {
+class VisionBaliseOverSocketTest {
 
     private static VisionBaliseOverSocket visionBalise;
 
     @BeforeAll
     @SneakyThrows
-    public static void initTest() {
-        Assumptions.assumingThat(serverListening("localhost", 9042),
-                () -> {
-                    visionBalise = new VisionBaliseOverSocket("localhost", 9042);
-                    visionBalise.openSocket();
-                    Assertions.assertTrue(visionBalise.isOpen());
-                }
-        );
+    static void initTest() {
+        String host = "localhost";
+        int port = 9042;
+        Assumptions.assumeTrue(SocketUtils.serverListening(host, port));
+
+        visionBalise = new VisionBaliseOverSocket(host, port);
+        visionBalise.openSocket();
+        Assertions.assertTrue(visionBalise.isOpen());
     }
 
     @AfterAll
-    public static void stopTest() {
+    static void stopTest() {
         if (visionBalise != null) {
             visionBalise.end();
         }
@@ -43,7 +43,7 @@ public class VisionBaliseOverSocketTest {
 
     @Test
     @SneakyThrows
-    public void testDetection() {
+    void testDetection() {
         visionBalise.startDetection();
 
         short tries = 4;
@@ -59,20 +59,11 @@ public class VisionBaliseOverSocketTest {
 
     @Test
     @SneakyThrows
-    public void testGetPhoto() {
+    void testGetPhoto() {
         String imgStr = visionBalise.getPhoto().getData();
         byte[] img = Base64.getDecoder().decode(imgStr);
         File dest = new File("img.jpg");
         FileUtils.writeByteArrayToFile(dest, img);
         log.info("Photo : {}", dest.getAbsolutePath());
-    }
-
-
-    public static boolean serverListening(String host, int port) {
-        try (Socket s = new Socket(host, port)) {
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
     }
 }
