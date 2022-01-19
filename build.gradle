@@ -34,7 +34,7 @@ configure(allprojects) { project ->
 		apacheCommonsMathVersion = '3.6.1'
 		apacheCommonsIOVersion = '2.11.0'
 		googleGuavaVersion = '31.0.1-jre'
-		pi4jVersion = '1.2-jdk9-SNAPSHOT'
+		pi4jVersion = '1.4'
 		junixsocketVersion = '2.4.0'
 		anyAnglePathFindingGitVersion = 'master-7b196baf6b-1'
 	}
