@@ -30,10 +30,18 @@ public abstract class AbstractServosService {
         return servo;
     }
 
+    protected Servo servo(String name) {
+        return servos.get(name);
+    }
+
     protected ServoGroup group(int id, String name) {
         ServoGroup group = new ServoGroup().id((byte) id).name(name);
         this.groups.put(name, group);
         return group;
+    }
+
+    protected ServoGroup group(String name) {
+        return groups.get(name);
     }
 
     protected void logPositionServo(final String servoName, final String positionName, final boolean wait) {
