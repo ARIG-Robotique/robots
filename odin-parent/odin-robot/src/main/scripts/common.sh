@@ -13,7 +13,8 @@ sudo rm -vf /tmp/ecran.sock
 echo ""
 
 echo "* Configuration de la JVM"
-JAVA_HOME=/opt/jre-11.0.13
+#JAVA_HOME=/opt/jre-11.0.13
+JAVA_HOME=/opt/jre-13.0.2
 PATH=${JAVA_HOME}/bin:${PATH}
 java -version
 JVM_ARGS="-XX:+UseG1GC -XX:MaxGCPauseMillis=10 -Xlog:gc:./gc.log -Xmx1024m -Xms1024m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m --add-exports java.base/jdk.internal.misc=ALL-UNNAMED --add-exports java.base/jdk.internal.ref=ALL-UNNAMED"
