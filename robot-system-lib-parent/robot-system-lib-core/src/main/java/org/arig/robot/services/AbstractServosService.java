@@ -56,6 +56,18 @@ public abstract class AbstractServosService {
     /* **************************************** */
 
     public void cyclePreparation() {
+        log.info("Servos enregistrés : ");
+        servos.values().forEach(s -> {
+            log.info(" * {} - {} ({} positions)", s.id(), s.name(), s.positions().size());
+            s.positions().forEach((name, p) -> log.info("   * {} - {} (speed {})", name, p.value(), p.speed()));
+        });
+
+        log.info("Servos groupés : ");
+        groups.values().forEach(g -> {
+            log.info(" * {} - {} ({} servos)", g.id(), g.name(), g.servos().size());
+            g.servos().forEach(s -> log.info("   * {}", s.name()));
+        });
+
         log.info("Servos en position initiale");
         homes();
     }
