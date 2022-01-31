@@ -68,12 +68,6 @@ configure(allprojects) { project ->
 		maven { url 'https://repo.spring.io/milestone' }
 		maven { url 'https://repo.spring.io/libs-snapshot' }
 		maven { url 'https://jitpack.io' }
-		maven {
-			url "s3://arig-artefacts.s3.eu-west-3.amazonaws.com/maven/snapshots"
-			authentication {
-				awsIm(AwsImAuthentication)
-			}
-		}
 	}
 
 	// Dependence commune pour tous les projets
