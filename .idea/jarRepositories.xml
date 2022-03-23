@@ -27,19 +27,9 @@
       <option name="url" value="https://repo.spring.io/libs-snapshot" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="maven4" />
-      <option name="name" value="maven4" />
-      <option name="url" value="s3://arig-artefacts.s3.eu-west-3.amazonaws.com/maven/snapshots" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="MavenLocal" />
       <option name="name" value="MavenLocal" />
       <option name="url" value="file:$USER_HOME$/.m2/repository/" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="BintrayJCenter" />
-      <option name="name" value="BintrayJCenter" />
-      <option name="url" value="https://jcenter.bintray.com/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="maven3" />
