@@ -20,7 +20,7 @@ public class ServoGroup {
     @JsonProperty("batch")
     private List<String> batch = new ArrayList<>();
 
-    public ServoGroup servo(Servo s) {
+    public ServoGroup addServo(Servo s) {
         servos.add(s);
         return this;
     }
