@@ -29,12 +29,12 @@ public class NerellCapteursController extends AbstractCapteursController {
 
         numeriqueInfos.put("Presence carre de fouille", ioService::presenceCarreFouille);
         numeriqueInfos.put("Presence prise bras", ioService::presencePriseBras);
-        numeriqueInfos.put("Presence pince stock 1", ioService::presenceStock1);
-        numeriqueInfos.put("Presence pince stock 2", ioService::presenceStock2);
-        numeriqueInfos.put("Presence pince stock 3", ioService::presenceStock3);
-        numeriqueInfos.put("Presence pince stock 4", ioService::presenceStock4);
-        numeriqueInfos.put("Presence pince stock 5", ioService::presenceStock5);
-        numeriqueInfos.put("Presence pince stock 6", ioService::presenceStock6);
+        numeriqueInfos.put("Presence stock 1", ioService::presenceStock1);
+        numeriqueInfos.put("Presence stock 2", ioService::presenceStock2);
+        numeriqueInfos.put("Presence stock 3", ioService::presenceStock3);
+        numeriqueInfos.put("Presence stock 4", ioService::presenceStock4);
+        numeriqueInfos.put("Presence stock 5", ioService::presenceStock5);
+        numeriqueInfos.put("Presence stock 6", ioService::presenceStock6);
         numeriqueInfos.put("Presence ventouse bas", ioService::presenceVentouseBas);
         numeriqueInfos.put("Presence ventouse haut", ioService::presenceVentouseHaut);
 
