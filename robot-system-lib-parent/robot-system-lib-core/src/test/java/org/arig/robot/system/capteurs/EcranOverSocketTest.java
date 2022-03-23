@@ -110,8 +110,8 @@ class EcranOverSocketTest {
         ecran.updateState(state);
         ThreadUtils.sleep(500);
 
-        state.setAlim5vp(true);
-        state.setAlim12v(true);
+        state.setAlimServos(true);
+        state.setAlimMoteurs(true);
         ecran.updateState(state);
         ThreadUtils.sleep(500);
 

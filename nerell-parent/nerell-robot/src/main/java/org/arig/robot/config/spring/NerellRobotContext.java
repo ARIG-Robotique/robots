@@ -73,6 +73,10 @@ public class NerellRobotContext {
                 .deviceName(INerellConstantesI2C.PCF_ALIM_DEVICE_NAME)
                 .device(i2cBus.getDevice(INerellConstantesI2C.PCF_ALIM_ADDRESS))
                 .build();
+        final I2CManagerDevice<I2CDevice> pcf1 = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(INerellConstantesI2C.PCF1_DEVICE_NAME)
+                .device(i2cBus.getDevice(INerellConstantesI2C.PCF1_ADDRESS))
+                .build();
         final I2CManagerDevice<I2CDevice> pcf2 = I2CManagerDevice.<I2CDevice>builder()
                 .deviceName(INerellConstantesI2C.PCF2_DEVICE_NAME)
                 .device(i2cBus.getDevice(INerellConstantesI2C.PCF2_ADDRESS))
@@ -98,43 +102,30 @@ public class NerellRobotContext {
                 .deviceName(INerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
                 .device(i2cBus.getDevice(INerellConstantesI2C.MULTIPLEXEUR_I2C_ADDRESS))
                 .build();
-        final I2CManagerDevice<I2CDevice> couleurAvant1 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(INerellConstantesI2C.COULEUR_AV_1_NAME)
+        final I2CManagerDevice<I2CDevice> couleurVentouseBas = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(INerellConstantesI2C.COULEUR_VENTOUSE_BAS_NAME)
                 .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
                 .multiplexerDeviceName(INerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(INerellConstantesI2C.COULEUR_AV_1_MUX_CHANNEL)
+                .multiplexerChannel(INerellConstantesI2C.COULEUR_VENTOUSE_BAS_MUX_CHANNEL)
                 .build();
-        final I2CManagerDevice<I2CDevice> couleurAvant2 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(INerellConstantesI2C.COULEUR_AV_2_NAME)
+        final I2CManagerDevice<I2CDevice> couleurVentouseHaut = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(INerellConstantesI2C.COULEUR_VENTOUSE_HAUT_NAME)
                 .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
                 .multiplexerDeviceName(INerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(INerellConstantesI2C.COULEUR_AV_2_MUX_CHANNEL)
-                .build();
-        final I2CManagerDevice<I2CDevice> couleurAvant3 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(INerellConstantesI2C.COULEUR_AV_3_NAME)
-                .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
-                .multiplexerDeviceName(INerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(INerellConstantesI2C.COULEUR_AV_3_MUX_CHANNEL)
-                .build();
-        final I2CManagerDevice<I2CDevice> couleurAvant4 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(INerellConstantesI2C.COULEUR_AV_4_NAME)
-                .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
-                .multiplexerDeviceName(INerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(INerellConstantesI2C.COULEUR_AV_4_MUX_CHANNEL)
+                .multiplexerChannel(INerellConstantesI2C.COULEUR_VENTOUSE_HAUT_MUX_CHANNEL)
                 .build();
 
         manager.registerDevice(sd21);
         manager.registerDevice(codeurMoteurDroit);
         manager.registerDevice(codeurMoteurGauche);
         manager.registerDevice(pcfAlim);
+        manager.registerDevice(pcf1);
         manager.registerDevice(pcf2);
         manager.registerDevice(pca9685);
         manager.registerDevice(controlleurPompes);
         manager.registerDevice(mux);
-        manager.registerDevice(couleurAvant1);
-        manager.registerDevice(couleurAvant2);
-        manager.registerDevice(couleurAvant3);
-        manager.registerDevice(couleurAvant4);
+        manager.registerDevice(couleurVentouseBas);
+        manager.registerDevice(couleurVentouseHaut);
 
         return manager;
     }
@@ -172,23 +163,13 @@ public class NerellRobotContext {
     }
 
     @Bean
-    public TCS34725ColorSensor couleurAvant1() {
-        return new TCS34725ColorSensor(INerellConstantesI2C.COULEUR_AV_1_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
+    public TCS34725ColorSensor couleurVentouseBas() {
+        return new TCS34725ColorSensor(INerellConstantesI2C.COULEUR_VENTOUSE_BAS_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
     }
 
     @Bean
-    public TCS34725ColorSensor couleurAvant2() {
-        return new TCS34725ColorSensor(INerellConstantesI2C.COULEUR_AV_2_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
-    }
-
-    @Bean
-    public TCS34725ColorSensor couleurAvant3() {
-        return new TCS34725ColorSensor(INerellConstantesI2C.COULEUR_AV_3_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
-    }
-
-    @Bean
-    public TCS34725ColorSensor couleurAvant4() {
-        return new TCS34725ColorSensor(INerellConstantesI2C.COULEUR_AV_4_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
+    public TCS34725ColorSensor couleurVentouseHaut() {
+        return new TCS34725ColorSensor(INerellConstantesI2C.COULEUR_VENTOUSE_HAUT_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
     }
 
     @Bean

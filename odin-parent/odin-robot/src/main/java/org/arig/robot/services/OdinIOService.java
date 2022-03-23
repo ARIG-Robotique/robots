@@ -81,8 +81,8 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
     private GpioPinDigitalOutput outCmdLedCapteurRGB;
 
     // PCF
-    private GpioPinDigitalOutput outAlimPuissance5V;
-    private GpioPinDigitalOutput outAlimPuissance12V;
+    private GpioPinDigitalOutput outAlimPuissanceServos;
+    private GpioPinDigitalOutput outAlimPuissanceMoteurs;
 
     @Override
     public void destroy() throws Exception {
@@ -136,8 +136,8 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
 
         // Alim
         inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_00);
-        outAlimPuissance12V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
-        outAlimPuissance5V = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_02);
+        outAlimPuissanceMoteurs = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
+        outAlimPuissanceServos = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_02);
 
         // PCF1
         inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
@@ -227,12 +227,12 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
     }
 
     @Override
-    public boolean calageBordureDroit() {
+    public boolean calageBordureArriereDroit() {
         return inCalageBordureDroit.isHigh();
     }
 
     @Override
-    public boolean calageBordureGauche() {
+    public boolean calageBordureArriereGauche() {
         return inCalageBordureGauche.isHigh();
     }
 
@@ -291,26 +291,26 @@ public class OdinIOService implements IOdinIOService, InitializingBean, Disposab
 
     @Override
     public void enableAlimServos() {
-        log.info("Activation puissance 5V");
-        outAlimPuissance5V.low();
+        log.info("Activation puissance servos");
+        outAlimPuissanceServos.low();
     }
 
     @Override
     public void disableAlimServos() {
-        log.info("Desactivation puissance 5V");
-        outAlimPuissance5V.high();
+        log.info("Desactivation puissance servos");
+        outAlimPuissanceServos.high();
     }
 
     @Override
     public void enableAlimMoteurs() {
-        log.info("Activation puissance 12V");
-        outAlimPuissance12V.low();
+        log.info("Activation puissance moteurs 12V");
+        outAlimPuissanceMoteurs.low();
     }
 
     @Override
     public void disableAlimMoteurs() {
-        log.info("Desactivation puissance 12V");
-        outAlimPuissance12V.high();
+        log.info("Desactivation puissance moteurs 12V");
+        outAlimPuissanceMoteurs.high();
     }
 
     // ----------------------------------------------------------- //

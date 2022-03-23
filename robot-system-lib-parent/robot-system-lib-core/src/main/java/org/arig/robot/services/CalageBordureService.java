@@ -32,13 +32,13 @@ public class CalageBordureService {
                 done = true;
             } else if (cmdRobot.isType(TypeConsigne.DIST) && cmdRobot.isType(TypeConsigne.ANGLE)) {
                 if (rs.calageBordure() == TypeCalage.STANDARD) {
-                    done = ioService.calageBordureDroit() || ioService.calageBordureGauche();
+                    done = ioService.calageBordureArriereDroit() || ioService.calageBordureArriereGauche();
                 } else {
                     done = ioService.calageBordureCustomDroit() || ioService.calageBordureCustomGauche();
                 }
             } else {
                 if (rs.calageBordure() == TypeCalage.STANDARD) {
-                    done = ioService.calageBordureDroit() && ioService.calageBordureGauche();
+                    done = ioService.calageBordureArriereDroit() && ioService.calageBordureArriereGauche();
                 } else {
                     done = ioService.calageBordureCustomDroit() && ioService.calageBordureCustomGauche();
                 }

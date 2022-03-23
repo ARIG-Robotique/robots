@@ -101,8 +101,8 @@ public abstract class AbstractEcranService<CONFIG extends AbstractEcranConfig, S
         stateInfos.setI2c(ii2CManager.status());
         stateInfos.setLidar(lidarService.isConnected());
         stateInfos.setAu(ioService.auOk());
-        stateInfos.setAlim12v(energyService.checkMoteurs(false));
-        stateInfos.setAlim5vp(energyService.checkServos(false));
+        stateInfos.setAlimMoteurs(energyService.checkMoteurs(false));
+        stateInfos.setAlimServos(energyService.checkServos(false));
         stateInfos.setTirette(ioService.tirette());
         stateInfos.setBalise(balise != null && balise.isOpen());
         stateInfos.setOtherRobot(rs.groupOk());

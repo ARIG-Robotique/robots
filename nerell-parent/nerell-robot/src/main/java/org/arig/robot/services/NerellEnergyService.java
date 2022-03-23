@@ -17,7 +17,7 @@ public class NerellEnergyService extends AbstractEnergyService {
 
     @Override
     public double tensionServos() {
-        if (iioService.auOk() && iioService.alimPuissance5VOk()) {
+        if (iioService.auOk() && iioService.puissanceServosOk()) {
             return sd21Servos.getTension();
         } else {
             return 0;
@@ -31,7 +31,7 @@ public class NerellEnergyService extends AbstractEnergyService {
 
     @Override
     public double tensionMoteurs() {
-        return iioService.auOk() && iioService.alimPuissance12VOk() ? 12 : 0;
+        return iioService.auOk() && iioService.puissanceMoteursOk() ? 12 : 0;
     }
 
     @Override

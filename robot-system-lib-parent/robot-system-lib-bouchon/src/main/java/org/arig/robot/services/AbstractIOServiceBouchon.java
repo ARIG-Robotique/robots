@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-public class AbstractIOServiceBouchon implements IIOService {
+public abstract class AbstractIOServiceBouchon implements IIOService {
 
     @Setter
     @Accessors(fluent = true)
@@ -45,23 +45,13 @@ public class AbstractIOServiceBouchon implements IIOService {
     // --------------------------------------------------------- //
 
     @Override
-    public boolean calageBordureDroit() {
-        return false;
+    public boolean puissanceServosOk() {
+        return alimServos;
     }
 
     @Override
-    public boolean calageBordureGauche() {
-        return false;
-    }
-
-    @Override
-    public boolean calageBordureCustomDroit() {
-        return false;
-    }
-
-    @Override
-    public boolean calageBordureCustomGauche() {
-        return false;
+    public boolean puissanceMoteursOk() {
+        return alimMoteurs;
     }
 
     // --------------------------------------------------------- //
@@ -87,5 +77,4 @@ public class AbstractIOServiceBouchon implements IIOService {
     public void disableAlimMoteurs() {
         alimMoteurs = false;
     }
-
 }

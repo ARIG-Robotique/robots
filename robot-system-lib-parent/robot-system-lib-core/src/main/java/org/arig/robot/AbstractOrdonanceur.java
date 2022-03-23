@@ -270,7 +270,7 @@ public abstract class AbstractOrdonanceur {
         ecranService.displayMessage("Position de préparation des servos moteurs");
         servos.cyclePreparation();
 
-        ecranService.displayMessage("Activation puissances 5V et 12V");
+        ecranService.displayMessage("Activation puissances servos et moteurs");
         io.enableAlimServos();
         io.enableAlimMoteurs();
         ThreadUtils.sleep(500);

@@ -8,6 +8,8 @@ public interface IIOService {
 
     void refreshAllIO();
     boolean auOk();
+    boolean puissanceServosOk();
+    boolean puissanceMoteursOk();
     boolean tirette();
 
     // --------------------------------------------------------- //
@@ -15,11 +17,25 @@ public interface IIOService {
     // --------------------------------------------------------- //
 
     // Numerique
-    boolean calageBordureDroit();
-    boolean calageBordureGauche();
+    default boolean calageBordureArriereDroit() {
+        return false;
+    }
+    default boolean calageBordureArriereGauche() {
+        return false;
+    }
+    default boolean calageBordureAvantDroit() {
+        return false;
+    }
+    default boolean calageBordureAvantGauche() {
+        return false;
+    }
 
-    boolean calageBordureCustomDroit();
-    boolean calageBordureCustomGauche();
+    default boolean calageBordureCustomDroit() {
+        return false;
+    }
+    default boolean calageBordureCustomGauche(){
+        return false;
+    }
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

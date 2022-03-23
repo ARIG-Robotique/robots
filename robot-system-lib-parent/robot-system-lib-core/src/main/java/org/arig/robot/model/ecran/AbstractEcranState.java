@@ -13,8 +13,8 @@ public abstract class AbstractEcranState implements Serializable {
     private Enum<?> strategy;
     private String message = "";
     private boolean au = false;
-    private boolean alim12v = false;
-    private boolean alim5vp = false;
+    private boolean alimMoteurs = false;
+    private boolean alimServos = false;
     private boolean tirette = false;
     private boolean i2c = false;
     private boolean lidar = false;

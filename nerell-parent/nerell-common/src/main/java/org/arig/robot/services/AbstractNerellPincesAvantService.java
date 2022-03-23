@@ -19,15 +19,6 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
     @Autowired
     private NerellRobotStatus rs;
 
-    @Autowired
-    private NerellServosService servosService;
-
-    @Autowired
-    private IPathFinder pathFinder;
-
-    @Autowired
-    private RobotGroupService group;
-
     private ECouleur expected = null;
 
     private boolean[] previousState = new boolean[]{false, false, false, false};
@@ -125,10 +116,8 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
     private void forceOnPompe(int i) {
         // @formatter:off
         switch (i) {
-            case 0: io.enableForcePompe1(); break;
-            case 1: io.enableForcePompe2(); break;
-            case 2: io.enableForcePompe3(); break;
-            case 3: io.enableForcePompe4(); break;
+            case 0: io.enableForcePompeVentouseHaut(); break;
+            case 1: io.enableForcePompeVentouseBas(); break;
         }
         // @formatter:on
     }
@@ -136,20 +125,16 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
     private void releasePompe(int i) {
         // @formatter:off
         switch (i) {
-            case 0: io.releasePompe1(); break;
-            case 1: io.releasePompe2(); break;
-            case 2: io.releasePompe3(); break;
-            case 3: io.releasePompe4(); break;
+            case 0: io.releasePompeVentouseBas(); break;
+            case 1: io.releasePompeVentouseHaut(); break;
         }
         // @formatter:on
     }
 
     private boolean[] getNewState() {
         return new boolean[]{
-                io.presenceVentouse1(),
-                io.presenceVentouse2(),
-                io.presenceVentouse3(),
-                io.presenceVentouse4()
+                io.presenceVentouseBas(),
+                io.presenceVentouseHaut(),
         };
     }
 
@@ -160,10 +145,8 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
     private ECouleur getCouleur(int index) {
         // @formatter:off
         switch (index) {
-            case 0: return io.couleurAvant1();
-            case 1: return io.couleurAvant2();
-            case 2: return io.couleurAvant3();
-            case 3: return io.couleurAvant4();
+            case 0: return io.couleurVentouseBas();
+            case 1: return io.couleurVentouseHaut();
             default: return ECouleur.INCONNU;
         }
         // @formatter:on

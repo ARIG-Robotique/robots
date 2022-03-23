@@ -13,8 +13,11 @@ public interface INerellConstantesI2C {
     String PCF_ALIM_DEVICE_NAME = "Carte alimentation";
     int PCF_ALIM_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3D;
 
-    String PCF2_DEVICE_NAME = "PCF 2 (Inputs µSwitch)";
-    int PCF2_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3F;
+    String PCF1_DEVICE_NAME = "PCF 1 (Inputs µSwitch)";
+    int PCF1_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3F;
+
+    String PCF2_DEVICE_NAME = "PCF 1 (Inputs Pololu)";
+    int PCF2_ADDRESS = PCF8574GpioProvider.PCF8574A_0x38;
 
     String PCA9685_DEVICE_NAME = "PCA9685";
     int PCA9685_ADDRESS = 0x40;
@@ -28,11 +31,11 @@ public interface INerellConstantesI2C {
     String MULTIPLEXEUR_I2C_NAME = "Mux TCA";
     int MULTIPLEXEUR_I2C_ADDRESS = 0x70;
 
-    String COULEUR_AV_1_NAME = "Couleur Av 1";
-    byte COULEUR_AV_1_MUX_CHANNEL = 2;
+    String COULEUR_VENTOUSE_BAS_NAME = "Couleur Av 1";
+    byte COULEUR_VENTOUSE_BAS_MUX_CHANNEL = 2;
 
-    String COULEUR_AV_2_NAME = "Couleur Av 2";
-    byte COULEUR_AV_2_MUX_CHANNEL = 3;
+    String COULEUR_VENTOUSE_HAUT_NAME = "Couleur Av 2";
+    byte COULEUR_VENTOUSE_HAUT_MUX_CHANNEL = 3;
 
     String COULEUR_AV_3_NAME = "Couleur Av 3";
     byte COULEUR_AV_3_MUX_CHANNEL = 5;

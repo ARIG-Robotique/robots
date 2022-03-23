@@ -8,6 +8,16 @@ public interface IOdinIOService extends IIOService {
     // -------------------------- INPUT ------------------------ //
     // --------------------------------------------------------- //
 
+    @Override
+    default boolean puissanceServosOk() {
+        return true;
+    }
+
+    @Override
+    default boolean puissanceMoteursOk() {
+        return true;
+    }
+
     // Numerique
     boolean presenceVentouseAvantGauche();
     boolean presenceVentouseAvantDroit();

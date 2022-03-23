@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class NerellCapteursController extends AbstractCapteursController {
 
     @Autowired
-    private NerellRobotStatus rs;
+    private NerellRobotStatus robotStatus;
 
     @Autowired
     private INerellIOService ioService;
@@ -20,22 +20,24 @@ public class NerellCapteursController extends AbstractCapteursController {
     public void afterPropertiesSet() throws Exception {
         super.afterPropertiesSet();
 
-        numeriqueInfos.put("Presence pince avant 1", ioService::presence1);
-        numeriqueInfos.put("Presence pince avant 2", ioService::presence2);
-        numeriqueInfos.put("Presence pince avant 3", ioService::presence3);
-        numeriqueInfos.put("Presence pince avant 4", ioService::presence4);
-        numeriqueInfos.put("Presence ventouse pince avant 1", ioService::presenceVentouse1);
-        numeriqueInfos.put("Presence ventouse pince avant 2", ioService::presenceVentouse2);
-        numeriqueInfos.put("Presence ventouse pince avant 3", ioService::presenceVentouse3);
-        numeriqueInfos.put("Presence ventouse pince avant 4", ioService::presenceVentouse4);
-        numeriqueInfos.put("Bordure arrière droite", ioService::calageBordureDroit);
-        numeriqueInfos.put("Bordure arrière gauche", ioService::calageBordureGauche);
-        numeriqueInfos.put("Presence pince arrière 1", ioService::presencePinceArriere1);
-        numeriqueInfos.put("Presence pince arrière 2", ioService::presencePinceArriere2);
-        numeriqueInfos.put("Presence pince arrière 3", ioService::presencePinceArriere3);
-        numeriqueInfos.put("Presence pince arrière 4", ioService::presencePinceArriere4);
-        numeriqueInfos.put("Presence pince arrière 5", ioService::presencePinceArriere5);
+        numeriqueInfos.put("Bordure arrière droite", ioService::calageBordureArriereDroit);
+        numeriqueInfos.put("Bordure arrière gauche", ioService::calageBordureArriereGauche);
+        numeriqueInfos.put("Bordure avant droite", ioService::calageBordureAvantDroit);
+        numeriqueInfos.put("Bordure avant gauche", ioService::calageBordureAvantGauche);
+        //numeriqueInfos.put("Bordure custom droite", ioService::calageBordureCustomDroit);
+        //numeriqueInfos.put("Bordure custom gauche", ioService::calageBordureCustomGauche);
 
-        textInfos.put("Equipe", () -> rs.team().name());
+        numeriqueInfos.put("Presence carre de fouille", ioService::presenceCarreFouille);
+        numeriqueInfos.put("Presence prise bras", ioService::presencePriseBras);
+        numeriqueInfos.put("Presence pince stock 1", ioService::presenceStock1);
+        numeriqueInfos.put("Presence pince stock 2", ioService::presenceStock2);
+        numeriqueInfos.put("Presence pince stock 3", ioService::presenceStock3);
+        numeriqueInfos.put("Presence pince stock 4", ioService::presenceStock4);
+        numeriqueInfos.put("Presence pince stock 5", ioService::presenceStock5);
+        numeriqueInfos.put("Presence pince stock 6", ioService::presenceStock6);
+        numeriqueInfos.put("Presence ventouse bas", ioService::presenceVentouseBas);
+        numeriqueInfos.put("Presence ventouse haut", ioService::presenceVentouseHaut);
+
+        textInfos.put("Equipe", () -> (robotStatus.team() != null) ? robotStatus.team().name() : "???");
     }
 }

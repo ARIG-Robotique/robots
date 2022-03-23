@@ -10,7 +10,7 @@ public class NerellIOServiceBouchon extends AbstractIOServiceBouchon implements 
 
     @Setter
     @Accessors(fluent = true)
-    private boolean contentPinceArriere = false;
+    private int contentStock = 0;
 
     // --------------------------------------------------------- //
     // -------------------------- INPUT ------------------------ //
@@ -19,87 +19,61 @@ public class NerellIOServiceBouchon extends AbstractIOServiceBouchon implements 
     // Numerique
 
     @Override
-    public boolean presenceVentouse1() {
+    public boolean presenceVentouseBas() {
         return false;
     }
 
     @Override
-    public boolean presenceVentouse2() {
+    public boolean presenceVentouseHaut() {
         return false;
     }
 
     @Override
-    public boolean presenceVentouse3() {
+    public boolean presencePriseBras() {
         return false;
     }
 
     @Override
-    public boolean presenceVentouse4() {
+    public boolean presenceCarreFouille() {
         return false;
     }
 
     @Override
-    public boolean presence1() {
-        return false;
+    public boolean presenceStock1() {
+        return contentStock >= 1;
     }
 
     @Override
-    public boolean presence2() {
-        return false;
+    public boolean presenceStock2() {
+        return contentStock >= 2;
     }
 
     @Override
-    public boolean presence3() {
-        return false;
+    public boolean presenceStock3() {
+        return contentStock >= 3;
     }
 
     @Override
-    public boolean presence4() {
-        return false;
+    public boolean presenceStock4() {
+        return contentStock >= 4;
     }
 
     @Override
-    public boolean presencePinceArriere1() {
-        return contentPinceArriere;
+    public boolean presenceStock5() {
+        return contentStock >= 5;
     }
 
     @Override
-    public boolean presencePinceArriere2() {
-        return contentPinceArriere;
+    public boolean presenceStock6() {
+        return contentStock >= 6;
     }
 
-    @Override
-    public boolean presencePinceArriere3() {
-        return contentPinceArriere;
-    }
-
-    @Override
-    public boolean presencePinceArriere4() {
-        return contentPinceArriere;
-    }
-
-    @Override
-    public boolean presencePinceArriere5() {
-        return contentPinceArriere;
-    }
-
-    @Override
-    public ECouleur couleurAvant1() {
+    public ECouleur couleurVentouseBas() {
         return ECouleur.INCONNU;
     }
 
     @Override
-    public ECouleur couleurAvant2() {
-        return ECouleur.INCONNU;
-    }
-
-    @Override
-    public ECouleur couleurAvant3() {
-        return ECouleur.INCONNU;
-    }
-
-    @Override
-    public ECouleur couleurAvant4() {
+    public ECouleur couleurVentouseHaut() {
         return ECouleur.INCONNU;
     }
 
@@ -109,10 +83,12 @@ public class NerellIOServiceBouchon extends AbstractIOServiceBouchon implements 
 
     @Override
     public void enableLedCapteurCouleur() {
+        // Nothing to do
     }
 
     @Override
     public void disableLedCapteurCouleur() {
+        // Nothing to do
     }
 
     // ----------------------------------------------------------- //
@@ -122,65 +98,51 @@ public class NerellIOServiceBouchon extends AbstractIOServiceBouchon implements 
 
     @Override
     public void disableAllPompes() {
-    }
-
-    @Override
-    public void enableForceAllPompes() {
-    }
-
-    @Override
-    public void enableForcePompe1() {
-    }
-
-    @Override
-    public void enableForcePompe2() {
-    }
-
-    @Override
-    public void enableForcePompe3() {
-    }
-
-    @Override
-    public void enableForcePompe4() {
+        // Nothing to do
     }
 
     @Override
     public void enableAllPompes() {
+        // Nothing to do
     }
 
     @Override
-    public void enablePompe1() {
-    }
-
-    @Override
-    public void enablePompe2() {
-    }
-
-    @Override
-    public void enablePompe3() {
-    }
-
-    @Override
-    public void enablePompe4() {
+    public void enableForceAllPompes() {
+        // Nothing to do
     }
 
     @Override
     public void releaseAllPompes() {
+        // Nothing to do
     }
 
     @Override
-    public void releasePompe1() {
+    public void enableForcePompeVentouseBas() {
+        // Nothing to do
     }
 
     @Override
-    public void releasePompe2() {
+    public void enableForcePompeVentouseHaut() {
+        // Nothing to do
     }
 
     @Override
-    public void releasePompe3() {
+    public void enablePompeVentouseBas() {
+        // Nothing to do
     }
 
     @Override
-    public void releasePompe4() {
+    public void enablePompeVentouseHaut() {
+        // Nothing to do
+    }
+
+    @Override
+    public void releasePompeVentouseBas() {
+        // Nothing to do
+    }
+
+    @Override
+    public void releasePompeVentouseHaut() {
+        // Nothing to do
     }
 }

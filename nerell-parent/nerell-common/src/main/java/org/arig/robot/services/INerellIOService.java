@@ -9,27 +9,21 @@ public interface INerellIOService extends IIOService {
     // --------------------------------------------------------- //
 
     // Numerique
-    boolean presenceVentouse1();
-    boolean presenceVentouse2();
-    boolean presenceVentouse3();
-    boolean presenceVentouse4();
+    boolean presenceVentouseBas();
+    boolean presenceVentouseHaut();
 
-    boolean presence1();
-    boolean presence2();
-    boolean presence3();
-    boolean presence4();
-
-    boolean presencePinceArriere1();
-    boolean presencePinceArriere2();
-    boolean presencePinceArriere3();
-    boolean presencePinceArriere4();
-    boolean presencePinceArriere5();
+    boolean presenceCarreFouille();
+    boolean presencePriseBras();
+    boolean presenceStock1();
+    boolean presenceStock2();
+    boolean presenceStock3();
+    boolean presenceStock4();
+    boolean presenceStock5();
+    boolean presenceStock6();
 
     // Couleurs
-    ECouleur couleurAvant1();
-    ECouleur couleurAvant2();
-    ECouleur couleurAvant3();
-    ECouleur couleurAvant4();
+    ECouleur couleurVentouseBas();
+    ECouleur couleurVentouseHaut();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
@@ -45,21 +39,15 @@ public interface INerellIOService extends IIOService {
     void disableAllPompes();
 
     void enableForceAllPompes();
-    void enableForcePompe1();
-    void enableForcePompe2();
-    void enableForcePompe3();
-    void enableForcePompe4();
+    void enableForcePompeVentouseBas();
+    void enableForcePompeVentouseHaut();
 
     void enableAllPompes();
-    void enablePompe1();
-    void enablePompe2();
-    void enablePompe3();
-    void enablePompe4();
+    void enablePompeVentouseBas();
+    void enablePompeVentouseHaut();
 
     void releaseAllPompes();
-    void releasePompe1();
-    void releasePompe2();
-    void releasePompe3();
-    void releasePompe4();
+    void releasePompeVentouseBas();
+    void releasePompeVentouseHaut();
 
 }

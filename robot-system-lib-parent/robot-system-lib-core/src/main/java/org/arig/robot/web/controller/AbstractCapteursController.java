@@ -2,6 +2,7 @@ package org.arig.robot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.IConstantesConfig;
+import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.IIOService;
 import org.springframework.beans.factory.InitializingBean;
