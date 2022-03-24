@@ -22,7 +22,7 @@ import org.arig.robot.model.Point3D;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public abstract class AbstractBras implements IBrasManager {
+public abstract class AbstractBras implements BrasManager {
 
     @Getter(AccessLevel.PROTECTED)
     private final Point3D P1;

@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Slf4j
-public abstract class AbstractAction implements IAction {
+public abstract class AbstractAction implements Action {
 
     @Getter
     @Accessors(fluent = true)

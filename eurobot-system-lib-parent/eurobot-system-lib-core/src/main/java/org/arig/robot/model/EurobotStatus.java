@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IEurobotConfig;
+import org.arig.robot.constants.EurobotConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,18 +15,18 @@ import java.util.Map;
 @Data
 @Accessors(fluent = true)
 @EqualsAndHashCode(callSuper = false)
-public class EurobotStatus extends AbstractRobotStatus {
+public abstract class EurobotStatus extends AbstractRobotStatus {
 
-    public EurobotStatus(boolean mainRobot) {
-        super(IEurobotConfig.matchTimeMs, mainRobot);
+    protected EurobotStatus(boolean mainRobot) {
+        super(EurobotConfig.matchTimeMs, mainRobot);
     }
 
     @Setter(AccessLevel.NONE)
-    private ETeam team;
+    private Team team;
 
-    private EStrategy strategy = EStrategy.BASIC;
+    private Strategy strategy = Strategy.BASIC;
 
-    public void setTeam(ETeam team) {
+    public void setTeam(Team team) {
         this.team = team;
     }
 

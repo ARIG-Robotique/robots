@@ -2,9 +2,9 @@ package org.arig.robot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.arig.robot.constants.IConstantesConfig;
+import org.arig.robot.constants.ConstantesConfig;
 import org.arig.robot.model.ActionSuperviseur;
-import org.arig.robot.strategy.IAction;
+import org.arig.robot.strategy.Action;
 import org.arig.robot.strategy.StrategyManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/strategy")
-@Profile(IConstantesConfig.profileMonitoring)
+@Profile(ConstantesConfig.profileMonitoring)
 public class StrategyController {
 
     @Autowired
@@ -39,12 +39,12 @@ public class StrategyController {
 
     @PostMapping(path = "/execute")
     public void execute(@RequestParam("uid") String uid) {
-        Optional<IAction> action = strategyManager.actions().stream()
+        Optional<Action> action = strategyManager.actions().stream()
                 .filter(a -> StringUtils.equalsIgnoreCase(a.uuid(), uid))
                 .findFirst();
 
         if (action.isPresent()) {
-            IAction exec = action.get();
+            Action exec = action.get();
             log.info("Execution de l'action : {}", exec.name());
             exec.execute();
         } else {

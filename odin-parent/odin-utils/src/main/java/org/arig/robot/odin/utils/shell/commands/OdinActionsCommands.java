@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.OdinOrdonanceur;
 import org.arig.robot.odin.utils.shell.providers.OdinActionsProvider;
 import org.arig.robot.services.AbstractEnergyService;
-import org.arig.robot.services.IOdinIOService;
-import org.arig.robot.strategy.IAction;
+import org.arig.robot.services.OdinIOService;
+import org.arig.robot.strategy.Action;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -24,10 +24,10 @@ import java.util.Optional;
 @AllArgsConstructor
 public class OdinActionsCommands {
 
-    private IOdinIOService ioService;
+    private OdinIOService ioService;
     private final AbstractEnergyService energyService;
     private OdinOrdonanceur ordonanceur;
-    private List<IAction> actions;
+    private List<Action> actions;
 
     @ShellMethodAvailability
     public Availability alimentationOk() {
@@ -52,7 +52,7 @@ public class OdinActionsCommands {
     @ShellMethod("Execute une action")
     @SneakyThrows
     public void action(@ShellOption(valueProvider = OdinActionsProvider.class) String name) {
-        final Optional<IAction> action = actions.stream()
+        final Optional<Action> action = actions.stream()
                 .filter(a -> a.getClass().getSimpleName().equals(name))
                 .findFirst();
 

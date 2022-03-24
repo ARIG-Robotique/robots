@@ -2,18 +2,18 @@ package org.arig.robot.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
-import org.arig.robot.constants.IOdinConstantesConfig;
+import org.arig.robot.constants.OdinConstantesConfig;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.OdinRobotStatus;
-import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.AbstractOdinPincesArriereService;
 import org.arig.robot.services.AbstractOdinPincesAvantService;
-import org.arig.robot.services.IIOService;
+import org.arig.robot.services.IOService;
 import org.arig.robot.services.OdinEcranService;
-import org.arig.robot.system.avoiding.IAvoidingService;
-import org.arig.robot.system.blockermanager.ISystemBlockerManager;
+import org.arig.robot.system.avoiding.AvoidingService;
+import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -28,22 +28,22 @@ public class OdinTasksScheduler {
     private OdinRobotStatus rs;
 
     @Autowired
-    private IAvoidingService avoidingService;
+    private AvoidingService avoidingService;
 
     @Autowired
-    private ISystemBlockerManager systemBlockerManager;
+    private SystemBlockerManager systemBlockerManager;
 
     @Autowired
     private OdinEcranService ecranService;
 
     @Autowired
-    private IIOService ioService;
+    private IOService ioService;
 
     @Autowired
     private AbstractEnergyService energyService;
 
     @Autowired
-    protected IMonitoringWrapper monitoringWrapper;
+    protected MonitoringWrapper monitoringWrapper;
 
     @Autowired
     private AbstractOdinPincesAvantService pincesAvant;
@@ -114,7 +114,7 @@ public class OdinTasksScheduler {
                     timerLectureCouleurAvant.start();
                 }
             }
-            if (timerLectureCouleurAvant.getTime(TimeUnit.MILLISECONDS) > IOdinConstantesConfig.TIME_BEFORE_READ_COLOR) {
+            if (timerLectureCouleurAvant.getTime(TimeUnit.MILLISECONDS) > OdinConstantesConfig.TIME_BEFORE_READ_COLOR) {
                 timerLectureCouleurAvant.reset();
                 pincesAvant.processCouleur();
             }
@@ -125,7 +125,7 @@ public class OdinTasksScheduler {
                     timerLectureCouleurArriere.start();
                 }
             }
-            if (timerLectureCouleurArriere.getTime(TimeUnit.MILLISECONDS) > IOdinConstantesConfig.TIME_BEFORE_READ_COLOR) {
+            if (timerLectureCouleurArriere.getTime(TimeUnit.MILLISECONDS) > OdinConstantesConfig.TIME_BEFORE_READ_COLOR) {
                 timerLectureCouleurArriere.reset();
                 pincesArriere.processCouleur();
             }

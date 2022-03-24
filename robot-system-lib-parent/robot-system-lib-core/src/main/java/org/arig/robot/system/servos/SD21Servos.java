@@ -1,7 +1,7 @@
 package org.arig.robot.system.servos;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.II2CManager;
+import org.arig.robot.communication.I2CManager;
 import org.arig.robot.exception.I2CException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class SD21Servos implements InitializingBean {
     protected String deviceName;
 
     @Autowired
-    private II2CManager i2cManager;
+    private I2CManager i2cManager;
 
     private Map<Byte, Integer> lastPositions = new HashMap<>(21);
     private Map<Byte, Byte> lastSpeed = new HashMap<>(21);

@@ -2,10 +2,10 @@ package org.arig.robot.config.spring;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.NerellOrdonanceur;
-import org.arig.robot.constants.INerellConstantesConfig;
+import org.arig.robot.constants.NerellConstantesConfig;
 import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.common.LimiterFilter.LimiterType;
-import org.arig.robot.filters.pid.IPidFilter;
+import org.arig.robot.filters.pid.PidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.CommandeRobot;
@@ -14,22 +14,22 @@ import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
 import org.arig.robot.model.ecran.EcranConfig;
 import org.arig.robot.model.ecran.EcranState;
-import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.system.RobotGroupOverSocket;
-import org.arig.robot.system.blockermanager.ISystemBlockerManager;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
+import org.arig.robot.system.blockermanager.SystemBlockerManagerImpl;
 import org.arig.robot.system.capteurs.EcranOverSocket;
 import org.arig.robot.system.capteurs.IEcran;
-import org.arig.robot.system.group.IRobotGroup;
+import org.arig.robot.system.group.RobotGroup;
 import org.arig.robot.system.motion.AsservissementPolaireDistanceOrientation;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motion.OdometrieLineaire;
 import org.arig.robot.system.pathfinding.GameMultiPathFinderImpl;
-import org.arig.robot.system.pathfinding.IPathFinder;
-import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
-import org.arig.robot.system.pathfinding.impl.NoPathFinderImpl;
+import org.arig.robot.system.pathfinding.PathFinder;
+import org.arig.robot.system.pathfinding.MultiPathFinderImpl;
+import org.arig.robot.system.pathfinding.NoPathFinderImpl;
 import org.arig.robot.system.process.EcranProcess;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,37 +52,37 @@ public class NerellCommonContext {
     @Bean
     public RobotConfig robotConfig(ConvertionRobotUnit conv) {
         return new RobotConfig()
-                .asservTimeMs(INerellConstantesConfig.asservTimeMs)
-                .calageTimeMs(INerellConstantesConfig.calageTimeMs)
-                .i2cReadTimeMs(INerellConstantesConfig.i2cReadTimeMs)
+                .asservTimeMs(NerellConstantesConfig.asservTimeMs)
+                .calageTimeMs(NerellConstantesConfig.calageTimeMs)
+                .i2cReadTimeMs(NerellConstantesConfig.i2cReadTimeMs)
 
-                .pathFindingTailleObstacle(INerellConstantesConfig.pathFindingTailleObstacle)
-                .lidarOffsetPointMm(INerellConstantesConfig.lidarOffsetPointMm)
-                .lidarClusterSizeMm(INerellConstantesConfig.lidarClusterSizeMm)
-                .avoidanceWaitTimeMs(INerellConstantesConfig.avoidanceWaitTimeMs)
-                .pathFindingSeuilProximite(INerellConstantesConfig.pathFindingSeuilProximite)
-                .pathFindingSeuilProximiteSafe(INerellConstantesConfig.pathFindingSeuilProximiteSafe)
-                .pathFindingAngle(INerellConstantesConfig.pathFindingAngle)
-                .pathFindingAngleSafe(INerellConstantesConfig.pathFindingAngleSafe)
+                .pathFindingTailleObstacle(NerellConstantesConfig.pathFindingTailleObstacle)
+                .lidarOffsetPointMm(NerellConstantesConfig.lidarOffsetPointMm)
+                .lidarClusterSizeMm(NerellConstantesConfig.lidarClusterSizeMm)
+                .avoidanceWaitTimeMs(NerellConstantesConfig.avoidanceWaitTimeMs)
+                .pathFindingSeuilProximite(NerellConstantesConfig.pathFindingSeuilProximite)
+                .pathFindingSeuilProximiteSafe(NerellConstantesConfig.pathFindingSeuilProximiteSafe)
+                .pathFindingAngle(NerellConstantesConfig.pathFindingAngle)
+                .pathFindingAngleSafe(NerellConstantesConfig.pathFindingAngleSafe)
 
-                .seuilTensionServos(INerellConstantesConfig.seuilAlimentationServosVolts)
+                .seuilTensionServos(NerellConstantesConfig.seuilAlimentationServosVolts)
                 .seuilTensionMoteurs(0) // Pas de mesure sur Nerell
 
-                .vitesse(INerellConstantesConfig.vitesseMin, INerellConstantesConfig.vitesseMax, 100)
-                .vitesseOrientation(INerellConstantesConfig.vitesseOrientationMin, INerellConstantesConfig.vitesseOrientationMax, 100)
-                .fenetreArretDistance(conv.mmToPulse(INerellConstantesConfig.arretDistanceMm))
-                .fenetreApprocheAvecFreinDistance(conv.mmToPulse(INerellConstantesConfig.approcheAvecFreinDistanceMm))
-                .fenetreApprocheSansFreinDistance(conv.mmToPulse(INerellConstantesConfig.approcheSansFreinDistanceMm))
-                .fenetreArretOrientation(conv.degToPulse(INerellConstantesConfig.arretOrientDeg))
-                .fenetreApprocheAvecFreinOrientation(conv.degToPulse(INerellConstantesConfig.approcheAvecFreinOrientationDeg))
-                .fenetreApprocheSansFreinOrientation(conv.degToPulse(INerellConstantesConfig.approcheSansFreinOrientationDeg))
-                .startAngleDemiTour(conv.degToPulse(INerellConstantesConfig.startAngleDemiTourDeg))
-                .startAngleLimitSpeedDistance(conv.degToPulse(INerellConstantesConfig.startAngleLimitVitesseDistance))
-                .sampleTimeS(INerellConstantesConfig.asservTimeS);
+                .vitesse(NerellConstantesConfig.vitesseMin, NerellConstantesConfig.vitesseMax, 100)
+                .vitesseOrientation(NerellConstantesConfig.vitesseOrientationMin, NerellConstantesConfig.vitesseOrientationMax, 100)
+                .fenetreArretDistance(conv.mmToPulse(NerellConstantesConfig.arretDistanceMm))
+                .fenetreApprocheAvecFreinDistance(conv.mmToPulse(NerellConstantesConfig.approcheAvecFreinDistanceMm))
+                .fenetreApprocheSansFreinDistance(conv.mmToPulse(NerellConstantesConfig.approcheSansFreinDistanceMm))
+                .fenetreArretOrientation(conv.degToPulse(NerellConstantesConfig.arretOrientDeg))
+                .fenetreApprocheAvecFreinOrientation(conv.degToPulse(NerellConstantesConfig.approcheAvecFreinOrientationDeg))
+                .fenetreApprocheSansFreinOrientation(conv.degToPulse(NerellConstantesConfig.approcheSansFreinOrientationDeg))
+                .startAngleDemiTour(conv.degToPulse(NerellConstantesConfig.startAngleDemiTourDeg))
+                .startAngleLimitSpeedDistance(conv.degToPulse(NerellConstantesConfig.startAngleLimitVitesseDistance))
+                .sampleTimeS(NerellConstantesConfig.asservTimeS);
     }
 
     @Bean
-    public IMonitoringWrapper monitoringWrapper(Environment env) {
+    public MonitoringWrapper monitoringWrapper(Environment env) {
         MonitoringJsonWrapper mjw = new MonitoringJsonWrapper();
         mjw.setEnabled(env.getProperty("robot.monitoring.points.enable", Boolean.class, true));
         return mjw;
@@ -90,7 +90,7 @@ public class NerellCommonContext {
 
     @Bean
     public ConvertionRobotUnit convertisseur() {
-        return new ConvertionRobotUnit(INerellConstantesConfig.countPerMm, INerellConstantesConfig.countPerDeg);
+        return new ConvertionRobotUnit(NerellConstantesConfig.countPerMm, NerellConstantesConfig.countPerDeg);
     }
 
     @Bean
@@ -122,40 +122,40 @@ public class NerellCommonContext {
     }
 
     @Bean(name = "pidDistance")
-    public IPidFilter pidDistance() {
+    public PidFilter pidDistance() {
         log.info("Configuration PID Distance");
         SimplePidFilter pid = new SimplePidFilter("distance");
-        pid.setTunings(INerellConstantesConfig.kpDistance, INerellConstantesConfig.kiDistance, INerellConstantesConfig.kdDistance);
+        pid.setTunings(NerellConstantesConfig.kpDistance, NerellConstantesConfig.kiDistance, NerellConstantesConfig.kdDistance);
         return pid;
     }
 
     @Bean(name = "pidOrientation")
-    public IPidFilter pidOrientation() {
+    public PidFilter pidOrientation() {
         log.info("Configuration PID Orientation");
         SimplePidFilter pid = new SimplePidFilter("orientation");
-        pid.setTunings(INerellConstantesConfig.kpOrientation, INerellConstantesConfig.kiOrientation, INerellConstantesConfig.kdOrientation);
+        pid.setTunings(NerellConstantesConfig.kpOrientation, NerellConstantesConfig.kiOrientation, NerellConstantesConfig.kdOrientation);
         return pid;
     }
 
     @Bean(name = "rampDistance")
     public TrapezoidalRampFilter rampDistance() {
         log.info("Configuration TrapezoidalRampFilter Distance");
-        return new TrapezoidalRampFilter("distance", INerellConstantesConfig.asservTimeMs, INerellConstantesConfig.rampAccDistance, INerellConstantesConfig.rampDecDistance, INerellConstantesConfig.gainVitesseRampeDistance);
+        return new TrapezoidalRampFilter("distance", NerellConstantesConfig.asservTimeMs, NerellConstantesConfig.rampAccDistance, NerellConstantesConfig.rampDecDistance, NerellConstantesConfig.gainVitesseRampeDistance);
     }
 
     @Bean(name = "rampOrientation")
     public TrapezoidalRampFilter rampOrientation() {
         log.info("Configuration TrapezoidalRampFilter Orientation");
-        return new TrapezoidalRampFilter("orientation", INerellConstantesConfig.asservTimeMs, INerellConstantesConfig.rampAccOrientation, INerellConstantesConfig.rampDecOrientation, INerellConstantesConfig.gainVitesseRampeOrientation);
+        return new TrapezoidalRampFilter("orientation", NerellConstantesConfig.asservTimeMs, NerellConstantesConfig.rampAccOrientation, NerellConstantesConfig.rampDecOrientation, NerellConstantesConfig.gainVitesseRampeOrientation);
     }
 
     @Bean
-    public IPathFinder pathFinder() {
+    public PathFinder pathFinder() {
         boolean enable = env.getProperty("robot.pathfinding.enable", Boolean.class, true);
 
         if (enable) {
             MultiPathFinderImpl pf = new GameMultiPathFinderImpl();
-            pf.setAlgorithm(INerellConstantesConfig.pathFindingAlgo);
+            pf.setAlgorithm(NerellConstantesConfig.pathFindingAlgo);
             pf.setSaveImages(env.getProperty("robot.pathfinding.saveImages", Boolean.class, true));
             return pf;
         } else {
@@ -169,7 +169,7 @@ public class NerellCommonContext {
     }
 
     @Bean
-    public IRobotGroup robotGroup(Environment env, ThreadPoolExecutor threadPoolTaskExecutor) throws IOException {
+    public RobotGroup robotGroup(Environment env, ThreadPoolExecutor threadPoolTaskExecutor) throws IOException {
         final Integer serverPort = env.getRequiredProperty("robot.server.port", Integer.class);
         final String odinHost = env.getRequiredProperty("odin.socket.host");
         final Integer odinPort = env.getRequiredProperty("odin.socket.port", Integer.class);
@@ -198,10 +198,10 @@ public class NerellCommonContext {
     }
 
     @Bean
-    public ISystemBlockerManager systemBlockerManager(ConvertionRobotUnit conv) {
-        return new SystemBlockerManager(
-                conv.mmToPulse(INerellConstantesConfig.seuilErreurDistanceMm),
-                conv.degToPulse(INerellConstantesConfig.seuilErreurOrientationDeg)
+    public SystemBlockerManager systemBlockerManager(ConvertionRobotUnit conv) {
+        return new SystemBlockerManagerImpl(
+                conv.mmToPulse(NerellConstantesConfig.seuilErreurDistanceMm),
+                conv.degToPulse(NerellConstantesConfig.seuilErreurOrientationDeg)
         );
     }
 }

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * @author gdepuille
  */
 @Slf4j
-public abstract class AbstractI2CManager<D> implements II2CManager {
+public abstract class AbstractI2CManager<D> implements I2CManager {
 
     private boolean status = false;
 
@@ -29,7 +29,7 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
     private final Map<String, I2CManagerDevice<D>> deviceMap = new TreeMap<>();
 
     @Getter(value = AccessLevel.PROTECTED)
-    private final Map<String, II2CMultiplexerDevice> multiplexerDeviceMap = new TreeMap<>();
+    private final Map<String, I2CMultiplexerDevice> multiplexerDeviceMap = new TreeMap<>();
 
     @Override
     public boolean status() {
@@ -141,7 +141,7 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
      * @param multiplexerDevice     Implementation a enregistrer
      */
     @Override
-    public final void registerMultiplexerDevice(String multiplexerDeviceName, II2CMultiplexerDevice multiplexerDevice) {
+    public final void registerMultiplexerDevice(String multiplexerDeviceName, I2CMultiplexerDevice multiplexerDevice) {
         Assert.hasText(multiplexerDeviceName, "Le nom du multiplexeur doit être spécifié");
         Assert.notNull(multiplexerDevice, "Implementation du multiplexeur doit être spécifié");
 
@@ -171,7 +171,7 @@ public abstract class AbstractI2CManager<D> implements II2CManager {
 
     protected void selectMuxIfNecessary(I2CManagerDevice<D> device) {
         if (device.isMultiplexed()) {
-            final II2CMultiplexerDevice mux = getMultiplexerDeviceMap().get(device.multiplexerDeviceName());
+            final I2CMultiplexerDevice mux = getMultiplexerDeviceMap().get(device.multiplexerDeviceName());
             mux.selectChannel(device.multiplexerChannel());
         }
     }

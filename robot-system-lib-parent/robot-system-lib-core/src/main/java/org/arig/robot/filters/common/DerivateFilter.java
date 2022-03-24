@@ -2,10 +2,10 @@ package org.arig.robot.filters.common;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import org.arig.robot.filters.IFilter;
+import org.arig.robot.filters.Filter;
 import org.springframework.util.Assert;
 
-public class DerivateFilter implements IFilter<Double, Double> {
+public class DerivateFilter implements Filter<Double, Double> {
 
     public static final String INITIAL_VALUE_NULL_MESSAGE = "La valeur initial ne peut être null";
 

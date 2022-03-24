@@ -1,10 +1,9 @@
 package org.arig.robot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesConfig;
-import org.arig.robot.model.AbstractRobotStatus;
+import org.arig.robot.constants.ConstantesConfig;
 import org.arig.robot.services.AbstractEnergyService;
-import org.arig.robot.services.IIOService;
+import org.arig.robot.services.IOService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -18,13 +17,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequestMapping(AbstractCapteursController.ROOT_PATH)
-@Profile(IConstantesConfig.profileMonitoring)
+@Profile(ConstantesConfig.profileMonitoring)
 public abstract class AbstractCapteursController implements InitializingBean {
 
     protected static final String ROOT_PATH = "/capteurs";
 
     @Autowired
-    private IIOService ioService;
+    private IOService ioService;
 
     @Autowired
     private AbstractEnergyService energyService;

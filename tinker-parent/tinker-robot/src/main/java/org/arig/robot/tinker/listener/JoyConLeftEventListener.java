@@ -6,13 +6,13 @@ import org.arig.robot.system.gamepad.nintendoswitch.ControllerConstants;
 import org.arig.robot.system.gamepad.nintendoswitch.ControllerEvent;
 import org.arig.robot.system.gamepad.nintendoswitch.ControllerEventListener;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
-import org.arig.robot.tinker.services.IServosServices;
+import org.arig.robot.tinker.services.ServosServices;
 
 @Slf4j
 @RequiredArgsConstructor
 public class JoyConLeftEventListener implements ControllerEventListener {
 
-    private final IServosServices servosServices;
+    private final ServosServices servosServices;
     private final AbstractPropulsionsMotors motors;
 
     @Override

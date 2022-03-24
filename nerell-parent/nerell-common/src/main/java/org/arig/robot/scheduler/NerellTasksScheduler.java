@@ -2,18 +2,18 @@ package org.arig.robot.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
-import org.arig.robot.constants.INerellConstantesConfig;
+import org.arig.robot.constants.NerellConstantesConfig;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.BaliseService;
-import org.arig.robot.services.INerellIOService;
-import org.arig.robot.services.INerellPincesAvantService;
+import org.arig.robot.services.NerellIOService;
+import org.arig.robot.services.NerellPincesAvantService;
 import org.arig.robot.services.NerellEcranService;
-import org.arig.robot.system.avoiding.IAvoidingService;
-import org.arig.robot.system.blockermanager.ISystemBlockerManager;
+import org.arig.robot.system.avoiding.AvoidingService;
+import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -28,13 +28,13 @@ public class NerellTasksScheduler {
     private NerellRobotStatus rs;
 
     @Autowired
-    private IAvoidingService avoidingService;
+    private AvoidingService avoidingService;
 
     @Autowired
-    private INerellIOService ioService;
+    private NerellIOService ioService;
 
     @Autowired
-    private ISystemBlockerManager systemBlockerManager;
+    private SystemBlockerManager systemBlockerManager;
 
     @Autowired
     private NerellEcranService ecranService;
@@ -46,13 +46,12 @@ public class NerellTasksScheduler {
     private AbstractEnergyService energyService;
 
     @Autowired
-    private INerellPincesAvantService pincesAvant;
+    private NerellPincesAvantService pincesAvant;
 
-
-    private StopWatch timerLectureCouleur = new StopWatch();
+    private final StopWatch timerLectureCouleur = new StopWatch();
 
     private final SignalEdgeFilter risingEnablePinces = new SignalEdgeFilter(false, Type.RISING);
-    private final ChangeFilter<Boolean> changeModeForce = new ChangeFilter<Boolean>(false);
+    private final ChangeFilter<Boolean> changeModeForce = new ChangeFilter<>(false);
     private final SignalEdgeFilter fallingEnablePinces = new SignalEdgeFilter(false, Type.FALLING);
 
     @Scheduled(fixedRate = 1000)
@@ -119,7 +118,7 @@ public class NerellTasksScheduler {
                 timerLectureCouleur.start();
             }
 
-            if (timerLectureCouleur.getTime(TimeUnit.MILLISECONDS) > INerellConstantesConfig.TIME_BEFORE_READ_COLOR) {
+            if (timerLectureCouleur.getTime(TimeUnit.MILLISECONDS) > NerellConstantesConfig.TIME_BEFORE_READ_COLOR) {
                 timerLectureCouleur.reset();
                 pincesAvant.processCouleur();
             }

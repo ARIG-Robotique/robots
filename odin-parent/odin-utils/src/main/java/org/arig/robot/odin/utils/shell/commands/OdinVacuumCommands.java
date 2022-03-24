@@ -3,7 +3,7 @@ package org.arig.robot.odin.utils.shell.commands;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.services.AbstractEnergyService;
-import org.arig.robot.services.IOdinIOService;
+import org.arig.robot.services.OdinIOService;
 import org.arig.robot.system.vacuum.ARIGVacuumController;
 import org.arig.robot.system.vacuum.VacuumPumpState;
 import org.arig.robot.utils.ThreadUtils;
@@ -19,7 +19,7 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 @RequiredArgsConstructor
 public class OdinVacuumCommands {
 
-    private final IOdinIOService ioService;
+    private final OdinIOService ioService;
     private final AbstractEnergyService energyService;
     private final ARIGVacuumController vacuumController;
 

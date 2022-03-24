@@ -1,7 +1,7 @@
 package org.arig.robot.system.capteurs;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.II2CManager;
+import org.arig.robot.communication.I2CManager;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.capteurs.AlimentationSensorValue;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public abstract class AbstractAlimentationSensor implements IAlimentationSensor 
     private static final byte COMMAND_GET_DATA = 'g';
 
     @Autowired
-    protected II2CManager i2cManager;
+    protected I2CManager i2cManager;
 
     protected final String deviceName;
 

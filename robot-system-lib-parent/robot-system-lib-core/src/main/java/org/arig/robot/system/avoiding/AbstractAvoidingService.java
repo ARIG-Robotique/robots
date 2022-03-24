@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 @Slf4j
-public abstract class AbstractAvoidingService implements IAvoidingService {
+public abstract class AbstractAvoidingService implements AvoidingService {
 
     @Autowired
     protected TrajectoryManager trajectoryManager;

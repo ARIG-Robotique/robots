@@ -21,7 +21,7 @@ public class SimplePidIntegralLimitTest extends AbstractPidTest {
     private SimplePidFilter pid;
 
     @Override
-    protected IPidFilter pid() {
+    protected PidFilter pid() {
         return pid;
     }
 

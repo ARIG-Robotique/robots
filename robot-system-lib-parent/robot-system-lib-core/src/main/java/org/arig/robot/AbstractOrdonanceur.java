@@ -3,8 +3,8 @@ package org.arig.robot;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.arig.robot.communication.II2CManager;
-import org.arig.robot.constants.IConstantesConfig;
+import org.arig.robot.communication.I2CManager;
+import org.arig.robot.constants.ConstantesConfig;
 import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.exception.NoPathFoundException;
@@ -14,17 +14,17 @@ import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
-import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractEcranService;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.AbstractServosService;
-import org.arig.robot.services.IIOService;
+import org.arig.robot.services.IOService;
 import org.arig.robot.services.TrajectoryManager;
-import org.arig.robot.system.avoiding.IAvoidingService;
+import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
-import org.arig.robot.system.group.IRobotGroup;
-import org.arig.robot.system.pathfinding.IPathFinder;
+import org.arig.robot.system.group.RobotGroup;
+import org.arig.robot.system.pathfinding.PathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
 import org.arig.robot.utils.ThreadUtils;
@@ -57,37 +57,37 @@ public abstract class AbstractOrdonanceur {
     protected AbstractEnergyService energyService;
 
     @Autowired
-    protected IIOService io;
+    protected IOService io;
 
     @Autowired
     protected AbstractServosService servos;
 
     @Autowired
-    protected II2CManager i2CManager;
+    protected I2CManager i2CManager;
 
     @Autowired
     protected TrajectoryManager mv;
 
     @Autowired
-    protected IPathFinder pathFinder;
+    protected PathFinder pathFinder;
 
     @Autowired
     protected ConvertionRobotUnit conv;
 
     @Autowired
-    protected IMonitoringWrapper monitoringWrapper;
+    protected MonitoringWrapper monitoringWrapper;
 
     @Autowired
     protected ILidarTelemeter lidar;
 
     @Autowired
-    protected IRobotGroup group;
+    protected RobotGroup group;
 
     @Autowired
     protected TableUtils tableUtils;
 
     @Autowired
-    protected IAvoidingService avoidingService;
+    protected AvoidingService avoidingService;
 
     @Autowired
     protected AbstractEcranService ecranService;
@@ -378,8 +378,8 @@ public abstract class AbstractOrdonanceur {
         ecranService.displayMessage("FIN - Sauvegarde télémétrie");
         monitoringWrapper.save();
         final LocalDateTime stopOrdonnanceur = LocalDateTime.now();
-        final File execFile = new File("./logs/" + System.getProperty(IConstantesConfig.keyExecutionId) + ".exec");
-        DateTimeFormatter savePattern = DateTimeFormatter.ofPattern(IConstantesConfig.executiondDateFormat);
+        final File execFile = new File("./logs/" + System.getProperty(ConstantesConfig.keyExecutionId) + ".exec");
+        DateTimeFormatter savePattern = DateTimeFormatter.ofPattern(ConstantesConfig.executiondDateFormat);
         List<String> lines = new ArrayList<>();
         lines.add(startOrdonnanceur.format(savePattern));
         lines.add(stopOrdonnanceur.format(savePattern));
@@ -412,10 +412,10 @@ public abstract class AbstractOrdonanceur {
     }
 
     protected void startMonitoring() {
-        launchExecId = System.getProperty(IConstantesConfig.keyExecutionId);
+        launchExecId = System.getProperty(ConstantesConfig.keyExecutionId);
 
-        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(IConstantesConfig.executiondIdFormat));
-        System.setProperty(IConstantesConfig.keyExecutionId, execId);
+        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
+        System.setProperty(ConstantesConfig.keyExecutionId, execId);
         robotStatus.enableForceMonitoring();
         monitoringWrapper.cleanAllPoints();
     }
@@ -425,11 +425,11 @@ public abstract class AbstractOrdonanceur {
         monitoringWrapper.save();
         robotStatus.disableForceMonitoring();
 
-        final String execId = System.getProperty(IConstantesConfig.keyExecutionId);
+        final String execId = System.getProperty(ConstantesConfig.keyExecutionId);
 
         final File execFile = new File("./logs/" + execId + ".exec");
-        DateTimeFormatter execIdPattern = DateTimeFormatter.ofPattern(IConstantesConfig.executiondIdFormat);
-        DateTimeFormatter savePattern = DateTimeFormatter.ofPattern(IConstantesConfig.executiondDateFormat);
+        DateTimeFormatter execIdPattern = DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat);
+        DateTimeFormatter savePattern = DateTimeFormatter.ofPattern(ConstantesConfig.executiondDateFormat);
         List<String> lines = new ArrayList<>();
         lines.add(LocalDateTime.parse(execId, execIdPattern).format(savePattern));
         lines.add(LocalDateTime.now().format(savePattern));
@@ -437,6 +437,6 @@ public abstract class AbstractOrdonanceur {
 
         log.info("Création du fichier de fin d'exécution {}", execFile.getAbsolutePath());
 
-        System.setProperty(IConstantesConfig.keyExecutionId, launchExecId);
+        System.setProperty(ConstantesConfig.keyExecutionId, launchExecId);
     }
 }

@@ -1,7 +1,7 @@
 package org.arig.robot.config.spring;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.INerellConstantesConfig;
+import org.arig.robot.constants.NerellConstantesConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,6 +17,6 @@ public class NerellCommonAsyncContext {
 
     @Bean
     public ThreadPoolExecutor threadPoolTaskExecutor() {
-        return (ThreadPoolExecutor) Executors.newFixedThreadPool(INerellConstantesConfig.nbThreadAsyncExecutor);
+        return (ThreadPoolExecutor) Executors.newFixedThreadPool(NerellConstantesConfig.nbThreadAsyncExecutor);
     }
 }

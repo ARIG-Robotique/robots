@@ -2,7 +2,7 @@ package org.arig.robot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.OdinRobotStatus;
-import org.arig.robot.services.IOdinIOService;
+import org.arig.robot.services.OdinIOService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,7 +14,7 @@ public class OdinCapteursController extends AbstractCapteursController {
     private OdinRobotStatus rs;
 
     @Autowired
-    private IOdinIOService ioService;
+    private OdinIOService ioService;
 
     @Override
     public void afterPropertiesSet() throws Exception {

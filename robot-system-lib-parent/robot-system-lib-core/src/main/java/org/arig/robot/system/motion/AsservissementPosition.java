@@ -1,7 +1,7 @@
 package org.arig.robot.system.motion;
 
 import lombok.AllArgsConstructor;
-import org.arig.robot.filters.pid.IPidFilter;
+import org.arig.robot.filters.pid.PidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.CommandeAsservissementPosition;
 import org.arig.robot.system.encoders.AbstractEncoder;
@@ -13,7 +13,7 @@ public class AsservissementPosition implements IAsservissement {
 
     private AbstractEncoder encoder;
 
-    private final IPidFilter pid;
+    private final PidFilter pid;
 
     private final TrapezoidalRampFilter ramp;
 

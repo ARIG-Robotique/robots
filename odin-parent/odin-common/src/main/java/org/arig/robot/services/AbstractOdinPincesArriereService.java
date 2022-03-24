@@ -1,6 +1,6 @@
 package org.arig.robot.services;
 
-import org.arig.robot.model.ECouleur;
+import org.arig.robot.model.Couleur;
 
 public abstract class AbstractOdinPincesArriereService extends AbstractOdinPincesService {
 
@@ -30,7 +30,7 @@ public abstract class AbstractOdinPincesArriereService extends AbstractOdinPince
     }
 
     @Override
-    protected ECouleur[] currentState() {
+    protected Couleur[] currentState() {
         return rs.pincesArriere();
     }
 
@@ -48,17 +48,17 @@ public abstract class AbstractOdinPincesArriereService extends AbstractOdinPince
     }
 
     @Override
-    protected void register(int index, ECouleur couleur) {
+    protected void register(int index, Couleur couleur) {
         rs.pinceArriere(index, couleur);
     }
 
     @Override
-    protected ECouleur getCouleur(int index) {
+    protected Couleur getCouleur(int index) {
         // @formatter:off
         switch (index) {
             case 0: return io.couleurArriereGauche();
             case 1: return io.couleurArriereDroit();
-            default: return ECouleur.INCONNU;
+            default: return Couleur.INCONNU;
         }
         // @formatter:on
     }

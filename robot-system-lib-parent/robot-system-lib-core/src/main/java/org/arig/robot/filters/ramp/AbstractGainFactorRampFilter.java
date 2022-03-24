@@ -6,7 +6,7 @@ import org.arig.robot.filters.common.ProportionalFilter;
 import java.util.Map;
 
 @Slf4j
-public abstract class AbstractGainFactorRampFilter extends AbstractRampFilter implements IGainFactorRampFilter {
+public abstract class AbstractGainFactorRampFilter extends AbstractRampFilter implements GainFactorRampFilter {
 
     private final ProportionalFilter gain = new ProportionalFilter(1d);
 

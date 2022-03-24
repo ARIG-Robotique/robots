@@ -1,6 +1,6 @@
 package org.arig.robot.config.spring;
 
-import org.arig.robot.constants.IConstantesConfig;
+import org.arig.robot.constants.ConstantesConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -12,8 +12,8 @@ public class NerellUtils {
 
     public static void main(String ... args) {
         // Définition d'un ID unique pour le nommage des fichiers
-        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(IConstantesConfig.executiondIdFormat));
-        System.setProperty(IConstantesConfig.keyExecutionId, execId);
+        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
+        System.setProperty(ConstantesConfig.keyExecutionId, execId);
 
         SpringApplication.run(NerellUtils.class, args);
     }

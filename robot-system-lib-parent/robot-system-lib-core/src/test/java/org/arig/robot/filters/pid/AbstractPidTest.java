@@ -4,8 +4,8 @@ import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesConfig;
-import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.constants.ConstantesConfig;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,16 +23,16 @@ import java.util.UUID;
 public abstract class AbstractPidTest {
 
     @Autowired
-    private IMonitoringWrapper monitoringWrapper;
+    private MonitoringWrapper monitoringWrapper;
 
     @Setter(value = AccessLevel.PROTECTED)
     private boolean hasIntegralLimiter = false;
 
-    protected abstract IPidFilter pid();
+    protected abstract PidFilter pid();
 
     @BeforeEach
     public void before() {
-        System.setProperty(IConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
+        System.setProperty(ConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
         monitoringWrapper.cleanAllPoints();
         pid().reset();
         hasIntegralLimiter = false;

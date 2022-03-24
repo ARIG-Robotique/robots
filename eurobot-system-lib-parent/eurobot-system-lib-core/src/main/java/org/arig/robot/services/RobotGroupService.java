@@ -2,11 +2,11 @@ package org.arig.robot.services;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.EStatusEvent;
-import org.arig.robot.model.EStrategy;
-import org.arig.robot.model.ETeam;
+import org.arig.robot.model.StatusEvent;
+import org.arig.robot.model.Strategy;
+import org.arig.robot.model.Team;
 import org.arig.robot.model.EurobotStatus;
-import org.arig.robot.system.group.IRobotGroup;
+import org.arig.robot.system.group.RobotGroup;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +18,13 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 @Slf4j
 @Service
-public class RobotGroupService implements InitializingBean, IRobotGroup.Handler {
+public class RobotGroupService implements InitializingBean, RobotGroup.Handler {
 
     @Autowired
     private EurobotStatus rs;
 
     @Autowired
-    private IRobotGroup group;
+    private RobotGroup group;
 
     @Autowired
     private ThreadPoolExecutor threadPoolTaskExecutor;
@@ -48,7 +48,7 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
 
     @Override
     public void handle(int eventOrdinal, byte[] value) {
-        switch (EStatusEvent.values()[eventOrdinal]) {
+        switch (StatusEvent.values()[eventOrdinal]) {
             case CALAGE:
                 calage = true;
                 break;
@@ -62,10 +62,10 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
                 start = true;
                 break;
             case TEAM:
-                rs.setTeam(ETeam.values()[value[0]]);
+                rs.setTeam(Team.values()[value[0]]);
                 break;
             case STRATEGY:
-                rs.strategy(EStrategy.values()[value[0]]);
+                rs.strategy(Strategy.values()[value[0]]);
                 break;
             case CONFIG:
                 rs.option1(value[0] > 0);
@@ -84,18 +84,18 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
     @Override
     public void setCurrentAction(String name) {
         if (name == null) {
-            sendEvent(EStatusEvent.CURRENT_ACTION);
+            sendEvent(StatusEvent.CURRENT_ACTION);
         } else {
-            sendEvent(EStatusEvent.CURRENT_ACTION, name.getBytes(StandardCharsets.UTF_8));
+            sendEvent(StatusEvent.CURRENT_ACTION, name.getBytes(StandardCharsets.UTF_8));
         }
     }
 
     public void calage() {
-        sendEvent(EStatusEvent.CALAGE);
+        sendEvent(StatusEvent.CALAGE);
     }
 
     public void initStep(int step) {
-        sendEvent(EStatusEvent.INIT, new byte[]{(byte) step});
+        sendEvent(StatusEvent.INIT, new byte[]{(byte) step});
     }
 
     public void waitInitStep(int step) {
@@ -105,21 +105,21 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
     }
 
     public void ready() {
-        sendEvent(EStatusEvent.READY);
+        sendEvent(StatusEvent.READY);
     }
 
     public void start() {
-        sendEvent(EStatusEvent.START);
+        sendEvent(StatusEvent.START);
     }
 
-    public void team(ETeam team) {
+    public void team(Team team) {
         rs.setTeam(team);
-        sendEvent(EStatusEvent.TEAM, team);
+        sendEvent(StatusEvent.TEAM, team);
     }
 
-    public void strategy(EStrategy strategy) {
+    public void strategy(Strategy strategy) {
         rs.strategy(strategy);
-        sendEvent(EStatusEvent.STRATEGY, strategy);
+        sendEvent(StatusEvent.STRATEGY, strategy);
     }
 
     public void configuration() {
@@ -127,18 +127,18 @@ public class RobotGroupService implements InitializingBean, IRobotGroup.Handler 
                 (byte) (rs.option1() ? 1 : 0),
                 (byte) (rs.option2() ? 1 : 0)
         };
-        sendEvent(EStatusEvent.CONFIG, data);
+        sendEvent(StatusEvent.CONFIG, data);
     }
 
-    private void sendEvent(EStatusEvent event) {
+    private void sendEvent(StatusEvent event) {
         sendEvent(event, new byte[]{});
     }
 
-    private <E extends Enum<E>> void sendEvent(EStatusEvent event, E value) {
+    private <E extends Enum<E>> void sendEvent(StatusEvent event, E value) {
         sendEvent(event, new byte[]{(byte) value.ordinal()});
     }
 
-    private void sendEvent(EStatusEvent event, byte[] data) {
+    private void sendEvent(StatusEvent event, byte[] data) {
         CompletableFuture.runAsync(() -> {
             group.sendEventLog(event, data);
         }, threadPoolTaskExecutor);

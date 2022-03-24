@@ -1,8 +1,8 @@
 package org.arig.robot.filters.ramp;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesConfig;
-import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.constants.ConstantesConfig;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,13 +22,13 @@ import java.util.concurrent.TimeUnit;
 public abstract class AbstractRampTest {
 
     @Autowired
-    private IMonitoringWrapper monitoringWrapper;
+    private MonitoringWrapper monitoringWrapper;
 
     protected abstract AbstractRampFilter getFiltre();
 
     @BeforeEach
     public void before() {
-        System.setProperty(IConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
+        System.setProperty(ConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
         monitoringWrapper.cleanAllPoints();
 
         getFiltre().reset();

@@ -2,11 +2,11 @@ package org.arig.robot.filters.common;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import org.arig.robot.filters.IFilter;
+import org.arig.robot.filters.Filter;
 
 import java.util.Objects;
 
-public class ChangeFilter<T> implements IFilter<T, Boolean> {
+public class ChangeFilter<T> implements Filter<T, Boolean> {
 
     private final T initial;
 

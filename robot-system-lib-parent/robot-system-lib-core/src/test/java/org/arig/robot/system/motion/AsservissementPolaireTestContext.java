@@ -1,13 +1,13 @@
 package org.arig.robot.system.motion;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.filters.pid.IPidFilter;
+import org.arig.robot.filters.pid.PidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.TestRobotStatus;
-import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -58,7 +58,7 @@ public class AsservissementPolaireTestContext {
     }
 
     @Bean(name = "pidDistance")
-    public IPidFilter pidDistance() {
+    public PidFilter pidDistance() {
         log.info("Configuration PID Distance");
         SimplePidFilter pid = new SimplePidFilter("distance");
         pid.setTunings(KP, KI, KD);
@@ -66,7 +66,7 @@ public class AsservissementPolaireTestContext {
     }
 
     @Bean(name = "pidOrientation")
-    public IPidFilter pidOrientation() {
+    public PidFilter pidOrientation() {
         log.info("Configuration PID Orientation");
         SimplePidFilter pid = new SimplePidFilter("orientation");
         pid.setTunings(KP, KI, KD);
@@ -74,7 +74,7 @@ public class AsservissementPolaireTestContext {
     }
 
     @Bean(name = "pidMoteurDroit")
-    public IPidFilter pidMoteurDroit() {
+    public PidFilter pidMoteurDroit() {
         log.info("Configuration PID moteur droit");
         SimplePidFilter pid = new SimplePidFilter("pid_mot_droit");
         pid.setTunings(KP, KI, KD);
@@ -82,7 +82,7 @@ public class AsservissementPolaireTestContext {
     }
 
     @Bean(name = "pidMoteurGauche")
-    public IPidFilter pidMoteurGauche() {
+    public PidFilter pidMoteurGauche() {
         log.info("Configuration PID moteur gauche");
         SimplePidFilter pid = new SimplePidFilter("pid_mot_gauche");
         pid.setTunings(KP, KI, KD);
@@ -102,7 +102,7 @@ public class AsservissementPolaireTestContext {
     }
 
     @Bean
-    public IMonitoringWrapper monitoringWrapper() {
+    public MonitoringWrapper monitoringWrapper() {
         return new MonitoringJsonWrapper();
     }
 }

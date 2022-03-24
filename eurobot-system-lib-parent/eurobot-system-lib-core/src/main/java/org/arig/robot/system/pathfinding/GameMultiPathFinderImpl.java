@@ -2,7 +2,6 @@ package org.arig.robot.system.pathfinding;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.EurobotStatus;
-import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 

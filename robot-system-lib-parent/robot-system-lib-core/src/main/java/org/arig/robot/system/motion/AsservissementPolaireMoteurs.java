@@ -1,11 +1,11 @@
 package org.arig.robot.system.motion;
 
-import org.arig.robot.filters.pid.IPidFilter;
+import org.arig.robot.filters.pid.PidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
-import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 public class AsservissementPolaireMoteurs implements IAsservissementPolaire {
 
     @Autowired
-    protected IMonitoringWrapper monitoringWrapper;
+    protected MonitoringWrapper monitoringWrapper;
 
     @Autowired
     private CommandeRobot cmdRobot;
@@ -28,11 +28,11 @@ public class AsservissementPolaireMoteurs implements IAsservissementPolaire {
 
     @Autowired
     @Qualifier("pidMoteurDroit")
-    private IPidFilter pidMoteurDroit;
+    private PidFilter pidMoteurDroit;
 
     @Autowired
     @Qualifier("pidMoteurGauche")
-    private IPidFilter pidMoteurGauche;
+    private PidFilter pidMoteurGauche;
 
     @Autowired
     @Qualifier("rampDistance")

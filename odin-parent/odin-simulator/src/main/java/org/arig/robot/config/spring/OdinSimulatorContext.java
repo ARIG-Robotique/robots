@@ -3,7 +3,7 @@ package org.arig.robot.config.spring;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.arig.robot.communication.I2CManagerDevice;
-import org.arig.robot.communication.II2CManager;
+import org.arig.robot.communication.I2CManager;
 import org.arig.robot.communication.bouchon.BouchonI2CManager;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.RobotName;
@@ -11,7 +11,7 @@ import org.arig.robot.model.bouchon.BouchonEncoderValues;
 import org.arig.robot.model.bouchon.BouchonI2CDevice;
 import org.arig.robot.model.bouchon.BouchonI2CMultiplexer;
 import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
-import org.arig.robot.system.avoiding.IAvoidingService;
+import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
@@ -45,7 +45,7 @@ public class OdinSimulatorContext {
     }
 
     @Bean
-    public II2CManager i2cManager() throws I2CException {
+    public I2CManager i2cManager() throws I2CException {
         final BouchonI2CManager manager = new BouchonI2CManager();
         BouchonI2CDevice simpleMultiplexerI2C = new BouchonI2CDevice().address(0x10);
         BouchonI2CDevice simpleDevice = new BouchonI2CDevice().address(0x12);
@@ -106,7 +106,7 @@ public class OdinSimulatorContext {
     }
 
     @Bean
-    public IAvoidingService avoidingService() {
+    public AvoidingService avoidingService() {
         return new AvoidingServiceBouchon();
     }
 }

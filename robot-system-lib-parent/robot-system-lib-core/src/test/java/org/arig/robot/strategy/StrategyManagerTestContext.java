@@ -9,10 +9,10 @@ import org.arig.robot.strategy.actions.InvalidWhenNotRunAfter10SecondsAndComplet
 import org.arig.robot.strategy.actions.OneShotAction;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.LidarTelemeterMock;
-import org.arig.robot.system.group.IRobotGroup;
+import org.arig.robot.system.group.RobotGroup;
 import org.arig.robot.system.group.RobotGroupTest;
-import org.arig.robot.system.pathfinding.IPathFinder;
-import org.arig.robot.system.pathfinding.impl.NoPathFinderImpl;
+import org.arig.robot.system.pathfinding.PathFinder;
+import org.arig.robot.system.pathfinding.NoPathFinderImpl;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.context.annotation.Bean;
@@ -35,7 +35,7 @@ public class StrategyManagerTestContext {
     }
 
     @Bean
-    public IRobotGroup robotGroup() {
+    public RobotGroup robotGroup() {
         return new RobotGroupTest();
     }
 
@@ -65,7 +65,7 @@ public class StrategyManagerTestContext {
     }
 
     @Bean
-    public IPathFinder pathFinder() {
+    public PathFinder pathFinder() {
         return new NoPathFinderImpl();
     }
 
@@ -75,12 +75,12 @@ public class StrategyManagerTestContext {
     }
 
     @Bean
-    public IAction oneShotAction() {
+    public Action oneShotAction() {
         return new OneShotAction();
     }
 
     @Bean
-    public IAction invalidDuring10Seconds() {
+    public Action invalidDuring10Seconds() {
         return new InvalidWhenNotRunAfter10SecondsAndCompletedAfter2ExecutionAction();
     }
 }

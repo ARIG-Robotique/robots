@@ -2,7 +2,7 @@ package org.arig.robot.monitoring;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesConfig;
+import org.arig.robot.constants.ConstantesConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
@@ -37,7 +37,7 @@ public class MonitoringJsonWrapper extends AbstractMonitoringWrapper {
         }
 
         try {
-            final String fileName = env.getRequiredProperty(IConstantesConfig.keyExecutionId) + "-mouvement.json";
+            final String fileName = env.getRequiredProperty(ConstantesConfig.keyExecutionId) + "-mouvement.json";
             final File f = new File(saveDirectory, fileName);
             final ObjectMapper om = new ObjectMapper();
             log.info("Enregistrement de {} points de mouvement dans le fichier {}", monitorMouvementPoints().size(), f.getAbsolutePath());
@@ -56,7 +56,7 @@ public class MonitoringJsonWrapper extends AbstractMonitoringWrapper {
         }
 
         try {
-            final String fileName = env.getRequiredProperty(IConstantesConfig.keyExecutionId) + "-timeseries.json";
+            final String fileName = env.getRequiredProperty(ConstantesConfig.keyExecutionId) + "-timeseries.json";
             final File f = new File(saveDirectory, fileName);
             final ObjectMapper om = new ObjectMapper();
             log.info("Enregistrement de {} points time serie dans le fichier {}", monitorTimeSeriePoints().size(), f.getAbsolutePath());

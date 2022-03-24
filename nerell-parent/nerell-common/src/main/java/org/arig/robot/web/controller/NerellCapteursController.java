@@ -2,7 +2,7 @@ package org.arig.robot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.NerellRobotStatus;
-import org.arig.robot.services.INerellIOService;
+import org.arig.robot.services.NerellIOService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,7 +14,7 @@ public class NerellCapteursController extends AbstractCapteursController {
     private NerellRobotStatus robotStatus;
 
     @Autowired
-    private INerellIOService ioService;
+    private NerellIOService ioService;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -39,5 +39,6 @@ public class NerellCapteursController extends AbstractCapteursController {
         numeriqueInfos.put("Presence ventouse haut", ioService::presenceVentouseHaut);
 
         textInfos.put("Equipe", () -> (robotStatus.team() != null) ? robotStatus.team().name() : "???");
+        textInfos.put("Carre fouille", () -> "???");
     }
 }

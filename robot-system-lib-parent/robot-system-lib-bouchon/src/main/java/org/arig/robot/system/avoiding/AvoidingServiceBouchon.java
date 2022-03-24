@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * TODO à reprendre pour faire des tests, vielle implémentation supprimée
  */
 @Slf4j
-public class AvoidingServiceBouchon implements IAvoidingService {
+public class AvoidingServiceBouchon implements AvoidingService {
 
     @Autowired
     private LidarService lidarService;

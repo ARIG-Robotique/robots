@@ -1,9 +1,9 @@
 package org.arig.robot.system.motion;
 
 import lombok.SneakyThrows;
-import org.arig.robot.constants.IConstantesConfig;
+import org.arig.robot.constants.ConstantesConfig;
 import org.arig.robot.model.CommandeRobot;
-import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,11 +28,11 @@ public class AsservissementPolaireTest {
     private CommandeRobot cmdRobot;
 
     @Autowired
-    private IMonitoringWrapper monitoringWrapper;
+    private MonitoringWrapper monitoringWrapper;
 
     @BeforeEach
     public void before() {
-        System.setProperty(IConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
+        System.setProperty(ConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
         monitoringWrapper.cleanAllPoints();
     }
 

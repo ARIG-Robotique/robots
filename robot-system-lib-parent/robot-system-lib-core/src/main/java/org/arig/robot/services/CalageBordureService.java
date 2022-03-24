@@ -16,7 +16,7 @@ public class CalageBordureService {
     private TrajectoryManager trajectoryManager;
 
     @Autowired
-    private IIOService ioService;
+    private IOService ioService;
 
     @Autowired
     private AbstractRobotStatus rs;

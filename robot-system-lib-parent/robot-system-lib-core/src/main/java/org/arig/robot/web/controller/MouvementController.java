@@ -1,7 +1,7 @@
 package org.arig.robot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesConfig;
+import org.arig.robot.constants.ConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.AbstractRobotStatus;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/mouvement")
-@Profile(IConstantesConfig.profileMonitoring)
+@Profile(ConstantesConfig.profileMonitoring)
 public class MouvementController {
 
     @Autowired

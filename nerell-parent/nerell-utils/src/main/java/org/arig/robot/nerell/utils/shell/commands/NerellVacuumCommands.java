@@ -2,7 +2,7 @@ package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.arig.robot.services.AbstractEnergyService;
-import org.arig.robot.services.INerellIOService;
+import org.arig.robot.services.NerellIOService;
 import org.arig.robot.system.vacuum.ARIGVacuumController;
 import org.arig.robot.system.vacuum.VacuumPumpState;
 import org.springframework.shell.Availability;
@@ -16,7 +16,7 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 @RequiredArgsConstructor
 public class NerellVacuumCommands {
 
-    private final INerellIOService ioService;
+    private final NerellIOService ioService;
     private final AbstractEnergyService energyService;
     private final ARIGVacuumController vacuumController;
 

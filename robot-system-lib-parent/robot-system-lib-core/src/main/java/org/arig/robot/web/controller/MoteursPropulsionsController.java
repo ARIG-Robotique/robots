@@ -1,7 +1,7 @@
 package org.arig.robot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesConfig;
+import org.arig.robot.constants.ConstantesConfig;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -20,7 +20,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/moteurs/propulsion")
-@Profile(IConstantesConfig.profileMonitoring)
+@Profile(ConstantesConfig.profileMonitoring)
 public class MoteursPropulsionsController {
 
     @Autowired

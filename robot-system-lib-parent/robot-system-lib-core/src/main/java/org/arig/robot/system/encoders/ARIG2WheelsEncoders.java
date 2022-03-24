@@ -1,7 +1,7 @@
 package org.arig.robot.system.encoders;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.II2CManager;
+import org.arig.robot.communication.I2CManager;
 import org.arig.robot.exception.I2CException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,7 +17,7 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
     private final String deviceNameGauche;
 
     @Autowired
-    private II2CManager i2cManager;
+    private I2CManager i2cManager;
 
     public ARIG2WheelsEncoders(final String deviceNameGauche, final String deviceNameDroit) {
         super("two_wheels_encoders");

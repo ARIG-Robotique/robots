@@ -5,6 +5,6 @@ package org.arig.robot.communication;
  *
  * @author gdepuille
  */
-public abstract class AbstractRs232Manager<D> implements IRs232Manager {
+public abstract class AbstractRs232Manager<D> implements Rs232Manager {
 
 }

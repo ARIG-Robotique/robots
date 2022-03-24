@@ -3,16 +3,16 @@ package org.arig.robot.filters.chain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import org.arig.robot.filters.IFilter;
+import org.arig.robot.filters.Filter;
 import org.springframework.util.Assert;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class AbstractChainFilter<T> implements IFilter<T, T> {
+public abstract class AbstractChainFilter<T> implements Filter<T, T> {
 
     @Getter(AccessLevel.PROTECTED)
-    private final List<IFilter<T, T>> filters = new LinkedList<>();
+    private final List<Filter<T, T>> filters = new LinkedList<>();
 
     @Getter
     @Accessors(fluent = true)
@@ -20,7 +20,7 @@ public abstract class AbstractChainFilter<T> implements IFilter<T, T> {
 
     protected abstract T doFilter(T value);
 
-    public void addFilter(IFilter<T, T> filter) {
+    public void addFilter(Filter<T, T> filter) {
         filters.add(filter);
     }
 
@@ -33,6 +33,6 @@ public abstract class AbstractChainFilter<T> implements IFilter<T, T> {
 
     @Override
     public final void reset() {
-        filters.forEach(IFilter::reset);
+        filters.forEach(Filter::reset);
     }
 }

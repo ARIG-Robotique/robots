@@ -2,7 +2,7 @@ package org.arig.robot.services;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IEurobotConfig;
+import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.ecran.EcranParams;
 import org.arig.robot.model.ecran.EcranState;
@@ -23,8 +23,8 @@ public class OdinEcranService extends EcranService {
             stateInfos.setTeam(rs.team());
             stateInfos.setStrategy(rs.strategy());
             stateInfos.setOptions(ImmutableMap.of(
-                    IEurobotConfig.OPTION_1, rs.option1(),
-                    IEurobotConfig.OPTION_2, rs.option2()
+                    EurobotConfig.OPTION_1, rs.option1(),
+                    EurobotConfig.OPTION_2, rs.option2()
             ));
         }
     }

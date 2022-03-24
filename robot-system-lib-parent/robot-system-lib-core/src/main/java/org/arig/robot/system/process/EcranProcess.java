@@ -2,7 +2,7 @@ package org.arig.robot.system.process;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesConfig;
+import org.arig.robot.constants.ConstantesConfig;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -31,7 +31,7 @@ public class EcranProcess implements InitializingBean, DisposableBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        if (System.getProperty(IConstantesConfig.disableEcran) != null) {
+        if (System.getProperty(ConstantesConfig.disableEcran) != null) {
             log.info("Le démarrage de l'écran est désactivé");
             return;
         }

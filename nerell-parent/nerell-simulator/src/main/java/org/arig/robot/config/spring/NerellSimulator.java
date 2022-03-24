@@ -2,10 +2,10 @@ package org.arig.robot.config.spring;
 
 import lombok.SneakyThrows;
 import org.arig.robot.NerellOrdonanceur;
-import org.arig.robot.constants.IConstantesConfig;
-import org.arig.robot.constants.INerellConstantesConfig;
-import org.arig.robot.filters.pid.IPidFilter;
-import org.arig.robot.filters.ramp.IGainFactorRampFilter;
+import org.arig.robot.constants.ConstantesConfig;
+import org.arig.robot.constants.NerellConstantesConfig;
+import org.arig.robot.filters.pid.PidFilter;
+import org.arig.robot.filters.ramp.GainFactorRampFilter;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
 import org.springframework.boot.SpringApplication;
@@ -21,24 +21,24 @@ public class NerellSimulator {
     @SneakyThrows
     public static void main(final String[] args) {
         // Définition d'un ID unique pour le nommage des fichiers
-        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(IConstantesConfig.executiondIdFormat));
-        System.setProperty(IConstantesConfig.keyExecutionId, execId);
+        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
+        System.setProperty(ConstantesConfig.keyExecutionId, execId);
 
         ConfigurableApplicationContext context = SpringApplication.run(NerellSimulator.class, args);
         NerellRobotStatus rs = context.getBean(NerellRobotStatus.class);
         rs.simulateur(true);
 
-        IGainFactorRampFilter rampDistance = context.getBean("rampDistance", IGainFactorRampFilter.class);
-        rampDistance.setGain(INerellConstantesConfig.gainVitesseRampeDistanceSimulateur);
+        GainFactorRampFilter rampDistance = context.getBean("rampDistance", GainFactorRampFilter.class);
+        rampDistance.setGain(NerellConstantesConfig.gainVitesseRampeDistanceSimulateur);
 
-        IGainFactorRampFilter rampOrientation = context.getBean("rampOrientation", IGainFactorRampFilter.class);
-        rampOrientation.setGain(INerellConstantesConfig.gainVitesseRampeOrientationSimulateur);
+        GainFactorRampFilter rampOrientation = context.getBean("rampOrientation", GainFactorRampFilter.class);
+        rampOrientation.setGain(NerellConstantesConfig.gainVitesseRampeOrientationSimulateur);
 
-        IPidFilter pidDistance = context.getBean("pidDistance", IPidFilter.class);
-        pidDistance.setTunings(INerellConstantesConfig.kpDistanceSimu, INerellConstantesConfig.kiDistanceSimu, INerellConstantesConfig.kdDistanceSimu);
+        PidFilter pidDistance = context.getBean("pidDistance", PidFilter.class);
+        pidDistance.setTunings(NerellConstantesConfig.kpDistanceSimu, NerellConstantesConfig.kiDistanceSimu, NerellConstantesConfig.kdDistanceSimu);
 
-        IPidFilter pidOrientation = context.getBean("pidOrientation", IPidFilter.class);
-        pidOrientation.setTunings(INerellConstantesConfig.kpOrientationSimu, INerellConstantesConfig.kiOrientationSimu, INerellConstantesConfig.kdOrientationSimu);
+        PidFilter pidOrientation = context.getBean("pidOrientation", PidFilter.class);
+        pidOrientation.setTunings(NerellConstantesConfig.kpOrientationSimu, NerellConstantesConfig.kiOrientationSimu, NerellConstantesConfig.kdOrientationSimu);
 
         // Affichage des bornes pour le limiteur des moteurs
         context.getBean(BouchonARIG2WheelsEncoders.class).printLimiterValues();

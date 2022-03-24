@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
-import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -15,13 +15,13 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public abstract class AbstractRampFilter implements IRampFilter {
+public abstract class AbstractRampFilter implements RampFilter {
 
     @Autowired
     protected ConvertionRobotUnit conv;
 
     @Autowired
-    protected IMonitoringWrapper monitoringWrapper;
+    protected MonitoringWrapper monitoringWrapper;
 
     @Getter
     private String name;

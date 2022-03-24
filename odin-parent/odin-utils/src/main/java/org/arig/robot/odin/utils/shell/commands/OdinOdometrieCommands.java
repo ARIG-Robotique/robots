@@ -3,12 +3,12 @@ package org.arig.robot.odin.utils.shell.commands;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IOdinConstantesConfig;
+import org.arig.robot.constants.OdinConstantesConfig;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
-import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractEnergyService;
-import org.arig.robot.services.IOdinIOService;
+import org.arig.robot.services.OdinIOService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -27,8 +27,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OdinOdometrieCommands {
 
-    private final IMonitoringWrapper monitoringWrapper;
-    private final IOdinIOService ioService;
+    private final MonitoringWrapper monitoringWrapper;
+    private final OdinIOService ioService;
     private final AbstractEnergyService energyService;
     private final TrajectoryManager trajectoryManager;
     private final OdinRobotStatus rs;
@@ -104,7 +104,7 @@ public class OdinOdometrieCommands {
     @ShellMethodAvailability("alimentationOk")
     public void odometrieDistance() {
         double distanceEntreCalage = 2999; // Table Gite 2021
-        double distanceReel = distanceEntreCalage - (IOdinConstantesConfig.dstCallage * 2);
+        double distanceReel = distanceEntreCalage - (OdinConstantesConfig.dstCallage * 2);
 
         encoders.reset();
         rs.enableAsserv();
@@ -208,8 +208,8 @@ public class OdinOdometrieCommands {
             i++;
         } while (i < 2);
         log.info("-------------------------------------------------");
-        log.info("Count per mm          : {}", IOdinConstantesConfig.countPerMm);
-        log.info("Count per deg         : {}", IOdinConstantesConfig.countPerDeg);
+        log.info("Count per mm          : {}", OdinConstantesConfig.countPerMm);
+        log.info("Count per deg         : {}", OdinConstantesConfig.countPerDeg);
         log.info("New Count per deg 1   : {}", newCountPerDegFirst);
         log.info("New Count per deg 2   : {}", newCountPerDegSecond);
         log.info("New Count per deg moy : {}", (newCountPerDegSecond + newCountPerDegFirst) / 2);

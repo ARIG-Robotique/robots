@@ -1,6 +1,6 @@
 package org.arig.robot.system.group;
 
-public class RobotGroupTest implements IRobotGroup {
+public class RobotGroupTest implements RobotGroup {
     @Override
     public void listen(Handler handler) {
     }

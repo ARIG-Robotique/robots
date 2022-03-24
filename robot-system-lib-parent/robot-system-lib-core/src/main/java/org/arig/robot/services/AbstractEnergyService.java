@@ -3,14 +3,14 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.RobotConfig;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
-import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 public abstract class AbstractEnergyService {
 
     @Autowired
-    private IMonitoringWrapper monitoringWrapper;
+    private MonitoringWrapper monitoringWrapper;
 
     @Autowired
     private RobotConfig robotConfig;

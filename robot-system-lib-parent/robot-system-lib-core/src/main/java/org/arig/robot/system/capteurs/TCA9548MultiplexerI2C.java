@@ -1,19 +1,19 @@
 package org.arig.robot.system.capteurs;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.II2CManager;
-import org.arig.robot.communication.II2CMultiplexerDevice;
+import org.arig.robot.communication.I2CManager;
+import org.arig.robot.communication.I2CMultiplexerDevice;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
-public class TCA9548MultiplexerI2C implements II2CMultiplexerDevice {
+public class TCA9548MultiplexerI2C implements I2CMultiplexerDevice {
 
     private static byte DISABLED_MUX = -1;
 
     @Autowired
-    private II2CManager i2cManager;
+    private I2CManager i2cManager;
 
     private final String deviceName;
 

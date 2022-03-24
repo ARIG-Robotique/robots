@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.RobotConfig;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
-import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.CalageBordureService;
-import org.arig.robot.services.IIOService;
+import org.arig.robot.services.IOService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.strategy.StrategyManager;
 import org.springframework.beans.factory.InitializingBean;
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 public class TasksScheduler implements InitializingBean {
 
     @Autowired
-    private IMonitoringWrapper monitoringWrapper;
+    private MonitoringWrapper monitoringWrapper;
 
     @Autowired
     private AbstractRobotStatus rs;
@@ -36,7 +36,7 @@ public class TasksScheduler implements InitializingBean {
     private CalageBordureService calageBordure;
 
     @Autowired
-    private IIOService ioService;
+    private IOService ioService;
 
     @Autowired
     private RobotConfig robotConfig;

@@ -1,7 +1,7 @@
 package org.arig.robot.config.spring;
 
 import org.arig.robot.OdinOrdonanceur;
-import org.arig.robot.constants.IConstantesConfig;
+import org.arig.robot.constants.ConstantesConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -15,8 +15,8 @@ public class OdinRobot {
 
     public static void main(final String[] args) throws IOException {
         // Définition d'un ID unique pour le nommage des fichiers
-        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(IConstantesConfig.executiondIdFormat));
-        System.setProperty(IConstantesConfig.keyExecutionId, execId);
+        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
+        System.setProperty(ConstantesConfig.keyExecutionId, execId);
 
         ConfigurableApplicationContext context = SpringApplication.run(OdinRobot.class, args);
         context.getBean(OdinOrdonanceur.class).run();

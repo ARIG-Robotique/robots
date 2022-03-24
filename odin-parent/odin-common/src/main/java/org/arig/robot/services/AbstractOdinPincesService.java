@@ -1,8 +1,8 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IOdinConstantesConfig;
-import org.arig.robot.model.ECouleur;
+import org.arig.robot.constants.OdinConstantesConfig;
+import org.arig.robot.model.Couleur;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.stream.Stream;
 
 @Slf4j
-public abstract class AbstractOdinPincesService implements IOdinPincesService {
+public abstract class AbstractOdinPincesService implements OdinPincesService {
 
     @Autowired
-    protected IOdinIOService io;
+    protected OdinIOService io;
 
     @Autowired
     protected OdinRobotStatus rs;
@@ -24,7 +24,7 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
     @Autowired
     private RobotGroupService group;
 
-    private ECouleur expected = null;
+    private Couleur expected = null;
 
     private boolean[] previousState = new boolean[]{false, false};
 
@@ -34,18 +34,18 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
 
     protected abstract void enablePompes();
 
-    protected abstract ECouleur[] currentState();
+    protected abstract Couleur[] currentState();
 
     protected abstract void clearPinces();
 
     protected abstract boolean[] getNewState();
 
-    protected abstract void register(int index, ECouleur couleur);
+    protected abstract void register(int index, Couleur couleur);
 
-    protected abstract ECouleur getCouleur(int index);
+    protected abstract Couleur getCouleur(int index);
 
     @Override
-    public void setExpected(ECouleur expected, int indexPince) {
+    public void setExpected(Couleur expected, int indexPince) {
         this.expected = expected;
     }
 
@@ -97,24 +97,24 @@ public abstract class AbstractOdinPincesService implements IOdinPincesService {
 
     @Override
     public void processCouleur() {
-        if (Stream.of(currentState()).noneMatch(c -> c == ECouleur.INCONNU)) {
+        if (Stream.of(currentState()).noneMatch(c -> c == Couleur.INCONNU)) {
             // Pas d'inconnu, pas de lecture
             return;
         }
 
         io.enableLedCapteurCouleur();
-        ThreadUtils.sleep(IOdinConstantesConfig.WAIT_LED);
+        ThreadUtils.sleep(OdinConstantesConfig.WAIT_LED);
 
         for (int i = 0; i < 2; i++) {
-            if (currentState()[i] == ECouleur.INCONNU) {
+            if (currentState()[i] == Couleur.INCONNU) {
                 register(i, getCouleur(i));
             }
         }
         io.disableLedCapteurCouleur();
     }
 
-    protected ECouleur getExpected() {
-        ECouleur couleur = ECouleur.INCONNU;
+    protected Couleur getExpected() {
+        Couleur couleur = Couleur.INCONNU;
         if (expected != null) {
             couleur = expected;
             expected = null;

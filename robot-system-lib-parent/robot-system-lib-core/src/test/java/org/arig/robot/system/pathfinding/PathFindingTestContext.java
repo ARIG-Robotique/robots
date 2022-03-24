@@ -1,9 +1,8 @@
 package org.arig.robot.system.pathfinding;
 
 import lombok.SneakyThrows;
-import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
-import org.arig.robot.system.pathfinding.impl.MultiPathFinderImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,7 +15,7 @@ import java.net.URL;
 public class PathFindingTestContext {
 
     @Bean
-    public IMonitoringWrapper monitoringWrapper() {
+    public MonitoringWrapper monitoringWrapper() {
         return new MonitoringJsonWrapper();
     }
 

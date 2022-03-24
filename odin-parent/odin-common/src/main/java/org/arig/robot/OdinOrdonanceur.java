@@ -1,19 +1,19 @@
 package org.arig.robot;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IEurobotConfig;
-import org.arig.robot.constants.IOdinConstantesConfig;
+import org.arig.robot.constants.EurobotConfig;
+import org.arig.robot.constants.OdinConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
-import org.arig.robot.model.EStrategy;
-import org.arig.robot.model.ETeam;
+import org.arig.robot.model.Strategy;
+import org.arig.robot.model.Team;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.services.IOdinIOService;
+import org.arig.robot.services.OdinIOService;
 import org.arig.robot.services.OdinEcranService;
 import org.arig.robot.services.OdinServosService;
 import org.arig.robot.services.RobotGroupService;
@@ -31,7 +31,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
     private OdinServosService odinServos;
 
     @Autowired
-    private IOdinIOService odinIO;
+    private OdinIOService odinIO;
 
     @Autowired
     private RobotGroupService groupService;
@@ -59,7 +59,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
         // Lancement d'une première lecture de couleurs pour initialiser les capteurs
         odinIO.enableLedCapteurCouleur();
-        ThreadUtils.sleep(IOdinConstantesConfig.WAIT_LED);
+        ThreadUtils.sleep(OdinConstantesConfig.WAIT_LED);
         odinIO.couleurAvantGauche();
         odinIO.couleurAvantDroit();
         odinIO.couleurArriereGauche();
@@ -70,7 +70,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
         // Visu après la tirette
         odinIO.enableLedCapteurCouleur();
-        ThreadUtils.sleep(IOdinConstantesConfig.WAIT_LED);
+        ThreadUtils.sleep(OdinConstantesConfig.WAIT_LED);
         odinIO.disableLedCapteurCouleur();
     }
 
@@ -102,8 +102,8 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
      * Etape du choix de l'équipe/stratégie
      */
     private void choixEquipeStrategy() {
-        ChangeFilter<ETeam> teamChangeFilter = new ChangeFilter<>(null);
-        ChangeFilter<EStrategy> strategyChangeFilter = new ChangeFilter<>(null);
+        ChangeFilter<Team> teamChangeFilter = new ChangeFilter<>(null);
+        ChangeFilter<Strategy> strategyChangeFilter = new ChangeFilter<>(null);
         ChangeFilter<Boolean> groupChangeFilter = new ChangeFilter<>(null);
 
         boolean done;
@@ -133,8 +133,8 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                     log.info("Strategy {}", odinRobotStatus.strategy().name());
                 }
 
-                odinRobotStatus.option1(ecranService.config().hasOption(IEurobotConfig.OPTION_1));
-                odinRobotStatus.option2(ecranService.config().hasOption(IEurobotConfig.OPTION_2));
+                odinRobotStatus.option1(ecranService.config().hasOption(EurobotConfig.OPTION_1));
+                odinRobotStatus.option2(ecranService.config().hasOption(EurobotConfig.OPTION_2));
 
                 done = ecranService.config().isStartCalibration();
             }
@@ -153,16 +153,16 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         try {
             robotStatus.disableAvoidance();
             if (robotStatus.simulateur() || skip) {
-                if (odinRobotStatus.team() == ETeam.JAUNE) {
+                if (odinRobotStatus.team() == Team.JAUNE) {
                     position.setPt(new Point(
-                            conv.mmToPulse(IOdinConstantesConfig.dstCallage + 150),
-                            conv.mmToPulse(IOdinConstantesConfig.dstCallage + 150)
+                            conv.mmToPulse(OdinConstantesConfig.dstCallage + 150),
+                            conv.mmToPulse(OdinConstantesConfig.dstCallage + 150)
                     ));
                     position.setAngle(conv.degToPulse(90));
                 } else {
                     position.setPt(new Point(
-                            conv.mmToPulse(3000 - IOdinConstantesConfig.dstCallage - 150),
-                            conv.mmToPulse(IOdinConstantesConfig.dstCallage + 150)
+                            conv.mmToPulse(3000 - OdinConstantesConfig.dstCallage - 150),
+                            conv.mmToPulse(OdinConstantesConfig.dstCallage + 150)
                     ));
                     position.setAngle(conv.degToPulse(90));
                 }
@@ -170,11 +170,11 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 robotStatus.enableCalageBordure();
                 mv.reculeMMSansAngle(1000);
 
-                if (odinRobotStatus.team() == ETeam.JAUNE) {
-                    position.getPt().setX(conv.mmToPulse(IOdinConstantesConfig.dstCallage));
+                if (odinRobotStatus.team() == Team.JAUNE) {
+                    position.getPt().setX(conv.mmToPulse(OdinConstantesConfig.dstCallage));
                     position.setAngle(conv.degToPulse(0));
                 } else {
-                    position.getPt().setX(conv.mmToPulse(3000 - IOdinConstantesConfig.dstCallage));
+                    position.getPt().setX(conv.mmToPulse(3000 - OdinConstantesConfig.dstCallage));
                     position.setAngle(conv.degToPulse(180));
                 }
 
@@ -189,7 +189,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                     throw new ExitProgram(true);
                 }
 
-                position.getPt().setY(conv.mmToPulse(IOdinConstantesConfig.dstCallage));
+                position.getPt().setY(conv.mmToPulse(OdinConstantesConfig.dstCallage));
                 position.setAngle(conv.degToPulse(90));
 
                 mv.avanceMM(150);
@@ -212,7 +212,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 case BASIC:
                 case AGGRESSIVE:
                     // Aligne vers les bouées au nord du port
-                    if (odinRobotStatus.team() == ETeam.JAUNE) {
+                    if (odinRobotStatus.team() == Team.JAUNE) {
                         mv.gotoPoint(255, 1005, GotoOption.ARRIERE);
                     } else {
                         mv.gotoPoint(3000 - 255, 1005, GotoOption.ARRIERE);
@@ -222,7 +222,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
                 case FINALE:
                     // Aligne vers le centre de la table
-                    if (odinRobotStatus.team() == ETeam.JAUNE) {
+                    if (odinRobotStatus.team() == Team.JAUNE) {
                         mv.gotoPoint(160, 1370, GotoOption.AVANT);
                         mv.gotoOrientationDeg(-70);
                     } else {

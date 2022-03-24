@@ -2,9 +2,9 @@ package org.arig.robot.web.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IConstantesConfig;
-import org.arig.robot.filters.pid.IPidFilter;
-import org.arig.robot.filters.ramp.IRampFilter;
+import org.arig.robot.constants.ConstantesConfig;
+import org.arig.robot.filters.pid.PidFilter;
+import org.arig.robot.filters.ramp.RampFilter;
 import org.arig.robot.services.TrajectoryManager;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,14 +21,14 @@ import java.util.Map;
 @RestController
 @RequestMapping("/asservissement")
 @AllArgsConstructor
-@Profile(IConstantesConfig.profileMonitoring)
+@Profile(ConstantesConfig.profileMonitoring)
 public class AsservissementController {
 
     private final TrajectoryManager mv;
-    private final IPidFilter pidDistance;
-    private final IPidFilter pidOrientation;
-    private final IRampFilter rampDistance;
-    private final IRampFilter rampOrientation;
+    private final PidFilter pidDistance;
+    private final PidFilter pidOrientation;
+    private final RampFilter rampDistance;
+    private final RampFilter rampOrientation;
 
 
     @GetMapping("/{type}")

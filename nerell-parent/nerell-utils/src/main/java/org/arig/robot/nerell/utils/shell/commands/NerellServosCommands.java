@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.services.AbstractEnergyService;
-import org.arig.robot.services.INerellIOService;
+import org.arig.robot.services.NerellIOService;
 import org.arig.robot.services.NerellServosService;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
@@ -21,7 +21,7 @@ public class NerellServosCommands {
 
     private final NerellRobotStatus rs;
     private final NerellServosService servosService;
-    private final INerellIOService ioService;
+    private final NerellIOService ioService;
     private final AbstractEnergyService energyService;
 
     public Availability alimentationOk() {

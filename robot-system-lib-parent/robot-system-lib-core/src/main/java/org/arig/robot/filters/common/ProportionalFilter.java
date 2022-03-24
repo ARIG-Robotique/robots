@@ -2,10 +2,10 @@ package org.arig.robot.filters.common;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import org.arig.robot.filters.IFilter;
+import org.arig.robot.filters.Filter;
 import org.springframework.util.Assert;
 
-public class ProportionalFilter implements IFilter<Double, Double> {
+public class ProportionalFilter implements Filter<Double, Double> {
 
     public static final String GAIN_NULL_MESSAGE = "Le gain ne peut être null";
 

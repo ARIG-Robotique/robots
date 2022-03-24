@@ -23,12 +23,12 @@ import org.arig.robot.model.monitor.MonitorMouvementPath;
 import org.arig.robot.model.monitor.MonitorMouvementRotation;
 import org.arig.robot.model.monitor.MonitorMouvementTranslation;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
-import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.system.motion.IOdometrie;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
-import org.arig.robot.system.pathfinding.IPathFinder;
+import org.arig.robot.system.pathfinding.PathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +55,7 @@ public class TrajectoryManager {
     private IOdometrie odom;
 
     @Autowired
-    private IMonitoringWrapper monitoring;
+    private MonitoringWrapper monitoring;
 
     @Autowired
     private IAsservissementPolaire asservissementPolaire;
@@ -70,7 +70,7 @@ public class TrajectoryManager {
     private ConvertionRobotUnit conv;
 
     @Autowired
-    private IPathFinder pathFinder;
+    private PathFinder pathFinder;
 
     @Autowired
     private LidarService lidarService;
@@ -89,10 +89,10 @@ public class TrajectoryManager {
     private TableUtils tableUtils;
 
     @Autowired
-    private IIOService iioService;
+    private IOService IOService;
 
     @Autowired
-    protected IMonitoringWrapper monitoringWrapper;
+    protected MonitoringWrapper monitoringWrapper;
 
     @Getter
     private AbstractMonitorMouvement currentMouvement = null;

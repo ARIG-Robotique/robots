@@ -1,6 +1,6 @@
 package org.arig.robot.filters.common;
 
-import org.arig.robot.filters.IFilter;
+import org.arig.robot.filters.Filter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ public class ProportionalFilterTest {
     @Test
     public void valueIsNull() {
         IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> impl.filter(null));
-        Assertions.assertEquals(ex.getMessage(), IFilter.FILTER_VALUE_NULL_MESSAGE);
+        Assertions.assertEquals(ex.getMessage(), Filter.FILTER_VALUE_NULL_MESSAGE);
     }
 
     @Test

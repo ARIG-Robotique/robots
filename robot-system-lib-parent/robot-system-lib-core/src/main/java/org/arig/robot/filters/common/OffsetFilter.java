@@ -2,10 +2,10 @@ package org.arig.robot.filters.common;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import org.arig.robot.filters.IFilter;
+import org.arig.robot.filters.Filter;
 import org.springframework.util.Assert;
 
-public class OffsetFilter implements IFilter<Double, Double> {
+public class OffsetFilter implements Filter<Double, Double> {
 
     public enum OffsetType {
         SIMPLE, MIRROR

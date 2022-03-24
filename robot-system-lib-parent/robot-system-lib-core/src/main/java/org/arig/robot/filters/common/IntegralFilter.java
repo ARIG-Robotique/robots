@@ -1,10 +1,10 @@
 package org.arig.robot.filters.common;
 
 import lombok.Getter;
-import org.arig.robot.filters.IFilter;
+import org.arig.robot.filters.Filter;
 import org.springframework.util.Assert;
 
-public class IntegralFilter implements IFilter<Double, Double> {
+public class IntegralFilter implements Filter<Double, Double> {
 
     public static final String INITIAL_VALUE_NULL_MESSAGE = "La valeur initial ne peut être null";
 

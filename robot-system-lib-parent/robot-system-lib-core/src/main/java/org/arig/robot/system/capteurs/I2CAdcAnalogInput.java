@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.II2CManager;
+import org.arig.robot.communication.I2CManager;
 import org.arig.robot.exception.I2CException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -51,7 +51,7 @@ public class I2CAdcAnalogInput {
     }
 
     @Autowired
-    private II2CManager i2cManager;
+    private I2CManager i2cManager;
 
     private final String deviceName;
 

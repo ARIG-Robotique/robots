@@ -1,6 +1,6 @@
 package org.arig.robot.system.group;
 
-public abstract class AbstractRobotGroupBouchon implements IRobotGroup {
+public abstract class AbstractRobotGroupBouchon implements RobotGroup {
 
     @Override
     public boolean isOpen() {

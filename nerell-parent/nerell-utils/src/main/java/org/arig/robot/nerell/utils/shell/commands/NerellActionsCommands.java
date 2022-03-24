@@ -7,8 +7,8 @@ import org.arig.robot.NerellOrdonanceur;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.nerell.utils.shell.providers.NerellActionsProvider;
 import org.arig.robot.services.AbstractEnergyService;
-import org.arig.robot.services.INerellIOService;
-import org.arig.robot.strategy.IAction;
+import org.arig.robot.services.NerellIOService;
+import org.arig.robot.strategy.Action;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -25,10 +25,10 @@ import java.util.Optional;
 @AllArgsConstructor
 public class NerellActionsCommands {
 
-    private INerellIOService ioService;
+    private NerellIOService ioService;
     private final AbstractEnergyService energyService;
     private NerellOrdonanceur ordonanceur;
-    private List<IAction> actions;
+    private List<Action> actions;
     private final NerellRobotStatus rs;
 
     @ShellMethodAvailability
@@ -56,7 +56,7 @@ public class NerellActionsCommands {
     @ShellMethod("Execute une action")
     @SneakyThrows
     public void action(@ShellOption(valueProvider = NerellActionsProvider.class) String name) {
-        final Optional<IAction> action = actions.stream()
+        final Optional<Action> action = actions.stream()
                 .filter(a -> a.getClass().getSimpleName().equals(name))
                 .findFirst();
 

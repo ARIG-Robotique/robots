@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.arig.robot.communication.II2CManager;
+import org.arig.robot.communication.I2CManager;
 import org.arig.robot.exception.I2CException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -123,7 +123,7 @@ public class TCS34725ColorSensor {
     }
 
     @Autowired
-    private II2CManager i2cManager;
+    private I2CManager i2cManager;
 
     @Getter
     @Accessors(fluent = true)

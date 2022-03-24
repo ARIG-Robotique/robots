@@ -1,7 +1,7 @@
 package org.arig.robot.system.motion;
 
 import org.arig.robot.filters.common.LimiterFilter;
-import org.arig.robot.filters.pid.IPidFilter;
+import org.arig.robot.filters.pid.PidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.enums.TypeConsigne;
@@ -24,11 +24,11 @@ public class AsservissementPolaireDistanceOrientation implements IAsservissement
 
     @Autowired
     @Qualifier("pidDistance")
-    private IPidFilter pidDistance;
+    private PidFilter pidDistance;
 
     @Autowired
     @Qualifier("pidOrientation")
-    private IPidFilter pidOrientation;
+    private PidFilter pidOrientation;
 
     @Autowired
     @Qualifier("rampDistance")

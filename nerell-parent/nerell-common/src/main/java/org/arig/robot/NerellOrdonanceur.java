@@ -3,20 +3,20 @@ package org.arig.robot;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.socket.balise.EtalonnageResponse;
 import org.arig.robot.communication.socket.balise.PhotoResponse;
-import org.arig.robot.constants.IEurobotConfig;
-import org.arig.robot.constants.INerellConstantesConfig;
+import org.arig.robot.constants.EurobotConfig;
+import org.arig.robot.constants.NerellConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
-import org.arig.robot.model.EStrategy;
-import org.arig.robot.model.ETeam;
+import org.arig.robot.model.Strategy;
+import org.arig.robot.model.Team;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.services.BaliseService;
-import org.arig.robot.services.INerellIOService;
+import org.arig.robot.services.NerellIOService;
 import org.arig.robot.services.NerellEcranService;
 import org.arig.robot.services.NerellServosService;
 import org.arig.robot.services.RobotGroupService;
@@ -34,7 +34,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     private NerellServosService nerellServos;
 
     @Autowired
-    private INerellIOService nerellIO;
+    private NerellIOService nerellIO;
 
     @Autowired
     private RobotGroupService groupService;
@@ -65,7 +65,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
         // Lancement d'une première lecture de couleurs pour initialiser les capteurs
         nerellIO.enableLedCapteurCouleur();
-        ThreadUtils.sleep(INerellConstantesConfig.WAIT_LED);
+        ThreadUtils.sleep(NerellConstantesConfig.WAIT_LED);
         nerellIO.couleurVentouseBas();
         nerellIO.couleurVentouseHaut();
         nerellIO.disableLedCapteurCouleur();
@@ -78,7 +78,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
         // Visu après la tirette
         nerellIO.enableLedCapteurCouleur();
-        ThreadUtils.sleep(INerellConstantesConfig.WAIT_LED);
+        ThreadUtils.sleep(NerellConstantesConfig.WAIT_LED);
         nerellIO.disableLedCapteurCouleur();
     }
 
@@ -116,8 +116,8 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     private void choixEquipeStrategy() {
         ecranService.displayMessage("Choix équipe et lancement calage bordure");
 
-        ChangeFilter<ETeam> teamChangeFilter = new ChangeFilter<>(null);
-        ChangeFilter<EStrategy> strategyChangeFilter = new ChangeFilter<>(null);
+        ChangeFilter<Team> teamChangeFilter = new ChangeFilter<>(null);
+        ChangeFilter<Strategy> strategyChangeFilter = new ChangeFilter<>(null);
         SignalEdgeFilter updatePhotoFilter = new SignalEdgeFilter(false, Type.RISING);
         SignalEdgeFilter doEtalonnageFilter = new SignalEdgeFilter(false, Type.RISING);
 
@@ -137,8 +137,8 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 log.info("Strategy {}", nerellRobotStatus.strategy().name());
             }
 
-            nerellRobotStatus.option1(ecranService.config().hasOption(IEurobotConfig.OPTION_1));
-            nerellRobotStatus.option2(ecranService.config().hasOption(IEurobotConfig.OPTION_2));
+            nerellRobotStatus.option1(ecranService.config().hasOption(EurobotConfig.OPTION_1));
+            nerellRobotStatus.option2(ecranService.config().hasOption(EurobotConfig.OPTION_2));
 
             groupService.configuration();
 
@@ -197,16 +197,16 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         try {
             robotStatus.disableAvoidance();
             if (robotStatus.simulateur() || skip) {
-                if (nerellRobotStatus.team() == ETeam.JAUNE) {
+                if (nerellRobotStatus.team() == Team.JAUNE) {
                     position.setPt(new Point(
-                            conv.mmToPulse(INerellConstantesConfig.dstCallage + 150),
-                            conv.mmToPulse(2000 - INerellConstantesConfig.dstCallage - 150)
+                            conv.mmToPulse(NerellConstantesConfig.dstCallage + 150),
+                            conv.mmToPulse(2000 - NerellConstantesConfig.dstCallage - 150)
                     ));
                     position.setAngle(conv.degToPulse(-90));
                 } else {
                     position.setPt(new Point(
-                            conv.mmToPulse(3000 - INerellConstantesConfig.dstCallage - 150),
-                            conv.mmToPulse(2000 - INerellConstantesConfig.dstCallage - 150)
+                            conv.mmToPulse(3000 - NerellConstantesConfig.dstCallage - 150),
+                            conv.mmToPulse(2000 - NerellConstantesConfig.dstCallage - 150)
                     ));
                     position.setAngle(conv.degToPulse(-90));
                 }
@@ -214,11 +214,11 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 robotStatus.enableCalageBordure();
                 mv.reculeMMSansAngle(1000);
 
-                if (nerellRobotStatus.team() == ETeam.JAUNE) {
-                    position.getPt().setX(conv.mmToPulse(INerellConstantesConfig.dstCallage));
+                if (nerellRobotStatus.team() == Team.JAUNE) {
+                    position.getPt().setX(conv.mmToPulse(NerellConstantesConfig.dstCallage));
                     position.setAngle(conv.degToPulse(0));
                 } else {
-                    position.getPt().setX(conv.mmToPulse(3000 - INerellConstantesConfig.dstCallage));
+                    position.getPt().setX(conv.mmToPulse(3000 - NerellConstantesConfig.dstCallage));
                     position.setAngle(conv.degToPulse(180));
                 }
 
@@ -233,7 +233,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                     throw new ExitProgram(true);
                 }
 
-                position.getPt().setY(conv.mmToPulse(2000 - INerellConstantesConfig.dstCallage));
+                position.getPt().setY(conv.mmToPulse(2000 - NerellConstantesConfig.dstCallage));
                 position.setAngle(conv.degToPulse(-90));
 
                 mv.avanceMM(150);
@@ -254,7 +254,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
             switch (nerellRobotStatus.strategy()) {
                 default:
-                    if (nerellRobotStatus.team() == ETeam.JAUNE) {
+                    if (nerellRobotStatus.team() == Team.JAUNE) {
                         mv.gotoPoint(300, 1200);
                         mv.gotoOrientationDeg(0);
                     } else {

@@ -5,9 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.II2CManager;
+import org.arig.robot.communication.I2CManager;
 import org.arig.robot.exception.I2CException;
-import org.arig.robot.filters.average.IAverage;
+import org.arig.robot.filters.average.Average;
 import org.arig.robot.filters.average.PassThroughValueAverage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -61,7 +61,7 @@ public class SRF02Sonar {
     }
 
     @Autowired
-    private II2CManager i2cManager;
+    private I2CManager i2cManager;
 
     private final String deviceName;
 
@@ -74,7 +74,7 @@ public class SRF02Sonar {
     private boolean fakeMode = false;
 
     @Setter
-    private IAverage<Integer> avg = new PassThroughValueAverage<>();
+    private Average<Integer> avg = new PassThroughValueAverage<>();
 
     public SRF02Sonar(String deviceName) {
         this.deviceName = deviceName;

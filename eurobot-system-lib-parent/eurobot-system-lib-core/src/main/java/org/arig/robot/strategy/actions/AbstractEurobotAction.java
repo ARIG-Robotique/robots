@@ -1,6 +1,6 @@
 package org.arig.robot.strategy.actions;
 
-import org.arig.robot.model.ETeam;
+import org.arig.robot.model.Team;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
@@ -37,7 +37,7 @@ public abstract class AbstractEurobotAction extends AbstractAction {
     protected EurobotStatus rs;
 
     protected int getX(int x) {
-        if (rs.team() == ETeam.JAUNE) {
+        if (rs.team() == Team.JAUNE) {
             return 3000 - x;
         } else {
             return x;

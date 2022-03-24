@@ -2,10 +2,10 @@ package org.arig.robot.filters.common;
 
 import lombok.Getter;
 import org.apache.commons.lang3.ArrayUtils;
-import org.arig.robot.filters.IFilter;
+import org.arig.robot.filters.Filter;
 import org.springframework.util.Assert;
 
-public class SignalEdgeFilter implements IFilter<Boolean, Boolean> {
+public class SignalEdgeFilter implements Filter<Boolean, Boolean> {
 
     public static final String INITIAL_VALUE_NULL_MESSAGE = "La valeur initial ne peut être null";
 

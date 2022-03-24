@@ -5,7 +5,7 @@ import lombok.Getter;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.TypeOdometrie;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
-import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 public abstract class AbstractOdometrie implements IOdometrie, InitializingBean {
 
     @Autowired
-    private IMonitoringWrapper monitoringWrapper;
+    private MonitoringWrapper monitoringWrapper;
 
     @Autowired
     @Qualifier("currentPosition")

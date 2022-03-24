@@ -63,9 +63,9 @@ public class NerellRobotStatus extends EurobotStatus {
 
     // De gauche à droite, dans le sens du robot
     @Accessors(fluent = true)
-    private ECouleur[] pincesAvant = new ECouleur[]{null, null, null, null};
+    private Couleur[] pincesAvant = new Couleur[]{null, null, null, null};
 
-    public void pinceAvant(int pos, ECouleur bouee) {
+    public void pinceAvant(int pos, Couleur bouee) {
         log.info("[RS] pince avant {} {}", pos, bouee == null ? "null" : bouee.name());
         pincesAvant[pos] = bouee;
     }

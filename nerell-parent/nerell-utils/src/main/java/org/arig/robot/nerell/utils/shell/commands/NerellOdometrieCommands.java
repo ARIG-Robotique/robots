@@ -3,15 +3,15 @@ package org.arig.robot.nerell.utils.shell.commands;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.INerellConstantesConfig;
-import org.arig.robot.filters.pid.IPidFilter;
+import org.arig.robot.constants.NerellConstantesConfig;
+import org.arig.robot.filters.pid.PidFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
-import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractEnergyService;
-import org.arig.robot.services.INerellIOService;
+import org.arig.robot.services.NerellIOService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.utils.ConvertionRobotUnit;
@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class NerellOdometrieCommands {
 
-    private final IMonitoringWrapper monitoringWrapper;
-    private final INerellIOService ioService;
+    private final MonitoringWrapper monitoringWrapper;
+    private final NerellIOService ioService;
     private final AbstractEnergyService energyService;
     private final TrajectoryManager trajectoryManager;
     private final NerellRobotStatus rs;
@@ -39,8 +39,8 @@ public class NerellOdometrieCommands {
     private final ConvertionRobotUnit convRobot;
     private final CommandeRobot cmdRobot;
     private final Position currentPosition;
-    private final IPidFilter pidDistance;
-    private final IPidFilter pidOrientation;
+    private final PidFilter pidDistance;
+    private final PidFilter pidOrientation;
 
     public Availability alimentationOk() {
         return ioService.auOk() && energyService.checkServos() && energyService.checkMoteurs()
@@ -112,7 +112,7 @@ public class NerellOdometrieCommands {
     public void odometrieDistance() {
         double distanceEntreCalage = 2999; // Table Gite 2021
         double dstCalageAvant = 103; // Distance calage avant
-        double distanceReel = distanceEntreCalage - INerellConstantesConfig.dstCallage - dstCalageAvant;
+        double distanceReel = distanceEntreCalage - NerellConstantesConfig.dstCallage - dstCalageAvant;
 
         encoders.reset();
         rs.enableAsserv();
@@ -216,8 +216,8 @@ public class NerellOdometrieCommands {
             i++;
         } while (i < 2);
         log.info("-------------------------------------------------");
-        log.info("Count per mm          : {}", INerellConstantesConfig.countPerMm);
-        log.info("Count per deg         : {}", INerellConstantesConfig.countPerDeg);
+        log.info("Count per mm          : {}", NerellConstantesConfig.countPerMm);
+        log.info("Count per deg         : {}", NerellConstantesConfig.countPerDeg);
         log.info("New Count per deg 1   : {}", newCountPerDegFirst);
         log.info("New Count per deg 2   : {}", newCountPerDegSecond);
         log.info("New Count per deg moy : {}", (newCountPerDegSecond + newCountPerDegFirst) / 2);

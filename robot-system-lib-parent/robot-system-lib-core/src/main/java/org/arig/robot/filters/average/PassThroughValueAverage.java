@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
  *
  * @author gdepuille on 08/05/15.
  */
-public class PassThroughValueAverage<T> implements IAverage<T> {
+public class PassThroughValueAverage<T> implements Average<T> {
 
     @Getter
     @Accessors(fluent = true)

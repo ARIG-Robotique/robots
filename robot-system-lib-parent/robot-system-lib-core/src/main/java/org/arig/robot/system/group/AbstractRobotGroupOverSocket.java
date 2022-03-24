@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.concurrent.Executor;
 
 @Slf4j
-public class AbstractRobotGroupOverSocket extends AbstractBidirectionalSocket<GroupAction> implements IRobotGroup {
+public class AbstractRobotGroupOverSocket extends AbstractBidirectionalSocket<GroupAction> implements RobotGroup {
 
     @Autowired
     private AbstractRobotStatus rs;

@@ -10,8 +10,8 @@ import org.arig.robot.system.gamepad.nintendoswitch.pro.ProController;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.tinker.listener.JoyConLeftEventListener;
 import org.arig.robot.tinker.listener.JoyConRightEventListener;
-import org.arig.robot.tinker.services.IServosServices;
 import org.arig.robot.tinker.services.ServosServices;
+import org.arig.robot.tinker.services.ServosServicesImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,17 +29,17 @@ public class TinkerRobotContext {
     }
 
     @Bean
-    public IServosServices servosServices(PCA9685GpioProvider pca9685GpioProvider) {
-        return new ServosServices(pca9685GpioProvider);
+    public ServosServices servosServices(PCA9685GpioProvider pca9685GpioProvider) {
+        return new ServosServicesImpl(pca9685GpioProvider);
     }
 
     @Bean
-    public JoyConLeftEventListener leftEventListener(IServosServices servosServices, AbstractPropulsionsMotors motors) {
+    public JoyConLeftEventListener leftEventListener(ServosServices servosServices, AbstractPropulsionsMotors motors) {
         return new JoyConLeftEventListener(servosServices, motors);
     }
 
     @Bean
-    public JoyConRightEventListener rightEventListener(IServosServices servosServices, AbstractPropulsionsMotors motors) {
+    public JoyConRightEventListener rightEventListener(ServosServices servosServices, AbstractPropulsionsMotors motors) {
         return new JoyConRightEventListener(servosServices, motors);
     }
 

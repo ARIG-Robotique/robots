@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.arig.robot.filters.common.ProportionalFilter;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
-import org.arig.robot.monitoring.IMonitoringWrapper;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
@@ -17,10 +17,10 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public abstract class AbstractPidFilter implements IPidFilter {
+public abstract class AbstractPidFilter implements PidFilter {
 
     @Autowired
-    private IMonitoringWrapper monitoringWrapper;
+    private MonitoringWrapper monitoringWrapper;
 
     @Getter
     private final String name;

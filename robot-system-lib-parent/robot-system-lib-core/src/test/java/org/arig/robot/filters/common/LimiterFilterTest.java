@@ -1,7 +1,7 @@
 package org.arig.robot.filters.common;
 
 import org.apache.commons.lang3.StringUtils;
-import org.arig.robot.filters.IFilter;
+import org.arig.robot.filters.Filter;
 import org.arig.robot.filters.common.LimiterFilter.LimiterType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,7 +26,7 @@ public class LimiterFilterTest {
     @Test
     public void valueIsNull() {
         IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> simpleFilter.filter(null));
-        Assertions.assertEquals(ex.getMessage(), IFilter.FILTER_VALUE_NULL_MESSAGE);
+        Assertions.assertEquals(ex.getMessage(), Filter.FILTER_VALUE_NULL_MESSAGE);
     }
 
     @Test

@@ -1,6 +1,6 @@
 package org.arig.robot.odin.utils.shell.providers;
 
-import org.arig.robot.strategy.IAction;
+import org.arig.robot.strategy.Action;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell.CompletionContext;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class OdinActionsProvider implements ValueProvider {
 
     @Autowired
-    private List<IAction> actions;
+    private List<Action> actions;
 
     @Override
     public boolean supports(MethodParameter parameter, CompletionContext completionContext) {

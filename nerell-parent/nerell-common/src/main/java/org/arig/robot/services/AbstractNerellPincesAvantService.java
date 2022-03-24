@@ -1,25 +1,24 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.INerellConstantesConfig;
-import org.arig.robot.model.ECouleur;
+import org.arig.robot.constants.NerellConstantesConfig;
+import org.arig.robot.model.Couleur;
 import org.arig.robot.model.NerellRobotStatus;
-import org.arig.robot.system.pathfinding.IPathFinder;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.stream.Stream;
 
 @Slf4j
-public abstract class AbstractNerellPincesAvantService implements INerellPincesAvantService {
+public abstract class AbstractNerellPincesAvantService implements NerellPincesAvantService {
 
     @Autowired
-    private INerellIOService io;
+    private NerellIOService io;
 
     @Autowired
     private NerellRobotStatus rs;
 
-    private ECouleur expected = null;
+    private Couleur expected = null;
 
     private boolean[] previousState = new boolean[]{false, false, false, false};
 
@@ -83,16 +82,16 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
 
     @Override
     public void processCouleur() {
-        if (Stream.of(rs.pincesAvant()).noneMatch(c -> c == ECouleur.INCONNU)) {
+        if (Stream.of(rs.pincesAvant()).noneMatch(c -> c == Couleur.INCONNU)) {
             // Pas d'inconnu, pas de lecture
             return;
         }
 
         io.enableLedCapteurCouleur();
-        ThreadUtils.sleep(INerellConstantesConfig.WAIT_LED);
+        ThreadUtils.sleep(NerellConstantesConfig.WAIT_LED);
 
         for (int i = 0; i < 4; i++) {
-            if (rs.pincesAvant()[i] == ECouleur.INCONNU) {
+            if (rs.pincesAvant()[i] == Couleur.INCONNU) {
                 register(i, getCouleur(i));
             }
         }
@@ -100,12 +99,12 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
     }
 
     @Override
-    public void setExpected(ECouleur expected) {
+    public void setExpected(Couleur expected) {
         this.expected = expected;
     }
 
-    protected ECouleur getExpected() {
-        ECouleur couleur = ECouleur.INCONNU;
+    protected Couleur getExpected() {
+        Couleur couleur = Couleur.INCONNU;
         if (expected != null) {
             couleur = expected;
             expected = null;
@@ -138,16 +137,16 @@ public abstract class AbstractNerellPincesAvantService implements INerellPincesA
         };
     }
 
-    private void register(int index, ECouleur couleur) {
+    private void register(int index, Couleur couleur) {
         rs.pinceAvant(index, couleur);
     }
 
-    private ECouleur getCouleur(int index) {
+    private Couleur getCouleur(int index) {
         // @formatter:off
         switch (index) {
             case 0: return io.couleurVentouseBas();
             case 1: return io.couleurVentouseHaut();
-            default: return ECouleur.INCONNU;
+            default: return Couleur.INCONNU;
         }
         // @formatter:on
     }

@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-public abstract class AbstractIOServiceBouchon implements IIOService {
+public abstract class AbstractIOServiceBouchon implements IOService {
 
     @Setter
     @Accessors(fluent = true)

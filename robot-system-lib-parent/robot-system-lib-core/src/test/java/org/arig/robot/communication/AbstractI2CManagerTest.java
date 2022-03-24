@@ -37,7 +37,7 @@ public class AbstractI2CManagerTest {
                 .deviceName("Board Multiplexeur")
                 .build();
         impl.registerDevice(mux);
-        impl.registerMultiplexerDevice(mux.deviceName(), new II2CMultiplexerDevice() {
+        impl.registerMultiplexerDevice(mux.deviceName(), new I2CMultiplexerDevice() {
             public boolean selectChannel(final byte channel) {
                 log.info("Selection du canal {}", channel);
                 return true;

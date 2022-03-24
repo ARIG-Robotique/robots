@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.I2CException;
-import org.arig.robot.filters.average.IAverage;
+import org.arig.robot.filters.average.Average;
 import org.arig.robot.filters.average.PassThroughValueAverage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -33,11 +33,11 @@ public class GP2D12 {
     private final String name;
 
     @Setter
-    private IAverage<Integer> avgRaw12Bit = new PassThroughValueAverage<>();
+    private Average<Integer> avgRaw12Bit = new PassThroughValueAverage<>();
     @Setter
-    private IAverage<Integer> avgRaw10Bit = new PassThroughValueAverage<>();
+    private Average<Integer> avgRaw10Bit = new PassThroughValueAverage<>();
     @Setter
-    private IAverage<Double> avgCm = new PassThroughValueAverage<>();
+    private Average<Double> avgCm = new PassThroughValueAverage<>();
 
     public GP2D12(final byte capteurId) {
         this(capteurId, "UNKNOWN");

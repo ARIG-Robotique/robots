@@ -12,7 +12,7 @@ import java.util.function.BinaryOperator;
  *
  * @author gdepuille on 14/05/17.
  */
-public abstract class AbstractCircularFifoValueAverage<T> implements IAverage<T> {
+public abstract class AbstractCircularFifoValueAverage<T> implements Average<T> {
 
     private CircularFifoQueue<T> queue;
 

@@ -3,7 +3,7 @@ package org.arig.robot.system.encoders;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.II2CManager;
+import org.arig.robot.communication.I2CManager;
 import org.arig.robot.exception.I2CException;
 
 @Slf4j
@@ -23,7 +23,7 @@ public final class ARIGEncoderUtils {
      * @throws I2CException
      * @see <a href="https://github.com/ARIG-Robotique/quadratic-reader">GitHub Quadratic Reader</a>
      */
-    public static int lectureData(II2CManager i2cManager, final String deviceName) throws I2CException {
+    public static int lectureData(I2CManager i2cManager, final String deviceName) throws I2CException {
         try {
             i2cManager.sendData(deviceName);
         } catch (I2CException e) {

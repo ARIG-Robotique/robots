@@ -1,6 +1,6 @@
 package org.arig.robot.filters.common;
 
-import org.arig.robot.filters.IFilter;
+import org.arig.robot.filters.Filter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,7 +40,7 @@ public class SignalEdgeFilterTest {
     @Test
     public void risingValueIsNull() {
         IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> risingFilter.filter(null));
-        Assertions.assertEquals(ex.getMessage(), IFilter.FILTER_VALUE_NULL_MESSAGE);
+        Assertions.assertEquals(ex.getMessage(), Filter.FILTER_VALUE_NULL_MESSAGE);
     }
 
     @Test

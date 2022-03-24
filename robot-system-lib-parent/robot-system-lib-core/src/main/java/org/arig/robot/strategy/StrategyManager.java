@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.services.LidarService;
-import org.arig.robot.system.group.IRobotGroup;
+import org.arig.robot.system.group.RobotGroup;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class StrategyManager {
 
     @Autowired
-    private List<IAction> actions;
+    private List<Action> actions;
 
     @Autowired
     private AbstractRobotStatus rs;
@@ -29,12 +29,12 @@ public class StrategyManager {
     private TableUtils tableUtils;
 
     @Autowired
-    private IRobotGroup group;
+    private RobotGroup group;
 
     @Autowired
     private LidarService lidarService;
 
-    public synchronized List<IAction> actions() {
+    public synchronized List<Action> actions() {
         return actions;
     }
 
@@ -45,12 +45,12 @@ public class StrategyManager {
 
         final String otherCurrentAction = rs.otherCurrentAction();
 
-        Optional<IAction> nextAction = actions().stream()
-                .filter(IAction::isValid)
+        Optional<Action> nextAction = actions().stream()
+                .filter(Action::isValid)
                 .filter(a -> !StringUtils.equals(otherCurrentAction, a.name()))
                 .filter(a -> !a.blockingActions().contains(otherCurrentAction))
                 .filter(a -> !lidarService.hasObstacleInZone(a.blockingZone()))
-                .sorted(Comparator.comparingInt(IAction::order).reversed())
+                .sorted(Comparator.comparingInt(Action::order).reversed())
                 .findFirst();
 
         if (!nextAction.isPresent()) {
@@ -62,7 +62,7 @@ public class StrategyManager {
             return;
         }
 
-        final IAction action = nextAction.get();
+        final Action action = nextAction.get();
         rs.currentAction(action.name());
         group.setCurrentAction(action.name());
         log.info("Execution de l'action {}", action.name());
@@ -81,9 +81,9 @@ public class StrategyManager {
 
         // Purge des actions terminé par l'autre robot entre temps
         log.info("Purge des actions terminés entre temps");
-        final List<IAction> completedActions = actions().stream()
-                .peek(IAction::refreshCompleted)
-                .filter(IAction::isCompleted)
+        final List<Action> completedActions = actions().stream()
+                .peek(Action::refreshCompleted)
+                .filter(Action::isCompleted)
                 .collect(Collectors.toList());
         completedActions.forEach(a -> actions().remove(a));
 

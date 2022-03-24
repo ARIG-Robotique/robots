@@ -2,9 +2,9 @@ package org.arig.robot.services;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.IEurobotConfig;
-import org.arig.robot.model.EStrategy;
-import org.arig.robot.model.ETeam;
+import org.arig.robot.constants.EurobotConfig;
+import org.arig.robot.model.Strategy;
+import org.arig.robot.model.Team;
 import org.arig.robot.model.ecran.EcranConfig;
 import org.arig.robot.model.ecran.EcranParams;
 import org.arig.robot.model.ecran.EcranState;
@@ -38,11 +38,11 @@ public class EcranService extends AbstractEcranService<EcranConfig, EcranState> 
     protected EcranParams getParams() {
         EcranParams ecranParams = new EcranParams();
         ecranParams.setTeams(ImmutableMap.of(
-                ETeam.JAUNE.name(), "yellow",
-                ETeam.VIOLET.name(), "purple"
+                Team.JAUNE.name(), "yellow",
+                Team.VIOLET.name(), "purple"
         ));
-        ecranParams.setStrategies(Stream.of(EStrategy.values()).map(Enum::name).collect(Collectors.toList()));
-        ecranParams.setOptions(Arrays.asList(IEurobotConfig.OPTION_1, IEurobotConfig.OPTION_2));
+        ecranParams.setStrategies(Stream.of(Strategy.values()).map(Enum::name).collect(Collectors.toList()));
+        ecranParams.setOptions(Arrays.asList(EurobotConfig.OPTION_1, EurobotConfig.OPTION_2));
         return ecranParams;
     }
 }

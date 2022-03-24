@@ -13,7 +13,7 @@ import org.arig.robot.model.RobotConfig;
 import org.arig.robot.model.Shape;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
-import org.arig.robot.system.pathfinding.IPathFinder;
+import org.arig.robot.system.pathfinding.PathFinder;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ public class LidarService implements InitializingBean {
     private RobotConfig robotConfig;
 
     @Autowired
-    private IPathFinder pathFinder;
+    private PathFinder pathFinder;
 
     @Getter
     private final List<Point> detectedPointsMm = Collections.synchronizedList(new ArrayList<>());

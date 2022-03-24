@@ -1,7 +1,7 @@
 package org.arig.robot.system.motors;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.II2CManager;
+import org.arig.robot.communication.I2CManager;
 import org.arig.robot.exception.I2CException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,7 +31,7 @@ public class PropulsionsMD22Motors extends AbstractPropulsionsMotors {
     private static final byte MAX_VAL_MODE_1 = 127;
 
     @Autowired
-    private II2CManager i2cManager;
+    private I2CManager i2cManager;
 
     private final String deviceName;
     private byte modeValue;

@@ -5,7 +5,7 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.arig.robot.communication.II2CManager;
+import org.arig.robot.communication.I2CManager;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.ecran.AbstractEcranConfig;
 import org.arig.robot.model.ecran.AbstractEcranState;
@@ -22,10 +22,10 @@ import org.springframework.boot.logging.LogLevel;
 public abstract class AbstractEcranService<CONFIG extends AbstractEcranConfig, STATE extends AbstractEcranState> {
 
     @Autowired
-    private IIOService ioService;
+    private IOService ioService;
 
     @Autowired
-    private II2CManager ii2CManager;
+    private I2CManager i2CManager;
 
     @Autowired
     private StrategyManager strategyManager;
@@ -98,7 +98,7 @@ public abstract class AbstractEcranService<CONFIG extends AbstractEcranConfig, S
     }
 
     public void updateStateInfo(STATE stateInfos) {
-        stateInfos.setI2c(ii2CManager.status());
+        stateInfos.setI2c(i2CManager.status());
         stateInfos.setLidar(lidarService.isConnected());
         stateInfos.setAu(ioService.auOk());
         stateInfos.setAlimMoteurs(energyService.checkMoteurs(false));

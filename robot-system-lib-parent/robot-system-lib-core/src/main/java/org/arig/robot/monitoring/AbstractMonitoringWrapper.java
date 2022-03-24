@@ -19,7 +19,7 @@ import java.util.List;
  * @author gdepuille on 30/10/16.
  */
 @Slf4j
-public abstract class AbstractMonitoringWrapper implements IMonitoringWrapper {
+public abstract class AbstractMonitoringWrapper implements MonitoringWrapper {
 
     @Autowired(required = false)
     private AbstractRobotStatus robotStatus = null;
