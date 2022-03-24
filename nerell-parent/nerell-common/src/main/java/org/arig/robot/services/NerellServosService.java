@@ -39,12 +39,12 @@ public class NerellServosService extends AbstractServosService {
     private static final String TRAPPE_ARRIERE_DROITE = "Trappe arrière droite";
     private static final byte TRAPPE_ARRIERE_DROITE_ID = 13;
 
+    private static final String POS_REPOS = "Repos";
     private static final String POS_FERME = "Fermé";
     private static final String POS_OUVERT = "Ouvert";
     private static final String POS_PRISE_DEPOSE = "Prise / dépose";
-    private static final String POS_POUSETTE = "Pousette";
+    private static final String POS_POUSSETTE = "Poussette";
     private static final String POS_MESURE = "Mesure";
-
 
     private static final String GROUP_BRAS_BAS = "Bras bas";
     private static final byte GROUP_BRAS_BAS_ID = 1;
@@ -54,23 +54,35 @@ public class NerellServosService extends AbstractServosService {
     private static final byte GROUP_BRAS_MESURE_ID = 3;
     private static final String GROUP_STATUETTE = "Statuette / Replique";
     private static final byte GROUP_STATUETTE_ID = 4;
-    private static final String GROUP_TRAPPES_ARRIERE = "Trappes arrière";
+    private static final String GROUP_TRAPPES_LATERAL_ARRIERE = "Trappes lateral arrière";
     private static final byte GROUP_TRAPPES_ARRIERE_ID = 5;
 
     public NerellServosService() {
         super();
 
-        Servo brasBasEpaule = servo(BRAS_BAS_EPAULE_ID, BRAS_BAS_EPAULE);
-        Servo brasBasCoude = servo(BRAS_BAS_COUDE_ID, BRAS_BAS_COUDE);
-        Servo brasBasPoignet = servo(BRAS_BAS_POIGNET_ID, BRAS_BAS_POIGNET);
+        Servo brasBasEpaule = servo(BRAS_BAS_EPAULE_ID, BRAS_BAS_EPAULE)
+                .time(500)
+                .position(POS_REPOS, 1500);
+        Servo brasBasCoude = servo(BRAS_BAS_COUDE_ID, BRAS_BAS_COUDE)
+                .time(500)
+                .position(POS_REPOS, 1500);
+        Servo brasBasPoignet = servo(BRAS_BAS_POIGNET_ID, BRAS_BAS_POIGNET)
+                .time(500)
+                .position(POS_REPOS, 1500);
         group(GROUP_BRAS_BAS_ID, GROUP_BRAS_BAS)
                 .addServo(brasBasEpaule)
                 .addServo(brasBasCoude)
                 .addServo(brasBasPoignet);
 
-        Servo brasHautEpaule = servo(BRAS_HAUT_EPAULE_ID, BRAS_HAUT_EPAULE);
-        Servo brasHautCoude = servo(BRAS_HAUT_COUDE_ID, BRAS_HAUT_COUDE);
-        Servo brasHautPoignet = servo(BRAS_HAUT_POIGNET_ID, BRAS_HAUT_POIGNET);
+        Servo brasHautEpaule = servo(BRAS_HAUT_EPAULE_ID, BRAS_HAUT_EPAULE)
+                .time(500)
+                .position(POS_REPOS, 1500);
+        Servo brasHautCoude = servo(BRAS_HAUT_COUDE_ID, BRAS_HAUT_COUDE)
+                .time(500)
+                .position(POS_REPOS, 1500);
+        Servo brasHautPoignet = servo(BRAS_HAUT_POIGNET_ID, BRAS_HAUT_POIGNET)
+                .time(500)
+                .position(POS_REPOS, 1500);
         group(GROUP_BRAS_HAUT_ID, GROUP_BRAS_HAUT)
                 .addServo(brasHautEpaule)
                 .addServo(brasHautCoude)
@@ -83,7 +95,7 @@ public class NerellServosService extends AbstractServosService {
         Servo brasPousseCarreFouille = servo(BRAS_POUSSE_CARRE_FOUILLE_ID, BRAS_POUSSE_CARRE_FOUILLE)
                 .time(500)
                 .position(POS_FERME, 1500)
-                .position(POS_POUSETTE, 1500);
+                .position(POS_POUSSETTE, 1500);
         group(GROUP_BRAS_MESURE_ID, GROUP_BRAS_MESURE)
                 .addServo(brasMesureCarreFouille)
                 .addServo(brasPousseCarreFouille);
@@ -95,7 +107,7 @@ public class NerellServosService extends AbstractServosService {
         Servo pousseReplique = servo(POUSSE_REPLIQUE_ID, POUSSE_REPLIQUE)
                 .time(500)
                 .position(POS_FERME, 1500)
-                .position(POS_POUSETTE, 1500);
+                .position(POS_POUSSETTE, 1500);
         group(GROUP_STATUETTE_ID, GROUP_STATUETTE)
                 .addServo(pinceStatuette)
                 .addServo(pousseReplique);
@@ -113,7 +125,7 @@ public class NerellServosService extends AbstractServosService {
                 .position(POS_FERME, 1500)
                 .position(POS_OUVERT, 1500);
 
-        group(GROUP_TRAPPES_ARRIERE_ID, GROUP_TRAPPES_ARRIERE)
+        group(GROUP_TRAPPES_ARRIERE_ID, GROUP_TRAPPES_LATERAL_ARRIERE)
                 .addServo(trappeArriereGauche)
                 .addServo(trappeArriereCentre)
                 .addServo(trappeArriereDroite)
@@ -126,32 +138,118 @@ public class NerellServosService extends AbstractServosService {
     /* **************************************** */
 
     public void homes() {
-        groupTrappesArriereFerme(false);
+        // TODO: Bras haut et bas @home
+        brasMesureCarreFouilleFerme(false);
+        brasPousseCarreFouilleFerme(false);
+        pinceStatuetteFerme(false);
+        pousseRepliqueFerme(false);
+        trappeArriereCentreFerme(false);
+        groupTrappesLateralArriereFerme(false);
     }
 
     //*******************************************//
     //* Lecture des positions                   *//
     //*******************************************//
 
+    public boolean isBrasMesureCarreFouilleFerme() {
+        return isInPosition(BRAS_MESURE_CARRE_FOUILLE, POS_FERME);
+    }
+
+    public boolean isBrasMesureCarreFouilleMesure() {
+        return isInPosition(BRAS_MESURE_CARRE_FOUILLE, POS_MESURE);
+    }
+
+    public boolean isBrasPousseCarreFouilleFerme() {
+        return isInPosition(BRAS_POUSSE_CARRE_FOUILLE, POS_FERME);
+    }
+
+    public boolean isBrasPousseCarreFouillePoussette() {
+        return isInPosition(BRAS_POUSSE_CARRE_FOUILLE, POS_POUSSETTE);
+    }
+
+    public boolean isPinceStatuetteFerme() {
+        return isInPosition(PINCE_STATUETTE, POS_FERME);
+    }
+
+    public boolean isPinceStatuettePriseDepose() {
+        return isInPosition(PINCE_STATUETTE, POS_PRISE_DEPOSE);
+    }
+
+    public boolean isTrappeArriereCentreFerme(){
+        return isInPosition(TRAPPE_ARRIERE_CENTRE, POS_FERME);
+    }
+
     public boolean isTrappeArriereCentreOuvert() {
         return isInPosition(TRAPPE_ARRIERE_CENTRE, POS_OUVERT);
+    }
+
+    public boolean isTrappeArriereGaucheFerme(){
+        return isInPosition(TRAPPE_ARRIERE_GAUCHE, POS_FERME);
+    }
+
+    public boolean isTrappeArriereGaucheOuvert(){
+        return isInPosition(TRAPPE_ARRIERE_GAUCHE, POS_OUVERT);
+    }
+
+    public boolean isTrappeArriereDroiteFerme(){
+        return isInPosition(TRAPPE_ARRIERE_DROITE, POS_FERME);
+    }
+
+    public boolean isTrappeArriereDroiteOuvert(){
+        return isInPosition(TRAPPE_ARRIERE_DROITE, POS_OUVERT);
     }
 
     //*******************************************//
     //* Déplacements de groupe                  *//
     //*******************************************//
 
-    public void groupTrappesArriereOuvert(boolean wait) {
-        setPositionBatch(GROUP_TRAPPES_ARRIERE, POS_OUVERT, wait);
+    public void groupTrappesLateralArriereOuvert(boolean wait) {
+        setPositionBatch(GROUP_TRAPPES_LATERAL_ARRIERE, POS_OUVERT, wait);
     }
 
-    public void groupTrappesArriereFerme(boolean wait) {
-        setPositionBatch(GROUP_TRAPPES_ARRIERE, POS_FERME, wait);
+    public void groupTrappesLateralArriereFerme(boolean wait) {
+        setPositionBatch(GROUP_TRAPPES_LATERAL_ARRIERE, POS_FERME, wait);
     }
 
     //*******************************************//
     //* Déplacements de servo                   *//
     //*******************************************//
+
+    public void pinceStatuetteFerme(boolean wait) {
+        setPosition(PINCE_STATUETTE, POS_FERME, wait);
+    }
+
+    public void pinceStatuettePriseDepose(boolean wait) {
+        setPosition(PINCE_STATUETTE, POS_PRISE_DEPOSE, wait);
+    }
+
+    public void pousseRepliqueFerme(boolean wait) {
+        setPosition(POUSSE_REPLIQUE, POS_FERME, wait);
+    }
+
+    public void pousseRepliquePoussette(boolean wait) {
+        setPosition(POUSSE_REPLIQUE, POS_POUSSETTE, wait);
+    }
+
+    public void brasMesureCarreFouilleFerme(boolean wait) {
+        setPosition(BRAS_MESURE_CARRE_FOUILLE, POS_FERME, wait);
+    }
+
+    public void brasMesureCarreFouilleMesure(boolean wait) {
+        setPosition(BRAS_MESURE_CARRE_FOUILLE, POS_MESURE, wait);
+    }
+
+    public void brasPousseCarreFouilleFerme(boolean wait) {
+        setPosition(BRAS_POUSSE_CARRE_FOUILLE, POS_FERME, wait);
+    }
+
+    public void brasPousseCarreFouillePoussette(boolean wait) {
+        setPosition(BRAS_POUSSE_CARRE_FOUILLE, POS_POUSSETTE, wait);
+    }
+
+    public void trappeArriereCentreFerme(boolean wait) {
+        setPosition(TRAPPE_ARRIERE_CENTRE, POS_FERME, wait);
+    }
 
     public void trappeArriereCentreOuvert(boolean wait) {
         setPosition(TRAPPE_ARRIERE_CENTRE, POS_OUVERT, wait);
