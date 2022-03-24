@@ -5,7 +5,6 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.TypeMouvement;
 import org.arig.robot.model.monitor.AbstractMonitorMouvement;
 import org.arig.robot.model.monitor.MonitorMouvementPath;
-import org.arig.robot.system.avoiding.AbstractAvoidingService;
 
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;

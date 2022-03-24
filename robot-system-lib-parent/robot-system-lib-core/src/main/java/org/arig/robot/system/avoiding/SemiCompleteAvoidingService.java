@@ -2,7 +2,6 @@ package org.arig.robot.system.avoiding;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
-import org.arig.robot.system.avoiding.AbstractAvoidingService;
 
 import java.util.concurrent.TimeUnit;
 

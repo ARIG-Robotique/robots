@@ -23,8 +23,8 @@ public class OdinEcranService extends EcranService {
             stateInfos.setTeam(rs.team());
             stateInfos.setStrategy(rs.strategy());
             stateInfos.setOptions(ImmutableMap.of(
-                    EurobotConfig.OPTION_1, rs.option1(),
-                    EurobotConfig.OPTION_2, rs.option2()
+                    EurobotConfig.STATUETTE_PRESENTE, rs.statuettePresente(),
+                    EurobotConfig.VITRINE_PRESENTE, rs.vitrinePresente()
             ));
         }
     }

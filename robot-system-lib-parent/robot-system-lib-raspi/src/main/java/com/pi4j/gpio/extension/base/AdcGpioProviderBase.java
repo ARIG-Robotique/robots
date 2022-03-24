@@ -29,7 +29,11 @@ package com.pi4j.gpio.extension.base;
  * #L%
  */
 
-import com.pi4j.io.gpio.*;
+import com.pi4j.io.gpio.GpioPin;
+import com.pi4j.io.gpio.GpioPinAnalogInput;
+import com.pi4j.io.gpio.GpioProviderBase;
+import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.gpio.PinMode;
 import com.pi4j.io.gpio.event.PinAnalogValueChangeEvent;
 import com.pi4j.io.gpio.event.PinListener;
 

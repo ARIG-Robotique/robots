@@ -30,8 +30,6 @@ package com.pi4j.gpio.extension.ads;
  */
 
 
-import java.io.IOException;
-
 import com.pi4j.io.gpio.GpioPin;
 import com.pi4j.io.gpio.GpioProvider;
 import com.pi4j.io.gpio.GpioProviderBase;
@@ -43,6 +41,8 @@ import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
+
+import java.io.IOException;
 
 /**
  * <p>

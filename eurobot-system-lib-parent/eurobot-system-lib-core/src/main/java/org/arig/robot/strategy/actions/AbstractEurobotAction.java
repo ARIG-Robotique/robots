@@ -1,9 +1,9 @@
 package org.arig.robot.strategy.actions;
 
-import org.arig.robot.model.Team;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
+import org.arig.robot.model.Team;
 import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.strategy.AbstractAction;

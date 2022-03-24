@@ -1,7 +1,6 @@
 package org.arig.robot.system.avoiding;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.system.avoiding.AbstractAvoidingService;
 
 /**
  * Evitement basique : arret complet si obstacle sans reprise

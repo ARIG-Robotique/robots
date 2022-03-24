@@ -1,7 +1,6 @@
 package org.arig.robot.system.avoiding;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.system.avoiding.AbstractAvoidingService;
 
 /**
  * Evitement sans path-finding : arret complet en cas d'obstacle et reprise après 1 seconde de blocage

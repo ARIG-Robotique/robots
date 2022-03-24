@@ -3,7 +3,6 @@ package org.arig.robot.system.capteurs;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.condition.EnabledIf;
 
 import java.io.File;
 

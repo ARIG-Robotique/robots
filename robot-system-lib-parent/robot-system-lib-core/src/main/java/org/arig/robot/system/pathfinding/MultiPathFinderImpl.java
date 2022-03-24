@@ -12,8 +12,6 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Chemin;
 import org.arig.robot.model.Point;
-import org.arig.robot.system.pathfinding.AbstractPathFinder;
-import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 import org.arig.robot.utils.ImageUtils;
 import org.arig.robot.utils.SimpleCircularList;
 import org.springframework.util.Assert;

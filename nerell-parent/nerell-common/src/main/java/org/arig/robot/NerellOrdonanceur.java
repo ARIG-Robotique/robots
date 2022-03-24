@@ -10,14 +10,14 @@ import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
-import org.arig.robot.model.Strategy;
-import org.arig.robot.model.Team;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.Strategy;
+import org.arig.robot.model.Team;
 import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.services.BaliseService;
-import org.arig.robot.services.NerellIOService;
 import org.arig.robot.services.NerellEcranService;
+import org.arig.robot.services.NerellIOService;
 import org.arig.robot.services.NerellServosService;
 import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.utils.ThreadUtils;
@@ -137,8 +137,8 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 log.info("Strategy {}", nerellRobotStatus.strategy().name());
             }
 
-            nerellRobotStatus.option1(ecranService.config().hasOption(EurobotConfig.OPTION_1));
-            nerellRobotStatus.option2(ecranService.config().hasOption(EurobotConfig.OPTION_2));
+            nerellRobotStatus.statuettePresente(ecranService.config().hasOption(EurobotConfig.STATUETTE_PRESENTE));
+            nerellRobotStatus.vitrinePresente(ecranService.config().hasOption(EurobotConfig.VITRINE_PRESENTE));
 
             groupService.configuration();
 

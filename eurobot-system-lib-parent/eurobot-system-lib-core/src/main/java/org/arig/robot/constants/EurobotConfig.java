@@ -14,8 +14,8 @@ public interface EurobotConfig {
     int tableBorder = 50;
 
     // Options de match
-    String OPTION_1 = "option1";
-    String OPTION_2 = "option2";
+    String STATUETTE_PRESENTE = "Statuette présente";
+    String VITRINE_PRESENTE = "Vitrine présente";
 
     // Noms des actions
 

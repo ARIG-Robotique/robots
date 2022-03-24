@@ -8,13 +8,13 @@ import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
-import org.arig.robot.model.Strategy;
-import org.arig.robot.model.Team;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.Strategy;
+import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.services.OdinIOService;
 import org.arig.robot.services.OdinEcranService;
+import org.arig.robot.services.OdinIOService;
 import org.arig.robot.services.OdinServosService;
 import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.utils.ThreadUtils;
@@ -133,8 +133,8 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                     log.info("Strategy {}", odinRobotStatus.strategy().name());
                 }
 
-                odinRobotStatus.option1(ecranService.config().hasOption(EurobotConfig.OPTION_1));
-                odinRobotStatus.option2(ecranService.config().hasOption(EurobotConfig.OPTION_2));
+                odinRobotStatus.statuettePresente(ecranService.config().hasOption(EurobotConfig.STATUETTE_PRESENTE));
+                odinRobotStatus.vitrinePresente(ecranService.config().hasOption(EurobotConfig.VITRINE_PRESENTE));
 
                 done = ecranService.config().isStartCalibration();
             }

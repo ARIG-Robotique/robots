@@ -29,7 +29,9 @@ package com.pi4j.gpio.extension.base;
  * #L%
  */
 
-import com.pi4j.io.gpio.*;
+import com.pi4j.io.gpio.GpioPinAnalogOutput;
+import com.pi4j.io.gpio.GpioProviderBase;
+import com.pi4j.io.gpio.Pin;
 
 /**
  *

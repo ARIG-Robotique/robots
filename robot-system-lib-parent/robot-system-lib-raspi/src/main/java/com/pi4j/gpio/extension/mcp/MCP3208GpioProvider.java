@@ -29,12 +29,12 @@ package com.pi4j.gpio.extension.mcp;
  * #L%
  */
 
-import java.io.IOException;
-
 import com.pi4j.gpio.extension.base.AdcGpioProvider;
 import com.pi4j.io.spi.SpiChannel;
 import com.pi4j.io.spi.SpiDevice;
 import com.pi4j.io.spi.SpiMode;
+
+import java.io.IOException;
 
 /**
  *

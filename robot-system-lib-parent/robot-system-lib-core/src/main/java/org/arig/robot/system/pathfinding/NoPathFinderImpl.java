@@ -3,7 +3,6 @@ package org.arig.robot.system.pathfinding;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Chemin;
 import org.arig.robot.model.Point;
-import org.arig.robot.system.pathfinding.AbstractPathFinder;
 
 import java.awt.*;
 import java.io.InputStream;
