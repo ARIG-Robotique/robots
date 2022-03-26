@@ -30,6 +30,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     public void setTeam(Team team) {
         this.team = team;
+        zoneDeFouille.refreshTeam(team);
     }
 
     private boolean statuettePresente = true;
@@ -40,17 +41,75 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
      */
 
     private boolean distributeurEquipePris = false;
+    public void distributeurEquipePris(boolean distributeurEquipePris) {
+        log.warn("[RS] distributeur equipe pris : {}", distributeurEquipePris);
+        this.distributeurEquipePris = distributeurEquipePris;
+    }
     private boolean distributeurCommunEquipePris = false;
+    public void distributeurCommunEquipePris(boolean distributeurCommunEquipePris) {
+        log.warn("[RS] distributeur commun equipe pris : {}", distributeurCommunEquipePris);
+        this.distributeurCommunEquipePris = distributeurCommunEquipePris;
+    }
     private boolean distributeurCommunAdversePris = false;
+    public void distributeurCommunAdversePris(boolean distributeurCommunAdversePris) {
+        log.warn("[RS] distributeur commun adverse pris : {}", distributeurCommunAdversePris);
+        this.distributeurCommunAdversePris = distributeurCommunAdversePris;
+    }
     private boolean siteEchantillonPris = false;
+    public void siteEchantillonPris(boolean siteEchantillonPris) {
+        log.warn("[RS] site echantillon pris : {}", siteEchantillonPris);
+        this.siteEchantillonPris = siteEchantillonPris;
+    }
     private boolean siteDeFouillePris = false;
+    public void siteDeFouillePris(boolean siteDeFouillePris) {
+        log.warn("[RS] site de fouille pris : {}", siteDeFouillePris);
+        this.siteDeFouillePris = siteDeFouillePris;
+    }
     private boolean vitrineActive = false;
+    public void vitrineActive(boolean vitrineActive) {
+        log.warn("[RS] vitrine active : {}", vitrineActive);
+        this.vitrineActive = vitrineActive;
+    }
     private boolean statuettePris = false;
+    public void statuettePris(boolean statuettePris) {
+        log.warn("[RS] statuette pris : {}", statuettePris);
+        this.statuettePris = statuettePris;
+    }
     private boolean statuetteDansVitrine = false;
+    public void statuetteDansVitrine(boolean statuetteDansVitrine) {
+        log.warn("[RS] statuette dans vitrine : {}", statuetteDansVitrine);
+        this.statuetteDansVitrine = statuetteDansVitrine;
+    }
     private boolean repliqueDepose = false;
+    public void repliqueDepose(boolean repliqueDepose) {
+        log.warn("[RS] replique depose : {}", repliqueDepose);
+        this.repliqueDepose = repliqueDepose;
+    }
     private boolean echantillonAbriChantierDistributeurPris = false;
+    public void echantillonAbriChantierDistributeurPris(boolean echantillonAbriChantierDistributeurPris) {
+        log.warn("[RS] echantillon abri chantier distributeur pris : {}", echantillonAbriChantierDistributeurPris);
+        this.echantillonAbriChantierDistributeurPris = echantillonAbriChantierDistributeurPris;
+    }
     private boolean echantillonAbriChantierCarreFouillePris = false;
+    public void echantillonAbriChantierCarreFouillePris(boolean echantillonAbriChantierCarreFouillePris) {
+        log.warn("[RS] echantillon abri chantier carre fouille pris : {}", echantillonAbriChantierCarreFouillePris);
+        this.echantillonAbriChantierCarreFouillePris = echantillonAbriChantierCarreFouillePris;
+    }
     private boolean echantillonCampementPris = false;
+    public void echantillonCampementPris(boolean echantillonCampementPris) {
+        log.warn("[RS] echantillon campement pris : {}", echantillonCampementPris);
+        this.echantillonCampementPris = echantillonCampementPris;
+    }
+    private SiteDeRetour siteDeRetour = SiteDeRetour.AUCUN;
+    public void siteDeRetour(SiteDeRetour siteDeRetour) {
+        log.warn("[RS] site de retour : {}", siteDeRetour);
+        this.siteDeRetour = siteDeRetour;
+    }
+    private SiteDeRetour siteDeRetourAutreRobot = SiteDeRetour.AUCUN;
+    public void siteDeRetourAutreRobot(SiteDeRetour siteDeRetourAutreRobot) {
+        log.warn("[RS] site de retour autre robot : {}", siteDeRetourAutreRobot);
+        this.siteDeRetourAutreRobot = siteDeRetourAutreRobot;
+    }
 
     @Setter(AccessLevel.NONE)
     private List<CouleurEchantillon> abriChantier = new ArrayList<>();
@@ -63,6 +122,19 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     @Setter(AccessLevel.NONE)
     private ZoneDeFouille zoneDeFouille = new ZoneDeFouille();
+
+    private int scoreAbriChantier() {
+        return abriChantier.size() * 5;
+    }
+
+    private int scoreRetourAuSite() {
+        if ((twoRobots() && siteDeRetour.isInSite() && siteDeRetourAutreRobot.isInSite() && siteDeRetour == siteDeRetourAutreRobot)
+                || (!twoRobots() && siteDeRetour.isInSite())) {
+            return 20;
+        }
+
+        return 0;
+    }
 
     public int calculerPoints() {
         int points = 0;
@@ -78,6 +150,13 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         if (statuettePris) points += 5;
         if (statuetteDansVitrine) points += 15;
         if (repliqueDepose) points += 10;
+        if (distributeurEquipePris) points += 3; // 3 échantillons
+        if (distributeurCommunEquipePris) points += 3; // 3 échantillons
+        points += campement.score();
+        points += galerie.score();
+        points += zoneDeFouille.score();
+        points += scoreAbriChantier();
+        points += scoreRetourAuSite();
 
         return points;
     }
@@ -91,7 +170,8 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         r.put("Carree fouille", zoneDeFouille.score());
         r.put("Campement", campement.score());
         r.put("Galerie", galerie.score());
-        r.put("Retour sur site", 0);
+        r.put("Abri de chantier", scoreAbriChantier());
+        r.put("Retour sur site", scoreRetourAuSite());
         return r;
     }
 
@@ -110,6 +190,8 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         r.put("echantillonAbriChantierDistributeurPris", echantillonAbriChantierDistributeurPris);
         r.put("echantillonAbriChantierCarreFouillePris", echantillonAbriChantierCarreFouillePris);
         r.put("echantillonCampementPris", echantillonCampementPris);
+        r.put("siteDeRetour", siteDeRetour);
+        r.put("siteDeRetourAutreRobot", siteDeRetourAutreRobot);
         return r;
     }
 }
