@@ -7,9 +7,7 @@ import java.util.concurrent.Executor;
 
 @Slf4j
 public class RobotGroupOverSocket extends AbstractRobotGroupOverSocket {
-
     public RobotGroupOverSocket(int serverPort, String otherHost, int otherPort, Executor executor) {
         super(serverPort, otherHost, otherPort, executor);
     }
-
 }

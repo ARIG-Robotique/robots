@@ -1,73 +1,127 @@
 package org.arig.robot.model;
 
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
+import java.util.stream.Stream;
+
 public class ZoneDeFouille {
 
+    @Setter
+    @Accessors(fluent = true, chain = true)
     private Team team;
 
-    private CarreeFouille[] carreeFouilles = new CarreeFouille[]{
-            new CarreeFouille(1),
-            new CarreeFouille(2, CouleurCarreeFouille.JAUNE),
-            new CarreeFouille(3),
-            new CarreeFouille(4),
-            new CarreeFouille(5),
-            new CarreeFouille(6),
-            new CarreeFouille(7),
-            new CarreeFouille(8),
-            new CarreeFouille(9, CouleurCarreeFouille.VIOLET),
-            new CarreeFouille(10)
+    private CarreFouille[] carresFouille = new CarreFouille[]{
+            new CarreFouille(1),
+            new CarreFouille(2, CouleurCarreFouille.JAUNE),
+            new CarreFouille(3),
+            new CarreFouille(4),
+            new CarreFouille(5),
+            new CarreFouille(6),
+            new CarreFouille(7),
+            new CarreFouille(8),
+            new CarreFouille(9, CouleurCarreFouille.VIOLET),
+            new CarreFouille(10)
     };
 
-    void refreshTeam(Team team) {
-        this.team = team;
+    CarreFouille get(int numero) {
+        return carresFouille[numero - 1];
+    }
+
+    boolean hasInconnu() {
+        return Stream.of(carresFouille).anyMatch(cf -> cf.couleur() == CouleurCarreFouille.INCONNU);
+    }
+
+    CarreFouille nextCarreFouilleToProcess() {
         if (team == Team.JAUNE) {
-            // Les 3 extrèmes droites sont violet (pour simplifier)
-            for (int i = 0 ; i < carreeFouilles.length ; i++) {
-                if (i == 1) {
-                    carreeFouilles[i].couleur(CouleurCarreeFouille.JAUNE);
-                } else if (i >= 7 ) {
-                    carreeFouilles[i].couleur(CouleurCarreeFouille.VIOLET);
-                } else {
-                    carreeFouilles[i].couleur(CouleurCarreeFouille.INCONNU);
+            for (int i = 1; i <= carresFouille.length - 3; i++) {
+                CarreFouille cf = get(i);
+                if(!cf.bascule() &&
+                        (cf.couleur() == CouleurCarreFouille.INCONNU || cf.couleur() == CouleurCarreFouille.JAUNE)) {
+                    return cf;
                 }
             }
-        } else {
-            // Les 3 extrèmes gauches sont jaune (pour simplifier)
-            for (int i = 0 ; i < carreeFouilles.length ; i++) {
-                if (i == 8) {
-                    carreeFouilles[i].couleur(CouleurCarreeFouille.VIOLET);
-                } else if (i <= 2 ) {
-                    carreeFouilles[i].couleur(CouleurCarreeFouille.JAUNE);
-                } else {
-                    carreeFouilles[i].couleur(CouleurCarreeFouille.INCONNU);
+        } else if (team == Team.VIOLET) {
+            for(int i = carresFouille.length; i >= 4; i--) {
+                CarreFouille cf = get(i);
+                if(!cf.bascule() &&
+                        (cf.couleur() == CouleurCarreFouille.INCONNU || cf.couleur() == CouleurCarreFouille.VIOLET)) {
+                    return cf;
                 }
             }
         }
+
+        return null;
     }
 
-    CarreeFouille get(int numero) {
-        return carreeFouilles[numero - 1];
+    void refreshProcessing() {
+        if (!hasInconnu()) {
+            return;
+        }
+
+        // Si le 1 est jaune ou le 10 violet, le 3 et le 8 sont interdit et réciroquement
+        if (get(1).couleur() == CouleurCarreFouille.JAUNE || get(3).couleur() == CouleurCarreFouille.INTERDIT
+                || get(8).couleur() == CouleurCarreFouille.INTERDIT || get(10).couleur() == CouleurCarreFouille.VIOLET) {
+            // Coté jaune
+            get(1).couleur(CouleurCarreFouille.JAUNE);
+            get(3).couleur(CouleurCarreFouille.INTERDIT);
+
+            // Coté violet
+            get(8).couleur(CouleurCarreFouille.INTERDIT);
+            get(10).couleur(CouleurCarreFouille.VIOLET);
+        }
+
+        // Si le 1 ou le 10 sont interdit, le 3 est jaune et le 8 est violet et réciproquement.
+        if (get(1).couleur() == CouleurCarreFouille.INTERDIT || get(3).couleur() == CouleurCarreFouille.JAUNE
+                || get(8).couleur() == CouleurCarreFouille.VIOLET || get(10).couleur() == CouleurCarreFouille.INTERDIT) {
+            // Coté jaune
+            get(1).couleur(CouleurCarreFouille.INTERDIT);
+            get(3).couleur(CouleurCarreFouille.JAUNE);
+
+            // Coté violet
+            get(8).couleur(CouleurCarreFouille.VIOLET);
+            get(10).couleur(CouleurCarreFouille.INTERDIT);
+        }
+
+        // Si le 4 ou le 7 sont violet, le 5 et le 6 sont jaune et reciproquement.
+        if (get(4).couleur() == CouleurCarreFouille.VIOLET || get(5).couleur() == CouleurCarreFouille.JAUNE
+                || get(6).couleur() == CouleurCarreFouille.JAUNE || get(7).couleur() == CouleurCarreFouille.VIOLET) {
+            get(4).couleur(CouleurCarreFouille.VIOLET);
+            get(5).couleur(CouleurCarreFouille.JAUNE);
+            get(6).couleur(CouleurCarreFouille.JAUNE);
+            get(7).couleur(CouleurCarreFouille.VIOLET);
+        }
+
+        // Si le 4 ou le 7 sont jaune, le 5 et 6 sont violet et réciproquement.
+        if (get(4).couleur() == CouleurCarreFouille.JAUNE || get(5).couleur() == CouleurCarreFouille.VIOLET
+                || get(6).couleur() == CouleurCarreFouille.VIOLET || get(7).couleur() == CouleurCarreFouille.JAUNE) {
+            get(4).couleur(CouleurCarreFouille.JAUNE);
+            get(5).couleur(CouleurCarreFouille.VIOLET);
+            get(6).couleur(CouleurCarreFouille.VIOLET);
+            get(7).couleur(CouleurCarreFouille.JAUNE);
+        }
     }
 
     int score() {
         int points = 0;
-        for (int i = 0 ; i < carreeFouilles.length ; i++) {
+        for (int i = 0; i < carresFouille.length; i++) {
             // On ignore les 3 extrèmes gauches et droites en fonction de la team
             if ((i <= 2 && team == Team.VIOLET) || (i >= 7 && team == Team.JAUNE)) {
                 continue;
             }
 
             // Contrôle carrée de fouille pas basculé, pas de points
-            if (!carreeFouilles[i].bascule()) {
+            if (!carresFouille[i].bascule()) {
                 continue;
             }
 
             // On a basculé un interdit, game over
-            if (carreeFouilles[i].couleur() == CouleurCarreeFouille.INTERDIT) {
+            if (carresFouille[i].couleur() == CouleurCarreFouille.INTERDIT) {
                 return 0;
             }
 
-            if ((team == Team.JAUNE && carreeFouilles[i].couleur() == CouleurCarreeFouille.JAUNE)
-                || (team == Team.VIOLET && carreeFouilles[i].couleur() == CouleurCarreeFouille.VIOLET)) {
+            if ((team == Team.JAUNE && carresFouille[i].couleur() == CouleurCarreFouille.JAUNE)
+                    || (team == Team.VIOLET && carresFouille[i].couleur() == CouleurCarreFouille.VIOLET)) {
                 points += 5;
             }
         }

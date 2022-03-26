@@ -7,28 +7,24 @@ import java.io.Serializable;
 
 @Data
 @Accessors(fluent = true, chain = true)
-public class CarreeFouille implements Serializable {
+public class CarreFouille implements Serializable {
 
     private final int numero;
 
-    private CouleurCarreeFouille couleur;
+    private CouleurCarreFouille couleur;
     private boolean bascule = false;
 
-    public CarreeFouille(final int numero) {
-        this(numero, CouleurCarreeFouille.INCONNU);
+    public CarreFouille(final int numero) {
+        this(numero, CouleurCarreFouille.INCONNU);
     }
 
-    public CarreeFouille(final int numero, final CouleurCarreeFouille couleur) {
+    public CarreFouille(final int numero, final CouleurCarreFouille couleur) {
         this.numero = numero;
         this.couleur = couleur;
     }
 
     public boolean needRead() {
-        return couleur == null || couleur == CouleurCarreeFouille.INCONNU;
-    }
-
-    public boolean isValid() {
-        return couleur != null && couleur != CouleurCarreeFouille.INTERDIT;
+        return couleur == null || couleur == CouleurCarreFouille.INCONNU;
     }
 
     /**

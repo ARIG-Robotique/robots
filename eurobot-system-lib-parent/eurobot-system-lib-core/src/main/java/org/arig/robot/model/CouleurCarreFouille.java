@@ -1,5 +1,5 @@
 package org.arig.robot.model;
 
-public enum CouleurCarreeFouille {
+public enum CouleurCarreFouille {
     JAUNE, VIOLET, INTERDIT, INCONNU
 }
