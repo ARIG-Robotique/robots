@@ -33,13 +33,15 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         zoneDeFouille.team(team);
     }
 
+    /**
+     * CONFIGURATION
+     */
     private boolean statuettePresente = true;
     private boolean vitrinePresente = true;
 
     /**
      * STATUT
      */
-
     private boolean distributeurEquipePris = false;
     public void distributeurEquipePris(boolean distributeurEquipePris) {
         log.info("[RS] distributeur equipe pris : {}", distributeurEquipePris);
@@ -114,74 +116,81 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Setter(AccessLevel.NONE)
     private List<CouleurEchantillon> abriChantier = new ArrayList<>();
 
-    public EurobotStatus addAbriChantier(CouleurEchantillon couleur) {
-        log.info("[RS] add abri chantier : {}", couleur);
-        abriChantier.add(couleur);
-        return this;
+    public void deposeAbriChantier(CouleurEchantillon ... echantillons) {
+        for (CouleurEchantillon echantillon : echantillons) {
+            log.info("[RS] depose abri chantier : {}", echantillon);
+            abriChantier.add(echantillon);
+        }
     }
 
     @Setter(AccessLevel.NONE)
     private Campement campement = new Campement();
 
-    public EurobotStatus addCampementRouge(CouleurEchantillon echantillon) {
-        log.info("[RS] add campement rouge : {}", echantillon);
-        campement.addRouge(echantillon);
-        return this;
+    public void deposeCampementRouge(CouleurEchantillon ... echantillons) {
+        for (CouleurEchantillon echantillon : echantillons) {
+            log.info("[RS] depose campement rouge : {}", echantillon);
+            campement.addRouge(echantillon);
+        }
     }
-    public EurobotStatus addCampementVert(CouleurEchantillon echantillon) {
-        log.info("[RS] add campement vert : {}", echantillon);
-        campement.addVert(echantillon);
-        return this;
+    public void deposeCampementVert(CouleurEchantillon ... echantillons) {
+        for (CouleurEchantillon echantillon : echantillons) {
+            log.info("[RS] depose campement vert : {}", echantillon);
+            campement.addVert(echantillon);
+        }
     }
-    public EurobotStatus addCampementBleu(CouleurEchantillon echantillon) {
-        log.info("[RS] add campement bleu : {}", echantillon);
-        campement.addBleu(echantillon);
-        return this;
+    public void deposeCampementBleu(CouleurEchantillon ... echantillons) {
+        for (CouleurEchantillon echantillon : echantillons) {
+            log.info("[RS] depose campement bleu : {}", echantillon);
+            campement.addBleu(echantillon);
+        }
     }
 
     @Setter(AccessLevel.NONE)
     private Galerie galerie = new Galerie();
 
-    public EurobotStatus addGalerieRouge(CouleurEchantillon echantillon) {
-        log.info("[RS] add galerie rouge : {}", echantillon);
-        galerie.addRouge(echantillon);
-        return this;
+    public void deposeGalerieRouge(CouleurEchantillon ... echantillons) {
+        for (CouleurEchantillon echantillon : echantillons) {
+            log.info("[RS] depose galerie rouge : {}", echantillon);
+            galerie.addRouge(echantillon);
+        }
     }
-    public EurobotStatus addGalerieRougeVert(CouleurEchantillon echantillon) {
-        log.info("[RS] add galerie rouge vert : {}", echantillon);
-        galerie.addRougeVert(echantillon);
-        return this;
+    public void deposeGalerieRougeVert(CouleurEchantillon ... echantillons) {
+        for (CouleurEchantillon echantillon : echantillons) {
+            log.info("[RS] depose galerie rouge vert : {}", echantillon);
+            galerie.addRougeVert(echantillon);
+        }
     }
-    public EurobotStatus addGalerieVert(CouleurEchantillon echantillon) {
-        log.info("[RS] add galerie vert : {}", echantillon);
-        galerie.addVert(echantillon);
-        return this;
+    public void deposeGalerieVert(CouleurEchantillon ... echantillons) {
+        for (CouleurEchantillon echantillon : echantillons) {
+            log.info("[RS] depose galerie vert : {}", echantillon);
+            galerie.addVert(echantillon);
+        }
     }
-    public EurobotStatus addGalerieVertBleu(CouleurEchantillon echantillon) {
-        log.info("[RS] add galerie vert bleu : {}", echantillon);
-        galerie.addVertBleu(echantillon);
-        return this;
+    public void deposeGalerieVertBleu(CouleurEchantillon ... echantillons) {
+        for (CouleurEchantillon echantillon : echantillons) {
+            log.info("[RS] depose galerie vert bleu : {}", echantillon);
+            galerie.addVertBleu(echantillon);
+        }
     }
-    public EurobotStatus addGalerieBleu(CouleurEchantillon echantillon) {
-        log.info("[RS] add galerie bleu : {}", echantillon);
-        galerie.addBleu(echantillon);
-        return this;
+    public void deposeGalerieBleu(CouleurEchantillon ... echantillons) {
+        for (CouleurEchantillon echantillon : echantillons) {
+            log.info("[RS] depose galerie bleu : {}", echantillon);
+            galerie.addBleu(echantillon);
+        }
     }
 
     @Setter(AccessLevel.NONE)
     private ZoneDeFouille zoneDeFouille = new ZoneDeFouille();
 
-    public EurobotStatus couleurCarreFouille(int numero, CouleurCarreFouille couleur) {
+    public void couleurCarreFouille(int numero, CouleurCarreFouille couleur) {
         log.info("[RS] couleur carre fouille {} : {}", numero, couleur);
         zoneDeFouille.get(numero).couleur(couleur);
         zoneDeFouille.refreshProcessing();
-        return this;
     }
 
-    public EurobotStatus basculeCarreFouille(int numero) {
+    public void basculeCarreFouille(int numero) {
         log.info("[RS] bascule carre fouille : {}", numero);
         zoneDeFouille.get(numero).bascule(true);
-        return this;
     }
 
     private int scoreAbriChantier() {

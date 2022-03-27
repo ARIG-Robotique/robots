@@ -7,20 +7,19 @@ import org.arig.robot.communication.socket.group.EventLogQuery;
 import org.arig.robot.communication.socket.group.enums.GroupAction;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.system.communication.AbstractBidirectionalSocket;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.Executor;
 
 @Slf4j
 public class AbstractRobotGroupOverSocket extends AbstractBidirectionalSocket<GroupAction> implements RobotGroup {
 
-    @Autowired
-    private AbstractRobotStatus rs;
+    private final AbstractRobotStatus rs;
 
     private Handler handler = null;
 
-    public AbstractRobotGroupOverSocket(int serverPort, String otherHost, int otherPort, Executor executor) {
+    public AbstractRobotGroupOverSocket(AbstractRobotStatus rs, int serverPort, String otherHost, int otherPort, Executor executor) {
         super(serverPort, otherHost, otherPort, 2000, executor);
+        this.rs = rs;
     }
 
     @Override

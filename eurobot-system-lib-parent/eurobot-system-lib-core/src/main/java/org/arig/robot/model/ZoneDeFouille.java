@@ -24,7 +24,7 @@ public class ZoneDeFouille {
             new CarreFouille(10)
     };
 
-    CarreFouille get(int numero) {
+    public CarreFouille get(int numero) {
         return carresFouille[numero - 1];
     }
 
