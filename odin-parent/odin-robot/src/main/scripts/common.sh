@@ -13,7 +13,7 @@ sudo rm -vf /tmp/ecran.sock
 echo ""
 
 echo "* Configuration de la JVM"
-#JAVA_HOME=/opt/jre-11.0.13
+#JAVA_HOME=/opt/jre-11.0.14
 JAVA_HOME=/opt/jre-13.0.2
 PATH=${JAVA_HOME}/bin:${PATH}
 java -version

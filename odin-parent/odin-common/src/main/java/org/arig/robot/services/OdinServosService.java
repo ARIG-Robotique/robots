@@ -8,23 +8,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class OdinServosService extends AbstractCommonServosService {
 
-    private static final byte BRAS_BAS_EPAULE_ID = 1;
-    private static final byte BRAS_BAS_COUDE_ID = 2;
-    private static final byte BRAS_BAS_POIGNET_ID = 3;
+    private static final byte BRAS_BAS_EPAULE_ID = 19;
+    private static final byte BRAS_BAS_COUDE_ID = 11;
+    private static final byte BRAS_BAS_POIGNET_ID = 12;
 
-    private static final byte BRAS_HAUT_EPAULE_ID = 4;
-    private static final byte BRAS_HAUT_COUDE_ID = 5;
-    private static final byte BRAS_HAUT_POIGNET_ID = 6;
+    private static final byte BRAS_HAUT_EPAULE_ID = 7;
+    private static final byte BRAS_HAUT_COUDE_ID = 21;
+    private static final byte BRAS_HAUT_POIGNET_ID = 20;
 
-    private static final byte BRAS_MESURE_CARRE_FOUILLE_ID = 7;
-    private static final byte BRAS_POUSSE_CARRE_FOUILLE_ID = 8;
+    private static final byte BRAS_MESURE_CARRE_FOUILLE_ID = 4;
+    private static final byte BRAS_POUSSE_CARRE_FOUILLE_ID = 2;
 
-    private static final byte PINCE_STATUETTE_ID = 9;
-    private static final byte POUSSE_REPLIQUE_ID = 10;
+    private static final byte PINCE_STATUETTE_ID = 3;
+    private static final byte POUSSE_REPLIQUE_ID = 5;
 
-    private static final byte TRAPPE_ARRIERE_GAUCHE_ID = 11;
-    private static final byte TRAPPE_ARRIERE_CENTRE_ID = 12;
-    private static final byte TRAPPE_ARRIERE_DROITE_ID = 13;
+    private static final byte TRAPPE_ARRIERE_GAUCHE_ID = 6;
+    private static final byte TRAPPE_ARRIERE_CENTRE_ID = 13;
+    private static final byte TRAPPE_ARRIERE_DROITE_ID = 1;
 
     private static final byte GROUP_BRAS_BAS_ID = 1;
     private static final byte GROUP_BRAS_HAUT_ID = 2;

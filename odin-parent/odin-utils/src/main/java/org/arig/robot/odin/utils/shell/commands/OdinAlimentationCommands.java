@@ -21,7 +21,6 @@ public class OdinAlimentationCommands {
     public Availability auOK() {
         return ioService.auOk() ? Availability.available() : Availability.unavailable("Arret d'urgence non OK");
     }
-
     @ShellMethodAvailability("auOK")
     @ShellMethod("Activation aliemntation moteurs")
     public void enableAlimentationMoteurs() {
@@ -33,6 +32,12 @@ public class OdinAlimentationCommands {
     public void enableAlimentationServoss() {
         servosService.cyclePreparation();
         ioService.enableAlimServos();
+    }
+
+    @ShellMethod("Désactivation des alimentations")
+    public void disableAlimentation() {
+        ioService.disableAlimServos();
+        ioService.disableAlimMoteurs();
     }
 
     /*@SneakyThrows

@@ -26,8 +26,8 @@ import java.io.IOException;
 @Service("IOService")
 public class OdinIOServiceRobot implements OdinIOService, InitializingBean, DisposableBean {
 
-    private static final int POMPE_VENTOUSE_BAS = 1;
-    private static final int POMPE_VENTOUSE_HAUT = 2;
+    private static final int POMPE_VENTOUSE_BAS = 3;
+    private static final int POMPE_VENTOUSE_HAUT = 4;
 
     @Autowired
     private I2CBus bus;
@@ -154,24 +154,24 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
         inAlimPuissanceServos = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_05);
         inAlimPuissanceMoteurs = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_06);
 
-        outAlimPuissanceServos = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
-        outAlimPuissanceMoteurs = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_02);
+        outAlimPuissanceServos = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_00);
+        outAlimPuissanceMoteurs = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
 
         // PCF1 (µSwitch)
-        inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
-        inCalageBordureArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
+        inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
+        inCalageBordureArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
         inCalageBordureArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
-        inCalageBordureAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
-        inCalageBordureAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
+        inCalageBordureAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
+        inCalageBordureAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
 
         // PCF2 (Pololu)
         inPresenceCarreFouille = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
         inPresencePriseBras = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
-        inPresenceStock1 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
-        inPresenceStock2 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
+        inPresenceStock1 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
+        inPresenceStock2 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
         inPresenceStock3 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
-        inPresenceStock4 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
-        inPresenceStock5 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
+        inPresenceStock4 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
+        inPresenceStock5 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
         inPresenceStock6 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_07);
     }
 
@@ -306,6 +306,13 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
     private CouleurEchantillon computeCouleur(TCS34725ColorSensor capteur) {
         final ColorData c = capteur.getColorData();
         log.info("{} R: {}, G: {}, B: {}", capteur.deviceName(), c.r(), c.g(), c.b());
+        if (c.r() > c.g() && c.r() > c.b()) {
+            return CouleurEchantillon.ROUGE;
+        } else if (c.g() > c.r() && c.g() > c.b()) {
+            return CouleurEchantillon.VERT;
+        } else if (c.b() > c.r() && c.b() > c.g()) {
+            return CouleurEchantillon.BLEU;
+        }
         return CouleurEchantillon.ROCHER;
     }
 

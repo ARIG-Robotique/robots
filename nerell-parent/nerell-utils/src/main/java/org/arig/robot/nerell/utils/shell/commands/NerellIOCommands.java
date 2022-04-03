@@ -6,9 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.services.NerellIOServiceRobot;
 import org.arig.robot.system.capteurs.CarreFouilleReader;
-import org.arig.robot.system.capteurs.TCA9548MultiplexerI2C;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -21,16 +18,7 @@ import org.springframework.shell.standard.ShellMethod;
 public class NerellIOCommands {
 
     private final NerellIOServiceRobot nerellIOServiceRobot;
-    private final TCA9548MultiplexerI2C mux;
-    private final TCS34725ColorSensor couleurVentouseBas;
     private final CarreFouilleReader carreFouilleReader;
-
-    @ShellMethod("Identification capteur couleur")
-    public void identificationCouleur(byte id) {
-        mux.selectChannel(id);
-        ColorData cd = couleurVentouseBas.getColorData();
-        log.info("Couleur capteur {} : R {} - G {} - B {} - #{}", id, cd.r(), cd.g(), cd.b(), cd.hexColor());
-    }
 
     @ShellMethod("Read couleur ventouse")
     public void readCouleurVentouse() {

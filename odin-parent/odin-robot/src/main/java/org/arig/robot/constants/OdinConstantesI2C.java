@@ -16,8 +16,8 @@ public interface OdinConstantesI2C {
     String PCF1_DEVICE_NAME = "PCF 1 (Inputs µSwitch)";
     int PCF1_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3F;
 
-    String PCF2_DEVICE_NAME = "PCF 1 (Inputs Pololu)";
-    int PCF2_ADDRESS = PCF8574GpioProvider.PCF8574A_0x38;
+    String PCF2_DEVICE_NAME = "PCF 2 (Inputs Pololu)";
+    int PCF2_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3B;
 
     String PCA9685_DEVICE_NAME = "PCA9685";
     int PCA9685_ADDRESS = 0x40;
@@ -35,10 +35,10 @@ public interface OdinConstantesI2C {
     int MULTIPLEXEUR_I2C_ADDRESS = 0x70;
 
     String COULEUR_VENTOUSE_BAS_NAME = "Couleur ventouse bas";
-    byte COULEUR_VENTOUSE_BAS_MUX_CHANNEL = 2;
+    byte COULEUR_VENTOUSE_BAS_MUX_CHANNEL = 4;
 
     String COULEUR_VENTOUSE_HAUT_NAME = "Couleur ventouse haut";
-    byte COULEUR_VENTOUSE_HAUT_MUX_CHANNEL = 3;
+    byte COULEUR_VENTOUSE_HAUT_MUX_CHANNEL = 5;
 
     String CARRE_FOUILLE_READER_NAME = "Carre fouille reader";
     int CARRE_FOUILLE_READER_ADDRESS = 0x3C;

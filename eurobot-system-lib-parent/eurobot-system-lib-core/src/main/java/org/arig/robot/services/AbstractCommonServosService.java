@@ -1,11 +1,9 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service
-public class AbstractCommonServosService extends AbstractServosService {
+public abstract class AbstractCommonServosService extends AbstractServosService {
 
     protected static final String BRAS_BAS_EPAULE = "Bras bas épaule";
     protected static final String BRAS_BAS_COUDE = "Bras bas coude";

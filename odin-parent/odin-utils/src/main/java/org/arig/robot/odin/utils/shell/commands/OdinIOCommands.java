@@ -4,10 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.CouleurEchantillon;
+import org.arig.robot.services.OdinIOServiceRobot;
 import org.arig.robot.system.capteurs.CarreFouilleReader;
-import org.arig.robot.system.capteurs.TCA9548MultiplexerI2C;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -19,15 +17,24 @@ import org.springframework.shell.standard.ShellMethod;
 @AllArgsConstructor
 public class OdinIOCommands {
 
-    private final TCA9548MultiplexerI2C mux;
-    private final TCS34725ColorSensor couleurVentouseBas;
+    private final OdinIOServiceRobot odinIOServiceRobot;
     private final CarreFouilleReader carreFouilleReader;
 
-    @ShellMethod("Identification capteur couleur")
-    public void identificationCouleur(byte id) {
-        mux.selectChannel(id);
-        ColorData cd = couleurVentouseBas.getColorData();
-        log.info("Couleur capteur {} : R {} - G {} - B {} - #{}", id, cd.r(), cd.g(), cd.b(), cd.hexColor());
+    @ShellMethod("Read couleur ventouse")
+    public void readCouleurVentouse() {
+        odinIOServiceRobot.enableLedCapteurCouleur();
+        ThreadUtils.sleep(500);
+        CouleurEchantillon echantillonHaut = odinIOServiceRobot.couleurVentouseHaut();
+        CouleurEchantillon echantillonBas = odinIOServiceRobot.couleurVentouseBas();
+        log.info("Couleur ventouse haut : {}", echantillonHaut);
+        log.info("Couleur ventouse bas : {}", echantillonBas);
+        odinIOServiceRobot.disableLedCapteurCouleur();
+    }
+
+    @SneakyThrows
+    @ShellMethod("Read carré de fouille")
+    public void readCarreFouille() {
+        log.info("Carre de fouille : {}", carreFouilleReader.readCarreFouille());
     }
 
     @SneakyThrows
@@ -41,9 +48,11 @@ public class OdinIOCommands {
 
         for (CouleurEchantillon couleur : CouleurEchantillon.values()) {
             log.info("State ventouse haut : {}", couleur);
-            carreFouilleReader.printStateVentouse(couleur, null);
+            carreFouilleReader.printStateVentouse(null, couleur);
             ThreadUtils.sleep(500);
         }
+
+        carreFouilleReader.printStateVentouse(null, null);
     }
 
     @SneakyThrows
@@ -58,5 +67,7 @@ public class OdinIOCommands {
                 ThreadUtils.sleep(500);
             }
         }
+
+        carreFouilleReader.printStateStock(null, null, null, null, null, null);
     }
 }

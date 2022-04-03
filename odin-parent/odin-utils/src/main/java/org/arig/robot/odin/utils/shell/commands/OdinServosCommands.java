@@ -38,7 +38,7 @@ public class OdinServosCommands {
 
     @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Identification des servos")
-    public void identification(byte id, int delta, byte speed, int nbCycle) {
+    public void identificationServos(byte id, int delta, byte speed, int nbCycle) {
         for (int i = 0; i < nbCycle; i++) {
             servosService.setPositionById(id, 1500 + delta, speed);
             ThreadUtils.sleep(1000);
