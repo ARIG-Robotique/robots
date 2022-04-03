@@ -16,20 +16,14 @@ public class NerellServosService extends AbstractCommonServosService {
     private static final byte BRAS_HAUT_COUDE_ID = 17;
     private static final byte BRAS_HAUT_POIGNET_ID = 16;
 
-    private static final byte BRAS_MESURE_CARRE_FOUILLE_ID = 1;
-    private static final byte BRAS_POUSSE_CARRE_FOUILLE_ID = 18;
+    private static final byte CARRE_FOUILLE_OHMMETRE_ID = 1;
+    private static final byte CARRE_FOUILLE_POUSSOIR_ID = 18;
 
-    private static final byte PINCE_STATUETTE_ID = 2;
+    private static final byte FOURCHE_STATUETTE_ID = 2;
 
-    private static final byte TRAPPE_ARRIERE_GAUCHE_ID = 3;
-    private static final byte TRAPPE_ARRIERE_CENTRE_ID = 20;
-    private static final byte TRAPPE_ARRIERE_DROITE_ID = 19;
-
-    private static final byte GROUP_BRAS_BAS_ID = 1;
-    private static final byte GROUP_BRAS_HAUT_ID = 2;
-    private static final byte GROUP_BRAS_MESURE_ID = 3;
-    private static final byte GROUP_STATUETTE_ID = 4;
-    private static final byte GROUP_TRAPPES_ARRIERE_ID = 5;
+    private static final byte MOUSTACHE_GAUCHE_ID = 3;
+    private static final byte LANGUE_ID = 20;
+    private static final byte MOUSTACHE_DROITE_ID = 19;
 
     public NerellServosService() {
         super();
@@ -46,7 +40,8 @@ public class NerellServosService extends AbstractCommonServosService {
         group(GROUP_BRAS_BAS_ID, GROUP_BRAS_BAS)
                 .addServo(brasBasEpaule)
                 .addServo(brasBasCoude)
-                .addServo(brasBasPoignet);
+                .addServo(brasBasPoignet)
+                .batch(POS_FERME);
 
         Servo brasHautEpaule = servo(BRAS_HAUT_EPAULE_ID, BRAS_HAUT_EPAULE)
                 .time(500)
@@ -60,44 +55,45 @@ public class NerellServosService extends AbstractCommonServosService {
         group(GROUP_BRAS_HAUT_ID, GROUP_BRAS_HAUT)
                 .addServo(brasHautEpaule)
                 .addServo(brasHautCoude)
-                .addServo(brasHautPoignet);
+                .addServo(brasHautPoignet)
+                .batch(POS_FERME);
 
-        Servo brasMesureCarreFouille = servo(BRAS_MESURE_CARRE_FOUILLE_ID, BRAS_MESURE_CARRE_FOUILLE)
+        Servo carreFouilleOhmmetre = servo(CARRE_FOUILLE_OHMMETRE_ID, CARRE_FOUILLE_OHMMETRE)
                 .time(500)
                 .position(POS_FERME, 1500)
                 .position(POS_MESURE, 1500);
-        Servo brasPousseCarreFouille = servo(BRAS_POUSSE_CARRE_FOUILLE_ID, BRAS_POUSSE_CARRE_FOUILLE)
+        Servo carreFouillePoussoir = servo(CARRE_FOUILLE_POUSSOIR_ID, CARRE_FOUILLE_POUSSOIR)
                 .time(500)
                 .position(POS_FERME, 1500)
                 .position(POS_POUSSETTE, 1500);
         group(GROUP_BRAS_MESURE_ID, GROUP_BRAS_MESURE)
-                .addServo(brasMesureCarreFouille)
-                .addServo(brasPousseCarreFouille);
+                .addServo(carreFouilleOhmmetre)
+                .addServo(carreFouillePoussoir);
 
-        Servo pinceStatuette = servo(PINCE_STATUETTE_ID, PINCE_STATUETTE)
+        Servo fourcheStatuette = servo(FOURCHE_STATUETTE_ID, FOURCHE_STATUETTE)
                 .time(500)
                 .position(POS_FERME, 1500)
                 .position(POS_PRISE_DEPOSE, 1500);
         group(GROUP_STATUETTE_ID, GROUP_STATUETTE)
-                .addServo(pinceStatuette);
+                .addServo(fourcheStatuette);
 
-        Servo trappeArriereGauche = servo(TRAPPE_ARRIERE_GAUCHE_ID, TRAPPE_ARRIERE_GAUCHE)
+        Servo moustacheGauche = servo(MOUSTACHE_GAUCHE_ID, MOUSTACHE_GAUCHE)
                 .time(500)
                 .position(POS_FERME, 1500)
                 .position(POS_OUVERT, 1500);
-        Servo trappeArriereCentre = servo(TRAPPE_ARRIERE_CENTRE_ID, TRAPPE_ARRIERE_CENTRE)
+        Servo langue = servo(LANGUE_ID, LANGUE)
                 .time(500)
                 .position(POS_FERME, 1500)
                 .position(POS_OUVERT, 1500);
-        Servo trappeArriereDroite = servo(TRAPPE_ARRIERE_DROITE_ID, TRAPPE_ARRIERE_DROITE)
+        Servo moustacheDroite = servo(MOUSTACHE_DROITE_ID, MOUSTACHE_DROITE)
                 .time(500)
                 .position(POS_FERME, 1500)
                 .position(POS_OUVERT, 1500);
 
-        group(GROUP_TRAPPES_ARRIERE_ID, GROUP_TRAPPES_LATERAL_ARRIERE)
-                .addServo(trappeArriereGauche)
-                .addServo(trappeArriereCentre)
-                .addServo(trappeArriereDroite)
+        group(GROUP_ARRIERE_ID, GROUP_ARRIERE)
+                .addServo(moustacheGauche)
+                .addServo(langue)
+                .addServo(moustacheDroite)
                 .batch(POS_OUVERT)
                 .batch(POS_FERME);
     }

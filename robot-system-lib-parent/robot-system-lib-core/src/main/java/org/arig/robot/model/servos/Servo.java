@@ -22,6 +22,9 @@ public class Servo {
     private int min = 3000;
     private int max = 0;
 
+    private int angleMin = 0;
+    private int angleMax = 0;
+
     // monitoring
     @JsonProperty("currentSpeed")
     private int currentSpeed;
