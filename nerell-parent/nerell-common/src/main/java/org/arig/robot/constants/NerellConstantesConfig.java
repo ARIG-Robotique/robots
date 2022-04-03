@@ -6,6 +6,7 @@ public interface NerellConstantesConfig {
 
     // Seuil de detection pour l'alimentation
     double seuilAlimentationServosVolts = 3;
+    double seuilAlimentationMoteursVolts = 7;
 
     // Nb Thread Pool Scheduler
     int nbThreadScheduledExecutor = 20;
@@ -30,13 +31,13 @@ public interface NerellConstantesConfig {
     // Configuration des convertions //
     // ----------------------------- //
 
-    // 40000 p => 1524.5 mm : 40000 / 1524.5 = 26,238110856
-    //double countPerMm = 26.238110856;
-    double countPerMm = 26.246265938069218;
+    // Diam 47mm => périmètre 147.655 mm
+    // 4096 p => 147.65485471872 mm : 4096 / 147.65485471872000000 = 27.74036795337890000
+    double countPerMm = 27.74036795337890000;
 
-    // 51325 p => 360° : 51325 / 360 = 142,569444444
-    //double countPerDeg = 142.569444444;
-    double countPerDeg = 142.5873611111111;
+    // Entraxe 280mm => périmètre 879.64594300514200000 mm (1 roue)
+    // 879.64594300514200000 mm => 180° : 879.64594300514200000 * 27.74036795337890000 / 180 =
+    double countPerDeg = 135.56501182033100000;
 
     double coefCodeurDroit = 1.0;
     double coefCodeurGauche = 1.0;
@@ -44,7 +45,7 @@ public interface NerellConstantesConfig {
     // ------------------------ //
     // Configuration des rampes //
     // ------------------------ //
-    double gainVitesseRampeDistance = 3;
+    double gainVitesseRampeDistance = 1.5;
     double gainVitesseRampeOrientation = gainVitesseRampeDistance * 2;
     double gainVitesseRampeDistanceSimulateur = 3;
     double gainVitesseRampeOrientationSimulateur = gainVitesseRampeDistanceSimulateur * 2;
@@ -72,18 +73,18 @@ public interface NerellConstantesConfig {
 
     double kcrDistance = 21.5;
     double tcrDistance = 0.04;
-    double kpDistance = 9;   // 6.5;   // 12.90
-    double kiDistance = 0; // 0.025; // 120
-    double kdDistance = 1;   // 150;   // 0.002
+    double kpDistance = 30;
+    double kiDistance = 0;
+    double kdDistance = 50;
     double kpDistanceSimu = 12.9;
     double kiDistanceSimu = 0.0;
     double kdDistanceSimu = 0.008;
 
     double kcrOrientation = 10.0;
     double tcrOrientation = 0.05;
-    double kpOrientation = 4;    // 0.8;   // 5;
-    double kiOrientation = 0; // 0.005; // 0.09;
-    double kdOrientation = 2;   // 80;    // 50;
+    double kpOrientation = 10;
+    double kiOrientation = 0;
+    double kdOrientation = 50;
     double kpOrientationSimu = 6.0;
     double kiOrientationSimu = 0.0;
     double kdOrientationSimu = 0.01;
@@ -108,7 +109,7 @@ public interface NerellConstantesConfig {
     // Paramètre Physiques        //
     // -------------------------- //
 
-    double dstCallage = 151.0; // dos du robot <=> milieu du robot
+    double dstCallage = 110.0; // dos du robot <=> milieu du robot
 
     // -------------------------- //
     // Paramètre Avoiding service //

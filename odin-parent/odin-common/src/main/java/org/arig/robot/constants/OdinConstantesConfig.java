@@ -32,39 +32,15 @@ public interface OdinConstantesConfig {
     // ----------------------------- //
 
     // Diam 47mm => périmètre 147.655 mm
-    // 4096 p => 147.65485471872 mm : 4096 / 147.65485471872 = 27.740367953379
-    //double countPerMm = 27.437735771;
-    //double countPerMm = 27.4398089550455000;
-    //double countPerMm = 27.43369373401977;
-    //double countPerMm = 27.43521476748314;
-    double countPerMm = 27.43361732339368;
+    // 4096 p => 147.65485471872 mm : 4096 / 147.65485471872000000 = 27.74036795337890000
+    double countPerMm = 27.74036795337890000;
 
-    // Entraxe 250mm => périmètre 785.39816339745 mm (1 roue)
-    // 785.39816339745 mm => 180° : 785.39816339745 * 27.740367953379 / 180 = 121.040189125
-    //double countPerDeg = 121.04018912529;
-    //double countPerDeg = 120.139145534;
-    //double countPerDeg = 119.719707124;
-    //double countPerDeg = 119.6199407014400000;
-    //double countPerDeg = 119.666123381539;
-    //double countPerDeg = 119.658051385;
-    //double countPerDeg = 119.649979388444;
-    //double countPerDeg = 119.654015387;
-    //double countPerDeg = 119.64038103943209;
-    //double countPerDeg = 119.63671933444043;
-    //double countPerDeg = 119.70623290737552;
-    //double countPerDeg = 119.70945955972493;
-    double countPerDeg = 119.68722222222223;
+    // Entraxe 280mm => périmètre 879.64594300514200000 mm (1 roue)
+    // 879.64594300514200000 mm => 180° : 879.64594300514200000 * 27.74036795337890000 / 180 =
+    double countPerDeg = 135.56501182033100000;
 
     double coefCodeurDroit = 1.0;
     double coefCodeurGauche = 1.0;
-    //double coefCodeurDroit = 0.9979078108395320;
-    //double coefCodeurGauche = 1.0020921891604700;
-    //double coefCodeurDroit = 0.9998923972085614;
-    //double coefCodeurGauche = 1.0001076027914404;
-    //double coefCodeurDroit = 0.9977054644225423;
-    //double coefCodeurGauche = 1.0022945355774595;
-    //double coefCodeurDroit = 0.9974800772898255;
-    //double coefCodeurGauche = 1.0025199227101746;
 
     // ------------------------ //
     // Configuration des rampes //
@@ -96,18 +72,18 @@ public interface OdinConstantesConfig {
     // TODO Configuration a faire
     double kcrDistance = 21.5;
     double tcrDistance = 0.04;
-    double kpDistance = 30;   // 6.5;   // 12.90
-    double kiDistance = 0; // 0.025; // 120
-    double kdDistance = 50;   // 150;   // 0.002
+    double kpDistance = 30;
+    double kiDistance = 0;
+    double kdDistance = 50;
     double kpDistanceSimu = 12.9;
     double kiDistanceSimu = 0.0;
     double kdDistanceSimu = 0.008;
 
     double kcrOrientation = 10.0;
     double tcrOrientation = 0.05;
-    double kpOrientation = 10;    // 0.8;   // 5;
-    double kiOrientation = 0; // 0.005; // 0.09;
-    double kdOrientation = 50;   // 80;    // 50;
+    double kpOrientation = 10;
+    double kiOrientation = 0;
+    double kdOrientation = 50;
     double kpOrientationSimu = 6.0;
     double kiOrientationSimu = 0.0;
     double kdOrientationSimu = 0.01;
@@ -132,7 +108,7 @@ public interface OdinConstantesConfig {
     // Paramètre Physiques        //
     // -------------------------- //
 
-    double dstCallage = 91.0; // dos du robot <=> milieu du robot
+    double dstCallage = 110.0; // dos du robot <=> milieu du robot
 
     // -------------------------- //
     // Paramètre Avoiding service //
@@ -147,8 +123,8 @@ public interface OdinConstantesConfig {
     PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.ANYA16;
     int pathFindingAngle = 45;
     int pathFindingAngleSafe = 50;
-    int pathFindingSeuilProximite = 440;
-    int pathFindingSeuilProximiteSafe = 500;
+    int pathFindingSeuilProximite = 480;
+    int pathFindingSeuilProximiteSafe = 540;
     int pathFindingTailleObstacle = OdinConstantesConfig.pathFindingSeuilProximite * 2 + 50;
 
     int lidarClusterSizeMm = 50;
