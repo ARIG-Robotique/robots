@@ -1,130 +1,111 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.servos.Servo;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class OdinServosService extends AbstractServosService {
+public class OdinServosService extends AbstractCommonServosService {
 
-    // Constantes de vitesse //
-    // --------------------- //
+    private static final byte BRAS_BAS_EPAULE_ID = 1;
+    private static final byte BRAS_BAS_COUDE_ID = 2;
+    private static final byte BRAS_BAS_POIGNET_ID = 3;
 
-    private static byte SPEED_BRAS = 0;
-    private static byte SPEED_PAVILLON = 0;
-    private static byte SPEED_POUSSOIR = 0;
-    private static byte SPEED_POUSSOIR_POUSSETTE = 20;
+    private static final byte BRAS_HAUT_EPAULE_ID = 4;
+    private static final byte BRAS_HAUT_COUDE_ID = 5;
+    private static final byte BRAS_HAUT_POIGNET_ID = 6;
 
-    // Tempo servos //
-    // ------------ //
+    private static final byte BRAS_MESURE_CARRE_FOUILLE_ID = 7;
+    private static final byte BRAS_POUSSE_CARRE_FOUILLE_ID = 8;
 
-    private static int WAIT_BRAS = 440;
-    private static int WAIT_PAVILLON = 300;
-    private static int WAIT_POUSSOIR = 500; // TODO
-    private static int WAIT_POUSSOIR_POUSSETTE = 500; // TODO
+    private static final byte PINCE_STATUETTE_ID = 9;
+    private static final byte POUSSE_REPLIQUE_ID = 10;
 
-    // Constantes d'identification Servo //
-    // --------------------------------- //
-    private static byte BRAS_GAUCHE = 14;
-    private static byte BRAS_DROIT = 15;
-    private static byte PAVILLON = 21;
-    private static byte POUSSOIR_AVANT_GAUCHE = 20;
-    private static byte POUSSOIR_AVANT_DROIT = 19;
-    private static byte POUSSOIR_ARRIERE_GAUCHE = 17;
-    private static byte POUSSOIR_ARRIERE_DROIT = 18;
+    private static final byte TRAPPE_ARRIERE_GAUCHE_ID = 11;
+    private static final byte TRAPPE_ARRIERE_CENTRE_ID = 12;
+    private static final byte TRAPPE_ARRIERE_DROITE_ID = 13;
 
-    // Constantes de position //
-    // ---------------------- //
-
-    private static int POS_BRAS_GAUCHE_FERME = 2050;
-    private static int POS_BRAS_DROIT_FERME = 780;
-    private static int POS_PAVILLON_BAS = 1400;
-    private static int POS_POUSSOIR_AVANT_GAUCHE_BAS = 2410;
-    private static int POS_POUSSOIR_AVANT_DROIT_BAS = 652;
-    private static int POS_POUSSOIR_ARRIERE_GAUCHE_BAS = 710;
-    private static int POS_POUSSOIR_ARRIERE_DROIT_BAS = 2140;
-
-    private static final String SERVO_BRAS_GAUCHE = "Bras gauche";
-    private static final String SERVO_BRAS_DROIT = "Bras droit";
-    private static final String SERVO_PAVILLON = "Pavillon";
-    private static final String SERVO_POUSSOIR_AVANT_GAUCHE = "Poussoir avant gauche";
-    private static final String SERVO_POUSSOIR_AVANT_DROIT = "Poussoir avant droit";
-    private static final String SERVO_POUSSOIR_ARRIERE_GAUCHE = "Poussoir arrière gauche";
-    private static final String SERVO_POUSSOIR_ARRIERE_DROIT = "Poussoir arrière droit";
-
-    private static final String SERVO1 = "Servo 1";
-    private static final String SERVO2 = "Servo 2";
-
-    private static final String POS_FERME = "Fermé";
-    private static final String POS_BAS = "Bas";
-    private static final String POS_OUVERT = "Ouvert";
-    private static final String POS_POUSETTE = "Pousette";
-
-    private static final String GROUP1 = "Groupe 1";
+    private static final byte GROUP_BRAS_BAS_ID = 1;
+    private static final byte GROUP_BRAS_HAUT_ID = 2;
+    private static final byte GROUP_BRAS_MESURE_ID = 3;
+    private static final byte GROUP_STATUETTE_ID = 4;
+    private static final byte GROUP_TRAPPES_ARRIERE_ID = 5;
 
     public OdinServosService() {
         super();
 
-        servo(BRAS_DROIT, SERVO_BRAS_DROIT).position(POS_FERME, POS_BRAS_DROIT_FERME);
-        servo(BRAS_GAUCHE, SERVO_BRAS_GAUCHE).position(POS_FERME, POS_BRAS_GAUCHE_FERME);
-        servo(PAVILLON, SERVO_PAVILLON).position(POS_BAS, POS_PAVILLON_BAS);
-        servo(POUSSOIR_AVANT_GAUCHE, SERVO_POUSSOIR_AVANT_GAUCHE).position(POS_BAS, POS_POUSSOIR_AVANT_GAUCHE_BAS);
-        servo(POUSSOIR_AVANT_DROIT, SERVO_POUSSOIR_AVANT_DROIT).position(POS_BAS, POS_POUSSOIR_AVANT_DROIT_BAS);
-        servo(POUSSOIR_ARRIERE_GAUCHE, SERVO_POUSSOIR_ARRIERE_GAUCHE).position(POS_BAS, POS_POUSSOIR_ARRIERE_GAUCHE_BAS);
-        servo(POUSSOIR_ARRIERE_DROIT, SERVO_POUSSOIR_ARRIERE_DROIT).position(POS_BAS, POS_POUSSOIR_ARRIERE_DROIT_BAS);
+        Servo brasBasEpaule = servo(BRAS_BAS_EPAULE_ID, BRAS_BAS_EPAULE)
+                .time(500)
+                .position(POS_REPOS, 1500);
+        Servo brasBasCoude = servo(BRAS_BAS_COUDE_ID, BRAS_BAS_COUDE)
+                .time(500)
+                .position(POS_REPOS, 1500);
+        Servo brasBasPoignet = servo(BRAS_BAS_POIGNET_ID, BRAS_BAS_POIGNET)
+                .time(500)
+                .position(POS_REPOS, 1500);
+        group(GROUP_BRAS_BAS_ID, GROUP_BRAS_BAS)
+                .addServo(brasBasEpaule)
+                .addServo(brasBasCoude)
+                .addServo(brasBasPoignet);
 
-//        group(1, GROUP1)
-//                .servo(
-//                        servo(1, SERVO1)
-//                                .time(500)
-//                                .position(POS_POUSETTE, 1500, 20)
-//                                .position(POS_OUVERT, 1000)
-//                                .position(POS_FERME, 2000)
-//                )
-//                .servo(
-//                        servo(2, SERVO2)
-//                                .time(500)
-//                                .position(POS_POUSETTE, 1500, 20)
-//                                .position(POS_OUVERT, 2000)
-//                                .position(POS_FERME, 1000)
-//                )
-//                .batch(POS_POUSETTE)
-//                .batch(POS_OUVERT)
-//                .batch(POS_FERME);
-    }
+        Servo brasHautEpaule = servo(BRAS_HAUT_EPAULE_ID, BRAS_HAUT_EPAULE)
+                .time(500)
+                .position(POS_REPOS, 1500);
+        Servo brasHautCoude = servo(BRAS_HAUT_COUDE_ID, BRAS_HAUT_COUDE)
+                .time(500)
+                .position(POS_REPOS, 1500);
+        Servo brasHautPoignet = servo(BRAS_HAUT_POIGNET_ID, BRAS_HAUT_POIGNET)
+                .time(500)
+                .position(POS_REPOS, 1500);
+        group(GROUP_BRAS_HAUT_ID, GROUP_BRAS_HAUT)
+                .addServo(brasHautEpaule)
+                .addServo(brasHautCoude)
+                .addServo(brasHautPoignet);
 
-    /* **************************************** */
-    /* Méthode pour le positionnement d'origine */
-    /* **************************************** */
+        Servo brasMesureCarreFouille = servo(BRAS_MESURE_CARRE_FOUILLE_ID, BRAS_MESURE_CARRE_FOUILLE)
+                .time(500)
+                .position(POS_FERME, 1500)
+                .position(POS_MESURE, 1500);
+        Servo brasPousseCarreFouille = servo(BRAS_POUSSE_CARRE_FOUILLE_ID, BRAS_POUSSE_CARRE_FOUILLE)
+                .time(500)
+                .position(POS_FERME, 1500)
+                .position(POS_POUSSETTE, 1500);
+        group(GROUP_BRAS_MESURE_ID, GROUP_BRAS_MESURE)
+                .addServo(brasMesureCarreFouille)
+                .addServo(brasPousseCarreFouille);
 
-    public void homes() {
-       setPosition(SERVO_BRAS_DROIT, POS_FERME, false);
-       setPosition(SERVO_BRAS_GAUCHE, POS_FERME, false);
-       setPosition(SERVO_PAVILLON, POS_BAS, false);
-       setPosition(SERVO_POUSSOIR_AVANT_GAUCHE, POS_BAS, false);
-       setPosition(SERVO_POUSSOIR_AVANT_DROIT, POS_BAS, false);
-       setPosition(SERVO_POUSSOIR_ARRIERE_GAUCHE, POS_BAS, false);
-       setPosition(SERVO_POUSSOIR_ARRIERE_DROIT, POS_BAS, false);
-    }
+        Servo pinceStatuette = servo(PINCE_STATUETTE_ID, PINCE_STATUETTE)
+                .time(500)
+                .position(POS_FERME, 1500)
+                .position(POS_PRISE_DEPOSE, 1500);
+        Servo pousseReplique = servo(POUSSE_REPLIQUE_ID, POUSSE_REPLIQUE)
+                .time(500)
+                .position(POS_FERME, 1500)
+                .position(POS_POUSSETTE, 1500);
+        group(GROUP_STATUETTE_ID, GROUP_STATUETTE)
+                .addServo(pinceStatuette)
+                .addServo(pousseReplique);
 
-    //*******************************************//
-    //* Lecture des positions                   *//
-    //*******************************************//
+        Servo trappeArriereGauche = servo(TRAPPE_ARRIERE_GAUCHE_ID, TRAPPE_ARRIERE_GAUCHE)
+                .time(500)
+                .position(POS_FERME, 1500)
+                .position(POS_OUVERT, 1500);
+        Servo trappeArriereCentre = servo(TRAPPE_ARRIERE_CENTRE_ID, TRAPPE_ARRIERE_CENTRE)
+                .time(500)
+                .position(POS_FERME, 1500)
+                .position(POS_OUVERT, 1500);
+        Servo trappeArriereDroite = servo(TRAPPE_ARRIERE_DROITE_ID, TRAPPE_ARRIERE_DROITE)
+                .time(500)
+                .position(POS_FERME, 1500)
+                .position(POS_OUVERT, 1500);
 
-    public boolean isServo1Ouvert() {
-        return isInPosition(SERVO1, POS_OUVERT);
-    }
-
-    //*******************************************//
-    //* Déplacements                            *//
-    //*******************************************//
-
-    public void group1Ouvert(boolean wait) {
-        setPositionBatch(GROUP1, POS_OUVERT, wait);
-    }
-
-    public void servo1Ouvert(boolean wait) {
-        setPosition(SERVO1, POS_OUVERT, wait);
+        group(GROUP_TRAPPES_ARRIERE_ID, GROUP_TRAPPES_LATERAL_ARRIERE)
+                .addServo(trappeArriereGauche)
+                .addServo(trappeArriereCentre)
+                .addServo(trappeArriereDroite)
+                .batch(POS_OUVERT)
+                .batch(POS_FERME);
     }
 
 }
