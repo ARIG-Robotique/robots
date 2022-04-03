@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
 import org.arig.robot.constants.OdinConstantesI2C;
-import org.arig.robot.model.Couleur;
+import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
@@ -26,10 +26,8 @@ import java.io.IOException;
 @Service("IOService")
 public class OdinIOServiceRobot implements OdinIOService, InitializingBean, DisposableBean {
 
-    private static final int POMPES_AVANT_GAUCHE = 2;
-    private static final int POMPES_AVANT_DROIT = 3;
-    private static final int POMPES_ARRIERE_GAUCHE = 1;
-    private static final int POMPES_ARRIERE_DROIT = 4;
+    private static final int POMPE_VENTOUSE_BAS = 1;
+    private static final int POMPE_VENTOUSE_HAUT = 2;
 
     @Autowired
     private I2CBus bus;
@@ -38,21 +36,16 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
     private AbstractARIGVacuumController vacuumController;
 
     @Autowired
-    private TCS34725ColorSensor couleurAvantGauche;
+    private TCS34725ColorSensor couleurVentouseBas;
 
     @Autowired
-    private TCS34725ColorSensor couleurAvantDroit;
-
-    @Autowired
-    private TCS34725ColorSensor couleurArriereGauche;
-
-    @Autowired
-    private TCS34725ColorSensor couleurArriereDroit;
+    private TCS34725ColorSensor couleurVentouseHaut;
 
     // Controlleur GPIO
     private GpioController gpio;
     private PCF8574GpioProvider pcfAlim;
     private PCF8574GpioProvider pcf1;
+    private PCF8574GpioProvider pcf2;
 
     // Référence sur les PIN Inputs
     // ----------------------------
@@ -66,13 +59,27 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
 //    private GpioPinDigitalInput inIrq5;
 //    private GpioPinDigitalInput inIrq6;
 
-    // Technique
+    // Input : Alimentation
     private GpioPinDigitalInput inAu;
-    private GpioPinDigitalInput inTirette;
+    private GpioPinDigitalInput inAlimPuissanceServos;
+    private GpioPinDigitalInput inAlimPuissanceMoteurs;
 
-    // Input : Numerique
-    private GpioPinDigitalInput inCalageBordureDroit;
-    private GpioPinDigitalInput inCalageBordureGauche;
+    // Input : Numerique 1 (+ Tirette)
+    private GpioPinDigitalInput inTirette;
+    private GpioPinDigitalInput inCalageBordureArriereDroit;
+    private GpioPinDigitalInput inCalageBordureArriereGauche;
+    private GpioPinDigitalInput inCalageBordureAvantDroit;
+    private GpioPinDigitalInput inCalageBordureAvantGauche;
+
+    // Input : Numerique 2
+    private GpioPinDigitalInput inPresenceCarreFouille;
+    private GpioPinDigitalInput inPresencePriseBras;
+    private GpioPinDigitalInput inPresenceStock1; // Fond du robot
+    private GpioPinDigitalInput inPresenceStock2;
+    private GpioPinDigitalInput inPresenceStock3;
+    private GpioPinDigitalInput inPresenceStock4;
+    private GpioPinDigitalInput inPresenceStock5;
+    private GpioPinDigitalInput inPresenceStock6; // Bord du robot
 
     // Référence sur les PIN Output
     // ----------------------------
@@ -98,7 +105,14 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
                 pcf1.shutdown();
             }
         } catch (Exception e) {
-            log.warn("Problème de shutdown du PCF 1 : {}", e.getMessage());
+            log.warn("Problème de shutdown du {} : {}", OdinConstantesI2C.PCF1_DEVICE_NAME, e.getMessage());
+        }
+        try {
+            if (pcf2 != null) {
+                pcf2.shutdown();
+            }
+        } catch (Exception e) {
+            log.warn("Problème de shutdown du {} : {}", OdinConstantesI2C.PCF2_DEVICE_NAME, e.getMessage());
         }
         try {
             if (gpio != null) {
@@ -133,16 +147,32 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
         // -------------- //
         pcfAlim = new PCF8574GpioProvider(bus, OdinConstantesI2C.PCF_ALIM_ADDRESS, true);
         pcf1 = new PCF8574GpioProvider(bus, OdinConstantesI2C.PCF1_ADDRESS, true);
+        pcf2 = new PCF8574GpioProvider(bus, OdinConstantesI2C.PCF2_ADDRESS, true);
 
         // Alim
-        inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_00);
-        outAlimPuissanceMoteurs = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
-        outAlimPuissanceServos = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_02);
+        inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_04);
+        inAlimPuissanceServos = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_05);
+        inAlimPuissanceMoteurs = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_06);
 
-        // PCF1
+        outAlimPuissanceServos = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
+        outAlimPuissanceMoteurs = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_02);
+
+        // PCF1 (µSwitch)
         inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
-        inCalageBordureGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
-        inCalageBordureDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
+        inCalageBordureArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
+        inCalageBordureArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
+        inCalageBordureAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
+        inCalageBordureAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
+
+        // PCF2 (Pololu)
+        inPresenceCarreFouille = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
+        inPresencePriseBras = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
+        inPresenceStock1 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
+        inPresenceStock2 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
+        inPresenceStock3 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
+        inPresenceStock4 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
+        inPresenceStock5 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
+        inPresenceStock6 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_07);
     }
 
     @Override
@@ -152,7 +182,15 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
                 pcf1.readAll();
             }
         } catch (IOException e) {
-            log.error("Erreur lecture PCF 1 : " + e.getMessage(), e);
+            log.error("Erreur lecture " + OdinConstantesI2C.PCF1_DEVICE_NAME + " : " + e.getMessage(), e);
+        }
+
+        try {
+            if (!pcf2.isShutdown()) {
+                pcf2.readAll();
+            }
+        } catch (IOException e) {
+            log.error("Erreur lecture " + OdinConstantesI2C.PCF2_DEVICE_NAME + " : " + e.getMessage(), e);
         }
 
         try {
@@ -175,6 +213,14 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
         return inAu.isLow();
     }
 
+    public boolean puissanceServosOk() {
+        return inAlimPuissanceServos.isHigh();
+    }
+
+    public boolean puissanceMoteursOk() {
+        return inAlimPuissanceMoteurs.isHigh();
+    }
+
     @Override
     public boolean tirette() {
         return inTirette.isLow();
@@ -184,93 +230,93 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
     // -------------------------- INPUT ------------------------ //
     // --------------------------------------------------------- //
 
-    // Numerique
+// Numerique
 
     @Override
-    public boolean presenceVentouseAvantGauche() {
-        return vacuumController.getData(POMPES_AVANT_GAUCHE).presence();
+    public boolean presenceCarreFouille() {
+        return inPresenceCarreFouille.isLow();
     }
 
     @Override
-    public boolean presenceVentouseAvantDroit() {
-        return vacuumController.getData(POMPES_AVANT_DROIT).presence();
+    public boolean presenceVentouseBas() {
+        return vacuumController.getData(POMPE_VENTOUSE_BAS).presence();
     }
 
     @Override
-    public boolean presenceVentouseArriereGauche() {
-        return vacuumController.getData(POMPES_ARRIERE_GAUCHE).presence();
+    public boolean presenceVentouseHaut() {
+        return vacuumController.getData(POMPE_VENTOUSE_HAUT).presence();
     }
 
     @Override
-    public boolean presenceVentouseArriereDroit() {
-        return vacuumController.getData(POMPES_ARRIERE_DROIT).presence();
+    public boolean presencePriseBras() {
+        return inPresencePriseBras.isLow();
     }
 
     @Override
-    public boolean presenceAvantGauche() {
-        return vacuumController.getData(POMPES_AVANT_GAUCHE).tor();
+    public boolean presenceStock1() {
+        return inPresenceStock1.isLow();
     }
 
     @Override
-    public boolean presenceAvantDroit() {
-        return vacuumController.getData(POMPES_AVANT_DROIT).tor();
+    public boolean presenceStock2() {
+        return inPresenceStock2.isLow();
     }
 
     @Override
-    public boolean presenceArriereGauche() {
-        return vacuumController.getData(POMPES_ARRIERE_GAUCHE).tor();
+    public boolean presenceStock3() {
+        return inPresenceStock3.isLow();
     }
 
     @Override
-    public boolean presenceArriereDroit() {
-        return vacuumController.getData(POMPES_ARRIERE_DROIT).tor();
+    public boolean presenceStock4() {
+        return inPresenceStock4.isLow();
+    }
+
+    @Override
+    public boolean presenceStock5() {
+        return inPresenceStock5.isLow();
+    }
+
+    @Override
+    public boolean presenceStock6() {
+        return inPresenceStock6.isLow();
     }
 
     @Override
     public boolean calageBordureArriereDroit() {
-        return inCalageBordureDroit.isHigh();
+        return inCalageBordureArriereDroit.isLow();
     }
 
     @Override
     public boolean calageBordureArriereGauche() {
-        return inCalageBordureGauche.isHigh();
+        return inCalageBordureArriereGauche.isLow();
     }
 
     @Override
-    public boolean calageBordureCustomDroit() {
-        return presenceVentouseAvantDroit();
+    public boolean calageBordureAvantDroit() {
+        return inCalageBordureAvantDroit.isLow();
     }
 
     @Override
-    public boolean calageBordureCustomGauche() {
-        return presenceVentouseAvantGauche();
+    public boolean calageBordureAvantGauche() {
+        return inCalageBordureAvantGauche.isLow();
     }
 
     // Couleur
-    private Couleur computeCouleurBouee(TCS34725ColorSensor capteur) {
+    private CouleurEchantillon computeCouleur(TCS34725ColorSensor capteur) {
         final ColorData c = capteur.getColorData();
         log.info("{} R: {}, G: {}, B: {}", capteur.deviceName(), c.r(), c.g(), c.b());
-        return Couleur.INCONNU;
+        return CouleurEchantillon.ROCHER;
     }
 
     @Override
-    public Couleur couleurAvantGauche() {
-        return computeCouleurBouee(couleurAvantGauche);
+    public CouleurEchantillon couleurVentouseBas() {
+        return computeCouleur(couleurVentouseBas);
     }
 
     @Override
-    public Couleur couleurAvantDroit() {
-        return computeCouleurBouee(couleurAvantDroit);
-    }
-
-    @Override
-    public Couleur couleurArriereGauche() {
-        return computeCouleurBouee(couleurArriereGauche);
-    }
-
-    @Override
-    public Couleur couleurArriereDroit() {
-        return computeCouleurBouee(couleurArriereDroit);
+    public CouleurEchantillon couleurVentouseHaut() {
+        return computeCouleur(couleurVentouseHaut);
     }
 
     // --------------------------------------------------------- //
@@ -303,13 +349,13 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
 
     @Override
     public void enableAlimMoteurs() {
-        log.info("Activation puissance moteurs 12V");
+        log.info("Activation puissance moteurs");
         outAlimPuissanceMoteurs.low();
     }
 
     @Override
     public void disableAlimMoteurs() {
-        log.info("Desactivation puissance moteurs 12V");
+        log.info("Desactivation puissance moteurs");
         outAlimPuissanceMoteurs.high();
     }
 
@@ -318,77 +364,53 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
     // ----------------------------------------------------------- //
 
     @Override
-    public void disableAllPompe() {
+    public void disableAllPompes() {
         vacuumController.disableAll();
     }
 
     @Override
-    public void enableAllPompe() {
+    public void enableAllPompes() {
         vacuumController.onAll();
     }
 
     @Override
-    public void enablePompesAvant() {
-        vacuumController.on(POMPES_AVANT_GAUCHE, POMPES_AVANT_DROIT);
+    public void enableForceAllPompes() {
+        vacuumController.forceOnAll();
     }
 
     @Override
-    public void enablePompesArriere() {
-        vacuumController.on(POMPES_ARRIERE_GAUCHE, POMPES_ARRIERE_DROIT);
-    }
-
-    @Override
-    public void enablePompeAvantGauche() {
-        vacuumController.on(POMPES_AVANT_GAUCHE);
-    }
-
-    @Override
-    public void enablePompeAvantDroit() {
-        vacuumController.on(POMPES_AVANT_DROIT);
-    }
-
-    @Override
-    public void enablePompeArriereGauche() {
-        vacuumController.on(POMPES_ARRIERE_GAUCHE);
-    }
-
-    @Override
-    public void enablePompeArriereDroit() {
-        vacuumController.on(POMPES_ARRIERE_DROIT);
-    }
-
-    @Override
-    public void releaseAllPompe() {
+    public void releaseAllPompes() {
         vacuumController.offAll();
     }
 
     @Override
-    public void releasePompesAvant() {
-        vacuumController.off(POMPES_AVANT_GAUCHE, POMPES_AVANT_DROIT);
+    public void enableForcePompeVentouseBas() {
+        vacuumController.onForce(POMPE_VENTOUSE_BAS);
     }
 
     @Override
-    public void releasePompesArriere() {
-        vacuumController.off(POMPES_ARRIERE_GAUCHE, POMPES_ARRIERE_DROIT);
+    public void enableForcePompeVentouseHaut() {
+        vacuumController.onForce(POMPE_VENTOUSE_HAUT);
     }
 
     @Override
-    public void releasePompeAvantGauche() {
-        vacuumController.off(POMPES_AVANT_GAUCHE);
+    public void enablePompeVentouseBas() {
+        vacuumController.on(POMPE_VENTOUSE_BAS);
     }
 
     @Override
-    public void releasePompeAvantDroit() {
-        vacuumController.off(POMPES_AVANT_DROIT);
+    public void releasePompeVentouseBas() {
+        vacuumController.off(POMPE_VENTOUSE_BAS);
     }
 
     @Override
-    public void releasePompeArriereGauche() {
-        vacuumController.off(POMPES_ARRIERE_GAUCHE);
+    public void enablePompeVentouseHaut() {
+        vacuumController.on(POMPE_VENTOUSE_HAUT);
     }
 
     @Override
-    public void releasePompeArriereDroit() {
-        vacuumController.off(POMPES_ARRIERE_DROIT);
+    public void releasePompeVentouseHaut() {
+        vacuumController.off(POMPE_VENTOUSE_HAUT);
     }
+
 }

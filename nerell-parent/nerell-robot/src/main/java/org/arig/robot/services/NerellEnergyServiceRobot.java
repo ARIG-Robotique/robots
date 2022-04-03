@@ -38,4 +38,56 @@ public class NerellEnergyServiceRobot extends AbstractEnergyService {
     public double courantMoteurs() {
         return 0;
     }
+
+    /*
+    private static final byte CHANNEL_SERVOS = 1;
+    private static final byte CHANNEL_MOTEURS = 2;
+
+    @Autowired
+    private IAlimentationSensor alimentationSensor;
+
+    private StopWatch refreshNeeded;
+
+    @PostConstruct
+    public void init() {
+        refreshNeeded = new StopWatch();
+        refreshNeeded.start();
+    }
+
+    @Override
+    public double tensionServos() {
+        refresh();
+        return alimentationSensor.get(CHANNEL_SERVOS).tension();
+    }
+
+    @Override
+    public double courantServos() {
+        refresh();
+        return alimentationSensor.get(CHANNEL_SERVOS).current();
+    }
+
+    @Override
+    public double tensionMoteurs() {
+        refresh();
+        return alimentationSensor.get(CHANNEL_MOTEURS).tension();
+    }
+
+    @Override
+    public double courantMoteurs() {
+        refresh();
+        return alimentationSensor.get(CHANNEL_MOTEURS).current();
+    }
+
+    private void refresh() {
+        if (refreshNeeded.getTime(TimeUnit.SECONDS) > 2) {
+            refreshNeeded.reset();
+            refreshNeeded.start();
+
+            try {
+                alimentationSensor.refresh();
+            } catch (I2CException e) {
+                log.error("Refresh des infos d'alimentation impossible", e);
+            }
+        }
+    }*/
 }

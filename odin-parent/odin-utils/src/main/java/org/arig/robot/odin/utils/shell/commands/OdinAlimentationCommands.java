@@ -23,17 +23,16 @@ public class OdinAlimentationCommands {
     }
 
     @ShellMethodAvailability("auOK")
-    @ShellMethod("Activation des alimentations")
-    public void enableAlimentation() {
-        servosService.cyclePreparation();
-        ioService.enableAlimServos();
+    @ShellMethod("Activation aliemntation moteurs")
+    public void enableAlimentationMoteurs() {
         ioService.enableAlimMoteurs();
     }
 
-    @ShellMethod("Désactivation des alimentations")
-    public void disableAlimentation() {
-        ioService.disableAlimServos();
-        ioService.disableAlimMoteurs();
+    @ShellMethodAvailability("auOK")
+    @ShellMethod("Activation aliemntation servos")
+    public void enableAlimentationServoss() {
+        servosService.cyclePreparation();
+        ioService.enableAlimServos();
     }
 
     /*@SneakyThrows

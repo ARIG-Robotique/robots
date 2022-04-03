@@ -1,12 +1,22 @@
 package org.arig.robot.services;
 
-import org.arig.robot.model.Couleur;
+import org.arig.robot.model.CouleurEchantillon;
 
 public interface NerellIOService extends IOService {
 
     // --------------------------------------------------------- //
     // -------------------------- INPUT ------------------------ //
     // --------------------------------------------------------- //
+
+    @Override
+    default boolean puissanceServosOk() {
+        return true;
+    }
+
+    @Override
+    default boolean puissanceMoteursOk() {
+        return true;
+    }
 
     // Numerique
     boolean presenceVentouseBas();
@@ -22,8 +32,8 @@ public interface NerellIOService extends IOService {
     boolean presenceStock6();
 
     // Couleurs
-    Couleur couleurVentouseBas();
-    Couleur couleurVentouseHaut();
+    CouleurEchantillon couleurVentouseBas();
+    CouleurEchantillon couleurVentouseHaut();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

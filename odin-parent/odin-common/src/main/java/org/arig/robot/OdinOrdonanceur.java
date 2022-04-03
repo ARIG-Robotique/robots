@@ -15,7 +15,6 @@ import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.services.OdinEcranService;
 import org.arig.robot.services.OdinIOService;
-import org.arig.robot.services.OdinServosService;
 import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,6 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Autowired
     private OdinRobotStatus odinRobotStatus;
-
-    @Autowired
-    private OdinServosService odinServos;
 
     @Autowired
     private OdinIOService odinIO;
@@ -60,10 +56,8 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         // Lancement d'une première lecture de couleurs pour initialiser les capteurs
         odinIO.enableLedCapteurCouleur();
         ThreadUtils.sleep(OdinConstantesConfig.WAIT_LED);
-        odinIO.couleurAvantGauche();
-        odinIO.couleurAvantDroit();
-        odinIO.couleurArriereGauche();
-        odinIO.couleurArriereDroit();
+        odinIO.couleurVentouseBas();
+        odinIO.couleurVentouseHaut();
         odinIO.disableLedCapteurCouleur();
 
         choixConfig();
@@ -89,12 +83,12 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void afterMatch() {
-        odinIO.releaseAllPompe();
+        odinIO.releaseAllPompes();
     }
 
     @Override
     public void beforePowerOff() {
-        odinIO.disableAllPompe();
+        odinIO.disableAllPompes();
         ThreadUtils.sleep(1000);
     }
 

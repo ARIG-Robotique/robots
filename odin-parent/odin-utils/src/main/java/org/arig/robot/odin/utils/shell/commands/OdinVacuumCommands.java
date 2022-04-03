@@ -24,8 +24,8 @@ public class OdinVacuumCommands {
     private final ARIGVacuumController vacuumController;
 
     public Availability alimentationOk() {
-        return ioService.auOk() && energyService.checkServos() && energyService.checkMoteurs()
-                ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
+        return ioService.auOk() && energyService.checkMoteurs()
+                ? Availability.available() : Availability.unavailable("Alimentation moteurs KO");
     }
 
     @ShellMethodAvailability("alimentationOk")

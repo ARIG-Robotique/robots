@@ -11,13 +11,13 @@ public interface NerellConstantesI2C {
     int CODEUR_GAUCHE_ADDRESS = 0x32;
 
     String PCF_ALIM_DEVICE_NAME = "Carte alimentation";
-    int PCF_ALIM_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3D;
+    int PCF_ALIM_ADDRESS = PCF8574GpioProvider.PCF8574A_0x38;
 
     String PCF1_DEVICE_NAME = "PCF 1 (Inputs µSwitch)";
-    int PCF1_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3F;
+    int PCF1_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3E;
 
-    String PCF2_DEVICE_NAME = "PCF 1 (Inputs Pololu)";
-    int PCF2_ADDRESS = PCF8574GpioProvider.PCF8574A_0x38;
+    String PCF2_DEVICE_NAME = "PCF 2 (Inputs Pololu)";
+    int PCF2_ADDRESS = PCF8574GpioProvider.PCF8574_0x27;
 
     String PCA9685_DEVICE_NAME = "PCA9685";
     int PCA9685_ADDRESS = 0x40;
@@ -28,18 +28,19 @@ public interface NerellConstantesI2C {
     String VACUUM_CONTROLLER_DEVICE_NAME = "Vacuum ctrl";
     int VACUUM_CONTROLLER_ADDRESS = 0x26;
 
+    String ALIM_MESURE_DEVICE_NAME = "Mesure alimentation";
+    int ALIM_MESURE_ADDRESS = 0x20;
+
     String MULTIPLEXEUR_I2C_NAME = "Mux TCA";
     int MULTIPLEXEUR_I2C_ADDRESS = 0x70;
 
-    String COULEUR_VENTOUSE_BAS_NAME = "Couleur Av 1";
+    String COULEUR_VENTOUSE_BAS_NAME = "Couleur ventouse bas";
     byte COULEUR_VENTOUSE_BAS_MUX_CHANNEL = 2;
 
-    String COULEUR_VENTOUSE_HAUT_NAME = "Couleur Av 2";
+    String COULEUR_VENTOUSE_HAUT_NAME = "Couleur ventouse haut";
     byte COULEUR_VENTOUSE_HAUT_MUX_CHANNEL = 3;
 
-    String COULEUR_AV_3_NAME = "Couleur Av 3";
-    byte COULEUR_AV_3_MUX_CHANNEL = 5;
+    String CARRE_FOUILLE_READER_NAME = "Carre fouille reader";
+    int CARRE_FOUILLE_READER_ADDRESS = 0x3C;
 
-    String COULEUR_AV_4_NAME = "Couleur Av 4";
-    byte COULEUR_AV_4_MUX_CHANNEL = 4;
 }

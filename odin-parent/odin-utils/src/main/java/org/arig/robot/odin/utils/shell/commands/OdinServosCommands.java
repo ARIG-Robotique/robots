@@ -25,8 +25,8 @@ public class OdinServosCommands {
     private final AbstractEnergyService energyService;
 
     public Availability alimentationOk() {
-        return ioService.auOk() && energyService.checkServos() && energyService.checkMoteurs()
-                ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
+        return ioService.auOk() && energyService.checkServos()
+                ? Availability.available() : Availability.unavailable("Alimentations servos KO");
     }
 
     @ShellMethodAvailability("alimentationOk")
@@ -36,4 +36,15 @@ public class OdinServosCommands {
         ThreadUtils.sleep(800);
     }
 
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Identification des servos")
+    public void identification(byte id, int delta, byte speed, int nbCycle) {
+        for (int i = 0; i < nbCycle; i++) {
+            servosService.setPositionById(id, 1500 + delta, speed);
+            ThreadUtils.sleep(1000);
+            servosService.setPositionById(id, 1500 - delta, speed);
+            ThreadUtils.sleep(1000);
+        }
+        servosService.setPositionById(id, 1500, speed);
+    }
 }

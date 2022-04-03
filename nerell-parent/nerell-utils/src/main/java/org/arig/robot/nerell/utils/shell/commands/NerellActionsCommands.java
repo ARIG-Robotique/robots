@@ -25,11 +25,12 @@ import java.util.Optional;
 @AllArgsConstructor
 public class NerellActionsCommands {
 
-    private NerellIOService ioService;
     private final AbstractEnergyService energyService;
+    private final NerellRobotStatus rs;
+
+    private NerellIOService ioService;
     private NerellOrdonanceur ordonanceur;
     private List<Action> actions;
-    private final NerellRobotStatus rs;
 
     @ShellMethodAvailability
     public Availability alimentationOk() {
@@ -45,12 +46,10 @@ public class NerellActionsCommands {
 
     @ShellMethod("Activation des services")
     public void enableServices() {
-        rs.enablePincesAvant();
     }
 
     @ShellMethod("Désactivation des services")
     public void disableServices() {
-        rs.disablePincesAvant();
     }
 
     @ShellMethod("Execute une action")

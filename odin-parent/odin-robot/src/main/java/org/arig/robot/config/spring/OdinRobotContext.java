@@ -21,6 +21,7 @@ import org.arig.robot.system.avoiding.BasicAvoidingService;
 import org.arig.robot.system.avoiding.BasicRetryAvoidingService;
 import org.arig.robot.system.avoiding.CompleteAvoidingService;
 import org.arig.robot.system.avoiding.SemiCompleteAvoidingService;
+import org.arig.robot.system.capteurs.CarreFouilleReader;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
 import org.arig.robot.system.capteurs.TCA9548MultiplexerI2C;
@@ -49,8 +50,8 @@ public class OdinRobotContext {
     @Bean
     public RobotName robotName() {
         return new RobotName()
-                .name("Odin (The challenger)")
-                .version("2021 (Sail the World)");
+                .name("Odin (The replicator)")
+                .version("2022 (Age of bots)");
     }
 
     @Bean(destroyMethod = "close")
@@ -73,6 +74,10 @@ public class OdinRobotContext {
         final I2CManagerDevice<I2CDevice> pcf1 = I2CManagerDevice.<I2CDevice>builder()
                 .deviceName(OdinConstantesI2C.PCF1_DEVICE_NAME)
                 .device(i2cBus.getDevice(OdinConstantesI2C.PCF1_ADDRESS))
+                .build();
+        final I2CManagerDevice<I2CDevice> pcf2 = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(OdinConstantesI2C.PCF2_DEVICE_NAME)
+                .device(i2cBus.getDevice(OdinConstantesI2C.PCF2_ADDRESS))
                 .build();
         final I2CManagerDevice<I2CDevice> sd21 = I2CManagerDevice.<I2CDevice>builder()
                 .deviceName(OdinConstantesI2C.SERVO_DEVICE_NAME)
@@ -100,44 +105,36 @@ public class OdinRobotContext {
                 .deviceName(OdinConstantesI2C.MULTIPLEXEUR_I2C_NAME)
                 .device(i2cBus.getDevice(OdinConstantesI2C.MULTIPLEXEUR_I2C_ADDRESS))
                 .build();
-        final I2CManagerDevice<I2CDevice> couleurAvantGauche = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(OdinConstantesI2C.COULEUR_AVANT_GAUCHE_NAME)
+        final I2CManagerDevice<I2CDevice> couleurVentouseBas = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(OdinConstantesI2C.COULEUR_VENTOUSE_BAS_NAME)
                 .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
                 .multiplexerDeviceName(OdinConstantesI2C.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(OdinConstantesI2C.COULEUR_AVANT_GAUCHE_MUX_CHANNEL)
+                .multiplexerChannel(OdinConstantesI2C.COULEUR_VENTOUSE_BAS_MUX_CHANNEL)
                 .build();
-        final I2CManagerDevice<I2CDevice> couleurAvantDroit = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(OdinConstantesI2C.COULEUR_AVANT_DROIT_NAME)
+        final I2CManagerDevice<I2CDevice> couleurVentouseHaut = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(OdinConstantesI2C.COULEUR_VENTOUSE_HAUT_NAME)
                 .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
                 .multiplexerDeviceName(OdinConstantesI2C.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(OdinConstantesI2C.COULEUR_AVANT_DROIT_MUX_CHANNEL)
+                .multiplexerChannel(OdinConstantesI2C.COULEUR_VENTOUSE_HAUT_MUX_CHANNEL)
                 .build();
-        final I2CManagerDevice<I2CDevice> couleurArriereGauche = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(OdinConstantesI2C.COULEUR_ARRIERE_GAUCHE_NAME)
-                .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
-                .multiplexerDeviceName(OdinConstantesI2C.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(OdinConstantesI2C.COULEUR_ARRIERE_GAUCHE_MUX_CHANNEL)
-                .build();
-        final I2CManagerDevice<I2CDevice> couleurArriereDroit = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(OdinConstantesI2C.COULEUR_ARRIERE_DROIT_NAME)
-                .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
-                .multiplexerDeviceName(OdinConstantesI2C.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(OdinConstantesI2C.COULEUR_ARRIERE_DROIT_MUX_CHANNEL)
+        final I2CManagerDevice<I2CDevice> carreFouilleReader = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(OdinConstantesI2C.CARRE_FOUILLE_READER_NAME)
+                .device(i2cBus.getDevice(OdinConstantesI2C.CARRE_FOUILLE_READER_ADDRESS))
                 .build();
 
+        manager.registerDevice(sd21);
         manager.registerDevice(codeurMoteurDroit);
         manager.registerDevice(codeurMoteurGauche);
-        manager.registerDevice(sd21);
         manager.registerDevice(pcfAlim);
         manager.registerDevice(pcf1);
+        manager.registerDevice(pcf2);
         manager.registerDevice(pca9685);
         //manager.registerDevice(alimMesure);
         manager.registerDevice(controlleurPompes);
         manager.registerDevice(mux);
-        manager.registerDevice(couleurAvantGauche);
-        manager.registerDevice(couleurAvantDroit);
-        manager.registerDevice(couleurArriereGauche);
-        manager.registerDevice(couleurArriereDroit);
+        manager.registerDevice(couleurVentouseBas);
+        manager.registerDevice(couleurVentouseHaut);
+        manager.registerDevice(carreFouilleReader);
 
         return manager;
     }
@@ -167,23 +164,13 @@ public class OdinRobotContext {
     */
 
     @Bean
-    public TCS34725ColorSensor couleurAvantGauche() {
-        return new TCS34725ColorSensor(OdinConstantesI2C.COULEUR_AVANT_GAUCHE_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
+    public TCS34725ColorSensor couleurVentouseBas() {
+        return new TCS34725ColorSensor(OdinConstantesI2C.COULEUR_VENTOUSE_BAS_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
     }
 
     @Bean
-    public TCS34725ColorSensor couleurAvantDroit() {
-        return new TCS34725ColorSensor(OdinConstantesI2C.COULEUR_AVANT_DROIT_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
-    }
-
-    @Bean
-    public TCS34725ColorSensor couleurArriereGauche() {
-        return new TCS34725ColorSensor(OdinConstantesI2C.COULEUR_ARRIERE_GAUCHE_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
-    }
-
-    @Bean
-    public TCS34725ColorSensor couleurArriereDroit() {
-        return new TCS34725ColorSensor(OdinConstantesI2C.COULEUR_ARRIERE_DROIT_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
+    public TCS34725ColorSensor couleurVentouseHaut() {
+        return new TCS34725ColorSensor(OdinConstantesI2C.COULEUR_VENTOUSE_HAUT_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
     }
 
     @Bean
@@ -191,6 +178,11 @@ public class OdinRobotContext {
         final TCA9548MultiplexerI2C mux = new TCA9548MultiplexerI2C(OdinConstantesI2C.MULTIPLEXEUR_I2C_NAME);
         i2CManager.registerMultiplexerDevice(OdinConstantesI2C.MULTIPLEXEUR_I2C_NAME, mux);
         return mux;
+    }
+
+    @Bean
+    public CarreFouilleReader carreFouilleReader(I2CManager i2CManager) {
+        return new CarreFouilleReader(i2CManager, OdinConstantesI2C.CARRE_FOUILLE_READER_NAME);
     }
 
     @Bean

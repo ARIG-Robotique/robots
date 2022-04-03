@@ -2,7 +2,7 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.OdinConstantesConfig;
-import org.arig.robot.model.Couleur;
+import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public abstract class AbstractOdinPincesService implements OdinPincesService {
     @Autowired
     private RobotGroupService group;
 
-    private Couleur expected = null;
+    private CouleurEchantillon expected = null;
 
     private boolean[] previousState = new boolean[]{false, false};
 
@@ -34,18 +34,18 @@ public abstract class AbstractOdinPincesService implements OdinPincesService {
 
     protected abstract void enablePompes();
 
-    protected abstract Couleur[] currentState();
+    protected abstract CouleurEchantillon[] currentState();
 
     protected abstract void clearPinces();
 
     protected abstract boolean[] getNewState();
 
-    protected abstract void register(int index, Couleur couleur);
+    protected abstract void register(int index, CouleurEchantillon couleur);
 
-    protected abstract Couleur getCouleur(int index);
+    protected abstract CouleurEchantillon getCouleur(int index);
 
     @Override
-    public void setExpected(Couleur expected, int indexPince) {
+    public void setExpected(CouleurEchantillon expected, int indexPince) {
         this.expected = expected;
     }
 
@@ -97,7 +97,7 @@ public abstract class AbstractOdinPincesService implements OdinPincesService {
 
     @Override
     public void processCouleur() {
-        if (Stream.of(currentState()).noneMatch(c -> c == Couleur.INCONNU)) {
+        if (Stream.of(currentState()).noneMatch(c -> c == CouleurEchantillon.ROCHER)) {
             // Pas d'inconnu, pas de lecture
             return;
         }
@@ -106,15 +106,15 @@ public abstract class AbstractOdinPincesService implements OdinPincesService {
         ThreadUtils.sleep(OdinConstantesConfig.WAIT_LED);
 
         for (int i = 0; i < 2; i++) {
-            if (currentState()[i] == Couleur.INCONNU) {
+            if (currentState()[i] == CouleurEchantillon.ROCHER) {
                 register(i, getCouleur(i));
             }
         }
         io.disableLedCapteurCouleur();
     }
 
-    protected Couleur getExpected() {
-        Couleur couleur = Couleur.INCONNU;
+    protected CouleurEchantillon getExpected() {
+        CouleurEchantillon couleur = CouleurEchantillon.ROCHER;
         if (expected != null) {
             couleur = expected;
             expected = null;

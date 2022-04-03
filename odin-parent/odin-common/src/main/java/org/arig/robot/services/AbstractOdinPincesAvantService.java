@@ -1,6 +1,6 @@
 package org.arig.robot.services;
 
-import org.arig.robot.model.Couleur;
+import org.arig.robot.model.CouleurEchantillon;
 
 public abstract class AbstractOdinPincesAvantService extends AbstractOdinPincesService {
 
@@ -11,26 +11,26 @@ public abstract class AbstractOdinPincesAvantService extends AbstractOdinPincesS
 
     @Override
     protected void releasePompes() {
-        io.releasePompesAvant();
+        //io.releasePompesAvant();
     }
 
     @Override
     public void releasePompe(boolean gauche, boolean droite) {
         if (gauche) {
-            io.releasePompeAvantGauche();
+            //io.releasePompeAvantGauche();
         }
         if (droite) {
-            io.releasePompeAvantDroit();
+            //io.releasePompeAvantDroit();
         }
     }
 
     @Override
     protected void enablePompes() {
-        io.enablePompesAvant();
+        //io.enablePompesAvant();
     }
 
     @Override
-    protected Couleur[] currentState() {
+    protected CouleurEchantillon[] currentState() {
         return rs.pincesAvant();
     }
 
@@ -42,23 +42,23 @@ public abstract class AbstractOdinPincesAvantService extends AbstractOdinPincesS
     @Override
     protected boolean[] getNewState() {
         return new boolean[]{
-                io.presenceVentouseAvantGauche(),
-                io.presenceVentouseAvantDroit()
+                //io.presenceVentouseAvantGauche(),
+                //io.presenceVentouseAvantDroit()
         };
     }
 
     @Override
-    protected void register(int index, Couleur couleur) {
+    protected void register(int index, CouleurEchantillon couleur) {
         rs.pinceAvant(index, couleur);
     }
 
     @Override
-    protected Couleur getCouleur(int index) {
+    protected CouleurEchantillon getCouleur(int index) {
         // @formatter:off
         switch (index) {
-            case 0: return io.couleurAvantGauche();
-            case 1: return io.couleurAvantDroit();
-            default: return Couleur.INCONNU;
+            //case 0: return io.couleurAvantGauche();
+            //case 1: return io.couleurAvantDroit();
+            default: return CouleurEchantillon.ROCHER;
         }
         // @formatter:on
     }

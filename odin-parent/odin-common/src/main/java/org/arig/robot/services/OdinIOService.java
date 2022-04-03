@@ -1,6 +1,6 @@
 package org.arig.robot.services;
 
-import org.arig.robot.model.Couleur;
+import org.arig.robot.model.CouleurEchantillon;
 
 public interface OdinIOService extends IOService {
 
@@ -8,32 +8,22 @@ public interface OdinIOService extends IOService {
     // -------------------------- INPUT ------------------------ //
     // --------------------------------------------------------- //
 
-    @Override
-    default boolean puissanceServosOk() {
-        return true;
-    }
-
-    @Override
-    default boolean puissanceMoteursOk() {
-        return true;
-    }
-
     // Numerique
-    boolean presenceVentouseAvantGauche();
-    boolean presenceVentouseAvantDroit();
-    boolean presenceVentouseArriereGauche();
-    boolean presenceVentouseArriereDroit();
+    boolean presenceVentouseBas();
+    boolean presenceVentouseHaut();
 
-    boolean presenceAvantGauche();
-    boolean presenceAvantDroit();
-    boolean presenceArriereGauche();
-    boolean presenceArriereDroit();
+    boolean presenceCarreFouille();
+    boolean presencePriseBras();
+    boolean presenceStock1();
+    boolean presenceStock2();
+    boolean presenceStock3();
+    boolean presenceStock4();
+    boolean presenceStock5();
+    boolean presenceStock6();
 
-    // Analogique
-    Couleur couleurAvantGauche();
-    Couleur couleurAvantDroit();
-    Couleur couleurArriereGauche();
-    Couleur couleurArriereDroit();
+    // Couleurs
+    CouleurEchantillon couleurVentouseBas();
+    CouleurEchantillon couleurVentouseHaut();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
@@ -45,22 +35,19 @@ public interface OdinIOService extends IOService {
     // ----------------------------------------------------------- //
     // -------------------------- BUSINESS ----------------------- //
     // ----------------------------------------------------------- //
-    void disableAllPompe();
 
-    void enableAllPompe();
-    void enablePompesAvant();
-    void enablePompesArriere();
-    void enablePompeAvantGauche();
-    void enablePompeAvantDroit();
-    void enablePompeArriereGauche();
-    void enablePompeArriereDroit();
+    void disableAllPompes();
 
-    void releaseAllPompe();
-    void releasePompesAvant();
-    void releasePompesArriere();
-    void releasePompeAvantGauche();
-    void releasePompeAvantDroit();
-    void releasePompeArriereGauche();
-    void releasePompeArriereDroit();
+    void enableForceAllPompes();
+    void enableForcePompeVentouseBas();
+    void enableForcePompeVentouseHaut();
+
+    void enableAllPompes();
+    void enablePompeVentouseBas();
+    void enablePompeVentouseHaut();
+
+    void releaseAllPompes();
+    void releasePompeVentouseBas();
+    void releasePompeVentouseHaut();
 
 }

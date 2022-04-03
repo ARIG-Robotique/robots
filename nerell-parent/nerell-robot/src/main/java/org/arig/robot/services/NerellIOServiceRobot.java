@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
 import org.arig.robot.constants.NerellConstantesI2C;
-import org.arig.robot.model.Couleur;
+import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
@@ -26,8 +26,8 @@ import java.io.IOException;
 @Service("IOService")
 public class NerellIOServiceRobot implements NerellIOService, InitializingBean, DisposableBean {
 
-    private static final int POMPE_VENTOUSE_BAS = 1;
-    private static final int POMPE_VENTOUSE_HAUT = 2;
+    private static final int POMPE_VENTOUSE_BAS = 2;
+    private static final int POMPE_VENTOUSE_HAUT = 1;
 
     @Autowired
     private I2CBus bus;
@@ -59,13 +59,11 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
 //    private GpioPinDigitalInput inIrq5;
 //    private GpioPinDigitalInput inIrq6;
 
-    // Technique
+    // Input : Alimentation
     private GpioPinDigitalInput inAu;
-    private GpioPinDigitalInput inAlimPuissanceServos;
-    private GpioPinDigitalInput inAlimPuissanceMoteurs;
-    private GpioPinDigitalInput inTirette;
 
     // Input : Numerique 1 (+ Tirette)
+    private GpioPinDigitalInput inTirette;
     private GpioPinDigitalInput inCalageBordureArriereDroit;
     private GpioPinDigitalInput inCalageBordureArriereGauche;
     private GpioPinDigitalInput inCalageBordureAvantDroit;
@@ -147,30 +145,28 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         // -------------- //
         pcfAlim = new PCF8574GpioProvider(bus, NerellConstantesI2C.PCF_ALIM_ADDRESS, true);
         pcf1 = new PCF8574GpioProvider(bus, NerellConstantesI2C.PCF1_ADDRESS, true);
+        pcf2 = new PCF8574GpioProvider(bus, NerellConstantesI2C.PCF2_ADDRESS, true);
 
         // Alim
-        inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_04);
-        inAlimPuissanceServos = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_05);
-        inAlimPuissanceMoteurs = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_06);
+        inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_00);
 
-        outAlimPuissanceServos = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_00);
-        outAlimPuissanceMoteurs = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
+        outAlimPuissanceServos = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
+        outAlimPuissanceMoteurs = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_02);
 
         // PCF1 (µSwitch)
-        inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
-        inPresencePriseBras = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
-        inCalageBordureArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
-        inCalageBordureArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
-        inCalageBordureAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
-        inCalageBordureAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
+        inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
+        inCalageBordureArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
+        inCalageBordureArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
+        inCalageBordureAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
+        inCalageBordureAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
 
         // PCF2 (Pololu)
-        inPresenceCarreFouille = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
-        inPresencePriseBras = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
-        inPresenceStock1 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
+        inPresencePriseBras = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
+        inPresenceCarreFouille = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
+        inPresenceStock1 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
         inPresenceStock2 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
-        inPresenceStock3 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
-        inPresenceStock4 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
+        inPresenceStock3 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
+        inPresenceStock4 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
         inPresenceStock5 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
         inPresenceStock6 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_07);
 
@@ -213,14 +209,6 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     @Override
     public boolean auOk() {
         return inAu.isLow();
-    }
-
-    public boolean puissanceServosOk() {
-        return inAlimPuissanceServos.isHigh();
-    }
-
-    public boolean puissanceMoteursOk() {
-        return inAlimPuissanceMoteurs.isHigh();
     }
 
     @Override
@@ -305,19 +293,26 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     }
 
     // Couleur
-    private Couleur computeCouleur(TCS34725ColorSensor capteur) {
+    private CouleurEchantillon computeCouleur(TCS34725ColorSensor capteur) {
         final ColorData c = capteur.getColorData();
         log.info("{} R: {}, G: {}, B: {}", capteur.deviceName(), c.r(), c.g(), c.b());
-        return Couleur.INCONNU;
+        if (c.r() > c.g() && c.r() > c.b()) {
+            return CouleurEchantillon.ROUGE;
+        } else if (c.g() > c.r() && c.g() > c.b()) {
+            return CouleurEchantillon.VERT;
+        } else if (c.b() > c.r() && c.b() > c.g()) {
+            return CouleurEchantillon.BLEU;
+        }
+        return CouleurEchantillon.ROCHER;
     }
 
     @Override
-    public Couleur couleurVentouseBas() {
+    public CouleurEchantillon couleurVentouseBas() {
         return computeCouleur(couleurVentouseBas);
     }
 
     @Override
-    public Couleur couleurVentouseHaut() {
+    public CouleurEchantillon couleurVentouseHaut() {
         return computeCouleur(couleurVentouseHaut);
     }
 
@@ -351,20 +346,19 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
 
     @Override
     public void enableAlimMoteurs() {
-        log.info("Activation puissance 12V");
+        log.info("Activation puissance moteurs");
         outAlimPuissanceMoteurs.low();
     }
 
     @Override
     public void disableAlimMoteurs() {
-        log.info("Desactivation puissance 12V");
+        log.info("Desactivation puissance moteurs");
         outAlimPuissanceMoteurs.high();
     }
 
     // ----------------------------------------------------------- //
     // -------------------------- BUSINESS ----------------------- //
     // ----------------------------------------------------------- //
-
 
     @Override
     public void disableAllPompes() {

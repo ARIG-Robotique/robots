@@ -2,7 +2,7 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.NerellConstantesConfig;
-import org.arig.robot.model.Couleur;
+import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public abstract class AbstractNerellPincesAvantService implements NerellPincesAv
     @Autowired
     private NerellRobotStatus rs;
 
-    private Couleur expected = null;
+    private CouleurEchantillon expected = null;
 
     private boolean[] previousState = new boolean[]{false, false, false, false};
 
@@ -82,7 +82,7 @@ public abstract class AbstractNerellPincesAvantService implements NerellPincesAv
 
     @Override
     public void processCouleur() {
-        if (Stream.of(rs.pincesAvant()).noneMatch(c -> c == Couleur.INCONNU)) {
+        if (Stream.of(rs.pincesAvant()).noneMatch(c -> c == CouleurEchantillon.ROCHER)) {
             // Pas d'inconnu, pas de lecture
             return;
         }
@@ -91,7 +91,7 @@ public abstract class AbstractNerellPincesAvantService implements NerellPincesAv
         ThreadUtils.sleep(NerellConstantesConfig.WAIT_LED);
 
         for (int i = 0; i < 4; i++) {
-            if (rs.pincesAvant()[i] == Couleur.INCONNU) {
+            if (rs.pincesAvant()[i] == CouleurEchantillon.ROCHER) {
                 register(i, getCouleur(i));
             }
         }
@@ -99,12 +99,12 @@ public abstract class AbstractNerellPincesAvantService implements NerellPincesAv
     }
 
     @Override
-    public void setExpected(Couleur expected) {
+    public void setExpected(CouleurEchantillon expected) {
         this.expected = expected;
     }
 
-    protected Couleur getExpected() {
-        Couleur couleur = Couleur.INCONNU;
+    protected CouleurEchantillon getExpected() {
+        CouleurEchantillon couleur = CouleurEchantillon.ROCHER;
         if (expected != null) {
             couleur = expected;
             expected = null;
@@ -137,16 +137,16 @@ public abstract class AbstractNerellPincesAvantService implements NerellPincesAv
         };
     }
 
-    private void register(int index, Couleur couleur) {
+    private void register(int index, CouleurEchantillon couleur) {
         rs.pinceAvant(index, couleur);
     }
 
-    private Couleur getCouleur(int index) {
+    private CouleurEchantillon getCouleur(int index) {
         // @formatter:off
         switch (index) {
             case 0: return io.couleurVentouseBas();
             case 1: return io.couleurVentouseHaut();
-            default: return Couleur.INCONNU;
+            default: return CouleurEchantillon.ROCHER;
         }
         // @formatter:on
     }

@@ -18,7 +18,6 @@ import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.NerellEcranService;
 import org.arig.robot.services.NerellIOService;
-import org.arig.robot.services.NerellServosService;
 import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +28,6 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Autowired
     private NerellRobotStatus nerellRobotStatus;
-
-    @Autowired
-    private NerellServosService nerellServos;
 
     @Autowired
     private NerellIOService nerellIO;
@@ -102,10 +98,6 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void beforePowerOff() {
-        ecranService.displayMessage("FIN - Attente béquille et enlever la tirette");
-        while (io.tirette()) {
-            ThreadUtils.sleep(1000);
-        }
         nerellIO.disableAllPompes();
         ThreadUtils.sleep(1000);
     }

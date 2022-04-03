@@ -2,7 +2,7 @@ package org.arig.robot.services;
 
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.arig.robot.model.Couleur;
+import org.arig.robot.model.CouleurEchantillon;
 import org.springframework.stereotype.Service;
 
 @Service("IOService")
@@ -68,13 +68,13 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
         return contentStock >= 6;
     }
 
-    public Couleur couleurVentouseBas() {
-        return Couleur.INCONNU;
+    public CouleurEchantillon couleurVentouseBas() {
+        return CouleurEchantillon.ROCHER;
     }
 
     @Override
-    public Couleur couleurVentouseHaut() {
-        return Couleur.INCONNU;
+    public CouleurEchantillon couleurVentouseHaut() {
+        return CouleurEchantillon.ROCHER;
     }
 
     // --------------------------------------------------------- //

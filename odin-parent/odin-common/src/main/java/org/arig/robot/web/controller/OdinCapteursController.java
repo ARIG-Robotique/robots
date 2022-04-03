@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OdinCapteursController extends AbstractCapteursController {
 
     @Autowired
-    private OdinRobotStatus rs;
+    private OdinRobotStatus robotStatus;
 
     @Autowired
     private OdinIOService ioService;
@@ -20,17 +20,25 @@ public class OdinCapteursController extends AbstractCapteursController {
     public void afterPropertiesSet() throws Exception {
         super.afterPropertiesSet();
 
-        numeriqueInfos.put("Presence avant droit", ioService::presenceAvantDroit);
-        numeriqueInfos.put("Presence avant gauche", ioService::presenceAvantGauche);
-        numeriqueInfos.put("Presence arriere droit", ioService::presenceArriereDroit);
-        numeriqueInfos.put("Presence arriere gauche", ioService::presenceArriereGauche);
-        numeriqueInfos.put("Presence ventouse avant droit", ioService::presenceVentouseAvantDroit);
-        numeriqueInfos.put("Presence ventouse avant gauche", ioService::presenceVentouseAvantGauche);
-        numeriqueInfos.put("Presence ventouse arriere droit", ioService::presenceVentouseArriereDroit);
-        numeriqueInfos.put("Presence ventouse arriere gauche", ioService::presenceVentouseArriereGauche);
         numeriqueInfos.put("Bordure arrière droite", ioService::calageBordureArriereDroit);
         numeriqueInfos.put("Bordure arrière gauche", ioService::calageBordureArriereGauche);
+        numeriqueInfos.put("Bordure avant droite", ioService::calageBordureAvantDroit);
+        numeriqueInfos.put("Bordure avant gauche", ioService::calageBordureAvantGauche);
+        //numeriqueInfos.put("Bordure custom droite", ioService::calageBordureCustomDroit);
+        //numeriqueInfos.put("Bordure custom gauche", ioService::calageBordureCustomGauche);
 
-        textInfos.put("Equipe", () -> rs.team().name());
+        numeriqueInfos.put("Presence carre de fouille", ioService::presenceCarreFouille);
+        numeriqueInfos.put("Presence prise bras", ioService::presencePriseBras);
+        numeriqueInfos.put("Presence stock 1", ioService::presenceStock1);
+        numeriqueInfos.put("Presence stock 2", ioService::presenceStock2);
+        numeriqueInfos.put("Presence stock 3", ioService::presenceStock3);
+        numeriqueInfos.put("Presence stock 4", ioService::presenceStock4);
+        numeriqueInfos.put("Presence stock 5", ioService::presenceStock5);
+        numeriqueInfos.put("Presence stock 6", ioService::presenceStock6);
+        numeriqueInfos.put("Presence ventouse bas", ioService::presenceVentouseBas);
+        numeriqueInfos.put("Presence ventouse haut", ioService::presenceVentouseHaut);
+
+        textInfos.put("Equipe", () -> (robotStatus.team() != null) ? robotStatus.team().name() : "???");
+        textInfos.put("Carre fouille", () -> "???");
     }
 }

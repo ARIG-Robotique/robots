@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.OdinOrdonanceur;
+import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.odin.utils.shell.providers.OdinActionsProvider;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.OdinIOService;
@@ -24,8 +25,10 @@ import java.util.Optional;
 @AllArgsConstructor
 public class OdinActionsCommands {
 
-    private OdinIOService ioService;
     private final AbstractEnergyService energyService;
+    private final OdinRobotStatus rs;
+
+    private OdinIOService ioService;
     private OdinOrdonanceur ordonanceur;
     private List<Action> actions;
 
@@ -47,6 +50,7 @@ public class OdinActionsCommands {
 
     @ShellMethod("Désactivation des services")
     public void disableServices() {
+
     }
 
     @ShellMethod("Execute une action")

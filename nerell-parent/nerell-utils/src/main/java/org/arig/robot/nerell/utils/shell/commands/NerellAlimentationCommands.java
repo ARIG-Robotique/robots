@@ -16,17 +16,23 @@ public class NerellAlimentationCommands {
 
     private final NerellIOService ioService;
     private final NerellServosService servosService;
+    //private final IAlimentationSensor alimentationSensor;
 
     public Availability auOK() {
         return ioService.auOk() ? Availability.available() : Availability.unavailable("Arret d'urgence non OK");
     }
 
     @ShellMethodAvailability("auOK")
-    @ShellMethod("Activation des alimentations")
-    public void enableAlimentation() {
+    @ShellMethod("Activation aliemntation moteurs")
+    public void enableAlimentationMoteurs() {
+        ioService.enableAlimMoteurs();
+    }
+
+    @ShellMethodAvailability("auOK")
+    @ShellMethod("Activation aliemntation servos")
+    public void enableAlimentationServoss() {
         servosService.cyclePreparation();
         ioService.enableAlimServos();
-        ioService.enableAlimMoteurs();
     }
 
     @ShellMethod("Désactivation des alimentations")
@@ -34,4 +40,21 @@ public class NerellAlimentationCommands {
         ioService.disableAlimServos();
         ioService.disableAlimMoteurs();
     }
+
+    /*@SneakyThrows
+    @ShellMethod("Lecture des alimentations")
+    public void readAlimentation(int nbRead) {
+        alimentationSensor.printVersion();
+        for (int read = 0 ; read < nbRead ; read++) {
+            log.info("Lecture {} / {}", read + 1, nbRead);
+            alimentationSensor.refresh();
+            for (byte i = 1; i <= 2; i++) {
+                AlimentationSensorValue v = alimentationSensor.get(i);
+                log.info("Lecture channel {} ({})\t{} V\t{} A",
+                        i, v.fault() ? "en erreur" : "OK", v.tension(), v.current());
+            }
+
+            ThreadUtils.sleep(200);
+        }
+    }*/
 }

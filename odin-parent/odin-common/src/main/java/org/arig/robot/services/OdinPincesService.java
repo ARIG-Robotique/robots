@@ -1,6 +1,6 @@
 package org.arig.robot.services;
 
-import org.arig.robot.model.Couleur;
+import org.arig.robot.model.CouleurEchantillon;
 
 public interface OdinPincesService {
     void activate();
@@ -13,5 +13,5 @@ public interface OdinPincesService {
 
     void releasePompe(boolean gauche, boolean droite);
 
-    void setExpected(Couleur expected, int pinceNumber);
+    void setExpected(CouleurEchantillon expected, int pinceNumber);
 }

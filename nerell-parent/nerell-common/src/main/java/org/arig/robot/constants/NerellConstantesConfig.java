@@ -38,6 +38,9 @@ public interface NerellConstantesConfig {
     //double countPerDeg = 142.569444444;
     double countPerDeg = 142.5873611111111;
 
+    double coefCodeurDroit = 1.0;
+    double coefCodeurGauche = 1.0;
+
     // ------------------------ //
     // Configuration des rampes //
     // ------------------------ //

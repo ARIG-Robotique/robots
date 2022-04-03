@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.NerellConstantesConfig;
-import org.arig.robot.filters.pid.PidFilter;
-import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.NerellRobotStatus;
-import org.arig.robot.model.Position;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractEnergyService;
@@ -37,10 +34,6 @@ public class NerellOdometrieCommands {
     private final NerellRobotStatus rs;
     private final ARIG2WheelsEncoders encoders;
     private final ConvertionRobotUnit convRobot;
-    private final CommandeRobot cmdRobot;
-    private final Position currentPosition;
-    private final PidFilter pidDistance;
-    private final PidFilter pidOrientation;
 
     public Availability alimentationOk() {
         return ioService.auOk() && energyService.checkServos() && energyService.checkMoteurs()

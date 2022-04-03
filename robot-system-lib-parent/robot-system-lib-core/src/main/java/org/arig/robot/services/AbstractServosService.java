@@ -116,6 +116,10 @@ public abstract class AbstractServosService {
         }
     }
 
+    public void setPositionById(byte id, int position, byte speed) {
+        ctrl.setPositionAndSpeed(id, position, speed);
+    }
+
     public void setPositionBatch(String groupName, String positionName, boolean wait) {
         ServoGroup group = groups.get(groupName);
         assert group != null;

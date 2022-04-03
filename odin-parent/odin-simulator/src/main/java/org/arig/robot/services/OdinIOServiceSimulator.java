@@ -3,7 +3,7 @@ package org.arig.robot.services;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.arig.robot.model.Couleur;
+import org.arig.robot.model.CouleurEchantillon;
 import org.springframework.stereotype.Service;
 
 @Getter
@@ -12,116 +12,146 @@ import org.springframework.stereotype.Service;
 @Service("IOService")
 public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements OdinIOService {
 
+    @Setter
+    @Accessors(fluent = true)
+    private int contentStock = 0;
+
     private boolean presenceVentouseAvantGauche = false;
     private boolean presenceVentouseAvantDroit = false;
     private boolean presenceVentouseArriereGauche = false;
     private boolean presenceVentouseArriereDroit = false;
 
+    // --------------------------------------------------------- //
+    // -------------------------- INPUT ------------------------ //
+    // --------------------------------------------------------- //
+
+    // Numerique
+
     @Override
-    public boolean presenceAvantGauche() {
+    public boolean presenceVentouseBas() {
         return false;
     }
 
     @Override
-    public boolean presenceAvantDroit() {
+    public boolean presenceVentouseHaut() {
         return false;
     }
 
     @Override
-    public boolean presenceArriereGauche() {
+    public boolean presencePriseBras() {
         return false;
     }
 
     @Override
-    public boolean presenceArriereDroit() {
+    public boolean presenceCarreFouille() {
         return false;
     }
 
     @Override
-    public Couleur couleurAvantGauche() {
-        return Couleur.INCONNU;
+    public boolean presenceStock1() {
+        return contentStock >= 1;
     }
 
     @Override
-    public Couleur couleurAvantDroit() {
-        return Couleur.INCONNU;
+    public boolean presenceStock2() {
+        return contentStock >= 2;
     }
 
     @Override
-    public Couleur couleurArriereGauche() {
-        return Couleur.INCONNU;
+    public boolean presenceStock3() {
+        return contentStock >= 3;
     }
 
     @Override
-    public Couleur couleurArriereDroit() {
-        return Couleur.INCONNU;
+    public boolean presenceStock4() {
+        return contentStock >= 4;
     }
+
+    @Override
+    public boolean presenceStock5() {
+        return contentStock >= 5;
+    }
+
+    @Override
+    public boolean presenceStock6() {
+        return contentStock >= 6;
+    }
+
+    public CouleurEchantillon couleurVentouseBas() {
+        return CouleurEchantillon.ROCHER;
+    }
+
+    @Override
+    public CouleurEchantillon couleurVentouseHaut() {
+        return CouleurEchantillon.ROCHER;
+    }
+
+    // --------------------------------------------------------- //
+    // -------------------------- OUTPUT ----------------------- //
+    // --------------------------------------------------------- //
 
     @Override
     public void enableLedCapteurCouleur() {
+        // Nothing to do
     }
 
     @Override
     public void disableLedCapteurCouleur() {
+        // Nothing to do
+    }
+
+    // ----------------------------------------------------------- //
+    // -------------------------- BUSINESS ----------------------- //
+    // ----------------------------------------------------------- //
+
+
+    @Override
+    public void disableAllPompes() {
+        // Nothing to do
     }
 
     @Override
-    public void disableAllPompe() {
+    public void enableAllPompes() {
+        // Nothing to do
     }
 
     @Override
-    public void enableAllPompe() {
+    public void enableForceAllPompes() {
+        // Nothing to do
     }
 
     @Override
-    public void enablePompesAvant() {
+    public void releaseAllPompes() {
+        // Nothing to do
     }
 
     @Override
-    public void enablePompesArriere() {
+    public void enableForcePompeVentouseBas() {
+        // Nothing to do
     }
 
     @Override
-    public void enablePompeAvantGauche() {
+    public void enableForcePompeVentouseHaut() {
+        // Nothing to do
     }
 
     @Override
-    public void enablePompeAvantDroit() {
+    public void enablePompeVentouseBas() {
+        // Nothing to do
     }
 
     @Override
-    public void enablePompeArriereGauche() {
+    public void enablePompeVentouseHaut() {
+        // Nothing to do
     }
 
     @Override
-    public void enablePompeArriereDroit() {
+    public void releasePompeVentouseBas() {
+        // Nothing to do
     }
 
     @Override
-    public void releaseAllPompe() {
-    }
-
-    @Override
-    public void releasePompesAvant() {
-    }
-
-    @Override
-    public void releasePompesArriere() {
-    }
-
-    @Override
-    public void releasePompeAvantGauche() {
-    }
-
-    @Override
-    public void releasePompeAvantDroit() {
-    }
-
-    @Override
-    public void releasePompeArriereGauche() {
-    }
-
-    @Override
-    public void releasePompeArriereDroit() {
+    public void releasePompeVentouseHaut() {
+        // Nothing to do
     }
 }

@@ -1,6 +1,6 @@
 package org.arig.robot.services;
 
-import org.arig.robot.model.Couleur;
+import org.arig.robot.model.CouleurEchantillon;
 
 public interface NerellPincesAvantService {
     void activate();
@@ -11,5 +11,5 @@ public interface NerellPincesAvantService {
 
     void processCouleur();
 
-    void setExpected(Couleur expected);
+    void setExpected(CouleurEchantillon expected);
 }

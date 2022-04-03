@@ -15,6 +15,9 @@ public class NerellUtils {
         final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
         System.setProperty(ConstantesConfig.keyExecutionId, execId);
 
+        // FIXME : Workaround
+        System.setProperty("spring.main.allow-circular-references", "true");
+
         SpringApplication.run(NerellUtils.class, args);
     }
 }

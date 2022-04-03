@@ -22,6 +22,7 @@ import org.arig.robot.system.avoiding.BasicAvoidingService;
 import org.arig.robot.system.avoiding.BasicRetryAvoidingService;
 import org.arig.robot.system.avoiding.CompleteAvoidingService;
 import org.arig.robot.system.avoiding.SemiCompleteAvoidingService;
+import org.arig.robot.system.capteurs.CarreFouilleReader;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
@@ -52,8 +53,8 @@ public class NerellRobotContext {
     @Bean
     public RobotName robotName() {
         return new RobotName()
-                .name("Nerell (The Big One)")
-                .version("2021 (Sail the World)");
+                .name("Nerell (The less I do the better I am)")
+                .version("2022 (Age of bots)");
     }
 
     @Bean(destroyMethod = "close")
@@ -93,6 +94,11 @@ public class NerellRobotContext {
                 .deviceName(NerellConstantesI2C.CODEUR_MOTEUR_GAUCHE)
                 .device(i2cBus.getDevice(NerellConstantesI2C.CODEUR_GAUCHE_ADDRESS))
                 .build();
+        /*final I2CManagerDevice<I2CDevice> alimMesure = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(NerellConstantesI2C.ALIM_MESURE_DEVICE_NAME)
+                .device(i2cBus.getDevice(NerellConstantesI2C.ALIM_MESURE_ADDRESS))
+                .scanCmd(new byte[]{0x00})
+                .build();*/
         final I2CManagerDevice<I2CDevice> controlleurPompes = I2CManagerDevice.<I2CDevice>builder()
                 .deviceName(NerellConstantesI2C.VACUUM_CONTROLLER_DEVICE_NAME)
                 .device(i2cBus.getDevice(NerellConstantesI2C.VACUUM_CONTROLLER_ADDRESS))
@@ -114,6 +120,10 @@ public class NerellRobotContext {
                 .multiplexerDeviceName(NerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
                 .multiplexerChannel(NerellConstantesI2C.COULEUR_VENTOUSE_HAUT_MUX_CHANNEL)
                 .build();
+        final I2CManagerDevice<I2CDevice> carreFouilleReader = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(NerellConstantesI2C.CARRE_FOUILLE_READER_NAME)
+                .device(i2cBus.getDevice(NerellConstantesI2C.CARRE_FOUILLE_READER_ADDRESS))
+                .build();
 
         manager.registerDevice(sd21);
         manager.registerDevice(codeurMoteurDroit);
@@ -122,10 +132,12 @@ public class NerellRobotContext {
         manager.registerDevice(pcf1);
         manager.registerDevice(pcf2);
         manager.registerDevice(pca9685);
+        //manager.registerDevice(alimMesure);
         manager.registerDevice(controlleurPompes);
         manager.registerDevice(mux);
         manager.registerDevice(couleurVentouseBas);
         manager.registerDevice(couleurVentouseHaut);
+        manager.registerDevice(carreFouilleReader);
 
         return manager;
     }
@@ -137,7 +149,44 @@ public class NerellRobotContext {
 
     @Bean
     public ARIG2WheelsEncoders encoders() {
-        return new ARIG2WheelsEncoders(NerellConstantesI2C.CODEUR_MOTEUR_GAUCHE, NerellConstantesI2C.CODEUR_MOTEUR_DROIT);
+        final ARIG2WheelsEncoders encoders = new ARIG2WheelsEncoders(NerellConstantesI2C.CODEUR_MOTEUR_GAUCHE, NerellConstantesI2C.CODEUR_MOTEUR_DROIT);
+        encoders.setCoefs(NerellConstantesConfig.coefCodeurGauche, NerellConstantesConfig.coefCodeurDroit);
+        return encoders;
+    }
+
+
+    @Bean
+    public ARIGVacuumController vacuumController() {
+        return new ARIGVacuumController(NerellConstantesI2C.VACUUM_CONTROLLER_DEVICE_NAME);
+    }
+
+    /*
+    @Bean
+    public ARIG2ChannelsAlimentationSensor alimentationSensor() {
+        return new ARIG2ChannelsAlimentationSensor(NerellConstantesI2C.ALIM_MESURE_DEVICE_NAME);
+    }
+    */
+
+    @Bean
+    public TCS34725ColorSensor couleurVentouseBas() {
+        return new TCS34725ColorSensor(NerellConstantesI2C.COULEUR_VENTOUSE_BAS_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
+    }
+
+    @Bean
+    public TCS34725ColorSensor couleurVentouseHaut() {
+        return new TCS34725ColorSensor(NerellConstantesI2C.COULEUR_VENTOUSE_HAUT_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
+    }
+
+    @Bean
+    public TCA9548MultiplexerI2C mux(I2CManager i2CManager) {
+        final TCA9548MultiplexerI2C mux = new TCA9548MultiplexerI2C(NerellConstantesI2C.MULTIPLEXEUR_I2C_NAME);
+        i2CManager.registerMultiplexerDevice(NerellConstantesI2C.MULTIPLEXEUR_I2C_NAME, mux);
+        return mux;
+    }
+
+    @Bean
+    public CarreFouilleReader carreFouilleReader(I2CManager i2CManager) {
+        return new CarreFouilleReader(i2CManager, NerellConstantesI2C.CARRE_FOUILLE_READER_NAME);
     }
 
     @Bean
@@ -155,28 +204,6 @@ public class NerellRobotContext {
         gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_03); // Direction
 
         return gpioProvider;
-    }
-
-    @Bean
-    public ARIGVacuumController vacuumController() {
-        return new ARIGVacuumController(NerellConstantesI2C.VACUUM_CONTROLLER_DEVICE_NAME);
-    }
-
-    @Bean
-    public TCS34725ColorSensor couleurVentouseBas() {
-        return new TCS34725ColorSensor(NerellConstantesI2C.COULEUR_VENTOUSE_BAS_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
-    }
-
-    @Bean
-    public TCS34725ColorSensor couleurVentouseHaut() {
-        return new TCS34725ColorSensor(NerellConstantesI2C.COULEUR_VENTOUSE_HAUT_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
-    }
-
-    @Bean
-    public TCA9548MultiplexerI2C mux(I2CManager i2CManager) {
-        final TCA9548MultiplexerI2C mux = new TCA9548MultiplexerI2C(NerellConstantesI2C.MULTIPLEXEUR_I2C_NAME);
-        i2CManager.registerMultiplexerDevice(NerellConstantesI2C.MULTIPLEXEUR_I2C_NAME, mux);
-        return mux;
     }
 
     @Bean

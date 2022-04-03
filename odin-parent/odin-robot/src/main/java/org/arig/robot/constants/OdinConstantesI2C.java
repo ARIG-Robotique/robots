@@ -11,10 +11,13 @@ public interface OdinConstantesI2C {
     int CODEUR_GAUCHE_ADDRESS = 0x32;
 
     String PCF_ALIM_DEVICE_NAME = "Carte alimentation";
-    int PCF_ALIM_ADDRESS = PCF8574GpioProvider.PCF8574A_0x38;
+    int PCF_ALIM_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3D;
 
-    String PCF1_DEVICE_NAME = "PCF 1 (Inputs)";
-    int PCF1_ADDRESS = PCF8574GpioProvider.PCF8574_0x27;
+    String PCF1_DEVICE_NAME = "PCF 1 (Inputs µSwitch)";
+    int PCF1_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3F;
+
+    String PCF2_DEVICE_NAME = "PCF 1 (Inputs Pololu)";
+    int PCF2_ADDRESS = PCF8574GpioProvider.PCF8574A_0x38;
 
     String PCA9685_DEVICE_NAME = "PCA9685";
     int PCA9685_ADDRESS = 0x40;
@@ -31,15 +34,12 @@ public interface OdinConstantesI2C {
     String MULTIPLEXEUR_I2C_NAME = "Mux TCA";
     int MULTIPLEXEUR_I2C_ADDRESS = 0x70;
 
-    String COULEUR_AVANT_GAUCHE_NAME = "Couleur avant gauche";
-    byte COULEUR_AVANT_GAUCHE_MUX_CHANNEL = 3;
+    String COULEUR_VENTOUSE_BAS_NAME = "Couleur ventouse bas";
+    byte COULEUR_VENTOUSE_BAS_MUX_CHANNEL = 2;
 
-    String COULEUR_AVANT_DROIT_NAME = "Couleur avant droit";
-    byte COULEUR_AVANT_DROIT_MUX_CHANNEL = 2;
+    String COULEUR_VENTOUSE_HAUT_NAME = "Couleur ventouse haut";
+    byte COULEUR_VENTOUSE_HAUT_MUX_CHANNEL = 3;
 
-    String COULEUR_ARRIERE_GAUCHE_NAME = "Couleur arriere gauche";
-    byte COULEUR_ARRIERE_GAUCHE_MUX_CHANNEL = 0;
-
-    String COULEUR_ARRIERE_DROIT_NAME = "Couleur arriere droit";
-    byte COULEUR_ARRIERE_DROIT_MUX_CHANNEL = 1;
+    String CARRE_FOUILLE_READER_NAME = "Carre fouille reader";
+    int CARRE_FOUILLE_READER_ADDRESS = 0x3C;
 }
