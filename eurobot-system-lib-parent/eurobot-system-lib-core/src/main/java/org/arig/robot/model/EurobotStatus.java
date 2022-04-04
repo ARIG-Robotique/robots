@@ -43,71 +43,98 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
      * STATUT
      */
     private boolean distributeurEquipePris = false;
+
     public void distributeurEquipePris(boolean distributeurEquipePris) {
         log.info("[RS] distributeur equipe pris : {}", distributeurEquipePris);
         this.distributeurEquipePris = distributeurEquipePris;
     }
+
     private boolean distributeurCommunEquipePris = false;
+
     public void distributeurCommunEquipePris(boolean distributeurCommunEquipePris) {
         log.info("[RS] distributeur commun equipe pris : {}", distributeurCommunEquipePris);
         this.distributeurCommunEquipePris = distributeurCommunEquipePris;
     }
+
     private boolean distributeurCommunAdversePris = false;
+
     public void distributeurCommunAdversePris(boolean distributeurCommunAdversePris) {
         log.info("[RS] distributeur commun adverse pris : {}", distributeurCommunAdversePris);
         this.distributeurCommunAdversePris = distributeurCommunAdversePris;
     }
+
     private boolean siteEchantillonPris = false;
+
     public void siteEchantillonPris(boolean siteEchantillonPris) {
         log.info("[RS] site echantillon pris : {}", siteEchantillonPris);
         this.siteEchantillonPris = siteEchantillonPris;
     }
+
     private boolean siteDeFouillePris = false;
+
     public void siteDeFouillePris(boolean siteDeFouillePris) {
         log.info("[RS] site de fouille pris : {}", siteDeFouillePris);
         this.siteDeFouillePris = siteDeFouillePris;
     }
+
     private boolean vitrineActive = false;
+
     public void vitrineActive(boolean vitrineActive) {
         log.info("[RS] vitrine active : {}", vitrineActive);
         this.vitrineActive = vitrineActive;
     }
+
     private boolean statuettePris = false;
+
     public void statuettePris(boolean statuettePris) {
         log.info("[RS] statuette pris : {}", statuettePris);
         this.statuettePris = statuettePris;
     }
+
     private boolean statuetteDansVitrine = false;
+
     public void statuetteDansVitrine(boolean statuetteDansVitrine) {
         log.info("[RS] statuette dans vitrine : {}", statuetteDansVitrine);
         this.statuetteDansVitrine = statuetteDansVitrine;
     }
+
     private boolean repliqueDepose = false;
+
     public void repliqueDepose(boolean repliqueDepose) {
         log.info("[RS] replique depose : {}", repliqueDepose);
         this.repliqueDepose = repliqueDepose;
     }
+
     private boolean echantillonAbriChantierDistributeurPris = false;
+
     public void echantillonAbriChantierDistributeurPris(boolean echantillonAbriChantierDistributeurPris) {
         log.info("[RS] echantillon abri chantier distributeur pris : {}", echantillonAbriChantierDistributeurPris);
         this.echantillonAbriChantierDistributeurPris = echantillonAbriChantierDistributeurPris;
     }
+
     private boolean echantillonAbriChantierCarreFouillePris = false;
+
     public void echantillonAbriChantierCarreFouillePris(boolean echantillonAbriChantierCarreFouillePris) {
         log.info("[RS] echantillon abri chantier carre fouille pris : {}", echantillonAbriChantierCarreFouillePris);
         this.echantillonAbriChantierCarreFouillePris = echantillonAbriChantierCarreFouillePris;
     }
+
     private boolean echantillonCampementPris = false;
+
     public void echantillonCampementPris(boolean echantillonCampementPris) {
         log.info("[RS] echantillon campement pris : {}", echantillonCampementPris);
         this.echantillonCampementPris = echantillonCampementPris;
     }
+
     private SiteDeRetour siteDeRetour = SiteDeRetour.AUCUN;
+
     public void siteDeRetour(SiteDeRetour siteDeRetour) {
         log.info("[RS] site de retour : {}", siteDeRetour);
         this.siteDeRetour = siteDeRetour;
     }
+
     private SiteDeRetour siteDeRetourAutreRobot = SiteDeRetour.AUCUN;
+
     public void siteDeRetourAutreRobot(SiteDeRetour siteDeRetourAutreRobot) {
         log.info("[RS] site de retour autre robot : {}", siteDeRetourAutreRobot);
         this.siteDeRetourAutreRobot = siteDeRetourAutreRobot;
@@ -116,7 +143,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Setter(AccessLevel.NONE)
     private List<CouleurEchantillon> abriChantier = new ArrayList<>();
 
-    public void deposeAbriChantier(CouleurEchantillon ... echantillons) {
+    public void deposeAbriChantier(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
             log.info("[RS] depose abri chantier : {}", echantillon);
             abriChantier.add(echantillon);
@@ -126,19 +153,21 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Setter(AccessLevel.NONE)
     private Campement campement = new Campement();
 
-    public void deposeCampementRouge(CouleurEchantillon ... echantillons) {
+    public void deposeCampementRouge(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
             log.info("[RS] depose campement rouge : {}", echantillon);
             campement.addRouge(echantillon);
         }
     }
-    public void deposeCampementVert(CouleurEchantillon ... echantillons) {
+
+    public void deposeCampementVert(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
             log.info("[RS] depose campement vert : {}", echantillon);
             campement.addVert(echantillon);
         }
     }
-    public void deposeCampementBleu(CouleurEchantillon ... echantillons) {
+
+    public void deposeCampementBleu(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
             log.info("[RS] depose campement bleu : {}", echantillon);
             campement.addBleu(echantillon);
@@ -148,31 +177,35 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Setter(AccessLevel.NONE)
     private Galerie galerie = new Galerie();
 
-    public void deposeGalerieRouge(CouleurEchantillon ... echantillons) {
+    public void deposeGalerieRouge(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
             log.info("[RS] depose galerie rouge : {}", echantillon);
             galerie.addRouge(echantillon);
         }
     }
-    public void deposeGalerieRougeVert(CouleurEchantillon ... echantillons) {
+
+    public void deposeGalerieRougeVert(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
             log.info("[RS] depose galerie rouge vert : {}", echantillon);
             galerie.addRougeVert(echantillon);
         }
     }
-    public void deposeGalerieVert(CouleurEchantillon ... echantillons) {
+
+    public void deposeGalerieVert(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
             log.info("[RS] depose galerie vert : {}", echantillon);
             galerie.addVert(echantillon);
         }
     }
-    public void deposeGalerieVertBleu(CouleurEchantillon ... echantillons) {
+
+    public void deposeGalerieVertBleu(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
             log.info("[RS] depose galerie vert bleu : {}", echantillon);
             galerie.addVertBleu(echantillon);
         }
     }
-    public void deposeGalerieBleu(CouleurEchantillon ... echantillons) {
+
+    public void deposeGalerieBleu(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
             log.info("[RS] depose galerie bleu : {}", echantillon);
             galerie.addBleu(echantillon);
@@ -222,6 +255,9 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         if (repliqueDepose) points += 10;
         if (distributeurEquipePris) points += 3; // 3 échantillons
         if (distributeurCommunEquipePris) points += 3; // 3 échantillons
+        if (echantillonAbriChantierCarreFouillePris) points += 1;
+        if (echantillonAbriChantierDistributeurPris) points += 1;
+        if (echantillonCampementPris) points += 1;
         points += campement.score();
         points += galerie.score();
         points += zoneDeFouille.score();
@@ -237,6 +273,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         r.put("Vitrine", (vitrinePresente ? 2 : 0) + (vitrineActive ? 5 : 0));
         r.put("Statuette", (statuettePresente ? 2 : 0) + (statuettePris ? 5 : 0) + (statuetteDansVitrine ? 15 : 0));
         r.put("Replique", repliqueDepose ? 10 : 0);
+        r.put("Distributeurs", (distributeurEquipePris ? 3 : 0) + (distributeurCommunEquipePris ? 3 : 0) + (echantillonAbriChantierCarreFouillePris ? 1 : 0) + (echantillonAbriChantierCarreFouillePris ? 1 : 0) + (echantillonCampementPris ? 1 : 0));
         r.put("Zone de fouille", zoneDeFouille.score());
         r.put("Campement", campement.score());
         r.put("Galerie", galerie.score());

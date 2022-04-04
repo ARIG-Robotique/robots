@@ -28,12 +28,21 @@ public class RobotGroupService implements RobotGroup.Handler {
     private final RobotGroup group;
     private final ThreadPoolExecutor threadPoolTaskExecutor;
 
+    /**
+     * Indique au secondaire de démarrer le callage
+     */
     @Getter
     private boolean calage;
 
+    /**
+     * Indique au secondaire l'etat "pret" (écran vérouillé)
+     */
     @Getter
     private boolean ready;
 
+    /**
+     * Indique au secondaire le début de match
+     */
     @Getter
     private boolean start;
 
@@ -173,27 +182,42 @@ public class RobotGroupService implements RobotGroup.Handler {
         }
     }
 
+    /**
+     * Appellé par le principal pour démarrer le callage bordure
+     */
     public void calage() {
         calage = true;
         sendEvent(StatusEvent.CALAGE);
     }
 
+    /**
+     * Appellé par les deux robots pour le phasage des mouvements à l'init
+     */
     public void initStep(int step) {
         initStep = step;
         sendEvent(StatusEvent.INIT, new byte[]{(byte) step});
     }
 
+    /**
+     * Attends que l'autre robot ait terminé une étape d'init
+     */
     public void waitInitStep(int step) {
         do {
             ThreadUtils.sleep(200);
         } while (this.initStep != step);
     }
 
+    /**
+     * Appellé par le principal en fin d'init
+     */
     public void ready() {
         ready = true;
         sendEvent(StatusEvent.READY);
     }
 
+    /**
+     * Appellé par le principal pour le début de match
+     */
     public void start() {
         start = true;
         sendEvent(StatusEvent.START);
