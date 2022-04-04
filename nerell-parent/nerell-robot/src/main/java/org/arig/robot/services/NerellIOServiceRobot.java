@@ -26,8 +26,8 @@ import java.io.IOException;
 @Service("IOService")
 public class NerellIOServiceRobot implements NerellIOService, InitializingBean, DisposableBean {
 
-    private static final int POMPE_VENTOUSE_BAS = 2;
-    private static final int POMPE_VENTOUSE_HAUT = 1;
+    private static final int POMPE_VENTOUSE_BAS = 3;
+    private static final int POMPE_VENTOUSE_HAUT = 4;
 
     @Autowired
     private I2CBus bus;
