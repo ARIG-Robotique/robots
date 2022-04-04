@@ -199,6 +199,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
      */
     public void positionStrategy() {
         ecranService.displayMessage("Mise en place");
+        /*
         try {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
@@ -231,6 +232,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
             ecranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
             throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);
         }
+        */
     }
 
     /**
