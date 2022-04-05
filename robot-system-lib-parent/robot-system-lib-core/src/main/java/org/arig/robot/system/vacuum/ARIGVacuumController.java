@@ -3,6 +3,7 @@ package org.arig.robot.system.vacuum;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.I2CManager;
 import org.arig.robot.exception.I2CException;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.charset.StandardCharsets;
@@ -55,22 +56,34 @@ public class ARIGVacuumController extends AbstractARIGVacuumController {
     }
 
     protected void sendToController() {
-        try {
-            byte data = (byte) (states[0].getValue() + (states[1].getValue() << 2)
-                    + (states[2].getValue() << 4) + (states[3].getValue() << 6));
-            i2cManager.sendData(deviceName, WRITE_PUMPS_MODE, data);
-        } catch (I2CException e) {
-            log.error("Erreur de la modification du mode des pompes");
-        }
+        int nbTry = 0;
+        do {
+            try {
+                byte data = (byte) (states[0].getValue() + (states[1].getValue() << 2)
+                        + (states[2].getValue() << 4) + (states[3].getValue() << 6));
+                i2cManager.sendData(deviceName, WRITE_PUMPS_MODE, data);
+            } catch (I2CException e) {
+                log.error("Erreur de la modification du mode des pompes (essai {}/3) : {}", nbTry, e.toString());
+                if (nbTry < 2) {
+                    ThreadUtils.sleep(1);
+                }
+            }
+        } while (nbTry++ < 3);
     }
 
     protected byte[] readFromController(byte register, int size) {
-        try {
-            i2cManager.sendData(deviceName, register, register);
-            return i2cManager.getData(deviceName, size);
-        } catch (I2CException e) {
-            log.error("Erreur lors de la récupération du registre {} : {}", register, e.toString());
-        }
+        int nbTry = 0;
+        do {
+            try {
+                i2cManager.sendData(deviceName, register, register);
+                return i2cManager.getData(deviceName, size);
+            } catch (I2CException e) {
+                log.error("Erreur lors de la récupération du registre {} (essai {}/3) : {}", register, nbTry, e.toString());
+                if (nbTry < 2) {
+                    ThreadUtils.sleep(1);
+                }
+            }
+        } while (nbTry++ < 3);
         return new byte[size];
     }
 
