@@ -66,7 +66,7 @@ public class NerellCommonContext {
                 .pathFindingAngleSafe(NerellConstantesConfig.pathFindingAngleSafe)
 
                 .seuilTensionServos(NerellConstantesConfig.seuilAlimentationServosVolts)
-                .seuilTensionMoteurs(0) // Pas de mesure sur Nerell
+                .seuilTensionMoteurs(NerellConstantesConfig.seuilAlimentationMoteursVolts)
 
                 .vitesse(NerellConstantesConfig.vitesseMin, NerellConstantesConfig.vitesseMax, 100)
                 .vitesseOrientation(NerellConstantesConfig.vitesseOrientationMin, NerellConstantesConfig.vitesseOrientationMax, 100)
