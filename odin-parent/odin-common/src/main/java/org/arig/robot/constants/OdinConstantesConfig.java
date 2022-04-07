@@ -140,7 +140,6 @@ public interface OdinConstantesConfig {
     // ----------------- //
 
     int WAIT_LED = 200;
-    int WAIT_POMPES = 300;
-
-    int TIME_BEFORE_READ_COLOR = 800;
+    int TIMEOUT_POMPE = 1000;
+    int TIMEOUT_COLOR = 800;
 }

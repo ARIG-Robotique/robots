@@ -23,16 +23,23 @@ public class NerellAlimentationCommands {
     }
 
     @ShellMethodAvailability("auOK")
-    @ShellMethod("Activation aliemntation moteurs")
+    @ShellMethod("Activation alimentation moteurs")
     public void enableAlimentationMoteurs() {
         ioService.enableAlimMoteurs();
     }
 
     @ShellMethodAvailability("auOK")
-    @ShellMethod("Activation aliemntation servos")
+    @ShellMethod("Activation alimentation servos")
     public void enableAlimentationServos() {
         servosService.cyclePreparation();
         ioService.enableAlimServos();
+    }
+
+    @ShellMethodAvailability("auOK")
+    @ShellMethod("Activation alimentations")
+    public void enableAlimentation() {
+        enableAlimentationMoteurs();
+        enableAlimentationServos();
     }
 
     @ShellMethod("Désactivation des alimentations")

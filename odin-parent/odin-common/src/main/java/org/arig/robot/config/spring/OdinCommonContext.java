@@ -54,6 +54,7 @@ public class OdinCommonContext {
                 .asservTimeMs(OdinConstantesConfig.asservTimeMs)
                 .calageTimeMs(OdinConstantesConfig.calageGlobalTimeMs, OdinConstantesConfig.calageCourtTimeMs)
                 .i2cReadTimeMs(OdinConstantesConfig.i2cReadTimeMs)
+                .sampleTimeS(OdinConstantesConfig.asservTimeS)
 
                 .pathFindingTailleObstacle(OdinConstantesConfig.pathFindingTailleObstacle)
                 .lidarOffsetPointMm(OdinConstantesConfig.lidarOffsetPointMm)
@@ -80,7 +81,10 @@ public class OdinCommonContext {
                 .fenetreApprocheSansFreinOrientation(conv.degToPulse(OdinConstantesConfig.approcheSansFreinOrientationDeg))
                 .startAngleDemiTour(conv.degToPulse(OdinConstantesConfig.startAngleDemiTourDeg))
                 .startAngleLimitSpeedDistance(conv.degToPulse(OdinConstantesConfig.startAngleLimitVitesseDistance))
-                .sampleTimeS(OdinConstantesConfig.asservTimeS);
+
+                .waitLed(OdinConstantesConfig.WAIT_LED)
+                .timeoutPompe(OdinConstantesConfig.TIMEOUT_POMPE)
+                .timeoutColor(OdinConstantesConfig.TIMEOUT_COLOR);
     }
 
     @Bean

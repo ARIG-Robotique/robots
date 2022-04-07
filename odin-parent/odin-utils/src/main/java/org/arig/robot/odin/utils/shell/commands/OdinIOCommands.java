@@ -14,7 +14,7 @@ import org.springframework.shell.standard.ShellMethod;
 
 @Slf4j
 @ShellComponent
-@ShellCommandGroup("Servos")
+@ShellCommandGroup("IO")
 @AllArgsConstructor
 public class OdinIOCommands {
 
@@ -65,10 +65,10 @@ public class OdinIOCommands {
     @SneakyThrows
     @ShellMethod("State stock")
     public void printStateStock() {
-        for (int i = 0; i < 6 ; i++) {
+        for (int i = 0; i < 6; i++) {
             CouleurEchantillon[] couleurs = new CouleurEchantillon[]{null, null, null, null, null, null};
             for (CouleurEchantillon echantillon : CouleurEchantillon.values()) {
-                log.info("State stock {} : {}", i+1, echantillon);
+                log.info("State stock {} : {}", i + 1, echantillon);
                 couleurs[i] = echantillon;
                 carreFouilleReader.printStateStock(couleurs[0], couleurs[1], couleurs[2], couleurs[3], couleurs[4], couleurs[5]);
                 ThreadUtils.sleep(500);

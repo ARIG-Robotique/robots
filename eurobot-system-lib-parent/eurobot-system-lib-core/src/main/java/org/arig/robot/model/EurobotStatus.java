@@ -9,7 +9,10 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Data
@@ -260,10 +263,35 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         zoneDeFouille.get(numero).bascule(true);
     }
 
-    private CouleurEchantillon[] stocks = new CouleurEchantillon[]{null, null, null, null, null, null};
+    private CouleurEchantillon[] stock = new CouleurEchantillon[]{null, null, null, null, null, null};
 
-    public long stockDisponible() {
-        return 6 - Arrays.stream(stocks).filter(Objects::nonNull).count();
+    public void stockage(CouleurEchantillon couleur) {
+        stock[indexStockage()] = couleur;
+    }
+
+    public CouleurEchantillon destockage() {
+        int idx = indexDestockage();
+        CouleurEchantillon couleur = stock[idx];
+        stock[idx] = null;
+        return couleur;
+    }
+
+    public int indexStockage() {
+        for (int i = 0; i < stock.length; i++) {
+            if (stock[i] == null) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int indexDestockage() {
+        for (int i = stock.length - 1; i >= 0; i--) {
+            if (stock[i] != null) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private int scoreAbriChantier() {
@@ -325,7 +353,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Override
     public Map<String, Object> gameStatus() {
         Map<String, Object> r = new HashMap<>();
-        r.put("stocks", stocks);
+        r.put("stock", stock);
         r.put("carresFouille", zoneDeFouille.carresFouille);
         r.put("distributeurEquipePris", distributeurEquipePris);
         r.put("distributeurCommunEquipePris", distributeurCommunEquipePris);

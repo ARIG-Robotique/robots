@@ -2,8 +2,10 @@ package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.services.AbstractEnergyService;
+import org.arig.robot.services.BrasService;
 import org.arig.robot.services.NerellIOService;
 import org.arig.robot.services.NerellServosService;
 import org.arig.robot.utils.ThreadUtils;
@@ -12,6 +14,10 @@ import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
+import org.springframework.shell.standard.ShellOption;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Slf4j
 @ShellComponent
@@ -21,6 +27,7 @@ public class NerellServosCommands {
 
     private final NerellRobotStatus rs;
     private final NerellServosService servosService;
+    private final BrasService brasService;
     private final NerellIOService ioService;
     private final AbstractEnergyService energyService;
 
@@ -108,5 +115,39 @@ public class NerellServosCommands {
             ThreadUtils.sleep(wait);
         }
         servosService.carreFouilleOhmmetreFerme(false);
+    }
+
+    enum Bras {
+        HAUT,
+        BAS
+    }
+
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Déplacement de bras")
+    public void mouvementBras(Bras bras, int a1, int a2, int a3) {
+        switch (bras) {
+            case HAUT:
+                servosService.brasHaut(a1, a2, a3, 40);
+                break;
+            case BAS:
+                servosService.brasBas(a1, a2, a3, 40);
+                break;
+        }
+    }
+
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Prise et stockage d'un échantillon au sol")
+    public void cyclePriseSol(@ShellOption(defaultValue = "INCONNU") CouleurEchantillon couleur) {
+        brasService.prise(BrasService.TypePrise.SOL, couleur);
+        brasService.finalizePrise();
+        log.info("Stock : {}", Arrays.stream(rs.stock()).map(c -> c == null ? "null" : c.name()).collect(Collectors.joining(",")));
+    }
+
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Dépose d'un échantillon au sol")
+    public void cycleDeposeSol() {
+        brasService.depose(BrasService.TypeDepose.SOL);
+        brasService.finalizeDepose();
+        log.info("Stock : {}", Arrays.stream(rs.stock()).map(c -> c == null ? "null" : c.name()).collect(Collectors.joining(",")));
     }
 }

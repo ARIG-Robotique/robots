@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.servos.Servo;
 import org.springframework.stereotype.Service;
 
+import static org.arig.robot.model.servos.Servo.POS_0DEG;
+
 @Slf4j
 @Service
 public class NerellServosService extends AbstractCommonServosService {
@@ -30,43 +32,71 @@ public class NerellServosService extends AbstractCommonServosService {
 
         Servo brasBasEpaule = servo(BRAS_BAS_EPAULE_ID, BRAS_BAS_EPAULE)
                 .time(500)
-                .min(960).angleMax(90)
-                .max(1880).angleMin(0)
-                .position(POS_REPOS, 860);
+                .angular()
+                .center(1880)
+                .mult(-1)
+                .angleMin(-10)
+                .angleMax(110)
+                .position(POS_INIT, 110, 50)
+                .build();
         Servo brasBasCoude = servo(BRAS_BAS_COUDE_ID, BRAS_BAS_COUDE)
                 .time(500)
-                .min(640).angleMax(90)
-                .max(2410).angleMin(-90)
-                .position(POS_REPOS, 1070);
+                .angular()
+                .center(1520)
+                .mult(-1)
+                .angleMin(-105)
+                .angleMax(110)
+                .position(POS_INIT, 30, 50)
+                .build();
         Servo brasBasPoignet = servo(BRAS_BAS_POIGNET_ID, BRAS_BAS_POIGNET)
                 .time(500)
-                .min(549).angleMax(90)
-                .max(2360).angleMin(-90)
-                .position(POS_REPOS, 2040);
+                .angular()
+                .center(1450)
+                .mult(-1)
+                .angleMin(-100)
+                .angleMax(100)
+                .position(POS_INIT, -50, 50)
+                .build();
         group(GROUP_BRAS_BAS_ID, GROUP_BRAS_BAS)
                 .addServo(brasBasEpaule)
                 .addServo(brasBasCoude)
-                .addServo(brasBasPoignet);
+                .addServo(brasBasPoignet)
+                .batch(POS_INIT)
+                .batch(POS_0DEG);
 
         Servo brasHautEpaule = servo(BRAS_HAUT_EPAULE_ID, BRAS_HAUT_EPAULE)
                 .time(500)
-                .min(1360).angleMin(-90)
-                .max(2350).angleMax(0)
-                .position(POS_REPOS, 1350);
+                .angular()
+                .center(2360)
+                .mult(1.1)
+                .angleMin(-135)
+                .angleMax(0)
+                .position(POS_INIT, -90, 50)
+                .build();
         Servo brasHautCoude = servo(BRAS_HAUT_COUDE_ID, BRAS_HAUT_COUDE)
                 .time(500)
-                .min(690).angleMin(-90)
-                .max(1620).angleMax(0)
-                .position(POS_REPOS, 1760);
+                .angular()
+                .center(1610)
+                .mult(1.1)
+                .angleMin(-90)
+                .angleMax(90)
+                .position(POS_INIT, 0, 50)
+                .build();
         Servo brasHautPoignet = servo(BRAS_HAUT_POIGNET_ID, BRAS_HAUT_POIGNET)
                 .time(500)
-                .min(560).angleMin(-90)
-                .max(2370).angleMax(90)
-                .position(POS_REPOS, 1680);
+                .angular()
+                .center(1460)
+                .mult(1)
+                .angleMin(-100)
+                .angleMax(100)
+                .position(POS_INIT, 20, 50)
+                .build();
         group(GROUP_BRAS_HAUT_ID, GROUP_BRAS_HAUT)
                 .addServo(brasHautEpaule)
                 .addServo(brasHautCoude)
-                .addServo(brasHautPoignet);
+                .addServo(brasHautPoignet)
+                .batch(POS_INIT)
+                .batch(POS_0DEG);
 
         Servo carreFouilleOhmmetre = servo(CARRE_FOUILLE_OHMMETRE_ID, CARRE_FOUILLE_OHMMETRE)
                 .time(225)
@@ -91,7 +121,7 @@ public class NerellServosService extends AbstractCommonServosService {
         Servo moustacheGauche = servo(MOUSTACHE_GAUCHE_ID, MOUSTACHE_GAUCHE)
                 .time(325)
                 .position(POS_FERME, 2280)
-                .position(POS_OUVERT, 1370);
+                .position(POS_OUVERT, 1440);
         Servo langue = servo(LANGUE_ID, LANGUE)
                 .time(350)
                 .position(POS_FERME, 2270)
@@ -99,7 +129,7 @@ public class NerellServosService extends AbstractCommonServosService {
         Servo moustacheDroite = servo(MOUSTACHE_DROITE_ID, MOUSTACHE_DROITE)
                 .time(325)
                 .position(POS_FERME, 670)
-                .position(POS_OUVERT, 1520);
+                .position(POS_OUVERT, 1450);
 
         group(GROUP_ARRIERE_ID, GROUP_ARRIERE)
                 .addServo(moustacheGauche)

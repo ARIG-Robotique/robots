@@ -55,6 +55,7 @@ public class NerellCommonContext {
                 .asservTimeMs(NerellConstantesConfig.asservTimeMs)
                 .calageTimeMs(NerellConstantesConfig.calageGlobalTimeMs, NerellConstantesConfig.calageCourtTimeMs)
                 .i2cReadTimeMs(NerellConstantesConfig.i2cReadTimeMs)
+                .sampleTimeS(NerellConstantesConfig.asservTimeS)
 
                 .pathFindingTailleObstacle(NerellConstantesConfig.pathFindingTailleObstacle)
                 .lidarOffsetPointMm(NerellConstantesConfig.lidarOffsetPointMm)
@@ -81,7 +82,10 @@ public class NerellCommonContext {
                 .fenetreApprocheSansFreinOrientation(conv.degToPulse(NerellConstantesConfig.approcheSansFreinOrientationDeg))
                 .startAngleDemiTour(conv.degToPulse(NerellConstantesConfig.startAngleDemiTourDeg))
                 .startAngleLimitSpeedDistance(conv.degToPulse(NerellConstantesConfig.startAngleLimitVitesseDistance))
-                .sampleTimeS(NerellConstantesConfig.asservTimeS);
+
+                .waitLed(NerellConstantesConfig.WAIT_LED)
+                .timeoutPompe(NerellConstantesConfig.TIMEOUT_POMPE)
+                .timeoutColor(NerellConstantesConfig.TIMEOUT_COLOR);
     }
 
     @Bean

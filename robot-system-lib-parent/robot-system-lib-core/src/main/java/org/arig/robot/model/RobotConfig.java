@@ -26,7 +26,7 @@ public class RobotConfig {
     }
 
     private double asservTimeMs;
-    private double i2cReadTimeMs;
+    private int i2cReadTimeMs;
     private double sampleTimeS;
 
     /**
@@ -126,4 +126,11 @@ public class RobotConfig {
      * Si l'angle du point suivant est inférieur un coef visant a limiter la vitesse est calculé
      */
     private double startAngleLimitSpeedDistance;
+
+    /**
+     * Autres
+     */
+    private int waitLed;
+    private int timeoutPompe;
+    private int timeoutColor;
 }

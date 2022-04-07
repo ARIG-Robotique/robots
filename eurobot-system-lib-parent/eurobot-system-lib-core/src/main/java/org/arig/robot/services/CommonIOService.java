@@ -21,6 +21,18 @@ public interface CommonIOService extends IOService {
     boolean presenceStock5();
     boolean presenceStock6();
 
+    default boolean presenceStock(int indexStock) {
+        switch (indexStock) {
+            case 0: return presenceStock1();
+            case 1: return presenceStock2();
+            case 2: return presenceStock3();
+            case 3: return presenceStock4();
+            case 4: return presenceStock5();
+            case 5: return presenceStock6();
+            default: return false;
+        }
+    }
+
     // Couleurs
     CouleurEchantillon couleurVentouseBas();
     CouleurEchantillon couleurVentouseHaut();

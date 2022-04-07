@@ -2,16 +2,18 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Map;
+
 @Slf4j
 public abstract class AbstractCommonServosService extends AbstractServosService {
 
-    protected static final String BRAS_BAS_EPAULE = "Bras bas épaule";
-    protected static final String BRAS_BAS_COUDE = "Bras bas coude";
-    protected static final String BRAS_BAS_POIGNET = "Bras bas poignet";
+    public static final String BRAS_BAS_EPAULE = "Bras bas épaule";
+    public static final String BRAS_BAS_COUDE = "Bras bas coude";
+    public static final String BRAS_BAS_POIGNET = "Bras bas poignet";
 
-    protected static final String BRAS_HAUT_EPAULE = "Bras haut épaule";
-    protected static final String BRAS_HAUT_COUDE = "Bras haut coude";
-    protected static final String BRAS_HAUT_POIGNET = "Bras haut poignet";
+    public static final String BRAS_HAUT_EPAULE = "Bras haut épaule";
+    public static final String BRAS_HAUT_COUDE = "Bras haut coude";
+    public static final String BRAS_HAUT_POIGNET = "Bras haut poignet";
 
     protected static final String CARRE_FOUILLE_OHMMETRE = "Ohmmetre";
     protected static final String CARRE_FOUILLE_POUSSOIR = "Poussoir carré fouille";
@@ -22,7 +24,7 @@ public abstract class AbstractCommonServosService extends AbstractServosService 
     protected static final String MOUSTACHE_GAUCHE = "Moustache gauche";
     protected static final String MOUSTACHE_DROITE = "Moustache droite";
 
-    protected static final String POS_REPOS = "Repos";
+    protected static final String POS_INIT = "Init";
     protected static final String POS_FERME = "Fermé";
     protected static final String POS_OUVERT = "Ouvert";
     protected static final String POS_PRISE_DEPOSE = "Prise / dépose";
@@ -48,12 +50,12 @@ public abstract class AbstractCommonServosService extends AbstractServosService 
     /* **************************************** */
 
     public void homes() {
-        setPosition(BRAS_BAS_POIGNET, POS_REPOS, false);
-        setPosition(BRAS_BAS_COUDE, POS_REPOS, false);
-        setPosition(BRAS_BAS_EPAULE, POS_REPOS, false);
-        setPosition(BRAS_HAUT_POIGNET, POS_REPOS, false);
-        setPosition(BRAS_HAUT_COUDE, POS_REPOS, false);
-        setPosition(BRAS_HAUT_EPAULE, POS_REPOS, false);
+        setPosition(BRAS_BAS_POIGNET, POS_INIT, false);
+        setPosition(BRAS_BAS_COUDE, POS_INIT, false);
+        setPosition(BRAS_BAS_EPAULE, POS_INIT, false);
+        setPosition(BRAS_HAUT_POIGNET, POS_INIT, false);
+        setPosition(BRAS_HAUT_COUDE, POS_INIT, false);
+        setPosition(BRAS_HAUT_EPAULE, POS_INIT, false);
         carreFouilleOhmmetreFerme(false);
         carreFouillePoussoirFerme(false);
         fourcheStatuetteFerme(false);
@@ -134,4 +136,13 @@ public abstract class AbstractCommonServosService extends AbstractServosService 
     public void moustacheDroiteOuvert(boolean wait) {
         setPosition(MOUSTACHE_DROITE, POS_OUVERT, wait);
     }
+
+    public void brasBas(int a1, int a2, int a3, int speed) {
+        setAngles(Map.of(BRAS_BAS_EPAULE, a1, BRAS_BAS_COUDE, a2, BRAS_BAS_POIGNET, a3), speed);
+    }
+
+    public void brasHaut(int a1, int a2, int a3, int speed) {
+        setAngles(Map.of(BRAS_HAUT_EPAULE, a1, BRAS_HAUT_COUDE, a2, BRAS_HAUT_POIGNET, a3), speed);
+    }
+
 }
