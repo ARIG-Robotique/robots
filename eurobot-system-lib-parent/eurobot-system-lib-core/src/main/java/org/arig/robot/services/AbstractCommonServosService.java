@@ -86,6 +86,10 @@ public abstract class AbstractCommonServosService extends AbstractServosService 
         setPosition(CARRE_FOUILLE_OHMMETRE, POS_FERME, wait);
     }
 
+    public void carreFouilleOhmmetreOuvert(boolean wait) {
+        setPosition(CARRE_FOUILLE_OHMMETRE, POS_OUVERT, wait);
+    }
+
     public void carreFouilleOhmmetreMesure(boolean wait) {
         setPosition(CARRE_FOUILLE_OHMMETRE, POS_MESURE, wait);
     }

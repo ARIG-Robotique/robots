@@ -11,7 +11,7 @@ public class ZoneDeFouille {
     @Accessors(fluent = true, chain = true)
     private Team team;
 
-    private CarreFouille[] carresFouille = new CarreFouille[]{
+    CarreFouille[] carresFouille = new CarreFouille[]{
             new CarreFouille(1),
             new CarreFouille(2, CouleurCarreFouille.JAUNE),
             new CarreFouille(3),
@@ -32,19 +32,31 @@ public class ZoneDeFouille {
         return Stream.of(carresFouille).anyMatch(cf -> cf.couleur() == CouleurCarreFouille.INCONNU);
     }
 
-    CarreFouille nextCarreFouilleToProcess() {
+    boolean isComplete() {
+        return nextCarreFouilleToProcess(Integer.MAX_VALUE) == null;
+    }
+
+    CarreFouille nextCarreFouilleToProcess(int nbTry) {
+        return nextCarreFouilleToProcess(nbTry, false);
+    }
+
+    CarreFouille nextCarreFouilleToProcess(int nbTry, boolean reverse) {
         if (team == Team.JAUNE) {
-            for (int i = 1; i <= carresFouille.length - 3; i++) {
+            int init = reverse ? carresFouille.length - 3 : 1;
+            int inc = reverse ? -1 : 1;
+            for (int i = init; reverse ? i >= 1 : i <= carresFouille.length - 3; i += inc) {
                 CarreFouille cf = get(i);
-                if(!cf.bascule() &&
+                if (!cf.bascule() && cf.nbTry() <= nbTry &&
                         (cf.couleur() == CouleurCarreFouille.INCONNU || cf.couleur() == CouleurCarreFouille.JAUNE)) {
                     return cf;
                 }
             }
         } else if (team == Team.VIOLET) {
-            for(int i = carresFouille.length; i >= 4; i--) {
+            int init = reverse ? 4 : carresFouille.length;
+            int inc = reverse ? 1 : -1;
+            for(int i = init ; reverse ? i <= carresFouille.length : i >= 4; i += inc) {
                 CarreFouille cf = get(i);
-                if(!cf.bascule() &&
+                if(!cf.bascule() && cf.nbTry() <= nbTry &&
                         (cf.couleur() == CouleurCarreFouille.INCONNU || cf.couleur() == CouleurCarreFouille.VIOLET)) {
                     return cf;
                 }

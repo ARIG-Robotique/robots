@@ -3,6 +3,7 @@ package org.arig.robot.model;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -213,7 +214,24 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     }
 
     @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     private ZoneDeFouille zoneDeFouille = new ZoneDeFouille();
+
+    public int zoneDeFouillePointRestant() {
+        return 25 - zoneDeFouille.score();
+    }
+
+    public boolean zoneDeFouilleComplete(){
+        return zoneDeFouille.isComplete();
+    }
+
+    public CarreFouille carreFouille(int numero) {
+        return zoneDeFouille.get(numero);
+    }
+
+    public CarreFouille nextCarreDeFouille(int nbTry, boolean reverse) {
+        return zoneDeFouille.nextCarreFouilleToProcess(nbTry, reverse);
+    }
 
     public void couleurCarreFouille(int numero, CouleurCarreFouille couleur) {
         log.info("[RS] couleur carre fouille {} : {}", numero, couleur);
@@ -225,6 +243,8 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         log.info("[RS] bascule carre fouille : {}", numero);
         zoneDeFouille.get(numero).bascule(true);
     }
+
+    private CouleurEchantillon[] stocks = new CouleurEchantillon[]{null, null, null, null, null, null};
 
     private int scoreAbriChantier() {
         return abriChantier.size() * 5;
@@ -285,11 +305,14 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Override
     public Map<String, Object> gameStatus() {
         Map<String, Object> r = new HashMap<>();
+        r.put("stocks", stocks);
+        r.put("carresFouille", zoneDeFouille.carresFouille);
         r.put("distributeurEquipePris", distributeurEquipePris);
         r.put("distributeurCommunEquipePris", distributeurCommunEquipePris);
         r.put("distributeurCommunAdversePris", distributeurCommunAdversePris);
         r.put("siteEchantillonPris", siteEchantillonPris);
         r.put("siteDeFouillePris", siteDeFouillePris);
+        r.put("zoneDeFouilleTerminee", zoneDeFouille.isComplete());
         r.put("vitrineActive", vitrineActive);
         r.put("statuettePris", statuettePris);
         r.put("statuetteDansVitrine", statuetteDansVitrine);

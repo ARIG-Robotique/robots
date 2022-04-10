@@ -363,18 +363,18 @@ class RobotGroupServiceTest {
         rgServicePrimary.couleurCarreFouille(1, CouleurCarreFouille.JAUNE);
         ThreadUtils.sleep(WAIT);
 
-        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusPrimary.zoneDeFouille().get(1).couleur());
-        Assertions.assertEquals(CouleurCarreFouille.INTERDIT, statusPrimary.zoneDeFouille().get(3).couleur());
-        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusSecondary.zoneDeFouille().get(1).couleur());
-        Assertions.assertEquals(CouleurCarreFouille.INTERDIT, statusPrimary.zoneDeFouille().get(3).couleur());
+        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusPrimary.carreFouille(1).couleur());
+        Assertions.assertEquals(CouleurCarreFouille.INTERDIT, statusPrimary.carreFouille(3).couleur());
+        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusSecondary.carreFouille(1).couleur());
+        Assertions.assertEquals(CouleurCarreFouille.INTERDIT, statusPrimary.carreFouille(3).couleur());
 
         rgServicePrimary.couleurCarreFouille(4, CouleurCarreFouille.JAUNE);
         ThreadUtils.sleep(WAIT);
 
-        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusPrimary.zoneDeFouille().get(4).couleur());
-        Assertions.assertEquals(CouleurCarreFouille.VIOLET, statusPrimary.zoneDeFouille().get(5).couleur());
-        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusSecondary.zoneDeFouille().get(4).couleur());
-        Assertions.assertEquals(CouleurCarreFouille.VIOLET, statusSecondary.zoneDeFouille().get(5).couleur());
+        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusPrimary.carreFouille(4).couleur());
+        Assertions.assertEquals(CouleurCarreFouille.VIOLET, statusPrimary.carreFouille(5).couleur());
+        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusSecondary.carreFouille(4).couleur());
+        Assertions.assertEquals(CouleurCarreFouille.VIOLET, statusSecondary.carreFouille(5).couleur());
     }
 
     @Test
@@ -384,18 +384,18 @@ class RobotGroupServiceTest {
         rgServicePrimary.couleurCarreFouille(1, CouleurCarreFouille.INTERDIT);
         ThreadUtils.sleep(WAIT);
 
-        Assertions.assertEquals(CouleurCarreFouille.INTERDIT, statusPrimary.zoneDeFouille().get(1).couleur());
-        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusPrimary.zoneDeFouille().get(3).couleur());
-        Assertions.assertEquals(CouleurCarreFouille.INTERDIT, statusSecondary.zoneDeFouille().get(1).couleur());
-        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusSecondary.zoneDeFouille().get(3).couleur());
+        Assertions.assertEquals(CouleurCarreFouille.INTERDIT, statusPrimary.carreFouille(1).couleur());
+        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusPrimary.carreFouille(3).couleur());
+        Assertions.assertEquals(CouleurCarreFouille.INTERDIT, statusSecondary.carreFouille(1).couleur());
+        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusSecondary.carreFouille(3).couleur());
 
         rgServicePrimary.couleurCarreFouille(4, CouleurCarreFouille.VIOLET);
         ThreadUtils.sleep(WAIT);
 
-        Assertions.assertEquals(CouleurCarreFouille.VIOLET, statusPrimary.zoneDeFouille().get(4).couleur());
-        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusPrimary.zoneDeFouille().get(5).couleur());
-        Assertions.assertEquals(CouleurCarreFouille.VIOLET, statusSecondary.zoneDeFouille().get(4).couleur());
-        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusSecondary.zoneDeFouille().get(5).couleur());
+        Assertions.assertEquals(CouleurCarreFouille.VIOLET, statusPrimary.carreFouille(4).couleur());
+        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusPrimary.carreFouille(5).couleur());
+        Assertions.assertEquals(CouleurCarreFouille.VIOLET, statusSecondary.carreFouille(4).couleur());
+        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusSecondary.carreFouille(5).couleur());
     }
 
     @ParameterizedTest
@@ -407,10 +407,10 @@ class RobotGroupServiceTest {
         rgServicePrimary.basculeCarreFouille(numero);
         ThreadUtils.sleep(WAIT);
 
-        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusPrimary.zoneDeFouille().get(numero).couleur());
-        Assertions.assertTrue(statusPrimary.zoneDeFouille().get(numero).bascule());
-        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusSecondary.zoneDeFouille().get(numero).couleur());
-        Assertions.assertTrue(statusSecondary.zoneDeFouille().get(numero).bascule());
+        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusPrimary.carreFouille(numero).couleur());
+        Assertions.assertTrue(statusPrimary.carreFouille(numero).bascule());
+        Assertions.assertEquals(CouleurCarreFouille.JAUNE, statusSecondary.carreFouille(numero).couleur());
+        Assertions.assertTrue(statusSecondary.carreFouille(numero).bascule());
     }
 
     @Test

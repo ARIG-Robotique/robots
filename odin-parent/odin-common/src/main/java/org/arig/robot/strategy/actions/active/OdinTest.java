@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class OdinTest extends AbstractOdinAction {
 
+    private int step = 0;
+
     @Getter
     private boolean completed = false;
 
@@ -42,14 +44,24 @@ public class OdinTest extends AbstractOdinAction {
             rsOdin.enableAvoidance();
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            mv.pathTo(2050,1600, GotoOption.AVANT);
-            mv.pathTo(950, 800, GotoOption.AVANT);
-            mv.pathTo(2050, 800, GotoOption.AVANT);
-            mv.pathTo(950, 1600, GotoOption.AVANT);
+            if (step == 0) {
+                mv.pathTo(2050, 1600, GotoOption.AVANT);
+            } else if (step == 1) {
+                mv.pathTo(950, 800, GotoOption.AVANT);
+            } else if (step == 2) {
+                mv.pathTo(2050, 800, GotoOption.AVANT);
+            } else if (step == 3) {
+                mv.pathTo(950, 1600, GotoOption.AVANT);
+            }
 
         } catch (AvoidingException | NoPathFoundException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.getMessage());
+        } finally {
+            step++;
+            if (step >= 4) {
+                step = 0;
+            }
         }
     }
 }

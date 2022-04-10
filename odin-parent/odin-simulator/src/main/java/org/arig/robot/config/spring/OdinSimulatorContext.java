@@ -6,12 +6,15 @@ import org.arig.robot.communication.I2CManager;
 import org.arig.robot.communication.I2CManagerDevice;
 import org.arig.robot.communication.bouchon.BouchonI2CManager;
 import org.arig.robot.exception.I2CException;
+import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.bouchon.BouchonEncoderValues;
 import org.arig.robot.model.bouchon.BouchonI2CDevice;
 import org.arig.robot.model.bouchon.BouchonI2CMultiplexer;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
+import org.arig.robot.system.capteurs.CarreFouilleReader;
+import org.arig.robot.system.capteurs.CarreFouilleReaderBouchon;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
@@ -108,5 +111,10 @@ public class OdinSimulatorContext {
     @Bean
     public AvoidingService avoidingService() {
         return new AvoidingServiceBouchon();
+    }
+
+    @Bean
+    public CarreFouilleReader carreFouilleReader(I2CManager i2cManager, EurobotStatus status) {
+        return new CarreFouilleReaderBouchon(i2cManager, "CarreFouilleBouchon", status);
     }
 }

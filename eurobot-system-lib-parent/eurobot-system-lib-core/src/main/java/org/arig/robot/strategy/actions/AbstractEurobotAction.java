@@ -4,6 +4,8 @@ import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
 import org.arig.robot.model.Team;
+import org.arig.robot.services.AbstractCommonServosService;
+import org.arig.robot.services.CommonIOService;
 import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.strategy.AbstractAction;
@@ -16,6 +18,12 @@ public abstract class AbstractEurobotAction extends AbstractAction {
 
     @Autowired
     protected RobotConfig robotConfig;
+
+    @Autowired
+    protected AbstractCommonServosService commonServosService;
+
+    @Autowired
+    protected CommonIOService commonIOService;
 
     @Autowired
     protected TrajectoryManager mv;

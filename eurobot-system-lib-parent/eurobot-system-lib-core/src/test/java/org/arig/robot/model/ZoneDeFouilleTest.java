@@ -30,10 +30,72 @@ class ZoneDeFouilleTest {
     }
 
     @Test
+    void testMatchJauneObstacle() {
+        zoneDeFouille.team(Team.JAUNE);
+
+        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess(0);
+        cf.incrementTry();
+        Assertions.assertEquals(1, cf.numero());
+        Assertions.assertTrue(cf.needRead());
+        Assertions.assertEquals(0, zoneDeFouille.score());
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
+        Assertions.assertEquals(2, cf.numero());
+        Assertions.assertFalse(cf.needRead());
+        cf.bascule(true);
+        Assertions.assertEquals(10, zoneDeFouille.score());
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
+        Assertions.assertEquals(3, cf.numero());
+        Assertions.assertTrue(cf.needRead());
+        cf.couleur(CouleurCarreFouille.INTERDIT);
+        Assertions.assertEquals(10, zoneDeFouille.score());
+
+        zoneDeFouille.refreshProcessing();
+        assertPattern1(false);
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
+        Assertions.assertEquals(4, cf.numero());
+        Assertions.assertTrue(cf.needRead());
+        cf.couleur(CouleurCarreFouille.VIOLET);
+        Assertions.assertEquals(10, zoneDeFouille.score());
+
+        zoneDeFouille.refreshProcessing();
+        Assertions.assertFalse(zoneDeFouille.hasInconnu());
+        assertPattern1(true);
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
+        Assertions.assertEquals(5, cf.numero());
+        Assertions.assertFalse(cf.needRead());
+        cf.bascule(true);
+        Assertions.assertEquals(15, zoneDeFouille.score());
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
+        Assertions.assertEquals(6, cf.numero());
+        Assertions.assertFalse(cf.needRead());
+        cf.bascule(true);
+        Assertions.assertEquals(20, zoneDeFouille.score());
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
+        Assertions.assertNull(cf);
+        Assertions.assertFalse(zoneDeFouille.isComplete());
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(1);
+        Assertions.assertEquals(1, cf.numero());
+        Assertions.assertFalse(cf.needRead());
+        cf.bascule(true);
+        Assertions.assertEquals(25, zoneDeFouille.score());
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(1);
+        Assertions.assertNull(cf);
+        Assertions.assertTrue(zoneDeFouille.isComplete());
+    }
+
+    @Test
     void testMatchJaunePattern1() {
         zoneDeFouille.team(Team.JAUNE);
 
-        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess();
+        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(1, cf.numero());
         Assertions.assertTrue(cf.needRead());
         cf.couleur(CouleurCarreFouille.JAUNE);
@@ -43,13 +105,13 @@ class ZoneDeFouilleTest {
         zoneDeFouille.refreshProcessing();
         assertPattern1(false);
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(2, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(15, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(4, cf.numero());
         Assertions.assertTrue(cf.needRead());
         cf.couleur(CouleurCarreFouille.VIOLET);
@@ -59,27 +121,79 @@ class ZoneDeFouilleTest {
         Assertions.assertFalse(zoneDeFouille.hasInconnu());
         assertPattern1(true);
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(5, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(20, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(6, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(25, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertNull(cf);
+        Assertions.assertTrue(zoneDeFouille.isComplete());
+    }
+
+    @Test
+    void testMatchJaunePattern1Reverse() {
+        zoneDeFouille.team(Team.JAUNE);
+
+        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess(0, true);
+        Assertions.assertEquals(7, cf.numero());
+        Assertions.assertTrue(cf.needRead());
+        cf.couleur(CouleurCarreFouille.VIOLET);
+        Assertions.assertEquals(0, zoneDeFouille.score());
+
+        zoneDeFouille.refreshProcessing();
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0, true);
+        Assertions.assertEquals(6, cf.numero());
+        Assertions.assertFalse(cf.needRead());
+        cf.bascule(true);
+        Assertions.assertEquals(10, zoneDeFouille.score());
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0, true);
+        Assertions.assertEquals(5, cf.numero());
+        Assertions.assertFalse(cf.needRead());
+        cf.bascule(true);
+        Assertions.assertEquals(15, zoneDeFouille.score());
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0, true);
+        Assertions.assertEquals(3, cf.numero());
+        Assertions.assertTrue(cf.needRead());
+        cf.couleur(CouleurCarreFouille.INTERDIT);
+        Assertions.assertEquals(15, zoneDeFouille.score());
+
+        zoneDeFouille.refreshProcessing();
+        Assertions.assertFalse(zoneDeFouille.hasInconnu());
+        assertPattern1(true);
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0, true);
+        Assertions.assertEquals(2, cf.numero());
+        Assertions.assertFalse(cf.needRead());
+        cf.bascule(true);
+        Assertions.assertEquals(20, zoneDeFouille.score());
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0, true);
+        Assertions.assertEquals(1, cf.numero());
+        Assertions.assertFalse(cf.needRead());
+        cf.bascule(true);
+        Assertions.assertEquals(25, zoneDeFouille.score());
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0, true);
+        Assertions.assertNull(cf);
+        Assertions.assertTrue(zoneDeFouille.isComplete());
     }
 
     @Test
     void testMatchVioletPattern1() {
         zoneDeFouille.team(Team.VIOLET);
 
-        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess();
+        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(10, cf.numero());
         Assertions.assertTrue(cf.needRead());
         cf.couleur(CouleurCarreFouille.VIOLET);
@@ -89,13 +203,13 @@ class ZoneDeFouilleTest {
         zoneDeFouille.refreshProcessing();
         assertPattern1(false);
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(9, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(15, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(7, cf.numero());
         Assertions.assertTrue(cf.needRead());
         cf.couleur(CouleurCarreFouille.VIOLET);
@@ -105,21 +219,67 @@ class ZoneDeFouilleTest {
         zoneDeFouille.refreshProcessing();
         assertPattern1(true);
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(4, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(25, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertNull(cf);
+        Assertions.assertTrue(zoneDeFouille.isComplete());
+    }
+
+    @Test
+    void testMatchVioletPattern1Reverse() {
+        zoneDeFouille.team(Team.VIOLET);
+
+        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess(0, true);
+        Assertions.assertEquals(4, cf.numero());
+        Assertions.assertTrue(cf.needRead());
+        cf.couleur(CouleurCarreFouille.VIOLET);
+        cf.bascule(true);
+        Assertions.assertEquals(10, zoneDeFouille.score());
+
+        zoneDeFouille.refreshProcessing();
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0, true);
+        Assertions.assertEquals(7, cf.numero());
+        Assertions.assertFalse(cf.needRead());
+        cf.bascule(true);
+        Assertions.assertEquals(15, zoneDeFouille.score());
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0, true);
+        Assertions.assertEquals(8, cf.numero());
+        Assertions.assertTrue(cf.needRead());
+        cf.couleur(CouleurCarreFouille.INTERDIT);
+        Assertions.assertEquals(15, zoneDeFouille.score());
+
+        zoneDeFouille.refreshProcessing();
+        assertPattern1(true);
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0, true);
+        Assertions.assertEquals(9, cf.numero());
+        Assertions.assertFalse(cf.needRead());
+        cf.bascule(true);
+        Assertions.assertEquals(20, zoneDeFouille.score());
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0, true);
+        Assertions.assertEquals(10, cf.numero());
+        Assertions.assertFalse(cf.needRead());
+        cf.bascule(true);
+        Assertions.assertEquals(25, zoneDeFouille.score());
+
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0, true);
+        Assertions.assertNull(cf);
+        Assertions.assertTrue(zoneDeFouille.isComplete());
     }
 
     @Test
     void testMatchJaunePattern2() {
         zoneDeFouille.team(Team.JAUNE);
 
-        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess();
+        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(1, cf.numero());
         Assertions.assertTrue(cf.needRead());
         cf.couleur(CouleurCarreFouille.INTERDIT);
@@ -128,19 +288,19 @@ class ZoneDeFouilleTest {
         zoneDeFouille.refreshProcessing();
         assertPattern2(false);
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(2, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(10, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(3, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(15, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(4, cf.numero());
         Assertions.assertTrue(cf.needRead());
         cf.couleur(CouleurCarreFouille.JAUNE);
@@ -150,21 +310,22 @@ class ZoneDeFouilleTest {
         zoneDeFouille.refreshProcessing();
         assertPattern2(true);
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(7, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(25, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertNull(cf);
+        Assertions.assertTrue(zoneDeFouille.isComplete());
     }
 
     @Test
     void testMatchVioletPattern2() {
         zoneDeFouille.team(Team.VIOLET);
 
-        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess();
+        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(10, cf.numero());
         Assertions.assertTrue(cf.needRead());
         cf.couleur(CouleurCarreFouille.INTERDIT);
@@ -173,19 +334,19 @@ class ZoneDeFouilleTest {
         zoneDeFouille.refreshProcessing();
        assertPattern2(false);
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(9, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(10, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(8, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(15, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(7, cf.numero());
         Assertions.assertTrue(cf.needRead());
         cf.couleur(CouleurCarreFouille.JAUNE);
@@ -194,27 +355,28 @@ class ZoneDeFouilleTest {
         zoneDeFouille.refreshProcessing();
         assertPattern2(true);
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(6, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(20, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(5, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(25, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertNull(cf);
+        Assertions.assertTrue(zoneDeFouille.isComplete());
     }
 
     @Test
     void testMatchJaunePattern3() {
         zoneDeFouille.team(Team.JAUNE);
 
-        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess();
+        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(1, cf.numero());
         Assertions.assertTrue(cf.needRead());
         cf.couleur(CouleurCarreFouille.JAUNE);
@@ -224,13 +386,13 @@ class ZoneDeFouilleTest {
         zoneDeFouille.refreshProcessing();
         assertPattern3(false);
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(2, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(15, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(4, cf.numero());
         Assertions.assertTrue(cf.needRead());
         cf.couleur(CouleurCarreFouille.JAUNE);
@@ -240,21 +402,22 @@ class ZoneDeFouilleTest {
         zoneDeFouille.refreshProcessing();
         assertPattern3(true);
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(7, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(25, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertNull(cf);
+        Assertions.assertTrue(zoneDeFouille.isComplete());
     }
 
     @Test
     void testMatchVioletPattern3() {
         zoneDeFouille.team(Team.VIOLET);
 
-        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess();
+        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(10, cf.numero());
         Assertions.assertTrue(cf.needRead());
         cf.couleur(CouleurCarreFouille.VIOLET);
@@ -264,13 +427,13 @@ class ZoneDeFouilleTest {
         zoneDeFouille.refreshProcessing();
         assertPattern3(false);
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(9, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(15, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(7, cf.numero());
         Assertions.assertTrue(cf.needRead());
         cf.couleur(CouleurCarreFouille.JAUNE);
@@ -279,27 +442,28 @@ class ZoneDeFouilleTest {
         zoneDeFouille.refreshProcessing();
         assertPattern3(true);
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(6, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(20, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(5, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(25, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertNull(cf);
+        Assertions.assertTrue(zoneDeFouille.isComplete());
     }
 
     @Test
     void testMatchJaunePattern4() {
         zoneDeFouille.team(Team.JAUNE);
 
-        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess();
+        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(1, cf.numero());
         Assertions.assertTrue(cf.needRead());
         cf.couleur(CouleurCarreFouille.INTERDIT);
@@ -308,19 +472,19 @@ class ZoneDeFouilleTest {
         zoneDeFouille.refreshProcessing();
         assertPattern4(false);
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(2, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(10, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(3, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(15, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(4, cf.numero());
         Assertions.assertTrue(cf.needRead());
         cf.couleur(CouleurCarreFouille.VIOLET);
@@ -329,27 +493,28 @@ class ZoneDeFouilleTest {
         zoneDeFouille.refreshProcessing();
         assertPattern4(true);
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(5, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(20, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(6, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(25, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertNull(cf);
+        Assertions.assertTrue(zoneDeFouille.isComplete());
     }
 
     @Test
     void testMatchVioletPattern4() {
         zoneDeFouille.team(Team.VIOLET);
 
-        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess();
+        CarreFouille cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(10, cf.numero());
         Assertions.assertTrue(cf.needRead());
         cf.couleur(CouleurCarreFouille.INTERDIT);
@@ -358,19 +523,19 @@ class ZoneDeFouilleTest {
         zoneDeFouille.refreshProcessing();
         assertPattern4(false);
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(9, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(10, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(8, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(15, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(7, cf.numero());
         Assertions.assertTrue(cf.needRead());
         cf.couleur(CouleurCarreFouille.VIOLET);
@@ -380,14 +545,15 @@ class ZoneDeFouilleTest {
         zoneDeFouille.refreshProcessing();
         assertPattern4(true);
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertEquals(4, cf.numero());
         Assertions.assertFalse(cf.needRead());
         cf.bascule(true);
         Assertions.assertEquals(25, zoneDeFouille.score());
 
-        cf = zoneDeFouille.nextCarreFouilleToProcess();
+        cf = zoneDeFouille.nextCarreFouilleToProcess(0);
         Assertions.assertNull(cf);
+        Assertions.assertTrue(zoneDeFouille.isComplete());
     }
 
     @Test
