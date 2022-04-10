@@ -15,6 +15,7 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.ecran.EcranPhoto;
+import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.NerellEcranService;
 import org.arig.robot.services.NerellIOService;
@@ -203,7 +204,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                     position.setAngle(conv.degToPulse(-90));
                 }
             } else {
-                robotStatus.enableCalageBordure();
+                robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
                 mv.reculeMMSansAngle(1000);
 
                 if (nerellRobotStatus.team() == Team.JAUNE) {
@@ -217,7 +218,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 mv.avanceMM(150);
                 mv.gotoOrientationDeg(-90);
 
-                robotStatus.enableCalageBordure();
+                robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
                 mv.reculeMMSansAngle(1000);
 
                 if (!io.auOk()) {

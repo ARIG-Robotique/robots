@@ -13,6 +13,7 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
+import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.OdinEcranService;
 import org.arig.robot.services.OdinIOService;
 import org.arig.robot.services.RobotGroupService;
@@ -161,7 +162,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                     position.setAngle(conv.degToPulse(90));
                 }
             } else {
-                robotStatus.enableCalageBordure();
+                robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
                 mv.reculeMMSansAngle(1000);
 
                 if (odinRobotStatus.team() == Team.JAUNE) {
@@ -175,7 +176,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 mv.avanceMM(150);
                 mv.gotoOrientationDeg(90);
 
-                robotStatus.enableCalageBordure();
+                robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
                 mv.reculeMMSansAngle(1000);
 
                 if (!io.auOk()) {

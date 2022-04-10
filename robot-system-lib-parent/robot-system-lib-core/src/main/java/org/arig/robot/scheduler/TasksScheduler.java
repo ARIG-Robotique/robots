@@ -56,7 +56,7 @@ public class TasksScheduler implements InitializingBean {
                 if (ellapsedCalage >= robotConfig.calageTimeMs() * 1000000) {
                     lastTimeCalage = timeStartCalage;
 
-                    if (rs.calageBordure() != null) {
+                    if (!rs.calageBordure().isEmpty()) {
                         calageBordure.process();
                     }
                 }

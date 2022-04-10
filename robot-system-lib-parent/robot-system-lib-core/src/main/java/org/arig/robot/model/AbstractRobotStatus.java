@@ -9,7 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.model.enums.TypeCalage;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Data
@@ -160,20 +165,21 @@ public abstract class AbstractRobotStatus {
     }
 
     @Setter(AccessLevel.NONE)
-    private TypeCalage calageBordure = null;
+    private List<TypeCalage> calageBordure = new ArrayList<>(3);
 
-    public void enableCalageBordure() {
-        enableCalageBordure(TypeCalage.STANDARD);
-    }
-
-    public void enableCalageBordure(TypeCalage type) {
-        log.info("Activation calage bordure {}", type);
-        calageBordure = type;
+    public void enableCalageBordure(TypeCalage main, TypeCalage ... others) {
+        calageBordure.clear();
+        calageBordure.add(main);
+        if (others != null) {
+            calageBordure.addAll(Arrays.asList(others));
+        }
+        log.info("Activation calage bordure : {}", calageBordure.stream()
+                .map(Enum::name).collect(Collectors.joining(", ")));
     }
 
     public void disableCalageBordure() {
         log.info("Désactivation calage bordure");
-        calageBordure = null;
+        calageBordure.clear();
     }
 
     private String currentAction = null;
