@@ -29,7 +29,7 @@ public class OdinAlimentationCommands {
 
     @ShellMethodAvailability("auOK")
     @ShellMethod("Activation aliemntation servos")
-    public void enableAlimentationServoss() {
+    public void enableAlimentationServos() {
         servosService.cyclePreparation();
         ioService.enableAlimServos();
     }

@@ -30,7 +30,7 @@ public class NerellAlimentationCommands {
 
     @ShellMethodAvailability("auOK")
     @ShellMethod("Activation aliemntation servos")
-    public void enableAlimentationServoss() {
+    public void enableAlimentationServos() {
         servosService.cyclePreparation();
         ioService.enableAlimServos();
     }
