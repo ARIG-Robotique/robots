@@ -1,7 +1,7 @@
 // Configuration pour le build
 buildscript {
 	ext {
-		springBootVersion = '2.6.4'
+		springBootVersion = '2.6.6'
 	}
 
 	repositories {
