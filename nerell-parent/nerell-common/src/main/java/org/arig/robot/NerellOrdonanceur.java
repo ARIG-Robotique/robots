@@ -10,6 +10,7 @@ import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
+import org.arig.robot.model.InitStep;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Strategy;
@@ -41,6 +42,14 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Autowired
     private NerellEcranService ecranService;
+
+    private int getX(int x) {
+        return tableUtils.getX(nerellRobotStatus.team() == Team.VIOLET, x);
+    }
+
+    private int getX(double x) {
+        return getX((int) x);
+    }
 
     @Override
     public String getPathfinderMap() {
@@ -130,6 +139,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 log.info("Strategy {}", nerellRobotStatus.strategy().name());
             }
 
+            nerellRobotStatus.twoRobots(ecranService.config().isTwoRobots());
             nerellRobotStatus.statuettePresente(ecranService.config().hasOption(EurobotConfig.STATUETTE_PRESENTE));
             nerellRobotStatus.vitrinePresente(ecranService.config().hasOption(EurobotConfig.VITRINE_PRESENTE));
 
@@ -189,34 +199,31 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
         try {
             robotStatus.disableAvoidance();
-            if (robotStatus.simulateur() || skip) {
-                if (nerellRobotStatus.team() == Team.JAUNE) {
-                    position.setPt(new Point(
-                            conv.mmToPulse(NerellConstantesConfig.dstCallage + 150),
-                            conv.mmToPulse(2000 - NerellConstantesConfig.dstCallage - 150)
-                    ));
-                    position.setAngle(conv.degToPulse(-90));
-                } else {
-                    position.setPt(new Point(
-                            conv.mmToPulse(3000 - NerellConstantesConfig.dstCallage - 150),
-                            conv.mmToPulse(2000 - NerellConstantesConfig.dstCallage - 150)
-                    ));
-                    position.setAngle(conv.degToPulse(-90));
-                }
+            position.setPt(new Point(
+                    conv.mmToPulse(getX(NerellConstantesConfig.dstCallage)),
+                    conv.mmToPulse(1180)
+            ));
+            if (nerellRobotStatus.team() == Team.JAUNE) {
+                position.setAngle(conv.degToPulse(0));
             } else {
+                position.setAngle(conv.degToPulse(180));
+            }
+            if (!skip) {
                 robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
-                mv.reculeMMSansAngle(1000);
+                mv.reculeMMSansAngle(300);
 
+                position.getPt().setX(conv.mmToPulse(getX(NerellConstantesConfig.dstCallage)));
                 if (nerellRobotStatus.team() == Team.JAUNE) {
-                    position.getPt().setX(conv.mmToPulse(NerellConstantesConfig.dstCallage));
                     position.setAngle(conv.degToPulse(0));
                 } else {
-                    position.getPt().setX(conv.mmToPulse(3000 - NerellConstantesConfig.dstCallage));
                     position.setAngle(conv.degToPulse(180));
                 }
 
                 mv.avanceMM(150);
                 mv.gotoOrientationDeg(-90);
+
+                ecranService.displayMessage("Attente Odin devant la galerie");
+                groupService.waitInitStep(InitStep.ODIN_DEVANT_GALERIE); // Odin calé, en attente devant la galerie
 
                 robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
                 mv.reculeMMSansAngle(1000);
@@ -225,6 +232,8 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                     ecranService.displayMessage("Echappement calage bordure car mauvais sens", LogLevel.ERROR);
                     throw new ExitProgram(true);
                 }
+
+                groupService.initStep(InitStep.NERELL_CALAGE_TERMINE); // Nerell calé
 
                 position.getPt().setY(conv.mmToPulse(2000 - NerellConstantesConfig.dstCallage));
                 position.setAngle(conv.degToPulse(-90));
@@ -241,27 +250,28 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
      * Positionnement en fonction de la stratégie
      */
     public void positionStrategy() {
+        ecranService.displayMessage("Attente Odin en position depart");
+        groupService.waitInitStep(InitStep.ODIN_EN_POSITION_BASIC);
         ecranService.displayMessage("Mise en place");
-        /*
+
         try {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             switch (nerellRobotStatus.strategy()) {
                 default:
+                    mv.gotoPoint(getX(270), 1440);
                     if (nerellRobotStatus.team() == Team.JAUNE) {
-                        mv.gotoPoint(300, 1200);
                         mv.gotoOrientationDeg(0);
                     } else {
-                        mv.gotoPoint(2700, 1200);
                         mv.gotoOrientationDeg(180);
                     }
+                    groupService.initStep(InitStep.NERELL_EN_POSITION_BASIC);
                     break;
             }
         } catch (AvoidingException e) {
             ecranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
             throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);
         }
-        */
     }
 
     /**

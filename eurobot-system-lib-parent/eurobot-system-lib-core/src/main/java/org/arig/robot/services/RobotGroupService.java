@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.model.CouleurCarreFouille;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.EurobotStatus;
+import org.arig.robot.model.InitStep;
 import org.arig.robot.model.SiteDeRetour;
 import org.arig.robot.model.StatusEvent;
 import org.arig.robot.model.Strategy;
@@ -193,18 +194,23 @@ public class RobotGroupService implements RobotGroup.Handler {
     /**
      * Appellé par les deux robots pour le phasage des mouvements à l'init
      */
-    public void initStep(int step) {
-        initStep = step;
-        sendEvent(StatusEvent.INIT, new byte[]{(byte) step});
+    public void initStep(InitStep s) {
+        initStep = s.step();
+        sendEvent(StatusEvent.INIT, new byte[]{(byte) initStep});
     }
 
     /**
      * Attends que l'autre robot ait terminé une étape d'init
      */
-    public void waitInitStep(int step) {
+    public void waitInitStep(InitStep s) {
+        if (!rs.twoRobots()){
+            log.warn("Un seul robot, on ne peut pas attendre l'autre robot !");
+            return;
+        }
+
         do {
             ThreadUtils.sleep(200);
-        } while (this.initStep != step);
+        } while (this.initStep != s.step());
     }
 
     /**

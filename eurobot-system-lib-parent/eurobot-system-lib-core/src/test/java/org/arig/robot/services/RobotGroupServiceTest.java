@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.CouleurCarreFouille;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.EurobotStatus;
+import org.arig.robot.model.InitStep;
 import org.arig.robot.model.SiteDeRetour;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
@@ -76,16 +77,16 @@ class RobotGroupServiceTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
-    void testInitStep(int step) {
+    @EnumSource(InitStep.class)
+    void testInitStep(InitStep s) {
         Assertions.assertEquals(0, rgServicePrimary.getInitStep());
         Assertions.assertEquals(0, rgServiceSecondary.getInitStep());
 
-        rgServicePrimary.initStep(step);
+        rgServicePrimary.initStep(s);
         ThreadUtils.sleep(WAIT);
 
-        Assertions.assertEquals(step, rgServicePrimary.getInitStep());
-        Assertions.assertEquals(step, rgServiceSecondary.getInitStep());
+        Assertions.assertEquals(s.step(), rgServicePrimary.getInitStep());
+        Assertions.assertEquals(s.step(), rgServiceSecondary.getInitStep());
     }
 
 

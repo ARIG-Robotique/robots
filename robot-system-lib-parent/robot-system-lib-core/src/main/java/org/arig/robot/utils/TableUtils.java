@@ -196,4 +196,8 @@ public class TableUtils {
         target.addDeltaY(currentY);
         return target;
     }
+
+    public int getX(boolean reverse, int x) {
+        return reverse ? 3000 - x : x;
+    }
 }

@@ -8,6 +8,7 @@ import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
+import org.arig.robot.model.InitStep;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Strategy;
@@ -35,6 +36,14 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Autowired
     private OdinEcranService ecranService;
+
+    private int getX(int x) {
+        return tableUtils.getX(odinRobotStatus.team() == Team.VIOLET, x);
+    }
+
+    private int getX(double x) {
+        return getX((int) x);
+    }
 
     @Override
     public String getPathfinderMap() {
@@ -128,6 +137,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                     log.info("Strategy {}", odinRobotStatus.strategy().name());
                 }
 
+                odinRobotStatus.twoRobots(ecranService.config().isTwoRobots());
                 odinRobotStatus.statuettePresente(ecranService.config().hasOption(EurobotConfig.STATUETTE_PRESENTE));
                 odinRobotStatus.vitrinePresente(ecranService.config().hasOption(EurobotConfig.VITRINE_PRESENTE));
 
@@ -147,45 +157,39 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
         try {
             robotStatus.disableAvoidance();
-            if (robotStatus.simulateur() || skip) {
-                if (odinRobotStatus.team() == Team.JAUNE) {
-                    position.setPt(new Point(
-                            conv.mmToPulse(OdinConstantesConfig.dstCallage + 150),
-                            conv.mmToPulse(OdinConstantesConfig.dstCallage + 150)
-                    ));
-                    position.setAngle(conv.degToPulse(90));
-                } else {
-                    position.setPt(new Point(
-                            conv.mmToPulse(3000 - OdinConstantesConfig.dstCallage - 150),
-                            conv.mmToPulse(OdinConstantesConfig.dstCallage + 150)
-                    ));
-                    position.setAngle(conv.degToPulse(90));
-                }
+            position.setPt(new Point(
+                    conv.mmToPulse(getX(OdinConstantesConfig.dstCallage)),
+                    conv.mmToPulse(1785)
+            ));
+            if (odinRobotStatus.team() == Team.JAUNE) {
+                position.setAngle(conv.degToPulse(0));
             } else {
+                position.setAngle(conv.degToPulse(180));
+            }
+            if (!skip) {
                 robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
-                mv.reculeMMSansAngle(1000);
+                mv.reculeMMSansAngle(300);
 
+                position.getPt().setX(conv.mmToPulse(getX(OdinConstantesConfig.dstCallage)));
                 if (odinRobotStatus.team() == Team.JAUNE) {
-                    position.getPt().setX(conv.mmToPulse(OdinConstantesConfig.dstCallage));
                     position.setAngle(conv.degToPulse(0));
                 } else {
-                    position.getPt().setX(conv.mmToPulse(3000 - OdinConstantesConfig.dstCallage));
                     position.setAngle(conv.degToPulse(180));
                 }
 
                 mv.avanceMM(150);
-                mv.gotoOrientationDeg(90);
+                mv.gotoOrientationDeg(-90);
 
                 robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
-                mv.reculeMMSansAngle(1000);
+                mv.reculeMMSansAngle(400);
 
                 if (!io.auOk()) {
                     ecranService.displayMessage("Echappement calage bordure car mauvais sens", LogLevel.ERROR);
                     throw new ExitProgram(true);
                 }
 
-                position.getPt().setY(conv.mmToPulse(OdinConstantesConfig.dstCallage));
-                position.setAngle(conv.degToPulse(90));
+                position.getPt().setY(conv.mmToPulse(2000 - OdinConstantesConfig.dstCallage));
+                position.setAngle(conv.degToPulse(-90));
 
                 mv.avanceMM(150);
             }
@@ -200,40 +204,31 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
      */
     public void positionStrategy() {
         ecranService.displayMessage("Mise en place");
-        /*
+
         try {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             switch (odinRobotStatus.strategy()) {
-                case BASIC:
-                case AGGRESSIVE:
-                    // Aligne vers les bouées au nord du port
-                    if (odinRobotStatus.team() == Team.JAUNE) {
-                        mv.gotoPoint(255, 1005, GotoOption.ARRIERE);
-                    } else {
-                        mv.gotoPoint(3000 - 255, 1005, GotoOption.ARRIERE);
+                default:
+                    if (robotStatus.twoRobots()) {
+                        mv.gotoPoint(getX(240), 1740);
+                        mv.gotoPoint(getX(570), 1740);
+                        groupService.initStep(InitStep.ODIN_DEVANT_GALERIE); // Odin calé, en attente devant la galerie
+                        ecranService.displayMessage("Attente calage Nerell");
+                        groupService.waitInitStep(InitStep.NERELL_CALAGE_TERMINE); // Attente Nerell calé
+                        ecranService.displayMessage("Mise en place");
                     }
+
+                    mv.gotoPoint(getX(240), 1130);
                     mv.gotoOrientationDeg(-90);
+                    groupService.initStep(InitStep.ODIN_EN_POSITION_BASIC);
                     break;
-
-                case FINALE:
-                    // Aligne vers le centre de la table
-                    if (odinRobotStatus.team() == Team.JAUNE) {
-                        mv.gotoPoint(160, 1370, GotoOption.AVANT);
-                        mv.gotoOrientationDeg(-70);
-                    } else {
-                        mv.gotoPoint(3000 - 160, 1370, GotoOption.AVANT);
-                        mv.gotoOrientationDeg(-110);
-                    }
-                    groupService.initStep(1);
-                    break;
-
             }
         } catch (AvoidingException e) {
             ecranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
             throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);
         }
-        */
+
     }
 
     /**

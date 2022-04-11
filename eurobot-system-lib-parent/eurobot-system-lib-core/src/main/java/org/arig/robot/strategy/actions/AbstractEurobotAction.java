@@ -37,11 +37,6 @@ public abstract class AbstractEurobotAction extends AbstractAction {
     protected EurobotStatus rs;
 
     protected int getX(int x) {
-        if (rs.team() == Team.JAUNE) {
-            return 3000 - x;
-        } else {
-            return x;
-        }
+        return tableUtils.getX(rs.team() == Team.VIOLET, x);
     }
-
 }

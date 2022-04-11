@@ -396,7 +396,7 @@ public abstract class AbstractOrdonanceur {
      */
     private void cycleFin() {
         ecranService.displayMessage(
-                String.format("FIN - Remettre la tirette et AU pour ejection - Score %s",
+                String.format("FIN - Remettre la tirette et AU pour arret - Score %s",
                         robotStatus.calculerPoints())
         );
 
@@ -404,11 +404,7 @@ public abstract class AbstractOrdonanceur {
             ThreadUtils.sleep(1000);
         }
 
-        io.enableAlimServos();
-
         beforePowerOff(); // impl
-
-        io.disableAlimServos();
     }
 
     protected void startMonitoring() {

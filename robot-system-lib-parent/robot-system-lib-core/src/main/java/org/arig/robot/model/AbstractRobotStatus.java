@@ -59,6 +59,10 @@ public abstract class AbstractRobotStatus {
      */
     private boolean twoRobots = false;
 
+    public boolean twoRobots() {
+        return groupOk ? true : twoRobots;
+    }
+
     /**
      * Les deux robots communiquent
      */
