@@ -16,6 +16,8 @@ public class CarreFouille implements Serializable {
 
     @JsonProperty("color")
     private CouleurCarreFouille couleur;
+
+    @JsonProperty("bascule")
     private boolean bascule = false;
 
     @Setter(AccessLevel.NONE)
