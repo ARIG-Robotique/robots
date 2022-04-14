@@ -1,17 +1,18 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.active.echappement;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.strategy.actions.AbstractNerellAction;
+import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class NerellTest extends AbstractNerellAction {
+public class EchappementCoinDeTable extends AbstractEurobotAction {
 
     private int step = 0;
 
@@ -20,7 +21,7 @@ public class NerellTest extends AbstractNerellAction {
 
     @Override
     public String name() {
-        return "Nerell Test";
+        return EurobotConfig.ACTION_ECHAPPEMENT_COIN_TABLE_PREFIX + robotName.id().name();
     }
 
     @Override
@@ -30,18 +31,18 @@ public class NerellTest extends AbstractNerellAction {
 
     @Override
     public int order() {
-        return 1000;
+        return -100;
     }
 
     @Override
     public boolean isValid() {
-        return isTimeValid();
+        return isTimeValid() && rs.getRemainingTime() > 25000;
     }
 
     @Override
     public void execute() {
         try {
-            rsNerell.enableAvoidance();
+            rs.enableAvoidance();
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             if (step == 0) {
