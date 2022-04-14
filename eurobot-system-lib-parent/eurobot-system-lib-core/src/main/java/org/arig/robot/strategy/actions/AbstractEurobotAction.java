@@ -1,8 +1,11 @@
 package org.arig.robot.strategy.actions;
 
+import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
+import org.arig.robot.model.RobotName;
+import org.arig.robot.model.RobotName.RobotIdentification;
 import org.arig.robot.model.Team;
 import org.arig.robot.services.AbstractCommonServosService;
 import org.arig.robot.services.CommonIOService;
@@ -18,6 +21,9 @@ public abstract class AbstractEurobotAction extends AbstractAction {
 
     @Autowired
     protected RobotConfig robotConfig;
+
+    @Autowired
+    protected RobotName robotName;
 
     @Autowired
     protected AbstractCommonServosService commonServosService;
@@ -46,5 +52,10 @@ public abstract class AbstractEurobotAction extends AbstractAction {
 
     protected int getX(int x) {
         return tableUtils.getX(rs.team() == Team.VIOLET, x);
+    }
+
+    protected boolean remainingTimeValid() {
+        int time = robotName.id() == RobotIdentification.NERELL ? EurobotConfig.validRetourSiteDeFouilleRemainingTimeNerell : EurobotConfig.validRetourSiteDeFouilleRemainingTimeOdin;
+        return rs.getRemainingTime() > time;
     }
 }

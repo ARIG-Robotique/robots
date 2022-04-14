@@ -54,7 +54,7 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !rs.zoneDeFouilleComplete() && cf() != null;
+        return isTimeValid() && remainingTimeValid() && !rs.zoneDeFouilleComplete() && cf() != null;
     }
 
     @Override
