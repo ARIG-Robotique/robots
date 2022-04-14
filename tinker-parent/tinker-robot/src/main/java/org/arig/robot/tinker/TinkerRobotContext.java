@@ -3,6 +3,7 @@ package org.arig.robot.tinker;
 import com.pi4j.gpio.extension.pca.PCA9685GpioProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.RobotName;
+import org.arig.robot.model.RobotName.RobotIdentification;
 import org.arig.robot.system.gamepad.nintendoswitch.ControllerEventListener;
 import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyConLeft;
 import org.arig.robot.system.gamepad.nintendoswitch.joycon.JoyConRight;
@@ -20,7 +21,11 @@ import org.springframework.context.annotation.Configuration;
 public class TinkerRobotContext {
 
     protected RobotName robotName() {
-        return new RobotName().name("Tinker (JoyCon drived)").version("2020 (Sail the World)");
+        return RobotName.builder()
+                .id(RobotIdentification.TINKER)
+                .name("Tinker (JoyCon drived)")
+                .version("2020 (Sail the World)")
+                .build();
     }
 
     @Bean

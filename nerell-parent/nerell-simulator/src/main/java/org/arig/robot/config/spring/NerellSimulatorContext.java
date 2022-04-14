@@ -9,6 +9,7 @@ import org.arig.robot.communication.bouchon.BouchonI2CManager;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.RobotName;
+import org.arig.robot.model.RobotName.RobotIdentification;
 import org.arig.robot.model.bouchon.BouchonEncoderValues;
 import org.arig.robot.model.bouchon.BouchonI2CDevice;
 import org.arig.robot.model.bouchon.BouchonI2CMultiplexer;
@@ -47,9 +48,11 @@ public class NerellSimulatorContext {
 
     @Bean
     public RobotName robotName() {
-        return new RobotName()
+        return RobotName.builder()
+                .id(RobotIdentification.NERELL)
                 .name("Nerell (simulator)")
-                .version("latest");
+                .version("latest")
+                .build();
     }
 
     @Bean

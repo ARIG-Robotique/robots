@@ -16,6 +16,7 @@ import org.arig.robot.communication.raspi.RaspiI2CManager;
 import org.arig.robot.constants.OdinConstantesConfig;
 import org.arig.robot.constants.OdinConstantesI2C;
 import org.arig.robot.model.RobotName;
+import org.arig.robot.model.RobotName.RobotIdentification;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.avoiding.BasicAvoidingService;
 import org.arig.robot.system.avoiding.BasicRetryAvoidingService;
@@ -49,9 +50,11 @@ public class OdinRobotContext {
 
     @Bean
     public RobotName robotName() {
-        return new RobotName()
+        return RobotName.builder()
+                .id(RobotIdentification.ODIN)
                 .name("Odin (The replicator)")
-                .version("2022 (Age of bots)");
+                .version("2022 (Age of bots)")
+                .build();
     }
 
     @Bean(destroyMethod = "close")

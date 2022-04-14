@@ -16,6 +16,7 @@ import org.arig.robot.communication.raspi.RaspiI2CManager;
 import org.arig.robot.constants.NerellConstantesConfig;
 import org.arig.robot.constants.NerellConstantesI2C;
 import org.arig.robot.model.RobotName;
+import org.arig.robot.model.RobotName.RobotIdentification;
 import org.arig.robot.model.balise.StatutBalise;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.avoiding.BasicAvoidingService;
@@ -52,9 +53,11 @@ public class NerellRobotContext {
 
     @Bean
     public RobotName robotName() {
-        return new RobotName()
+        return RobotName.builder()
+                .id(RobotIdentification.NERELL)
                 .name("Nerell (The less I do the better I am)")
-                .version("2022 (Age of bots)");
+                .version("2022 (Age of bots)")
+                .build();
     }
 
     @Bean(destroyMethod = "close")
