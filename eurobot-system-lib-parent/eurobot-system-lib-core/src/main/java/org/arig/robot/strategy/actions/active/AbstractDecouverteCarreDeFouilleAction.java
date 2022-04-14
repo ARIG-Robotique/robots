@@ -86,7 +86,7 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                     mv.avanceMMSansAngle(300);
 
                     final double robotY = position.getPt().getY();
-                    final double realY = conv.mmToPulse(110); // TODO : à définir en commun
+                    final double realY = conv.mmToPulse(robotConfig.distanceCalageAvant());
                     if (Math.abs(realY - robotY) > conv.mmToPulse(10)) {
                         log.warn("RECALAGE REQUIS : yRobot = {} ; yReel = {}",
                                 conv.pulseToMm(robotY), conv.pulseToMm(realY));

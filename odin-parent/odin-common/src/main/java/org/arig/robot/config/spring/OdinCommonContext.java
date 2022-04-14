@@ -67,6 +67,9 @@ public class OdinCommonContext {
                 .seuilTensionServos(OdinConstantesConfig.seuilAlimentationServosVolts)
                 .seuilTensionMoteurs(OdinConstantesConfig.seuilAlimentationMoteursVolts)
 
+                .distanceCalageAvant(OdinConstantesConfig.dstCallage)
+                .distanceCalageArriere(OdinConstantesConfig.dstCallage)
+
                 .vitesse(OdinConstantesConfig.vitesseMin, OdinConstantesConfig.vitesseMax, 100)
                 .vitesseOrientation(OdinConstantesConfig.vitesseOrientationMin, OdinConstantesConfig.vitesseOrientationMax, 100)
                 .fenetreArretDistance(conv.mmToPulse(OdinConstantesConfig.arretDistanceMm))

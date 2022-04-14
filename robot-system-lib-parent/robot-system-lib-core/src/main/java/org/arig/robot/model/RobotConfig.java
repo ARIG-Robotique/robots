@@ -28,14 +28,16 @@ public class RobotConfig {
     private int pathFindingAngleSafe;
 
     /**
-     * moteurs
+     * Seuils tensions
      */
     double seuilTensionMoteurs;
+    double seuilTensionServos;
 
     /**
-     * servos
+     * Mécanique
      */
-    double seuilTensionServos;
+    double distanceCalageAvant;
+    double distanceCalageArriere;
 
     /**
      * mouvement

@@ -68,6 +68,9 @@ public class NerellCommonContext {
                 .seuilTensionServos(NerellConstantesConfig.seuilAlimentationServosVolts)
                 .seuilTensionMoteurs(NerellConstantesConfig.seuilAlimentationMoteursVolts)
 
+                .distanceCalageAvant(NerellConstantesConfig.dstCallage)
+                .distanceCalageArriere(NerellConstantesConfig.dstCallage)
+
                 .vitesse(NerellConstantesConfig.vitesseMin, NerellConstantesConfig.vitesseMax, 100)
                 .vitesseOrientation(NerellConstantesConfig.vitesseOrientationMin, NerellConstantesConfig.vitesseOrientationMax, 100)
                 .fenetreArretDistance(conv.mmToPulse(NerellConstantesConfig.arretDistanceMm))

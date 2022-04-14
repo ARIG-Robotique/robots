@@ -77,7 +77,6 @@ public interface OdinConstantesConfig {
     // -------------- //
     // Parametres PID //
     // -------------- //
-    // TODO Configuration a faire
     double kcrDistance = 21.5;
     double tcrDistance = 0.04;
     double kpDistance = 30;
