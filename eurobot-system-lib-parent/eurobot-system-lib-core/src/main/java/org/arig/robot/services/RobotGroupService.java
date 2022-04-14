@@ -106,8 +106,14 @@ public class RobotGroupService implements RobotGroup.Handler {
             case SITE_ECHANTILLON_PRIS:
                 rs.siteEchantillonPris(true);
                 break;
+            case SITE_ECHANTILLON_ADVERSE_PRIS:
+                rs.siteEchantillonAdversePris(true);
+                break;
             case SITE_DE_FOUILLE_PRIS:
                 rs.siteDeFouillePris(true);
+                break;
+            case SITE_DE_FOUILLE_ADVERSE_PRIS:
+                rs.siteDeFouilleAdversePris(true);
                 break;
             case VITRINE_ACTIVE:
                 rs.vitrineActive(true);
@@ -267,9 +273,19 @@ public class RobotGroupService implements RobotGroup.Handler {
         sendEvent(StatusEvent.SITE_ECHANTILLON_PRIS);
     }
 
+    public void siteEchantillonAdversePris() {
+        rs.siteEchantillonAdversePris(true);
+        sendEvent(StatusEvent.SITE_ECHANTILLON_ADVERSE_PRIS);
+    }
+
     public void siteDeFouillePris() {
         rs.siteDeFouillePris(true);
         sendEvent(StatusEvent.SITE_DE_FOUILLE_PRIS);
+    }
+
+    public void siteDeFouilleAdversePris() {
+        rs.siteDeFouilleAdversePris(true);
+        sendEvent(StatusEvent.SITE_DE_FOUILLE_ADVERSE_PRIS);
     }
 
     public void vitrineActive() {

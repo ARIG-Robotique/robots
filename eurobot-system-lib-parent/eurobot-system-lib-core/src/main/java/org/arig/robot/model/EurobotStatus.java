@@ -71,11 +71,25 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         this.siteEchantillonPris = siteEchantillonPris;
     }
 
+    private boolean siteEchantillonAdversePris = false;
+
+    public void siteEchantillonAdversePris(boolean siteEchantillonAdversePris) {
+        log.info("[RS] site echantillon adverse pris : {}", siteEchantillonAdversePris);
+        this.siteEchantillonAdversePris = siteEchantillonAdversePris;
+    }
+
     private boolean siteDeFouillePris = false;
 
     public void siteDeFouillePris(boolean siteDeFouillePris) {
         log.info("[RS] site de fouille pris : {}", siteDeFouillePris);
         this.siteDeFouillePris = siteDeFouillePris;
+    }
+
+    private boolean siteDeFouilleAdversePris = false;
+
+    public void siteDeFouilleAdversePris(boolean siteDeFouilleAdversePris) {
+        log.info("[RS] site de fouille adverse pris : {}", siteDeFouilleAdversePris);
+        this.siteDeFouilleAdversePris = siteDeFouilleAdversePris;
     }
 
     private boolean vitrineActive = false;
@@ -311,8 +325,10 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         r.put("distributeurCommunEquipePris", distributeurCommunEquipePris);
         r.put("distributeurCommunAdversePris", distributeurCommunAdversePris);
         r.put("siteEchantillonPris", siteEchantillonPris);
+        r.put("siteEchantillonAdversePris", siteEchantillonAdversePris);
         r.put("siteDeFouillePris", siteDeFouillePris);
-        r.put("zoneDeFouilleTerminee", zoneDeFouille.isComplete());
+        r.put("siteDeFouilleAdversePris", siteDeFouilleAdversePris);
+        r.put("carresDeFouilleTermines", zoneDeFouille.isComplete());
         r.put("vitrineActive", vitrineActive);
         r.put("statuettePris", statuettePris);
         r.put("statuetteDansVitrine", statuetteDansVitrine);

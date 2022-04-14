@@ -236,6 +236,18 @@ class RobotGroupServiceTest {
     }
 
     @Test
+    void testSiteEchantillonAdversePris() {
+        Assertions.assertFalse(statusPrimary.siteEchantillonAdversePris());
+        Assertions.assertFalse(statusSecondary.siteEchantillonAdversePris());
+
+        rgServicePrimary.siteEchantillonAdversePris();
+        ThreadUtils.sleep(WAIT);
+
+        Assertions.assertTrue(statusPrimary.siteEchantillonAdversePris());
+        Assertions.assertTrue(statusSecondary.siteEchantillonAdversePris());
+    }
+
+    @Test
     void testSiteDeFouillePris() {
         Assertions.assertFalse(statusPrimary.siteDeFouillePris());
         Assertions.assertFalse(statusSecondary.siteDeFouillePris());
@@ -245,6 +257,18 @@ class RobotGroupServiceTest {
 
         Assertions.assertTrue(statusPrimary.siteDeFouillePris());
         Assertions.assertTrue(statusSecondary.siteDeFouillePris());
+    }
+
+    @Test
+    void testSiteDeFouilleAdversePris() {
+        Assertions.assertFalse(statusPrimary.siteDeFouilleAdversePris());
+        Assertions.assertFalse(statusSecondary.siteDeFouilleAdversePris());
+
+        rgServicePrimary.siteDeFouilleAdversePris();
+        ThreadUtils.sleep(WAIT);
+
+        Assertions.assertTrue(statusPrimary.siteDeFouilleAdversePris());
+        Assertions.assertTrue(statusSecondary.siteDeFouilleAdversePris());
     }
 
     @Test
