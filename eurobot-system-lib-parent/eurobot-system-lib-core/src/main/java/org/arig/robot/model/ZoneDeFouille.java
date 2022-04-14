@@ -116,6 +116,7 @@ public class ZoneDeFouille {
 
     int score() {
         int points = 0;
+
         for (int i = 0; i < carresFouille.length; i++) {
             // On ignore les 3 extrèmes gauches et droites en fonction de la team
             if ((i <= 2 && team == Team.VIOLET) || (i >= 7 && team == Team.JAUNE)) {
@@ -135,6 +136,22 @@ public class ZoneDeFouille {
             if ((team == Team.JAUNE && carresFouille[i].couleur() == CouleurCarreFouille.JAUNE)
                     || (team == Team.VIOLET && carresFouille[i].couleur() == CouleurCarreFouille.VIOLET)) {
                 points += 5;
+            }
+        }
+
+        // Si l'adversaire est bourrin, et que les 4 du milieu sont basculé en inconnu, on ajoute 10 points
+        if (hasInconnu()) {
+            int nbInconnuCentre = 0;
+            for (int i = 3 ; i < 7 ; i++) {
+                CarreFouille cf = carresFouille[i];
+                if (cf.couleur() == CouleurCarreFouille.INCONNU && cf.bascule()) {
+                    nbInconnuCentre++;
+                }
+            }
+
+            if (nbInconnuCentre == 4) {
+                // Il y en as deux des nôtres qui ont été donné par l'adversaire
+                points += 10;
             }
         }
 

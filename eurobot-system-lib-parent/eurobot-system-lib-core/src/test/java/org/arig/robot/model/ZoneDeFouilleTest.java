@@ -30,6 +30,42 @@ class ZoneDeFouilleTest {
     }
 
     @Test
+    void testScoreTeamBourrinAuMilieuJaune() {
+        zoneDeFouille.team(Team.JAUNE);
+
+        for (int i = 4 ; i <= 7 ; i++) {
+            CarreFouille cf = zoneDeFouille.get(i);
+            cf.bascule(true);
+        }
+
+        Assertions.assertEquals(15, zoneDeFouille.score());
+        zoneDeFouille.get(1).couleur(CouleurCarreFouille.JAUNE).bascule(true);
+        zoneDeFouille.get(2).bascule(true);
+        zoneDeFouille.refreshProcessing();
+        assertPattern1(false);
+
+        Assertions.assertEquals(25, zoneDeFouille.score());
+    }
+
+    @Test
+    void testScoreTeamBourrinAuMilieuViolet() {
+        zoneDeFouille.team(Team.VIOLET);
+
+        for (int i = 4 ; i <= 7 ; i++) {
+            CarreFouille cf = zoneDeFouille.get(i);
+            cf.bascule(true);
+        }
+
+        Assertions.assertEquals(15, zoneDeFouille.score());
+        zoneDeFouille.get(10).couleur(CouleurCarreFouille.VIOLET).bascule(true);
+        zoneDeFouille.get(9).bascule(true);
+        zoneDeFouille.refreshProcessing();
+        assertPattern1(false);
+
+        Assertions.assertEquals(25, zoneDeFouille.score());
+    }
+
+    @Test
     void testMatchJauneObstacle() {
         zoneDeFouille.team(Team.JAUNE);
 
