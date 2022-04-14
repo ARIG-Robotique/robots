@@ -16,11 +16,6 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
     @Accessors(fluent = true)
     private int contentStock = 0;
 
-    private boolean presenceVentouseAvantGauche = false;
-    private boolean presenceVentouseAvantDroit = false;
-    private boolean presenceVentouseArriereGauche = false;
-    private boolean presenceVentouseArriereDroit = false;
-
     // --------------------------------------------------------- //
     // -------------------------- INPUT ------------------------ //
     // --------------------------------------------------------- //
@@ -43,8 +38,8 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
     }
 
     @Override
-    public boolean presenceCarreFouille() {
-        return false;
+    public boolean presenceCarreFouille(final boolean expected) {
+        return expected;
     }
 
     @Override

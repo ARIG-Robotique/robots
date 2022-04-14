@@ -27,7 +27,7 @@ public class NerellCapteursController extends AbstractCapteursController {
         //numeriqueInfos.put("Bordure custom droite", ioService::calageBordureCustomDroit);
         //numeriqueInfos.put("Bordure custom gauche", ioService::calageBordureCustomGauche);
 
-        numeriqueInfos.put("Presence carre de fouille", ioService::presenceCarreFouille);
+        numeriqueInfos.put("Presence carre de fouille", () -> ioService.presenceCarreFouille(false));
         numeriqueInfos.put("Presence prise bras", ioService::presencePriseBras);
         numeriqueInfos.put("Presence stock 1", ioService::presenceStock1);
         numeriqueInfos.put("Presence stock 2", ioService::presenceStock2);

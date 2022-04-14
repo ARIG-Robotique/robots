@@ -34,8 +34,8 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     }
 
     @Override
-    public boolean presenceCarreFouille() {
-        return false;
+    public boolean presenceCarreFouille(final boolean expected) {
+        return expected;
     }
 
     @Override

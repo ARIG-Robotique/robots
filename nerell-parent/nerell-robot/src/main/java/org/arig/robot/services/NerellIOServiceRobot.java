@@ -223,7 +223,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     // Numerique
 
     @Override
-    public boolean presenceCarreFouille() {
+    public boolean presenceCarreFouille(final boolean expected) {
         return inPresenceCarreFouille.isLow();
     }
 

@@ -107,7 +107,7 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                 mv.gotoOrientationDeg(0);
                 commonServosService.carreFouilleOhmmetreOuvert(false);
 
-                if (commonIOService.presenceCarreFouille()) {
+                if (commonIOService.presenceCarreFouille(true)) {
                     log.info("Carré de fouille #{} {} : Presence", carreFouille.numero(), carreFouille.couleur());
                     CouleurCarreFouille couleur = carreFouille.couleur();
                     if (carreFouille.needRead()) {
@@ -134,11 +134,11 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                         int sleepTimeMs = 5;
                         do {
                             ThreadUtils.sleep(sleepTimeMs);
-                            presence = commonIOService.presenceCarreFouille();
+                            presence = commonIOService.presenceCarreFouille(false);
                             wait += sleepTimeMs;
                         } while(presence && wait < WAIT_READ_BASCULE_MS);
 
-                        if (!commonIOService.presenceCarreFouille()) {
+                        if (!presence) {
                             group.basculeCarreFouille(carreFouille.numero());
                         }
                     }

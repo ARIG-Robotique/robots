@@ -12,7 +12,7 @@ public interface CommonIOService extends IOService {
     boolean presenceVentouseBas();
     boolean presenceVentouseHaut();
 
-    boolean presenceCarreFouille();
+    boolean presenceCarreFouille(boolean expected);
     boolean presencePriseBras();
     boolean presenceStock1();
     boolean presenceStock2();
