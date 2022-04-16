@@ -98,6 +98,7 @@ public class OdinOdometrieCommands {
         log.info("-------------------------------------------------");
         log.info("Coef gauche : {} -> {}", oldGauche, oldGauche + correction);
         log.info("Coef droit  : {} -> {}", oldDroit, oldDroit - correction);
+        log.info("Ecart       : {}%", correction * 100);
     }
 
     @SneakyThrows

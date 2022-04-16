@@ -5,6 +5,8 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.NerellConstantesConfig;
 import org.arig.robot.model.NerellRobotStatus;
+import org.arig.robot.model.Position;
+import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.MonitoringWrapper;
@@ -19,6 +21,7 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +38,8 @@ public class NerellOdometrieCommands {
     private final NerellRobotStatus rs;
     private final ARIG2WheelsEncoders encoders;
     private final ConvertionRobotUnit convRobot;
+
+    private final Position currentPosition;
 
     public Availability alimentationOk() {
         return ioService.auOk() && energyService.checkServos() && energyService.checkMoteurs()
@@ -98,6 +103,7 @@ public class NerellOdometrieCommands {
         log.info("-------------------------------------------------");
         log.info("Coef gauche : {} -> {}", oldGauche, oldGauche + correction);
         log.info("Coef droit  : {} -> {}", oldDroit, oldDroit - correction);
+        log.info("Ecart       : {}%", correction * 100);
     }
 
     @SneakyThrows
@@ -119,12 +125,16 @@ public class NerellOdometrieCommands {
         List<MonitorTimeSerie> codeursData;
         double roueDroite = 0;
         double roueGauche = 0;
+        double localRoueDroite = 0;
+        double localRoueGauche = 0;
 
+        List<Double> countPerMmByCycle = new ArrayList<>();
         for (int cycle = 0 ; cycle < nbCycle ; cycle++) {
             log.info("Cycle {} / {}", cycle + 1, nbCycle);
 
             rs.enableForceMonitoring();
-            trajectoryManager.avanceMM(distanceReel - 10);
+            currentPosition.updatePosition(0, 0, 0);
+            trajectoryManager.gotoPoint(distanceReel - 50, 0, GotoOption.AVANT, GotoOption.SANS_ORIENTATION);
             rs.enableCalageBordure(TypeCalage.AVANT);
             trajectoryManager.avanceMMSansAngle(200);
             rs.disableForceMonitoring();
@@ -133,13 +143,19 @@ public class NerellOdometrieCommands {
                     .filter(m -> m.getMeasurementName().equals("encodeurs"))
                     .collect(Collectors.toList());
             monitoringWrapper.cleanAllPoints();
+            localRoueDroite = 0;
+            localRoueGauche = 0;
             for (MonitorTimeSerie d : codeursData) {
-                roueDroite += d.getFields().get("droit").doubleValue();
-                roueGauche += d.getFields().get("gauche").doubleValue();
+                localRoueDroite += d.getFields().get("droit").doubleValue();
+                localRoueGauche += d.getFields().get("gauche").doubleValue();
             }
+            roueDroite += localRoueDroite;
+            roueGauche += localRoueGauche;
+            countPerMmByCycle.add(((localRoueDroite + localRoueGauche) / 2) / distanceReel);
 
             rs.enableForceMonitoring();
-            trajectoryManager.reculeMM(distanceReel - 10);
+            currentPosition.updatePosition(convRobot.mmToPulse(distanceEntreCalage - NerellConstantesConfig.dstCallage), 0, 0);
+            trajectoryManager.gotoPoint(distanceEntreCalage - distanceReel - 50, 0, GotoOption.ARRIERE, GotoOption.SANS_ORIENTATION);
             rs.enableCalageBordure(TypeCalage.ARRIERE);
             trajectoryManager.reculeMMSansAngle(200);
             rs.disableForceMonitoring();
@@ -148,10 +164,15 @@ public class NerellOdometrieCommands {
                     .filter(m -> m.getMeasurementName().equals("encodeurs"))
                     .collect(Collectors.toList());
             monitoringWrapper.cleanAllPoints();
+            localRoueDroite = 0;
+            localRoueGauche = 0;
             for (MonitorTimeSerie d : codeursData) {
-                roueDroite += d.getFields().get("droit").doubleValue() * -1;
-                roueGauche += d.getFields().get("gauche").doubleValue() * -1;
+                localRoueDroite += d.getFields().get("droit").doubleValue() * -1;
+                localRoueGauche += d.getFields().get("gauche").doubleValue() * -1;
             }
+            roueDroite += localRoueDroite;
+            roueGauche += localRoueGauche;
+            countPerMmByCycle.add(((localRoueDroite + localRoueGauche) / 2) / distanceReel);
         }
         rs.disableAsserv();
 
@@ -166,6 +187,10 @@ public class NerellOdometrieCommands {
         log.info("Distance Rob    : {} mm", convRobot.pulseToMm(distance));
         log.info("-------------------------------------------------");
         log.info("Count per mm    : {}", distance / (distanceReel * 2 * nbCycle)); // Distance de la table 2022
+        log.info("-------------------------------------------------");
+        for (int i = 0; i < countPerMmByCycle.size(); i++) {
+            log.info("Count per mm {} : {}", i, countPerMmByCycle.get(i));
+        }
     }
 
     @SneakyThrows
@@ -183,7 +208,7 @@ public class NerellOdometrieCommands {
 
             rs.enableCalageBordure(TypeCalage.ARRIERE);
             trajectoryManager.setVitesse(100, 100);
-            trajectoryManager.reculeMMSansAngle(1000);
+            trajectoryManager.reculeMMSansAngle(100);
 
             rs.enableForceMonitoring();
             monitoringWrapper.cleanAllPoints();
@@ -194,7 +219,7 @@ public class NerellOdometrieCommands {
             }
             trajectoryManager.gotoOrientationDeg(0);
             rs.enableCalageBordure(TypeCalage.ARRIERE);
-            trajectoryManager.reculeMMSansAngle(1000);
+            trajectoryManager.reculeMMSansAngle(500);
 
             rs.disableForceMonitoring();
             rs.disableAsserv();
