@@ -46,13 +46,13 @@ public class EchappementCoinDeTable extends AbstractEurobotAction {
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             if (step == 0) {
-                mv.pathTo(950, 1600, GotoOption.AVANT);
+                mv.pathTo(getX(520), 370);
             } else if (step == 1) {
-                mv.pathTo(2050, 800, GotoOption.AVANT);
+                mv.pathTo(getX(1500), 1345);
             } else if (step == 2) {
-                mv.pathTo(950, 800, GotoOption.AVANT);
+                mv.pathTo(getX(560), 1630);
             } else if (step == 3) {
-                mv.pathTo(2050, 1600, GotoOption.AVANT);
+                mv.pathTo(getX(1500), 370);
             }
 
         } catch (AvoidingException | NoPathFoundException e) {

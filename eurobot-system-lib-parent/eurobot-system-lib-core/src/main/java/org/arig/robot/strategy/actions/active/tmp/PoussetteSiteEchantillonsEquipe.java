@@ -59,7 +59,7 @@ public class PoussetteSiteEchantillonsEquipe extends AbstractEurobotAction {
             mv.gotoPoint(getX(480), 1320, GotoOption.ARRIERE);
             group.siteEchantillonPris();
 
-            rs.deposeCampementBleu(CouleurEchantillon.ROCHER, CouleurEchantillon.ROCHER, CouleurEchantillon.ROCHER);
+            rs.deposeCampementBleu(CouleurEchantillon.ROCHER, CouleurEchantillon.ROCHER);
             mv.avanceMM(100);
         } catch (AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
