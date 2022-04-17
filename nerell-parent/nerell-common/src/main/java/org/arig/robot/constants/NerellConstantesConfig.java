@@ -43,7 +43,6 @@ public interface NerellConstantesConfig {
     //double countPerDeg = 135.56501182033100000; // Théorique
     //double countPerDeg = 133.54528278505845; // 5 tours
     double countPerDeg = 133.54984849251548; // 10 tours
-    //double countPerDeg = ; // 25 tours
 
     double coefCodeurDroit = (0.9914760162438181 + 0.9901903052878885 + 0.9901004087212356) / 3;
     double coefCodeurGauche = 1;
