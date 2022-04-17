@@ -795,9 +795,9 @@ public class TrajectoryManager {
 
             double consOrient = calculAngleConsigne(dX, dY);
             if (consOrient > 0) {
-                consOrient -= conv.getPiPulse();
+                consOrient -= conv.piPulse();
             } else {
-                consOrient += conv.getPiPulse();
+                consOrient += conv.piPulse();
             }
 
             cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);

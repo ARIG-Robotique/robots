@@ -26,15 +26,24 @@ public class ConvertionRobotUnitTest {
     }
 
     @Test
-    public void testPiValue() {
-        log.info("Test des valeurs de PI en pulse");
+    void testEntraxe() {
+        ConvertionRobotUnit conv = new ConvertionRobotUnit(27.74036795337890000, 280, true);
 
-        Assertions.assertEquals(180, ConvertionRobotUnitTest.conv1.getPiPulse(), 0);
-        Assertions.assertEquals(360, ConvertionRobotUnitTest.conv1.getPi2Pulse(), 0);
+        Assertions.assertEquals(27.74036795337890000, conv.countPerMm(), 0);
+        Assertions.assertEquals(280, conv.entraxe(), 0);
+        Assertions.assertEquals(135.56501182033114, conv.countPerDegree(), 0);
     }
 
     @Test
-    public void testMmConvertion() {
+    void testPiValue() {
+        log.info("Test des valeurs de PI en pulse");
+
+        Assertions.assertEquals(180, ConvertionRobotUnitTest.conv1.piPulse(), 0);
+        Assertions.assertEquals(360, ConvertionRobotUnitTest.conv1.pi2Pulse(), 0);
+    }
+
+    @Test
+    void testMmConvertion() {
         log.info("Test des convertions en millimètres");
 
         Assertions.assertEquals(1, ConvertionRobotUnitTest.conv1.mmToPulse(1), 0);
@@ -45,7 +54,7 @@ public class ConvertionRobotUnitTest {
     }
 
     @Test
-    public void testDegConvertion() {
+    void testDegConvertion() {
         log.info("Test des convertions en degrées");
 
         Assertions.assertEquals(1, ConvertionRobotUnitTest.conv1.degToPulse(1), 0);
@@ -56,7 +65,7 @@ public class ConvertionRobotUnitTest {
     }
 
     @Test
-    public void testRadConvertion() {
+    void testRadConvertion() {
         log.info("Test des convertions en radians");
 
         Assertions.assertEquals(Math.toDegrees(1), ConvertionRobotUnitTest.conv1.radToPulse(1), 0);
