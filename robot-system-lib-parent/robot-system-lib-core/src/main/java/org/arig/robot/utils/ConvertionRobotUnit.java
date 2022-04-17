@@ -9,18 +9,22 @@ import lombok.Getter;
 public final class ConvertionRobotUnit {
 
     @Getter
-    private final double countPerMm;
+    private double countPerMm;
 
     @Getter
-    private final double countPerDegree;
+    private double countPerDegree;
 
     @Getter
-    private final double piPulse;
+    private double piPulse;
 
     @Getter
-    private final double pi2Pulse;
+    private double pi2Pulse;
 
     public ConvertionRobotUnit(final double countPerMm, final double countPerDegree) {
+        setCoefs(countPerMm, countPerDegree);
+    }
+
+    public void setCoefs(final double countPerMm, final double countPerDegree) {
         this.countPerMm = countPerMm;
         this.countPerDegree = countPerDegree;
 
