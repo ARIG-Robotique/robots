@@ -63,7 +63,7 @@ public abstract class AbstractAvoidingService implements AvoidingService {
 
     protected boolean needLowSpeed() {
         return lidarService.getDetectedPointsMm().parallelStream()
-                .anyMatch(pt -> checkValidPointForSeuil(pt, robotConfig.pathFindingSeuilProximite() * 2));
+                .anyMatch(pt -> checkValidPointForSeuil(pt, robotConfig.pathFindingSeuilProximite() * 4));
     }
 
     private boolean checkValidPointForSeuil(Point pt, int seuilMm) {
