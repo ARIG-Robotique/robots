@@ -984,8 +984,8 @@ public class TrajectoryManager {
 
     private void applyVitesse(long vDistance, long vOrientation) {
         synchronized (this) {
-            cmdRobot.getVitesse().setDistance(obstacleLowSpeed.get() ? vDistance / 2 : vDistance);
-            cmdRobot.getVitesse().setOrientation(obstacleLowSpeed.get() ? vOrientation / 2 : vOrientation);
+            cmdRobot.getVitesse().setDistance(obstacleLowSpeed.get() ? vDistance / 3 : vDistance);
+            cmdRobot.getVitesse().setOrientation(vOrientation);
         }
     }
 
