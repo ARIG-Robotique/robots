@@ -27,7 +27,7 @@ public class AsservissementPosition implements IAsservissement {
     }
 
     @Override
-    public void process(final long timeStepMs) {
+    public void process(final long timeStepMs, boolean obstacleDetected) {
         // Rampe accel / decel
         ramp.setConsigneVitesse(cmd.getVitesse().getValue());
         ramp.setFrein(cmd.isFrein());

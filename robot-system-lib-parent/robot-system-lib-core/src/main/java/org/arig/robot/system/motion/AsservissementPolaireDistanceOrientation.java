@@ -66,7 +66,7 @@ public class AsservissementPolaireDistanceOrientation implements IAsservissement
     }
 
     @Override
-    public void process(final long timeStepMs) {
+    public void process(final long timeStepMs, boolean obstacleDetected) {
         final double distance;
         final double orientation;
 
@@ -74,7 +74,7 @@ public class AsservissementPolaireDistanceOrientation implements IAsservissement
         if (cmdRobot.isType(TypeConsigne.DIST) || cmdRobot.isType(TypeConsigne.XY)) {
             rampDistance.setConsigneVitesse(cmdRobot.getVitesse().getDistance());
             rampDistance.setFrein(cmdRobot.isFrein());
-            rampDistance.setBypass(cmdRobot.isBypassRampDistance());
+            rampDistance.setBypass(cmdRobot.isBypassRampDistance() || obstacleDetected);
             final double positionDistance = rampDistance.filter(cmdRobot.getConsigne().getDistance());
             pidDistance.setSampleTimeMs(timeStepMs);
             pidDistance.consigne(positionDistance);
@@ -87,7 +87,7 @@ public class AsservissementPolaireDistanceOrientation implements IAsservissement
         if (cmdRobot.isType(TypeConsigne.ANGLE) || cmdRobot.isType(TypeConsigne.XY)) {
             rampOrientation.setConsigneVitesse(cmdRobot.getVitesse().getOrientation());
             rampOrientation.setFrein(true);
-            rampOrientation.setBypass(cmdRobot.isBypassRampOrientation());
+            rampOrientation.setBypass(cmdRobot.isBypassRampOrientation() || obstacleDetected);
             final double positionOrientation = rampOrientation.filter(cmdRobot.getConsigne().getOrientation());
             pidOrientation.setSampleTimeMs(timeStepMs);
             pidOrientation.consigne(positionOrientation);

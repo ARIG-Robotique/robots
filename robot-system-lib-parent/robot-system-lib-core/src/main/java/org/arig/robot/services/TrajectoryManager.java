@@ -200,25 +200,15 @@ public class TrajectoryManager {
             long tAsserv = tCalcul1;
 
             // 2. Gestion de l'evittement
-            if (obstacleFound.get()) {
-                // Obstacle détecté, on stop les moteurs
-                stop();
+            // 2.A. Calcul des consignes
+            calculConsigne();
 
-                // Commande moteur null
-                cmdRobot.getMoteur().setDroit(0);
-                cmdRobot.getMoteur().setGauche(0);
-            } else {
-                // C. Pas d'obstacle, asservissement koi
-                // C.1. Calcul des consignes
-                calculConsigne();
+            tCalcul2 = System.nanoTime();
 
-                tCalcul2 = System.nanoTime();
+            // 2.B Asservissement sur les consignes
+            asservissementPolaire.process(timeStepMs, obstacleFound.get());
 
-                // C.2. Asservissement sur les consignes
-                asservissementPolaire.process(timeStepMs);
-
-                tAsserv = System.nanoTime();
-            }
+            tAsserv = System.nanoTime();
 
             // 3. Envoi aux moteurs
             propulsionsMotors.generateMouvement(cmdRobot.getMoteur().getGauche(), cmdRobot.getMoteur().getDroit());
@@ -248,7 +238,7 @@ public class TrajectoryManager {
      * -> b : Si dans fenêtre d'approche : consigne(n) = consigne(n - 1) - d(position)
      */
     private void calculConsigne() {
-        if (calageBordure.get()) {
+        if (calageBordure.get() || obstacleFound.get()) {
             // Un calage sur bordure est fait. On asservi sur place jusqu'au prochain mouvement
             cmdRobot.getConsigne().setDistance(0);
             cmdRobot.getConsigne().setOrientation(0);
@@ -403,8 +393,13 @@ public class TrajectoryManager {
     }
 
     private void gestionFlags() {
-        boolean distAtteint, orientAtteint, distApproche, orientApproche;
+        // Si on est en cours de gestion d'évitement, on ne raffraichit pas les flags.
+        // Si on les rafraichit, on va indiquer que l'on est en trajet atteint, hors ce n'est pas le cas.
+        if (obstacleFound.get()) {
+            return;
+        }
 
+        boolean distAtteint, orientAtteint, distApproche, orientApproche;
         // ------------------------------------------------------------------------------- //
         // Calcul du trajet atteints en mode freinage (toujours en DIST,ANGLE ici normale) //
         // ------------------------------------------------------------------------------- //

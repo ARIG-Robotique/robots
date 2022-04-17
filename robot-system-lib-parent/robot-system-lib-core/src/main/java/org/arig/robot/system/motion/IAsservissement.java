@@ -9,9 +9,11 @@ public interface IAsservissement {
 
     /**
      * Process.
+     *
      * @param timeStepMs
+     * @param obstacleDetected
      */
-    void process(long timeStepMs);
+    void process(long timeStepMs, boolean obstacleDetected);
 
     /**
      * Reset.

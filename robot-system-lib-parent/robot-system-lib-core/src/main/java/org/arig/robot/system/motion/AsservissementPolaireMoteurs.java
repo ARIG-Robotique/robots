@@ -61,7 +61,7 @@ public class AsservissementPolaireMoteurs implements IAsservissementPolaire {
     }
 
     @Override
-    public void process(final long timeStepMs) {
+    public void process(final long timeStepMs, boolean obstacleDetected) {
         final double positionDistance, positionOrientation;
 
         // Distance
