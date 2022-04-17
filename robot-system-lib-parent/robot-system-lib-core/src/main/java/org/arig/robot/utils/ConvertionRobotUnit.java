@@ -52,9 +52,9 @@ public final class ConvertionRobotUnit {
         pi2Pulse = degToPulse(360);
     }
 
-    public void entraxe(final double entraxe) {
-        this.entraxe = entraxe;
-        double countPerDeg = Math.PI * entraxe * countPerMm / 180;
+    public void entraxe(final double entraxeMm) {
+        this.entraxe = entraxeMm;
+        double countPerDeg = Math.PI * entraxeMm * countPerMm / 180;
         countPerDegree(countPerDeg);
     }
 

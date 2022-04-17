@@ -93,7 +93,7 @@ public class NerellCommonContext {
 
     @Bean
     public ConvertionRobotUnit convertisseur() {
-        return new ConvertionRobotUnit(NerellConstantesConfig.countPerMm, NerellConstantesConfig.entraxe, true);
+        return new ConvertionRobotUnit(NerellConstantesConfig.countPerMm, NerellConstantesConfig.countPerDeg);
     }
 
     @Bean
