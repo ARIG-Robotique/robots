@@ -214,6 +214,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                         mv.gotoPoint(getX(240), 1740);
                         mv.gotoPoint(getX(570), 1740);
                         groupService.initStep(InitStep.ODIN_DEVANT_GALERIE); // Odin calé, en attente devant la galerie
+                        mv.gotoPoint(getX(570), 1130);
                         ecranService.displayMessage("Attente calage Nerell");
                         groupService.waitInitStep(InitStep.NERELL_CALAGE_TERMINE); // Attente Nerell calé
                         ecranService.displayMessage("Mise en place");

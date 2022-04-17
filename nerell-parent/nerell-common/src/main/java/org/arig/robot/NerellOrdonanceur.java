@@ -220,13 +220,13 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 }
 
                 mv.avanceMM(150);
-                mv.gotoOrientationDeg(-90);
+                mv.gotoOrientationDeg(90);
 
                 ecranService.displayMessage("Attente Odin devant la galerie");
                 groupService.waitInitStep(InitStep.ODIN_DEVANT_GALERIE); // Odin calé, en attente devant la galerie
 
-                robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
-                mv.reculeMMSansAngle(1000);
+                robotStatus.enableCalageBordure(TypeCalage.AVANT);
+                mv.avanceMMSansAngle(1000);
 
                 if (!io.auOk()) {
                     ecranService.displayMessage("Echappement calage bordure car mauvais sens", LogLevel.ERROR);
@@ -236,9 +236,9 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 groupService.initStep(InitStep.NERELL_CALAGE_TERMINE); // Nerell calé
 
                 position.getPt().setY(conv.mmToPulse(2000 - NerellConstantesConfig.dstCallage));
-                position.setAngle(conv.degToPulse(-90));
+                position.setAngle(conv.degToPulse(90));
 
-                mv.avanceMM(150);
+                mv.reculeMM(150);
             }
         } catch (AvoidingException e) {
             ecranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
