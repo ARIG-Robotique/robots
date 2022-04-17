@@ -44,8 +44,8 @@ public interface NerellConstantesConfig {
     double countPerDeg = 134.1977777777778; // 10 tours
     //double countPerDeg = ; // 25 tours
 
-    double coefCodeurDroit = 1.0;
-    double coefCodeurGauche = 1.0;
+    double coefCodeurDroit = 0.9913681958125206;
+    double coefCodeurGauche = 1.0086318041874798;
 
     // ------------------------ //
     // Configuration des rampes //
