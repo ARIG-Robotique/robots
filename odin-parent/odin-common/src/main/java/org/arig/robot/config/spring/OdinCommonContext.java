@@ -92,7 +92,7 @@ public class OdinCommonContext {
 
     @Bean
     public ConvertionRobotUnit convertisseur() {
-        return new ConvertionRobotUnit(OdinConstantesConfig.countPerMm, OdinConstantesConfig.entraxe, true);
+        return new ConvertionRobotUnit(OdinConstantesConfig.countPerMm, OdinConstantesConfig.countPerDeg);
     }
 
     @Bean

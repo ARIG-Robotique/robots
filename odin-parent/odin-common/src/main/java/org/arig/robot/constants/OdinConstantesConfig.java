@@ -31,21 +31,21 @@ public interface OdinConstantesConfig {
     // Configuration des convertions //
     // ----------------------------- //
 
-    double entraxe = 280;
+    //double entraxe = 280;
 
     // Diam 47mm => périmètre 147.655 mm
     // 4096 p => 147.65485471872 mm : 4096 / 147.65485471872000000 = 27.74036795337890000
-    double countPerMm = 27.74036795337890000; // Théorique
-    //double countPerMm = ; // Manuel 2700 -> mesure 2720 depuis le théorique
+    //double countPerMm = 27.74036795337890000; // Théorique
+    double countPerMm = 27.556656907330034; // Manuel 2700 -> mesure 2718 depuis le théorique
 
     // Entraxe 280mm => périmètre 879.64594300514200000 mm (1 roue)
     // 879.64594300514200000 mm => 180° : 879.64594300514200000 * 27.74036795337890000 / 180 =
     //double countPerDeg = 135.56501182033100000; // Théorique
-    //double countPerDeg = 133.9513888888889; // 5 tours
-    //double countPerDeg = 133.98916666666668; // 10 tours
+    //double countPerDeg = 133.86663837508056; // 5 tours
+    double countPerDeg = 133.86778649410599; // 10 tours
 
     double coefCodeurDroit = 1.0;
-    double coefCodeurGauche = 1.0;
+    double coefCodeurGauche = (0.9989161414636104 + 0.998509395055139) / 2;
 
     // ------------------------ //
     // Configuration des rampes //

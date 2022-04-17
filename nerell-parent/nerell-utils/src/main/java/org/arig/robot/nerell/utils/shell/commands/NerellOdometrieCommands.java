@@ -250,7 +250,7 @@ public class NerellOdometrieCommands {
 
         rs.disableAsserv();
 
-        log.info("Pour upgrade il faut calculer : {} * (MESURE_MM / {})", convRobot.countPerMm(), distanceCmd);
+        log.info("Pour upgrade il faut calculer : {} * ({} / MESURE_MM)", convRobot.countPerMm(), distanceCmd);
         log.info("Pour le calcule la méthode 'odometrie-distance-manuel-reglage --distance-cmd {} --mesure-mm <value>' peut être utilisée", distanceCmd);
     }
     @ShellMethod("Réglage distance (manuelle) - Application du nouveau paramètre de conversion")
