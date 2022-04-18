@@ -59,7 +59,6 @@ public class CalageBordureService {
 
             if (doneAvant || doneArriere || doneCustom) {
                 trajectoryManager.calageBordureDone();
-                rs.disableCalageBordure();
             }
         }
     }

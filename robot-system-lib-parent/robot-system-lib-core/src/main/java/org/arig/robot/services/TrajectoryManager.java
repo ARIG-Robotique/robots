@@ -14,10 +14,7 @@ import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
-import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.model.enums.SensDeplacement;
-import org.arig.robot.model.enums.SensRotation;
-import org.arig.robot.model.enums.TypeConsigne;
+import org.arig.robot.model.enums.*;
 import org.arig.robot.model.monitor.AbstractMonitorMouvement;
 import org.arig.robot.model.monitor.MonitorMouvementPath;
 import org.arig.robot.model.monitor.MonitorMouvementRotation;
@@ -1025,6 +1022,7 @@ public class TrajectoryManager {
 
     public void calageBordureDone() {
         calageBordure.set(true);
+        rs.disableCalageBordure();
     }
 
     public void refreshPathFinding() {
@@ -1049,7 +1047,12 @@ public class TrajectoryManager {
     private void checkCancelMouvement() throws MovementCancelledException {
         if (cancelMouvement.get()) {
             cancelMouvement.set(false);
-            throw new MovementCancelledException();
+
+            if (rs.calageBordure().contains(TypeCalage.FORCE)) {
+                calageBordureDone();
+            } else {
+                throw new MovementCancelledException();
+            }
         }
     }
 }
