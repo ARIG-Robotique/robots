@@ -42,8 +42,6 @@ public class EchappementCoinDeTable extends AbstractEurobotAction {
     @Override
     public void execute() {
         try {
-            rs.enableAvoidance();
-
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             if (step == 0) {
                 mv.pathTo(getX(520), 370);

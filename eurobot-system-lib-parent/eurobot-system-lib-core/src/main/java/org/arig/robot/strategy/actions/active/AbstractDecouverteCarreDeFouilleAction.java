@@ -67,8 +67,6 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
     @Override
     public void execute() {
         try {
-            rs.enableAvoidance();
-
             double yRef = -1.0;
             do {
                 CarreFouille carreFouille = cf();

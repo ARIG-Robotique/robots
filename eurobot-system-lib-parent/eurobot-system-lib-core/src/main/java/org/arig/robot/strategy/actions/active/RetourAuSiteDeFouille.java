@@ -82,7 +82,6 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
             log.info("Go site de fouille : {}", gotoSite);
             group.siteDeRetour(gotoSite);
 
-            rs.enableAvoidance();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
             group.siteDeRetour(destSite);

@@ -48,7 +48,7 @@ public class PoussetteSiteEchantillonsEquipe extends AbstractEurobotAction {
     @Override
     public void execute() {
         try {
-            rs.enableAvoidance();
+            rs.enableAvoidance(); // Seul le path l'active par défaut
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.gotoPoint(entryPoint());
             mv.gotoPoint(getX(1380), 1320);
