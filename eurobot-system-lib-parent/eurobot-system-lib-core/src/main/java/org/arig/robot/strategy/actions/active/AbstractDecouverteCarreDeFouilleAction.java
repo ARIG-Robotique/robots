@@ -104,7 +104,11 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                     log.info("Calage terminé, yRef = {}", yRef);
                 } else {
                     log.info("Calage déjà effectué, on se place au point de départ #{} - X={} ; Y={}", carreFouille.numero(), carreFouille.getX(), yRef);
-                    mv.gotoPoint(carreFouille.getX(), yRef, rs.team() == Team.JAUNE ? GotoOption.AVANT : GotoOption.ARRIERE);
+                    GotoOption sens = GotoOption.AVANT;
+                    if ((rs.team() == Team.JAUNE && isReverse()) || (rs.team() == Team.VIOLET && !isReverse())) {
+                        sens = GotoOption.ARRIERE;
+                    }
+                    mv.gotoPoint(carreFouille.getX(), yRef, sens);
                 }
                 mv.gotoOrientationDeg(0);
                 commonServosService.carreFouilleOhmmetreOuvert(false);
@@ -165,12 +169,15 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
     }
 
     private CarreFouille cf() {
-        boolean reverse = rs.strategy() != Strategy.BASIC;
-        return rs.nextCarreDeFouille(nbTry, reverse);
+        return rs.nextCarreDeFouille(nbTry, isReverse());
     }
 
     private boolean basculable(CouleurCarreFouille couleur) {
         return (couleur == CouleurCarreFouille.JAUNE && rs.team() == Team.JAUNE) ||
                 (couleur == CouleurCarreFouille.VIOLET && rs.team() == Team.VIOLET);
+    }
+
+    private boolean isReverse() {
+        return rs.strategy() != Strategy.BASIC;
     }
 }
