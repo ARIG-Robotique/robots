@@ -235,7 +235,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
                 groupService.initStep(InitStep.NERELL_CALAGE_TERMINE); // Nerell calé
 
-                position.getPt().setY(conv.mmToPulse(2000 - NerellConstantesConfig.dstCallage));
+                position.getPt().setY(conv.mmToPulse(EurobotConfig.tableHeight - NerellConstantesConfig.dstCallage));
                 position.setAngle(conv.degToPulse(90));
 
                 mv.reculeMM(50);

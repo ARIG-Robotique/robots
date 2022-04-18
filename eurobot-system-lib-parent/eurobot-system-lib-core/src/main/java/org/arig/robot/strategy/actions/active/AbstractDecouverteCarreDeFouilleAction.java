@@ -83,19 +83,13 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                     mv.pathTo(start);
 
                     mv.gotoOrientationDeg(-90);
+                    mv.avanceMM(start.getY() - 10);
+
                     rs.enableCalageBordure(TypeCalage.AVANT);
                     mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
-                    mv.avanceMMSansAngle(300);
-
-                    final double robotY = position.getPt().getY();
-                    final double realY = conv.mmToPulse(robotConfig.distanceCalageAvant());
-                    if (Math.abs(realY - robotY) > conv.mmToPulse(10)) {
-                        log.warn("RECALAGE REQUIS : yRobot = {} ; yReel = {}",
-                                conv.pulseToMm(robotY), conv.pulseToMm(realY));
-
-                        position.getPt().setY(realY);
-                        position.setAngle(conv.degToPulse(-90));
-                    }
+                    mv.avanceMMSansAngle(30);
+                    checkRecalageYmm(robotConfig.distanceCalageAvant());
+                    checkRecalageAngleDeg(-90);
 
                     mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
                     mv.reculeMM(70);

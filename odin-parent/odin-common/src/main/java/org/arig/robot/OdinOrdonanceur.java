@@ -188,7 +188,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                     throw new ExitProgram(true);
                 }
 
-                position.getPt().setY(conv.mmToPulse(2000 - OdinConstantesConfig.dstCallage));
+                position.getPt().setY(conv.mmToPulse(EurobotConfig.tableHeight - OdinConstantesConfig.dstCallage));
                 position.setAngle(conv.degToPulse(90));
 
                 mv.reculeMM(50);

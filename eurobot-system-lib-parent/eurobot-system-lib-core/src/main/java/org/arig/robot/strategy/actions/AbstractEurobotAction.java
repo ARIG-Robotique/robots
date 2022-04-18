@@ -1,5 +1,6 @@
 package org.arig.robot.strategy.actions;
 
+import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.Position;
@@ -17,6 +18,7 @@ import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+@Slf4j
 public abstract class AbstractEurobotAction extends AbstractAction {
 
     @Autowired
@@ -57,5 +59,35 @@ public abstract class AbstractEurobotAction extends AbstractAction {
     protected boolean remainingTimeValid() {
         int time = robotName.id() == RobotIdentification.NERELL ? EurobotConfig.validRetourSiteDeFouilleRemainingTimeNerell : EurobotConfig.validRetourSiteDeFouilleRemainingTimeOdin;
         return rs.getRemainingTime() > time;
+    }
+
+    protected void checkRecalageXmm(double realXmm) {
+        final double robotX = position.getPt().getX();
+        final double realX = conv.mmToPulse(realXmm);
+        if (Math.abs(realX - robotX) > conv.mmToPulse(10)) {
+            log.warn("RECALAGE X REQUIS (diff > 10 mm) : xRobot = {} mm ; xReel = {} mm",
+                    conv.pulseToMm(robotX), realXmm);
+            position.getPt().setX(realX);
+        }
+    }
+
+    protected void checkRecalageYmm(double realYmm) {
+        final double robotY = position.getPt().getY();
+        final double realY = conv.mmToPulse(realYmm);
+        if (Math.abs(realY - robotY) > conv.mmToPulse(10)) {
+            log.warn("RECALAGE Y REQUIS (diff > 10 mm) : yRobot = {} mm ; yReel = {} mm",
+                    conv.pulseToMm(robotY), realYmm);
+            position.getPt().setY(realY);
+        }
+    }
+
+    protected void checkRecalageAngleDeg(double realAdeg) {
+        final double robotA = position.getAngle();
+        final double realA = conv.degToPulse(realAdeg);
+        if (Math.abs(realA - robotA) > conv.degToPulse(2)) {
+            log.warn("RECALAGE ANGLE REQUIS (> 2°) : aRobot = {} ; aReel = {}",
+                    conv.pulseToDeg(robotA), realAdeg);
+            position.setAngle(realA);
+        }
     }
 }
