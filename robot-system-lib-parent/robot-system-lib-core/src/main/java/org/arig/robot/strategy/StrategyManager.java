@@ -56,8 +56,8 @@ public class StrategyManager {
         if (!nextAction.isPresent()) {
             if (rs.currentAction() != null) {
                 log.warn("0/{} actions disponible pour le moment", actionsCount());
+                group.setCurrentAction(null);
             }
-            group.setCurrentAction(null);
             return;
         }
 
