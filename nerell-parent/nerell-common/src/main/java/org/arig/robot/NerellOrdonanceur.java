@@ -219,7 +219,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                     position.setAngle(conv.degToPulse(180));
                 }
 
-                mv.avanceMM(150);
+                mv.avanceMM(50);
                 mv.gotoOrientationDeg(90);
 
                 ecranService.displayMessage("Attente Odin devant la galerie");
@@ -238,7 +238,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 position.getPt().setY(conv.mmToPulse(2000 - NerellConstantesConfig.dstCallage));
                 position.setAngle(conv.degToPulse(90));
 
-                mv.reculeMM(150);
+                mv.reculeMM(50);
             }
         } catch (AvoidingException e) {
             ecranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
