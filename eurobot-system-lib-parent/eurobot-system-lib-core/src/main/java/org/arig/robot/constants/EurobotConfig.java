@@ -17,6 +17,9 @@ public interface EurobotConfig {
     int validRetourSiteDeFouilleRemainingTimeNerell = 15000;
     int validRetourSiteDeFouilleRemainingTimeOdin = 12000;
 
+    // Config activation vitrine sans statuette
+    int validActivationVitrineRemainingTime = 30000;
+
     // Options de match
     String STATUETTE_PRESENTE = "Statuette présente";
     String VITRINE_PRESENTE = "Vitrine présente";
