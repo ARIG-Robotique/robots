@@ -151,12 +151,9 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
             nbTry++;
-            if (rs.zoneDeFouilleComplete()) {
-                complete();
-            }
-
             commonServosService.carreFouillePoussoirFerme(true);
             commonServosService.carreFouilleOhmmetreFerme(false);
+            refreshCompleted();
         }
     }
 
