@@ -34,7 +34,7 @@ public class SemiCompleteAvoidingService extends AbstractAvoidingService {
             }
 
             if (stopWatch.getTime(TimeUnit.MILLISECONDS) > robotConfig.avoidanceWaitTimeMs()) {
-                log.warn("L'obstacle n'est pas parti après 1sec, recherche d'un nouveau chemin");
+                log.warn("L'obstacle n'est pas parti après {} ms, recherche d'un nouveau chemin", robotConfig.avoidanceWaitTimeMs());
 
                 lidarService.refreshObstacles();
                 trajectoryManager.refreshPathFinding();

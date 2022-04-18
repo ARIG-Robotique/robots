@@ -118,7 +118,7 @@ public interface OdinConstantesConfig {
     // Paramètre Avoiding service //
     // -------------------------- //
 
-    int avoidanceWaitTimeMs = 1000;
+    int avoidanceWaitTimeMs = 500;
     int avoidancePathRefreshTimeMs = 2000;
 
     // ---------------------- //
