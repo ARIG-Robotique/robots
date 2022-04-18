@@ -286,13 +286,17 @@ class RobotGroupServiceTest {
     @Test
     void testStatuettePris() {
         Assertions.assertFalse(statusPrimary.statuettePris());
+        Assertions.assertFalse(statusPrimary.statuettePrisDansCeRobot());
         Assertions.assertFalse(statusSecondary.statuettePris());
+        Assertions.assertFalse(statusSecondary.statuettePrisDansCeRobot());
 
         rgServicePrimary.statuettePris();
         ThreadUtils.sleep(WAIT);
 
         Assertions.assertTrue(statusPrimary.statuettePris());
+        Assertions.assertTrue(statusPrimary.statuettePrisDansCeRobot());
         Assertions.assertTrue(statusSecondary.statuettePris());
+        Assertions.assertFalse(statusSecondary.statuettePrisDansCeRobot());
     }
 
     @Test

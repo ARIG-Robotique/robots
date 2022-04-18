@@ -99,11 +99,16 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         this.vitrineActive = vitrineActive;
     }
 
+    @Setter(AccessLevel.NONE)
     private boolean statuettePris = false;
 
-    public void statuettePris(boolean statuettePris) {
-        log.info("[RS] statuette pris : {}", statuettePris);
+    @Setter(AccessLevel.NONE)
+    private boolean statuettePrisDansCeRobot = false;
+
+    public void statuettePris(boolean statuettePris, boolean statuettePrisDansCeRobot) {
+        log.info("[RS] statuette pris : {} / Dans ce robot : {}", statuettePris, statuettePrisDansCeRobot);
         this.statuettePris = statuettePris;
+        this.statuettePrisDansCeRobot = statuettePrisDansCeRobot;
     }
 
     private boolean statuetteDansVitrine = false;

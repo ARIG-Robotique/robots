@@ -119,7 +119,7 @@ public class RobotGroupService implements RobotGroup.Handler {
                 rs.vitrineActive(true);
                 break;
             case STATUETTE_PRIS:
-                rs.statuettePris(true);
+                rs.statuettePris(true, false);
                 break;
             case STATUETTE_DANS_VITRINE:
                 rs.statuetteDansVitrine(true);
@@ -295,7 +295,7 @@ public class RobotGroupService implements RobotGroup.Handler {
     }
 
     public void statuettePris() {
-        rs.statuettePris(true);
+        rs.statuettePris(true, true);
         sendEvent(StatusEvent.STATUETTE_PRIS);
     }
 
