@@ -177,11 +177,13 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                     position.setAngle(conv.degToPulse(180));
                 }
 
-                mv.avanceMM(50);
+                mv.avanceMM(70);
                 mv.gotoOrientationDeg(90);
 
                 robotStatus.enableCalageBordure(TypeCalage.AVANT);
-                mv.avanceMMSansAngle(400);
+                mv.avanceMM(400);
+                robotStatus.enableCalageBordure(TypeCalage.AVANT);
+                mv.avanceMMSansAngle(100);
 
                 if (!io.auOk()) {
                     ecranService.displayMessage("Echappement calage bordure car mauvais sens", LogLevel.ERROR);
@@ -191,7 +193,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 position.getPt().setY(conv.mmToPulse(EurobotConfig.tableHeight - OdinConstantesConfig.dstCallage));
                 position.setAngle(conv.degToPulse(90));
 
-                mv.reculeMM(50);
+                mv.reculeMM(70);
             }
         } catch (AvoidingException e) {
             ecranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);

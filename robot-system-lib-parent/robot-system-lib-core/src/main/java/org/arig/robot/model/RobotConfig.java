@@ -63,10 +63,10 @@ public class RobotConfig {
     /**
      * Pour un nombre entre 0 et 100 retourne une vitesse proportionnelle entre min et max
      *
-     * @param value Pourcentage de la vitesse
+     * @param percent Pourcentage de la vitesse
      */
-    public long vitesse(int value) {
-        double pct = (double) value / 100;
+    public long vitesse(int percent) {
+        double pct = (double) percent / 100;
         return (long) (((vitesseMax - vitesseMin) * pct) + vitesseMin);
     }
 
@@ -83,9 +83,11 @@ public class RobotConfig {
 
     /**
      * Pour un nombre en 0 et 100 retourne une vitesse proportionnelle entre min et max
+     *
+     *  @param percent Pourcentage de la vitesse
      */
-    public long vitesseOrientation(int value) {
-        double pct = (double) value / 100;
+    public long vitesseOrientation(int percent) {
+        double pct = (double) percent / 100;
         return (long) (((vitesseOrientationMax - vitesseOrientationMin) * pct) + vitesseOrientationMin);
     }
 
