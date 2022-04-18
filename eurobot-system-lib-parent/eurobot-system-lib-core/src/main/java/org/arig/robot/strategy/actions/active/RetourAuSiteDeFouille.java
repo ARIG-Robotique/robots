@@ -11,6 +11,8 @@ import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Component;
 
+import java.awt.geom.Rectangle2D;
+
 @Slf4j
 @Component
 public class RetourAuSiteDeFouille extends AbstractEurobotAction {
@@ -73,6 +75,9 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
     @Override
     public void execute() {
         try {
+            // On ignore toute la zone de fouille
+            tableUtils.addDynamicDeadZone(new Rectangle2D.Double(pointCentre().getX() - OFFSET, pointCentre().getY() - OFFSET, 2 * OFFSET, 2 * OFFSET));
+
             final Point entry = entryPoint();
             log.info("Go site de fouille : {}", gotoSite);
             group.siteDeRetour(gotoSite);
