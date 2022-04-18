@@ -182,6 +182,7 @@ public class RobotGroupService implements RobotGroup.Handler {
 
     @Override
     public void setCurrentAction(String name) {
+        rs.currentAction(name);
         if (StringUtils.isBlank(name)) {
             sendEvent(StatusEvent.CURRENT_ACTION);
         } else {

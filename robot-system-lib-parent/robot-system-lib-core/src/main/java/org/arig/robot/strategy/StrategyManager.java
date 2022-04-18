@@ -57,13 +57,11 @@ public class StrategyManager {
             if (rs.currentAction() != null) {
                 log.warn("0/{} actions disponible pour le moment", actionsCount());
             }
-            rs.currentAction(null);
             group.setCurrentAction(null);
             return;
         }
 
         final Action action = nextAction.get();
-        rs.currentAction(action.name());
         group.setCurrentAction(action.name());
         log.info("Execution de l'action {}", action.name());
         tableUtils.clearDynamicDeadZones();
