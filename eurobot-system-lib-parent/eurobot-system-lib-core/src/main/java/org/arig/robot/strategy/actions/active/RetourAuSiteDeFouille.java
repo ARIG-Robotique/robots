@@ -75,8 +75,15 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
     @Override
     public void execute() {
         try {
-            // On ignore toute la zone de fouille
-            tableUtils.addDynamicDeadZone(new Rectangle2D.Double(pointCentre().getX() - OFFSET, pointCentre().getY() - OFFSET, 2 * OFFSET, 2 * OFFSET));
+            // On ignore toute la zone de fouille + un peut pour l'épaisseur du mat
+            tableUtils.addDynamicDeadZone(
+                new Rectangle2D.Double(
+                    pointCentre().getX() - OFFSET - 50,
+                    pointCentre().getY() - OFFSET - 50 ,
+                    2 * (OFFSET + 50),
+                    2 * (OFFSET + 40)
+                )
+            );
 
             final Point entry = entryPoint();
             log.info("Go site de fouille : {}", gotoSite);
