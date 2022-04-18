@@ -265,7 +265,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     }
 
     private int scoreRetourAuSite() {
-        if ((twoRobots() && siteDeRetour.isInSite() && siteDeRetourAutreRobot.isInSite() && siteDeRetour == siteDeRetourAutreRobot)
+        if ((twoRobots() && siteDeRetour.isInSite() && siteDeRetourAutreRobot.isInSite())
                 || (!twoRobots() && siteDeRetour.isInSite())) {
             return 20;
         }
