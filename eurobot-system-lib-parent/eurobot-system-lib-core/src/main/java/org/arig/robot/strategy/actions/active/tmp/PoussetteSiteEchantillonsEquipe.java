@@ -53,7 +53,7 @@ public class PoussetteSiteEchantillonsEquipe extends AbstractEurobotAction {
             mv.gotoPoint(entryPoint());
             mv.gotoPoint(getX(1380), 1320);
             mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 0 : 180);
-            commonServosService.groupeArriereOuvert(true);
+            commonServosService.groupeMoustacheOuvert(true);
 
             mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
             mv.gotoPoint(getX(480), 1320, GotoOption.ARRIERE);
@@ -65,7 +65,7 @@ public class PoussetteSiteEchantillonsEquipe extends AbstractEurobotAction {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
 
         } finally {
-            commonServosService.groupeArriereFerme(false);
+            commonServosService.groupeMoustacheFerme(false);
             complete();
         }
     }

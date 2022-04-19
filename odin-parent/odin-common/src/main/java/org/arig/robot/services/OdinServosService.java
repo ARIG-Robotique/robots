@@ -117,6 +117,11 @@ public class OdinServosService extends AbstractCommonServosService {
                 .addServo(moustacheDroite)
                 .batch(POS_OUVERT)
                 .batch(POS_FERME);
+        group(GROUP_MOUSTACHE_ID, GROUP_MOUSTACHE)
+                .addServo(moustacheGauche)
+                .addServo(moustacheDroite)
+                .batch(POS_OUVERT)
+                .batch(POS_FERME);
     }
 
     @Override

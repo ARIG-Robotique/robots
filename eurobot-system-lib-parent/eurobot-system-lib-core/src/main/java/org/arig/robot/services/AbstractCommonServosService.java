@@ -34,12 +34,14 @@ public abstract class AbstractCommonServosService extends AbstractServosService 
     protected static final String GROUP_BRAS_MESURE = "Bras mesure";
     protected static final String GROUP_STATUETTE = "Statuette / Replique";
     protected static final String GROUP_ARRIERE = "Arrière";
+    protected static final String GROUP_MOUSTACHE = "Moustache";
 
     protected static final byte GROUP_BRAS_BAS_ID = 1;
     protected static final byte GROUP_BRAS_HAUT_ID = 2;
     protected static final byte GROUP_BRAS_MESURE_ID = 3;
     protected static final byte GROUP_STATUETTE_ID = 4;
     protected static final byte GROUP_ARRIERE_ID = 5;
+    protected static final byte GROUP_MOUSTACHE_ID = 6;
 
     /* **************************************** */
     /* Méthode pour le positionnement d'origine */
@@ -68,6 +70,13 @@ public abstract class AbstractCommonServosService extends AbstractServosService 
 
     public void groupeArriereFerme(boolean wait) {
         setPositionBatch(GROUP_ARRIERE, POS_FERME, wait);
+    }
+
+    public void groupeMoustacheOuvert(boolean wait) {
+        setPositionBatch(GROUP_MOUSTACHE, POS_OUVERT, wait);
+    }
+    public void groupeMoustacheFerme(boolean wait) {
+        setPositionBatch(GROUP_MOUSTACHE, POS_FERME, wait);
     }
 
     //*******************************************//
