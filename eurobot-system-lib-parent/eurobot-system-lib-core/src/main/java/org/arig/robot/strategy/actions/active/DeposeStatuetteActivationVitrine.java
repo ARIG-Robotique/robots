@@ -5,7 +5,6 @@ import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.SiteDeRetour;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
