@@ -108,5 +108,4 @@ public class NerellServosService extends AbstractCommonServosService {
                 .batch(POS_OUVERT)
                 .batch(POS_FERME);
     }
-
 }

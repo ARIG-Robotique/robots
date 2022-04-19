@@ -11,7 +11,6 @@ import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.NerellEcranService;
 import org.arig.robot.services.NerellIOService;
-import org.arig.robot.services.NerellPincesAvantService;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,15 +43,6 @@ public class NerellTasksScheduler {
 
     @Autowired
     private AbstractEnergyService energyService;
-
-    @Autowired
-    private NerellPincesAvantService pincesAvant;
-
-    private final StopWatch timerLectureCouleur = new StopWatch();
-
-    private final SignalEdgeFilter risingEnablePinces = new SignalEdgeFilter(false, Type.RISING);
-    private final ChangeFilter<Boolean> changeModeForce = new ChangeFilter<>(false);
-    private final SignalEdgeFilter fallingEnablePinces = new SignalEdgeFilter(false, Type.FALLING);
 
     @Scheduled(fixedRate = 1000)
     public void ecranTask() {
@@ -97,31 +87,6 @@ public class NerellTasksScheduler {
         } else {
             baliseService.startDetection();
             baliseService.updateStatus();
-        }
-    }
-
-    @Scheduled(fixedDelay = 200)
-    public void pincesTask() {
-        boolean pincesAvantEnabled = rs.pincesAvantEnabled();
-        boolean pincesAvantForceMode = rs.pincesAvantForceOn();
-
-        if (Boolean.TRUE.equals(risingEnablePinces.filter(pincesAvantEnabled))
-            || (pincesAvantEnabled && changeModeForce.filter(pincesAvantForceMode))) {
-            pincesAvant.activate();
-        } else if (Boolean.TRUE.equals(fallingEnablePinces.filter(pincesAvantEnabled))) {
-            pincesAvant.deactivate();
-        }
-
-        if (pincesAvantEnabled) {
-            if (pincesAvant.process()) {
-                timerLectureCouleur.reset();
-                timerLectureCouleur.start();
-            }
-
-            if (timerLectureCouleur.getTime(TimeUnit.MILLISECONDS) > NerellConstantesConfig.TIME_BEFORE_READ_COLOR) {
-                timerLectureCouleur.reset();
-                pincesAvant.processCouleur();
-            }
         }
     }
 }
