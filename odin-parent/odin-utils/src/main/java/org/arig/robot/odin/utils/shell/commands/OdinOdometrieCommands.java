@@ -288,12 +288,17 @@ public class OdinOdometrieCommands {
             currentPosition.updatePosition(0, 0, 0);
             trajectoryManager.setVitesse(100, 1000);
             trajectoryManager.avanceMM(100);
-            trajectoryManager.setVitesse(1000, 100);
-            trajectoryManager.tourneDeg(360 * (first ? nbCycle : -nbCycle));
-            trajectoryManager.gotoOrientationDeg(0);
-            rs.enableCalageBordure(TypeCalage.ARRIERE);
+            trajectoryManager.setVitesse(1000, 200);
+            for (int cycle = 0; cycle < nbCycle; cycle++) {
+                log.info(LOG_CYCLE, cycle + 1, nbCycle);
+                trajectoryManager.tourneDeg(360 * (first ? 1 : -1));
+                trajectoryManager.gotoOrientationDeg(0);
+            }
             trajectoryManager.setVitesse(100, 1000);
-            trajectoryManager.reculeMMSansAngle(500);
+            rs.enableCalageBordure(TypeCalage.ARRIERE);
+            trajectoryManager.reculeMM(90);
+            rs.enableCalageBordure(TypeCalage.ARRIERE);
+            trajectoryManager.reculeMMSansAngle(30);
 
             rs.disableForceMonitoring();
             ThreadUtils.sleep(3000); // Stabilisation
