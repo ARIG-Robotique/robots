@@ -20,8 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 
-    private static final int WAIT_READ_OHMMETRE_MS = 100;
-    private static final int WAIT_READ_BASCULE_MS = 100;
+    private static final int WAIT_READ_OHMMETRE_MS = 10; // 5 itération de 2ms (polling carte lecture ohmmetre)
+    private static final int WAIT_READ_BASCULE_MS = 60; // 3 x i2cReadTime
 
     @Autowired
     private CarreFouilleReader cfReader;
@@ -68,13 +68,16 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
     public void execute() {
         try {
             double yRef = -1.0;
+            double deltaX = 0;
+            boolean calageBordure = false;
+            boolean calageCarreFouille = false;
             do {
                 CarreFouille carreFouille = cf();
                 carreFouille.incrementTry();
                 log.info("Traitement carré de fouille #{} {}", carreFouille.numero(), carreFouille.couleur());
 
-                // Calage requis
-                if (yRef == -1.0) {
+                if (!calageBordure) {
+                    // Calage bordure requis
                     final Point start = entryPoint(carreFouille);
                     log.info("Calage requis, on se place au point de départ : #{} - X={}", carreFouille.numero(), start.getX());
                     mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
@@ -85,24 +88,50 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                     rs.enableCalageBordure(TypeCalage.AVANT);
                     mv.avanceMM(start.getY() - robotConfig.distanceCalageAvant() - 10);
                     rs.enableCalageBordure(TypeCalage.AVANT);
-                    mv.avanceMMSansAngle(20);
-                    checkRecalageYmm(robotConfig.distanceCalageAvant());
-                    checkRecalageAngleDeg(-90);
+                    mv.avanceMMSansAngle(40);
+                    //checkRecalageYmm(robotConfig.distanceCalageAvant());
+                    //checkRecalageAngleDeg(-90);
 
                     mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
                     mv.reculeMM(70);
+                    mv.tourneDeg(90);
 
                     yRef = conv.pulseToMm(position.getPt().getY());
-                    log.info("Calage terminé, yRef = {}", yRef);
+                    log.info("Calage bordure terminé, yRef = {} mm", yRef);
+                    calageBordure = true;
+                }
+
+                if (!calageCarreFouille && carreFouille.needRead()) {
+                    log.info("Calage carré de fouille requis");
+                    mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+
+                    // On est censé avoir un carré de fouille
+                    boolean presence;
+                    int wait = 0;
+                    int sleepTimeMs = 5;
+                    do {
+                        ThreadUtils.sleep(sleepTimeMs);
+                        presence = commonIOService.presenceCarreFouille(true);
+                        wait += sleepTimeMs;
+                    } while(!presence && wait < WAIT_READ_BASCULE_MS);
+
+                    rs.enableCalageBordure(TypeCalage.LATTERAL_DROIT);
+                    mv.avanceMM(60);
+                    mv.reculeMM(40); // Distance calage au capteur
+
+                    double currentX = conv.pulseToMm(position.getPt().getX());
+                    deltaX = currentX - carreFouille.getX();
+                    log.info("On a déplacé le robot de {} mm (delta X)", deltaX);
+                    calageCarreFouille = true;
                 } else {
-                    log.info("Calage déjà effectué, on se place au point de départ #{} - X={} ; Y={}", carreFouille.numero(), carreFouille.getX(), yRef);
+                    log.info("Position carre de fouille #{} - X={} ; Y={}", carreFouille.numero(), carreFouille.getX(), yRef);
                     GotoOption sens = GotoOption.AVANT;
                     if ((rs.team() == Team.JAUNE && isReverse()) || (rs.team() == Team.VIOLET && !isReverse())) {
                         sens = GotoOption.ARRIERE;
                     }
-                    mv.gotoPoint(carreFouille.getX(), yRef, sens);
+                    mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+                    mv.gotoPoint(carreFouille.getX() + deltaX, yRef, sens, GotoOption.SANS_ORIENTATION);
                 }
-                mv.gotoOrientationDeg(0);
                 commonServosService.carreFouilleOhmmetreOuvert(false);
 
                 if (commonIOService.presenceCarreFouille(true)) {
