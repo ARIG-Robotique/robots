@@ -118,4 +118,20 @@ public abstract class AbstractCommonServosService extends AbstractServosService 
     public void langueOuvert(boolean wait) {
         setPosition(LANGUE, POS_OUVERT, wait);
     }
+
+    public void moustacheGaucheFerme(boolean wait) {
+        setPosition(MOUSTACHE_GAUCHE, POS_FERME, wait);
+    }
+
+    public void moustacheGaucheOuvert(boolean wait) {
+        setPosition(MOUSTACHE_GAUCHE, POS_OUVERT, wait);
+    }
+
+    public void moustacheDroiteFerme(boolean wait) {
+        setPosition(MOUSTACHE_DROITE, POS_FERME, wait);
+    }
+
+    public void moustacheDroiteOuvert(boolean wait) {
+        setPosition(MOUSTACHE_DROITE, POS_OUVERT, wait);
+    }
 }

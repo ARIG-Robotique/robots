@@ -69,12 +69,12 @@ public class NerellServosService extends AbstractCommonServosService {
                 .addServo(brasHautPoignet);
 
         Servo carreFouilleOhmmetre = servo(CARRE_FOUILLE_OHMMETRE_ID, CARRE_FOUILLE_OHMMETRE)
-                .time(500)
+                .time(225)
                 .position(POS_FERME, 2210)
                 .position(POS_OUVERT, 1770)
                 .position(POS_MESURE, 1570);
         Servo carreFouillePoussoir = servo(CARRE_FOUILLE_POUSSOIR_ID, CARRE_FOUILLE_POUSSOIR)
-                .time(500)
+                .time(250)
                 .position(POS_FERME, 450)
                 .position(POS_POUSSETTE, 1050);
         group(GROUP_BRAS_MESURE_ID, GROUP_BRAS_MESURE)
@@ -82,22 +82,22 @@ public class NerellServosService extends AbstractCommonServosService {
                 .addServo(carreFouillePoussoir);
 
         Servo fourcheStatuette = servo(FOURCHE_STATUETTE_ID, FOURCHE_STATUETTE)
-                .time(500)
+                .time(475)
                 .position(POS_FERME, 2270)
                 .position(POS_PRISE_DEPOSE, 960);
         group(GROUP_STATUETTE_ID, GROUP_STATUETTE)
                 .addServo(fourcheStatuette);
 
         Servo moustacheGauche = servo(MOUSTACHE_GAUCHE_ID, MOUSTACHE_GAUCHE)
-                .time(500)
+                .time(325)
                 .position(POS_FERME, 2280)
                 .position(POS_OUVERT, 1370);
         Servo langue = servo(LANGUE_ID, LANGUE)
-                .time(500)
+                .time(350)
                 .position(POS_FERME, 2270)
                 .position(POS_OUVERT, 1330);
         Servo moustacheDroite = servo(MOUSTACHE_DROITE_ID, MOUSTACHE_DROITE)
-                .time(500)
+                .time(325)
                 .position(POS_FERME, 670)
                 .position(POS_OUVERT, 1520);
 

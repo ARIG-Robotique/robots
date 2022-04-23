@@ -74,12 +74,12 @@ public class OdinServosService extends AbstractCommonServosService {
                 .batch(POS_FERME);
 
         Servo carreFouilleOhmmetre = servo(CARRE_FOUILLE_OHMMETRE_ID, CARRE_FOUILLE_OHMMETRE)
-                .time(500)
+                .time(225)
                 .position(POS_FERME, 2310)
                 .position(POS_OUVERT, 1810)
                 .position(POS_MESURE, 1610);
         Servo carreFouillePoussoir = servo(CARRE_FOUILLE_POUSSOIR_ID, CARRE_FOUILLE_POUSSOIR)
-                .time(500)
+                .time(250)
                 .position(POS_FERME, 730)
                 .position(POS_POUSSETTE, 1300);
         group(GROUP_BRAS_MESURE_ID, GROUP_BRAS_MESURE)
@@ -87,11 +87,11 @@ public class OdinServosService extends AbstractCommonServosService {
                 .addServo(carreFouillePoussoir);
 
         Servo fourcheStatuette = servo(FOURCHE_STATUETTE_ID, FOURCHE_STATUETTE)
-                .time(500)
+                .time(475)
                 .position(POS_FERME, 2310)
                 .position(POS_PRISE_DEPOSE, 980);
         Servo pousseReplique = servo(POUSSE_REPLIQUE_ID, POUSSE_REPLIQUE)
-                .time(500)
+                .time(500) // TODO
                 .position(POS_FERME, 1870)
                 .position(POS_POUSSETTE, 670);
         group(GROUP_STATUETTE_ID, GROUP_STATUETTE)
@@ -99,15 +99,15 @@ public class OdinServosService extends AbstractCommonServosService {
                 .addServo(pousseReplique);
 
         Servo moustacheGauche = servo(MOUSTACHE_GAUCHE_ID, MOUSTACHE_GAUCHE)
-                .time(500)
+                .time(325)
                 .position(POS_FERME, 2330)
                 .position(POS_OUVERT, 1450);
         Servo langue = servo(LANGUE_ID, LANGUE)
-                .time(500)
+                .time(350)
                 .position(POS_FERME, 2270)
                 .position(POS_OUVERT, 1340);
         Servo moustacheDroite = servo(MOUSTACHE_DROITE_ID, MOUSTACHE_DROITE)
-                .time(500)
+                .time(325)
                 .position(POS_FERME, 700)
                 .position(POS_OUVERT, 1590);
 
