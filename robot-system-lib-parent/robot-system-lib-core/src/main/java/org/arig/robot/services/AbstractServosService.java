@@ -128,6 +128,8 @@ public abstract class AbstractServosService {
         logPositionServo(groupName, positionName, wait);
 
         int waitTime = 0;
+        int speed = 0;
+        int servoTime = 0;
         for (Servo servo : group.servos()) {
             ServoPosition position = servo.positions().get(positionName);
             if (position == null) {
@@ -137,8 +139,16 @@ public abstract class AbstractServosService {
             int currentPosition = ctrl.getPosition(servo.id());
 
             ctrl.setPositionAndSpeed(servo.id(), position.value(), position.speed());
-
+            speed += position.speed();
             waitTime = Math.max(waitTime, computeWaitTime(servo, currentPosition, position.value()));
+            servoTime = Math.max(servoTime, servo.time());
+        }
+        if (wait) {
+            if (speed != 0) {
+                ThreadUtils.sleep(servoTime); // FIXME calcul intelligent du temps de mouvement avec vitesse
+            } else {
+                ThreadUtils.sleep(waitTime);
+            }
         }
     }
 
