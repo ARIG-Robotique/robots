@@ -14,10 +14,12 @@ echo ""
 
 echo "* Configuration de la JVM"
 #JAVA_HOME=/opt/jre-11.0.14
-JAVA_HOME=/opt/jre-13.0.2
+#JAVA_HOME=/opt/jre-13.0.2
+#JAVA_HOME=/opt/jre-17.0.3
+JAVA_HOME=/opt/jre-18.0.1
 PATH=${JAVA_HOME}/bin:${PATH}
 java -version
-JVM_ARGS="-XX:+UseG1GC -XX:MaxGCPauseMillis=10 -Xlog:gc:./gc.log -Xmx1024m -Xms1024m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m --add-exports java.base/jdk.internal.misc=ALL-UNNAMED --add-exports java.base/jdk.internal.ref=ALL-UNNAMED"
+JVM_ARGS="-XX:+UseZGC -XX:MaxGCPauseMillis=10 -Xlog:gc:./gc.log -Xmx1024m -Xms1024m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m --add-exports java.base/jdk.internal.misc=ALL-UNNAMED --add-exports java.base/jdk.internal.ref=ALL-UNNAMED"
 DEBUG_ARGS="-Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:8787"
 
 echo "  - JVM Args   : ${JVM_ARGS}"
