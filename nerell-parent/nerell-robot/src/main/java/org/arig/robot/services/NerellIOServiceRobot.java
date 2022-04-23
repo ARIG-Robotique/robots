@@ -64,10 +64,10 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
 
     // Input : Numerique 1 (+ Tirette)
     private GpioPinDigitalInput inTirette;
-    private GpioPinDigitalInput inCalageBordureArriereDroit;
-    private GpioPinDigitalInput inCalageBordureArriereGauche;
-    private GpioPinDigitalInput inCalageBordureAvantDroit;
-    private GpioPinDigitalInput inCalageBordureAvantGauche;
+    private GpioPinDigitalInput inCalageArriereDroit;
+    private GpioPinDigitalInput inCalageArriereGauche;
+    private GpioPinDigitalInput inCalageAvantDroit;
+    private GpioPinDigitalInput inCalageAvantGauche;
 
     // Input : Numerique 2
     private GpioPinDigitalInput inPresenceCarreFouille;
@@ -155,10 +155,10 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
 
         // PCF1 (µSwitch)
         inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
-        inCalageBordureArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
-        inCalageBordureArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
-        inCalageBordureAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
-        inCalageBordureAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
+        inCalageArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
+        inCalageArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
+        inCalageAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
+        inCalageAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
 
         // PCF2 (Pololu)
         inPresencePriseBras = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
@@ -273,23 +273,28 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     }
 
     @Override
-    public boolean calageBordureArriereDroit() {
-        return inCalageBordureArriereDroit.isLow();
+    public boolean calageArriereDroit() {
+        return inCalageArriereDroit.isLow();
     }
 
     @Override
-    public boolean calageBordureArriereGauche() {
-        return inCalageBordureArriereGauche.isLow();
+    public boolean calageArriereGauche() {
+        return inCalageArriereGauche.isLow();
     }
 
     @Override
-    public boolean calageBordureAvantDroit() {
-        return inCalageBordureAvantDroit.isLow();
+    public boolean calageAvantDroit() {
+        return inCalageAvantDroit.isLow();
     }
 
     @Override
-    public boolean calageBordureAvantGauche() {
-        return inCalageBordureAvantGauche.isLow();
+    public boolean calageAvantGauche() {
+        return inCalageAvantGauche.isLow();
+    }
+
+    @Override
+    public boolean calageLatteralDroit() {
+        return !presenceCarreFouille(false);
     }
 
     // Couleur

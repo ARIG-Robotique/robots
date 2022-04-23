@@ -5,7 +5,7 @@ import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.RobotConfig;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.MonitoringWrapper;
-import org.arig.robot.services.CalageBordureService;
+import org.arig.robot.services.CalageService;
 import org.arig.robot.services.IOService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.strategy.StrategyManager;
@@ -33,7 +33,7 @@ public class TasksScheduler implements InitializingBean {
     private TrajectoryManager trajectoryManager;
 
     @Autowired
-    private CalageBordureService calageBordure;
+    private CalageService calageBordure;
 
     @Autowired
     private IOService ioService;
@@ -56,7 +56,7 @@ public class TasksScheduler implements InitializingBean {
                 if (ellapsedCalage >= robotConfig.calageTimeMs() * 1000000) {
                     lastTimeCalage = timeStartCalage;
 
-                    if (!rs.calageBordure().isEmpty()) {
+                    if (!rs.calage().isEmpty()) {
                         calageBordure.process();
                     }
                 }

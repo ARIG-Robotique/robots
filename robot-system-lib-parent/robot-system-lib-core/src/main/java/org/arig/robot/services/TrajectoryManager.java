@@ -1048,7 +1048,7 @@ public class TrajectoryManager {
         if (cancelMouvement.get()) {
             cancelMouvement.set(false);
 
-            if (rs.calageBordure().contains(TypeCalage.FORCE)) {
+            if (rs.calage().contains(TypeCalage.FORCE)) {
                 calageBordureDone();
             } else {
                 throw new MovementCancelledException();

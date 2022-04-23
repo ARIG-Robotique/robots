@@ -20,12 +20,11 @@ public class NerellCapteursController extends AbstractCapteursController {
     public void afterPropertiesSet() throws Exception {
         super.afterPropertiesSet();
 
-        numeriqueInfos.put("Bordure arrière droite", ioService::calageBordureArriereDroit);
-        numeriqueInfos.put("Bordure arrière gauche", ioService::calageBordureArriereGauche);
-        numeriqueInfos.put("Bordure avant droite", ioService::calageBordureAvantDroit);
-        numeriqueInfos.put("Bordure avant gauche", ioService::calageBordureAvantGauche);
-        //numeriqueInfos.put("Bordure custom droite", ioService::calageBordureCustomDroit);
-        //numeriqueInfos.put("Bordure custom gauche", ioService::calageBordureCustomGauche);
+        numeriqueInfos.put("Calage arrière droite", ioService::calageArriereDroit);
+        numeriqueInfos.put("Calage arrière gauche", ioService::calageArriereGauche);
+        numeriqueInfos.put("Calage avant droite", ioService::calageAvantDroit);
+        numeriqueInfos.put("Calage avant gauche", ioService::calageAvantGauche);
+        numeriqueInfos.put("Calage latteral droit", ioService::calageLatteralDroit);
 
         numeriqueInfos.put("Presence carre de fouille", () -> ioService.presenceCarreFouille(false));
         numeriqueInfos.put("Presence prise bras", ioService::presencePriseBras);
@@ -39,6 +38,5 @@ public class NerellCapteursController extends AbstractCapteursController {
         numeriqueInfos.put("Presence ventouse haut", ioService::presenceVentouseHaut);
 
         textInfos.put("Equipe", () -> (robotStatus.team() != null) ? robotStatus.team().name() : "???");
-        textInfos.put("Carre fouille", () -> "???");
     }
 }

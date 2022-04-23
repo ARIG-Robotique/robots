@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Data
@@ -169,21 +168,21 @@ public abstract class AbstractRobotStatus {
     }
 
     @Setter(AccessLevel.NONE)
-    private List<TypeCalage> calageBordure = new ArrayList<>(3);
+    private List<TypeCalage> calage = new ArrayList<>(3);
 
     public void enableCalageBordure(TypeCalage main, TypeCalage ... others) {
-        calageBordure.clear();
-        calageBordure.add(main);
+        calage.clear();
+        calage.add(main);
         if (others != null) {
-            calageBordure.addAll(Arrays.asList(others));
+            calage.addAll(Arrays.asList(others));
         }
-        log.info("Activation calage bordure : {}", calageBordure.stream()
+        log.info("Activation calage bordure : {}", calage.stream()
                 .map(Enum::name).collect(Collectors.joining(", ")));
     }
 
     public void disableCalageBordure() {
         log.info("Désactivation calage bordure");
-        calageBordure.clear();
+        calage.clear();
     }
 
     private String currentAction = null;

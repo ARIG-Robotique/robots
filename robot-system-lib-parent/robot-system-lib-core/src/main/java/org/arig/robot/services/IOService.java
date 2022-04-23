@@ -17,24 +17,21 @@ public interface IOService {
     // --------------------------------------------------------- //
 
     // Numerique
-    default boolean calageBordureArriereDroit() {
+    default boolean calageArriereDroit() {
         return false;
     }
-    default boolean calageBordureArriereGauche() {
+    default boolean calageArriereGauche() {
         return false;
     }
-    default boolean calageBordureAvantDroit() {
+    default boolean calageAvantDroit() {
         return false;
     }
-    default boolean calageBordureAvantGauche() {
+    default boolean calageAvantGauche() {
         return false;
     }
 
-    default boolean calageBordureCustomDroit() {
-        return false;
-    }
-    default boolean calageBordureCustomGauche(){
-        return false;
+    default boolean calageLatteralDroit() {
+        return true;
     }
 
     // --------------------------------------------------------- //

@@ -66,10 +66,10 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
 
     // Input : Numerique 1 (+ Tirette)
     private GpioPinDigitalInput inTirette;
-    private GpioPinDigitalInput inCalageBordureArriereDroit;
-    private GpioPinDigitalInput inCalageBordureArriereGauche;
-    private GpioPinDigitalInput inCalageBordureAvantDroit;
-    private GpioPinDigitalInput inCalageBordureAvantGauche;
+    private GpioPinDigitalInput inCalageArriereDroit;
+    private GpioPinDigitalInput inCalageArriereGauche;
+    private GpioPinDigitalInput inCalageAvantDroit;
+    private GpioPinDigitalInput inCalageAvantGauche;
 
     // Input : Numerique 2
     private GpioPinDigitalInput inPresenceCarreFouille;
@@ -159,10 +159,10 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
 
         // PCF1 (µSwitch)
         inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
-        inCalageBordureArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
-        inCalageBordureArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
-        inCalageBordureAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
-        inCalageBordureAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
+        inCalageArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
+        inCalageArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
+        inCalageAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
+        inCalageAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
 
         // PCF2 (Pololu)
         inPresenceCarreFouille = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
@@ -283,23 +283,28 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
     }
 
     @Override
-    public boolean calageBordureArriereDroit() {
-        return inCalageBordureArriereDroit.isLow();
+    public boolean calageArriereDroit() {
+        return inCalageArriereDroit.isLow();
     }
 
     @Override
-    public boolean calageBordureArriereGauche() {
-        return inCalageBordureArriereGauche.isLow();
+    public boolean calageArriereGauche() {
+        return inCalageArriereGauche.isLow();
     }
 
     @Override
-    public boolean calageBordureAvantDroit() {
-        return inCalageBordureAvantDroit.isLow();
+    public boolean calageAvantDroit() {
+        return inCalageAvantDroit.isLow();
     }
 
     @Override
-    public boolean calageBordureAvantGauche() {
-        return inCalageBordureAvantGauche.isLow();
+    public boolean calageAvantGauche() {
+        return inCalageAvantGauche.isLow();
+    }
+
+    @Override
+    public boolean calageLatteralDroit() {
+        return !presenceCarreFouille(false);
     }
 
     // Couleur
