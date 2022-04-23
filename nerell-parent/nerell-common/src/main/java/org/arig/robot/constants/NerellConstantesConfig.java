@@ -19,7 +19,8 @@ public interface NerellConstantesConfig {
     double asservTimeS = NerellConstantesConfig.asservTimeMs / 1000;
 
     int i2cReadTimeMs = 20;
-    double calageTimeMs = 10;
+    double calageGlobalTimeMs = 100;
+    double calageCourtTimeMs = 10;
 
     // -------------------------------- //
     // Configuration moteurs propulsion //

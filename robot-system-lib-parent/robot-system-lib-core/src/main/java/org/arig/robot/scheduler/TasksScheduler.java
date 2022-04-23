@@ -3,6 +3,7 @@ package org.arig.robot.scheduler;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.RobotConfig;
+import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.CalageService;
@@ -53,7 +54,7 @@ public class TasksScheduler implements InitializingBean {
                 long timeStartCalage = System.nanoTime();
                 long ellapsedCalage = timeStartCalage - lastTimeCalage;
 
-                if (ellapsedCalage >= robotConfig.calageTimeMs() * 1000000) {
+                if (ellapsedCalage >= robotConfig.calageTimeMs(rs.calage().contains(TypeCalage.LATTERAL_DROIT)) * 1000000) {
                     lastTimeCalage = timeStartCalage;
 
                     if (!rs.calage().isEmpty()) {

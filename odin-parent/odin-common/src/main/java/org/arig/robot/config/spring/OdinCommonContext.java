@@ -52,7 +52,7 @@ public class OdinCommonContext {
     public RobotConfig robotConfig(ConvertionRobotUnit conv) {
         return new RobotConfig()
                 .asservTimeMs(OdinConstantesConfig.asservTimeMs)
-                .calageTimeMs(OdinConstantesConfig.calageTimeMs)
+                .calageTimeMs(OdinConstantesConfig.calageGlobalTimeMs, OdinConstantesConfig.calageCourtTimeMs)
                 .i2cReadTimeMs(OdinConstantesConfig.i2cReadTimeMs)
 
                 .pathFindingTailleObstacle(OdinConstantesConfig.pathFindingTailleObstacle)

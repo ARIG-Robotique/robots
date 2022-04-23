@@ -19,7 +19,8 @@ public interface OdinConstantesConfig {
     double asservTimeS = OdinConstantesConfig.asservTimeMs / 1000;
 
     int i2cReadTimeMs = 20;
-    double calageTimeMs = 10;
+    double calageGlobalTimeMs = 100;
+    double calageCourtTimeMs = 10;
 
     // -------------------------------- //
     // Configuration moteurs propulsion //

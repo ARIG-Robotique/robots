@@ -1,6 +1,7 @@
 package org.arig.robot.model;
 
 import lombok.Data;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Data
@@ -10,7 +11,20 @@ public class RobotConfig {
     /**
      * scheduler
      */
-    private double calageTimeMs;
+    @Setter(lombok.AccessLevel.NONE)
+    private double calageGlobalTimeMs;
+    @Setter(lombok.AccessLevel.NONE)
+    private double calageCourtMs;
+
+    public RobotConfig calageTimeMs(double calageGlobalTimeMs, double calageCourtMs) {
+        this.calageGlobalTimeMs = calageGlobalTimeMs;
+        this.calageCourtMs = calageCourtMs;
+        return this;
+    }
+    public double calageTimeMs(boolean court){
+        return court ? calageCourtMs : calageGlobalTimeMs;
+    }
+
     private double asservTimeMs;
     private double i2cReadTimeMs;
     private double sampleTimeS;

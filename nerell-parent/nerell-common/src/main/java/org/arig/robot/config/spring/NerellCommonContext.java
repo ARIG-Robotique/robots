@@ -53,7 +53,7 @@ public class NerellCommonContext {
     public RobotConfig robotConfig(ConvertionRobotUnit conv) {
         return new RobotConfig()
                 .asservTimeMs(NerellConstantesConfig.asservTimeMs)
-                .calageTimeMs(NerellConstantesConfig.calageTimeMs)
+                .calageTimeMs(NerellConstantesConfig.calageGlobalTimeMs, NerellConstantesConfig.calageCourtTimeMs)
                 .i2cReadTimeMs(NerellConstantesConfig.i2cReadTimeMs)
 
                 .pathFindingTailleObstacle(NerellConstantesConfig.pathFindingTailleObstacle)
