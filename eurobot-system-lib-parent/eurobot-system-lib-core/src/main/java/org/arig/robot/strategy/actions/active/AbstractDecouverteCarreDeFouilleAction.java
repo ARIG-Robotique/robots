@@ -20,8 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 
-    private static final int WAIT_READ_OHMMETRE_MS = 10; // 5 itération de 2ms (polling carte lecture ohmmetre)
-    private static final int WAIT_READ_BASCULE_MS = 60; // 3 x i2cReadTime
+    private static final int WAIT_READ_OHMMETRE_MS = 100;
+    private static final int WAIT_READ_BASCULE_MS = 120;
 
     @Autowired
     private CarreFouilleReader cfReader;
@@ -115,14 +115,17 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                         wait += sleepTimeMs;
                     } while(!presence && wait < WAIT_READ_BASCULE_MS);
 
-                    rs.enableCalageBordure(TypeCalage.LATTERAL_DROIT);
-                    mv.avanceMM(60);
-                    mv.reculeMM(40); // Distance calage au capteur
+                    // Calage uniquement si il y a un carre de fouille détecté
+                    if (commonIOService.presenceCarreFouille(true)) {
+                        rs.enableCalageBordure(TypeCalage.LATTERAL_DROIT);
+                        mv.avanceMM(60);
+                        mv.reculeMM(40); // Distance calage au capteur
 
-                    double currentX = conv.pulseToMm(position.getPt().getX());
-                    deltaX = currentX - carreFouille.getX();
-                    log.info("On a déplacé le robot de {} mm (delta X)", deltaX);
-                    calageCarreFouille = true;
+                        double currentX = conv.pulseToMm(position.getPt().getX());
+                        deltaX = currentX - carreFouille.getX();
+                        log.info("On a déplacé le robot de {} mm (delta X)", deltaX);
+                        calageCarreFouille = true;
+                    }
                 } else {
                     log.info("Position carre de fouille #{} - X={} ; Y={}", carreFouille.numero(), carreFouille.getX(), yRef);
                     GotoOption sens = GotoOption.AVANT;
