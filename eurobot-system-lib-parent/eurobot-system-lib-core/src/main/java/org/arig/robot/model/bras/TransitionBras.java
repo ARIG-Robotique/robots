@@ -12,7 +12,6 @@ import java.io.Serializable;
 public class TransitionBras implements Serializable {
 
     public static final int MAX_SPEED = 70;
-    public static final int SLOW_SPEED = 40;
 
     public static final TransitionBras DEFAULT = new TransitionBras(MAX_SPEED, new PointBras[0]);
 
@@ -21,7 +20,7 @@ public class TransitionBras implements Serializable {
     private PointBras[] points;
 
     public static TransitionBras withPoints(PointBras... points) {
-        return new TransitionBras(SLOW_SPEED, points);
+        return new TransitionBras(MAX_SPEED, points);
     }
 
 }

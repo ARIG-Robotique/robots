@@ -128,6 +128,7 @@ public class BrasService extends BrasServiceInternal {
                 log.warn("Pas de présence ventouse haut");
                 io.releasePompeVentouseHaut();
                 setBrasHaut(PositionBras.HORIZONTAL);
+                setBrasBas(PositionBras.HORIZONTAL); // pour que le truc se détache
                 setBrasBas(PositionBras.STOCK_ENTREE);
                 return false;
             }
@@ -177,6 +178,15 @@ public class BrasService extends BrasServiceInternal {
 
         boolean ok = false;
         if (io.presenceStock(indexStock)) {
+            // cas pourri ou le précédent stockage c'est mal passé
+            // grace a ce stockage, l'échantillon d'avant c'est remis en place
+            // il faut donc le compter
+            if (indexStock < 5 && io.presenceStock(indexStock + 1)) {
+                log.warn("Prise en compte de l'échantillon précédent mal stocké");
+                rs.stockage(CouleurEchantillon.INCONNU);
+                indexStock++;
+            }
+
             log.info("Stockage d'un {} à l'emplacement {}", couleur, indexStock);
             rs.stockage(couleur);
             ok = true;
@@ -192,6 +202,7 @@ public class BrasService extends BrasServiceInternal {
         setBrasHaut(PositionBras.HORIZONTAL);
         setBrasBas(PositionBras.REPOS);
         setBrasHaut(PositionBras.REPOS);
+        updateStock();
     }
 
     public enum TypeDepose {
@@ -253,6 +264,23 @@ public class BrasService extends BrasServiceInternal {
         setBrasHaut(PositionBras.HORIZONTAL);
         setBrasBas(PositionBras.REPOS);
         setBrasHaut(PositionBras.REPOS);
+        updateStock();
+    }
+
+    /**
+     * Force la mise à jour du stock en fonction des capteurs
+     * Pour gérer des cas de mauvaise détection
+     */
+    public void updateStock() {
+        for (int i = 0; i < 6; i++) {
+            if (io.presenceStock(i) && rs.stock()[i] == null) {
+                log.warn("Nouvel échantillon détecté dans le stock {}", (i + 1));
+                rs.stock()[i] = CouleurEchantillon.INCONNU;
+            } else if (!io.presenceStock(i) && rs.stock()[i] != null) {
+                log.warn("échantillon perdu dans le stock {}", (i + 1));
+                rs.stock()[i] = null;
+            }
+        }
     }
 
 }
