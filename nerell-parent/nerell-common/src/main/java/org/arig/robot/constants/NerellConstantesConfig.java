@@ -37,17 +37,19 @@ public interface NerellConstantesConfig {
     // Diam 47mm => périmètre 147.655 mm
     // 4096 p => 147.65485471872 mm : 4096 / 147.65485471872000000 = 27.74036795337890000
     //double countPerMm = 27.74036795337890000; // Théorique
-    double countPerMm = 27.536394659604056; // Manuel 2700 -> mesure 2720 depuis le théorique
+    //double countPerMm = 27.536394659604056; // Manuel 2700 -> mesure 2720 depuis le théorique
+    double countPerMm = 27.387010963439838; // Manuel 2750 -> mesure 2765 depuis le manuel 2720
 
     // Entraxe 280mm => périmètre 879.64594300514200000 mm (1 roue)
     // 879.64594300514200000 mm => 180° : 879.64594300514200000 * 27.74036795337890000 / 180 =
     //double countPerDeg = 135.56501182033100000; // Théorique
     //double countPerDeg = 133.54528278505845; // 5 tours
     //double countPerDeg = 133.54984849251548; // 10 tours
-    double countPerDeg = 133.60106536759326; // 50 tours
+    //double countPerDeg = 133.60106536759326; // 50 tours
+    double countPerDeg = 133.75398669244305; // 50 tours
 
     //double coefCodeurDroit = (0.9914760162438181 + 0.9901903052878885 + 0.9901004087212356) / 3;
-    double coefCodeurDroit = 0.990588910084314;
+    double coefCodeurDroit = 0.9920508329274527;//0.990588910084314;
     double coefCodeurGauche = 1;
 
     // ------------------------ //
