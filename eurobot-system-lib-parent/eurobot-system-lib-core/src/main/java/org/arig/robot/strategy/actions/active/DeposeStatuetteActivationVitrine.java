@@ -92,7 +92,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
             }
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-            mv.gotoPoint(entry.getX(), EurobotConfig.tableHeight - 60, GotoOption.SANS_ARRET);
+            mv.avanceMM(100);
             commonServosService.fourcheStatuetteFerme(false);
             group.vitrineActive();
             mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);
