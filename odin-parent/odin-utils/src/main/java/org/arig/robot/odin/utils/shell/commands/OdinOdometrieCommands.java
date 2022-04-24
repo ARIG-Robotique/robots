@@ -242,10 +242,8 @@ public class OdinOdometrieCommands {
         rs.enableCalageBordure(TypeCalage.ARRIERE);
         trajectoryManager.setVitesse(100, 1000);
         trajectoryManager.reculeMMSansAngle(1000);
-        currentPosition.updatePosition(0, 0, 0);
+        trajectoryManager.setVitesse(300, 1000);
         trajectoryManager.avanceMM(distanceCmd);
-        trajectoryManager.setVitesse(1000, 100);
-        trajectoryManager.gotoOrientationDeg(0);
         ThreadUtils.sleep(3000); // Stabilisation
 
         rs.disableAsserv();
