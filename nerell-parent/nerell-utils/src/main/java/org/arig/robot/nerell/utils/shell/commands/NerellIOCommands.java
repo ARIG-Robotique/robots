@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.services.NerellIOServiceRobot;
+import org.arig.robot.services.NerellServosService;
 import org.arig.robot.system.capteurs.CarreFouilleReader;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -18,6 +19,7 @@ import org.springframework.shell.standard.ShellMethod;
 public class NerellIOCommands {
 
     private final NerellIOServiceRobot nerellIOServiceRobot;
+    private final NerellServosService nerellServosService;
     private final CarreFouilleReader carreFouilleReader;
 
     @ShellMethod("Read couleur ventouse")
@@ -34,7 +36,12 @@ public class NerellIOCommands {
     @SneakyThrows
     @ShellMethod("Read carré de fouille")
     public void readCarreFouille() {
-        log.info("Carre de fouille : {}", carreFouilleReader.readCarreFouille());
+        nerellServosService.carreFouilleOhmmetreMesure(true);
+        for (int i = 0; i < 10; i++) {
+            log.info("Carre de fouille {} / 10 : {}", i, carreFouilleReader.readCarreFouille());
+            ThreadUtils.sleep(1000);
+        }
+        nerellServosService.carreFouilleOhmmetreFerme(false);
     }
 
     @SneakyThrows
