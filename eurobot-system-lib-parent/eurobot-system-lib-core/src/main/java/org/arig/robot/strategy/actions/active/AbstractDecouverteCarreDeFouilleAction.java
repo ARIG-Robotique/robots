@@ -106,17 +106,10 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                     mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
 
                     // On est censé avoir un carré de fouille
-                    boolean presence;
-                    int wait = 0;
-                    int sleepTimeMs = 5;
-                    do {
-                        ThreadUtils.sleep(sleepTimeMs);
-                        presence = commonIOService.presenceCarreFouille(true);
-                        wait += sleepTimeMs;
-                    } while(!presence && wait < WAIT_READ_BASCULE_MS);
+                    boolean presence = ThreadUtils.waitUntil(() -> commonIOService.presenceCarreFouille(true), 5, WAIT_READ_BASCULE_MS);
 
                     // Calage uniquement si il y a un carre de fouille détecté
-                    if (commonIOService.presenceCarreFouille(true)) {
+                    if (presence) {
                         rs.enableCalageBordure(TypeCalage.LATTERAL_DROIT);
                         mv.avanceMM(60);
                         mv.reculeMM(40); // Distance calage au capteur
@@ -143,13 +136,15 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                     if (carreFouille.needRead()) {
                         log.info("Carré de fouille #{} {} : Lecture ohmmetre", carreFouille.numero(), carreFouille.couleur());
                         commonServosService.carreFouilleOhmmetreMesure(true);
-                        int wait = 0;
-                        int sleepTimeMs = 15;
-                        do {
-                            ThreadUtils.sleep(sleepTimeMs);
-                            couleur = cfReader.readCarreFouille();
-                            wait += sleepTimeMs;
-                        } while(couleur == CouleurCarreFouille.INCONNU && wait < WAIT_READ_OHMMETRE_MS);
+                        couleur = ThreadUtils.waitUntil(() -> {
+                            try {
+                                return cfReader.readCarreFouille();
+                            } catch (I2CException e) {
+                                log.error("Erreur lecture carré de fouille", e);
+                                return CouleurCarreFouille.INCONNU;
+                            }
+                        }, CouleurCarreFouille.INCONNU, 15, WAIT_READ_OHMMETRE_MS);
+
                         log.info("Carré de fouille #{} {} : Lecture ohmmetre : {}", carreFouille.numero(), carreFouille.couleur(), couleur);
                         group.couleurCarreFouille(carreFouille.numero(), couleur);
                         commonServosService.carreFouilleOhmmetreOuvert(false);
@@ -178,7 +173,7 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                 }
 
             } while (cf() != null);
-        } catch (NoPathFoundException | AvoidingException | I2CException e) {
+        } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
