@@ -114,7 +114,7 @@ public class NerellServosService extends AbstractCommonServosService {
         Servo fourcheStatuette = servo(FOURCHE_STATUETTE_ID, FOURCHE_STATUETTE)
                 .time(475)
                 .position(POS_FERME, 2270)
-                .position(POS_PRISE_DEPOSE, 960);
+                .position(POS_PRISE_DEPOSE, 940);
         group(GROUP_STATUETTE_ID, GROUP_STATUETTE)
                 .addServo(fourcheStatuette);
 
