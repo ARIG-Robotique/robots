@@ -32,7 +32,9 @@ public interface NerellConstantesConfig {
     // Configuration des convertions //
     // ----------------------------- //
 
-    //double entraxe = 280;
+    double entraxe = 280;
+    //double entraxe = 280.0665022872784; // 1 tours
+    //double entraxe = 280.3703418872723; // 10 tours
 
     // Diam 47mm => périmètre 147.655 mm
     // 4096 p => 147.65485471872 mm : 4096 / 147.65485471872000000 = 27.74036795337890000
@@ -46,10 +48,10 @@ public interface NerellConstantesConfig {
     //double countPerDeg = 133.54528278505845; // 5 tours
     //double countPerDeg = 133.54984849251548; // 10 tours
     //double countPerDeg = 133.60106536759326; // 50 tours
-    double countPerDeg = 133.75398669244305; // 50 tours
+    //double countPerDeg = 133.75398669244305; // 50 tours
 
     //double coefCodeurDroit = (0.9914760162438181 + 0.9901903052878885 + 0.9901004087212356) / 3;
-    double coefCodeurDroit = 0.9920508329274527;//0.990588910084314;
+    double coefCodeurDroit = 0.9920508329274527; //0.990588910084314;
     double coefCodeurGauche = 1;
 
     // ------------------------ //
