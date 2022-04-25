@@ -10,8 +10,6 @@ import static org.arig.robot.model.servos.Servo.POS_0DEG;
 @Service
 public class OdinServosService extends AbstractCommonServosService {
 
-    protected static final String POUSSE_REPLIQUE = "Pousse replique";
-
     private static final byte BRAS_BAS_EPAULE_ID = 19;
     private static final byte BRAS_BAS_COUDE_ID = 11;
     private static final byte BRAS_BAS_POIGNET_ID = 12;
@@ -153,17 +151,13 @@ public class OdinServosService extends AbstractCommonServosService {
     }
 
     @Override
+    public boolean pousseReplique() {
+        return true;
+    }
+
+    @Override
     public void homes() {
         super.homes();
         pousseRepliqueFerme(false);
     }
-
-    public void pousseRepliqueFerme(boolean wait) {
-        setPosition(POUSSE_REPLIQUE, POS_FERME, wait);
-    }
-
-    public void pousseRepliquePoussette(boolean wait) {
-        setPosition(POUSSE_REPLIQUE, POS_POUSSETTE, wait);
-    }
-
 }

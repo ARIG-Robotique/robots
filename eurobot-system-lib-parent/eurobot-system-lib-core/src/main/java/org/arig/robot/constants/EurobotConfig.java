@@ -26,8 +26,7 @@ public interface EurobotConfig {
 
     // Noms des actions
     String ACTION_DECOUVERTE_CARRE_FOUILLE = "Découverte carré de fouille";
-    String ACTION_DEPOSE_REPLIQUE = "Dépose replique";
-    String ACTION_RECUPERATION_STATUETTE = "Recupération statuette";
+    String ACTION_STATUETTE_REPLIQUE = "Statuette / Replique";
     String ACTION_DEPOSE_STATUETTE = "Dépose statuette";
     String ACTION_RETOUR_SITE_DE_FOUILLE_PREFIX = "Retour site de fouille ";
 

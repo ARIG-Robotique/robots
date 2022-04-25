@@ -19,6 +19,7 @@ public abstract class AbstractCommonServosService extends AbstractServosService 
     protected static final String CARRE_FOUILLE_POUSSOIR = "Poussoir carré fouille";
 
     protected static final String FOURCHE_STATUETTE = "Fourche statuette";
+    protected static final String POUSSE_REPLIQUE = "Pousse replique";
 
     protected static final String LANGUE = "Langue";
     protected static final String MOUSTACHE_GAUCHE = "Moustache gauche";
@@ -44,6 +45,10 @@ public abstract class AbstractCommonServosService extends AbstractServosService 
     protected static final byte GROUP_STATUETTE_ID = 4;
     protected static final byte GROUP_ARRIERE_ID = 5;
     protected static final byte GROUP_MOUSTACHE_ID = 6;
+
+    public boolean pousseReplique() {
+        return false;
+    }
 
     /* **************************************** */
     /* Méthode pour le positionnement d'origine */
@@ -91,6 +96,14 @@ public abstract class AbstractCommonServosService extends AbstractServosService 
 
     public void fourcheStatuettePriseDepose(boolean wait) {
         setPosition(FOURCHE_STATUETTE, POS_PRISE_DEPOSE, wait);
+    }
+
+    public void pousseRepliqueFerme(boolean wait) {
+        setPosition(POUSSE_REPLIQUE, POS_FERME, wait);
+    }
+
+    public void pousseRepliquePoussette(boolean wait) {
+        setPosition(POUSSE_REPLIQUE, POS_POUSSETTE, wait);
     }
 
     public void carreFouilleOhmmetreFerme(boolean wait) {
