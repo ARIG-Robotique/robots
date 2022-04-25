@@ -101,7 +101,7 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                     calageBordure = true;
                 }
 
-                if (!calageCarreFouille && carreFouille.needRead()) {
+                if (!calageCarreFouille) {
                     log.info("Calage carré de fouille requis");
                     mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
 
@@ -154,16 +154,9 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                         log.info("Carré de fouille #{} {} : Basculage", carreFouille.numero(), carreFouille.couleur());
                         commonServosService.carreFouillePoussoirPoussette(true);
                         commonServosService.carreFouillePoussoirFerme(false);
-                        boolean presence;
-                        int wait = 0;
-                        int sleepTimeMs = 5;
-                        do {
-                            ThreadUtils.sleep(sleepTimeMs);
-                            presence = commonIOService.presenceCarreFouille(false);
-                            wait += sleepTimeMs;
-                        } while(presence && wait < WAIT_READ_BASCULE_MS);
 
-                        if (!presence) {
+                        boolean notPresence = ThreadUtils.waitUntil(() -> !commonIOService.presenceCarreFouille(false), 5, WAIT_READ_BASCULE_MS);
+                        if (notPresence) {
                             group.basculeCarreFouille(carreFouille.numero());
                         }
                     }
