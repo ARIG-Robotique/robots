@@ -15,6 +15,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
 
+    private static final int ENTRY_X = 240;
+    private static final int ENTRY_Y = 1810;
+
     @Override
     public String name() {
         return EurobotConfig.ACTION_DEPOSE_STATUETTE;
@@ -52,7 +55,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
 
     @Override
     public Point entryPoint() {
-        return new Point(getX(240), 1810);
+        return new Point(getX(ENTRY_X), ENTRY_Y);
     }
 
     @Override
@@ -67,21 +70,22 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
             // Calage sur X
             mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 0 : 180);
             rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
-            mv.reculeMM(240 - robotConfig.distanceCalageArriere() - 10);
+            mv.reculeMM(ENTRY_X - robotConfig.distanceCalageArriere() - 10);
             mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
             rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
-            mv.reculeMMSansAngle(30);
+            mv.reculeMMSansAngle(100);
             checkRecalageXmm(rs.team() == Team.JAUNE ? robotConfig.distanceCalageArriere() : EurobotConfig.tableWidth - robotConfig.distanceCalageArriere());
             checkRecalageAngleDeg(rs.team() == Team.JAUNE ? 0 : 180);
-            mv.avanceMM(240 - robotConfig.distanceCalageArriere());
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.avanceMM(ENTRY_X - robotConfig.distanceCalageArriere());
 
             // Calage sur Y
             mv.gotoOrientationDeg(-90);
             rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
-            mv.reculeMM(EurobotConfig.tableHeight - entry.getY() - robotConfig.distanceCalageArriere() - 10);
+            mv.reculeMM(EurobotConfig.tableHeight - ENTRY_Y - robotConfig.distanceCalageArriere() - 10);
             mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
             rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
-            mv.reculeMMSansAngle(30);
+            mv.reculeMMSansAngle(100);
             checkRecalageYmm(EurobotConfig.tableHeight - robotConfig.distanceCalageArriere());
             checkRecalageAngleDeg(-90);
 
@@ -91,11 +95,10 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
                 group.statuetteDansVitrine();
             }
 
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.setVitesse(robotConfig.vitesse(25), robotConfig.vitesseOrientation());
             mv.avanceMM(100);
             commonServosService.fourcheStatuetteFerme(false);
             group.vitrineActive();
-            mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);
 
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
