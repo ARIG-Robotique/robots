@@ -296,6 +296,11 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         return !presenceCarreFouille(false);
     }
 
+    @Override
+    public boolean calagePriseEchantillon() {
+        return presencePriseBras();
+    }
+
     // Couleur
     @Override
     public CouleurEchantillon couleurVentouseBas() {

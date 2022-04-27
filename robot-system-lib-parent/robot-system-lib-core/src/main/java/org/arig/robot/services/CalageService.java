@@ -29,12 +29,16 @@ public class CalageService {
             boolean doneArriere = false;
             boolean doneAvant = false;
             boolean doneLatteralDroit = false;
+            boolean donePriseEchantillon = false;
 
             if (!rs.matchEnabled() && !ioService.auOk()) {
                 doneArriere = doneAvant = doneLatteralDroit = true;
             } else {
                 if (rs.calage().size() == 1 && rs.calage().contains(TypeCalage.LATTERAL_DROIT)) {
                     doneLatteralDroit = ioService.calageLatteralDroit();
+                }
+                if (rs.calage().size() == 1 && rs.calage().contains(TypeCalage.PRISE_ECHANTILLON)) {
+                    donePriseEchantillon = ioService.calagePriseEchantillon();
                 }
 
                 if (cmdRobot.isType(TypeConsigne.DIST) && cmdRobot.isType(TypeConsigne.ANGLE)) {
@@ -58,7 +62,7 @@ public class CalageService {
                 }
             }
 
-            if (doneAvant || doneArriere || doneLatteralDroit) {
+            if (doneAvant || doneArriere || doneLatteralDroit || donePriseEchantillon) {
                 trajectoryManager.calageBordureDone();
             }
         }

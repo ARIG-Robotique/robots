@@ -306,6 +306,11 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
         return !presenceCarreFouille(false);
     }
 
+    @Override
+    public boolean calagePriseEchantillon() {
+        return presencePriseBras();
+    }
+
     // Couleur
     @Override
     public CouleurEchantillon couleurVentouseBas() {
