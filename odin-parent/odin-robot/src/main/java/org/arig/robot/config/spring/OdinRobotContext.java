@@ -168,12 +168,12 @@ public class OdinRobotContext {
 
     @Bean
     public TCS34725ColorSensor couleurVentouseBas() {
-        return new TCS34725ColorSensor(OdinConstantesI2C.COULEUR_VENTOUSE_BAS_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
+        return new TCS34725ColorSensor(OdinConstantesI2C.COULEUR_VENTOUSE_BAS_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_154MS, Gain.TCS34725_GAIN_1X);
     }
 
     @Bean
     public TCS34725ColorSensor couleurVentouseHaut() {
-        return new TCS34725ColorSensor(OdinConstantesI2C.COULEUR_VENTOUSE_HAUT_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_24MS, Gain.TCS34725_GAIN_4X);
+        return new TCS34725ColorSensor(OdinConstantesI2C.COULEUR_VENTOUSE_HAUT_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_154MS, Gain.TCS34725_GAIN_1X);
     }
 
     @Bean

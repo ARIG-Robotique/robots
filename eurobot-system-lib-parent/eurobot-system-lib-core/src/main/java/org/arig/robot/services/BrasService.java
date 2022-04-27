@@ -83,6 +83,7 @@ public class BrasService extends BrasServiceInternal {
                 return false;
         }
 
+        io.enableLedCapteurCouleur();
         io.enablePompeVentouseBas();
         boolean pompeOk = ThreadUtils.waitUntil(io::presenceVentouseBas, config.i2cReadTimeMs(), config.timeoutPompe());
 
@@ -103,20 +104,11 @@ public class BrasService extends BrasServiceInternal {
         }
 
         // lecture de la couleur
-//        io.enableLedCapteurCouleur();
-//        ThreadUtils.sleep(config.waitLed());
-//
-//        CouleurEchantillon couleur;
-//        int remainingReadTime = config.waitReadColor();
-//        do {
-//            couleur = io.couleurVentouseBas();
-//            if (couleur == CouleurEchantillon.INCONNU) {
-//                ThreadUtils.sleep(config.i2cReadTimeMs());
-//                remainingReadTime -= config.i2cReadTimeMs();
-//            }
-//        } while (couleur == CouleurEchantillon.INCONNU && remainingReadTime > 0);
+        if (couleur.isNeedsLecture()) {
+            couleur = ThreadUtils.waitUntil(io::couleurVentouseBas, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor());
+        }
 
-        if (couleur == CouleurEchantillon.ROCHER) {
+        if (couleur.isNeedsEchange()) {
             // echange
             setBrasBas(typePrise == TypePrise.BORDURE ? PositionBras.ECHANGE_2 : PositionBras.ECHANGE);
             setBrasHaut(PositionBras.ECHANGE);
@@ -133,20 +125,15 @@ public class BrasService extends BrasServiceInternal {
                 return false;
             }
 
+            couleur = couleur.getReverseColor();
+
             // 2nd lecture de la couleur
-//            remainingReadTime = config.waitReadColor();
-//            do {
-//                couleur = io.couleurVentouseHaut();
-//                if (couleur == CouleurEchantillon.INCONNU) {
-//                    ThreadUtils.sleep(config.i2cReadTimeMs());
-//                    remainingReadTime -= config.i2cReadTimeMs();
-//                }
-//            } while (couleur == CouleurEchantillon.INCONNU && remainingReadTime > 0);
-//
-//            if (couleur == CouleurEchantillon.ROCHER) {
-//                log.warn("Après échange la couleur est toujours un rocher ?!");
-//                couleur = CouleurEchantillon.INCONNU;
-//            }
+            if (couleur.isNeedsLecture()) {
+                couleur = ThreadUtils.waitUntil(io::couleurVentouseHaut, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor());
+                if (couleur == CouleurEchantillon.ROCHER) {
+                    log.warn("Après échange la couleur est toujours un rocher ?!");
+                }
+            }
 
             setBrasBas(PositionBras.HORIZONTAL);
 
@@ -198,7 +185,7 @@ public class BrasService extends BrasServiceInternal {
     }
 
     public void finalizePrise() {
-//        io.disableLedCapteurCouleur();
+        io.disableLedCapteurCouleur();
         setBrasHaut(PositionBras.HORIZONTAL);
         setBrasBas(PositionBras.REPOS);
         setBrasHaut(PositionBras.REPOS);

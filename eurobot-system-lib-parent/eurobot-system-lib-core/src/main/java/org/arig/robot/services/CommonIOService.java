@@ -1,6 +1,7 @@
 package org.arig.robot.services;
 
 import org.arig.robot.model.CouleurEchantillon;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 
 public interface CommonIOService extends IOService {
 
@@ -36,6 +37,33 @@ public interface CommonIOService extends IOService {
     // Couleurs
     CouleurEchantillon couleurVentouseBas();
     CouleurEchantillon couleurVentouseHaut();
+
+    TCS34725ColorSensor.ColorData couleurVentouseHautRaw();
+    TCS34725ColorSensor.ColorData couleurVentouseBasRaw();
+
+    default CouleurEchantillon computeCouleur(TCS34725ColorSensor.ColorData c) {
+        if (c.c() < 3000) {
+            return CouleurEchantillon.INCONNU;
+        }
+
+        double r2g = 1. * c.r() / c.g();
+        double r2b = 1. * c.r() / c.b();
+        double g2r = 1. / r2g;
+        double g2b = 1. * c.g() / c.b();
+        double b2r = 1. / r2b;
+        double b2g = 1. / g2b;
+
+        if (r2g > 1.2 && r2b > 1.2) {
+            return CouleurEchantillon.ROUGE;
+        }
+        if (g2r > 1.2 && g2b > 1.2) {
+            return CouleurEchantillon.VERT;
+        }
+        if (b2r > 1.2 && b2g > 0.9 && b2g < 1.1 && g2r > 1.2) {
+            return CouleurEchantillon.BLEU;
+        }
+        return CouleurEchantillon.ROCHER;
+    }
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

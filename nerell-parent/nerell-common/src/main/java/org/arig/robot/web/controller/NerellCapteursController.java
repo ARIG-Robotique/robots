@@ -1,8 +1,10 @@
 package org.arig.robot.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.services.NerellIOService;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +38,17 @@ public class NerellCapteursController extends AbstractCapteursController {
         numeriqueInfos.put("Presence stock 6", ioService::presenceStock6);
         numeriqueInfos.put("Presence ventouse bas", ioService::presenceVentouseBas);
         numeriqueInfos.put("Presence ventouse haut", ioService::presenceVentouseHaut);
+
+        couleursInfos.put("Ventouse haut", () -> {
+            TCS34725ColorSensor.ColorData colorData = ioService.couleurVentouseHautRaw();
+            CouleurEchantillon couleurEchantillon = ioService.computeCouleur(colorData);
+            return String.format("%s (%d %d %d)", couleurEchantillon.name(), colorData.r(), colorData.g(), colorData.b());
+        });
+        couleursInfos.put("Ventouse bas", () -> {
+            TCS34725ColorSensor.ColorData colorData = ioService.couleurVentouseBasRaw();
+            CouleurEchantillon couleurEchantillon = ioService.computeCouleur(colorData);
+            return String.format("%s (%d %d %d)", couleurEchantillon.name(), colorData.r(), colorData.g(), colorData.b());
+        });
 
         textInfos.put("Equipe", () -> (robotStatus.team() != null) ? robotStatus.team().name() : "???");
     }

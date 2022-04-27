@@ -138,6 +138,9 @@ public class NerellServosCommands {
     @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Prise et stockage d'un échantillon au sol")
     public void cyclePriseSol(@ShellOption(defaultValue = "INCONNU") CouleurEchantillon couleur) {
+        ioService.couleurVentouseHaut();
+        ioService.couleurVentouseBas();
+
         brasService.prise(BrasService.TypePrise.SOL, couleur);
         brasService.finalizePrise();
         log.info("Stock : {}", Arrays.stream(rs.stock()).map(c -> c == null ? "null" : c.name()).collect(Collectors.joining(",")));

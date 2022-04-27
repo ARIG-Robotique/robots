@@ -90,6 +90,15 @@ public class TCS34725ColorSensor {
 
         @Getter
         private long delay;
+
+        public static IntegrationTime fromDelay(long delay) {
+            for (IntegrationTime time : values()) {
+                if (delay <= time.delay) {
+                    return time;
+                }
+            }
+            return TCS34725_INTEGRATIONTIME_2_4MS;
+        }
     }
 
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -101,6 +110,15 @@ public class TCS34725ColorSensor {
 
         @Getter
         private byte value;
+
+        public static Gain fromValue(int value) {
+            for (Gain gain : values()) {
+                if (gain.value == value) {
+                    return gain;
+                }
+            }
+            return TCS34725_GAIN_1X;
+        }
     }
 
     @Data
@@ -165,27 +183,21 @@ public class TCS34725ColorSensor {
     }
 
     public void setIntegrationTime(IntegrationTime integrationTime) {
-        if (!initialised) {
-            begin();
-        }
-
-        /* Update the timing register */
-        write8(TCS34725_ATIME, integrationTime.getValue());
-
-        /* Update value placeholders */
         this.integrationTime = integrationTime;
+
+        if (initialised) {
+            /* Update the timing register */
+            write8(TCS34725_ATIME, integrationTime.getValue());
+        }
     }
 
     public void setGain(Gain gain) {
-        if (!initialised) {
-            begin();
-        }
-
-        /* Update the gain register */
-        write8(TCS34725_CONTROL, gain.getValue());
-
-        /* Update value placeholders */
         this.gain = gain;
+
+        if (!initialised) {
+            /* Update the gain register */
+            write8(TCS34725_CONTROL, gain.getValue());
+        }
     }
 
     /**
@@ -198,20 +210,24 @@ public class TCS34725ColorSensor {
             begin();
         }
 
-        ColorData result = new ColorData()
-                .c(read16(TCS34725_CDATAL))
-                .r(read16(TCS34725_RDATAL))
-                .g(read16(TCS34725_GDATAL))
-                .b(read16(TCS34725_BDATAL));
+        if (log.isDebugEnabled()) {
+            log.debug("Lecture du capteur de couleur {}", deviceName);
+        }
 
         /* Set a delay for the integration time */
-        try  {
+        try {
             Thread.sleep(this.integrationTime.getDelay());
         } catch (InterruptedException e) {
             log.warn("Erreur d'attente pour l'intégration.", e);
         }
 
-        return result;
+        int[] data = readColorData();
+
+        return new ColorData()
+                .c(data[0])
+                .r(data[1])
+                .g(data[2])
+                .b(data[3]);
     }
 
     public int calculateColorTemperature(ColorData rd) {
@@ -328,9 +344,6 @@ public class TCS34725ColorSensor {
     }
 
     private byte read8(byte reg) {
-        if (log.isDebugEnabled()) {
-            log.debug("Lecture du capteur de couleur {}", deviceName);
-        }
         try {
             i2cManager.sendData(deviceName, (byte) (TCS34725_COMMAND_BIT | reg));
             return i2cManager.getData(deviceName);
@@ -344,10 +357,28 @@ public class TCS34725ColorSensor {
         try {
             i2cManager.sendData(deviceName, (byte) (TCS34725_COMMAND_BIT | reg));
             final byte[] data = i2cManager.getData(deviceName, 2);
-            return (data[1] << 8) + (data[0] & 0xFF);
+            return (data[1] & 0xFF) << 8 | (data[0] & 0xFF);
         } catch (I2CException e) {
             log.error("Erreur de lecture du capteur de couleur {} : {}", deviceName, e.toString());
             return TCS34725_INVALID_VALUE;
+        }
+    }
+
+    /**
+     * Lecture des tous les registres de couleur en une seule fois
+     */
+    private int[] readColorData() {
+        try {
+            i2cManager.sendData(deviceName, (byte) (TCS34725_COMMAND_BIT | TCS34725_CDATAL));
+            final byte[] data = i2cManager.getData(deviceName, 8);
+            int c = (data[1] & 0xFF) << 8 | (data[0] & 0xFF);
+            int r = (data[3] & 0xFF) << 8 | (data[2] & 0xFF);
+            int g = (data[5] & 0xFF) << 8 | (data[4] & 0xFF);
+            int b = (data[7] & 0xFF) << 8 | (data[6] & 0xFF);
+            return new int[]{c, r, g, b};
+        } catch (I2CException e) {
+            log.error("Erreur de lecture du capteur de couleur {} : {}", deviceName, e.toString());
+            return new int[]{-1, -1, -1, -1};
         }
     }
 

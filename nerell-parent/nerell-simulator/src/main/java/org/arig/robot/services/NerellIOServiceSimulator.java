@@ -3,6 +3,7 @@ package org.arig.robot.services;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.arig.robot.model.CouleurEchantillon;
+import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.springframework.stereotype.Service;
 
 @Service("IOService")
@@ -68,13 +69,24 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
         return contentStock >= 6;
     }
 
+    @Override
     public CouleurEchantillon couleurVentouseBas() {
-        return CouleurEchantillon.ROCHER;
+        return CouleurEchantillon.INCONNU;
     }
 
     @Override
     public CouleurEchantillon couleurVentouseHaut() {
-        return CouleurEchantillon.ROCHER;
+        return CouleurEchantillon.INCONNU;
+    }
+
+    @Override
+    public TCS34725ColorSensor.ColorData couleurVentouseHautRaw() {
+        return new TCS34725ColorSensor.ColorData();
+    }
+
+    @Override
+    public TCS34725ColorSensor.ColorData couleurVentouseBasRaw() {
+        return new TCS34725ColorSensor.ColorData();
     }
 
     // --------------------------------------------------------- //

@@ -13,7 +13,6 @@ import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
 import org.arig.robot.constants.OdinConstantesI2C;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor.ColorData;
 import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -308,27 +307,28 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
     }
 
     // Couleur
-    private CouleurEchantillon computeCouleur(TCS34725ColorSensor capteur) {
-        final ColorData c = capteur.getColorData();
-        log.info("{} R: {}, G: {}, B: {}", capteur.deviceName(), c.r(), c.g(), c.b());
-        if (c.r() > c.g() && c.r() > c.b()) {
-            return CouleurEchantillon.ROUGE;
-        } else if (c.g() > c.r() && c.g() > c.b()) {
-            return CouleurEchantillon.VERT;
-        } else if (c.b() > c.r() && c.b() > c.g()) {
-            return CouleurEchantillon.BLEU;
-        }
-        return CouleurEchantillon.ROCHER;
-    }
-
     @Override
     public CouleurEchantillon couleurVentouseBas() {
-        return computeCouleur(couleurVentouseBas);
+        final TCS34725ColorSensor.ColorData c = couleurVentouseBas.getColorData();
+        log.info("{} R: {}, G: {}, B: {}", couleurVentouseBas.deviceName(), c.r(), c.g(), c.b());
+        return computeCouleur(c);
     }
 
     @Override
     public CouleurEchantillon couleurVentouseHaut() {
-        return computeCouleur(couleurVentouseHaut);
+        final TCS34725ColorSensor.ColorData c = couleurVentouseHaut.getColorData();
+        log.info("{} R: {}, G: {}, B: {}", couleurVentouseHaut.deviceName(), c.r(), c.g(), c.b());
+        return computeCouleur(c);
+    }
+
+    @Override
+    public TCS34725ColorSensor.ColorData couleurVentouseHautRaw() {
+        return couleurVentouseHaut.getColorData();
+    }
+
+    @Override
+    public TCS34725ColorSensor.ColorData couleurVentouseBasRaw() {
+        return couleurVentouseBas.getColorData();
     }
 
     // --------------------------------------------------------- //
