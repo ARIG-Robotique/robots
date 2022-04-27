@@ -134,7 +134,6 @@ public class OdinServosCommands {
         BAS
     }
 
-    @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Déplacement de bras")
     public void mouvementBras(Bras bras, int a1, int a2, int a3) {
         switch (bras) {
@@ -147,18 +146,23 @@ public class OdinServosCommands {
         }
     }
 
-    @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Prise et stockage d'un échantillon au sol")
     public void cyclePriseSol(@ShellOption(defaultValue = "INCONNU") CouleurEchantillon couleur) {
         ioService.couleurVentouseHaut();
         ioService.couleurVentouseBas();
 
-        brasService.prise(BrasService.TypePrise.SOL, couleur);
+        if (brasService.initPrise(BrasService.TypePrise.SOL)) {
+            log.info("Prise en cours");
+            if (brasService.processPrise(BrasService.TypePrise.SOL)) {
+                log.info("Prise terminée");
+                if (brasService.stockagePrise(BrasService.TypePrise.SOL, couleur)) {
+                    log.info("Stockage terminé : {}", Arrays.stream(rs.stock()).map(c -> c == null ? "null" : c.name()).collect(Collectors.joining(",")));
+                }
+            }
+        }
         brasService.finalizePrise();
-        log.info("Stock : {}", Arrays.stream(rs.stock()).map(c -> c == null ? "null" : c.name()).collect(Collectors.joining(",")));
     }
 
-    @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Dépose d'un échantillon au sol")
     public void cycleDeposeSol() {
         brasService.depose(BrasService.TypeDepose.SOL);

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class BrasService extends BrasServiceInternal {
 
-    private static final int DST_BORDURE = 50; // TODO
+    private static final int DST_BORDURE = 200;
 
     private final RobotConfig config;
     private final EurobotStatus rs;
@@ -42,12 +42,8 @@ public class BrasService extends BrasServiceInternal {
         DISTRIBUTEUR
     }
 
-    public boolean prise(@NonNull final TypePrise typePrise, CouleurEchantillon couleur) {
-        if (couleur == null) {
-            couleur = CouleurEchantillon.INCONNU;
-        }
-
-        log.info("Prise d'échantillon {} @ {}", couleur, typePrise);
+    public boolean initPrise(@NonNull final TypePrise typePrise) {
+        log.info("Init prise d'échantillon @ {}", typePrise);
 
         int indexStock = rs.indexStockage();
         if (indexStock == -1) {
@@ -71,28 +67,34 @@ public class BrasService extends BrasServiceInternal {
                 break;
             case BORDURE:
                 setBrasBas(PositionBras.BORDURE_APPROCHE);
-                try {
-                    mv.avanceMM(DST_BORDURE);
-                } catch (AvoidingException e) {
-                    e.printStackTrace();
-                }
-                setBrasBas(PositionBras.BORDURE_PRISE);
                 break;
             case DISTRIBUTEUR:
                 // TODO
                 return false;
         }
 
-        io.enableLedCapteurCouleur();
-        io.enablePompeVentouseBas();
-        boolean pompeOk = ThreadUtils.waitUntil(io::presenceVentouseBas, config.i2cReadTimeMs(), config.timeoutPompe());
+        return true;
+    }
 
+    public boolean processPrise(@NonNull final TypePrise typePrise) {
+        return processPrise(typePrise, DST_BORDURE);
+    }
+
+    public boolean processPrise(@NonNull final TypePrise typePrise, int distanceReculBordure) {
+        log.info("Process prise d'échantillon @ {}", typePrise);
+
+        io.enablePompeVentouseBas();
+        if (typePrise == TypePrise.BORDURE) {
+            setBrasBas(PositionBras.BORDURE_PRISE);
+        }
+
+        boolean pompeOk = ThreadUtils.waitUntil(io::presenceVentouseBas, config.i2cReadTimeMs(), config.timeoutPompe());
         if (typePrise == TypePrise.BORDURE) {
             setBrasBas(PositionBras.BORDURE_APPROCHE);
             try {
-                mv.reculeMM(DST_BORDURE);
+                mv.reculeMM(distanceReculBordure);
             } catch (AvoidingException e) {
-                e.printStackTrace();
+                log.warn("Erreur lors de déplacement depuis la prise bordure", e);
             }
         }
 
@@ -103,7 +105,20 @@ public class BrasService extends BrasServiceInternal {
             return false;
         }
 
-        // lecture de la couleur
+        return true;
+    }
+
+    public boolean stockagePrise(@NonNull final TypePrise typePrise, CouleurEchantillon couleur) {
+        if (couleur == null) {
+            couleur = CouleurEchantillon.INCONNU;
+        }
+
+        int indexStock = rs.indexStockage();
+
+        // Lecture de la couleur
+        io.enableLedCapteurCouleur();
+        ThreadUtils.sleep(config.waitLed());
+
         if (couleur.isNeedsLecture()) {
             couleur = ThreadUtils.waitUntil(io::couleurVentouseBas, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor());
         }
@@ -194,7 +209,9 @@ public class BrasService extends BrasServiceInternal {
 
     public enum TypeDepose {
         SOL,
-        GALERIE
+        GALERIE_BAS,
+        GALERIE_MILIEU,
+        GALERIE_HAUT
     }
 
     public CouleurEchantillon depose(@NonNull final TypeDepose typeDepose) {
@@ -204,6 +221,12 @@ public class BrasService extends BrasServiceInternal {
         if (indexStock == -1) {
             log.warn("Dépose impossible, le stock est vide");
             return null;
+        }
+
+        CouleurEchantillon couleur = rs.destockage();
+        // TODO : Check de la couleur une dernière fois (cas pourri de restockage, etc...
+        if (couleur.isNeedsLecture()) {
+            log.warn("Lecture couleur requise, mais pas encore codé sur la dépose");
         }
 
         switch (typeDepose) {
@@ -236,12 +259,12 @@ public class BrasService extends BrasServiceInternal {
 
                 break;
 
-            case GALERIE:
-                // TODO
+            case GALERIE_BAS:
+            case GALERIE_MILIEU:
+            case GALERIE_HAUT:
                 return null;
         }
 
-        CouleurEchantillon couleur = rs.destockage();
         log.info("Echantillon {} retiré du stock", couleur);
 
         return couleur;
