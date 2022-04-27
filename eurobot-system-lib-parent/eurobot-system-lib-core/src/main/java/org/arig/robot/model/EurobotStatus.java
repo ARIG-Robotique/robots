@@ -9,10 +9,7 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Data
@@ -264,6 +261,10 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     }
 
     private CouleurEchantillon[] stock = new CouleurEchantillon[]{null, null, null, null, null, null};
+
+    public long stockDisponible() {
+        return Arrays.stream(stock).filter(Objects::isNull).count();
+    }
 
     public void stockage(CouleurEchantillon couleur) {
         stock[indexStockage()] = couleur;
