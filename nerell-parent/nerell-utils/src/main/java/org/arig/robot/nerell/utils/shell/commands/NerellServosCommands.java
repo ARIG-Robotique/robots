@@ -13,7 +13,6 @@ import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 
 import java.util.Arrays;
@@ -57,7 +56,7 @@ public class NerellServosCommands {
 
     @ShellMethod("Configuration attente moustache gauche")
     public void configWaitMoustacheGauche(int wait) {
-        for (int i = 0 ; i < nbLoop ; i++) {
+        for (int i = 0; i < nbLoop; i++) {
             servosService.moustacheGaucheOuvert(false);
             ThreadUtils.sleep(wait);
             servosService.moustacheGaucheFerme(false);
@@ -67,7 +66,7 @@ public class NerellServosCommands {
 
     @ShellMethod("Configuration attente moustache droite")
     public void configWaitMoustacheDroite(int wait) {
-        for (int i = 0 ; i < nbLoop ; i++) {
+        for (int i = 0; i < nbLoop; i++) {
             servosService.moustacheDroiteOuvert(false);
             ThreadUtils.sleep(wait);
             servosService.moustacheDroiteFerme(false);
@@ -77,7 +76,7 @@ public class NerellServosCommands {
 
     @ShellMethod("Configuration attente langue")
     public void configWaitLangue(int wait) {
-        for (int i = 0 ; i < nbLoop ; i++) {
+        for (int i = 0; i < nbLoop; i++) {
             servosService.langueOuvert(false);
             ThreadUtils.sleep(wait);
             servosService.langueFerme(false);
@@ -87,7 +86,7 @@ public class NerellServosCommands {
 
     @ShellMethod("Configuration attente fourche statuette")
     public void configWaitFourcheStatuette(int wait) {
-        for (int i = 0 ; i < nbLoop ; i++) {
+        for (int i = 0; i < nbLoop; i++) {
             servosService.fourcheStatuettePriseDepose(false);
             ThreadUtils.sleep(wait);
             servosService.fourcheStatuetteFerme(false);
@@ -97,7 +96,7 @@ public class NerellServosCommands {
 
     @ShellMethod("Configuration attente ohmmetre")
     public void configWaitOhmmetre(int wait) {
-        for (int i = 0 ; i < nbLoop ; i++) {
+        for (int i = 0; i < nbLoop; i++) {
             servosService.carreFouilleOhmmetreMesure(false);
             ThreadUtils.sleep(wait);
             servosService.carreFouilleOhmmetreFerme(false);
@@ -108,7 +107,7 @@ public class NerellServosCommands {
     @ShellMethod("Configuration attente pousse carre fouille")
     public void configWaitPousseCarreFouille(int wait) {
         servosService.carreFouilleOhmmetreOuvert(true);
-        for (int i = 0 ; i < nbLoop ; i++) {
+        for (int i = 0; i < nbLoop; i++) {
             servosService.carreFouillePoussoirPoussette(false);
             ThreadUtils.sleep(wait);
             servosService.carreFouillePoussoirFerme(false);
@@ -134,16 +133,19 @@ public class NerellServosCommands {
         }
     }
 
-    @ShellMethod("Prise et stockage d'un échantillon au sol")
-    public void cyclePriseSol(@ShellOption(defaultValue = "INCONNU") CouleurEchantillon couleur) {
+    @ShellMethod("Prise et stockage d'un échantillon")
+    public void cyclePrise(
+            @ShellOption(defaultValue = "INCONNU") CouleurEchantillon couleur,
+            @ShellOption(defaultValue = "SOL") BrasService.TypePrise typePrise
+    ) {
         ioService.couleurVentouseHaut();
         ioService.couleurVentouseBas();
 
-        if (brasService.initPrise(BrasService.TypePrise.SOL)) {
+        if (brasService.initPrise(typePrise)) {
             log.info("Prise en cours");
-            if (brasService.processPrise(BrasService.TypePrise.SOL)) {
+            if (brasService.processPrise(typePrise)) {
                 log.info("Prise terminée");
-                if (brasService.stockagePrise(BrasService.TypePrise.SOL, couleur)) {
+                if (brasService.stockagePrise(typePrise, couleur)) {
                     log.info("Stockage terminé : {}", Arrays.stream(rs.stock()).map(c -> c == null ? "null" : c.name()).collect(Collectors.joining(",")));
                 }
             }
@@ -151,10 +153,20 @@ public class NerellServosCommands {
         brasService.finalizePrise();
     }
 
-    @ShellMethod("Dépose d'un échantillon au sol")
-    public void cycleDeposeSol() {
-        brasService.depose(BrasService.TypeDepose.SOL);
+    @ShellMethod("Dépose d'un échantillon")
+    public void cycleDepose(
+            @ShellOption(defaultValue = "SOL") BrasService.TypeDepose typeDepose
+    ) {
+        ioService.couleurVentouseHaut();
+        ioService.couleurVentouseBas();
+
+        if (brasService.initDepose(typeDepose)) {
+            log.info("Dépose en cours");
+            if (brasService.processDepose(typeDepose) != null) {
+                log.info("Dépose terminée");
+                log.info("Stock : {}", Arrays.stream(rs.stock()).map(c -> c == null ? "null" : c.name()).collect(Collectors.joining(",")));
+            }
+        }
         brasService.finalizeDepose();
-        log.info("Stock : {}", Arrays.stream(rs.stock()).map(c -> c == null ? "null" : c.name()).collect(Collectors.joining(",")));
     }
 }

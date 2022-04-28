@@ -28,6 +28,9 @@ public interface EurobotConfig {
     String ACTION_STATUETTE_REPLIQUE = "Statuette / Replique";
     String ACTION_DEPOSE_STATUETTE = "Dépose statuette";
     String ACTION_RETOUR_SITE_DE_FOUILLE_PREFIX = "Retour site de fouille ";
+    String ACTION_PRISE_DISTRIB_EQUIPE = "Prise distrib. équipe";
+    String ACTION_PRISE_DISTRIB_COMMUN_EQUIPE = "Prise distrib. commun équipe";
+    String ACTION_PRISE_DISTRIB_COMMUN_ADVERSE = "Prise distrib. commun adverse";
 
     // Actions d'échappement
     String ACTION_ECHAPPEMENT_COIN_TABLE_PREFIX = "Echappement coin de table ";

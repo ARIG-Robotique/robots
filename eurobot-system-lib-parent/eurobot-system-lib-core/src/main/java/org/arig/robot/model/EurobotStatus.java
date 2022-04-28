@@ -233,7 +233,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         return 25 - zoneDeFouille.score();
     }
 
-    public boolean zoneDeFouilleComplete(){
+    public boolean zoneDeFouilleComplete() {
         return zoneDeFouille.isComplete();
     }
 
@@ -258,12 +258,28 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     private CouleurEchantillon[] stock = new CouleurEchantillon[]{null, null, null, null, null, null};
 
-    public long stockDisponible() {
-        return Arrays.stream(stock).filter(Objects::isNull).count();
+    public int stockDisponible() {
+        int i = indexStockage();
+        return i == -1 ? 0 : stock.length - i;
+    }
+
+    public int stockTaille() {
+        int i = indexDestockage();
+        return i == -1 ? 0 : i + 1;
+    }
+
+    public CouleurEchantillon stockFirst() {
+        int i = indexDestockage();
+        return i == -1 ? null : stock[i];
     }
 
     public void stockage(CouleurEchantillon couleur) {
-        stock[indexStockage()] = couleur;
+        int i = indexStockage();
+        if (i != -1) {
+            stock[i] = couleur;
+        } else {
+            log.error("[RS] demande de stockage invalide, pas de place");
+        }
     }
 
     public CouleurEchantillon destockage() {
@@ -273,15 +289,24 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         return couleur;
     }
 
+    /**
+     * Retourne le premier emplacement vide (en partant de la fin=sortie)
+     */
     public int indexStockage() {
-        for (int i = 0; i < stock.length; i++) {
-            if (stock[i] == null) {
+        for (int i = stock.length - 1; i > 0; i--) {
+            if (stock[i] == null && stock[i-1] != null) {
                 return i;
             }
+        }
+        if (stock[0] == null) {
+            return 0;
         }
         return -1;
     }
 
+    /**
+     * Retourne le premier emplacement non vide (en partant de la fin=sortie)
+     */
     public int indexDestockage() {
         for (int i = stock.length - 1; i >= 0; i--) {
             if (stock[i] != null) {

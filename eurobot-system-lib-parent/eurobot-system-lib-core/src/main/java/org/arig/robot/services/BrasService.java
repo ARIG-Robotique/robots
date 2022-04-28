@@ -24,6 +24,8 @@ public class BrasService extends BrasServiceInternal {
     private final CommonIOService io;
     private final TrajectoryManager mv;
 
+    private CouleurEchantillon couleurPrecedente = null;
+
     public BrasService(final AbstractCommonServosService servos,
                        final RobotConfig config,
                        final EurobotStatus rs,
@@ -69,8 +71,8 @@ public class BrasService extends BrasServiceInternal {
                 setBrasBas(PositionBras.BORDURE_APPROCHE);
                 break;
             case DISTRIBUTEUR:
-                // TODO
-                return false;
+                setBrasBas(PositionBras.DISTRIBUTEUR_PRISE);
+                break;
         }
 
         return true;
@@ -101,7 +103,6 @@ public class BrasService extends BrasServiceInternal {
         if (!pompeOk) {
             log.warn("Pas de présence ventouse bas");
             io.releasePompeVentouseBas();
-            setBrasBas(PositionBras.STOCK_ENTREE);
             return false;
         }
 
@@ -135,8 +136,9 @@ public class BrasService extends BrasServiceInternal {
                 log.warn("Pas de présence ventouse haut");
                 io.releasePompeVentouseHaut();
                 setBrasHaut(PositionBras.HORIZONTAL);
-                setBrasBas(PositionBras.HORIZONTAL); // pour que le truc se détache
-                setBrasBas(PositionBras.STOCK_ENTREE);
+                // pour que le truc se détache
+                setBrasBas(typePrise == TypePrise.DISTRIBUTEUR ? PositionBras.DISTRIBUTEUR_PRISE : PositionBras.HORIZONTAL);
+                setBrasBas(typePrise == TypePrise.DISTRIBUTEUR ? PositionBras.DISTRIBUTEUR_PRISE : PositionBras.STOCK_ENTREE);
                 return false;
             }
 
@@ -150,7 +152,7 @@ public class BrasService extends BrasServiceInternal {
                 }
             }
 
-            setBrasBas(PositionBras.HORIZONTAL);
+            setBrasBas(typePrise == TypePrise.DISTRIBUTEUR ? PositionBras.DISTRIBUTEUR_PRISE : PositionBras.HORIZONTAL);
 
             // stockage
             setBrasHaut(PositionBras.STOCK_ENTREE);
@@ -163,7 +165,8 @@ public class BrasService extends BrasServiceInternal {
 
             setBrasHaut(PositionBras.STOCK_ENTREE);
             setBrasHaut(PositionBras.HORIZONTAL);
-            setBrasBas(PositionBras.STOCK_ENTREE);
+
+            setBrasBas(typePrise == TypePrise.DISTRIBUTEUR ? PositionBras.DISTRIBUTEUR_PRISE : PositionBras.STOCK_ENTREE);
 
         } else {
             // stockage
@@ -176,6 +179,10 @@ public class BrasService extends BrasServiceInternal {
             }
 
             setBrasBas(PositionBras.STOCK_ENTREE);
+
+            if (typePrise == TypePrise.DISTRIBUTEUR) {
+                setBrasBas(PositionBras.DISTRIBUTEUR_PRISE);
+            }
         }
 
         boolean ok = false;
@@ -185,13 +192,15 @@ public class BrasService extends BrasServiceInternal {
             // il faut donc le compter
             if (indexStock < 5 && io.presenceStock(indexStock + 1)) {
                 log.warn("Prise en compte de l'échantillon précédent mal stocké");
-                rs.stockage(CouleurEchantillon.INCONNU);
+                rs.stockage(couleurPrecedente != null ? couleurPrecedente : CouleurEchantillon.INCONNU);
                 indexStock++;
             }
 
             log.info("Stockage d'un {} à l'emplacement {}", couleur, indexStock);
             rs.stockage(couleur);
+            couleurPrecedente = couleur;
             ok = true;
+
         } else {
             log.warn("Aucun echantillon posé dans le stock");
         }
@@ -202,9 +211,10 @@ public class BrasService extends BrasServiceInternal {
     public void finalizePrise() {
         io.disableLedCapteurCouleur();
         setBrasHaut(PositionBras.HORIZONTAL);
-        setBrasBas(PositionBras.REPOS);
-        setBrasHaut(PositionBras.REPOS);
+        setBrasBas(PositionBras.STOCK_ENTREE);
         updateStock();
+        setBrasBas(PositionBras.repos(rs.stockTaille()));
+        setBrasHaut(PositionBras.repos(rs.stockTaille()));
     }
 
     public enum TypeDepose {
@@ -214,27 +224,43 @@ public class BrasService extends BrasServiceInternal {
         GALERIE_HAUT
     }
 
-    public CouleurEchantillon depose(@NonNull final TypeDepose typeDepose) {
-        log.info("Dépose d'échantillon @ {}", typeDepose);
-
-        int indexStock = rs.indexDestockage();
-        if (indexStock == -1) {
+    public boolean initDepose(@NonNull final TypeDepose typeDepose) {
+        CouleurEchantillon couleur = rs.stockFirst();
+        if (couleur == null) {
             log.warn("Dépose impossible, le stock est vide");
-            return null;
+            return false;
         }
 
-        CouleurEchantillon couleur = rs.destockage();
-        // TODO : Check de la couleur une dernière fois (cas pourri de restockage, etc...
-        if (couleur.isNeedsLecture()) {
-            log.warn("Lecture couleur requise, mais pas encore codé sur la dépose");
+        log.info("Dépose d'échantillon {} @ {}", couleur, typeDepose);
+
+        // préparation
+        switch (typeDepose) {
+            case SOL:
+            case GALERIE_BAS:
+            case GALERIE_MILIEU:
+                setBrasHaut(PositionBras.HORIZONTAL);
+                setBrasBas(PositionBras.STOCK_ENTREE);
+                break;
+
+            case GALERIE_HAUT:
+                setBrasHaut(PositionBras.HORIZONTAL);
+                setBrasBas(PositionBras.STOCK_ENTREE);
+                setBrasBas(PositionBras.SOL_DEPOSE); // FIXME bonne position à déterminer
+                setBrasHaut(PositionBras.STOCK_ENTREE);
+                break;
         }
+
+        return true;
+    }
+
+    public CouleurEchantillon processDepose(@NonNull final TypeDepose typeDepose) {
+        int indexStock = rs.indexDestockage();
+        CouleurEchantillon couleur = rs.stockFirst();
 
         switch (typeDepose) {
             case SOL:
-                // préparation
-                setBrasHaut(PositionBras.HORIZONTAL);
-                setBrasBas(PositionBras.STOCK_ENTREE);
-
+            case GALERIE_BAS:
+            case GALERIE_MILIEU:
                 // prise
                 setBrasBas(PositionBras.stockPrise(indexStock));
 
@@ -246,9 +272,17 @@ public class BrasService extends BrasServiceInternal {
                     return null;
                 }
 
+                if (couleur.isNeedsLecture()) {
+                    couleur = ThreadUtils.waitUntil(io::couleurVentouseBas, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor());
+                    rs.stock()[indexStock] = couleur;
+                    log.info("Dernière lecture de la couleur : {}", couleur);
+                }
+
                 // depose
                 setBrasBas(PositionBras.STOCK_ENTREE);
-                setBrasBas(PositionBras.SOL_DEPOSE);
+                setBrasBas(typeDepose == TypeDepose.SOL ? PositionBras.SOL_DEPOSE :
+                        typeDepose == TypeDepose.GALERIE_BAS ? PositionBras.GALERIE_DEPOSE :
+                                PositionBras.GALERIE_DEPOSE_MILIEU);
 
                 io.releasePompeVentouseBas();
                 if (!ThreadUtils.waitUntil(() -> !io.presenceVentouseBas(), config.i2cReadTimeMs(), config.timeoutPompe())) {
@@ -256,14 +290,40 @@ public class BrasService extends BrasServiceInternal {
                 }
 
                 setBrasBas(PositionBras.STOCK_ENTREE);
-
                 break;
 
-            case GALERIE_BAS:
-            case GALERIE_MILIEU:
             case GALERIE_HAUT:
-                return null;
+                // prise
+                setBrasHaut(PositionBras.stockPrise(indexStock));
+
+                io.enablePompeVentouseHaut();
+                if (!ThreadUtils.waitUntil(io::presenceVentouseHaut, config.i2cReadTimeMs(), config.timeoutPompe())) {
+                    log.warn("Pas de présence ventouse haut");
+                    io.releasePompeVentouseBas();
+                    setBrasHaut(PositionBras.STOCK_ENTREE);
+                    return null;
+                }
+
+                if (couleur.isNeedsLecture()) {
+                    couleur = ThreadUtils.waitUntil(io::couleurVentouseHaut, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor());
+                    rs.stock()[indexStock] = couleur;
+                    log.info("Dernière lecture de la couleur : {}", couleur);
+                }
+
+                // depose
+                setBrasHaut(PositionBras.STOCK_ENTREE);
+                setBrasHaut(PositionBras.GALERIE_DEPOSE);
+
+                io.releasePompeVentouseHaut();
+                if (!ThreadUtils.waitUntil(() -> !io.presenceVentouseHaut(), config.i2cReadTimeMs(), config.timeoutPompe())) {
+                    log.warn("Echec de libération ventouse haut ?");
+                }
+
+                setBrasHaut(PositionBras.STOCK_ENTREE);
+                break;
         }
+
+        couleur = rs.destockage();
 
         log.info("Echantillon {} retiré du stock", couleur);
 
@@ -272,9 +332,10 @@ public class BrasService extends BrasServiceInternal {
 
     public void finalizeDepose() {
         setBrasHaut(PositionBras.HORIZONTAL);
-        setBrasBas(PositionBras.REPOS);
-        setBrasHaut(PositionBras.REPOS);
+        setBrasBas(PositionBras.STOCK_ENTREE);
         updateStock();
+        setBrasBas(PositionBras.repos(rs.stockTaille()));
+        setBrasHaut(PositionBras.repos(rs.stockTaille()));
     }
 
     /**
@@ -282,13 +343,18 @@ public class BrasService extends BrasServiceInternal {
      * Pour gérer des cas de mauvaise détection
      */
     public void updateStock() {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < rs.stock().length; i++) {
             if (io.presenceStock(i) && rs.stock()[i] == null) {
                 log.warn("Nouvel échantillon détecté dans le stock {}", (i + 1));
                 rs.stock()[i] = CouleurEchantillon.INCONNU;
             } else if (!io.presenceStock(i) && rs.stock()[i] != null) {
                 log.warn("échantillon perdu dans le stock {}", (i + 1));
                 rs.stock()[i] = null;
+            }
+        }
+        for (int i = rs.stock().length - 1; i > 0; i--) {
+            if (rs.stock()[i] != null && rs.stock()[i - 1] == null) {
+                log.warn("Trou dans le stock à la position {}", i);
             }
         }
     }

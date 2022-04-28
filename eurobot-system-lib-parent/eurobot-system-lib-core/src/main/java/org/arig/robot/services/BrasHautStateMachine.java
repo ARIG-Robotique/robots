@@ -12,7 +12,13 @@ public class BrasHautStateMachine extends AbstractBrasStateMachine {
 
         state(PositionBras.INIT, new PointBras(66, 97, -70)); // dois matcher la position "Init" du service servos
         state(PositionBras.HORIZONTAL, new PointBras(configBras.x + configBras.r1 + configBras.r2 + configBras.r3, configBras.y, 0));
-        state(PositionBras.REPOS, new PointBras(120, 120, -70));
+
+        state(PositionBras.REPOS_1, new PointBras(80, 95, -70));
+        state(PositionBras.REPOS_2, new PointBras(75, 95, -70));
+        state(PositionBras.REPOS_3, new PointBras(95, 100, -80));
+        state(PositionBras.REPOS_4, new PointBras(95, 100, -80));
+        state(PositionBras.REPOS_5, new PointBras(115, 110, -80));
+        state(PositionBras.REPOS_6, new PointBras(120, 120, -70));
 
         state(PositionBras.STOCK_DEPOSE_1, new PointBras(-20, 165, 180));
         state(PositionBras.STOCK_DEPOSE_2, new PointBras(-4, 165, 180));
@@ -30,17 +36,40 @@ public class BrasHautStateMachine extends AbstractBrasStateMachine {
 
         state(PositionBras.ECHANGE, new PointBras(160, 155, -90));
 
-        // TODO depose galerie
+        state(PositionBras.DISTRIBUTEUR_PRISE, new PointBras(0, 0, 0)); // TODO
+        state(PositionBras.GALERIE_DEPOSE, new PointBras(0, 0, 0)); // TODO
+        state(PositionBras.GALERIE_DEPOSE_MILIEU, new PointBras(0, 0, 0)); // TODO
 
         transition(PositionBras.INIT, PositionBras.HORIZONTAL);
-        transition(PositionBras.INIT, PositionBras.REPOS);
-        transition(PositionBras.REPOS, PositionBras.STOCK_ENTREE);
-        transition(PositionBras.STOCK_ENTREE, PositionBras.REPOS);
-        transition(PositionBras.REPOS, PositionBras.HORIZONTAL);
-        transition(PositionBras.HORIZONTAL, PositionBras.REPOS);
         transition(PositionBras.HORIZONTAL, PositionBras.STOCK_ENTREE);
         transition(PositionBras.HORIZONTAL, PositionBras.INIT);
         transition(PositionBras.STOCK_ENTREE, PositionBras.HORIZONTAL);
+
+        transition(PositionBras.REPOS_1, PositionBras.STOCK_ENTREE);
+        transition(PositionBras.REPOS_2, PositionBras.STOCK_ENTREE);
+        transition(PositionBras.REPOS_3, PositionBras.STOCK_ENTREE);
+        transition(PositionBras.REPOS_4, PositionBras.STOCK_ENTREE);
+        transition(PositionBras.REPOS_5, PositionBras.STOCK_ENTREE);
+        transition(PositionBras.REPOS_6, PositionBras.STOCK_ENTREE);
+        transition(PositionBras.STOCK_ENTREE, PositionBras.REPOS_1);
+        transition(PositionBras.STOCK_ENTREE, PositionBras.REPOS_2);
+        transition(PositionBras.STOCK_ENTREE, PositionBras.REPOS_3);
+        transition(PositionBras.STOCK_ENTREE, PositionBras.REPOS_4);
+        transition(PositionBras.STOCK_ENTREE, PositionBras.REPOS_5);
+        transition(PositionBras.STOCK_ENTREE, PositionBras.REPOS_6);
+
+        transition(PositionBras.REPOS_1, PositionBras.HORIZONTAL);
+        transition(PositionBras.REPOS_2, PositionBras.HORIZONTAL);
+        transition(PositionBras.REPOS_3, PositionBras.HORIZONTAL);
+        transition(PositionBras.REPOS_4, PositionBras.HORIZONTAL);
+        transition(PositionBras.REPOS_5, PositionBras.HORIZONTAL);
+        transition(PositionBras.REPOS_6, PositionBras.HORIZONTAL);
+        transition(PositionBras.HORIZONTAL, PositionBras.REPOS_1);
+        transition(PositionBras.HORIZONTAL, PositionBras.REPOS_2);
+        transition(PositionBras.HORIZONTAL, PositionBras.REPOS_3);
+        transition(PositionBras.HORIZONTAL, PositionBras.REPOS_4);
+        transition(PositionBras.HORIZONTAL, PositionBras.REPOS_5);
+        transition(PositionBras.HORIZONTAL, PositionBras.REPOS_6);
 
         transition(PositionBras.HORIZONTAL, PositionBras.ECHANGE);
         transition(PositionBras.ECHANGE, PositionBras.HORIZONTAL);
@@ -82,6 +111,11 @@ public class BrasHautStateMachine extends AbstractBrasStateMachine {
         transition(PositionBras.STOCK_ENTREE, PositionBras.STOCK_PRISE_5);
         transition(PositionBras.STOCK_PRISE_6, PositionBras.STOCK_ENTREE);
         transition(PositionBras.STOCK_ENTREE, PositionBras.STOCK_PRISE_6);
+
+        transition(PositionBras.STOCK_ENTREE, PositionBras.GALERIE_DEPOSE);
+        transition(PositionBras.GALERIE_DEPOSE, PositionBras.STOCK_ENTREE);
+        transition(PositionBras.STOCK_ENTREE, PositionBras.GALERIE_DEPOSE_MILIEU);
+        transition(PositionBras.GALERIE_DEPOSE_MILIEU, PositionBras.STOCK_ENTREE);
     }
 
 }

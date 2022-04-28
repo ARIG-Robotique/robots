@@ -146,16 +146,19 @@ public class OdinServosCommands {
         }
     }
 
-    @ShellMethod("Prise et stockage d'un échantillon au sol")
-    public void cyclePriseSol(@ShellOption(defaultValue = "INCONNU") CouleurEchantillon couleur) {
+    @ShellMethod("Prise et stockage d'un échantillon")
+    public void cyclePrise(
+            @ShellOption(defaultValue = "INCONNU") CouleurEchantillon couleur,
+            @ShellOption(defaultValue = "SOL") BrasService.TypePrise typePrise
+    ) {
         ioService.couleurVentouseHaut();
         ioService.couleurVentouseBas();
 
-        if (brasService.initPrise(BrasService.TypePrise.SOL)) {
+        if (brasService.initPrise(typePrise)) {
             log.info("Prise en cours");
-            if (brasService.processPrise(BrasService.TypePrise.SOL)) {
+            if (brasService.processPrise(typePrise)) {
                 log.info("Prise terminée");
-                if (brasService.stockagePrise(BrasService.TypePrise.SOL, couleur)) {
+                if (brasService.stockagePrise(typePrise, couleur)) {
                     log.info("Stockage terminé : {}", Arrays.stream(rs.stock()).map(c -> c == null ? "null" : c.name()).collect(Collectors.joining(",")));
                 }
             }
@@ -163,10 +166,20 @@ public class OdinServosCommands {
         brasService.finalizePrise();
     }
 
-    @ShellMethod("Dépose d'un échantillon au sol")
-    public void cycleDeposeSol() {
-        brasService.depose(BrasService.TypeDepose.SOL);
+    @ShellMethod("Dépose d'un échantillon")
+    public void cycleDepose(
+            @ShellOption(defaultValue = "SOL") BrasService.TypeDepose typeDepose
+    ) {
+        ioService.couleurVentouseHaut();
+        ioService.couleurVentouseBas();
+
+        if (brasService.initDepose(typeDepose)) {
+            log.info("Dépose en cours");
+            if (brasService.processDepose(typeDepose) != null) {
+                log.info("Dépose terminée");
+                log.info("Stock : {}", Arrays.stream(rs.stock()).map(c -> c == null ? "null" : c.name()).collect(Collectors.joining(",")));
+            }
+        }
         brasService.finalizeDepose();
-        log.info("Stock : {}", Arrays.stream(rs.stock()).map(c -> c == null ? "null" : c.name()).collect(Collectors.joining(",")));
     }
 }
