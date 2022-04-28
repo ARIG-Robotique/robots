@@ -23,12 +23,15 @@ public class ThreadUtils {
 
     public static <T> T waitUntil(Supplier<T> supplier, T invalidValue, int intervalMs, int timeoutMs) {
         int remainingTime = timeoutMs;
-        T value = supplier.get();
-        while (value == invalidValue && remainingTime > 0) {
-            ThreadUtils.sleep(intervalMs);
+        T value;
+        do {
             value = supplier.get();
+            if (value != invalidValue) {
+                break;
+            }
+            ThreadUtils.sleep(intervalMs);
             remainingTime -= intervalMs;
-        }
+        } while (remainingTime > 0);
         return value;
     }
 }
