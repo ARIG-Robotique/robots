@@ -163,6 +163,8 @@ public class PriseStatuetteDeposeReplique extends AbstractEurobotAction {
                 log.info("Prise de l'achantillon OK");
                 notify.run();
 
+                // TODO Avec une odometrie fiable, on doit pouvoir faire le stock direct. Sinon on les poses pour les pousser dans l'abri
+
                 // On pose au sol l'échantillon pour se recaler dessus.
                 brasService.setBrasBas(PositionBras.SOL_PRISE);
                 commonIOService.releasePompeVentouseBas();

@@ -99,9 +99,9 @@ public class OdinServosCommands {
     public void configWaitPousseReplique(int wait) {
         servosService.langueOuvert(true);
         for (int i = 0 ; i < nbLoop ; i++) {
-            servosService.fourcheStatuettePriseDepose(false);
+            servosService.pousseRepliquePoussette(false);
             ThreadUtils.sleep(wait);
-            servosService.fourcheStatuetteFerme(false);
+            servosService.pousseRepliqueFerme(false);
             ThreadUtils.sleep(wait);
         }
         servosService.langueFerme(false);
