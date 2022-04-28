@@ -102,7 +102,7 @@ public class NerellServosService extends AbstractCommonServosService {
                 .time(225)
                 .position(POS_FERME, 2210)
                 .position(POS_OUVERT, 1770)
-                .position(POS_MESURE, 1570);
+                .position(POS_MESURE, 1550);
         Servo carreFouillePoussoir = servo(CARRE_FOUILLE_POUSSOIR_ID, CARRE_FOUILLE_POUSSOIR)
                 .time(250)
                 .position(POS_FERME, 450)
