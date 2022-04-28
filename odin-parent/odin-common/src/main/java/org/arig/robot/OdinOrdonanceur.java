@@ -13,8 +13,10 @@ import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
+import org.arig.robot.services.BrasService;
 import org.arig.robot.services.OdinEcranService;
 import org.arig.robot.services.OdinIOService;
 import org.arig.robot.services.RobotGroupService;
@@ -36,6 +38,9 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Autowired
     private OdinEcranService ecranService;
+
+    @Autowired
+    private BrasService brasService;
 
     private int getX(int x) {
         return tableUtils.getX(odinRobotStatus.team() == Team.VIOLET, x);
@@ -99,7 +104,19 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
     @Override
     public void beforePowerOff() {
         odinIO.disableAllPompes();
-        ThreadUtils.sleep(1000);
+        odinIO.enableAlimServos();
+
+        ecranService.displayMessage("FIN - Enlever la tirette quand stock vide.");
+
+        brasService.setBrasHaut(PositionBras.HORIZONTAL);
+        brasService.setBrasBas(PositionBras.HORIZONTAL);
+
+        while (io.tirette()) {
+            ThreadUtils.sleep(1000);
+        }
+
+        brasService.setBrasBas(PositionBras.INIT);
+        brasService.setBrasHaut(PositionBras.INIT);
     }
 
     /**

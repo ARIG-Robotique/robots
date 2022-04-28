@@ -396,7 +396,7 @@ public abstract class AbstractOrdonanceur {
      */
     private void cycleFin() {
         ecranService.displayMessage(
-                String.format("FIN - Remettre la tirette et AU pour arret - Score %s",
+                String.format("FIN - Tirette et AU OK pour ejection stock - Score %s",
                         robotStatus.calculerPoints())
         );
 

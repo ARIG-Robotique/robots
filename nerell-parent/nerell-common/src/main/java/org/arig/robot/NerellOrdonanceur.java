@@ -15,12 +15,10 @@ import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.model.enums.TypeCalage;
-import org.arig.robot.services.BaliseService;
-import org.arig.robot.services.NerellEcranService;
-import org.arig.robot.services.NerellIOService;
-import org.arig.robot.services.RobotGroupService;
+import org.arig.robot.services.*;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
@@ -42,6 +40,9 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Autowired
     private NerellEcranService ecranService;
+
+    @Autowired
+    private BrasService brasService;
 
     private int getX(int x) {
         return tableUtils.getX(nerellRobotStatus.team() == Team.VIOLET, x);
@@ -109,7 +110,19 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     @Override
     public void beforePowerOff() {
         nerellIO.disableAllPompes();
-        ThreadUtils.sleep(1000);
+        nerellIO.enableAlimServos();
+
+        ecranService.displayMessage("FIN - Enlever la tirette quand stock vide.");
+
+        brasService.setBrasHaut(PositionBras.HORIZONTAL);
+        brasService.setBrasBas(PositionBras.HORIZONTAL);
+
+        while (io.tirette()) {
+            ThreadUtils.sleep(1000);
+        }
+
+        brasService.setBrasBas(PositionBras.INIT);
+        brasService.setBrasHaut(PositionBras.INIT);
     }
 
     /**
