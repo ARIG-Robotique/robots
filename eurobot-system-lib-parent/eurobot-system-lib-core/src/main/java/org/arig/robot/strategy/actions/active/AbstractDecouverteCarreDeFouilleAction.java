@@ -69,14 +69,16 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
         try {
             double yRef = -1.0;
             double deltaX = 0;
-            boolean calageBordure = false;
-            boolean calageCarreFouille = false;
+            boolean calageBordureDone = false;
+            boolean calageCarreFouilleDone = false;
+            boolean needMove = false;
             do {
                 CarreFouille carreFouille = cf();
                 carreFouille.incrementTry();
                 log.info("Traitement carré de fouille #{} {}", carreFouille.numero(), carreFouille.couleur());
 
-                if (!calageBordure) {
+                // Le calage bordure n'as pas encore été fait, donc on se cale sur celle-ci
+                if (!calageBordureDone) {
                     // Calage bordure requis
                     final Point start = entryPoint(carreFouille);
                     log.info("Calage requis, on se place au point de départ : #{} - X={}", carreFouille.numero(), start.getX());
@@ -98,10 +100,12 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
 
                     yRef = conv.pulseToMm(position.getPt().getY());
                     log.info("Calage bordure terminé, yRef = {} mm", yRef);
-                    calageBordure = true;
+                    calageBordureDone = true;
                 }
 
-                if (!calageCarreFouille) {
+                // Si le calage sur carré de fouille n'a pas encore été fait, on se cale sur lui
+                // si on a besoin de faire une lecture.
+                if (!calageCarreFouilleDone && carreFouille.needRead()) {
                     log.info("Calage carré de fouille requis");
                     mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
 
@@ -117,9 +121,17 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                         double currentX = conv.pulseToMm(position.getPt().getX());
                         deltaX = currentX - carreFouille.getX();
                         log.info("On a déplacé le robot de {} mm (delta X)", deltaX);
-                        calageCarreFouille = true;
+                        calageCarreFouilleDone = true;
                     }
                 } else {
+                    // Le calage sur carré de fouille n'auras plus lieu jusqu'a la prochaine tentative
+                    calageCarreFouilleDone = true;
+                }
+
+                // Ici on se déplace seulement a partir du moment on a besoin.
+                // Lors de la première itération, pas utile.
+                // A partir des suivantes, on reset après calage sur le carré de fouille (cas ou pas besoin de lire au début)
+                if (needMove) {
                     log.info("Position carre de fouille #{} - X={} ; Y={}", carreFouille.numero(), carreFouille.getX(), yRef);
                     GotoOption sens = GotoOption.AVANT;
                     if ((rs.team() == Team.JAUNE && isReverse()) || (rs.team() == Team.VIOLET && !isReverse())) {
@@ -128,8 +140,11 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                     mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
                     mv.gotoPoint(carreFouille.getX() + deltaX, yRef, sens, GotoOption.SANS_ORIENTATION);
                 }
+
+                // Ouverture de l'ohmmetre
                 commonServosService.carreFouilleOhmmetreOuvert(false);
 
+                // Si on a pas de carre de fouille ici, c'est qu'il est basculé
                 if (commonIOService.presenceCarreFouille(true)) {
                     log.info("Carré de fouille #{} {} : Presence", carreFouille.numero(), carreFouille.couleur());
                     CouleurCarreFouille couleur = carreFouille.couleur();
@@ -165,6 +180,8 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                     group.basculeCarreFouille(carreFouille.numero());
                 }
 
+                // A la prochaine itération, il faut se déplacer devant le carré de fouille suivant
+                needMove = true;
             } while (cf() != null);
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
