@@ -138,7 +138,7 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                         sens = GotoOption.ARRIERE;
                     }
                     mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-                    mv.gotoPoint(carreFouille.getX() + deltaX, yRef, sens, GotoOption.SANS_ORIENTATION);
+                    mv.gotoPoint(carreFouille.getX() + deltaX, yRef == -1.0 ? entryPoint().getY() : yRef, sens, GotoOption.SANS_ORIENTATION);
                 }
 
                 // Ouverture de l'ohmmetre
