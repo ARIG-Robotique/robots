@@ -10,11 +10,15 @@ import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.stereotype.Component;
 
+import java.util.Random;
+
 @Slf4j
 @Component
 public class EchappementCoinDeTable extends AbstractEurobotAction {
 
     private int step = 0;
+
+    private final Random rand = new Random();
 
     @Getter
     private boolean completed = false;
@@ -46,21 +50,22 @@ public class EchappementCoinDeTable extends AbstractEurobotAction {
             if (step == 0) {
                 mv.pathTo(getX(520), 370);
             } else if (step == 1) {
-                mv.pathTo(getX(1500), 1345);
+                mv.pathTo(getX(1500), 1500);
             } else if (step == 2) {
-                mv.pathTo(getX(560), 1630);
+                mv.pathTo(getX(2595), 370);
             } else if (step == 3) {
-                mv.pathTo(getX(1500), 370);
+                mv.pathTo(getX(1500), 190);
+            } else if (step == 4) {
+                mv.pathTo(getX(240), 1800);
+            } else if (step == 5) {
+                mv.pathTo(getX(2420), 1720);
             }
 
         } catch (AvoidingException | NoPathFoundException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.getMessage());
         } finally {
-            step++;
-            if (step >= 4) {
-                step = 0;
-            }
+            step = rand.nextInt(6);
         }
     }
 }
