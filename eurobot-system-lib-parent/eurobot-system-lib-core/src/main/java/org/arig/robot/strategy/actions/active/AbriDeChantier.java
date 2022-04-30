@@ -11,6 +11,7 @@ import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BrasService;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -192,7 +193,6 @@ public class AbriDeChantier extends AbstractEurobotAction {
             if (brasService.processPrise(BrasService.TypePrise.BORDURE)) {
                 log.info("Prise de l'échantillon OK");
                 notify.run();
-
                 if (stockAbri) {
                     // Stockage du contenu de l'abri
                     log.info("Stockage de l'échantillon");
@@ -201,8 +201,9 @@ public class AbriDeChantier extends AbstractEurobotAction {
                 } else {
                     // On pose au sol l'échantillon pour le pousser.
                     log.info("Dépose pour le pousser sous l'abri");
-                    brasService.setBrasBas(PositionBras.SOL_PRISE);
+                    brasService.setBrasBas(PositionBras.SOL_DEPOSE);
                     commonIOService.releasePompeVentouseBas();
+                    ThreadUtils.waitUntil(() -> !commonIOService.presenceVentouseBas(), robotConfig.i2cReadTimeMs(), robotConfig.timeoutPompe());
                 }
             }
         }

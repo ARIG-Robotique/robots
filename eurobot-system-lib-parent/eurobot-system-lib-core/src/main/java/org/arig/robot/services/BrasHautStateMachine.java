@@ -41,8 +41,10 @@ public class BrasHautStateMachine extends AbstractBrasStateMachine {
         state(PositionBras.GALERIE_DEPOSE_MILIEU, new PointBras(0, 0, 0)); // TODO
 
         transition(PositionBras.INIT, PositionBras.HORIZONTAL);
-        transition(PositionBras.HORIZONTAL, PositionBras.STOCK_ENTREE);
         transition(PositionBras.HORIZONTAL, PositionBras.INIT);
+        transition(PositionBras.INIT, PositionBras.STOCK_ENTREE);
+        transition(PositionBras.STOCK_ENTREE, PositionBras.INIT);
+        transition(PositionBras.HORIZONTAL, PositionBras.STOCK_ENTREE);
         transition(PositionBras.STOCK_ENTREE, PositionBras.HORIZONTAL);
 
         transition(PositionBras.REPOS_1, PositionBras.STOCK_ENTREE);
