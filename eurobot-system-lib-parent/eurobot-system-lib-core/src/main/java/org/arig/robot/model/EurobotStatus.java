@@ -1,10 +1,6 @@
 package org.arig.robot.model;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
@@ -34,8 +30,8 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     /**
      * CONFIGURATION
      */
-    private boolean statuettePresente = true;
-    private boolean vitrinePresente = true;
+
+    private boolean troisDeposeAbriChantier = false;
 
     /**
      * STATUT
@@ -316,9 +312,9 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
             return points;
         }
 
-        if (vitrinePresente) points += 2;
+        points += 2; // Vitrine présente
+        points += 2; // Statuette présente
         if (vitrineActive) points += 5;
-        if (statuettePresente) points += 2;
         if (statuettePris) points += 5;
         if (statuetteDansVitrine) points += 15;
         if (repliqueDepose) points += 10;
@@ -339,8 +335,8 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Override
     public Map<String, Integer> scoreStatus() {
         Map<String, Integer> r = new HashMap<>();
-        r.put("Vitrine", (vitrinePresente ? 2 : 0) + (vitrineActive ? 5 : 0));
-        r.put("Statuette", (statuettePresente ? 2 : 0) + (statuettePris ? 5 : 0) + (statuetteDansVitrine ? 15 : 0));
+        r.put("Vitrine", 2 + (vitrineActive ? 5 : 0));
+        r.put("Statuette", 2 + (statuettePris ? 5 : 0) + (statuetteDansVitrine ? 15 : 0));
         r.put("Replique", repliqueDepose ? 10 : 0);
         r.put("Distributeurs", (distributeurEquipePris ? 3 : 0) + (distributeurCommunEquipePris ? 3 : 0) + (echantillonAbriChantierCarreFouillePris ? 1 : 0) + (echantillonAbriChantierCarreFouillePris ? 1 : 0) + (echantillonCampementPris ? 1 : 0));
         r.put("Zone de fouille", zoneDeFouille.score());

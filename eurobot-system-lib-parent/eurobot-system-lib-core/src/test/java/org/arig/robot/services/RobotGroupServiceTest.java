@@ -2,14 +2,7 @@ package org.arig.robot.services;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.CouleurCarreFouille;
-import org.arig.robot.model.CouleurEchantillon;
-import org.arig.robot.model.EurobotStatus;
-import org.arig.robot.model.InitStep;
-import org.arig.robot.model.SiteDeRetour;
-import org.arig.robot.model.Strategy;
-import org.arig.robot.model.Team;
-import org.arig.robot.model.TestEurobotStatus;
+import org.arig.robot.model.*;
 import org.arig.robot.system.RobotGroupOverSocket;
 import org.arig.robot.utils.ThreadUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -153,38 +146,16 @@ class RobotGroupServiceTest {
     }
 
     @Test
-    void testConfiguration() {
-        Assertions.assertTrue(statusPrimary.statuettePresente());
-        Assertions.assertTrue(statusPrimary.vitrinePresente());
-        Assertions.assertTrue(statusSecondary.statuettePresente());
-        Assertions.assertTrue(statusSecondary.vitrinePresente());
+    void testConfigurationTroisDeposeAbriChantier() {
+        Assertions.assertFalse(statusPrimary.troisDeposeAbriChantier());
+        Assertions.assertFalse(statusSecondary.troisDeposeAbriChantier());
 
-        statusPrimary.statuettePresente(false);
+        statusPrimary.troisDeposeAbriChantier(true);
         rgServicePrimary.configuration();
         ThreadUtils.sleep(WAIT);
 
-        Assertions.assertFalse(statusPrimary.statuettePresente());
-        Assertions.assertTrue(statusPrimary.vitrinePresente());
-        Assertions.assertFalse(statusSecondary.statuettePresente());
-        Assertions.assertTrue(statusSecondary.vitrinePresente());
-
-        statusSecondary.statuettePresente(true);
-        rgServiceSecondary.configuration();
-        ThreadUtils.sleep(WAIT);
-
-        Assertions.assertTrue(statusPrimary.statuettePresente());
-        Assertions.assertTrue(statusPrimary.vitrinePresente());
-        Assertions.assertTrue(statusSecondary.statuettePresente());
-        Assertions.assertTrue(statusSecondary.vitrinePresente());
-
-        statusPrimary.vitrinePresente(false);
-        rgServicePrimary.configuration();
-        ThreadUtils.sleep(WAIT);
-
-        Assertions.assertTrue(statusPrimary.statuettePresente());
-        Assertions.assertFalse(statusPrimary.vitrinePresente());
-        Assertions.assertTrue(statusSecondary.statuettePresente());
-        Assertions.assertFalse(statusSecondary.vitrinePresente());
+        Assertions.assertTrue(statusPrimary.troisDeposeAbriChantier());
+        Assertions.assertTrue(statusSecondary.troisDeposeAbriChantier());
     }
 
     @Test

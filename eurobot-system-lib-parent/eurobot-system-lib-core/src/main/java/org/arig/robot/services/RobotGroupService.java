@@ -3,14 +3,7 @@ package org.arig.robot.services;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.arig.robot.model.CouleurCarreFouille;
-import org.arig.robot.model.CouleurEchantillon;
-import org.arig.robot.model.EurobotStatus;
-import org.arig.robot.model.InitStep;
-import org.arig.robot.model.SiteDeRetour;
-import org.arig.robot.model.StatusEvent;
-import org.arig.robot.model.Strategy;
-import org.arig.robot.model.Team;
+import org.arig.robot.model.*;
 import org.arig.robot.system.group.RobotGroup;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Service;
@@ -83,8 +76,7 @@ public class RobotGroupService implements RobotGroup.Handler {
                 rs.strategy(Strategy.values()[data[0]]);
                 break;
             case CONFIG:
-                rs.statuettePresente(data[0] > 0);
-                rs.vitrinePresente(data[1] > 0);
+                rs.troisDeposeAbriChantier(data[0] > 0);
                 break;
             case CURRENT_ACTION:
                 String actionName = null;
@@ -248,8 +240,7 @@ public class RobotGroupService implements RobotGroup.Handler {
 
     public void configuration() {
         byte[] data = new byte[]{
-                (byte) (rs.statuettePresente() ? 1 : 0),
-                (byte) (rs.vitrinePresente() ? 1 : 0)
+                (byte) (rs.troisDeposeAbriChantier() ? 1 : 0)
         };
         sendEvent(StatusEvent.CONFIG, data);
     }

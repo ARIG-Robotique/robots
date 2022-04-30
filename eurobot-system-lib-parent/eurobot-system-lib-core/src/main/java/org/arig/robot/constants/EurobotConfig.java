@@ -21,8 +21,7 @@ public interface EurobotConfig {
     int validActivationVitrineRemainingTime = 30000;
 
     // Options de match
-    String STATUETTE_PRESENTE = "Statuette présente";
-    String VITRINE_PRESENTE = "Vitrine présente";
+    String TROIS_DANS_ABRI = "3 dans abri";
 
     // Noms des actions
     String ACTION_DECOUVERTE_CARRE_FOUILLE = "Découverte carré de fouille";

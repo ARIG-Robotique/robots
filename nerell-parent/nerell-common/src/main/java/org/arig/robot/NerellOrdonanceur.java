@@ -10,11 +10,7 @@ import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
-import org.arig.robot.model.InitStep;
-import org.arig.robot.model.NerellRobotStatus;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Strategy;
-import org.arig.robot.model.Team;
+import org.arig.robot.model.*;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.model.enums.TypeCalage;
@@ -152,9 +148,8 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 log.info("Strategy {}", nerellRobotStatus.strategy().name());
             }
 
-            nerellRobotStatus.twoRobots(ecranService.config().isTwoRobots());
-            nerellRobotStatus.statuettePresente(ecranService.config().hasOption(EurobotConfig.STATUETTE_PRESENTE));
-            nerellRobotStatus.vitrinePresente(ecranService.config().hasOption(EurobotConfig.VITRINE_PRESENTE));
+            nerellRobotStatus.twoRobots(nerellEcranService.config().isTwoRobots());
+            nerellRobotStatus.troisDeposeAbriChantier(nerellEcranService.config().hasOption(EurobotConfig.TROIS_DANS_ABRI));
 
             groupService.configuration();
 
