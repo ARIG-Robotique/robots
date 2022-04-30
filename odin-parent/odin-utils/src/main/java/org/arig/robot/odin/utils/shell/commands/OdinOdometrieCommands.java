@@ -67,13 +67,13 @@ public class OdinOdometrieCommands {
         monitoringWrapper.cleanAllPoints();
         for (int cycle = 0 ; cycle < nbCycle ; cycle++) {
             log.info(LOG_CYCLE, cycle + 1, nbCycle);
-            trajectoryManager.setVitesse(100, 1000);
+            trajectoryManager.setVitesse(500, 1000);
             trajectoryManager.avanceMM(cycle == 0 ? 1000 : 900);
-            trajectoryManager.setVitesse(1000, 100);
+            trajectoryManager.setVitesse(1000, 500);
             trajectoryManager.tourneDeg(180);
-            trajectoryManager.setVitesse(100, 1000);
+            trajectoryManager.setVitesse(500, 1000);
             trajectoryManager.avanceMM(900);
-            trajectoryManager.setVitesse(1000, 100);
+            trajectoryManager.setVitesse(1000, 500);
             trajectoryManager.tourneDeg(-180);
         }
         rs.enableCalageBordure(TypeCalage.ARRIERE);
@@ -105,8 +105,7 @@ public class OdinOdometrieCommands {
         // Si delta > 0 => roue gauche plus petite que la roue droite (roue gauche a fait plus de tour)
 
         double distance = (roueDroite + roueGauche) / 2;
-        double delta = roueGauche - roueDroite;
-        // Si delta > 0, la roue gauche est plus grande
+        double delta = roueGauche - roueDroite; // Si delta > 0, la roue gauche est plus petite que la roue droite
 
         double ratioError = delta / distance;
 
@@ -114,10 +113,6 @@ public class OdinOdometrieCommands {
         double oldDroit = encoders.getCoefDroit();
         double newGauche = (1 - ratioError) * oldGauche;
         double newDroit = (1 + ratioError) * oldDroit;
-        log.info("Roue gauche : {} pulse", roueGauche);
-        log.info("Roue droite : {} pulse", roueDroite);
-        log.info("Distance    : {} pulse", distance);
-        log.info("Delta G - D : {} pulse", delta);
         if (delta > 0) {
             log.info("Roue gauche plus petite que la roue droite");
             newDroit = 1;
@@ -125,6 +120,11 @@ public class OdinOdometrieCommands {
             log.info("Roue droite plus petite que la roue gauche");
             newGauche = 1;
         }
+
+        log.info("Roue gauche : {} pulse", roueGauche);
+        log.info("Roue droite : {} pulse", roueDroite);
+        log.info("Distance    : {} pulse", distance);
+        log.info("Delta G - D : {} pulse", delta);
         log.info("Ratio error : {}", ratioError);
         log.info(LOG_SEPARATOR);
         log.info("Coef gauche : {} -> {}", oldGauche, newGauche);
@@ -242,7 +242,7 @@ public class OdinOdometrieCommands {
         rs.enableCalageBordure(TypeCalage.ARRIERE);
         trajectoryManager.setVitesse(100, 1000);
         trajectoryManager.reculeMMSansAngle(1000);
-        trajectoryManager.setVitesse(300, 1000);
+        trajectoryManager.setVitesse(500, 1000);
         trajectoryManager.avanceMM(distanceCmd);
         ThreadUtils.sleep(3000); // Stabilisation
 
@@ -366,15 +366,18 @@ public class OdinOdometrieCommands {
             rs.enableForceMonitoring();
             monitoringWrapper.cleanAllPoints();
             currentPosition.updatePosition(0, 0, 0);
-            trajectoryManager.avanceMM(100);
-            trajectoryManager.setVitesse(1000, 100);
+            trajectoryManager.avanceMM(70);
+            trajectoryManager.setVitesse(1000, 500);
             trajectoryManager.tourneDeg(360 * (first ? nbCycle : -nbCycle));
             trajectoryManager.gotoOrientationDeg(0);
-            rs.enableCalageBordure(TypeCalage.ARRIERE);
             trajectoryManager.setVitesse(100, 1000);
-            trajectoryManager.reculeMMSansAngle(500);
+            rs.enableCalageBordure(TypeCalage.ARRIERE);
+            trajectoryManager.reculeMM(70);
+            rs.enableCalageBordure(TypeCalage.ARRIERE);
+            trajectoryManager.reculeMMSansAngle(70);
 
             rs.disableForceMonitoring();
+            double finalAngle = convRobot.pulseToDeg(currentPosition.getAngle());
             ThreadUtils.sleep(300); // Stabilisation
             rs.disableAsserv();
 
@@ -393,7 +396,7 @@ public class OdinOdometrieCommands {
                 roueGauche += d.getFields().get("gauche").doubleValue();
             }
 
-            double delta = Math.abs(roueGauche) - Math.abs(roueDroite);
+            double delta = -finalAngle;
             double ratio = delta / (360 * nbCycle);
             double newTrack = oldTrack * (1 + ratio);
             if (first) {
@@ -404,7 +407,8 @@ public class OdinOdometrieCommands {
 
             log.info("Roue gauche     : {} pulse", roueGauche);
             log.info("Roue droite     : {} pulse", roueDroite);
-            log.info("Delta G-D       : {} pulse", delta);
+            log.info("Delta Angle     : {} pulse", delta);
+            log.info("Ratio           : {}", ratio);
 
             first = false;
             i++;
@@ -412,6 +416,7 @@ public class OdinOdometrieCommands {
         double newTrackMoy = (newTrackFirst + newTrackSecond) / 2;
         log.info(LOG_SEPARATOR);
         log.info("Count per mm          : {} pulse", convRobot.countPerMm());
+        log.info("Old count per deg     : {} pulse", convRobot.countPerDegree());
         log.info("Old entraxe           : {} mm", oldTrack);
         log.info("New entraxe 1         : {} mm", newTrackFirst);
         log.info("New entraxe 2         : {} mm", newTrackSecond);
@@ -421,5 +426,6 @@ public class OdinOdometrieCommands {
         log.info("Application du nouveau paramètre de conversion");
 
         convRobot.entraxe(newTrackMoy);
+        log.info("New countPerDeg       : {} pulse", convRobot.countPerDegree());
     }
 }

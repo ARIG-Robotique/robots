@@ -67,13 +67,13 @@ public class NerellOdometrieCommands {
         monitoringWrapper.cleanAllPoints();
         for (int cycle = 0 ; cycle < nbCycle ; cycle++) {
             log.info(LOG_CYCLE, cycle + 1, nbCycle);
-            trajectoryManager.setVitesse(100, 1000);
+            trajectoryManager.setVitesse(500, 1000);
             trajectoryManager.avanceMM(cycle == 0 ? 1000 : 900);
-            trajectoryManager.setVitesse(1000, 100);
+            trajectoryManager.setVitesse(1000, 500);
             trajectoryManager.tourneDeg(180);
-            trajectoryManager.setVitesse(100, 1000);
+            trajectoryManager.setVitesse(500, 1000);
             trajectoryManager.avanceMM(900);
-            trajectoryManager.setVitesse(1000, 100);
+            trajectoryManager.setVitesse(1000, 500);
             trajectoryManager.tourneDeg(-180);
         }
         rs.enableCalageBordure(TypeCalage.ARRIERE);
@@ -242,7 +242,7 @@ public class NerellOdometrieCommands {
         rs.enableCalageBordure(TypeCalage.ARRIERE);
         trajectoryManager.setVitesse(100, 1000);
         trajectoryManager.reculeMMSansAngle(1000);
-        trajectoryManager.setVitesse(300, 1000);
+        trajectoryManager.setVitesse(500, 1000);
         trajectoryManager.avanceMM(distanceCmd);
         ThreadUtils.sleep(3000); // Stabilisation
 
@@ -366,15 +366,15 @@ public class NerellOdometrieCommands {
             rs.enableForceMonitoring();
             monitoringWrapper.cleanAllPoints();
             currentPosition.updatePosition(0, 0, 0);
-            trajectoryManager.avanceMM(100);
-            trajectoryManager.setVitesse(1000, 100);
+            trajectoryManager.avanceMM(70);
+            trajectoryManager.setVitesse(1000, 500);
             trajectoryManager.tourneDeg(360 * (first ? nbCycle : -nbCycle));
             trajectoryManager.gotoOrientationDeg(0);
             trajectoryManager.setVitesse(100, 1000);
             rs.enableCalageBordure(TypeCalage.ARRIERE);
-            trajectoryManager.reculeMM(100);
+            trajectoryManager.reculeMM(70);
             rs.enableCalageBordure(TypeCalage.ARRIERE);
-            trajectoryManager.reculeMMSansAngle(100);
+            trajectoryManager.reculeMMSansAngle(70);
 
             rs.disableForceMonitoring();
             double finalAngle = convRobot.pulseToDeg(currentPosition.getAngle());
