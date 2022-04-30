@@ -63,6 +63,19 @@ public class CalageService {
             }
 
             if (doneAvant || doneArriere || doneLatteralDroit || donePriseEchantillon) {
+                if (doneAvant) {
+                    rs.calageCompleted().add(TypeCalage.AVANT);
+                }
+                if (doneArriere) {
+                    rs.calageCompleted().add(TypeCalage.ARRIERE);
+                }
+                if (doneLatteralDroit) {
+                    rs.calageCompleted().add(TypeCalage.LATTERAL_DROIT);
+                }
+                if (donePriseEchantillon) {
+                    rs.calageCompleted().add(TypeCalage.PRISE_ECHANTILLON);
+                }
+
                 trajectoryManager.calageBordureDone();
             }
         }

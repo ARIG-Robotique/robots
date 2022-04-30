@@ -170,7 +170,10 @@ public abstract class AbstractRobotStatus {
     @Setter(AccessLevel.NONE)
     private List<TypeCalage> calage = new ArrayList<>(3);
 
+    private List<TypeCalage> calageCompleted = new ArrayList<>(3);
+
     public void enableCalageBordure(TypeCalage main, TypeCalage ... others) {
+        calageCompleted.clear();
         calage.clear();
         calage.add(main);
         if (others != null) {
