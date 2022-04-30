@@ -71,7 +71,9 @@ public class BrasHautStateMachine extends AbstractBrasStateMachine {
         transition(PositionBras.HORIZONTAL, PositionBras.REPOS_5);
         transition(PositionBras.HORIZONTAL, PositionBras.REPOS_6);
 
-        transition(PositionBras.HORIZONTAL, PositionBras.ECHANGE);
+        transition(PositionBras.HORIZONTAL, PositionBras.ECHANGE, TransitionBras.withPoints(
+                new PointBras(180, 185, -90)
+        ));
         transition(PositionBras.ECHANGE, PositionBras.HORIZONTAL);
         transition(PositionBras.ECHANGE, PositionBras.STOCK_ENTREE);
         transition(PositionBras.STOCK_ENTREE, PositionBras.ECHANGE);
