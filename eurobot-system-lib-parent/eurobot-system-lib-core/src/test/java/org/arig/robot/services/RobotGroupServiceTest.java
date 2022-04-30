@@ -159,6 +159,19 @@ class RobotGroupServiceTest {
     }
 
     @Test
+    void testConfigurationStockageAbriChantier() {
+        Assertions.assertFalse(statusPrimary.stockageAbriChantier());
+        Assertions.assertFalse(statusSecondary.stockageAbriChantier());
+
+        statusPrimary.stockageAbriChantier(true);
+        rgServicePrimary.configuration();
+        ThreadUtils.sleep(WAIT);
+
+        Assertions.assertTrue(statusPrimary.stockageAbriChantier());
+        Assertions.assertTrue(statusSecondary.stockageAbriChantier());
+    }
+
+    @Test
     void testDistributeurEquipePris() {
         Assertions.assertFalse(statusPrimary.distributeurEquipePris());
         Assertions.assertFalse(statusSecondary.distributeurEquipePris());
@@ -414,15 +427,15 @@ class RobotGroupServiceTest {
 
     @Test
     void testDeposeAbriChantier() {
-        Assertions.assertEquals(0, statusPrimary.abriChantier().size());
-        Assertions.assertEquals(0, statusSecondary.abriChantier().size());
+        Assertions.assertEquals(0, statusPrimary.abriChantierSize());
+        Assertions.assertEquals(0, statusSecondary.abriChantierSize());
 
         rgServicePrimary.deposeAbriChantier(CouleurEchantillon.VERT, CouleurEchantillon.ROUGE);
         ThreadUtils.sleep(WAIT);
 
-        Assertions.assertEquals(2, statusPrimary.abriChantier().size());
-        Assertions.assertEquals(2, statusSecondary.abriChantier().size());
-        Assertions.assertEquals(CouleurEchantillon.VERT, statusPrimary.abriChantier().get(0));
-        Assertions.assertEquals(CouleurEchantillon.ROUGE, statusSecondary.abriChantier().get(1));
+        Assertions.assertEquals(2, statusPrimary.abriChantierSize());
+        Assertions.assertEquals(2, statusSecondary.abriChantierSize());
+        Assertions.assertEquals(CouleurEchantillon.VERT, statusPrimary.abriChantierEchantillon(0));
+        Assertions.assertEquals(CouleurEchantillon.ROUGE, statusSecondary.abriChantierEchantillon(1));
     }
 }

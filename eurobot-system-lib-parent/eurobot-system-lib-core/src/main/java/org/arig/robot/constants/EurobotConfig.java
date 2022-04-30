@@ -24,10 +24,11 @@ public interface EurobotConfig {
 
     // Options de match
     String TROIS_DANS_ABRI = "3 dans abri";
+    String STOCKAGE_ABRI = "Stockage abri";
 
     // Noms des actions
     String ACTION_DECOUVERTE_CARRE_FOUILLE = "Découverte carré de fouille";
-    String ACTION_STATUETTE_REPLIQUE = "Statuette / Replique";
+    String ACTION_ABRI_CHANTIER = "Abri de chantier";
     String ACTION_DEPOSE_STATUETTE = "Dépose statuette";
     String ACTION_RETOUR_SITE_DE_FOUILLE_PREFIX = "Retour site de fouille ";
     String ACTION_PRISE_DISTRIB_EQUIPE = "Prise distrib. équipe";

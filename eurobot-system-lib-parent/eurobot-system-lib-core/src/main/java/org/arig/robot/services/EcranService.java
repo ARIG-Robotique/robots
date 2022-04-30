@@ -42,7 +42,7 @@ public class EcranService extends AbstractEcranService<EcranConfig, EcranState> 
                 Team.VIOLET.name(), "purple"
         ));
         ecranParams.setStrategies(Stream.of(Strategy.values()).map(Enum::name).collect(Collectors.toList()));
-        ecranParams.setOptions(List.of(EurobotConfig.TROIS_DANS_ABRI));
+        ecranParams.setOptions(List.of(EurobotConfig.TROIS_DANS_ABRI, EurobotConfig.STOCKAGE_ABRI));
         return ecranParams;
     }
 }

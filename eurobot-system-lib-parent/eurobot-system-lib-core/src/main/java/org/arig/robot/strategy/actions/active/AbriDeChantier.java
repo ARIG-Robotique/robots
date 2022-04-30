@@ -16,18 +16,19 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PriseStatuetteDeposeReplique extends AbstractEurobotAction {
+public class AbriDeChantier extends AbstractEurobotAction {
 
     @Autowired
     private BrasService brasService;
 
     @Override
     public String name() {
-        return EurobotConfig.ACTION_STATUETTE_REPLIQUE;
+        return EurobotConfig.ACTION_ABRI_CHANTIER;
     }
 
     @Override
     public int order() {
+        boolean stockAbri = rs.stockageAbriChantier();
         int points = 0;
         if (!rs.statuettePris()) {
             points += 5;
@@ -37,9 +38,15 @@ public class PriseStatuetteDeposeReplique extends AbstractEurobotAction {
         }
         if (!rs.echantillonAbriChantierCarreFouillePris()) {
             points += 1; // 1 point de plus si on prend l'échantillon
+            if (!stockAbri) {
+                points += 5; // 5 points de plus si on ne prend pas l'échantillon en stock, on le pousse sous l'abri
+            }
         }
         if (!rs.echantillonAbriChantierDistributeurPris()) {
             points += 1; // 1 point de plus si on prend l'échantillon
+            if (!stockAbri) {
+                points += 5; // 5 points de plus si on ne prend pas l'échantillon en stock, on le pousse sous l'abri
+            }
         }
         return points + tableUtils.alterOrder(entryPoint());
     }
@@ -54,18 +61,26 @@ public class PriseStatuetteDeposeReplique extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
+        boolean stockAbri = rs.stockageAbriChantier();
+        int nbEchantillon = !rs.echantillonAbriChantierDistributeurPris() ? 1 : 0;
+        nbEchantillon += !rs.echantillonAbriChantierCarreFouillePris() ? 1 : 0;
+
         // Valid si la statuette n'as pas été prise
         boolean validStatuette = !rs.statuettePris();
 
-        // Valid si on peut géré la réplique, et non déposée
+        // Valid si on peut gérer la réplique, et qu'elle n'est pas déposée
         boolean validReplique = commonServosService.pousseReplique() && !rs.repliqueDepose();
 
-        // Valid si un des echantillons n'as pas été pris et qu'il reste de la place en stock
-        int nbEchantillon = !rs.echantillonAbriChantierDistributeurPris() ? 1 : 0;
-        nbEchantillon += !rs.echantillonAbriChantierCarreFouillePris() ? 1 : 0;
-        boolean validEchantillons = nbEchantillon > 0 && rs.stockDisponible() >= nbEchantillon;
+        // Valid si un des échantillons n'as pas été pris
+        boolean validEchantillons = nbEchantillon > 0;
 
-        return (validStatuette || validReplique || validEchantillons) && isTimeValid() && remainingTimeValid();
+        // Validitité du stock si on a activé le stockage avec des échantillons
+        boolean validStock = rs.stockDisponible() >= nbEchantillon;
+
+        // Si on stock, il faut valid stock et echantillons
+
+        return (validStatuette || validReplique || (!stockAbri && validEchantillons) || (stockAbri && validEchantillons && validStock))
+                && isTimeValid() && remainingTimeValid();
     }
 
     @Override
@@ -96,35 +111,52 @@ public class PriseStatuetteDeposeReplique extends AbstractEurobotAction {
 
     @Override
     public void execute() {
+        boolean stockAbri = rs.stockageAbriChantier();
+
         try {
             if (!rs.echantillonAbriChantierDistributeurPris()) {
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
                 mv.pathTo(entryEchantillonDistributeur());
                 mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -135 : -45);
-                processingPriseBordureSafe(CouleurEchantillon.ROCHER_BLEU, group::echantillonAbriChantierDistributeurPris);
+                processingPriseBordureSafe(CouleurEchantillon.ROCHER_BLEU, group::echantillonAbriChantierDistributeurPris, stockAbri);
             }
 
             if (!rs.echantillonAbriChantierCarreFouillePris()) {
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
                 mv.pathTo(entryEchantillonCarreFouille());
                 mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -135 : -45);
-                processingPriseBordureSafe(CouleurEchantillon.ROCHER_ROUGE, group::echantillonAbriChantierCarreFouillePris);
+                processingPriseBordureSafe(CouleurEchantillon.ROCHER_ROUGE, group::echantillonAbriChantierCarreFouillePris, stockAbri);
             }
 
             if (!rs.statuettePris() || (commonServosService.pousseReplique() &&!rs.repliqueDepose())) {
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
                 mv.pathTo(entryStatuette());
                 mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 45 : 135);
+
                 if (!rs.statuettePris()) {
                     commonServosService.fourcheStatuettePriseDepose(false);
                 }
+
+                // Si on a pas fait le stockage des échantillons, on les pousses sous l'abri.
+                if (!stockAbri) {
+                    mv.avanceMM(150);
+                    commonServosService.groupeArriereOuvert(true);
+                }
+
+                // Ouverture de la langue pour la réplique
                 if (commonServosService.pousseReplique() && !rs.repliqueDepose()) {
                     commonServosService.langueOuvert(true);
                 }
 
                 rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
                 mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
-                mv.reculeMM(200);
+                mv.reculeMM(200 + (!stockAbri ? 150 : 0));
+
+                if (!stockAbri){
+                    log.info("Normalement on a poussé deux échantillons sous l'abri");
+                    group.deposeAbriChantier(CouleurEchantillon.ROCHER_ROUGE, CouleurEchantillon.ROCHER_BLEU);
+                }
+
                 if (!rs.statuettePris()) {
                     commonServosService.fourcheStatuetteFerme(true);
                     // TODO Capteur pour vérifier que la prise de la statuette est bien terminé
@@ -144,39 +176,33 @@ public class PriseStatuetteDeposeReplique extends AbstractEurobotAction {
             updateValidTime();
         } finally {
             commonServosService.fourcheStatuetteFerme(false);
-            if (commonServosService.pousseReplique()) {
-                commonServosService.langueFerme(false);
-            }
+            commonServosService.groupeArriereFerme(false);
             refreshCompleted();
         }
     }
 
-    private void processingPriseBordureSafe(CouleurEchantillon couleur, Runnable notify) throws AvoidingException {
+    private void processingPriseBordureSafe(CouleurEchantillon couleur, Runnable notify, boolean stockAbri) throws AvoidingException {
         if (brasService.initPrise(BrasService.TypePrise.BORDURE)) {
             log.info("Init de la prise de l'échantillon abri distributeur OK");
-            rs.enableCalageBordure(TypeCalage.FORCE);
+            rs.enableCalageBordure(TypeCalage.AVANT_HAUT, TypeCalage.FORCE);
             mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
             mv.avanceMM(150);
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             if (brasService.processPrise(BrasService.TypePrise.BORDURE)) {
-                log.info("Prise de l'achantillon OK");
+                log.info("Prise de l'échantillon OK");
                 notify.run();
 
-                // TODO Avec une odometrie fiable, on doit pouvoir faire le stock direct. Sinon on les poses pour les pousser dans l'abri
+                if (stockAbri) {
+                    // Stockage du contenu de l'abri
+                    log.info("Stockage de l'échantillon");
+                    brasService.stockagePrise(BrasService.TypePrise.BORDURE, couleur);
 
-                // On pose au sol l'échantillon pour se recaler dessus.
-                brasService.setBrasBas(PositionBras.SOL_PRISE);
-                commonIOService.releasePompeVentouseBas();
-                brasService.setBrasBas(PositionBras.SOL_DEPOSE);
-
-                rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON);
-                mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
-                mv.avanceMM(70);
-                brasService.setBrasBas(PositionBras.SOL_PRISE);
-                if (brasService.processPrise(BrasService.TypePrise.SOL)) {
-                    log.info("Reprise de l'échantillon abri distributeur au sol OK");
-                    brasService.stockagePrise(BrasService.TypePrise.SOL, couleur);
+                } else {
+                    // On pose au sol l'échantillon pour le pousser.
+                    log.info("Dépose pour le pousser sous l'abri");
+                    brasService.setBrasBas(PositionBras.SOL_PRISE);
+                    commonIOService.releasePompeVentouseBas();
                 }
             }
         }

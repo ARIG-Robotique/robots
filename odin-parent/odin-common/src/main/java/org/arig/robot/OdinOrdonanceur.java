@@ -154,6 +154,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
                 odinRobotStatus.twoRobots(odinEcranService.config().isTwoRobots());
                 odinRobotStatus.troisDeposeAbriChantier(odinEcranService.config().hasOption(EurobotConfig.TROIS_DANS_ABRI));
+                odinRobotStatus.stockageAbriChantier(odinEcranService.config().hasOption(EurobotConfig.STOCKAGE_ABRI));
 
                 done = odinEcranService.config().isStartCalibration();
             }

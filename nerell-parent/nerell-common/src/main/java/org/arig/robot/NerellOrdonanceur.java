@@ -152,6 +152,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
             nerellRobotStatus.twoRobots(nerellEcranService.config().isTwoRobots());
             nerellRobotStatus.troisDeposeAbriChantier(nerellEcranService.config().hasOption(EurobotConfig.TROIS_DANS_ABRI));
+            nerellRobotStatus.stockageAbriChantier(nerellEcranService.config().hasOption(EurobotConfig.STOCKAGE_ABRI));
 
             groupService.configuration();
 

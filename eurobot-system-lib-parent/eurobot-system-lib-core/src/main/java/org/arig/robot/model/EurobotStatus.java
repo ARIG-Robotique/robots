@@ -32,6 +32,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
      */
 
     private boolean troisDeposeAbriChantier = false;
+    private boolean stockageAbriChantier = false;
 
     /**
      * STATUT
@@ -154,6 +155,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     }
 
     @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     private List<CouleurEchantillon> abriChantier = new ArrayList<>();
 
     public void deposeAbriChantier(CouleurEchantillon... echantillons) {
@@ -161,6 +163,14 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
             log.info("[RS] depose abri chantier : {}", echantillon);
             abriChantier.add(echantillon);
         }
+    }
+
+    public CouleurEchantillon abriChantierEchantillon(int index) {
+        return abriChantier.get(index);
+    }
+
+    public int abriChantierSize() {
+        return abriChantier.size();
     }
 
     @Setter(AccessLevel.NONE)

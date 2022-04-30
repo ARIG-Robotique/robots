@@ -24,7 +24,8 @@ public class OdinEcranService extends EcranService {
             stateInfos.setTeam(rs.team());
             stateInfos.setStrategy(rs.strategy());
             stateInfos.setOptions(Map.of(
-                    EurobotConfig.TROIS_DANS_ABRI, rs.troisDeposeAbriChantier()
+                    EurobotConfig.TROIS_DANS_ABRI, rs.troisDeposeAbriChantier(),
+                    EurobotConfig.STOCKAGE_ABRI, rs.stockageAbriChantier()
             ));
         }
     }
