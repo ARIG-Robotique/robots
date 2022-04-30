@@ -35,7 +35,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     private BaliseService baliseService;
 
     @Autowired
-    private NerellEcranService ecranService;
+    private NerellEcranService nerellEcranService;
 
     @Autowired
     private BrasService brasService;
@@ -60,6 +60,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void addDeadZones() {
+        // Nope
     }
 
     @Override
@@ -94,6 +95,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void inMatch() {
+        // Nope
     }
 
     @Override
@@ -108,7 +110,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         nerellIO.disableAllPompes();
         nerellIO.enableAlimServos();
 
-        ecranService.displayMessage("FIN - Enlever la tirette quand stock vide.");
+        nerellEcranService.displayMessage("FIN - Enlever la tirette quand stock vide.");
 
         brasService.setBrasHaut(PositionBras.HORIZONTAL);
         brasService.setBrasBas(PositionBras.HORIZONTAL);
@@ -125,7 +127,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
      * Etape du choix de l'équipe/stratégie + config balise
      */
     private void choixEquipeStrategy() {
-        ecranService.displayMessage("Choix équipe et lancement calage bordure");
+        nerellEcranService.displayMessage("Choix équipe et lancement calage bordure");
 
         ChangeFilter<Team> teamChangeFilter = new ChangeFilter<>(null);
         ChangeFilter<Strategy> strategyChangeFilter = new ChangeFilter<>(null);
@@ -138,13 +140,13 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             connectBalise();
             configBalise(updatePhotoFilter, doEtalonnageFilter);
 
-            if (teamChangeFilter.filter(ecranService.config().getTeam())) {
-                groupService.team(ecranService.config().getTeam());
+            if (Boolean.TRUE.equals(teamChangeFilter.filter(nerellEcranService.config().getTeam()))) {
+                groupService.team(nerellEcranService.config().getTeam());
                 log.info("Team {}", nerellRobotStatus.team().name());
             }
 
-            if (strategyChangeFilter.filter(ecranService.config().getStrategy())) {
-                groupService.strategy(ecranService.config().getStrategy());
+            if (Boolean.TRUE.equals(strategyChangeFilter.filter(nerellEcranService.config().getStrategy()))) {
+                groupService.strategy(nerellEcranService.config().getStrategy());
                 log.info("Strategy {}", nerellRobotStatus.strategy().name());
             }
 
@@ -154,7 +156,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             groupService.configuration();
 
             ThreadUtils.sleep(200);
-        } while (!ecranService.config().isStartCalibration());
+        } while (!nerellEcranService.config().isStartCalibration());
     }
 
     /**
@@ -173,24 +175,24 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
      */
     private void configBalise(SignalEdgeFilter updatePhotoFilter, SignalEdgeFilter doEtalonnageFilter) {
         if (baliseService.isConnected()) {
-            if (updatePhotoFilter.filter(ecranService.config().isUpdatePhoto())) {
+            if (Boolean.TRUE.equals(updatePhotoFilter.filter(nerellEcranService.config().isUpdatePhoto()))) {
                 // sur front montant de "updatePhoto" on prend une photo et l'envoie à l'écran
                 PhotoResponse photo = baliseService.getPhoto();
                 EcranPhoto query = new EcranPhoto();
                 query.setMessage(photo == null ? "Erreur inconnue" : photo.getErrorMessage());
                 query.setPhoto(photo == null ? null : photo.getData());
-                ecranService.updatePhoto(query);
+                nerellEcranService.updatePhoto(query);
 
-            } else if (doEtalonnageFilter.filter(ecranService.config().isEtalonnageBalise())) {
+            } else if (Boolean.TRUE.equals(doEtalonnageFilter.filter(nerellEcranService.config().isEtalonnageBalise()))) {
                 // sur front montant de "etalonnageBalise" on lance l'étalonnage et envoie le résultat à l'écran
                 EtalonnageResponse etalonnage = baliseService.etalonnage();
                 EcranPhoto query = new EcranPhoto();
                 query.setMessage(etalonnage == null ? "Erreur inconnue" : etalonnage.getErrorMessage());
                 query.setPhoto(etalonnage == null ? null : etalonnage.getData());
-                ecranService.updatePhoto(query);
+                nerellEcranService.updatePhoto(query);
             }
 
-            nerellRobotStatus.etalonageBaliseOk(ecranService.config().isEtalonnageOk());
+            nerellRobotStatus.etalonageBaliseOk(nerellEcranService.config().isEtalonnageOk());
         } else {
             nerellRobotStatus.etalonageBaliseOk(false);
         }
@@ -201,7 +203,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
      */
     @Override
     public void calageBordure(boolean skip) {
-        ecranService.displayMessage("Calage bordure");
+        nerellEcranService.displayMessage("Calage bordure");
 
         groupService.calage();
 
@@ -230,7 +232,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 mv.avanceMM(70);
                 mv.gotoOrientationDeg(90);
 
-                ecranService.displayMessage("Attente Odin devant la galerie");
+                nerellEcranService.displayMessage("Attente Odin devant la galerie");
                 groupService.waitInitStep(InitStep.ODIN_DEVANT_GALERIE); // Odin calé, en attente devant la galerie
 
                 robotStatus.enableCalageBordure(TypeCalage.AVANT);
@@ -239,7 +241,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 mv.avanceMMSansAngle(100);
 
                 if (!io.auOk()) {
-                    ecranService.displayMessage("Echappement calage bordure car mauvais sens", LogLevel.ERROR);
+                    nerellEcranService.displayMessage("Echappement calage bordure car mauvais sens", LogLevel.ERROR);
                     throw new ExitProgram(true);
                 }
 
@@ -251,7 +253,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 mv.reculeMM(70);
             }
         } catch (AvoidingException e) {
-            ecranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
+            nerellEcranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
             throw new RuntimeException("Impossible de se placer pour le départ", e);
         }
     }
@@ -260,9 +262,9 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
      * Positionnement en fonction de la stratégie
      */
     public void positionStrategy() {
-        ecranService.displayMessage("Attente Odin en position depart");
+        nerellEcranService.displayMessage("Attente Odin en position depart");
         groupService.waitInitStep(InitStep.ODIN_EN_POSITION_BASIC);
-        ecranService.displayMessage("Mise en place");
+        nerellEcranService.displayMessage("Mise en place");
 
         try {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
@@ -279,7 +281,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                     break;
             }
         } catch (AvoidingException e) {
-            ecranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
+            nerellEcranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
             throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);
         }
     }
@@ -288,37 +290,37 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
      * Etape du choix des options + config balise
      */
     private void choixConfig() {
-        ecranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
+        nerellEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
 
-        SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.RISING);
-        SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.FALLING);
+        SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(nerellEcranService.config().isModeManuel(), Type.RISING);
+        SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(nerellEcranService.config().isModeManuel(), Type.FALLING);
         SignalEdgeFilter updatePhotoFilter = new SignalEdgeFilter(false, Type.RISING);
         SignalEdgeFilter doEtalonnageFilter = new SignalEdgeFilter(false, Type.RISING);
 
-        boolean manuel = ecranService.config().isModeManuel();
+        boolean manuel = nerellEcranService.config().isModeManuel();
 
         while (!io.tirette()) {
             exitFromScreen();
 
-            if (manuelRisingEdge.filter(ecranService.config().isModeManuel())) {
+            if (Boolean.TRUE.equals(manuelRisingEdge.filter(nerellEcranService.config().isModeManuel()))) {
                 manuel = true;
-                ecranService.displayMessage("!!!! Mode manuel !!!!");
+                nerellEcranService.displayMessage("!!!! Mode manuel !!!!");
                 startMonitoring();
-            } else if (manuel && manuelFallingEdge.filter(ecranService.config().isModeManuel())) {
+            } else if (manuel && Boolean.TRUE.equals(manuelFallingEdge.filter(nerellEcranService.config().isModeManuel()))) {
                 manuel = false;
                 endMonitoring();
-                ecranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
+                nerellEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
             }
 
             // Si on est pas en manuel, gestion de la strategy
-            if (!manuel && !ecranService.config().isSkipCalageBordure()) {
-                ecranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
+            if (!manuel && !nerellEcranService.config().isSkipCalageBordure()) {
+                nerellEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
 
                 groupService.configuration();
             }
 
-            robotStatus.twoRobots(ecranService.config().isTwoRobots());
-            avoidingService.setSafeAvoidance(ecranService.config().isSafeAvoidance());
+            robotStatus.twoRobots(nerellEcranService.config().isTwoRobots());
+            avoidingService.setSafeAvoidance(nerellEcranService.config().isSafeAvoidance());
 
             connectGroup();
             connectBalise();

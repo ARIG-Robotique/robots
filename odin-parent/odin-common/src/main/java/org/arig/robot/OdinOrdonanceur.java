@@ -8,13 +8,8 @@ import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
-import org.arig.robot.model.InitStep;
-import org.arig.robot.model.OdinRobotStatus;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Strategy;
-import org.arig.robot.model.Team;
+import org.arig.robot.model.*;
 import org.arig.robot.model.bras.PositionBras;
-import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BrasService;
 import org.arig.robot.services.OdinEcranService;
@@ -37,7 +32,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
     private RobotGroupService groupService;
 
     @Autowired
-    private OdinEcranService ecranService;
+    private OdinEcranService odinEcranService;
 
     @Autowired
     private BrasService brasService;
@@ -62,6 +57,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void addDeadZones() {
+        // Nope
     }
 
     @Override
@@ -90,10 +86,12 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void startMatch() {
+        // Nope
     }
 
     @Override
     public void inMatch() {
+        // Nope
     }
 
     @Override
@@ -106,7 +104,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         odinIO.disableAllPompes();
         odinIO.enableAlimServos();
 
-        ecranService.displayMessage("FIN - Enlever la tirette quand stock vide.");
+        odinEcranService.displayMessage("FIN - Enlever la tirette quand stock vide.");
 
         brasService.setBrasHaut(PositionBras.HORIZONTAL);
         brasService.setBrasBas(PositionBras.HORIZONTAL);
@@ -132,11 +130,11 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
             exitFromScreen();
             connectGroup();
 
-            if (groupChangeFilter.filter(robotStatus.groupOk())) {
+            if (Boolean.TRUE.equals(groupChangeFilter.filter(robotStatus.groupOk()))) {
                 if (robotStatus.groupOk()) {
-                    ecranService.displayMessage("Attente configuration Nerell");
+                    odinEcranService.displayMessage("Attente configuration Nerell");
                 } else {
-                    ecranService.displayMessage("Choix équipe et lancement calage bordure");
+                    odinEcranService.displayMessage("Choix équipe et lancement calage bordure");
                 }
             }
 
@@ -144,21 +142,20 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 done = groupService.isCalage();
 
             } else {
-                if (teamChangeFilter.filter(ecranService.config().getTeam())) {
-                    odinRobotStatus.setTeam(ecranService.config().getTeam());
+                if (Boolean.TRUE.equals(teamChangeFilter.filter(odinEcranService.config().getTeam()))) {
+                    odinRobotStatus.setTeam(odinEcranService.config().getTeam());
                     log.info("Team {}", odinRobotStatus.team().name());
                 }
 
-                if (strategyChangeFilter.filter(ecranService.config().getStrategy())) {
-                    odinRobotStatus.strategy(ecranService.config().getStrategy());
+                if (Boolean.TRUE.equals(strategyChangeFilter.filter(odinEcranService.config().getStrategy()))) {
+                    odinRobotStatus.strategy(odinEcranService.config().getStrategy());
                     log.info("Strategy {}", odinRobotStatus.strategy().name());
                 }
 
-                odinRobotStatus.twoRobots(ecranService.config().isTwoRobots());
-                odinRobotStatus.statuettePresente(ecranService.config().hasOption(EurobotConfig.STATUETTE_PRESENTE));
-                odinRobotStatus.vitrinePresente(ecranService.config().hasOption(EurobotConfig.VITRINE_PRESENTE));
+                odinRobotStatus.twoRobots(odinEcranService.config().isTwoRobots());
+                odinRobotStatus.troisDeposeAbriChantier(odinEcranService.config().hasOption(EurobotConfig.TROIS_DANS_ABRI));
 
-                done = ecranService.config().isStartCalibration();
+                done = odinEcranService.config().isStartCalibration();
             }
 
             ThreadUtils.sleep(200);
@@ -170,7 +167,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
      */
     @Override
     public void calageBordure(boolean skip) {
-        ecranService.displayMessage("Calage bordure");
+        odinEcranService.displayMessage("Calage bordure");
 
         try {
             robotStatus.disableAvoidance();
@@ -203,7 +200,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 mv.avanceMMSansAngle(100);
 
                 if (!io.auOk()) {
-                    ecranService.displayMessage("Echappement calage bordure car mauvais sens", LogLevel.ERROR);
+                    odinEcranService.displayMessage("Echappement calage bordure car mauvais sens", LogLevel.ERROR);
                     throw new ExitProgram(true);
                 }
 
@@ -213,7 +210,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 mv.reculeMM(70);
             }
         } catch (AvoidingException e) {
-            ecranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
+            odinEcranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
             throw new RuntimeException("Impossible de se placer pour le départ", e);
         }
     }
@@ -222,7 +219,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
      * Positionnement en fonction de la stratégie
      */
     public void positionStrategy() {
-        ecranService.displayMessage("Mise en place");
+        odinEcranService.displayMessage("Mise en place");
 
         try {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
@@ -234,9 +231,9 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                         mv.gotoPoint(getX(570), 1740);
                         groupService.initStep(InitStep.ODIN_DEVANT_GALERIE); // Odin calé, en attente devant la galerie
                         mv.gotoPoint(getX(570), 1130);
-                        ecranService.displayMessage("Attente calage Nerell");
+                        odinEcranService.displayMessage("Attente calage Nerell");
                         groupService.waitInitStep(InitStep.NERELL_CALAGE_TERMINE); // Attente Nerell calé
-                        ecranService.displayMessage("Mise en place");
+                        odinEcranService.displayMessage("Mise en place");
                     }
 
                     mv.gotoPoint(getX(240), 1130);
@@ -245,7 +242,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                     break;
             }
         } catch (AvoidingException e) {
-            ecranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
+            odinEcranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
             throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);
         }
 
@@ -256,43 +253,43 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
      */
     private void choixConfig() {
         if (robotStatus.groupOk()) {
-            ecranService.displayMessage("Attente démarrage Nerell");
+            odinEcranService.displayMessage("Attente démarrage Nerell");
 
             while (!groupService.isReady()) {
                 exitFromScreen();
                 robotStatus.twoRobots(true);
-                avoidingService.setSafeAvoidance(ecranService.config().isSafeAvoidance());
+                avoidingService.setSafeAvoidance(odinEcranService.config().isSafeAvoidance());
                 ThreadUtils.sleep(200);
             }
 
         } else {
-            ecranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
+            odinEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
 
-            SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.RISING);
-            SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(ecranService.config().isModeManuel(), Type.FALLING);
+            SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(odinEcranService.config().isModeManuel(), Type.RISING);
+            SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(odinEcranService.config().isModeManuel(), Type.FALLING);
 
-            boolean manuel = ecranService.config().isModeManuel();
+            boolean manuel = odinEcranService.config().isModeManuel();
 
             while (!io.tirette()) {
                 exitFromScreen();
 
-                if (manuelRisingEdge.filter(ecranService.config().isModeManuel())) {
+                if (Boolean.TRUE.equals(manuelRisingEdge.filter(odinEcranService.config().isModeManuel()))) {
                     manuel = true;
-                    ecranService.displayMessage("!!!! Mode manuel !!!!");
+                    odinEcranService.displayMessage("!!!! Mode manuel !!!!");
                     startMonitoring();
-                } else if (manuel && manuelFallingEdge.filter(ecranService.config().isModeManuel())) {
+                } else if (manuel && Boolean.TRUE.equals(manuelFallingEdge.filter(odinEcranService.config().isModeManuel()))) {
                     manuel = false;
                     endMonitoring();
-                    ecranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
+                    odinEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
                 }
 
                 // Si on est pas en manuel, gestion de la config
-                if (!manuel && !ecranService.config().isSkipCalageBordure()) {
-                    ecranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
+                if (!manuel && !odinEcranService.config().isSkipCalageBordure()) {
+                    odinEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
                 }
 
-                robotStatus.twoRobots(ecranService.config().isTwoRobots());
-                avoidingService.setSafeAvoidance(ecranService.config().isSafeAvoidance());
+                robotStatus.twoRobots(odinEcranService.config().isTwoRobots());
+                avoidingService.setSafeAvoidance(odinEcranService.config().isSafeAvoidance());
 
                 ThreadUtils.sleep(manuel ? 4000 : 200);
             }
