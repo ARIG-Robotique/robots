@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 
-    private static final int WAIT_READ_OHMMETRE_MS = 100;
+    private static final int WAIT_READ_OHMMETRE_MS = 1000;
     private static final int WAIT_READ_BASCULE_MS = 120;
 
     @Autowired
