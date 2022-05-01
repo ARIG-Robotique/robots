@@ -25,7 +25,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
     @Override
     public int order() {
         int points = 0;
-        if (rs.statuettePriseDansCeRobot()) {
+        if (rs.statuettePriseDansCeRobot() && commonIOService.presenceStatuette()) {
             points += 15; // 15 points pour la dépose de statuette
         }
         if (!rs.vitrineActive()) {
@@ -44,7 +44,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
     @Override
     public boolean isValid() {
         // Valid si on est chargé de la statuette
-        boolean validStatuette = rs.statuettePriseDansCeRobot();
+        boolean validStatuette = rs.statuettePriseDansCeRobot() && commonIOService.presenceStatuette();
 
         // Valid si la vitrine n'est pas encore activé dans les 30 dernières secondes de match
         boolean validVitrine = !rs.vitrineActive() && rs.getRemainingTime() < EurobotConfig.validActivationVitrineRemainingTime;
@@ -89,7 +89,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
             checkRecalageAngleDeg(-90);
 
             // Si on as la statuette dans le robot, on la dépose
-            if (rs.statuettePriseDansCeRobot()) {
+            if (rs.statuettePriseDansCeRobot() && commonIOService.presenceStatuette()) {
                 commonServosService.fourcheStatuettePriseDepose(true);
                 group.statuetteDansVitrine();
             }

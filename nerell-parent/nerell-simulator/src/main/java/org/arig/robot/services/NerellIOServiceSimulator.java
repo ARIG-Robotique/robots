@@ -39,6 +39,11 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     }
 
     @Override
+    public boolean presenceStatuette() {
+        return nerellRobotStatus.statuettePriseDansCeRobot();
+    }
+
+    @Override
     public boolean presenceCarreFouille(final boolean expected) {
         return expected;
     }

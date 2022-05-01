@@ -69,6 +69,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     private GpioPinDigitalInput inCalageAvantBasGauche;
     private GpioPinDigitalInput inCalageAvantHautDroit;
     private GpioPinDigitalInput inCalageAvantHautGauche;
+    private GpioPinDigitalInput inPresenceStatuette;
 
     // Input : Numerique 2
     private GpioPinDigitalInput inPresenceCarreFouille;
@@ -160,8 +161,9 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         inCalageArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
         inCalageAvantBasDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
         inCalageAvantBasGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
-        inCalageAvantHautDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02); // TODO Assignation des pins
-        inCalageAvantHautGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04); // TODO Assignation des pins
+        inCalageAvantHautDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
+        inCalageAvantHautGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
+        inPresenceStatuette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
 
         // PCF2 (Pololu)
         inPresencePriseBras = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
@@ -224,6 +226,11 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     // --------------------------------------------------------- //
 
     // Numerique
+
+    @Override
+    public boolean presenceStatuette() {
+        return inPresenceStatuette.isLow();
+    }
 
     @Override
     public boolean presenceCarreFouille(final boolean expected) {

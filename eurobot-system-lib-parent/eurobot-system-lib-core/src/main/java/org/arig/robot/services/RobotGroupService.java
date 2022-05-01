@@ -115,6 +115,7 @@ public class RobotGroupService implements RobotGroup.Handler {
                 break;
             case STATUETTE_DANS_VITRINE:
                 rs.statuetteDansVitrine(true);
+                rs.statuettePrise(true, false); // Si bug de prise, mais qu'elle est quand même la plus tardivement (vibrations, etc...)
                 break;
             case REPLIQUE_DEPOSE:
                 rs.repliqueDepose(true);
@@ -307,6 +308,7 @@ public class RobotGroupService implements RobotGroup.Handler {
 
     public void statuetteDansVitrine() {
         rs.statuetteDansVitrine(true);
+        rs.statuettePrise(true, true); // Si bug de prise, mais qu'elle est quand même la plus tardivement (vibrations, etc...)
         sendEvent(StatusEvent.STATUETTE_DANS_VITRINE);
     }
 

@@ -208,8 +208,10 @@ public class AbriDeChantier extends AbstractEurobotAction {
 
             if (!rs.statuettePrise()) {
                 commonServosService.fourcheStatuetteFerme(true);
-                // TODO Capteur pour vérifier que la prise de la statuette est bien terminé
-                group.statuettePris();
+                if (ThreadUtils.waitUntil(commonIOService::presenceStatuette, 100, 1000)) {
+                    log.info("Youpi ! On a trouvé la statuette");
+                    group.statuettePris();
+                }
             }
             if (commonServosService.pousseReplique() && !rs.repliqueDepose()) {
                 commonServosService.pousseRepliquePoussette(true);

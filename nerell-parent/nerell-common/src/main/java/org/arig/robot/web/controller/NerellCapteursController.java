@@ -41,6 +41,7 @@ public class NerellCapteursController extends AbstractCapteursController {
         numeriqueInfos.put("Presence stock 6", ioService::presenceStock6);
         numeriqueInfos.put("Presence ventouse bas", ioService::presenceVentouseBas);
         numeriqueInfos.put("Presence ventouse haut", ioService::presenceVentouseHaut);
+        numeriqueInfos.put("Presence statuette", ioService::presenceStatuette);
 
         couleursInfos.put("Ventouse haut", () -> {
             TCS34725ColorSensor.ColorData colorData = ioService.couleurVentouseHautRaw();

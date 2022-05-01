@@ -37,6 +37,11 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
     }
 
     @Override
+    public boolean presenceStatuette() {
+        return odinRobotStatus.statuettePriseDansCeRobot();
+    }
+
+    @Override
     public boolean presenceCarreFouille(final boolean expected) {
         return expected;
     }

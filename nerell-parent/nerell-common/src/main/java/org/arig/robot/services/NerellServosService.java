@@ -121,6 +121,7 @@ public class NerellServosService extends AbstractCommonServosService {
         Servo moustacheGauche = servo(MOUSTACHE_GAUCHE_ID, MOUSTACHE_GAUCHE)
                 .time(325)
                 .position(POS_FERME, 2280)
+                .position(POS_POUSSETTE, 1640)
                 .position(POS_OUVERT, 1440);
         Servo langue = servo(LANGUE_ID, LANGUE)
                 .time(350)
@@ -129,6 +130,7 @@ public class NerellServosService extends AbstractCommonServosService {
         Servo moustacheDroite = servo(MOUSTACHE_DROITE_ID, MOUSTACHE_DROITE)
                 .time(325)
                 .position(POS_FERME, 670)
+                .position(POS_POUSSETTE, 1250)
                 .position(POS_OUVERT, 1450);
 
         group(GROUP_ARRIERE_ID, GROUP_ARRIERE)
@@ -141,6 +143,7 @@ public class NerellServosService extends AbstractCommonServosService {
                 .addServo(moustacheGauche)
                 .addServo(moustacheDroite)
                 .batch(POS_OUVERT)
+                .batch(POS_POUSSETTE)
                 .batch(POS_FERME);
     }
 }

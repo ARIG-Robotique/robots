@@ -71,6 +71,7 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
     private GpioPinDigitalInput inCalageAvantBasGauche;
     private GpioPinDigitalInput inCalageAvantHautDroit;
     private GpioPinDigitalInput inCalageAvantHautGauche;
+    private GpioPinDigitalInput inPresenceStatuette;
 
     // Input : Numerique 2
     private GpioPinDigitalInput inPresenceCarreFouille;
@@ -166,6 +167,7 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
         inCalageAvantBasGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
         inCalageAvantHautDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00); // TODO Assignation des pins
         inCalageAvantHautGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01); // TODO Assignation des pins
+        inPresenceStatuette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02); // TODO Assignation des pins
 
         // PCF2 (Pololu)
         inPresenceCarreFouille = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
@@ -233,7 +235,12 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
     // -------------------------- INPUT ------------------------ //
     // --------------------------------------------------------- //
 
-// Numerique
+    // Numerique
+
+    @Override
+    public boolean presenceStatuette() {
+        return inPresenceStatuette.isLow();
+    }
 
     @Override
     public boolean presenceCarreFouille(final boolean expected) {
