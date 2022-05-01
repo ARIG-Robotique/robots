@@ -235,9 +235,9 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 nerellEcranService.displayMessage("Attente Odin devant la galerie");
                 groupService.waitInitStep(InitStep.ODIN_DEVANT_GALERIE); // Odin calé, en attente devant la galerie
 
-                robotStatus.enableCalageBordure(TypeCalage.AVANT);
+                robotStatus.enableCalageBordure(TypeCalage.AVANT_BAS);
                 mv.avanceMM(1000);
-                robotStatus.enableCalageBordure(TypeCalage.AVANT);
+                robotStatus.enableCalageBordure(TypeCalage.AVANT_BAS);
                 mv.avanceMMSansAngle(100);
 
                 if (!io.auOk()) {

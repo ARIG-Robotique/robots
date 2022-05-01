@@ -194,9 +194,9 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 mv.avanceMM(70);
                 mv.gotoOrientationDeg(90);
 
-                robotStatus.enableCalageBordure(TypeCalage.AVANT);
+                robotStatus.enableCalageBordure(TypeCalage.AVANT_BAS);
                 mv.avanceMM(400);
-                robotStatus.enableCalageBordure(TypeCalage.AVANT);
+                robotStatus.enableCalageBordure(TypeCalage.AVANT_BAS);
                 mv.avanceMMSansAngle(100);
 
                 if (!io.auOk()) {

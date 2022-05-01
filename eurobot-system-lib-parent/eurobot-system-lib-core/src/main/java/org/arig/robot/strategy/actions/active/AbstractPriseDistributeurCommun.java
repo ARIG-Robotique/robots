@@ -67,10 +67,10 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
             // Calage sur X
             mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
             mv.gotoOrientationDeg(angleCallageX());
-            rs.enableCalageBordure(TypeCalage.AVANT);
+            rs.enableCalageBordure(TypeCalage.AVANT_BAS);
             mv.avanceMM(1500 - ENTRY_X - TASSEAU_W - robotConfig.distanceCalageAvant() - 10);
             mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
-            rs.enableCalageBordure(TypeCalage.AVANT);
+            rs.enableCalageBordure(TypeCalage.AVANT_BAS);
             mv.avanceMM(100);
 
             mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
@@ -79,10 +79,10 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
             // Calage sur Y
             mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
             mv.gotoOrientationDeg(90);
-            rs.enableCalageBordure(TypeCalage.AVANT);
+            rs.enableCalageBordure(TypeCalage.AVANT_BAS);
             mv.avanceMM(2000 - ENTRY_Y - DISTRIB_H - robotConfig.distanceCalageAvant() - 10);
             mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
-            rs.enableCalageBordure(TypeCalage.AVANT);
+            rs.enableCalageBordure(TypeCalage.AVANT_BAS);
             mv.avanceMM(100);
 
             mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation(50));
@@ -121,6 +121,7 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
 
                 if (robotY >= 1650 && robotX >= 1230 && robotX <= 3000 - 1230) {
                     log.warn("Blocage détecté à proximité de {}", name());
+                    // FIXME Tenter de récupérer l'échantillon et le déposer derrière nous
                     setDistributeurPris(); // on désactive l'action
                     return;
                 }

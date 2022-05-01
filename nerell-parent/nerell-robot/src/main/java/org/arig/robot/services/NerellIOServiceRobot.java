@@ -65,8 +65,10 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     private GpioPinDigitalInput inTirette;
     private GpioPinDigitalInput inCalageArriereDroit;
     private GpioPinDigitalInput inCalageArriereGauche;
-    private GpioPinDigitalInput inCalageAvantDroit;
-    private GpioPinDigitalInput inCalageAvantGauche;
+    private GpioPinDigitalInput inCalageAvantBasDroit;
+    private GpioPinDigitalInput inCalageAvantBasGauche;
+    private GpioPinDigitalInput inCalageAvantHautDroit;
+    private GpioPinDigitalInput inCalageAvantHautGauche;
 
     // Input : Numerique 2
     private GpioPinDigitalInput inPresenceCarreFouille;
@@ -156,8 +158,10 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
         inCalageArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
         inCalageArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
-        inCalageAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
-        inCalageAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
+        inCalageAvantBasDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
+        inCalageAvantBasGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
+        inCalageAvantHautDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02); // TODO Assignation des pins
+        inCalageAvantHautGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04); // TODO Assignation des pins
 
         // PCF2 (Pololu)
         inPresencePriseBras = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
@@ -282,13 +286,23 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     }
 
     @Override
-    public boolean calageAvantDroit() {
-        return inCalageAvantDroit.isLow();
+    public boolean calageAvantBasDroit() {
+        return inCalageAvantBasDroit.isLow();
     }
 
     @Override
-    public boolean calageAvantGauche() {
-        return inCalageAvantGauche.isLow();
+    public boolean calageAvantBasGauche() {
+        return inCalageAvantBasGauche.isLow();
+    }
+
+    @Override
+    public boolean calageAvantHautDroit() {
+        return inCalageAvantHautDroit.isLow();
+    }
+
+    @Override
+    public boolean calageAvantHautGauche() {
+        return inCalageAvantHautGauche.isLow();
     }
 
     @Override

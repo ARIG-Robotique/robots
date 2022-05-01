@@ -1,5 +1,5 @@
 package org.arig.robot.model.enums;
 
 public enum TypeCalage {
-    AVANT, ARRIERE, FORCE, LATTERAL_DROIT, PRISE_ECHANTILLON
+    AVANT_BAS, AVANT_HAUT, ARRIERE, FORCE, LATTERAL_DROIT, PRISE_ECHANTILLON
 }

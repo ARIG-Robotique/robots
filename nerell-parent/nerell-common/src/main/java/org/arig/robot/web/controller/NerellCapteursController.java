@@ -22,11 +22,14 @@ public class NerellCapteursController extends AbstractCapteursController {
     public void afterPropertiesSet() throws Exception {
         super.afterPropertiesSet();
 
-        numeriqueInfos.put("Calage arrière droite", ioService::calageArriereDroit);
+        numeriqueInfos.put("Calage arrière droit", ioService::calageArriereDroit);
         numeriqueInfos.put("Calage arrière gauche", ioService::calageArriereGauche);
-        numeriqueInfos.put("Calage avant droite", ioService::calageAvantDroit);
-        numeriqueInfos.put("Calage avant gauche", ioService::calageAvantGauche);
-        numeriqueInfos.put("Calage latteral droit", ioService::calageLatteralDroit);
+        numeriqueInfos.put("Calage avant bas droit", ioService::calageAvantBasDroit);
+        numeriqueInfos.put("Calage avant bas gauche", ioService::calageAvantBasGauche);
+        numeriqueInfos.put("Calage avant haut droit", ioService::calageAvantHautDroit);
+        numeriqueInfos.put("Calage avant haut gauche", ioService::calageAvantHautGauche);
+        numeriqueInfos.put("Calage lateral droit", ioService::calageLatteralDroit);
+        numeriqueInfos.put("Calage echantillon", ioService::calagePriseEchantillon);
 
         numeriqueInfos.put("Presence carre de fouille", () -> ioService.presenceCarreFouille(false));
         numeriqueInfos.put("Presence prise bras", ioService::presencePriseBras);

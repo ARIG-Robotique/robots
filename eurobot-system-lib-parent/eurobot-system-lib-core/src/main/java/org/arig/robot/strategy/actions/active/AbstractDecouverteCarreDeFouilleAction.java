@@ -87,9 +87,9 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
 
                     mv.gotoOrientationDeg(-90);
                     mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
-                    rs.enableCalageBordure(TypeCalage.AVANT);
+                    rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                     mv.avanceMM(start.getY() - robotConfig.distanceCalageAvant() - 10);
-                    rs.enableCalageBordure(TypeCalage.AVANT);
+                    rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                     mv.avanceMMSansAngle(40);
                     checkRecalageYmm(robotConfig.distanceCalageAvant());
                     checkRecalageAngleDeg(-90);

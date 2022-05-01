@@ -23,10 +23,16 @@ public interface IOService {
     default boolean calageArriereGauche() {
         return false;
     }
-    default boolean calageAvantDroit() {
+    default boolean calageAvantBasDroit() {
         return false;
     }
-    default boolean calageAvantGauche() {
+    default boolean calageAvantBasGauche() {
+        return false;
+    }
+    default boolean calageAvantHautDroit() {
+        return false;
+    }
+    default boolean calageAvantHautGauche() {
         return false;
     }
 

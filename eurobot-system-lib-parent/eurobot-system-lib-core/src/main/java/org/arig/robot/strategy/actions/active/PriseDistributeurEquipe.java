@@ -75,13 +75,13 @@ public class PriseDistributeurEquipe extends AbstractEurobotAction {
             // Calage sur X
             mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
             mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
-            rs.enableCalageBordure(TypeCalage.AVANT);
+            rs.enableCalageBordure(TypeCalage.AVANT_BAS);
             mv.avanceMM(ENTRY_X - DISTRIB_H - robotConfig.distanceCalageAvant() - 10);
             mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
-            rs.enableCalageBordure(TypeCalage.AVANT);
+            rs.enableCalageBordure(TypeCalage.AVANT_BAS);
             mv.avanceMM(100);
 
-            if (!io.calageAvantDroit() || !io.calageAvantGauche()) {
+            if (!io.calageAvantBasDroit() || !io.calageAvantBasGauche()) {
                 log.warn("Mauvaise position Y pour {}", name());
                 updateValidTime(); // FIXME on devrait requérir un callage avant de recommencer
                 rs.enableAvoidance();
@@ -127,6 +127,7 @@ public class PriseDistributeurEquipe extends AbstractEurobotAction {
                 // blocage dans la zone d'approche = un échantillon bloque le passage
                 if ((robotX <= 350 || robotX >= 3000 - 350) && robotY <= 830 && robotY >= 670) {
                     log.warn("Blocage détecté à proximité de {}", name());
+                    // FIXME Tenter de récupérer l'échantillon et le déposer derrière nous
                     group.distributeurEquipePris(); // on désactive l'action
                     return;
                 }
