@@ -20,7 +20,6 @@ public class BrasService extends BrasServiceInternal {
     private static final int DST_BORDURE = 200;
 
     private final RobotConfig config;
-    private final EurobotStatus rs;
     private final CommonIOService io;
     private final TrajectoryManager mv;
 
@@ -31,9 +30,8 @@ public class BrasService extends BrasServiceInternal {
                        final EurobotStatus rs,
                        final CommonIOService io,
                        final TrajectoryManager mv) {
-        super(servos);
+        super(servos, rs);
         this.config = config;
-        this.rs = rs;
         this.io = io;
         this.mv = mv;
     }

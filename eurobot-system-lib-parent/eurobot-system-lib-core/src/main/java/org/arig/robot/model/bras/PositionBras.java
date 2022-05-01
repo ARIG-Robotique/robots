@@ -1,46 +1,53 @@
 package org.arig.robot.model.bras;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum PositionBras {
     // commun
-    INIT,
-    HORIZONTAL,
-    STOCK_ENTREE,
-    ECHANGE,
+    INIT(true),
+    HORIZONTAL(false),
+    STOCK_ENTREE(true),
+    ECHANGE(false),
 
-    REPOS_1,
-    REPOS_2,
-    REPOS_3,
-    REPOS_4,
-    REPOS_5,
-    REPOS_6,
+    REPOS_1(true),
+    REPOS_2(true),
+    REPOS_3(true),
+    REPOS_4(true),
+    REPOS_5(true),
+    REPOS_6(true),
 
-    STOCK_PRISE_1,
-    STOCK_PRISE_2,
-    STOCK_PRISE_3,
-    STOCK_PRISE_4,
-    STOCK_PRISE_5,
-    STOCK_PRISE_6,
+    STOCK_PRISE_1(true),
+    STOCK_PRISE_2(true),
+    STOCK_PRISE_3(true),
+    STOCK_PRISE_4(true),
+    STOCK_PRISE_5(true),
+    STOCK_PRISE_6(true),
 
-    STOCK_DEPOSE_1,
-    STOCK_DEPOSE_2,
-    STOCK_DEPOSE_3,
-    STOCK_DEPOSE_4,
-    STOCK_DEPOSE_5,
-    STOCK_DEPOSE_6,
+    STOCK_DEPOSE_1(true),
+    STOCK_DEPOSE_2(true),
+    STOCK_DEPOSE_3(true),
+    STOCK_DEPOSE_4(true),
+    STOCK_DEPOSE_5(true),
+    STOCK_DEPOSE_6(true),
 
-    GALERIE_DEPOSE,
-    GALERIE_DEPOSE_MILIEU,
+    GALERIE_DEPOSE(false),
+    GALERIE_DEPOSE_MILIEU(false),
 
     // bas
-    SOL_PRISE,
-    SOL_DEPOSE,
+    SOL_PRISE(false),
+    SOL_DEPOSE(false),
 
-    BORDURE_APPROCHE,
-    BORDURE_PRISE,
-    ECHANGE_2,
+    BORDURE_APPROCHE(false),
+    BORDURE_PRISE(false),
+    ECHANGE_2(false),
 
-    DISTRIBUTEUR_PRISE,
+    DISTRIBUTEUR_PRISE(false),
     ;
+
+    private final boolean inside;
 
     public static PositionBras stockPrise(int indexStock) {
         return PositionBras.valueOf("STOCK_PRISE_" + (indexStock+1));

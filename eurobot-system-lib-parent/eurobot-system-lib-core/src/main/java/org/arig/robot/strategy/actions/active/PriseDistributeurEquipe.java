@@ -134,7 +134,9 @@ public class PriseDistributeurEquipe extends AbstractEurobotAction {
 
             log.error("Erreur d'exécution de l'action : {}", e.toString());
             updateValidTime();
+
         } finally {
+            brasService.safeHoming();
             refreshCompleted();
         }
     }

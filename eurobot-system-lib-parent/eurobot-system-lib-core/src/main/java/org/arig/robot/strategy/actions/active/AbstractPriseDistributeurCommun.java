@@ -128,7 +128,9 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
 
             log.error("Erreur d'exécution de l'action : {}", e.toString());
             updateValidTime();
+
         } finally {
+            brasService.safeHoming();
             refreshCompleted();
         }
     }

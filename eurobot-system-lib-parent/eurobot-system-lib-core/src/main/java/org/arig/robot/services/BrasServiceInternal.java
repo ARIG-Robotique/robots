@@ -3,6 +3,7 @@ package org.arig.robot.services;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
+import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.bras.AnglesBras;
 import org.arig.robot.model.bras.ConfigBras;
 import org.arig.robot.model.bras.CurrentBras;
@@ -22,6 +23,7 @@ import static org.arig.robot.services.AbstractCommonServosService.*;
 public abstract class BrasServiceInternal {
 
     private final AbstractCommonServosService servos;
+    protected final EurobotStatus rs;
 
     ConfigBras CONFIG_BRAS_BAS = new ConfigBras(
             54, 51,
@@ -51,8 +53,10 @@ public abstract class BrasServiceInternal {
     private CurrentBras positionBrasBas;
     private CurrentBras positionBrasHaut;
 
-    public BrasServiceInternal(final AbstractCommonServosService servos) {
+    public BrasServiceInternal(final AbstractCommonServosService servos,
+                               final EurobotStatus rs) {
         this.servos = servos;
+        this.rs = rs;
 
         CONFIG_BRAS_BAS.a1Min = servos.servo(BRAS_BAS_EPAULE).angleMin();
         CONFIG_BRAS_BAS.a1Max = servos.servo(BRAS_BAS_EPAULE).angleMax();
@@ -154,6 +158,41 @@ public abstract class BrasServiceInternal {
         } catch (Throwable e) {
             log.warn(e.getMessage(), e);
         }
+    }
+
+    /**
+     * Depuis n'importe quelle position, repasse en position de repos
+     */
+    public void safeHoming() {
+        PositionBras currentHaut = brasHaut.current();
+        PositionBras currentBas = brasBas.current();
+
+        PositionBras repos = PositionBras.repos(rs.stockTaille());
+
+        brasHaut.disableCheck(true);
+        brasBas.disableCheck(true);
+
+        if (currentHaut.isInside() && currentBas.isInside()) {
+            // les deux à l'intérieur
+        } else if (currentHaut.isInside()) {
+            // le haut à l'intérieur et le bas à l'exterieur
+            brasBas.goTo(PositionBras.HORIZONTAL);
+            brasHaut.goTo(PositionBras.HORIZONTAL);
+            brasBas.goTo(repos);
+            brasHaut.goTo(repos);
+        } else if (currentBas.isInside()) {
+            // le haut à l'extérieur et le bas à l'intérieur
+            brasBas.goTo(repos);
+            brasHaut.goTo(repos);
+        } else {
+            // les deux à l'extérieur
+            brasHaut.goTo(PositionBras.HORIZONTAL);
+            brasBas.goTo(repos);
+            brasHaut.goTo(repos);
+        }
+
+        brasHaut.disableCheck(false);
+        brasBas.disableCheck(false);
     }
 
     private void setBrasBas(PositionBras state, PointBras pt, TransitionBras transition) {

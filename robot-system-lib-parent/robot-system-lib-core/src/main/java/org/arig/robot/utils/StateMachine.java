@@ -36,6 +36,10 @@ public class StateMachine<KEY extends Enum<?>, STATE extends Serializable, TRANS
     @Setter
     private TriConsumer<KEY, STATE, TRANSITION> onState;
 
+    @Getter
+    @Setter
+    private boolean disableCheck = false;
+
     public Set<KEY> states() {
         return states.keySet();
     }
@@ -97,8 +101,10 @@ public class StateMachine<KEY extends Enum<?>, STATE extends Serializable, TRANS
 
         if (current != null) {
             Pair<KEY, KEY> key = Pair.of(current, to);
-            Assert.isTrue(transitions.containsKey(key), "[" + name + "] " + current.name() + "->" + to.name() + " transition not registered");
-            onState.accept(to, states.get(to), transitions.get(key));
+            if (!disableCheck) {
+                Assert.isTrue(transitions.containsKey(key), "[" + name + "] " + current.name() + "->" + to.name() + " transition not registered");
+            }
+            onState.accept(to, states.get(to), transitions.getOrDefault(key, defaultTransition));
         } else {
             onState.accept(to, states.get(to), defaultTransition);
         }
