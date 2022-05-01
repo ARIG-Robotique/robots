@@ -396,8 +396,7 @@ public class OdinOdometrieCommands {
                 roueGauche += d.getFields().get("gauche").doubleValue();
             }
 
-            double delta = -finalAngle;
-            double ratio = delta / (360 * nbCycle);
+            double ratio = finalAngle / (360 * nbCycle * (first ? 1 : -1));
             double newTrack = oldTrack * (1 + ratio);
             if (first) {
                 newTrackFirst = newTrack;
@@ -407,7 +406,7 @@ public class OdinOdometrieCommands {
 
             log.info("Roue gauche     : {} pulse", roueGauche);
             log.info("Roue droite     : {} pulse", roueDroite);
-            log.info("Delta Angle     : {} pulse", delta);
+            log.info("Delta Angle     : {} °", finalAngle);
             log.info("Ratio           : {}", ratio);
 
             first = false;
