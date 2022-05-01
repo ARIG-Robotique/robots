@@ -40,6 +40,7 @@ import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -59,6 +60,7 @@ import java.math.RoundingMode;
  *
  * @author Christian Wehrli
  */
+@Slf4j
 public class PCA9685GpioProvider extends GpioProviderBase implements GpioProvider {
 
     public static final String NAME = "com.pi4j.gpio.extension.pca.PCA9685GpioProvider";
@@ -133,7 +135,7 @@ public class PCA9685GpioProvider extends GpioProviderBase implements GpioProvide
      * Target frequency (accuracy is around +/- 5%!)
      *
      * @param frequency desired PWM frequency
-     * @see #setFrequency(int, BigDecimal)
+     * @see #setFrequency(BigDecimal, BigDecimal)
      */
     public void setFrequency(BigDecimal frequency) {
         setFrequency(frequency, BigDecimal.ONE);
@@ -384,15 +386,17 @@ public class PCA9685GpioProvider extends GpioProviderBase implements GpioProvide
         if (isShutdown()) {
             return;
         }
-        super.shutdown();
-        reset();
         try {
+            super.shutdown();
+            reset();
+
             // if we are the owner of the I2C bus, then close it
             if(i2cBusOwner) {
                 // close the I2C bus communication
                 bus.close();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
+            log.warn("Error shutting down PCA9685", e);
             throw new RuntimeException(e);
         }
     }
