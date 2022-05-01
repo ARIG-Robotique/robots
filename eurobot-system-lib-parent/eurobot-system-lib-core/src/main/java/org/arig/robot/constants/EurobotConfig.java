@@ -20,6 +20,8 @@ public interface EurobotConfig {
     // Config activation vitrine sans statuette
     int validActivationVitrineRemainingTime = 30000;
 
+    int validPriseEchantillonRemainingTime = 40000;
+
     // Options de match
     String TROIS_DANS_ABRI = "3 dans abri";
 
@@ -39,4 +41,7 @@ public interface EurobotConfig {
     String TMP_ACTION_POUSSETTE_SITE_ECHANTILLONS_EQUIPE = "Poussette site echantillons équipe";
 
     // Zones d'exclusion d'action
+
+    // nombre de points de déposes comptés lors d'une prise
+    int PTS_DEPOSE_PRISE = 2;
 }

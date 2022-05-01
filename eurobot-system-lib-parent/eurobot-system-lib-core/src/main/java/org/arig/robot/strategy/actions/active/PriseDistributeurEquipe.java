@@ -3,6 +3,7 @@ package org.arig.robot.strategy.actions.active;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.Point;
@@ -14,6 +15,8 @@ import org.arig.robot.services.CommonIOService;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import static org.arig.robot.constants.EurobotConfig.PTS_DEPOSE_PRISE;
 
 @Slf4j
 @Component
@@ -37,7 +40,7 @@ public class PriseDistributeurEquipe extends AbstractEurobotAction {
 
     @Override
     public int order() {
-        int points = 6; // 1 points par échantillons pris + 1 point de dépose
+        int points = 3 + 3 * PTS_DEPOSE_PRISE;
         return points + tableUtils.alterOrder(entryPoint());
     }
 
@@ -50,8 +53,9 @@ public class PriseDistributeurEquipe extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        // TODO temps max de prise (même paramètre pour toutes les actions)
-        return !rs.distributeurEquipePris() && isTimeValid() && remainingTimeValid() && rs.stockDisponible() >= 3;
+        return !rs.distributeurEquipePris() && rs.stockDisponible() >= 3
+                && rs.getRemainingTime() >= EurobotConfig.validPriseEchantillonRemainingTime
+                && isTimeValid() && remainingTimeValid();
     }
 
     @Override
@@ -66,21 +70,31 @@ public class PriseDistributeurEquipe extends AbstractEurobotAction {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry);
 
+            rs.disableAvoidance();
+
             // Calage sur X
-            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
+            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
             mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
             rs.enableCalageBordure(TypeCalage.AVANT);
-            rs.disableAvoidance();
-            mv.avanceMM(ENTRY_X - robotConfig.distanceCalageAvant());
+            mv.avanceMM(ENTRY_X - DISTRIB_H - robotConfig.distanceCalageAvant() - 10);
+            mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+            rs.enableCalageBordure(TypeCalage.AVANT);
+            mv.avanceMM(100);
+
             if (!io.calageAvantDroit() || !io.calageAvantGauche()) {
-                // FIXME on est pas en face
+                log.warn("Mauvaise position Y pour {}", name());
+                updateValidTime(); // FIXME on devrait requérir un callage avant de recommencer
+                rs.enableAvoidance();
+                mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+                mv.gotoPoint(entry, GotoOption.ARRIERE);
+                return;
             }
-            rs.enableAvoidance();
-            mv.reculeMM(ENTRY_X - robotConfig.distanceCalageAvant() - DISTRIB_H - 10);
+
+            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
+            mv.reculeMM(ENTRY_X - DISTRIB_H - robotConfig.distanceCalageAvant() - 10);
             mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
 
-            rs.disableAvoidance();
-
+            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
             brasService.initPrise(BrasService.TypePrise.DISTRIBUTEUR);
 
             for (int i = 0; i < 3; i++) {
@@ -99,12 +113,25 @@ public class PriseDistributeurEquipe extends AbstractEurobotAction {
 
             brasService.finalizePrise();
 
+            rs.enableAvoidance();
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.gotoPoint(entry, GotoOption.ARRIERE);
 
             group.distributeurEquipePris();
 
         } catch (NoPathFoundException | AvoidingException e) {
+            if (e instanceof MovementCancelledException) {
+                final double robotX = conv.pulseToMm(position.getPt().getX());
+                final double robotY = conv.pulseToMm(position.getPt().getY());
+
+                // blocage dans la zone d'approche = un échantillon bloque le passage
+                if ((robotX <= 350 || robotX >= 3000 - 350) && robotY <= 830 && robotY >= 670) {
+                    log.warn("Blocage détecté à proximité de {}", name());
+                    group.distributeurEquipePris(); // on désactive l'action
+                    return;
+                }
+            }
+
             log.error("Erreur d'exécution de l'action : {}", e.toString());
             updateValidTime();
         } finally {
