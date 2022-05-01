@@ -10,7 +10,9 @@ import org.arig.robot.model.Point;
 import org.arig.robot.utils.ImageUtils;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.time.LocalDateTime;
@@ -26,6 +28,7 @@ public abstract class AbstractPathFinder implements PathFinder {
     @Getter(AccessLevel.PROTECTED)
     private boolean saveImages = true;
 
+    @Getter
     private BufferedImage workImage;
     private File pathDir;
     private final DateTimeFormatter dteFormat = DateTimeFormatter.ISO_TIME;
@@ -34,15 +37,17 @@ public abstract class AbstractPathFinder implements PathFinder {
         pathDir = new File("./logs/path/" + System.getProperty(ConstantesConfig.keyExecutionId));
     }
 
-    public void saveImageForWork(BufferedImage workImage) {
-        this.workImage = workImage;
-        try {
-            if (!pathDir.exists()) {
-                log.info("Création du répertoire {} : {}", pathDir.getAbsolutePath(), pathDir.mkdirs());
+    protected void saveImageForWork(BufferedImage workImage) {
+        if (isSaveImages()) {
+            this.workImage = workImage;
+            try {
+                if (!pathDir.exists()) {
+                    log.info("Création du répertoire {} : {}", pathDir.getAbsolutePath(), pathDir.mkdirs());
+                }
+                ImageIO.write(ImageUtils.mirrorX(workImage), "png", new File(pathDir, dteFormat.format(LocalDateTime.now()) + "-work.png"));
+            } catch (Exception e) {
+                log.error("Impossible d'enregistrer l'obstacle dans une image : {}", e.toString());
             }
-            ImageIO.write(ImageUtils.mirrorX(workImage), "png", new File(pathDir, dteFormat.format(LocalDateTime.now()) + "-work.png"));
-        } catch (Exception e) {
-            log.error("Impossible d'enregistrer l'obstacle dans une image : {}", e.toString());
         }
     }
 

@@ -4,7 +4,8 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Chemin;
 import org.arig.robot.model.Point;
 
-import java.awt.*;
+import java.awt.Shape;
+import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.util.List;
 
@@ -37,5 +38,7 @@ public interface PathFinder {
      * @param obstacles Une forme représentant les obstacles détecté.
      */
     void setObstacles(List<Shape> obstacles);
+
+    BufferedImage getWorkImage();
 
 }

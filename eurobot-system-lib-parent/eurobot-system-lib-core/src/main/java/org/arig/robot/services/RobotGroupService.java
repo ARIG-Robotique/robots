@@ -399,7 +399,7 @@ public class RobotGroupService implements RobotGroup.Handler {
 
     private void sendEvent(StatusEvent event, byte[] data) {
         CompletableFuture.runAsync(() -> {
-            log.info("[GROUP] Send event {} : {}", event, data);
+            log.debug("[GROUP] Send event {} : {}", event, data);
             group.sendEventLog(event, data);
         }, threadPoolTaskExecutor);
     }

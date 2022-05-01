@@ -193,9 +193,7 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
         Assert.notNull(img, "L'image ne peut pas être null");
 
         // Ecriture sur disque de la map de path
-        if (isSaveImages()) {
-            saveImageForWork(img);
-        }
+        saveImageForWork(img);
 
         StopWatch sw = new StopWatch();
         sw.start();

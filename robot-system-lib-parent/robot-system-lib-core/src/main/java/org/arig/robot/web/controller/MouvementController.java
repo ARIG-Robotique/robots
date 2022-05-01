@@ -1,5 +1,6 @@
 package org.arig.robot.web.controller;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.ConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
@@ -13,16 +14,21 @@ import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.services.LidarService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.strategy.StrategyManager;
+import org.arig.robot.system.pathfinding.PathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.imageio.ImageIO;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -30,9 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * @author gdepuille on 22/12/14.
- */
 @Slf4j
 @RestController
 @RequestMapping("/mouvement")
@@ -61,6 +64,9 @@ public class MouvementController {
     @Autowired
     private StrategyManager strategyManager;
 
+    @Autowired
+    private PathFinder pathFinder;
+
     @GetMapping
     public Map<String, Object> showPosition() {
         List<ActionSuperviseur> actions = strategyManager.actions().stream()
@@ -85,6 +91,15 @@ public class MouvementController {
         pos.put("gameStatus", rs.gameStatus());
         pos.put("scoreStatus", rs.scoreStatus());
         return pos;
+    }
+
+    @GetMapping(value = "/mask", produces = MediaType.IMAGE_PNG_VALUE)
+    @ResponseBody
+    @SneakyThrows
+    public byte[] getMask() {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(pathFinder.getWorkImage(), "png", baos);
+        return baos.toByteArray();
     }
 
     @PostMapping(value = "/path")
