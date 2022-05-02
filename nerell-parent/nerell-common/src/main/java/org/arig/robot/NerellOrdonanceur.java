@@ -121,6 +121,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
         brasService.setBrasBas(PositionBras.INIT);
         brasService.setBrasHaut(PositionBras.INIT);
+        servos.homes();
     }
 
     /**

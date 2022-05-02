@@ -11,10 +11,7 @@ import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.*;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.TypeCalage;
-import org.arig.robot.services.BrasService;
-import org.arig.robot.services.OdinEcranService;
-import org.arig.robot.services.OdinIOService;
-import org.arig.robot.services.RobotGroupService;
+import org.arig.robot.services.*;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
@@ -36,6 +33,9 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Autowired
     private BrasService brasService;
+
+    @Autowired
+    private OdinServosService odinServosService;
 
     private int getX(int x) {
         return tableUtils.getX(odinRobotStatus.team() == Team.VIOLET, x);
@@ -109,12 +109,15 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         brasService.setBrasHaut(PositionBras.HORIZONTAL);
         brasService.setBrasBas(PositionBras.HORIZONTAL);
 
+        odinServosService.langueOuvert(true);
+        odinServosService.pousseRepliquePoussette(false);
+
         while (io.tirette()) {
             ThreadUtils.sleep(1000);
         }
-
         brasService.setBrasBas(PositionBras.INIT);
         brasService.setBrasHaut(PositionBras.INIT);
+        odinServosService.homes();
     }
 
     /**
