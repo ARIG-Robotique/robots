@@ -25,17 +25,17 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
 
     @Override
     public boolean presenceVentouseBas() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean presenceVentouseHaut() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean presencePriseBras() {
-        return false;
+        return true;
     }
 
     @Override

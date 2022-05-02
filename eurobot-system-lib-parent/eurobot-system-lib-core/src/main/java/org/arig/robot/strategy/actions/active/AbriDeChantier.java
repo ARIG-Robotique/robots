@@ -105,6 +105,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
         // getX() ;  (Jaune = -135° Violet = -45°)
         return new Point(getX(537), 345);
     }
+
     private Point entryStatuette() {
         // Statuette (Jaune = 45° Violet = 135°)
         return new Point(getX(435), 435);

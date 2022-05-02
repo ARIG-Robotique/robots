@@ -21,17 +21,17 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
 
     @Override
     public boolean presenceVentouseBas() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean presenceVentouseHaut() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean presencePriseBras() {
-        return false;
+        return true;
     }
 
     @Override
