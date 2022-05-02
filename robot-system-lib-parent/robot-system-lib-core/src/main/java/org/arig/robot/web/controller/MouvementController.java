@@ -19,6 +19,7 @@ import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,8 +27,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -97,8 +100,12 @@ public class MouvementController {
     @ResponseBody
     @SneakyThrows
     public byte[] getMask() {
+        BufferedImage image = pathFinder.getWorkImage();
+        if (image == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(pathFinder.getWorkImage(), "png", baos);
+        ImageIO.write(image, "png", baos);
         return baos.toByteArray();
     }
 
