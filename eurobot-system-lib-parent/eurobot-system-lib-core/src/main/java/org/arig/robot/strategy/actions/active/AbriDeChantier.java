@@ -205,6 +205,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
                     brasService.setBrasBas(PositionBras.SOL_DEPOSE);
                     commonIOService.releasePompeVentouseBas();
                     ThreadUtils.waitUntil(() -> !commonIOService.presenceVentouseBas(), robotConfig.i2cReadTimeMs(), robotConfig.timeoutPompe());
+                    mv.reculeMM(100);
                 }
             }
         }

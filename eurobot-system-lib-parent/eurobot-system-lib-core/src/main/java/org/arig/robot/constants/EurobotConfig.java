@@ -17,10 +17,9 @@ public interface EurobotConfig {
     int validRetourSiteDeFouilleRemainingTimeNerell = 15000;
     int validRetourSiteDeFouilleRemainingTimeOdin = 12000;
 
-    // Config activation vitrine sans statuette
-    int validActivationVitrineRemainingTime = 30000;
+    int validActivationVitrineRemainingTime = 30000; // Activation vitrine sans statuette
 
-    int validPriseEchantillonRemainingTime = 40000;
+    int invalidPriseEchantillonRemainingTime = 30000;
 
     // Options de match
     String TROIS_DANS_ABRI = "3 dans abri";
@@ -45,4 +44,7 @@ public interface EurobotConfig {
 
     // nombre de points de déposes comptés lors d'une prise
     int PTS_DEPOSE_PRISE = 2;
+
+    // Taille d'un echantillon
+    int ECHANTILLON_SIZE = 150;
 }

@@ -55,7 +55,7 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
     @Override
     public boolean isValid() {
         return rs.stockDisponible() >= 3
-                && rs.getRemainingTime() >= EurobotConfig.validPriseEchantillonRemainingTime
+                && rs.getRemainingTime() >= EurobotConfig.invalidPriseEchantillonRemainingTime
                 && isTimeValid() && remainingTimeValid();
     }
 

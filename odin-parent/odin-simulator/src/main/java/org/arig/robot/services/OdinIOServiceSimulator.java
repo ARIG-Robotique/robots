@@ -1,21 +1,19 @@
 package org.arig.robot.services;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import lombok.RequiredArgsConstructor;
 import org.arig.robot.model.CouleurEchantillon;
+import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.springframework.stereotype.Service;
 
-@Getter
-@Setter
-@Accessors(fluent = true)
 @Service("IOService")
+@RequiredArgsConstructor
 public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements OdinIOService {
 
-    @Setter
-    @Accessors(fluent = true)
-    private int contentStock = 0;
+    private final OdinRobotStatus odinRobotStatus;
+
+    private boolean presVentouseBas = false;
+    private boolean presVentouseHaut = false;
 
     // --------------------------------------------------------- //
     // -------------------------- INPUT ------------------------ //
@@ -25,12 +23,12 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
 
     @Override
     public boolean presenceVentouseBas() {
-        return true;
+        return presVentouseBas;
     }
 
     @Override
     public boolean presenceVentouseHaut() {
-        return true;
+        return presVentouseHaut;
     }
 
     @Override
@@ -45,32 +43,32 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
 
     @Override
     public boolean presenceStock1() {
-        return contentStock >= 1;
+        return odinRobotStatus.stockDisponible() <= 6;
     }
 
     @Override
     public boolean presenceStock2() {
-        return contentStock >= 2;
+        return odinRobotStatus.stockDisponible() <= 5;
     }
 
     @Override
     public boolean presenceStock3() {
-        return contentStock >= 3;
+        return odinRobotStatus.stockDisponible() <= 4;
     }
 
     @Override
     public boolean presenceStock4() {
-        return contentStock >= 4;
+        return odinRobotStatus.stockDisponible() <= 3;
     }
 
     @Override
     public boolean presenceStock5() {
-        return contentStock >= 5;
+        return odinRobotStatus.stockDisponible() <= 2;
     }
 
     @Override
     public boolean presenceStock6() {
-        return contentStock >= 6;
+        return odinRobotStatus.stockDisponible() <= 1;
     }
 
     @Override
@@ -114,51 +112,53 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
 
     @Override
     public void disableAllPompes() {
-        // Nothing to do
+        releaseAllPompes();
     }
 
     @Override
     public void enableAllPompes() {
-        // Nothing to do
+        enablePompeVentouseBas();
+        enablePompeVentouseHaut();
     }
 
     @Override
     public void enableForceAllPompes() {
-        // Nothing to do
+        enableAllPompes();
     }
 
     @Override
     public void releaseAllPompes() {
-        // Nothing to do
+        releasePompeVentouseBas();
+        releasePompeVentouseHaut();
     }
 
     @Override
     public void enableForcePompeVentouseBas() {
-        // Nothing to do
+        enablePompeVentouseBas();
     }
 
     @Override
     public void enableForcePompeVentouseHaut() {
-        // Nothing to do
+        enablePompeVentouseHaut();
     }
 
     @Override
     public void enablePompeVentouseBas() {
-        // Nothing to do
+        presVentouseBas = true;
     }
 
     @Override
     public void enablePompeVentouseHaut() {
-        // Nothing to do
+        presVentouseHaut = true;
     }
 
     @Override
     public void releasePompeVentouseBas() {
-        // Nothing to do
+        presVentouseBas = false;
     }
 
     @Override
     public void releasePompeVentouseHaut() {
-        // Nothing to do
+        presVentouseBas = false;
     }
 }

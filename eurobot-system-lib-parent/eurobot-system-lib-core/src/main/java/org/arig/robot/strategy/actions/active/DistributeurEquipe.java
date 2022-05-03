@@ -11,7 +11,6 @@ import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BrasService;
-import org.arig.robot.services.CommonIOService;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,9 +28,6 @@ public class DistributeurEquipe extends AbstractEurobotAction {
 
     @Autowired
     private BrasService brasService;
-
-    @Autowired
-    private CommonIOService io;
 
     @Override
     public String name() {
@@ -54,7 +50,7 @@ public class DistributeurEquipe extends AbstractEurobotAction {
     @Override
     public boolean isValid() {
         return rs.stockDisponible() >= 3
-                && rs.getRemainingTime() >= EurobotConfig.validPriseEchantillonRemainingTime
+                && rs.getRemainingTime() >= EurobotConfig.invalidPriseEchantillonRemainingTime
                 && isTimeValid() && remainingTimeValid();
     }
 
@@ -81,7 +77,7 @@ public class DistributeurEquipe extends AbstractEurobotAction {
             rs.enableCalageBordure(TypeCalage.AVANT_BAS);
             mv.avanceMM(100);
 
-            if (!io.calageAvantBasDroit() || !io.calageAvantBasGauche()) {
+            if (!commonIOService.calageAvantBasDroit() || !commonIOService.calageAvantBasGauche()) {
                 log.warn("Mauvaise position Y pour {}", name());
                 updateValidTime(); // FIXME on devrait requérir un callage avant de recommencer
                 rs.enableAvoidance();

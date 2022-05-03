@@ -2,6 +2,7 @@ package org.arig.robot.services;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.EurobotStatus;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class BrasService extends BrasServiceInternal {
 
-    private static final int DST_BORDURE = 200;
+    private static final int DST_BORDURE = EurobotConfig.ECHANTILLON_SIZE;
 
     private final RobotConfig config;
     private final CommonIOService io;
