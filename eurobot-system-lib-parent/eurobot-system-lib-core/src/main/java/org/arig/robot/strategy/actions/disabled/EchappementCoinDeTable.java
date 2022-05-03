@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active.echappement;
+package org.arig.robot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -63,9 +63,13 @@ public class EchappementCoinDeTable extends AbstractEurobotAction {
 
         } catch (AvoidingException | NoPathFoundException e) {
             updateValidTime();
-            log.error("Erreur d'exécution de l'action : {}", e.getMessage());
+            log.error("Erreur d'éxecution de l'action : {}", e.getMessage());
         } finally {
-            step = rand.nextInt(6);
+            int newStep;
+            do {
+                newStep = rand.nextInt(6);
+            } while (newStep == step);
+            step = newStep;
         }
     }
 }
