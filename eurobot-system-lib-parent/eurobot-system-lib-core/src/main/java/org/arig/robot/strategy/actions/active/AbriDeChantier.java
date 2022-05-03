@@ -31,7 +31,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
     public int order() {
         boolean stockAbri = rs.stockageAbriChantier();
         int points = 0;
-        if (!rs.statuettePris()) {
+        if (!rs.statuettePrise()) {
             points += 5;
         }
         if (commonServosService.pousseReplique() && !rs.repliqueDepose()) {
@@ -54,7 +54,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
 
     @Override
     public void refreshCompleted() {
-        if (rs.statuettePris() && rs.echantillonAbriChantierDistributeurPris() && rs.echantillonAbriChantierCarreFouillePris()
+        if (rs.statuettePrise() && rs.echantillonAbriChantierDistributeurPris() && rs.echantillonAbriChantierCarreFouillePris()
             && ((commonServosService.pousseReplique() && rs.repliqueDepose()) || !commonServosService.pousseReplique())) {
             complete();
         }
@@ -67,7 +67,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
         nbEchantillon += !rs.echantillonAbriChantierCarreFouillePris() ? 1 : 0;
 
         // Valid si la statuette n'as pas été prise
-        boolean validStatuette = !rs.statuettePris();
+        boolean validStatuette = !rs.statuettePrise();
 
         // Valid si on peut gérer la réplique, et qu'elle n'est pas déposée
         boolean validReplique = commonServosService.pousseReplique() && !rs.repliqueDepose();
@@ -130,12 +130,12 @@ public class AbriDeChantier extends AbstractEurobotAction {
                 processingPriseBordureSafe(CouleurEchantillon.ROCHER_ROUGE, group::echantillonAbriChantierCarreFouillePris, stockAbri);
             }
 
-            if (!rs.statuettePris() || (commonServosService.pousseReplique() &&!rs.repliqueDepose())) {
+            if (!rs.statuettePrise() || (commonServosService.pousseReplique() &&!rs.repliqueDepose())) {
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
                 mv.pathTo(entryStatuette());
                 mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 45 : 135);
 
-                if (!rs.statuettePris()) {
+                if (!rs.statuettePrise()) {
                     commonServosService.fourcheStatuettePriseDepose(false);
                 }
 
@@ -159,7 +159,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
                     group.deposeAbriChantier(CouleurEchantillon.ROCHER_ROUGE, CouleurEchantillon.ROCHER_BLEU);
                 }
 
-                if (!rs.statuettePris()) {
+                if (!rs.statuettePrise()) {
                     commonServosService.fourcheStatuetteFerme(true);
                     // TODO Capteur pour vérifier que la prise de la statuette est bien terminé
                     group.statuettePris();

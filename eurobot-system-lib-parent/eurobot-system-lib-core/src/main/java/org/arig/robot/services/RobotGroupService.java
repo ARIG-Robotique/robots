@@ -112,7 +112,7 @@ public class RobotGroupService implements RobotGroup.Handler {
                 rs.vitrineActive(true);
                 break;
             case STATUETTE_PRIS:
-                rs.statuettePris(true, false);
+                rs.statuettePrise(true, false);
                 break;
             case STATUETTE_DANS_VITRINE:
                 rs.statuetteDansVitrine(true);
@@ -262,6 +262,21 @@ public class RobotGroupService implements RobotGroup.Handler {
         sendEvent(StatusEvent.DISTRIBUTEUR_COMMUN_ADVERSE_PRIS);
     }
 
+    public void distributeurEquipeBloque() {
+        rs.distributeurEquipeBloque(true);
+        sendEvent(StatusEvent.DISTRIBUTEUR_EQUIPE_BLOQUE);
+    }
+
+    public void distributeurCommunEquipeBloque() {
+        rs.distributeurCommunEquipeBloque(true);
+        sendEvent(StatusEvent.DISTRIBUTEUR_COMMUN_EQUIPE_BLOQUE);
+    }
+
+    public void distributeurCommunAdverseBloque() {
+        rs.distributeurCommunAdverseBloque(true);
+        sendEvent(StatusEvent.DISTRIBUTEUR_COMMUN_ADVERSE_BLOQUE);
+    }
+
     public void siteEchantillonPris() {
         rs.siteEchantillonPris(true);
         sendEvent(StatusEvent.SITE_ECHANTILLON_PRIS);
@@ -288,7 +303,7 @@ public class RobotGroupService implements RobotGroup.Handler {
     }
 
     public void statuettePris() {
-        rs.statuettePris(true, true);
+        rs.statuettePrise(true, true);
         sendEvent(StatusEvent.STATUETTE_PRIS);
     }
 

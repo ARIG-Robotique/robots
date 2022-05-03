@@ -20,7 +20,7 @@ import static org.arig.robot.constants.EurobotConfig.PTS_DEPOSE_PRISE;
 
 @Slf4j
 @Component
-public class PriseDistributeurEquipe extends AbstractEurobotAction {
+public class DistributeurEquipe extends AbstractEurobotAction {
 
     private static final int DISTRIB_H = 102;
 
@@ -46,14 +46,14 @@ public class PriseDistributeurEquipe extends AbstractEurobotAction {
 
     @Override
     public void refreshCompleted() {
-        if (rs.distributeurEquipePris()) {
+        if (rs.distributeurEquipePris() || rs.distributeurEquipeBloque()) {
             complete();
         }
     }
 
     @Override
     public boolean isValid() {
-        return !rs.distributeurEquipePris() && rs.stockDisponible() >= 3
+        return rs.stockDisponible() >= 3
                 && rs.getRemainingTime() >= EurobotConfig.validPriseEchantillonRemainingTime
                 && isTimeValid() && remainingTimeValid();
     }
@@ -128,7 +128,7 @@ public class PriseDistributeurEquipe extends AbstractEurobotAction {
                 if ((robotX <= 350 || robotX >= 3000 - 350) && robotY <= 830 && robotY >= 670) {
                     log.warn("Blocage détecté à proximité de {}", name());
                     // FIXME Tenter de récupérer l'échantillon et le déposer derrière nous
-                    group.distributeurEquipePris(); // on désactive l'action
+                    group.distributeurEquipeBloque(); // on désactive l'action
                     return;
                 }
             }

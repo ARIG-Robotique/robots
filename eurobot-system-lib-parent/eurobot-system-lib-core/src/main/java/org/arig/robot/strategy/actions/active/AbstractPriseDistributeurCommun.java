@@ -26,7 +26,11 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
 
     protected abstract boolean isDistributeurPris();
 
+    protected abstract boolean isDistributeurBloque();
+
     protected abstract void setDistributeurPris();
+
+    protected abstract void setDistributeurBloque();
 
     protected abstract int angleCallageX();
 
@@ -43,14 +47,14 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
 
     @Override
     public void refreshCompleted() {
-        if (isDistributeurPris()) {
+        if (isDistributeurPris() || isDistributeurBloque()) {
             complete();
         }
     }
 
     @Override
     public boolean isValid() {
-        return !isDistributeurPris() && rs.stockDisponible() >= 3
+        return rs.stockDisponible() >= 3
                 && rs.getRemainingTime() >= EurobotConfig.validPriseEchantillonRemainingTime
                 && isTimeValid() && remainingTimeValid();
     }
@@ -122,7 +126,7 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
                 if (robotY >= 1650 && robotX >= 1230 && robotX <= 3000 - 1230) {
                     log.warn("Blocage détecté à proximité de {}", name());
                     // FIXME Tenter de récupérer l'échantillon et le déposer derrière nous
-                    setDistributeurPris(); // on désactive l'action
+                    setDistributeurBloque(); // on désactive l'action
                     return;
                 }
             }

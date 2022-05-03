@@ -24,8 +24,18 @@ public class DistributeurCommunEquipe extends AbstractPriseDistributeurCommun {
     }
 
     @Override
+    protected boolean isDistributeurBloque() {
+        return rs.distributeurCommunEquipeBloque();
+    }
+
+    @Override
     protected void setDistributeurPris() {
         group.distributeurCommunEquipePris();
+    }
+
+    @Override
+    protected void setDistributeurBloque() {
+        group.distributeurCommunEquipeBloque();
     }
 
     @Override

@@ -58,6 +58,12 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         this.distributeurCommunAdversePris = distributeurCommunAdversePris;
     }
 
+    private boolean distributeurEquipeBloque = false;
+
+    private boolean distributeurCommunEquipeBloque = false;
+
+    private boolean distributeurCommunAdverseBloque = false;
+
     private boolean siteEchantillonPris = false;
 
     public void siteEchantillonPris(boolean siteEchantillonPris) {
@@ -94,15 +100,15 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     }
 
     @Setter(AccessLevel.NONE)
-    private boolean statuettePris = false;
+    private boolean statuettePrise = false;
 
     @Setter(AccessLevel.NONE)
-    private boolean statuettePrisDansCeRobot = false;
+    private boolean statuettePriseDansCeRobot = false;
 
-    public void statuettePris(boolean statuettePris, boolean statuettePrisDansCeRobot) {
-        log.info("[RS] statuette pris : {} / Dans ce robot : {}", statuettePris, statuettePrisDansCeRobot);
-        this.statuettePris = statuettePris;
-        this.statuettePrisDansCeRobot = statuettePrisDansCeRobot;
+    public void statuettePrise(boolean statuettePrise, boolean statuettePriseDansCeRobot) {
+        log.info("[RS] statuette prise : {} / Dans ce robot : {}", statuettePrise, statuettePriseDansCeRobot);
+        this.statuettePrise = statuettePrise;
+        this.statuettePriseDansCeRobot = statuettePriseDansCeRobot;
     }
 
     private boolean statuetteDansVitrine = false;
@@ -350,7 +356,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         points += 2; // Vitrine présente
         points += 2; // Statuette présente
         if (vitrineActive) points += 5;
-        if (statuettePris) points += 5;
+        if (statuettePrise) points += 5;
         if (statuetteDansVitrine) points += 15;
         if (repliqueDepose) points += 10;
         if (distributeurEquipePris) points += 3; // 3 échantillons
@@ -371,7 +377,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public Map<String, Integer> scoreStatus() {
         Map<String, Integer> r = new HashMap<>();
         r.put("Vitrine", 2 + (vitrineActive ? 5 : 0));
-        r.put("Statuette", 2 + (statuettePris ? 5 : 0) + (statuetteDansVitrine ? 15 : 0));
+        r.put("Statuette", 2 + (statuettePrise ? 5 : 0) + (statuetteDansVitrine ? 15 : 0));
         r.put("Replique", repliqueDepose ? 10 : 0);
         r.put("Distributeurs", (distributeurEquipePris ? 3 : 0) + (distributeurCommunEquipePris ? 3 : 0) + (echantillonAbriChantierCarreFouillePris ? 1 : 0) + (echantillonAbriChantierCarreFouillePris ? 1 : 0) + (echantillonCampementPris ? 1 : 0));
         r.put("Zone de fouille", zoneDeFouille.score());
@@ -396,7 +402,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         r.put("siteDeFouilleAdversePris", siteDeFouilleAdversePris);
         r.put("carresDeFouilleTermines", zoneDeFouille.isComplete());
         r.put("vitrineActive", vitrineActive);
-        r.put("statuettePris", statuettePris);
+        r.put("statuettePris", statuettePrise);
         r.put("statuetteDansVitrine", statuetteDansVitrine);
         r.put("repliqueDepose", repliqueDepose);
         r.put("echantillonAbriChantierDistributeurPris", echantillonAbriChantierDistributeurPris);

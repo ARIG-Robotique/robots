@@ -269,18 +269,18 @@ class RobotGroupServiceTest {
 
     @Test
     void testStatuettePris() {
-        Assertions.assertFalse(statusPrimary.statuettePris());
-        Assertions.assertFalse(statusPrimary.statuettePrisDansCeRobot());
-        Assertions.assertFalse(statusSecondary.statuettePris());
-        Assertions.assertFalse(statusSecondary.statuettePrisDansCeRobot());
+        Assertions.assertFalse(statusPrimary.statuettePrise());
+        Assertions.assertFalse(statusPrimary.statuettePriseDansCeRobot());
+        Assertions.assertFalse(statusSecondary.statuettePrise());
+        Assertions.assertFalse(statusSecondary.statuettePriseDansCeRobot());
 
         rgServicePrimary.statuettePris();
         ThreadUtils.sleep(WAIT);
 
-        Assertions.assertTrue(statusPrimary.statuettePris());
-        Assertions.assertTrue(statusPrimary.statuettePrisDansCeRobot());
-        Assertions.assertTrue(statusSecondary.statuettePris());
-        Assertions.assertFalse(statusSecondary.statuettePrisDansCeRobot());
+        Assertions.assertTrue(statusPrimary.statuettePrise());
+        Assertions.assertTrue(statusPrimary.statuettePriseDansCeRobot());
+        Assertions.assertTrue(statusSecondary.statuettePrise());
+        Assertions.assertFalse(statusSecondary.statuettePriseDansCeRobot());
     }
 
     @Test
