@@ -34,7 +34,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -77,7 +77,7 @@ public class MouvementController {
                 .sorted(Comparator.comparingInt(ActionSuperviseur::getOrder).reversed())
                 .collect(Collectors.toList());
 
-        Map<String, Object> pos = new LinkedHashMap<>();
+        Map<String, Object> pos = new HashMap<>();
         pos.put("x", conv.pulseToMm(position.getPt().getX()));
         pos.put("y", conv.pulseToMm(position.getPt().getY()));
         pos.put("angle", conv.pulseToDeg(position.getAngle()));
@@ -92,6 +92,7 @@ public class MouvementController {
         pos.put("currentAction", rs.currentAction());
         pos.put("actions", actions);
         pos.put("gameStatus", rs.gameStatus());
+        pos.put("gameFlags", rs.gameFlags());
         pos.put("scoreStatus", rs.scoreStatus());
         return pos;
     }

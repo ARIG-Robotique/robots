@@ -196,6 +196,8 @@ public abstract class AbstractRobotStatus {
 
     public abstract Map<String, ?> gameStatus();
 
+    public abstract Map<String, Boolean> gameFlags();
+
     public abstract Map<String, Integer> scoreStatus();
 
 }

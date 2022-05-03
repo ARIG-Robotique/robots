@@ -393,23 +393,29 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         Map<String, Object> r = new HashMap<>();
         r.put("stock", stock);
         r.put("carresFouille", zoneDeFouille.carresFouille);
-        r.put("distributeurEquipePris", distributeurEquipePris);
-        r.put("distributeurCommunEquipePris", distributeurCommunEquipePris);
-        r.put("distributeurCommunAdversePris", distributeurCommunAdversePris);
-        r.put("siteEchantillonPris", siteEchantillonPris);
-        r.put("siteEchantillonAdversePris", siteEchantillonAdversePris);
-        r.put("siteDeFouillePris", siteDeFouillePris);
-        r.put("siteDeFouilleAdversePris", siteDeFouilleAdversePris);
-        r.put("carresDeFouilleTermines", zoneDeFouille.isComplete());
-        r.put("vitrineActive", vitrineActive);
-        r.put("statuettePris", statuettePrise);
-        r.put("statuetteDansVitrine", statuetteDansVitrine);
-        r.put("repliqueDepose", repliqueDepose);
-        r.put("echantillonAbriChantierDistributeurPris", echantillonAbriChantierDistributeurPris);
-        r.put("echantillonAbriChantierCarreFouillePris", echantillonAbriChantierCarreFouillePris);
-        r.put("echantillonCampementPris", echantillonCampementPris);
         r.put("siteDeRetour", siteDeRetour);
         r.put("siteDeRetourAutreRobot", siteDeRetourAutreRobot);
+        return r;
+    }
+
+    @Override
+    public Map<String, Boolean> gameFlags() {
+        Map<String, Boolean> r = new HashMap<>();
+        r.put("Distributeur équipe pris", distributeurEquipePris);
+        r.put("Distributeur commun équipe pris", distributeurCommunEquipePris);
+        r.put("Distributeur commun adverse pris", distributeurCommunAdversePris);
+        r.put("Site echantillons pris", siteEchantillonPris);
+        r.put("Site echantillons adverse pris", siteEchantillonAdversePris);
+        r.put("Site de fouille pris", siteDeFouillePris);
+        r.put("Site de fouille adverse pris", siteDeFouilleAdversePris);
+        r.put("Carrés de fouille terminés", zoneDeFouille.isComplete());
+        r.put("Vitrine activée", vitrineActive);
+        r.put("Statuette prise", statuettePrise);
+        r.put("Statuette dans vitrine", statuetteDansVitrine);
+        r.put("Replique déposée", repliqueDepose);
+        r.put("Echantillon chantier (coté distrib.) pris", echantillonAbriChantierDistributeurPris);
+        r.put("Echantillon chantier (coté fouille) pris", echantillonAbriChantierCarreFouillePris);
+        r.put("Echantillon campement pris", echantillonCampementPris);
         return r;
     }
 }

@@ -20,6 +20,11 @@ public class TestRobotStatus extends AbstractRobotStatus {
     }
 
     @Override
+    public Map<String, Boolean> gameFlags() {
+        return Collections.emptyMap();
+    }
+
+    @Override
     public Map<String, Integer> scoreStatus() {
         return Collections.emptyMap();
     }
