@@ -69,7 +69,7 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && !remainingTimeValid();
+        return !remainingTimeValid();
     }
 
     @Override
@@ -96,11 +96,7 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
 
             if (rs.twoRobots() && rs.siteDeRetour() == SiteDeRetour.FOUILLE_CENTRE) {
                 // Premier (allé au centre), on attend que le second dise ou il va pour aller à l'opposé.
-                SiteDeRetour autre;
-                do {
-                    ThreadUtils.sleep(10);
-                    autre = rs.siteDeRetourAutreRobot();
-                } while (autre == SiteDeRetour.AUCUN);
+                final SiteDeRetour autre = ThreadUtils.waitUntil(rs::siteDeRetourAutreRobot, SiteDeRetour.AUCUN, 10, 20000);
                 log.info("L'autre robot va au site de fouille : {}", autre);
 
                 // L'autre robot a choisis sa destination
