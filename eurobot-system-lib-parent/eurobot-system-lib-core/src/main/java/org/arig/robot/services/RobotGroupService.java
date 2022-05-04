@@ -76,7 +76,7 @@ public class RobotGroupService implements RobotGroup.Handler {
                 rs.strategy(Strategy.values()[data[0]]);
                 break;
             case CONFIG:
-                rs.troisDeposeAbriChantier(data[0] > 0);
+                rs.reverseCarreDeFouille(data[0] > 0);
                 rs.stockageAbriChantier(data[1] > 0);
                 break;
             case CURRENT_ACTION:
@@ -241,7 +241,7 @@ public class RobotGroupService implements RobotGroup.Handler {
 
     public void configuration() {
         byte[] data = new byte[]{
-                (byte) (rs.troisDeposeAbriChantier() ? 1 : 0),
+                (byte) (rs.reverseCarreDeFouille() ? 1 : 0),
                 (byte) (rs.stockageAbriChantier() ? 1 : 0)
         };
         sendEvent(StatusEvent.CONFIG, data);

@@ -146,16 +146,16 @@ class RobotGroupServiceTest {
     }
 
     @Test
-    void testConfigurationTroisDeposeAbriChantier() {
-        Assertions.assertFalse(statusPrimary.troisDeposeAbriChantier());
-        Assertions.assertFalse(statusSecondary.troisDeposeAbriChantier());
+    void testConfigurationReverseCarreDeFouille() {
+        Assertions.assertFalse(statusPrimary.reverseCarreDeFouille());
+        Assertions.assertFalse(statusSecondary.reverseCarreDeFouille());
 
-        statusPrimary.troisDeposeAbriChantier(true);
+        statusPrimary.reverseCarreDeFouille(true);
         rgServicePrimary.configuration();
         ThreadUtils.sleep(WAIT);
 
-        Assertions.assertTrue(statusPrimary.troisDeposeAbriChantier());
-        Assertions.assertTrue(statusSecondary.troisDeposeAbriChantier());
+        Assertions.assertTrue(statusPrimary.reverseCarreDeFouille());
+        Assertions.assertTrue(statusSecondary.reverseCarreDeFouille());
     }
 
     @Test

@@ -31,7 +31,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
      * CONFIGURATION
      */
 
-    private boolean troisDeposeAbriChantier = false;
+    private boolean reverseCarreDeFouille = false;
     private boolean stockageAbriChantier = false;
 
     /**

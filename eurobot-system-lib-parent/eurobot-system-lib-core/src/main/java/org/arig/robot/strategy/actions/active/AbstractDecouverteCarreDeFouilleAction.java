@@ -8,7 +8,6 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.CarreFouille;
 import org.arig.robot.model.CouleurCarreFouille;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
@@ -204,6 +203,6 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
     }
 
     private boolean isReverse() {
-        return rs.strategy() != Strategy.BASIC;
+        return rs.reverseCarreDeFouille() && nbTry == 0;
     }
 }

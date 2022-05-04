@@ -22,7 +22,7 @@ public interface EurobotConfig {
     int invalidPriseEchantillonRemainingTime = 30000;
 
     // Options de match
-    String TROIS_DANS_ABRI = "3 dans abri";
+    String REVERSE_CARRE_FOUILLE = "Reverse carre de fouille";
     String STOCKAGE_ABRI = "Stockage abri";
 
     // Noms des actions
