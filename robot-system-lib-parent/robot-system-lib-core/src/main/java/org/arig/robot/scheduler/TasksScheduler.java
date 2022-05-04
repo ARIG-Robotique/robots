@@ -48,6 +48,7 @@ public class TasksScheduler implements InitializingBean {
             long lastTimeAsserv = System.nanoTime();
             long lastTimeI2C = lastTimeAsserv;
             long lastTimeCalage = lastTimeAsserv;
+            long lastTimeRefreshState = lastTimeAsserv;
 
             rs.enableMainThread();
             while (rs.mainThread()) {
@@ -103,6 +104,13 @@ public class TasksScheduler implements InitializingBean {
                             .addField("execTime", ellapsedI2C);
 
                     monitoringWrapper.addTimeSeriePoint(serie);
+                }
+
+                long timeStartRefreshState = System.nanoTime();
+                long ellapsedRefreshState = timeStartRefreshState - lastTimeRefreshState;
+                if (ellapsedRefreshState >= 1000000000) {
+                    lastTimeRefreshState = timeStartRefreshState;
+                    rs.refreshState();
                 }
             }
         });

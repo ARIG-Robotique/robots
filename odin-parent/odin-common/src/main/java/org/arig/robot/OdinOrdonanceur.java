@@ -12,6 +12,7 @@ import org.arig.robot.model.*;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.*;
+import org.arig.robot.system.capteurs.CarreFouilleReader;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
@@ -37,6 +38,9 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
     @Autowired
     private OdinServosService odinServosService;
 
+    @Autowired
+    private CarreFouilleReader carreFouilleReader;
+
     private int getX(int x) {
         return tableUtils.getX(odinRobotStatus.team() == Team.VIOLET, x);
     }
@@ -52,6 +56,12 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void afterInit() {
+        try {
+            carreFouilleReader.printStateStock(null, null, null, null, null, null);
+            carreFouilleReader.printStateVentouse(null, null);
+        } catch (Exception e) {
+            // NOPE
+        }
         choixEquipeStrategy();
     }
 
@@ -115,6 +125,14 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         while (io.tirette()) {
             ThreadUtils.sleep(1000);
         }
+
+        try {
+            carreFouilleReader.printStateVentouse(null, null);
+            carreFouilleReader.printStateStock(null, null, null, null, null, null);
+        } catch (Exception e) {
+            // NOPE
+        }
+
         brasService.setBrasBas(PositionBras.INIT);
         brasService.setBrasHaut(PositionBras.INIT);
         odinServosService.homes();

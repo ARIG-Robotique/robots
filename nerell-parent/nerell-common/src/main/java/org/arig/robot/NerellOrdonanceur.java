@@ -15,6 +15,7 @@ import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.*;
+import org.arig.robot.system.capteurs.CarreFouilleReader;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
@@ -40,6 +41,9 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     @Autowired
     private BrasService brasService;
 
+    @Autowired
+    private CarreFouilleReader carreFouilleReader;
+
     private int getX(int x) {
         return tableUtils.getX(nerellRobotStatus.team() == Team.VIOLET, x);
     }
@@ -55,6 +59,12 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void afterInit() {
+        try {
+            carreFouilleReader.printStateStock(null, null, null, null, null, null);
+            carreFouilleReader.printStateVentouse(null, null);
+        } catch (Exception e) {
+            // NOPE
+        }
         choixEquipeStrategy();
     }
 
@@ -117,6 +127,13 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
         while (io.tirette()) {
             ThreadUtils.sleep(1000);
+        }
+
+        try {
+            carreFouilleReader.printStateVentouse(null, null);
+            carreFouilleReader.printStateStock(null, null, null, null, null, null);
+        } catch (Exception e) {
+            // NOPE
         }
 
         brasService.setBrasBas(PositionBras.INIT);

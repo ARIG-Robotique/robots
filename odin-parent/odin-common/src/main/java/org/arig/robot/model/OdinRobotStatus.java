@@ -1,15 +1,10 @@
 package org.arig.robot.model;
 
-import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Objects;
+import org.arig.robot.system.capteurs.CarreFouilleReader;
 
 @Slf4j
 @Data
@@ -17,7 +12,7 @@ import java.util.Objects;
 @EqualsAndHashCode(callSuper = true)
 public class OdinRobotStatus extends EurobotStatus {
 
-    public OdinRobotStatus() {
-        super(false);
+    public OdinRobotStatus(CarreFouilleReader carreFouilleReader) {
+        super(false, carreFouilleReader);
     }
 }

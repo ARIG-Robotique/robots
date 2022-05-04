@@ -1,9 +1,6 @@
 package org.arig.robot.model;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
@@ -186,6 +183,10 @@ public abstract class AbstractRobotStatus {
     public void disableCalageBordure() {
         log.info("Désactivation calage bordure");
         calage.clear();
+    }
+
+    public void refreshState() {
+        // To be overidded
     }
 
     private String currentAction = null;

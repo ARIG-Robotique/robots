@@ -4,6 +4,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
+import org.arig.robot.exception.I2CException;
+import org.arig.robot.system.capteurs.CarreFouilleReader;
 
 import java.util.*;
 
@@ -13,8 +15,37 @@ import java.util.*;
 @EqualsAndHashCode(callSuper = false)
 public abstract class EurobotStatus extends AbstractRobotStatus {
 
-    protected EurobotStatus(boolean mainRobot) {
+    private final CarreFouilleReader carreFouilleReader;
+
+    protected EurobotStatus(boolean mainRobot, CarreFouilleReader carreFouilleReader) {
         super(EurobotConfig.matchTimeMs, mainRobot);
+        this.carreFouilleReader = carreFouilleReader;
+    }
+
+    private boolean needRefreshStock = false;
+    private boolean needRefreshBras = false;
+
+    @Override
+    public void refreshState() {
+        if (matchEnabled()) {
+            if (needRefreshStock) {
+                needRefreshStock = false;
+                try {
+                    carreFouilleReader.printStateStock(stock[0], stock[1], stock[2], stock[3], stock[4], stock[5]);
+                } catch (I2CException e) {
+                    log.warn("Erreur d'affichage du stock sur les LEDs", e);
+                }
+            }
+
+            if (needRefreshBras) {
+                needRefreshBras = false;
+                try {
+                    carreFouilleReader.printStateVentouse(null, null);
+                } catch (I2CException e) {
+                    log.warn("Erreur d'affichage des ventouses sur les LEDs", e);
+                }
+            }
+        }
     }
 
     @Setter(AccessLevel.NONE)
@@ -293,6 +324,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         int i = indexStockage();
         if (i != -1) {
             stock[i] = couleur;
+            needRefreshStock = true;
         } else {
             log.error("[RS] demande de stockage invalide, pas de place");
         }
@@ -302,6 +334,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         int idx = indexDestockage();
         CouleurEchantillon couleur = stock[idx];
         stock[idx] = null;
+        needRefreshStock = true;
         return couleur;
     }
 
