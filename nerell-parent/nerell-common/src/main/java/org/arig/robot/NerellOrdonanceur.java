@@ -289,13 +289,10 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             switch (nerellRobotStatus.strategy()) {
+                case BASIC:
                 default:
-                    mv.gotoPoint(getX(270), 1440);
-                    if (nerellRobotStatus.team() == Team.JAUNE) {
-                        mv.gotoOrientationDeg(0);
-                    } else {
-                        mv.gotoOrientationDeg(180);
-                    }
+                    mv.gotoPoint(getX(270), 1430);
+                    mv.alignFrontTo(getX(830), 1325);
                     groupService.initStep(InitStep.NERELL_EN_POSITION_BASIC);
                     break;
             }

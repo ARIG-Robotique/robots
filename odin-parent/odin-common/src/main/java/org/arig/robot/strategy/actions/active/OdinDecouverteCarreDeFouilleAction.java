@@ -10,7 +10,7 @@ public class OdinDecouverteCarreDeFouilleAction extends AbstractDecouverteCarreD
 
     @Override
     public int order() {
-        if (rs.strategy() == Strategy.BASIC && nbTry == 0) {
+        if (rs.twoRobots() && rs.strategy() == Strategy.BASIC && nbTry == 0) {
             return 1000;
         }
         return super.order();

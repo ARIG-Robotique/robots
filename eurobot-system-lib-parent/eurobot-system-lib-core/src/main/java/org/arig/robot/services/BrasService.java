@@ -39,6 +39,7 @@ public class BrasService extends BrasServiceInternal {
 
     public enum TypePrise {
         SOL,
+        SOL_FORCE,
         BORDURE,
         DISTRIBUTEUR
     }
@@ -68,6 +69,7 @@ public class BrasService extends BrasServiceInternal {
         // prise
         switch (typePrise) {
             case SOL:
+            case SOL_FORCE:
                 setBrasBas(PositionBras.SOL_PRISE);
                 break;
             case BORDURE:
@@ -349,7 +351,7 @@ public class BrasService extends BrasServiceInternal {
         for (int i = 0; i < rs.stock().length; i++) {
             if (io.presenceStock(i) && rs.stock()[i] == null) {
                 log.warn("Nouvel échantillon détecté dans le stock {}", (i + 1));
-                rs.stock()[i] = CouleurEchantillon.INCONNU;
+                rs.stock()[i] = CouleurEchantillon.INCONNU; // FIXME : Réordonner le stock
             } else if (!io.presenceStock(i) && rs.stock()[i] != null) {
                 log.warn("échantillon perdu dans le stock {}", (i + 1));
                 rs.stock()[i] = null;

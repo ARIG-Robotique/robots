@@ -45,32 +45,32 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
 
     @Override
     public boolean presenceStock1() {
-        return nerellRobotStatus.stockDisponible() <= 6;
+        return nerellRobotStatus.stock()[0] != null;
     }
 
     @Override
     public boolean presenceStock2() {
-        return nerellRobotStatus.stockDisponible() <= 5;
+        return nerellRobotStatus.stock()[1] != null;
     }
 
     @Override
     public boolean presenceStock3() {
-        return nerellRobotStatus.stockDisponible() <= 4;
+        return nerellRobotStatus.stock()[2] != null;
     }
 
     @Override
     public boolean presenceStock4() {
-        return nerellRobotStatus.stockDisponible() <= 3;
+        return nerellRobotStatus.stock()[3] != null;
     }
 
     @Override
     public boolean presenceStock5() {
-        return nerellRobotStatus.stockDisponible() <= 2;
+        return nerellRobotStatus.stock()[4] != null;
     }
 
     @Override
     public boolean presenceStock6() {
-        return nerellRobotStatus.stockDisponible() <= 1;
+        return nerellRobotStatus.stock()[5] != null;
     }
 
     @Override
