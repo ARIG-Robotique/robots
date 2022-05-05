@@ -55,7 +55,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     public void setTeam(Team team) {
         this.team = team;
-        zoneDeFouille.team(team);
+        carresFouille.team(team);
     }
 
     /**
@@ -274,33 +274,33 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    private ZoneDeFouille zoneDeFouille = new ZoneDeFouille();
+    private CarresFouille carresFouille = new CarresFouille();
 
-    public int zoneDeFouillePointRestant() {
-        return 25 - zoneDeFouille.score();
+    public int carresDeFouillePointRestant() {
+        return 25 - carresFouille.score();
     }
 
-    public boolean zoneDeFouilleComplete() {
-        return zoneDeFouille.isComplete();
+    public boolean carresDeFouilleComplete() {
+        return carresFouille.isComplete();
     }
 
     public CarreFouille carreFouille(int numero) {
-        return zoneDeFouille.get(numero);
+        return carresFouille.get(numero);
     }
 
     public CarreFouille nextCarreDeFouille(int nbTry, boolean reverse) {
-        return zoneDeFouille.nextCarreFouilleToProcess(nbTry, reverse);
+        return carresFouille.nextCarreFouilleToProcess(nbTry, reverse);
     }
 
     public void couleurCarreFouille(int numero, CouleurCarreFouille couleur) {
         log.info("[RS] couleur carre fouille {} : {}", numero, couleur);
-        zoneDeFouille.get(numero).couleur(couleur);
-        zoneDeFouille.refreshProcessing();
+        carresFouille.get(numero).couleur(couleur);
+        carresFouille.refreshProcessing();
     }
 
     public void basculeCarreFouille(int numero) {
         log.info("[RS] bascule carre fouille : {}", numero);
-        zoneDeFouille.get(numero).bascule(true);
+        carresFouille.get(numero).bascule(true);
     }
 
     private CouleurEchantillon[] stock = new CouleurEchantillon[]{null, null, null, null, null, null};
@@ -399,7 +399,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         if (echantillonCampementPris) points += 1;
         points += campement.score();
         points += galerie.score();
-        points += zoneDeFouille.score();
+        points += carresFouille.score();
         points += scoreAbriChantier();
         points += scoreRetourAuSite();
 
@@ -413,7 +413,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         r.put("Statuette", 2 + (statuettePrise ? 5 : 0) + (statuetteDansVitrine ? 15 : 0));
         r.put("Replique", repliqueDepose ? 10 : 0);
         r.put("Distributeurs", (distributeurEquipePris ? 3 : 0) + (distributeurCommunEquipePris ? 3 : 0) + (echantillonAbriChantierCarreFouillePris ? 1 : 0) + (echantillonAbriChantierCarreFouillePris ? 1 : 0) + (echantillonCampementPris ? 1 : 0));
-        r.put("Zone de fouille", zoneDeFouille.score());
+        r.put("Carrés de fouille", carresFouille.score());
         r.put("Campement", campement.score());
         r.put("Galerie", galerie.score());
         r.put("Abri de chantier", scoreAbriChantier());
@@ -425,7 +425,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public Map<String, Object> gameStatus() {
         Map<String, Object> r = new HashMap<>();
         r.put("stock", stock);
-        r.put("carresFouille", zoneDeFouille.carresFouille);
+        r.put("carresFouille", carresFouille.carresFouille);
         r.put("siteDeRetour", siteDeRetour);
         r.put("siteDeRetourAutreRobot", siteDeRetourAutreRobot);
         return r;
@@ -441,7 +441,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         r.put("Site echantillons adverse pris", siteEchantillonAdversePris);
         r.put("Site de fouille pris", siteDeFouillePris);
         r.put("Site de fouille adverse pris", siteDeFouilleAdversePris);
-        r.put("Carrés de fouille terminés", zoneDeFouille.isComplete());
+        r.put("Carrés de fouille terminés", carresFouille.isComplete());
         r.put("Vitrine activée", vitrineActive);
         r.put("Statuette prise", statuettePrise);
         r.put("Statuette dans vitrine", statuetteDansVitrine);

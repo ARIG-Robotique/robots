@@ -48,17 +48,17 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
 
     @Override
     public int order() {
-        return rs.zoneDeFouillePointRestant() + tableUtils.alterOrder(entryPoint());
+        return rs.carresDeFouillePointRestant() + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && remainingTimeValid() && !rs.zoneDeFouilleComplete() && cf() != null;
+        return isTimeValid() && remainingTimeValid() && !rs.carresDeFouilleComplete() && cf() != null;
     }
 
     @Override
     public void refreshCompleted() {
-        if (rs.zoneDeFouilleComplete()) {
+        if (rs.carresDeFouilleComplete()) {
             complete();
         }
     }

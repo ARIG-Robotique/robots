@@ -5,7 +5,7 @@ import lombok.experimental.Accessors;
 
 import java.util.stream.Stream;
 
-public class ZoneDeFouille {
+public class CarresFouille {
 
     @Setter
     @Accessors(fluent = true, chain = true)
