@@ -44,15 +44,19 @@ public class BrasService extends BrasServiceInternal {
     }
 
     public boolean initPrise(@NonNull final TypePrise typePrise) {
+        return initPrise(typePrise, false);
+    }
+
+    public boolean initPrise(@NonNull final TypePrise typePrise, boolean skipCheck) {
         log.info("Init prise d'échantillon @ {}", typePrise);
 
         int indexStock = rs.indexStockage();
-        if (indexStock == -1) {
+        if (!skipCheck && indexStock == -1) {
             log.warn("Prise impossible, le stock est plein");
             return false;
         }
 
-        if (typePrise == TypePrise.SOL && !io.presencePriseBras()) {
+        if (!skipCheck && typePrise == TypePrise.SOL && !io.presencePriseBras()) {
             log.warn("Prise impossible, rien à prendre");
             return false;
         }
