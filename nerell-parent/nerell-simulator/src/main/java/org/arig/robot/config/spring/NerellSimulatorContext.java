@@ -128,7 +128,7 @@ public class NerellSimulatorContext {
     }
 
     @Bean
-    public CarreFouilleReader carreFouilleReader(I2CManager i2cManager, EurobotStatus status) {
-        return new CarreFouilleReaderBouchon(i2cManager, "CarreFouilleBouchon", status);
+    public CarreFouilleReader carreFouilleReader(I2CManager i2cManager) {
+        return new CarreFouilleReaderBouchon(i2cManager, "CarreFouilleBouchon");
     }
 }
