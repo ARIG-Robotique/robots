@@ -86,6 +86,10 @@ public abstract class AbstractCommonServosService extends AbstractServosService 
         setPositionBatch(GROUP_MOUSTACHE, POS_FERME, wait);
     }
 
+    public void groupeMoustachePoussette(boolean wait) {
+        setPositionBatch(GROUP_MOUSTACHE, POS_POUSSETTE, wait);
+    }
+
     //*******************************************//
     //* Déplacements de servo                   *//
     //*******************************************//

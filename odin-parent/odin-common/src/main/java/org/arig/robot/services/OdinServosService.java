@@ -127,14 +127,17 @@ public class OdinServosService extends AbstractCommonServosService {
         Servo moustacheGauche = servo(MOUSTACHE_GAUCHE_ID, MOUSTACHE_GAUCHE)
                 .time(325)
                 .position(POS_FERME, 2330)
+                .position(POS_POUSSETTE, 1700)
                 .position(POS_OUVERT, 1500);
         Servo langue = servo(LANGUE_ID, LANGUE)
                 .time(350)
+                .position(POS_FERME, 2270)
                 .position(POS_FERME, 2270)
                 .position(POS_OUVERT, 1340);
         Servo moustacheDroite = servo(MOUSTACHE_DROITE_ID, MOUSTACHE_DROITE)
                 .time(325)
                 .position(POS_FERME, 700)
+                .position(POS_POUSSETTE, 1360)
                 .position(POS_OUVERT, 1560);
 
         group(GROUP_ARRIERE_ID, GROUP_ARRIERE)
@@ -147,6 +150,7 @@ public class OdinServosService extends AbstractCommonServosService {
                 .addServo(moustacheGauche)
                 .addServo(moustacheDroite)
                 .batch(POS_OUVERT)
+                .batch(POS_POUSSETTE)
                 .batch(POS_FERME);
     }
 

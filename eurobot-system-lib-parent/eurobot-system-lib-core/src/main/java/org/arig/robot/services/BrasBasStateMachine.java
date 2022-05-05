@@ -86,6 +86,7 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
                 new PointBras(135, 170, 100)
         ));
         transition(PositionBras.STOCK_ENTREE, PositionBras.ECHANGE);
+        transition(PositionBras.HORIZONTAL, PositionBras.ECHANGE);
         transition(PositionBras.ECHANGE, PositionBras.HORIZONTAL);
         transition(PositionBras.ECHANGE, PositionBras.STOCK_ENTREE);
 
@@ -156,6 +157,7 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
                 new PointBras(170, 134, -20)
         ));
         transition(PositionBras.SOL_DEPOSE, PositionBras.STOCK_ENTREE);
+        transition(PositionBras.ECHANGE, PositionBras.SOL_DEPOSE);
 
         transition(PositionBras.STOCK_ENTREE, PositionBras.BORDURE_APPROCHE);
         transition(PositionBras.BORDURE_APPROCHE, PositionBras.STOCK_ENTREE);
