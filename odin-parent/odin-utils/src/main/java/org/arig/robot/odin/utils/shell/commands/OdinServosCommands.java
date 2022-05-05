@@ -1,6 +1,7 @@
 package org.arig.robot.odin.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.OdinRobotStatus;
@@ -146,6 +147,7 @@ public class OdinServosCommands {
         }
     }
 
+    @SneakyThrows
     @ShellMethod("Prise et stockage d'un échantillon")
     public void cyclePrise(
             @ShellOption(defaultValue = "INCONNU") CouleurEchantillon couleur,
@@ -154,16 +156,16 @@ public class OdinServosCommands {
         ioService.couleurVentouseHaut();
         ioService.couleurVentouseBas();
 
-        if (brasService.initPrise(typePrise)) {
+        if (brasService.initPrise(typePrise).get()) {
             log.info("Prise en cours");
-            if (brasService.processPrise(typePrise)) {
+            if (brasService.processPrise(typePrise).get()) {
                 log.info("Prise terminée");
-                if (brasService.stockagePrise(typePrise, couleur)) {
+                if (brasService.stockagePrise(typePrise, couleur).get()) {
                     log.info("Stockage terminé : {}", Arrays.stream(rs.stock()).map(c -> c == null ? "null" : c.name()).collect(Collectors.joining(",")));
                 }
             }
         }
-        brasService.finalizePrise();
+        brasService.finalizePrise().get();
     }
 
     @ShellMethod("Dépose d'un échantillon")

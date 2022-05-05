@@ -10,6 +10,8 @@ public class BrasHautStateMachine extends AbstractBrasStateMachine {
     public BrasHautStateMachine(ConfigBras configBras) {
         super("Bras haut");
 
+        disableCheck(true);
+
         state(PositionBras.INIT, new PointBras(66, 97, -70)); // dois matcher la position "Init" du service servos
         state(PositionBras.HORIZONTAL, new PointBras(configBras.x + configBras.r1 + configBras.r2 + configBras.r3, configBras.y, 0));
 

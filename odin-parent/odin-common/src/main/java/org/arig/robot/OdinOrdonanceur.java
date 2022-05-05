@@ -175,7 +175,6 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
                 odinRobotStatus.twoRobots(odinEcranService.config().isTwoRobots());
                 odinRobotStatus.reverseCarreDeFouille(odinEcranService.config().hasOption(EurobotConfig.REVERSE_CARRE_FOUILLE));
-                odinRobotStatus.stockageAbriChantier(odinEcranService.config().hasOption(EurobotConfig.STOCKAGE_ABRI));
 
                 done = odinEcranService.config().isStartCalibration();
             }

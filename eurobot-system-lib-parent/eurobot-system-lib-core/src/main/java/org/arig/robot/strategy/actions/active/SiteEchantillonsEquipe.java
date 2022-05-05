@@ -15,6 +15,9 @@ import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
 import static org.arig.robot.constants.EurobotConfig.PTS_DEPOSE_PRISE;
 import static org.arig.robot.constants.EurobotConfig.ECHANTILLON_SIZE;
 
@@ -99,37 +102,42 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
         try {
             entryPoint(); // On récupère le point d'entrée et on rafraichit l'échantillon
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            CompletableFuture<Boolean> task = null;
             if (firstAction && echantillonEntry == CouleurEchantillon.ROCHER_VERT) {
-                priseEchantillon(false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                priseEchantillon(false, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE, GotoOption.AVANT);
-                priseEchantillon(false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU, GotoOption.AVANT);
+                task = priseEchantillon(task, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
+                task = priseEchantillon(task, false, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE, GotoOption.AVANT);
+                task = priseEchantillon(task, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU, GotoOption.AVANT);
             } else {
                 if (echantillonEntry == CouleurEchantillon.ROCHER_ROUGE) {
                     // De bas en haut
-                    priseEchantillon(true, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE, GotoOption.AVANT);
-                    priseEchantillon(false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT, GotoOption.AVANT);
-                    priseEchantillon(false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU, GotoOption.AVANT);
+                    task = priseEchantillon(task, true, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE, GotoOption.AVANT);
+                    task = priseEchantillon(task, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT, GotoOption.AVANT);
+                    task = priseEchantillon(task, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU, GotoOption.AVANT);
                 } else {
                     // De haut en bas
-                    priseEchantillon(false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU, GotoOption.AVANT);
-                    priseEchantillon(false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT, GotoOption.AVANT);
-                    priseEchantillon(false, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE, GotoOption.AVANT);
+                    task = priseEchantillon(task, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU, GotoOption.AVANT);
+                    task = priseEchantillon(task, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT, GotoOption.AVANT);
+                    task = priseEchantillon(task, false, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE, GotoOption.AVANT);
                 }
             }
+
+            task.get();
+            brasService.finalizePrise();
+
             group.siteEchantillonPris();
 
-        } catch (NoPathFoundException | AvoidingException e) {
+        } catch (NoPathFoundException | AvoidingException | ExecutionException | InterruptedException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
             updateValidTime();
+            brasService.safeHoming();
 
         } finally {
             firstAction = false;
-            brasService.safeHoming();
             refreshCompleted();
         }
     }
 
-    private void priseEchantillon(boolean path, Point pointEchantillon, CouleurEchantillon couleur, GotoOption ... gotoOptions) throws AvoidingException, NoPathFoundException {
+    private CompletableFuture<Boolean> priseEchantillon(CompletableFuture<Boolean> previousTask, boolean path, Point pointEchantillon, CouleurEchantillon couleur, GotoOption... gotoOptions) throws AvoidingException, NoPathFoundException, ExecutionException, InterruptedException {
         mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
         final Point dest = tableUtils.eloigner(pointEchantillon, -robotConfig.distanceCalageAvant() - (ECHANTILLON_SIZE / 4.0));
         if (path) {
@@ -141,16 +149,19 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
         mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
         rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON);
         mv.avanceMM(ECHANTILLON_SIZE / 2.0);
+
+        if (previousTask != null) previousTask.get();
+
         if (rs.calageCompleted().contains(TypeCalage.PRISE_ECHANTILLON)) {
-            if (brasService.initPrise(BrasService.TypePrise.SOL, true)
-                    && brasService.processPrise(BrasService.TypePrise.SOL)
-                    && brasService.stockagePrise(BrasService.TypePrise.SOL, couleur)) {
+            if (brasService.initPrise(BrasService.TypePrise.SOL, true).get()
+                    && brasService.processPrise(BrasService.TypePrise.SOL).get()) {
                 log.info("Echantillon pris : {}", couleur);
+                return brasService.stockagePrise(BrasService.TypePrise.SOL, couleur);
             }
-            brasService.finalizePrise();
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
         } else {
             log.warn("Calage de l'échantillon {} non terminé", couleur);
         }
+
+        return CompletableFuture.completedFuture(false);
     }
 }

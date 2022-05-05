@@ -13,6 +13,8 @@ import org.arig.robot.model.bras.TransitionBras;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import static org.arig.robot.services.AbstractCommonServosService.*;
 
@@ -23,6 +25,7 @@ import static org.arig.robot.services.AbstractCommonServosService.*;
 public abstract class BrasServiceInternal {
 
     private final AbstractCommonServosService servos;
+    protected final ThreadPoolExecutor executor;
     protected final EurobotStatus rs;
 
     ConfigBras CONFIG_BRAS_BAS = new ConfigBras(
@@ -54,8 +57,10 @@ public abstract class BrasServiceInternal {
     private CurrentBras positionBrasHaut;
 
     public BrasServiceInternal(final AbstractCommonServosService servos,
+                               final ThreadPoolExecutor executor,
                                final EurobotStatus rs) {
         this.servos = servos;
+        this.executor = executor;
         this.rs = rs;
 
         CONFIG_BRAS_BAS.a1Min = servos.servo(BRAS_BAS_EPAULE).angleMin();
@@ -127,6 +132,10 @@ public abstract class BrasServiceInternal {
         }
     }
 
+    public CompletableFuture<Void> setBrasBasAsync(PositionBras position) {
+        return CompletableFuture.runAsync(() -> setBrasBas(position), executor);
+    }
+
     /**
      * Change la position du bras en direct sans passer par la state machine
      */
@@ -160,6 +169,10 @@ public abstract class BrasServiceInternal {
         }
     }
 
+    public CompletableFuture<Void> setBrasHautAsync(PositionBras position) {
+        return CompletableFuture.runAsync(() -> setBrasHaut(position), executor);
+    }
+
     /**
      * Depuis n'importe quelle position, repasse en position de repos
      */
@@ -168,6 +181,9 @@ public abstract class BrasServiceInternal {
         PositionBras currentBas = brasBas.current();
 
         PositionBras repos = PositionBras.repos(rs.stockTaille());
+
+        boolean brasHautDisableCheck = brasHaut.disableCheck();
+        boolean brasBasDisableCheck = brasBas.disableCheck();
 
         brasHaut.disableCheck(true);
         brasBas.disableCheck(true);
@@ -191,8 +207,8 @@ public abstract class BrasServiceInternal {
             brasHaut.goTo(repos);
         }
 
-        brasHaut.disableCheck(false);
-        brasBas.disableCheck(false);
+        brasHaut.disableCheck(brasHautDisableCheck);
+        brasBas.disableCheck(brasBasDisableCheck);
     }
 
     private void setBrasBas(PositionBras state, PointBras pt, TransitionBras transition) {

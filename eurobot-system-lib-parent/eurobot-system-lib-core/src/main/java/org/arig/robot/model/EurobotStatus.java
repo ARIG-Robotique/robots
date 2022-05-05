@@ -1,13 +1,20 @@
 package org.arig.robot.model;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.system.capteurs.CarreFouilleReader;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Data
@@ -63,7 +70,6 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
      */
 
     private boolean reverseCarreDeFouille = false;
-    private boolean stockageAbriChantier = false;
 
     /**
      * STATUT

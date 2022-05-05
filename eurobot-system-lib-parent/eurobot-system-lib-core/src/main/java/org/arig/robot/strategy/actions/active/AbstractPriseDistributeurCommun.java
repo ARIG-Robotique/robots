@@ -13,6 +13,9 @@ import org.arig.robot.services.BrasService;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
 import static org.arig.robot.constants.EurobotConfig.PTS_DEPOSE_PRISE;
 
 @Slf4j
@@ -89,36 +92,41 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
             rs.enableCalageBordure(TypeCalage.AVANT_BAS);
             mv.avanceMM(100);
 
+            CompletableFuture<?> task = brasService.initPrise(BrasService.TypePrise.DISTRIBUTEUR);
+
             mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation(50));
             mv.reculeMM(80);
             mv.gotoOrientationDeg(anglePrise());
 
             mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
-            brasService.initPrise(BrasService.TypePrise.DISTRIBUTEUR);
+
+            task.get();
 
             for (int i = 0; i < 3; i++) {
                 mv.avanceMM(20);
 
-                if (brasService.processPrise(BrasService.TypePrise.DISTRIBUTEUR)) {
+                if (brasService.processPrise(BrasService.TypePrise.DISTRIBUTEUR).get()) {
                     if (i == 2) {
                         mv.reculeMM(30);
                     }
                     CouleurEchantillon couleur = i == 0 ? CouleurEchantillon.ROCHER_BLEU :
                             i == 1 ? CouleurEchantillon.ROCHER_VERT :
                                     CouleurEchantillon.ROCHER_ROUGE;
-                    brasService.stockagePrise(BrasService.TypePrise.DISTRIBUTEUR, couleur);
+                    brasService.stockagePrise(BrasService.TypePrise.DISTRIBUTEUR, couleur).get();
                 }
             }
 
-            brasService.finalizePrise();
+            task = brasService.finalizePrise();
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.reculeMM(30);
             mv.gotoPoint(entry, GotoOption.ARRIERE);
 
+            task.get();
+
             setDistributeurPris();
 
-        } catch (NoPathFoundException | AvoidingException e) {
+        } catch (NoPathFoundException | AvoidingException | ExecutionException | InterruptedException e) {
             if (e instanceof MovementCancelledException) {
                 final double robotX = conv.pulseToMm(position.getPt().getX());
                 final double robotY = conv.pulseToMm(position.getPt().getY());

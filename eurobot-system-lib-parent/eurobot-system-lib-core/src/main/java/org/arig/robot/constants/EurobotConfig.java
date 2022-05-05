@@ -23,7 +23,6 @@ public interface EurobotConfig {
 
     // Options de match
     String REVERSE_CARRE_FOUILLE = "Reverse carre de fouille";
-    String STOCKAGE_ABRI = "Stockage abri";
 
     // Noms des actions
     String ACTION_DECOUVERTE_CARRE_FOUILLE = "Découverte carré de fouille";
