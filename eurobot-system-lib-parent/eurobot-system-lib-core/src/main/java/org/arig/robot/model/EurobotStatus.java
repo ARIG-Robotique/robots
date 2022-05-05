@@ -100,6 +100,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public void siteEchantillonPris(boolean siteEchantillonPris) {
         log.info("[RS] site echantillon pris : {}", siteEchantillonPris);
         this.siteEchantillonPris = siteEchantillonPris;
+        this.echantillons.priseSiteEchantillons(team);
     }
 
     private boolean siteEchantillonAdversePris = false;
@@ -107,6 +108,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public void siteEchantillonAdversePris(boolean siteEchantillonAdversePris) {
         log.info("[RS] site echantillon adverse pris : {}", siteEchantillonAdversePris);
         this.siteEchantillonAdversePris = siteEchantillonAdversePris;
+        this.echantillons.priseSiteEchantillonsAdverse(team);
     }
 
     private boolean siteDeFouillePris = false;
@@ -190,6 +192,9 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         log.info("[RS] site de retour autre robot : {}", siteDeRetourAutreRobot);
         this.siteDeRetourAutreRobot = siteDeRetourAutreRobot;
     }
+
+    @Setter(AccessLevel.NONE)
+    private Echantillons echantillons = new Echantillons();
 
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
@@ -303,6 +308,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         carresFouille.get(numero).bascule(true);
     }
 
+    @Setter(AccessLevel.NONE)
     private CouleurEchantillon[] stock = new CouleurEchantillon[]{null, null, null, null, null, null};
 
     public int stockDisponible() {
@@ -425,6 +431,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public Map<String, Object> gameStatus() {
         Map<String, Object> r = new HashMap<>();
         r.put("stock", stock);
+        r.put("echantillons", new ArrayList<>(echantillons.getEchantillons()));
         r.put("carresFouille", carresFouille.carresFouille);
         r.put("siteDeRetour", siteDeRetour);
         r.put("siteDeRetourAutreRobot", siteDeRetourAutreRobot);

@@ -47,4 +47,8 @@ public interface EurobotConfig {
 
     // Taille d'un echantillon
     int ECHANTILLON_SIZE = 150;
+
+    int PATHFINDER_ECHANTILLON_SIZE = 500;
+    int PATHFINDER_SITE_FOUILLE_SIZE = 700;
+
 }
