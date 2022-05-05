@@ -22,6 +22,8 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
     private static final int WAIT_READ_OHMMETRE_MS = 1000;
     private static final int WAIT_READ_BASCULE_MS = 120;
 
+    private static final int ENTRY_Y = 200;
+
     @Autowired
     private CarreFouilleReader cfReader;
 
@@ -40,7 +42,7 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
 
     private Point entryPoint(CarreFouille carreFouille) {
         if (carreFouille != null) {
-            return new Point(carreFouille.getX(), 200);
+            return new Point(carreFouille.getX(), ENTRY_Y);
         } else {
             return new Point(getX(0), 0);
         }
@@ -66,7 +68,7 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
     @Override
     public void execute() {
         try {
-            double yRef = 200;
+            double yRef = ENTRY_Y;
             double deltaX = 0;
             boolean calageBordureDone = false;
             boolean calageCarreFouilleDone = false;
@@ -77,7 +79,7 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                 log.info("Traitement carré de fouille #{} {}", carreFouille.numero(), carreFouille.couleur());
 
                 // Le calage bordure n'as pas encore été fait, donc on se cale sur celle-ci
-                if (nbTry > 0 && !calageBordureDone) {
+                if (!calageBordureDone) {
                     // Calage bordure requis
                     final Point start = entryPoint(carreFouille);
                     log.info("Calage requis, on se place au point de départ : #{} - X={}", carreFouille.numero(), start.getX());
