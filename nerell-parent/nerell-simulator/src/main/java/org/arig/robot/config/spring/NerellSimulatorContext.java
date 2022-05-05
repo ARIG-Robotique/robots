@@ -31,6 +31,7 @@ import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
 import org.arig.robot.system.vacuum.BouchonARIGVacuumController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
@@ -128,7 +129,7 @@ public class NerellSimulatorContext {
     }
 
     @Bean
-    public CarreFouilleReader carreFouilleReader(I2CManager i2cManager, EurobotStatus status) {
+    public CarreFouilleReader carreFouilleReader(I2CManager i2cManager, @Lazy EurobotStatus status) {
         return new CarreFouilleReaderBouchon(i2cManager, "CarreFouilleBouchon", status);
     }
 }
