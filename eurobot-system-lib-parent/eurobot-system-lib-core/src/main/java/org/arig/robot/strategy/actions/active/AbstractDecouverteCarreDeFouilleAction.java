@@ -66,7 +66,7 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
     @Override
     public void execute() {
         try {
-            double yRef = -1.0;
+            double yRef = 200;
             double deltaX = 0;
             boolean calageBordureDone = false;
             boolean calageCarreFouilleDone = false;
@@ -77,7 +77,7 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                 log.info("Traitement carré de fouille #{} {}", carreFouille.numero(), carreFouille.couleur());
 
                 // Le calage bordure n'as pas encore été fait, donc on se cale sur celle-ci
-                if (!calageBordureDone) {
+                if (nbTry > 0 && !calageBordureDone) {
                     // Calage bordure requis
                     final Point start = entryPoint(carreFouille);
                     log.info("Calage requis, on se place au point de départ : #{} - X={}", carreFouille.numero(), start.getX());
@@ -100,11 +100,13 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                     yRef = conv.pulseToMm(position.getPt().getY());
                     log.info("Calage bordure terminé, yRef = {} mm", yRef);
                     calageBordureDone = true;
+                } else {
+                    mv.gotoOrientationDeg(0);
                 }
 
                 // Si le calage sur carré de fouille n'a pas encore été fait, on se cale sur lui
                 // si on a besoin de faire une lecture.
-                if (!calageCarreFouilleDone && carreFouille.needRead()) {
+                if (nbTry > 0 && !calageCarreFouilleDone && carreFouille.needRead()) {
                     log.info("Calage carré de fouille requis");
                     mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
 
@@ -137,7 +139,7 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
                         sens = GotoOption.ARRIERE;
                     }
                     mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-                    mv.gotoPoint(carreFouille.getX() + deltaX, yRef == -1.0 ? entryPoint().getY() : yRef, sens, GotoOption.SANS_ORIENTATION);
+                    mv.gotoPoint(carreFouille.getX() + deltaX, yRef, sens, GotoOption.SANS_ORIENTATION);
                 }
 
                 // Ouverture de l'ohmmetre
@@ -190,6 +192,9 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
             commonServosService.carreFouillePoussoirFerme(true);
             commonServosService.carreFouilleOhmmetreFerme(false);
             refreshCompleted();
+            if (!isCompleted()) {
+                updateValidTime(); // Retentative plus tard
+            }
         }
     }
 
