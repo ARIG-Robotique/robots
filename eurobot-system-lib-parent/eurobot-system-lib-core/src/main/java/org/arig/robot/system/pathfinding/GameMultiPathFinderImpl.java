@@ -1,6 +1,7 @@
 package org.arig.robot.system.pathfinding;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.Echantillon;
 import org.arig.robot.model.EurobotStatus;
@@ -32,11 +33,13 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
         }
 
         // ajout des sites de fouille
-        if (!rs.siteDeFouillePris() && rs.team() == Team.JAUNE || !rs.siteDeFouilleAdversePris() && rs.team() == Team.VIOLET) {
-            obstacles.add(tableUtils.createPolygonObstacle(new Point(975, 625), EurobotConfig.PATHFINDER_SITE_FOUILLE_SIZE));
-        }
-        if (!rs.siteDeFouillePris() && rs.team() == Team.VIOLET || !rs.siteDeFouilleAdversePris() && rs.team() == Team.JAUNE) {
-            obstacles.add(tableUtils.createPolygonObstacle(new Point(2025, 625), EurobotConfig.PATHFINDER_SITE_FOUILLE_SIZE));
+        if (!StringUtils.startsWith(rs.currentAction(), EurobotConfig.ACTION_RETOUR_SITE_DE_FOUILLE_PREFIX)) {
+            if (!rs.siteDeFouillePris() && rs.team() == Team.JAUNE || !rs.siteDeFouilleAdversePris() && rs.team() == Team.VIOLET) {
+                obstacles.add(tableUtils.createPolygonObstacle(new Point(975, 625), EurobotConfig.PATHFINDER_SITE_FOUILLE_SIZE));
+            }
+            if (!rs.siteDeFouillePris() && rs.team() == Team.VIOLET || !rs.siteDeFouilleAdversePris() && rs.team() == Team.JAUNE) {
+                obstacles.add(tableUtils.createPolygonObstacle(new Point(2025, 625), EurobotConfig.PATHFINDER_SITE_FOUILLE_SIZE));
+            }
         }
 
         super.setObstacles(obstacles);
