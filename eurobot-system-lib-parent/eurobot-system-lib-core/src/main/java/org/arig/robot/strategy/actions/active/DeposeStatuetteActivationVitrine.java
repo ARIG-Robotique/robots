@@ -70,7 +70,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
             mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 0 : 180);
             rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
             mv.reculeMM(ENTRY_X - robotConfig.distanceCalageArriere() - 10);
-            mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
             rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
             mv.reculeMMSansAngle(100);
             checkRecalageXmm(rs.team() == Team.JAUNE ? robotConfig.distanceCalageArriere() : EurobotConfig.tableWidth - robotConfig.distanceCalageArriere());
@@ -82,7 +82,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
             mv.gotoOrientationDeg(-90);
             rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
             mv.reculeMM(EurobotConfig.tableHeight - ENTRY_Y - robotConfig.distanceCalageArriere() - 10);
-            mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
             rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
             mv.reculeMMSansAngle(100);
             checkRecalageYmm(EurobotConfig.tableHeight - robotConfig.distanceCalageArriere());
@@ -94,7 +94,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
                 group.statuetteDansVitrine();
             }
 
-            mv.setVitesse(robotConfig.vitesse(25), robotConfig.vitesseOrientation());
+            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
             mv.avanceMM(100);
             commonServosService.fourcheStatuetteFerme(false);
             group.vitrineActive();
