@@ -3,7 +3,14 @@ package org.arig.robot.services;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.arig.robot.model.*;
+import org.arig.robot.model.CouleurCarreFouille;
+import org.arig.robot.model.CouleurEchantillon;
+import org.arig.robot.model.EurobotStatus;
+import org.arig.robot.model.InitStep;
+import org.arig.robot.model.SiteDeRetour;
+import org.arig.robot.model.StatusEvent;
+import org.arig.robot.model.Strategy;
+import org.arig.robot.model.Team;
 import org.arig.robot.system.group.RobotGroup;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Service;
@@ -145,8 +152,14 @@ public class RobotGroupService implements RobotGroup.Handler {
             case DEPOSE_CAMPEMENT_VERT:
                 rs.deposeCampementVert(getEchantillons(data));
                 break;
+            case DEPOSE_CAMPEMENT_VERT_TEMP:
+                rs.deposeCampementVertTemp(getEchantillons(data));
+                break;
             case DEPOSE_CAMPEMENT_BLEU:
                 rs.deposeCampementBleu(getEchantillons(data));
+                break;
+            case POUSSETTE_CAMPEMENT:
+                rs.poussetteCampementFaite(true);
                 break;
             case DEPOSE_GALERIE_ROUGE:
                 rs.deposeGalerieRouge(getEchantillons(data));
@@ -203,7 +216,7 @@ public class RobotGroupService implements RobotGroup.Handler {
      * Attends que l'autre robot ait terminé une étape d'init
      */
     public void waitInitStep(InitStep s) {
-        if (!rs.twoRobots()){
+        if (!rs.twoRobots()) {
             log.warn("Un seul robot, on ne peut pas attendre l'autre robot !");
             return;
         }
@@ -347,43 +360,57 @@ public class RobotGroupService implements RobotGroup.Handler {
         sendEvent(StatusEvent.COULEUR_CARRE_FOUILLE, new byte[]{(byte) numero, (byte) carreFouille.ordinal()});
     }
 
-    public void deposeAbriChantier(CouleurEchantillon ... echantillons) {
+    public void deposeAbriChantier(CouleurEchantillon... echantillons) {
         rs.deposeAbriChantier(echantillons);
         sendEvent(StatusEvent.DEPOSE_ABRI_CHANTIER, echantillons);
     }
 
-    public void deposeCampementRouge(CouleurEchantillon ... echantillons) {
+    public void deposeCampementRouge(CouleurEchantillon... echantillons) {
         rs.deposeCampementRouge(echantillons);
         sendEvent(StatusEvent.DEPOSE_CAMPEMENT_ROUGE, echantillons);
     }
 
-    public void deposeCampementVert(CouleurEchantillon ... echantillons) {
-        rs.deposeCampementBleu(echantillons);
+    public void deposeCampementVert(CouleurEchantillon... echantillons) {
+        rs.deposeCampementVert(echantillons);
         sendEvent(StatusEvent.DEPOSE_CAMPEMENT_VERT, echantillons);
     }
 
-    public void deposeCampementBleu(CouleurEchantillon ... echantillons) {
+    public void deposeCampementVertTemp(CouleurEchantillon... echantillons) {
+        rs.deposeCampementVertTemp(echantillons);
+        sendEvent(StatusEvent.DEPOSE_CAMPEMENT_VERT_TEMP, echantillons);
+    }
+
+    public void deposeCampementBleu(CouleurEchantillon... echantillons) {
         rs.deposeCampementBleu(echantillons);
         sendEvent(StatusEvent.DEPOSE_CAMPEMENT_BLEU, echantillons);
     }
 
-    public void deposeGalerieRouge(CouleurEchantillon ... echantillons) {
+    public void pousetteCampementFaite() {
+        rs.poussetteCampementFaite(true);
+        sendEvent(StatusEvent.POUSSETTE_CAMPEMENT);
+    }
+
+    public void deposeGalerieRouge(CouleurEchantillon... echantillons) {
         rs.deposeGalerieRouge(echantillons);
         sendEvent(StatusEvent.DEPOSE_GALERIE_ROUGE, echantillons);
     }
-    public void deposeGalerieRougeVert(CouleurEchantillon ... echantillons) {
+
+    public void deposeGalerieRougeVert(CouleurEchantillon... echantillons) {
         rs.deposeGalerieRougeVert(echantillons);
         sendEvent(StatusEvent.DEPOSE_GALERIE_ROUGE_VERT, echantillons);
     }
-    public void deposeGalerieVert(CouleurEchantillon ... echantillons) {
+
+    public void deposeGalerieVert(CouleurEchantillon... echantillons) {
         rs.deposeGalerieVert(echantillons);
         sendEvent(StatusEvent.DEPOSE_GALERIE_VERT, echantillons);
     }
-    public void deposeGalerieVertBleu(CouleurEchantillon ... echantillons) {
+
+    public void deposeGalerieVertBleu(CouleurEchantillon... echantillons) {
         rs.deposeGalerieVertBleu(echantillons);
         sendEvent(StatusEvent.DEPOSE_GALERIE_VERT_BLEU, echantillons);
     }
-    public void deposeGalerieBleu(CouleurEchantillon ... echantillons) {
+
+    public void deposeGalerieBleu(CouleurEchantillon... echantillons) {
         rs.deposeGalerieBleu(echantillons);
         sendEvent(StatusEvent.DEPOSE_GALERIE_BLEU, echantillons);
     }
@@ -401,7 +428,7 @@ public class RobotGroupService implements RobotGroup.Handler {
     }
 
     @SafeVarargs
-    private <E extends Enum<E>> void sendEvent(StatusEvent event, E ... data) {
+    private <E extends Enum<E>> void sendEvent(StatusEvent event, E... data) {
         Enum[] dataBytes = Stream.of(data)
                 .filter(Objects::nonNull)
                 .toArray(Enum[]::new);

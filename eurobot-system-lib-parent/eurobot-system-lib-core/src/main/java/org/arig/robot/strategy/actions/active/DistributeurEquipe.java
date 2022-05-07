@@ -52,7 +52,7 @@ public class DistributeurEquipe extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return rs.stockDisponible() >= 3
+        return !rs.distributeurEquipePris() && !rs.distributeurEquipeBloque() && rs.stockDisponible() >= 3
                 && rs.getRemainingTime() >= EurobotConfig.invalidPriseEchantillonRemainingTime
                 && isTimeValid() && remainingTimeValid();
     }

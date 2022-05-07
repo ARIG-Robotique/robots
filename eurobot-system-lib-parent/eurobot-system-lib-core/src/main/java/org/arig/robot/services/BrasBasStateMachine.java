@@ -180,7 +180,7 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
                 new PointBras(139, 150, -40)
         ));
         transition(PositionBras.SOL_DEPOSE_5, PositionBras.STOCK_ENTREE);
-        transition(PositionBras.ECHANGE, PositionBras.SOL_DEPOSE_1;
+        transition(PositionBras.ECHANGE, PositionBras.SOL_DEPOSE_1);
 
         transition(PositionBras.STOCK_ENTREE, PositionBras.BORDURE_APPROCHE);
         transition(PositionBras.BORDURE_APPROCHE, PositionBras.STOCK_ENTREE);

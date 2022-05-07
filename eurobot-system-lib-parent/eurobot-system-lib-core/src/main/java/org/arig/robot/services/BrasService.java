@@ -195,24 +195,28 @@ public class BrasService extends BrasServiceInternal {
                 }
             }
 
+            ThreadUtils.sleep(config.i2cReadTimeMs());
+
             boolean ok = false;
             if (io.presenceStock(indexStock)) {
                 // cas pourri ou le précédent stockage c'est mal passé
                 // grace a ce stockage, l'échantillon d'avant c'est remis en place
                 // il faut donc le compter
                 if (indexStock < 5 && io.presenceStock(indexStock + 1)) {
-                    log.warn("Prise en compte de l'échantillon précédent mal stocké");
-                    rs.stockage(couleurPrecedente != null ? couleurPrecedente : CouleurEchantillon.INCONNU);
+                    CouleurEchantillon couleur1 = couleurPrecedente != null ? couleurPrecedente : CouleurEchantillon.INCONNU;
+                    log.warn("Prise en compte de l'échantillon {} précédent mal stocké", couleur1);
+                    rs.stockage(couleur1);
                     indexStock++;
                 }
 
                 log.info("Stockage d'un {} à l'emplacement {}", couleur.get(), indexStock);
                 rs.stockage(couleur.get());
-                couleurPrecedente = couleur.get();
+                couleurPrecedente = null;
                 ok = true;
 
             } else {
                 log.warn("Aucun echantillon posé dans le stock");
+                couleurPrecedente = couleur.get();
             }
 
             return ok;

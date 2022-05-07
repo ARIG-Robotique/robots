@@ -226,6 +226,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         return abriChantier.size();
     }
 
+    @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private Campement campement = new Campement();
 
@@ -243,6 +244,13 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         }
     }
 
+    public void deposeCampementVertTemp(CouleurEchantillon... echantillons) {
+        for (CouleurEchantillon echantillon : echantillons) {
+            log.info("[RS] depose campement vert TEMP : {}", echantillon);
+            campement.addVertTemp(echantillon);
+        }
+    }
+
     public void deposeCampementBleu(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
             log.info("[RS] depose campement bleu : {}", echantillon);
@@ -250,6 +258,42 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         }
     }
 
+    public int tailleCampementRouge() {
+        return campement.sizeRouge();
+    }
+
+    public int tailleCampementVert() {
+        return campement.sizeVert();
+    }
+
+    public int tailleCampementVertTemp() {
+        return campement.sizeVertTemp();
+    }
+
+    public int tailleCampementBleu() {
+        return campement.sizeBleu();
+    }
+
+    public boolean campementComplet() {
+        return tailleCampementRouge() == Campement.MAX_DEPOSE
+                && tailleCampementBleu() == Campement.MAX_DEPOSE
+                && tailleCampementVertTemp() == Campement.MAX_DEPOSE;
+    }
+
+    public int campementPointsPousette() {
+        // chaque echantillon vert rapporte un point de plus s'il est poussé
+        return campement.score() + tailleCampementVertTemp();
+    }
+
+    private boolean poussetteCampementFaite = false;
+
+    public void poussetteCampementFaite(boolean val) {
+        log.info("[RS] poussette campement faite : {}", val);
+        this.poussetteCampementFaite = val;
+        campement.poussetteVert();
+    }
+
+    @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private Galerie galerie = new Galerie();
 
@@ -492,6 +536,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         r.put("Echantillon chantier (coté distrib.) pris", echantillonAbriChantierDistributeurPris);
         r.put("Echantillon chantier (coté fouille) pris", echantillonAbriChantierCarreFouillePris);
         r.put("Echantillon campement pris", echantillonCampementPris);
+        r.put("Pousette campement faite", poussetteCampementFaite);
         return r;
     }
 }
