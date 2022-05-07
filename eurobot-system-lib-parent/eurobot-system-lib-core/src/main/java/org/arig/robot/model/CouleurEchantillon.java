@@ -3,6 +3,8 @@ package org.arig.robot.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 @Getter
 @AllArgsConstructor
 public enum CouleurEchantillon {
@@ -36,6 +38,28 @@ public enum CouleurEchantillon {
                 return VERT;
             default:
                 return INCONNU;
+        }
+    }
+
+    public static class Atomic extends AtomicReference<CouleurEchantillon> {
+        public Atomic(CouleurEchantillon c) {
+            super(c);
+        }
+
+        public boolean isNeedsLecture() {
+            return get().isNeedsLecture();
+        }
+
+        public boolean isNeedsEchange() {
+            return get().isNeedsEchange();
+        }
+
+        public boolean equals(CouleurEchantillon c) {
+            return c == get();
+        }
+
+        public void reverseColor() {
+            set(get().getReverseColor());
         }
     }
 

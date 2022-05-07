@@ -112,25 +112,27 @@ public class BrasService extends BrasServiceInternal {
     }
 
     public CompletableFuture<Boolean> stockagePrise(@NonNull final TypePrise typePrise, final CouleurEchantillon c) {
-        return CompletableFuture.supplyAsync(() -> {
-            CouleurEchantillon couleur = c;
-            if (couleur == null) {
-                couleur = CouleurEchantillon.INCONNU;
-            }
+        final CouleurEchantillon.Atomic couleur = new CouleurEchantillon.Atomic(c != null ? c : CouleurEchantillon.INCONNU);
 
-            int indexStock = rs.indexStockage();
-
-            // Lecture de la couleur
-            io.enableLedCapteurCouleur();
+        // Lecture de la couleur
+        io.enableLedCapteurCouleur();
+        if (couleur.isNeedsLecture()) {
             ThreadUtils.sleep(config.waitLed());
+            couleur.set(ThreadUtils.waitUntil(io::couleurVentouseBas, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor()));
+        }
 
-            if (couleur.isNeedsLecture()) {
-                couleur = ThreadUtils.waitUntil(io::couleurVentouseBas, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor());
-            }
+        // premier mouvement synchrone
+        if (couleur.isNeedsEchange()) {
+            setBrasBas(typePrise == TypePrise.BORDURE ? PositionBras.ECHANGE_2 : PositionBras.ECHANGE);
+        } else {
+            setBrasBas(PositionBras.STOCK_ENTREE);
+        }
+
+        return CompletableFuture.supplyAsync(() -> {
+            int indexStock = rs.indexStockage();
 
             if (couleur.isNeedsEchange()) {
                 // echange
-                setBrasBas(typePrise == TypePrise.BORDURE ? PositionBras.ECHANGE_2 : PositionBras.ECHANGE);
                 setBrasHaut(PositionBras.ECHANGE);
 
                 io.enablePompeVentouseHaut();
@@ -146,12 +148,12 @@ public class BrasService extends BrasServiceInternal {
                     return false;
                 }
 
-                couleur = couleur.getReverseColor();
+                couleur.reverseColor();
 
                 // 2nd lecture de la couleur
                 if (couleur.isNeedsLecture()) {
-                    couleur = ThreadUtils.waitUntil(io::couleurVentouseHaut, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor());
-                    if (couleur == CouleurEchantillon.ROCHER) {
+                    couleur.set(ThreadUtils.waitUntil(io::couleurVentouseHaut, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor()));
+                    if (couleur.get() == CouleurEchantillon.ROCHER) {
                         log.warn("Après échange la couleur est toujours un rocher ?!");
                     }
                 }
@@ -174,7 +176,6 @@ public class BrasService extends BrasServiceInternal {
 
             } else {
                 // stockage
-                setBrasBas(PositionBras.STOCK_ENTREE);
                 setBrasBas(PositionBras.stockDepose(indexStock));
 
                 io.releasePompeVentouseBas();
@@ -200,9 +201,9 @@ public class BrasService extends BrasServiceInternal {
                     indexStock++;
                 }
 
-                log.info("Stockage d'un {} à l'emplacement {}", couleur, indexStock);
-                rs.stockage(couleur);
-                couleurPrecedente = couleur;
+                log.info("Stockage d'un {} à l'emplacement {}", couleur.get(), indexStock);
+                rs.stockage(couleur.get());
+                couleurPrecedente = couleur.get();
                 ok = true;
 
             } else {
