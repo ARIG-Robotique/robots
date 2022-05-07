@@ -150,7 +150,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
             if (poussetteRequise) {
                 // Premier échantillon
                 if (commonIOService.presenceVentouseBas()) {
-                    log.info("Dépose devant l'abri du premier echantillon récupérer");
+                    log.info("Dépose devant l'abri du premier echantillon récupéré");
                     mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -165 : -20);
                     brasService.setBrasBas(PositionBras.SOL_DEPOSE);
                     commonIOService.releasePompeVentouseBas();
@@ -158,7 +158,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
                     brasService.setBrasBas(PositionBras.STOCK_ENTREE);
                 }
                 if (commonIOService.presenceVentouseHaut()) {
-                    log.info("Dépose devant l'abri du second échantillon récupérer");
+                    log.info("Dépose devant l'abri du second échantillon récupéré");
                     mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -105 : -75);
                     brasService.setBrasBas(PositionBras.HORIZONTAL);
                     brasService.setBrasHaut(PositionBras.ECHANGE);
