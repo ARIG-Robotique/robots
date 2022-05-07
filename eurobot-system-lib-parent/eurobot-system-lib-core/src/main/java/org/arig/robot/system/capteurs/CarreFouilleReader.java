@@ -85,7 +85,11 @@ public class CarreFouilleReader {
             case ROUGE: return 'R';
             case BLEU: return 'B';
             case VERT: return 'G';
-            case ROCHER: return '?';
+            case ROCHER:
+            case ROCHER_ROUGE:
+            case ROCHER_VERT:
+            case ROCHER_BLEU:
+                return '?';
             default: return '0';
         }
     }

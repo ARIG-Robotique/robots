@@ -29,8 +29,13 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         this.carreFouilleReader = carreFouilleReader;
     }
 
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     private boolean needRefreshStock = false;
-    private boolean needRefreshBras = false;
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private boolean needRefreshVentouses = false;
 
     @Override
     public void refreshState() {
@@ -44,10 +49,10 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
                 }
             }
 
-            if (needRefreshBras) {
-                needRefreshBras = false;
+            if (needRefreshVentouses) {
+                needRefreshVentouses = false;
                 try {
-                    carreFouilleReader.printStateVentouse(null, null);
+                    carreFouilleReader.printStateVentouse(ventouses[0], ventouses[1]);
                 } catch (I2CException e) {
                     log.warn("Erreur d'affichage des ventouses sur les LEDs", e);
                 }
@@ -315,6 +320,31 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     }
 
     @Setter(AccessLevel.NONE)
+    private CouleurEchantillon[] ventouses = new CouleurEchantillon[]{null, null};
+
+    public void ventouseBas(CouleurEchantillon c) {
+        if (ventouses[0] != c) {
+            ventouses[0] = c;
+            needRefreshVentouses = true;
+        }
+    }
+
+    public void ventouseHaut(CouleurEchantillon c) {
+        if (ventouses[1] != c) {
+            ventouses[1] = c;
+            needRefreshVentouses = true;
+        }
+    }
+
+    public CouleurEchantillon ventouseBas() {
+        return ventouses[0];
+    }
+
+    public CouleurEchantillon ventouseHaut() {
+        return ventouses[1];
+    }
+
+    @Setter(AccessLevel.NONE)
     private CouleurEchantillon[] stock = new CouleurEchantillon[]{null, null, null, null, null, null};
 
     public int stockDisponible() {
@@ -355,7 +385,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
      */
     public int indexStockage() {
         for (int i = stock.length - 1; i > 0; i--) {
-            if (stock[i] == null && stock[i-1] != null) {
+            if (stock[i] == null && stock[i - 1] != null) {
                 return i;
             }
         }

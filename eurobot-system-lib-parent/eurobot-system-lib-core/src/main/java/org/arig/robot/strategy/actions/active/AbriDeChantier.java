@@ -129,7 +129,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
                 mv.pathTo(entryEchantillonDistributeur());
                 mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -135 : -45);
-                task = processingPriseBordureSafe(group::echantillonAbriChantierDistributeurPris);
+                task = processingPriseBordureSafe(CouleurEchantillon.ROCHER_BLEU, group::echantillonAbriChantierDistributeurPris);
                 poussetteRequise = true;
             }
 
@@ -138,7 +138,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
                 mv.pathTo(entryEchantillonCarreFouille());
                 mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -135 : -45);
                 if (task != null) task.get();
-                task = processingPriseBordureSafe(group::echantillonAbriChantierCarreFouillePris);
+                task = processingPriseBordureSafe(CouleurEchantillon.ROCHER_ROUGE, group::echantillonAbriChantierCarreFouillePris);
                 poussetteRequise = true;
             }
 
@@ -154,6 +154,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
                     mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -165 : -20);
                     brasService.setBrasBas(PositionBras.SOL_DEPOSE);
                     commonIOService.releasePompeVentouseBas();
+                    rs.ventouseBas(null);
                     ThreadUtils.waitUntil(() -> !commonIOService.presenceVentouseBas(), robotConfig.i2cReadTimeMs(), robotConfig.timeoutPompe());
                     brasService.setBrasBas(PositionBras.STOCK_ENTREE);
                 }
@@ -165,10 +166,13 @@ public class AbriDeChantier extends AbstractEurobotAction {
                     brasService.setBrasBas(PositionBras.ECHANGE);
                     commonIOService.enablePompeVentouseBas();
                     commonIOService.releasePompeVentouseHaut();
+                    rs.ventouseBas(rs.ventouseHaut() != null ? rs.ventouseHaut().getReverseColor() : null);
+                    rs.ventouseHaut(null);
                     ThreadUtils.waitUntil(commonIOService::presenceVentouseBas, robotConfig.i2cReadTimeMs(), robotConfig.timeoutPompe());
                     brasService.setBrasHaut(PositionBras.HORIZONTAL);
                     brasService.setBrasBas(PositionBras.SOL_DEPOSE);
                     commonIOService.releasePompeVentouseBas();
+                    rs.ventouseBas(null);
                     ThreadUtils.waitUntil(() -> !commonIOService.presenceVentouseBas(), robotConfig.i2cReadTimeMs(), robotConfig.timeoutPompe());
                 }
                 brasService.safeHoming();
@@ -239,7 +243,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
         }
     }
 
-    private CompletableFuture<Void> processingPriseBordureSafe(Runnable notify) throws AvoidingException, ExecutionException, InterruptedException {
+    private CompletableFuture<Void> processingPriseBordureSafe(CouleurEchantillon couleur, Runnable notify) throws AvoidingException, ExecutionException, InterruptedException {
         if (brasService.initPrise(BrasService.TypePrise.BORDURE, true).get()) {
             log.info("Init de la prise de l'échantillon abri distributeur OK");
             rs.enableCalageBordure(TypeCalage.AVANT_HAUT, TypeCalage.FORCE);
@@ -249,6 +253,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
 
             if (brasService.processPrise(BrasService.TypePrise.BORDURE).get()) {
                 log.info("Prise de l'échantillon OK");
+                rs.ventouseBas(couleur);
                 notify.run();
 
                 // Si il en reste deux a prendre, on stock le premier en haut
@@ -260,6 +265,8 @@ public class AbriDeChantier extends AbstractEurobotAction {
 
                         commonIOService.enablePompeVentouseHaut();
                         commonIOService.releasePompeVentouseBas();
+                        rs.ventouseHaut(rs.ventouseBas() != null ? rs.ventouseBas().getReverseColor() : null);
+                        rs.ventouseBas(null);
                         ThreadUtils.waitUntil(commonIOService::presenceVentouseHaut, robotConfig.i2cReadTimeMs(), robotConfig.timeoutPompe());
                         nbEchantillonsRemaining--;
                         brasService.setBrasBas(PositionBras.HORIZONTAL);

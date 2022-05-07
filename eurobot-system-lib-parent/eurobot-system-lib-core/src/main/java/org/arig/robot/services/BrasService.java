@@ -120,6 +120,7 @@ public class BrasService extends BrasServiceInternal {
             ThreadUtils.sleep(config.waitLed());
             couleur.set(ThreadUtils.waitUntil(io::couleurVentouseBas, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor()));
         }
+        rs.ventouseBas(couleur.get());
 
         // premier mouvement synchrone
         if (couleur.isNeedsEchange()) {
@@ -137,6 +138,7 @@ public class BrasService extends BrasServiceInternal {
 
                 io.enablePompeVentouseHaut();
                 io.releasePompeVentouseBas();
+                rs.ventouseBas(null);
 
                 if (!ThreadUtils.waitUntil(io::presenceVentouseHaut, config.i2cReadTimeMs(), config.timeoutPompe())) {
                     log.warn("Pas de présence ventouse haut");
@@ -157,6 +159,7 @@ public class BrasService extends BrasServiceInternal {
                         log.warn("Après échange la couleur est toujours un rocher ?!");
                     }
                 }
+                rs.ventouseHaut(couleur.get());
 
                 setBrasBas(typePrise == TypePrise.DISTRIBUTEUR ? PositionBras.DISTRIBUTEUR_PRISE : PositionBras.HORIZONTAL);
 
@@ -165,6 +168,7 @@ public class BrasService extends BrasServiceInternal {
                 setBrasHaut(PositionBras.stockDepose(indexStock));
 
                 io.releasePompeVentouseHaut();
+                rs.ventouseHaut(null);
                 if (!ThreadUtils.waitUntil(() -> !io.presenceVentouseHaut(), config.i2cReadTimeMs(), config.timeoutPompe())) {
                     log.warn("Echec de libération ventouse haut ?");
                 }
@@ -179,6 +183,7 @@ public class BrasService extends BrasServiceInternal {
                 setBrasBas(PositionBras.stockDepose(indexStock));
 
                 io.releasePompeVentouseBas();
+                rs.ventouseBas(null);
                 if (!ThreadUtils.waitUntil(() -> !io.presenceVentouseBas(), config.i2cReadTimeMs(), config.timeoutPompe())) {
                     log.warn("Echec de libération ventouse bas ?");
                 }
@@ -222,6 +227,8 @@ public class BrasService extends BrasServiceInternal {
             updateStock();
             setBrasBas(PositionBras.repos(rs.stockTaille()));
             setBrasHaut(PositionBras.repos(rs.stockTaille()));
+            rs.ventouseHaut(null);
+            rs.ventouseBas(null);
         });
     }
 
@@ -285,6 +292,7 @@ public class BrasService extends BrasServiceInternal {
                     rs.stock()[indexStock] = couleur;
                     log.info("Dernière lecture de la couleur : {}", couleur);
                 }
+                rs.ventouseBas(couleur);
 
                 // depose
                 setBrasBas(PositionBras.STOCK_ENTREE);
@@ -293,6 +301,7 @@ public class BrasService extends BrasServiceInternal {
                                 PositionBras.GALERIE_DEPOSE_MILIEU);
 
                 io.releasePompeVentouseBas();
+                rs.ventouseBas(null);
                 if (!ThreadUtils.waitUntil(() -> !io.presenceVentouseBas(), config.i2cReadTimeMs(), config.timeoutPompe())) {
                     log.warn("Echec de libération ventouse bas ?");
                 }
@@ -317,12 +326,14 @@ public class BrasService extends BrasServiceInternal {
                     rs.stock()[indexStock] = couleur;
                     log.info("Dernière lecture de la couleur : {}", couleur);
                 }
+                rs.ventouseHaut(couleur);
 
                 // depose
                 setBrasHaut(PositionBras.STOCK_ENTREE);
                 setBrasHaut(PositionBras.GALERIE_DEPOSE);
 
                 io.releasePompeVentouseHaut();
+                rs.ventouseHaut(null);
                 if (!ThreadUtils.waitUntil(() -> !io.presenceVentouseHaut(), config.i2cReadTimeMs(), config.timeoutPompe())) {
                     log.warn("Echec de libération ventouse haut ?");
                 }
@@ -344,6 +355,8 @@ public class BrasService extends BrasServiceInternal {
         updateStock();
         setBrasBas(PositionBras.repos(rs.stockTaille()));
         setBrasHaut(PositionBras.repos(rs.stockTaille()));
+        rs.ventouseHaut(null);
+        rs.ventouseBas(null);
     }
 
     /**
