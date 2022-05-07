@@ -38,7 +38,6 @@ public class BrasHautStateMachine extends AbstractBrasStateMachine {
 
         state(PositionBras.ECHANGE, new PointBras(160, 155, -90));
 
-        state(PositionBras.DISTRIBUTEUR_PRISE, new PointBras(0, 0, 0)); // TODO
         state(PositionBras.GALERIE_DEPOSE, new PointBras(0, 0, 0)); // TODO
         state(PositionBras.GALERIE_DEPOSE_MILIEU, new PointBras(0, 0, 0)); // TODO
 

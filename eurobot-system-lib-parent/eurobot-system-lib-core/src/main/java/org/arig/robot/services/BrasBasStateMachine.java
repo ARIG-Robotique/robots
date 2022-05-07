@@ -37,7 +37,11 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
         state(PositionBras.STOCK_ENTREE, new PointBras(135, 180, 90));
 
         state(PositionBras.SOL_PRISE, new PointBras(140, 20, -90));
-        state(PositionBras.SOL_DEPOSE, new PointBras(175, 45, -90));
+        state(PositionBras.SOL_DEPOSE_1, new PointBras(192, 45, -80));
+        state(PositionBras.SOL_DEPOSE_2, new PointBras(189, 55, -80));
+        state(PositionBras.SOL_DEPOSE_3, new PointBras(182, 72, -80));
+        state(PositionBras.SOL_DEPOSE_4, new PointBras(181, 88, -70));
+        state(PositionBras.SOL_DEPOSE_5, new PointBras(154, 141, -40));
 
         state(PositionBras.BORDURE_APPROCHE, new PointBras(135, 140, -50));
         state(PositionBras.BORDURE_PRISE, new PointBras(149, 88, -90));
@@ -153,18 +157,35 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
                 new PointBras(144, 138, 90),
                 new PointBras(135, 170, 100)
         ));
-        transition(PositionBras.SOL_PRISE, PositionBras.SOL_DEPOSE);
-        transition(PositionBras.SOL_DEPOSE, PositionBras.SOL_PRISE);
-        transition(PositionBras.STOCK_ENTREE, PositionBras.SOL_DEPOSE, TransitionBras.withPoints(
-                new PointBras(170, 134, -20)
+        transition(PositionBras.SOL_PRISE, PositionBras.SOL_DEPOSE_1);
+        transition(PositionBras.SOL_DEPOSE_1, PositionBras.SOL_PRISE);
+
+        transition(PositionBras.STOCK_ENTREE, PositionBras.SOL_DEPOSE_1, TransitionBras.withPoints(
+                new PointBras(160, 135, -40)
         ));
-        transition(PositionBras.SOL_DEPOSE, PositionBras.STOCK_ENTREE);
-        transition(PositionBras.ECHANGE, PositionBras.SOL_DEPOSE);
+        transition(PositionBras.SOL_DEPOSE_1, PositionBras.STOCK_ENTREE);
+        transition(PositionBras.STOCK_ENTREE, PositionBras.SOL_DEPOSE_2, TransitionBras.withPoints(
+                new PointBras(160, 135, -40)
+        ));
+        transition(PositionBras.SOL_DEPOSE_2, PositionBras.STOCK_ENTREE);
+        transition(PositionBras.STOCK_ENTREE, PositionBras.SOL_DEPOSE_3, TransitionBras.withPoints(
+                new PointBras(160, 135, -40)
+        ));
+        transition(PositionBras.SOL_DEPOSE_3, PositionBras.STOCK_ENTREE);
+        transition(PositionBras.STOCK_ENTREE, PositionBras.SOL_DEPOSE_4, TransitionBras.withPoints(
+                new PointBras(160, 135, -40)
+        ));
+        transition(PositionBras.SOL_DEPOSE_4, PositionBras.STOCK_ENTREE);
+        transition(PositionBras.STOCK_ENTREE, PositionBras.SOL_DEPOSE_5, TransitionBras.withPoints(
+                new PointBras(139, 150, -40)
+        ));
+        transition(PositionBras.SOL_DEPOSE_5, PositionBras.STOCK_ENTREE);
+        transition(PositionBras.ECHANGE, PositionBras.SOL_DEPOSE_1;
 
         transition(PositionBras.STOCK_ENTREE, PositionBras.BORDURE_APPROCHE);
         transition(PositionBras.BORDURE_APPROCHE, PositionBras.STOCK_ENTREE);
         transition(PositionBras.BORDURE_APPROCHE, PositionBras.BORDURE_PRISE);
-        transition(PositionBras.BORDURE_APPROCHE, PositionBras.SOL_DEPOSE);
+        transition(PositionBras.BORDURE_APPROCHE, PositionBras.SOL_DEPOSE_1);
         transition(PositionBras.BORDURE_APPROCHE, PositionBras.SOL_PRISE);
         transition(PositionBras.BORDURE_PRISE, PositionBras.BORDURE_APPROCHE);
         transition(PositionBras.BORDURE_APPROCHE, PositionBras.ECHANGE_2);

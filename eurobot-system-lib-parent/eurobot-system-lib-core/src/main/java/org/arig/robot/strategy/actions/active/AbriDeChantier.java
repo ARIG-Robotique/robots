@@ -152,7 +152,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
                 if (commonIOService.presenceVentouseBas()) {
                     log.info("Dépose devant l'abri du premier echantillon récupéré");
                     mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -165 : -20);
-                    brasService.setBrasBas(PositionBras.SOL_DEPOSE);
+                    brasService.setBrasBas(PositionBras.SOL_DEPOSE_1);
                     commonIOService.releasePompeVentouseBas();
                     rs.ventouseBas(null);
                     ThreadUtils.waitUntil(() -> !commonIOService.presenceVentouseBas(), robotConfig.i2cReadTimeMs(), robotConfig.timeoutPompe());
@@ -170,7 +170,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
                     rs.ventouseHaut(null);
                     ThreadUtils.waitUntil(commonIOService::presenceVentouseBas, robotConfig.i2cReadTimeMs(), robotConfig.timeoutPompe());
                     brasService.setBrasHaut(PositionBras.HORIZONTAL);
-                    brasService.setBrasBas(PositionBras.SOL_DEPOSE);
+                    brasService.setBrasBas(PositionBras.SOL_DEPOSE_1);
                     commonIOService.releasePompeVentouseBas();
                     rs.ventouseBas(null);
                     ThreadUtils.waitUntil(() -> !commonIOService.presenceVentouseBas(), robotConfig.i2cReadTimeMs(), robotConfig.timeoutPompe());

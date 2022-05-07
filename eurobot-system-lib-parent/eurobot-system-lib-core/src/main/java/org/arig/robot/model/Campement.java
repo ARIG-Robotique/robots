@@ -6,6 +6,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Campement {
 
+    public static final int MAX_DEPOSE = 5;
+
     private final List<CouleurEchantillon> rouge = new ArrayList<>(4);
     private final List<CouleurEchantillon> vert = new ArrayList<>(4);
     private final List<CouleurEchantillon> bleu = new ArrayList<>(4);

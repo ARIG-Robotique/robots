@@ -38,7 +38,11 @@ public enum PositionBras {
 
     // bas
     SOL_PRISE(false),
-    SOL_DEPOSE(false),
+    SOL_DEPOSE_1(false),
+    SOL_DEPOSE_2(false),
+    SOL_DEPOSE_3(false),
+    SOL_DEPOSE_4(false),
+    SOL_DEPOSE_5(false),
 
     BORDURE_APPROCHE(false),
     BORDURE_PRISE(false),
@@ -50,11 +54,11 @@ public enum PositionBras {
     private final boolean inside;
 
     public static PositionBras stockPrise(int indexStock) {
-        return PositionBras.valueOf("STOCK_PRISE_" + (indexStock+1));
+        return PositionBras.valueOf("STOCK_PRISE_" + (indexStock + 1));
     }
 
     public static PositionBras stockDepose(int indexStock) {
-        return PositionBras.valueOf("STOCK_DEPOSE_" + (indexStock+1));
+        return PositionBras.valueOf("STOCK_DEPOSE_" + (indexStock + 1));
     }
 
     public static PositionBras repos(int tailleStock) {
@@ -62,5 +66,9 @@ public enum PositionBras {
             return INIT;
         }
         return PositionBras.valueOf("REPOS_" + tailleStock);
+    }
+
+    public static PositionBras solDepose(int tailleCampement) {
+        return PositionBras.valueOf("SOL_DEPOSE_" + (tailleCampement + 1));
     }
 }

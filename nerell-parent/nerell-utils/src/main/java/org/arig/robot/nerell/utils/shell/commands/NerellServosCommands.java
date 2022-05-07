@@ -171,4 +171,25 @@ public class NerellServosCommands {
         }
         brasService.finalizeDepose();
     }
+
+    @ShellMethod("Cycle dépose au sol avec empillement")
+    public void cycleDeposeSol() {
+        ioService.couleurVentouseHaut();
+        ioService.couleurVentouseBas();
+
+        for (int i = 0; i < 4; i++) {
+            brasService.initPrise(BrasService.TypePrise.SOL);
+            brasService.processPrise(BrasService.TypePrise.SOL);
+            brasService.stockagePrise(BrasService.TypePrise.SOL, CouleurEchantillon.INCONNU);
+        }
+        brasService.finalizePrise();
+
+        ThreadUtils.sleep(5000);
+
+        brasService.initDepose(BrasService.TypeDepose.SOL);
+        for (int i = 0; i < 4; i++) {
+            brasService.processDeposeSol(i);
+        }
+        brasService.finalizePrise();
+    }
 }

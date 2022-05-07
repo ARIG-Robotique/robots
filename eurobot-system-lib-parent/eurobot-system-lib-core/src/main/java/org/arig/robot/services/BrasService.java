@@ -259,8 +259,7 @@ public class BrasService extends BrasServiceInternal {
 
             case GALERIE_HAUT:
                 setBrasHaut(PositionBras.HORIZONTAL);
-                setBrasBas(PositionBras.STOCK_ENTREE);
-                setBrasBas(PositionBras.SOL_DEPOSE); // FIXME bonne position à déterminer
+                setBrasBas(PositionBras.STOCK_ENTREE); // FIXME bonne position à déterminer
                 setBrasHaut(PositionBras.STOCK_ENTREE);
                 break;
         }
@@ -269,6 +268,14 @@ public class BrasService extends BrasServiceInternal {
     }
 
     public CouleurEchantillon processDepose(@NonNull final TypeDepose typeDepose) {
+        return processDepose(typeDepose, 0);
+    }
+
+    public CouleurEchantillon processDeposeSol(final int index) {
+        return processDepose(TypeDepose.SOL, index);
+    }
+
+    private CouleurEchantillon processDepose(@NonNull final TypeDepose typeDepose, final int index) {
         int indexStock = rs.indexDestockage();
         CouleurEchantillon couleur = rs.stockFirst();
 
@@ -296,7 +303,7 @@ public class BrasService extends BrasServiceInternal {
 
                 // depose
                 setBrasBas(PositionBras.STOCK_ENTREE);
-                setBrasBas(typeDepose == TypeDepose.SOL ? PositionBras.SOL_DEPOSE :
+                setBrasBas(typeDepose == TypeDepose.SOL ? PositionBras.solDepose(index) :
                         typeDepose == TypeDepose.GALERIE_BAS ? PositionBras.GALERIE_DEPOSE :
                                 PositionBras.GALERIE_DEPOSE_MILIEU);
 
