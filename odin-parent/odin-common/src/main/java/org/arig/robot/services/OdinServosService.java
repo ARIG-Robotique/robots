@@ -115,6 +115,7 @@ public class OdinServosService extends AbstractCommonServosService {
         Servo fourcheStatuette = servo(FOURCHE_STATUETTE_ID, FOURCHE_STATUETTE)
                 .time(475)
                 .position(POS_FERME, 2370)
+                .position(POS_VIBRATION, 2170)
                 .position(POS_PRISE_DEPOSE, 980);
         Servo pousseReplique = servo(POUSSE_REPLIQUE_ID, POUSSE_REPLIQUE)
                 .time(375)

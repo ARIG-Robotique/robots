@@ -207,11 +207,16 @@ public class AbriDeChantier extends AbstractEurobotAction {
             }
 
             if (!rs.statuettePrise()) {
-                commonServosService.fourcheStatuetteFerme(true);
-                if (ThreadUtils.waitUntil(commonIOService::presenceStatuette, 100, 1000)) {
-                    log.info("Youpi ! On a trouvé la statuette");
-                    group.statuettePris();
-                }
+                int nbTry = 5;
+                do {
+                    commonServosService.fourcheStatuetteFerme(true);
+                    if (ThreadUtils.waitUntil(commonIOService::presenceStatuette, 100, 1000)) {
+                        log.info("Youpi ! On a trouvé la statuette");
+                        group.statuettePris();
+                        break;
+                    }
+                    commonServosService.fourcheStatuetteVibration(true);
+                } while (nbTry-- > 0);
             }
             if (commonServosService.pousseReplique() && !rs.repliqueDepose()) {
                 commonServosService.pousseRepliquePoussette(true);
