@@ -165,9 +165,9 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
         inCalageArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
         inCalageAvantBasDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
         inCalageAvantBasGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
-        inCalageAvantHautDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00); // TODO Assignation des pins
-        inCalageAvantHautGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01); // TODO Assignation des pins
-        inPresenceStatuette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02); // TODO Assignation des pins
+        inCalageAvantHautDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
+        inCalageAvantHautGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
+        inPresenceStatuette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
 
         // PCF2 (Pololu)
         inPresenceCarreFouille = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
