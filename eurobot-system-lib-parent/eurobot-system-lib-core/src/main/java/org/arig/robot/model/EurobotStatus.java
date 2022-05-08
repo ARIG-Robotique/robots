@@ -213,8 +213,10 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     public void deposeAbriChantier(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
-            log.info("[RS] depose abri chantier : {}", echantillon);
-            abriChantier.add(echantillon);
+            if (echantillon != null) {
+                log.info("[RS] depose abri chantier : {}", echantillon);
+                abriChantier.add(echantillon);
+            }
         }
     }
 

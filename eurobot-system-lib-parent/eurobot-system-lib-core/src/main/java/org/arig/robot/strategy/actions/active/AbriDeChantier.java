@@ -118,38 +118,53 @@ public class AbriDeChantier extends AbstractEurobotAction {
         nbEchantillons += !rs.echantillonAbriChantierCarreFouillePris() ? 1 : 0;
     }
 
+    enum Ventouse {
+        HAUT,
+        BAS
+    }
+
     @Override
     public void execute() {
         refreshConditions();
         nbEchantillonsRemaining = nbEchantillons;
-        boolean poussetteRequise = false;
         try {
-            CompletableFuture<Void> task = null;
+            boolean priseHaut = false;
+            boolean priseBas = false;
+            CompletableFuture<Ventouse> task = null;
+
             if (!rs.echantillonAbriChantierDistributeurPris()) {
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
                 mv.pathTo(entryEchantillonDistributeur());
                 mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -135 : -45);
                 task = processingPriseBordureSafe(CouleurEchantillon.ROCHER_BLEU, group::echantillonAbriChantierDistributeurPris);
-                poussetteRequise = true;
             }
 
             if (!rs.echantillonAbriChantierCarreFouillePris()) {
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
                 mv.pathTo(entryEchantillonCarreFouille());
                 mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -135 : -45);
-                if (task != null) task.get();
+                if (task != null) {
+                    Ventouse result = task.get();
+                    priseBas = result == Ventouse.BAS;
+                    priseHaut = result == Ventouse.HAUT;
+                }
                 task = processingPriseBordureSafe(CouleurEchantillon.ROCHER_ROUGE, group::echantillonAbriChantierCarreFouillePris);
-                poussetteRequise = true;
             }
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entryStatuette());
-            if (task != null) task.get();
+            if (task != null) {
+                Ventouse result = task.get();
+                priseBas = priseBas || result == Ventouse.BAS;
+                priseHaut = priseHaut || result == Ventouse.HAUT;
+            }
 
             // Si on a pas mis les échantillons en stock, on les déposent pour les pousser
-            if (poussetteRequise) {
+            if (priseBas || priseHaut) {
+                log.info("Dépose devant l'abri");
+
                 // Premier échantillon
-                if (commonIOService.presenceVentouseBas()) {
+                if (priseBas) {
                     log.info("Dépose devant l'abri du premier echantillon récupéré");
                     mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -165 : -20);
                     brasService.setBrasBas(PositionBras.SOL_DEPOSE_1);
@@ -157,8 +172,10 @@ public class AbriDeChantier extends AbstractEurobotAction {
                     rs.ventouseBas(null);
                     ThreadUtils.waitUntil(() -> !commonIOService.presenceVentouseBas(), robotConfig.i2cReadTimeMs(), robotConfig.timeoutPompe());
                     brasService.setBrasBas(PositionBras.STOCK_ENTREE);
+                } else {
+                    log.info("Rien dans la ventouse bas");
                 }
-                if (commonIOService.presenceVentouseHaut()) {
+                if (priseHaut) {
                     log.info("Dépose devant l'abri du second échantillon récupéré");
                     mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -105 : -75);
                     brasService.setBrasBas(PositionBras.HORIZONTAL);
@@ -174,6 +191,8 @@ public class AbriDeChantier extends AbstractEurobotAction {
                     commonIOService.releasePompeVentouseBas();
                     rs.ventouseBas(null);
                     ThreadUtils.waitUntil(() -> !commonIOService.presenceVentouseBas(), robotConfig.i2cReadTimeMs(), robotConfig.timeoutPompe());
+                } else {
+                    log.info("Rien dans la ventouse haut");
                 }
                 brasService.safeHoming();
                 mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -135 : -45);
@@ -186,8 +205,8 @@ public class AbriDeChantier extends AbstractEurobotAction {
                 commonServosService.fourcheStatuettePriseDepose(false);
             }
 
-            // Si on a pas fait le stockage des échantillons, on les pousses sous l'abri.
-            if (poussetteRequise) {
+            // On les pousse sous l'abri
+            if (priseBas || priseHaut) {
                 commonServosService.langueOuvert(false);
                 commonServosService.groupeMoustachePoussette(true);
             }
@@ -205,9 +224,13 @@ public class AbriDeChantier extends AbstractEurobotAction {
             mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
             mv.reculeMMSansAngle(100);
 
-            if (poussetteRequise && (rs.calageCompleted().contains(TypeCalage.ARRIERE) || rs.calageCompleted().contains(TypeCalage.FORCE))) {
+            if ((priseBas || priseHaut) && (rs.calageCompleted().contains(TypeCalage.ARRIERE) || rs.calageCompleted().contains(TypeCalage.FORCE))) {
                 log.info("Normalement on a poussé deux échantillons sous l'abri");
-                group.deposeAbriChantier(CouleurEchantillon.ROCHER_ROUGE, CouleurEchantillon.ROCHER_BLEU);
+                // FIXME pas sur que ça fonctionne du tout s'il n'y en a qu'un
+                group.deposeAbriChantier(
+                        priseBas ? CouleurEchantillon.ROCHER_ROUGE : null,
+                        priseHaut ? CouleurEchantillon.ROCHER_BLEU : null
+                );
             }
 
             if (!rs.statuettePrise()) {
@@ -243,7 +266,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
         }
     }
 
-    private CompletableFuture<Void> processingPriseBordureSafe(CouleurEchantillon couleur, Runnable notify) throws AvoidingException, ExecutionException, InterruptedException {
+    private CompletableFuture<Ventouse> processingPriseBordureSafe(CouleurEchantillon couleur, Runnable notify) throws AvoidingException, ExecutionException, InterruptedException {
         if (brasService.initPrise(BrasService.TypePrise.BORDURE, true).get()) {
             log.info("Init de la prise de l'échantillon abri distributeur OK");
             rs.enableCalageBordure(TypeCalage.AVANT_HAUT, TypeCalage.FORCE);
@@ -258,7 +281,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
 
                 // Si il en reste deux a prendre, on stock le premier en haut
                 if (nbEchantillonsRemaining == 2) {
-                    return CompletableFuture.runAsync(() -> {
+                    return CompletableFuture.supplyAsync(() -> {
                         log.info("Echange de l'échantillon sur le bras du haut");
                         brasService.setBrasBas(PositionBras.ECHANGE_2);
                         brasService.setBrasHaut(PositionBras.ECHANGE);
@@ -267,16 +290,18 @@ public class AbriDeChantier extends AbstractEurobotAction {
                         commonIOService.releasePompeVentouseBas();
                         rs.ventouseHaut(rs.ventouseBas() != null ? rs.ventouseBas().getReverseColor() : null);
                         rs.ventouseBas(null);
-                        ThreadUtils.waitUntil(commonIOService::presenceVentouseHaut, robotConfig.i2cReadTimeMs(), robotConfig.timeoutPompe());
+                        boolean ok = ThreadUtils.waitUntil(commonIOService::presenceVentouseHaut, robotConfig.i2cReadTimeMs(), robotConfig.timeoutPompe());
                         nbEchantillonsRemaining--;
                         brasService.setBrasBas(PositionBras.HORIZONTAL);
                         brasService.setBrasHaut(PositionBras.HORIZONTAL);
                         brasService.setBrasBas(PositionBras.STOCK_ENTREE);
+                        return ok ? Ventouse.HAUT : null;
                     }, executor);
 
                 } else if (nbEchantillonsRemaining == 1) {
                     log.info("Conservation de l'échantillon dans le bras du bas");
                     nbEchantillonsRemaining--;
+                    return CompletableFuture.completedFuture(Ventouse.BAS);
 
                 } else {
                     log.warn("Comment c'est possible ?? Nombre d'échantillons de l'abri restant invalide");

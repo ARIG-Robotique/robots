@@ -131,11 +131,11 @@ public class DeposeCampement extends AbstractEurobotAction {
             mv.pathTo(entry);
 
             if (rs.tailleCampementRouge() == 0) {
-                rs.enableCalageBordure(TypeCalage.AVANT_BAS);
+                rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                 mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
                 mv.avanceMM(X - robotConfig.distanceCalageAvant() - 10);
                 mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
-                rs.enableCalageBordure(TypeCalage.AVANT_BAS);
+                rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                 mv.avanceMMSansAngle(100);
                 checkRecalageXmm(rs.team() == Team.JAUNE ? robotConfig.distanceCalageAvant() : EurobotConfig.tableWidth - robotConfig.distanceCalageAvant());
                 checkRecalageAngleDeg(rs.team() == Team.JAUNE ? 180 : 0);

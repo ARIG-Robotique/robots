@@ -103,7 +103,7 @@ public abstract class BrasServiceInternal {
      * Change la position du bras en direct sans passer par la state machine
      */
     public boolean setBrasBas(PointBras pt, PositionBras state, int speed) {
-        log.info("Bras bas x={} y={} a={}", pt.x, pt.y, pt.a);
+        log.debug("Bras bas x={} y={} a={}", pt.x, pt.y, pt.a);
         AnglesBras angles = calculerAngles(CONFIG_BRAS_BAS, pt.x, pt.y, pt.a, true, null);
 
         if (angles == null || angles.isError()) {
@@ -114,7 +114,7 @@ public abstract class BrasServiceInternal {
             brasBas.current(null);
         }
 
-        log.info("Bras bas a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
+        log.debug("Bras bas a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
         servos.brasBas(angles.a1, angles.a2, angles.a3, speed);
         positionBrasBas = new CurrentBras(state, angles, pt);
 
@@ -140,7 +140,7 @@ public abstract class BrasServiceInternal {
      * Change la position du bras en direct sans passer par la state machine
      */
     public boolean setBrasHaut(PointBras pt, PositionBras state, Integer speed) {
-        log.info("Bras haut x={} y={} a={}", pt.x, pt.y, pt.a);
+        log.debug("Bras haut x={} y={} a={}", pt.x, pt.y, pt.a);
         AnglesBras angles = calculerAngles(CONFIG_BRAS_HAUT, pt.x, pt.y, pt.a, true, null);
 
         if (angles == null || angles.isError()) {
@@ -151,7 +151,7 @@ public abstract class BrasServiceInternal {
             brasHaut.current(null);
         }
 
-        log.info("Bras haut a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
+        log.debug("Bras haut a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
         servos.brasHaut(angles.a1, angles.a2, angles.a3, speed);
         positionBrasHaut = new CurrentBras(state, angles, pt);
 
