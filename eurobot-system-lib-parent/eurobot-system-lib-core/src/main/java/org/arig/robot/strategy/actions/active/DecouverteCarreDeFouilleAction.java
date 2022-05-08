@@ -1,6 +1,5 @@
 package org.arig.robot.strategy.actions.active;
 
-import draw.EditorUI;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;

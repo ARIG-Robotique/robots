@@ -241,7 +241,7 @@ public class BrasService extends BrasServiceInternal {
     public enum TypeDepose {
         SOL,
         GALERIE_BAS,
-        GALERIE_MILIEU,
+        GALERIE_CENTRE,
         GALERIE_HAUT
     }
 
@@ -258,14 +258,14 @@ public class BrasService extends BrasServiceInternal {
         switch (typeDepose) {
             case SOL:
             case GALERIE_BAS:
-            case GALERIE_MILIEU:
                 setBrasHaut(PositionBras.HORIZONTAL);
                 setBrasBas(PositionBras.STOCK_ENTREE);
                 break;
 
+            case GALERIE_CENTRE:
             case GALERIE_HAUT:
                 setBrasHaut(PositionBras.HORIZONTAL);
-                setBrasBas(PositionBras.STOCK_ENTREE); // FIXME bonne position à déterminer
+                setBrasBas(PositionBras.HORIZONTAL);
                 setBrasHaut(PositionBras.STOCK_ENTREE);
                 break;
         }
@@ -288,7 +288,6 @@ public class BrasService extends BrasServiceInternal {
         switch (typeDepose) {
             case SOL:
             case GALERIE_BAS:
-            case GALERIE_MILIEU:
                 // prise
                 setBrasBas(PositionBras.stockPrise(indexStock));
 
@@ -309,19 +308,23 @@ public class BrasService extends BrasServiceInternal {
 
                 // depose
                 setBrasBas(PositionBras.STOCK_ENTREE);
-                setBrasBas(typeDepose == TypeDepose.SOL ? PositionBras.solDepose(index) :
-                        typeDepose == TypeDepose.GALERIE_BAS ? PositionBras.GALERIE_DEPOSE :
-                                PositionBras.GALERIE_DEPOSE_MILIEU);
+                if (typeDepose == TypeDepose.SOL) {
+                    setBrasBas(PositionBras.solDepose(index));
+                    io.releasePompeVentouseBas();
+                    rs.ventouseBas(null);
+                    if (!ThreadUtils.waitUntil(() -> !io.presenceVentouseBas(), config.i2cReadTimeMs(), config.timeoutPompe())) {
+                        log.warn("Echec de libération ventouse bas ?");
+                    }
 
-                io.releasePompeVentouseBas();
-                rs.ventouseBas(null);
-                if (!ThreadUtils.waitUntil(() -> !io.presenceVentouseBas(), config.i2cReadTimeMs(), config.timeoutPompe())) {
-                    log.warn("Echec de libération ventouse bas ?");
+                    setBrasBas(PositionBras.STOCK_ENTREE);
+                } else {
+                    // Forcement galerie bas (cf case)
+                    setBrasBas(PositionBras.GALERIE_DEPOSE);
                 }
 
-                setBrasBas(PositionBras.STOCK_ENTREE);
                 break;
 
+            case GALERIE_CENTRE:
             case GALERIE_HAUT:
                 // prise
                 setBrasHaut(PositionBras.stockPrise(indexStock));
@@ -343,22 +346,53 @@ public class BrasService extends BrasServiceInternal {
 
                 // depose
                 setBrasHaut(PositionBras.STOCK_ENTREE);
-                setBrasHaut(PositionBras.GALERIE_DEPOSE);
-
-                io.releasePompeVentouseHaut();
-                rs.ventouseHaut(null);
-                if (!ThreadUtils.waitUntil(() -> !io.presenceVentouseHaut(), config.i2cReadTimeMs(), config.timeoutPompe())) {
-                    log.warn("Echec de libération ventouse haut ?");
+                if (typeDepose == TypeDepose.GALERIE_HAUT) {
+                    setBrasHaut(PositionBras.GALERIE_DEPOSE);
+                } else {
+                    setBrasHaut(PositionBras.GALERIE_DEPOSE_CENTRE);
                 }
+                setBrasBas(PositionBras.STOCK_ENTREE);
+                setBrasBas(PositionBras.repos(Math.max(0, indexStock - 1)));
 
-                setBrasHaut(PositionBras.STOCK_ENTREE);
                 break;
         }
 
-        couleur = rs.destockage();
+        if (typeDepose == TypeDepose.SOL) {
+            couleur = rs.destockage();
+            log.info("Echantillon {} retiré du stock", couleur);
+        } else {
+            couleur = rs.stockFirst();
+            log.info("Echantillon {} pret à être retiré du stock sur la galerie", couleur);
+        }
+        return couleur;
+    }
 
+    public CouleurEchantillon processEndDeposeGalerie(@NonNull final TypeDepose typeDepose) {
+        if (typeDepose == TypeDepose.SOL) {
+            log.error("Type de dépose non supporté pour la galerie : {}", typeDepose);
+            return null;
+        }
+
+        if (typeDepose == TypeDepose.GALERIE_BAS) {
+            io.releasePompeVentouseBas();
+            rs.ventouseBas(null);
+            if (!ThreadUtils.waitUntil(() -> !io.presenceVentouseBas(), config.i2cReadTimeMs(), config.timeoutPompe())) {
+                log.warn("Echec de libération ventouse bas ?");
+            }
+
+            setBrasBas(PositionBras.STOCK_ENTREE);
+        } else {
+            io.releasePompeVentouseHaut();
+            rs.ventouseHaut(null);
+            if (!ThreadUtils.waitUntil(() -> !io.presenceVentouseHaut(), config.i2cReadTimeMs(), config.timeoutPompe())) {
+                log.warn("Echec de libération ventouse haut ?");
+            }
+
+            setBrasHaut(PositionBras.STOCK_ENTREE);
+        }
+
+        CouleurEchantillon couleur = rs.destockage();
         log.info("Echantillon {} retiré du stock", couleur);
-
         return couleur;
     }
 

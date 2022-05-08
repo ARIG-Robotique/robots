@@ -50,8 +50,7 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
         state(PositionBras.ECHANGE, new PointBras(147, 144, 100)); // en vrai c'est 90 mais le bras tombe sous le poids
 
         state(PositionBras.DISTRIBUTEUR_PRISE, new PointBras(210, 80, -20));
-        state(PositionBras.GALERIE_DEPOSE, new PointBras(0, 0, 0)); // TODO
-        state(PositionBras.GALERIE_DEPOSE_MILIEU, new PointBras(0, 0, 0)); // TODO
+        state(PositionBras.GALERIE_DEPOSE, new PointBras(170, 164, 10));
 
         transition(PositionBras.INIT, PositionBras.STOCK_ENTREE);
         transition(PositionBras.STOCK_ENTREE, PositionBras.INIT);
@@ -201,8 +200,6 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
 
         transition(PositionBras.STOCK_ENTREE, PositionBras.GALERIE_DEPOSE);
         transition(PositionBras.GALERIE_DEPOSE, PositionBras.STOCK_ENTREE);
-        transition(PositionBras.STOCK_ENTREE, PositionBras.GALERIE_DEPOSE_MILIEU);
-        transition(PositionBras.GALERIE_DEPOSE_MILIEU, PositionBras.STOCK_ENTREE);
     }
 
 }

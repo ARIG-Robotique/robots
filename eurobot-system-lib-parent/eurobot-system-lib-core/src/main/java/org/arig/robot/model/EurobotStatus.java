@@ -299,6 +299,18 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Setter(AccessLevel.NONE)
     private Galerie galerie = new Galerie();
 
+    public boolean galerieComplete() {
+        return galerie.complete();
+    }
+
+    public int galerieEmplacementDisponible() {
+        return galerie.emplacementDisponible();
+    }
+
+    public Galerie.GaleriePosition galerieBestPosition(CouleurEchantillon echantillon, Galerie.Periode currentPeriode) {
+        return galerie.bestPosition(echantillon, currentPeriode);
+    }
+
     public void deposeGalerieRouge(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
             log.info("[RS] depose galerie rouge : {}", echantillon);
@@ -320,10 +332,10 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         }
     }
 
-    public void deposeGalerieVertBleu(CouleurEchantillon... echantillons) {
+    public void deposeGalerieBleuVert(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
             log.info("[RS] depose galerie vert bleu : {}", echantillon);
-            galerie.addVertBleu(echantillon);
+            galerie.addBleuVert(echantillon);
         }
     }
 

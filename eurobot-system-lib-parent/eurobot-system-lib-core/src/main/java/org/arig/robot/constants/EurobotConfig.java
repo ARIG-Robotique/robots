@@ -27,8 +27,9 @@ public interface EurobotConfig {
     // Noms des actions
     String ACTION_DECOUVERTE_CARRE_FOUILLE = "Découverte carré de fouille";
     String ACTION_ABRI_CHANTIER = "Abri de chantier";
-    String ACTION_DEPOSE_STATUETTE = "Dépose statuette";
+    String ACTION_DEPOSE_STATUETTE = "Dépose statuette / vitrine";
     String ACTION_DEPOSE_CAMPEMENT = "Dépose campement";
+    String ACTION_DEPOSE_GALERIE = "Dépose galerie";
     String ACTION_POUSSETTE_CAMPEMENT = "Poussette campement";
     String ACTION_RETOUR_SITE_DE_FOUILLE_PREFIX = "Retour site de fouille ";
     String ACTION_PRISE_DISTRIB_EQUIPE = "Prise distrib. équipe";
@@ -51,6 +52,9 @@ public interface EurobotConfig {
 
     // Taille d'un echantillon
     int ECHANTILLON_SIZE = 150;
+
+    // Largeur de la galerie
+    int GALERIE_WIDTH = 720;
 
     int PATHFINDER_ECHANTILLON_SIZE = 500;
     int PATHFINDER_SITE_FOUILLE_SIZE = 700;

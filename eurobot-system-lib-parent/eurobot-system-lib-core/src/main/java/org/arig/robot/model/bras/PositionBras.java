@@ -34,7 +34,7 @@ public enum PositionBras {
     STOCK_DEPOSE_6(true),
 
     GALERIE_DEPOSE(false),
-    GALERIE_DEPOSE_MILIEU(false),
+    GALERIE_DEPOSE_CENTRE(false),
 
     // bas
     SOL_PRISE(false),

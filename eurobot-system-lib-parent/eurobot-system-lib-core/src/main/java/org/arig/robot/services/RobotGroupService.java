@@ -179,8 +179,8 @@ public class RobotGroupService implements RobotGroup.Handler {
             case DEPOSE_GALERIE_VERT:
                 rs.deposeGalerieVert(getEchantillons(data));
                 break;
-            case DEPOSE_GALERIE_VERT_BLEU:
-                rs.deposeGalerieVertBleu(getEchantillons(data));
+            case DEPOSE_GALERIE_BLEU_VERT:
+                rs.deposeGalerieBleuVert(getEchantillons(data));
                 break;
             case DEPOSE_GALERIE_BLEU:
                 rs.deposeGalerieBleu(getEchantillons(data));
@@ -414,9 +414,9 @@ public class RobotGroupService implements RobotGroup.Handler {
         sendEvent(StatusEvent.DEPOSE_GALERIE_VERT, echantillons);
     }
 
-    public void deposeGalerieVertBleu(CouleurEchantillon... echantillons) {
-        rs.deposeGalerieVertBleu(echantillons);
-        sendEvent(StatusEvent.DEPOSE_GALERIE_VERT_BLEU, echantillons);
+    public void deposeGalerieBleuVert(CouleurEchantillon... echantillons) {
+        rs.deposeGalerieBleuVert(echantillons);
+        sendEvent(StatusEvent.DEPOSE_GALERIE_BLEU_VERT, echantillons);
     }
 
     public void deposeGalerieBleu(CouleurEchantillon... echantillons) {
