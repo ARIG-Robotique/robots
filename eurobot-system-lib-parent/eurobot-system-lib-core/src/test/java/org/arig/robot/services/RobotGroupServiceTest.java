@@ -159,19 +159,6 @@ class RobotGroupServiceTest {
     }
 
     @Test
-    void testConfigurationStockageAbriChantier() {
-        Assertions.assertFalse(statusPrimary.stockageAbriChantier());
-        Assertions.assertFalse(statusSecondary.stockageAbriChantier());
-
-        statusPrimary.stockageAbriChantier(true);
-        rgServicePrimary.configuration();
-        ThreadUtils.sleep(WAIT);
-
-        Assertions.assertTrue(statusPrimary.stockageAbriChantier());
-        Assertions.assertTrue(statusSecondary.stockageAbriChantier());
-    }
-
-    @Test
     void testDistributeurEquipePris() {
         Assertions.assertFalse(statusPrimary.distributeurEquipePris());
         Assertions.assertFalse(statusSecondary.distributeurEquipePris());
