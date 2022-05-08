@@ -13,16 +13,15 @@ public class ThreadUtils {
     }
 
     public static boolean waitUntil(BooleanSupplier pass, int intervalMs, int timeoutMs) {
-        int remainingTime = timeoutMs;
-        while (!pass.getAsBoolean() && remainingTime > 0) {
+        long startTime = System.currentTimeMillis();
+        while (!pass.getAsBoolean() && System.currentTimeMillis() < startTime + timeoutMs) {
             ThreadUtils.sleep(intervalMs);
-            remainingTime -= intervalMs;
         }
         return pass.getAsBoolean();
     }
 
     public static <T> T waitUntil(Supplier<T> supplier, T invalidValue, int intervalMs, int timeoutMs) {
-        int remainingTime = timeoutMs;
+        long startTime = System.currentTimeMillis();
         T value;
         do {
             value = supplier.get();
@@ -30,8 +29,7 @@ public class ThreadUtils {
                 break;
             }
             ThreadUtils.sleep(intervalMs);
-            remainingTime -= intervalMs;
-        } while (remainingTime > 0);
+        } while (System.currentTimeMillis() < startTime + timeoutMs);
         return value;
     }
 }
