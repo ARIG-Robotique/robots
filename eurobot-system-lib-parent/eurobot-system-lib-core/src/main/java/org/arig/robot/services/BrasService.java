@@ -252,7 +252,7 @@ public class BrasService extends BrasServiceInternal {
             return false;
         }
 
-        log.info("Dépose d'échantillon {} @ {}", couleur, typeDepose);
+        log.info("Dépose d'échantillon {}", typeDepose);
 
         // préparation
         switch (typeDepose) {

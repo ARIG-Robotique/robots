@@ -246,6 +246,9 @@ public class DeposeCampement extends AbstractEurobotAction {
                 }
 
             default:
+                if (tailleRouge == tailleBleu && tailleBleu == tailleVert) {
+                    return CouleurEchantillon.values()[(int) Math.floor(Math.random() * 3)];
+                }
                 // on privilégie le moins vide
                 if (tailleRouge < tailleVert && tailleRouge < tailleBleu) {
                     return CouleurEchantillon.ROUGE;
