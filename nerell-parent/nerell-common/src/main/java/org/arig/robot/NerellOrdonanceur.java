@@ -229,7 +229,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             robotStatus.disableAvoidance();
             position.setPt(new Point(
                     conv.mmToPulse(getX(NerellConstantesConfig.dstCallage)),
-                    conv.mmToPulse(1180)
+                    conv.mmToPulse(1450)
             ));
             if (nerellRobotStatus.team() == Team.JAUNE) {
                 position.setAngle(conv.degToPulse(0));
