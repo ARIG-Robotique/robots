@@ -198,26 +198,28 @@ public class BrasService extends BrasServiceInternal {
             ThreadUtils.sleep(config.i2cReadTimeMs());
 
             boolean ok = false;
-            if (io.presenceStock(indexStock, true)) {
+            // FIXME détection du stock plus fiable
+//            if (io.presenceStock(indexStock)) {
                 // cas pourri ou le précédent stockage c'est mal passé
                 // grace a ce stockage, l'échantillon d'avant c'est remis en place
                 // il faut donc le compter
-                if (indexStock < 5 && io.presenceStock(indexStock + 1, false)) {
-                    CouleurEchantillon couleur1 = couleurPrecedente != null ? couleurPrecedente : CouleurEchantillon.INCONNU;
-                    log.warn("Prise en compte de l'échantillon {} précédent mal stocké", couleur1);
-                    rs.stockage(couleur1);
-                    indexStock++;
-                }
+//                if (indexStock < 5 && io.presenceStock(indexStock + 1, false)) {
+//                if (indexStock < 5 && io.presenceStock(indexStock + 1)) {
+//                    CouleurEchantillon couleur1 = couleurPrecedente != null ? couleurPrecedente : CouleurEchantillon.INCONNU;
+//                    log.warn("Prise en compte de l'échantillon {} précédent mal stocké", couleur1);
+//                    rs.stockage(couleur1);
+//                    indexStock++;
+//                }
 
                 log.info("Stockage d'un {} à l'emplacement {}", couleur.get(), indexStock);
                 rs.stockage(couleur.get());
                 couleurPrecedente = null;
                 ok = true;
 
-            } else {
-                log.warn("Aucun echantillon posé dans le stock");
-                couleurPrecedente = couleur.get();
-            }
+//            } else {
+//                log.warn("Aucun echantillon posé dans le stock");
+//                couleurPrecedente = couleur.get();
+//            }
 
             return ok;
         }, executor);
@@ -375,20 +377,20 @@ public class BrasService extends BrasServiceInternal {
      * Pour gérer des cas de mauvaise détection
      */
     public void updateStock() {
-        for (int i = 0; i < rs.stock().length; i++) {
-            if (io.presenceStock(i, false) && rs.stock()[i] == null) {
-                log.warn("Nouvel échantillon détecté dans le stock {}", (i + 1));
-                rs.stock()[i] = CouleurEchantillon.INCONNU; // FIXME : Réordonner le stock
-            } else if (!io.presenceStock(i, true) && rs.stock()[i] != null) {
-                log.warn("échantillon perdu dans le stock {}", (i + 1));
-                rs.stock()[i] = null;
-            }
-        }
-        for (int i = rs.stock().length - 1; i > 0; i--) {
-            if (rs.stock()[i] != null && rs.stock()[i - 1] == null) {
-                log.warn("Trou dans le stock à la position {}", i);
-            }
-        }
+//        for (int i = 0; i < rs.stock().length; i++) {
+//            if (io.presenceStock(i) && rs.stock()[i] == null) {
+//                log.warn("Nouvel échantillon détecté dans le stock {}", (i + 1));
+//                rs.stock()[i] = CouleurEchantillon.INCONNU; // FIXME : Réordonner le stock
+//            } else if (!io.presenceStock(i) && rs.stock()[i] != null) {
+//                log.warn("échantillon perdu dans le stock {}", (i + 1));
+//                rs.stock()[i] = null;
+//            }
+//        }
+//        for (int i = rs.stock().length - 1; i > 0; i--) {
+//            if (rs.stock()[i] != null && rs.stock()[i - 1] == null) {
+//                log.warn("Trou dans le stock à la position {}", i);
+//            }
+//        }
     }
 
 }
