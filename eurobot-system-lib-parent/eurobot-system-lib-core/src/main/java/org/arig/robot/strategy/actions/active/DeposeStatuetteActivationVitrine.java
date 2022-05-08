@@ -25,7 +25,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
     @Override
     public int order() {
         int points = 0;
-        if (rs.statuettePriseDansCeRobot() && commonIOService.presenceStatuette()) {
+        if (rs.statuettePriseDansCeRobot() && commonIOService.presenceStatuette(true)) {
             points += 15; // 15 points pour la dépose de statuette
         }
         if (!rs.vitrineActive()) {
@@ -44,7 +44,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
     @Override
     public boolean isValid() {
         // Valid si on est chargé de la statuette
-        boolean validStatuette = rs.statuettePriseDansCeRobot() && commonIOService.presenceStatuette();
+        boolean validStatuette = rs.statuettePriseDansCeRobot() && commonIOService.presenceStatuette(true);
 
         // Valid si la vitrine n'est pas encore activé dans les 30 dernières secondes de match
         boolean validVitrine = !rs.vitrineActive() && rs.getRemainingTime() < EurobotConfig.validActivationVitrineRemainingTime;
@@ -66,7 +66,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
 
             rs.disableAvoidance(); // Zone interdite pour l'adversaire
 
-            if (rs.statuettePriseDansCeRobot() && commonIOService.presenceStatuette()) {
+            if (rs.statuettePriseDansCeRobot() && commonIOService.presenceStatuette(true)) {
                 // Calage sur X
                 mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 0 : 180);
                 rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
@@ -92,7 +92,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
             group.vitrineActive(); // Vitrine active sur front
 
             // Si on as la statuette dans le robot, on la dépose
-            if (rs.statuettePriseDansCeRobot() && commonIOService.presenceStatuette()) {
+            if (rs.statuettePriseDansCeRobot() && commonIOService.presenceStatuette(true)) {
                 commonServosService.fourcheStatuettePriseDepose(true);
                 group.statuetteDansVitrine();
             }

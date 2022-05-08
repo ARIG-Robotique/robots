@@ -13,24 +13,24 @@ public interface CommonIOService extends IOService {
     boolean presenceVentouseBas();
     boolean presenceVentouseHaut();
 
-    boolean presenceStatuette();
-    boolean presenceCarreFouille(boolean expected);
-    boolean presencePriseBras();
-    boolean presenceStock1();
-    boolean presenceStock2();
-    boolean presenceStock3();
-    boolean presenceStock4();
-    boolean presenceStock5();
-    boolean presenceStock6();
+    boolean presenceStatuette(boolean expectedSimulation);
+    boolean presenceCarreFouille(boolean expectedSimulation);
+    boolean presencePriseBras(boolean expectedSimulation);
+    boolean presenceStock1(boolean expectedSimulation);
+    boolean presenceStock2(boolean expectedSimulation);
+    boolean presenceStock3(boolean expectedSimulation);
+    boolean presenceStock4(boolean expectedSimulation);
+    boolean presenceStock5(boolean expectedSimulation);
+    boolean presenceStock6(boolean expectedSimulation);
 
-    default boolean presenceStock(int indexStock) {
+    default boolean presenceStock(int indexStock, boolean expectedSimulation) {
         switch (indexStock) {
-            case 0: return presenceStock1();
-            case 1: return presenceStock2();
-            case 2: return presenceStock3();
-            case 3: return presenceStock4();
-            case 4: return presenceStock5();
-            case 5: return presenceStock6();
+            case 0: return presenceStock1(expectedSimulation);
+            case 1: return presenceStock2(expectedSimulation);
+            case 2: return presenceStock3(expectedSimulation);
+            case 3: return presenceStock4(expectedSimulation);
+            case 4: return presenceStock5(expectedSimulation);
+            case 5: return presenceStock6(expectedSimulation);
             default: return false;
         }
     }

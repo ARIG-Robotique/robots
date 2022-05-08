@@ -228,12 +228,12 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     // Numerique
 
     @Override
-    public boolean presenceStatuette() {
+    public boolean presenceStatuette(boolean expectedSimulation) {
         return inPresenceStatuette.isLow();
     }
 
     @Override
-    public boolean presenceCarreFouille(final boolean expected) {
+    public boolean presenceCarreFouille(final boolean expectedSimulation) {
         return inPresenceCarreFouille.isLow();
     }
 
@@ -248,37 +248,37 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     }
 
     @Override
-    public boolean presencePriseBras() {
+    public boolean presencePriseBras(boolean expectedSimulation) {
         return inPresencePriseBras.isLow();
     }
 
     @Override
-    public boolean presenceStock1() {
+    public boolean presenceStock1(boolean expectedSimulation) {
         return inPresenceStock1.isLow();
     }
 
     @Override
-    public boolean presenceStock2() {
+    public boolean presenceStock2(boolean expectedSimulation) {
         return inPresenceStock2.isLow();
     }
 
     @Override
-    public boolean presenceStock3() {
+    public boolean presenceStock3(boolean expectedSimulation) {
         return inPresenceStock3.isLow();
     }
 
     @Override
-    public boolean presenceStock4() {
+    public boolean presenceStock4(boolean expectedSimulation) {
         return inPresenceStock4.isLow();
     }
 
     @Override
-    public boolean presenceStock5() {
+    public boolean presenceStock5(boolean expectedSimulation) {
         return inPresenceStock5.isLow();
     }
 
     @Override
-    public boolean presenceStock6() {
+    public boolean presenceStock6(boolean expectedSimulation) {
         return inPresenceStock6.isLow();
     }
 
@@ -319,7 +319,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
 
     @Override
     public boolean calagePriseEchantillon() {
-        return presencePriseBras();
+        return presencePriseBras(true);
     }
 
     // Couleur

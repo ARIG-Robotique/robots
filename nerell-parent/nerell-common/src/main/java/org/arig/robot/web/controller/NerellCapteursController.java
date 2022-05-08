@@ -32,16 +32,16 @@ public class NerellCapteursController extends AbstractCapteursController {
         numeriqueInfos.put("Calage echantillon", ioService::calagePriseEchantillon);
 
         numeriqueInfos.put("Presence carre de fouille", () -> ioService.presenceCarreFouille(false));
-        numeriqueInfos.put("Presence prise bras", ioService::presencePriseBras);
-        numeriqueInfos.put("Presence stock 1", ioService::presenceStock1);
-        numeriqueInfos.put("Presence stock 2", ioService::presenceStock2);
-        numeriqueInfos.put("Presence stock 3", ioService::presenceStock3);
-        numeriqueInfos.put("Presence stock 4", ioService::presenceStock4);
-        numeriqueInfos.put("Presence stock 5", ioService::presenceStock5);
-        numeriqueInfos.put("Presence stock 6", ioService::presenceStock6);
+        numeriqueInfos.put("Presence prise bras", () -> ioService.presencePriseBras(false));
+        numeriqueInfos.put("Presence stock 1", () -> ioService.presenceStock1(false));
+        numeriqueInfos.put("Presence stock 2", () -> ioService.presenceStock2(false));
+        numeriqueInfos.put("Presence stock 3", () -> ioService.presenceStock3(false));
+        numeriqueInfos.put("Presence stock 4", () -> ioService.presenceStock4(false));
+        numeriqueInfos.put("Presence stock 5", () -> ioService.presenceStock5(false));
+        numeriqueInfos.put("Presence stock 6", () -> ioService.presenceStock6(false));
         numeriqueInfos.put("Presence ventouse bas", ioService::presenceVentouseBas);
         numeriqueInfos.put("Presence ventouse haut", ioService::presenceVentouseHaut);
-        numeriqueInfos.put("Presence statuette", ioService::presenceStatuette);
+        numeriqueInfos.put("Presence statuette", () -> ioService.presenceStatuette(false));
 
         couleursInfos.put("Ventouse haut", () -> {
             TCS34725ColorSensor.ColorData colorData = ioService.couleurVentouseHautRaw();

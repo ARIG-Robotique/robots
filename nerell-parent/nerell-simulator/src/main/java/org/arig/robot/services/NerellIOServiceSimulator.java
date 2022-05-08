@@ -1,10 +1,9 @@
 package org.arig.robot.services;
 
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.NerellRobotStatus;
+import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implements NerellIOService {
 
-    private final NerellRobotStatus nerellRobotStatus;
+    private final NerellRobotStatus rs;
 
     private boolean presVentouseBas = false;
     private boolean presVentouseHaut = false;
@@ -21,8 +20,48 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     // -------------------------- INPUT ------------------------ //
     // --------------------------------------------------------- //
 
-    // Numerique
+    // Calages
+    @Override
+    public boolean calageArriereDroit() {
+        return rs.calage().contains(TypeCalage.ARRIERE);
+    }
 
+    @Override
+    public boolean calageArriereGauche() {
+        return rs.calage().contains(TypeCalage.ARRIERE);
+    }
+
+    @Override
+    public boolean calageAvantBasDroit() {
+        return rs.calage().contains(TypeCalage.AVANT_BAS);
+    }
+
+    @Override
+    public boolean calageAvantBasGauche() {
+        return rs.calage().contains(TypeCalage.AVANT_BAS);
+    }
+
+    @Override
+    public boolean calageAvantHautDroit() {
+        return rs.calage().contains(TypeCalage.AVANT_HAUT);
+    }
+
+    @Override
+    public boolean calageAvantHautGauche() {
+        return rs.calage().contains(TypeCalage.AVANT_HAUT);
+    }
+
+    @Override
+    public boolean calageLatteralDroit() {
+        return rs.calage().contains(TypeCalage.LATTERAL_DROIT);
+    }
+
+    @Override
+    public boolean calagePriseEchantillon() {
+        return rs.calage().contains(TypeCalage.PRISE_ECHANTILLON);
+    }
+
+    // Numerique
     @Override
     public boolean presenceVentouseBas() {
         return presVentouseBas;
@@ -34,48 +73,48 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     }
 
     @Override
-    public boolean presencePriseBras() {
-        return true;
+    public boolean presencePriseBras(boolean expectedSimulation) {
+        return expectedSimulation;
     }
 
     @Override
-    public boolean presenceStatuette() {
-        return nerellRobotStatus.statuettePriseDansCeRobot();
+    public boolean presenceStatuette(boolean expectedSimulation) {
+        return rs.statuettePriseDansCeRobot() || expectedSimulation;
     }
 
     @Override
-    public boolean presenceCarreFouille(final boolean expected) {
-        return expected;
+    public boolean presenceCarreFouille(final boolean expectedSimulation) {
+        return expectedSimulation;
     }
 
     @Override
-    public boolean presenceStock1() {
-        return nerellRobotStatus.stock()[0] != null;
+    public boolean presenceStock1(boolean expectedSimulation) {
+        return rs.stock()[0] != null || expectedSimulation;
     }
 
     @Override
-    public boolean presenceStock2() {
-        return nerellRobotStatus.stock()[1] != null;
+    public boolean presenceStock2(boolean expectedSimulation) {
+        return rs.stock()[1] != null || expectedSimulation;
     }
 
     @Override
-    public boolean presenceStock3() {
-        return nerellRobotStatus.stock()[2] != null;
+    public boolean presenceStock3(boolean expectedSimulation) {
+        return rs.stock()[2] != null || expectedSimulation;
     }
 
     @Override
-    public boolean presenceStock4() {
-        return nerellRobotStatus.stock()[3] != null;
+    public boolean presenceStock4(boolean expectedSimulation) {
+        return rs.stock()[3] != null || expectedSimulation;
     }
 
     @Override
-    public boolean presenceStock5() {
-        return nerellRobotStatus.stock()[4] != null;
+    public boolean presenceStock5(boolean expectedSimulation) {
+        return rs.stock()[4] != null || expectedSimulation;
     }
 
     @Override
-    public boolean presenceStock6() {
-        return nerellRobotStatus.stock()[5] != null;
+    public boolean presenceStock6(boolean expectedSimulation) {
+        return rs.stock()[5] != null || expectedSimulation;
     }
 
     @Override

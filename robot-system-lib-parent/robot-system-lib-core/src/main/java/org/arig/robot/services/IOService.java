@@ -17,32 +17,14 @@ public interface IOService {
     // --------------------------------------------------------- //
 
     // Numerique
-    default boolean calageArriereDroit() {
-        return false;
-    }
-    default boolean calageArriereGauche() {
-        return false;
-    }
-    default boolean calageAvantBasDroit() {
-        return false;
-    }
-    default boolean calageAvantBasGauche() {
-        return false;
-    }
-    default boolean calageAvantHautDroit() {
-        return false;
-    }
-    default boolean calageAvantHautGauche() {
-        return false;
-    }
-
-    default boolean calageLatteralDroit() {
-        return true;
-    }
-
-    default boolean calagePriseEchantillon() {
-        return false;
-    }
+    boolean calageArriereDroit();
+    boolean calageArriereGauche();
+    boolean calageAvantBasDroit();
+    boolean calageAvantBasGauche();
+    boolean calageAvantHautDroit();
+    boolean calageAvantHautGauche();
+    boolean calageLatteralDroit();
+    boolean calagePriseEchantillon();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

@@ -3,6 +3,7 @@ package org.arig.robot.services;
 import lombok.RequiredArgsConstructor;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.OdinRobotStatus;
+import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements OdinIOService {
 
-    private final OdinRobotStatus odinRobotStatus;
+    private final OdinRobotStatus rs;
 
     private boolean presVentouseBas = false;
     private boolean presVentouseHaut = false;
@@ -19,8 +20,48 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
     // -------------------------- INPUT ------------------------ //
     // --------------------------------------------------------- //
 
-    // Numerique
+    // Calages
+    @Override
+    public boolean calageArriereDroit() {
+        return rs.calage().contains(TypeCalage.ARRIERE);
+    }
 
+    @Override
+    public boolean calageArriereGauche() {
+        return rs.calage().contains(TypeCalage.ARRIERE);
+    }
+
+    @Override
+    public boolean calageAvantBasDroit() {
+        return rs.calage().contains(TypeCalage.AVANT_BAS);
+    }
+
+    @Override
+    public boolean calageAvantBasGauche() {
+        return rs.calage().contains(TypeCalage.AVANT_BAS);
+    }
+
+    @Override
+    public boolean calageAvantHautDroit() {
+        return rs.calage().contains(TypeCalage.AVANT_HAUT);
+    }
+
+    @Override
+    public boolean calageAvantHautGauche() {
+        return rs.calage().contains(TypeCalage.AVANT_HAUT);
+    }
+
+    @Override
+    public boolean calageLatteralDroit() {
+        return rs.calage().contains(TypeCalage.LATTERAL_DROIT);
+    }
+
+    @Override
+    public boolean calagePriseEchantillon() {
+        return rs.calage().contains(TypeCalage.PRISE_ECHANTILLON);
+    }
+
+    // Numerique
     @Override
     public boolean presenceVentouseBas() {
         return presVentouseBas;
@@ -32,48 +73,48 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
     }
 
     @Override
-    public boolean presencePriseBras() {
-        return true;
+    public boolean presencePriseBras(boolean expectedSimulation) {
+        return expectedSimulation;
     }
 
     @Override
-    public boolean presenceStatuette() {
-        return odinRobotStatus.statuettePriseDansCeRobot();
+    public boolean presenceStatuette(boolean expectedSimulation) {
+        return rs.statuettePriseDansCeRobot() || expectedSimulation;
     }
 
     @Override
-    public boolean presenceCarreFouille(final boolean expected) {
-        return expected;
+    public boolean presenceCarreFouille(final boolean expectedSimulation) {
+        return expectedSimulation;
     }
 
     @Override
-    public boolean presenceStock1() {
-        return odinRobotStatus.stockDisponible() <= 6;
+    public boolean presenceStock1(boolean expectedSimulation) {
+        return rs.stock()[0] != null || expectedSimulation;
     }
 
     @Override
-    public boolean presenceStock2() {
-        return odinRobotStatus.stockDisponible() <= 5;
+    public boolean presenceStock2(boolean expectedSimulation) {
+        return rs.stock()[1] != null || expectedSimulation;
     }
 
     @Override
-    public boolean presenceStock3() {
-        return odinRobotStatus.stockDisponible() <= 4;
+    public boolean presenceStock3(boolean expectedSimulation) {
+        return rs.stock()[2] != null || expectedSimulation;
     }
 
     @Override
-    public boolean presenceStock4() {
-        return odinRobotStatus.stockDisponible() <= 3;
+    public boolean presenceStock4(boolean expectedSimulation) {
+        return rs.stock()[3] != null || expectedSimulation;
     }
 
     @Override
-    public boolean presenceStock5() {
-        return odinRobotStatus.stockDisponible() <= 2;
+    public boolean presenceStock5(boolean expectedSimulation) {
+        return rs.stock()[4] != null || expectedSimulation;
     }
 
     @Override
-    public boolean presenceStock6() {
-        return odinRobotStatus.stockDisponible() <= 1;
+    public boolean presenceStock6(boolean expectedSimulation) {
+        return rs.stock()[5] != null || expectedSimulation;
     }
 
     @Override

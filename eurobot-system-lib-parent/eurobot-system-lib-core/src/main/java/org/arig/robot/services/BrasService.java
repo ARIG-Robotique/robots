@@ -55,7 +55,7 @@ public class BrasService extends BrasServiceInternal {
         return CompletableFuture.supplyAsync(() -> {
             log.info("Init prise d'échantillon @ {}", typePrise);
 
-            if (!skipCheck && typePrise == TypePrise.SOL && !io.presencePriseBras()) {
+            if (!skipCheck && typePrise == TypePrise.SOL && !io.presencePriseBras(true)) {
                 log.warn("Prise impossible, rien à prendre");
                 return false;
             }
@@ -198,11 +198,11 @@ public class BrasService extends BrasServiceInternal {
             ThreadUtils.sleep(config.i2cReadTimeMs());
 
             boolean ok = false;
-            if (io.presenceStock(indexStock)) {
+            if (io.presenceStock(indexStock, true)) {
                 // cas pourri ou le précédent stockage c'est mal passé
                 // grace a ce stockage, l'échantillon d'avant c'est remis en place
                 // il faut donc le compter
-                if (indexStock < 5 && io.presenceStock(indexStock + 1)) {
+                if (indexStock < 5 && io.presenceStock(indexStock + 1, false)) {
                     CouleurEchantillon couleur1 = couleurPrecedente != null ? couleurPrecedente : CouleurEchantillon.INCONNU;
                     log.warn("Prise en compte de l'échantillon {} précédent mal stocké", couleur1);
                     rs.stockage(couleur1);
@@ -376,10 +376,10 @@ public class BrasService extends BrasServiceInternal {
      */
     public void updateStock() {
         for (int i = 0; i < rs.stock().length; i++) {
-            if (io.presenceStock(i) && rs.stock()[i] == null) {
+            if (io.presenceStock(i, false) && rs.stock()[i] == null) {
                 log.warn("Nouvel échantillon détecté dans le stock {}", (i + 1));
                 rs.stock()[i] = CouleurEchantillon.INCONNU; // FIXME : Réordonner le stock
-            } else if (!io.presenceStock(i) && rs.stock()[i] != null) {
+            } else if (!io.presenceStock(i, true) && rs.stock()[i] != null) {
                 log.warn("échantillon perdu dans le stock {}", (i + 1));
                 rs.stock()[i] = null;
             }

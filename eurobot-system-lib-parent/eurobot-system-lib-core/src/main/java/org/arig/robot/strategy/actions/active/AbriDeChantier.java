@@ -214,7 +214,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
                 int nbTry = 5;
                 do {
                     commonServosService.fourcheStatuetteFerme(true);
-                    if (ThreadUtils.waitUntil(commonIOService::presenceStatuette, 100, 1000)) {
+                    if (ThreadUtils.waitUntil(() -> commonIOService.presenceStatuette(true), 100, 1000)) {
                         log.info("Youpi ! On a trouvé la statuette");
                         group.statuettePris();
                         break;
