@@ -18,7 +18,7 @@ public class DistributeurCommunEquipe extends AbstractPriseDistributeurCommun {
 
     @Override
     public List<String> blockingActions() {
-        return Collections.singletonList(EurobotConfig.ACTION_PRISE_DISTRIB_COMMUN_ADVERSE;
+        return Collections.singletonList(EurobotConfig.ACTION_PRISE_DISTRIB_COMMUN_ADVERSE);
     }
 
     @Override
