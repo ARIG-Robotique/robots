@@ -102,8 +102,8 @@ public class OdinCommonContext {
 
     @Bean
     public IAsservissementPolaire asservissement() {
-        LimiterFilter limiterMoteurGauche = new LimiterFilter(0d, 4095d, LimiterType.MIRROR);
-        LimiterFilter limiterMoteurDroit = new LimiterFilter(0d, 4095d, LimiterType.MIRROR);
+        LimiterFilter limiterMoteurGauche = new LimiterFilter(100d, 4095d, LimiterType.MIRROR);
+        LimiterFilter limiterMoteurDroit = new LimiterFilter(100d, 4095d, LimiterType.MIRROR);
         return new AsservissementPolaireDistanceOrientation(limiterMoteurGauche, limiterMoteurDroit);
     }
 

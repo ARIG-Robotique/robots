@@ -103,14 +103,8 @@ public class NerellCommonContext {
 
     @Bean
     public IAsservissementPolaire asservissement() {
-        // Positive Min moteur Gauche : 102
-        // Negative Min moteur Gauche : -37
-        LimiterFilter limiterMoteurGauche = new LimiterFilter(35d, 4095d, LimiterType.MIRROR);
-
-        // Positive Min moteur Droit : 93
-        // Negative Min moteur Droit : -78
-        LimiterFilter limiterMoteurDroit = new LimiterFilter(35d, 4095d, LimiterType.MIRROR);
-
+        LimiterFilter limiterMoteurGauche = new LimiterFilter(100d, 4095d, LimiterType.MIRROR);
+        LimiterFilter limiterMoteurDroit = new LimiterFilter(100d, 4095d, LimiterType.MIRROR);
         return new AsservissementPolaireDistanceOrientation(limiterMoteurGauche, limiterMoteurDroit);
     }
 
