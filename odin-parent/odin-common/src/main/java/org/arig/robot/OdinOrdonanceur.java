@@ -119,8 +119,10 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         brasService.setBrasHaut(PositionBras.HORIZONTAL);
         brasService.setBrasBas(PositionBras.HORIZONTAL);
 
-        odinServosService.langueOuvert(true);
-        odinServosService.pousseRepliquePoussette(false);
+        if (!odinRobotStatus.repliqueDepose()) {
+            odinServosService.langueOuvert(true);
+            odinServosService.pousseRepliquePoussette(false);
+        }
 
         while (io.tirette()) {
             ThreadUtils.sleep(1000);

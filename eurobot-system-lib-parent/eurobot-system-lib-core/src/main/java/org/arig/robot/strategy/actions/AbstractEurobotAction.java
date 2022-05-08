@@ -68,6 +68,9 @@ public abstract class AbstractEurobotAction extends AbstractAction {
             log.warn("RECALAGE X REQUIS (diff > 10 mm) : xRobot = {} mm ; xReel = {} mm",
                     conv.pulseToMm(robotX), realXmm);
             position.getPt().setX(realX);
+        } else {
+            log.info("Recalage X inutile : xRobot = {} mm ; xReel = {} mm",
+                    conv.pulseToMm(robotX), realXmm);
         }
     }
 
@@ -78,6 +81,9 @@ public abstract class AbstractEurobotAction extends AbstractAction {
             log.warn("RECALAGE Y REQUIS (diff > 10 mm) : yRobot = {} mm ; yReel = {} mm",
                     conv.pulseToMm(robotY), realYmm);
             position.getPt().setY(realY);
+        } else {
+            log.info("Recalage Y inutile : yRobot = {} mm ; yReel = {} mm",
+                    conv.pulseToMm(robotY), realYmm);
         }
     }
 
@@ -88,6 +94,9 @@ public abstract class AbstractEurobotAction extends AbstractAction {
             log.warn("RECALAGE ANGLE REQUIS (> 2°) : aRobot = {} ; aReel = {}",
                     conv.pulseToDeg(robotA), realAdeg);
             position.setAngle(realA);
+        } else {
+            log.info("Recalage angle inutile : aRobot = {} ; aReel = {}",
+                    conv.pulseToDeg(robotA), realAdeg);
         }
     }
 }
