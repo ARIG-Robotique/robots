@@ -6,6 +6,8 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.RobotName;
+import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
@@ -14,6 +16,8 @@ import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -53,6 +57,12 @@ public class SiteFouille extends AbstractEurobotAction {
 
     @Override
     public int order() {
+        if (rs.strategy() == Strategy.BASIC && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
+            // Si c'est Odin et que la strat est la basique avec deux robots
+            // C'est la première action
+            return 1000;
+        }
+
         int stock = rs.stockDisponible();
         return Math.min(stock, 3) * EurobotConfig.PTS_DEPOSE_PRISE + tableUtils.alterOrder(entryPoint());
     }
@@ -61,6 +71,11 @@ public class SiteFouille extends AbstractEurobotAction {
     public boolean isValid() {
         return !rs.siteDeFouillePris() && rs.stockDisponible() > 0
                 && rs.getRemainingTime() > EurobotConfig.invalidPriseEchantillonRemainingTime;
+    }
+
+    @Override
+    public List<String> blockingActions() {
+        return Collections.singletonList(EurobotConfig.ACTION_DECOUVERTE_CARRE_FOUILLE);
     }
 
     @Override

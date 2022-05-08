@@ -1,5 +1,6 @@
 package org.arig.robot.strategy.actions.active;
 
+import draw.EditorUI;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
@@ -15,9 +16,14 @@ import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.arig.robot.system.capteurs.CarreFouilleReader;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.List;
 
 @Slf4j
-public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEurobotAction {
+@Component
+public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 
     private static final int WAIT_READ_OHMMETRE_MS = 1000;
     private static final int WAIT_READ_BASCULE_MS = 120;
@@ -56,6 +62,11 @@ public abstract class AbstractDecouverteCarreDeFouilleAction extends AbstractEur
     @Override
     public boolean isValid() {
         return isTimeValid() && remainingTimeValid() && !rs.carresDeFouilleComplete() && cf() != null;
+    }
+
+    @Override
+    public List<String> blockingActions() {
+        return Collections.singletonList(EurobotConfig.ACTION_PRISE_SITE_FOUILLE_EQUIPE);
     }
 
     @Override

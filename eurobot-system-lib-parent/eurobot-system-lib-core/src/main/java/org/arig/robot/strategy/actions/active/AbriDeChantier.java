@@ -251,6 +251,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
                 commonServosService.pousseRepliqueFerme(false);
             }
 
+            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.avanceMM(100);
 
         } catch (NoPathFoundException | AvoidingException | ExecutionException | InterruptedException e) {

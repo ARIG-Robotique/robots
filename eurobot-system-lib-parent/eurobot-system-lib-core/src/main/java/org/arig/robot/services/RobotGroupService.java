@@ -102,6 +102,15 @@ public class RobotGroupService implements RobotGroup.Handler {
             case DISTRIBUTEUR_COMMUN_ADVERSE_PRIS:
                 rs.distributeurCommunAdversePris(true);
                 break;
+            case DISTRIBUTEUR_EQUIPE_BLOQUE:
+                rs.distributeurEquipeBloque(true);
+                break;
+            case DISTRIBUTEUR_COMMUN_EQUIPE_BLOQUE:
+                rs.distributeurCommunEquipeBloque(true);
+                break;
+            case DISTRIBUTEUR_COMMUN_ADVERSE_BLOQUE:
+                rs.distributeurCommunAdverseBloque(true);
+                break;
             case SITE_ECHANTILLON_PRIS:
                 rs.siteEchantillonPris(true);
                 break;

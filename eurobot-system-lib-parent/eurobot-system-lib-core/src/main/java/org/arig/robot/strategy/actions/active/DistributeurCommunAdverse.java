@@ -5,12 +5,20 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.Team;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.List;
+
 @Component
 public class DistributeurCommunAdverse extends AbstractPriseDistributeurCommun {
 
     @Override
     public String name() {
         return EurobotConfig.ACTION_PRISE_DISTRIB_COMMUN_ADVERSE;
+    }
+
+    @Override
+    public List<String> blockingActions() {
+        return Collections.singletonList(EurobotConfig.ACTION_PRISE_DISTRIB_COMMUN_EQUIPE);
     }
 
     @Override

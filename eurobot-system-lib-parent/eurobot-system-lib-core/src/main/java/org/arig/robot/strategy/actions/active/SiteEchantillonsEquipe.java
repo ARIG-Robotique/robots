@@ -134,6 +134,7 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
         } finally {
             firstAction = false;
             refreshCompleted();
+            rs.disableCalageBordure();
         }
     }
 
@@ -148,7 +149,7 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
 
         mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
         rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON);
-        mv.avanceMM(ECHANTILLON_SIZE / 2.0);
+        mv.avanceMM(ECHANTILLON_SIZE);
 
         if (previousTask != null) previousTask.get();
 

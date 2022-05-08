@@ -8,14 +8,24 @@ import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
-import org.arig.robot.model.*;
+import org.arig.robot.model.InitStep;
+import org.arig.robot.model.OdinRobotStatus;
+import org.arig.robot.model.Point;
+import org.arig.robot.model.Strategy;
+import org.arig.robot.model.Team;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.TypeCalage;
-import org.arig.robot.services.*;
+import org.arig.robot.services.BrasService;
+import org.arig.robot.services.OdinEcranService;
+import org.arig.robot.services.OdinIOService;
+import org.arig.robot.services.OdinServosService;
+import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.system.capteurs.CarreFouilleReader;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
+
+import java.awt.geom.Rectangle2D;
 
 @Slf4j
 public class OdinOrdonanceur extends AbstractOrdonanceur {
@@ -67,7 +77,12 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void addDeadZones() {
-        // Nope
+        // campement
+        if (odinRobotStatus.team() == Team.JAUNE) {
+            tableUtils.addPersistentDeadZone(new Rectangle2D.Double(0, 1000, 400, 600));
+        } else {
+            tableUtils.addPersistentDeadZone(new Rectangle2D.Double(2600, 1000, 400, 600));
+        }
     }
 
     @Override
