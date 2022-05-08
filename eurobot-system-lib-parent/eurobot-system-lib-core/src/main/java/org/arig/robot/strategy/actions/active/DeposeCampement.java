@@ -13,6 +13,8 @@ import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Slf4j
 @Component
 public class DeposeCampement extends AbstractEurobotAction {
@@ -25,13 +27,20 @@ public class DeposeCampement extends AbstractEurobotAction {
     private BrasService bras;
 
     @Override
+    public List<String> blockingActions() {
+        return List.of(EurobotConfig.ACTION_POUSSETTE_CAMPEMENT);
+    }
+
+    @Override
     public String name() {
         return EurobotConfig.ACTION_DEPOSE_CAMPEMENT;
     }
 
     @Override
     public boolean isValid() {
-        return !rs.poussetteCampementFaite() && !rs.campementComplet() && rs.stockTaille() > 0;
+        return !rs.poussetteCampementFaite() && !rs.campementComplet()
+                && (rs.stockTaille() == 6 || (rs.stockTaille() > 0 && rs.getRemainingTime() < 30000))
+                && isTimeValid() && remainingTimeValid();
     }
 
     @Override

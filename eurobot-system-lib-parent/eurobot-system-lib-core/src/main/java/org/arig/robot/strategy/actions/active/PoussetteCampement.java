@@ -9,12 +9,19 @@ import org.arig.robot.model.Team;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Slf4j
 @Component
 public class PoussetteCampement extends AbstractEurobotAction {
 
     protected final int X = 560;
     protected final int Y = 876;
+
+    @Override
+    public List<String> blockingActions() {
+        return List.of(EurobotConfig.ACTION_DEPOSE_CAMPEMENT);
+    }
 
     @Override
     public String name() {
