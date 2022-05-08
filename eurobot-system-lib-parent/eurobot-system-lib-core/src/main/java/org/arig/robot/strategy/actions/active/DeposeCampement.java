@@ -8,11 +8,13 @@ import org.arig.robot.model.Campement;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BrasService;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -28,7 +30,7 @@ public class DeposeCampement extends AbstractEurobotAction {
 
     @Override
     public List<String> blockingActions() {
-        return List.of(EurobotConfig.ACTION_POUSSETTE_CAMPEMENT);
+        return Collections.singletonList(EurobotConfig.ACTION_POUSSETTE_CAMPEMENT);
     }
 
     @Override
@@ -39,7 +41,7 @@ public class DeposeCampement extends AbstractEurobotAction {
     @Override
     public boolean isValid() {
         return !rs.poussetteCampementFaite() && !rs.campementComplet()
-                && (rs.stockTaille() == 6 || (rs.stockTaille() > 0 && rs.getRemainingTime() < 30000))
+                && (rs.stockTaille() == 6 || (rs.stockTaille() > 0 && rs.getRemainingTime() < 50000))
                 && isTimeValid() && remainingTimeValid();
     }
 
@@ -128,7 +130,20 @@ public class DeposeCampement extends AbstractEurobotAction {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry);
 
-            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
+            if (rs.tailleCampementRouge() == 0) {
+                rs.enableCalageBordure(TypeCalage.AVANT_BAS);
+                mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
+                mv.avanceMM(X - robotConfig.distanceCalageAvant() - 10);
+                mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
+                rs.enableCalageBordure(TypeCalage.AVANT_BAS);
+                mv.avanceMMSansAngle(100);
+                checkRecalageXmm(rs.team() == Team.JAUNE ? robotConfig.distanceCalageAvant() : EurobotConfig.tableWidth - robotConfig.distanceCalageAvant());
+                checkRecalageAngleDeg(rs.team() == Team.JAUNE ? 180 : 0);
+                mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+                mv.gotoPoint(entry);
+            }
+
+            //mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
             rs.disableAvoidance();
 
             bras.initDepose(BrasService.TypeDepose.SOL);
@@ -154,8 +169,9 @@ public class DeposeCampement extends AbstractEurobotAction {
                     if (position != null) {
                         mv.gotoPoint(entry);
                     }
+                    position = newPosition;
 
-                    switch (newPosition) {
+                    switch (position) {
                         case ROUGE:
                             mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
                             break;
@@ -166,9 +182,7 @@ public class DeposeCampement extends AbstractEurobotAction {
                             mv.gotoOrientationDeg(90);
                             break;
                     }
-                    mv.avanceMM(OFFSET);
-
-                    position = newPosition;
+                    mv.avanceMM(position == CouleurEchantillon.ROUGE ? OFFSET - 10 : OFFSET);
                 }
 
 
@@ -193,6 +207,7 @@ public class DeposeCampement extends AbstractEurobotAction {
 
             mv.gotoPoint(entry);
             bras.finalizeDepose();
+            complete(true);
 
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());

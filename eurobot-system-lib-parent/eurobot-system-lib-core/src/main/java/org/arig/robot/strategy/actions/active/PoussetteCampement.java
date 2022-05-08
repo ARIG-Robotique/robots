@@ -9,6 +9,7 @@ import org.arig.robot.model.Team;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -20,7 +21,7 @@ public class PoussetteCampement extends AbstractEurobotAction {
 
     @Override
     public List<String> blockingActions() {
-        return List.of(EurobotConfig.ACTION_DEPOSE_CAMPEMENT);
+        return Collections.singletonList(EurobotConfig.ACTION_DEPOSE_CAMPEMENT);
     }
 
     @Override
@@ -59,10 +60,10 @@ public class PoussetteCampement extends AbstractEurobotAction {
 
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.pathTo(entry);
-            mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -32 : -122);
+            mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -32 : -148);
+            mv.reculeMM(100);
+            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
             mv.reculeMM(150);
-            mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
-            mv.reculeMM(101);
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             mv.gotoPoint(entry);
 
