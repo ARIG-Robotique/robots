@@ -81,10 +81,16 @@ public class SiteFouille extends AbstractEurobotAction {
 
             mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
 
-            doPrise(!isReverse ? new Point(getX(ENTRY_X_2), Y_1) : new Point(getX(ENTRY_X_1), Y_1));
+            int prises = doPrise(0, !isReverse ? new Point(getX(ENTRY_X_2), Y_1) : new Point(getX(ENTRY_X_1), Y_1));
             group.siteDeFouillePris();
-            doPrise(!isReverse ? new Point(getX(ENTRY_X_2), Y_2) : new Point(getX(ENTRY_X_1), Y_2));
-            doPrise(!isReverse ? new Point(getX(ENTRY_X_1), Y_2) : new Point(getX(ENTRY_X_2), Y_2));
+            if (prises < 3) {
+                prises = doPrise(prises, !isReverse ? new Point(getX(ENTRY_X_2), Y_2) : new Point(getX(ENTRY_X_1), Y_2));
+            }
+            if (prises < 3) {
+                doPrise(prises, !isReverse ? new Point(getX(ENTRY_X_1), Y_2) : new Point(getX(ENTRY_X_2), Y_2));
+            }
+
+            complete(true);
 
         } catch (NoPathFoundException | AvoidingException | InterruptedException | ExecutionException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
@@ -93,7 +99,7 @@ public class SiteFouille extends AbstractEurobotAction {
         }
     }
 
-    private void doPrise(Point target) throws AvoidingException, ExecutionException, InterruptedException {
+    private int doPrise(int prises, Point target) throws AvoidingException, ExecutionException, InterruptedException {
         CompletableFuture<?> task = null;
 
         while (true) {
@@ -109,6 +115,10 @@ public class SiteFouille extends AbstractEurobotAction {
                 if (bras.processPrise(BrasService.TypePrise.SOL).get()) {
                     task = bras.stockagePrise(BrasService.TypePrise.SOL, CouleurEchantillon.INCONNU)
                             .thenCompose((Boolean) -> bras.finalizePrise());
+                    prises++;
+                    if (prises == 3) {
+                        break;
+                    }
                 } else {
                     task = bras.finalizePrise();
                 }
@@ -118,6 +128,8 @@ public class SiteFouille extends AbstractEurobotAction {
         }
 
         if (task != null) task.get();
+
+        return prises;
     }
 
 }
