@@ -144,7 +144,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
                 if (firstAction){
                     firstAction = false;
-                    mv.pathTo(entryEchantillonDistributeur(), GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                    mv.gotoPoint(entryEchantillonDistributeur(), GotoOption.SANS_ORIENTATION);
                 } else {
                     mv.pathTo(entryEchantillonDistributeur());
                 }
