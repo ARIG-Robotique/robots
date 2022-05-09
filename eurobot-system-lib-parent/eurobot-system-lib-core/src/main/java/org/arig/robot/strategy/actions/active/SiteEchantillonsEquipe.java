@@ -105,8 +105,8 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
             CompletableFuture<Boolean> task = null;
             if (firstAction && echantillonEntry == CouleurEchantillon.ROCHER_VERT) {
                 task = priseEchantillon(task, false, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
-                task = priseEchantillon(task, false, true, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
                 task = priseEchantillon(task, false, true, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
+                task = priseEchantillon(task, false, true, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
             } else {
                 if (echantillonEntry == CouleurEchantillon.ROCHER_ROUGE) {
                     // De bas en haut
