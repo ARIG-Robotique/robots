@@ -2,6 +2,7 @@ package org.arig.robot.strategy.actions.active;
 
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,24 @@ public class DistributeurCommunAdverse extends AbstractPriseDistributeurCommun {
     @Override
     public List<String> blockingActions() {
         return Collections.singletonList(EurobotConfig.ACTION_PRISE_DISTRIB_COMMUN_EQUIPE);
+    }
+
+    @Override
+    public boolean isValid() {
+        if (rs.strategy() == Strategy.BASIC){
+            return false;
+        }
+
+        return super.isValid();
+    }
+
+    @Override
+    public void refreshCompleted() {
+        if (rs.strategy() == Strategy.BASIC){
+            complete();
+            return;
+        }
+        super.refreshCompleted();
     }
 
     @Override
