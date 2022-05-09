@@ -145,14 +145,14 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
         }
         final Point dest = tableUtils.eloigner(pointEchantillon, -robotConfig.distanceCalageAvant() - (ECHANTILLON_SIZE / 4.0));
         if (path) {
-            mv.pathTo(dest);
+            mv.pathTo(dest, GotoOption.AVANT);
         } else {
             if (!needAlignFront) {
                 // Avec orientation
-                mv.gotoPoint(dest);
+                mv.gotoPoint(dest, GotoOption.AVANT);
             } else {
                 // Sans orientation, c'est déjà fait
-                mv.gotoPoint(dest, GotoOption.SANS_ORIENTATION);
+                mv.gotoPoint(dest, GotoOption.AVANT, GotoOption.SANS_ORIENTATION);
             }
         }
 
