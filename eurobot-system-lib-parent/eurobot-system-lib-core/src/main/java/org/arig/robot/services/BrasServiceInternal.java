@@ -228,6 +228,8 @@ public abstract class BrasServiceInternal {
     }
 
     private AnglesBras calculerAngles(ConfigBras configBras, int x, int y, int a, boolean enableLog, Boolean preferA1Min) {
+        boolean first = preferA1Min == null;
+
         if (preferA1Min == null) {
             preferA1Min = configBras.preferA1Min;
         }
@@ -285,8 +287,8 @@ public abstract class BrasServiceInternal {
         result.a3Error = result.a3 < configBras.a3Min || result.a3 > configBras.a3Max;
 
         // si l'inversion entraine une erreur, on essaye sans inversion
-        if (preferA1Min && result.isError()) {
-            AnglesBras newResult = calculerAngles(configBras, x, y, a, false, false);
+        if (first && result.isError()) {
+            AnglesBras newResult = calculerAngles(configBras, x, y, a, false, !preferA1Min);
             if (newResult != null && !newResult.isError()) {
                 return newResult;
             }
