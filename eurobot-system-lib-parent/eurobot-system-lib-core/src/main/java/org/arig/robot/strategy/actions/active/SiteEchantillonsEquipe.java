@@ -143,7 +143,7 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
         if (needAlignFront) {
             mv.alignFrontTo(pointEchantillon);
         }
-        final Point dest = tableUtils.eloigner(pointEchantillon, -robotConfig.distanceCalageAvant() - (ECHANTILLON_SIZE / 4.0));
+        final Point dest = tableUtils.eloigner(pointEchantillon, -robotConfig.distanceCalageAvant() - (ECHANTILLON_SIZE / 3.0));
         if (path) {
             mv.pathTo(dest, GotoOption.AVANT);
         } else {
@@ -158,7 +158,7 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
 
         mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
         rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON);
-        mv.avanceMM(ECHANTILLON_SIZE * 2);
+        mv.avanceMM(ECHANTILLON_SIZE / 2);
 
         if (previousTask != null) previousTask.get();
 
