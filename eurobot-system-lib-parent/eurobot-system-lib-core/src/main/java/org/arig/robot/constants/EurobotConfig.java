@@ -46,6 +46,8 @@ public interface EurobotConfig {
     // Actions d'échappement
     String ACTION_ECHAPPEMENT_COIN_TABLE_PREFIX = "Echappement coin de table ";
 
+    String ACTION_ECHAPPEMENT_CENTRE_TABLE_PREFIX = "Echappement centre de table ";
+
     // Actions temporaire sans bras
     String TMP_ACTION_POUSSETTE_SITE_ECHANTILLONS_EQUIPE = "Poussette site echantillons équipe";
 
