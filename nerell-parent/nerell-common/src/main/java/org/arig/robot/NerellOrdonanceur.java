@@ -137,6 +137,11 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         }
 
         try {
+            nerellRobotStatus.ventouseBas(null);
+            nerellRobotStatus.ventouseHaut(null);
+            while(nerellRobotStatus.stockTaille() > 0){
+                nerellRobotStatus.destockage();
+            }
             carreFouilleReader.printStateVentouse(null, null);
             carreFouilleReader.printStateStock(null, null, null, null, null, null);
         } catch (Exception e) {

@@ -144,6 +144,11 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         }
 
         try {
+            odinRobotStatus.ventouseBas(null);
+            odinRobotStatus.ventouseHaut(null);
+            while(odinRobotStatus.stockTaille() > 0){
+                odinRobotStatus.destockage();
+            }
             carreFouilleReader.printStateVentouse(null, null);
             carreFouilleReader.printStateStock(null, null, null, null, null, null);
         } catch (Exception e) {
