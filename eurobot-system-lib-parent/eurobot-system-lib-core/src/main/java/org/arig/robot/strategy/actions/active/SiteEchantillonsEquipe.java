@@ -104,20 +104,20 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
             CompletableFuture<Boolean> task = null;
             if (firstAction && echantillonEntry == CouleurEchantillon.ROCHER_VERT) {
-                task = priseEchantillon(task, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT, GotoOption.SANS_ORIENTATION, GotoOption.AVANT);
-                task = priseEchantillon(task, false, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE, GotoOption.AVANT);
-                task = priseEchantillon(task, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU, GotoOption.AVANT);
+                task = priseEchantillon(task, false, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
+                task = priseEchantillon(task, false, true, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
+                task = priseEchantillon(task, false, true, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
             } else {
                 if (echantillonEntry == CouleurEchantillon.ROCHER_ROUGE) {
                     // De bas en haut
-                    task = priseEchantillon(task, true, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE, GotoOption.AVANT);
-                    task = priseEchantillon(task, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT, GotoOption.AVANT);
-                    task = priseEchantillon(task, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU, GotoOption.AVANT);
+                    task = priseEchantillon(task, true, false, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
+                    task = priseEchantillon(task, false, true, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
+                    task = priseEchantillon(task, false, true, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
                 } else {
                     // De haut en bas
-                    task = priseEchantillon(task, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU, GotoOption.AVANT);
-                    task = priseEchantillon(task, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT, GotoOption.AVANT);
-                    task = priseEchantillon(task, false, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE, GotoOption.AVANT);
+                    task = priseEchantillon(task, true, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
+                    task = priseEchantillon(task, false, true, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
+                    task = priseEchantillon(task, false, true, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
                 }
             }
 
@@ -138,13 +138,22 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
         }
     }
 
-    private CompletableFuture<Boolean> priseEchantillon(CompletableFuture<Boolean> previousTask, boolean path, Point pointEchantillon, CouleurEchantillon couleur, GotoOption... gotoOptions) throws AvoidingException, NoPathFoundException, ExecutionException, InterruptedException {
+    private CompletableFuture<Boolean> priseEchantillon(CompletableFuture<Boolean> previousTask, boolean path, boolean needAlignFront, Point pointEchantillon, CouleurEchantillon couleur) throws AvoidingException, NoPathFoundException, ExecutionException, InterruptedException {
         mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+        if (needAlignFront) {
+            mv.alignFrontTo(pointEchantillon);
+        }
         final Point dest = tableUtils.eloigner(pointEchantillon, -robotConfig.distanceCalageAvant() - (ECHANTILLON_SIZE / 4.0));
         if (path) {
-            mv.pathTo(dest, gotoOptions);
+            mv.pathTo(dest);
         } else {
-            mv.gotoPoint(dest, gotoOptions);
+            if (!needAlignFront) {
+                // Avec orientation
+                mv.gotoPoint(dest);
+            } else {
+                // Sans orientation, c'est déjà fait
+                mv.gotoPoint(dest, GotoOption.SANS_ORIENTATION);
+            }
         }
 
         mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
