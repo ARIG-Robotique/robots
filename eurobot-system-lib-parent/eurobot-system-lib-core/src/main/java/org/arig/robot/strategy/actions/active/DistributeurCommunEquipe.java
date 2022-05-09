@@ -2,6 +2,8 @@ package org.arig.robot.strategy.actions.active;
 
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.RobotName;
+import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,14 @@ public class DistributeurCommunEquipe extends AbstractPriseDistributeurCommun {
 
     @Override
     public int order() {
+        if (rs.strategy() == Strategy.BASIC && (
+                (robotName.id() == RobotName.RobotIdentification.NERELL) || (!rs.twoRobots() && robotName.id() == RobotName.RobotIdentification.ODIN)
+        )) {
+            // Si c'est Nerell et que la strat est la basique.
+            // Ou si c'est Odin et qu'il n'y a qu'un seul robot en strat basique.
+            // C'est la seconde action
+            return 500;
+        }
         return super.order() + 3; // 3 points par prise
     }
 

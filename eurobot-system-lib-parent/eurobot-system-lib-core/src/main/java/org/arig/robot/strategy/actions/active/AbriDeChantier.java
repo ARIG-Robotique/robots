@@ -4,9 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.CouleurEchantillon;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Team;
+import org.arig.robot.model.*;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
@@ -27,6 +25,8 @@ public class AbriDeChantier extends AbstractEurobotAction {
     private int nbEchantillons = 0;
     private int nbEchantillonsRemaining = 0;
 
+    boolean firstAction = false;
+
     @Autowired
     private BrasService brasService;
 
@@ -40,6 +40,13 @@ public class AbriDeChantier extends AbstractEurobotAction {
 
     @Override
     public int order() {
+        if (rs.strategy() == Strategy.BASIC && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
+            // Si c'est Odin et que la strat est la basique avec deux robots
+            // C'est la première action
+            firstAction = true;
+            return 1000;
+        }
+
         refreshConditions();
 
         int points = 0;
@@ -51,11 +58,11 @@ public class AbriDeChantier extends AbstractEurobotAction {
         }
         if (!rs.echantillonAbriChantierCarreFouillePris()) {
             points += 1; // 1 point de plus si on prend l'échantillon
-            points += 5; // 5 points de plus si on ne prend pas l'échantillon en stock, on le pousse sous l'abri
+            points += 5; // 5 points de plus si on le pousse sous l'abri
         }
         if (!rs.echantillonAbriChantierDistributeurPris()) {
             points += 1; // 1 point de plus si on prend l'échantillon
-            points += 5; // 5 points de plus si on ne prend pas l'échantillon en stock, on le pousse sous l'abri
+            points += 5; // 5 points de plus si on le pousse sous l'abri
         }
         return points + tableUtils.alterOrder(entryPoint());
     }
@@ -127,6 +134,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
     public void execute() {
         refreshConditions();
         nbEchantillonsRemaining = nbEchantillons;
+
         try {
             boolean priseHaut = false;
             boolean priseBas = false;
@@ -134,7 +142,12 @@ public class AbriDeChantier extends AbstractEurobotAction {
 
             if (!rs.echantillonAbriChantierDistributeurPris()) {
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-                mv.pathTo(entryEchantillonDistributeur());
+                if (firstAction){
+                    firstAction = false;
+                    mv.pathTo(entryEchantillonDistributeur(), GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                } else {
+                    mv.pathTo(entryEchantillonDistributeur());
+                }
                 mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -135 : -45);
                 task = processingPriseBordureSafe(CouleurEchantillon.ROCHER_BLEU, group::echantillonAbriChantierDistributeurPris);
             }

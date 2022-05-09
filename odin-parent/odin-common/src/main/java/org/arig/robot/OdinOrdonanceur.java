@@ -274,7 +274,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                         groupService.waitInitStep(InitStep.NERELL_CALAGE_TERMINE); // Attente Nerell calé
                         odinEcranService.displayMessage("Mise en place");
                         mv.gotoPoint(getX(240), 1130);
-                        mv.gotoOrientationDeg(-90);
+                        mv.alignFrontTo(getX(345), 537); // Entry point abri de chantier
                     } else {
                         odinEcranService.displayMessage("Mise en place");
                         mv.gotoPoint(getX(270), 1430);

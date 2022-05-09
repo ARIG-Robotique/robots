@@ -57,12 +57,6 @@ public class SiteFouille extends AbstractEurobotAction {
 
     @Override
     public int order() {
-        if (rs.strategy() == Strategy.BASIC && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
-            // Si c'est Odin et que la strat est la basique avec deux robots
-            // C'est la première action
-            return 1000;
-        }
-
         int stock = rs.stockDisponible();
         return Math.min(stock, 3) * EurobotConfig.PTS_DEPOSE_PRISE + tableUtils.alterOrder(entryPoint());
     }
