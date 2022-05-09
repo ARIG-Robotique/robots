@@ -80,7 +80,8 @@ public class DistributeurEquipe extends AbstractEurobotAction {
             rs.enableCalageBordure(TypeCalage.AVANT_BAS);
             mv.avanceMM(100);
 
-            if (!commonIOService.calageAvantBasDroit() || !commonIOService.calageAvantBasGauche()) {
+            //if (!commonIOService.calageAvantBasDroit() || !commonIOService.calageAvantBasGauche()) {
+            if (!rs.calageCompleted().contains(TypeCalage.AVANT_BAS)) {
                 log.warn("Mauvaise position Y pour {}", name());
                 updateValidTime(); // FIXME on devrait requérir un callage avant de recommencer
                 rs.enableAvoidance();
