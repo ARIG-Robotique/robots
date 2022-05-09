@@ -158,7 +158,7 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
 
         mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
         rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON);
-        mv.avanceMM(ECHANTILLON_SIZE);
+        mv.avanceMM(ECHANTILLON_SIZE * 2);
 
         if (previousTask != null) previousTask.get();
 
