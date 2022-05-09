@@ -54,6 +54,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
     @Override
     public boolean isValid() {
         return isTimeValid() && remainingTimeBeforeRetourSiteValid() && !rs.galerieComplete()
+                && rs.getRemainingTime() >= (rs.stockTaille() * 5000L) // 5s par échantillon environ
                 && (rs.stockTaille() >= 4 || (rs.stockTaille() > 0 && rs.getRemainingTime() < EurobotConfig.validDeposeIfElementInStockRemainingTime));
     }
 
