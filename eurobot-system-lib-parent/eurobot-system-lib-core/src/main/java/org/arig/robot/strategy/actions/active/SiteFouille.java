@@ -69,7 +69,8 @@ public class SiteFouille extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return !rs.siteDeFouillePris() && rs.stockDisponible() > 0
+        return isTimeValid() && remainingTimeBeforeRetourSiteValid()
+                && !rs.siteDeFouillePris() && rs.stockDisponible() > 0
                 && rs.getRemainingTime() > EurobotConfig.invalidPriseEchantillonRemainingTime;
     }
 

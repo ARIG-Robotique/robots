@@ -49,7 +49,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
         // Valid si la vitrine n'est pas encore activé dans les 30 dernières secondes de match
         boolean validVitrine = !rs.vitrineActive() && rs.getRemainingTime() < EurobotConfig.validActivationVitrineRemainingTime;
 
-        return (validStatuette || validVitrine) && isTimeValid() && remainingTimeValid();
+        return isTimeValid() && remainingTimeBeforeRetourSiteValid() && (validStatuette || validVitrine);
     }
 
     @Override

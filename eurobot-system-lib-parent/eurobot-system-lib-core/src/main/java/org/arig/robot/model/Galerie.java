@@ -120,6 +120,7 @@ public class Galerie {
             } else if (vert.size() < MAX_DEPOSE_VERT) {
                 return new GaleriePosition(Periode.VERT, Etage.CENTRE);
             } else {
+                // Ne peut pas arriver normalement
                 return null;
             }
         }

@@ -60,7 +60,7 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && remainingTimeValid() && !rs.carresDeFouilleComplete() && cf() != null;
+        return isTimeValid() && remainingTimeBeforeRetourSiteValid() && !rs.carresDeFouilleComplete() && cf() != null;
     }
 
     @Override

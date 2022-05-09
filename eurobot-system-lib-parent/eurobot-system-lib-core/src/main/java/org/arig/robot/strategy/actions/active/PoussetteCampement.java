@@ -31,8 +31,9 @@ public class PoussetteCampement extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return !rs.poussetteCampementFaite() && rs.tailleCampementVertTemp() > 0
-                && (rs.campementComplet() || rs.getRemainingTime() < 20000);
+        return isTimeValid() && remainingTimeBeforeRetourSiteValid() &&
+                !rs.poussetteCampementFaite() && rs.tailleCampementVertTemp() > 0
+                && (rs.campementComplet() || rs.getRemainingTime() < EurobotConfig.validPoussetteRemainingTime);
     }
 
     @Override

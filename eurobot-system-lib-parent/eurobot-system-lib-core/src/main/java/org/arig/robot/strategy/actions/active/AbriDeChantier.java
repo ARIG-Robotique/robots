@@ -83,7 +83,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
 
         // Si on stock, il faut valid stock et echantillons
         return (validStatuette || validReplique || validEchantillons)
-                && isTimeValid() && remainingTimeValid() && rs.getRemainingTime() < 60000;
+                && isTimeValid() && remainingTimeBeforeRetourSiteValid();
     }
 
     @Override

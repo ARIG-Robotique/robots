@@ -35,7 +35,7 @@ public class PoussetteSiteEchantillonsEquipe extends AbstractEurobotAction {
         if (rs.twoRobots() && robotName.id() == RobotIdentification.ODIN) {
             return false;
         }
-        return isTimeValid() && remainingTimeValid() && !rs.siteEchantillonPris();
+        return isTimeValid() && remainingTimeBeforeRetourSiteValid() && !rs.siteEchantillonPris();
     }
 
     @Override

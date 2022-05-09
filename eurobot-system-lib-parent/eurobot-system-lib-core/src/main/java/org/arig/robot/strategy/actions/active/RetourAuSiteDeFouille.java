@@ -69,7 +69,7 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return !remainingTimeValid();
+        return !remainingTimeBeforeRetourSiteValid();
     }
 
     @Override

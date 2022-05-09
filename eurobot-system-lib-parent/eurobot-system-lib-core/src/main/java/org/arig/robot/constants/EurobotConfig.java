@@ -19,6 +19,10 @@ public interface EurobotConfig {
 
     int validActivationVitrineRemainingTime = 30000; // Activation vitrine sans statuette
 
+    int validDeposeIfElementInStockRemainingTime = matchTimeMs / 2; // Activation de la dépose si au moins un élément en stock
+
+    int validPoussetteRemainingTime = 20000; // Activation poussette
+
     int invalidPriseEchantillonRemainingTime = 30000;
 
     // Options de match

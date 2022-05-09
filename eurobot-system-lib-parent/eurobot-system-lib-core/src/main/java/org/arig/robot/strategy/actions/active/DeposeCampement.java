@@ -41,8 +41,8 @@ public class DeposeCampement extends AbstractEurobotAction {
     @Override
     public boolean isValid() {
         return !rs.poussetteCampementFaite() && !rs.campementComplet()
-                && (rs.stockTaille() == 6 || (rs.stockTaille() > 0 && rs.getRemainingTime() < 50000))
-                && isTimeValid() && remainingTimeValid();
+                && (rs.stockTaille() >= 4 || (rs.stockTaille() > 0 && rs.getRemainingTime() < EurobotConfig.validDeposeIfElementInStockRemainingTime))
+                && isTimeValid() && remainingTimeBeforeRetourSiteValid();
     }
 
     @Override
