@@ -41,7 +41,6 @@ public class DeposeCampement extends AbstractEurobotAction {
     @Override
     public boolean isValid() {
         return !rs.poussetteCampementFaite() && !rs.campementComplet()
-                && rs.getRemainingTime() >= (rs.stockTaille() * 4000L) // 4s par échantillon environ
                 && (rs.stockTaille() >= 4 || (rs.stockTaille() > 0 && rs.getRemainingTime() < EurobotConfig.validDeposeIfElementInStockRemainingTime))
                 && isTimeValid() && remainingTimeBeforeRetourSiteValid();
     }
@@ -152,7 +151,7 @@ public class DeposeCampement extends AbstractEurobotAction {
             CouleurEchantillon echantillon;
             CouleurEchantillon position = null;
 
-            while ((echantillon = rs.stockFirst()) != null) {
+            while ((echantillon = rs.stockFirst()) != null && remainingTimeBeforeRetourSiteValid()) {
                 // on doit changer de colonne
                 // - la première fois
                 // - si on change de couleur

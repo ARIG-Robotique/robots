@@ -54,7 +54,6 @@ public class DeposeGalerie extends AbstractEurobotAction {
     @Override
     public boolean isValid() {
         return isTimeValid() && remainingTimeBeforeRetourSiteValid() && !rs.galerieComplete()
-                && rs.getRemainingTime() >= (rs.stockTaille() * 5000L) // 5s par échantillon environ
                 && (rs.stockTaille() >= 4 || (rs.stockTaille() > 0 && rs.getRemainingTime() < EurobotConfig.validDeposeIfElementInStockRemainingTime));
     }
 
@@ -158,7 +157,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
                 }
 
                 lastPosition = pos;
-            } while (!rs.galerieComplete() && rs.stockTaille() != 0);
+            } while (!rs.galerieComplete() && rs.stockTaille() != 0 && remainingTimeBeforeRetourSiteValid());
 
             // On se place à la position permettant de tourner le robot pour la prochaine action
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
