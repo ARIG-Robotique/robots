@@ -22,16 +22,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 public abstract class AbstractEurobotAction extends AbstractAction {
 
     @Autowired
-    protected RobotConfig robotConfig;
+    protected RobotConfig config;
 
     @Autowired
     protected RobotName robotName;
 
     @Autowired
-    protected AbstractCommonServosService commonServosService;
+    protected AbstractCommonServosService servos;
 
     @Autowired
-    protected CommonIOService commonIOService;
+    protected CommonIOService io;
 
     @Autowired
     protected TrajectoryManager mv;

@@ -128,19 +128,19 @@ public class DeposeCampement extends AbstractEurobotAction {
         try {
             final Point entry = entryPoint();
 
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.pathTo(entry);
 
             if (rs.tailleCampementRouge() == 0) {
                 rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                 mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
-                mv.avanceMM(X - robotConfig.distanceCalageAvant() - 10);
-                mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
+                mv.avanceMM(X - config.distanceCalageAvant() - 10);
+                mv.setVitesse(config.vitesse(10), config.vitesseOrientation());
                 rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                 mv.avanceMMSansAngle(100);
-                checkRecalageXmm(rs.team() == Team.JAUNE ? robotConfig.distanceCalageAvant() : EurobotConfig.tableWidth - robotConfig.distanceCalageAvant());
+                checkRecalageXmm(rs.team() == Team.JAUNE ? config.distanceCalageAvant() : EurobotConfig.tableWidth - config.distanceCalageAvant());
                 checkRecalageAngleDeg(rs.team() == Team.JAUNE ? 180 : 0);
-                mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+                mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                 mv.gotoPoint(entry);
             }
 

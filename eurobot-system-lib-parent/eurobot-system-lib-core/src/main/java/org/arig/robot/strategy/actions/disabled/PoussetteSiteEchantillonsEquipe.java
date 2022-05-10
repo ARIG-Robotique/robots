@@ -49,13 +49,13 @@ public class PoussetteSiteEchantillonsEquipe extends AbstractEurobotAction {
     public void execute() {
         try {
             rs.enableAvoidance(); // Seul le path l'active par défaut
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.gotoPoint(entryPoint());
             mv.gotoPoint(getX(1380), 1320);
             mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 0 : 180);
-            commonServosService.groupeMoustacheOuvert(true);
+            servos.groupeMoustacheOuvert(true);
 
-            mv.setVitesse(robotConfig.vitesse(30), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(30), config.vitesseOrientation());
             mv.gotoPoint(getX(480), 1320, GotoOption.ARRIERE);
             group.siteEchantillonPris();
 
@@ -65,7 +65,7 @@ public class PoussetteSiteEchantillonsEquipe extends AbstractEurobotAction {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
 
         } finally {
-            commonServosService.groupeMoustacheFerme(false);
+            servos.groupeMoustacheFerme(false);
             complete();
         }
     }

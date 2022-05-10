@@ -40,7 +40,7 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
     protected abstract int anglePrise();
 
     @Autowired
-    private BrasService brasService;
+    private BrasService bras;
 
     @Override
     public int order() {
@@ -66,59 +66,59 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
     public void execute() {
         try {
             Point entry = entryPoint();
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.pathTo(entry);
 
             rs.disableAvoidance();
 
             // Calage sur X
-            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
             mv.gotoOrientationDeg(angleCallageX());
             rs.enableCalageBordure(TypeCalage.AVANT_BAS);
-            mv.avanceMM(1500 - ENTRY_X - TASSEAU_W - robotConfig.distanceCalageAvant() - 10);
-            mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+            mv.avanceMM(1500 - ENTRY_X - TASSEAU_W - config.distanceCalageAvant() - 10);
+            mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
             rs.enableCalageBordure(TypeCalage.AVANT_BAS);
             mv.avanceMM(100);
 
-            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
             mv.reculeMM(60);
 
             // Calage sur Y
-            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
             mv.gotoOrientationDeg(90);
             rs.enableCalageBordure(TypeCalage.AVANT_BAS);
-            mv.avanceMM(2000 - ENTRY_Y - DISTRIB_H - robotConfig.distanceCalageAvant() - 10);
-            mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+            mv.avanceMM(2000 - ENTRY_Y - DISTRIB_H - config.distanceCalageAvant() - 10);
+            mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
             rs.enableCalageBordure(TypeCalage.AVANT_BAS);
             mv.avanceMM(100);
 
-            CompletableFuture<?> task = brasService.initPrise(BrasService.TypePrise.DISTRIBUTEUR);
+            CompletableFuture<?> task = bras.initPrise(BrasService.TypePrise.DISTRIBUTEUR);
 
-            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation(50));
+            mv.setVitesse(config.vitesse(50), config.vitesseOrientation(50));
             mv.reculeMM(80);
             mv.gotoOrientationDeg(anglePrise());
 
-            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(10), config.vitesseOrientation());
 
             task.get();
 
             for (int i = 0; i < 3; i++) {
                 mv.avanceMM(20);
 
-                if (brasService.processPrise(BrasService.TypePrise.DISTRIBUTEUR).get()) {
+                if (bras.processPrise(BrasService.TypePrise.DISTRIBUTEUR).get()) {
                     if (i == 2) {
                         mv.reculeMM(30);
                     }
                     CouleurEchantillon couleur = i == 0 ? CouleurEchantillon.ROCHER_BLEU :
                             i == 1 ? CouleurEchantillon.ROCHER_VERT :
                                     CouleurEchantillon.ROCHER_ROUGE;
-                    brasService.stockagePrise(BrasService.TypePrise.DISTRIBUTEUR, couleur).get();
+                    bras.stockagePrise(BrasService.TypePrise.DISTRIBUTEUR, couleur).get();
                 }
             }
 
-            task = brasService.finalizePrise();
+            task = bras.finalizePrise();
 
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.reculeMM(30);
             mv.gotoPoint(entry, GotoOption.ARRIERE);
 
@@ -143,7 +143,7 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
             updateValidTime();
 
         } finally {
-            brasService.safeHoming();
+            bras.safeHoming();
             refreshCompleted();
         }
     }

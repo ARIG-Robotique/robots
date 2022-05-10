@@ -51,7 +51,7 @@ public class EchappementCentreTable extends AbstractEurobotAction {
     @Override
     public void execute() {
         try {
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.pathTo(entryPoint());
 
         } catch (AvoidingException | NoPathFoundException e) {

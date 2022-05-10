@@ -93,19 +93,19 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                     // Calage bordure requis
                     final Point start = entryPoint(carreFouille);
                     log.info("Calage requis, on se place au point de départ : #{} - X={}", carreFouille.numero(), start.getX());
-                    mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+                    mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                     mv.pathTo(start);
 
                     mv.gotoOrientationDeg(-90);
-                    mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+                    mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
                     rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
-                    mv.avanceMM(start.getY() - robotConfig.distanceCalageAvant() - 10);
+                    mv.avanceMM(start.getY() - config.distanceCalageAvant() - 10);
                     rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                     mv.avanceMMSansAngle(40);
-                    checkRecalageYmm(robotConfig.distanceCalageAvant());
+                    checkRecalageYmm(config.distanceCalageAvant());
                     checkRecalageAngleDeg(-90);
 
-                    mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+                    mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                     mv.reculeMM(70);
                     mv.tourneDeg(90);
 
@@ -120,10 +120,10 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                 // si on a besoin de faire une lecture.
                 if (nbTry > 0 && !calageCarreFouilleDone && carreFouille.needRead()) {
                     log.info("Calage carré de fouille requis");
-                    mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+                    mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
 
                     // On est censé avoir un carré de fouille
-                    boolean presence = ThreadUtils.waitUntil(() -> commonIOService.presenceCarreFouille(true), 5, WAIT_READ_BASCULE_MS);
+                    boolean presence = ThreadUtils.waitUntil(() -> io.presenceCarreFouille(true), 5, WAIT_READ_BASCULE_MS);
 
                     // Calage uniquement si il y a un carre de fouille détecté
                     if (presence) {
@@ -150,20 +150,20 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                     if ((rs.team() == Team.JAUNE && isReverse()) || (rs.team() == Team.VIOLET && !isReverse())) {
                         sens = GotoOption.ARRIERE;
                     }
-                    mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+                    mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                     mv.gotoPoint(carreFouille.getX() + deltaX, yRef, sens, GotoOption.SANS_ORIENTATION);
                 }
 
                 // Ouverture de l'ohmmetre
-                commonServosService.carreFouilleOhmmetreOuvert(false);
+                servos.carreFouilleOhmmetreOuvert(false);
 
                 // Si on a pas de carre de fouille ici, c'est qu'il est basculé
-                if (commonIOService.presenceCarreFouille(true)) {
+                if (io.presenceCarreFouille(true)) {
                     log.info("Carré de fouille #{} {} : Presence", carreFouille.numero(), carreFouille.couleur());
                     CouleurCarreFouille couleur = carreFouille.couleur();
                     if (carreFouille.needRead()) {
                         log.info("Carré de fouille #{} {} : Lecture ohmmetre", carreFouille.numero(), carreFouille.couleur());
-                        commonServosService.carreFouilleOhmmetreMesure(true);
+                        servos.carreFouilleOhmmetreMesure(true);
                         couleur = ThreadUtils.waitUntil(() -> {
                             try {
                                 return cfReader.readCarreFouille();
@@ -175,15 +175,15 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 
                         log.info("Carré de fouille #{} {} : Lecture ohmmetre : {}", carreFouille.numero(), carreFouille.couleur(), couleur);
                         group.couleurCarreFouille(carreFouille.numero(), couleur);
-                        commonServosService.carreFouilleOhmmetreOuvert(false);
+                        servos.carreFouilleOhmmetreOuvert(false);
                     }
 
                     if (basculable(couleur)) {
                         log.info("Carré de fouille #{} {} : Basculage", carreFouille.numero(), carreFouille.couleur());
-                        commonServosService.carreFouillePoussoirPoussette(true);
-                        commonServosService.carreFouillePoussoirFerme(false);
+                        servos.carreFouillePoussoirPoussette(true);
+                        servos.carreFouillePoussoirFerme(false);
 
-                        boolean notPresence = ThreadUtils.waitUntil(() -> !commonIOService.presenceCarreFouille(false), 5, WAIT_READ_BASCULE_MS);
+                        boolean notPresence = ThreadUtils.waitUntil(() -> !io.presenceCarreFouille(false), 5, WAIT_READ_BASCULE_MS);
                         if (notPresence) {
                             group.basculeCarreFouille(carreFouille.numero());
                         }
@@ -201,8 +201,8 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
             nbTry++;
-            commonServosService.carreFouillePoussoirFerme(true);
-            commonServosService.carreFouilleOhmmetreFerme(false);
+            servos.carreFouillePoussoirFerme(true);
+            servos.carreFouilleOhmmetreFerme(false);
             refreshCompleted();
             if (!isCompleted()) {
                 updateValidTime(); // Retentative plus tard

@@ -59,13 +59,13 @@ public class PoussetteCampement extends AbstractEurobotAction {
         try {
             final Point entry = entryPoint();
 
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.pathTo(entry);
             mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -32 : -148);
             mv.reculeMM(100);
-            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
             mv.reculeMM(150);
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.gotoPoint(entry);
 
             group.pousetteCampementFaite();

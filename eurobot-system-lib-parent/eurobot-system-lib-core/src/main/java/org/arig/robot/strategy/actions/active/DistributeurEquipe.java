@@ -30,7 +30,7 @@ public class DistributeurEquipe extends AbstractEurobotAction {
     private static final int ENTRY_Y = 750;
 
     @Autowired
-    private BrasService brasService;
+    private BrasService bras;
 
     @Override
     public String name() {
@@ -66,17 +66,17 @@ public class DistributeurEquipe extends AbstractEurobotAction {
     public void execute() {
         try {
             Point entry = entryPoint();
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.pathTo(entry);
 
             rs.disableAvoidance();
 
             // Calage sur X
-            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
             mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
             rs.enableCalageBordure(TypeCalage.AVANT_BAS);
-            mv.avanceMM(ENTRY_X - DISTRIB_H - robotConfig.distanceCalageAvant() - 10);
-            mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+            mv.avanceMM(ENTRY_X - DISTRIB_H - config.distanceCalageAvant() - 10);
+            mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
             rs.enableCalageBordure(TypeCalage.AVANT_BAS);
             mv.avanceMM(100);
 
@@ -85,39 +85,39 @@ public class DistributeurEquipe extends AbstractEurobotAction {
                 log.warn("Mauvaise position Y pour {}", name());
                 updateValidTime(); // FIXME on devrait requérir un callage avant de recommencer
                 rs.enableAvoidance();
-                mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+                mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                 mv.gotoPoint(entry, GotoOption.ARRIERE);
                 return;
             }
 
-            CompletableFuture<?> task = brasService.initPrise(BrasService.TypePrise.DISTRIBUTEUR);
+            CompletableFuture<?> task = bras.initPrise(BrasService.TypePrise.DISTRIBUTEUR);
 
-            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
-            mv.reculeMM(ENTRY_X - DISTRIB_H - robotConfig.distanceCalageAvant() - 10);
+            mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
+            mv.reculeMM(ENTRY_X - DISTRIB_H - config.distanceCalageAvant() - 10);
             mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
 
-            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(10), config.vitesseOrientation());
 
             task.get();
 
             for (int i = 0; i < 3; i++) {
                 mv.avanceMM(20);
 
-                if (brasService.processPrise(BrasService.TypePrise.DISTRIBUTEUR).get()) {
+                if (bras.processPrise(BrasService.TypePrise.DISTRIBUTEUR).get()) {
                     if (i == 2) {
                         mv.reculeMM(30);
                     }
                     CouleurEchantillon couleur = i == 0 ? CouleurEchantillon.ROCHER_BLEU :
                             i == 1 ? CouleurEchantillon.ROCHER_VERT :
                                     CouleurEchantillon.ROCHER_ROUGE;
-                    brasService.stockagePrise(BrasService.TypePrise.DISTRIBUTEUR, couleur).get();
+                    bras.stockagePrise(BrasService.TypePrise.DISTRIBUTEUR, couleur).get();
                 }
             }
 
-            task = brasService.finalizePrise();
+            task = bras.finalizePrise();
 
             rs.enableAvoidance();
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.gotoPoint(entry, GotoOption.ARRIERE);
 
             task.get();
@@ -142,7 +142,7 @@ public class DistributeurEquipe extends AbstractEurobotAction {
             updateValidTime();
 
         } finally {
-            brasService.safeHoming();
+            bras.safeHoming();
             refreshCompleted();
         }
     }

@@ -6,7 +6,6 @@ import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +45,7 @@ public class EchappementCoinDeTable extends AbstractEurobotAction {
     @Override
     public void execute() {
         try {
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             if (step == 0) {
                 mv.pathTo(getX(520), 370);
             } else if (step == 1) {

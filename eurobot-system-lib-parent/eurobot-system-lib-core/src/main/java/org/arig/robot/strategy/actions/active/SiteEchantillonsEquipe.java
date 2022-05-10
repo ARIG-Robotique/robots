@@ -26,7 +26,7 @@ import static org.arig.robot.constants.EurobotConfig.ECHANTILLON_SIZE;
 public class SiteEchantillonsEquipe extends AbstractEurobotAction {
 
     @Autowired
-    private BrasService brasService;
+    private BrasService bras;
 
     private boolean firstAction = false;
     private CouleurEchantillon echantillonEntry;
@@ -101,7 +101,7 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
     public void execute() {
         try {
             entryPoint(); // On récupère le point d'entrée et on rafraichit l'échantillon
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             CompletableFuture<Boolean> task = null;
             if (firstAction && echantillonEntry == CouleurEchantillon.ROCHER_VERT) {
                 task = priseEchantillon(task, false, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
@@ -122,14 +122,14 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
             }
 
             task.get();
-            brasService.finalizePrise();
+            bras.finalizePrise();
 
             group.siteEchantillonPris();
 
         } catch (NoPathFoundException | AvoidingException | ExecutionException | InterruptedException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
             updateValidTime();
-            brasService.safeHoming();
+            bras.safeHoming();
 
         } finally {
             firstAction = false;
@@ -139,11 +139,11 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
     }
 
     private CompletableFuture<Boolean> priseEchantillon(CompletableFuture<Boolean> previousTask, boolean path, boolean needAlignFront, Point pointEchantillon, CouleurEchantillon couleur) throws AvoidingException, NoPathFoundException, ExecutionException, InterruptedException {
-        mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+        mv.setVitesse(config.vitesse(), config.vitesseOrientation());
         if (needAlignFront) {
             mv.alignFrontTo(pointEchantillon);
         }
-        final Point dest = tableUtils.eloigner(pointEchantillon, -robotConfig.distanceCalageAvant() - (ECHANTILLON_SIZE / 3.0));
+        final Point dest = tableUtils.eloigner(pointEchantillon, -config.distanceCalageAvant() - (ECHANTILLON_SIZE / 3.0));
         if (path) {
             mv.pathTo(dest, GotoOption.AVANT);
         } else {
@@ -156,17 +156,17 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
             }
         }
 
-        mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+        mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
         rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON);
         mv.avanceMM(ECHANTILLON_SIZE / 2);
 
         if (previousTask != null) previousTask.get();
 
         if (rs.calageCompleted().contains(TypeCalage.PRISE_ECHANTILLON)) {
-            if (brasService.initPrise(BrasService.TypePrise.SOL, true).get()
-                    && brasService.processPrise(BrasService.TypePrise.SOL).get()) {
+            if (bras.initPrise(BrasService.TypePrise.SOL, true).get()
+                    && bras.processPrise(BrasService.TypePrise.SOL).get()) {
                 log.info("Echantillon pris : {}", couleur);
-                return brasService.stockagePrise(BrasService.TypePrise.SOL, couleur);
+                return bras.stockagePrise(BrasService.TypePrise.SOL, couleur);
             }
         } else {
             log.warn("Calage de l'échantillon {} non terminé", couleur);

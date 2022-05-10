@@ -25,7 +25,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
     @Override
     public int order() {
         int points = 0;
-        if (rs.statuettePriseDansCeRobot() && commonIOService.presenceStatuette(true)) {
+        if (rs.statuettePriseDansCeRobot() && io.presenceStatuette(true)) {
             points += 15; // 15 points pour la dépose de statuette
         }
         if (!rs.vitrineActive()) {
@@ -44,7 +44,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
     @Override
     public boolean isValid() {
         // Valid si on est chargé de la statuette
-        boolean validStatuette = rs.statuettePriseDansCeRobot() && commonIOService.presenceStatuette(true);
+        boolean validStatuette = rs.statuettePriseDansCeRobot() && io.presenceStatuette(true);
 
         // Valid si la vitrine n'est pas encore activé dans les 30 dernières secondes de match
         boolean validVitrine = !rs.vitrineActive() && rs.getRemainingTime() < EurobotConfig.validActivationVitrineRemainingTime;
@@ -61,51 +61,51 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
     public void execute() {
         try {
             Point entry = entryPoint();
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.pathTo(entry);
 
             rs.disableAvoidance(); // Zone interdite pour l'adversaire
 
-            if (rs.statuettePriseDansCeRobot() && commonIOService.presenceStatuette(true)) {
+            if (rs.statuettePriseDansCeRobot() && io.presenceStatuette(true)) {
                 // Calage sur X
                 mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 0 : 180);
                 rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
-                mv.reculeMM(ENTRY_X - robotConfig.distanceCalageArriere() - 10);
-                mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
+                mv.reculeMM(ENTRY_X - config.distanceCalageArriere() - 10);
+                mv.setVitesse(config.vitesse(10), config.vitesseOrientation());
                 rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
                 mv.reculeMMSansAngle(100);
-                checkRecalageXmm(rs.team() == Team.JAUNE ? robotConfig.distanceCalageArriere() : EurobotConfig.tableWidth - robotConfig.distanceCalageArriere());
+                checkRecalageXmm(rs.team() == Team.JAUNE ? config.distanceCalageArriere() : EurobotConfig.tableWidth - config.distanceCalageArriere());
                 checkRecalageAngleDeg(rs.team() == Team.JAUNE ? 0 : 180);
-                mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
-                mv.avanceMM(ENTRY_X - robotConfig.distanceCalageArriere());
+                mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+                mv.avanceMM(ENTRY_X - config.distanceCalageArriere());
             }
 
             // Calage sur Y
             mv.gotoOrientationDeg(-90);
             rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
-            mv.reculeMM(EurobotConfig.tableHeight - ENTRY_Y - robotConfig.distanceCalageArriere() - 10);
-            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
+            mv.reculeMM(EurobotConfig.tableHeight - ENTRY_Y - config.distanceCalageArriere() - 10);
+            mv.setVitesse(config.vitesse(10), config.vitesseOrientation());
             rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
             mv.reculeMMSansAngle(100);
-            checkRecalageYmm(EurobotConfig.tableHeight - robotConfig.distanceCalageArriere());
+            checkRecalageYmm(EurobotConfig.tableHeight - config.distanceCalageArriere());
             checkRecalageAngleDeg(-90);
             group.vitrineActive(); // Vitrine active sur front
 
             // Si on as la statuette dans le robot, on la dépose
-            if (rs.statuettePriseDansCeRobot() && commonIOService.presenceStatuette(true)) {
-                commonServosService.fourcheStatuettePriseDepose(true);
+            if (rs.statuettePriseDansCeRobot() && io.presenceStatuette(true)) {
+                servos.fourcheStatuettePriseDepose(true);
                 group.statuetteDansVitrine();
             }
 
-            mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
             mv.avanceMM(100);
-            commonServosService.fourcheStatuetteFerme(false);
+            servos.fourcheStatuetteFerme(false);
 
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
             updateValidTime();
         } finally {
-            commonServosService.fourcheStatuetteFerme(false);
+            servos.fourcheStatuetteFerme(false);
             refreshCompleted();
         }
     }

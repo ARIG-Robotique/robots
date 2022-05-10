@@ -39,7 +39,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
     private static final int OFFSET_Y_REF_HAUT = 5;
 
     @Autowired
-    private BrasService brasService;
+    private BrasService bras;
 
     @Override
     public List<String> blockingActions() {
@@ -104,13 +104,13 @@ public class DeposeGalerie extends AbstractEurobotAction {
                 log.info("Dépose dans la galerie : Période {}, Etage {}", pos.periode(), pos.etage());
                 entryPoint = echantillonEntryPoint(pos);
                 if (yRefBordure == ENTRY_Y) {
-                    mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+                    mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                     mv.pathTo(entryPoint);
 
                     rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
-                    mv.gotoPoint(entryPoint.getX(), EurobotConfig.tableHeight - robotConfig.distanceCalageAvant() - 102, GotoOption.AVANT);
+                    mv.gotoPoint(entryPoint.getX(), EurobotConfig.tableHeight - config.distanceCalageAvant() - 102, GotoOption.AVANT);
 
-                    mv.setVitesse(robotConfig.vitesse(0), robotConfig.vitesseOrientation());
+                    mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
                     rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                     mv.avanceMM(100);
                     yRefBordure = conv.pulseToMm(position.getPt().getY());
@@ -119,38 +119,38 @@ public class DeposeGalerie extends AbstractEurobotAction {
                 }
 
                 // On se place à la position permettant de tourner le robot
-                mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+                mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                 mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_POUR_ROTATION, GotoOption.SANS_ORIENTATION);
 
                 CouleurEchantillon echantillonDepose = null;
                 if (pos.etage() == Galerie.Etage.BAS) {
-                    if (brasService.initDepose(BrasService.TypeDepose.GALERIE_BAS)
-                            && brasService.processDepose(BrasService.TypeDepose.GALERIE_BAS) != null) {
+                    if (bras.initDepose(BrasService.TypeDepose.GALERIE_BAS)
+                            && bras.processDepose(BrasService.TypeDepose.GALERIE_BAS) != null) {
 
                         mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_BAS, GotoOption.AVANT);
-                        echantillonDepose = brasService.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_BAS);
+                        echantillonDepose = bras.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_BAS);
                     }
 
                 } else if (pos.etage() == Galerie.Etage.HAUT) {
-                    if (brasService.initDepose(BrasService.TypeDepose.GALERIE_HAUT)
-                            && brasService.processDepose(BrasService.TypeDepose.GALERIE_HAUT) != null) {
+                    if (bras.initDepose(BrasService.TypeDepose.GALERIE_HAUT)
+                            && bras.processDepose(BrasService.TypeDepose.GALERIE_HAUT) != null) {
 
                         mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_HAUT, GotoOption.AVANT);
-                        echantillonDepose = brasService.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_HAUT);
+                        echantillonDepose = bras.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_HAUT);
                     }
 
                 } else {
-                    if (brasService.initDepose(BrasService.TypeDepose.GALERIE_CENTRE)
-                            && brasService.processDepose(BrasService.TypeDepose.GALERIE_CENTRE) != null) {
+                    if (bras.initDepose(BrasService.TypeDepose.GALERIE_CENTRE)
+                            && bras.processDepose(BrasService.TypeDepose.GALERIE_CENTRE) != null) {
 
                         rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                         mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
-                        echantillonDepose = brasService.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_CENTRE);
+                        echantillonDepose = bras.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_CENTRE);
                     }
                 }
                 if (echantillonDepose != null) {
                     comptagePoint(pos, echantillonDepose);
-                    brasService.finalizeDepose();
+                    bras.finalizeDepose();
                 } else {
                     log.warn("Echantillon de dépose null dans la galerie {} - {}", pos.periode(), pos.etage());
                 }
@@ -159,14 +159,14 @@ public class DeposeGalerie extends AbstractEurobotAction {
             } while (!rs.galerieComplete() && rs.stockTaille() != 0);
 
             // On se place à la position permettant de tourner le robot pour la prochaine action
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_POUR_ROTATION, GotoOption.SANS_ORIENTATION);
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
-            brasService.safeHoming();
+            bras.safeHoming();
             refreshCompleted();
         }
     }

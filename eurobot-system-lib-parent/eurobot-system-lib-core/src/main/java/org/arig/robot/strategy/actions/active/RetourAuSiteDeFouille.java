@@ -89,7 +89,7 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
             log.info("Go site de fouille : {}", gotoSite);
             group.siteDeRetour(gotoSite);
 
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.pathTo(entry, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
             group.siteDeRetour(destSite);
             log.info("Arrivé site de fouille : {}", destSite);
@@ -121,7 +121,7 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
 
             log.info("Danse de la fouille !!!!");
             boolean alt = false;
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation(50));
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation(50));
             do {
                 alt = !alt;
                 mv.tourneDeg(alt ? 90 : 45);

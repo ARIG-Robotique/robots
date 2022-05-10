@@ -6,7 +6,6 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.RobotName;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
@@ -90,10 +89,10 @@ public class SiteFouille extends AbstractEurobotAction {
             boolean isReverse = isReverse();
 
             // point d'entrée
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.pathTo(entryPoint());
 
-            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
+            mv.setVitesse(config.vitesse(10), config.vitesseOrientation());
 
             int prises = doPrise(0, !isReverse ? new Point(getX(ENTRY_X_2), Y_1) : new Point(getX(ENTRY_X_1), Y_1));
             group.siteDeFouillePris();
