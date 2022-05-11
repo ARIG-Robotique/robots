@@ -148,8 +148,8 @@ public interface NerellConstantesConfig {
     PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.ANYA16;
     int pathFindingAngle = 45;
     int pathFindingAngleSafe = 50;
-    int pathFindingSeuilProximite = 480;
-    int pathFindingSeuilProximiteSafe = 540;
+    int pathFindingSeuilProximite = 400;
+    int pathFindingSeuilProximiteSafe = 480;
     int pathFindingTailleObstacle = NerellConstantesConfig.pathFindingSeuilProximite * 2 + 50;
 
     int lidarClusterSizeMm = 50;
