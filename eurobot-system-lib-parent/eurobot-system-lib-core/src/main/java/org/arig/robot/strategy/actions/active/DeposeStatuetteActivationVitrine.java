@@ -26,10 +26,10 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
     public int order() {
         int points = 0;
         if (rs.statuettePriseDansCeRobot() && io.presenceStatuette(true)) {
-            points += 15; // 15 points pour la dépose de statuette
+            points += 1000; // 15 points pour la dépose de statuette
         }
         if (!rs.vitrineActive()) {
-             points += 5; // 5 point de plus si vitrine inactive
+            points += 5; // 5 point de plus si vitrine inactive
         }
         return points + tableUtils.alterOrder(entryPoint());
     }
@@ -54,12 +54,26 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
         return new Point(getX(ENTRY_X), ENTRY_Y);
     }
 
+    private Point secondaryEntryPoint() {
+        return new Point(getX(ENTRY_X), 1500);
+    }
+
     @Override
     public void execute() {
         try {
             Point entry = entryPoint();
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-            mv.pathTo(entry);
+
+            try {
+                mv.pathTo(entry);
+            } catch (NoPathFoundException e) {
+                if (rs.tailleCampementRouge() == 0 && rs.tailleCampementBleu() == 0) {
+                    entry = secondaryEntryPoint();
+                    mv.pathTo(entry);
+                } else {
+                    throw e;
+                }
+            }
 
             rs.disableAvoidance(); // Zone interdite pour l'adversaire
 
@@ -80,7 +94,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
             // Calage sur Y
             mv.gotoOrientationDeg(-90);
             rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
-            mv.reculeMM(EurobotConfig.tableHeight - ENTRY_Y - config.distanceCalageArriere() - 10);
+            mv.reculeMM(EurobotConfig.tableHeight - entry.getY() - config.distanceCalageArriere() - 10);
             mv.setVitesse(config.vitesse(10), config.vitesseOrientation());
             rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
             mv.reculeMMSansAngle(100);
