@@ -8,12 +8,9 @@ import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.exception.RefreshPathFindingException;
-import org.arig.robot.model.AbstractRobotStatus;
-import org.arig.robot.model.Chemin;
-import org.arig.robot.model.CommandeRobot;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
-import org.arig.robot.model.RobotConfig;
+import org.arig.robot.filters.common.ChangeFilter;
+import org.arig.robot.filters.common.SignalEdgeFilter;
+import org.arig.robot.model.*;
 import org.arig.robot.model.enums.*;
 import org.arig.robot.model.monitor.AbstractMonitorMouvement;
 import org.arig.robot.model.monitor.MonitorMouvementPath;
@@ -123,6 +120,9 @@ public class TrajectoryManager {
 
     private AtomicBoolean cancelMouvement = new AtomicBoolean(false);
 
+    private SignalEdgeFilter obstacleFoundFilter = new SignalEdgeFilter(false, SignalEdgeFilter.Type.RISING);
+    private SignalEdgeFilter obstacleNotFoundFilter = new SignalEdgeFilter(false, SignalEdgeFilter.Type.FALLING);
+
     @PostConstruct
     public void postConstruct() {
         log.info("Fenetre arret distance                  : {} pulse -> {} mm", robotConfig.fenetreArretDistance(), conv.pulseToMm(robotConfig.fenetreArretDistance()));
@@ -229,18 +229,30 @@ public class TrajectoryManager {
         }
     }
 
+    ConsigneAsservissementPolaire oldConsigne;
+
     /**
      * Calcul des consignes d'asservissement
      * -> a : Gestion en fonction de l'odométrie
      * -> b : Si dans fenêtre d'approche : consigne(n) = consigne(n - 1) - d(position)
      */
     private void calculConsigne() {
+        if (Boolean.TRUE.equals(obstacleFoundFilter.filter(obstacleFound.get()))) {
+            log.info("Sauvegarde des vieilles consignes sur detection d'obstacle");
+            oldConsigne = cmdRobot.getConsigne();
+        }
+
         if (calageBordure.get() || obstacleFound.get()) {
             // Un calage sur bordure est fait. On asservi sur place jusqu'au prochain mouvement
             cmdRobot.getConsigne().setDistance(0);
             cmdRobot.getConsigne().setOrientation(0);
             cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
             calageBordure.set(false);
+        }
+
+        if (Boolean.TRUE.equals(obstacleNotFoundFilter.filter(obstacleFound.get()))) {
+            log.info("Restauration des vieilles consignes sur disparition d'obstacle");
+            cmdRobot.setConsigne(oldConsigne);
         }
 
         if (!trajetAtteint.get() && cmdRobot.isType(TypeConsigne.XY)) {
