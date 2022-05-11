@@ -22,6 +22,15 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Component
 public class AbriDeChantier extends AbstractEurobotAction {
 
+    private static final int ORIENT_JAUNE_FACE_ABRI = -135;
+    private static final int ORIENT_JAUNE_DOS_ABRI = 45;
+    private static final int ORIENT_VIOLET_FACE_ABRI = -45;
+    private static final int ORIENT_VIOLET_DOS_ABRI = 135;
+    private static final int OFFSET_DEPOSE_2ND_DEG = 45;
+    private static final int OFFSET_CENTRAGE_DEG = 15;
+
+    private static final int FOURCHE_WIDTH = 70;
+
     private int nbEchantillons = 0;
     private int nbEchantillonsRemaining = 0;
 
@@ -69,7 +78,8 @@ public class AbriDeChantier extends AbstractEurobotAction {
 
     @Override
     public void refreshCompleted() {
-        if (rs.statuettePrise() && rs.echantillonAbriChantierDistributeurPris() && rs.echantillonAbriChantierCarreFouillePris()
+        if ((rs.statuettePrise() || !rs.statuettePrise() && rs.repliqueDepose())
+                && rs.echantillonAbriChantierDistributeurPris() && rs.echantillonAbriChantierCarreFouillePris()
                 && ((servos.pousseReplique() && rs.repliqueDepose()) || !servos.pousseReplique())) {
             complete();
         }
@@ -80,7 +90,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
         refreshConditions();
 
         // Valid si la statuette n'as pas été prise
-        boolean validStatuette = !rs.statuettePrise();
+        boolean validStatuette = !rs.statuettePrise() && !io.presenceStatuette(false) && !rs.repliqueDepose();
 
         // Valid si on peut gérer la réplique, et qu'elle n'est pas déposée
         boolean validReplique = servos.pousseReplique() && !rs.repliqueDepose();
@@ -117,7 +127,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
 
     private Point entryStatuette() {
         // Statuette (Jaune = 45° Violet = 135°)
-        return new Point(getX(450), 450);
+        return new Point(getX(460), 460);
     }
 
     private void refreshConditions() {
@@ -140,22 +150,33 @@ public class AbriDeChantier extends AbstractEurobotAction {
             boolean priseBas = false;
             CompletableFuture<Ventouse> task = null;
 
+            boolean needPath = true;
+            if (firstAction){
+                firstAction = false;
+                needPath = false;
+            }
+
             if (!rs.echantillonAbriChantierDistributeurPris()) {
                 mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-                if (firstAction){
-                    firstAction = false;
-                    mv.gotoPoint(entryEchantillonDistributeur(), GotoOption.SANS_ORIENTATION);
-                } else {
+                if (needPath){
+                    needPath = false;
                     mv.pathTo(entryEchantillonDistributeur());
+                } else {
+                    mv.gotoPoint(entryEchantillonDistributeur(), GotoOption.SANS_ORIENTATION);
                 }
-                mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -135 : -45);
+                mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? ORIENT_JAUNE_FACE_ABRI : ORIENT_VIOLET_FACE_ABRI);
                 task = processingPriseBordureSafe(CouleurEchantillon.ROCHER_BLEU, group::echantillonAbriChantierDistributeurPris);
             }
 
             if (!rs.echantillonAbriChantierCarreFouillePris()) {
                 mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-                mv.pathTo(entryEchantillonCarreFouille());
-                mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -135 : -45);
+                if (needPath){
+                    needPath = false;
+                    mv.pathTo(entryEchantillonCarreFouille());
+                } else {
+                    mv.gotoPoint(entryEchantillonCarreFouille(), GotoOption.SANS_ORIENTATION);
+                }
+                mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? ORIENT_JAUNE_FACE_ABRI : ORIENT_VIOLET_FACE_ABRI);
                 if (task != null) {
                     Ventouse result = task.get();
                     priseBas = result == Ventouse.BAS;
@@ -165,7 +186,11 @@ public class AbriDeChantier extends AbstractEurobotAction {
             }
 
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-            mv.pathTo(entryStatuette());
+            if (needPath) {
+                mv.pathTo(entryStatuette());
+            } else {
+                mv.gotoPoint(entryStatuette(), GotoOption.SANS_ORIENTATION);
+            }
             if (task != null) {
                 Ventouse result = task.get();
                 priseBas = priseBas || result == Ventouse.BAS;
@@ -179,7 +204,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
                 // Premier échantillon
                 if (priseBas) {
                     log.info("Dépose devant l'abri du premier echantillon récupéré");
-                    mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -165 : -20);
+                    mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? ORIENT_JAUNE_FACE_ABRI : ORIENT_VIOLET_FACE_ABRI);
                     bras.setBrasBas(PositionBras.SOL_DEPOSE_1);
                     io.releasePompeVentouseBas();
                     rs.ventouseBas(null);
@@ -190,7 +215,14 @@ public class AbriDeChantier extends AbstractEurobotAction {
                 }
                 if (priseHaut) {
                     log.info("Dépose devant l'abri du second échantillon récupéré");
-                    mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -105 : -75);
+                    if (priseBas) {
+                        // On a mis en face du piedestal un premier echantillon
+                        mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? ORIENT_JAUNE_FACE_ABRI + OFFSET_DEPOSE_2ND_DEG : ORIENT_VIOLET_FACE_ABRI - OFFSET_DEPOSE_2ND_DEG);
+                    } else {
+                        // Va savoir pourquoi, on a pas mis de premier echantillon (deuxième prise planté ??), mais on en a un en haut
+                        // On le pose comme le premier
+                        mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? ORIENT_JAUNE_FACE_ABRI : ORIENT_VIOLET_FACE_ABRI);
+                    }
                     bras.setBrasBas(PositionBras.HORIZONTAL);
                     bras.setBrasHaut(PositionBras.ECHANGE);
                     bras.setBrasBas(PositionBras.ECHANGE);
@@ -201,27 +233,30 @@ public class AbriDeChantier extends AbstractEurobotAction {
                     ThreadUtils.waitUntil(io::presenceVentouseBas, config.i2cReadTimeMs(), config.timeoutPompe());
                     bras.setBrasHaut(PositionBras.HORIZONTAL);
                     bras.setBrasBas(PositionBras.SOL_DEPOSE_1);
+                    if (priseBas) {
+                        // On tourne pour aligner les deux échantillons
+                        mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? ORIENT_JAUNE_FACE_ABRI + OFFSET_CENTRAGE_DEG : ORIENT_VIOLET_FACE_ABRI - OFFSET_CENTRAGE_DEG);
+                    }
                     io.releasePompeVentouseBas();
                     rs.ventouseBas(null);
                     ThreadUtils.waitUntil(() -> !io.presenceVentouseBas(), config.i2cReadTimeMs(), config.timeoutPompe());
                 } else {
                     log.info("Rien dans la ventouse haut");
                 }
-                bras.safeHoming();
-                mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? -135 : -45);
-                mv.reculeMM(100);
+                CompletableFuture<Void> asyncHoming = CompletableFuture.runAsync(bras::safeHoming, executor);
+                mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? ORIENT_JAUNE_FACE_ABRI : ORIENT_VIOLET_FACE_ABRI);
+                mv.reculeMM(90);
+                asyncHoming.get();
             }
 
-            mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 45 : 135);
-
-            if (!rs.statuettePrise()) {
+            mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? ORIENT_JAUNE_DOS_ABRI : ORIENT_VIOLET_DOS_ABRI);
+            if (!rs.statuettePrise() && !io.presenceStatuette(false)) {
                 servos.fourcheStatuettePriseDepose(false);
             }
 
-            // On les pousse sous l'abri
+            // On les poussent sous l'abri
             if (priseBas || priseHaut) {
-                servos.langueOuvert(false);
-                servos.groupeMoustachePoussette(true);
+                servos.groupeArriereOuvert(true);
             }
 
             // Ouverture de la langue pour la réplique
@@ -231,15 +266,16 @@ public class AbriDeChantier extends AbstractEurobotAction {
 
             rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-            mv.gotoPoint(tableUtils.eloigner(new Point(getX(255), 255), -config.distanceCalageArriere() - 30), GotoOption.ARRIERE);
+            mv.gotoPoint(tableUtils.eloigner(new Point(getX(255), 255), -config.distanceCalageArriere() - FOURCHE_WIDTH), GotoOption.ARRIERE);
 
             rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
             mv.setVitesse(config.vitesse(10), config.vitesseOrientation());
-            mv.reculeMMSansAngle(100);
+            mv.reculeMMSansAngle(2 * FOURCHE_WIDTH);
 
             if ((priseBas || priseHaut) && (rs.calageCompleted().contains(TypeCalage.ARRIERE) || rs.calageCompleted().contains(TypeCalage.FORCE))) {
+                servos.groupeMoustachePoussette(true); // Histoire de les pousser sous l'abri un peu plus loin
+
                 log.info("Normalement on a poussé deux échantillons sous l'abri");
-                // FIXME pas sur que ça fonctionne du tout s'il n'y en a qu'un
                 group.deposeAbriChantier(
                         priseBas ? CouleurEchantillon.ROCHER_ROUGE : null,
                         priseHaut ? CouleurEchantillon.ROCHER_BLEU : null
@@ -250,7 +286,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
                 int nbTry = 5;
                 do {
                     servos.fourcheStatuetteFerme(true);
-                    if (ThreadUtils.waitUntil(() -> io.presenceStatuette(true), 100, 1000)) {
+                    if (ThreadUtils.waitUntil(() -> io.presenceStatuette(true), 100, 500)) {
                         log.info("Youpi ! On a trouvé la statuette");
                         group.statuettePris();
                         break;
