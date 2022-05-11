@@ -6,7 +6,7 @@
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$USER_HOME$/.m2/repository/org/projectlombok/lombok/1.18.22/lombok-1.18.22.jar" />
+          <entry name="$USER_HOME$/.m2/repository/org/projectlombok/lombok/1.18.24/lombok-1.18.24.jar" />
         </processorPath>
         <module name="robots.eurobot-system-lib-parent.eurobot-system-lib-core.test" />
         <module name="robots.robot-system-lib-parent.robot-system-lib-bouchon.main" />

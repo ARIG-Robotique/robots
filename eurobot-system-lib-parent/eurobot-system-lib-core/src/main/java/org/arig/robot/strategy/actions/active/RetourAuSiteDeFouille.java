@@ -3,6 +3,7 @@ package org.arig.robot.strategy.actions.active;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.SiteDeRetour;
@@ -75,15 +76,28 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
     @Override
     public void execute() {
         try {
-            // On ignore toute la zone de fouille + un peut pour l'épaisseur du mat
-            tableUtils.addDynamicDeadZone(
-                new Rectangle2D.Double(
-                    pointCentre().getX() - OFFSET - 50,
-                    pointCentre().getY() - OFFSET - 50 ,
-                    2 * (OFFSET + 50),
-                    2 * (OFFSET + 40)
-                )
-            );
+            if (rs.siteDeRetourAutreRobot().isInSite()) {
+                final Point pointDestAutreRobot;
+                if (destSite == SiteDeRetour.FOUILLE_NORD) {
+                    pointDestAutreRobot = pointSud();
+                } else if (destSite == SiteDeRetour.FOUILLE_SUD) {
+                    pointDestAutreRobot = pointNord();
+                } else if (destSite == SiteDeRetour.FOUILLE_EST) {
+                    pointDestAutreRobot = pointOuest();
+                } else {
+                    pointDestAutreRobot = pointEst();
+                }
+
+                // On ignore toute la zone de la ou se trouve l'autre robot + un peut pour l'épaisseur du mat
+                tableUtils.addDynamicDeadZone(
+                        new Rectangle2D.Double(
+                                pointDestAutreRobot.getX() - OFFSET - 50,
+                                pointDestAutreRobot.getY() - OFFSET - 50,
+                                2 * (OFFSET + 50),
+                                2 * (OFFSET + 40)
+                        )
+                );
+            }
 
             final Point entry = entryPoint();
             log.info("Go site de fouille : {}", gotoSite);
@@ -102,19 +116,19 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
                 // L'autre robot a choisis sa destination
                 if (autre == SiteDeRetour.WIP_FOUILLE_NORD || autre == SiteDeRetour.FOUILLE_NORD) {
                     log.info("On va au sud");
-                    mv.gotoPoint(pointSud());
+                    mv.gotoPoint(pointSud(), GotoOption.SANS_ORIENTATION);
                     group.siteDeRetour(SiteDeRetour.FOUILLE_SUD);
                 } else if (autre == SiteDeRetour.WIP_FOUILLE_SUD || autre == SiteDeRetour.FOUILLE_SUD) {
                     log.info("On va au nord");
-                    mv.gotoPoint(pointNord());
+                    mv.gotoPoint(pointNord(), GotoOption.SANS_ORIENTATION);
                     group.siteDeRetour(SiteDeRetour.FOUILLE_NORD);
                 } else if (autre == SiteDeRetour.WIP_FOUILLE_EST || autre == SiteDeRetour.FOUILLE_EST) {
                     log.info("On va a l'ouest");
-                    mv.gotoPoint(pointOuest());
+                    mv.gotoPoint(pointOuest(), GotoOption.SANS_ORIENTATION);
                     group.siteDeRetour(SiteDeRetour.FOUILLE_OUEST);
                 } else {
                     log.info("On va a l'est");
-                    mv.gotoPoint(pointEst());
+                    mv.gotoPoint(pointEst(), GotoOption.SANS_ORIENTATION);
                     group.siteDeRetour(SiteDeRetour.FOUILLE_EST);
                 }
             }
@@ -131,7 +145,7 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
 
-            if (!rs.siteDeRetour().isInSite()) {
+            if (!rs.siteDeRetour().isInSite() && !(e instanceof MovementCancelledException)) {
                 group.siteDeRetour(SiteDeRetour.AUCUN);
             }
         }
