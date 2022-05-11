@@ -107,6 +107,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
                     mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                     mv.pathTo(entryPoint);
 
+                    rs.disableAvoidance();
                     rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                     mv.gotoPoint(entryPoint.getX(), EurobotConfig.tableHeight - config.distanceCalageAvant() - 102, GotoOption.AVANT);
 
@@ -119,6 +120,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
                 }
 
                 // On se place à la position permettant de tourner le robot
+                rs.disableAvoidance();
                 mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                 mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_POUR_ROTATION, GotoOption.SANS_ORIENTATION);
 
