@@ -37,6 +37,11 @@ public abstract class AbstractPathFinder implements PathFinder {
         pathDir = new File("./logs/path/" + System.getProperty(ConstantesConfig.keyExecutionId));
     }
 
+    @Override
+    public boolean isBordureTable(Point pointCm) {
+        return isBlocked(pointCm) && !isBlockedByObstacle(pointCm);
+    }
+
     protected void saveImageForWork(BufferedImage workImage) {
         if (isSaveImages()) {
             this.workImage = workImage;

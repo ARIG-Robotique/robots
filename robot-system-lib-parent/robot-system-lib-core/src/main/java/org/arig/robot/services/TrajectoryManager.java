@@ -8,10 +8,17 @@ import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.exception.NotYetImplementedException;
 import org.arig.robot.exception.RefreshPathFindingException;
-import org.arig.robot.filters.common.ChangeFilter;
-import org.arig.robot.filters.common.SignalEdgeFilter;
-import org.arig.robot.model.*;
-import org.arig.robot.model.enums.*;
+import org.arig.robot.model.AbstractRobotStatus;
+import org.arig.robot.model.Chemin;
+import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.Point;
+import org.arig.robot.model.Position;
+import org.arig.robot.model.RobotConfig;
+import org.arig.robot.model.enums.GotoOption;
+import org.arig.robot.model.enums.SensDeplacement;
+import org.arig.robot.model.enums.SensRotation;
+import org.arig.robot.model.enums.TypeCalage;
+import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.model.monitor.AbstractMonitorMouvement;
 import org.arig.robot.model.monitor.MonitorMouvementPath;
 import org.arig.robot.model.monitor.MonitorMouvementRotation;
@@ -200,7 +207,7 @@ public class TrajectoryManager {
             odom.calculPosition();
 
             if (rs.waitTirette()) {
-                propulsionsMotors.generateMouvement(0,0);
+                propulsionsMotors.generateMouvement(0, 0);
                 return;
             }
 
@@ -640,16 +647,34 @@ public class TrajectoryManager {
                 rs.disableAvoidance();
             }
 
+            double dX = conv.mmToPulse(x) - currentPosition.getPt().getX();
+            double dY = conv.mmToPulse(y) - currentPosition.getPt().getY();
+            double angle = calculAngleConsigne(dX, dY);
+            final SensDeplacement sensAuto = Math.abs(angle) < conv.degToPulse(90) ? SensDeplacement.AVANT : SensDeplacement.ARRIERE;
+
+            // si on est bord de la table on ne peut pas tourner sur place
+            // => on tourne en glissant, on avance un peu, puis on enchaine sur le mouvement normal
+            final Point currentCm = new Point(
+                    conv.pulseToMm(currentPosition.getPt().getX()) / 10,
+                    conv.pulseToMm(currentPosition.getPt().getY()) / 10
+            );
+            if (pathFinder.isBordureTable(currentCm)) {
+                if (sensAuto == SensDeplacement.ARRIERE) {
+                    alignBackToSansDistance(x, y);
+                    reculeMM(30);
+                } else {
+                    alignFrontToSansDistance(x, y);
+                    avanceMM(30);
+                }
+            }
+
             final SensDeplacement realSens;
             if (options.contains(GotoOption.AVANT)) {
                 realSens = SensDeplacement.AVANT;
             } else if (options.contains(GotoOption.ARRIERE)) {
                 realSens = SensDeplacement.ARRIERE;
             } else {
-                double dX = conv.mmToPulse(x) - currentPosition.getPt().getX();
-                double dY = conv.mmToPulse(y) - currentPosition.getPt().getY();
-                double angle = calculAngleConsigne(dX, dY);
-                realSens = Math.abs(angle) < conv.degToPulse(90) ? SensDeplacement.AVANT : SensDeplacement.ARRIERE;
+                realSens = sensAuto;
             }
 
             if (realSens == SensDeplacement.ARRIERE) {
@@ -717,44 +742,31 @@ public class TrajectoryManager {
         tourneDegByType(newOrient, types);
     }
 
+    /**
+     * Méthode permettant d'aligner le robot face a un point
+     */
     public void alignFrontTo(final Point point) throws AvoidingException {
         alignFrontTo(point.getX(), point.getY());
     }
 
-    /**
-     * Méthode permettant d'aligner le robot face a un point
-     *
-     * @param x the x
-     * @param y the y
-     */
     public void alignFrontTo(final double x, final double y) throws AvoidingException {
         log.info("Aligne ton avant sur le point X = {}mm ; Y = {}mm", x, y);
-        alignFrontToAvecDecalage(x, y, 0);
+        cmdAlignFrontToByType(x, y, TypeConsigne.DIST, TypeConsigne.ANGLE);
     }
 
-    public void alignFrontToAvecDecalage(final Point point, final double decalageDeg) throws AvoidingException {
-        alignFrontToAvecDecalage(point.getX(), point.getY(), decalageDeg);
+    public void alignFrontToSansDistance(final double x, final double y) throws AvoidingException {
+        log.info("Aligne ton avant sur le point X = {}mm ; Y = {}mm ; sans distance", x, y);
+        cmdAlignFrontToByType(x, y, TypeConsigne.ANGLE);
     }
 
-    /**
-     * Alignement sur un point avec un décalage en degré (dans le sens trigo)
-     *
-     * @param x           position sur l'axe X
-     * @param y           position sur l'axe Y
-     * @param decalageDeg valeur du déclage angulaire par rapport au point X,Y
-     */
-    public void alignFrontToAvecDecalage(final double x, final double y, final double decalageDeg) throws AvoidingException {
-        if (decalageDeg != 0) {
-            log.info("Décalage de {}° par rapport au point X = {}mm ; Y = {}mm", decalageDeg, x, y);
-        }
-
+    private void cmdAlignFrontToByType(final double x, final double y, final TypeConsigne... typeConsignes) throws AvoidingException {
         synchronized (this) {
             double dX = conv.mmToPulse(x) - currentPosition.getPt().getX();
             double dY = conv.mmToPulse(y) - currentPosition.getPt().getY();
 
-            cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+            cmdRobot.setTypes(typeConsignes);
             cmdRobot.getConsigne().setDistance(0);
-            cmdRobot.getConsigne().setOrientation((long) (calculAngleConsigne(dX, dY) + conv.degToPulse(decalageDeg)));
+            cmdRobot.getConsigne().setOrientation((long) calculAngleConsigne(dX, dY));
             cmdRobot.setFrein(true);
             cmdRobot.setBypassRampDistance(true);
             cmdRobot.setBypassRampOrientation(false);
@@ -765,37 +777,24 @@ public class TrajectoryManager {
         waitMouvement();
     }
 
+    /**
+     * Méthode permettant d'aligner le robot dos a un point
+     */
     public void alignBackTo(final Point point) throws AvoidingException {
         alignBackTo(point.getX(), point.getY());
     }
 
-    /**
-     * Méthode permettant d'aligner le robot dos a un point
-     *
-     * @param x the x
-     * @param y the y
-     */
     public void alignBackTo(final double x, final double y) throws AvoidingException {
         log.info("Aligne ton cul sur le point X = {}mm ; Y = {}mm", x, y);
-        alignBackToAvecDecalage(x, y, 0);
+        cmdAlignBackToByType(x, y, TypeConsigne.DIST, TypeConsigne.ANGLE);
     }
 
-    public void alignBackToAvecDecalage(final Point point, final double decalageDeg) throws AvoidingException {
-        alignBackToAvecDecalage(point.getX(), point.getY(), decalageDeg);
+    public void alignBackToSansDistance(final double x, final double y) throws AvoidingException {
+        log.info("Aligne ton cul sur le point X = {}mm ; Y = {}mm ; sans distance", x, y);
+        cmdAlignBackToByType(x, y, TypeConsigne.ANGLE);
     }
 
-    /**
-     * Alignement sur un point avec un décalage en degré (dans le sens trigo)
-     *
-     * @param x           position sur l'axe X
-     * @param y           position sur l'axe Y
-     * @param decalageDeg valeur du déclage angulaire par rapport au point X,Y
-     */
-    public void alignBackToAvecDecalage(final double x, final double y, final double decalageDeg) throws AvoidingException {
-        if (decalageDeg != 0) {
-            log.info("Décalage de {}° par rapport au point X = {}mm ; Y = {}mm", decalageDeg, x, y);
-        }
-
+    private void cmdAlignBackToByType(final double x, final double y, final TypeConsigne... typeConsignes) throws AvoidingException {
         synchronized (this) {
             double dX = conv.mmToPulse(x) - currentPosition.getPt().getX();
             double dY = conv.mmToPulse(y) - currentPosition.getPt().getY();
@@ -807,9 +806,9 @@ public class TrajectoryManager {
                 consOrient += conv.piPulse();
             }
 
-            cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
+            cmdRobot.setTypes(typeConsignes);
             cmdRobot.getConsigne().setDistance(0);
-            cmdRobot.getConsigne().setOrientation((long) (consOrient + conv.degToPulse(decalageDeg)));
+            cmdRobot.getConsigne().setOrientation((long) consOrient);
             cmdRobot.setFrein(true);
             cmdRobot.setBypassRampDistance(true);
             cmdRobot.setBypassRampOrientation(false);

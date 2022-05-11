@@ -32,6 +32,8 @@ public interface PathFinder {
 
     boolean isBlockedByObstacle(Point pointCm);
 
+    boolean isBordureTable(Point pointCm);
+
     /**
      * Ajout d'un obstacle sur la map.
      *

@@ -198,6 +198,6 @@ public class TableUtils {
     }
 
     public int getX(boolean reverse, int x) {
-        return reverse ? 3000 - x : x;
+        return reverse ? tableWidth - x : x;
     }
 }
