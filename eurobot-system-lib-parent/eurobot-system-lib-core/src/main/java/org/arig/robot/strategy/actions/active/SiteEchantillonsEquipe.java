@@ -159,10 +159,10 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
         mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
         rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON);
         mv.avanceMM(ECHANTILLON_SIZE / 2);
-
-        if (previousTask != null) previousTask.get();
-
         if (rs.calageCompleted().contains(TypeCalage.PRISE_ECHANTILLON)) {
+            mv.avanceMM(20); // Histoire de bien le charger dans le robot
+            if (previousTask != null) previousTask.get();
+
             if (bras.initPrise(BrasService.TypePrise.SOL, true).get()
                     && bras.processPrise(BrasService.TypePrise.SOL).get()) {
                 log.info("Echantillon pris : {}", couleur);
@@ -170,6 +170,7 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
             }
         } else {
             log.warn("Calage de l'échantillon {} non terminé", couleur);
+            if (previousTask != null) previousTask.get();
         }
 
         return CompletableFuture.completedFuture(false);
