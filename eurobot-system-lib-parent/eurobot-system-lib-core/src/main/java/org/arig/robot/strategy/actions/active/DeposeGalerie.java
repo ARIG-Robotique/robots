@@ -36,7 +36,6 @@ public class DeposeGalerie extends AbstractEurobotAction {
 
     private static final int OFFSET_Y_REF_POUR_ROTATION = 165;
     private static final int OFFSET_Y_REF_BAS = 20;
-    private static final int OFFSET_Y_REF_HAUT = 5;
 
     @Autowired
     private BrasService bras;
@@ -136,7 +135,8 @@ public class DeposeGalerie extends AbstractEurobotAction {
                     if (bras.initDepose(BrasService.TypeDepose.GALERIE_HAUT)
                             && bras.processDepose(BrasService.TypeDepose.GALERIE_HAUT) != null) {
 
-                        mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_HAUT, GotoOption.AVANT);
+                        rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
+                        mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
                         echantillonDepose = bras.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_HAUT);
                     }
 
