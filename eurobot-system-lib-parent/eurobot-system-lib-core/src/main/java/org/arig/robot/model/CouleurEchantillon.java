@@ -11,10 +11,10 @@ public enum CouleurEchantillon {
     ROUGE(false, false),
     BLEU(false, false),
     VERT(false, false),
-    ROCHER(false, true),
-    ROCHER_ROUGE(false, true),
-    ROCHER_BLEU(false, true),
-    ROCHER_VERT(false, true),
+    ROCHER(false, false),
+    ROCHER_ROUGE(false, false),
+    ROCHER_BLEU(false, false),
+    ROCHER_VERT(false, false),
     INCONNU(true, false);
 
     private final boolean needsLecture;
