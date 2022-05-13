@@ -282,9 +282,8 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
                 && tailleCampementVertTemp() == Campement.MAX_DEPOSE;
     }
 
-    public int campementPointsPousette() {
-        // chaque echantillon vert rapporte un point de plus s'il est poussé
-        return campement.score() + tailleCampementVertTemp();
+    public int scorePoussetteCampement() {
+        return campement.scorePoussette();
     }
 
     private boolean poussetteCampementFaite = false;

@@ -32,13 +32,13 @@ public class PoussetteCampement extends AbstractEurobotAction {
     @Override
     public boolean isValid() {
         return isTimeValid() && remainingTimeBeforeRetourSiteValid() &&
-                !rs.poussetteCampementFaite() && rs.tailleCampementVertTemp() > 0
+                !rs.poussetteCampementFaite() && rs.scorePoussetteCampement() > 0
                 && (rs.campementComplet() || rs.getRemainingTime() < EurobotConfig.validPoussetteRemainingTime);
     }
 
     @Override
     public int order() {
-        int points = rs.campementPointsPousette();
+        int points = rs.scorePoussetteCampement();
         return points + tableUtils.alterOrder(entryPoint());
     }
 

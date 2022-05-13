@@ -41,6 +41,10 @@ public class Campement {
         return vertTemp.size();
     }
 
+    public int scorePoussette() {
+        return (int) vertTemp.stream().filter(c -> c == CouleurEchantillon.VERT).count();
+    }
+
     public int sizeBleu() {
         return bleu.size();
     }
