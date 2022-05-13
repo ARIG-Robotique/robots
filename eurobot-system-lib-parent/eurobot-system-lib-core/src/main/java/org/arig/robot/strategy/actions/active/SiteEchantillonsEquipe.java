@@ -166,7 +166,7 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
             if (bras.initPrise(BrasService.TypePrise.SOL, true).get()
                     && bras.processPrise(BrasService.TypePrise.SOL).get()) {
                 log.info("Echantillon pris : {}", couleur);
-                return bras.stockagePrise(BrasService.TypePrise.SOL, couleur);
+                return bras.stockagePrise(BrasService.TypePrise.SOL, couleur, false);
             }
         } else {
             log.warn("Calage de l'échantillon {} non terminé", couleur);

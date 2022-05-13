@@ -190,22 +190,16 @@ public class DeposeCampement extends AbstractEurobotAction {
                     case ROUGE:
                         if (bras.processDeposeSol(rs.tailleCampementRouge()) != null) {
                             group.deposeCampementRouge(echantillon);
-                        } else {
-                            rs.destockage();
                         }
                         break;
                     case VERT:
                         if (bras.processDeposeSol(rs.tailleCampementVertTemp()) != null) {
                             group.deposeCampementVertTemp(echantillon);
-                        } else {
-                            rs.destockage();
                         }
                         break;
                     case BLEU:
                         if (bras.processDeposeSol(rs.tailleCampementBleu()) != null) {
                             group.deposeCampementBleu(echantillon);
-                        } else {
-                            rs.destockage();
                         }
                         break;
                 }
@@ -231,6 +225,7 @@ public class DeposeCampement extends AbstractEurobotAction {
 
         switch (echantillon) {
             case ROUGE:
+            case ROCHER_ROUGE:
                 if (tailleRouge < Campement.MAX_DEPOSE) {
                     return CouleurEchantillon.ROUGE;
                 } else {
@@ -238,6 +233,7 @@ public class DeposeCampement extends AbstractEurobotAction {
                 }
 
             case VERT:
+            case ROCHER_VERT:
                 if (tailleVert < Campement.MAX_DEPOSE) {
                     return CouleurEchantillon.VERT;
                 } else {
@@ -245,6 +241,7 @@ public class DeposeCampement extends AbstractEurobotAction {
                 }
 
             case BLEU:
+            case ROCHER_BLEU:
                 if (tailleBleu < Campement.MAX_DEPOSE) {
                     return CouleurEchantillon.BLEU;
                 } else {
@@ -256,7 +253,7 @@ public class DeposeCampement extends AbstractEurobotAction {
                     return getNewPosition(previousPosition, null);
                 }
                 if (tailleRouge == tailleBleu && tailleBleu == tailleVert) {
-                    return CouleurEchantillon.values()[(int) Math.floor(Math.random() * 3)];
+                    return CouleurEchantillon.ROUGE;
                 }
                 // on privilégie le moins vide
                 if (tailleRouge < tailleVert && tailleRouge < tailleBleu) {

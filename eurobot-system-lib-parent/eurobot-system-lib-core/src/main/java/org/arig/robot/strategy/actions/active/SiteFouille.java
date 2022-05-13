@@ -122,7 +122,7 @@ public class SiteFouille extends AbstractEurobotAction {
 
                 bras.initPrise(BrasService.TypePrise.SOL, true).get();
                 if (bras.processPrise(BrasService.TypePrise.SOL).get()) {
-                    task = bras.stockagePrise(BrasService.TypePrise.SOL, CouleurEchantillon.INCONNU)
+                    task = bras.stockagePrise(BrasService.TypePrise.SOL, CouleurEchantillon.INCONNU, false)
                             .thenCompose((Boolean) -> bras.finalizePrise());
                     prises++;
                     if (prises == 3) {

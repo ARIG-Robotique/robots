@@ -114,7 +114,7 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
                     CouleurEchantillon couleur = i == 0 ? CouleurEchantillon.ROCHER_BLEU :
                             i == 1 ? CouleurEchantillon.ROCHER_VERT :
                                     CouleurEchantillon.ROCHER_ROUGE;
-                    bras.stockagePrise(BrasService.TypePrise.DISTRIBUTEUR, couleur).get();
+                    bras.stockagePrise(BrasService.TypePrise.DISTRIBUTEUR, couleur, false).get();
                 }
             }
 

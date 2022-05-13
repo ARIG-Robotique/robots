@@ -101,58 +101,59 @@ public class DeposeGalerie extends AbstractEurobotAction {
                 Galerie.GaleriePosition pos = bestPosition(lastPosition);
                 log.info("Dépose dans la galerie : Période {}, Etage {}", pos.periode(), pos.etage());
                 entryPoint = echantillonEntryPoint(pos);
+
                 if (yRefBordure == ENTRY_Y) {
                     mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                     mv.pathTo(entryPoint);
 
                     rs.disableAvoidance();
                     rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
-                    mv.gotoPoint(entryPoint.getX(), EurobotConfig.tableHeight - config.distanceCalageAvant() - 102, GotoOption.AVANT);
+                    mv.gotoPoint(entryPoint.getX(), EurobotConfig.tableHeight - config.distanceCalageAvant() - 85 - 20, GotoOption.AVANT);
 
                     mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
                     rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                     mv.avanceMM(100);
                     yRefBordure = conv.pulseToMm(position.getPt().getY());
                     log.info("Calage bordure galerie terminé, yRef = {} mm", yRefBordure);
-
                 }
 
                 // On se place à la position permettant de tourner le robot
                 rs.disableAvoidance();
                 mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                 mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_POUR_ROTATION, GotoOption.SANS_ORIENTATION);
+                mv.gotoOrientationDeg(90);
 
                 CouleurEchantillon echantillonDepose = null;
                 if (pos.etage() == Galerie.Etage.BAS) {
                     if (bras.initDepose(BrasService.TypeDepose.GALERIE_BAS)
-                            && bras.processDepose(BrasService.TypeDepose.GALERIE_BAS) != null) {
+                            && (echantillonDepose = bras.processDepose(BrasService.TypeDepose.GALERIE_BAS)) != null) {
 
                         mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_BAS, GotoOption.AVANT);
-                        echantillonDepose = bras.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_BAS);
-                    } else {
-                        rs.destockage();
+                        if (!bras.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_BAS)) {
+                            echantillonDepose = null;
+                        }
                     }
 
                 } else if (pos.etage() == Galerie.Etage.HAUT) {
                     if (bras.initDepose(BrasService.TypeDepose.GALERIE_HAUT)
-                            && bras.processDepose(BrasService.TypeDepose.GALERIE_HAUT) != null) {
+                            && (echantillonDepose = bras.processDepose(BrasService.TypeDepose.GALERIE_HAUT)) != null) {
 
                         rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                         mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
-                        echantillonDepose = bras.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_HAUT);
-                    } else {
-                        rs.destockage();
+                        if (!bras.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_HAUT)) {
+                            echantillonDepose = null;
+                        }
                     }
 
                 } else {
                     if (bras.initDepose(BrasService.TypeDepose.GALERIE_CENTRE)
-                            && bras.processDepose(BrasService.TypeDepose.GALERIE_CENTRE) != null) {
+                            && (echantillonDepose = bras.processDepose(BrasService.TypeDepose.GALERIE_CENTRE)) != null) {
 
                         rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                         mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
-                        echantillonDepose = bras.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_CENTRE);
-                    } else {
-                        rs.destockage();
+                        if (!bras.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_CENTRE)) {
+                            echantillonDepose = null;
+                        }
                     }
                 }
                 if (echantillonDepose != null) {
@@ -160,6 +161,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
                 } else {
                     log.warn("Echantillon de dépose null dans la galerie {} - {}", pos.periode(), pos.etage());
                 }
+                mv.reculeMM(20);
                 bras.finalizeDepose();
 
                 lastPosition = pos;

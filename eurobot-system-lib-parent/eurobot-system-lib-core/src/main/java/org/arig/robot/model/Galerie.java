@@ -65,7 +65,7 @@ public class Galerie {
         log.info("Demande de stockage galerie pour échantillon {} depuis la période {}", couleur, currentPeriode);
 
         // On commence dans le cas ou, on est sur une période déja en place, ou pas de période pour une couleur donné.
-        if (couleur == CouleurEchantillon.BLEU) {
+        if (couleur == CouleurEchantillon.BLEU || couleur == CouleurEchantillon.ROCHER_BLEU) {
             if (bleu.size() < MAX_DEPOSE && (currentPeriode == Periode.BLEU || currentPeriode == null)) {
                 return new GaleriePosition(Periode.BLEU, bleu.isEmpty() ? Etage.BAS : Etage.HAUT);
             } else if (bleuVert.size() < MAX_DEPOSE && (currentPeriode == Periode.BLEU_VERT || currentPeriode == null)) {
@@ -74,7 +74,7 @@ public class Galerie {
                 return bestPosition(couleur, null); // Retry sans période préférée
             }
 
-        } else if (couleur == CouleurEchantillon.ROUGE) {
+        } else if (couleur == CouleurEchantillon.ROUGE || couleur == CouleurEchantillon.ROCHER_ROUGE) {
             if (rouge.size() < MAX_DEPOSE && (currentPeriode == Periode.ROUGE || currentPeriode == null)) {
                 return new GaleriePosition(Periode.ROUGE, rouge.isEmpty() ? Etage.BAS : Etage.HAUT);
             } else if (rougeVert.size() < MAX_DEPOSE && (currentPeriode == Periode.ROUGE_VERT || currentPeriode == null)) {
@@ -83,7 +83,7 @@ public class Galerie {
                 return bestPosition(couleur, null); // Retry sans période préférée
             }
 
-        } else if (couleur == CouleurEchantillon.VERT) {
+        } else if (couleur == CouleurEchantillon.VERT || couleur == CouleurEchantillon.ROCHER_VERT) {
             if (bleuVert.size() < MAX_DEPOSE && (currentPeriode == Periode.BLEU_VERT || currentPeriode == null)) {
                 return new GaleriePosition(Periode.BLEU_VERT, bleuVert.isEmpty() ? Etage.BAS : Etage.HAUT);
             } else if (rougeVert.size() < MAX_DEPOSE && (currentPeriode == Periode.ROUGE_VERT || currentPeriode == null)) {
