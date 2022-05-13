@@ -116,7 +116,7 @@ public class OdinServosService extends AbstractCommonServosService {
                 .time(475)
                 .position(POS_FERME, 2370)
                 .position(POS_VIBRATION, 2170)
-                .position(POS_PRISE_DEPOSE, 980);
+                .position(POS_PRISE_DEPOSE, 1010);
         Servo pousseReplique = servo(POUSSE_REPLIQUE_ID, POUSSE_REPLIQUE)
                 .time(375)
                 .position(POS_FERME, 1870)
