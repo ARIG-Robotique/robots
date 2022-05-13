@@ -432,10 +432,14 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     public CouleurEchantillon destockage() {
         int idx = indexDestockage();
-        CouleurEchantillon couleur = stock[idx];
-        stock[idx] = null;
-        needRefreshStock = true;
-        return couleur;
+        if (idx != -1) {
+            CouleurEchantillon couleur = stock[idx];
+            stock[idx] = null;
+            needRefreshStock = true;
+            return couleur;
+        } else {
+            return null;
+        }
     }
 
     /**

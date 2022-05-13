@@ -190,16 +190,22 @@ public class DeposeCampement extends AbstractEurobotAction {
                     case ROUGE:
                         if (bras.processDeposeSol(rs.tailleCampementRouge()) != null) {
                             group.deposeCampementRouge(echantillon);
+                        } else {
+                            rs.destockage();
                         }
                         break;
                     case VERT:
                         if (bras.processDeposeSol(rs.tailleCampementVertTemp()) != null) {
                             group.deposeCampementVertTemp(echantillon);
+                        } else {
+                            rs.destockage();
                         }
                         break;
                     case BLEU:
                         if (bras.processDeposeSol(rs.tailleCampementBleu()) != null) {
                             group.deposeCampementBleu(echantillon);
+                        } else {
+                            rs.destockage();
                         }
                         break;
                 }

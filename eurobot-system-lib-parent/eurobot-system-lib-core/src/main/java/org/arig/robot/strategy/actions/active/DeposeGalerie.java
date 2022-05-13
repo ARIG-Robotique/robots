@@ -129,6 +129,8 @@ public class DeposeGalerie extends AbstractEurobotAction {
 
                         mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_BAS, GotoOption.AVANT);
                         echantillonDepose = bras.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_BAS);
+                    } else {
+                        rs.destockage();
                     }
 
                 } else if (pos.etage() == Galerie.Etage.HAUT) {
@@ -138,6 +140,8 @@ public class DeposeGalerie extends AbstractEurobotAction {
                         rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                         mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
                         echantillonDepose = bras.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_HAUT);
+                    } else {
+                        rs.destockage();
                     }
 
                 } else {
@@ -147,14 +151,16 @@ public class DeposeGalerie extends AbstractEurobotAction {
                         rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                         mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
                         echantillonDepose = bras.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_CENTRE);
+                    } else {
+                        rs.destockage();
                     }
                 }
                 if (echantillonDepose != null) {
                     comptagePoint(pos, echantillonDepose);
-                    bras.finalizeDepose();
                 } else {
                     log.warn("Echantillon de dépose null dans la galerie {} - {}", pos.periode(), pos.etage());
                 }
+                bras.finalizeDepose();
 
                 lastPosition = pos;
             } while (!rs.galerieComplete() && rs.stockTaille() != 0 && remainingTimeBeforeRetourSiteValid());
