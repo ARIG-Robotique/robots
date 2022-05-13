@@ -156,7 +156,7 @@ public class DeposeCampement extends AbstractEurobotAction {
                 // - la première fois
                 // - si on change de couleur
                 // - si la zone est pleine
-                CouleurEchantillon newPosition = getNewPosition(echantillon);
+                CouleurEchantillon newPosition = getNewPosition(echantillon, position);
                 if (newPosition == null) {
                     log.info("Plus de place au campement pour faire la dépose");
                     complete();
@@ -216,7 +216,7 @@ public class DeposeCampement extends AbstractEurobotAction {
         }
     }
 
-    private CouleurEchantillon getNewPosition(CouleurEchantillon echantillon) {
+    private CouleurEchantillon getNewPosition(CouleurEchantillon echantillon, CouleurEchantillon previousPosition) {
         int tailleRouge = rs.tailleCampementRouge();
         int tailleVert = rs.tailleCampementVertTemp();
         int tailleBleu = rs.tailleCampementBleu();
@@ -228,24 +228,27 @@ public class DeposeCampement extends AbstractEurobotAction {
                 if (tailleRouge < Campement.MAX_DEPOSE) {
                     return CouleurEchantillon.ROUGE;
                 } else {
-                    return getNewPosition(CouleurEchantillon.ROCHER);
+                    return getNewPosition(CouleurEchantillon.ROCHER, previousPosition);
                 }
 
             case VERT:
                 if (tailleVert < Campement.MAX_DEPOSE) {
                     return CouleurEchantillon.VERT;
                 } else {
-                    return getNewPosition(CouleurEchantillon.ROCHER);
+                    return getNewPosition(CouleurEchantillon.ROCHER, previousPosition);
                 }
 
             case BLEU:
                 if (tailleBleu < Campement.MAX_DEPOSE) {
                     return CouleurEchantillon.BLEU;
                 } else {
-                    return getNewPosition(CouleurEchantillon.ROCHER);
+                    return getNewPosition(CouleurEchantillon.ROCHER, previousPosition);
                 }
 
             default:
+                if (previousPosition != null) {
+                    return getNewPosition(previousPosition, null);
+                }
                 if (tailleRouge == tailleBleu && tailleBleu == tailleVert) {
                     return CouleurEchantillon.values()[(int) Math.floor(Math.random() * 3)];
                 }
