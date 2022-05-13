@@ -25,6 +25,7 @@ public interface IOService {
     boolean calageAvantHautGauche();
     boolean calageLatteralDroit();
     boolean calagePriseEchantillon();
+    boolean calageVentouseBas();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

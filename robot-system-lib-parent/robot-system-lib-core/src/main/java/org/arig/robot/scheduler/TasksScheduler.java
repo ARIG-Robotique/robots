@@ -55,7 +55,9 @@ public class TasksScheduler implements InitializingBean {
                 long timeStartCalage = System.nanoTime();
                 long ellapsedCalage = timeStartCalage - lastTimeCalage;
 
-                boolean calageCourt = rs.calage().contains(TypeCalage.LATTERAL_DROIT) || rs.calage().contains(TypeCalage.PRISE_ECHANTILLON);
+                boolean calageCourt = rs.calage().contains(TypeCalage.LATTERAL_DROIT)
+                        || rs.calage().contains(TypeCalage.PRISE_ECHANTILLON)
+                        || rs.calage().contains(TypeCalage.VENTOUSE_BAS);
                 if (ellapsedCalage >= robotConfig.calageTimeMs(calageCourt) * 1000000) {
                     lastTimeCalage = timeStartCalage;
 

@@ -103,7 +103,8 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
             task.get();
 
             for (int i = 0; i < 3; i++) {
-                mv.avanceMM(20);
+                rs.enableCalageBordure(TypeCalage.VENTOUSE_BAS, TypeCalage.FORCE);
+                mv.avanceMM(25);
 
                 if (bras.processPrise(BrasService.TypePrise.DISTRIBUTEUR).get()) {
                     if (i == 2) {

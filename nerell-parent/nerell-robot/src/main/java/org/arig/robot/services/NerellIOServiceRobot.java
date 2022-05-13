@@ -322,6 +322,11 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         return presencePriseBras(true);
     }
 
+    @Override
+    public boolean calageVentouseBas() {
+        return presenceVentouseBas();
+    }
+
     // Couleur
     @Override
     public CouleurEchantillon couleurVentouseBas() {

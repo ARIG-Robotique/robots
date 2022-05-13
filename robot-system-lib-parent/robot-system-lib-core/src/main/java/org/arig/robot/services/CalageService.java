@@ -31,15 +31,19 @@ public class CalageService {
             boolean doneAvantHaut = false;
             boolean doneLatteralDroit = false;
             boolean donePriseEchantillon = false;
+            boolean doneVentouseBas = false;
 
             if (!rs.matchEnabled() && !ioService.auOk()) {
-                doneArriere = doneAvantBas = doneAvantHaut = doneLatteralDroit = donePriseEchantillon = true;
+                doneArriere = doneAvantBas = doneAvantHaut = doneLatteralDroit = donePriseEchantillon = doneVentouseBas = true;
             } else {
                 if (rs.calage().size() == 1 && rs.calage().contains(TypeCalage.LATTERAL_DROIT)) {
                     doneLatteralDroit = ioService.calageLatteralDroit();
                 }
                 if (rs.calage().size() == 1 && rs.calage().contains(TypeCalage.PRISE_ECHANTILLON)) {
                     donePriseEchantillon = ioService.calagePriseEchantillon();
+                }
+                if (rs.calage().contains(TypeCalage.VENTOUSE_BAS)) {
+                    doneVentouseBas = ioService.calageVentouseBas();
                 }
 
                 if (cmdRobot.isType(TypeConsigne.DIST) && cmdRobot.isType(TypeConsigne.ANGLE)) {
@@ -69,7 +73,7 @@ public class CalageService {
                 }
             }
 
-            if (doneAvantBas || doneAvantHaut || doneArriere || doneLatteralDroit || donePriseEchantillon) {
+            if (doneAvantBas || doneAvantHaut || doneArriere || doneLatteralDroit || donePriseEchantillon || doneVentouseBas) {
                 if (doneAvantBas) {
                     rs.calageCompleted().add(TypeCalage.AVANT_BAS);
                 }
@@ -85,8 +89,11 @@ public class CalageService {
                 if (donePriseEchantillon) {
                     rs.calageCompleted().add(TypeCalage.PRISE_ECHANTILLON);
                 }
+                if (doneVentouseBas) {
+                    rs.calageCompleted().add(TypeCalage.VENTOUSE_BAS);
+                }
 
-                trajectoryManager.calageBordureDone();
+                trajectoryManager.calageBordureDone(); // TODO Rename
             }
         }
     }

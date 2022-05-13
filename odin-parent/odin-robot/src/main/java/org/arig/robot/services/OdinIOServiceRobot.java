@@ -332,6 +332,11 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
         return presencePriseBras(true);
     }
 
+    @Override
+    public boolean calageVentouseBas() {
+        return presenceVentouseBas();
+    }
+
     // Couleur
     @Override
     public CouleurEchantillon couleurVentouseBas() {

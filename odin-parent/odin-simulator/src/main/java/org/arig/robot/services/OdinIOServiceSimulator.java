@@ -61,6 +61,11 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
         return rs.calage().contains(TypeCalage.PRISE_ECHANTILLON);
     }
 
+    @Override
+    public boolean calageVentouseBas() {
+        return rs.calage().contains(TypeCalage.VENTOUSE_BAS) && presenceVentouseBas();
+    }
+
     // Numerique
     @Override
     public boolean presenceVentouseBas() {
