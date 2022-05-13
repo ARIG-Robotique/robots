@@ -156,8 +156,6 @@ public class AbriDeChantier extends AbstractEurobotAction {
                 needPath = false;
             }
 
-            rs.enableAvoidance();
-
             if (!rs.echantillonAbriChantierDistributeurPris()) {
                 mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                 if (needPath){
