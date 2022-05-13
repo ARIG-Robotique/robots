@@ -162,6 +162,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
             } while (!rs.galerieComplete() && rs.stockTaille() != 0 && remainingTimeBeforeRetourSiteValid());
 
             // On se place à la position permettant de tourner le robot pour la prochaine action
+            rs.enableAvoidance();
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_POUR_ROTATION, GotoOption.SANS_ORIENTATION);
 
