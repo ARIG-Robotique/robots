@@ -101,6 +101,7 @@ public class DistributeurEquipe extends AbstractEurobotAction {
             task.get();
 
             for (int i = 0; i < 3; i++) {
+                io.enablePompeVentouseBas();
                 rs.enableCalageBordure(TypeCalage.VENTOUSE_BAS, TypeCalage.FORCE);
                 mv.avanceMM(25);
 
