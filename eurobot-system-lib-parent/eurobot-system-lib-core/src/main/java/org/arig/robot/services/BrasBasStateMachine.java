@@ -100,8 +100,16 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
                 new PointBras(70, 180, 120),
                 new PointBras(30, 160, 160)
         ));
+        transition(PositionBras.ECHANGE, PositionBras.STOCK_DEPOSE_1, TransitionBras.withPoints(
+                new PointBras(70, 180, 120),
+                new PointBras(30, 160, 160)
+        ));
         transition(PositionBras.STOCK_DEPOSE_2, PositionBras.STOCK_ENTREE);
         transition(PositionBras.STOCK_ENTREE, PositionBras.STOCK_DEPOSE_2, TransitionBras.withPoints(
+                new PointBras(70, 180, 120),
+                new PointBras(30, 160, 160)
+        ));
+        transition(PositionBras.ECHANGE, PositionBras.STOCK_DEPOSE_2, TransitionBras.withPoints(
                 new PointBras(70, 180, 120),
                 new PointBras(30, 160, 160)
         ));
@@ -110,16 +118,29 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
                 new PointBras(70, 180, 120),
                 new PointBras(30, 167, 170)
         ));
+        transition(PositionBras.ECHANGE, PositionBras.STOCK_DEPOSE_3, TransitionBras.withPoints(
+                new PointBras(70, 180, 120),
+                new PointBras(30, 167, 170)
+        ));
         transition(PositionBras.STOCK_DEPOSE_4, PositionBras.STOCK_ENTREE);
         transition(PositionBras.STOCK_ENTREE, PositionBras.STOCK_DEPOSE_4, TransitionBras.withPoints(
+                new PointBras(70, 170, 150)
+        ));
+        transition(PositionBras.ECHANGE, PositionBras.STOCK_DEPOSE_4, TransitionBras.withPoints(
                 new PointBras(70, 170, 150)
         ));
         transition(PositionBras.STOCK_DEPOSE_5, PositionBras.STOCK_ENTREE);
         transition(PositionBras.STOCK_ENTREE, PositionBras.STOCK_DEPOSE_5, TransitionBras.withPoints(
                 new PointBras(105, 182, 130)
         ));
+        transition(PositionBras.ECHANGE, PositionBras.STOCK_DEPOSE_5, TransitionBras.withPoints(
+                new PointBras(105, 182, 130)
+        ));
         transition(PositionBras.STOCK_DEPOSE_6, PositionBras.STOCK_ENTREE);
         transition(PositionBras.STOCK_ENTREE, PositionBras.STOCK_DEPOSE_6, TransitionBras.withPoints(
+                new PointBras(110, 170, 140)
+        ));
+        transition(PositionBras.ECHANGE, PositionBras.STOCK_DEPOSE_6, TransitionBras.withPoints(
                 new PointBras(110, 170, 140)
         ));
 

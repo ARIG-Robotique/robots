@@ -146,8 +146,6 @@ public class DeposeCampement extends AbstractEurobotAction {
             //mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
             rs.disableAvoidance();
 
-            bras.initDepose(BrasService.TypeDepose.SOL);
-
             CouleurEchantillon echantillon;
             CouleurEchantillon position = null;
 
@@ -162,6 +160,8 @@ public class DeposeCampement extends AbstractEurobotAction {
                     complete();
                     break;
                 }
+
+                bras.initDepose(BrasService.TypeDepose.SOL);
 
                 log.info("Dépose {} dans le campement {}", echantillon, newPosition);
 
