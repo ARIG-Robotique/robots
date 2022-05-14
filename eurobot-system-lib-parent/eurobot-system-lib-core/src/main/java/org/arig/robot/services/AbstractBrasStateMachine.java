@@ -1,5 +1,6 @@
 package org.arig.robot.services;
 
+import org.arig.robot.model.bras.OptionBras;
 import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.bras.TransitionBras;
@@ -7,7 +8,7 @@ import org.arig.robot.utils.StateMachine;
 
 import java.util.Map;
 
-public abstract class AbstractBrasStateMachine extends StateMachine<PositionBras, PointBras, TransitionBras> {
+public abstract class AbstractBrasStateMachine extends StateMachine<PositionBras, PointBras, TransitionBras, OptionBras> {
 
     Map<Integer, PointBras> PRISE_STOCK = Map.of(
             1, new PointBras(-22, 136, -170),

@@ -19,7 +19,12 @@ import java.util.Set;
 @Slf4j
 @Accessors(fluent = true)
 @RequiredArgsConstructor
-public class StateMachine<KEY extends Enum<?>, STATE extends Serializable, TRANSITION extends Serializable> {
+public class StateMachine<KEY extends Enum<?>, STATE extends Serializable, TRANSITION extends Serializable, OPTION extends Serializable> {
+
+    @FunctionalInterface
+    public static interface OnState<KEY extends Enum<?>, STATE extends Serializable, TRANSITION extends Serializable, OPTION extends Serializable> {
+        void accept(KEY key, STATE state, TRANSITION transition, OPTION options);
+    }
 
     private final Map<KEY, STATE> states = new HashMap<>();
     private final Map<Pair<KEY, KEY>, TRANSITION> transitions = new HashMap<>();
@@ -34,7 +39,7 @@ public class StateMachine<KEY extends Enum<?>, STATE extends Serializable, TRANS
     private TRANSITION defaultTransition = null;
 
     @Setter
-    private TriConsumer<KEY, STATE, TRANSITION> onState;
+    private OnState<KEY, STATE, TRANSITION, OPTION> onState;
 
     @Getter
     @Setter
@@ -64,7 +69,7 @@ public class StateMachine<KEY extends Enum<?>, STATE extends Serializable, TRANS
         transitions.keySet().stream().sorted().forEach(k -> log.info("  * {} -> {}", k.getLeft(), k.getRight()));
     }
 
-    public StateMachine<KEY, STATE, TRANSITION> state(@NonNull KEY key, @NonNull STATE state) {
+    public StateMachine<KEY, STATE, TRANSITION, OPTION> state(@NonNull KEY key, @NonNull STATE state) {
         assert !states.containsKey(key) : "[" + name + "] " + key.name() + " state already registered";
 
         states.put(key, state);
@@ -72,12 +77,12 @@ public class StateMachine<KEY extends Enum<?>, STATE extends Serializable, TRANS
         return this;
     }
 
-    public StateMachine<KEY, STATE, TRANSITION> transition(@NonNull KEY from, @NonNull KEY to) {
+    public StateMachine<KEY, STATE, TRANSITION, OPTION> transition(@NonNull KEY from, @NonNull KEY to) {
         transition(from, to, null);
         return this;
     }
 
-    public StateMachine<KEY, STATE, TRANSITION> transition(@NonNull KEY from, @NonNull KEY to, TRANSITION transition) {
+    public StateMachine<KEY, STATE, TRANSITION, OPTION> transition(@NonNull KEY from, @NonNull KEY to, TRANSITION transition) {
         assert states.containsKey(from) : "[" + name + "] " + from.name() + " state missing";
         assert states.containsKey(to) : "[" + name + "] " + to.name() + " state missing";
 
@@ -92,6 +97,10 @@ public class StateMachine<KEY extends Enum<?>, STATE extends Serializable, TRANS
 
     // TODO calcul automatique des différents points de passage si manquant dans "transitions"
     public void goTo(@NonNull KEY to) {
+        goTo(to, null);
+    }
+
+    public void goTo(@NonNull KEY to, OPTION option) {
         if (to == current) {
             return;
         }
@@ -104,9 +113,9 @@ public class StateMachine<KEY extends Enum<?>, STATE extends Serializable, TRANS
             if (!disableCheck) {
                 Assert.isTrue(transitions.containsKey(key), "[" + name + "] " + current.name() + "->" + to.name() + " transition not registered");
             }
-            onState.accept(to, states.get(to), transitions.getOrDefault(key, defaultTransition));
+            onState.accept(to, states.get(to), transitions.getOrDefault(key, defaultTransition), option);
         } else {
-            onState.accept(to, states.get(to), defaultTransition);
+            onState.accept(to, states.get(to), defaultTransition, option);
         }
 
         current = to;

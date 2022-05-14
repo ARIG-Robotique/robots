@@ -24,7 +24,11 @@ public class StateMachineTest {
 
     }
 
-    private StateMachine<Key, State, Transition> machine;
+    class Option implements Serializable {
+
+    }
+
+    private StateMachine<Key, State, Transition, Option> machine;
 
     @BeforeEach
     public void init() {
@@ -49,7 +53,7 @@ public class StateMachineTest {
     public void testBasic() {
         final AtomicReference<Key> newKey = new AtomicReference<>();
         final AtomicBoolean hadTransition = new AtomicBoolean();
-        machine.onState((key, state, transition) -> {
+        machine.onState((key, state, transition, opt) -> {
             newKey.set(key);
             hadTransition.set(transition != null);
         });

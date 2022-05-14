@@ -7,6 +7,7 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.RobotConfig;
+import org.arig.robot.model.bras.OptionBras;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Service;
@@ -128,9 +129,9 @@ public class BrasService extends BrasServiceInternal {
 
         // premier mouvement synchrone
         if (couleur.isNeedsEchange()) {
-            setBrasBas(typePrise == TypePrise.BORDURE ? PositionBras.ECHANGE_2 : PositionBras.ECHANGE);
+            setBrasBas(typePrise == TypePrise.BORDURE ? PositionBras.ECHANGE_2 : PositionBras.ECHANGE, OptionBras.SLOW);
         } else {
-            setBrasBas(PositionBras.STOCK_ENTREE);
+            setBrasBas(PositionBras.STOCK_ENTREE, OptionBras.SLOW);
         }
 
         return CompletableFuture.supplyAsync(() -> {
@@ -168,8 +169,8 @@ public class BrasService extends BrasServiceInternal {
                 setBrasBas(typePrise == TypePrise.DISTRIBUTEUR ? PositionBras.DISTRIBUTEUR_PRISE : PositionBras.HORIZONTAL);
 
                 // stockage
-                setBrasHaut(PositionBras.STOCK_ENTREE);
-                setBrasHaut(PositionBras.stockDepose(indexStock));
+                setBrasHaut(PositionBras.STOCK_ENTREE, OptionBras.SLOW);
+                setBrasHaut(PositionBras.stockDepose(indexStock), OptionBras.SLOW);
 
                 io.releasePompeVentouseHaut();
                 rs.ventouseHaut(null);
@@ -184,7 +185,7 @@ public class BrasService extends BrasServiceInternal {
 
             } else {
                 // stockage
-                setBrasBas(PositionBras.stockDepose(indexStock));
+                setBrasBas(PositionBras.stockDepose(indexStock), OptionBras.SLOW);
 
                 io.releasePompeVentouseBas();
                 rs.ventouseBas(null);

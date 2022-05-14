@@ -160,7 +160,7 @@ public class OdinServosCommands {
             log.info("Prise en cours");
             if (brasService.processPrise(typePrise).get()) {
                 log.info("Prise terminée");
-                if (brasService.stockagePrise(typePrise, couleur, false).get()) {
+                if (brasService.stockagePrise(typePrise, couleur).get()) {
                     log.info("Stockage terminé : {}", Arrays.stream(rs.stock()).map(c -> c == null ? "null" : c.name()).collect(Collectors.joining(",")));
                 }
             }

@@ -7,13 +7,13 @@ import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.bras.AnglesBras;
 import org.arig.robot.model.bras.ConfigBras;
 import org.arig.robot.model.bras.CurrentBras;
+import org.arig.robot.model.bras.OptionBras;
 import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.bras.TransitionBras;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import static org.arig.robot.services.AbstractCommonServosService.*;
@@ -125,15 +125,15 @@ public abstract class BrasServiceInternal {
      * Change la position du bras bas en passant par la state machine
      */
     public void setBrasBas(PositionBras position) {
+        setBrasBas(position, null);
+    }
+
+    public void setBrasBas(PositionBras position, OptionBras opt) {
         try {
-            brasBas.goTo(position);
+            brasBas.goTo(position, opt);
         } catch (Throwable e) {
             log.warn(e.getMessage(), e);
         }
-    }
-
-    public CompletableFuture<Void> setBrasBasAsync(PositionBras position) {
-        return CompletableFuture.runAsync(() -> setBrasBas(position), executor);
     }
 
     /**
@@ -162,15 +162,15 @@ public abstract class BrasServiceInternal {
      * Change la position du bras haut en passant par la state machine
      */
     public void setBrasHaut(PositionBras position) {
+        setBrasHaut(position, null);
+    }
+
+    public void setBrasHaut(PositionBras position, OptionBras opt) {
         try {
-            brasHaut.goTo(position);
+            brasHaut.goTo(position, opt);
         } catch (Throwable e) {
             log.warn(e.getMessage(), e);
         }
-    }
-
-    public CompletableFuture<Void> setBrasHautAsync(PositionBras position) {
-        return CompletableFuture.runAsync(() -> setBrasHaut(position), executor);
     }
 
     /**
@@ -211,20 +211,20 @@ public abstract class BrasServiceInternal {
         brasBas.disableCheck(brasBasDisableCheck);
     }
 
-    private void setBrasBas(PositionBras state, PointBras pt, TransitionBras transition) {
+    private void setBrasBas(PositionBras state, PointBras pt, TransitionBras transition, OptionBras opt) {
         for (PointBras point : transition.points()) {
-            setBrasBas(point, state, transition.speed());
+            setBrasBas(point, state, opt == OptionBras.SLOW ? 50 : 80);
         }
 
-        setBrasBas(pt, state, transition.speed());
+        setBrasBas(pt, state, opt == OptionBras.SLOW ? 50 : 80);
     }
 
-    private void setBrasHaut(PositionBras state, PointBras pt, TransitionBras transition) {
+    private void setBrasHaut(PositionBras state, PointBras pt, TransitionBras transition, OptionBras opt) {
         for (PointBras point : transition.points()) {
-            setBrasHaut(point, state, transition.speed());
+            setBrasHaut(point, state, opt == OptionBras.SLOW ? 50 : 80);
         }
 
-        setBrasHaut(pt, state, transition.speed());
+        setBrasHaut(pt, state, opt == OptionBras.SLOW ? 50 : 80);
     }
 
     private AnglesBras calculerAngles(ConfigBras configBras, int x, int y, int a, boolean enableLog, Boolean preferA1Min) {
