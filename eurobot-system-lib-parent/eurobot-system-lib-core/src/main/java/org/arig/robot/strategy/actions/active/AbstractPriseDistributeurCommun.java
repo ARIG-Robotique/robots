@@ -81,7 +81,7 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
             mv.avanceMM(100);
 
             mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
-            mv.reculeMM(60);
+            mv.reculeMM(55);
 
             // Calage sur Y
             mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
