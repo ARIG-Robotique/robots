@@ -17,6 +17,7 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -65,6 +66,9 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 
     @Override
     public List<String> blockingActions() {
+        if (!rs.reverseCarreDeFouille()) {
+            return Arrays.asList(EurobotConfig.ACTION_PRISE_SITE_FOUILLE_EQUIPE, EurobotConfig.ACTION_ABRI_CHANTIER);
+        }
         return Collections.singletonList(EurobotConfig.ACTION_PRISE_SITE_FOUILLE_EQUIPE);
     }
 
