@@ -8,14 +8,12 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.ActionSuperviseur;
 import org.arig.robot.model.CommandeRobot;
-import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.SensRotation;
 import org.arig.robot.services.LidarService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.pathfinding.PathFinder;
-import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
@@ -49,13 +47,7 @@ public class MouvementController {
     private AbstractRobotStatus rs;
 
     @Autowired
-    private Position position;
-
-    @Autowired
     private CommandeRobot cmdRobot;
-
-    @Autowired
-    private ConvertionRobotUnit conv;
 
     @Autowired
     private LidarService lidarService;
@@ -78,9 +70,9 @@ public class MouvementController {
                 .collect(Collectors.toList());
 
         Map<String, Object> pos = new HashMap<>();
-        pos.put("x", conv.pulseToMm(position.getPt().getX()));
-        pos.put("y", conv.pulseToMm(position.getPt().getY()));
-        pos.put("angle", conv.pulseToDeg(position.getAngle()));
+        pos.put("x", trajectoryManager.currentXMm());
+        pos.put("y", trajectoryManager.currentYMm());
+        pos.put("angle", trajectoryManager.currentAngleDeg());
         pos.put("targetMvt", trajectoryManager.getCurrentMouvement());
         pos.put("trajetAtteint", trajectoryManager.isTrajetAtteint());
         pos.put("trajetEnApproche", trajectoryManager.isTrajetEnApproche());

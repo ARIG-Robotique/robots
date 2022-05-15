@@ -17,6 +17,10 @@ public abstract class AbstractRobotGroupBouchon implements RobotGroup {
     }
 
     @Override
+    public void setCurrentPosition(int x, int y) {
+    }
+
+    @Override
     public <E extends Enum<E>> void sendEventLog(E event, byte[] data) {
     }
 

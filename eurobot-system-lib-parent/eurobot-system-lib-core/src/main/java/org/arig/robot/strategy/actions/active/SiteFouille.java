@@ -34,14 +34,10 @@ public class SiteFouille extends AbstractEurobotAction {
 
     private boolean isReverse() {
         if (rs.team() == Team.JAUNE) {
-            return getCurrentX() > 970;
+            return mv.currentXMm() > 970;
         } else {
-            return getCurrentX() < 3000 - 970;
+            return mv.currentXMm() < 3000 - 970;
         }
-    }
-
-    private double getCurrentX() {
-        return conv.pulseToMm(position.getPt().getX());
     }
 
     @Override

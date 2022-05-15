@@ -5,13 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
 import org.arig.robot.services.LidarService;
 import org.arig.robot.services.TrajectoryManager;
-import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 @Slf4j
 public abstract class AbstractAvoidingService implements AvoidingService {
@@ -21,13 +18,6 @@ public abstract class AbstractAvoidingService implements AvoidingService {
 
     @Autowired
     protected LidarService lidarService;
-
-    @Autowired
-    protected ConvertionRobotUnit conv;
-
-    @Autowired
-    @Qualifier("currentPosition")
-    protected Position currentPosition;
 
     @Autowired
     protected CommandeRobot cmdRobot;
@@ -67,8 +57,8 @@ public abstract class AbstractAvoidingService implements AvoidingService {
     }
 
     private boolean checkValidPointForSeuil(Point pt, int seuilMm) {
-        long dX = (long) (pt.getX() - conv.pulseToMm(currentPosition.getPt().getX()));
-        long dY = (long) (pt.getY() - conv.pulseToMm(currentPosition.getPt().getY()));
+        long dX = (long) (pt.getX() - trajectoryManager.currentXMm());
+        long dY = (long) (pt.getY() - trajectoryManager.currentYMm());
         double distanceMm = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
 
         if (distanceMm > seuilMm) {
@@ -76,7 +66,7 @@ public abstract class AbstractAvoidingService implements AvoidingService {
         }
 
         double alpha = Math.toDegrees(Math.atan2(dY, dX));
-        double dA = alpha - conv.pulseToDeg(currentPosition.getAngle());
+        double dA = alpha - trajectoryManager.currentAngleDeg();
         if (dA > 180) {
             dA -= 360;
         } else if (dA < -180) {

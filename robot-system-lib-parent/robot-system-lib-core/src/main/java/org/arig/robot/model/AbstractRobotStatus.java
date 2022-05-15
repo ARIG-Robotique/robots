@@ -193,6 +193,18 @@ public abstract class AbstractRobotStatus {
 
     private String otherCurrentAction = null;
 
+    @Setter(AccessLevel.PRIVATE)
+    private Point otherPosition = null;
+
+    public void otherPosition(int x, int y) {
+        if (otherPosition == null) {
+            otherPosition = new Point(x, y);
+        } else {
+            otherPosition.setX(x);
+            otherPosition.setY(y);
+        }
+    }
+
     public abstract int calculerPoints();
 
     public abstract Map<String, ?> gameStatus();

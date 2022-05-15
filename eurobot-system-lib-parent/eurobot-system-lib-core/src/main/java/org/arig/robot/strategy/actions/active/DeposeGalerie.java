@@ -113,7 +113,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
                     mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
                     rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                     mv.avanceMM(100);
-                    yRefBordure = conv.pulseToMm(position.getPt().getY());
+                    yRefBordure = mv.currentYMm();
                     log.info("Calage bordure galerie terminé, yRef = {} mm", yRefBordure);
                 }
 

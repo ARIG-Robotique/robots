@@ -59,8 +59,8 @@ public class CompleteAvoidingService extends AbstractAvoidingService {
                 MonitorMouvementPath mp = (MonitorMouvementPath) currentMvt;
 
                 Point2D ptFrom = new Point2D.Double(
-                        conv.pulseToMm(currentPosition.getPt().getX()) / 10,
-                        conv.pulseToMm(currentPosition.getPt().getY()) / 10
+                        trajectoryManager.currentXMm() / 10,
+                        trajectoryManager.currentYMm() / 10
                 );
                 Point2D ptTo;
                 for (Point pt : mp.getPath()) {

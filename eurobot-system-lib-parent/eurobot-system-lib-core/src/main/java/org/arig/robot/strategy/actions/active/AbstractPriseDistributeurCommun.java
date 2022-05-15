@@ -130,8 +130,8 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
 
         } catch (NoPathFoundException | AvoidingException | ExecutionException | InterruptedException e) {
             if (e instanceof MovementCancelledException) {
-                final double robotX = conv.pulseToMm(position.getPt().getX());
-                final double robotY = conv.pulseToMm(position.getPt().getY());
+                final double robotX = mv.currentXMm();
+                final double robotY = mv.currentYMm();
 
                 if (robotY >= 1650 && robotX >= 1230 && robotX <= 3000 - 1230) {
                     log.warn("Blocage détecté à proximité de {}", name());

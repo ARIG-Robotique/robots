@@ -128,8 +128,8 @@ public class DistributeurEquipe extends AbstractEurobotAction {
 
         } catch (NoPathFoundException | AvoidingException | ExecutionException | InterruptedException e) {
             if (e instanceof MovementCancelledException) {
-                final double robotX = conv.pulseToMm(position.getPt().getX());
-                final double robotY = conv.pulseToMm(position.getPt().getY());
+                final double robotX = mv.currentXMm();
+                final double robotY = mv.currentYMm();
 
                 // blocage dans la zone d'approche = un échantillon bloque le passage
                 if ((robotX <= 350 || robotX >= 3000 - 350) && robotY <= 830 && robotY >= 670) {

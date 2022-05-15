@@ -65,6 +65,13 @@ public class AbstractRobotGroupOverSocket extends AbstractBidirectionalSocket<Gr
     }
 
     @Override
+    public void setCurrentPosition(int x, int y) {
+        if (handler != null) {
+            handler.setCurrentPosition(x, y);
+        }
+    }
+
+    @Override
     public synchronized <E extends Enum<E>> void sendEventLog(E event, byte[] value) {
         if (!rs.groupOk()) {
             return;

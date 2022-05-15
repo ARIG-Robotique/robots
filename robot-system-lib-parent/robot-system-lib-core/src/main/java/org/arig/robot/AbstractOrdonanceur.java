@@ -362,6 +362,14 @@ public abstract class AbstractOrdonanceur {
 
         robotStatus.stopMatch();
 
+        afterMatch(); // impl
+
+        io.disableAlimMoteurs();
+        lidar.stopScan();
+        ecranService.displayMessage(String.format("FIN - Durée match %s ms", robotStatus.getElapsedTime()));
+
+        io.disableAlimServos();
+
         log.info("SCORE");
         robotStatus.scoreStatus().forEach((key, val) -> {
             log.info("  - {} : {}", key, val);
@@ -374,14 +382,6 @@ public abstract class AbstractOrdonanceur {
         robotStatus.gameStatus().forEach((key, val) -> {
             log.info("  - {} : {}", key, val);
         });
-
-        afterMatch(); // impl
-
-        io.disableAlimMoteurs();
-        lidar.stopScan();
-        ecranService.displayMessage(String.format("FIN - Durée match %s ms", robotStatus.getElapsedTime()));
-
-        io.disableAlimServos();
     }
 
     /**

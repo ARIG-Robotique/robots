@@ -125,9 +125,9 @@ public class OdinAsservissementCommands {
 
     @ShellMethod("Lecture de la position actuelle")
     public void readPosition() {
-        log.info("X: {}", convRobot.pulseToMm(currentPosition.getPt().getX()));
-        log.info("Y: {}", convRobot.pulseToMm(currentPosition.getPt().getY()));
-        log.info("A: {}", convRobot.pulseToDeg(currentPosition.getAngle()));
+        log.info("X: {}", trajectoryManager.currentXMm());
+        log.info("Y: {}", trajectoryManager.currentYMm());
+        log.info("A: {}", trajectoryManager.currentAngleDeg());
     }
 
     @ShellMethod("Réinitialisation de la position")

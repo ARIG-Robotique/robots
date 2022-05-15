@@ -10,6 +10,7 @@ import org.arig.robot.services.CalageService;
 import org.arig.robot.services.IOService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.strategy.StrategyManager;
+import org.arig.robot.system.group.RobotGroup;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,6 +21,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 public class TasksScheduler implements InitializingBean {
+
+    private static final int MS_TO_NS = 1000000;
 
     @Autowired
     private MonitoringWrapper monitoringWrapper;
@@ -42,6 +45,9 @@ public class TasksScheduler implements InitializingBean {
     @Autowired
     private RobotConfig robotConfig;
 
+    @Autowired
+    private RobotGroup group;
+
     @Override
     public void afterPropertiesSet() {
         Thread processThread = new Thread(() -> {
@@ -49,16 +55,18 @@ public class TasksScheduler implements InitializingBean {
             long lastTimeI2C = lastTimeAsserv;
             long lastTimeCalage = lastTimeAsserv;
             long lastTimeRefreshState = lastTimeAsserv;
+            long lastTimeRefreshPosition = lastTimeAsserv;
 
             rs.enableMainThread();
             while (rs.mainThread()) {
+                // calage
                 long timeStartCalage = System.nanoTime();
                 long ellapsedCalage = timeStartCalage - lastTimeCalage;
 
                 boolean calageCourt = rs.calage().contains(TypeCalage.LATTERAL_DROIT)
                         || rs.calage().contains(TypeCalage.PRISE_ECHANTILLON)
                         || rs.calage().contains(TypeCalage.VENTOUSE_BAS);
-                if (ellapsedCalage >= robotConfig.calageTimeMs(calageCourt) * 1000000) {
+                if (ellapsedCalage >= robotConfig.calageTimeMs(calageCourt) * MS_TO_NS) {
                     lastTimeCalage = timeStartCalage;
 
                     if (!rs.calage().isEmpty()) {
@@ -66,10 +74,11 @@ public class TasksScheduler implements InitializingBean {
                     }
                 }
 
+                // asservissement
                 long timeStartAsserv = System.nanoTime();
                 long ellapsedAsserv = timeStartAsserv - lastTimeAsserv;
 
-                if (ellapsedAsserv >= robotConfig.asservTimeMs() * 1000000) {
+                if (ellapsedAsserv >= robotConfig.asservTimeMs() * MS_TO_NS) {
                     lastTimeAsserv = timeStartAsserv;
 
                     if (rs.asservEnabled()) {
@@ -90,10 +99,11 @@ public class TasksScheduler implements InitializingBean {
                     monitoringWrapper.addTimeSeriePoint(serie);
                 }
 
+                // lecture I2C
                 long timeStartI2C = System.nanoTime();
                 long ellapsedI2C = timeStartI2C - lastTimeI2C;
 
-                if (ellapsedI2C >= robotConfig.i2cReadTimeMs() * 1000000) {
+                if (ellapsedI2C >= robotConfig.i2cReadTimeMs() * MS_TO_NS) {
                     lastTimeI2C = timeStartI2C;
 
                     ioService.refreshAllIO();
@@ -108,9 +118,20 @@ public class TasksScheduler implements InitializingBean {
                     monitoringWrapper.addTimeSeriePoint(serie);
                 }
 
+                // position
+                if (rs.groupOk()) {
+                    long timeStartRefreshPosition = System.nanoTime();
+                    long ellapsedRefreshPosition = timeStartRefreshPosition - lastTimeRefreshPosition;
+                    if (ellapsedRefreshPosition >= 500 * MS_TO_NS) {
+                        group.setCurrentPosition((int) trajectoryManager.currentXMm(), (int) trajectoryManager.currentXMm());
+                        lastTimeRefreshPosition = timeStartRefreshPosition;
+                    }
+                }
+
+                // state
                 long timeStartRefreshState = System.nanoTime();
                 long ellapsedRefreshState = timeStartRefreshState - lastTimeRefreshState;
-                if (ellapsedRefreshState >= 1000000000) {
+                if (ellapsedRefreshState >= 1000 * MS_TO_NS) {
                     lastTimeRefreshState = timeStartRefreshState;
                     rs.refreshState();
                 }

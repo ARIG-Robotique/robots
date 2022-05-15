@@ -2,7 +2,15 @@ package org.arig.robot.services;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.*;
+import org.arig.robot.model.CouleurCarreFouille;
+import org.arig.robot.model.CouleurEchantillon;
+import org.arig.robot.model.EurobotStatus;
+import org.arig.robot.model.InitStep;
+import org.arig.robot.model.Point;
+import org.arig.robot.model.SiteDeRetour;
+import org.arig.robot.model.Strategy;
+import org.arig.robot.model.Team;
+import org.arig.robot.model.TestEurobotStatus;
 import org.arig.robot.system.RobotGroupOverSocket;
 import org.arig.robot.utils.ThreadUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -10,12 +18,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.stream.Stream;
 
 @Slf4j
 class RobotGroupServiceTest {
@@ -143,6 +154,23 @@ class RobotGroupServiceTest {
 
         Assertions.assertEquals(action, statusPrimary.otherCurrentAction());
         Assertions.assertEquals(action, statusSecondary.otherCurrentAction());
+    }
+
+    @ParameterizedTest
+    @MethodSource("testCurrentPositionData")
+    void testCurrentPosition(int x, int y) {
+        rgServicePrimary.setCurrentPosition(x, y);
+        ThreadUtils.sleep(WAIT);
+
+        Assertions.assertEquals(statusSecondary.otherPosition(), new Point(x, y));
+    }
+
+    private static Stream<Arguments> testCurrentPositionData() {
+        return Stream.of(
+                Arguments.of(0, 0),
+                Arguments.of(1000, 1500),
+                Arguments.of(2000, 3000)
+        );
     }
 
     @Test

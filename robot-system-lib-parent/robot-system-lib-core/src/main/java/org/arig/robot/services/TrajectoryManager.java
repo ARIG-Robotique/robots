@@ -174,6 +174,18 @@ public class TrajectoryManager {
         asservissementPolaire.reset(true);
     }
 
+    public double currentXMm() {
+        return conv.pulseToMm(currentPosition.getPt().getX());
+    }
+
+    public double currentYMm() {
+        return conv.pulseToMm(currentPosition.getPt().getY());
+    }
+
+    public double currentAngleDeg() {
+        return conv.pulseToDeg(currentPosition.getAngle());
+    }
+
     /**
      * Process. Cette méthode permet de réaliser les fonctions lié aux déplacements.
      *
@@ -478,19 +490,13 @@ public class TrajectoryManager {
         int divisor = 10;
 
         do {
-            Point ptFromCm = new Point(
-                    conv.pulseToMm(currentPosition.getPt().getX()) / divisor,
-                    conv.pulseToMm(currentPosition.getPt().getY()) / divisor
-            );
+            Point ptFromCm = new Point(currentXMm() / divisor, currentYMm() / divisor);
             Point ptToCm = new Point(targetXmm / divisor, targetYmm / divisor);
             try {
                 // si c'est une nouvelle tentative et qu'on est dans le noir, on recule ou avance selon le sens déplacement
                 if (nbCollisionDetected > 0 && pathFinder.isBlockedByObstacle(ptFromCm)) {
                     if (degagementPath(targetXmm, targetYmm)) {
-                        ptFromCm = new Point(
-                                conv.pulseToMm(currentPosition.getPt().getX()) / divisor,
-                                conv.pulseToMm(currentPosition.getPt().getY()) / divisor
-                        );
+                        ptFromCm = new Point(currentXMm() / divisor, currentYMm() / divisor);
                     } else {
                         log.warn("Impossible de se dégager de l'obstacle");
                         throw new AvoidingException();
@@ -502,10 +508,7 @@ public class TrajectoryManager {
 
                 MonitorMouvementPath mPath = new MonitorMouvementPath();
                 mPath.setPath(new ArrayList<>(c.getPoints().size() + 1));
-                mPath.getPath().add(new Point(
-                        conv.pulseToMm(currentPosition.getPt().getX()),
-                        conv.pulseToMm(currentPosition.getPt().getY())
-                ));
+                mPath.getPath().add(new Point(currentXMm(), currentYMm()));
                 mPath.getPath().addAll(c.getPoints().stream()
                         .map(point -> point.multiplied(divisor))
                         .collect(Collectors.toList()));
@@ -542,8 +545,8 @@ public class TrajectoryManager {
 
                 } else {
                     // Contrôle que l'on est proche de la position demandée
-                    double dXmm = (targetXmm - conv.pulseToMm(currentPosition.getPt().getX()));
-                    double dYmm = (targetYmm - conv.pulseToMm(currentPosition.getPt().getY()));
+                    double dXmm = (targetXmm - currentXMm());
+                    double dYmm = (targetYmm - currentYMm());
                     double targetDistMm = calculDistance(dXmm, dYmm);
 
                     // Trajet ok si il reste moins de 2cm avec le freinage, sinon le dernier point n'est pas la fin
@@ -591,10 +594,10 @@ public class TrajectoryManager {
 
         // vérifie qu'un point correspondant au bord du robot est toujours dans la table
         Point pointTest = new Point();
-        pointTest.setX(dir * 250 * Math.cos(Math.toRadians(conv.pulseToDeg(currentPosition.getAngle()))));
-        pointTest.setY(dir * 250 * Math.sin(Math.toRadians(conv.pulseToDeg(currentPosition.getAngle()))));
-        pointTest.addDeltaX(conv.pulseToMm(currentPosition.getPt().getX()));
-        pointTest.addDeltaY(conv.pulseToMm(currentPosition.getPt().getY()));
+        pointTest.setX(dir * 250 * Math.cos(Math.toRadians(currentAngleDeg())));
+        pointTest.setY(dir * 250 * Math.sin(Math.toRadians(currentAngleDeg())));
+        pointTest.addDeltaX(currentXMm());
+        pointTest.addDeltaY(currentYMm());
 
         if (tableUtils.isInPhysicalTable(pointTest)) {
             log.info("Dégagement d'obstacle");
@@ -709,7 +712,7 @@ public class TrajectoryManager {
     private void gotoOrientationDegByType(double angle, SensRotation sensRotation, TypeConsigne... types) throws AvoidingException {
         log.info("Aligne toi sur l'angle {}° du repère dans le sens {}", angle, sensRotation.name());
 
-        double newOrient = calculAngleDelta(conv.pulseToDeg(currentPosition.getAngle()), angle, sensRotation);
+        double newOrient = calculAngleDelta(currentAngleDeg(), angle, sensRotation);
 
         tourneDegByType(newOrient, types);
     }
@@ -845,10 +848,7 @@ public class TrajectoryManager {
 
             MonitorMouvementTranslation mTr = new MonitorMouvementTranslation();
             mTr.setDistance(distance);
-            mTr.setFromPoint(new Point(
-                    conv.pulseToMm(currentPosition.getPt().getX()),
-                    conv.pulseToMm(currentPosition.getPt().getY())
-            ));
+            mTr.setFromPoint(new Point(currentXMm(), currentYMm()));
             mTr.setToPoint(tableUtils.getPointFromAngle(distance, 0));
             currentMouvement = mTr;
             monitoring.addMouvementPoint(mTr);
@@ -903,7 +903,7 @@ public class TrajectoryManager {
 
                 MonitorMouvementRotation mRot = new MonitorMouvementRotation();
                 mRot.setAngle(angle);
-                mRot.setFromAngle(conv.pulseToDeg(currentPosition.getAngle()));
+                mRot.setFromAngle(currentAngleDeg());
                 mRot.setToAngle(angle + mRot.getFromAngle());
                 currentMouvement = mRot;
                 monitoring.addMouvementPoint(mRot);

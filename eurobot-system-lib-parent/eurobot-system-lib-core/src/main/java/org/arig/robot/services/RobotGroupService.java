@@ -92,6 +92,11 @@ public class RobotGroupService implements RobotGroup.Handler {
                 }
                 rs.otherCurrentAction(actionName);
                 break;
+            case CURRENT_POSITION:
+                int x = ((data[0] & 0xff) << 8) + (data[1] & 0xff);
+                int y = ((data[2] & 0xff) << 8) + (data[3] & 0xff);
+                rs.otherPosition(x, y);
+                break;
 
             case DISTRIBUTEUR_EQUIPE_PRIS:
                 rs.distributeurEquipePris(true);
@@ -203,6 +208,17 @@ public class RobotGroupService implements RobotGroup.Handler {
         } else {
             sendEvent(StatusEvent.CURRENT_ACTION, name.getBytes(StandardCharsets.UTF_8));
         }
+    }
+
+    @Override
+    public void setCurrentPosition(int x, int y) {
+        byte[] data = new byte[]{
+                (byte) ((x >> 8) & 0xff),
+                (byte) (x & 0xff),
+                (byte) ((y >> 8) & 0xff),
+                (byte) (y & 0xff)
+        };
+        sendEvent(StatusEvent.CURRENT_POSITION, data);
     }
 
     /**

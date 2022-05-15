@@ -37,13 +37,6 @@ public abstract class AbstractEurobotAction extends AbstractAction {
     protected TrajectoryManager mv;
 
     @Autowired
-    protected ConvertionRobotUnit conv;
-
-    @Autowired
-    @Qualifier("currentPosition")
-    protected Position position;
-
-    @Autowired
     protected TableUtils tableUtils;
 
     @Autowired
@@ -51,6 +44,13 @@ public abstract class AbstractEurobotAction extends AbstractAction {
 
     @Autowired
     protected EurobotStatus rs;
+
+    @Autowired
+    private ConvertionRobotUnit conv;
+
+    @Autowired
+    @Qualifier("currentPosition")
+    private Position position;
 
     protected int getX(int x) {
         return tableUtils.getX(rs.team() == Team.VIOLET, x);
@@ -62,41 +62,32 @@ public abstract class AbstractEurobotAction extends AbstractAction {
     }
 
     protected void checkRecalageXmm(double realXmm) {
-        final double robotX = position.getPt().getX();
-        final double realX = conv.mmToPulse(realXmm);
-        if (Math.abs(realX - robotX) > conv.mmToPulse(10)) {
-            log.warn("RECALAGE X REQUIS (diff > 10 mm) : xRobot = {} mm ; xReel = {} mm",
-                    conv.pulseToMm(robotX), realXmm);
-            position.getPt().setX(realX);
+        final double robotX = mv.currentXMm();
+        if (Math.abs(realXmm - robotX) > 10) {
+            log.warn("RECALAGE X REQUIS (diff > 10 mm) : xRobot = {} mm ; xReel = {} mm", robotX, realXmm);
+            position.getPt().setX(conv.mmToPulse(realXmm));
         } else {
-            log.info("Recalage X inutile : xRobot = {} mm ; xReel = {} mm",
-                    conv.pulseToMm(robotX), realXmm);
+            log.info("Recalage X inutile : xRobot = {} mm ; xReel = {} mm", robotX, realXmm);
         }
     }
 
     protected void checkRecalageYmm(double realYmm) {
-        final double robotY = position.getPt().getY();
-        final double realY = conv.mmToPulse(realYmm);
-        if (Math.abs(realY - robotY) > conv.mmToPulse(10)) {
-            log.warn("RECALAGE Y REQUIS (diff > 10 mm) : yRobot = {} mm ; yReel = {} mm",
-                    conv.pulseToMm(robotY), realYmm);
-            position.getPt().setY(realY);
+        final double robotY = mv.currentXMm();
+        if (Math.abs(realYmm - robotY) > 10) {
+            log.warn("RECALAGE Y REQUIS (diff > 10 mm) : yRobot = {} mm ; yReel = {} mm", robotY, realYmm);
+            position.getPt().setY(conv.mmToPulse(realYmm));
         } else {
-            log.info("Recalage Y inutile : yRobot = {} mm ; yReel = {} mm",
-                    conv.pulseToMm(robotY), realYmm);
+            log.info("Recalage Y inutile : yRobot = {} mm ; yReel = {} mm", robotY, realYmm);
         }
     }
 
     protected void checkRecalageAngleDeg(double realAdeg) {
-        final double robotA = position.getAngle();
-        final double realA = conv.degToPulse(realAdeg);
-        if (Math.abs(realA - robotA) > conv.degToPulse(2)) {
-            log.warn("RECALAGE ANGLE REQUIS (> 2°) : aRobot = {} ; aReel = {}",
-                    conv.pulseToDeg(robotA), realAdeg);
-            position.setAngle(realA);
+        final double robotA = mv.currentAngleDeg();
+        if (Math.abs(realAdeg - robotA) > 2) {
+            log.warn("RECALAGE ANGLE REQUIS (> 2°) : aRobot = {} ; aReel = {}", robotA, realAdeg);
+            position.setAngle(conv.degToPulse(realAdeg));
         } else {
-            log.info("Recalage angle inutile : aRobot = {} ; aReel = {}",
-                    conv.pulseToDeg(robotA), realAdeg);
+            log.info("Recalage angle inutile : aRobot = {} ; aReel = {}", robotA, realAdeg);
         }
     }
 }

@@ -113,7 +113,7 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                     mv.reculeMM(65);
                     mv.tourneDeg(90);
 
-                    yRef = conv.pulseToMm(position.getPt().getY());
+                    yRef = mv.currentYMm();
                     log.info("Calage bordure terminé, yRef = {} mm", yRef);
                     calageBordureDone = true;
                 } else {
@@ -135,8 +135,7 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                         mv.avanceMM(60);
                         mv.reculeMM(40); // Distance calage au capteur
 
-                        double currentX = conv.pulseToMm(position.getPt().getX());
-                        deltaX = currentX - carreFouille.getX();
+                        deltaX = mv.currentXMm() - carreFouille.getX();
                         log.info("On a déplacé le robot de {} mm (delta X)", deltaX);
                         calageCarreFouilleDone = true;
                     }
