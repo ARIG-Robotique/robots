@@ -155,11 +155,11 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         this.statuettePriseDansCeRobot = statuettePriseDansCeRobot;
     }
 
-    private boolean statuetteDansVitrine = false;
+    private boolean statuetteDepose = false;
 
-    public void statuetteDansVitrine(boolean statuetteDansVitrine) {
+    public void statuetteDepose(boolean statuetteDansVitrine) {
         log.info("[RS] statuette dans vitrine : {}", statuetteDansVitrine);
-        this.statuetteDansVitrine = statuetteDansVitrine;
+        this.statuetteDepose = statuetteDansVitrine;
     }
 
     private boolean repliqueDepose = false;
@@ -493,7 +493,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         points += 2; // Statuette présente
         if (vitrineActive) points += 5;
         if (statuettePrise) points += 5;
-        if (statuetteDansVitrine) points += 15;
+        if (statuetteDepose) points += 15;
         if (repliqueDepose) points += 10;
         if (distributeurEquipePris) points += 3; // 3 échantillons
         if (distributeurCommunEquipePris) points += 3; // 3 échantillons
@@ -513,7 +513,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public Map<String, Integer> scoreStatus() {
         Map<String, Integer> r = new HashMap<>();
         r.put("Vitrine", 2 + (vitrineActive ? 5 : 0));
-        r.put("Statuette", 2 + (statuettePrise ? 5 : 0) + (statuetteDansVitrine ? 15 : 0));
+        r.put("Statuette", 2 + (statuettePrise ? 5 : 0) + (statuetteDepose ? 15 : 0));
         r.put("Replique", repliqueDepose ? 10 : 0);
         r.put("Distributeurs", (distributeurEquipePris ? 3 : 0) + (distributeurCommunEquipePris ? 3 : 0) + (echantillonAbriChantierCarreFouillePris ? 1 : 0) + (echantillonAbriChantierCarreFouillePris ? 1 : 0) + (echantillonCampementPris ? 1 : 0));
         r.put("Carrés de fouille", carresFouille.score());
@@ -548,7 +548,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         r.put("Carrés de fouille terminés", carresFouille.isComplete());
         r.put("Vitrine activée", vitrineActive);
         r.put("Statuette prise", statuettePrise);
-        r.put("Statuette dans vitrine", statuetteDansVitrine);
+        r.put("Statuette déposée", statuetteDepose);
         r.put("Replique déposée", repliqueDepose);
         r.put("Echantillon chantier (coté distrib.) pris", echantillonAbriChantierDistributeurPris);
         r.put("Echantillon chantier (coté fouille) pris", echantillonAbriChantierCarreFouillePris);

@@ -115,6 +115,7 @@ public class NerellServosService extends AbstractCommonServosService {
                 .time(475)
                 .position(POS_FERME, 2270)
                 .position(POS_VIBRATION, 2070)
+                .position(POS_ATTENTE, 1140)
                 .position(POS_PRISE_DEPOSE, 940);
         group(GROUP_STATUETTE_ID, GROUP_STATUETTE)
                 .addServo(fourcheStatuette);

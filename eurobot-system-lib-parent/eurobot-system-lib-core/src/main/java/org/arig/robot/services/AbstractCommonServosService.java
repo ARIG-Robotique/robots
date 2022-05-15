@@ -30,6 +30,7 @@ public abstract class AbstractCommonServosService extends AbstractServosService 
     protected static final String POS_OUVERT = "Ouvert";
     protected static final String POS_VIBRATION = "Vibration";
     protected static final String POS_PRISE_DEPOSE = "Prise / dépose";
+    protected static final String POS_ATTENTE = "Attente";
     protected static final String POS_POUSSETTE = "Poussette";
     protected static final String POS_MESURE = "Mesure";
 
@@ -105,6 +106,10 @@ public abstract class AbstractCommonServosService extends AbstractServosService 
 
     public void fourcheStatuettePriseDepose(boolean wait) {
         setPosition(FOURCHE_STATUETTE, POS_PRISE_DEPOSE, wait);
+    }
+
+    public void fourcheStatuetteAttente(boolean wait) {
+        setPosition(FOURCHE_STATUETTE, POS_ATTENTE, wait);
     }
 
     public void pousseRepliqueFerme(boolean wait) {
