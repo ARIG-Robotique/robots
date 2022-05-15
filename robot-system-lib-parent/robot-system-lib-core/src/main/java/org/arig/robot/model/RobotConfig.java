@@ -33,11 +33,13 @@ public class RobotConfig {
      * pathfinding
      */
     private int pathFindingTailleObstacle;
+    private int pathFindingTailleObstacleArig;
     private int lidarOffsetPointMm;
     private int lidarClusterSizeMm;
     private int avoidanceWaitTimeMs;
     private int pathFindingSeuilProximite;
     private int pathFindingSeuilProximiteSafe;
+    private int pathFindingSeuilProximiteArig;
     private int pathFindingAngle;
     private int pathFindingAngleSafe;
 

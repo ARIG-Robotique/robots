@@ -47,13 +47,16 @@ public abstract class AbstractAvoidingService implements AvoidingService {
 
     protected boolean hasProximite() {
         int seuil = safeAvoidance ? robotConfig.pathFindingSeuilProximiteSafe() : robotConfig.pathFindingSeuilProximite();
+        int seuilArig = robotConfig.pathFindingSeuilProximiteArig();
         return lidarService.getDetectedPointsMm().parallelStream()
-                .anyMatch(pt -> checkValidPointForSeuil(pt, seuil));
+                .anyMatch(pt -> checkValidPointForSeuil(pt, lidarService.isOtherRobot(pt) ? seuilArig : seuil));
     }
 
     protected boolean needLowSpeed() {
+        int seuil = robotConfig.pathFindingSeuilProximite() * 2;
+        int seuilArig = robotConfig.pathFindingSeuilProximiteArig() * 2;
         return lidarService.getDetectedPointsMm().parallelStream()
-                .anyMatch(pt -> checkValidPointForSeuil(pt, robotConfig.pathFindingSeuilProximite() * 3));
+                .anyMatch(pt -> checkValidPointForSeuil(pt, lidarService.isOtherRobot(pt) ? seuilArig : seuil));
     }
 
     private boolean checkValidPointForSeuil(Point pt, int seuilMm) {

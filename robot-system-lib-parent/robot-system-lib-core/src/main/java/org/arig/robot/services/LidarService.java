@@ -7,6 +7,7 @@ import org.apache.commons.math3.ml.clustering.Cluster;
 import org.apache.commons.math3.ml.clustering.Clusterable;
 import org.apache.commons.math3.ml.clustering.DBSCANClusterer;
 import org.apache.commons.math3.ml.clustering.evaluation.ClusterEvaluator;
+import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.Cercle;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotConfig;
@@ -54,6 +55,9 @@ public class LidarService implements InitializingBean {
 
     @Autowired
     private RobotConfig robotConfig;
+
+    @Autowired
+    private AbstractRobotStatus robotStatus;
 
     @Autowired
     private PathFinder pathFinder;
@@ -137,10 +141,12 @@ public class LidarService implements InitializingBean {
 
         pointLidar:
         for (Point pt : applyClustering(detectedPointsMm)) {
-            collisionsShape.add(new Cercle(pt, robotConfig.pathFindingTailleObstacle() / 2));
-//            collisionsShape.add(new org.arig.robot.model.Rectangle(pt.getX() - pathFindingTailleObstacle / 2., pt.getY() - pathFindingTailleObstacle / 2., pathFindingTailleObstacle, pathFindingTailleObstacle));
+            int tailleObstacle = isOtherRobot(pt) ? robotConfig.pathFindingTailleObstacleArig() : robotConfig.pathFindingTailleObstacle();
 
-            Polygon obstacle = tableUtils.createPolygonObstacle(pt, robotConfig.pathFindingTailleObstacle());
+            collisionsShape.add(new Cercle(pt, tailleObstacle / 2));
+//            collisionsShape.add(new org.arig.robot.model.Rectangle(pt.getX() - tailleObstacle / 2., pt.getY() - tailleObstacle / 2., tailleObstacle, tailleObstacle));
+
+            Polygon obstacle = tableUtils.createPolygonObstacle(pt, tailleObstacle);
 
             if (CollectionUtils.isEmpty(lines)) {
                 log.info("Ajout polygon : {} {}", pt, obstacle.toString());
@@ -171,7 +177,7 @@ public class LidarService implements InitializingBean {
         return hasObstacle.get();
     }
 
-    List<Point> applyClustering(List<Point> input) {
+    private List<Point> applyClustering(List<Point> input) {
         return clusterer.cluster(input)
                 .stream()
                 .map(cluster -> {
@@ -180,6 +186,10 @@ public class LidarService implements InitializingBean {
                 })
                 .map(point -> tableUtils.eloigner(point, robotConfig.lidarOffsetPointMm()))
                 .collect(Collectors.toList());
+    }
+
+    public boolean isOtherRobot(Point pt) {
+        return robotStatus.otherPosition() != null && pt.distance(robotStatus.otherPosition()) < robotConfig.pathFindingSeuilProximiteArig() / 3.0;
     }
 
 }
