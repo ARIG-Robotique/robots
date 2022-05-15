@@ -28,6 +28,9 @@ public class DeposeCampement extends AbstractEurobotAction {
     @Autowired
     private BrasService bras;
 
+    @Autowired
+    private DeposeGalerie actionDeposeGalerie;
+
     @Override
     public List<String> blockingActions() {
         return Collections.singletonList(EurobotConfig.ACTION_POUSSETTE_CAMPEMENT);
@@ -40,6 +43,11 @@ public class DeposeCampement extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
+        // si la galerie est dispo on interdit la dépose au campement
+        if (actionDeposeGalerie.isValid() && !EurobotConfig.ACTION_DEPOSE_GALERIE.equals(rs.otherCurrentAction())) {
+            return false;
+        }
+
         return !rs.poussetteCampementFaite() && !rs.campementComplet()
                 && (rs.stockTaille() >= 4 || (rs.stockTaille() > 0 && rs.getRemainingTime() < EurobotConfig.validDeposeIfElementInStockRemainingTime))
                 && isTimeValid() && remainingTimeBeforeRetourSiteValid();
@@ -203,11 +211,15 @@ public class DeposeCampement extends AbstractEurobotAction {
                         }
                         break;
                 }
+
+                // si la galerie devient disponible on arrete là
+                if (actionDeposeGalerie.isValid() && !EurobotConfig.ACTION_DEPOSE_GALERIE.equals(rs.otherCurrentAction())) {
+                    break;
+                }
             }
 
             mv.gotoPoint(entry);
             bras.finalizeDepose();
-            complete(true);
 
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
