@@ -362,6 +362,19 @@ public abstract class AbstractOrdonanceur {
 
         robotStatus.stopMatch();
 
+        log.info("SCORE");
+        robotStatus.scoreStatus().forEach((key, val) -> {
+            log.info("  - {} : {}", key, val);
+        });
+        log.info("FLAGS");
+        robotStatus.gameFlags().forEach((key, val) -> {
+            log.info("  - {} : {}", key, val);
+        });
+        log.info("STATUS");
+        robotStatus.gameStatus().forEach((key, val) -> {
+            log.info("  - {} : {}", key, val);
+        });
+
         afterMatch(); // impl
 
         io.disableAlimMoteurs();

@@ -28,4 +28,9 @@ public class Echantillon extends Point {
         this.couleur = couleur;
         this.blocking = false;
     }
+
+    @Override
+    public String toString() {
+        return "Echantillon{" + "x=" + getX() + ",y=" + getY() + ",couleur=" + couleur + "}";
+    }
 }

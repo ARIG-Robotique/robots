@@ -49,4 +49,9 @@ public class CarreFouille implements Serializable {
         // 185 entraxe des carres de fouille
         return 667 + ((numero - 1) * 185);
     }
+
+    @Override
+    public String toString() {
+        return "CarreFouille{" + "numero=" + numero + ", couleur=" + couleur + ", bascule=" + bascule + "}";
+    }
 }
