@@ -473,11 +473,17 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     }
 
     private int scoreRetourAuSite() {
-        if ((twoRobots() && siteDeRetour.isInSite() && siteDeRetourAutreRobot.isInSite())
-                || (!twoRobots() && siteDeRetour.isInSite())) {
-            return 20;
+        if (twoRobots()) {
+            if (siteDeRetour.isInSite() && siteDeRetourAutreRobot.isInSite() &&
+                    siteDeRetour.isCampement() == siteDeRetourAutreRobot.isCampement() &&
+                    siteDeRetour.isFouille() == siteDeRetourAutreRobot.isFouille()) {
+                return 20;
+            }
+        } else {
+            if (siteDeRetour.isInSite()) {
+                return 20;
+            }
         }
-
         return 0;
     }
 

@@ -9,7 +9,6 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.SiteDeRetour;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
-import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Component;
 
 import java.awt.geom.Rectangle2D;
@@ -18,7 +17,7 @@ import java.awt.geom.Rectangle2D;
 @Component
 public class RetourAuSiteDeFouille extends AbstractEurobotAction {
 
-    private static final int CENTER_X_RAW = 975;
+    private static final int CENTER_X = 975;
     private static final int CENTER_Y = 625;
     private static final int OFFSET = 175;
 
@@ -32,34 +31,64 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
 
     @Override
     public Point entryPoint() {
-        if (rs.siteDeRetourAutreRobot() == SiteDeRetour.AUCUN) {
+        if (!rs.twoRobots()) {
+            // un seul robot : on va au centre
             gotoSite = SiteDeRetour.WIP_FOUILLE_CENTRE;
             destSite = SiteDeRetour.FOUILLE_CENTRE;
             return pointCentre();
-        }
 
-        final double distanceNord = tableUtils.distance(pointNord());
-        final double distanceSud = tableUtils.distance(pointSud());
-        final double distanceEst = tableUtils.distance(pointEst());
-        final double distanceOuest = tableUtils.distance(pointOuest());
+        } else if (rs.siteDeRetourAutreRobot() == SiteDeRetour.AUCUN) {
+            // le premier robot calcule le chemin le plus court pour l'autre robot
+            final double distanceNord = rs.otherPosition().distance(pointNord());
+            final double distanceSud = rs.otherPosition().distance(pointSud());
+            final double distanceEst = rs.otherPosition().distance(pointEst());
+            final double distanceOuest = rs.otherPosition().distance(pointOuest());
 
-        final double distanceMin = Math.min(distanceNord, Math.min(distanceSud, Math.min(distanceEst, distanceOuest)));
-        if (distanceMin == distanceNord) {
-            gotoSite = SiteDeRetour.WIP_FOUILLE_NORD;
-            destSite = SiteDeRetour.FOUILLE_NORD;
-            return pointNord();
-        } else if (distanceMin == distanceSud) {
-            gotoSite = SiteDeRetour.WIP_FOUILLE_SUD;
-            destSite = SiteDeRetour.FOUILLE_SUD;
-            return pointSud();
-        } else if (distanceMin == distanceEst) {
-            gotoSite = SiteDeRetour.WIP_FOUILLE_EST;
-            destSite = SiteDeRetour.FOUILLE_EST;
-            return pointEst();
+            final double distanceMin = Math.min(distanceNord, Math.min(distanceSud, Math.min(distanceEst, distanceOuest)));
+            if (distanceMin == distanceSud) {
+                gotoSite = SiteDeRetour.WIP_FOUILLE_NORD;
+                destSite = SiteDeRetour.FOUILLE_NORD;
+                return pointNord();
+            } else if (distanceMin == distanceNord) {
+                gotoSite = SiteDeRetour.WIP_FOUILLE_SUD;
+                destSite = SiteDeRetour.FOUILLE_SUD;
+                return pointSud();
+            } else if (distanceMin == distanceOuest) {
+                gotoSite = SiteDeRetour.WIP_FOUILLE_EST;
+                destSite = SiteDeRetour.FOUILLE_EST;
+                return pointEst();
+            } else {
+                gotoSite = SiteDeRetour.WIP_FOUILLE_OUEST;
+                destSite = SiteDeRetour.FOUILLE_OUEST;
+                return pointOuest();
+            }
+
         } else {
-            gotoSite = SiteDeRetour.WIP_FOUILLE_OUEST;
-            destSite = SiteDeRetour.FOUILLE_OUEST;
-            return pointOuest();
+            // le second robot va a l'emplacement correspondant
+            switch (rs.siteDeRetourAutreRobot()) {
+                case FOUILLE_NORD:
+                case WIP_FOUILLE_NORD:
+                    gotoSite = SiteDeRetour.WIP_FOUILLE_SUD;
+                    destSite = SiteDeRetour.FOUILLE_SUD;
+                    return pointSud();
+                case FOUILLE_SUD:
+                case WIP_FOUILLE_SUD:
+                    gotoSite = SiteDeRetour.WIP_FOUILLE_NORD;
+                    destSite = SiteDeRetour.FOUILLE_NORD;
+                    return pointNord();
+                case FOUILLE_EST:
+                case WIP_FOUILLE_EST:
+                    gotoSite = SiteDeRetour.WIP_FOUILLE_OUEST;
+                    destSite = SiteDeRetour.FOUILLE_OUEST;
+                    return pointEst();
+                case FOUILLE_OUEST:
+                case WIP_FOUILLE_OUEST:
+                    gotoSite = SiteDeRetour.WIP_FOUILLE_EST;
+                    destSite = SiteDeRetour.FOUILLE_EST;
+                    return pointOuest();
+                default:
+                    throw new IllegalArgumentException("Etat incohérent, l'autre robot est au campement");
+            }
         }
     }
 
@@ -70,7 +99,8 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return !remainingTimeBeforeRetourSiteValid();
+        return (rs.siteDeRetourAutreRobot() == SiteDeRetour.AUCUN || rs.siteDeRetourAutreRobot().isFouille())
+                && !remainingTimeBeforeRetourSiteValid();
     }
 
     @Override
@@ -78,23 +108,28 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
         try {
             if (rs.siteDeRetourAutreRobot().isInSite()) {
                 final Point pointDestAutreRobot;
-                if (destSite == SiteDeRetour.FOUILLE_NORD) {
-                    pointDestAutreRobot = pointSud();
-                } else if (destSite == SiteDeRetour.FOUILLE_SUD) {
-                    pointDestAutreRobot = pointNord();
-                } else if (destSite == SiteDeRetour.FOUILLE_EST) {
-                    pointDestAutreRobot = pointOuest();
-                } else {
-                    pointDestAutreRobot = pointEst();
+                switch (destSite) {
+                    case FOUILLE_NORD:
+                        pointDestAutreRobot = pointSud();
+                        break;
+                    case FOUILLE_SUD:
+                        pointDestAutreRobot = pointNord();
+                        break;
+                    case FOUILLE_EST:
+                        pointDestAutreRobot = pointOuest();
+                        break;
+                    default:
+                        pointDestAutreRobot = pointEst();
+                        break;
                 }
 
-                // On ignore toute la zone de la ou se trouve l'autre robot + un peut pour l'épaisseur du mat
+                // On ignore la zone de la ou se trouve l'autre robot
                 tableUtils.addDynamicDeadZone(
                         new Rectangle2D.Double(
-                                pointDestAutreRobot.getX() - OFFSET - 50,
-                                pointDestAutreRobot.getY() - OFFSET - 50,
-                                2 * (OFFSET + 50),
-                                2 * (OFFSET + 40)
+                                pointDestAutreRobot.getX() - 100,
+                                pointDestAutreRobot.getY() - 100,
+                                200,
+                                200
                         )
                 );
             }
@@ -106,34 +141,8 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.pathTo(entry, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
             group.siteDeRetour(destSite);
-            log.info("Arrivé site de fouille : {}", destSite);
+            log.info("Arrivée au site de fouille : {}", destSite);
 
-            if (rs.twoRobots() && rs.siteDeRetour() == SiteDeRetour.FOUILLE_CENTRE) {
-                // Premier (allé au centre), on attend que le second dise ou il va pour aller à l'opposé.
-                final SiteDeRetour autre = ThreadUtils.waitUntil(rs::siteDeRetourAutreRobot, SiteDeRetour.AUCUN, 10, 20000);
-                log.info("L'autre robot va au site de fouille : {}", autre);
-
-                // L'autre robot a choisis sa destination
-                if (autre == SiteDeRetour.WIP_FOUILLE_NORD || autre == SiteDeRetour.FOUILLE_NORD) {
-                    log.info("On va au sud");
-                    mv.gotoPoint(pointSud(), GotoOption.SANS_ORIENTATION);
-                    group.siteDeRetour(SiteDeRetour.FOUILLE_SUD);
-                } else if (autre == SiteDeRetour.WIP_FOUILLE_SUD || autre == SiteDeRetour.FOUILLE_SUD) {
-                    log.info("On va au nord");
-                    mv.gotoPoint(pointNord(), GotoOption.SANS_ORIENTATION);
-                    group.siteDeRetour(SiteDeRetour.FOUILLE_NORD);
-                } else if (autre == SiteDeRetour.WIP_FOUILLE_EST || autre == SiteDeRetour.FOUILLE_EST) {
-                    log.info("On va a l'ouest");
-                    mv.gotoPoint(pointOuest(), GotoOption.SANS_ORIENTATION);
-                    group.siteDeRetour(SiteDeRetour.FOUILLE_OUEST);
-                } else {
-                    log.info("On va a l'est");
-                    mv.gotoPoint(pointEst(), GotoOption.SANS_ORIENTATION);
-                    group.siteDeRetour(SiteDeRetour.FOUILLE_EST);
-                }
-            }
-
-            log.info("Danse de la fouille !!!!");
             boolean alt = false;
             mv.setVitesse(config.vitesse(), config.vitesseOrientation(50));
             do {
@@ -152,22 +161,22 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
     }
 
     private Point pointCentre() {
-        return new Point(getX(CENTER_X_RAW), CENTER_Y);
+        return new Point(getX(CENTER_X), CENTER_Y);
     }
 
     private Point pointNord() {
-        return new Point(getX(CENTER_X_RAW), CENTER_Y + OFFSET);
+        return new Point(getX(CENTER_X), CENTER_Y + OFFSET);
     }
 
     private Point pointSud() {
-        return new Point(getX(CENTER_X_RAW), CENTER_Y - OFFSET);
+        return new Point(getX(CENTER_X), CENTER_Y - OFFSET);
     }
 
     private Point pointEst() {
-        return new Point(getX(CENTER_X_RAW) + OFFSET, CENTER_Y);
+        return new Point(getX(CENTER_X) + OFFSET, CENTER_Y);
     }
 
     private Point pointOuest() {
-        return new Point(getX(CENTER_X_RAW) - OFFSET, CENTER_Y);
+        return new Point(getX(CENTER_X) - OFFSET, CENTER_Y);
     }
 }
