@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
-public class DistributeurCommunEquipe extends AbstractPriseDistributeurCommun {
+public class DistributeurCommunEquipe extends AbstractDistributeurCommun {
 
     @Override
     public String name() {

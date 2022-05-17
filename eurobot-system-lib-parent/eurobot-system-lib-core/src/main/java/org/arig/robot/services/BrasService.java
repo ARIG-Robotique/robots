@@ -1,9 +1,7 @@
 package org.arig.robot.services;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.EurobotConfig;
-import org.arig.robot.exception.AvoidingException;
+import org.apache.commons.lang3.ObjectUtils;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.RobotConfig;
@@ -12,7 +10,6 @@ import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -22,498 +19,246 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Service
 public class BrasService extends BrasServiceInternal {
 
-    private static final int DST_BORDURE = EurobotConfig.ECHANTILLON_SIZE;
-
     private final RobotConfig config;
     private final CommonIOService io;
-    private final TrajectoryManager mv;
-
-    private CouleurEchantillon couleurPrecedente = null;
 
     public BrasService(final AbstractCommonServosService servos,
                        final ThreadPoolExecutor executor,
                        final RobotConfig config,
                        final EurobotStatus rs,
-                       final CommonIOService io,
-                       final TrajectoryManager mv) {
+                       final CommonIOService io) {
         super(servos, executor, rs);
         this.config = config;
         this.io = io;
-        this.mv = mv;
     }
 
-    public enum TypePrise {
-        SOL,
-        BORDURE,
-        DISTRIBUTEUR
-    }
+    /**
+     * Activation de la ventouse bas + lecture couleur si besoin
+     */
+    public boolean waitEnableVentouseBas(CouleurEchantillon couleur) {
+        log.info("Prise d'un {} dans la ventouse bas", couleur);
 
-    public CompletableFuture<Boolean> initPrise(TypePrise typePrise) {
-        return initPrise(typePrise, false);
-    }
+        io.enablePompeVentouseBas();
+        boolean ok = ThreadUtils.waitUntil(io::presenceVentouseBas, config.i2cReadTimeMs(), config.timeoutPompe());
 
-    public CompletableFuture<Boolean> initPrise(@NonNull final TypePrise typePrise, boolean skipCheck) {
-        return CompletableFuture.supplyAsync(() -> {
-            log.info("Init prise d'échantillon @ {}", typePrise);
-
-            if (!skipCheck && typePrise == TypePrise.SOL && !io.presencePriseBras(true)) {
-                log.warn("Prise impossible, rien à prendre");
-                return false;
+        if (ok) {
+            rs.ventouseBas(couleur);
+            if (couleur.isNeedsLecture()) {
+                lectureCouleurBas();
             }
-
-            setBrasHaut(PositionBras.HORIZONTAL);
-
-            switch (typePrise) {
-                case SOL:
-                    setBrasBas(PositionBras.SOL_PRISE);
-                    break;
-                case BORDURE:
-                    setBrasBas(PositionBras.BORDURE_APPROCHE);
-                    break;
-                case DISTRIBUTEUR:
-                    setBrasBas(PositionBras.DISTRIBUTEUR_PRISE);
-                    break;
-            }
-
             return true;
-        }, executor);
-    }
 
-    public CompletableFuture<Boolean> processPrise(@NonNull final TypePrise typePrise) {
-        return processPrise(typePrise, DST_BORDURE);
-    }
-
-    public CompletableFuture<Boolean> processPrise(@NonNull final TypePrise typePrise, int distanceReculBordure) {
-        return CompletableFuture.supplyAsync(() -> {
-            log.info("Process prise d'échantillon @ {}", typePrise);
-
-            io.enablePompeVentouseBas();
-            if (typePrise == TypePrise.BORDURE) {
-                setBrasBas(PositionBras.BORDURE_PRISE);
-            }
-
-            boolean pompeOk = ThreadUtils.waitUntil(io::presenceVentouseBas, config.i2cReadTimeMs(), config.timeoutPompe());
-            if (typePrise == TypePrise.BORDURE) {
-                setBrasBas(PositionBras.BORDURE_APPROCHE);
-                try {
-                    mv.reculeMM(distanceReculBordure);
-                } catch (AvoidingException e) {
-                    log.warn("Erreur lors de déplacement depuis la prise bordure", e);
-                }
-            }
-
-            if (!pompeOk) {
-                log.warn("Pas de présence ventouse bas");
-                io.releasePompeVentouseBas();
-                return false;
-            }
-
-            return true;
-        }, executor);
-    }
-
-    public CompletableFuture<Boolean> stockagePrise(@NonNull final TypePrise typePrise, final CouleurEchantillon c) {
-        return stockagePrise(typePrise, c, true);
-    }
-
-    public CompletableFuture<Boolean> stockagePrise(@NonNull final TypePrise typePrise, final CouleurEchantillon c, final boolean doEchange) {
-        final CouleurEchantillon.Atomic couleur = new CouleurEchantillon.Atomic(c != null ? c : CouleurEchantillon.INCONNU);
-
-        // Lecture de la couleur
-        io.enableLedCapteurCouleur();
-        if (couleur.isNeedsLecture()) {
-            ThreadUtils.sleep(config.waitLed());
-            couleur.set(ThreadUtils.waitUntil(io::couleurVentouseBas, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor()));
-        }
-        rs.ventouseBas(couleur.get());
-
-        // premier mouvement synchrone
-        if (couleur.isNeedsEchange()) {
-            setBrasBas(typePrise == TypePrise.BORDURE ? PositionBras.ECHANGE_2 : PositionBras.ECHANGE, OptionBras.SLOW);
         } else {
-            setBrasBas(PositionBras.STOCK_ENTREE, OptionBras.SLOW);
-        }
-
-        return CompletableFuture.supplyAsync(() -> {
-            int indexStock = rs.indexStockage();
-
-            if (couleur.isNeedsEchange() && doEchange) {
-                // echange
-                setBrasHaut(PositionBras.ECHANGE);
-
-                io.enablePompeVentouseHaut();
-                io.releasePompeVentouseBas();
-                rs.ventouseBas(null);
-
-                if (!ThreadUtils.waitUntil(io::presenceVentouseHaut, config.i2cReadTimeMs(), config.timeoutPompe())) {
-                    log.warn("Pas de présence ventouse haut");
-                    io.releasePompeVentouseHaut();
-                    setBrasHaut(PositionBras.HORIZONTAL);
-                    // pour que le truc se détache
-                    setBrasBas(typePrise == TypePrise.DISTRIBUTEUR ? PositionBras.DISTRIBUTEUR_PRISE : PositionBras.HORIZONTAL);
-                    setBrasBas(typePrise == TypePrise.DISTRIBUTEUR ? PositionBras.DISTRIBUTEUR_PRISE : PositionBras.STOCK_ENTREE);
-                    return false;
-                }
-
-                couleur.reverseColor();
-
-                // 2nd lecture de la couleur
-                if (couleur.isNeedsLecture()) {
-                    couleur.set(ThreadUtils.waitUntil(io::couleurVentouseHaut, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor()));
-                    if (couleur.get() == CouleurEchantillon.ROCHER) {
-                        log.warn("Après échange la couleur est toujours un rocher ?!");
-                    }
-                }
-                rs.ventouseHaut(couleur.get());
-
-                setBrasBas(typePrise == TypePrise.DISTRIBUTEUR ? PositionBras.DISTRIBUTEUR_PRISE : PositionBras.HORIZONTAL);
-
-                // stockage
-                setBrasHaut(PositionBras.STOCK_ENTREE, OptionBras.SLOW);
-                setBrasHaut(PositionBras.stockDepose(indexStock), OptionBras.SLOW);
-
-                io.releasePompeVentouseHaut();
-                rs.ventouseHaut(null);
-                if (!ThreadUtils.waitUntil(() -> !io.presenceVentouseHaut(), config.i2cReadTimeMs(), config.timeoutPompe())) {
-                    log.warn("Echec de libération ventouse haut ?");
-                }
-
-                setBrasHaut(PositionBras.STOCK_ENTREE);
-                setBrasHaut(PositionBras.HORIZONTAL);
-
-                setBrasBas(typePrise == TypePrise.DISTRIBUTEUR ? PositionBras.DISTRIBUTEUR_PRISE : PositionBras.STOCK_ENTREE);
-
-            } else {
-                // stockage
-                setBrasBas(PositionBras.stockDepose(indexStock), OptionBras.SLOW);
-
-                io.releasePompeVentouseBas();
-                rs.ventouseBas(null);
-                if (!ThreadUtils.waitUntil(() -> !io.presenceVentouseBas(), config.i2cReadTimeMs(), config.timeoutPompe())) {
-                    log.warn("Echec de libération ventouse bas ?");
-                }
-
-                setBrasBas(PositionBras.STOCK_ENTREE);
-
-                if (typePrise == TypePrise.DISTRIBUTEUR) {
-                    setBrasBas(PositionBras.DISTRIBUTEUR_PRISE);
-                }
-            }
-
-            ThreadUtils.sleep(config.i2cReadTimeMs());
-
-            boolean ok = false;
-            // FIXME détection du stock plus fiable
-//            if (io.presenceStock(indexStock)) {
-            // cas pourri ou le précédent stockage c'est mal passé
-            // grace a ce stockage, l'échantillon d'avant c'est remis en place
-            // il faut donc le compter
-//                if (indexStock < 5 && io.presenceStock(indexStock + 1, false)) {
-//                if (indexStock < 5 && io.presenceStock(indexStock + 1)) {
-//                    CouleurEchantillon couleur1 = couleurPrecedente != null ? couleurPrecedente : CouleurEchantillon.INCONNU;
-//                    log.warn("Prise en compte de l'échantillon {} précédent mal stocké", couleur1);
-//                    rs.stockage(couleur1);
-//                    indexStock++;
-//                }
-
-            log.info("Stockage d'un {} à l'emplacement {}", couleur.get(), indexStock);
-            rs.stockage(couleur.get());
-            couleurPrecedente = null;
-            ok = true;
-
-//            } else {
-//                log.warn("Aucun echantillon posé dans le stock");
-//                couleurPrecedente = couleur.get();
-//            }
-
-            return ok;
-        }, executor);
-    }
-
-    public CompletableFuture<Void> finalizePrise() {
-        return CompletableFuture.runAsync(() -> {
-            io.disableLedCapteurCouleur();
-            setBrasHaut(PositionBras.HORIZONTAL);
-            setBrasBas(PositionBras.STOCK_ENTREE);
-            updateStock();
-            setBrasBas(PositionBras.repos(rs.stockTaille()));
-            setBrasHaut(PositionBras.repos(rs.stockTaille()));
-            rs.ventouseHaut(null);
-            rs.ventouseBas(null);
-        });
-    }
-
-    public enum TypeDepose {
-        SOL,
-        GALERIE_BAS,
-        GALERIE_CENTRE,
-        GALERIE_HAUT
-    }
-
-    public boolean initDepose(@NonNull final TypeDepose typeDepose) {
-        CouleurEchantillon couleur = rs.stockFirst();
-        if (couleur == null) {
-            log.warn("Dépose impossible, le stock est vide");
+            log.warn("Pas de présence ventouse bas");
+            io.releasePompeVentouseBas();
             return false;
         }
+    }
 
-        log.info("Dépose d'échantillon {}", typeDepose);
+    /**
+     * Activation de la ventouse bas + lecture couleur si besoin
+     */
+    public boolean waitEnableVentouseHaut(CouleurEchantillon couleur) {
+        log.info("Prise d'un {} dans la ventouse haut", couleur);
 
-        // préparation
-        switch (typeDepose) {
-            case SOL:
-            case GALERIE_BAS:
-                if (couleur.isNeedsEchange()) {
-                    setBrasHaut(PositionBras.HORIZONTAL);
-                    setBrasBas(PositionBras.HORIZONTAL);
-                    setBrasHaut(PositionBras.STOCK_ENTREE);
-                } else {
-                    setBrasHaut(PositionBras.HORIZONTAL);
-                    setBrasBas(PositionBras.STOCK_ENTREE);
-                }
-                break;
+        io.enablePompeVentouseHaut();
+        boolean ok = ThreadUtils.waitUntil(io::presenceVentouseHaut, config.i2cReadTimeMs(), config.timeoutPompe());
 
-            case GALERIE_CENTRE:
-            case GALERIE_HAUT:
-                if (couleur.isNeedsEchange()) {
-                    setBrasHaut(PositionBras.HORIZONTAL);
-                    setBrasBas(PositionBras.STOCK_ENTREE);
-                } else {
-                    setBrasHaut(PositionBras.HORIZONTAL);
-                    setBrasBas(PositionBras.HORIZONTAL);
-                    setBrasHaut(PositionBras.STOCK_ENTREE);
-                }
-                break;
+        if (ok) {
+            rs.ventouseHaut(couleur);
+            if (couleur.isNeedsLecture()) {
+                lectureCouleurBas();
+            }
+            return true;
+
+        } else {
+            log.warn("Pas de présence ventouse haut");
+            io.releasePompeVentouseHaut();
+            return false;
         }
-
-        return true;
     }
 
-    public CouleurEchantillon processDepose(@NonNull final TypeDepose typeDepose) {
-        return processDepose(typeDepose, 0);
+    /**
+     * Libération de la ventouse bas
+     */
+    public void waitReleaseVentouseBas() {
+        log.info("Libération ventouse bas");
+        io.releasePompeVentouseBas();
+        rs.ventouseBas(null);
+        ThreadUtils.waitUntil(() -> !io.presenceVentouseBas(), config.i2cReadTimeMs(), config.timeoutPompe());
     }
 
-    public CouleurEchantillon processDeposeSol(final int index) {
-        return processDepose(TypeDepose.SOL, index);
+    /**
+     * Libération de la ventouse haut
+     */
+    public void waitReleaseVentouseHaut() {
+        log.info("Libération ventouse haut");
+        io.releasePompeVentouseHaut();
+        rs.ventouseHaut(null);
+        ThreadUtils.waitUntil(() -> !io.presenceVentouseHaut(), config.i2cReadTimeMs(), config.timeoutPompe());
     }
 
-    private CouleurEchantillon processDepose(@NonNull final TypeDepose typeDepose, final int index) {
+    /**
+     * Lecture de la couleur ventouse bas
+     */
+    public void lectureCouleurBas() {
+        CouleurEchantillon couleur = ThreadUtils.waitUntil(io::couleurVentouseBas, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor());
+        log.info("Couleur ventouse bas : {}", couleur);
+        rs.ventouseBas(couleur);
+    }
+
+    /**
+     * Lecture de la couleur ventouse haut
+     */
+    public void lectureCouleurHaut() {
+        CouleurEchantillon couleur = ThreadUtils.waitUntil(io::couleurVentouseHaut, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor());
+        log.info("Couleur ventouse haut : {}", couleur);
+        rs.ventouseHaut(couleur);
+    }
+
+    /**
+     * Echange de bas en haut + lecture couleur si besoin
+     * Les bras restent en position d'échange
+     */
+    public boolean echangeBasHaut() {
+        return echangeBasHaut(false);
+    }
+
+    public boolean echangeBasHaut(boolean fromBordure) {
+        CouleurEchantillon couleur = ObjectUtils.firstNonNull(rs.ventouseBas(), CouleurEchantillon.INCONNU);
+        log.info("Echange d'un {} du bas vers le haut", couleur);
+
+        setBrasBas(fromBordure ? PositionBras.ECHANGE_2 : PositionBras.ECHANGE, OptionBras.SLOW);
+        setBrasHaut(PositionBras.ECHANGE);
+
+        io.enablePompeVentouseHaut();
+        io.releasePompeVentouseBas();
+        rs.ventouseBas(null);
+
+        if (!ThreadUtils.waitUntil(io::presenceVentouseHaut, config.i2cReadTimeMs(), config.timeoutPompe())) {
+            log.warn("Pas de présence ventouse haut");
+            io.releasePompeVentouseHaut();
+            return false;
+
+        } else {
+            couleur = couleur.getReverseColor();
+            rs.ventouseHaut(couleur);
+            if (couleur.isNeedsLecture()) {
+                lectureCouleurHaut();
+            }
+            return true;
+        }
+    }
+
+    /**
+     * Echange de haut en bas + lecture couleur si besoin
+     * Les bras restent en position d'échange
+     */
+    public boolean echangeHautBas() {
+        CouleurEchantillon couleur = ObjectUtils.firstNonNull(rs.ventouseHaut(), CouleurEchantillon.INCONNU);
+        log.info("Echange d'un {} du bas vers le haut", couleur);
+
+        setBrasBas(PositionBras.HORIZONTAL);
+        setBrasHaut(PositionBras.ECHANGE);
+        setBrasBas(PositionBras.ECHANGE);
+
+        io.enablePompeVentouseBas();
+        io.releasePompeVentouseHaut();
+        rs.ventouseHaut(null);
+
+        if (!ThreadUtils.waitUntil(io::presenceVentouseBas, config.i2cReadTimeMs(), config.timeoutPompe())) {
+            log.warn("Pas de présence ventouse bas");
+            io.releasePompeVentouseBas();
+            return false;
+
+        } else {
+            couleur = couleur.getReverseColor();
+            rs.ventouseBas(couleur);
+            if (couleur.isNeedsLecture()) {
+                lectureCouleurBas();
+            }
+            return true;
+        }
+    }
+
+    /**
+     * Stockage par le bas
+     */
+    public void stockageBas() {
+        CouleurEchantillon couleur = ObjectUtils.firstNonNull(rs.ventouseBas(), CouleurEchantillon.INCONNU);
+        log.info("Stockage d'un {} par le bas", couleur);
+
+        setBrasBas(PositionBras.STOCK_ENTREE, OptionBras.SLOW);
+        setBrasBas(PositionBras.stockDepose(rs.indexStockage()), OptionBras.SLOW);
+
+        waitReleaseVentouseBas();
+        rs.stockage(couleur);
+
+        setBrasBas(PositionBras.STOCK_ENTREE);
+    }
+
+    /**
+     * Stockage par le haut
+     */
+    public void stockageHaut() {
+        CouleurEchantillon couleur = ObjectUtils.firstNonNull(rs.ventouseHaut(), CouleurEchantillon.INCONNU);
+        log.info("Stockage d'un {} par le haut", couleur);
+
+        setBrasHaut(PositionBras.STOCK_ENTREE, OptionBras.SLOW);
+        setBrasHaut(PositionBras.stockDepose(rs.indexStockage()), OptionBras.SLOW);
+
+        waitReleaseVentouseHaut();
+        rs.stockage(couleur);
+
+        setBrasHaut(PositionBras.STOCK_ENTREE);
+    }
+
+    /**
+     * Déstockage par le bas
+     */
+    public boolean destockageBas() {
         int indexStock = rs.indexDestockage();
         CouleurEchantillon couleur = rs.stockFirst();
+        log.info("Récupération de l'échantillon {} {} par le bas", indexStock, couleur);
 
-        io.enableLedCapteurCouleur();
-
-        switch (typeDepose) {
-            case SOL:
-            case GALERIE_BAS:
-                if (couleur.isNeedsEchange()) {
-                    // prise + échange
-                    setBrasHaut(PositionBras.stockPrise(indexStock));
-
-                    io.enablePompeVentouseHaut();
-                    if (!ThreadUtils.waitUntil(io::presenceVentouseHaut, config.i2cReadTimeMs(), config.timeoutPompe())) {
-                        log.warn("Pas de présence ventouse haut");
-                        rs.destockage();
-                        io.releasePompeVentouseHaut();
-                        setBrasHaut(PositionBras.STOCK_ENTREE);
-                        return null;
-                    }
-                    rs.ventouseHaut(couleur);
-
-                    setBrasHaut(PositionBras.STOCK_ENTREE);
-                    rs.destockage();
-                    setBrasHaut(PositionBras.ECHANGE);
-                    setBrasBas(PositionBras.ECHANGE);
-
-                    io.enablePompeVentouseBas();
-                    io.releasePompeVentouseHaut();
-                    rs.ventouseHaut(null);
-
-                    if (!ThreadUtils.waitUntil(io::presenceVentouseBas, config.i2cReadTimeMs(), config.timeoutPompe())) {
-                        log.warn("Pas de présence ventouse bas");
-                        io.releasePompeVentouseBas();
-                        setBrasBas(PositionBras.HORIZONTAL);
-                        setBrasHaut(PositionBras.STOCK_ENTREE);
-                        return null;
-                    }
-
-                    couleur = couleur.getReverseColor();
-
-                    if (couleur.isNeedsLecture()) {
-                        couleur = ThreadUtils.waitUntil(io::couleurVentouseBas, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor());
-                        log.info("Dernière lecture de la couleur : {}", couleur);
-                    }
-
-                    rs.ventouseBas(couleur);
-
-                    setBrasHaut(PositionBras.HORIZONTAL);
-
-                } else {
-                    // prise
-                    setBrasBas(PositionBras.stockPrise(indexStock));
-
-                    io.enablePompeVentouseBas();
-                    if (!ThreadUtils.waitUntil(io::presenceVentouseBas, config.i2cReadTimeMs(), config.timeoutPompe())) {
-                        log.warn("Pas de présence ventouse bas");
-                        rs.destockage();
-                        io.releasePompeVentouseBas();
-                        setBrasBas(PositionBras.STOCK_ENTREE);
-                        return null;
-                    }
-
-                    if (couleur.isNeedsLecture()) {
-                        couleur = ThreadUtils.waitUntil(io::couleurVentouseBas, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor());
-                        rs.stock()[indexStock] = couleur;
-                        log.info("Dernière lecture de la couleur : {}", couleur);
-                    }
-                    rs.ventouseBas(couleur);
-
-                    // depose
-                    setBrasBas(PositionBras.STOCK_ENTREE);
-                    rs.destockage();
-                }
-
-                if (typeDepose == TypeDepose.SOL) {
-                    setBrasBas(PositionBras.solDepose(index));
-                    io.releasePompeVentouseBas();
-                    rs.ventouseBas(null);
-                    if (!ThreadUtils.waitUntil(() -> !io.presenceVentouseBas(), config.i2cReadTimeMs(), config.timeoutPompe())) {
-                        log.warn("Echec de libération ventouse bas ?");
-                    }
-
-                    setBrasBas(PositionBras.STOCK_ENTREE);
-                } else {
-                    // Forcement galerie bas (cf case)
-                    setBrasBas(PositionBras.GALERIE_DEPOSE);
-                }
-                break;
-
-            case GALERIE_CENTRE:
-            case GALERIE_HAUT:
-                if (couleur.isNeedsEchange()) {
-                    // prise+échange
-                    setBrasBas(PositionBras.stockPrise(indexStock));
-
-                    io.enablePompeVentouseBas();
-                    if (!ThreadUtils.waitUntil(io::presenceVentouseBas, config.i2cReadTimeMs(), config.timeoutPompe())) {
-                        log.warn("Pas de présence ventouse bas");
-                        rs.destockage();
-                        io.releasePompeVentouseBas();
-                        setBrasBas(PositionBras.STOCK_ENTREE);
-                        return null;
-                    }
-                    rs.ventouseBas(couleur);
-
-                    setBrasBas(PositionBras.STOCK_ENTREE);
-                    rs.destockage();
-                    setBrasBas(PositionBras.ECHANGE);
-                    setBrasHaut(PositionBras.ECHANGE);
-
-                    io.enablePompeVentouseHaut();
-                    io.releasePompeVentouseBas();
-                    rs.ventouseBas(null);
-
-                    if (!ThreadUtils.waitUntil(io::presenceVentouseHaut, config.i2cReadTimeMs(), config.timeoutPompe())) {
-                        log.warn("Pas de présence ventouse haut");
-                        io.releasePompeVentouseHaut();
-                        setBrasHaut(PositionBras.HORIZONTAL);
-                        setBrasBas(PositionBras.STOCK_ENTREE);
-                        return null;
-                    }
-
-                    couleur = couleur.getReverseColor();
-
-                    if (couleur.isNeedsLecture()) {
-                        couleur = ThreadUtils.waitUntil(io::couleurVentouseHaut, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor());
-                        log.info("Dernière lecture de la couleur : {}", couleur);
-                    }
-
-                    rs.ventouseHaut(couleur);
-
-                    // depose
-                    setBrasBas(PositionBras.HORIZONTAL);
-                    if (typeDepose == TypeDepose.GALERIE_HAUT) {
-                        setBrasHaut(PositionBras.GALERIE_DEPOSE);
-                    } else {
-                        setBrasHaut(PositionBras.GALERIE_DEPOSE_CENTRE);
-                    }
-                    setBrasBas(PositionBras.STOCK_ENTREE);
-
-                } else {
-                    // prise
-                    setBrasHaut(PositionBras.stockPrise(indexStock));
-
-                    io.enablePompeVentouseHaut();
-                    if (!ThreadUtils.waitUntil(io::presenceVentouseHaut, config.i2cReadTimeMs(), config.timeoutPompe())) {
-                        log.warn("Pas de présence ventouse haut");
-                        rs.destockage();
-                        io.releasePompeVentouseHaut();
-                        setBrasHaut(PositionBras.STOCK_ENTREE);
-                        return null;
-                    }
-
-                    if (couleur.isNeedsLecture()) {
-                        couleur = ThreadUtils.waitUntil(io::couleurVentouseHaut, CouleurEchantillon.INCONNU, config.i2cReadTimeMs(), config.timeoutColor());
-                        rs.stock()[indexStock] = couleur;
-                        log.info("Dernière lecture de la couleur : {}", couleur);
-                    }
-                    rs.ventouseHaut(couleur);
-
-                    // depose
-                    setBrasHaut(PositionBras.STOCK_ENTREE);
-                    rs.destockage();
-
-                    if (typeDepose == TypeDepose.GALERIE_HAUT) {
-                        setBrasHaut(PositionBras.GALERIE_DEPOSE);
-                    } else {
-                        setBrasHaut(PositionBras.GALERIE_DEPOSE_CENTRE);
-                    }
-                    setBrasBas(PositionBras.STOCK_ENTREE);
-                }
-
-                break;
-        }
-
-        if (typeDepose == TypeDepose.SOL) {
-            log.info("Echantillon {} retiré du stock", couleur);
-        } else {
-            log.info("Echantillon {} pret à être retiré du stock sur la galerie", couleur);
-        }
-        return couleur;
-    }
-
-    public boolean processEndDeposeGalerie(@NonNull final TypeDepose typeDepose) {
-        if (typeDepose == TypeDepose.SOL) {
-            log.error("Type de dépose non supporté pour la galerie : {}", typeDepose);
-            return false;
-        }
-
-        if (typeDepose == TypeDepose.GALERIE_BAS) {
-            io.releasePompeVentouseBas();
-            rs.ventouseBas(null);
-            if (!ThreadUtils.waitUntil(() -> !io.presenceVentouseBas(), config.i2cReadTimeMs(), config.timeoutPompe())) {
-                log.warn("Echec de libération ventouse bas ?");
-            }
-        } else {
-            io.releasePompeVentouseHaut();
-            rs.ventouseHaut(null);
-            if (!ThreadUtils.waitUntil(() -> !io.presenceVentouseHaut(), config.i2cReadTimeMs(), config.timeoutPompe())) {
-                log.warn("Echec de libération ventouse haut ?");
-            }
-        }
-
-        return true;
-    }
-
-    public void finalizeDepose() {
-        io.disableLedCapteurCouleur();
-        setBrasHaut(PositionBras.HORIZONTAL);
         setBrasBas(PositionBras.STOCK_ENTREE);
-        updateStock();
+        setBrasBas(PositionBras.stockPrise(indexStock));
+
+        boolean ok = waitEnableVentouseBas(couleur);
+        setBrasBas(PositionBras.STOCK_ENTREE);
+        rs.destockage(); // dans tous les cas on enlève du stock
+        return ok;
+    }
+
+    /**
+     * Déstockage par le haut
+     */
+    public boolean destockageHaut() {
+        int indexStock = rs.indexDestockage();
+        CouleurEchantillon couleur = rs.stockFirst();
+        log.info("Récupération de l'échantillon {} {} par le haut", indexStock, couleur);
+
+        setBrasHaut(PositionBras.STOCK_ENTREE);
+        setBrasHaut(PositionBras.stockPrise(indexStock));
+
+        boolean ok = waitEnableVentouseHaut(couleur);
+        setBrasHaut(PositionBras.STOCK_ENTREE);
+        rs.destockage(); // dans tous les cas on enlève du stock
+        return ok;
+    }
+
+    /**
+     * Mise au repos + désactivation des pompes
+     */
+    public void repos() {
+        log.info("Positions de repos");
+        io.disableLedCapteurCouleur();
+        io.releasePompeVentouseHaut();
+        io.releasePompeVentouseBas();
+        rs.ventouseBas(null);
+        rs.ventouseHaut(null);
         setBrasBas(PositionBras.repos(rs.stockTaille()));
         setBrasHaut(PositionBras.repos(rs.stockTaille()));
-        rs.ventouseHaut(null);
-        rs.ventouseBas(null);
     }
 
     /**

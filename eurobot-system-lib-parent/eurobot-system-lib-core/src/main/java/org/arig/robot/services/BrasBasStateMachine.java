@@ -49,7 +49,9 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
 
         state(PositionBras.ECHANGE, new PointBras(147, 144, 100)); // en vrai c'est 90 mais le bras tombe sous le poids
 
-        state(PositionBras.DISTRIBUTEUR_PRISE, new PointBras(210, 80, -20));
+        state(PositionBras.DISTRIBUTEUR_PRISE_1, new PointBras(210, 80, -20));
+        state(PositionBras.DISTRIBUTEUR_PRISE_2, new PointBras(210, 73, -30));
+        state(PositionBras.DISTRIBUTEUR_PRISE_3, new PointBras(205, 70, -30));
         state(PositionBras.GALERIE_DEPOSE, new PointBras(170, 164, 10));
 
         transition(PositionBras.INIT, PositionBras.STOCK_ENTREE);
@@ -192,12 +194,26 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
         transition(PositionBras.ECHANGE_2, PositionBras.HORIZONTAL);
         transition(PositionBras.ECHANGE_2, PositionBras.STOCK_ENTREE);
 
-        transition(PositionBras.STOCK_ENTREE, PositionBras.DISTRIBUTEUR_PRISE);
-        transition(PositionBras.DISTRIBUTEUR_PRISE, PositionBras.STOCK_ENTREE);
-        transition(PositionBras.DISTRIBUTEUR_PRISE, PositionBras.ECHANGE, TransitionBras.withPoints(
+        transition(PositionBras.STOCK_ENTREE, PositionBras.DISTRIBUTEUR_PRISE_1);
+        transition(PositionBras.STOCK_ENTREE, PositionBras.DISTRIBUTEUR_PRISE_2);
+        transition(PositionBras.STOCK_ENTREE, PositionBras.DISTRIBUTEUR_PRISE_3);
+        transition(PositionBras.DISTRIBUTEUR_PRISE_1, PositionBras.STOCK_ENTREE);
+        transition(PositionBras.DISTRIBUTEUR_PRISE_2, PositionBras.STOCK_ENTREE);
+        transition(PositionBras.DISTRIBUTEUR_PRISE_3, PositionBras.STOCK_ENTREE);
+        transition(PositionBras.DISTRIBUTEUR_PRISE_1, PositionBras.ECHANGE, TransitionBras.withPoints(
                 new PointBras(190, 135, 0)
         ));
-        transition(PositionBras.ECHANGE, PositionBras.DISTRIBUTEUR_PRISE);
+        transition(PositionBras.DISTRIBUTEUR_PRISE_2, PositionBras.ECHANGE, TransitionBras.withPoints(
+                new PointBras(190, 135, 0)
+        ));
+        transition(PositionBras.DISTRIBUTEUR_PRISE_3, PositionBras.ECHANGE, TransitionBras.withPoints(
+                new PointBras(190, 135, 0)
+        ));
+        transition(PositionBras.ECHANGE, PositionBras.DISTRIBUTEUR_PRISE_1);
+        transition(PositionBras.ECHANGE, PositionBras.DISTRIBUTEUR_PRISE_2);
+        transition(PositionBras.ECHANGE, PositionBras.DISTRIBUTEUR_PRISE_3, TransitionBras.withPoints(
+                new PointBras(183, 93, -30)
+        ));
 
         transition(PositionBras.STOCK_ENTREE, PositionBras.GALERIE_DEPOSE);
         transition(PositionBras.GALERIE_DEPOSE, PositionBras.STOCK_ENTREE);

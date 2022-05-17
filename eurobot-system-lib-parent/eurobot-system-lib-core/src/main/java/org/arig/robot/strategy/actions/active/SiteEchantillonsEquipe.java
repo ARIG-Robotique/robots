@@ -8,6 +8,7 @@ import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.Strategy;
+import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BrasService;
@@ -16,10 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
-import static org.arig.robot.constants.EurobotConfig.PTS_DEPOSE_PRISE;
 import static org.arig.robot.constants.EurobotConfig.ECHANTILLON_SIZE;
+import static org.arig.robot.constants.EurobotConfig.PTS_DEPOSE_PRISE;
 
 @Slf4j
 @Component
@@ -101,78 +101,116 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
     public void execute() {
         try {
             entryPoint(); // On récupère le point d'entrée et on rafraichit l'échantillon
-            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-            CompletableFuture<Boolean> task = null;
-            if (firstAction && echantillonEntry == CouleurEchantillon.ROCHER_VERT) {
-                task = priseEchantillon(task, false, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
-                task = priseEchantillon(task, false, true, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
-                task = priseEchantillon(task, false, true, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
+
+            CompletableFuture<Void> task = CompletableFuture.completedFuture(null);
+            if (firstAction) {
+                task = priseEchantillon(task, false, true, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
+                task = priseEchantillon(task, false, false, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
+                task = priseEchantillon(task, false, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
             } else {
                 if (echantillonEntry == CouleurEchantillon.ROCHER_ROUGE) {
                     // De bas en haut
-                    task = priseEchantillon(task, true, false, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
-                    task = priseEchantillon(task, false, true, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
-                    task = priseEchantillon(task, false, true, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
+                    task = priseEchantillon(task, true, true, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
+                    task = priseEchantillon(task, false, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
+                    task = priseEchantillon(task, false, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
                 } else {
                     // De haut en bas
-                    task = priseEchantillon(task, true, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
-                    task = priseEchantillon(task, false, true, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
-                    task = priseEchantillon(task, false, true, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
+                    task = priseEchantillon(task, true, true, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
+                    task = priseEchantillon(task, false, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
+                    task = priseEchantillon(task, false, false, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
                 }
             }
 
-            task.get();
-            bras.finalizePrise();
+            task.join();
+            runAsync(() -> bras.repos());
 
             group.siteEchantillonPris();
 
-        } catch (NoPathFoundException | AvoidingException | ExecutionException | InterruptedException e) {
+        } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
             updateValidTime();
-            bras.safeHoming();
 
         } finally {
-            firstAction = false;
+            bras.safeHoming();
             refreshCompleted();
-            rs.disableCalageBordure();
+            firstAction = false;
         }
     }
 
-    private CompletableFuture<Boolean> priseEchantillon(CompletableFuture<Boolean> previousTask, boolean path, boolean needAlignFront, Point pointEchantillon, CouleurEchantillon couleur) throws AvoidingException, NoPathFoundException, ExecutionException, InterruptedException {
+    private CompletableFuture<Void> priseEchantillon(
+            CompletableFuture<Void> previousTask,
+            boolean path,
+            boolean first,
+            Point pointEchantillon,
+            CouleurEchantillon couleur
+    ) throws AvoidingException, NoPathFoundException {
+
         mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-        if (needAlignFront) {
-            mv.alignFrontTo(pointEchantillon);
-        }
         final Point dest = tableUtils.eloigner(pointEchantillon, -config.distanceCalageAvant() - (ECHANTILLON_SIZE / 3.0));
-        if (path) {
+
+        final CompletableFuture<Void> task;
+
+        if (path) { // implique first
             mv.pathTo(dest, GotoOption.AVANT);
+
+            // après le path, pendant le calage, on met les bras en position initiale
+            task = previousTask.thenRunAsync(() -> {
+                bras.setBrasHaut(PositionBras.HORIZONTAL);
+                bras.setBrasBas(PositionBras.SOL_DEPOSE_3);
+            }, executor);
+
         } else {
-            if (!needAlignFront) {
-                // Avec orientation
-                mv.gotoPoint(dest, GotoOption.AVANT);
-            } else {
-                // Sans orientation, c'est déjà fait
+            // pendant le mouvement et le calage, on met les bras en position initiale
+            task = previousTask.thenRunAsync(() -> {
+                bras.setBrasHaut(PositionBras.HORIZONTAL);
+                bras.setBrasBas(PositionBras.SOL_DEPOSE_3);
+            }, executor);
+
+            if (first) {
                 mv.gotoPoint(dest, GotoOption.AVANT, GotoOption.SANS_ORIENTATION);
+            } else {
+                mv.gotoPoint(dest, GotoOption.AVANT);
             }
         }
+
+        mv.alignFrontTo(pointEchantillon);
 
         mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
         rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON);
-        mv.avanceMM(ECHANTILLON_SIZE / 2);
+        mv.avanceMM(ECHANTILLON_SIZE / 2.0);
+
         if (rs.calageCompleted().contains(TypeCalage.PRISE_ECHANTILLON)) {
             mv.avanceMM(20); // Histoire de bien le charger dans le robot
-            if (previousTask != null) previousTask.get();
 
-            if (bras.initPrise(BrasService.TypePrise.SOL, true).get()
-                    && bras.processPrise(BrasService.TypePrise.SOL).get()) {
-                log.info("Echantillon pris : {}", couleur);
-                return bras.stockagePrise(BrasService.TypePrise.SOL, couleur, false);
+            task.join();
+            bras.setBrasBas(PositionBras.SOL_PRISE);
+
+            if (bras.waitEnableVentouseBas(couleur)) {
+                bras.setBrasBas(PositionBras.SOL_DEPOSE_3); // on lève
+
+                return runAsync(() -> {
+                    if (EurobotConfig.ECHANGE_PRISE) {
+                        if (bras.echangeBasHaut()) {
+                            bras.setBrasBas(PositionBras.SOL_DEPOSE_3);
+                            bras.stockageHaut();
+                            bras.setBrasHaut(PositionBras.HORIZONTAL);
+                        } else {
+                            bras.setBrasHaut(PositionBras.HORIZONTAL);
+                            bras.setBrasBas(PositionBras.SOL_DEPOSE_3);
+                        }
+                    } else {
+                        bras.stockageBas();
+                    }
+                });
+            } else {
+                bras.setBrasBas(PositionBras.SOL_DEPOSE_3);
             }
+
         } else {
             log.warn("Calage de l'échantillon {} non terminé", couleur);
-            if (previousTask != null) previousTask.get();
+            task.join();
         }
 
-        return CompletableFuture.completedFuture(false);
+        return CompletableFuture.completedFuture(null);
     }
 }

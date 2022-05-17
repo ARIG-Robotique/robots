@@ -18,6 +18,10 @@ import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.function.Supplier;
+
 @Slf4j
 public abstract class AbstractEurobotAction extends AbstractAction {
 
@@ -44,6 +48,9 @@ public abstract class AbstractEurobotAction extends AbstractAction {
 
     @Autowired
     protected EurobotStatus rs;
+
+    @Autowired
+    protected ThreadPoolExecutor executor;
 
     @Autowired
     private ConvertionRobotUnit conv;
@@ -89,5 +96,13 @@ public abstract class AbstractEurobotAction extends AbstractAction {
         } else {
             log.info("Recalage angle inutile : aRobot = {} ; aReel = {}", robotA, realAdeg);
         }
+    }
+
+    protected CompletableFuture<Void> runAsync(Runnable runnable) {
+        return CompletableFuture.runAsync(runnable, executor);
+    }
+
+    protected <T> CompletableFuture<T> supplyAsync(Supplier<T> runnable) {
+        return CompletableFuture.supplyAsync(runnable, executor);
     }
 }

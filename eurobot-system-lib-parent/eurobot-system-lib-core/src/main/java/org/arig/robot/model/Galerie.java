@@ -17,7 +17,7 @@ public class Galerie {
     }
 
     public enum Etage {
-        BAS, HAUT, CENTRE, AUCUN
+        BAS, HAUT
     }
 
     @Getter
@@ -29,26 +29,29 @@ public class Galerie {
     }
 
     private static final int MAX_DEPOSE = 2;
-    private static final int MAX_DEPOSE_VERT = 1;
 
     private final List<CouleurEchantillon> bleu = new ArrayList<>(MAX_DEPOSE);
     private final List<CouleurEchantillon> bleuVert = new ArrayList<>(MAX_DEPOSE);
-    private final List<CouleurEchantillon> vert = new ArrayList<>(MAX_DEPOSE_VERT);
+    private final List<CouleurEchantillon> vert = new ArrayList<>(MAX_DEPOSE);
     private final List<CouleurEchantillon> rougeVert = new ArrayList<>(MAX_DEPOSE);
     private final List<CouleurEchantillon> rouge = new ArrayList<>(MAX_DEPOSE);
 
     public void addRouge(final CouleurEchantillon echantillon) {
         rouge.add(echantillon);
     }
+
     public void addRougeVert(final CouleurEchantillon echantillon) {
         rougeVert.add(echantillon);
     }
+
     public void addVert(final CouleurEchantillon echantillon) {
         vert.add(echantillon);
     }
+
     public void addBleuVert(final CouleurEchantillon echantillon) {
         bleuVert.add(echantillon);
     }
+
     public void addBleu(final CouleurEchantillon echantillon) {
         bleu.add(echantillon);
     }
@@ -58,7 +61,7 @@ public class Galerie {
     }
 
     int emplacementDisponible() {
-        return 9 - (bleu.size() + bleuVert.size() + vert.size() + rougeVert.size() + rouge.size());
+        return 10 - (bleu.size() + bleuVert.size() + vert.size() + rougeVert.size() + rouge.size());
     }
 
     GaleriePosition bestPosition(CouleurEchantillon couleur, Periode currentPeriode) {
@@ -84,12 +87,12 @@ public class Galerie {
             }
 
         } else if (couleur == CouleurEchantillon.VERT || couleur == CouleurEchantillon.ROCHER_VERT) {
-            if (bleuVert.size() < MAX_DEPOSE && (currentPeriode == Periode.BLEU_VERT || currentPeriode == null)) {
+            if (vert.size() < MAX_DEPOSE && (currentPeriode == Periode.VERT || currentPeriode == null)) {
+                return new GaleriePosition(Periode.VERT, vert.isEmpty() ? Etage.BAS : Etage.HAUT);
+            } else if (bleuVert.size() < MAX_DEPOSE && (currentPeriode == Periode.BLEU_VERT || currentPeriode == null)) {
                 return new GaleriePosition(Periode.BLEU_VERT, bleuVert.isEmpty() ? Etage.BAS : Etage.HAUT);
             } else if (rougeVert.size() < MAX_DEPOSE && (currentPeriode == Periode.ROUGE_VERT || currentPeriode == null)) {
                 return new GaleriePosition(Periode.ROUGE_VERT, rougeVert.isEmpty() ? Etage.BAS : Etage.HAUT);
-            } else if (vert.size() < MAX_DEPOSE_VERT && (currentPeriode == Periode.VERT || currentPeriode == null)) {
-                return new GaleriePosition(Periode.VERT, Etage.CENTRE);
             } else if (currentPeriode != null) {
                 return bestPosition(couleur, null); // Retry sans période préférée
             }
@@ -105,8 +108,8 @@ public class Galerie {
             return new GaleriePosition(Periode.ROUGE, bleu.isEmpty() ? Etage.BAS : Etage.HAUT);
         } else if (currentPeriode == Periode.ROUGE_VERT && rougeVert.size() < MAX_DEPOSE) {
             return new GaleriePosition(Periode.ROUGE_VERT, bleu.isEmpty() ? Etage.BAS : Etage.HAUT);
-        } else if (currentPeriode == Periode.VERT && vert.size() < MAX_DEPOSE_VERT) {
-            return new GaleriePosition(Periode.VERT, Etage.CENTRE);
+        } else if (currentPeriode == Periode.VERT && vert.size() < MAX_DEPOSE) {
+            return new GaleriePosition(Periode.VERT, vert.isEmpty() ? Etage.BAS : Etage.HAUT);
         } else {
             // 2. Sinon, on cherche une période qui n'est pas pleine.
             if (bleu.size() < MAX_DEPOSE) {
@@ -117,8 +120,8 @@ public class Galerie {
                 return new GaleriePosition(Periode.ROUGE, rouge.isEmpty() ? Etage.BAS : Etage.HAUT);
             } else if (rougeVert.size() < MAX_DEPOSE) {
                 return new GaleriePosition(Periode.ROUGE_VERT, rougeVert.isEmpty() ? Etage.BAS : Etage.HAUT);
-            } else if (vert.size() < MAX_DEPOSE_VERT) {
-                return new GaleriePosition(Periode.VERT, Etage.CENTRE);
+            } else if (vert.size() < MAX_DEPOSE) {
+                return new GaleriePosition(Periode.VERT, vert.isEmpty() ? Etage.BAS : Etage.HAUT);
             } else {
                 // Ne peut pas arriver normalement
                 return null;

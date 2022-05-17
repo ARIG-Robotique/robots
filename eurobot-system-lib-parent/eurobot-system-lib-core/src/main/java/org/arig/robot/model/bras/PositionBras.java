@@ -34,7 +34,6 @@ public enum PositionBras {
     STOCK_DEPOSE_6(true),
 
     GALERIE_DEPOSE(false),
-    GALERIE_DEPOSE_CENTRE(false),
 
     // bas
     SOL_PRISE(false),
@@ -48,7 +47,9 @@ public enum PositionBras {
     BORDURE_PRISE(false),
     ECHANGE_2(false),
 
-    DISTRIBUTEUR_PRISE(false),
+    DISTRIBUTEUR_PRISE_1(false),
+    DISTRIBUTEUR_PRISE_2(false),
+    DISTRIBUTEUR_PRISE_3(false),
     ;
 
     private final boolean inside;
@@ -70,5 +71,9 @@ public enum PositionBras {
 
     public static PositionBras solDepose(int tailleCampement) {
         return PositionBras.valueOf("SOL_DEPOSE_" + (tailleCampement + 1));
+    }
+
+    public static PositionBras distribPrise(int i) {
+        return PositionBras.valueOf("DISTRIBUTEUR_PRISE_" + (i + 1));
     }
 }

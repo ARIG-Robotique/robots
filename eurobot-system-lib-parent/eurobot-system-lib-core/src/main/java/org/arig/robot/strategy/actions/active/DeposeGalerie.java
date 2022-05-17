@@ -7,6 +7,7 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.Galerie;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BrasService;
@@ -16,22 +17,26 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
-
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 @Slf4j
 @Component
 public class DeposeGalerie extends AbstractEurobotAction {
 
-    private static final int DEMI_ECHANTILLON_WIDTH = EurobotConfig.ECHANTILLON_SIZE / 2; // 75 = 150 / 2
-    private static final int DEMI_GALERIE_WIDTH = EurobotConfig.GALERIE_WIDTH / 2; // 360 = 720 / 2
-    private static final int PERIODE_WITDH = EurobotConfig.GALERIE_WIDTH / 3; // 240 = 720 / 3
-
+    private static final int GALERIE_WIDTH = 720;
     private static final int GALERIE_X_START = 450;
+    private static final int GALERIE_X_END = GALERIE_X_START + GALERIE_WIDTH;
+    private static final int GALERIE_CENTRE = GALERIE_X_START + GALERIE_WIDTH / 2;
+    private static final int PERIODE_WIDTH = GALERIE_WIDTH / 3;
+    private static final int DEMI_ECHANTILLON_WIDTH = EurobotConfig.ECHANTILLON_SIZE / 2;
+
     private static final int ENTRY_X_BLEU = GALERIE_X_START + DEMI_ECHANTILLON_WIDTH;
-    private static final int ENTRY_X_BLEU_VERT = GALERIE_X_START + PERIODE_WITDH;
-    private static final int ENTRY_X_SINGLE_VERT = GALERIE_X_START + DEMI_GALERIE_WIDTH;
-    private static final int ENTRY_X_ROUGE_VERT = GALERIE_X_START + (2 * PERIODE_WITDH);
-    private static final int ENTRY_X_ROUGE = GALERIE_X_START + EurobotConfig.GALERIE_WIDTH - DEMI_ECHANTILLON_WIDTH;
+    private static final int ENTRY_X_BLEU_VERT = GALERIE_X_START + PERIODE_WIDTH;
+    private static final int ENTRY_X_SINGLE_VERT = GALERIE_CENTRE;
+    private static final int ENTRY_X_ROUGE_VERT = GALERIE_X_END - PERIODE_WIDTH;
+    private static final int ENTRY_X_ROUGE = GALERIE_X_END - DEMI_ECHANTILLON_WIDTH;
+
     private static final int ENTRY_Y = 1720;
 
     private static final int OFFSET_Y_REF_AVANT_PROCHAINE_DEPOSE = 80;
@@ -75,16 +80,17 @@ public class DeposeGalerie extends AbstractEurobotAction {
     }
 
     private Point echantillonEntryPoint(Galerie.GaleriePosition pos) {
-        if (pos.periode() == Galerie.Periode.BLEU) {
-            return new Point(getX(ENTRY_X_BLEU), ENTRY_Y);
-        } else if (pos.periode() == Galerie.Periode.BLEU_VERT) {
-            return new Point(getX(ENTRY_X_BLEU_VERT), ENTRY_Y);
-        } else if (pos.periode() == Galerie.Periode.VERT) {
-            return new Point(getX(ENTRY_X_SINGLE_VERT), ENTRY_Y);
-        } else if (pos.periode() == Galerie.Periode.ROUGE_VERT) {
-            return new Point(getX(ENTRY_X_ROUGE_VERT), ENTRY_Y);
-        } else {
-            return new Point(getX(ENTRY_X_ROUGE), ENTRY_Y);
+        switch (pos.periode()) {
+            case BLEU:
+                return new Point(getX(ENTRY_X_BLEU), ENTRY_Y);
+            case BLEU_VERT:
+                return new Point(getX(ENTRY_X_BLEU_VERT), ENTRY_Y);
+            case VERT:
+                return new Point(getX(ENTRY_X_SINGLE_VERT), ENTRY_Y);
+            case ROUGE_VERT:
+                return new Point(getX(ENTRY_X_ROUGE_VERT), ENTRY_Y);
+            default:
+                return new Point(getX(ENTRY_X_ROUGE), ENTRY_Y);
         }
     }
 
@@ -101,7 +107,8 @@ public class DeposeGalerie extends AbstractEurobotAction {
             boolean hasNextDepose;
             do {
                 Galerie.GaleriePosition pos = bestPosition(lastPosition);
-                log.info("Dépose dans la galerie : Période {}, Etage {}", pos.periode(), pos.etage());
+                CouleurEchantillon couleur = rs.stockFirst();
+                log.info("Dépose {} dans la galerie : Période {}, Etage {}", couleur, pos.periode(), pos.etage());
                 entryPoint = echantillonEntryPoint(pos);
 
                 if (yRefBordure == ENTRY_Y) {
@@ -119,49 +126,79 @@ public class DeposeGalerie extends AbstractEurobotAction {
                     log.info("Calage bordure galerie terminé, yRef = {} mm", yRefBordure);
                 }
 
+                io.enableLedCapteurCouleur();
+
                 // On se place à la position permettant de tourner le robot
                 rs.disableAvoidance();
-                mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-                mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_POUR_PREPARATION, GotoOption.SANS_ORIENTATION);
-                mv.gotoOrientationDeg(90);
 
-                CouleurEchantillon echantillonDepose = null;
+                final Point tempPoint = new Point(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_POUR_ROTATION);
+                CompletableFuture<Void> moveTask = runAsync(() -> {
+                    try {
+                        mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+                        mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_POUR_PREPARATION, GotoOption.SANS_ORIENTATION);
+                        mv.gotoOrientationDeg(90);
+                    } catch (AvoidingException e) {
+                        throw new CompletionException(e);
+                    }
+                });
+
+                boolean ok;
+
                 if (pos.etage() == Galerie.Etage.BAS) {
-                    if (bras.initDepose(BrasService.TypeDepose.GALERIE_BAS)
-                            && (echantillonDepose = bras.processDepose(BrasService.TypeDepose.GALERIE_BAS)) != null) {
+                    bras.setBrasHaut(PositionBras.HORIZONTAL);
 
+                    if (couleur.isNeedsEchange()) {
+                        bras.setBrasBas(PositionBras.HORIZONTAL);
+                        ok = bras.destockageHaut() && bras.echangeHautBas();
+
+                    } else {
+                        ok = bras.destockageBas();
+                    }
+
+                    if (ok) {
+                        bras.setBrasHaut(PositionBras.HORIZONTAL);
+                        bras.setBrasBas(PositionBras.GALERIE_DEPOSE);
+
+                        moveTask.join();
                         mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_BAS, GotoOption.AVANT);
-                        if (!bras.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_BAS)) {
-                            echantillonDepose = null;
-                        }
+
+                        couleur = rs.ventouseBas();
+                        bras.waitReleaseVentouseBas();
+                        bras.setBrasBas(PositionBras.STOCK_ENTREE);
+
+                        comptagePoint(pos, couleur);
+                    } else {
+                        bras.setBrasHaut(PositionBras.HORIZONTAL);
+                        bras.setBrasBas(PositionBras.STOCK_ENTREE);
                     }
 
                 } else if (pos.etage() == Galerie.Etage.HAUT) {
-                    if (bras.initDepose(BrasService.TypeDepose.GALERIE_HAUT)
-                            && (echantillonDepose = bras.processDepose(BrasService.TypeDepose.GALERIE_HAUT)) != null) {
+                    bras.setBrasHaut(PositionBras.HORIZONTAL);
 
-                        rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
-                        mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
-                        if (!bras.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_HAUT)) {
-                            echantillonDepose = null;
-                        }
+                    if (couleur.isNeedsEchange()) {
+                        ok = bras.destockageBas() && bras.echangeBasHaut();
+
+                    } else {
+                        bras.setBrasBas(PositionBras.HORIZONTAL);
+                        ok = bras.destockageHaut();
                     }
 
-                } else {
-                    if (bras.initDepose(BrasService.TypeDepose.GALERIE_CENTRE)
-                            && (echantillonDepose = bras.processDepose(BrasService.TypeDepose.GALERIE_CENTRE)) != null) {
+                    if (ok) {
+                        bras.setBrasHaut(PositionBras.GALERIE_DEPOSE);
+                        bras.setBrasBas(PositionBras.STOCK_ENTREE);
 
+                        moveTask.join();
                         rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                         mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
-                        if (!bras.processEndDeposeGalerie(BrasService.TypeDepose.GALERIE_CENTRE)) {
-                            echantillonDepose = null;
-                        }
+
+                        couleur = rs.ventouseHaut();
+                        bras.waitReleaseVentouseHaut();
+
+                        comptagePoint(pos, couleur);
+                    } else {
+                        bras.setBrasHaut(PositionBras.HORIZONTAL);
+                        bras.setBrasBas(PositionBras.STOCK_ENTREE);
                     }
-                }
-                if (echantillonDepose != null) {
-                    comptagePoint(pos, echantillonDepose);
-                } else {
-                    log.warn("Echantillon de dépose null dans la galerie {} - {}", pos.periode(), pos.etage());
                 }
 
                 lastPosition = pos;
@@ -169,8 +206,9 @@ public class DeposeGalerie extends AbstractEurobotAction {
                 hasNextDepose = !rs.galerieComplete() && rs.stockTaille() != 0 && remainingTimeBeforeRetourSiteValid();
                 if (hasNextDepose) {
                     mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_AVANT_PROCHAINE_DEPOSE, GotoOption.SANS_ORIENTATION);
-                    bras.finalizeDepose();
                 }
+
+                bras.repos();
             } while (hasNextDepose);
 
             // On se place à la position permettant de tourner le robot pour la prochaine action
@@ -180,6 +218,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
+
         } finally {
             bras.safeHoming();
             refreshCompleted();

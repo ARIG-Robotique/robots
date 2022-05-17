@@ -422,6 +422,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public void stockage(CouleurEchantillon couleur) {
         int i = indexStockage();
         if (i != -1) {
+            log.info("[RS] Stockage d'un {} à l'emplacement {}", couleur, i);
             stock[i] = couleur;
             needRefreshStock = true;
         } else {
@@ -430,10 +431,11 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     }
 
     public CouleurEchantillon destockage() {
-        int idx = indexDestockage();
-        if (idx != -1) {
-            CouleurEchantillon couleur = stock[idx];
-            stock[idx] = null;
+        int i = indexDestockage();
+        if (i != -1) {
+            CouleurEchantillon couleur = stock[i];
+            log.info("[RS] Déstocke {} de l'emplacement {}", couleur, i);
+            stock[i] = null;
             needRefreshStock = true;
             return couleur;
         } else {

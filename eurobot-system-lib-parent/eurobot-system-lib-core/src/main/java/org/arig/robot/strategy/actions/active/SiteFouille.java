@@ -8,6 +8,7 @@ import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BrasService;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Component
@@ -97,42 +97,53 @@ public class SiteFouille extends AbstractEurobotAction {
 
             complete(true);
 
-        } catch (NoPathFoundException | AvoidingException | InterruptedException | ExecutionException e) {
+        } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
             updateValidTime();
+
+        } finally {
             bras.safeHoming();
         }
     }
 
-    private int doPrise(int prises, Point target) throws AvoidingException, ExecutionException, InterruptedException {
+    private int doPrise(int prises, Point target) throws AvoidingException {
         CompletableFuture<?> task = null;
 
         while (true) {
             rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON);
             mv.gotoPoint(target, GotoOption.AVANT);
 
-            if (task != null) task.get();
+            if (task != null) task.join();
 
             if (rs.calageCompleted().contains(TypeCalage.PRISE_ECHANTILLON)) {
                 mv.avanceMM(20); // pour vraiment etre en contact
 
-                bras.initPrise(BrasService.TypePrise.SOL, true).get();
-                if (bras.processPrise(BrasService.TypePrise.SOL).get()) {
-                    task = bras.stockagePrise(BrasService.TypePrise.SOL, CouleurEchantillon.INCONNU, false)
-                            .thenCompose((Boolean) -> bras.finalizePrise());
+                io.enableLedCapteurCouleur();
+                bras.setBrasHaut(PositionBras.HORIZONTAL);
+                bras.setBrasBas(PositionBras.SOL_PRISE);
+
+                if (bras.waitEnableVentouseBas(CouleurEchantillon.INCONNU)) {
+                    bras.setBrasBas(PositionBras.SOL_DEPOSE_2);
+
+                    task = runAsync(() -> {
+                        bras.stockageBas();
+                        bras.repos();
+                    });
+
                     prises++;
                     if (prises == 3) {
                         break;
                     }
+
                 } else {
-                    task = bras.finalizePrise();
+                    task = runAsync(() -> bras.repos());
                 }
             } else {
                 break;
             }
         }
 
-        if (task != null) task.get();
+        if (task != null) task.join();
 
         return prises;
     }

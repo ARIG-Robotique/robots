@@ -8,6 +8,7 @@ import org.arig.robot.model.Campement;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BrasService;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Component
@@ -23,7 +25,7 @@ public class DeposeCampement extends AbstractEurobotAction {
 
     protected final int X = 330;
     protected final int Y = 1260;
-    protected final int OFFSET = 70; // TODO
+    protected final int OFFSET = 70;
 
     @Autowired
     private BrasService bras;
@@ -133,45 +135,62 @@ public class DeposeCampement extends AbstractEurobotAction {
     @Override
     public void execute() {
         try {
-            final Point entry = entryPoint();
+            Point entry = entryPoint();
 
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.pathTo(entry);
 
-            if (rs.tailleCampementRouge() == 0) {
-                rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
-                mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
-                mv.avanceMM(X - config.distanceCalageAvant() - 10);
-                mv.setVitesse(config.vitesse(10), config.vitesseOrientation());
-                rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
-                mv.avanceMMSansAngle(100);
-                checkRecalageXmm(rs.team() == Team.JAUNE ? config.distanceCalageAvant() : EurobotConfig.tableWidth - config.distanceCalageAvant());
-                checkRecalageAngleDeg(rs.team() == Team.JAUNE ? 180 : 0);
-                mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-                mv.gotoPoint(entry);
-            }
+            // FIXME ne semble pas necessaire
+//            if (rs.tailleCampementRouge() == 0) {
+//                rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
+//                mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
+//                mv.avanceMM(X - config.distanceCalageAvant() - 10);
+//                mv.setVitesse(config.vitesse(10), config.vitesseOrientation());
+//                rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
+//                mv.avanceMMSansAngle(100);
+//                checkRecalageXmm(rs.team() == Team.JAUNE ? config.distanceCalageAvant() : EurobotConfig.tableWidth - config.distanceCalageAvant());
+//                checkRecalageAngleDeg(rs.team() == Team.JAUNE ? 180 : 0);
+//                mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+//                mv.gotoPoint(entry);
+//            }
 
-            //mv.setVitesse(robotConfig.vitesse(50), robotConfig.vitesseOrientation());
             rs.disableAvoidance();
 
             CouleurEchantillon echantillon;
             CouleurEchantillon position = null;
 
             while ((echantillon = rs.stockFirst()) != null && remainingTimeBeforeRetourSiteValid()) {
-                // on doit changer de colonne
+                // on doit changer de zone
                 // - la première fois
                 // - si on change de couleur
                 // - si la zone est pleine
                 CouleurEchantillon newPosition = getNewPosition(echantillon, position);
                 if (newPosition == null) {
                     log.info("Plus de place au campement pour faire la dépose");
-                    complete();
+                    complete(true);
                     break;
                 }
 
-                bras.initDepose(BrasService.TypeDepose.SOL);
-
                 log.info("Dépose {} dans le campement {}", echantillon, newPosition);
+
+                final CouleurEchantillon e = echantillon;
+                CompletableFuture<Boolean> task = supplyAsync(() -> {
+                    if (e.isNeedsEchange()) {
+                        bras.setBrasHaut(PositionBras.HORIZONTAL);
+                        bras.setBrasBas(PositionBras.HORIZONTAL);
+
+                        boolean ok = bras.destockageHaut() && bras.echangeHautBas();
+                        bras.setBrasHaut(PositionBras.HORIZONTAL);
+                        bras.setBrasBas(PositionBras.STOCK_ENTREE);
+                        return ok;
+
+                    } else {
+                        bras.setBrasHaut(PositionBras.HORIZONTAL);
+                        bras.setBrasBas(PositionBras.STOCK_ENTREE);
+
+                        return bras.destockageBas();
+                    }
+                });
 
                 if (position != newPosition) {
                     if (position != null) {
@@ -193,23 +212,28 @@ public class DeposeCampement extends AbstractEurobotAction {
                     mv.avanceMM(position == CouleurEchantillon.ROUGE ? OFFSET - 10 : OFFSET);
                 }
 
+                if (task.join()) {
+                    echantillon = rs.ventouseBas();
 
-                switch (position) {
-                    case ROUGE:
-                        if (bras.processDeposeSol(rs.tailleCampementRouge()) != null) {
-                            group.deposeCampementRouge(echantillon);
-                        }
-                        break;
-                    case VERT:
-                        if (bras.processDeposeSol(rs.tailleCampementVertTemp()) != null) {
+                    switch (position) {
+                        case ROUGE:
+                            bras.setBrasBas(PositionBras.solDepose(rs.tailleCampementRouge()));
+                            bras.waitReleaseVentouseBas();
+                            group.deposeCampementRouge();
+                            break;
+                        case VERT:
+                            bras.setBrasBas(PositionBras.solDepose(rs.tailleCampementVertTemp()));
+                            bras.waitReleaseVentouseBas();
                             group.deposeCampementVertTemp(echantillon);
-                        }
-                        break;
-                    case BLEU:
-                        if (bras.processDeposeSol(rs.tailleCampementBleu()) != null) {
+                            break;
+                        case BLEU:
+                            bras.setBrasBas(PositionBras.solDepose(rs.tailleCampementBleu()));
+                            bras.waitReleaseVentouseBas();
                             group.deposeCampementBleu(echantillon);
-                        }
-                        break;
+                            break;
+                    }
+
+                    bras.setBrasBas(PositionBras.STOCK_ENTREE);
                 }
 
                 // si la galerie devient disponible on arrete là
@@ -218,12 +242,15 @@ public class DeposeCampement extends AbstractEurobotAction {
                 }
             }
 
+            runAsync(() -> bras.repos());
+
             mv.gotoPoint(entry);
-            bras.finalizeDepose();
 
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
             updateValidTime();
+
+        } finally {
             bras.safeHoming();
         }
     }

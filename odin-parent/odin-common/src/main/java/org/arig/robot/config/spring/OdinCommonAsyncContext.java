@@ -12,7 +12,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 public class OdinCommonAsyncContext {
 
-    @Bean
+    @Bean(destroyMethod = "shutdown")
     public ThreadPoolExecutor threadPoolTaskExecutor() {
         return (ThreadPoolExecutor) Executors.newFixedThreadPool(OdinConstantesConfig.nbThreadAsyncExecutor);
     }

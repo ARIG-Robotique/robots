@@ -59,10 +59,9 @@ public interface EurobotConfig {
     // Taille d'un echantillon
     int ECHANTILLON_SIZE = 150;
 
-    // Largeur de la galerie
-    int GALERIE_WIDTH = 720;
-
     int PATHFINDER_ECHANTILLON_SIZE = 500;
     int PATHFINDER_SITE_FOUILLE_SIZE = 700;
+
+    boolean ECHANGE_PRISE = true;
 
 }

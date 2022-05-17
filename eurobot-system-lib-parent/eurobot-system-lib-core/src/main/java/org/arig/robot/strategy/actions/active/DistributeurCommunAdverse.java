@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
-public class DistributeurCommunAdverse extends AbstractPriseDistributeurCommun {
+public class DistributeurCommunAdverse extends AbstractDistributeurCommun {
 
     @Override
     public String name() {

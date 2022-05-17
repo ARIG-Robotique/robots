@@ -5,21 +5,16 @@ import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
-import org.arig.robot.services.BrasService;
-import org.arig.robot.strategy.actions.AbstractEurobotAction;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 import static org.arig.robot.constants.EurobotConfig.PTS_DEPOSE_PRISE;
 
 @Slf4j
-public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAction {
+public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
 
     private static final int DISTRIB_H = 102;
     private static final int TASSEAU_W = 11;
@@ -38,9 +33,6 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
     protected abstract int angleCallageX();
 
     protected abstract int anglePrise();
-
-    @Autowired
-    private BrasService bras;
 
     @Override
     public int order() {
@@ -92,43 +84,23 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
             rs.enableCalageBordure(TypeCalage.AVANT_BAS);
             mv.avanceMM(100);
 
-            CompletableFuture<?> task = bras.initPrise(BrasService.TypePrise.DISTRIBUTEUR);
+            CompletableFuture<?> task = prepare();
 
             mv.setVitesse(config.vitesse(50), config.vitesseOrientation(50));
             mv.reculeMM(80);
             mv.gotoOrientationDeg(anglePrise());
 
-            mv.setVitesse(config.vitesse(10), config.vitesseOrientation());
-
-            task.get();
-
-            for (int i = 0; i < 3; i++) {
-                io.enablePompeVentouseBas();
-                rs.enableCalageBordure(TypeCalage.VENTOUSE_BAS, TypeCalage.FORCE);
-                mv.avanceMM(25);
-
-                if (bras.processPrise(BrasService.TypePrise.DISTRIBUTEUR).get()) {
-                    if (i == 2) {
-                        mv.reculeMM(30);
-                    }
-                    CouleurEchantillon couleur = i == 0 ? CouleurEchantillon.ROCHER_BLEU :
-                            i == 1 ? CouleurEchantillon.ROCHER_VERT :
-                                    CouleurEchantillon.ROCHER_ROUGE;
-                    bras.stockagePrise(BrasService.TypePrise.DISTRIBUTEUR, couleur, false).get();
-                }
-            }
-
-            task = bras.finalizePrise();
+            task.join();
+            prise();
 
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.reculeMM(30);
             mv.gotoPoint(entry, GotoOption.ARRIERE);
 
-            task.get();
-
             setDistributeurPris();
+            complete(true);
 
-        } catch (NoPathFoundException | AvoidingException | ExecutionException | InterruptedException e) {
+        } catch (NoPathFoundException | AvoidingException e) {
             if (e instanceof MovementCancelledException) {
                 final double robotX = mv.currentXMm();
                 final double robotY = mv.currentYMm();
@@ -146,7 +118,6 @@ public abstract class AbstractPriseDistributeurCommun extends AbstractEurobotAct
 
         } finally {
             bras.safeHoming();
-            refreshCompleted();
         }
     }
 }

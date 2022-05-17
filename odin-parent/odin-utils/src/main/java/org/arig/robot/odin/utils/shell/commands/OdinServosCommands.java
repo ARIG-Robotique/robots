@@ -1,9 +1,7 @@
 package org.arig.robot.odin.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.BrasService;
@@ -14,11 +12,6 @@ import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
-import org.springframework.shell.standard.ShellOption;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @Slf4j
 @ShellComponent
@@ -145,46 +138,5 @@ public class OdinServosCommands {
                 servosService.brasBas(a1, a2, a3, 40);
                 break;
         }
-    }
-
-    @SneakyThrows
-    @ShellMethod("Prise et stockage d'un échantillon")
-    public void cyclePrise(
-            @ShellOption(defaultValue = "INCONNU") CouleurEchantillon couleur,
-            @ShellOption(defaultValue = "SOL") BrasService.TypePrise typePrise
-    ) {
-        ioService.couleurVentouseHaut();
-        ioService.couleurVentouseBas();
-
-        if (brasService.initPrise(typePrise).get()) {
-            log.info("Prise en cours");
-            if (brasService.processPrise(typePrise).get()) {
-                log.info("Prise terminée");
-                if (brasService.stockagePrise(typePrise, couleur).get()) {
-                    log.info("Stockage terminé : {}", Arrays.stream(rs.stock()).map(c -> c == null ? "null" : c.name()).collect(Collectors.joining(",")));
-                }
-            }
-        }
-        brasService.finalizePrise().get();
-    }
-
-    @ShellMethod("Dépose d'un échantillon")
-    public void cycleDepose(
-            @ShellOption(defaultValue = "SOL") BrasService.TypeDepose typeDepose
-    ) {
-        ioService.couleurVentouseHaut();
-        ioService.couleurVentouseBas();
-
-        if (brasService.initDepose(typeDepose)) {
-            log.info("Dépose en cours");
-            if (brasService.processDepose(typeDepose) != null) {
-                if (typeDepose == BrasService.TypeDepose.GALERIE_BAS || typeDepose == BrasService.TypeDepose.GALERIE_CENTRE || typeDepose == BrasService.TypeDepose.GALERIE_HAUT) {
-                    brasService.processEndDeposeGalerie(typeDepose);
-                }
-                log.info("Dépose terminée");
-                log.info("Stock : {}", Arrays.stream(rs.stock()).map(c -> c == null ? "null" : c.name()).collect(Collectors.joining(",")));
-            }
-        }
-        brasService.finalizeDepose();
     }
 }
