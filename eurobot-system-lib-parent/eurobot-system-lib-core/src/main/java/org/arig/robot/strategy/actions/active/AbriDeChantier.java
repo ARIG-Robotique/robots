@@ -152,7 +152,6 @@ public class AbriDeChantier extends AbstractEurobotAction {
 
             boolean needPath = true;
             if (firstAction){
-                firstAction = false;
                 needPath = false;
             }
 
@@ -162,7 +161,11 @@ public class AbriDeChantier extends AbstractEurobotAction {
                     needPath = false;
                     mv.pathTo(entryEchantillonDistributeur());
                 } else {
-                    mv.gotoPoint(entryEchantillonDistributeur(), GotoOption.SANS_ORIENTATION);
+                    if (firstAction) {
+                        mv.gotoPoint(entryEchantillonDistributeur(), GotoOption.SANS_ORIENTATION);
+                    } else {
+                        mv.gotoPoint(entryEchantillonDistributeur());
+                    }
                 }
                 mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? ORIENT_JAUNE_FACE_ABRI : ORIENT_VIOLET_FACE_ABRI);
                 task = processingPriseBordureSafe(CouleurEchantillon.ROCHER_BLEU, group::echantillonAbriChantierDistributeurPris);
@@ -174,7 +177,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
                     needPath = false;
                     mv.pathTo(entryEchantillonCarreFouille());
                 } else {
-                    mv.gotoPoint(entryEchantillonCarreFouille(), GotoOption.SANS_ORIENTATION);
+                    mv.gotoPoint(entryEchantillonCarreFouille());
                 }
                 mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? ORIENT_JAUNE_FACE_ABRI : ORIENT_VIOLET_FACE_ABRI);
                 if (task != null) {
@@ -189,7 +192,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
             if (needPath) {
                 mv.pathTo(entryStatuette());
             } else {
-                mv.gotoPoint(entryStatuette(), GotoOption.SANS_ORIENTATION);
+                mv.gotoPoint(entryStatuette());
             }
             if (task != null) {
                 Ventouse result = task.get();
@@ -307,6 +310,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
             updateValidTime();
         } finally {
+            firstAction = false;
             io.releasePompeVentouseHaut();
             io.releasePompeVentouseBas();
             bras.safeHoming();
