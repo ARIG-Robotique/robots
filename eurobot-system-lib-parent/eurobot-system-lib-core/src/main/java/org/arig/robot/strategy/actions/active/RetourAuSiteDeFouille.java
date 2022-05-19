@@ -80,12 +80,12 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
                 case WIP_FOUILLE_EST:
                     gotoSite = SiteDeRetour.WIP_FOUILLE_OUEST;
                     destSite = SiteDeRetour.FOUILLE_OUEST;
-                    return pointEst();
+                    return pointOuest();
                 case FOUILLE_OUEST:
                 case WIP_FOUILLE_OUEST:
                     gotoSite = SiteDeRetour.WIP_FOUILLE_EST;
                     destSite = SiteDeRetour.FOUILLE_EST;
-                    return pointOuest();
+                    return pointEst();
                 default:
                     throw new IllegalArgumentException("Etat incohérent, l'autre robot est au campement");
             }
