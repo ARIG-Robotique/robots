@@ -106,6 +106,9 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
     @Override
     public void execute() {
         try {
+            // L'entry point calcul le chemin le plus court et défini gotoSite et destSite
+            final Point entry = entryPoint();
+
             if (rs.siteDeRetourAutreRobot().isInSite()) {
                 final Point pointDestAutreRobot;
                 switch (destSite) {
@@ -134,7 +137,6 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
                 );
             }
 
-            final Point entry = entryPoint();
             log.info("Go site de fouille : {}", gotoSite);
             group.siteDeRetour(gotoSite);
 
