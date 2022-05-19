@@ -4,8 +4,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -17,7 +19,7 @@ public class Galerie {
     }
 
     public enum Etage {
-        BAS, HAUT
+        BAS, HAUT, DOUBLE
     }
 
     @Getter
@@ -62,6 +64,83 @@ public class Galerie {
 
     int emplacementDisponible() {
         return 10 - (bleu.size() + bleuVert.size() + vert.size() + rougeVert.size() + rouge.size());
+    }
+
+    private final List<Pair<CouleurEchantillon, CouleurEchantillon>> PERMUTATIONS_ROUGE = Arrays.asList(
+            Pair.of(CouleurEchantillon.ROUGE, CouleurEchantillon.ROUGE),
+            Pair.of(CouleurEchantillon.ROCHER_ROUGE, CouleurEchantillon.ROUGE)
+    );
+
+    private final List<Pair<CouleurEchantillon, CouleurEchantillon>> PERMUTATIONS_VERT = Arrays.asList(
+            Pair.of(CouleurEchantillon.VERT, CouleurEchantillon.VERT),
+            Pair.of(CouleurEchantillon.ROCHER_VERT, CouleurEchantillon.VERT)
+    );
+
+    private final List<Pair<CouleurEchantillon, CouleurEchantillon>> PERMUTATIONS_BLEU = Arrays.asList(
+            Pair.of(CouleurEchantillon.BLEU, CouleurEchantillon.BLEU),
+            Pair.of(CouleurEchantillon.ROCHER_BLEU, CouleurEchantillon.BLEU)
+    );
+
+    private final List<Pair<CouleurEchantillon, CouleurEchantillon>> PERMUTATIONS_ROUGE_VERT = Arrays.asList(
+            Pair.of(CouleurEchantillon.ROUGE, CouleurEchantillon.VERT),
+            Pair.of(CouleurEchantillon.VERT, CouleurEchantillon.ROUGE),
+            Pair.of(CouleurEchantillon.ROCHER_VERT, CouleurEchantillon.ROUGE),
+            Pair.of(CouleurEchantillon.ROCHER_ROUGE, CouleurEchantillon.VERT)
+    );
+
+    private final List<Pair<CouleurEchantillon, CouleurEchantillon>> PERMUTATIONS_BLEU_VERT = Arrays.asList(
+            Pair.of(CouleurEchantillon.BLEU, CouleurEchantillon.VERT),
+            Pair.of(CouleurEchantillon.VERT, CouleurEchantillon.BLEU),
+            Pair.of(CouleurEchantillon.ROCHER_VERT, CouleurEchantillon.BLEU),
+            Pair.of(CouleurEchantillon.ROCHER_BLEU, CouleurEchantillon.VERT)
+    );
+
+    GaleriePosition bestPositionDoubleDepose(CouleurEchantillon couleur1, CouleurEchantillon couleur2, Periode currentPeriode) {
+        if (couleur2 == null) {
+            return bestPosition(couleur1, currentPeriode);
+        }
+
+        log.info("Demande de stockage galerie pour échantillons {} {} depuis la période {}", couleur1, couleur2, currentPeriode);
+
+        // on est capable d'en poser deux de la bonne couleur
+        final Pair<CouleurEchantillon, CouleurEchantillon> couleurs = Pair.of(couleur1, couleur2);
+        if (PERMUTATIONS_ROUGE.contains(couleurs) && rouge.isEmpty()) {
+            return new GaleriePosition(Periode.ROUGE, Etage.DOUBLE);
+        }
+        if (PERMUTATIONS_VERT.contains(couleurs) && vert.isEmpty()) {
+            return new GaleriePosition(Periode.VERT, Etage.DOUBLE);
+        }
+        if (PERMUTATIONS_BLEU.contains(couleurs) && bleu.isEmpty()) {
+            return new GaleriePosition(Periode.BLEU, Etage.DOUBLE);
+        }
+        if ((PERMUTATIONS_ROUGE.contains(couleurs) || PERMUTATIONS_ROUGE_VERT.contains(couleurs)) && rougeVert.isEmpty()) {
+            return new GaleriePosition(Periode.ROUGE_VERT, Etage.DOUBLE);
+        }
+        if ((PERMUTATIONS_BLEU.contains(couleurs) || PERMUTATIONS_BLEU_VERT.contains(couleurs)) && bleuVert.isEmpty()) {
+            return new GaleriePosition(Periode.BLEU_VERT, Etage.DOUBLE);
+        }
+
+        // on est capable d'en poser au moins un de la bonne couleur
+        if ((couleur1.isRouge() || couleur2 == CouleurEchantillon.ROUGE) && rouge.isEmpty()) {
+            return new GaleriePosition(Periode.ROUGE, Etage.DOUBLE);
+        }
+        if ((couleur1.isVert() || couleur2 == CouleurEchantillon.VERT) && vert.isEmpty()) {
+            return new GaleriePosition(Periode.VERT, Etage.DOUBLE);
+        }
+        if ((couleur1.isBleu() || couleur2 == CouleurEchantillon.BLEU) && bleu.isEmpty()) {
+            return new GaleriePosition(Periode.BLEU, Etage.DOUBLE);
+        }
+        if ((couleur1.isRouge() || couleur1.isVert() || couleur2 == CouleurEchantillon.ROUGE || couleur2 == CouleurEchantillon.VERT) && rougeVert.isEmpty()) {
+            return new GaleriePosition(Periode.ROUGE_VERT, Etage.DOUBLE);
+        }
+        if ((couleur1.isBleu() || couleur1.isVert() || couleur2 == CouleurEchantillon.BLEU || couleur2 == CouleurEchantillon.VERT) && bleuVert.isEmpty()) {
+            return new GaleriePosition(Periode.BLEU_VERT, Etage.DOUBLE);
+        }
+
+        log.info("Pas de combinaison double trouvée");
+
+        // on en pose qu'un
+        return bestPosition(couleur1, currentPeriode);
     }
 
     GaleriePosition bestPosition(CouleurEchantillon couleur, Periode currentPeriode) {

@@ -41,6 +41,18 @@ public enum CouleurEchantillon {
         }
     }
 
+    public boolean isRouge() {
+        return this == ROUGE || this == ROCHER_ROUGE;
+    }
+
+    public boolean isVert() {
+        return this == VERT || this == ROCHER_VERT;
+    }
+
+    public boolean isBleu() {
+        return this == BLEU || this == ROCHER_BLEU;
+    }
+
     public static class Atomic extends AtomicReference<CouleurEchantillon> {
         public Atomic(CouleurEchantillon c) {
             super(c);

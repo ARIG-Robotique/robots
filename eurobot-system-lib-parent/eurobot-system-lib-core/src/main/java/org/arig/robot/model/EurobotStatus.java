@@ -76,6 +76,8 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     private boolean reverseCarreDeFouille = false;
 
+    private boolean doubleDeposeGalerie = false;
+
     /**
      * STATUT
      */
@@ -310,6 +312,10 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         return galerie.bestPosition(echantillon, currentPeriode);
     }
 
+    public Galerie.GaleriePosition galerieBestPositionDoubleDepose(CouleurEchantillon echantillon1, CouleurEchantillon echantillon2, Galerie.Periode currentPeriode) {
+        return galerie.bestPositionDoubleDepose(echantillon1, echantillon2, currentPeriode);
+    }
+
     public void deposeGalerieRouge(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
             log.info("[RS] depose galerie rouge : {}", echantillon);
@@ -417,6 +423,11 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public CouleurEchantillon stockFirst() {
         int i = indexDestockage();
         return i == -1 ? null : stock[i];
+    }
+
+    public CouleurEchantillon stockSecond() {
+        int i = indexDestockage();
+        return i == -1 || i == 0 ? null : stock[i - 1];
     }
 
     public void stockage(CouleurEchantillon couleur) {

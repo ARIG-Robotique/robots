@@ -152,10 +152,17 @@ class GalerieTest {
         Assertions.assertFalse(galerie.complete());
 
         result = galerie.bestPosition(CouleurEchantillon.BLEU, null);
-        Assertions.assertEquals(Galerie.Etage.CENTRE, result.etage());
+        Assertions.assertEquals(Galerie.Etage.BAS, result.etage());
         Assertions.assertEquals(Galerie.Periode.VERT, result.periode());
         galerie.addVert(CouleurEchantillon.BLEU);
         Assertions.assertEquals(39, galerie.score());
+        Assertions.assertFalse(galerie.complete());
+
+        result = galerie.bestPosition(CouleurEchantillon.BLEU, null);
+        Assertions.assertEquals(Galerie.Etage.HAUT, result.etage());
+        Assertions.assertEquals(Galerie.Periode.VERT, result.periode());
+        galerie.addVert(CouleurEchantillon.BLEU);
+        Assertions.assertEquals(42, galerie.score());
         Assertions.assertTrue(galerie.complete());
     }
 
@@ -238,65 +245,72 @@ class GalerieTest {
     void testBestVert() {
         Galerie.GaleriePosition result = galerie.bestPosition(CouleurEchantillon.VERT, null);
         Assertions.assertEquals(Galerie.Etage.BAS, result.etage());
-        Assertions.assertEquals(Galerie.Periode.BLEU_VERT, result.periode());
-        galerie.addBleuVert(CouleurEchantillon.VERT);
+        Assertions.assertEquals(Galerie.Periode.VERT, result.periode());
+        galerie.addVert(CouleurEchantillon.VERT);
         Assertions.assertEquals(6, galerie.score());
         Assertions.assertFalse(galerie.complete());
 
         result = galerie.bestPosition(CouleurEchantillon.VERT, null);
         Assertions.assertEquals(Galerie.Etage.HAUT, result.etage());
-        Assertions.assertEquals(Galerie.Periode.BLEU_VERT, result.periode());
-        galerie.addBleuVert(CouleurEchantillon.VERT);
+        Assertions.assertEquals(Galerie.Periode.VERT, result.periode());
+        galerie.addVert(CouleurEchantillon.VERT);
         Assertions.assertEquals(12, galerie.score());
         Assertions.assertFalse(galerie.complete());
 
         result = galerie.bestPosition(CouleurEchantillon.VERT, null);
         Assertions.assertEquals(Galerie.Etage.BAS, result.etage());
-        Assertions.assertEquals(Galerie.Periode.ROUGE_VERT, result.periode());
-        galerie.addRougeVert(CouleurEchantillon.VERT);
+        Assertions.assertEquals(Galerie.Periode.BLEU_VERT, result.periode());
+        galerie.addBleuVert(CouleurEchantillon.VERT);
         Assertions.assertEquals(18, galerie.score());
         Assertions.assertFalse(galerie.complete());
 
         result = galerie.bestPosition(CouleurEchantillon.VERT, null);
         Assertions.assertEquals(Galerie.Etage.HAUT, result.etage());
-        Assertions.assertEquals(Galerie.Periode.ROUGE_VERT, result.periode());
-        galerie.addRougeVert(CouleurEchantillon.VERT);
+        Assertions.assertEquals(Galerie.Periode.BLEU_VERT, result.periode());
+        galerie.addBleuVert(CouleurEchantillon.VERT);
         Assertions.assertEquals(24, galerie.score());
         Assertions.assertFalse(galerie.complete());
 
         result = galerie.bestPosition(CouleurEchantillon.VERT, null);
-        Assertions.assertEquals(Galerie.Etage.CENTRE, result.etage());
-        Assertions.assertEquals(Galerie.Periode.VERT, result.periode());
-        galerie.addVert(CouleurEchantillon.VERT);
+        Assertions.assertEquals(Galerie.Etage.BAS, result.etage());
+        Assertions.assertEquals(Galerie.Periode.ROUGE_VERT, result.periode());
+        galerie.addRougeVert(CouleurEchantillon.VERT);
         Assertions.assertEquals(30, galerie.score());
         Assertions.assertFalse(galerie.complete());
 
         result = galerie.bestPosition(CouleurEchantillon.VERT, null);
-        Assertions.assertEquals(Galerie.Etage.BAS, result.etage());
-        Assertions.assertEquals(Galerie.Periode.BLEU, result.periode());
-        galerie.addBleu(CouleurEchantillon.VERT);
-        Assertions.assertEquals(33, galerie.score());
-        Assertions.assertFalse(galerie.complete());
-
-        result = galerie.bestPosition(CouleurEchantillon.VERT, null);
         Assertions.assertEquals(Galerie.Etage.HAUT, result.etage());
-        Assertions.assertEquals(Galerie.Periode.BLEU, result.periode());
-        galerie.addBleu(CouleurEchantillon.VERT);
+        Assertions.assertEquals(Galerie.Periode.ROUGE_VERT, result.periode());
+        galerie.addRougeVert(CouleurEchantillon.VERT);
         Assertions.assertEquals(36, galerie.score());
         Assertions.assertFalse(galerie.complete());
 
         result = galerie.bestPosition(CouleurEchantillon.VERT, null);
         Assertions.assertEquals(Galerie.Etage.BAS, result.etage());
+        Assertions.assertEquals(Galerie.Periode.BLEU, result.periode());
+        galerie.addBleu(CouleurEchantillon.VERT);
+        Assertions.assertEquals(39, galerie.score());
+        Assertions.assertFalse(galerie.complete());
+
+        result = galerie.bestPosition(CouleurEchantillon.VERT, null);
+        Assertions.assertEquals(Galerie.Etage.HAUT, result.etage());
+        Assertions.assertEquals(Galerie.Periode.BLEU, result.periode());
+        galerie.addBleu(CouleurEchantillon.VERT);
+        Assertions.assertEquals(42, galerie.score());
+        Assertions.assertFalse(galerie.complete());
+
+        result = galerie.bestPosition(CouleurEchantillon.VERT, null);
+        Assertions.assertEquals(Galerie.Etage.BAS, result.etage());
         Assertions.assertEquals(Galerie.Periode.ROUGE, result.periode());
         galerie.addRouge(CouleurEchantillon.VERT);
-        Assertions.assertEquals(39, galerie.score());
+        Assertions.assertEquals(45, galerie.score());
         Assertions.assertFalse(galerie.complete());
 
         result = galerie.bestPosition(CouleurEchantillon.VERT, null);
         Assertions.assertEquals(Galerie.Etage.HAUT, result.etage());
         Assertions.assertEquals(Galerie.Periode.ROUGE, result.periode());
         galerie.addRouge(CouleurEchantillon.VERT);
-        Assertions.assertEquals(42, galerie.score());
+        Assertions.assertEquals(48, galerie.score());
         Assertions.assertTrue(galerie.complete());
     }
 
@@ -359,10 +373,24 @@ class GalerieTest {
         Assertions.assertFalse(galerie.complete());
 
         result = galerie.bestPosition(CouleurEchantillon.ROUGE, null);
-        Assertions.assertEquals(Galerie.Etage.CENTRE, result.etage());
+        Assertions.assertEquals(Galerie.Etage.BAS, result.etage());
         Assertions.assertEquals(Galerie.Periode.VERT, result.periode());
         galerie.addVert(CouleurEchantillon.ROUGE);
         Assertions.assertEquals(39, galerie.score());
+        Assertions.assertFalse(galerie.complete());
+
+        result = galerie.bestPosition(CouleurEchantillon.ROUGE, null);
+        Assertions.assertEquals(Galerie.Etage.HAUT, result.etage());
+        Assertions.assertEquals(Galerie.Periode.VERT, result.periode());
+        galerie.addVert(CouleurEchantillon.ROUGE);
+        Assertions.assertEquals(42, galerie.score());
         Assertions.assertTrue(galerie.complete());
+    }
+
+    @Test
+    public void testDoubleDepose() {
+        Galerie.GaleriePosition result = galerie.bestPositionDoubleDepose(CouleurEchantillon.ROUGE, CouleurEchantillon.VERT, null);
+        Assertions.assertEquals(Galerie.Etage.DOUBLE, result.etage());
+        Assertions.assertEquals(Galerie.Periode.ROUGE_VERT, result.periode());
     }
 }
