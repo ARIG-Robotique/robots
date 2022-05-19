@@ -121,7 +121,7 @@ public abstract class AbstractOrdonanceur {
     /**
      * Avant le début du match
      */
-    public abstract void beforeMatch();
+    public abstract void beforeMatch(boolean skip);
 
     /**
      * Juste au début du match
@@ -168,7 +168,7 @@ public abstract class AbstractOrdonanceur {
 
             addDeadZones();
 
-            beforeMatch(); // impl
+            beforeMatch(ecranService.config().isSkipCalageBordure()); // impl
 
             ecranService.displayMessage("!!! ... ATTENTE DEPART TIRETTE ... !!!");
             robotStatus.waitTirette(true);

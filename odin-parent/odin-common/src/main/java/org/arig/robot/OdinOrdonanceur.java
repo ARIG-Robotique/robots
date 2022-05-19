@@ -86,8 +86,10 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
     }
 
     @Override
-    public void beforeMatch() {
-        positionStrategy();
+    public void beforeMatch(boolean skip) {
+        if (!skip) {
+            positionStrategy();
+        }
 
         // Lancement d'une première lecture de couleurs pour initialiser les capteurs
         odinIO.enableLedCapteurCouleur();
