@@ -119,7 +119,7 @@ public class TasksScheduler implements InitializingBean {
                 }
 
                 // position
-                if (rs.groupOk()) {
+                if (rs.groupOk() && rs.matchEnabled()) {
                     long timeStartRefreshPosition = System.nanoTime();
                     long ellapsedRefreshPosition = timeStartRefreshPosition - lastTimeRefreshPosition;
                     if (ellapsedRefreshPosition >= 500 * MS_TO_NS) {
