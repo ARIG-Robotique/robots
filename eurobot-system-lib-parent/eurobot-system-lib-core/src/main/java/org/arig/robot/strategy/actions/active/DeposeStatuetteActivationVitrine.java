@@ -26,7 +26,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
     @Override
     public int order() {
         int points = 0;
-        if (rs.statuettePriseDansCeRobot() && io.presenceStatuette(true)) {
+        if (io.presenceStatuette(true)) {
             points += 15; // 15 points pour la dépose de statuette
         }
         if (!rs.vitrineActive()) {
@@ -44,7 +44,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        boolean validStatuette = rs.statuettePriseDansCeRobot() && io.presenceStatuette(true);
+        boolean validStatuette = io.presenceStatuette(true);
 
         return isTimeValid() && remainingTimeBeforeRetourSiteValid() && validStatuette;
     }
