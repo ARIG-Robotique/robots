@@ -31,6 +31,10 @@ public class DistributeurEquipe extends AbstractDistributeur {
 
     @Override
     public int order() {
+        if (io.presenceStatuette(true)) {
+            return 1000;
+        }
+
         int points = 3 + 3 * PTS_DEPOSE_PRISE;
         return points + tableUtils.alterOrder(entryPoint());
     }
