@@ -27,7 +27,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
     public int order() {
         int points = 0;
         if (rs.statuettePriseDansCeRobot() && io.presenceStatuette(true)) {
-            points += 1000; // 15 points pour la dépose de statuette
+            points += 15; // 15 points pour la dépose de statuette
         }
         if (!rs.vitrineActive()) {
             points += 5; // 5 point de plus si vitrine inactive
