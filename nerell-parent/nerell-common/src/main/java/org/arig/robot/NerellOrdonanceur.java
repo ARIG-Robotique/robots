@@ -73,11 +73,11 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     @Override
     public void addDeadZones() {
         // campement
-        if (nerellRobotStatus.team() == Team.JAUNE) {
-            tableUtils.addPersistentDeadZone(new Rectangle2D.Double(0, 1000, 400, 600));
-        } else {
-            tableUtils.addPersistentDeadZone(new Rectangle2D.Double(2600, 1000, 400, 600));
-        }
+//        if (nerellRobotStatus.team() == Team.JAUNE) {
+//            tableUtils.addPersistentDeadZone(new Rectangle2D.Double(0, 1000, 400, 600));
+//        } else {
+//            tableUtils.addPersistentDeadZone(new Rectangle2D.Double(2600, 1000, 400, 600));
+//        }
     }
 
     @Override

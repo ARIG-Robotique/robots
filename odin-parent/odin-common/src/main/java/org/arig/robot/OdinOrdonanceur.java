@@ -78,11 +78,11 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
     @Override
     public void addDeadZones() {
         // campement
-        if (odinRobotStatus.team() == Team.JAUNE) {
-            tableUtils.addPersistentDeadZone(new Rectangle2D.Double(0, 1000, 400, 600));
-        } else {
-            tableUtils.addPersistentDeadZone(new Rectangle2D.Double(2600, 1000, 400, 600));
-        }
+//        if (odinRobotStatus.team() == Team.JAUNE) {
+//            tableUtils.addPersistentDeadZone(new Rectangle2D.Double(0, 1000, 400, 600));
+//        } else {
+//            tableUtils.addPersistentDeadZone(new Rectangle2D.Double(2600, 1000, 400, 600));
+//        }
     }
 
     @Override
