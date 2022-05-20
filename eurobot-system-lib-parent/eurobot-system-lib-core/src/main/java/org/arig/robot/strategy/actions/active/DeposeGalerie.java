@@ -34,7 +34,8 @@ public class DeposeGalerie extends AbstractEurobotAction {
     private static final int ENTRY_X_ROUGE = GALERIE_X_START + EurobotConfig.GALERIE_WIDTH - DEMI_ECHANTILLON_WIDTH;
     private static final int ENTRY_Y = 1720;
 
-    private static final int OFFSET_Y_REF_POUR_ROTATION = 165;
+    private static final int OFFSET_Y_REF_AVANT_PROCHAINE_DEPOSE = 80;
+    private static final int OFFSET_Y_REF_POUR_PREPARATION = 165;
     private static final int OFFSET_Y_REF_BAS = 20;
 
     @Autowired
@@ -97,6 +98,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
             double yRefBordure = ENTRY_Y;
             Galerie.GaleriePosition lastPosition = null;
             Point entryPoint;
+            boolean hasNextDepose;
             do {
                 Galerie.GaleriePosition pos = bestPosition(lastPosition);
                 log.info("Dépose dans la galerie : Période {}, Etage {}", pos.periode(), pos.etage());
@@ -120,7 +122,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
                 // On se place à la position permettant de tourner le robot
                 rs.disableAvoidance();
                 mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-                mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_POUR_ROTATION, GotoOption.SANS_ORIENTATION);
+                mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_POUR_PREPARATION, GotoOption.SANS_ORIENTATION);
                 mv.gotoOrientationDeg(90);
 
                 CouleurEchantillon echantillonDepose = null;
@@ -161,15 +163,19 @@ public class DeposeGalerie extends AbstractEurobotAction {
                 } else {
                     log.warn("Echantillon de dépose null dans la galerie {} - {}", pos.periode(), pos.etage());
                 }
-                mv.reculeMM(20);
-                bras.finalizeDepose();
 
                 lastPosition = pos;
-            } while (!rs.galerieComplete() && rs.stockTaille() != 0 && remainingTimeBeforeRetourSiteValid());
+
+                hasNextDepose = !rs.galerieComplete() && rs.stockTaille() != 0 && remainingTimeBeforeRetourSiteValid();
+                if (hasNextDepose) {
+                    mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_AVANT_PROCHAINE_DEPOSE, GotoOption.SANS_ORIENTATION);
+                    bras.finalizeDepose();
+                }
+            } while (hasNextDepose);
 
             // On se place à la position permettant de tourner le robot pour la prochaine action
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-            mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_POUR_ROTATION, GotoOption.SANS_ORIENTATION);
+            mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_POUR_PREPARATION, GotoOption.SANS_ORIENTATION);
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
