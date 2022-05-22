@@ -31,12 +31,12 @@ public class DeposeGalerie extends AbstractEurobotAction {
     private static final int GALERIE_X_END = GALERIE_X_START + GALERIE_WIDTH;
     private static final int GALERIE_CENTRE = GALERIE_X_START + GALERIE_WIDTH / 2;
     private static final int PERIODE_WIDTH = GALERIE_WIDTH / 3;
-    private static final int PERIODE_ECHANTILLON_A_CHEVAL = 30;
+    private static final int PERIODE_ECHANTILLON_A_CHEVAL = 40;
 
     private static final int ENTRY_X_BLEU = GALERIE_X_START + PERIODE_ECHANTILLON_A_CHEVAL;
-    private static final int ENTRY_X_BLEU_VERT = GALERIE_X_START + PERIODE_WIDTH - PERIODE_ECHANTILLON_A_CHEVAL;
+    private static final int ENTRY_X_BLEU_VERT = GALERIE_X_START + PERIODE_WIDTH - PERIODE_ECHANTILLON_A_CHEVAL / 2;
     private static final int ENTRY_X_SINGLE_VERT = GALERIE_CENTRE;
-    private static final int ENTRY_X_ROUGE_VERT = GALERIE_X_END - PERIODE_WIDTH + PERIODE_ECHANTILLON_A_CHEVAL;
+    private static final int ENTRY_X_ROUGE_VERT = GALERIE_X_END - PERIODE_WIDTH + PERIODE_ECHANTILLON_A_CHEVAL / 2;
     private static final int ENTRY_X_ROUGE = GALERIE_X_END - PERIODE_ECHANTILLON_A_CHEVAL;
 
     private static final int ENTRY_Y = 1720;
@@ -172,7 +172,8 @@ public class DeposeGalerie extends AbstractEurobotAction {
                         bras.setBrasHaut(PositionBras.HORIZONTAL);
                         bras.setBrasBas(PositionBras.GALERIE_DEPOSE);
 
-                        mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_BAS, GotoOption.AVANT);
+                        rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
+                        mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
 
                         couleur = rs.ventouseBas();
                         bras.waitReleaseVentouseBas();
@@ -244,9 +245,12 @@ public class DeposeGalerie extends AbstractEurobotAction {
 
                     moveTask.join();
 
-                    if (okBas) {
-                        mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_BAS, GotoOption.AVANT);
+                    if (okBas || okHaut) {
+                        rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
+                        mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
+                    }
 
+                    if (okBas) {
                         couleur2 = rs.ventouseBas();
                         bras.waitReleaseVentouseBas();
                         bras.setBrasBas(PositionBras.STOCK_ENTREE);
@@ -255,11 +259,9 @@ public class DeposeGalerie extends AbstractEurobotAction {
                     }
 
                     if (okHaut) {
-                        rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
-                        mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
-
                         couleur1 = rs.ventouseHaut();
                         bras.waitReleaseVentouseHaut();
+                        bras.setBrasHaut(PositionBras.HORIZONTAL);
 
                         comptagePoint(pos, couleur1);
                     }
