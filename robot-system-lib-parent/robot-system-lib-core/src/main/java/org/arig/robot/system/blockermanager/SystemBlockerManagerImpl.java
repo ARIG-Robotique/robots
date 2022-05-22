@@ -46,7 +46,7 @@ public class SystemBlockerManagerImpl implements SystemBlockerManager {
 
     @Override
     public void process() {
-        if (cmdRobot.isType(TypeConsigne.DIST, TypeConsigne.XY) && !trajectoryManager.isTrajetAtteint() &&
+        if (!cmdRobot.isBypassRampDistance() && !trajectoryManager.isTrajetAtteint() &&
                 Math.abs(encoders.getDistance()) < seuilDistancePulse) {
             countErrorDistance++;
 
@@ -54,7 +54,7 @@ public class SystemBlockerManagerImpl implements SystemBlockerManager {
             countErrorDistance = 0;
         }
 
-        if (cmdRobot.isType(TypeConsigne.ANGLE, TypeConsigne.XY)  && !trajectoryManager.isTrajetAtteint() &&
+        if (!cmdRobot.isBypassRampOrientation() && !trajectoryManager.isTrajetAtteint() &&
                 Math.abs(encoders.getOrientation()) < seuilOrientationPulse) {
             countErrorOrientation++;
 
@@ -75,7 +75,7 @@ public class SystemBlockerManagerImpl implements SystemBlockerManager {
         monitoringWrapper.addTimeSeriePoint(serie);
 
         // x itérations de 500 ms (cf Scheduler)
-        if (countErrorDistance >= MAX_ERROR_DISTANCE && countErrorOrientation >= MAX_ERROR_ORIENTATION) {
+        if (countErrorDistance >= MAX_ERROR_DISTANCE || countErrorOrientation >= MAX_ERROR_ORIENTATION) {
             log.warn("Détection de blocage trop importante : distance {} ; orientation {}", countErrorDistance, countErrorOrientation);
 
             trajectoryManager.cancelMouvement();

@@ -114,8 +114,8 @@ public interface OdinConstantesConfig {
     double startAngleLimitVitesseDistance = 15;
 
     // TODO : A déterminer de manière empirique
-    double seuilErreurOrientationDeg = 1;
-    double seuilErreurDistanceMm = 1;
+    double seuilErreurOrientationDeg = arretOrientDeg;
+    double seuilErreurDistanceMm = arretDistanceMm;
 
     // -------------------------- //
     // Paramètre Physiques        //
