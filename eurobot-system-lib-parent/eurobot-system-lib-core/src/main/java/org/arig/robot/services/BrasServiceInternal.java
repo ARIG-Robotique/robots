@@ -213,18 +213,18 @@ public abstract class BrasServiceInternal {
 
     private void setBrasBas(PositionBras state, PointBras pt, TransitionBras transition, OptionBras opt) {
         for (PointBras point : transition.points()) {
-            setBrasBas(point, state, opt == OptionBras.SLOW ? 50 : 80);
+            setBrasBas(point, state, opt == OptionBras.SLOW ? 80 : 100);
         }
 
-        setBrasBas(pt, state, opt == OptionBras.SLOW ? 50 : 80);
+        setBrasBas(pt, state, opt == OptionBras.SLOW ? 80 : 100);
     }
 
     private void setBrasHaut(PositionBras state, PointBras pt, TransitionBras transition, OptionBras opt) {
         for (PointBras point : transition.points()) {
-            setBrasHaut(point, state, opt == OptionBras.SLOW ? 50 : 80);
+            setBrasHaut(point, state, opt == OptionBras.SLOW ? 80 : 100);
         }
 
-        setBrasHaut(pt, state, opt == OptionBras.SLOW ? 50 : 80);
+        setBrasHaut(pt, state, opt == OptionBras.SLOW ? 80 : 100);
     }
 
     private AnglesBras calculerAngles(ConfigBras configBras, int x, int y, int a, boolean enableLog, Boolean preferA1Min) {

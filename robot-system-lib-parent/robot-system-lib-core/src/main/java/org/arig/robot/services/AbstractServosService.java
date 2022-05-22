@@ -231,7 +231,7 @@ public abstract class AbstractServosService {
         if (speed != 0) {
             // calcul d'après la datasheet SD21
             // FIXME rajouter un délai fixe ?
-            wait = Math.abs(position - currentPosition) / (speed * 1.) * 20;
+            wait = Math.abs(position - currentPosition) / (speed * 1.) * 25;
         } else {
             // calcul empirique
             wait = servo.time() * Math.abs(position - currentPosition) / (servo.max() * 1. - servo.min());

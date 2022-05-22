@@ -37,7 +37,7 @@ public class NerellServosService extends AbstractCommonServosService {
                 .mult(-1)
                 .angleMin(-10)
                 .angleMax(110)
-                .position(POS_INIT, 110, 50)
+                .position(POS_INIT, 101, 50)
                 .build();
         Servo brasBasCoude = servo(BRAS_BAS_COUDE_ID, BRAS_BAS_COUDE)
                 .time(500)
@@ -46,7 +46,7 @@ public class NerellServosService extends AbstractCommonServosService {
                 .mult(-1)
                 .angleMin(-105)
                 .angleMax(110)
-                .position(POS_INIT, 30, 50)
+                .position(POS_INIT, 33, 50)
                 .build();
         Servo brasBasPoignet = servo(BRAS_BAS_POIGNET_ID, BRAS_BAS_POIGNET)
                 .time(500)
@@ -55,7 +55,7 @@ public class NerellServosService extends AbstractCommonServosService {
                 .mult(-1)
                 .angleMin(-100)
                 .angleMax(100)
-                .position(POS_INIT, -50, 50)
+                .position(POS_INIT, -44, 50)
                 .build();
         group(GROUP_BRAS_BAS_ID, GROUP_BRAS_BAS)
                 .addServo(brasBasEpaule)
@@ -71,7 +71,7 @@ public class NerellServosService extends AbstractCommonServosService {
                 .mult(1.1)
                 .angleMin(-135)
                 .angleMax(0)
-                .position(POS_INIT, -90, 50)
+                .position(POS_INIT, -76, 50)
                 .build();
         Servo brasHautCoude = servo(BRAS_HAUT_COUDE_ID, BRAS_HAUT_COUDE)
                 .time(500)
@@ -80,7 +80,7 @@ public class NerellServosService extends AbstractCommonServosService {
                 .mult(1.1)
                 .angleMin(-90)
                 .angleMax(90)
-                .position(POS_INIT, 0, 50)
+                .position(POS_INIT, -16, 50)
                 .build();
         Servo brasHautPoignet = servo(BRAS_HAUT_POIGNET_ID, BRAS_HAUT_POIGNET)
                 .time(500)
@@ -89,7 +89,7 @@ public class NerellServosService extends AbstractCommonServosService {
                 .mult(1)
                 .angleMin(-100)
                 .angleMax(100)
-                .position(POS_INIT, 20, 50)
+                .position(POS_INIT, 22, 50)
                 .build();
         group(GROUP_BRAS_HAUT_ID, GROUP_BRAS_HAUT)
                 .addServo(brasHautEpaule)

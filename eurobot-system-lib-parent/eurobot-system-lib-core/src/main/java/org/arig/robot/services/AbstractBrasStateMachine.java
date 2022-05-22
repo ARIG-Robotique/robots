@@ -11,12 +11,12 @@ import java.util.Map;
 public abstract class AbstractBrasStateMachine extends StateMachine<PositionBras, PointBras, TransitionBras, OptionBras> {
 
     Map<Integer, PointBras> PRISE_STOCK = Map.of(
-            1, new PointBras(-22, 136, -170),
-            2, new PointBras(-7, 139, -170),
-            3, new PointBras(8, 142, -170),
-            4, new PointBras(23, 145, -170),
-            5, new PointBras(38, 148, -170),
-            6, new PointBras(53, 151, -170)
+            1, new PointBras(-14, 135, -175),
+            2, new PointBras(4, 136, -175),
+            3, new PointBras(17, 140, -175),
+            4, new PointBras(34, 141, -175),
+            5, new PointBras(49, 139, -175),
+            6, new PointBras(63, 138, -175)
     );
 
     public AbstractBrasStateMachine(String name) {

@@ -12,22 +12,22 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
 
         disableCheck(true);
 
-        state(PositionBras.INIT, new PointBras(-22, 192, 90)); // dois matcher la position "Init" du service servos
+        state(PositionBras.INIT, new PointBras(-9, 199, 90)); // dois matcher la position "Init" du service servos
         state(PositionBras.HORIZONTAL, new PointBras(configBras.x + configBras.r1 + configBras.r2 + configBras.r3, configBras.y, 0));
 
-        state(PositionBras.REPOS_1, new PointBras(-10, 200, 90));
-        state(PositionBras.REPOS_2, new PointBras(0, 208, 90));
-        state(PositionBras.REPOS_3, new PointBras(18, 210, 90));
-        state(PositionBras.REPOS_4, new PointBras(30, 215, 90));
-        state(PositionBras.REPOS_5, new PointBras(50, 210, 90));
-        state(PositionBras.REPOS_6, new PointBras(65, 200, 90));
+        state(PositionBras.REPOS_1, new PointBras(0,208, 90));
+        state(PositionBras.REPOS_2, new PointBras(14, 213, 90));
+        state(PositionBras.REPOS_3, new PointBras(26, 216, 90));
+        state(PositionBras.REPOS_4, new PointBras(29, 215, 100));
+        state(PositionBras.REPOS_5, new PointBras(49, 211, 100));
+        state(PositionBras.REPOS_6, new PointBras(78, 185, 90));
 
-        state(PositionBras.STOCK_DEPOSE_1, new PointBras(-18, 170, 180));
-        state(PositionBras.STOCK_DEPOSE_2, new PointBras(-3, 170, 180));
-        state(PositionBras.STOCK_DEPOSE_3, new PointBras(12, 170, 180));
-        state(PositionBras.STOCK_DEPOSE_4, new PointBras(27, 170, 180));
-        state(PositionBras.STOCK_DEPOSE_5, new PointBras(42, 170, 180));
-        state(PositionBras.STOCK_DEPOSE_6, new PointBras(57, 170, 180));
+        state(PositionBras.STOCK_DEPOSE_1, new PointBras(-10, 170, 180));
+        state(PositionBras.STOCK_DEPOSE_2, new PointBras(7, 170, 180));
+        state(PositionBras.STOCK_DEPOSE_3, new PointBras(25, 170, 180));
+        state(PositionBras.STOCK_DEPOSE_4, new PointBras(40, 175, 180));
+        state(PositionBras.STOCK_DEPOSE_5, new PointBras(52, 175, 180));
+        state(PositionBras.STOCK_DEPOSE_6, new PointBras(65, 175, 180));
         state(PositionBras.STOCK_PRISE_1, PRISE_STOCK.get(1));
         state(PositionBras.STOCK_PRISE_2, PRISE_STOCK.get(2));
         state(PositionBras.STOCK_PRISE_3, PRISE_STOCK.get(3));
@@ -92,56 +92,36 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
         ));
         transition(PositionBras.STOCK_ENTREE, PositionBras.ECHANGE);
         transition(PositionBras.HORIZONTAL, PositionBras.ECHANGE);
-        transition(PositionBras.ECHANGE, PositionBras.HORIZONTAL);
+        transition(PositionBras.ECHANGE, PositionBras.HORIZONTAL, TransitionBras.withPoints(
+                new PointBras(157, 128, 100)
+        ));
         transition(PositionBras.ECHANGE, PositionBras.STOCK_ENTREE);
 
         transition(PositionBras.STOCK_DEPOSE_1, PositionBras.STOCK_ENTREE);
         transition(PositionBras.STOCK_ENTREE, PositionBras.STOCK_DEPOSE_1, TransitionBras.withPoints(
-                new PointBras(70, 180, 120),
-                new PointBras(30, 160, 160)
-        ));
-        transition(PositionBras.ECHANGE, PositionBras.STOCK_DEPOSE_1, TransitionBras.withPoints(
-                new PointBras(70, 180, 120),
-                new PointBras(30, 160, 160)
+                new PointBras(60, 175, 150),
+                new PointBras(20, 175, 150)
         ));
         transition(PositionBras.STOCK_DEPOSE_2, PositionBras.STOCK_ENTREE);
         transition(PositionBras.STOCK_ENTREE, PositionBras.STOCK_DEPOSE_2, TransitionBras.withPoints(
-                new PointBras(70, 180, 120),
-                new PointBras(30, 160, 160)
-        ));
-        transition(PositionBras.ECHANGE, PositionBras.STOCK_DEPOSE_2, TransitionBras.withPoints(
-                new PointBras(70, 180, 120),
-                new PointBras(30, 160, 160)
+                new PointBras(60, 175, 150),
+                new PointBras(40, 175, 150)
         ));
         transition(PositionBras.STOCK_DEPOSE_3, PositionBras.STOCK_ENTREE);
         transition(PositionBras.STOCK_ENTREE, PositionBras.STOCK_DEPOSE_3, TransitionBras.withPoints(
-                new PointBras(70, 180, 120),
-                new PointBras(30, 167, 170)
-        ));
-        transition(PositionBras.ECHANGE, PositionBras.STOCK_DEPOSE_3, TransitionBras.withPoints(
-                new PointBras(70, 180, 120),
-                new PointBras(30, 167, 170)
+                new PointBras(60, 175, 150)
         ));
         transition(PositionBras.STOCK_DEPOSE_4, PositionBras.STOCK_ENTREE);
         transition(PositionBras.STOCK_ENTREE, PositionBras.STOCK_DEPOSE_4, TransitionBras.withPoints(
-                new PointBras(70, 170, 150)
-        ));
-        transition(PositionBras.ECHANGE, PositionBras.STOCK_DEPOSE_4, TransitionBras.withPoints(
-                new PointBras(70, 170, 150)
+                new PointBras(75, 180, 160)
         ));
         transition(PositionBras.STOCK_DEPOSE_5, PositionBras.STOCK_ENTREE);
         transition(PositionBras.STOCK_ENTREE, PositionBras.STOCK_DEPOSE_5, TransitionBras.withPoints(
-                new PointBras(105, 182, 130)
-        ));
-        transition(PositionBras.ECHANGE, PositionBras.STOCK_DEPOSE_5, TransitionBras.withPoints(
-                new PointBras(105, 182, 130)
+                new PointBras(75, 180, 160)
         ));
         transition(PositionBras.STOCK_DEPOSE_6, PositionBras.STOCK_ENTREE);
         transition(PositionBras.STOCK_ENTREE, PositionBras.STOCK_DEPOSE_6, TransitionBras.withPoints(
-                new PointBras(110, 170, 140)
-        ));
-        transition(PositionBras.ECHANGE, PositionBras.STOCK_DEPOSE_6, TransitionBras.withPoints(
-                new PointBras(110, 170, 140)
+                new PointBras(100, 170, 160)
         ));
 
         transition(PositionBras.STOCK_PRISE_1, PositionBras.STOCK_ENTREE);
@@ -166,7 +146,7 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
         ));
         transition(PositionBras.STOCK_PRISE_6, PositionBras.STOCK_ENTREE);
         transition(PositionBras.STOCK_ENTREE, PositionBras.STOCK_PRISE_6, TransitionBras.withPoints(
-                new PointBras(70, 155, PRISE_STOCK.get(6).a)
+                new PointBras(94, 154, 170)
         ));
 
         transition(PositionBras.STOCK_ENTREE, PositionBras.SOL_PRISE, TransitionBras.withPoints(

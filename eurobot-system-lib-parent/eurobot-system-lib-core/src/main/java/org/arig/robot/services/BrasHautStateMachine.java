@@ -12,22 +12,22 @@ public class BrasHautStateMachine extends AbstractBrasStateMachine {
 
         disableCheck(true);
 
-        state(PositionBras.INIT, new PointBras(66, 97, -70)); // dois matcher la position "Init" du service servos
+        state(PositionBras.INIT, new PointBras(78, 95, -70)); // dois matcher la position "Init" du service servos
         state(PositionBras.HORIZONTAL, new PointBras(configBras.x + configBras.r1 + configBras.r2 + configBras.r3, configBras.y, 0));
 
         state(PositionBras.REPOS_1, new PointBras(80, 95, -70));
-        state(PositionBras.REPOS_2, new PointBras(75, 95, -70));
-        state(PositionBras.REPOS_3, new PointBras(95, 100, -80));
-        state(PositionBras.REPOS_4, new PointBras(95, 100, -80));
-        state(PositionBras.REPOS_5, new PointBras(115, 110, -80));
-        state(PositionBras.REPOS_6, new PointBras(120, 120, -70));
+        state(PositionBras.REPOS_2, new PointBras(78, 94, -80));
+        state(PositionBras.REPOS_3, new PointBras(84, 96, -80));
+        state(PositionBras.REPOS_4, new PointBras(93, 99, -80));
+        state(PositionBras.REPOS_5, new PointBras(107, 108, -80));
+        state(PositionBras.REPOS_6, new PointBras(118, 132, -80));
 
-        state(PositionBras.STOCK_DEPOSE_1, new PointBras(-20, 165, 180));
-        state(PositionBras.STOCK_DEPOSE_2, new PointBras(-4, 165, 180));
-        state(PositionBras.STOCK_DEPOSE_3, new PointBras(12, 165, 180));
-        state(PositionBras.STOCK_DEPOSE_4, new PointBras(30, 165, 180));
-        state(PositionBras.STOCK_DEPOSE_5, new PointBras(46, 170, 180));
-        state(PositionBras.STOCK_DEPOSE_6, new PointBras(65, 170, 180));
+        state(PositionBras.STOCK_DEPOSE_1, new PointBras(-5, 165, 180));
+        state(PositionBras.STOCK_DEPOSE_2, new PointBras(12, 165, 180));
+        state(PositionBras.STOCK_DEPOSE_3, new PointBras(29, 165, 180));
+        state(PositionBras.STOCK_DEPOSE_4, new PointBras(48, 165, 180));
+        state(PositionBras.STOCK_DEPOSE_5, new PointBras(65, 165, 180));
+        state(PositionBras.STOCK_DEPOSE_6, new PointBras(82, 165, 180));
         state(PositionBras.STOCK_PRISE_1, PRISE_STOCK.get(1));
         state(PositionBras.STOCK_PRISE_2, PRISE_STOCK.get(2));
         state(PositionBras.STOCK_PRISE_3, PRISE_STOCK.get(3));
