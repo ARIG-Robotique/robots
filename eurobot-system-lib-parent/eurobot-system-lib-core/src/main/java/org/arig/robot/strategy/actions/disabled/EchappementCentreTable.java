@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active.echappement;
+package org.arig.robot.strategy.actions.disabled;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
