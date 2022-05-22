@@ -37,6 +37,7 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
         state(PositionBras.STOCK_ENTREE, new PointBras(135, 180, 90));
 
         state(PositionBras.SOL_PRISE, new PointBras(140, 20, -90));
+        state(PositionBras.SOL_LEVEE, new PointBras(140, 40, -90));
         state(PositionBras.SOL_DEPOSE_1, new PointBras(192, 30, -80));
         state(PositionBras.SOL_DEPOSE_2, new PointBras(189, 55, -80));
         state(PositionBras.SOL_DEPOSE_3, new PointBras(182, 72, -80));
@@ -87,7 +88,10 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
         transition(PositionBras.HORIZONTAL, PositionBras.REPOS_5);
         transition(PositionBras.HORIZONTAL, PositionBras.REPOS_6);
 
-        transition(PositionBras.SOL_PRISE, PositionBras.ECHANGE, TransitionBras.withPoints(
+        transition(PositionBras.SOL_PRISE, PositionBras.SOL_LEVEE);
+        transition(PositionBras.SOL_LEVEE, PositionBras.SOL_PRISE);
+        transition(PositionBras.STOCK_ENTREE, PositionBras.SOL_LEVEE);
+        transition(PositionBras.SOL_LEVEE, PositionBras.ECHANGE, TransitionBras.withPoints(
                 new PointBras(170, 110, -30),
                 new PointBras(144, 138, 90),
                 new PointBras(135, 170, 100)

@@ -114,8 +114,6 @@ public class DistributeurEquipe extends AbstractDistributeur {
 
             log.error("Erreur d'exécution de l'action : {}", e.toString());
             updateValidTime();
-
-        } finally {
             bras.safeHoming();
         }
     }

@@ -301,10 +301,10 @@ public class AbriDeChantier extends AbstractEurobotAction {
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
             updateValidTime();
+            bras.safeHoming();
 
         } finally {
             firstAction = false;
-            bras.safeHoming();
             servos.fourcheStatuetteFerme(false);
             servos.groupeArriereFerme(false);
             refreshCompleted();

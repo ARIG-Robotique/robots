@@ -249,8 +249,6 @@ public class DeposeCampement extends AbstractEurobotAction {
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
             updateValidTime();
-
-        } finally {
             bras.safeHoming();
         }
     }

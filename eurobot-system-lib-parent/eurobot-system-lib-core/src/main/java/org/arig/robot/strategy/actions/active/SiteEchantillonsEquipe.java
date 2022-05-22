@@ -104,9 +104,10 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
 
             CompletableFuture<Void> task = CompletableFuture.completedFuture(null);
             if (firstAction) {
-                task = priseEchantillon(task, false, true, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
-                task = priseEchantillon(task, false, false, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
+                mv.pathTo(getX(1030), 1680);
                 task = priseEchantillon(task, false, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
+                task = priseEchantillon(task, false, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
+                task = priseEchantillon(task, false, false, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
             } else {
                 if (echantillonEntry == CouleurEchantillon.ROCHER_ROUGE) {
                     // De bas en haut
@@ -129,9 +130,9 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
             updateValidTime();
+            bras.safeHoming();
 
         } finally {
-            bras.safeHoming();
             refreshCompleted();
             firstAction = false;
         }
@@ -156,14 +157,14 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
             // après le path, pendant le calage, on met les bras en position initiale
             task = previousTask.thenRunAsync(() -> {
                 bras.setBrasHaut(PositionBras.HORIZONTAL);
-                bras.setBrasBas(PositionBras.SOL_DEPOSE_3);
+                bras.setBrasBas(PositionBras.SOL_LEVEE);
             }, executor);
 
         } else {
             // pendant le mouvement et le calage, on met les bras en position initiale
             task = previousTask.thenRunAsync(() -> {
                 bras.setBrasHaut(PositionBras.HORIZONTAL);
-                bras.setBrasBas(PositionBras.SOL_DEPOSE_3);
+                bras.setBrasBas(PositionBras.SOL_LEVEE);
             }, executor);
 
             if (first) {
@@ -180,30 +181,30 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
         mv.avanceMM(ECHANTILLON_SIZE / 2.0);
 
         if (rs.calageCompleted().contains(TypeCalage.PRISE_ECHANTILLON)) {
-            mv.avanceMM(20); // Histoire de bien le charger dans le robot
+            //mv.avanceMM(20); // Histoire de bien le charger dans le robot
 
             task.join();
             bras.setBrasBas(PositionBras.SOL_PRISE);
 
             if (bras.waitEnableVentouseBas(couleur)) {
-                bras.setBrasBas(PositionBras.SOL_DEPOSE_3); // on lève
+                bras.setBrasBas(PositionBras.SOL_LEVEE); // on lève
 
                 return runAsync(() -> {
                     if (EurobotConfig.ECHANGE_PRISE) {
                         if (bras.echangeBasHaut()) {
-                            bras.setBrasBas(PositionBras.SOL_DEPOSE_3);
+                            bras.setBrasBas(PositionBras.HORIZONTAL);
                             bras.stockageHaut();
                             bras.setBrasHaut(PositionBras.HORIZONTAL);
                         } else {
                             bras.setBrasHaut(PositionBras.HORIZONTAL);
-                            bras.setBrasBas(PositionBras.SOL_DEPOSE_3);
+                            bras.setBrasBas(PositionBras.STOCK_ENTREE);
                         }
                     } else {
                         bras.stockageBas();
                     }
                 });
             } else {
-                bras.setBrasBas(PositionBras.SOL_DEPOSE_3);
+                bras.setBrasBas(PositionBras.SOL_LEVEE);
             }
 
         } else {

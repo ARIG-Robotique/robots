@@ -37,6 +37,7 @@ public enum PositionBras {
 
     // bas
     SOL_PRISE(false),
+    SOL_LEVEE(false),
     SOL_DEPOSE_1(false),
     SOL_DEPOSE_2(false),
     SOL_DEPOSE_3(false),

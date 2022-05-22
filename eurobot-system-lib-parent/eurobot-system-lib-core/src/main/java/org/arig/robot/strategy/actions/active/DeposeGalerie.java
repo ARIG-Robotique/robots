@@ -282,11 +282,11 @@ public class DeposeGalerie extends AbstractEurobotAction {
             mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_POUR_PREPARATION, GotoOption.SANS_ORIENTATION);
 
         } catch (NoPathFoundException | AvoidingException e) {
-            updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
+            updateValidTime();
+            bras.safeHoming();
 
         } finally {
-            bras.safeHoming();
             refreshCompleted();
         }
     }
