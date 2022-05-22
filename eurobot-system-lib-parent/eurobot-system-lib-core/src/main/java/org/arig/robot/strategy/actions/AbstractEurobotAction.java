@@ -79,7 +79,7 @@ public abstract class AbstractEurobotAction extends AbstractAction {
     }
 
     protected void checkRecalageYmm(double realYmm) {
-        final double robotY = mv.currentXMm();
+        final double robotY = mv.currentYMm();
         if (Math.abs(realYmm - robotY) > 10) {
             log.warn("RECALAGE Y REQUIS (diff > 10 mm) : yRobot = {} mm ; yReel = {} mm", robotY, realYmm);
             position.getPt().setY(conv.mmToPulse(realYmm));

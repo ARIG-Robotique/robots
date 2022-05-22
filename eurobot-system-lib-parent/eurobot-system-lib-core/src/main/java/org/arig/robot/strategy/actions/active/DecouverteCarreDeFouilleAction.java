@@ -110,7 +110,7 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                     checkRecalageAngleDeg(-90);
 
                     mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-                    mv.reculeMM(65);
+                    mv.reculeMM(70);
                     mv.tourneDeg(90);
 
                     yRef = mv.currentYMm();
