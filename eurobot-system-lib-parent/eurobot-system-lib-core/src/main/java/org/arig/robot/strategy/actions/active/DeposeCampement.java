@@ -219,7 +219,7 @@ public class DeposeCampement extends AbstractEurobotAction {
                         case ROUGE:
                             bras.setBrasBas(PositionBras.solDepose(rs.tailleCampementRouge()));
                             bras.waitReleaseVentouseBas();
-                            group.deposeCampementRouge();
+                            group.deposeCampementRouge(echantillon);
                             break;
                         case VERT:
                             bras.setBrasBas(PositionBras.solDepose(rs.tailleCampementVertTemp()));
@@ -238,6 +238,7 @@ public class DeposeCampement extends AbstractEurobotAction {
 
                 // si la galerie devient disponible on arrete là
                 if (actionDeposeGalerie.isValid() && !EurobotConfig.ACTION_DEPOSE_GALERIE.equals(rs.otherCurrentAction())) {
+                    log.info("Annulation de la dépose campement car la galerie est dispo");
                     break;
                 }
             }
