@@ -104,7 +104,8 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
 
             CompletableFuture<Void> task = CompletableFuture.completedFuture(null);
             if (firstAction) {
-                mv.pathTo(getX(1030), 1680);
+                mv.gotoPoint(getX(800), 1700);
+                mv.gotoPoint(getX(1060), 1700);
                 task = priseEchantillon(task, false, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
                 task = priseEchantillon(task, false, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
                 task = priseEchantillon(task, false, false, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);

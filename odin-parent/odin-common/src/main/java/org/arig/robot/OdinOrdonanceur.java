@@ -285,8 +285,8 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                         mv.alignFrontTo(getX(345), 537); // Entry point abri de chantier
                     } else {
                         odinEcranService.displayMessage("Mise en place");
-                        mv.gotoPoint(getX(270), 1430);
-                        mv.alignFrontTo(getX(830), 1325);
+                        mv.gotoPoint(getX(250), 1430);
+                        mv.alignFrontTo(getX(800), 1700);
                     }
                     groupService.initStep(InitStep.ODIN_EN_POSITION_BASIC);
                     break;

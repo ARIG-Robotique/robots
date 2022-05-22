@@ -305,8 +305,8 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             switch (nerellRobotStatus.strategy()) {
                 case BASIC:
                 default:
-                    mv.gotoPoint(getX(270), 1430);
-                    mv.alignFrontTo(getX(830), 1325);
+                    mv.gotoPoint(getX(250), 1430);
+                    mv.alignFrontTo(getX(800), 1700);
                     groupService.initStep(InitStep.NERELL_EN_POSITION_BASIC);
                     break;
             }
