@@ -135,6 +135,8 @@ public class RetourCampement extends AbstractCampement {
                 deposePile(isValid, onDepose, taillePile);
             }
 
+            complete(true);
+
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
             bras.safeHoming();

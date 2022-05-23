@@ -99,12 +99,13 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
             task.join();
             prise();
 
-            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-            mv.reculeMM(30);
-            mv.gotoPoint(entry, GotoOption.ARRIERE);
-
             setDistributeurPris();
             complete(true);
+
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+
+            rs.enableAvoidance();
+            mv.reculeMM(100);
 
         } catch (NoPathFoundException | AvoidingException e) {
             if (e instanceof MovementCancelledException) {

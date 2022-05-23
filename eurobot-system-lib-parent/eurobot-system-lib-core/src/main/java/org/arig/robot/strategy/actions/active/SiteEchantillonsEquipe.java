@@ -111,20 +111,20 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
             if (firstAction) {
                 mv.gotoPoint(getX(800), 1700);
                 mv.gotoPoint(getX(1060), 1700);
-                task = priseEchantillon(task, false, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
-                task = priseEchantillon(task, false, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
-                task = priseEchantillon(task, false, false, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
+                task = priseEchantillon(task, false, false, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
+                task = priseEchantillon(task, false, false, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
+                task = priseEchantillon(task, false, false, true, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
             } else {
                 if (echantillonEntry == CouleurEchantillon.ROCHER_ROUGE) {
                     // De bas en haut
-                    task = priseEchantillon(task, true, true, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
-                    task = priseEchantillon(task, false, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
-                    task = priseEchantillon(task, false, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
+                    task = priseEchantillon(task, true, true, false, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
+                    task = priseEchantillon(task, false, false, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
+                    task = priseEchantillon(task, false, false, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
                 } else {
                     // De haut en bas
-                    task = priseEchantillon(task, true, true, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
-                    task = priseEchantillon(task, false, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
-                    task = priseEchantillon(task, false, false, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
+                    task = priseEchantillon(task, true, true, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
+                    task = priseEchantillon(task, false, false, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
+                    task = priseEchantillon(task, false, false, false, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);
                 }
             }
 
@@ -148,6 +148,7 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
             CompletableFuture<Void> previousTask,
             boolean path,
             boolean first,
+            boolean pousseRouge,
             Point pointEchantillon,
             CouleurEchantillon couleur
     ) throws AvoidingException, NoPathFoundException {
@@ -187,7 +188,9 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
         mv.avanceMM(ECHANTILLON_SIZE / 2.0);
 
         if (rs.calageCompleted().contains(TypeCalage.PRISE_ECHANTILLON)) {
-            //mv.avanceMM(20); // Histoire de bien le charger dans le robot
+            if (pousseRouge) {
+                mv.avanceMM(10);
+            }
 
             task.join();
             bras.setBrasBas(PositionBras.SOL_PRISE);

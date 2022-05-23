@@ -157,7 +157,8 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
                 mv.tourneDeg(alt ? 90 : 45);
             } while (rs.getRemainingTime() > 100);
 
-            complete();
+            complete(true);
+
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
 
