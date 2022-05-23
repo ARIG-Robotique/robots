@@ -39,7 +39,7 @@ public class DistributeurEquipe extends AbstractDistributeur {
 
     @Override
     public int order() {
-        if (io.presenceStatuette(true)) {
+        if (io.presenceStatuette(true) && rs.getRemainingTime() > 20000) {
             return 1000;
         }
 
