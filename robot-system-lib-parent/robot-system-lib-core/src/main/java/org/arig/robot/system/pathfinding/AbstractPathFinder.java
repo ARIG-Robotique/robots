@@ -26,6 +26,7 @@ import java.util.List;
 
 @Slf4j
 public abstract class AbstractPathFinder implements PathFinder {
+
     @Autowired
     private AbstractRobotStatus rs;
 
@@ -38,7 +39,7 @@ public abstract class AbstractPathFinder implements PathFinder {
     private File pathDir;
     private final DateTimeFormatter dteFormat = DateTimeFormatter.ISO_TIME;
 
-    public AbstractPathFinder() {
+    protected AbstractPathFinder() {
         pathDir = new File("./logs/path/" + System.getProperty(ConstantesConfig.keyExecutionId));
     }
 

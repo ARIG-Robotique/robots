@@ -30,10 +30,12 @@ public class StateMachineTest {
 
     private StateMachine<Key, State, Transition, Option> machine;
 
-    @BeforeEach
-    public void init() {
-        machine = new StateMachine<>("test");
+    @Test
+    public void testBasic() {
+        final AtomicReference<Key> newKey = new AtomicReference<>();
+        final AtomicBoolean hadTransition = new AtomicBoolean();
 
+        machine = new StateMachine<>("test");
         machine
                 .state(Key.ONE, new State())
                 .state(Key.TWO, new State())
@@ -45,18 +47,10 @@ public class StateMachineTest {
                 .transition(Key.THREE, Key.ONE)
 
                 .current(Key.ONE)
-                .build();
-    }
-
-
-    @Test
-    public void testBasic() {
-        final AtomicReference<Key> newKey = new AtomicReference<>();
-        final AtomicBoolean hadTransition = new AtomicBoolean();
-        machine.onState((key, state, transition, opt) -> {
+                .onState((key, state, transition, opt) -> {
             newKey.set(key);
             hadTransition.set(transition != null);
-        });
+        }).build();
 
         // 1->2
         machine.goTo(Key.TWO);
