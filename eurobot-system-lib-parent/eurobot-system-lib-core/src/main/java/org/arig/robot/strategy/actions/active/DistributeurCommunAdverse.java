@@ -23,24 +23,6 @@ public class DistributeurCommunAdverse extends AbstractDistributeurCommun {
     }
 
     @Override
-    public boolean isValid() {
-        if (rs.strategy() == Strategy.BASIC){
-            return false;
-        }
-
-        return super.isValid();
-    }
-
-    @Override
-    public void refreshCompleted() {
-        if (rs.strategy() == Strategy.BASIC){
-            complete();
-            return;
-        }
-        super.refreshCompleted();
-    }
-
-    @Override
     protected boolean isDistributeurPris() {
         return rs.distributeurCommunAdversePris();
     }
