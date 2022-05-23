@@ -35,10 +35,10 @@ public class DeposeCampement extends AbstractCampement {
         if (rs.otherCampement() == null) {
             if (rs.tailleCampementRougeVertSud() == 0) {
                 position = Campement.Position.SUD;
-                return pointNord;
+                return pointSud;
             } else {
                 position = Campement.Position.NORD;
-                return pointSud;
+                return pointNord;
             }
         } else if (rs.otherCampement() == Campement.Position.NORD) {
             position = Campement.Position.SUD;
@@ -69,12 +69,19 @@ public class DeposeCampement extends AbstractCampement {
     @Override
     public boolean isValid() {
         final boolean campementValid;
+        // on ne peut pas poser au nord si l'autre fait la galerie
         if (rs.otherCampement() == null) {
-            campementValid = (rs.tailleCampementRougeVertNord() == 0 || rs.tailleCampementRougeVertSud() == 0);
+            if (EurobotConfig.ACTION_DEPOSE_GALERIE.equals(rs.otherCurrentAction())) {
+                campementValid = rs.tailleCampementRougeVertSud() == 0;
+            } else {
+                campementValid = (rs.tailleCampementRougeVertNord() == 0 || rs.tailleCampementRougeVertSud() == 0);
+            }
         } else if (rs.otherCampement() == Campement.Position.NORD) {
-            return rs.tailleCampementRougeVertSud() == 0;
+            campementValid = rs.tailleCampementRougeVertSud() == 0;
+        } else if (!EurobotConfig.ACTION_DEPOSE_GALERIE.equals(rs.otherCurrentAction())) {
+            campementValid = rs.tailleCampementRougeVertNord() == 0;
         } else {
-            return rs.tailleCampementRougeVertNord() == 0;
+            campementValid = false;
         }
 
         return rs.stockTaille() > 0 && campementValid && isTimeValid() && timeBeforeRetourValid();
@@ -90,9 +97,6 @@ public class DeposeCampement extends AbstractCampement {
     @Override
     public void execute() {
         Point entry = entryPoint();
-
-        // pos premier nord rouge vert x=302 y=1477
-        // pos second nord rouge vert x=436 y=1555
 
         try {
             group.positionCampement(position);
