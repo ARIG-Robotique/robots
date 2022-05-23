@@ -74,7 +74,7 @@ public class SiteFouille extends AbstractEurobotAction {
 
     @Override
     public void refreshCompleted() {
-        if (rs.siteDeFouillePris() || rs.strategy() == Strategy.BASIC) {
+        if (rs.siteDeFouillePris()) {
             complete();
         }
     }
