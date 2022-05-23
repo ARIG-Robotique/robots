@@ -68,7 +68,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && remainingTimeBeforeRetourSiteValid() && !rs.galerieComplete()
+        return isTimeValid() && timeBeforeRetourValid() && !rs.galerieComplete()
                 && (rs.stockTaille() >= 4 || (rs.stockTaille() > 0 && rs.getRemainingTime() < EurobotConfig.validDeposeIfElementInStockRemainingTime));
     }
 
@@ -277,7 +277,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
 
                 lastPosition = pos;
 
-                hasNextDepose = !rs.galerieComplete() && rs.stockTaille() != 0 && remainingTimeBeforeRetourSiteValid();
+                hasNextDepose = !rs.galerieComplete() && rs.stockTaille() != 0 && timeBeforeRetourValid();
                 if (hasNextDepose) {
                     mv.gotoPoint(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_AVANT_PROCHAINE_DEPOSE, GotoOption.SANS_ORIENTATION);
                 }

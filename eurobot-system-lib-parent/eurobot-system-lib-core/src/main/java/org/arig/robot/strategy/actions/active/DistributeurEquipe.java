@@ -56,7 +56,7 @@ public class DistributeurEquipe extends AbstractDistributeur {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && remainingTimeBeforeRetourSiteValid()
+        return isTimeValid() && timeBeforeRetourValid()
                 && !rs.distributeurEquipePris() && !rs.distributeurEquipeBloque() && rs.stockDisponible() >= 3;
     }
 

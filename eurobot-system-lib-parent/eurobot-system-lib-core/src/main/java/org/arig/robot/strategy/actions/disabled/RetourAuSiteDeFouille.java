@@ -105,7 +105,7 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
     @Override
     public boolean isValid() {
         return (rs.siteDeRetourAutreRobot() == SiteDeRetour.AUCUN || rs.siteDeRetourAutreRobot().isFouille())
-                && !remainingTimeBeforeRetourSiteValid();
+                && !timeBeforeRetourValid();
     }
 
     @Override

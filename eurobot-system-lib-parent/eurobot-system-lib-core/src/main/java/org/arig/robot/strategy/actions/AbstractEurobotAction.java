@@ -81,7 +81,7 @@ public abstract class AbstractEurobotAction extends AbstractAction {
         return true;
     }
 
-    protected boolean remainingTimeBeforeRetourSiteValid() {
+    protected boolean timeBeforeRetourValid() {
         int time = robotName.id() == RobotIdentification.NERELL ? EurobotConfig.validRetourSiteDeFouilleRemainingTimeNerell : EurobotConfig.validRetourSiteDeFouilleRemainingTimeOdin;
         return rs.getRemainingTime() > time;
     }

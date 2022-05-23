@@ -14,8 +14,8 @@ public interface EurobotConfig {
     int tableBorder = 50;
 
     // Config retour site de fouille
-    int validRetourSiteDeFouilleRemainingTimeNerell = 15000;
-    int validRetourSiteDeFouilleRemainingTimeOdin = 12000;
+    int validRetourSiteDeFouilleRemainingTimeNerell = 10000;
+    int validRetourSiteDeFouilleRemainingTimeOdin = 8000;
 
     int validDeposeIfElementInStockRemainingTime = matchTimeMs / 2; // Activation de la dépose si au moins un élément en stock
 
@@ -27,10 +27,10 @@ public interface EurobotConfig {
     String ACTION_DECOUVERTE_CARRE_FOUILLE = "Découverte carré de fouille";
     String ACTION_ABRI_CHANTIER = "Abri de chantier";
     String ACTION_DEPOSE_STATUETTE = "Dépose statuette / vitrine";
-    String ACTION_DEPOSE_CAMPEMENT = "Dépose campement";
     String ACTION_DEPOSE_GALERIE = "Dépose galerie";
-    String ACTION_POUSSETTE_CAMPEMENT = "Poussette campement";
     String ACTION_RETOUR_SITE_DE_FOUILLE_PREFIX = "Retour site de fouille ";
+    String ACTION_DEPOSE_CAMPEMENT_PREFIX = "Dépose campement ";
+    String ACTION_RETOUR_CAMPEMENT_PREFIX = "Retour campement ";
     String ACTION_PRISE_DISTRIB_EQUIPE = "Prise distrib. équipe";
     String ACTION_PRISE_DISTRIB_COMMUN_EQUIPE = "Prise distrib. commun équipe";
     String ACTION_PRISE_DISTRIB_COMMUN_ADVERSE = "Prise distrib. commun adverse";

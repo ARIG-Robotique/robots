@@ -43,7 +43,7 @@ public class EchappementAruco extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && remainingTimeBeforeRetourSiteValid();
+        return isTimeValid() && timeBeforeRetourValid();
     }
 
     @Override

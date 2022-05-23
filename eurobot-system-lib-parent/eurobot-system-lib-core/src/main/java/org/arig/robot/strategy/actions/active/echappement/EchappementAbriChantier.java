@@ -9,8 +9,6 @@ import org.arig.robot.model.Point;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.stereotype.Component;
 
-import java.util.Random;
-
 @Slf4j
 @Component
 public class EchappementAbriChantier extends AbstractEurobotAction {
@@ -40,7 +38,7 @@ public class EchappementAbriChantier extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && remainingTimeBeforeRetourSiteValid() && rs.distributeurEquipePris()
+        return isTimeValid() && timeBeforeRetourValid() && rs.distributeurEquipePris()
                 && rs.echantillonAbriChantierCarreFouillePris() && rs.echantillonAbriChantierDistributeurPris()
                 && rs.statuettePrise() && rs.repliqueDepose();
     }

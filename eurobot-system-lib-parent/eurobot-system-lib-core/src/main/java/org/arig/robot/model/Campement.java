@@ -6,60 +6,64 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Campement {
 
+    public enum Position {
+        NORD,
+        SUD
+    }
+
     public static final int MAX_DEPOSE = 5;
 
-    private final List<CouleurEchantillon> rouge = new ArrayList<>(4);
-    private final List<CouleurEchantillon> vert = new ArrayList<>(4);
-    private final List<CouleurEchantillon> vertTemp = new ArrayList<>(4);
-    private final List<CouleurEchantillon> bleu = new ArrayList<>(4);
+    private final List<CouleurEchantillon> rougeVertNord = new ArrayList<>(MAX_DEPOSE);
+    private final List<CouleurEchantillon> rougeVertSud = new ArrayList<>(MAX_DEPOSE);
+    private final List<CouleurEchantillon> bleuVertNord = new ArrayList<>(MAX_DEPOSE);
+    private final List<CouleurEchantillon> bleuVertSud = new ArrayList<>(MAX_DEPOSE);
 
-    public void addRouge(final CouleurEchantillon echantillon) {
-        rouge.add(echantillon);
+    public void addRougeVertNord(final CouleurEchantillon echantillon) {
+        rougeVertNord.add(echantillon);
     }
 
-    public void addVert(final CouleurEchantillon echantillon) {
-        vert.add(echantillon);
+    public void addRougeVertSud(final CouleurEchantillon echantillon) {
+        rougeVertSud.add(echantillon);
     }
 
-    public void addVertTemp(final CouleurEchantillon echantillon) {
-        vertTemp.add(echantillon);
+    public void addBleuVertNord(final CouleurEchantillon echantillon) {
+        bleuVertNord.add(echantillon);
     }
 
-    public void addBleu(final CouleurEchantillon echantillon) {
-        bleu.add(echantillon);
+    public void addBleuVertSud(final CouleurEchantillon echantillon) {
+        bleuVertSud.add(echantillon);
     }
 
-    public int sizeRouge() {
-        return rouge.size();
+    public int sizeRougeVertNord() {
+        return rougeVertNord.size();
     }
 
-    public int sizeVert() {
-        return vert.size();
+    public int sizeRougeVertSud() {
+        return rougeVertSud.size();
     }
 
-    public int sizeVertTemp() {
-        return vertTemp.size();
+    public int sizeBleuVertNord() {
+        return bleuVertNord.size();
     }
 
-    public int scorePoussette() {
-        return (int) vertTemp.stream().filter(c -> c == CouleurEchantillon.VERT).count();
+    public int sizeBleuVertSud() {
+        return bleuVertSud.size();
     }
 
-    public int sizeBleu() {
-        return bleu.size();
-    }
-
-    public void poussetteVert() {
-        vert.addAll(vertTemp);
-        vertTemp.clear();
-    }
-
-    int score() {
+    public int score() {
         AtomicInteger points = new AtomicInteger(0);
-        rouge.forEach(couleurEchantillon -> points.addAndGet(couleurEchantillon == CouleurEchantillon.ROUGE ? 2 : 1));
-        vert.forEach(couleurEchantillon -> points.addAndGet(couleurEchantillon == CouleurEchantillon.VERT ? 2 : 1));
-        points.addAndGet(vertTemp.size());
-        bleu.forEach(couleurEchantillon -> points.addAndGet(couleurEchantillon == CouleurEchantillon.BLEU ? 2 : 1));
+        rougeVertNord.forEach(c -> points.addAndGet(c == CouleurEchantillon.ROUGE || c == CouleurEchantillon.VERT ? 2 : 1));
+        rougeVertSud.forEach(c -> points.addAndGet(c == CouleurEchantillon.ROUGE || c == CouleurEchantillon.VERT ? 2 : 1));
+        bleuVertNord.forEach(c -> points.addAndGet(c == CouleurEchantillon.BLEU || c == CouleurEchantillon.VERT ? 2 : 1));
+        bleuVertSud.forEach(c -> points.addAndGet(c == CouleurEchantillon.BLEU || c == CouleurEchantillon.VERT ? 2 : 1));
         return points.get();
     }
+     public Campement clone() {
+        Campement c = new Campement();
+        c.rougeVertNord.addAll(rougeVertNord);
+        c.rougeVertSud.addAll(rougeVertSud);
+        c.bleuVertNord.addAll(bleuVertNord);
+        c.bleuVertSud.addAll(bleuVertSud);
+        return c;
+     }
 }

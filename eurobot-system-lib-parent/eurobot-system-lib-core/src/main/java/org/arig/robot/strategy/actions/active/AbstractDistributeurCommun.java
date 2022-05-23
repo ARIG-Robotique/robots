@@ -1,7 +1,6 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
@@ -57,7 +56,7 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && remainingTimeBeforeRetourSiteValid()
+        return isTimeValid() && timeBeforeRetourValid()
                 && !isDistributeurPris() && !isDistributeurBloque() && rs.stockDisponible() >= 3;
     }
 

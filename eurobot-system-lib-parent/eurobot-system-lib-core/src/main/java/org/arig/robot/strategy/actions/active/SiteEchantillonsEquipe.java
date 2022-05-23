@@ -59,7 +59,7 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && remainingTimeBeforeRetourSiteValid() && !rs.siteEchantillonPris();
+        return isTimeValid() && timeBeforeRetourValid() && !rs.siteEchantillonPris();
     }
 
     @Override

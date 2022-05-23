@@ -51,7 +51,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
     public boolean isValid() {
         boolean validStatuette = io.presenceStatuette(true);
 
-        return isTimeValid() && remainingTimeBeforeRetourSiteValid() && validStatuette;
+        return isTimeValid() && timeBeforeRetourValid() && validStatuette;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
             try {
                 mv.pathTo(entry);
             } catch (NoPathFoundException e) {
-                if (rs.tailleCampementRouge() == 0 && rs.tailleCampementBleu() == 0) {
+                if (rs.tailleCampementRougeVertSud() == 0 && rs.tailleCampementRougeVertNord() == 0) {
                     entry = secondaryEntryPoint();
                     mv.pathTo(entry);
                 } else {

@@ -43,17 +43,11 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
         }
 
         // ajout campement
-        if (rs.tailleCampementRouge() > 0) {
-            obstacles.add(tableUtils.createPolygonObstacle(new Point(tableUtils.getX(rs.team() == Team.VIOLET, 70), 1260), EurobotConfig.PATHFINDER_ECHANTILLON_SIZE));
+        if (rs.tailleCampementRougeVertNord() > 0) {
+            obstacles.add(tableUtils.createPolygonObstacle(new Point(tableUtils.getX(rs.team() == Team.VIOLET, 133), 1380), EurobotConfig.PATHFINDER_ECHANTILLON_SIZE));
         }
-        if (rs.tailleCampementBleu() > 0) {
-            obstacles.add(tableUtils.createPolygonObstacle(new Point(tableUtils.getX(rs.team() == Team.VIOLET, 330), 2000 - 485), EurobotConfig.PATHFINDER_ECHANTILLON_SIZE));
-        }
-        if (rs.tailleCampementVertTemp() > 0) {
-            obstacles.add(tableUtils.createPolygonObstacle(new Point(tableUtils.getX(rs.team() == Team.VIOLET, 330), 1000), EurobotConfig.PATHFINDER_ECHANTILLON_SIZE));
-        }
-        if (rs.tailleCampementVert() > 0) {
-            obstacles.add(tableUtils.createPolygonObstacle(new Point(tableUtils.getX(rs.team() == Team.VIOLET, 200), 2000 - 920), EurobotConfig.PATHFINDER_ECHANTILLON_SIZE));
+        if (rs.tailleCampementRougeVertSud() > 0) {
+            obstacles.add(tableUtils.createPolygonObstacle(new Point(tableUtils.getX(rs.team() == Team.VIOLET, 133), 1220), EurobotConfig.PATHFINDER_ECHANTILLON_SIZE));
         }
 
         super.setObstacles(obstacles);

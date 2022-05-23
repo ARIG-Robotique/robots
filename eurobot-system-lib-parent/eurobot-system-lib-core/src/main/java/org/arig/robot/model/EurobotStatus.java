@@ -234,67 +234,51 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Setter(AccessLevel.NONE)
     private Campement campement = new Campement();
 
-    public void deposeCampementRouge(CouleurEchantillon... echantillons) {
+    public void deposeCampementRougeVertNord(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
-            log.info("[RS] depose campement rouge : {}", echantillon);
-            campement.addRouge(echantillon);
+            log.info("[RS] depose campement rouge vert nord : {}", echantillon);
+            campement.addRougeVertNord(echantillon);
         }
     }
 
-    public void deposeCampementVert(CouleurEchantillon... echantillons) {
+    public void deposeCampementRougeVertSud(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
-            log.info("[RS] depose campement vert : {}", echantillon);
-            campement.addVert(echantillon);
+            log.info("[RS] depose campement rouge vert sud : {}", echantillon);
+            campement.addRougeVertSud(echantillon);
         }
     }
 
-    public void deposeCampementVertTemp(CouleurEchantillon... echantillons) {
+    public void deposeCampementBleuVertNord(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
-            log.info("[RS] depose campement vert TEMP : {}", echantillon);
-            campement.addVertTemp(echantillon);
+            log.info("[RS] depose campement bleu vert nord : {}", echantillon);
+            campement.addBleuVertNord(echantillon);
         }
     }
 
-    public void deposeCampementBleu(CouleurEchantillon... echantillons) {
+    public void deposeCampementBleuVertSud(CouleurEchantillon... echantillons) {
         for (CouleurEchantillon echantillon : echantillons) {
-            log.info("[RS] depose campement bleu : {}", echantillon);
-            campement.addBleu(echantillon);
+            log.info("[RS] depose campement bleu vert sud : {}", echantillon);
+            campement.addBleuVertSud(echantillon);
         }
     }
 
-    public int tailleCampementRouge() {
-        return campement.sizeRouge();
+    public int tailleCampementRougeVertNord() {
+        return campement.sizeRougeVertNord();
     }
 
-    public int tailleCampementVert() {
-        return campement.sizeVert();
+    public int tailleCampementRougeVertSud() {
+        return campement.sizeRougeVertSud();
     }
 
-    public int tailleCampementVertTemp() {
-        return campement.sizeVertTemp();
+    public int tailleCampementBleuVertNord() {
+        return campement.sizeBleuVertNord();
     }
 
-    public int tailleCampementBleu() {
-        return campement.sizeBleu();
+    public int tailleCampementBleuVertSud() {
+        return campement.sizeBleuVertSud();
     }
 
-    public boolean campementComplet() {
-        return tailleCampementRouge() == Campement.MAX_DEPOSE
-                && tailleCampementBleu() == Campement.MAX_DEPOSE
-                && tailleCampementVertTemp() == Campement.MAX_DEPOSE;
-    }
-
-    public int scorePoussetteCampement() {
-        return campement.scorePoussette();
-    }
-
-    private boolean poussetteCampementFaite = false;
-
-    public void poussetteCampementFaite(boolean val) {
-        log.info("[RS] poussette campement faite : {}", val);
-        this.poussetteCampementFaite = val;
-        campement.poussetteVert();
-    }
+    private Campement.Position otherCampement = null;
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -572,7 +556,6 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         r.put("Echantillon chantier (coté distrib.) pris", echantillonAbriChantierDistributeurPris);
         r.put("Echantillon chantier (coté fouille) pris", echantillonAbriChantierCarreFouillePris);
         r.put("Echantillon campement pris", echantillonCampementPris);
-        r.put("Pousette campement faite", poussetteCampementFaite);
         return r;
     }
 }

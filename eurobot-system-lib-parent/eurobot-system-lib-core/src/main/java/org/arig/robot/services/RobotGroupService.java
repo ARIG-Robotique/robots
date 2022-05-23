@@ -3,6 +3,7 @@ package org.arig.robot.services;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.arig.robot.model.Campement;
 import org.arig.robot.model.CouleurCarreFouille;
 import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.EurobotStatus;
@@ -161,20 +162,20 @@ public class RobotGroupService implements RobotGroup.Handler {
             case BASCULE_CARRE_FOUILLE:
                 rs.basculeCarreFouille(data[0]);
                 break;
-            case DEPOSE_CAMPEMENT_ROUGE:
-                rs.deposeCampementRouge(getEchantillons(data));
+            case DEPOSE_CAMPEMENT_ROUGE_VERT_NORD:
+                rs.deposeCampementRougeVertNord(getEchantillons(data));
                 break;
-            case DEPOSE_CAMPEMENT_VERT:
-                rs.deposeCampementVert(getEchantillons(data));
+            case DEPOSE_CAMPEMENT_ROUGE_VERT_SUD:
+                rs.deposeCampementRougeVertSud(getEchantillons(data));
                 break;
-            case DEPOSE_CAMPEMENT_VERT_TEMP:
-                rs.deposeCampementVertTemp(getEchantillons(data));
+            case DEPOSE_CAMPEMENT_BLEU_VERT_NORD:
+                rs.deposeCampementBleuVertNord(getEchantillons(data));
                 break;
-            case DEPOSE_CAMPEMENT_BLEU:
-                rs.deposeCampementBleu(getEchantillons(data));
+            case DEPOSE_CAMPEMENT_BLEU_VERT_SUD:
+                rs.deposeCampementBleuVertSud(getEchantillons(data));
                 break;
-            case POUSSETTE_CAMPEMENT:
-                rs.poussetteCampementFaite(true);
+            case CURRENT_CAMPEMENT:
+                rs.otherCampement(Campement.Position.values()[data[0]]);
                 break;
             case DEPOSE_GALERIE_ROUGE:
                 rs.deposeGalerieRouge(getEchantillons(data));
@@ -392,29 +393,28 @@ public class RobotGroupService implements RobotGroup.Handler {
         sendEvent(StatusEvent.DEPOSE_ABRI_CHANTIER, echantillons);
     }
 
-    public void deposeCampementRouge(CouleurEchantillon... echantillons) {
-        rs.deposeCampementRouge(echantillons);
-        sendEvent(StatusEvent.DEPOSE_CAMPEMENT_ROUGE, echantillons);
+    public void deposeCampementRougeVertNord(CouleurEchantillon... echantillons) {
+        rs.deposeCampementRougeVertNord(echantillons);
+        sendEvent(StatusEvent.DEPOSE_CAMPEMENT_ROUGE_VERT_NORD, echantillons);
     }
 
-    public void deposeCampementVert(CouleurEchantillon... echantillons) {
-        rs.deposeCampementVert(echantillons);
-        sendEvent(StatusEvent.DEPOSE_CAMPEMENT_VERT, echantillons);
+    public void deposeCampementRougeVertSud(CouleurEchantillon... echantillons) {
+        rs.deposeCampementRougeVertSud(echantillons);
+        sendEvent(StatusEvent.DEPOSE_CAMPEMENT_ROUGE_VERT_SUD, echantillons);
     }
 
-    public void deposeCampementVertTemp(CouleurEchantillon... echantillons) {
-        rs.deposeCampementVertTemp(echantillons);
-        sendEvent(StatusEvent.DEPOSE_CAMPEMENT_VERT_TEMP, echantillons);
+    public void deposeCampementBleuVertNord(CouleurEchantillon... echantillons) {
+        rs.deposeCampementBleuVertNord(echantillons);
+        sendEvent(StatusEvent.DEPOSE_CAMPEMENT_BLEU_VERT_NORD, echantillons);
     }
 
-    public void deposeCampementBleu(CouleurEchantillon... echantillons) {
-        rs.deposeCampementBleu(echantillons);
-        sendEvent(StatusEvent.DEPOSE_CAMPEMENT_BLEU, echantillons);
+    public void deposeCampementBleuVertSud(CouleurEchantillon... echantillons) {
+        rs.deposeCampementBleuVertSud(echantillons);
+        sendEvent(StatusEvent.DEPOSE_CAMPEMENT_BLEU_VERT_SUD, echantillons);
     }
 
-    public void pousetteCampementFaite() {
-        rs.poussetteCampementFaite(true);
-        sendEvent(StatusEvent.POUSSETTE_CAMPEMENT);
+    public void positionCampement(Campement.Position pos) {
+        sendEvent(StatusEvent.CURRENT_CAMPEMENT, pos);
     }
 
     public void deposeGalerieRouge(CouleurEchantillon... echantillons) {
