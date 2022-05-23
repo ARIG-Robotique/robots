@@ -245,6 +245,7 @@ public class TrajectoryManager {
     }
 
     ConsigneAsservissementPolaire oldConsigne;
+    TypeConsigne[] oldTypeConsigne;
 
     /**
      * Calcul des consignes d'asservissement
@@ -255,6 +256,7 @@ public class TrajectoryManager {
         if (Boolean.TRUE.equals(obstacleFoundFilter.filter(obstacleFound.get()))) {
             log.info("Sauvegarde des vieilles consignes sur detection d'obstacle");
             oldConsigne = cmdRobot.getConsigne();
+            oldTypeConsigne = cmdRobot.getTypes();
         }
 
         if (calageBordure.get() || obstacleFound.get()) {
@@ -268,6 +270,7 @@ public class TrajectoryManager {
         if (Boolean.TRUE.equals(obstacleNotFoundFilter.filter(obstacleFound.get()))) {
             log.info("Restauration des vieilles consignes sur disparition d'obstacle");
             cmdRobot.setConsigne(oldConsigne);
+            cmdRobot.setTypes(oldTypeConsigne);
         }
 
         if (!trajetAtteint.get() && cmdRobot.isType(TypeConsigne.XY)) {

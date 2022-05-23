@@ -67,6 +67,12 @@ public class CommandeRobot {
         }
     }
 
+    public TypeConsigne[] getTypes() {
+        synchronized (types) {
+            return types.toArray(TypeConsigne[]::new);
+        }
+    }
+
     public boolean isType(final TypeConsigne... types) {
         for (final TypeConsigne t : types) {
             if(this.types.contains(t)) {
