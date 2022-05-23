@@ -173,7 +173,7 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                     log.info("Carré de fouille #{} {} : Presence", carreFouille.numero(), carreFouille.couleur());
                     CouleurCarreFouille couleur = carreFouille.couleur();
                     if (carreFouille.needRead()) {
-                        int nbTryReed = 0;
+                        int nbTryRead = 0;
                         do {
                             log.info("Carré de fouille #{} {} : Lecture ohmmetre", carreFouille.numero(), carreFouille.couleur());
                             servos.carreFouilleOhmmetreMesure(true);
@@ -188,7 +188,7 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                             if (couleur == CouleurCarreFouille.INCONNU) {
                                 servos.carreFouilleOhmmetreOuvert(true);
                             }
-                        } while(couleur != CouleurCarreFouille.INCONNU && nbTryReed++ < 2);
+                        } while (couleur == CouleurCarreFouille.INCONNU && nbTryRead++ < 2);
 
                         log.info("Carré de fouille #{} {} : Lecture ohmmetre : {}", carreFouille.numero(), carreFouille.couleur(), couleur);
                         group.couleurCarreFouille(carreFouille.numero(), couleur);
