@@ -57,8 +57,7 @@ public class DistributeurEquipe extends AbstractDistributeur {
     @Override
     public boolean isValid() {
         return isTimeValid() && remainingTimeBeforeRetourSiteValid()
-                && !rs.distributeurEquipePris() && !rs.distributeurEquipeBloque() && rs.stockDisponible() >= 3
-                && rs.getRemainingTime() >= EurobotConfig.invalidPriseEchantillonRemainingTime;
+                && !rs.distributeurEquipePris() && !rs.distributeurEquipeBloque() && rs.stockDisponible() >= 3;
     }
 
     @Override

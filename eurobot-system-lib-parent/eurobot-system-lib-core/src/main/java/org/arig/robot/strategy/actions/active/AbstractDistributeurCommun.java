@@ -58,8 +58,7 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
     @Override
     public boolean isValid() {
         return isTimeValid() && remainingTimeBeforeRetourSiteValid()
-                && !isDistributeurPris() && !isDistributeurBloque() && rs.stockDisponible() >= 3
-                && rs.getRemainingTime() >= EurobotConfig.invalidPriseEchantillonRemainingTime;
+                && !isDistributeurPris() && !isDistributeurBloque() && rs.stockDisponible() >= 3;
     }
 
     @Override

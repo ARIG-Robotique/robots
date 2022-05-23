@@ -21,8 +21,6 @@ public interface EurobotConfig {
 
     int validDeposeIfElementInStockRemainingTime = matchTimeMs / 2; // Activation de la dépose si au moins un élément en stock
 
-    int invalidPriseEchantillonRemainingTime = 30000;
-
     // Options de match
     String REVERSE_CARRE_FOUILLE = "Reverse carre de fouille";
     String DOUBLE_DEPOSE_GALERIE = "Double dépose galerie";
