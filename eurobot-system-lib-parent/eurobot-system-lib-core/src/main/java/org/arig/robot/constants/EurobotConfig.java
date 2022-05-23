@@ -38,16 +38,12 @@ public interface EurobotConfig {
 
     String ACTION_PRISE_ECHANTILLONS_SITE_EQUIPE = "Prise échantillons site équipe";
 
+    String ACTION_PRISE_ECHANTILLON_DISTRIBUTEUR_CAMPEMENT = "Prise echantillon campement";
+
     // Actions d'échappement
-    String ACTION_ECHAPPEMENT_COIN_TABLE_PREFIX = "Echappement coin de table ";
-
-    String ACTION_ECHAPPEMENT_CENTRE_TABLE_PREFIX = "Echappement centre de table ";
-
     String ACTION_ECHAPPEMENT_ARUCO_PREFIX = "Echappement Aruco ";
     String ACTION_ECHAPPEMENT_ABRI_CHANTIER = "Echappement abri chantier";
 
-    // Actions temporaire sans bras
-    String TMP_ACTION_POUSSETTE_SITE_ECHANTILLONS_EQUIPE = "Poussette site echantillons équipe";
 
     // Zones d'exclusion d'action
 
