@@ -54,7 +54,7 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
         state(PositionBras.DISTRIBUTEUR_PRISE_2, new PointBras(210, 73, -30));
         state(PositionBras.DISTRIBUTEUR_PRISE_3, new PointBras(205, 70, -30));
         state(PositionBras.GALERIE_DEPOSE, new PointBras(150, 145, 0));
-        state(PositionBras.GALERIE_DEPOSE_VERT, new PointBras(155, 175, 10));
+        state(PositionBras.GALERIE_DEPOSE_VERT, new PointBras(155, 174, 10));
 
         transition(PositionBras.INIT, PositionBras.STOCK_ENTREE);
         transition(PositionBras.STOCK_ENTREE, PositionBras.INIT);
