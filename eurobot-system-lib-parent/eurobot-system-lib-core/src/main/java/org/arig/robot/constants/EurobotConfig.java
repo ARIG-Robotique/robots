@@ -17,8 +17,6 @@ public interface EurobotConfig {
     int validRetourSiteDeFouilleRemainingTimeNerell = 15000;
     int validRetourSiteDeFouilleRemainingTimeOdin = 12000;
 
-    int validActivationVitrineRemainingTime = 30000; // Activation vitrine sans statuette
-
     int validDeposeIfElementInStockRemainingTime = matchTimeMs / 2; // Activation de la dépose si au moins un élément en stock
 
     // Options de match
