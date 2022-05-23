@@ -28,7 +28,7 @@ public class EchappementAbriChantier extends AbstractEurobotAction {
 
     @Override
     public Point entryPoint() {
-        return new Point(getX(460), 460);
+        return new Point(getX(345), 537);
     }
 
     @Override
