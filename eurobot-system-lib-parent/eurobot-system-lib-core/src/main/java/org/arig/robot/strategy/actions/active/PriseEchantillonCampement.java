@@ -75,12 +75,12 @@ public class PriseEchantillonCampement extends AbstractEurobotAction {
     CompletableFuture<Void> execute(boolean skipPath) {
         CompletableFuture<Void> task = null;
         try {
-            if (skipPath) {
+            if (!skipPath) {
                 mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                 mv.pathTo(entryPoint());
-
-                rs.disableAvoidance();
             }
+
+            rs.disableAvoidance();
 
             task = runAsync(() -> {
                 // Preparation des position des bras pour la prise
