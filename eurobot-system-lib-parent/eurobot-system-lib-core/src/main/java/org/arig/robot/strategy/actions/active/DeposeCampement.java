@@ -68,6 +68,11 @@ public class DeposeCampement extends AbstractCampement {
 
     @Override
     public boolean isValid() {
+        // si la galerie est dispo on interdit la dépose au campement
+        if (actionDeposeGalerie.isValid() && !EurobotConfig.ACTION_DEPOSE_GALERIE.equals(rs.otherCurrentAction())) {
+            return false;
+        }
+
         final boolean campementValid;
         // on ne peut pas poser au nord si l'autre fait la galerie
         if (rs.otherCampement() == null) {
@@ -111,6 +116,7 @@ public class DeposeCampement extends AbstractCampement {
             Supplier<Boolean> isValid = () -> {
                 if (actionDeposeGalerie.isValid() && !EurobotConfig.ACTION_DEPOSE_GALERIE.equals(rs.otherCurrentAction())) {
                     log.info("Annulation de la dépose campement car la galerie est dispo");
+                    updateValidTime();
                     return false;
                 } else {
                     return true;
