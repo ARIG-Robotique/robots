@@ -75,21 +75,27 @@ public class CalageService {
 
             if (doneAvantBas || doneAvantHaut || doneArriere || doneLatteralDroit || donePriseEchantillon || doneVentouseBas) {
                 if (doneAvantBas) {
+                    log.info("Callage complet : {}", TypeCalage.AVANT_BAS);
                     rs.calageCompleted().add(TypeCalage.AVANT_BAS);
                 }
                 if (doneAvantHaut) {
+                    log.info("Callage complet : {}", TypeCalage.AVANT_HAUT);
                     rs.calageCompleted().add(TypeCalage.AVANT_HAUT);
                 }
                 if (doneArriere) {
+                    log.info("Callage complet : {}", TypeCalage.ARRIERE);
                     rs.calageCompleted().add(TypeCalage.ARRIERE);
                 }
                 if (doneLatteralDroit) {
+                    log.info("Callage complet : {}", TypeCalage.LATTERAL_DROIT);
                     rs.calageCompleted().add(TypeCalage.LATTERAL_DROIT);
                 }
                 if (donePriseEchantillon) {
+                    log.info("Callage complet : {}", TypeCalage.PRISE_ECHANTILLON);
                     rs.calageCompleted().add(TypeCalage.PRISE_ECHANTILLON);
                 }
                 if (doneVentouseBas) {
+                    log.info("Callage complet : {}", TypeCalage.VENTOUSE_BAS);
                     rs.calageCompleted().add(TypeCalage.VENTOUSE_BAS);
                 }
 
