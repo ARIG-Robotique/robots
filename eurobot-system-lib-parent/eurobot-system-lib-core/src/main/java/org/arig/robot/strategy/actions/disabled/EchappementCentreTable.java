@@ -28,6 +28,11 @@ public class EchappementCentreTable extends AbstractEurobotAction {
     }
 
     @Override
+    public int executionTimeMs() {
+        return 0;
+    }
+
+    @Override
     public Point entryPoint() {
         if (step == 0) {
             return new Point(getX(1500), 1000);

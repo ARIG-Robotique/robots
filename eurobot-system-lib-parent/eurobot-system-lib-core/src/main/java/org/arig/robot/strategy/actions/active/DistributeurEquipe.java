@@ -30,6 +30,14 @@ public class DistributeurEquipe extends AbstractDistributeur {
     }
 
     @Override
+    public int executionTimeMs() {
+        int executionTime = 1000; // Calage
+        executionTime += 2000 * 3; // 2 sec par échantillon
+
+        return executionTime;
+    }
+
+    @Override
     public int order() {
         if (io.presenceStatuette(true)) {
             return 1000;

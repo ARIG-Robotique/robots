@@ -42,6 +42,14 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
     }
 
     @Override
+    public int executionTimeMs() {
+        int executionTime = 2500; // Calage
+        executionTime += 1300 * 4; // 1,3 sec par carre de fouille
+
+        return executionTime;
+    }
+
+    @Override
     public Point entryPoint() {
         return entryPoint(cf());
     }

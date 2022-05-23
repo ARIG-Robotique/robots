@@ -30,6 +30,11 @@ public class PoussetteCampement extends AbstractEurobotAction {
     }
 
     @Override
+    public int executionTimeMs() {
+        return 0;
+    }
+
+    @Override
     public boolean isValid() {
         return isTimeValid() && remainingTimeBeforeRetourSiteValid() &&
                 !rs.poussetteCampementFaite() && rs.scorePoussetteCampement() > 0

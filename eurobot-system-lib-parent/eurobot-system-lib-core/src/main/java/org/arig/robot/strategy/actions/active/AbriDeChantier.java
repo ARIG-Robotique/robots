@@ -47,6 +47,20 @@ public class AbriDeChantier extends AbstractEurobotAction {
     }
 
     @Override
+    public int executionTimeMs() {
+        int executionTime = 0;
+        if (!rs.echantillonAbriChantierDistributeurPris() || !rs.echantillonAbriChantierCarreFouillePris()) {
+            executionTime += 15000; // Cycle prise + dépose
+        }
+
+        if (!rs.statuettePrise() || (!rs.repliqueDepose() && servos.pousseReplique())) {
+            executionTime += 6000;
+        }
+
+        return executionTime;
+    }
+
+    @Override
     public int order() {
         if (rs.strategy() == Strategy.BASIC && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
             // Si c'est Odin et que la strat est la basique avec deux robots

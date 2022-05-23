@@ -24,6 +24,11 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
     }
 
     @Override
+    public int executionTimeMs() {
+        return 5000; // Calage + dépose
+    }
+
+    @Override
     public int order() {
         int points = 0;
         if (io.presenceStatuette(true)) {

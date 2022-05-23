@@ -28,6 +28,11 @@ public class EchappementCoinDeTable extends AbstractEurobotAction {
     }
 
     @Override
+    public int executionTimeMs() {
+        return 0;
+    }
+
+    @Override
     public Point entryPoint() {
         return null;
     }

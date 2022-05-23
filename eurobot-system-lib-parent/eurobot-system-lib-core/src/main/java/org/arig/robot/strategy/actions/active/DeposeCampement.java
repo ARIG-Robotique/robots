@@ -44,6 +44,11 @@ public class DeposeCampement extends AbstractEurobotAction {
     }
 
     @Override
+    public int executionTimeMs() {
+        return 3000 * rs.stockTaille();
+    }
+
+    @Override
     public boolean isValid() {
         // si la galerie est dispo on interdit la dépose au campement
         if (actionDeposeGalerie.isValid() && !EurobotConfig.ACTION_DEPOSE_GALERIE.equals(rs.otherCurrentAction())) {

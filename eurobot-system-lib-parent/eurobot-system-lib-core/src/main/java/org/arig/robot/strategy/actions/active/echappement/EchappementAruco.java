@@ -23,6 +23,11 @@ public class EchappementAruco extends AbstractEurobotAction {
     }
 
     @Override
+    public int executionTimeMs() {
+        return 4000;
+    }
+
+    @Override
     public Point entryPoint() {
         if (robotName.id() == RobotName.RobotIdentification.NERELL) {
             return new Point(getX(1500), 550);

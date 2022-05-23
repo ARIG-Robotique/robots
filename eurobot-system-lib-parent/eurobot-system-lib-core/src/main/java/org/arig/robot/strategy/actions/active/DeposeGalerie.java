@@ -59,6 +59,14 @@ public class DeposeGalerie extends AbstractEurobotAction {
     }
 
     @Override
+    public int executionTimeMs() {
+        int executionTime = 2000; // Calage
+        executionTime += 3000 * rs.stockTaille(); // 3 sec par échantillon
+
+        return executionTime;
+    }
+
+    @Override
     public boolean isValid() {
         return isTimeValid() && remainingTimeBeforeRetourSiteValid() && !rs.galerieComplete()
                 && (rs.stockTaille() >= 4 || (rs.stockTaille() > 0 && rs.getRemainingTime() < EurobotConfig.validDeposeIfElementInStockRemainingTime));

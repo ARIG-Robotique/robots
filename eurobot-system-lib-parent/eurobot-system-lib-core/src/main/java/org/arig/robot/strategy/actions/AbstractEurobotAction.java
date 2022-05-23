@@ -63,6 +63,24 @@ public abstract class AbstractEurobotAction extends AbstractAction {
         return tableUtils.getX(rs.team() == Team.VIOLET, x);
     }
 
+    public abstract int executionTimeMs();
+
+    @Override
+    protected boolean isTimeValid() {
+        boolean timeValid = super.isTimeValid();
+        if (!timeValid) {
+            return false;
+        }
+
+        // Check remaining time with the time need by the action
+        if (rs.getRemainingTime() < executionTimeMs()) {
+            return false;
+        }
+
+        // Everything is OK
+        return true;
+    }
+
     protected boolean remainingTimeBeforeRetourSiteValid() {
         int time = robotName.id() == RobotIdentification.NERELL ? EurobotConfig.validRetourSiteDeFouilleRemainingTimeNerell : EurobotConfig.validRetourSiteDeFouilleRemainingTimeOdin;
         return rs.getRemainingTime() > time;

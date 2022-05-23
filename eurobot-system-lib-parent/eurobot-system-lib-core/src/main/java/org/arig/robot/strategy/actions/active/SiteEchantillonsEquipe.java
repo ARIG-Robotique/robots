@@ -37,6 +37,11 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
     }
 
     @Override
+    public int executionTimeMs() {
+        return 4000 * 3;
+    }
+
+    @Override
     public int order() {
         if (rs.strategy() == Strategy.BASIC && (
                 (robotName.id() == RobotName.RobotIdentification.NERELL) || (!rs.twoRobots() && robotName.id() == RobotName.RobotIdentification.ODIN)

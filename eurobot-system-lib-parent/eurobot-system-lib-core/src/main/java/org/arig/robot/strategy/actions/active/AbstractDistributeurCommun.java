@@ -35,6 +35,14 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
     protected abstract int anglePrise();
 
     @Override
+    public int executionTimeMs() {
+        int executionTime = 4000; // Calage
+        executionTime += 2000 * 3; // 2 sec par échantillon
+
+        return executionTime;
+    }
+
+    @Override
     public int order() {
         int points = 3 * PTS_DEPOSE_PRISE;
         return points + tableUtils.alterOrder(entryPoint());

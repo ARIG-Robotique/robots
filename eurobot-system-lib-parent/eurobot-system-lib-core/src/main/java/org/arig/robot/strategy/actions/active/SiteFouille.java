@@ -51,6 +51,11 @@ public class SiteFouille extends AbstractEurobotAction {
     }
 
     @Override
+    public int executionTimeMs() {
+        return 1000 * 3;
+    }
+
+    @Override
     public int order() {
         int stock = rs.stockDisponible();
         return Math.min(stock, 3) * EurobotConfig.PTS_DEPOSE_PRISE + tableUtils.alterOrder(entryPoint());

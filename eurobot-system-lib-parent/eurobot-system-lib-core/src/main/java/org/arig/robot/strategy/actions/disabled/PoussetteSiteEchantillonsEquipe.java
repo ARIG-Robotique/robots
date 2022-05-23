@@ -21,6 +21,11 @@ public class PoussetteSiteEchantillonsEquipe extends AbstractEurobotAction {
     }
 
     @Override
+    public int executionTimeMs() {
+        return 0;
+    }
+
+    @Override
     public Point entryPoint() {
         return new Point(getX(910), 1720);
     }

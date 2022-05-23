@@ -30,6 +30,11 @@ public class RetourAuSiteDeFouille extends AbstractEurobotAction {
     }
 
     @Override
+    public int executionTimeMs() {
+        return 0;
+    }
+
+    @Override
     public Point entryPoint() {
         if (!rs.twoRobots()) {
             // un seul robot : on va au centre

@@ -24,6 +24,11 @@ public class EchappementAbriChantier extends AbstractEurobotAction {
     }
 
     @Override
+    public int executionTimeMs() {
+        return 4000;
+    }
+
+    @Override
     public Point entryPoint() {
         return new Point(getX(460), 460);
     }
