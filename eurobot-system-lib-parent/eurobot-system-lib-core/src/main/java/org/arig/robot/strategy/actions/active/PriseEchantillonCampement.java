@@ -43,7 +43,7 @@ public class PriseEchantillonCampement extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && remainingTimeBeforeRetourSiteValid() && rs.stockDisponible() > 0;
+        return isTimeValid() && timeBeforeRetourValid() && rs.stockDisponible() > 0;
     }
 
     @Override

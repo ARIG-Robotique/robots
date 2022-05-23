@@ -7,6 +7,7 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.TypeCalage;
+import org.arig.robot.services.BrasService;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,9 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
 
     @Autowired
     private PriseEchantillonCampement priseEchantillonCampement;
+
+    @Autowired
+    private BrasService bras;
 
     @Override
     public String name() {
@@ -157,7 +161,7 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
         } finally {
             servos.fourcheStatuetteFerme(false);
             if (priseEnchantillonCampementFaite) {
-                bras
+                bras.safeHoming();
             }
             refreshCompleted();
         }
