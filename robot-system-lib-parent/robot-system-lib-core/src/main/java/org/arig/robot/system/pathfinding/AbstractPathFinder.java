@@ -4,10 +4,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.constants.ConstantesConfig;
+import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.Chemin;
 import org.arig.robot.model.Point;
 import org.arig.robot.utils.ImageUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.imageio.ImageIO;
 import java.awt.BasicStroke;
@@ -23,6 +26,8 @@ import java.util.List;
 
 @Slf4j
 public abstract class AbstractPathFinder implements PathFinder {
+    @Autowired
+    private AbstractRobotStatus rs;
 
     @Setter
     @Getter(AccessLevel.PROTECTED)
@@ -77,9 +82,7 @@ public abstract class AbstractPathFinder implements PathFinder {
 
             BufferedImage img = new BufferedImage(workImage.getWidth(), workImage.getHeight(), workImage.getType());
             Graphics2D g = img.createGraphics();
-
             g.drawImage(workImage, 0, 0, null);
-
             g.setBackground(Color.WHITE);
 
             Point precedentPoint = null;
@@ -113,14 +116,31 @@ public abstract class AbstractPathFinder implements PathFinder {
                 g.drawLine((int) pts.get(0).getX(), (int) pts.get(0).getY(), (int) pts.get(l - 1).getX(), (int) pts.get(l - 1).getY());
             }
 
+            // Deuxieme robot
+            final Point autreRobot = rs.otherPosition();
+            if(autreRobot != null) {
+                g.setColor(Color.ORANGE);
+                g.fillOval((int) autreRobot.getX() - 10, (int) autreRobot.getY() - 10, 20, 20);
+            }
+
             g.dispose();
 
             if (!pathDir.exists()) {
                 log.info("Création du répertoire {} : {}", pathDir.getAbsolutePath(), pathDir.mkdirs());
             }
 
-            ImageIO.write(ImageUtils.mirrorX(img), "png", new File(pathDir, dteFormat.format(LocalDateTime.now()) + "-path.png"));
+            BufferedImage mirrored = ImageUtils.mirrorX(img);
+            Graphics2D mirroredG = mirrored.createGraphics();
 
+            // Action courante
+            final String currentAction = rs.currentAction();
+            if(StringUtils.isNotBlank(currentAction)) {
+                mirroredG.setColor(Color.GREEN);
+                mirroredG.drawString(currentAction, 5, 15);
+            }
+            mirroredG.dispose();
+
+            ImageIO.write(mirrored, "png", new File(pathDir, dteFormat.format(LocalDateTime.now()) + "-path.png"));
         } catch (Exception e) {
             log.error("Impossible d'enregistrer le chemin dans une image : {}", e.toString());
         }

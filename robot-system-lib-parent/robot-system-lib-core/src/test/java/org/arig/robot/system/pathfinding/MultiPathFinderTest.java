@@ -3,6 +3,7 @@ package org.arig.robot.system.pathfinding;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.Chemin;
 import org.arig.robot.model.Point;
 import org.junit.jupiter.api.Assertions;
@@ -23,18 +24,21 @@ import java.util.Collections;
 @Slf4j
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {PathFindingTestContext.class})
-public class MultiPathFinderTest {
+class MultiPathFinderTest {
 
     @Autowired
     @Qualifier("multiPathTableJaune")
     private MultiPathFinderImpl pf;
+
+    @Autowired
+    private AbstractRobotStatus rs;
 
     private Point from = new Point(89, 16);
     private Point to = new Point(227, 178);
 
     @Test
     @SneakyThrows
-    public void testStartNodeDoesntExist() {
+    void testStartNodeDoesntExist() {
         pf.setAlgorithm(PathFinderAlgorithm.A_STAR);
         Chemin c = pf.findPath(new Point(67, 81), to);
         Assertions.assertNotNull(c);
@@ -43,7 +47,7 @@ public class MultiPathFinderTest {
 
     @Test
     @SneakyThrows
-    public void testEndNodeDoesntExist() {
+    void testEndNodeDoesntExist() {
         pf.setAlgorithm(PathFinderAlgorithm.A_STAR);
         try {
             pf.findPath(from, new Point(225, 285));
@@ -55,7 +59,7 @@ public class MultiPathFinderTest {
 
     @Test
     @SneakyThrows
-    public void testFindPathAStar() {
+    void testFindPathAStar() {
         pf.setAlgorithm(PathFinderAlgorithm.A_STAR);
         Chemin c = pf.findPath(from, to);
         Assertions.assertNotNull(c);
@@ -64,7 +68,7 @@ public class MultiPathFinderTest {
 
     @Test
     @SneakyThrows
-    public void testFindPathDijkstra() {
+    void testFindPathDijkstra() {
         pf.setAlgorithm(PathFinderAlgorithm.DIJKSTRA);
         Chemin c = pf.findPath(from, to);
         Assertions.assertNotNull(c);
@@ -73,7 +77,7 @@ public class MultiPathFinderTest {
 
     @Test
     @SneakyThrows
-    public void testFindPathLazyThetaStar() {
+    void testFindPathLazyThetaStar() {
         pf.setAlgorithm(PathFinderAlgorithm.LAZY_THETA_STAR);
         Chemin c = pf.findPath(from, to);
         Assertions.assertNotNull(c);
@@ -82,7 +86,10 @@ public class MultiPathFinderTest {
 
     @Test
     @SneakyThrows
-    public void testFindPathAnya16() {
+    void testFindPathAnya16() {
+        rs.currentAction("Test find path ANYA16");
+        rs.otherPosition(70, 70);
+
         pf.setAlgorithm(PathFinderAlgorithm.ANYA16);
         Chemin c = pf.findPath(from, to);
         Assertions.assertNotNull(c);
@@ -92,7 +99,7 @@ public class MultiPathFinderTest {
     @Test
     @SneakyThrows
     @DirtiesContext
-    public void testFindPathLazyThetaStarAvecObstacle() {
+    void testFindPathLazyThetaStarAvecObstacle() {
         pf.setAlgorithm(PathFinderAlgorithm.LAZY_THETA_STAR);
         Chemin cheminSansObstacles = pf.findPath(from, to);
         Assertions.assertNotNull(cheminSansObstacles);

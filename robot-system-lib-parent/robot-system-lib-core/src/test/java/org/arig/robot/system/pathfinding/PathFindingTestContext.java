@@ -1,6 +1,8 @@
 package org.arig.robot.system.pathfinding;
 
 import lombok.SneakyThrows;
+import org.arig.robot.model.AbstractRobotStatus;
+import org.arig.robot.model.TestRobotStatus;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.monitoring.MonitoringWrapper;
 import org.springframework.context.annotation.Bean;
@@ -50,5 +52,10 @@ public class PathFindingTestContext {
         pf.construitGraphDepuisImageNoirEtBlanc(url.openStream());
 
         return pf;
+    }
+
+    @Bean
+    public AbstractRobotStatus robotStatus() {
+        return new TestRobotStatus();
     }
 }
