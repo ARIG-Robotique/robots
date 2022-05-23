@@ -173,16 +173,22 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                     log.info("Carré de fouille #{} {} : Presence", carreFouille.numero(), carreFouille.couleur());
                     CouleurCarreFouille couleur = carreFouille.couleur();
                     if (carreFouille.needRead()) {
-                        log.info("Carré de fouille #{} {} : Lecture ohmmetre", carreFouille.numero(), carreFouille.couleur());
-                        servos.carreFouilleOhmmetreMesure(true);
-                        couleur = ThreadUtils.waitUntil(() -> {
-                            try {
-                                return cfReader.readCarreFouille();
-                            } catch (I2CException e) {
-                                log.error("Erreur lecture carré de fouille", e);
-                                return CouleurCarreFouille.INCONNU;
+                        int nbTryReed = 0;
+                        do {
+                            log.info("Carré de fouille #{} {} : Lecture ohmmetre", carreFouille.numero(), carreFouille.couleur());
+                            servos.carreFouilleOhmmetreMesure(true);
+                            couleur = ThreadUtils.waitUntil(() -> {
+                                try {
+                                    return cfReader.readCarreFouille();
+                                } catch (I2CException e) {
+                                    log.error("Erreur lecture carré de fouille", e);
+                                    return CouleurCarreFouille.INCONNU;
+                                }
+                            }, CouleurCarreFouille.INCONNU, 15, WAIT_READ_OHMMETRE_MS);
+                            if (couleur == CouleurCarreFouille.INCONNU) {
+                                servos.carreFouilleOhmmetreOuvert(true);
                             }
-                        }, CouleurCarreFouille.INCONNU, 15, WAIT_READ_OHMMETRE_MS);
+                        } while(couleur != CouleurCarreFouille.INCONNU && nbTryReed++ < 2);
 
                         log.info("Carré de fouille #{} {} : Lecture ohmmetre : {}", carreFouille.numero(), carreFouille.couleur(), couleur);
                         group.couleurCarreFouille(carreFouille.numero(), couleur);
