@@ -43,7 +43,7 @@ public class PriseEchantillonCampement extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && timeBeforeRetourValid() && rs.stockDisponible() > 0;
+        return isTimeValid() && timeBeforeRetourValid() && !rs.echantillonCampementPris() && rs.stockDisponible() > 0;
     }
 
     @Override
@@ -111,6 +111,7 @@ public class PriseEchantillonCampement extends AbstractEurobotAction {
             mv.reculeMM(ENTRY_X_DEPOSE_STATUETTE - config.distanceCalageAvant());
 
             if (priseOK) {
+                group.echantillonCampementPris();
                 task = runAsync(() -> {
                     if (EurobotConfig.ECHANGE_PRISE) {
                         if (bras.echangeBasHaut(true)) {
@@ -121,7 +122,6 @@ public class PriseEchantillonCampement extends AbstractEurobotAction {
                             bras.setBrasHaut(PositionBras.HORIZONTAL);
                             bras.setBrasBas(PositionBras.STOCK_ENTREE);
                         }
-                        group.echantillonCampementPris();
                     } else {
                         bras.stockageBas();
                     }
