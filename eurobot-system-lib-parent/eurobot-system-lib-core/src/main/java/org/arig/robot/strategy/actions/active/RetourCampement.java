@@ -21,15 +21,65 @@ public class RetourCampement extends AbstractCampement {
     protected final int X = 425;
     protected final int Y = 1555;
 
+    private SiteDeRetour gotoSite;
+    private SiteDeRetour destSite;
+
     @Override
     public Point entryPoint() {
-        if (rs.siteDeRetourAutreRobot() == SiteDeRetour.AUCUN) {
-            position = Campement.Position.SUD;
-            return new Point(getX(X), 1300 - (Y - 1300));
-        } else {
-            position = Campement.Position.NORD;
-            return new Point(getX(X), Y);
+        if (!rs.twoRobots()) {
+            return entrySud();
         }
+
+        if (rs.siteDeRetourAutreRobot() == SiteDeRetour.AUCUN) {
+            // l'autre fait une dépose
+            if (rs.otherCampement() == Campement.Position.NORD) {
+                return entrySud();
+            }
+            if (rs.otherCampement() == Campement.Position.SUD) {
+                return entryNord();
+            }
+
+            // on est déjà sur site
+            int currentX = getX((int) mv.currentXMm());
+            int currentY = (int) mv.currentYMm();
+            if (currentX <= 450 && currentY >= 950 && currentY <= 1650) {
+                if (currentY > 1300) {
+                    Point pt = entryNord();
+                    gotoSite = SiteDeRetour.CAMPEMENT_NORD;
+                    return pt;
+                } else {
+                    Point pt = entrySud();
+                    gotoSite = SiteDeRetour.CAMPEMENT_SUD;
+                    return pt;
+                }
+            }
+
+            if (rs.galerieComplete()) {
+                return entryNord();
+            } else {
+                return entrySud();
+            }
+        }
+
+        if (rs.siteDeRetourAutreRobot() == SiteDeRetour.CAMPEMENT_SUD || rs.siteDeRetourAutreRobot() == SiteDeRetour.WIP_CAMPEMENT_SUD) {
+            return entryNord();
+        } else {
+            return entrySud();
+        }
+    }
+
+    private Point entryNord() {
+        position = Campement.Position.NORD;
+        gotoSite = SiteDeRetour.WIP_CAMPEMENT_NORD;
+        destSite = SiteDeRetour.CAMPEMENT_NORD;
+        return new Point(getX(X), Y);
+    }
+
+    private Point entrySud() {
+        position = Campement.Position.SUD;
+        gotoSite = SiteDeRetour.WIP_CAMPEMENT_SUD;
+        destSite = SiteDeRetour.CAMPEMENT_SUD;
+        return new Point(getX(X), 1300 - (Y - 1300));
     }
 
     @Override
@@ -49,7 +99,7 @@ public class RetourCampement extends AbstractCampement {
 
     @Override
     public boolean isValid() {
-        boolean siteValid = rs.siteDeRetourAutreRobot() == SiteDeRetour.AUCUN || !rs.siteDeRetourAutreRobot().isFouille();
+        boolean siteValid = rs.siteDeRetourAutreRobot() == SiteDeRetour.AUCUN || rs.siteDeRetourAutreRobot().isCampement();
         return siteValid && !timeBeforeRetourValid();
     }
 
@@ -58,12 +108,12 @@ public class RetourCampement extends AbstractCampement {
         try {
             final Point entry = entryPoint();
 
-            group.siteDeRetour(SiteDeRetour.WIP_CAMPEMENT);
+            group.siteDeRetour(gotoSite);
 
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.pathTo(entry);
 
-            group.siteDeRetour(SiteDeRetour.CAMPEMENT);
+            group.siteDeRetour(destSite);
 
             if (rs.stockTaille() > 0) {
                 Supplier<Integer> taillePile = () -> {

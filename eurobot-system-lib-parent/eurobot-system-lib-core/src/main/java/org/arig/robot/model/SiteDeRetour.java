@@ -8,8 +8,10 @@ public enum SiteDeRetour {
     AUCUN(false, false, false),
 
     // Retour au campement
-    WIP_CAMPEMENT(false, true, false),
-    CAMPEMENT(true, true, false),
+    WIP_CAMPEMENT_NORD(false, true, false),
+    WIP_CAMPEMENT_SUD(false, true, false),
+    CAMPEMENT_NORD(true, true, false),
+    CAMPEMENT_SUD(true, true, false),
 
     // Retour au site de fouille
     WIP_FOUILLE_CENTRE(false, false, true),
