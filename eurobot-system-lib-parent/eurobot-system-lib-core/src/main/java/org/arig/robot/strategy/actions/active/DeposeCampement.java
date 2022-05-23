@@ -56,7 +56,7 @@ public class DeposeCampement extends AbstractCampement {
 
     @Override
     public int executionTimeMs() {
-        return 3000 * rs.stockTaille();
+        return 1500 * Math.min(rs.stockTaille(), Campement.MAX_DEPOSE);
     }
 
     @Override

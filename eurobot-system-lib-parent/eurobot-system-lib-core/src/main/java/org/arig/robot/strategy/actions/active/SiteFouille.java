@@ -52,7 +52,7 @@ public class SiteFouille extends AbstractEurobotAction {
 
     @Override
     public int executionTimeMs() {
-        return 1000 * 3;
+        return 5000;
     }
 
     @Override
@@ -92,10 +92,10 @@ public class SiteFouille extends AbstractEurobotAction {
 
             int prises = doPrise(0, !isReverse ? new Point(getX(ENTRY_X_2), Y_1) : new Point(getX(ENTRY_X_1), Y_1));
             group.siteDeFouillePris();
-            if (prises < 3) {
+            if (prises < 3 && timeBeforeRetourValid()) {
                 prises = doPrise(prises, !isReverse ? new Point(getX(ENTRY_X_2), Y_2) : new Point(getX(ENTRY_X_1), Y_2));
             }
-            if (prises < 3) {
+            if (prises < 3 && timeBeforeRetourValid()) {
                 doPrise(prises, !isReverse ? new Point(getX(ENTRY_X_1), Y_2) : new Point(getX(ENTRY_X_2), Y_2));
             }
 
@@ -127,7 +127,7 @@ public class SiteFouille extends AbstractEurobotAction {
                 bras.setBrasBas(PositionBras.SOL_PRISE);
 
                 if (bras.waitEnableVentouseBas(CouleurEchantillon.INCONNU)) {
-                    bras.setBrasBas(PositionBras.SOL_DEPOSE_2);
+                    bras.setBrasBas(PositionBras.SOL_LEVEE);
 
                     task = runAsync(() -> {
                         bras.stockageBas();
@@ -135,7 +135,7 @@ public class SiteFouille extends AbstractEurobotAction {
                     });
 
                     prises++;
-                    if (prises == 3) {
+                    if (prises == 3 && !timeBeforeRetourValid()) {
                         break;
                     }
 
