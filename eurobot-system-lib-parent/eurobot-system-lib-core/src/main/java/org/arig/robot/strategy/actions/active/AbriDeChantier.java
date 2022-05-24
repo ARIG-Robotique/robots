@@ -86,6 +86,9 @@ public class AbriDeChantier extends AbstractEurobotAction {
             points += 1; // 1 point de plus si on prend l'échantillon
             points += 5; // 5 points de plus si on le pousse sous l'abri
         }
+        if (rs.stockTaille() > 0) {
+            points += 5;
+        }
         return points + tableUtils.alterOrder(entryPoint());
     }
 
@@ -163,6 +166,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
 
             boolean priseHaut = false;
             boolean priseBas = false;
+            CouleurEchantillon troisiemeDepose = null;
             CompletableFuture<Ventouse> task = null;
 
             // prise du premier échantillon
@@ -213,7 +217,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
                 priseHaut = priseHaut || result == Ventouse.HAUT;
             }
 
-            // Si on a pas mis les échantillons en stock, on les déposen pour les pousser
+            // Si on a pas mis les échantillons en stock, on les dépose pour les pousser
             if (priseBas || priseHaut) {
                 log.info("Dépose devant l'abri");
 
@@ -227,9 +231,22 @@ public class AbriDeChantier extends AbstractEurobotAction {
                     log.info("Rien dans la ventouse bas");
                 }
 
+                if (rs.stockTaille() > 0) {
+                    log.info("Dépose devant l'abri d'un échantillon supplémentaire");
+                    if (bras.destockageBas()) {
+                        if (priseBas) {
+                            mv.reculeMM(EurobotConfig.ECHANTILLON_SIZE + 10);
+                        }
+                        bras.setBrasBas(PositionBras.SOL_DEPOSE_1);
+                        troisiemeDepose = rs.ventouseBas();
+                        bras.waitReleaseVentouseBas();
+                        bras.setBrasBas(PositionBras.STOCK_ENTREE);
+                    }
+                }
+
                 if (priseHaut) {
                     log.info("Dépose devant l'abri du second échantillon récupéré");
-                    if (priseBas) {
+                    if (priseBas || troisiemeDepose != null) {
                         // On a mis en face du piedestal un premier echantillon
                         mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? ORIENT_JAUNE_FACE_ABRI + OFFSET_DEPOSE_2ND_DEG : ORIENT_VIOLET_FACE_ABRI - OFFSET_DEPOSE_2ND_DEG);
                     } else {
@@ -240,7 +257,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
                     bras.echangeHautBas();
                     bras.setBrasHaut(PositionBras.HORIZONTAL);
                     bras.setBrasBas(PositionBras.SOL_DEPOSE_1);
-                    if (priseBas) {
+                    if (priseBas || troisiemeDepose != null) {
                         // On tourne pour aligner les deux échantillons
                         mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? ORIENT_JAUNE_FACE_ABRI + OFFSET_CENTRAGE_DEG : ORIENT_VIOLET_FACE_ABRI - OFFSET_CENTRAGE_DEG);
                     }
@@ -281,10 +298,11 @@ public class AbriDeChantier extends AbstractEurobotAction {
             if ((priseBas || priseHaut) && (rs.calageCompleted().contains(TypeCalage.ARRIERE) || rs.calageCompleted().contains(TypeCalage.FORCE))) {
                 servos.groupeMoustachePoussette(true); // Histoire de les pousser sous l'abri un peu plus loin
 
-                log.info("Normalement on a poussé deux échantillons sous l'abri");
+                log.info("Normalement on a poussé {} échantillons sous l'abri", troisiemeDepose == null ? "deux" : "trois");
                 group.deposeAbriChantier(
                         priseBas ? CouleurEchantillon.ROCHER_ROUGE : null,
-                        priseHaut ? CouleurEchantillon.ROCHER_BLEU : null
+                        priseHaut ? CouleurEchantillon.ROCHER_BLEU : null,
+                        troisiemeDepose
                 );
             }
 
