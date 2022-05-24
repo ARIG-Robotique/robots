@@ -213,4 +213,6 @@ public abstract class AbstractRobotStatus {
 
     public abstract Map<String, Integer> scoreStatus();
 
+    public abstract Map<String, String> deposesStatus();
+
 }

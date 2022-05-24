@@ -382,6 +382,10 @@ public abstract class AbstractOrdonanceur {
         robotStatus.gameStatus().forEach((key, val) -> {
             log.info("  - {} : {}", key, val);
         });
+        log.info("DEPOSES");
+        robotStatus.deposesStatus().forEach((key, val) -> {
+            log.info("  - {} : {}", key, val);
+        });
     }
 
     /**

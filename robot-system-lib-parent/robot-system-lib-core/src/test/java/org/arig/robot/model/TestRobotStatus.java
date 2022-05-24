@@ -29,4 +29,8 @@ public class TestRobotStatus extends AbstractRobotStatus {
         return Collections.emptyMap();
     }
 
+    @Override
+    public Map<String, String> deposesStatus() {
+        return Collections.emptyMap();
+    }
 }

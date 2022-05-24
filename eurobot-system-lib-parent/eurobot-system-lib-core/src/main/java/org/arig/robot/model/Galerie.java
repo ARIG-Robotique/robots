@@ -33,11 +33,11 @@ public class Galerie {
     private static final int MAX_DEPOSE = 2;
     private static final int MAX_DEPOSE_VERT = 1;
 
-    private final List<CouleurEchantillon> bleu = new ArrayList<>(MAX_DEPOSE);
-    private final List<CouleurEchantillon> bleuVert = new ArrayList<>(MAX_DEPOSE);
-    private final List<CouleurEchantillon> vert = new ArrayList<>(MAX_DEPOSE_VERT);
-    private final List<CouleurEchantillon> rougeVert = new ArrayList<>(MAX_DEPOSE);
-    private final List<CouleurEchantillon> rouge = new ArrayList<>(MAX_DEPOSE);
+    final List<CouleurEchantillon> bleu = new ArrayList<>(MAX_DEPOSE);
+    final List<CouleurEchantillon> bleuVert = new ArrayList<>(MAX_DEPOSE);
+    final List<CouleurEchantillon> vert = new ArrayList<>(MAX_DEPOSE_VERT);
+    final List<CouleurEchantillon> rougeVert = new ArrayList<>(MAX_DEPOSE);
+    final List<CouleurEchantillon> rouge = new ArrayList<>(MAX_DEPOSE);
 
     public void addRouge(final CouleurEchantillon echantillon) {
         rouge.add(echantillon);

@@ -13,10 +13,10 @@ public class Campement {
 
     public static final int MAX_DEPOSE = 5;
 
-    private final List<CouleurEchantillon> rougeVertNord = new ArrayList<>(MAX_DEPOSE);
-    private final List<CouleurEchantillon> rougeVertSud = new ArrayList<>(MAX_DEPOSE);
-    private final List<CouleurEchantillon> bleuVertNord = new ArrayList<>(MAX_DEPOSE);
-    private final List<CouleurEchantillon> bleuVertSud = new ArrayList<>(MAX_DEPOSE);
+    final List<CouleurEchantillon> rougeVertNord = new ArrayList<>(MAX_DEPOSE);
+    final List<CouleurEchantillon> rougeVertSud = new ArrayList<>(MAX_DEPOSE);
+    final List<CouleurEchantillon> bleuVertNord = new ArrayList<>(MAX_DEPOSE);
+    final List<CouleurEchantillon> bleuVertSud = new ArrayList<>(MAX_DEPOSE);
 
     public void addRougeVertNord(final CouleurEchantillon echantillon) {
         rougeVertNord.add(echantillon);

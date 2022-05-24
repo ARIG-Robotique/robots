@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Data
@@ -577,6 +578,22 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         r.put("Echantillon chantier (coté distrib.) pris", echantillonAbriChantierDistributeurPris);
         r.put("Echantillon chantier (coté fouille) pris", echantillonAbriChantierCarreFouillePris);
         r.put("Echantillon campement pris", echantillonCampementPris);
+        return r;
+    }
+
+    @Override
+    public Map<String, String> deposesStatus() {
+        Map<String, String> r = new HashMap<>();
+        r.put("Galerie - Bleu", galerie.bleu.stream().map(CouleurEchantillon::name).collect(Collectors.joining(",")));
+        r.put("Galerie - Bleu / Vert", galerie.bleuVert.stream().map(CouleurEchantillon::name).collect(Collectors.joining(",")));
+        r.put("Galerie - Vert", galerie.vert.stream().map(CouleurEchantillon::name).collect(Collectors.joining(",")));
+        r.put("Galerie - Rouge / Vert", galerie.rougeVert.stream().map(CouleurEchantillon::name).collect(Collectors.joining(",")));
+        r.put("Galerie - Rouge", galerie.rouge.stream().map(CouleurEchantillon::name).collect(Collectors.joining(",")));
+
+        r.put("Campement - Rouge / Vert Nord ", campement.rougeVertNord.stream().map(CouleurEchantillon::name).collect(Collectors.joining(",")));
+        r.put("Campement - Bleu / Vert Nord ", campement.bleuVertNord.stream().map(CouleurEchantillon::name).collect(Collectors.joining(",")));
+        r.put("Campement - Rouge / Vert Sud ", campement.rougeVertSud.stream().map(CouleurEchantillon::name).collect(Collectors.joining(",")));
+        r.put("Campement - Bleu / Vert Sud ", campement.bleuVertSud.stream().map(CouleurEchantillon::name).collect(Collectors.joining(",")));
         return r;
     }
 }
