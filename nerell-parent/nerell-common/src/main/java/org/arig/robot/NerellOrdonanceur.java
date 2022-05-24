@@ -102,6 +102,17 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
         choixConfig();
 
+        if (!skip) {
+            try {
+                mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation(20));
+                mv.tourneDeg(180);
+
+            } catch (AvoidingException e) {
+                nerellEcranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
+                throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);
+            }
+        }
+
         if (nerellRobotStatus.etalonageBaliseOk()) {
             nerellRobotStatus.enableBalise();
         }

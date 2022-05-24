@@ -108,6 +108,17 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
         choixConfig();
 
+        if (!skip && !robotStatus.twoRobots()) {
+            try {
+                mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation(20));
+                mv.tourneDeg(180);
+
+            } catch (AvoidingException e) {
+                odinEcranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
+                throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);
+            }
+        }
+
         if (odinRobotStatus.etalonageBaliseOk()) {
             odinRobotStatus.enableBalise();
         }
@@ -170,7 +181,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         try {
             odinRobotStatus.ventouseBas(null);
             odinRobotStatus.ventouseHaut(null);
-            while(odinRobotStatus.stockTaille() > 0){
+            while (odinRobotStatus.stockTaille() > 0) {
                 odinRobotStatus.destockage();
             }
             carreFouilleReader.printStateVentouse(null, null);
