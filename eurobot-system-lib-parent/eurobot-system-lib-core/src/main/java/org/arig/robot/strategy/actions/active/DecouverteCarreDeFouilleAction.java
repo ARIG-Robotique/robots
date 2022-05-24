@@ -5,10 +5,7 @@ import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.CarreFouille;
-import org.arig.robot.model.CouleurCarreFouille;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Team;
+import org.arig.robot.model.*;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
@@ -35,6 +32,8 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 
     // Nombre de tentative de récupération des carrés de fouille
     protected int nbTry = 0;
+
+    boolean firstAction = false;
 
     @Override
     public String name() {
@@ -64,6 +63,14 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 
     @Override
     public int order() {
+        if (nbTry == 0 && rs.strategy() == Strategy.AGGRESSIVE
+                && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
+            // Si c'est Odin et que la strat est aggressive avec deux robots
+            // C'est la première action
+            firstAction = true;
+            return 1000;
+        }
+
         return rs.carresDeFouillePointRestant() + tableUtils.alterOrder(entryPoint());
     }
 
@@ -106,7 +113,13 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                     final Point start = entryPoint(carreFouille);
                     log.info("Calage requis, on se place au point de départ : #{} - X={}", carreFouille.numero(), start.getX());
                     mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-                    mv.pathTo(start);
+                    if (firstAction) {
+                        mv.gotoPoint(getX(660), 320, GotoOption.SANS_ORIENTATION);
+                        rs.enableAvoidance();
+                        mv.gotoPoint(start, GotoOption.SANS_ORIENTATION);
+                    } else {
+                        mv.pathTo(start);
+                    }
 
                     mv.gotoOrientationDeg(-90);
                     mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
@@ -219,6 +232,7 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
             nbTry++;
+            firstAction = false;
             servos.carreFouillePoussoirFerme(true);
             servos.carreFouilleOhmmetreFerme(false);
             refreshCompleted();
@@ -238,6 +252,10 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
     }
 
     private boolean isReverse() {
+        if (nbTry == 0 && rs.strategy() == Strategy.AGGRESSIVE
+                && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
+            return true;
+        }
         return rs.reverseCarreDeFouille() && nbTry == 0;
     }
 }

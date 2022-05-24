@@ -18,6 +18,8 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -40,6 +42,14 @@ public class AbriDeChantier extends AbstractEurobotAction {
 
     @Autowired
     private BrasService bras;
+
+    @Override
+    public List<String> blockingActions() {
+        return Arrays.asList(
+                EurobotConfig.ACTION_DECOUVERTE_CARRE_FOUILLE,
+                EurobotConfig.ACTION_PRISE_DISTRIB_EQUIPE
+        );
+    }
 
     @Override
     public String name() {
