@@ -132,12 +132,15 @@ public abstract class AbstractPathFinder implements PathFinder {
 
             BufferedImage mirrored = ImageUtils.mirrorX(img);
             Graphics2D mirroredG = mirrored.createGraphics();
+            mirroredG.setColor(Color.GREEN);
+
+            // Temps restant de match
+            mirroredG.drawString("Remain " + rs.getRemainingTime() / 1000 + " s", 5, 15);
 
             // Action courante
             final String currentAction = rs.currentAction();
             if(StringUtils.isNotBlank(currentAction)) {
-                mirroredG.setColor(Color.GREEN);
-                mirroredG.drawString(currentAction, 5, 15);
+                mirroredG.drawString(currentAction, 5, 28);
             }
             mirroredG.dispose();
 
