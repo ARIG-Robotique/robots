@@ -396,7 +396,7 @@ public class PCA9685GpioProvider extends GpioProviderBase implements GpioProvide
                 bus.close();
             }
         } catch (Exception e) {
-            log.warn("Error shutting down PCA9685", e);
+            log.warn("Error shutting down PCA9685");
             throw new RuntimeException(e);
         }
     }
