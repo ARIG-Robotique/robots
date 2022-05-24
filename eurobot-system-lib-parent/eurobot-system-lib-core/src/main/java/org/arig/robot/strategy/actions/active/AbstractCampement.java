@@ -10,6 +10,7 @@ import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -29,12 +30,21 @@ public abstract class AbstractCampement extends AbstractEurobotAction {
         boolean isNord = position == Campement.Position.NORD;
 
         CompletableFuture<Void> task = runAsync(() -> {
-            bras.setBrasHaut(PositionBras.HORIZONTAL);
+            try {
+                mv.gotoOrientationDeg(isNord && rs.team() == Team.JAUNE ? -150 :
+                        !isNord && rs.team() == Team.JAUNE ? 150 :
+                                isNord && rs.team() == Team.VIOLET ? -30 : 30);
+            } catch (AvoidingException e) {
+                throw new CompletionException(e);
+            }
         });
 
-        mv.gotoOrientationDeg(isNord && rs.team() == Team.JAUNE ? -150 :
-                !isNord && rs.team() == Team.JAUNE ? 150 :
-                        isNord && rs.team() == Team.VIOLET ? -30 : 30);
+        // si l'autre est à coté on doit attendre la rotation
+        if (rs.otherCampement() != null) {
+            task.join();
+        }
+
+        bras.setBrasHaut(PositionBras.HORIZONTAL);
 
         task.join();
 
