@@ -166,12 +166,14 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
     }
 
     private void deminage(Echantillon echantillon) throws AvoidingException, NoPathFoundException {
+        log.info("Déminage {}", echantillon);
+
         if (echantillon.getX() > 1300 && echantillon.getX() < 1700) {
             // au milieu
-            mv.pathTo(getX(1250), 1600);
+            mv.pathTo(getX(1250), 1600, GotoOption.AVANT);
         } else {
             // le long de la bordure
-            mv.pathTo(echantillon.getX(), 1700);
+            mv.pathTo(echantillon.getX(), 1700, GotoOption.AVANT);
         }
 
         mv.alignFrontTo(echantillon);

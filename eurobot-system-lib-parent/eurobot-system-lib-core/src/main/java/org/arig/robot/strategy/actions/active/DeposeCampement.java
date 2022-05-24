@@ -114,7 +114,9 @@ public class DeposeCampement extends AbstractCampement {
             };
 
             Supplier<Boolean> isValid = () -> {
-                if (actionDeposeGalerie.isValid() && !EurobotConfig.ACTION_DEPOSE_GALERIE.equals(rs.otherCurrentAction())) {
+                if (actionDeposeGalerie.isValid()
+                        && !EurobotConfig.ACTION_DEPOSE_GALERIE.equals(rs.otherCurrentAction())
+                        && rs.getRemainingTime() > 15000) {
                     log.info("Annulation de la dépose campement car la galerie est dispo");
                     updateValidTime();
                     return false;
