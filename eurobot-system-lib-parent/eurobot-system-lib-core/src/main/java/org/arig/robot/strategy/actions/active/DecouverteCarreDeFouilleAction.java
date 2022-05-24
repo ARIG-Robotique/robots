@@ -130,7 +130,8 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 
                 // Si le calage sur carré de fouille n'a pas encore été fait, on se cale sur lui
                 // si on a besoin de faire une lecture.
-                if (nbTry > 0 && !calageCarreFouilleDone && carreFouille.needRead()) {
+                //if (nbTry > 0 && !calageCarreFouilleDone && carreFouille.needRead()) {
+                if (!calageCarreFouilleDone && carreFouille.needRead()) {
                     log.info("Calage carré de fouille requis");
                     mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
 
