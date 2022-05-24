@@ -17,6 +17,8 @@ public interface EurobotConfig {
     int validRetourSiteDeFouilleRemainingTimeNerell = 10000;
     int validRetourSiteDeFouilleRemainingTimeOdin = 8000;
 
+    int validTimeEchappement = 20000;
+
     int validDeposeIfElementInStockRemainingTime = matchTimeMs / 2; // Activation de la dépose si au moins un élément en stock
 
     // Options de match
@@ -43,6 +45,7 @@ public interface EurobotConfig {
     // Actions d'échappement
     String ACTION_ECHAPPEMENT_ARUCO_PREFIX = "Echappement Aruco ";
     String ACTION_ECHAPPEMENT_ABRI_CHANTIER = "Echappement abri chantier";
+    String ACTION_ECHAPPEMENT_VITRINE = "Echappement vitrine";
 
 
     // Zones d'exclusion d'action

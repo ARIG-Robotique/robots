@@ -23,7 +23,7 @@ public class EchappementAbriChantier extends AbstractEurobotAction {
 
     @Override
     public int executionTimeMs() {
-        return 4000;
+        return 0;
     }
 
     @Override
@@ -33,14 +33,14 @@ public class EchappementAbriChantier extends AbstractEurobotAction {
 
     @Override
     public int order() {
-        return -100;
+        return -100 + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && timeBeforeRetourValid() && rs.distributeurEquipePris()
+        return isTimeValid() && rs.getRemainingTime() > EurobotConfig.validTimeEchappement
                 && rs.echantillonAbriChantierCarreFouillePris() && rs.echantillonAbriChantierDistributeurPris()
-                && rs.statuettePrise() && rs.repliqueDepose();
+                && rs.statuettePrise() && rs.repliqueDepose() && rs.distributeurEquipePris();
     }
 
     @Override

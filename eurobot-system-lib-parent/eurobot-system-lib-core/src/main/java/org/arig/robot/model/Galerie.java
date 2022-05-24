@@ -63,6 +63,10 @@ public class Galerie {
         return emplacementDisponible() == 0;
     }
 
+    boolean bleuComplete() {
+        return bleu.size() == MAX_DEPOSE;
+    }
+
     int emplacementDisponible() {
         return 9 - (bleu.size() + bleuVert.size() + vert.size() + rougeVert.size() + rouge.size());
     }

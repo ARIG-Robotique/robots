@@ -305,6 +305,10 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         return galerie.complete();
     }
 
+    public boolean galerieBleuComplete() {
+        return galerie.bleuComplete();
+    }
+
     public int galerieEmplacementDisponible() {
         return galerie.emplacementDisponible();
     }

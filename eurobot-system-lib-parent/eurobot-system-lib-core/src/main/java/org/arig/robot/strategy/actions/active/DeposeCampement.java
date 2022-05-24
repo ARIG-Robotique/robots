@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 public class DeposeCampement extends AbstractCampement {
 
     protected final int X = 290;
-    protected final int Y = 1477;
+    protected final int Y = 1490;
 
     @Autowired
     private BrasService bras;

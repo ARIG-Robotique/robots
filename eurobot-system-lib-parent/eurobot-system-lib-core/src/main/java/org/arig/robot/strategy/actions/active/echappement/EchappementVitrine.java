@@ -6,20 +6,19 @@ import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.RobotName;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class EchappementAruco extends AbstractEurobotAction {
+public class EchappementVitrine extends AbstractEurobotAction {
 
     @Getter
     private final boolean completed = false;
 
     @Override
     public String name() {
-        return EurobotConfig.ACTION_ECHAPPEMENT_ARUCO_PREFIX + robotName.id();
+        return EurobotConfig.ACTION_ECHAPPEMENT_VITRINE;
     }
 
     @Override
@@ -29,11 +28,7 @@ public class EchappementAruco extends AbstractEurobotAction {
 
     @Override
     public Point entryPoint() {
-        if (robotName.id() == RobotName.RobotIdentification.NERELL) {
-            return new Point(getX(1500), 550);
-        } else {
-            return new Point(getX(1500), 950);
-        }
+        return new Point(getX(180), 1815);
     }
 
     @Override
@@ -43,7 +38,8 @@ public class EchappementAruco extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && rs.getRemainingTime() > EurobotConfig.validTimeEchappement;
+        return isTimeValid() && rs.getRemainingTime() > EurobotConfig.validTimeEchappement
+                && rs.statuetteDepose() && rs.echantillonCampementPris() && rs.galerieBleuComplete();
     }
 
     @Override

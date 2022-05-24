@@ -33,7 +33,7 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
         }
 
         // ajout des sites de fouille
-        if (!StringUtils.startsWith(rs.currentAction(), EurobotConfig.ACTION_RETOUR_SITE_DE_FOUILLE_PREFIX)) {
+        if (!StringUtils.startsWith(rs.currentAction(), EurobotConfig.ACTION_RETOUR_SITE_DE_FOUILLE_PREFIX) && rs.getRemainingTime() > 10000) {
             if (!rs.siteDeFouillePris() && rs.team() == Team.JAUNE || !rs.siteDeFouilleAdversePris() && rs.team() == Team.VIOLET) {
                 obstacles.add(tableUtils.createPolygonObstacle(new Point(975, 625), EurobotConfig.PATHFINDER_SITE_FOUILLE_SIZE));
             }
