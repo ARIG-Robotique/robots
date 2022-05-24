@@ -13,6 +13,7 @@ import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.InitStep;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.SiteDeRetour;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.bras.PositionBras;
@@ -134,6 +135,12 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void afterMatch() {
+        double currentX = mv.currentXMm();
+        double currentY = mv.currentYMm();
+        if ((currentX <= 500 || currentX >= 2500) && currentY <= 1700 && currentY >= 900) {
+            groupService.siteDeRetour(currentY > 1300 ? SiteDeRetour.CAMPEMENT_NORD : SiteDeRetour.CAMPEMENT_SUD);
+        }
+
         odinIO.releaseAllPompes();
         if (!robotStatus.twoRobots()) {
             baliseService.idle();

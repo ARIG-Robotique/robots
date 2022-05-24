@@ -10,17 +10,24 @@ import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
-import org.arig.robot.model.*;
+import org.arig.robot.model.InitStep;
+import org.arig.robot.model.NerellRobotStatus;
+import org.arig.robot.model.Point;
+import org.arig.robot.model.SiteDeRetour;
+import org.arig.robot.model.Strategy;
+import org.arig.robot.model.Team;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.model.enums.TypeCalage;
-import org.arig.robot.services.*;
+import org.arig.robot.services.BaliseService;
+import org.arig.robot.services.BrasService;
+import org.arig.robot.services.NerellEcranService;
+import org.arig.robot.services.NerellIOService;
+import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.system.capteurs.CarreFouilleReader;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
-
-import java.awt.geom.Rectangle2D;
 
 @Slf4j
 public class NerellOrdonanceur extends AbstractOrdonanceur {
@@ -119,6 +126,12 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void afterMatch() {
+        double currentX = mv.currentXMm();
+        double currentY = mv.currentYMm();
+        if ((currentX <= 500 || currentX >= 2500) && currentY <= 1700 && currentY >= 900) {
+            groupService.siteDeRetour(currentY > 1300 ? SiteDeRetour.CAMPEMENT_NORD : SiteDeRetour.CAMPEMENT_SUD);
+        }
+
         nerellIO.releaseAllPompes();
         baliseService.idle();
         nerellRobotStatus.disableBalise();
