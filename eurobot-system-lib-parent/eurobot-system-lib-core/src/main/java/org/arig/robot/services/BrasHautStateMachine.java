@@ -27,14 +27,14 @@ public class BrasHautStateMachine extends AbstractBrasStateMachine {
         state(PositionBras.STOCK_DEPOSE_3, new PointBras(29, 165, 180));
         state(PositionBras.STOCK_DEPOSE_4, new PointBras(48, 165, 180));
         state(PositionBras.STOCK_DEPOSE_5, new PointBras(65, 165, 180));
-        state(PositionBras.STOCK_DEPOSE_6, new PointBras(82, 165, 180));
+        state(PositionBras.STOCK_DEPOSE_6, new PointBras(75, 165, 180));
         state(PositionBras.STOCK_PRISE_1, PRISE_STOCK.get(1));
         state(PositionBras.STOCK_PRISE_2, PRISE_STOCK.get(2));
         state(PositionBras.STOCK_PRISE_3, PRISE_STOCK.get(3));
         state(PositionBras.STOCK_PRISE_4, PRISE_STOCK.get(4));
         state(PositionBras.STOCK_PRISE_5, PRISE_STOCK.get(5));
         state(PositionBras.STOCK_PRISE_6, PRISE_STOCK.get(6));
-        state(PositionBras.STOCK_ENTREE, new PointBras(100, 170, -160));
+        state(PositionBras.STOCK_ENTREE, new PointBras(135, 170, -140));
 
         state(PositionBras.ECHANGE, new PointBras(160, 155, -90));
 
