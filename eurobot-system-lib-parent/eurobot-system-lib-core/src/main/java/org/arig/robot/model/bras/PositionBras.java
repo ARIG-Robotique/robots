@@ -52,10 +52,9 @@ public enum PositionBras {
     DISTRIBUTEUR_PRISE_2(false),
     DISTRIBUTEUR_PRISE_3(false),
 
-    GALERIE_DEPOSE_VERT(false),
-
     // haut
-    GALERIE_PREDEPOSE(false)
+    GALERIE_PREDEPOSE(false),
+    GALERIE_DEPOSE_CENTRE(false)
     ;
 
     private final boolean inside;

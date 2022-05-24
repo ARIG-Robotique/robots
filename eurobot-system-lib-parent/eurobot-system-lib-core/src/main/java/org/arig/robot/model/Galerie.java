@@ -19,7 +19,7 @@ public class Galerie {
     }
 
     public enum Etage {
-        BAS, HAUT, DOUBLE
+        BAS, HAUT, CENTRE, DOUBLE
     }
 
     @Getter
@@ -31,10 +31,11 @@ public class Galerie {
     }
 
     private static final int MAX_DEPOSE = 2;
+    private static final int MAX_DEPOSE_VERT = 1;
 
     private final List<CouleurEchantillon> bleu = new ArrayList<>(MAX_DEPOSE);
     private final List<CouleurEchantillon> bleuVert = new ArrayList<>(MAX_DEPOSE);
-    private final List<CouleurEchantillon> vert = new ArrayList<>(MAX_DEPOSE);
+    private final List<CouleurEchantillon> vert = new ArrayList<>(MAX_DEPOSE_VERT);
     private final List<CouleurEchantillon> rougeVert = new ArrayList<>(MAX_DEPOSE);
     private final List<CouleurEchantillon> rouge = new ArrayList<>(MAX_DEPOSE);
 
@@ -63,17 +64,12 @@ public class Galerie {
     }
 
     int emplacementDisponible() {
-        return 10 - (bleu.size() + bleuVert.size() + vert.size() + rougeVert.size() + rouge.size());
+        return 9 - (bleu.size() + bleuVert.size() + vert.size() + rougeVert.size() + rouge.size());
     }
 
     private final List<Pair<CouleurEchantillon, CouleurEchantillon>> PERMUTATIONS_ROUGE = Arrays.asList(
             Pair.of(CouleurEchantillon.ROUGE, CouleurEchantillon.ROUGE),
             Pair.of(CouleurEchantillon.ROCHER_ROUGE, CouleurEchantillon.ROUGE)
-    );
-
-    private final List<Pair<CouleurEchantillon, CouleurEchantillon>> PERMUTATIONS_VERT = Arrays.asList(
-            Pair.of(CouleurEchantillon.VERT, CouleurEchantillon.VERT),
-            Pair.of(CouleurEchantillon.ROCHER_VERT, CouleurEchantillon.VERT)
     );
 
     private final List<Pair<CouleurEchantillon, CouleurEchantillon>> PERMUTATIONS_BLEU = Arrays.asList(
@@ -107,9 +103,6 @@ public class Galerie {
         if (PERMUTATIONS_ROUGE.contains(couleurs) && rouge.isEmpty()) {
             return new GaleriePosition(Periode.ROUGE, Etage.DOUBLE);
         }
-        if (PERMUTATIONS_VERT.contains(couleurs) && vert.isEmpty() && rougeVert.size() == 2 && bleuVert.size() == 2) {
-            return new GaleriePosition(Periode.VERT, Etage.DOUBLE);
-        }
         if (PERMUTATIONS_BLEU.contains(couleurs) && bleu.isEmpty()) {
             return new GaleriePosition(Periode.BLEU, Etage.DOUBLE);
         }
@@ -123,9 +116,6 @@ public class Galerie {
         // on est capable d'en poser au moins un de la bonne couleur
         if ((couleur1.isRouge() || couleur2 == CouleurEchantillon.ROUGE) && rouge.isEmpty()) {
             return new GaleriePosition(Periode.ROUGE, Etage.DOUBLE);
-        }
-        if ((couleur1.isVert() || couleur2 == CouleurEchantillon.VERT) && vert.isEmpty() && rougeVert.size() == 2 && bleuVert.size() == 2) {
-            return new GaleriePosition(Periode.VERT, Etage.DOUBLE);
         }
         if ((couleur1.isBleu() || couleur2 == CouleurEchantillon.BLEU) && bleu.isEmpty()) {
             return new GaleriePosition(Periode.BLEU, Etage.DOUBLE);
@@ -168,13 +158,8 @@ public class Galerie {
         } else if (couleur == CouleurEchantillon.VERT || couleur == CouleurEchantillon.ROCHER_VERT) {
             if (vert.isEmpty() && (currentPeriode == Periode.VERT || currentPeriode == null)
                     && !bleuVert.isEmpty() && !rougeVert.isEmpty()) {
-                return new GaleriePosition(Periode.VERT, Etage.BAS);
-            }
-            if (vert.size() == 1 && (currentPeriode == Periode.VERT || currentPeriode == null)
-                    && bleuVert.size() == 2 && rougeVert.size() == 2) {
-                return new GaleriePosition(Periode.VERT, Etage.HAUT);
-            }
-            if (bleuVert.size() < MAX_DEPOSE && (currentPeriode == Periode.BLEU_VERT || currentPeriode == null)) {
+                return new GaleriePosition(Periode.VERT, Etage.CENTRE);
+            } else if (bleuVert.size() < MAX_DEPOSE && (currentPeriode == Periode.BLEU_VERT || currentPeriode == null)) {
                 return new GaleriePosition(Periode.BLEU_VERT, bleuVert.isEmpty() ? Etage.BAS : Etage.HAUT);
             } else if (rougeVert.size() < MAX_DEPOSE && (currentPeriode == Periode.ROUGE_VERT || currentPeriode == null)) {
                 return new GaleriePosition(Periode.ROUGE_VERT, rougeVert.isEmpty() ? Etage.BAS : Etage.HAUT);
@@ -193,13 +178,6 @@ public class Galerie {
             return new GaleriePosition(Periode.ROUGE, bleu.isEmpty() ? Etage.BAS : Etage.HAUT);
         } else if (currentPeriode == Periode.ROUGE_VERT && rougeVert.size() < MAX_DEPOSE) {
             return new GaleriePosition(Periode.ROUGE_VERT, bleu.isEmpty() ? Etage.BAS : Etage.HAUT);
-        } else if (currentPeriode == Periode.VERT && vert.size() < MAX_DEPOSE) {
-            if (vert.isEmpty() && !bleuVert.isEmpty() && !rougeVert.isEmpty()) {
-                return new GaleriePosition(Periode.VERT, Etage.BAS);
-            }
-            if (vert.size() == 1 && bleuVert.size() == 2 && rougeVert.size() == 2) {
-                return new GaleriePosition(Periode.VERT, Etage.HAUT);
-            }
         }
 
         // 2. Sinon, on cherche une période qui n'est pas pleine.
@@ -211,8 +189,8 @@ public class Galerie {
             return new GaleriePosition(Periode.ROUGE, rouge.isEmpty() ? Etage.BAS : Etage.HAUT);
         } else if (rougeVert.size() < MAX_DEPOSE) {
             return new GaleriePosition(Periode.ROUGE_VERT, rougeVert.isEmpty() ? Etage.BAS : Etage.HAUT);
-        } else if (vert.size() < MAX_DEPOSE) {
-            return new GaleriePosition(Periode.VERT, vert.isEmpty() ? Etage.BAS : Etage.HAUT);
+        } else if (vert.size() < MAX_DEPOSE_VERT) {
+            return new GaleriePosition(Periode.VERT, Etage.CENTRE);
         } else {
             // Ne peut pas arriver normalement
             return null;

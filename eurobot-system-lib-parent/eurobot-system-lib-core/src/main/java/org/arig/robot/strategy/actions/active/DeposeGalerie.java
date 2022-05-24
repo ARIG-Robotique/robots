@@ -178,7 +178,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
 
                     if (ok) {
                         bras.setBrasHaut(PositionBras.HORIZONTAL);
-                        bras.setBrasBas(pos.periode() == VERT ? PositionBras.GALERIE_DEPOSE_VERT : PositionBras.GALERIE_DEPOSE);
+                        bras.setBrasBas(PositionBras.GALERIE_DEPOSE);
 
                         rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                         mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
@@ -193,7 +193,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
                         bras.setBrasBas(PositionBras.STOCK_ENTREE);
                     }
 
-                } else if (pos.etage() == Galerie.Etage.HAUT) {
+                } else if (pos.etage() == Galerie.Etage.HAUT || pos.etage() == Galerie.Etage.CENTRE) {
                     CouleurEchantillon couleur = rs.stockFirst();
 
                     boolean ok;
@@ -210,14 +210,16 @@ public class DeposeGalerie extends AbstractEurobotAction {
                     moveTask.join();
 
                     if (ok) {
-                        bras.setBrasHaut(PositionBras.GALERIE_PREDEPOSE);
+                        bras.setBrasHaut(pos.etage() == Galerie.Etage.CENTRE ? PositionBras.GALERIE_DEPOSE_CENTRE : PositionBras.GALERIE_PREDEPOSE);
                         bras.setBrasBas(PositionBras.STOCK_ENTREE);
 
                         rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                         mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
 
                         couleur = rs.ventouseHaut();
-                        bras.setBrasHaut(PositionBras.GALERIE_DEPOSE);
+                        if (pos.etage() != Galerie.Etage.CENTRE) {
+                            bras.setBrasHaut(PositionBras.GALERIE_DEPOSE);
+                        }
                         bras.waitReleaseVentouseHaut();
 
                         comptagePoint(pos, couleur);
@@ -247,7 +249,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
 
                     boolean okBas = bras.destockageBas();
                     if (okBas) {
-                        bras.setBrasBas(pos.periode() == VERT ? PositionBras.GALERIE_DEPOSE_VERT : PositionBras.GALERIE_DEPOSE);
+                        bras.setBrasBas(PositionBras.GALERIE_DEPOSE);
                     } else {
                         bras.setBrasBas(PositionBras.STOCK_ENTREE);
                     }
