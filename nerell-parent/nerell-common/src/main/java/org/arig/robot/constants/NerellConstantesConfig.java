@@ -129,6 +129,9 @@ public interface NerellConstantesConfig {
     double seuilErreurOrientationDeg = arretOrientDeg;
     double seuilErreurDistanceMm = arretDistanceMm;
 
+    double maxErrorSumDistance = 20000;
+    double maxErrorSumOrientation = 40000;
+
     // -------------------------- //
     // Paramètre Physiques        //
     // -------------------------- //

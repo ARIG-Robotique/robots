@@ -204,7 +204,9 @@ public class OdinCommonContext {
     public SystemBlockerManager systemBlockerManager(ConvertionRobotUnit conv) {
         return new SystemBlockerManagerImpl(
                 conv.mmToPulse(OdinConstantesConfig.seuilErreurDistanceMm),
-                conv.degToPulse(OdinConstantesConfig.seuilErreurOrientationDeg)
+                conv.degToPulse(OdinConstantesConfig.seuilErreurOrientationDeg),
+                OdinConstantesConfig.maxErrorSumDistance,
+                OdinConstantesConfig.maxErrorSumOrientation
         );
     }
 }

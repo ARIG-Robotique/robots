@@ -205,7 +205,9 @@ public class NerellCommonContext {
     public SystemBlockerManager systemBlockerManager(ConvertionRobotUnit conv) {
         return new SystemBlockerManagerImpl(
                 conv.mmToPulse(NerellConstantesConfig.seuilErreurDistanceMm),
-                conv.degToPulse(NerellConstantesConfig.seuilErreurOrientationDeg)
+                conv.degToPulse(NerellConstantesConfig.seuilErreurOrientationDeg),
+                NerellConstantesConfig.maxErrorSumDistance,
+                NerellConstantesConfig.maxErrorSumOrientation
         );
     }
 }
