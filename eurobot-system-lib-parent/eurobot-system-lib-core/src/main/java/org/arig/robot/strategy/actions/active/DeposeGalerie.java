@@ -30,20 +30,17 @@ public class DeposeGalerie extends AbstractEurobotAction {
     private static final int GALERIE_X_START = 450;
     private static final int GALERIE_X_END = GALERIE_X_START + GALERIE_WIDTH;
     private static final int GALERIE_CENTRE = GALERIE_X_START + GALERIE_WIDTH / 2;
-    private static final int PERIODE_WIDTH = GALERIE_WIDTH / 3;
-    private static final int PERIODE_ECHANTILLON_A_CHEVAL = 40;
 
-    private static final int ENTRY_X_BLEU = GALERIE_X_START + PERIODE_ECHANTILLON_A_CHEVAL;
-    private static final int ENTRY_X_BLEU_VERT = GALERIE_X_START + PERIODE_WIDTH - PERIODE_ECHANTILLON_A_CHEVAL / 2;
+    private static final int ENTRY_X_BLEU = GALERIE_X_START + 50;
+    private static final int ENTRY_X_BLEU_VERT = GALERIE_X_START + 230;
     private static final int ENTRY_X_SINGLE_VERT = GALERIE_CENTRE;
-    private static final int ENTRY_X_ROUGE_VERT = GALERIE_X_END - PERIODE_WIDTH + PERIODE_ECHANTILLON_A_CHEVAL / 2;
-    private static final int ENTRY_X_ROUGE = GALERIE_X_END - PERIODE_ECHANTILLON_A_CHEVAL;
+    private static final int ENTRY_X_ROUGE_VERT = GALERIE_X_END - 230;
+    private static final int ENTRY_X_ROUGE = GALERIE_X_END - 50;
 
     private static final int ENTRY_Y = 1720;
 
     private static final int OFFSET_Y_REF_AVANT_PROCHAINE_DEPOSE = 80;
     private static final int OFFSET_Y_REF_POUR_PREPARATION = 165;
-    private static final int OFFSET_Y_REF_BAS = 20;
 
     @Autowired
     private BrasService bras;
@@ -210,8 +207,11 @@ public class DeposeGalerie extends AbstractEurobotAction {
                     moveTask.join();
 
                     if (ok) {
-                        bras.setBrasHaut(pos.etage() == Galerie.Etage.CENTRE ? PositionBras.GALERIE_DEPOSE_CENTRE : PositionBras.GALERIE_PREDEPOSE);
+                        bras.setBrasHaut(PositionBras.GALERIE_PREDEPOSE);
                         bras.setBrasBas(PositionBras.STOCK_ENTREE);
+                        if (pos.etage() == Galerie.Etage.CENTRE) {
+                            bras.setBrasHaut(PositionBras.GALERIE_DEPOSE_CENTRE);
+                        }
 
                         rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                         mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
