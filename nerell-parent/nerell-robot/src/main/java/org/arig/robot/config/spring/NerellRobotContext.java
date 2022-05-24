@@ -199,12 +199,12 @@ public class NerellRobotContext {
 
         final GpioController gpio = GpioFactory.getInstance();
         // Moteur Gauche
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_00); // PWM
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_01); // Direction
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_04); // PWM
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_05); // Direction
 
         // Moteur Droit
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_02); // PWM
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_03); // Direction
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_06); // PWM
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_07); // Direction
 
         return gpioProvider;
     }
@@ -212,7 +212,7 @@ public class NerellRobotContext {
     @Bean
     public AbstractPropulsionsMotors motors() {
         // Configuration de la carte moteur propulsion.
-        final PropulsionsPCA9685Motors motors = new PropulsionsPCA9685Motors(PCA9685Pin.PWM_02, PCA9685Pin.PWM_03, PCA9685Pin.PWM_00, PCA9685Pin.PWM_01);
+        final PropulsionsPCA9685Motors motors = new PropulsionsPCA9685Motors(PCA9685Pin.PWM_06, PCA9685Pin.PWM_07, PCA9685Pin.PWM_04, PCA9685Pin.PWM_05);
         motors.assignMotors(NerellConstantesConfig.numeroMoteurGauche, NerellConstantesConfig.numeroMoteurDroit);
         return motors;
     }
