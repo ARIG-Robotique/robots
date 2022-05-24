@@ -198,9 +198,15 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
         transition(PositionBras.ECHANGE_2, PositionBras.HORIZONTAL);
         transition(PositionBras.ECHANGE_2, PositionBras.STOCK_ENTREE);
 
-        transition(PositionBras.STOCK_ENTREE, PositionBras.DISTRIBUTEUR_PRISE_1);
-        transition(PositionBras.STOCK_ENTREE, PositionBras.DISTRIBUTEUR_PRISE_2);
-        transition(PositionBras.STOCK_ENTREE, PositionBras.DISTRIBUTEUR_PRISE_3);
+        transition(PositionBras.STOCK_ENTREE, PositionBras.DISTRIBUTEUR_PRISE_1, TransitionBras.withPoints(
+                new PointBras(195, 90, -20)
+        ));
+        transition(PositionBras.STOCK_ENTREE, PositionBras.DISTRIBUTEUR_PRISE_2, TransitionBras.withPoints(
+                new PointBras(195, 90, -20)
+        ));
+        transition(PositionBras.STOCK_ENTREE, PositionBras.DISTRIBUTEUR_PRISE_3, TransitionBras.withPoints(
+                new PointBras(183, 93, -30)
+        ));
         transition(PositionBras.DISTRIBUTEUR_PRISE_1, PositionBras.STOCK_ENTREE);
         transition(PositionBras.DISTRIBUTEUR_PRISE_2, PositionBras.STOCK_ENTREE);
         transition(PositionBras.DISTRIBUTEUR_PRISE_3, PositionBras.STOCK_ENTREE);
@@ -213,8 +219,12 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
         transition(PositionBras.DISTRIBUTEUR_PRISE_3, PositionBras.ECHANGE, TransitionBras.withPoints(
                 new PointBras(190, 135, 0)
         ));
-        transition(PositionBras.ECHANGE, PositionBras.DISTRIBUTEUR_PRISE_1);
-        transition(PositionBras.ECHANGE, PositionBras.DISTRIBUTEUR_PRISE_2);
+        transition(PositionBras.ECHANGE, PositionBras.DISTRIBUTEUR_PRISE_1, TransitionBras.withPoints(
+                new PointBras(195, 90, -20)
+        ));
+        transition(PositionBras.ECHANGE, PositionBras.DISTRIBUTEUR_PRISE_2, TransitionBras.withPoints(
+                new PointBras(195, 90, -20)
+        ));
         transition(PositionBras.ECHANGE, PositionBras.DISTRIBUTEUR_PRISE_3, TransitionBras.withPoints(
                 new PointBras(183, 93, -30)
         ));

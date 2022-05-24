@@ -180,8 +180,8 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
         mv.gotoPoint(tableUtils.eloigner(echantillon, -EurobotConfig.ECHANTILLON_SIZE - config.distanceCalageAvant()));
 
         mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
-        rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON);
-        mv.avanceMM(EurobotConfig.ECHANTILLON_SIZE);
+        rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON, TypeCalage.FORCE);
+        mv.avanceMMSansAngle(EurobotConfig.ECHANTILLON_SIZE);
 
         bras.setBrasHaut(PositionBras.HORIZONTAL);
         bras.setBrasBas(PositionBras.STOCK_ENTREE);

@@ -38,7 +38,7 @@ public class PriseEchantillonCampement extends AbstractEurobotAction {
 
     @Override
     public int order() {
-        return EurobotConfig.PTS_DEPOSE_PRISE;
+        return EurobotConfig.PTS_DEPOSE_PRISE + tableUtils.alterOrder(entryPoint());
     }
 
     @Override

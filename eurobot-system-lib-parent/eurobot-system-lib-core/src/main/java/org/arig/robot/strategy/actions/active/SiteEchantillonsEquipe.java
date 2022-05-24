@@ -189,6 +189,9 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
 
         if (rs.calageCompleted().contains(TypeCalage.PRISE_ECHANTILLON)) {
             task.join();
+            if (pousseRouge) {
+                mv.avanceMM(10);
+            }
             bras.setBrasBas(PositionBras.SOL_PRISE);
 
             if (bras.waitEnableVentouseBas(couleur)) {
@@ -196,7 +199,7 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
 
                 return runAsync(() -> {
                     if (EurobotConfig.ECHANGE_PRISE) {
-                        if (bras.echangeBasHaut(pousseRouge)) {
+                        if (bras.echangeBasHaut()) {
                             bras.setBrasBas(PositionBras.HORIZONTAL);
                             bras.stockageHaut();
                             bras.setBrasHaut(PositionBras.HORIZONTAL);
