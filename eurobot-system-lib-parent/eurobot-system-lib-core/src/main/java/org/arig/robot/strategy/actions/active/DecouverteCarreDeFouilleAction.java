@@ -162,7 +162,7 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                         sens = GotoOption.ARRIERE;
                     }
                     mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-                    mv.gotoPoint(carreFouille.getX() + deltaX, yRef, sens, GotoOption.SANS_ORIENTATION);
+                    mv.gotoPoint(carreFouille.getX() + deltaX, yRef, sens);
                 }
 
                 // Ouverture de l'ohmmetre
@@ -187,8 +187,13 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                             }, CouleurCarreFouille.INCONNU, 15, WAIT_READ_OHMMETRE_MS);
                             if (couleur == CouleurCarreFouille.INCONNU) {
                                 servos.carreFouilleOhmmetreOuvert(true);
+                                if (nbTryRead == 0) {
+                                    mv.gotoOrientationDeg(1);
+                                } else if (nbTryRead == 1) {
+                                    mv.gotoOrientationDeg(-1);
+                                }
                             }
-                        } while (couleur == CouleurCarreFouille.INCONNU && nbTryRead++ < 2);
+                        } while (couleur == CouleurCarreFouille.INCONNU && nbTryRead++ < 1);
 
                         log.info("Carré de fouille #{} {} : Lecture ohmmetre : {}", carreFouille.numero(), carreFouille.couleur(), couleur);
                         group.couleurCarreFouille(carreFouille.numero(), couleur);
