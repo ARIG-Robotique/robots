@@ -14,19 +14,30 @@ public class Echantillon extends Point {
     private final ID id;
     private final CouleurEchantillon couleur;
     private boolean blocking; // génère un masque sur la pathfinder
+    private Long existence;
 
-    public Echantillon(ID id, CouleurEchantillon couleur, int x, int y, boolean blocking) {
+    public Echantillon(ID id, CouleurEchantillon couleur, double x, double y, boolean blocking) {
         super(x, y);
         this.id = id;
         this.couleur = couleur;
         this.blocking = blocking;
     }
 
-    public Echantillon(CouleurEchantillon couleur, int x, int y) {
+    public Echantillon(ID id, CouleurEchantillon couleur, double x, double y, Long existence) {
         super(x, y);
-        this.id = null;
+        this.id = id;
         this.couleur = couleur;
         this.blocking = false;
+        this.existence = existence;
+    }
+
+    public void setPt(Point point) {
+        setX(point.getX());
+        setY(point.getY());
+    }
+
+    public boolean isReal() {
+        return existence == null || (System.currentTimeMillis() - existence) >= 5000;
     }
 
     @Override

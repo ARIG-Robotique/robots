@@ -29,6 +29,21 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         this.carreFouilleReader = carreFouilleReader;
     }
 
+    private boolean etalonageBaliseOk = false;
+
+    @Setter(AccessLevel.NONE)
+    private boolean baliseEnabled = false;
+
+    public void enableBalise() {
+        log.info("[RS] activation de la balise");
+        baliseEnabled = true;
+    }
+
+    public void disableBalise() {
+        log.info("[RS] désactivation de la balise");
+        baliseEnabled = false;
+    }
+
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     private boolean needRefreshStock = false;
@@ -129,6 +144,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public void siteDeFouillePris(boolean siteDeFouillePris) {
         log.info("[RS] site de fouille pris : {}", siteDeFouillePris);
         this.siteDeFouillePris = siteDeFouillePris;
+        this.echantillons.priseSiteFouille(team);
     }
 
     private boolean siteDeFouilleAdversePris = false;
@@ -136,6 +152,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public void siteDeFouilleAdversePris(boolean siteDeFouilleAdversePris) {
         log.info("[RS] site de fouille adverse pris : {}", siteDeFouilleAdversePris);
         this.siteDeFouilleAdversePris = siteDeFouilleAdversePris;
+        this.echantillons.priseSiteFouilleAdverse(team);
     }
 
     private boolean vitrineActive = false;

@@ -17,6 +17,7 @@ import org.arig.robot.constants.OdinConstantesConfig;
 import org.arig.robot.constants.OdinConstantesI2C;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.RobotName.RobotIdentification;
+import org.arig.robot.model.balise.StatutBalise;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.avoiding.BasicAvoidingService;
 import org.arig.robot.system.avoiding.BasicRetryAvoidingService;
@@ -24,11 +25,13 @@ import org.arig.robot.system.avoiding.CompleteAvoidingService;
 import org.arig.robot.system.avoiding.SemiCompleteAvoidingService;
 import org.arig.robot.system.capteurs.CarreFouilleReader;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
+import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
 import org.arig.robot.system.capteurs.TCA9548MultiplexerI2C;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.Gain;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.IntegrationTime;
+import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.PropulsionsPCA9685Motors;
@@ -223,6 +226,13 @@ public class OdinRobotContext {
     public ILidarTelemeter rplidar() throws Exception {
         final File socketFile = new File(RPLidarBridgeProcess.socketPath);
         return new RPLidarA2TelemeterOverSocket(socketFile);
+    }
+
+    @Bean
+    public IVisionBalise<StatutBalise> visionBalise(Environment env) {
+        final String host = env.getRequiredProperty("balise.socket.host");
+        final Integer port = env.getRequiredProperty("balise.socket.port", Integer.class);
+        return new VisionBaliseOverSocket(host, port);
     }
 
     @Bean

@@ -33,6 +33,12 @@ nerell:
     host: nerell
     port: 9100
 
+# Balise de vision
+balise:
+  socket:
+    host: sauron
+    port: 9042
+
 # Logging
 logging:
   file:
@@ -67,6 +73,10 @@ spring:
 ecran:
   binary: /opt/robots-gui
 
+# Balise de vision
+balise:
+  impl: BOUCHON
+
 ---
 
 # Spring properties
@@ -74,6 +84,12 @@ spring:
   config:
     activate:
       on-profile: greg
+
+# Balise de vision
+balise:
+  impl: SOCKET
+  socket:
+    host: localhost
 
 # Nerell
 nerell:
@@ -88,6 +104,12 @@ spring:
     activate:
       on-profile: damien
 
+# Balise de vision
+balise:
+  impl: SOCKET
+  socket:
+    host: sauron
+
 # Nerell
 nerell:
   socket:
@@ -100,6 +122,12 @@ spring:
   config:
     activate:
       on-profile: mathieu
+
+# Balise de vision
+balise:
+  impl: SOCKET
+  socket:
+    host: localhost
 
 # Nerell
 nerell:

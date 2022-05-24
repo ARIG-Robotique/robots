@@ -5,6 +5,7 @@ import org.arig.robot.constants.OdinConstantesConfig;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractEnergyService;
+import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.IOService;
 import org.arig.robot.services.OdinEcranService;
 import org.arig.robot.system.avoiding.AvoidingService;
@@ -30,6 +31,9 @@ public class OdinTasksScheduler {
 
     @Autowired
     private OdinEcranService ecranService;
+
+    @Autowired
+    private BaliseService baliseService;
 
     @Autowired
     private IOService ioService;
@@ -68,6 +72,23 @@ public class OdinTasksScheduler {
             if (!energyService.checkMoteurs()) {
                 ioService.disableAlimMoteurs();
             }
+        }
+    }
+
+    @Scheduled(fixedDelay = 2000)
+    public void updateBaliseStatus() {
+        if (!rs.baliseEnabled()) {
+            return;
+        }
+
+        if (!baliseService.isConnected()) {
+            baliseService.tryConnect();
+
+        } else {
+            if (!rs.twoRobots()) {
+                baliseService.startDetection();
+            }
+            baliseService.updateStatus();
         }
     }
 }

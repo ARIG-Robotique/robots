@@ -1,13 +1,19 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.Echantillon;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.Team;
+import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 
+import java.awt.Polygon;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static org.arig.robot.constants.EurobotConfig.PTS_DEPOSE_PRISE;
@@ -65,7 +71,15 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
         try {
             Point entry = entryPoint();
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-            mv.pathTo(entry);
+
+            Echantillon echantillonAEnlever = deminageRequis();
+
+            if (echantillonAEnlever != null) {
+                deminage(echantillonAEnlever);
+                mv.gotoPoint(entry);
+            } else {
+                mv.pathTo(entry);
+            }
 
             rs.disableAvoidance();
 
@@ -100,9 +114,7 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
             prise();
 
             setDistributeurPris();
-            complete(true);
-
-            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+            complete();
 
             rs.enableAvoidance();
             mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);
@@ -124,5 +136,63 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
             updateValidTime();
             bras.safeHoming();
         }
+    }
+
+    private Echantillon deminageRequis() {
+        Polygon zoneDistrib = new Polygon();
+        if (rs.team() == Team.JAUNE && name().equals(EurobotConfig.ACTION_PRISE_DISTRIB_COMMUN_EQUIPE) ||
+                rs.team() == Team.VIOLET && name().equals(EurobotConfig.ACTION_PRISE_DISTRIB_COMMUN_ADVERSE)) {
+            zoneDistrib.addPoint(1100, 1900);
+            zoneDistrib.addPoint(1500, 1900);
+            zoneDistrib.addPoint(1500, 1600);
+            zoneDistrib.addPoint(1300, 1600);
+            zoneDistrib.addPoint(1300, 1700);
+            zoneDistrib.addPoint(1100, 1700);
+        } else {
+            zoneDistrib.addPoint(1500, 1900);
+            zoneDistrib.addPoint(1900, 1900);
+            zoneDistrib.addPoint(1900, 1700);
+            zoneDistrib.addPoint(1700, 1700);
+            zoneDistrib.addPoint(1700, 1600);
+            zoneDistrib.addPoint(1500, 1600);
+        }
+
+        List<Echantillon> echantillons = rs.echantillons().findEchantillon(zoneDistrib);
+        if (echantillons.isEmpty()) {
+            return null;
+        } else {
+            return echantillons.get(0);
+        }
+    }
+
+    private void deminage(Echantillon echantillon) throws AvoidingException, NoPathFoundException {
+        if (echantillon.getX() > 1300 && echantillon.getX() < 1700) {
+            // au milieu
+            mv.pathTo(getX(1250), 1600);
+        } else {
+            // le long de la bordure
+            mv.pathTo(echantillon.getX(), 1700);
+        }
+
+        mv.alignFrontTo(echantillon);
+        mv.gotoPoint(tableUtils.eloigner(echantillon, -EurobotConfig.ECHANTILLON_SIZE - config.distanceCalageAvant()));
+
+        mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
+        rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON);
+        mv.avanceMM(EurobotConfig.ECHANTILLON_SIZE);
+
+        bras.setBrasHaut(PositionBras.HORIZONTAL);
+        bras.setBrasBas(PositionBras.STOCK_ENTREE);
+        bras.setBrasBas(PositionBras.SOL_PRISE);
+
+        mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
+
+        if (bras.waitEnableVentouseBas(echantillon.getCouleur())) {
+            bras.setBrasBas(PositionBras.SOL_DEPOSE_5);
+            mv.gotoOrientationDeg(-90);
+            bras.waitReleaseVentouseBas();
+        }
+
+        bras.repos();
     }
 }

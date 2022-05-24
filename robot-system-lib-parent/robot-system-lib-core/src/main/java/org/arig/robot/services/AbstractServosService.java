@@ -183,7 +183,7 @@ public abstract class AbstractServosService {
             // la vitesse de chaque servo dépend de la distance à parcourir
             int finalSpeed = (int) Math.ceil(dst * 1.0 / maxDst * speed);
 
-            logPositionServo(servo.name(), angle + "°", targetPosition, finalSpeed, true);
+            //logPositionServo(servo.name(), angle + "°", targetPosition, finalSpeed, true);
             ctrl.setPositionAndSpeed(servo.id(), targetPosition, (byte) finalSpeed);
 
             if (currentPosition != targetPosition && finalSpeed > 0) {

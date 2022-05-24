@@ -1,6 +1,8 @@
 package org.arig.robot;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.communication.socket.balise.EtalonnageResponse;
+import org.arig.robot.communication.socket.balise.PhotoResponse;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.constants.OdinConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
@@ -14,7 +16,9 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.bras.PositionBras;
+import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.model.enums.TypeCalage;
+import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.BrasService;
 import org.arig.robot.services.OdinEcranService;
 import org.arig.robot.services.OdinIOService;
@@ -38,6 +42,9 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Autowired
     private RobotGroupService groupService;
+
+    @Autowired
+    private BaliseService baliseService;
 
     @Autowired
     private OdinEcranService odinEcranService;
@@ -100,6 +107,10 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
         choixConfig();
 
+        if (odinRobotStatus.etalonageBaliseOk()) {
+            odinRobotStatus.enableBalise();
+        }
+
         // Visu après la tirette
         odinIO.enableLedCapteurCouleur();
         ThreadUtils.sleep(OdinConstantesConfig.WAIT_LED);
@@ -124,6 +135,10 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
     @Override
     public void afterMatch() {
         odinIO.releaseAllPompes();
+        if (!robotStatus.twoRobots()) {
+            baliseService.idle();
+        }
+        odinRobotStatus.disableBalise();
     }
 
     @Override
@@ -169,11 +184,17 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         ChangeFilter<Team> teamChangeFilter = new ChangeFilter<>(null);
         ChangeFilter<Strategy> strategyChangeFilter = new ChangeFilter<>(null);
         ChangeFilter<Boolean> groupChangeFilter = new ChangeFilter<>(null);
+        SignalEdgeFilter updatePhotoFilter = new SignalEdgeFilter(false, Type.RISING);
+        SignalEdgeFilter doEtalonnageFilter = new SignalEdgeFilter(false, Type.RISING);
 
         boolean done;
         do {
             exitFromScreen();
+            connectBalise();
             connectGroup();
+            if (!robotStatus.twoRobots()) {
+                configBalise(updatePhotoFilter, doEtalonnageFilter);
+            }
 
             if (Boolean.TRUE.equals(groupChangeFilter.filter(robotStatus.groupOk()))) {
                 if (robotStatus.groupOk()) {
@@ -206,6 +227,45 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
             ThreadUtils.sleep(200);
         } while (!done);
+    }
+
+    /**
+     * Tente de se connecter à la balise ou envoie un heartbeat
+     */
+    private void connectBalise() {
+        if (!baliseService.isConnected()) {
+            baliseService.tryConnect();
+        } else {
+            baliseService.heartbeat();
+        }
+    }
+
+    /**
+     * Prend en compte la config de la balise
+     */
+    private void configBalise(SignalEdgeFilter updatePhotoFilter, SignalEdgeFilter doEtalonnageFilter) {
+        if (baliseService.isConnected()) {
+            if (Boolean.TRUE.equals(updatePhotoFilter.filter(odinEcranService.config().isUpdatePhoto()))) {
+                // sur front montant de "updatePhoto" on prend une photo et l'envoie à l'écran
+                PhotoResponse photo = baliseService.getPhoto();
+                EcranPhoto query = new EcranPhoto();
+                query.setMessage(photo == null ? "Erreur inconnue" : photo.getErrorMessage());
+                query.setPhoto(photo == null ? null : photo.getData());
+                odinEcranService.updatePhoto(query);
+
+            } else if (Boolean.TRUE.equals(doEtalonnageFilter.filter(odinEcranService.config().isEtalonnageBalise()))) {
+                // sur front montant de "etalonnageBalise" on lance l'étalonnage et envoie le résultat à l'écran
+                EtalonnageResponse etalonnage = baliseService.etalonnage();
+                EcranPhoto query = new EcranPhoto();
+                query.setMessage(etalonnage == null ? "Erreur inconnue" : etalonnage.getErrorMessage());
+                query.setPhoto(etalonnage == null ? null : etalonnage.getData());
+                odinEcranService.updatePhoto(query);
+            }
+
+            odinRobotStatus.etalonageBaliseOk(odinEcranService.config().isEtalonnageOk());
+        } else {
+            odinRobotStatus.etalonageBaliseOk(false);
+        }
     }
 
     /**

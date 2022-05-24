@@ -5,9 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * @author gdepuille on 14/05/2017.
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,5 +17,9 @@ public class Rectangle extends Shape {
     private double y;
     private double w;
     private double h;
+
+    public boolean contains(Point pt) {
+        return pt.getX() >= x && pt.getX() < x + w && pt.getY() >= y && pt.getY() < y + h;
+    }
 
 }
