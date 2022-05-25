@@ -5,6 +5,7 @@ import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.CouleurEchantillon;
+import org.arig.robot.model.Galerie;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.bras.PositionBras;
@@ -43,7 +44,10 @@ public class PriseEchantillonCampement extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && timeBeforeRetourValid() && !rs.echantillonCampementPris() && rs.stockDisponible() > 0;
+        boolean validePeriodeGalerie = rs.periodeGalerieAutreRobot() != Galerie.Periode.BLEU;
+
+        return isTimeValid() && timeBeforeRetourValid() && !rs.echantillonCampementPris()
+                && validePeriodeGalerie && rs.stockDisponible() > 0;
     }
 
     @Override

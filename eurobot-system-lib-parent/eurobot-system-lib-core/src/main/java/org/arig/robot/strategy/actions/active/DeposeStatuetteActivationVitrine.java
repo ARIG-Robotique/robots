@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.Galerie;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.TypeCalage;
@@ -62,8 +63,9 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
     @Override
     public boolean isValid() {
         boolean validStatuette = io.presenceStatuette(true);
+        boolean validePeriodeGalerie = rs.periodeGalerieAutreRobot() != Galerie.Periode.BLEU;
 
-        return isTimeValid() && timeBeforeRetourValid() && validStatuette;
+        return isTimeValid() && timeBeforeRetourValid() && validStatuette && validePeriodeGalerie;
     }
 
     @Override

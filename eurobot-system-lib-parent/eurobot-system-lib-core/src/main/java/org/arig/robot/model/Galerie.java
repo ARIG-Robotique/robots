@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Galerie {
 
     public enum Periode {
-        BLEU, BLEU_VERT, VERT, ROUGE_VERT, ROUGE
+        BLEU, BLEU_VERT, VERT, ROUGE_VERT, ROUGE, AUCUNE
     }
 
     public enum Etage {

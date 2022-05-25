@@ -1,6 +1,7 @@
 package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
@@ -12,6 +13,7 @@ import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BrasService;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -115,6 +117,16 @@ public class DeposeGalerie extends AbstractEurobotAction {
             do {
                 Galerie.GaleriePosition pos = bestPosition(lastPosition);
                 entryPoint = echantillonEntryPoint(pos.periode());
+
+                group.periodeGalerie(pos.periode());
+
+                if (pos.periode() == BLEU &&
+                        (StringUtils.equals(rs.otherCurrentAction(), EurobotConfig.ACTION_DEPOSE_STATUETTE) || StringUtils.equals(rs.otherCurrentAction(), EurobotConfig.ACTION_PRISE_ECHANTILLON_DISTRIBUTEUR_CAMPEMENT))) {
+
+                    // Attente que l'autre robot est terminé son action
+                    ThreadUtils.waitUntil(() -> !StringUtils.equals(rs.otherCurrentAction(), EurobotConfig.ACTION_DEPOSE_STATUETTE)
+                            && !StringUtils.equals(rs.otherCurrentAction(), EurobotConfig.ACTION_PRISE_ECHANTILLON_DISTRIBUTEUR_CAMPEMENT), 100, 10000);
+                }
 
                 if (pos.etage() == Galerie.Etage.DOUBLE) {
                     log.info("Dépose {}+{} dans la galerie : Période {}, Etage {}", rs.stockFirst(), rs.stockSecond(), pos.periode(), pos.etage());
@@ -297,6 +309,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
 
         } finally {
             refreshCompleted();
+            group.periodeGalerie(AUCUNE);
         }
     }
 

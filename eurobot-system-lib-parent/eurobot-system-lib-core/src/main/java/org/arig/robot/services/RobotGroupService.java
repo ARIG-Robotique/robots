@@ -3,16 +3,7 @@ package org.arig.robot.services;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.arig.robot.model.Campement;
-import org.arig.robot.model.CouleurCarreFouille;
-import org.arig.robot.model.CouleurEchantillon;
-import org.arig.robot.model.EurobotStatus;
-import org.arig.robot.model.InitStep;
-import org.arig.robot.model.SiteDeRetour;
-import org.arig.robot.model.StatusEvent;
-import org.arig.robot.model.StatutDistributeur;
-import org.arig.robot.model.Strategy;
-import org.arig.robot.model.Team;
+import org.arig.robot.model.*;
 import org.arig.robot.system.group.RobotGroup;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Service;
@@ -187,6 +178,10 @@ public class RobotGroupService implements RobotGroup.Handler {
                 break;
             case DEPOSE_ABRI_CHANTIER:
                 rs.deposeAbriChantier(getEchantillons(data));
+                break;
+
+            case PERIODE_GALERIE:
+                rs.periodeGalerieAutreRobot(Galerie.Periode.values()[data[0]]);
                 break;
 
             default:
@@ -394,6 +389,10 @@ public class RobotGroupService implements RobotGroup.Handler {
 
     public void positionCampement(Campement.Position pos) {
         sendEvent(StatusEvent.CURRENT_CAMPEMENT, pos);
+    }
+
+    public void periodeGalerie(Galerie.Periode periode) {
+        sendEvent(StatusEvent.PERIODE_GALERIE, periode);
     }
 
     public void deposeGalerieRouge(CouleurEchantillon... echantillons) {

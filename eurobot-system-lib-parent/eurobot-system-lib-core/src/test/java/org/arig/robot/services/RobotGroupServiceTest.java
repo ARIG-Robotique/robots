@@ -2,16 +2,7 @@ package org.arig.robot.services;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.CouleurCarreFouille;
-import org.arig.robot.model.CouleurEchantillon;
-import org.arig.robot.model.EurobotStatus;
-import org.arig.robot.model.InitStep;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.SiteDeRetour;
-import org.arig.robot.model.StatutDistributeur;
-import org.arig.robot.model.Strategy;
-import org.arig.robot.model.Team;
-import org.arig.robot.model.TestEurobotStatus;
+import org.arig.robot.model.*;
 import org.arig.robot.system.RobotGroupOverSocket;
 import org.arig.robot.utils.ThreadUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -457,5 +448,18 @@ class RobotGroupServiceTest {
         Assertions.assertEquals(2, statusSecondary.abriChantierSize());
         Assertions.assertEquals(CouleurEchantillon.VERT, statusPrimary.abriChantierEchantillon(0));
         Assertions.assertEquals(CouleurEchantillon.ROUGE, statusSecondary.abriChantierEchantillon(1));
+    }
+
+    @ParameterizedTest
+    @EnumSource(Galerie.Periode.class)
+    void testPeriodeGalerie(Galerie.Periode periode) {
+        Assertions.assertEquals(Galerie.Periode.AUCUNE, statusPrimary.periodeGalerieAutreRobot());
+        Assertions.assertEquals(Galerie.Periode.AUCUNE, statusSecondary.periodeGalerieAutreRobot());
+
+        rgServicePrimary.periodeGalerie(periode);
+        ThreadUtils.sleep(WAIT);
+
+        Assertions.assertEquals(Galerie.Periode.AUCUNE, statusPrimary.periodeGalerieAutreRobot());
+        Assertions.assertEquals(periode, statusSecondary.periodeGalerieAutreRobot());
     }
 }

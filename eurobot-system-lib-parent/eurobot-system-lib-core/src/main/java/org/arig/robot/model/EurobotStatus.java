@@ -321,6 +321,8 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Setter(AccessLevel.NONE)
     private Galerie galerie = new Galerie();
 
+    private Galerie.Periode periodeGalerieAutreRobot = Galerie.Periode.AUCUNE;
+
     public boolean galerieComplete() {
         return galerie.complete();
     }
@@ -337,6 +339,11 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         boolean forceDoubleDepose = doubleDeposeGalerie();
 
         return galerie.bestPositionDoubleDepose(echantillon1, echantillon2, currentPeriode, forceDoubleDepose);
+    }
+
+    public void periodeGalerieAutreRobot(Galerie.Periode periode) {
+        log.info("[RS] periode galerie autre robot : {}", periode);
+        periodeGalerieAutreRobot = periode;
     }
 
     public void deposeGalerieRouge(CouleurEchantillon... echantillons) {
