@@ -13,6 +13,7 @@ import org.arig.robot.system.capteurs.CarreFouilleReader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -97,32 +98,50 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     /**
      * STATUT
      */
-    private boolean distributeurEquipePris = false;
+    private StatutDistributeur distributeurEquipe = StatutDistributeur.PAS_PRIS;
 
-    public void distributeurEquipePris(boolean distributeurEquipePris) {
-        log.info("[RS] distributeur equipe pris : {}", distributeurEquipePris);
-        this.distributeurEquipePris = distributeurEquipePris;
+    public void distributeurEquipe(StatutDistributeur distributeurEquipe) {
+        log.info("[RS] distributeur equipe pris : {}", distributeurEquipe);
+        this.distributeurEquipe = distributeurEquipe;
     }
 
-    private boolean distributeurCommunEquipePris = false;
-
-    public void distributeurCommunEquipePris(boolean distributeurCommunEquipePris) {
-        log.info("[RS] distributeur commun equipe pris : {}", distributeurCommunEquipePris);
-        this.distributeurCommunEquipePris = distributeurCommunEquipePris;
+    public boolean distributeurEquipeDispo() {
+        return distributeurEquipe == StatutDistributeur.PAS_PRIS;
     }
 
-    private boolean distributeurCommunAdversePris = false;
-
-    public void distributeurCommunAdversePris(boolean distributeurCommunAdversePris) {
-        log.info("[RS] distributeur commun adverse pris : {}", distributeurCommunAdversePris);
-        this.distributeurCommunAdversePris = distributeurCommunAdversePris;
+    public boolean distributeurEquipeTermine() {
+        return distributeurEquipe == StatutDistributeur.PRIS_NOUS || distributeurEquipe == StatutDistributeur.BLOQUE;
     }
 
-    private boolean distributeurEquipeBloque = false;
+    private StatutDistributeur distributeurCommunEquipe = StatutDistributeur.PAS_PRIS;
 
-    private boolean distributeurCommunEquipeBloque = false;
+    public void distributeurCommunEquipe(StatutDistributeur distributeurCommunEquipe) {
+        log.info("[RS] distributeur commun equipe pris : {}", distributeurCommunEquipe);
+        this.distributeurCommunEquipe = distributeurCommunEquipe;
+    }
 
-    private boolean distributeurCommunAdverseBloque = false;
+    public boolean distributeurCommunEquipeDispo() {
+        return distributeurCommunEquipe == StatutDistributeur.PAS_PRIS;
+    }
+
+    public boolean distributeurCommunEquipeTermine() {
+        return distributeurCommunEquipe == StatutDistributeur.PRIS_NOUS || distributeurCommunEquipe == StatutDistributeur.BLOQUE;
+    }
+
+    private StatutDistributeur distributeurCommunAdverse = StatutDistributeur.PAS_PRIS;
+
+    public void distributeurCommunAdverse(StatutDistributeur distributeurCommunAdverse) {
+        log.info("[RS] distributeur commun adverse pris : {}", distributeurCommunAdverse);
+        this.distributeurCommunAdverse = distributeurCommunAdverse;
+    }
+
+    public boolean distributeurCommunAdverseDispo() {
+        return distributeurCommunAdverse == StatutDistributeur.PAS_PRIS;
+    }
+
+    public boolean distributeurCommunAdverseTermine() {
+        return distributeurCommunAdverse == StatutDistributeur.PRIS_NOUS || distributeurCommunAdverse == StatutDistributeur.BLOQUE;
+    }
 
     private boolean siteEchantillonPris = false;
 
@@ -506,6 +525,33 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         return 0;
     }
 
+    private int scoreDistributeurs() {
+        int points = 0;
+        if (distributeurEquipe != StatutDistributeur.PAS_PRIS) points += 3; // 3 échantillons
+        if (distributeurCommunEquipe != StatutDistributeur.PAS_PRIS) points += 3; // 3 échantillons
+        if (echantillonAbriChantierCarreFouillePris) points += 1;
+        if (echantillonAbriChantierDistributeurPris) points += 1;
+        if (echantillonCampementPris) points += 1;
+        return points;
+    }
+
+    private int scoreVitrine() {
+        int points = 2; // Vitrine présente
+        if (vitrineActive) points += 5;
+        return points;
+    }
+
+    private int scoreStatuette() {
+        int points = 2; // Statuette présente
+        if (statuettePrise) points += 5;
+        if (statuetteDepose) points += 15;
+        return points;
+    }
+
+    private int scoreReplique() {
+        return repliqueDepose ? 10 : 0;
+    }
+
     public int calculerPoints() {
         int points = 0;
 
@@ -514,17 +560,10 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
             return points;
         }
 
-        points += 2; // Vitrine présente
-        points += 2; // Statuette présente
-        if (vitrineActive) points += 5;
-        if (statuettePrise) points += 5;
-        if (statuetteDepose) points += 15;
-        if (repliqueDepose) points += 10;
-        if (distributeurEquipePris) points += 3; // 3 échantillons
-        if (distributeurCommunEquipePris) points += 3; // 3 échantillons
-        if (echantillonAbriChantierCarreFouillePris) points += 1;
-        if (echantillonAbriChantierDistributeurPris) points += 1;
-        if (echantillonCampementPris) points += 1;
+        points += scoreVitrine();
+        points += scoreStatuette();
+        points += scoreReplique();
+        points += scoreDistributeurs();
         points += campement.score();
         points += galerie.score();
         points += carresFouille.score();
@@ -537,10 +576,10 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Override
     public Map<String, Integer> scoreStatus() {
         Map<String, Integer> r = new HashMap<>();
-        r.put("Vitrine", 2 + (vitrineActive ? 5 : 0));
-        r.put("Statuette", 2 + (statuettePrise ? 5 : 0) + (statuetteDepose ? 15 : 0));
-        r.put("Replique", repliqueDepose ? 10 : 0);
-        r.put("Distributeurs", (distributeurEquipePris ? 3 : 0) + (distributeurCommunEquipePris ? 3 : 0) + (echantillonAbriChantierCarreFouillePris ? 1 : 0) + (echantillonAbriChantierCarreFouillePris ? 1 : 0) + (echantillonCampementPris ? 1 : 0));
+        r.put("Vitrine", scoreVitrine());
+        r.put("Statuette", scoreStatuette());
+        r.put("Replique", scoreReplique());
+        r.put("Distributeurs", scoreDistributeurs());
         r.put("Carrés de fouille", carresFouille.score());
         r.put("Campement", campement.score());
         r.put("Galerie", galerie.score());
@@ -562,10 +601,10 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     @Override
     public Map<String, Boolean> gameFlags() {
-        Map<String, Boolean> r = new HashMap<>();
-        r.put("Distributeur équipe pris", distributeurEquipePris);
-        r.put("Distributeur commun équipe pris", distributeurCommunEquipePris);
-        r.put("Distributeur commun adverse pris", distributeurCommunAdversePris);
+        Map<String, Boolean> r = new LinkedHashMap<>();
+        r.put("Distributeur équipe pris", distributeurEquipe != StatutDistributeur.PAS_PRIS);
+        r.put("Distributeur commun équipe pris", distributeurCommunEquipe != StatutDistributeur.PAS_PRIS);
+        r.put("Distributeur commun adverse pris", distributeurCommunAdverse != StatutDistributeur.PAS_PRIS);
         r.put("Site echantillons pris", siteEchantillonPris);
         r.put("Site echantillons adverse pris", siteEchantillonAdversePris);
         r.put("Site de fouille pris", siteDeFouillePris);
@@ -583,7 +622,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     @Override
     public Map<String, String> deposesStatus() {
-        Map<String, String> r = new HashMap<>();
+        Map<String, String> r = new LinkedHashMap<>();
         r.put("Galerie - Bleu", galerie.bleu.stream().map(CouleurEchantillon::name).collect(Collectors.joining(",")));
         r.put("Galerie - Bleu / Vert", galerie.bleuVert.stream().map(CouleurEchantillon::name).collect(Collectors.joining(",")));
         r.put("Galerie - Vert", galerie.vert.stream().map(CouleurEchantillon::name).collect(Collectors.joining(",")));

@@ -27,9 +27,9 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
     protected static final int ENTRY_X = 1295;
     protected static final int ENTRY_Y = 1705;
 
-    protected abstract boolean isDistributeurPris();
+    protected abstract boolean isDistributeurDispo();
 
-    protected abstract boolean isDistributeurBloque();
+    protected abstract boolean isDistributeurTermine();
 
     protected abstract void setDistributeurPris();
 
@@ -55,7 +55,7 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
 
     @Override
     public void refreshCompleted() {
-        if (isDistributeurPris() || isDistributeurBloque()) {
+        if (isDistributeurTermine()) {
             complete();
         }
     }
@@ -63,7 +63,7 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
     @Override
     public boolean isValid() {
         return isTimeValid() && timeBeforeRetourValid()
-                && !isDistributeurPris() && !isDistributeurBloque() && rs.stockDisponible() >= 3;
+                && isDistributeurDispo() && rs.stockDisponible() >= 3;
     }
 
     @Override

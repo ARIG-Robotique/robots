@@ -8,6 +8,7 @@ import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.InitStep;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.SiteDeRetour;
+import org.arig.robot.model.StatutDistributeur;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.TestEurobotStatus;
@@ -188,38 +189,38 @@ class RobotGroupServiceTest {
 
     @Test
     void testDistributeurEquipePris() {
-        Assertions.assertFalse(statusPrimary.distributeurEquipePris());
-        Assertions.assertFalse(statusSecondary.distributeurEquipePris());
+        Assertions.assertEquals(statusPrimary.distributeurEquipe(), StatutDistributeur.PAS_PRIS);
+        Assertions.assertEquals(statusSecondary.distributeurEquipe(), StatutDistributeur.PAS_PRIS);
 
-        rgServicePrimary.distributeurEquipePris();
+        rgServicePrimary.distributeurEquipe(StatutDistributeur.PRIS_NOUS);
         ThreadUtils.sleep(WAIT);
 
-        Assertions.assertTrue(statusPrimary.distributeurEquipePris());
-        Assertions.assertTrue(statusSecondary.distributeurEquipePris());
+        Assertions.assertEquals(statusPrimary.distributeurEquipe(), StatutDistributeur.PRIS_NOUS);
+        Assertions.assertEquals(statusSecondary.distributeurEquipe(), StatutDistributeur.PRIS_NOUS);
     }
 
     @Test
     void testDistributeurCommunEquipePris() {
-        Assertions.assertFalse(statusPrimary.distributeurCommunEquipePris());
-        Assertions.assertFalse(statusSecondary.distributeurCommunEquipePris());
+        Assertions.assertEquals(statusPrimary.distributeurCommunEquipe(), StatutDistributeur.PAS_PRIS);
+        Assertions.assertEquals(statusSecondary.distributeurCommunEquipe(), StatutDistributeur.PAS_PRIS);
 
-        rgServicePrimary.distributeurCommunEquipePris();
+        rgServicePrimary.distributeurCommunEquipe(StatutDistributeur.PRIS_NOUS);
         ThreadUtils.sleep(WAIT);
 
-        Assertions.assertTrue(statusPrimary.distributeurCommunEquipePris());
-        Assertions.assertTrue(statusSecondary.distributeurCommunEquipePris());
+        Assertions.assertEquals(statusPrimary.distributeurCommunEquipe(), StatutDistributeur.PRIS_NOUS);
+        Assertions.assertEquals(statusSecondary.distributeurCommunEquipe(), StatutDistributeur.PRIS_NOUS);
     }
 
     @Test
     void testDistributeurCommunAdversePris() {
-        Assertions.assertFalse(statusPrimary.distributeurCommunAdversePris());
-        Assertions.assertFalse(statusSecondary.distributeurCommunAdversePris());
+        Assertions.assertEquals(statusPrimary.distributeurCommunAdverse(), StatutDistributeur.PAS_PRIS);
+        Assertions.assertEquals(statusSecondary.distributeurCommunAdverse(), StatutDistributeur.PAS_PRIS);
 
-        rgServicePrimary.distributeurCommunAdversePris();
+        rgServicePrimary.distributeurCommunAdverse(StatutDistributeur.PRIS_NOUS);
         ThreadUtils.sleep(WAIT);
 
-        Assertions.assertTrue(statusPrimary.distributeurCommunAdversePris());
-        Assertions.assertTrue(statusSecondary.distributeurCommunAdversePris());
+        Assertions.assertEquals(statusPrimary.distributeurCommunAdverse(), StatutDistributeur.PRIS_NOUS);
+        Assertions.assertEquals(statusSecondary.distributeurCommunAdverse(), StatutDistributeur.PRIS_NOUS);
     }
 
     @Test

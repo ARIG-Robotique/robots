@@ -1,10 +1,10 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.Echantillon;
 import org.arig.robot.model.Echantillons;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.StatutDistributeur;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.balise.StatutBalise;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +17,13 @@ public class BaliseService extends AbstractBaliseService<StatutBalise> {
     @Autowired
     private EurobotStatus rs;
 
-    @Autowired
-    private RobotGroupService group;
-
     private StatutBalise statut;
 
     public void updateStatus() {
         statut = balise.getStatut();
 
         if (statut != null && statut.detectionOk()) {
-            // updateDistributeurs(); // FIXME ne fonctionne pas
+            updateDistributeurs();
             updateEchantillons();
         }
     }
@@ -40,8 +37,8 @@ public class BaliseService extends AbstractBaliseService<StatutBalise> {
             Point point = echantillon.getPoint();
             echantillons.findEchantillon(point, echantillon.getC())
                     .ifPresentOrElse(
-                            echantillonExistant -> echantillonExistant.setPt(point), // FIXME notif group
-                            () -> echantillons.addEchantillon(point, echantillon.getC()) // FIXME notif group
+                            echantillonExistant -> echantillonExistant.setPt(point),
+                            () -> echantillons.addEchantillon(point, echantillon.getC())
                     );
         });
 
@@ -49,7 +46,7 @@ public class BaliseService extends AbstractBaliseService<StatutBalise> {
         echantillons.getEchantillons().removeIf(echantillon -> {
             boolean missing = echantillonsDetectes.stream()
                     .noneMatch(e -> Echantillons.match(echantillon, e.getPoint(), e.getC()));
-            return missing; // FIXME notif group
+            return missing;
         });
 
         // sites de fouille et sites de départ
@@ -82,18 +79,22 @@ public class BaliseService extends AbstractBaliseService<StatutBalise> {
     private void updateDistributeurs() {
         List<StatutBalise.PresenceDistrib> distribs = statut.getDetection().getDistribs();
 
-        if (distribs.get(0) == StatutBalise.PresenceDistrib.ABSENT) {
-            if (rs.team() == Team.JAUNE && !rs.distributeurCommunEquipePris()) {
-                group.distributeurCommunEquipePris();
-            } else if (!rs.distributeurCommunAdversePris()) {
-                group.distributeurCommunAdversePris();
+        boolean firstPris = distribs.get(0) == StatutBalise.PresenceDistrib.ABSENT;
+        boolean secondPris = distribs.get(1) == StatutBalise.PresenceDistrib.ABSENT;
+
+        if (rs.team() == Team.JAUNE) {
+            if (rs.distributeurCommunEquipe() != StatutDistributeur.PRIS_NOUS) {
+                rs.distributeurCommunEquipe(firstPris ? StatutDistributeur.PRIS_BALISE : StatutDistributeur.PAS_PRIS);
             }
-        }
-        if (distribs.get(1) == StatutBalise.PresenceDistrib.ABSENT) {
-            if (rs.team() == Team.VIOLET && !rs.distributeurCommunEquipePris()) {
-                group.distributeurCommunEquipePris();
-            } else if (!rs.distributeurCommunAdversePris()) {
-                group.distributeurCommunAdversePris();
+            if (rs.distributeurCommunAdverse() != StatutDistributeur.PRIS_NOUS) {
+                rs.distributeurCommunAdverse(secondPris ? StatutDistributeur.PRIS_BALISE : StatutDistributeur.PAS_PRIS);
+            }
+        } else {
+            if (rs.distributeurCommunEquipe() != StatutDistributeur.PRIS_NOUS) {
+                rs.distributeurCommunEquipe(secondPris ? StatutDistributeur.PRIS_BALISE : StatutDistributeur.PAS_PRIS);
+            }
+            if (rs.distributeurCommunAdverse() != StatutDistributeur.PRIS_NOUS) {
+                rs.distributeurCommunAdverse(firstPris ? StatutDistributeur.PRIS_BALISE : StatutDistributeur.PAS_PRIS);
             }
         }
     }

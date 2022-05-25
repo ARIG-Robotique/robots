@@ -40,7 +40,7 @@ public class EchappementAbriChantier extends AbstractEurobotAction {
     public boolean isValid() {
         return isTimeValid() && rs.getRemainingTime() > EurobotConfig.validTimeEchappement
                 && rs.echantillonAbriChantierCarreFouillePris() && rs.echantillonAbriChantierDistributeurPris()
-                && rs.statuettePrise() && rs.repliqueDepose() && rs.distributeurEquipePris();
+                && rs.statuettePrise() && rs.repliqueDepose() && rs.distributeurEquipeTermine();
     }
 
     @Override

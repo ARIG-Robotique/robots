@@ -3,6 +3,7 @@ package org.arig.robot.strategy.actions.active;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotName;
+import org.arig.robot.model.StatutDistributeur;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.springframework.stereotype.Component;
@@ -37,23 +38,23 @@ public class DistributeurCommunEquipe extends AbstractDistributeurCommun {
     }
 
     @Override
-    protected boolean isDistributeurPris() {
-        return rs.distributeurCommunEquipePris();
+    protected boolean isDistributeurDispo() {
+        return rs.distributeurCommunEquipeDispo();
     }
 
     @Override
-    protected boolean isDistributeurBloque() {
-        return rs.distributeurCommunEquipeBloque();
+    protected boolean isDistributeurTermine() {
+        return rs.distributeurCommunEquipeTermine();
     }
 
     @Override
     protected void setDistributeurPris() {
-        group.distributeurCommunEquipePris();
+        group.distributeurCommunEquipe(StatutDistributeur.PRIS_NOUS);
     }
 
     @Override
     protected void setDistributeurBloque() {
-        group.distributeurCommunEquipeBloque();
+        group.distributeurCommunEquipe(StatutDistributeur.BLOQUE);
     }
 
     @Override

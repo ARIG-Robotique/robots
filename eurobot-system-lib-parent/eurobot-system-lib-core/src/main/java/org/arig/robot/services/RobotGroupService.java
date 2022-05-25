@@ -10,6 +10,7 @@ import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.InitStep;
 import org.arig.robot.model.SiteDeRetour;
 import org.arig.robot.model.StatusEvent;
+import org.arig.robot.model.StatutDistributeur;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.system.group.RobotGroup;
@@ -101,23 +102,14 @@ public class RobotGroupService implements RobotGroup.Handler {
                 rs.otherPosition(x, y);
                 break;
 
-            case DISTRIBUTEUR_EQUIPE_PRIS:
-                rs.distributeurEquipePris(true);
+            case DISTRIBUTEUR_EQUIPE:
+                rs.distributeurEquipe(StatutDistributeur.values()[data[0]]);
                 break;
-            case DISTRIBUTEUR_COMMUN_EQUIPE_PRIS:
-                rs.distributeurCommunEquipePris(true);
+            case DISTRIBUTEUR_COMMUN_EQUIPE:
+                rs.distributeurCommunEquipe(StatutDistributeur.values()[data[0]]);
                 break;
-            case DISTRIBUTEUR_COMMUN_ADVERSE_PRIS:
-                rs.distributeurCommunAdversePris(true);
-                break;
-            case DISTRIBUTEUR_EQUIPE_BLOQUE:
-                rs.distributeurEquipeBloque(true);
-                break;
-            case DISTRIBUTEUR_COMMUN_EQUIPE_BLOQUE:
-                rs.distributeurCommunEquipeBloque(true);
-                break;
-            case DISTRIBUTEUR_COMMUN_ADVERSE_BLOQUE:
-                rs.distributeurCommunAdverseBloque(true);
+            case DISTRIBUTEUR_COMMUN_ADVERSE:
+                rs.distributeurCommunAdverse(StatutDistributeur.values()[data[0]]);
                 break;
             case SITE_ECHANTILLON_PRIS:
                 rs.siteEchantillonPris(true);
@@ -289,34 +281,19 @@ public class RobotGroupService implements RobotGroup.Handler {
         sendEvent(StatusEvent.CONFIG, data);
     }
 
-    public void distributeurEquipePris() {
-        rs.distributeurEquipePris(true);
-        sendEvent(StatusEvent.DISTRIBUTEUR_EQUIPE_PRIS);
+    public void distributeurEquipe(StatutDistributeur distributeurEquipe) {
+        rs.distributeurEquipe(distributeurEquipe);
+        sendEvent(StatusEvent.DISTRIBUTEUR_EQUIPE, distributeurEquipe);
     }
 
-    public void distributeurCommunEquipePris() {
-        rs.distributeurCommunEquipePris(true);
-        sendEvent(StatusEvent.DISTRIBUTEUR_COMMUN_EQUIPE_PRIS);
+    public void distributeurCommunEquipe(StatutDistributeur distributeurCommunEquipe) {
+        rs.distributeurCommunEquipe(distributeurCommunEquipe);
+        sendEvent(StatusEvent.DISTRIBUTEUR_COMMUN_EQUIPE, distributeurCommunEquipe);
     }
 
-    public void distributeurCommunAdversePris() {
-        rs.distributeurCommunAdversePris(true);
-        sendEvent(StatusEvent.DISTRIBUTEUR_COMMUN_ADVERSE_PRIS);
-    }
-
-    public void distributeurEquipeBloque() {
-        rs.distributeurEquipeBloque(true);
-        sendEvent(StatusEvent.DISTRIBUTEUR_EQUIPE_BLOQUE);
-    }
-
-    public void distributeurCommunEquipeBloque() {
-        rs.distributeurCommunEquipeBloque(true);
-        sendEvent(StatusEvent.DISTRIBUTEUR_COMMUN_EQUIPE_BLOQUE);
-    }
-
-    public void distributeurCommunAdverseBloque() {
-        rs.distributeurCommunAdverseBloque(true);
-        sendEvent(StatusEvent.DISTRIBUTEUR_COMMUN_ADVERSE_BLOQUE);
+    public void distributeurCommunAdverse(StatutDistributeur distributeurCommunEquipe) {
+        rs.distributeurCommunAdverse(distributeurCommunEquipe);
+        sendEvent(StatusEvent.DISTRIBUTEUR_COMMUN_ADVERSE, distributeurCommunEquipe);
     }
 
     public void siteEchantillonPris() {

@@ -101,9 +101,7 @@ public class Echantillons implements Iterable<Echantillon> {
     }
 
     public static boolean match(final Echantillon e, final Point pt, final CouleurEchantillon c) {
-        return Math.abs(e.getX() - pt.getX()) < DELTA
-                && Math.abs(e.getY() - pt.getY()) < DELTA
-                && (c == CouleurEchantillon.INCONNU || e.getCouleur() == c || c.isRocher() && e.getCouleur().isRocher());
+        return Math.abs(e.getX() - pt.getX()) < DELTA && Math.abs(e.getY() - pt.getY()) < DELTA;
     }
 
 }

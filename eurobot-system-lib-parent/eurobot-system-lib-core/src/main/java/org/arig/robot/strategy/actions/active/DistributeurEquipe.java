@@ -6,6 +6,7 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.StatutDistributeur;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
@@ -49,7 +50,7 @@ public class DistributeurEquipe extends AbstractDistributeur {
 
     @Override
     public void refreshCompleted() {
-        if (rs.distributeurEquipePris() || rs.distributeurEquipeBloque()) {
+        if (rs.distributeurEquipeTermine()) {
             complete();
         }
     }
@@ -57,7 +58,7 @@ public class DistributeurEquipe extends AbstractDistributeur {
     @Override
     public boolean isValid() {
         return isTimeValid() && timeBeforeRetourValid()
-                && !rs.distributeurEquipePris() && !rs.distributeurEquipeBloque() && rs.stockDisponible() >= 3;
+                && rs.distributeurEquipeDispo() && rs.stockDisponible() >= 3;
     }
 
     @Override
@@ -105,7 +106,7 @@ public class DistributeurEquipe extends AbstractDistributeur {
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.gotoPoint(entry, GotoOption.ARRIERE);
 
-            group.distributeurEquipePris();
+            group.distributeurEquipe(StatutDistributeur.PRIS_NOUS);
             complete(true);
 
         } catch (NoPathFoundException | AvoidingException e) {
@@ -117,7 +118,7 @@ public class DistributeurEquipe extends AbstractDistributeur {
                 if ((robotX <= 350 || robotX >= 3000 - 350) && robotY <= 830 && robotY >= 670) {
                     log.warn("Blocage détecté à proximité de {}", name());
                     // FIXME Tenter de récupérer l'échantillon et le déposer derrière nous
-                    group.distributeurEquipeBloque(); // on désactive l'action
+                    group.distributeurEquipe(StatutDistributeur.BLOQUE); // on désactive l'action
                     return;
                 }
             }
