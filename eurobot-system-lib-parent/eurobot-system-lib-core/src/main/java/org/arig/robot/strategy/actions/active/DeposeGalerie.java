@@ -102,11 +102,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
     }
 
     private Galerie.GaleriePosition bestPosition(Galerie.GaleriePosition lastPosition) {
-        if (rs.doubleDeposeGalerie() && rs.stockTaille() > 1) {
-            return rs.galerieBestPositionDoubleDepose(rs.stockFirst(), rs.stockSecond(), lastPosition != null ? lastPosition.periode() : null);
-        } else {
-            return rs.galerieBestPosition(rs.stockFirst(), lastPosition != null ? lastPosition.periode() : null);
-        }
+        return rs.galerieBestPositionDoubleDepose(rs.stockFirst(), rs.stockSecond(), lastPosition != null ? lastPosition.periode() : null);
     }
 
     @Override

@@ -95,7 +95,7 @@ public class Galerie {
             Pair.of(CouleurEchantillon.ROCHER_BLEU, CouleurEchantillon.VERT)
     );
 
-    GaleriePosition bestPositionDoubleDepose(CouleurEchantillon couleur1, CouleurEchantillon couleur2, Periode currentPeriode) {
+    GaleriePosition bestPositionDoubleDepose(CouleurEchantillon couleur1, CouleurEchantillon couleur2, Periode currentPeriode, boolean force) {
         if (couleur2 == null) {
             return bestPosition(couleur1, currentPeriode);
         }
@@ -117,21 +117,39 @@ public class Galerie {
             return new GaleriePosition(Periode.BLEU_VERT, Etage.DOUBLE);
         }
 
-        // on est capable d'en poser au moins un de la bonne couleur
-        if ((couleur1.isRouge() || couleur2 == CouleurEchantillon.ROUGE) && rouge.isEmpty()) {
-            return new GaleriePosition(Periode.ROUGE, Etage.DOUBLE);
-        }
-        if ((couleur1.isBleu() || couleur2 == CouleurEchantillon.BLEU) && bleu.isEmpty()) {
-            return new GaleriePosition(Periode.BLEU, Etage.DOUBLE);
-        }
-        if ((couleur1.isRouge() || couleur1.isVert() || couleur2 == CouleurEchantillon.ROUGE || couleur2 == CouleurEchantillon.VERT) && rougeVert.isEmpty()) {
-            return new GaleriePosition(Periode.ROUGE_VERT, Etage.DOUBLE);
-        }
-        if ((couleur1.isBleu() || couleur1.isVert() || couleur2 == CouleurEchantillon.BLEU || couleur2 == CouleurEchantillon.VERT) && bleuVert.isEmpty()) {
-            return new GaleriePosition(Periode.BLEU_VERT, Etage.DOUBLE);
+        if (force) {
+            // on est capable d'en poser au moins un de la bonne couleur
+            if ((couleur1.isRouge() || couleur2 == CouleurEchantillon.ROUGE) && rouge.isEmpty()) {
+                return new GaleriePosition(Periode.ROUGE, Etage.DOUBLE);
+            }
+            if ((couleur1.isBleu() || couleur2 == CouleurEchantillon.BLEU) && bleu.isEmpty()) {
+                return new GaleriePosition(Periode.BLEU, Etage.DOUBLE);
+            }
+            if ((couleur1.isRouge() || couleur1.isVert() || couleur2 == CouleurEchantillon.ROUGE || couleur2 == CouleurEchantillon.VERT) && rougeVert.isEmpty()) {
+                return new GaleriePosition(Periode.ROUGE_VERT, Etage.DOUBLE);
+            }
+            if ((couleur1.isBleu() || couleur1.isVert() || couleur2 == CouleurEchantillon.BLEU || couleur2 == CouleurEchantillon.VERT) && bleuVert.isEmpty()) {
+                return new GaleriePosition(Periode.BLEU_VERT, Etage.DOUBLE);
+            }
         }
 
-        log.info("Pas de combinaison double trouvée");
+        // Si il ne reste que deux places dans une période, et que l'on en a deux à poser, on remplit la période vide
+        if (couleur2 != null && emplacementDisponible() == 2) {
+            if (rouge.isEmpty()) {
+                return new GaleriePosition(Periode.ROUGE, Etage.DOUBLE);
+            }
+            if (bleu.isEmpty()) {
+                return new GaleriePosition(Periode.BLEU, Etage.DOUBLE);
+            }
+            if (rougeVert.isEmpty()) {
+                return new GaleriePosition(Periode.ROUGE_VERT, Etage.DOUBLE);
+            }
+            if (bleuVert.isEmpty()) {
+                return new GaleriePosition(Periode.BLEU_VERT, Etage.DOUBLE);
+            }
+        }
+
+        log.info("Pas de combinaison double trouvée (forcé={})", force);
 
         // on en pose qu'un
         return bestPosition(couleur1, currentPeriode);

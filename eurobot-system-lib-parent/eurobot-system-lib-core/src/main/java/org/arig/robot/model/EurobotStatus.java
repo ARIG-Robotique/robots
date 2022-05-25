@@ -333,12 +333,10 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         return galerie.emplacementDisponible();
     }
 
-    public Galerie.GaleriePosition galerieBestPosition(CouleurEchantillon echantillon, Galerie.Periode currentPeriode) {
-        return galerie.bestPosition(echantillon, currentPeriode);
-    }
-
     public Galerie.GaleriePosition galerieBestPositionDoubleDepose(CouleurEchantillon echantillon1, CouleurEchantillon echantillon2, Galerie.Periode currentPeriode) {
-        return galerie.bestPositionDoubleDepose(echantillon1, echantillon2, currentPeriode);
+        boolean forceDoubleDepose = doubleDeposeGalerie();
+
+        return galerie.bestPositionDoubleDepose(echantillon1, echantillon2, currentPeriode, forceDoubleDepose);
     }
 
     public void deposeGalerieRouge(CouleurEchantillon... echantillons) {

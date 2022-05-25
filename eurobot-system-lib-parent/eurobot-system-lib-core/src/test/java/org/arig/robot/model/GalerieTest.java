@@ -367,9 +367,90 @@ class GalerieTest {
     }
 
     @Test
-    public void testDoubleDepose() {
-        Galerie.GaleriePosition result = galerie.bestPositionDoubleDepose(CouleurEchantillon.ROUGE, CouleurEchantillon.VERT, null);
+    void testDoubleDeposeForce() {
+        // Stock Nerell : ROUGE, VERT, BLEU, ROUGE, VERT, BLEU
+        Galerie.GaleriePosition result = galerie.bestPositionDoubleDepose(CouleurEchantillon.ROUGE, CouleurEchantillon.VERT, null, true);
         Assertions.assertEquals(Galerie.Etage.DOUBLE, result.etage());
         Assertions.assertEquals(Galerie.Periode.ROUGE_VERT, result.periode());
+        galerie.addRougeVert(CouleurEchantillon.ROUGE);
+        galerie.addRougeVert(CouleurEchantillon.VERT);
+
+        // Stock Nerell : BLEU, ROUGE, VERT, BLEU
+        result = galerie.bestPositionDoubleDepose(CouleurEchantillon.BLEU, CouleurEchantillon.ROUGE, result.periode(), true);
+        Assertions.assertEquals(Galerie.Etage.DOUBLE, result.etage());
+        Assertions.assertEquals(Galerie.Periode.ROUGE, result.periode());
+        galerie.addRouge(CouleurEchantillon.BLEU);
+        galerie.addRouge(CouleurEchantillon.ROUGE);
+
+        // Stock Nerell : VERT, BLEU
+        result = galerie.bestPositionDoubleDepose(CouleurEchantillon.VERT, CouleurEchantillon.BLEU, result.periode(), true);
+        Assertions.assertEquals(Galerie.Etage.DOUBLE, result.etage());
+        Assertions.assertEquals(Galerie.Periode.BLEU_VERT, result.periode());
+        galerie.addBleuVert(CouleurEchantillon.VERT);
+        galerie.addBleuVert(CouleurEchantillon.BLEU);
+
+        // Stock Odin : VERT, ROUGE, VERT, BLEU
+        result = galerie.bestPositionDoubleDepose(CouleurEchantillon.VERT, CouleurEchantillon.ROUGE, null, true);
+        Assertions.assertEquals(Galerie.Etage.CENTRE, result.etage());
+        Assertions.assertEquals(Galerie.Periode.VERT, result.periode());
+        galerie.addVert(CouleurEchantillon.VERT);
+
+        // Stock Odin : ROUGE, VERT, BLEU
+        result = galerie.bestPositionDoubleDepose(CouleurEchantillon.ROUGE, CouleurEchantillon.VERT, result.periode(), true);
+        Assertions.assertEquals(Galerie.Etage.DOUBLE, result.etage());
+        Assertions.assertEquals(Galerie.Periode.BLEU, result.periode());
+        galerie.addBleu(CouleurEchantillon.ROUGE);
+        galerie.addBleu(CouleurEchantillon.VERT);
+
+        Assertions.assertTrue(galerie.complete());
+    }
+
+    @Test
+    void testDoubleDeposeOptimal() {
+        // Stock Nerell : ROUGE, VERT, BLEU, ROUGE, VERT, BLEU
+        Galerie.GaleriePosition result = galerie.bestPositionDoubleDepose(CouleurEchantillon.ROUGE, CouleurEchantillon.VERT, null, false);
+        Assertions.assertEquals(Galerie.Etage.DOUBLE, result.etage());
+        Assertions.assertEquals(Galerie.Periode.ROUGE_VERT, result.periode());
+        galerie.addRougeVert(CouleurEchantillon.ROUGE);
+        galerie.addRougeVert(CouleurEchantillon.VERT);
+
+        // Stock Nerell : BLEU, ROUGE, VERT, BLEU
+        result = galerie.bestPositionDoubleDepose(CouleurEchantillon.BLEU, CouleurEchantillon.ROUGE, result.periode(), false);
+        Assertions.assertEquals(Galerie.Etage.BAS, result.etage());
+        Assertions.assertEquals(Galerie.Periode.BLEU, result.periode());
+        galerie.addBleu(CouleurEchantillon.BLEU);
+
+        // Stock Nerell : ROUGE, VERT, BLEU
+        result = galerie.bestPositionDoubleDepose(CouleurEchantillon.ROUGE, CouleurEchantillon.VERT, result.periode(), false);
+        Assertions.assertEquals(Galerie.Etage.BAS, result.etage());
+        Assertions.assertEquals(Galerie.Periode.ROUGE, result.periode());
+        galerie.addRouge(CouleurEchantillon.ROUGE);
+
+        // Stock Nerell : VERT, BLEU
+        result = galerie.bestPositionDoubleDepose(CouleurEchantillon.VERT, CouleurEchantillon.BLEU, result.periode(), false);
+        Assertions.assertEquals(Galerie.Etage.DOUBLE, result.etage());
+        Assertions.assertEquals(Galerie.Periode.BLEU_VERT, result.periode());
+        galerie.addBleuVert(CouleurEchantillon.VERT);
+        galerie.addBleuVert(CouleurEchantillon.BLEU);
+
+        // Stock Odin : VERT, ROUGE, VERT, BLEU
+        result = galerie.bestPositionDoubleDepose(CouleurEchantillon.VERT, CouleurEchantillon.ROUGE, null, false);
+        Assertions.assertEquals(Galerie.Etage.CENTRE, result.etage());
+        Assertions.assertEquals(Galerie.Periode.VERT, result.periode());
+        galerie.addVert(CouleurEchantillon.VERT);
+
+        // Stock Odin : ROUGE, VERT, BLEU
+        result = galerie.bestPositionDoubleDepose(CouleurEchantillon.ROUGE, CouleurEchantillon.VERT, result.periode(), false);
+        Assertions.assertEquals(Galerie.Etage.HAUT, result.etage());
+        Assertions.assertEquals(Galerie.Periode.ROUGE, result.periode());
+        galerie.addRouge(CouleurEchantillon.ROUGE);
+
+        // Stock Odin : VERT, BLEU
+        result = galerie.bestPositionDoubleDepose(CouleurEchantillon.VERT, CouleurEchantillon.BLEU, result.periode(), false);
+        Assertions.assertEquals(Galerie.Etage.HAUT, result.etage());
+        Assertions.assertEquals(Galerie.Periode.BLEU, result.periode());
+        galerie.addBleu(CouleurEchantillon.VERT);
+
+        Assertions.assertTrue(galerie.complete());
     }
 }
