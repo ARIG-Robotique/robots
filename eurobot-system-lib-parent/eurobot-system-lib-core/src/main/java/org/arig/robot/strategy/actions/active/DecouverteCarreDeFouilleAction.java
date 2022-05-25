@@ -141,14 +141,26 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 //                        }
                     }
 
-                    mv.gotoOrientationDeg(-90);
-                    mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
-                    rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
-                    mv.avanceMM(start.getY() - config.distanceCalageAvant() - 10);
-                    rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
-                    mv.avanceMMSansAngle(40);
-                    checkRecalageYmm(config.distanceCalageAvant(), TypeCalage.AVANT_BAS);
-                    checkRecalageAngleDeg(-90, TypeCalage.AVANT_BAS);
+                    if (rs.stockTaille() >= 5) {
+                        mv.gotoOrientationDeg(90);
+                        mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
+                        rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
+                        mv.reculeMM(start.getY() - config.distanceCalageArriere() - 10);
+                        rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
+                        mv.reculeMMSansAngle(40);
+                        checkRecalageYmm(config.distanceCalageArriere(), TypeCalage.ARRIERE);
+                        checkRecalageAngleDeg(90, TypeCalage.ARRIERE);
+
+                    } else {
+                        mv.gotoOrientationDeg(-90);
+                        mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
+                        rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
+                        mv.avanceMM(start.getY() - config.distanceCalageAvant() - 10);
+                        rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
+                        mv.avanceMMSansAngle(40);
+                        checkRecalageYmm(config.distanceCalageAvant(), TypeCalage.AVANT_BAS);
+                        checkRecalageAngleDeg(-90, TypeCalage.AVANT_BAS);
+                    }
 
                     mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                     mv.reculeMM(70);
