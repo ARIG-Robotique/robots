@@ -6,14 +6,17 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.*;
+import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
+import org.arig.robot.services.BrasService;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.arig.robot.system.capteurs.CarreFouilleReader;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.awt.Polygon;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -30,10 +33,15 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
     @Autowired
     private CarreFouilleReader cfReader;
 
+    @Autowired
+    private BrasService bras;
+
     // Nombre de tentative de récupération des carrés de fouille
     protected int nbTry = 0;
 
     boolean firstAction = false;
+
+    boolean reverse = false;
 
     @Override
     public String name() {
@@ -50,6 +58,12 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 
     @Override
     public Point entryPoint() {
+        if (rs.reverseCarreDeFouille() && nbTry == 0) {
+            reverse = true;
+        } else {
+            int currentX = getX((int) mv.currentXMm());
+            reverse = currentX > 1500;
+        }
         return entryPoint(cf());
     }
 
@@ -81,7 +95,7 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 
     @Override
     public List<String> blockingActions() {
-        if (!rs.reverseCarreDeFouille()) {
+        if (!reverse) {
             return Arrays.asList(EurobotConfig.ACTION_PRISE_SITE_FOUILLE_EQUIPE, EurobotConfig.ACTION_ABRI_CHANTIER);
         }
         return Collections.singletonList(EurobotConfig.ACTION_PRISE_SITE_FOUILLE_EQUIPE);
@@ -118,7 +132,13 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                         rs.enableAvoidance();
                         mv.gotoPoint(start, GotoOption.SANS_ORIENTATION);
                     } else {
-                        mv.pathTo(start);
+//                        Echantillon echantillonAEnlever = deminageRequis(start);
+//                        if (echantillonAEnlever != null) {
+//                            deminage(echantillonAEnlever);
+//                            mv.gotoPoint(start);
+//                        } else {
+                            mv.pathTo(start);
+//                        }
                     }
 
                     mv.gotoOrientationDeg(-90);
@@ -172,7 +192,7 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                 if (needMove) {
                     log.info("Position carre de fouille #{} - X={} ; Y={}", carreFouille.numero(), carreFouille.getX(), yRef);
                     GotoOption sens = GotoOption.AVANT;
-                    if ((rs.team() == Team.JAUNE && isReverse()) || (rs.team() == Team.VIOLET && !isReverse())) {
+                    if ((rs.team() == Team.JAUNE && reverse) || (rs.team() == Team.VIOLET && !reverse)) {
                         sens = GotoOption.ARRIERE;
                     }
                     mv.setVitesse(config.vitesse(), config.vitesseOrientation());
@@ -243,7 +263,7 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
     }
 
     private CarreFouille cf() {
-        return rs.nextCarreDeFouille(nbTry, isReverse());
+        return rs.nextCarreDeFouille(nbTry, reverse);
     }
 
     private boolean basculable(CouleurCarreFouille couleur) {
@@ -251,11 +271,45 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                 (couleur == CouleurCarreFouille.VIOLET && rs.team() == Team.VIOLET);
     }
 
-    private boolean isReverse() {
-        if (nbTry == 0 && rs.strategy() == Strategy.AGGRESSIVE
-                && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
-            return true;
+    private Echantillon deminageRequis(Point entryPoint) {
+        java.awt.Rectangle zoneEntree = new java.awt.Rectangle();
+        zoneEntree.setSize(300, 200);
+        zoneEntree.setLocation((int) (entryPoint.getX() - zoneEntree.getWidth() / 2.0), 0);
+
+        List<Echantillon> echantillons = rs.echantillons().findEchantillon(zoneEntree);
+        if (echantillons.isEmpty()) {
+            return null;
+        } else {
+            return echantillons.get(0);
         }
-        return rs.reverseCarreDeFouille() && nbTry == 0;
+    }
+
+    private void deminage(Echantillon echantillon) throws AvoidingException, NoPathFoundException {
+        log.info("Déminage {}", echantillon);
+        mv.pathTo(echantillon.getX(), 300, GotoOption.AVANT);
+
+        mv.alignFrontTo(echantillon);
+        Point ptApproche = tableUtils.eloigner(echantillon, -EurobotConfig.ECHANTILLON_SIZE - config.distanceCalageAvant());
+        if (ptApproche.getY() < 300) {
+            mv.gotoPoint(ptApproche);
+        }
+
+        mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
+        rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON, TypeCalage.FORCE);
+        mv.avanceMMSansAngle(EurobotConfig.ECHANTILLON_SIZE);
+
+        bras.setBrasHaut(PositionBras.HORIZONTAL);
+        bras.setBrasBas(PositionBras.STOCK_ENTREE);
+        bras.setBrasBas(PositionBras.SOL_PRISE);
+
+        mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
+
+        if (bras.waitEnableVentouseBas(echantillon.getCouleur())) {
+            bras.setBrasBas(PositionBras.SOL_DEPOSE_5);
+            mv.gotoOrientationDeg(90);
+            bras.waitReleaseVentouseBas();
+        }
+
+        bras.repos();
     }
 }

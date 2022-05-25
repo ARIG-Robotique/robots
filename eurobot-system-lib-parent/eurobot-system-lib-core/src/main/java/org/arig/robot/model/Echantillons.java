@@ -2,7 +2,7 @@ package org.arig.robot.model;
 
 import lombok.Getter;
 
-import java.awt.Polygon;
+import java.awt.Shape;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -82,7 +82,7 @@ public class Echantillons implements Iterable<Echantillon> {
                 .findFirst();
     }
 
-    public List<Echantillon> findEchantillon(final Polygon polygon) {
+    public List<Echantillon> findEchantillon(final Shape polygon) {
         return echantillons.stream()
                 .filter(e -> polygon.contains(e.getX(), e.getY()))
                 .collect(Collectors.toList());
