@@ -139,9 +139,9 @@ public interface OdinConstantesConfig {
     PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.ANYA16;
     int pathFindingAngle = 45;
     int pathFindingAngleSafe = 50;
-    int pathFindingSeuilProximite = 400;
-    int pathFindingSeuilProximiteSafe = 480;
-    int pathFindingSeuilProximiteArig = 380;
+    int pathFindingSeuilProximite = 440;
+    int pathFindingSeuilProximiteSafe = 500;
+    int pathFindingSeuilProximiteArig = 400;
     int pathFindingTailleObstacle = OdinConstantesConfig.pathFindingSeuilProximite * 2 + 50;
     int pathFindingTailleObstacleArig = OdinConstantesConfig.pathFindingSeuilProximiteArig * 2 + 40;
 
