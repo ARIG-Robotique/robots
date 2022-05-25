@@ -119,8 +119,8 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
                 mv.setVitesse(config.vitesse(10), config.vitesseOrientation());
                 rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
                 mv.reculeMMSansAngle(100);
-                checkRecalageXmm(rs.team() == Team.JAUNE ? config.distanceCalageArriere() : EurobotConfig.tableWidth - config.distanceCalageArriere());
-                checkRecalageAngleDeg(rs.team() == Team.JAUNE ? 0 : 180);
+                checkRecalageXmm(rs.team() == Team.JAUNE ? config.distanceCalageArriere() : EurobotConfig.tableWidth - config.distanceCalageArriere(), TypeCalage.ARRIERE);
+                checkRecalageAngleDeg(rs.team() == Team.JAUNE ? 0 : 180, TypeCalage.ARRIERE);
                 mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                 mv.avanceMM(ENTRY_X_DEPOSE_STATUETTE - config.distanceCalageArriere());
             }
@@ -139,8 +139,8 @@ public class DeposeStatuetteActivationVitrine extends AbstractEurobotAction {
             mv.setVitesse(config.vitesse(10), config.vitesseOrientation());
             rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
             mv.reculeMMSansAngle(100);
-            checkRecalageYmm(EurobotConfig.tableHeight - config.distanceCalageArriere());
-            checkRecalageAngleDeg(-90);
+            checkRecalageYmm(EurobotConfig.tableHeight - config.distanceCalageArriere(), TypeCalage.ARRIERE);
+            checkRecalageAngleDeg(-90, TypeCalage.ARRIERE);
 
             // Dépose
             servos.fourcheStatuettePriseDepose(true);

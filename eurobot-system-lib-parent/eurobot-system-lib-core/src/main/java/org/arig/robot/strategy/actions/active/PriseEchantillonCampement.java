@@ -101,8 +101,8 @@ public class PriseEchantillonCampement extends AbstractEurobotAction {
             rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.AVANT_HAUT, TypeCalage.FORCE);
             mv.setVitesse(config.vitesse(10), config.vitesseOrientation());
             mv.avanceMMSansAngle(20);
-            checkRecalageXmm(rs.team() == Team.JAUNE ? config.distanceCalageAvant() : EurobotConfig.tableWidth - config.distanceCalageAvant());
-            checkRecalageAngleDeg(rs.team() == Team.JAUNE ? 180 : 0);
+            checkRecalageXmm(rs.team() == Team.JAUNE ? config.distanceCalageAvant() : EurobotConfig.tableWidth - config.distanceCalageAvant(), TypeCalage.AVANT_BAS, TypeCalage.AVANT_HAUT);
+            checkRecalageAngleDeg(rs.team() == Team.JAUNE ? 180 : 0, TypeCalage.AVANT_BAS, TypeCalage.AVANT_HAUT);
 
             // prise echantillon
             bras.setBrasBas(PositionBras.BORDURE_PRISE);

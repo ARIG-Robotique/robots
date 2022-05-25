@@ -147,8 +147,8 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                     mv.avanceMM(start.getY() - config.distanceCalageAvant() - 10);
                     rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                     mv.avanceMMSansAngle(40);
-                    checkRecalageYmm(config.distanceCalageAvant());
-                    checkRecalageAngleDeg(-90);
+                    checkRecalageYmm(config.distanceCalageAvant(), TypeCalage.AVANT_BAS);
+                    checkRecalageAngleDeg(-90, TypeCalage.AVANT_BAS);
 
                     mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                     mv.reculeMM(70);

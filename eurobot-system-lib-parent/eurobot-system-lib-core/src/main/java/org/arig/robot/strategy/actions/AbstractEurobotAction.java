@@ -8,6 +8,7 @@ import org.arig.robot.model.RobotConfig;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.RobotName.RobotIdentification;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.AbstractCommonServosService;
 import org.arig.robot.services.CommonIOService;
 import org.arig.robot.services.RobotGroupService;
@@ -86,7 +87,23 @@ public abstract class AbstractEurobotAction extends AbstractAction {
         return rs.getRemainingTime() > time;
     }
 
-    protected void checkRecalageXmm(double realXmm) {
+    private boolean isCalage(TypeCalage ... calages) {
+        boolean calageDone = false;
+        for (TypeCalage calage : calages) {
+            if (rs.calageCompleted().contains(calage)) {
+                calageDone = true;
+                break;
+            }
+        }
+        return calageDone;
+    }
+
+    protected void checkRecalageXmm(double realXmm, TypeCalage ... calages) {
+        if (!isCalage(calages)) {
+            log.warn("Recalage Xmm {} not valid, calage not done", realXmm);
+            return;
+        }
+
         final double robotX = mv.currentXMm();
         if (Math.abs(realXmm - robotX) > 10) {
             log.warn("RECALAGE X REQUIS (diff > 10 mm) : xRobot = {} mm ; xReel = {} mm", robotX, realXmm);
@@ -96,7 +113,12 @@ public abstract class AbstractEurobotAction extends AbstractAction {
         }
     }
 
-    protected void checkRecalageYmm(double realYmm) {
+    protected void checkRecalageYmm(double realYmm, TypeCalage ... calages) {
+        if (!isCalage(calages)) {
+            log.warn("Recalage Ymm {} not valid, calage not done", realYmm);
+            return;
+        }
+
         final double robotY = mv.currentYMm();
         if (Math.abs(realYmm - robotY) > 10) {
             log.warn("RECALAGE Y REQUIS (diff > 10 mm) : yRobot = {} mm ; yReel = {} mm", robotY, realYmm);
@@ -106,7 +128,12 @@ public abstract class AbstractEurobotAction extends AbstractAction {
         }
     }
 
-    protected void checkRecalageAngleDeg(double realAdeg) {
+    protected void checkRecalageAngleDeg(double realAdeg, TypeCalage ... calages) {
+        if (!isCalage(calages)) {
+            log.warn("Recalage angle deg {} not valid, calage not done", realAdeg);
+            return;
+        }
+
         final double robotA = mv.currentAngleDeg();
         if (Math.abs(realAdeg - robotA) > 2) {
             log.warn("RECALAGE ANGLE REQUIS (> 2°) : aRobot = {} ; aReel = {}", robotA, realAdeg);
