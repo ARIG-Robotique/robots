@@ -10,6 +10,7 @@ import org.arig.robot.model.Team;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.List;
 
@@ -48,6 +49,14 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
         }
         if (rs.tailleCampementRougeVertSud() > 0) {
             obstacles.add(tableUtils.createPolygonObstacle(new Point(tableUtils.getX(rs.team() == Team.VIOLET, 133), 1220), EurobotConfig.PATHFINDER_ECHANTILLON_SIZE));
+        }
+
+        // dead zone au distributeur
+        if (EurobotConfig.ACTION_PRISE_DISTRIB_COMMUN_EQUIPE.equals(rs.currentAction())) {
+            obstacles.add(new Rectangle(
+                    rs.team() == Team.JAUNE ? 150 : 110, 160,
+                    40, 40
+            ));
         }
 
         super.setObstacles(obstacles);

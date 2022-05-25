@@ -8,6 +8,7 @@ import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.springframework.stereotype.Component;
 
+import java.awt.geom.Rectangle2D;
 import java.util.Collections;
 import java.util.List;
 
@@ -70,5 +71,15 @@ public class DistributeurCommunEquipe extends AbstractDistributeurCommun {
     @Override
     protected int anglePrise() {
         return rs.team() == Team.JAUNE ? 85 : 95;
+    }
+
+    @Override
+    public void execute() {
+        tableUtils.addDynamicDeadZone(new Rectangle2D.Double(
+                rs.team() == Team.JAUNE ? 1500 : 1200, 1700,
+                300, 300
+        ));
+
+        super.execute();
     }
 }
