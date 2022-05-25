@@ -117,7 +117,7 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
             complete();
 
             rs.enableAvoidance();
-            mv.gotoPoint(entry, GotoOption.SANS_ORIENTATION);
+            mv.reculeMM(150);
 
         } catch (NoPathFoundException | AvoidingException e) {
             if (e instanceof MovementCancelledException) {
