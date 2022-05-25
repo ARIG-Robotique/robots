@@ -28,7 +28,20 @@ public class StatutBalise implements Serializable {
         private int y;
 
         public Point getPoint() {
-            return new Point(x, 2000 - y);
+            double correctedY;
+            if (y < 555) {
+                correctedY = lerp(y, 190, 555, 170, 555);
+            } else if (y > 795) {
+                correctedY = lerp(y, 795, 1885, 795, 1925);
+            } else {
+                correctedY = y;
+            }
+            return new Point(x, 2000 - correctedY);
+        }
+
+        public double lerp(double val, double start_1, double end_1, double start_2, double end_2) {
+            double lambda = (val - start_1) / (end_1 - start_1);
+            return start_2 + lambda * (end_2 - start_2);
         }
     }
 
