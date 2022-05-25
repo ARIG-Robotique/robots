@@ -110,6 +110,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
         if (!skip && !robotStatus.twoRobots()) {
             try {
+                ThreadUtils.sleep(2000);
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation(20));
                 mv.tourneDeg(180);
 

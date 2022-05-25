@@ -104,6 +104,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
         if (!skip) {
             try {
+                ThreadUtils.sleep(2000);
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation(20));
                 mv.tourneDeg(180);
 
