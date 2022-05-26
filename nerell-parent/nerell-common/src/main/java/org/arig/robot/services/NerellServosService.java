@@ -33,7 +33,7 @@ public class NerellServosService extends AbstractCommonServosService {
         Servo brasBasEpaule = servo(BRAS_BAS_EPAULE_ID, BRAS_BAS_EPAULE)
                 .time(500)
                 .angular()
-                .center(1880)
+                .center(1850)
                 .mult(-1)
                 .angleMin(-10)
                 .angleMax(110)
