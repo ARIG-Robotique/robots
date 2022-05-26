@@ -151,6 +151,10 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                         checkRecalageYmm(config.distanceCalageArriere(), TypeCalage.ARRIERE);
                         checkRecalageAngleDeg(90, TypeCalage.ARRIERE);
 
+                        mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+                        mv.avanceMM(70);
+                        mv.tourneDeg(-90);
+
                     } else {
                         mv.gotoOrientationDeg(-90);
                         mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
@@ -160,11 +164,11 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                         mv.avanceMMSansAngle(40);
                         checkRecalageYmm(config.distanceCalageAvant(), TypeCalage.AVANT_BAS);
                         checkRecalageAngleDeg(-90, TypeCalage.AVANT_BAS);
-                    }
 
-                    mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-                    mv.reculeMM(70);
-                    mv.tourneDeg(90);
+                        mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+                        mv.reculeMM(70);
+                        mv.tourneDeg(90);
+                    }
 
                     yRef = mv.currentYMm();
                     log.info("Calage bordure terminé, yRef = {} mm", yRef);
