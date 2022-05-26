@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Echantillon extends Point {
-    enum ID {
+    public enum ID {
         SITE_ECHANTILLONS_JAUNE,
         SITE_ECHANTILLONS_VIOLET,
         SITE_FOUILLE_JAUNE,
@@ -38,6 +38,12 @@ public class Echantillon extends Point {
 
     public boolean isReal() {
         return existence == null || (System.currentTimeMillis() - existence) >= 5000;
+    }
+
+    public Echantillon clone() {
+        Echantillon newEchantillon = new Echantillon(id, couleur, getX(), getY(), blocking);
+        newEchantillon.existence = this.existence;
+        return newEchantillon;
     }
 
     @Override

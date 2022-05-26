@@ -89,7 +89,7 @@ spring:
 balise:
   impl: SOCKET
   socket:
-    host: localhost
+    host: sauron
 
 # Odin
 odin:
