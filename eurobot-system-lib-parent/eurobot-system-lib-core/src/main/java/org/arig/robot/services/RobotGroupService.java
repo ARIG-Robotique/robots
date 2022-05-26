@@ -78,7 +78,8 @@ public class RobotGroupService implements RobotGroup.Handler {
             case CONFIG:
                 rs.reverseCarreDeFouille(data[0] > 0);
                 rs.doubleDeposeGalerie(data[1] > 0);
-                rs.etalonageBaliseOk(data[2] > 0);
+                rs.priseUnitaire(data[2] > 0);
+                rs.etalonageBaliseOk(data[3] > 0);
                 break;
             case CURRENT_ACTION:
                 String actionName = null;
@@ -271,6 +272,7 @@ public class RobotGroupService implements RobotGroup.Handler {
         byte[] data = new byte[]{
                 (byte) (rs.reverseCarreDeFouille() ? 1 : 0),
                 (byte) (rs.doubleDeposeGalerie() ? 1 : 0),
+                (byte) (rs.priseUnitaire() ? 1 : 0),
                 (byte) (rs.etalonageBaliseOk() ? 1 : 0)
         };
         sendEvent(StatusEvent.CONFIG, data);

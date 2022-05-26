@@ -44,7 +44,8 @@ public class EcranService extends AbstractEcranService<EcranConfig, EcranState> 
         ecranParams.setStrategies(Stream.of(Strategy.values()).map(Enum::name).collect(Collectors.toList()));
         ecranParams.setOptions(List.of(
                 EurobotConfig.REVERSE_CARRE_FOUILLE,
-                EurobotConfig.DOUBLE_DEPOSE_GALERIE
+                EurobotConfig.DOUBLE_DEPOSE_GALERIE,
+                EurobotConfig.PRISE_UNITAIRE
         ));
         return ecranParams;
     }

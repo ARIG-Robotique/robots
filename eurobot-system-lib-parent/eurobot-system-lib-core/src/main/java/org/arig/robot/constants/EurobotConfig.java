@@ -24,6 +24,7 @@ public interface EurobotConfig {
     // Options de match
     String REVERSE_CARRE_FOUILLE = "Force reverse carres f.";
     String DOUBLE_DEPOSE_GALERIE = "Force dbl. dans galerie";
+    String PRISE_UNITAIRE = "Prise unitaire";
 
     // Noms des actions
     String ACTION_DECOUVERTE_CARRE_FOUILLE = "Découverte carré de fouille";
