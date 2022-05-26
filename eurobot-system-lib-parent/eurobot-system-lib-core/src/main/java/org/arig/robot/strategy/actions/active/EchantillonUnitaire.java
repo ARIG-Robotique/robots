@@ -41,7 +41,17 @@ public class EchantillonUnitaire extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
+        if (!rs.priseUnitaire()) {
+            return false;
+        }
         return isTimeValid() && timeBeforeRetourValid() && rs.stockDisponible() > 0;
+    }
+
+    @Override
+    public void refreshCompleted() {
+        if (!rs.priseUnitaire()) {
+            complete();
+        }
     }
 
     @Override
