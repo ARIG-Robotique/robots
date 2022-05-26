@@ -75,7 +75,9 @@ public class OdinCommonContext {
                 .distanceCalageArriere(OdinConstantesConfig.dstCallage)
 
                 .vitesse(OdinConstantesConfig.vitesseMin, OdinConstantesConfig.vitesseMax, 100)
+                .rampeDistance(OdinConstantesConfig.rampAccDistance, OdinConstantesConfig.rampDecDistance)
                 .vitesseOrientation(OdinConstantesConfig.vitesseOrientationMin, OdinConstantesConfig.vitesseOrientationMax, 100)
+                .rampeOrientation(OdinConstantesConfig.rampAccOrientation, OdinConstantesConfig.rampDecOrientation)
                 .fenetreArretDistance(conv.mmToPulse(OdinConstantesConfig.arretDistanceMm))
                 .fenetreApprocheAvecFreinDistance(conv.mmToPulse(OdinConstantesConfig.approcheAvecFreinDistanceMm))
                 .fenetreApprocheSansFreinDistance(conv.mmToPulse(OdinConstantesConfig.approcheSansFreinDistanceMm))

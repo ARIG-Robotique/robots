@@ -105,4 +105,14 @@ public class AsservissementPolaireMoteurs implements IAsservissementPolaire {
 
         monitoringWrapper.addTimeSeriePoint(serie);
     }
+
+    @Override
+    public void setRampDistance(double accel, double decel) {
+        rampDistance.setRamps(accel, decel);
+    }
+
+    @Override
+    public void setRampOriantation(double accel, double decel) {
+        rampOrientation.setRamps(accel, decel);
+    }
 }

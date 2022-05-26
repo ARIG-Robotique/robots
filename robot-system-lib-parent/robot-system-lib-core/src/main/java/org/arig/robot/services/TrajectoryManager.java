@@ -86,9 +86,6 @@ public class TrajectoryManager {
     private TableUtils tableUtils;
 
     @Autowired
-    private IOService IOService;
-
-    @Autowired
     protected MonitoringWrapper monitoringWrapper;
 
     @Getter
@@ -977,7 +974,17 @@ public class TrajectoryManager {
     public void setVitesse(long vDistance, long vOrientation) {
         this.vitesseDistance.set(vDistance);
         this.vitesseOrientation.set(vOrientation);
+        asservissementPolaire.setRampDistance(robotConfig.rampeAccelDistance(), robotConfig.rampeDecelDistance());
+        asservissementPolaire.setRampOriantation(robotConfig.rampeAccelOrientation(), robotConfig.rampeDecelOrientation());
         applyVitesse(vDistance, vOrientation);
+    }
+
+    public void setRampesDistance(double rampeAccel, double rampeDecel) {
+        asservissementPolaire.setRampDistance(rampeAccel, rampeDecel);
+    }
+
+    public void setRampeOrientation(double rampeAccel, double rampeDecel) {
+        asservissementPolaire.setRampOriantation(rampeAccel, rampeDecel);
     }
 
     public void setLowSpeed(final boolean lowSpeed) {

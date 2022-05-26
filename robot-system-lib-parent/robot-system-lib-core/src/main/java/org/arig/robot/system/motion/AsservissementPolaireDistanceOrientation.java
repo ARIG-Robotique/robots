@@ -103,4 +103,14 @@ public class AsservissementPolaireDistanceOrientation implements IAsservissement
         cmdRobot.getMoteur().setGauche(limiterMoteurGauche.filter(cmdMotGauche).intValue());
         cmdRobot.getMoteur().setDroit(limiterMoteurDroit.filter(cmdMotDroit).intValue());
     }
+
+    @Override
+    public void setRampDistance(double accel, double decel) {
+        rampDistance.setRamps(accel, decel);
+    }
+
+    @Override
+    public void setRampOriantation(double accel, double decel) {
+        rampOrientation.setRamps(accel, decel);
+    }
 }

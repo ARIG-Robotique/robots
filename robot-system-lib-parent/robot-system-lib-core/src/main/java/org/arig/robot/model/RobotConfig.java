@@ -61,14 +61,27 @@ public class RobotConfig {
     private long vitesseMax;
     private long vitesseMin;
     private int vitesseDefRatio;
+
+    private double rampeAccelDistance;
+    private double rampeDecelDistance;
+
     private long vitesseOrientationMax;
     private long vitesseOrientationMin;
     private int vitesseOrientationDefRatio;
+
+    private double rampeAccelOrientation;
+    private double rampeDecelOrientation;
 
     public RobotConfig vitesse(long min, long max, int defRatio) {
         this.vitesseMin = min;
         this.vitesseMax = max;
         this.vitesseDefRatio = defRatio;
+        return this;
+    }
+
+    public RobotConfig rampeDistance(double accel, double decel) {
+        rampeAccelDistance = accel;
+        rampeDecelDistance = decel;
         return this;
     }
 
@@ -86,10 +99,33 @@ public class RobotConfig {
         return (long) (((vitesseMax - vitesseMin) * pct) + vitesseMin);
     }
 
+    public long rampeAccelDistance() {
+        return rampeAccelDistance(100);
+    }
+    public long rampeAccelDistance(int percent) {
+        double pct = (double) percent / 100;
+        return (long) (rampeAccelDistance * pct);
+    }
+
+    public long rampeDecelDistance() {
+        return rampeDecelDistance(100);
+    }
+
+    public long rampeDecelDistance(int percent) {
+        double pct = (double) percent / 100;
+        return (long) (rampeDecelDistance * pct);
+    }
+
     public RobotConfig vitesseOrientation(long min, long max, int defRatio) {
         this.vitesseOrientationMin = min;
         this.vitesseOrientationMax = max;
         this.vitesseOrientationDefRatio = defRatio;
+        return this;
+    }
+
+    public RobotConfig rampeOrientation(double accel, double decel) {
+        rampeAccelOrientation = accel;
+        rampeDecelOrientation = decel;
         return this;
     }
 
@@ -105,6 +141,24 @@ public class RobotConfig {
     public long vitesseOrientation(int percent) {
         double pct = (double) percent / 100;
         return (long) (((vitesseOrientationMax - vitesseOrientationMin) * pct) + vitesseOrientationMin);
+    }
+
+    public double rampeAccelOrientation() {
+        return rampeAccelOrientation(100);
+    }
+
+    public double rampeAccelOrientation(int percent) {
+        double pct = (double) percent / 100;
+        return rampeAccelOrientation * pct;
+    }
+
+    public double rampeDecelOrientation() {
+        return rampeDecelOrientation(100);
+    }
+
+    public double rampeDecelOrientation(int percent) {
+        double pct = (double) percent / 100;
+        return rampeDecelOrientation * pct;
     }
 
     /* Fenetre d'arret / approche distance (en pulse) */

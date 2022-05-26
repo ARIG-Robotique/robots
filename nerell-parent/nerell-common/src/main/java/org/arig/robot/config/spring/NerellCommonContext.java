@@ -76,7 +76,9 @@ public class NerellCommonContext {
                 .distanceCalageArriere(NerellConstantesConfig.dstCallage)
 
                 .vitesse(NerellConstantesConfig.vitesseMin, NerellConstantesConfig.vitesseMax, 100)
+                .rampeDistance(NerellConstantesConfig.rampAccDistance, NerellConstantesConfig.rampDecDistance)
                 .vitesseOrientation(NerellConstantesConfig.vitesseOrientationMin, NerellConstantesConfig.vitesseOrientationMax, 100)
+                .rampeOrientation(NerellConstantesConfig.rampAccOrientation, NerellConstantesConfig.rampDecOrientation)
                 .fenetreArretDistance(conv.mmToPulse(NerellConstantesConfig.arretDistanceMm))
                 .fenetreApprocheAvecFreinDistance(conv.mmToPulse(NerellConstantesConfig.approcheAvecFreinDistanceMm))
                 .fenetreApprocheSansFreinDistance(conv.mmToPulse(NerellConstantesConfig.approcheSansFreinDistanceMm))
