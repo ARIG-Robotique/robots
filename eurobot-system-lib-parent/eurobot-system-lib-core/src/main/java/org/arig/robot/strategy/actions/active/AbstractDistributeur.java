@@ -66,6 +66,10 @@ public abstract class AbstractDistributeur extends AbstractEurobotAction {
                     io.releasePompeVentouseBas();
                 }
             }
+
+            if (!timeBeforeRetourValid()) {
+                break;
+            }
         }
 
         return runAsync(() -> bras.repos());

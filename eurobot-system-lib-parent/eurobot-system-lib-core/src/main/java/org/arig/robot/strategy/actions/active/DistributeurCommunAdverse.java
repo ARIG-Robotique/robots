@@ -23,6 +23,11 @@ public class DistributeurCommunAdverse extends AbstractDistributeurCommun {
     }
 
     @Override
+    public int executionTimeMs() {
+        return super.executionTimeMs() + 2000; // il est plus loin
+    }
+
+    @Override
     protected boolean isDistributeurDispo() {
         return rs.distributeurCommunAdverseDispo();
     }
