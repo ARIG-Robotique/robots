@@ -21,6 +21,8 @@ public class RetourCampement extends AbstractCampement {
     protected final int X = 425;
     protected final int Y = 1555;
 
+    protected final int CENTER_X = 1300;
+
     private SiteDeRetour gotoSite;
     private SiteDeRetour destSite;
 
@@ -79,7 +81,7 @@ public class RetourCampement extends AbstractCampement {
         position = Campement.Position.SUD;
         gotoSite = SiteDeRetour.WIP_CAMPEMENT_SUD;
         destSite = SiteDeRetour.CAMPEMENT_SUD;
-        return new Point(getX(X), 1300 - (Y - 1300));
+        return new Point(getX(X), CENTER_X - (Y - CENTER_X));
     }
 
     @Override

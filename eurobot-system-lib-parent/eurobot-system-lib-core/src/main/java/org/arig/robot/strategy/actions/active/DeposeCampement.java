@@ -18,8 +18,13 @@ import java.util.function.Supplier;
 @Component
 public class DeposeCampement extends AbstractCampement {
 
+    protected final int ENTRY_X = 425;
+    protected final int ENTRY_Y = 1555;
+
     protected final int X = 290;
     protected final int Y = 1490;
+
+    protected final int CENTER_X = 1300;
 
     @Autowired
     private BrasService bras;
@@ -29,8 +34,8 @@ public class DeposeCampement extends AbstractCampement {
 
     @Override
     public Point entryPoint() {
-        Point pointNord = new Point(getX(X), Y);
-        Point pointSud = new Point(getX(X), 1300 - (Y - 1300));
+        Point pointNord = new Point(getX(ENTRY_X), ENTRY_Y);
+        Point pointSud = new Point(getX(ENTRY_X), CENTER_X - (ENTRY_Y - CENTER_X));
 
         if (rs.otherCampement() == null) {
             if (rs.tailleCampementRougeVertSud() == 0) {
@@ -108,6 +113,13 @@ public class DeposeCampement extends AbstractCampement {
 
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.pathTo(entry);
+
+            rs.disableAvoidance();
+            if (position == Campement.Position.NORD) {
+                mv.gotoPoint(getX(X), Y);
+            } else {
+                mv.gotoPoint(getX(X), CENTER_X - (Y - CENTER_X));
+            }
 
             Supplier<Integer> taillePile = () -> {
                 return position == Campement.Position.NORD ? rs.tailleCampementRougeVertNord() : rs.tailleCampementRougeVertSud();
