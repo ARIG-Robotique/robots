@@ -97,7 +97,9 @@ public class BrasBasStateMachine extends AbstractBrasStateMachine {
                 new PointBras(135, 170, 100)
         ));
         transition(PositionBras.STOCK_ENTREE, PositionBras.ECHANGE);
-        transition(PositionBras.HORIZONTAL, PositionBras.ECHANGE);
+        transition(PositionBras.HORIZONTAL, PositionBras.ECHANGE, TransitionBras.withPoints(
+                new PointBras(156, 128, 100)
+        ));
         transition(PositionBras.ECHANGE, PositionBras.HORIZONTAL, TransitionBras.withPoints(
                 new PointBras(157, 128, 100)
         ));
