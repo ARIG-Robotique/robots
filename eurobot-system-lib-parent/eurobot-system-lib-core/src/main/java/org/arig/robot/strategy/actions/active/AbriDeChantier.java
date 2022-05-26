@@ -269,7 +269,9 @@ public class AbriDeChantier extends AbstractEurobotAction {
                     bras.setBrasBas(PositionBras.SOL_DEPOSE_1);
                     if (priseBas || troisiemeDepose != null) {
                         // On tourne pour aligner les deux échantillons
+                        mv.setVitesse(config.vitesse(), config.vitesseOrientation(10)); // FIXME baisser la ramp d'accel plutot
                         mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? ORIENT_JAUNE_FACE_ABRI + OFFSET_CENTRAGE_DEG : ORIENT_VIOLET_FACE_ABRI - OFFSET_CENTRAGE_DEG);
+                        mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                     }
                     bras.waitReleaseVentouseBas();
                 } else {
