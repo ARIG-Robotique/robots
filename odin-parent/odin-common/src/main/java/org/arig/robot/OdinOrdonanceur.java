@@ -30,8 +30,6 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
 
-import java.awt.geom.Rectangle2D;
-
 @Slf4j
 public class OdinOrdonanceur extends AbstractOrdonanceur {
 
@@ -350,7 +348,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             switch (odinRobotStatus.strategy()) {
-                case BASIC:
+                case ABRI:
                 default:
                     if (robotStatus.twoRobots()) {
                         mv.gotoPoint(getX(240), 1740);

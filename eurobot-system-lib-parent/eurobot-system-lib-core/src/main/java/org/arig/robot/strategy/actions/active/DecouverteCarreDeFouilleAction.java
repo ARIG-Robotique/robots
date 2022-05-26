@@ -16,7 +16,6 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.awt.Polygon;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -77,7 +76,7 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 
     @Override
     public int order() {
-        if (nbTry == 0 && rs.strategy() == Strategy.AGGRESSIVE
+        if (nbTry == 0 && rs.strategy() == Strategy.CARRE
                 && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
             // Si c'est Odin et que la strat est aggressive avec deux robots
             // C'est la première action

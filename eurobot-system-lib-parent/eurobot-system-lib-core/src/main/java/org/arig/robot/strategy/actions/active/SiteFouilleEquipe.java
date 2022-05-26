@@ -4,9 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.Echantillon;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Team;
+import org.arig.robot.model.*;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
@@ -57,6 +55,13 @@ public class SiteFouilleEquipe extends AbstractEurobotAction {
 
     @Override
     public int order() {
+        if (rs.strategy() == Strategy.FOUILLE
+                && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
+            // Si c'est Odin et que la strat est fouille avec deux robots
+            // C'est la première action
+            return 1000;
+        }
+
         int stock = rs.stockDisponible();
         return Math.min(stock, 3) * EurobotConfig.PTS_DEPOSE_PRISE + tableUtils.alterOrder(entryPoint());
     }

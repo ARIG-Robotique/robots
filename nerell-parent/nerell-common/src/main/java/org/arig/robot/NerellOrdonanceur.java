@@ -328,7 +328,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             switch (nerellRobotStatus.strategy()) {
-                case BASIC:
+                case ABRI:
                 default:
                     mv.gotoPoint(getX(240), 1430);
                     mv.alignFrontTo(getX(800), 1700);
