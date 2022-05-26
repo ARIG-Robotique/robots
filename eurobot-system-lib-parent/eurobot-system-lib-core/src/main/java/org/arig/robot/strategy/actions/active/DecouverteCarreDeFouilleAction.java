@@ -291,12 +291,7 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
         zoneEntree.setSize(300, 200);
         zoneEntree.setLocation((int) (entryPoint.getX() - zoneEntree.getWidth() / 2.0), 0);
 
-        List<Echantillon> echantillons = rs.echantillons().findEchantillon(zoneEntree);
-        if (echantillons.isEmpty()) {
-            return null;
-        } else {
-            return echantillons.get(0);
-        }
+        return rs.echantillons().findEchantillon(zoneEntree);
     }
 
     private void deminage(Echantillon echantillon) throws AvoidingException, NoPathFoundException {

@@ -5,15 +5,16 @@ import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.Echantillon;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
+import org.arig.robot.utils.ThreadUtils;
 
 import java.awt.Polygon;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static org.arig.robot.constants.EurobotConfig.PTS_DEPOSE_PRISE;
@@ -72,52 +73,16 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
             Point entry = entryPoint();
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
 
+            // deminage par la camera
             Echantillon echantillonAEnlever = deminageRequis();
-
             if (echantillonAEnlever != null) {
                 deminage(echantillonAEnlever);
                 mv.gotoPoint(entry);
             } else {
-                mv.pathTo(entry);
+                mv.pathTo(entry, GotoOption.AVANT);
             }
 
-            rs.disableAvoidance();
-
-            // Calage sur X
-            mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
-            mv.gotoOrientationDeg(angleCallageX());
-            rs.enableCalageBordure(TypeCalage.AVANT_BAS);
-            mv.avanceMM(1500 - ENTRY_X - TASSEAU_W - config.distanceCalageAvant() - 10);
-            mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
-            rs.enableCalageBordure(TypeCalage.AVANT_BAS);
-            mv.avanceMM(100);
-
-            mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
-            mv.reculeMM(55);
-
-            // Calage sur Y
-            mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
-            mv.gotoOrientationDeg(90);
-            rs.enableCalageBordure(TypeCalage.AVANT_BAS);
-            mv.avanceMM(2000 - ENTRY_Y - DISTRIB_H - config.distanceCalageAvant() - 10);
-            mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
-            rs.enableCalageBordure(TypeCalage.AVANT_BAS);
-            mv.avanceMM(100);
-
-            CompletableFuture<?> task = prepare();
-
-            mv.setVitesse(config.vitesse(50), config.vitesseOrientation(50));
-            mv.reculeMM(80);
-            mv.gotoOrientationDeg(anglePrise());
-
-            task.join();
-            prise();
-
-            setDistributeurPris();
-            complete();
-
-            rs.enableAvoidance();
-            mv.reculeMM(150);
+            doExecute();
 
         } catch (NoPathFoundException | AvoidingException e) {
             if (e instanceof MovementCancelledException) {
@@ -126,8 +91,41 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
 
                 if (robotY >= 1650 && robotX >= 1230 && robotX <= 3000 - 1230) {
                     log.warn("Blocage détecté à proximité de {}", name());
-                    // FIXME Tenter de récupérer l'échantillon et le déposer derrière nous
-                    setDistributeurBloque(); // on désactive l'action
+
+                    try {
+                        if (io.presencePriseBras(false)) {
+                            log.info("Tentative de prise au sol");
+                            if (priseAuSolEtEjecte(CouleurEchantillon.ROCHER)) {
+                                mv.gotoPoint(entryPoint());
+                                doExecute();
+                                return;
+                            }
+                        }
+
+                        log.info("Attente de détection par la balise");
+                        Echantillon echantillon = ThreadUtils.waitUntil(this::deminageRequis, null, 500, 3000);
+
+                        if (echantillon != null) {
+                            mv.reculeMM(100);
+                            mv.alignFrontTo(echantillon);
+                            mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
+                            rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON, TypeCalage.FORCE);
+                            mv.avanceMMSansAngle(100 + EurobotConfig.ECHANTILLON_SIZE);
+                            if (priseAuSolEtEjecte(CouleurEchantillon.ROCHER)) {
+                                mv.gotoPoint(entryPoint());
+                                doExecute();
+                                return;
+                            }
+                        }
+
+                        setDistributeurBloque();
+                        mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+                        mv.reculeMM(100);
+
+                    } catch (AvoidingException e2) {
+                        log.warn("Erreur pendant le déminage " + e2.getMessage());
+                        setDistributeurBloque();
+                    }
                     return;
                 }
             }
@@ -136,6 +134,46 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
             updateValidTime();
             bras.safeHoming();
         }
+    }
+
+    private void doExecute() throws AvoidingException {
+        rs.disableAvoidance();
+
+        // Calage sur X
+        mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
+        mv.gotoOrientationDeg(angleCallageX());
+        rs.enableCalageBordure(TypeCalage.AVANT_BAS);
+        mv.avanceMM(1500 - ENTRY_X - TASSEAU_W - config.distanceCalageAvant() - 10);
+        mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
+        rs.enableCalageBordure(TypeCalage.AVANT_BAS);
+        mv.avanceMM(100);
+
+        mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
+        mv.reculeMM(55);
+
+        // Calage sur Y
+        mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
+        mv.gotoOrientationDeg(90);
+        rs.enableCalageBordure(TypeCalage.AVANT_BAS);
+        mv.avanceMM(2000 - ENTRY_Y - DISTRIB_H - config.distanceCalageAvant() - 10);
+        mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
+        rs.enableCalageBordure(TypeCalage.AVANT_BAS);
+        mv.avanceMM(100);
+
+        CompletableFuture<?> task = prepare();
+
+        mv.setVitesse(config.vitesse(50), config.vitesseOrientation(50));
+        mv.reculeMM(80);
+        mv.gotoOrientationDeg(anglePrise());
+
+        task.join();
+        prise();
+
+        setDistributeurPris();
+        complete();
+
+        rs.enableAvoidance();
+        mv.reculeMM(150);
     }
 
     private Echantillon deminageRequis() {
@@ -157,16 +195,11 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
             zoneDistrib.addPoint(1500, 1600);
         }
 
-        List<Echantillon> echantillons = rs.echantillons().findEchantillon(zoneDistrib);
-        if (echantillons.isEmpty()) {
-            return null;
-        } else {
-            return echantillons.get(0);
-        }
+        return rs.echantillons().findEchantillon(zoneDistrib);
     }
 
     private void deminage(Echantillon echantillon) throws AvoidingException, NoPathFoundException {
-        log.info("Déminage {}", echantillon);
+        log.info("Déminage {} pour {}", echantillon, name());
 
         if (echantillon.getX() > 1300 && echantillon.getX() < 1700) {
             // au milieu
@@ -183,18 +216,28 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
         rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON, TypeCalage.FORCE);
         mv.avanceMMSansAngle(EurobotConfig.ECHANTILLON_SIZE);
 
+        priseAuSolEtEjecte(echantillon.getCouleur());
+    }
+
+    private boolean priseAuSolEtEjecte(CouleurEchantillon couleur) throws AvoidingException {
+        log.info("On évacue la mine");
+
         bras.setBrasHaut(PositionBras.HORIZONTAL);
         bras.setBrasBas(PositionBras.STOCK_ENTREE);
         bras.setBrasBas(PositionBras.SOL_PRISE);
 
         mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
 
-        if (bras.waitEnableVentouseBas(echantillon.getCouleur())) {
+        boolean ok = bras.waitEnableVentouseBas(couleur);
+        if (ok) {
+            mv.reculeMM(10);
             bras.setBrasBas(PositionBras.SOL_DEPOSE_5);
             mv.gotoOrientationDeg(-90);
             bras.waitReleaseVentouseBas();
         }
 
         bras.repos();
+
+        return ok;
     }
 }

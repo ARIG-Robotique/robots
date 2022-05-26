@@ -82,10 +82,11 @@ public class Echantillons implements Iterable<Echantillon> {
                 .findFirst();
     }
 
-    public List<Echantillon> findEchantillon(final Shape polygon) {
+    public Echantillon findEchantillon(final Shape polygon) {
         return echantillons.stream()
                 .filter(e -> polygon.contains(e.getX(), e.getY()))
-                .collect(Collectors.toList());
+                .findFirst()
+                .orElse(null);
     }
 
     public void addEchantillon(final Point point, final CouleurEchantillon c) {

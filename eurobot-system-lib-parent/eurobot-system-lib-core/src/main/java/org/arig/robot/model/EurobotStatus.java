@@ -342,6 +342,11 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         return galerie.bestPositionDoubleDepose(echantillon1, echantillon2, currentPeriode, forceDoubleDepose);
     }
 
+    public void periodeGalerieBloquee(Galerie.Periode periode) {
+        log.info("[RS] période de la galerie bloquée : {}", periode);
+        galerie.periodeBloquee(periode);
+    }
+
     public void periodeGalerieAutreRobot(Galerie.Periode periode) {
         log.info("[RS] periode galerie autre robot : {}", periode);
         periodeGalerieAutreRobot = periode;

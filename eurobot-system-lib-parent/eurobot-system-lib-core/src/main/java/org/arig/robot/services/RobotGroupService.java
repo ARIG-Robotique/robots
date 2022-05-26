@@ -180,11 +180,12 @@ public class RobotGroupService implements RobotGroup.Handler {
             case DEPOSE_ABRI_CHANTIER:
                 rs.deposeAbriChantier(getEchantillons(data));
                 break;
-
             case PERIODE_GALERIE:
                 rs.periodeGalerieAutreRobot(Galerie.Periode.values()[data[0]]);
                 break;
-
+            case GALERIE_BLOQUEE:
+                rs.periodeGalerieBloquee(Galerie.Periode.values()[data[0]]);
+                break;
             default:
                 log.warn("Reception d'un event inconnu : " + event);
                 break;
@@ -420,6 +421,11 @@ public class RobotGroupService implements RobotGroup.Handler {
     public void deposeGalerieBleu(CouleurEchantillon... echantillons) {
         rs.deposeGalerieBleu(echantillons);
         sendEvent(StatusEvent.DEPOSE_GALERIE_BLEU, echantillons);
+    }
+
+    public void periodeGalerieBloquee(Galerie.Periode periode) {
+        rs.periodeGalerieBloquee(periode);
+        sendEvent(StatusEvent.GALERIE_BLOQUEE, periode);
     }
 
     private CouleurEchantillon[] getEchantillons(byte[] data) {

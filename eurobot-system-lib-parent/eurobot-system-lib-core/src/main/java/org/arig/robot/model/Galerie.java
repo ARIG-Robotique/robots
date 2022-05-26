@@ -8,6 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -39,6 +40,8 @@ public class Galerie {
     final List<CouleurEchantillon> rougeVert = new ArrayList<>(MAX_DEPOSE);
     final List<CouleurEchantillon> rouge = new ArrayList<>(MAX_DEPOSE);
 
+    final EnumSet<Periode> blocs = EnumSet.noneOf(Periode.class);
+
     public void addRouge(final CouleurEchantillon echantillon) {
         rouge.add(echantillon);
     }
@@ -67,7 +70,14 @@ public class Galerie {
         return bleu.size() == MAX_DEPOSE;
     }
 
+    public void periodeBloquee(final Periode periode) {
+        blocs.add(periode);
+    }
+
     int emplacementDisponible() {
+        if (blocs.containsAll(Arrays.asList(Periode.values()))) {
+            return 0;
+        }
         return 9 - (bleu.size() + bleuVert.size() + vert.size() + rougeVert.size() + rouge.size());
     }
 
@@ -104,47 +114,49 @@ public class Galerie {
 
         // on est capable d'en poser deux de la bonne couleur
         final Pair<CouleurEchantillon, CouleurEchantillon> couleurs = Pair.of(couleur1, couleur2);
-        if (PERMUTATIONS_ROUGE.contains(couleurs) && rouge.isEmpty()) {
+        if (PERMUTATIONS_ROUGE.contains(couleurs) && rouge.isEmpty() && !blocs.contains(Periode.ROUGE)) {
             return new GaleriePosition(Periode.ROUGE, Etage.DOUBLE);
         }
-        if (PERMUTATIONS_BLEU.contains(couleurs) && bleu.isEmpty()) {
+        if (PERMUTATIONS_BLEU.contains(couleurs) && bleu.isEmpty() && !blocs.contains(Periode.BLEU)) {
             return new GaleriePosition(Periode.BLEU, Etage.DOUBLE);
         }
-        if ((PERMUTATIONS_ROUGE.contains(couleurs) || PERMUTATIONS_ROUGE_VERT.contains(couleurs)) && rougeVert.isEmpty()) {
+        if ((PERMUTATIONS_ROUGE.contains(couleurs) || PERMUTATIONS_ROUGE_VERT.contains(couleurs)) && rougeVert.isEmpty() && !blocs.contains(Periode.ROUGE_VERT)) {
             return new GaleriePosition(Periode.ROUGE_VERT, Etage.DOUBLE);
         }
-        if ((PERMUTATIONS_BLEU.contains(couleurs) || PERMUTATIONS_BLEU_VERT.contains(couleurs)) && bleuVert.isEmpty()) {
+        if ((PERMUTATIONS_BLEU.contains(couleurs) || PERMUTATIONS_BLEU_VERT.contains(couleurs)) && bleuVert.isEmpty() && !blocs.contains(Periode.BLEU_VERT)) {
             return new GaleriePosition(Periode.BLEU_VERT, Etage.DOUBLE);
         }
 
         if (force) {
             // on est capable d'en poser au moins un de la bonne couleur
-            if ((couleur1.isRouge() || couleur2 == CouleurEchantillon.ROUGE) && rouge.isEmpty()) {
+            if ((couleur1.isRouge() || couleur2 == CouleurEchantillon.ROUGE) && rouge.isEmpty() && !blocs.contains(Periode.ROUGE)) {
                 return new GaleriePosition(Periode.ROUGE, Etage.DOUBLE);
             }
-            if ((couleur1.isBleu() || couleur2 == CouleurEchantillon.BLEU) && bleu.isEmpty()) {
+            if ((couleur1.isBleu() || couleur2 == CouleurEchantillon.BLEU) && bleu.isEmpty() && !blocs.contains(Periode.BLEU)) {
                 return new GaleriePosition(Periode.BLEU, Etage.DOUBLE);
             }
-            if ((couleur1.isRouge() || couleur1.isVert() || couleur2 == CouleurEchantillon.ROUGE || couleur2 == CouleurEchantillon.VERT) && rougeVert.isEmpty()) {
+            if ((couleur1.isRouge() || couleur1.isVert() || couleur2 == CouleurEchantillon.ROUGE || couleur2 == CouleurEchantillon.VERT)
+                    && rougeVert.isEmpty() && !blocs.contains(Periode.ROUGE_VERT)) {
                 return new GaleriePosition(Periode.ROUGE_VERT, Etage.DOUBLE);
             }
-            if ((couleur1.isBleu() || couleur1.isVert() || couleur2 == CouleurEchantillon.BLEU || couleur2 == CouleurEchantillon.VERT) && bleuVert.isEmpty()) {
+            if ((couleur1.isBleu() || couleur1.isVert() || couleur2 == CouleurEchantillon.BLEU || couleur2 == CouleurEchantillon.VERT)
+                    && bleuVert.isEmpty() && !blocs.contains(Periode.BLEU_VERT)) {
                 return new GaleriePosition(Periode.BLEU_VERT, Etage.DOUBLE);
             }
         }
 
         // Si il ne reste que deux places dans une période, et que l'on en a deux à poser, on remplit la période vide
-        if (couleur2 != null && emplacementDisponible() == 2) {
-            if (rouge.isEmpty()) {
+        if (emplacementDisponible() == 2) {
+            if (rouge.isEmpty() && !blocs.contains(Periode.ROUGE)) {
                 return new GaleriePosition(Periode.ROUGE, Etage.DOUBLE);
             }
-            if (bleu.isEmpty()) {
+            if (bleu.isEmpty() && !blocs.contains(Periode.BLEU)) {
                 return new GaleriePosition(Periode.BLEU, Etage.DOUBLE);
             }
-            if (rougeVert.isEmpty()) {
+            if (rougeVert.isEmpty() && !blocs.contains(Periode.ROUGE_VERT)) {
                 return new GaleriePosition(Periode.ROUGE_VERT, Etage.DOUBLE);
             }
-            if (bleuVert.isEmpty()) {
+            if (bleuVert.isEmpty() && !blocs.contains(Periode.BLEU_VERT)) {
                 return new GaleriePosition(Periode.BLEU_VERT, Etage.DOUBLE);
             }
         }
@@ -160,18 +172,18 @@ public class Galerie {
 
         // On commence dans le cas ou, on est sur une période déja en place, ou pas de période pour une couleur donné.
         if (couleur == CouleurEchantillon.BLEU || couleur == CouleurEchantillon.ROCHER_BLEU) {
-            if (bleu.size() < MAX_DEPOSE && (currentPeriode == Periode.BLEU || currentPeriode == null)) {
+            if (bleu.size() < MAX_DEPOSE && (currentPeriode == Periode.BLEU || currentPeriode == null) && !blocs.contains(Periode.BLEU)) {
                 return new GaleriePosition(Periode.BLEU, bleu.isEmpty() ? Etage.BAS : Etage.HAUT);
-            } else if (bleuVert.size() < MAX_DEPOSE && (currentPeriode == Periode.BLEU_VERT || currentPeriode == null)) {
+            } else if (bleuVert.size() < MAX_DEPOSE && (currentPeriode == Periode.BLEU_VERT || currentPeriode == null) && !blocs.contains(Periode.BLEU_VERT)) {
                 return new GaleriePosition(Periode.BLEU_VERT, bleuVert.isEmpty() ? Etage.BAS : Etage.HAUT);
             } else if (currentPeriode != null) {
                 return bestPosition(couleur, null); // Retry sans période préférée
             }
 
         } else if (couleur == CouleurEchantillon.ROUGE || couleur == CouleurEchantillon.ROCHER_ROUGE) {
-            if (rouge.size() < MAX_DEPOSE && (currentPeriode == Periode.ROUGE || currentPeriode == null)) {
+            if (rouge.size() < MAX_DEPOSE && (currentPeriode == Periode.ROUGE || currentPeriode == null) && !blocs.contains(Periode.ROUGE)) {
                 return new GaleriePosition(Periode.ROUGE, rouge.isEmpty() ? Etage.BAS : Etage.HAUT);
-            } else if (rougeVert.size() < MAX_DEPOSE && (currentPeriode == Periode.ROUGE_VERT || currentPeriode == null)) {
+            } else if (rougeVert.size() < MAX_DEPOSE && (currentPeriode == Periode.ROUGE_VERT || currentPeriode == null) && !blocs.contains(Periode.ROUGE_VERT)) {
                 return new GaleriePosition(Periode.ROUGE_VERT, rougeVert.isEmpty() ? Etage.BAS : Etage.HAUT);
             } else if (currentPeriode != null) {
                 return bestPosition(couleur, null); // Retry sans période préférée
@@ -179,11 +191,11 @@ public class Galerie {
 
         } else if (couleur == CouleurEchantillon.VERT || couleur == CouleurEchantillon.ROCHER_VERT) {
             if (vert.isEmpty() && (currentPeriode == Periode.VERT || currentPeriode == null)
-                    && !bleuVert.isEmpty() && !rougeVert.isEmpty()) {
+                    && !bleuVert.isEmpty() && !rougeVert.isEmpty() && !blocs.contains(Periode.VERT)) {
                 return new GaleriePosition(Periode.VERT, Etage.CENTRE);
-            } else if (bleuVert.size() < MAX_DEPOSE && (currentPeriode == Periode.BLEU_VERT || currentPeriode == null)) {
+            } else if (bleuVert.size() < MAX_DEPOSE && (currentPeriode == Periode.BLEU_VERT || currentPeriode == null) && !blocs.contains(Periode.BLEU_VERT)) {
                 return new GaleriePosition(Periode.BLEU_VERT, bleuVert.isEmpty() ? Etage.BAS : Etage.HAUT);
-            } else if (rougeVert.size() < MAX_DEPOSE && (currentPeriode == Periode.ROUGE_VERT || currentPeriode == null)) {
+            } else if (rougeVert.size() < MAX_DEPOSE && (currentPeriode == Periode.ROUGE_VERT || currentPeriode == null) && !blocs.contains(Periode.ROUGE_VERT)) {
                 return new GaleriePosition(Periode.ROUGE_VERT, rougeVert.isEmpty() ? Etage.BAS : Etage.HAUT);
             } else if (currentPeriode != null) {
                 return bestPosition(couleur, null); // Retry sans période préférée
@@ -192,26 +204,26 @@ public class Galerie {
 
         // A partir d'ici, pour la couleur demandé et eventuellement une période préféré, on a rien qui match.
         // 1. Si il reste de la place a notre position, on répond celle-ci.
-        if (currentPeriode == Periode.BLEU && bleu.size() < MAX_DEPOSE) {
+        if (currentPeriode == Periode.BLEU && bleu.size() < MAX_DEPOSE && !blocs.contains(Periode.BLEU)) {
             return new GaleriePosition(Periode.BLEU, bleu.isEmpty() ? Etage.BAS : Etage.HAUT);
-        } else if (currentPeriode == Periode.BLEU_VERT && bleuVert.size() < MAX_DEPOSE) {
+        } else if (currentPeriode == Periode.BLEU_VERT && bleuVert.size() < MAX_DEPOSE && !blocs.contains(Periode.BLEU_VERT)) {
             return new GaleriePosition(Periode.BLEU_VERT, bleu.isEmpty() ? Etage.BAS : Etage.HAUT);
-        } else if (currentPeriode == Periode.ROUGE && rouge.size() < MAX_DEPOSE) {
+        } else if (currentPeriode == Periode.ROUGE && rouge.size() < MAX_DEPOSE && !blocs.contains(Periode.ROUGE)) {
             return new GaleriePosition(Periode.ROUGE, bleu.isEmpty() ? Etage.BAS : Etage.HAUT);
-        } else if (currentPeriode == Periode.ROUGE_VERT && rougeVert.size() < MAX_DEPOSE) {
+        } else if (currentPeriode == Periode.ROUGE_VERT && rougeVert.size() < MAX_DEPOSE && !blocs.contains(Periode.ROUGE_VERT)) {
             return new GaleriePosition(Periode.ROUGE_VERT, bleu.isEmpty() ? Etage.BAS : Etage.HAUT);
         }
 
         // 2. Sinon, on cherche une période qui n'est pas pleine.
-        if (bleu.size() < MAX_DEPOSE) {
+        if (bleu.size() < MAX_DEPOSE && !blocs.contains(Periode.BLEU)) {
             return new GaleriePosition(Periode.BLEU, bleu.isEmpty() ? Etage.BAS : Etage.HAUT);
-        } else if (bleuVert.size() < MAX_DEPOSE) {
+        } else if (bleuVert.size() < MAX_DEPOSE && !blocs.contains(Periode.BLEU_VERT)) {
             return new GaleriePosition(Periode.BLEU_VERT, bleuVert.isEmpty() ? Etage.BAS : Etage.HAUT);
-        } else if (rouge.size() < MAX_DEPOSE) {
+        } else if (rouge.size() < MAX_DEPOSE && !blocs.contains(Periode.ROUGE)) {
             return new GaleriePosition(Periode.ROUGE, rouge.isEmpty() ? Etage.BAS : Etage.HAUT);
-        } else if (rougeVert.size() < MAX_DEPOSE) {
+        } else if (rougeVert.size() < MAX_DEPOSE && !blocs.contains(Periode.ROUGE_VERT)) {
             return new GaleriePosition(Periode.ROUGE_VERT, rougeVert.isEmpty() ? Etage.BAS : Etage.HAUT);
-        } else if (vert.size() < MAX_DEPOSE_VERT) {
+        } else if (vert.size() < MAX_DEPOSE_VERT && !blocs.contains(Periode.VERT)) {
             return new GaleriePosition(Periode.VERT, Etage.CENTRE);
         } else {
             // Ne peut pas arriver normalement
