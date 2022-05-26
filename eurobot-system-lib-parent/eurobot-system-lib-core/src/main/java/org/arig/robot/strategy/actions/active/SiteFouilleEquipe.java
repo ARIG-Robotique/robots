@@ -49,8 +49,19 @@ public class SiteFouilleEquipe extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
+        if (rs.strategy() != Strategy.FOUILLE) {
+            return false;
+        }
+
         return isTimeValid() && timeBeforeRetourValid()
                 && !rs.siteDeFouillePris() && rs.stockDisponible() > 0;
+    }
+
+    @Override
+    public void refreshCompleted() {
+        if (rs.siteDeFouillePris() || rs.strategy() != Strategy.FOUILLE) {
+            complete();
+        }
     }
 
     @Override
@@ -83,13 +94,6 @@ public class SiteFouilleEquipe extends AbstractEurobotAction {
 
         // Pas d'entry point
         return new Point(0,0);
-    }
-
-    @Override
-    public void refreshCompleted() {
-        if (rs.siteDeFouillePris()) {
-            complete();
-        }
     }
 
     @Override
