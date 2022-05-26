@@ -1,6 +1,7 @@
 package org.arig.robot.strategy.actions.active;
 
 import org.arig.robot.constants.EurobotConfig;
+import org.arig.robot.model.Galerie;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.StatutDistributeur;
@@ -23,6 +24,11 @@ public class DistributeurCommunEquipe extends AbstractDistributeurCommun {
     @Override
     public List<String> blockingActions() {
         return Collections.singletonList(EurobotConfig.ACTION_PRISE_DISTRIB_COMMUN_ADVERSE);
+    }
+
+    @Override
+    public boolean isValid() {
+        return super.isValid() && rs.periodeGalerieAutreRobot() != Galerie.Periode.ROUGE;
     }
 
     @Override

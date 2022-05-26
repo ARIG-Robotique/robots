@@ -128,6 +128,11 @@ public class DeposeGalerie extends AbstractEurobotAction {
                             && !StringUtils.equals(rs.otherCurrentAction(), EurobotConfig.ACTION_PRISE_ECHANTILLON_DISTRIBUTEUR_CAMPEMENT), 100, 10000);
                 }
 
+                if (pos.periode() == ROUGE &&
+                        EurobotConfig.ACTION_PRISE_DISTRIB_COMMUN_EQUIPE.equals(rs.otherCurrentAction())) {
+                    ThreadUtils.waitUntil(() -> !EurobotConfig.ACTION_PRISE_DISTRIB_COMMUN_EQUIPE.equals(rs.otherCurrentAction()), 100, 10000);
+                }
+
                 if (pos.etage() == Galerie.Etage.DOUBLE) {
                     log.info("Dépose {}+{} dans la galerie : Période {}, Etage {}", rs.stockFirst(), rs.stockSecond(), pos.periode(), pos.etage());
                 } else {
