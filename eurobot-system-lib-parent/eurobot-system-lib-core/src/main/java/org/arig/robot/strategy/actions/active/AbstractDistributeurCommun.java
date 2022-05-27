@@ -93,6 +93,8 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
                     log.warn("Blocage détecté à proximité de {}", name());
 
                     try {
+                        mv.avanceMM(0);
+
                         if (io.presencePriseBras(false)) {
                             log.info("Tentative de prise au sol");
                             if (priseAuSolEtEjecte(CouleurEchantillon.ROCHER)) {
@@ -118,6 +120,7 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
                             }
                         }
 
+                        log.warn("Echec de déminage {}", name());
                         setDistributeurBloque();
                         mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                         mv.reculeMM(100);

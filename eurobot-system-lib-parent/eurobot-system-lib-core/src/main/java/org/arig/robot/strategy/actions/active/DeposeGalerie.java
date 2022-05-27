@@ -384,6 +384,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
     private CheckYResult checkYAndDeminage(Galerie.Etage etage, Galerie.Periode periode) throws AvoidingException {
         if (mv.currentYMm() < 1750) {
             log.warn("Blocage détecté à proximité de {}", periode);
+            mv.avanceMM(0);
 
             // on a cliqué/forcé sur échantillon
             if (io.presencePriseBras(false)) {
@@ -414,6 +415,8 @@ public class DeposeGalerie extends AbstractEurobotAction {
 
             log.warn("Echec de déminage {}", periode);
             group.periodeGalerieBloquee(periode);
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+            mv.reculeMM(100);
             restock();
             return CheckYResult.CONTINUE;
 
