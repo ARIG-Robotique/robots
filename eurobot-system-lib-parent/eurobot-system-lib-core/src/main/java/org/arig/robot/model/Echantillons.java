@@ -91,6 +91,7 @@ public class Echantillons implements Iterable<Echantillon> {
 
     public void addEchantillon(final Point point, final CouleurEchantillon c) {
         final Echantillon.ID id;
+
         if (isInSiteFouilleJaune(point)) {
             id = Echantillon.ID.SITE_FOUILLE_JAUNE;
         } else if (isInSiteFouilleViolet(point)) {
@@ -98,7 +99,9 @@ public class Echantillons implements Iterable<Echantillon> {
         } else {
             id = null;
         }
-        echantillons.add(new Echantillon(id, c, point.getX(), point.getY(), System.currentTimeMillis()));
+        Echantillon echantillon = new Echantillon(id, c, point.getX(), point.getY(), System.currentTimeMillis());
+        echantillon.setBlocking(id != null);
+        echantillons.add(echantillon);
     }
 
     public static boolean match(final Echantillon e, final Point pt, final CouleurEchantillon c) {

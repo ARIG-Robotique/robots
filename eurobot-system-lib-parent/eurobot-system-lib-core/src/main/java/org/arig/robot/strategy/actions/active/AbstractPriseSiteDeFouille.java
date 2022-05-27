@@ -6,26 +6,24 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Echantillon;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.Team;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
-import org.arig.robot.services.BrasService;
-import org.arig.robot.strategy.actions.AbstractEurobotAction;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import static org.arig.robot.constants.EurobotConfig.ECHANTILLON_SIZE;
 
 @Slf4j
 public abstract class AbstractPriseSiteDeFouille extends AbstractPriseEchantillon {
 
+    protected static final int CENTRE_FOUILLE_X_JAUNE = 975;
+    protected static final int CENTRE_FOUILLE_Y = 625;
+
     protected abstract Echantillon.ID siteDeFouille();
+    protected abstract void notifySitePris();
 
     @Override
     public void execute() {
@@ -94,7 +92,7 @@ public abstract class AbstractPriseSiteDeFouille extends AbstractPriseEchantillo
             updateValidTime();
 
         } finally {
-            group.siteDeFouillePris();
+            notifySitePris();
             refreshCompleted();
             bras.safeHoming();
         }

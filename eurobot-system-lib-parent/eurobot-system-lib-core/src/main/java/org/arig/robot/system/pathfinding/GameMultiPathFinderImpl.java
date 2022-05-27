@@ -30,18 +30,6 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
                     obstacles.add(tableUtils.createPolygonObstacle(echantillon, EurobotConfig.PATHFINDER_ECHANTILLON_SIZE));
                 }
             }
-
-            // ajout des sites de fouille
-            if (rs.strategy() != Strategy.AGGRESSIVE
-                    && !StringUtils.startsWith(rs.currentAction(), EurobotConfig.ACTION_RETOUR_SITE_DE_FOUILLE_PREFIX)) {
-
-                if (!rs.siteDeFouillePris() && rs.team() == Team.JAUNE || !rs.siteDeFouilleAdversePris() && rs.team() == Team.VIOLET) {
-                    obstacles.add(tableUtils.createPolygonObstacle(new Point(975, 625), EurobotConfig.PATHFINDER_SITE_FOUILLE_SIZE));
-                }
-                if (!rs.siteDeFouillePris() && rs.team() == Team.VIOLET || !rs.siteDeFouilleAdversePris() && rs.team() == Team.JAUNE) {
-                    obstacles.add(tableUtils.createPolygonObstacle(new Point(2025, 625), EurobotConfig.PATHFINDER_SITE_FOUILLE_SIZE));
-                }
-            }
         }
 
         // ajout campement

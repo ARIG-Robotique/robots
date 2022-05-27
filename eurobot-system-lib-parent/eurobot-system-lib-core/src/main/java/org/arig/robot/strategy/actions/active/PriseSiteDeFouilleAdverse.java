@@ -2,24 +2,20 @@ package org.arig.robot.strategy.actions.active;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
-import org.arig.robot.model.*;
+import org.arig.robot.model.Echantillon;
+import org.arig.robot.model.Point;
+import org.arig.robot.model.Team;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
 @Component
-public class PriseSiteDeFouilleEquipe extends AbstractPriseSiteDeFouille {
+public class PriseSiteDeFouilleAdverse extends AbstractPriseSiteDeFouille {
 
     @Override
     public String name() {
-        return EurobotConfig.ACTION_PRISE_SITE_FOUILLE_EQUIPE;
-    }
-
-    @Override
-    public List<String> blockingActions() {
-        return Collections.singletonList(EurobotConfig.ACTION_DECOUVERTE_CARRE_FOUILLE);
+        return EurobotConfig.ACTION_PRISE_SITE_FOUILLE_ADVERSE;
     }
 
     @Override
@@ -34,12 +30,12 @@ public class PriseSiteDeFouilleEquipe extends AbstractPriseSiteDeFouille {
         }
 
         return isTimeValid() && timeBeforeRetourValid()
-                && !rs.siteDeFouillePris() && rs.stockDisponible() > 0;
+                && !rs.siteDeFouilleAdversePris() && rs.stockDisponible() > 0;
     }
 
     @Override
     public void refreshCompleted() {
-        if (rs.siteDeFouillePris() || !rs.siteDeFouille()) {
+        if (rs.siteDeFouilleAdversePris() || !rs.siteDeFouille()) {
             complete();
         }
     }
@@ -52,12 +48,12 @@ public class PriseSiteDeFouilleEquipe extends AbstractPriseSiteDeFouille {
 
     @Override
     protected Echantillon.ID siteDeFouille() {
-        return rs.team() == Team.JAUNE ? Echantillon.ID.SITE_FOUILLE_JAUNE : Echantillon.ID.SITE_FOUILLE_VIOLET;
+        return rs.team() == Team.JAUNE ? Echantillon.ID.SITE_FOUILLE_VIOLET : Echantillon.ID.SITE_FOUILLE_JAUNE;
     }
 
     @Override
     protected void notifySitePris() {
-        group.siteDeFouillePris();
+        group.siteDeFouilleAdversePris();
     }
 
     @Override
@@ -67,7 +63,7 @@ public class PriseSiteDeFouilleEquipe extends AbstractPriseSiteDeFouille {
         // Calcul point d'approche du site de fouille
         if (!currentEchantillons.isEmpty()) {
             final Echantillon echantillonPlusProche = currentEchantillons.get(0);
-            final Point centreSiteDeFouille = new Point(getX(CENTRE_FOUILLE_X_JAUNE), CENTRE_FOUILLE_Y);
+            final Point centreSiteDeFouille = new Point(rs.team() == Team.JAUNE ? 3000 - CENTRE_FOUILLE_X_JAUNE : CENTRE_FOUILLE_X_JAUNE, CENTRE_FOUILLE_Y);
             return new Point(
                     centreSiteDeFouille.getX() -
                             Math.signum(centreSiteDeFouille.getX() - echantillonPlusProche.getX()) * EurobotConfig.PATHFINDER_SITE_FOUILLE_SIZE / 2,
