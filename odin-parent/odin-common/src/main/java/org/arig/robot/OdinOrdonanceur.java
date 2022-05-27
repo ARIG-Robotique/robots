@@ -349,7 +349,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             switch (odinRobotStatus.strategy()) {
-                case ABRI:
+                case BASIC:
                 default:
                     if (robotStatus.twoRobots()) {
                         mv.gotoPoint(getX(240), 1740);

@@ -1,5 +1,5 @@
 package org.arig.robot.model;
 
 public enum Strategy {
-    ABRI, CARRE, FOUILLE, FINALE
+    BASIC, AGGRESSIVE, FINALE_1, FINALE_2
 }

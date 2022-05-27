@@ -126,8 +126,8 @@ class RobotGroupServiceTest {
     @ParameterizedTest
     @EnumSource(Strategy.class)
     void testStrategy(Strategy strategy) {
-        Assertions.assertEquals(Strategy.ABRI, statusPrimary.strategy());
-        Assertions.assertEquals(Strategy.ABRI, statusSecondary.strategy());
+        Assertions.assertEquals(Strategy.BASIC, statusPrimary.strategy());
+        Assertions.assertEquals(Strategy.BASIC, statusSecondary.strategy());
 
         rgServicePrimary.strategy(strategy);
         ThreadUtils.sleep(WAIT);

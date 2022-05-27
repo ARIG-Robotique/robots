@@ -32,7 +32,7 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
             }
 
             // ajout des sites de fouille
-            if (rs.strategy() != Strategy.FOUILLE
+            if (rs.strategy() != Strategy.AGGRESSIVE
                     && !StringUtils.startsWith(rs.currentAction(), EurobotConfig.ACTION_RETOUR_SITE_DE_FOUILLE_PREFIX)) {
 
                 if (!rs.siteDeFouillePris() && rs.team() == Team.JAUNE || !rs.siteDeFouilleAdversePris() && rs.team() == Team.VIOLET) {

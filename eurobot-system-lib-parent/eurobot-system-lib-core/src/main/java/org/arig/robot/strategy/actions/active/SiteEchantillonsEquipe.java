@@ -43,11 +43,11 @@ public class SiteEchantillonsEquipe extends AbstractEurobotAction {
 
     @Override
     public int order() {
-        if ((rs.strategy() == Strategy.ABRI || rs.strategy() == Strategy.CARRE || rs.strategy() == Strategy.FOUILLE) && (
+        if ((rs.strategy() == Strategy.BASIC || rs.strategy() == Strategy.AGGRESSIVE) && (
                 (robotName.id() == RobotName.RobotIdentification.NERELL) || (!rs.twoRobots() && robotName.id() == RobotName.RobotIdentification.ODIN)
         )) {
             // Si c'est Nerell et que la strat est la basique ou aggressive.
-            // Ou si c'est Odin et qu'il n'y a qu'un seul robot en strat basique ou .
+            // Ou si c'est Odin et qu'il n'y a qu'un seul robot en strat basique.
             // C'est la première action
             firstAction = true;
             return 1000;

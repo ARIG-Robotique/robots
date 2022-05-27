@@ -11,5 +11,5 @@ import org.arig.robot.model.Team;
 @EqualsAndHashCode(callSuper = true)
 public class EcranConfig extends AbstractEcranConfig {
     private Team team;
-    private Strategy strategy = Strategy.ABRI;
+    private Strategy strategy = Strategy.BASIC;
 }

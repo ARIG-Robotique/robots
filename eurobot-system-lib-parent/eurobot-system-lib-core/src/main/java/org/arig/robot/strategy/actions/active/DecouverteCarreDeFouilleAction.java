@@ -38,8 +38,6 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
     // Nombre de tentative de récupération des carrés de fouille
     protected int nbTry = 0;
 
-    boolean firstAction = false;
-
     boolean reverse = false;
 
     @Override
@@ -76,14 +74,6 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 
     @Override
     public int order() {
-        if (nbTry == 0 && rs.strategy() == Strategy.CARRE
-                && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
-            // Si c'est Odin et que la strat est aggressive avec deux robots
-            // C'est la première action
-            firstAction = true;
-            return 1000;
-        }
-
         return rs.carresDeFouillePointRestant() + tableUtils.alterOrder(entryPoint());
     }
 
@@ -126,19 +116,13 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                     final Point start = entryPoint(carreFouille);
                     log.info("Calage requis, on se place au point de départ : #{} - X={}", carreFouille.numero(), start.getX());
                     mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-                    if (firstAction) {
-                        mv.gotoPoint(getX(660), 320, GotoOption.SANS_ORIENTATION);
-                        rs.enableAvoidance();
-                        mv.gotoPoint(start, GotoOption.SANS_ORIENTATION);
-                    } else {
-//                        Echantillon echantillonAEnlever = deminageRequis(start);
-//                        if (echantillonAEnlever != null) {
-//                            deminage(echantillonAEnlever);
-//                            mv.gotoPoint(start);
-//                        } else {
-                            mv.pathTo(start);
-//                        }
-                    }
+//                  Echantillon echantillonAEnlever = deminageRequis(start);
+//                  if (echantillonAEnlever != null) {
+//                      deminage(echantillonAEnlever);
+//                      mv.gotoPoint(start);
+//                  } else {
+                      mv.pathTo(start);
+//                  }
 
                     if (rs.stockTaille() >= 5) {
                         mv.gotoOrientationDeg(90);
@@ -178,7 +162,6 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 
                 // Si le calage sur carré de fouille n'a pas encore été fait, on se cale sur lui
                 // si on a besoin de faire une lecture.
-                //if (nbTry > 0 && !calageCarreFouilleDone && carreFouille.needRead()) {
                 if (!calageCarreFouilleDone && carreFouille.needRead()) {
                     log.info("Calage carré de fouille requis");
                     mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
@@ -267,7 +250,6 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
             nbTry++;
-            firstAction = false;
             servos.carreFouillePoussoirFerme(true);
             servos.carreFouilleOhmmetreFerme(false);
             refreshCompleted();
