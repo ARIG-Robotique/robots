@@ -38,7 +38,7 @@ public class BaliseService extends AbstractBaliseService<StatutBalise> {
             echantillons.findEchantillon(point, echantillon.getC())
                     .ifPresentOrElse(
                             echantillonExistant -> echantillonExistant.setPt(point),
-                            () -> echantillons.addEchantillon(point, echantillon.getC())
+                            () -> echantillons.addEchantillon(point, echantillon.getC(), rs.team(), rs.siteDeFouillePris(), rs.siteDeFouilleAdversePris())
                     );
         });
 

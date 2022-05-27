@@ -89,18 +89,22 @@ public class Echantillons implements Iterable<Echantillon> {
                 .orElse(null);
     }
 
-    public void addEchantillon(final Point point, final CouleurEchantillon c) {
+    public void addEchantillon(final Point point, final CouleurEchantillon c, final Team team,
+                               final boolean siteFouillePris, final boolean siteFouilleAdversePris) {
         final Echantillon.ID id;
-
+        final boolean blocking;
         if (isInSiteFouilleJaune(point)) {
             id = Echantillon.ID.SITE_FOUILLE_JAUNE;
+            blocking = (team == Team.JAUNE && !siteFouillePris) || (team == Team.VIOLET && !siteFouilleAdversePris);
         } else if (isInSiteFouilleViolet(point)) {
             id = Echantillon.ID.SITE_FOUILLE_VIOLET;
+            blocking = (team == Team.VIOLET && !siteFouillePris) || (team == Team.JAUNE && !siteFouilleAdversePris);
         } else {
             id = null;
+            blocking = false;
         }
         Echantillon echantillon = new Echantillon(id, c, point.getX(), point.getY(), System.currentTimeMillis());
-        echantillon.setBlocking(id != null);
+        echantillon.setBlocking(blocking);
         echantillons.add(echantillon);
     }
 
