@@ -264,7 +264,7 @@ public class TrajectoryManager {
             calageBordure.set(false);
         }
 
-        if (Boolean.TRUE.equals(obstacleNotFoundFilter.filter(obstacleFound.get()))) {
+        if (Boolean.TRUE.equals(obstacleNotFoundFilter.filter(obstacleFound.get())) && oldConsigne != null) {
             log.info("Restauration des vieilles consignes sur disparition d'obstacle");
             cmdRobot.setConsigne(oldConsigne);
             cmdRobot.setTypes(oldTypeConsigne);
@@ -943,6 +943,9 @@ public class TrajectoryManager {
      * Méthode pour préparer le prochain mouvement.
      */
     private void prepareNextMouvement() {
+        oldConsigne = null;
+        oldTypeConsigne = null;
+
         // Reset de l'erreur de l'asservissementPolaire sur le mouvement précédent lorsqu'il
         // s'agit d'un nouveau mouvement au départ vitesse presque nulle.
         if (trajetAtteint.get()) {
@@ -1043,6 +1046,8 @@ public class TrajectoryManager {
     }
 
     public void refreshPathFinding() {
+        oldConsigne = null;
+        oldTypeConsigne = null;
         refreshPath.set(true);
     }
 
