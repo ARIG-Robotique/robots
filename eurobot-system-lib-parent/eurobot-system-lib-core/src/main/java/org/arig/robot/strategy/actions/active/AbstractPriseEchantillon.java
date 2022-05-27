@@ -28,7 +28,20 @@ public abstract class AbstractPriseEchantillon extends AbstractEurobotAction {
     protected final Echantillon echantillonPerdu() {
         final Point positionCourante = new Point(mv.currentXMm(), mv.currentYMm());
         return rs.echantillons().getEchantillons().stream()
-                .filter(e -> e.getId() == null)
+                .filter(e -> {
+                    if (e.getId() == null) {
+                        return true;
+                    }
+                    if (rs.siteDeFouillePris() && ((e.getId() == Echantillon.ID.SITE_FOUILLE_JAUNE && rs.team() == Team.JAUNE)
+                            || (e.getId() == Echantillon.ID.SITE_FOUILLE_VIOLET && rs.team() == Team.VIOLET))) {
+                        return true;
+                    }
+                    if (rs.siteDeFouilleAdversePris() && ((e.getId() == Echantillon.ID.SITE_FOUILLE_VIOLET && rs.team() == Team.JAUNE)
+                            || (e.getId() == Echantillon.ID.SITE_FOUILLE_JAUNE && rs.team() == Team.VIOLET))) {
+                        return true;
+                    }
+                    return false;
+                })
                 .sorted(Comparator.comparing(e -> e.distance(positionCourante)))
                 .map(Echantillon::clone)
                 .findFirst().orElse(null);
