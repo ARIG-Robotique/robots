@@ -60,8 +60,14 @@ public class SystemBlockerManagerImpl implements SystemBlockerManager {
 
     @Override
     public void process() {
+        int motDroit = cmdRobot.getMoteur().getDroit();
+        int motGauche = cmdRobot.getMoteur().getGauche();
+        int consigneDst = Math.abs(motDroit + motGauche) / 2;
+        int condigneOrient = Math.abs(motDroit - motGauche);
+
         // Detection du non-deplacement ou de saturation de commande d'asservissement
-        if (!cmdRobot.isBypassRampDistance() && !trajectoryManager.isTrajetAtteint() &&
+        if (!trajectoryManager.isTrajetAtteint() &&
+                consigneDst > 500 &&
                 (Math.abs(encoders.getDistance()) < seuilDistancePulse ||
                         Math.abs(pidDistance.getErrorSum()) > maxErrorSumDistance)) {
             countErrorDistance++;
@@ -70,7 +76,8 @@ public class SystemBlockerManagerImpl implements SystemBlockerManager {
             countErrorDistance = 0;
         }
 
-        if (!cmdRobot.isBypassRampOrientation() && !trajectoryManager.isTrajetAtteint() &&
+        if (!trajectoryManager.isTrajetAtteint() &&
+                condigneOrient > 500 &&
                 (Math.abs(encoders.getOrientation()) < seuilOrientationPulse ||
                         Math.abs(pidOrientation.getErrorSum() )> maxErrorSumOrientation)) {
             countErrorOrientation++;
