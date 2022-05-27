@@ -201,6 +201,7 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                     }
                     mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                     mv.gotoPoint(carreFouille.getX() + deltaX, yRef, sens, GotoOption.SANS_ORIENTATION);
+                    mv.gotoOrientationDeg(0);
                 }
 
                 // Ouverture de l'ohmmetre
