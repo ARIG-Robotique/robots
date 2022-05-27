@@ -273,12 +273,31 @@ public abstract class AbstractOrdonanceur {
         ecranService.displayMessage("Activation puissances servos et moteurs");
         io.enableAlimServos();
         io.enableAlimMoteurs();
-        ThreadUtils.sleep(500);
+        ThreadUtils.sleep(1000);
+        int nbTryMoteurs = 0;
+        int nbTryServos = 0;
         if (!energyService.checkMoteurs() || !energyService.checkServos()) {
-            ecranService.displayMessage(String.format("Alimentation NOK (Moteurs : %s V ; Servos : %s V)", energyService.tensionMoteurs(), energyService.tensionServos()));
+            ecranService.displayMessage(String.format("Alim. NOK (Moteurs (%d) : %s V ; Servos (%d) : %s V)",
+                    nbTryMoteurs, energyService.tensionMoteurs(), nbTryServos, energyService.tensionServos()));
             while (!energyService.checkMoteurs() || !energyService.checkServos()) {
                 exitFromScreen();
                 ThreadUtils.sleep(500);
+                if (!energyService.checkServos() && nbTryServos < 3) {
+                    nbTryServos++;
+                    log.warn("Rentative alim. servos {}/3", nbTryServos);
+                    io.disableAlimServos();
+                    ThreadUtils.sleep(100);
+                    io.enableAlimServos();
+                    ThreadUtils.sleep(100);
+                }
+                if (!energyService.checkMoteurs() && nbTryMoteurs < 3) {
+                    nbTryMoteurs++;
+                    log.warn("Rentative alim. moteurs {}/3", nbTryServos);
+                    io.disableAlimMoteurs();
+                    ThreadUtils.sleep(100);
+                    io.enableAlimMoteurs();
+                    ThreadUtils.sleep(100);
+                }
             }
         }
         ecranService.displayMessage(String.format("Alimentation OK (Moteurs : %s V ; Servos : %s V)", energyService.tensionMoteurs(), energyService.tensionServos()));
