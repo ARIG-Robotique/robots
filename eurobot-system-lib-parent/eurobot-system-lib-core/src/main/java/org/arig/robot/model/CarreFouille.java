@@ -40,6 +40,10 @@ public class CarreFouille implements Serializable {
         nbTry++;
     }
 
+    public void decrementTry() {
+        nbTry--;
+    }
+
     /**
      * Coordonnée en X du carre de fouille
      * @return Valeur de X

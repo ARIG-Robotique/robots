@@ -4,9 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.I2CException;
+import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.*;
-import org.arig.robot.model.bras.PositionBras;
+import org.arig.robot.model.CarreFouille;
+import org.arig.robot.model.CouleurCarreFouille;
+import org.arig.robot.model.Point;
+import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BrasService;
@@ -16,18 +19,19 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 @Slf4j
 @Component
-public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
+public class DecouverteCarreDeFouille extends AbstractEurobotAction {
 
     private static final int WAIT_READ_OHMMETRE_MS = 1000;
     private static final int WAIT_READ_BASCULE_MS = 120;
 
-    private static final int ENTRY_Y = 200;
+    private static final int ENTRY_Y = 300;
 
     @Autowired
     private CarreFouilleReader cfReader;
@@ -73,7 +77,7 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 
     @Override
     public int order() {
-        return rs.carresDeFouillePointRestant() + tableUtils.alterOrder(entryPoint());
+        return 10000 + rs.carresDeFouillePointRestant() + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
@@ -104,31 +108,65 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
             boolean calageBordureDone = false;
             boolean calageCarreFouilleDone = false;
             boolean needMove = false;
-            do {
-                CarreFouille carreFouille = cf();
+            CarreFouille carreFouille;
+
+            List<CarreFouille> carresBloques = new ArrayList<>();
+
+            while ((carreFouille = cf()) != null) {
                 carreFouille.incrementTry();
+                final Point start = entryPoint(carreFouille);
                 log.info("Traitement carré de fouille #{} {}", carreFouille.numero(), carreFouille.couleur());
 
                 // Le calage bordure n'as pas encore été fait, donc on se cale sur celle-ci
                 if (!calageBordureDone) {
                     // Calage bordure requis
-                    final Point start = entryPoint(carreFouille);
                     log.info("Calage requis, on se place au point de départ : #{} - X={}", carreFouille.numero(), start.getX());
                     mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-//                  Echantillon echantillonAEnlever = deminageRequis(start);
-//                  if (echantillonAEnlever != null) {
-//                      deminage(echantillonAEnlever);
-//                      mv.gotoPoint(start);
-//                  } else {
-                      mv.pathTo(start);
-//                  }
+                    try {
+                        mv.pathTo(start);
+                    } catch (MovementCancelledException e) {
+                        if (mv.currentYMm() < 300) {
+                            log.warn("Blocage pendant l'approche du carré de fouille {}", carreFouille.numero());
+                            carresBloques.add(carreFouille);
+                            CarreFouille nextCf = cf();
+                            if (nextCf != null) {
+                                nextCf.incrementTry();
+                                carresBloques.add(carreFouille);
+                            }
+                            if (mv.currentAngleDeg() > 0) {
+                                mv.avanceMM(100);
+                            } else {
+                                mv.reculeMM(100);
+                            }
+                            continue;
+                        } else {
+                            throw e;
+                        }
+                    }
 
                     rs.enableAvoidance(true);
-                    if (rs.stockTaille() >= 5) {
+                    if (rs.stockTaille() >= 5 || mv.currentAngleDeg() > 0) {
                         mv.gotoOrientationDeg(90);
                         mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
                         rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
                         mv.reculeMM(start.getY() - config.distanceCalageArriere() - 10);
+
+                        if (mv.currentYMm() > 150) {
+                            log.warn("Blocage pendant le callage du carré de fouille {}", carreFouille.numero());
+                            carresBloques.add(carreFouille);
+                            CarreFouille nextCf = cf();
+                            if (nextCf != null) {
+                                nextCf.incrementTry();
+                                carresBloques.add(carreFouille);
+                            }
+                            if (mv.currentAngleDeg() > 0) {
+                                mv.avanceMM(100);
+                            } else {
+                                mv.reculeMM(100);
+                            }
+                            continue;
+                        }
+
                         rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
                         mv.reculeMMSansAngle(40);
                         checkRecalageYmm(config.distanceCalageArriere(), TypeCalage.ARRIERE);
@@ -143,6 +181,23 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                         mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
                         rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                         mv.avanceMM(start.getY() - config.distanceCalageAvant() - 10);
+
+                        if (mv.currentYMm() > 150) {
+                            log.warn("Blocage pendant le callage du carré de fouille {}", carreFouille.numero());
+                            carresBloques.add(carreFouille);
+                            CarreFouille nextCf = cf();
+                            if (nextCf != null) {
+                                nextCf.incrementTry();
+                                carresBloques.add(carreFouille);
+                            }
+                            if (mv.currentAngleDeg() > 0) {
+                                mv.avanceMM(100);
+                            } else {
+                                mv.reculeMM(100);
+                            }
+                            continue;
+                        }
+
                         rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                         mv.avanceMMSansAngle(40);
                         checkRecalageYmm(config.distanceCalageAvant(), TypeCalage.AVANT_BAS);
@@ -160,6 +215,9 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                     mv.gotoOrientationDeg(0);
                 }
 
+                carresBloques.forEach(CarreFouille::decrementTry);
+                carresBloques.clear();
+
                 rs.enableAvoidance(true);
 
                 // Si le calage sur carré de fouille n'a pas encore été fait, on se cale sur lui
@@ -167,23 +225,26 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                 if (!calageCarreFouilleDone && carreFouille.needRead()) {
                     log.info("Calage carré de fouille requis");
                     mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
+                    mv.setRampesDistance(config.rampeAccelDistance(20), config.rampeDecelDistance(20));
 
                     // On est censé avoir un carré de fouille
                     boolean presence = ThreadUtils.waitUntil(() -> io.presenceCarreFouille(true), 5, WAIT_READ_BASCULE_MS);
 
                     // Calage uniquement si il y a un carre de fouille détecté
                     if (presence) {
-                        rs.enableCalageBordure(TypeCalage.LATTERAL_DROIT);
+                        rs.enableCalageBordure(TypeCalage.LATERAL_DROIT);
                         mv.avanceMM(60);
+                        if (!rs.calageCompleted().contains(TypeCalage.LATERAL_DROIT)) {
+                            mv.avanceMM(60);
+                        }
                         mv.reculeMM(40); // Distance calage au capteur
 
                         deltaX = mv.currentXMm() - carreFouille.getX();
                         log.info("On a déplacé le robot de {} mm (delta X)", deltaX);
                         calageCarreFouilleDone = true;
                     }
-                } else {
-                    // Le calage sur carré de fouille n'auras plus lieu jusqu'a la prochaine tentative
-                    calageCarreFouilleDone = true;
+
+                    mv.setRampesDistance(config.rampeAccelDistance(), config.rampeDecelDistance());
                 }
 
                 // Ici on se déplace seulement a partir du moment on a besoin.
@@ -191,12 +252,8 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                 // A partir des suivantes, on reset après calage sur le carré de fouille (cas ou pas besoin de lire au début)
                 if (needMove) {
                     log.info("Position carre de fouille #{} - X={} ; Y={}", carreFouille.numero(), carreFouille.getX(), yRef);
-                    GotoOption sens = GotoOption.AVANT;
-                    if ((rs.team() == Team.JAUNE && reverse) || (rs.team() == Team.VIOLET && !reverse)) {
-                        sens = GotoOption.ARRIERE;
-                    }
                     mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-                    mv.gotoPoint(carreFouille.getX() + deltaX, yRef, sens, GotoOption.SANS_ORIENTATION);
+                    mv.gotoPoint(carreFouille.getX() + deltaX, yRef, GotoOption.SANS_ORIENTATION);
                     mv.gotoOrientationDeg(0);
                 }
 
@@ -247,7 +304,7 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
 
                 // A la prochaine itération, il faut se déplacer devant le carré de fouille suivant
                 needMove = true;
-            } while (cf() != null);
+            }
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
@@ -271,40 +328,4 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                 (couleur == CouleurCarreFouille.VIOLET && rs.team() == Team.VIOLET);
     }
 
-    private Echantillon deminageRequis(Point entryPoint) {
-        java.awt.Rectangle zoneEntree = new java.awt.Rectangle();
-        zoneEntree.setSize(300, 200);
-        zoneEntree.setLocation((int) (entryPoint.getX() - zoneEntree.getWidth() / 2.0), 0);
-
-        return rs.echantillons().findEchantillon(zoneEntree);
-    }
-
-    private void deminage(Echantillon echantillon) throws AvoidingException, NoPathFoundException {
-        log.info("Déminage {}", echantillon);
-        mv.pathTo(echantillon.getX(), 300, GotoOption.AVANT);
-
-        mv.alignFrontTo(echantillon);
-        Point ptApproche = tableUtils.eloigner(echantillon, -EurobotConfig.ECHANTILLON_SIZE - config.distanceCalageAvant());
-        if (ptApproche.getY() < 300) {
-            mv.gotoPoint(ptApproche);
-        }
-
-        mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
-        rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON, TypeCalage.FORCE);
-        mv.avanceMMSansAngle(EurobotConfig.ECHANTILLON_SIZE);
-
-        bras.setBrasHaut(PositionBras.HORIZONTAL);
-        bras.setBrasBas(PositionBras.STOCK_ENTREE);
-        bras.setBrasBas(PositionBras.SOL_PRISE);
-
-        mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
-
-        if (bras.waitEnableVentouseBas(echantillon.getCouleur())) {
-            bras.setBrasBas(PositionBras.SOL_DEPOSE_5);
-            mv.gotoOrientationDeg(90);
-            bras.waitReleaseVentouseBas();
-        }
-
-        bras.repos();
-    }
 }

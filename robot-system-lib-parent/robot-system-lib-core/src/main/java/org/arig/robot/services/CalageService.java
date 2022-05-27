@@ -36,7 +36,7 @@ public class CalageService {
             if (!rs.matchEnabled() && !ioService.auOk()) {
                 doneArriere = doneAvantBas = doneAvantHaut = doneLatteralDroit = donePriseEchantillon = doneVentouseBas = true;
             } else {
-                if (rs.calage().size() == 1 && rs.calage().contains(TypeCalage.LATTERAL_DROIT)) {
+                if (rs.calage().size() == 1 && rs.calage().contains(TypeCalage.LATERAL_DROIT)) {
                     doneLatteralDroit = ioService.calageLatteralDroit();
                 }
                 if (rs.calage().size() == 1 && rs.calage().contains(TypeCalage.PRISE_ECHANTILLON)) {
@@ -87,8 +87,8 @@ public class CalageService {
                     rs.calageCompleted().add(TypeCalage.ARRIERE);
                 }
                 if (doneLatteralDroit) {
-                    log.info("Callage complet : {}", TypeCalage.LATTERAL_DROIT);
-                    rs.calageCompleted().add(TypeCalage.LATTERAL_DROIT);
+                    log.info("Callage complet : {}", TypeCalage.LATERAL_DROIT);
+                    rs.calageCompleted().add(TypeCalage.LATERAL_DROIT);
                 }
                 if (donePriseEchantillon) {
                     log.info("Callage complet : {}", TypeCalage.PRISE_ECHANTILLON);

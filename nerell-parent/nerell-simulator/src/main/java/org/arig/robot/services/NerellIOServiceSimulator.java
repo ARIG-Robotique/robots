@@ -53,7 +53,7 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
 
     @Override
     public boolean calageLatteralDroit() {
-        return rs.calage().contains(TypeCalage.LATTERAL_DROIT);
+        return rs.calage().contains(TypeCalage.LATERAL_DROIT);
     }
 
     @Override
