@@ -77,9 +77,17 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
             Echantillon echantillonAEnlever = deminageRequis();
             if (echantillonAEnlever != null) {
                 deminage(echantillonAEnlever);
+                if (!timeBeforeRetourValid()) {
+                    log.warn("Annulation {}, y'a plus le temps", name());
+                    return;
+                }
                 mv.gotoPoint(entry);
             } else {
                 mv.pathTo(entry, GotoOption.AVANT);
+                if (!timeBeforeRetourValid()) {
+                    log.warn("Annulation {}, y'a plus le temps", name());
+                    return;
+                }
             }
 
             doExecute();

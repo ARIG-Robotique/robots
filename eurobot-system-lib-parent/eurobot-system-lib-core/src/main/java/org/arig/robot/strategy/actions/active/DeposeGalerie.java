@@ -156,6 +156,11 @@ public class DeposeGalerie extends AbstractEurobotAction {
                     mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                     mv.pathTo(entryPoint);
 
+                    if (!timeBeforeRetourValid()) {
+                        log.warn("Annulation {}, y'a plus le temps", name());
+                        return;
+                    }
+
                     rs.disableAvoidance();
                     rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                     mv.gotoPoint(entryPoint.getX(), EurobotConfig.tableHeight - config.distanceCalageAvant() - 85 - 20, GotoOption.AVANT);
