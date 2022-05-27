@@ -23,7 +23,7 @@ import static org.arig.robot.constants.EurobotConfig.PTS_DEPOSE_PRISE;
 
 @Slf4j
 @Component
-public class SiteEchantillonsEquipe extends AbstractEurobotAction {
+public class PriseSiteEchantillonsEquipe extends AbstractEurobotAction {
 
     @Autowired
     private BrasService bras;

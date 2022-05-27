@@ -39,11 +39,9 @@ public interface EurobotConfig {
     String ACTION_PRISE_DISTRIB_COMMUN_EQUIPE = "Prise distrib. commun équipe";
     String ACTION_PRISE_DISTRIB_COMMUN_ADVERSE = "Prise distrib. commun adverse";
     String ACTION_PRISE_SITE_FOUILLE_EQUIPE = "Prise site de fouille équipe";
-
+    String ACTION_PRISE_SITE_FOUILLE_ADVERSE = "Prise site de fouille adverse";
     String ACTION_PRISE_ECHANTILLON_UNITAIRE = "Prise echantillon";
-
     String ACTION_PRISE_ECHANTILLONS_SITE_EQUIPE = "Prise échantillons site équipe";
-
     String ACTION_PRISE_ECHANTILLON_DISTRIBUTEUR_CAMPEMENT = "Prise echantillon campement";
 
     // Actions d'échappement

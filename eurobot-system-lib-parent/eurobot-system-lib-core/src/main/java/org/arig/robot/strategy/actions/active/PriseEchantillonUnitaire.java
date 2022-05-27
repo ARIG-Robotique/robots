@@ -13,21 +13,14 @@ import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import static org.arig.robot.constants.EurobotConfig.ECHANTILLON_SIZE;
 
 @Slf4j
 @Component
-public class EchantillonUnitaire extends AbstractEurobotAction {
-
-    @Autowired
-    private BrasService bras;
+public class PriseEchantillonUnitaire extends AbstractPriseEchantillon {
 
     @Override
     public String name() {
@@ -142,12 +135,4 @@ public class EchantillonUnitaire extends AbstractEurobotAction {
         }
     }
 
-    private Echantillon echantillonPerdu() {
-        final Point positionCourante = new Point(mv.currentXMm(), mv.currentYMm());
-        return rs.echantillons().getEchantillons().stream()
-                .filter(e -> e.getId() == null)
-                .sorted(Comparator.comparing(e -> e.distance(positionCourante)))
-                .map(Echantillon::clone)
-                .findFirst().orElse(null);
-    }
 }
