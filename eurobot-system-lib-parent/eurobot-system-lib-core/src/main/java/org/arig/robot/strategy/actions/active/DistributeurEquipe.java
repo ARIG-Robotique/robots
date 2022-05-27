@@ -79,7 +79,7 @@ public class DistributeurEquipe extends AbstractDistributeur {
                 }
                 mv.gotoPoint(entry);
             } else {
-                mv.pathTo(entry);
+                mv.pathTo(entry, GotoOption.AVANT);
                 if (!timeBeforeRetourValid()) {
                     log.warn("Annulation {}, y'a plus le temps", name());
                     return;

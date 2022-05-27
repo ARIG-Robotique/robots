@@ -5,6 +5,7 @@ import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.Echantillon;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.Rectangle;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.GotoOption;
@@ -25,10 +26,15 @@ public abstract class AbstractPriseEchantillon extends AbstractEurobotAction {
     @Autowired
     protected BrasService bras;
 
+    private Rectangle zoneDistributeur = new Rectangle(1200, 1750, 600, 250);
+
     protected final Echantillon echantillonPerdu() {
         final Point positionCourante = new Point(mv.currentXMm(), mv.currentYMm());
         return rs.echantillons().getEchantillons().stream()
                 .filter(e -> {
+                    if (zoneDistributeur.contains(e)) {
+                        return false;
+                    }
                     if (e.getId() == null) {
                         return true;
                     }

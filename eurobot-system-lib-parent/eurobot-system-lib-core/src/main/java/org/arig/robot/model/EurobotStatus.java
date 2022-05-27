@@ -538,8 +538,8 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     private int scoreDistributeurs() {
         int points = 0;
-        if (distributeurEquipe != StatutDistributeur.PAS_PRIS) points += 3; // 3 échantillons
-        if (distributeurCommunEquipe != StatutDistributeur.PAS_PRIS) points += 3; // 3 échantillons
+        if (distributeurEquipe == StatutDistributeur.PRIS_NOUS) points += 3; // 3 échantillons
+        if (distributeurCommunEquipe == StatutDistributeur.PRIS_NOUS || distributeurCommunEquipe == StatutDistributeur.PRIS_BALISE) points += 3; // 3 échantillons
         if (echantillonAbriChantierCarreFouillePris) points += 1;
         if (echantillonAbriChantierDistributeurPris) points += 1;
         if (echantillonCampementPris) points += 1;
