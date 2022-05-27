@@ -121,7 +121,7 @@ public abstract class AbstractPathFinder implements PathFinder {
             final Point autreRobot = rs.otherPosition();
             if(autreRobot != null) {
                 g.setColor(Color.ORANGE);
-                g.fillOval((int) autreRobot.getX() - 10, (int) autreRobot.getY() - 10, 20, 20);
+                g.fillOval((int) autreRobot.getX() / 10 - 10, (int) autreRobot.getY() / 10 - 10, 20, 20);
             }
 
             g.dispose();
