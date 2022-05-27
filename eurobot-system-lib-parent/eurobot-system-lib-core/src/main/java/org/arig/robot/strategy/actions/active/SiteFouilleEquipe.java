@@ -49,7 +49,7 @@ public class SiteFouilleEquipe extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        if (rs.strategy() != Strategy.FOUILLE) {
+        if (!rs.siteDeFouille()) {
             return false;
         }
 
@@ -59,16 +59,16 @@ public class SiteFouilleEquipe extends AbstractEurobotAction {
 
     @Override
     public void refreshCompleted() {
-        if (rs.siteDeFouillePris() || rs.strategy() != Strategy.FOUILLE) {
+        if (rs.siteDeFouillePris() || !rs.siteDeFouille()) {
             complete();
         }
     }
 
     @Override
     public int order() {
-        if (rs.strategy() == Strategy.FOUILLE
+        if (rs.strategy() == Strategy.AGGRESSIVE
                 && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
-            // Si c'est Odin et que la strat est fouille avec deux robots
+            // Si c'est Odin et que la strat est aggressive avec deux robots
             // C'est la première action
             return 1000;
         }
