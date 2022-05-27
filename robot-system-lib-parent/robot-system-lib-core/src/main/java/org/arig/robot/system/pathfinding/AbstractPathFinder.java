@@ -36,7 +36,7 @@ public abstract class AbstractPathFinder implements PathFinder {
 
     @Getter
     private BufferedImage workImage;
-    private File pathDir;
+    final private File pathDir;
     private final DateTimeFormatter dteFormat = DateTimeFormatter.ISO_TIME;
 
     protected AbstractPathFinder() {
@@ -117,22 +117,18 @@ public abstract class AbstractPathFinder implements PathFinder {
                 g.drawLine((int) pts.get(0).getX(), (int) pts.get(0).getY(), (int) pts.get(l - 1).getX(), (int) pts.get(l - 1).getY());
             }
 
-            // Deuxieme robot
-            final Point autreRobot = rs.otherPosition();
-            if(autreRobot != null) {
-                g.setColor(Color.ORANGE);
-                g.fillOval((int) autreRobot.getX() / 10 - 10, (int) autreRobot.getY() / 10 - 10, 20, 20);
-            }
-
             g.dispose();
-
-            if (!pathDir.exists()) {
-                log.info("Création du répertoire {} : {}", pathDir.getAbsolutePath(), pathDir.mkdirs());
-            }
 
             BufferedImage mirrored = ImageUtils.mirrorX(img);
             Graphics2D mirroredG = mirrored.createGraphics();
             mirroredG.setColor(Color.GREEN);
+
+            // Deuxieme robot
+            final Point autreRobot = rs.otherPosition();
+            if(autreRobot != null) {
+                mirroredG.setColor(Color.ORANGE);
+                mirroredG.fillOval((int) autreRobot.getX() / 10 - 10, (int) autreRobot.getY() / 10 - 10, 20, 20);
+            }
 
             // Temps restant de match
             mirroredG.drawString("Remain " + rs.getRemainingTime() / 1000 + " s", 5, 15);
@@ -143,6 +139,10 @@ public abstract class AbstractPathFinder implements PathFinder {
                 mirroredG.drawString(currentAction, 5, 28);
             }
             mirroredG.dispose();
+
+            if (!pathDir.exists()) {
+                log.info("Création du répertoire {} : {}", pathDir.getAbsolutePath(), pathDir.mkdirs());
+            }
 
             ImageIO.write(mirrored, "png", new File(pathDir, dteFormat.format(LocalDateTime.now()) + "-path.png"));
         } catch (Exception e) {
