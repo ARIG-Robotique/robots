@@ -300,7 +300,8 @@ public abstract class AbstractOrdonanceur {
                 }
             }
         }
-        ecranService.displayMessage(String.format("Alimentation OK (Moteurs : %s V ; Servos : %s V)", energyService.tensionMoteurs(), energyService.tensionServos()));
+        ecranService.displayMessage(String.format("Alim. OK (Moteurs (%d) : %s V ; Servos (%d) : %s V)",
+                nbTryMoteurs, energyService.tensionMoteurs(), nbTryServos, energyService.tensionServos()));
         ThreadUtils.sleep(500);
     }
 
