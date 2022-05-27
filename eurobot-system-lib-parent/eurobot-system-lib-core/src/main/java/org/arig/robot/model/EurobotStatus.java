@@ -91,7 +91,6 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
      * CONFIGURATION
      */
 
-    private boolean reverseCarreDeFouille = false;
     private boolean doubleDeposeGalerie = false;
     private boolean priseUnitaire = false;
     private boolean siteDeFouille = false;

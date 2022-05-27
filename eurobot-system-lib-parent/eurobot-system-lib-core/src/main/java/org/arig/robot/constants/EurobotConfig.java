@@ -18,11 +18,9 @@ public interface EurobotConfig {
     int validRetourSiteDeFouilleRemainingTimeOdin = 8000;
 
     int validTimeEchappement = 20000;
-
     int validDeposeIfElementInStockRemainingTime = matchTimeMs / 2; // Activation de la dépose si au moins un élément en stock
 
     // Options de match
-    String REVERSE_CARRE_FOUILLE = "Force reverse carres f.";
     String DOUBLE_DEPOSE_GALERIE = "Force dbl. dans galerie";
     String PRISE_UNITAIRE = "Prise unitaire";
     String SITE_DE_FOUILLE = "Site de fouille";

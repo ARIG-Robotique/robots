@@ -166,19 +166,6 @@ class RobotGroupServiceTest {
     }
 
     @Test
-    void testConfigurationReverseCarreDeFouille() {
-        Assertions.assertFalse(statusPrimary.reverseCarreDeFouille());
-        Assertions.assertFalse(statusSecondary.reverseCarreDeFouille());
-
-        statusPrimary.reverseCarreDeFouille(true);
-        rgServicePrimary.configuration();
-        ThreadUtils.sleep(WAIT);
-
-        Assertions.assertTrue(statusPrimary.reverseCarreDeFouille());
-        Assertions.assertTrue(statusSecondary.reverseCarreDeFouille());
-    }
-
-    @Test
     void testDistributeurEquipePris() {
         Assertions.assertEquals(statusPrimary.distributeurEquipe(), StatutDistributeur.PAS_PRIS);
         Assertions.assertEquals(statusSecondary.distributeurEquipe(), StatutDistributeur.PAS_PRIS);
