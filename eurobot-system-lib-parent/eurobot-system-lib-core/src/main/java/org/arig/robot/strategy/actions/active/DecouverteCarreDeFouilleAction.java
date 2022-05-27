@@ -58,8 +58,11 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
         if (rs.reverseCarreDeFouille() && nbTry == 0) {
             reverse = true;
         } else {
-            int currentX = getX((int) mv.currentXMm());
-            reverse = currentX > 1500;
+            if (rs.team() == Team.JAUNE) {
+                reverse = mv.currentXMm() > 1200;
+            } else {
+                reverse = mv.currentXMm() < 800;
+            }
         }
         return entryPoint(cf());
     }

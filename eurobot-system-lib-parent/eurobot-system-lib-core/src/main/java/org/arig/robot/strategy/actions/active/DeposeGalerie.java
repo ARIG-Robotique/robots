@@ -42,7 +42,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
     private static final int ENTRY_X_ROUGE_VERT = GALERIE_X_END - 230;
     private static final int ENTRY_X_ROUGE = GALERIE_X_END - 50;
 
-    private static final int ENTRY_Y = 1660;
+    private static final int ENTRY_Y = 1670;
 
     private static final int OFFSET_Y_REF_POUR_PREPARATION = 165;
 
