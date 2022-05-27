@@ -33,7 +33,7 @@ public class DistributeurCommunEquipe extends AbstractDistributeurCommun {
 
     @Override
     public int order() {
-        if ((rs.strategy() == Strategy.BASIC || rs.strategy() == Strategy.AGGRESSIVE) && (
+        if (rs.strategy() == Strategy.BASIC && (
                 (robotName.id() == RobotName.RobotIdentification.NERELL) || (!rs.twoRobots() && robotName.id() == RobotName.RobotIdentification.ODIN)
         )) {
             // Si c'est Nerell et que la strat est la basique.

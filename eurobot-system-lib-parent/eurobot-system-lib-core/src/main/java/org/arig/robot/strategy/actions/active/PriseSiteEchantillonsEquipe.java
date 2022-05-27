@@ -43,7 +43,7 @@ public class PriseSiteEchantillonsEquipe extends AbstractEurobotAction {
 
     @Override
     public int order() {
-        if ((rs.strategy() == Strategy.BASIC || rs.strategy() == Strategy.AGGRESSIVE) && (
+        if (rs.strategy() == Strategy.BASIC && (
                 (robotName.id() == RobotName.RobotIdentification.NERELL) || (!rs.twoRobots() && robotName.id() == RobotName.RobotIdentification.ODIN)
         )) {
             // Si c'est Nerell et que la strat est la basique ou aggressive.
@@ -109,15 +109,8 @@ public class PriseSiteEchantillonsEquipe extends AbstractEurobotAction {
 
             CompletableFuture<Void> task = CompletableFuture.completedFuture(null);
             if (firstAction) {
-                final Point passage1 = new Point(getX(800), 1700);
-                final Point passage2 = new Point(getX(1060), 1700);
-                if (rs.strategy() == Strategy.AGGRESSIVE) {
-                    mv.gotoPoint(passage1, GotoOption.SANS_ORIENTATION, GotoOption.SANS_ARRET);
-                    mv.gotoPoint(passage2, GotoOption.SANS_ORIENTATION);
-                } else {
-                    mv.gotoPoint(passage1, GotoOption.SANS_ORIENTATION);
-                    mv.gotoPoint(passage2);
-                }
+                mv.gotoPoint(getX(800), 1700, GotoOption.SANS_ORIENTATION);
+                mv.gotoPoint(getX(1060), 1700);
                 task = priseEchantillon(task, false, false, false, pointEchantillonBleu(), CouleurEchantillon.ROCHER_BLEU);
                 task = priseEchantillon(task, false, false, false, pointEchantillonVert(), CouleurEchantillon.ROCHER_VERT);
                 task = priseEchantillon(task, false, false, true, pointEchantillonRouge(), CouleurEchantillon.ROCHER_ROUGE);

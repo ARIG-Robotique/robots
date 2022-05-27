@@ -49,13 +49,6 @@ public class PriseSiteDeFouilleEquipe extends AbstractPriseSiteDeFouille {
 
     @Override
     public int order() {
-        if (rs.strategy() == Strategy.AGGRESSIVE
-                && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
-            // Si c'est Odin et que la strat est aggressive avec deux robots
-            // C'est la première action
-            return 1000;
-        }
-
         int stock = rs.stockDisponible();
         return Math.min(stock, 3) * EurobotConfig.PTS_DEPOSE_PRISE + tableUtils.alterOrder(entryPoint());
     }
