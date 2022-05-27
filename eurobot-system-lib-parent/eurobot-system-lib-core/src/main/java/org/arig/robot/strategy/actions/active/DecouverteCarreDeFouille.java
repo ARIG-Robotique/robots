@@ -77,7 +77,7 @@ public class DecouverteCarreDeFouille extends AbstractEurobotAction {
 
     @Override
     public int order() {
-        return 10000 + rs.carresDeFouillePointRestant() + tableUtils.alterOrder(entryPoint());
+        return rs.carresDeFouillePointRestant() + tableUtils.alterOrder(entryPoint());
     }
 
     @Override

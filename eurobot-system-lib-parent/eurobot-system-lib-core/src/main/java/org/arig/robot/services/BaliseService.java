@@ -84,17 +84,29 @@ public class BaliseService extends AbstractBaliseService<StatutBalise> {
 
         if (rs.team() == Team.JAUNE) {
             if (rs.distributeurCommunEquipe() != StatutDistributeur.PRIS_NOUS) {
-                rs.distributeurCommunEquipe(firstPris ? StatutDistributeur.PRIS_BALISE : StatutDistributeur.PAS_PRIS);
+                StatutDistributeur newStatut = firstPris ? StatutDistributeur.PRIS_BALISE : StatutDistributeur.PAS_PRIS;
+                if (rs.distributeurCommunEquipe() != newStatut) {
+                    rs.distributeurCommunEquipe(newStatut);
+                }
             }
             if (rs.distributeurCommunAdverse() != StatutDistributeur.PRIS_NOUS) {
-                rs.distributeurCommunAdverse(secondPris ? StatutDistributeur.PRIS_BALISE : StatutDistributeur.PAS_PRIS);
+                StatutDistributeur newStatut = secondPris ? StatutDistributeur.PRIS_BALISE : StatutDistributeur.PAS_PRIS;
+                if (rs.distributeurCommunAdverse() != newStatut) {
+                    rs.distributeurCommunAdverse(newStatut);
+                }
             }
         } else {
             if (rs.distributeurCommunEquipe() != StatutDistributeur.PRIS_NOUS) {
-                rs.distributeurCommunEquipe(secondPris ? StatutDistributeur.PRIS_BALISE : StatutDistributeur.PAS_PRIS);
+                StatutDistributeur newStatut = secondPris ? StatutDistributeur.PRIS_BALISE : StatutDistributeur.PAS_PRIS;
+                if (rs.distributeurCommunEquipe() != newStatut) {
+                    rs.distributeurCommunEquipe(newStatut);
+                }
             }
             if (rs.distributeurCommunAdverse() != StatutDistributeur.PRIS_NOUS) {
-                rs.distributeurCommunAdverse(firstPris ? StatutDistributeur.PRIS_BALISE : StatutDistributeur.PAS_PRIS);
+                StatutDistributeur newStatut = firstPris ? StatutDistributeur.PRIS_BALISE : StatutDistributeur.PAS_PRIS;
+                if (rs.distributeurCommunAdverse() != newStatut) {
+                    rs.distributeurCommunAdverse(newStatut);
+                }
             }
         }
     }
