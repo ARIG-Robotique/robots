@@ -108,7 +108,6 @@ public class MouvementController {
                                    @RequestParam("sens") final GotoOption sens
     ) throws NoPathFoundException, AvoidingException {
         trajectoryManager.pathTo(x, y, sens != null ? sens : GotoOption.AUTO);
-        rs.disableAvoidance();
     }
 
     @PostMapping(value = "/position")

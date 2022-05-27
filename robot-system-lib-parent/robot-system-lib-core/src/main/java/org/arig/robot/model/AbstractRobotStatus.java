@@ -24,7 +24,7 @@ public abstract class AbstractRobotStatus {
      */
     private final boolean mainRobot;
 
-    public AbstractRobotStatus(int matchTimeMs, boolean mainRobot) {
+    protected AbstractRobotStatus(int matchTimeMs, boolean mainRobot) {
         this.matchTimeMs = matchTimeMs;
         this.mainRobot = mainRobot;
     }
@@ -108,9 +108,18 @@ public abstract class AbstractRobotStatus {
     @Setter(AccessLevel.NONE)
     private boolean avoidanceEnabled = false;
 
+    @Setter(AccessLevel.NONE)
+    @Getter
+    private boolean avoidanceLong = false;
+
     public void enableAvoidance() {
+        enableAvoidance(false);
+    }
+
+    public void enableAvoidance(boolean isLongTime) {
         log.info("Activation evittement");
         avoidanceEnabled = true;
+        avoidanceLong = isLongTime;
     }
 
     public void disableAvoidance() {

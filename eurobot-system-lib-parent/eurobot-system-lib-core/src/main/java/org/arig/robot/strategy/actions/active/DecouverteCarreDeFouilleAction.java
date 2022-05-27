@@ -127,6 +127,7 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                       mv.pathTo(start);
 //                  }
 
+                    rs.enableAvoidance(true);
                     if (rs.stockTaille() >= 5) {
                         mv.gotoOrientationDeg(90);
                         mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
@@ -162,6 +163,8 @@ public class DecouverteCarreDeFouilleAction extends AbstractEurobotAction {
                 } else {
                     mv.gotoOrientationDeg(0);
                 }
+
+                rs.enableAvoidance(true);
 
                 // Si le calage sur carré de fouille n'a pas encore été fait, on se cale sur lui
                 // si on a besoin de faire une lecture.

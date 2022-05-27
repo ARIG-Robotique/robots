@@ -123,8 +123,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
             Point entryPoint;
             boolean hasNextDepose = false;
 
-            mainLoop:
-            do {
+            mainLoop: do {
                 Galerie.GaleriePosition pos = bestPosition(lastPosition);
                 if (pos == null) {
                     break;
@@ -188,7 +187,8 @@ public class DeposeGalerie extends AbstractEurobotAction {
                 io.enableLedCapteurCouleur();
 
                 // On se place à la position permettant de tourner le robot
-                rs.disableAvoidance();
+                rs.enableAvoidance(true);
+                //rs.disableAvoidance();
 
                 final Point tempPoint = new Point(entryPoint.getX(), yRefBordure - OFFSET_Y_REF_POUR_PREPARATION);
                 CompletableFuture<Void> moveTask = runAsync(() -> {

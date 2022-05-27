@@ -131,6 +131,7 @@ public interface OdinConstantesConfig {
     // -------------------------- //
 
     int avoidanceWaitTimeMs = 500;
+    int avoidanceWaitTimeLongMs = 5000;
     int avoidancePathRefreshTimeMs = 2000;
 
     // ---------------------- //

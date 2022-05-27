@@ -196,6 +196,8 @@ public class AbriDeChantier extends AbstractEurobotAction {
                 task = processingPrise(CouleurEchantillon.ROCHER_BLEU, group::echantillonAbriChantierDistributeurPris);
             }
 
+            rs.enableAvoidance(true);
+
             // prise du second échantillon
             if (!rs.echantillonAbriChantierCarreFouillePris()) {
                 mv.setVitesse(config.vitesse(), config.vitesseOrientation());

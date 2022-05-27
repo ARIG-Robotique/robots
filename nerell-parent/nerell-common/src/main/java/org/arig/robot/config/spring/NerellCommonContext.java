@@ -63,6 +63,7 @@ public class NerellCommonContext {
                 .lidarOffsetPointMm(NerellConstantesConfig.lidarOffsetPointMm)
                 .lidarClusterSizeMm(NerellConstantesConfig.lidarClusterSizeMm)
                 .avoidanceWaitTimeMs(NerellConstantesConfig.avoidanceWaitTimeMs)
+                .avoidanceWaitTimeLongMs(NerellConstantesConfig.avoidanceWaitTimeLongMs)
                 .pathFindingSeuilProximite(NerellConstantesConfig.pathFindingSeuilProximite)
                 .pathFindingSeuilProximiteSafe(NerellConstantesConfig.pathFindingSeuilProximiteSafe)
                 .pathFindingSeuilProximiteArig(NerellConstantesConfig.pathFindingSeuilProximiteArig)

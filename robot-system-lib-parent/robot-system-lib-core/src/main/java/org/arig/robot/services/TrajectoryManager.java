@@ -637,6 +637,7 @@ public class TrajectoryManager {
 
         if (!options.contains(GotoOption.SANS_ORIENTATION)) {
             boolean avoidanceEnabled = rs.avoidanceEnabled();
+            boolean avoidanceLong = rs.avoidanceLong();
 
             // Alignement sur le point
             if (avoidanceEnabled) {
@@ -681,7 +682,7 @@ public class TrajectoryManager {
 
             // Retour de l'évittement si actif avant
             if (avoidanceEnabled) {
-                rs.enableAvoidance();
+                rs.enableAvoidance(avoidanceLong);
             }
         }
 
@@ -885,7 +886,8 @@ public class TrajectoryManager {
     private void tourneDegByType(final double angle, TypeConsigne... types) throws AvoidingException {
         log.info("Tourne de {}° en mode : {}", angle, StringUtils.join(types, ", "));
 
-        boolean isAvoidance = rs.avoidanceEnabled();
+        boolean avoidanceEnabled = rs.avoidanceEnabled();
+        boolean avoidanceLong = rs.avoidanceLong();
         try {
             synchronized (this) {
                 rs.disableAvoidance();
@@ -908,8 +910,8 @@ public class TrajectoryManager {
 
             waitMouvement();
         } finally {
-            if (isAvoidance) {
-                rs.enableAvoidance();
+            if (avoidanceEnabled) {
+                rs.enableAvoidance(avoidanceLong);
             }
         }
     }

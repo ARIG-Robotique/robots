@@ -32,9 +32,9 @@ public class SemiCompleteAvoidingService extends AbstractAvoidingService {
                 hasProximite = true;
                 stopWatch.reset();
             }
-
-            if (stopWatch.getTime(TimeUnit.MILLISECONDS) > robotConfig.avoidanceWaitTimeMs()) {
-                log.warn("L'obstacle n'est pas parti après {} ms, recherche d'un nouveau chemin", robotConfig.avoidanceWaitTimeMs());
+            long avoidanceWaitTimeMs = rs.avoidanceLong() ? robotConfig.avoidanceWaitTimeLongMs() : robotConfig.avoidanceWaitTimeMs();
+            if (stopWatch.getTime(TimeUnit.MILLISECONDS) > avoidanceWaitTimeMs) {
+                log.warn("L'obstacle n'est pas parti après {} ms, recherche d'un nouveau chemin", avoidanceWaitTimeMs);
 
                 lidarService.refreshObstacles();
                 trajectoryManager.refreshPathFinding();
@@ -44,8 +44,7 @@ public class SemiCompleteAvoidingService extends AbstractAvoidingService {
             } else {
                 trajectoryManager.obstacleFound();
             }
-        }
-        else {
+        } else {
             if (hasProximite) {
                 log.info("L'obstacle à disparu");
 

@@ -62,6 +62,7 @@ public class OdinCommonContext {
                 .lidarOffsetPointMm(OdinConstantesConfig.lidarOffsetPointMm)
                 .lidarClusterSizeMm(OdinConstantesConfig.lidarClusterSizeMm)
                 .avoidanceWaitTimeMs(OdinConstantesConfig.avoidanceWaitTimeMs)
+                .avoidanceWaitTimeLongMs(OdinConstantesConfig.avoidanceWaitTimeLongMs)
                 .pathFindingSeuilProximite(OdinConstantesConfig.pathFindingSeuilProximite)
                 .pathFindingSeuilProximiteSafe(OdinConstantesConfig.pathFindingSeuilProximiteSafe)
                 .pathFindingSeuilProximiteArig(OdinConstantesConfig.pathFindingSeuilProximiteArig)

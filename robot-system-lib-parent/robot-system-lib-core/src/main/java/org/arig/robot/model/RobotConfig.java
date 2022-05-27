@@ -37,6 +37,7 @@ public class RobotConfig {
     private int lidarOffsetPointMm;
     private int lidarClusterSizeMm;
     private int avoidanceWaitTimeMs;
+    private int avoidanceWaitTimeLongMs;
     private int pathFindingSeuilProximite;
     private int pathFindingSeuilProximiteSafe;
     private int pathFindingSeuilProximiteArig;
