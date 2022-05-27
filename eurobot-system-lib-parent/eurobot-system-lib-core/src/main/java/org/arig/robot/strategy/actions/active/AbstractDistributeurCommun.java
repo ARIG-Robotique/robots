@@ -105,7 +105,7 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
 
                         if (io.presencePriseBras(false)) {
                             log.info("Tentative de prise au sol");
-                            if (priseAuSolEtEjecte(CouleurEchantillon.ROCHER)) {
+                            if (priseAuSolEtEjecte(CouleurEchantillon.ROCHER, -90)) {
                                 mv.gotoPoint(entryPoint());
                                 doExecute();
                                 return;
@@ -121,7 +121,7 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
                             mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
                             rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON, TypeCalage.FORCE);
                             mv.avanceMMSansAngle(100 + EurobotConfig.ECHANTILLON_SIZE);
-                            if (priseAuSolEtEjecte(CouleurEchantillon.ROCHER)) {
+                            if (priseAuSolEtEjecte(CouleurEchantillon.ROCHER, -90)) {
                                 mv.gotoPoint(entryPoint());
                                 doExecute();
                                 return;
@@ -227,28 +227,6 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
         rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON, TypeCalage.FORCE);
         mv.avanceMMSansAngle(EurobotConfig.ECHANTILLON_SIZE);
 
-        priseAuSolEtEjecte(echantillon.getCouleur());
-    }
-
-    private boolean priseAuSolEtEjecte(CouleurEchantillon couleur) throws AvoidingException {
-        log.info("On évacue la mine");
-
-        bras.setBrasHaut(PositionBras.HORIZONTAL);
-        bras.setBrasBas(PositionBras.STOCK_ENTREE);
-        bras.setBrasBas(PositionBras.SOL_PRISE);
-
-        mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
-
-        boolean ok = bras.waitEnableVentouseBas(couleur);
-        if (ok) {
-            mv.reculeMM(10);
-            bras.setBrasBas(PositionBras.SOL_DEPOSE_5);
-            mv.gotoOrientationDeg(-90);
-            bras.waitReleaseVentouseBas();
-        }
-
-        bras.repos();
-
-        return ok;
+        priseAuSolEtEjecte(echantillon.getCouleur(), -90);
     }
 }

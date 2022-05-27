@@ -5,13 +5,14 @@ import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.*;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.StatutDistributeur;
-import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
 import java.util.concurrent.CompletableFuture;
 
 import static org.arig.robot.constants.EurobotConfig.PTS_DEPOSE_PRISE;
@@ -67,43 +68,25 @@ public class DistributeurEquipe extends AbstractDistributeur {
         try {
             Point entry = entryPoint();
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-            mv.pathTo(entry);
 
-            rs.disableAvoidance();
-
-            // Calage sur X
-            mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
-            mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
-            rs.enableCalageBordure(TypeCalage.AVANT_BAS);
-            mv.avanceMM(ENTRY_X - DISTRIB_H - config.distanceCalageAvant() - 10);
-            mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
-            rs.enableCalageBordure(TypeCalage.AVANT_BAS);
-            mv.avanceMM(100);
-
-            if (!io.calageAvantBasDroit() || !io.calageAvantBasGauche()) {
-                log.warn("Mauvaise position Y pour {}", name());
-                updateValidTime(); // FIXME on devrait requérir un callage avant de recommencer
-                rs.enableAvoidance();
-                mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-                mv.gotoPoint(entry, GotoOption.ARRIERE);
-                return;
+            // deminage par la caméra
+            Echantillon echantillonAEnlever = deminageRequis();
+            if (echantillonAEnlever != null) {
+                deminage(echantillonAEnlever);
+                if (!timeBeforeRetourValid()) {
+                    log.warn("Annulation {}, y'a plus le temps", name());
+                    return;
+                }
+                mv.gotoPoint(entry);
+            } else {
+                mv.pathTo(entry);
+                if (!timeBeforeRetourValid()) {
+                    log.warn("Annulation {}, y'a plus le temps", name());
+                    return;
+                }
             }
 
-            CompletableFuture<?> task = prepare();
-
-            mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
-            mv.reculeMM(ENTRY_X - DISTRIB_H - config.distanceCalageAvant() - 10);
-            mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
-
-            task.join();
-            prise();
-
-            rs.enableAvoidance();
-            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-            mv.gotoPoint(entry, GotoOption.ARRIERE);
-
-            group.distributeurEquipe(StatutDistributeur.PRIS_NOUS);
-            complete(true);
+            doExecute();
 
         } catch (NoPathFoundException | AvoidingException e) {
             if (e instanceof MovementCancelledException) {
@@ -113,8 +96,44 @@ public class DistributeurEquipe extends AbstractDistributeur {
                 // blocage dans la zone d'approche = un échantillon bloque le passage
                 if ((robotX <= 350 || robotX >= 3000 - 350) && robotY <= 830 && robotY >= 670) {
                     log.warn("Blocage détecté à proximité de {}", name());
-                    // FIXME Tenter de récupérer l'échantillon et le déposer derrière nous
-                    group.distributeurEquipe(StatutDistributeur.BLOQUE); // on désactive l'action
+
+                    try {
+                        mv.avanceMM(0);
+
+                        if (io.presencePriseBras(false)) {
+                            log.info("Tentative de prise au sol");
+                            if (priseAuSolEtEjecte(CouleurEchantillon.ROCHER, 90)) {
+                                mv.gotoPoint(entryPoint());
+                                doExecute();
+                                return;
+                            }
+                        }
+
+                        log.info("Attente de détection par la balise");
+                        Echantillon echantillon = ThreadUtils.waitUntil(this::deminageRequis, null, 500, 3000);
+
+                        if (echantillon != null) {
+                            mv.reculeMM(100);
+                            mv.alignFrontTo(echantillon);
+                            mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
+                            rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON, TypeCalage.FORCE);
+                            mv.avanceMMSansAngle(100 + EurobotConfig.ECHANTILLON_SIZE);
+                            if (priseAuSolEtEjecte(CouleurEchantillon.ROCHER, 90)) {
+                                mv.gotoPoint(entryPoint());
+                                doExecute();
+                                return;
+                            }
+                        }
+
+                        log.warn("Echec de déminage {}", name());
+                        setDistributeurBloque();
+                        mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+                        mv.reculeMM(100);
+
+                    } catch (AvoidingException e2) {
+                        log.warn("Erreur pendant le déminage " + e2.getMessage());
+                        setDistributeurBloque();
+                    }
                     return;
                 }
             }
@@ -123,5 +142,69 @@ public class DistributeurEquipe extends AbstractDistributeur {
             updateValidTime();
             bras.safeHoming();
         }
+    }
+
+    private Echantillon deminageRequis() {
+        Polygon zoneDistrib = new Polygon();
+        zoneDistrib.addPoint(getX(80), 950);
+        zoneDistrib.addPoint(getX(280), 950);
+        zoneDistrib.addPoint(getX(280), 550);
+        zoneDistrib.addPoint(getX(80), 550);
+        return rs.echantillons().findEchantillon(zoneDistrib);
+    }
+
+    private void deminage(Echantillon echantillon) throws AvoidingException, NoPathFoundException {
+        log.info("Déminage {} pour {}", echantillon, name());
+
+        mv.pathTo(tableUtils.eloigner(echantillon, -EurobotConfig.ECHANTILLON_SIZE - config.distanceCalageAvant()), GotoOption.AVANT);
+        mv.alignFrontTo(echantillon);
+
+        mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
+        rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON, TypeCalage.FORCE);
+        mv.avanceMMSansAngle(EurobotConfig.ECHANTILLON_SIZE);
+
+        priseAuSolEtEjecte(echantillon.getCouleur(), 90);
+    }
+
+    private void doExecute() throws AvoidingException {
+        rs.disableAvoidance();
+
+        // Calage sur X
+        mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
+        mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
+        rs.enableCalageBordure(TypeCalage.AVANT_BAS);
+        mv.avanceMM(ENTRY_X - DISTRIB_H - config.distanceCalageAvant() - 10);
+        mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
+        rs.enableCalageBordure(TypeCalage.AVANT_BAS);
+        mv.avanceMM(100);
+
+        if (!io.calageAvantBasDroit() || !io.calageAvantBasGauche()) {
+            log.warn("Mauvaise position Y pour {}", name());
+            updateValidTime(); // FIXME on devrait requérir un callage avant de recommencer
+            rs.enableAvoidance();
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+            mv.gotoPoint(entryPoint(), GotoOption.ARRIERE);
+            return;
+        }
+
+        CompletableFuture<?> task = prepare();
+
+        mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
+        mv.reculeMM(ENTRY_X - DISTRIB_H - config.distanceCalageAvant() - 10);
+        mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
+
+        task.join();
+        prise();
+
+        rs.enableAvoidance();
+        mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+        mv.gotoPoint(entryPoint(), GotoOption.ARRIERE);
+
+        group.distributeurEquipe(StatutDistributeur.PRIS_NOUS);
+        complete(true);
+    }
+
+    private void setDistributeurBloque() {
+        group.distributeurEquipe(StatutDistributeur.BLOQUE); // on désactive l'action
     }
 }

@@ -75,4 +75,25 @@ public abstract class AbstractDistributeur extends AbstractEurobotAction {
         return runAsync(() -> bras.repos());
     }
 
+    protected boolean priseAuSolEtEjecte(CouleurEchantillon couleur, double angle) throws AvoidingException {
+        log.info("On évacue la mine");
+
+        bras.setBrasHaut(PositionBras.HORIZONTAL);
+        bras.setBrasBas(PositionBras.STOCK_ENTREE);
+        bras.setBrasBas(PositionBras.SOL_PRISE);
+
+        mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
+
+        boolean ok = bras.waitEnableVentouseBas(couleur);
+        if (ok) {
+            mv.reculeMM(10);
+            bras.setBrasBas(PositionBras.SOL_DEPOSE_5);
+            mv.gotoOrientationDeg(angle);
+            bras.waitReleaseVentouseBas();
+        }
+
+        bras.repos();
+
+        return ok;
+    }
 }
