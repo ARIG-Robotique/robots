@@ -350,12 +350,27 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
             switch (odinRobotStatus.strategy()) {
                 case FINALE_1:
+                case FINALE_2:
                     if (!robotStatus.twoRobots()) {
-                        mv.gotoPoint(getX(240), 1430);
+                        mv.gotoPoint(getX(265), 1430);
                         mv.alignFrontTo(getX(750), 1550);
-                        groupService.initStep(InitStep.NERELL_EN_POSITION);
                         break;
+                    } else {
+                        mv.gotoPoint(getX(240), 1740);
+                        mv.gotoPoint(getX(570), 1740);
+                        groupService.initStep(InitStep.ODIN_DEVANT_GALERIE); // Odin calé, en attente devant la galerie
+                        mv.gotoPoint(getX(570), 1160);
+                        mv.gotoOrientationDeg(odinRobotStatus.team() == Team.JAUNE ? 0 : 180);
+                        odinEcranService.displayMessage("Attente calage Nerell");
+                        groupService.waitInitStep(InitStep.NERELL_CALAGE_TERMINE); // Attente Nerell calé
+                        mv.gotoPoint(getX(robotConfig.distanceCalageArriere() + 20), 1160);
+                        mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
+                        robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
+                        mv.reculeMMSansAngle(30);
                     }
+                    groupService.initStep(InitStep.ODIN_EN_POSITION);
+                    break;
+
                 case BASIC:
                 default:
                     if (robotStatus.twoRobots()) {

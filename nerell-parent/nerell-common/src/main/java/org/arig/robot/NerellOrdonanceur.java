@@ -106,7 +106,20 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             try {
                 ThreadUtils.sleep(2000);
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation(20));
-                mv.tourneDeg(180);
+                switch(nerellRobotStatus.strategy()) {
+                    case FINALE_1:
+                    case FINALE_2:
+                        mv.tourneDeg(180);
+                        mv.gotoPoint(getX(260), 1430);
+                        mv.alignBackTo(getX(750), 1550);
+                        break;
+
+                    case BASIC:
+                    default:
+                        mv.tourneDeg(180);
+                        break;
+                }
+
 
             } catch (AvoidingException e) {
                 nerellEcranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
@@ -330,8 +343,14 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
             switch (nerellRobotStatus.strategy()) {
                 case FINALE_1:
-                    mv.gotoPoint(getX(240), 1430);
-                    mv.alignFrontTo(getX(750), 1550);
+                case FINALE_2:
+                    if (robotStatus.twoRobots()) {
+                        mv.gotoPoint(getX(285), 1430);
+                        mv.alignFrontTo(getX(750), 1550);
+                    } else {
+                        mv.gotoPoint(getX(280), 1430);
+                        mv.gotoOrientationDeg(nerellRobotStatus.team() == Team.JAUNE ? 0 : 180);
+                    }
                     groupService.initStep(InitStep.NERELL_EN_POSITION);
                     break;
                 case BASIC:
