@@ -18,6 +18,7 @@ import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.ecran.EcranPhoto;
+import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.BrasService;
@@ -346,8 +347,10 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         try {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
+            GotoOption sensFinal = GotoOption.ARRIERE;
             switch (odinRobotStatus.strategy()) {
                 case FINALE_1:
+                    sensFinal = GotoOption.AVANT;
                 case FINALE_2:
                     if (!robotStatus.twoRobots()) {
                         mv.gotoPoint(getX(265), 1430);
@@ -361,7 +364,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                         mv.gotoOrientationDeg(odinRobotStatus.team() == Team.JAUNE ? 0 : 180);
                         odinEcranService.displayMessage("Attente calage Nerell");
                         groupService.waitInitStep(InitStep.NERELL_CALAGE_TERMINE); // Attente Nerell calé
-                        mv.gotoPoint(getX(robotConfig.distanceCalageArriere() + 20), 1160);
+                        mv.gotoPoint(getX(robotConfig.distanceCalageArriere() + 20), 1160, sensFinal);
                         mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
                         robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
                         mv.reculeMMSansAngle(30);
