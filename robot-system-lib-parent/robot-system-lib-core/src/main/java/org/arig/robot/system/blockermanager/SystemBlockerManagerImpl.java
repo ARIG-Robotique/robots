@@ -62,14 +62,11 @@ public class SystemBlockerManagerImpl implements SystemBlockerManager {
     public void process() {
         int motDroit = cmdRobot.getMoteur().getDroit();
         int motGauche = cmdRobot.getMoteur().getGauche();
-        int consigneDst = Math.abs(motDroit + motGauche) / 2;
-        int condigneOrient = Math.abs(motDroit - motGauche);
 
         // Detection du non-deplacement ou de saturation de commande d'asservissement
         if (!trajectoryManager.isTrajetAtteint() &&
-                consigneDst > 500 &&
-                (Math.abs(encoders.getDistance()) < seuilDistancePulse ||
-                        Math.abs(pidDistance.getErrorSum()) > maxErrorSumDistance)) {
+                Math.abs(motDroit) > 500 &&
+                Math.abs(encoders.getDroit()) < maxErrorSumDistance) {
             countErrorDistance++;
 
         } else {
@@ -77,13 +74,12 @@ public class SystemBlockerManagerImpl implements SystemBlockerManager {
         }
 
         if (!trajectoryManager.isTrajetAtteint() &&
-                condigneOrient > 500 &&
-                (Math.abs(encoders.getOrientation()) < seuilOrientationPulse ||
-                        Math.abs(pidOrientation.getErrorSum() )> maxErrorSumOrientation)) {
-            countErrorOrientation++;
+                Math.abs(motGauche) > 500 &&
+                Math.abs(encoders.getGauche()) < maxErrorSumDistance) {
+            countErrorDistance++;
 
         } else {
-            countErrorOrientation = 0;
+            countErrorDistance = 0;
         }
 
         // Construction du monitoring
@@ -99,7 +95,7 @@ public class SystemBlockerManagerImpl implements SystemBlockerManager {
         monitoringWrapper.addTimeSeriePoint(serie);
 
         // x itérations de 500 ms (cf Scheduler)
-        if (countErrorDistance >= MAX_ERROR_DISTANCE || countErrorOrientation >= MAX_ERROR_ORIENTATION) {
+        if (countErrorDistance >= MAX_ERROR_DISTANCE && countErrorOrientation >= MAX_ERROR_ORIENTATION) {
             log.warn("Détection de blocage trop importante : distance {} ; orientation {}", countErrorDistance, countErrorOrientation);
 
             trajectoryManager.cancelMouvement();

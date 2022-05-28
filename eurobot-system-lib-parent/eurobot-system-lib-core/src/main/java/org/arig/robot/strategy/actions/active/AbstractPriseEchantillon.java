@@ -53,7 +53,7 @@ public abstract class AbstractPriseEchantillon extends AbstractEurobotAction {
                 .findFirst().orElse(null);
     }
 
-    protected final List<Echantillon> echantillonsSite(Echantillon.ID site) {
+    protected List<Echantillon> echantillonsSite(Echantillon.ID site) {
         final Point positionCourante = new Point(mv.currentXMm(), mv.currentYMm());
         return rs.echantillons().getEchantillons().stream()
                 .filter(e -> e.getId() != null)
