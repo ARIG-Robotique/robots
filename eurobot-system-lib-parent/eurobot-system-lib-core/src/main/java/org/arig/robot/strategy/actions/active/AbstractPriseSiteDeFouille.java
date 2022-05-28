@@ -28,10 +28,19 @@ public abstract class AbstractPriseSiteDeFouille extends AbstractPriseEchantillo
 
     @Override
     public void execute() {
+        execute(false);
+    }
+
+    public void execute(boolean skipPath) {
         try {
             final List<Echantillon> currentEchantillons = echantillonsSite(siteDeFouille());
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-            mv.pathTo(entryPoint(), GotoOption.AVANT);
+
+            if (!skipPath) {
+                mv.pathTo(entryPoint(), GotoOption.AVANT);
+            }
+
+            boolean first = true;
 
             // Tant qu'il reste du temps et des échantillons dispo et du stock
             Iterator<Echantillon> echIt = currentEchantillons.iterator();
@@ -44,18 +53,20 @@ public abstract class AbstractPriseSiteDeFouille extends AbstractPriseEchantillo
 
                 // Approche vers l'échantillon
                 final Echantillon echantillonAPrendre = echIt.next();
-                final Point approcheEchantillon = tableUtils.eloigner(echantillonAPrendre, -config.distanceCalageAvant() - (ECHANTILLON_SIZE / 2.0));
 
-                log.info("Approche de l'échantillon {}", echantillonAPrendre);
-                mv.gotoPoint(approcheEchantillon, GotoOption.AVANT);
+                if (!skipPath || !first) {
+                    final Point approcheEchantillon = tableUtils.eloigner(echantillonAPrendre, -config.distanceCalageAvant() - (ECHANTILLON_SIZE / 2.0));
+                    log.info("Approche de l'échantillon {}", echantillonAPrendre);
+                    mv.gotoPoint(approcheEchantillon, GotoOption.AVANT);
+                }
+
                 mv.alignFrontTo(echantillonAPrendre);
 
                 // Avance vers l'échantillon
-                double distanceEchantillon = ECHANTILLON_SIZE;
-                log.info("Avance vers l'échantillon de {} mm", distanceEchantillon);
+                log.info("Avance vers l'échantillon de {} mm", ECHANTILLON_SIZE);
                 mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
                 rs.enableCalageBordure(TypeCalage.PRISE_ECHANTILLON);
-                mv.avanceMM(distanceEchantillon);
+                mv.avanceMM(ECHANTILLON_SIZE);
 
                 if (rs.calageCompleted().contains(TypeCalage.PRISE_ECHANTILLON)) {
                     task.join();
@@ -72,6 +83,8 @@ public abstract class AbstractPriseSiteDeFouille extends AbstractPriseEchantillo
                     log.warn("Calage de l'échantillon {} non terminé", echantillonAPrendre);
                     task.join();
                 }
+
+                first = false;
 
             } while (timeBeforeRetourValid() && echIt.hasNext() && rs.stockDisponible() > 0);
             bras.repos();

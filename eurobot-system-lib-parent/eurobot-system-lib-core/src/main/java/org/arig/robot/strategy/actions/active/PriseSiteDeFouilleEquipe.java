@@ -21,8 +21,6 @@ public class PriseSiteDeFouilleEquipe extends AbstractPriseSiteDeFouille {
     private static final int CENTRE_FOUILLE_X = 975;
     private static final int CENTRE_FOUILLE_Y = 625;
 
-    private boolean first = true;
-
     @Override
     public String name() {
         return EurobotConfig.ACTION_PRISE_SITE_FOUILLE_EQUIPE;
@@ -35,7 +33,7 @@ public class PriseSiteDeFouilleEquipe extends AbstractPriseSiteDeFouille {
 
     @Override
     public int executionTimeMs() {
-        if (rs.strategy() == Strategy.BASIC && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN) && first) {
+        if (rs.strategy() == Strategy.BASIC && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
             return 3000;
         }
         return 3000 * 3; // TODO: A quantifier
@@ -60,10 +58,7 @@ public class PriseSiteDeFouilleEquipe extends AbstractPriseSiteDeFouille {
 
     @Override
     public int order() {
-        if (rs.strategy() == Strategy.BASIC && first
-                && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
-            // Si c'est Odin et que la strat est aggressive avec deux robots
-            // C'est la première action
+        if (rs.strategy() == Strategy.BASIC && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
             return 1000;
         }
 
@@ -104,15 +99,15 @@ public class PriseSiteDeFouilleEquipe extends AbstractPriseSiteDeFouille {
     public void execute() {
         super.execute();
 
-        if (rs.strategy() == Strategy.BASIC && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN) && first) {
+        if (rs.strategy() == Strategy.BASIC && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
+            notifySitePris();
             complete();
-            first = false;
         }
     }
 
     @Override
     protected List<Echantillon> echantillonsSite(Echantillon.ID site) {
-        if (rs.strategy() == Strategy.BASIC && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN) && first) {
+        if (rs.strategy() == Strategy.BASIC && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
             return Arrays.asList(super.echantillonsSite(site).get(0));
         } else {
             return super.echantillonsSite(site);

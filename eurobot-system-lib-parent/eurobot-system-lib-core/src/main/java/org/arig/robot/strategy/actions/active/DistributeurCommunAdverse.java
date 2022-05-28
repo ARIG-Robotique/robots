@@ -18,8 +18,6 @@ import java.util.List;
 @Component
 public class DistributeurCommunAdverse extends AbstractDistributeurCommun {
 
-    private boolean firstTry = true;
-
     @Override
     public String name() {
         return EurobotConfig.ACTION_PRISE_DISTRIB_COMMUN_ADVERSE;
@@ -27,7 +25,7 @@ public class DistributeurCommunAdverse extends AbstractDistributeurCommun {
 
     @Override
     public int order() {
-        if (rs.strategy() == Strategy.FINALE_1 && robotName.id() == RobotName.RobotIdentification.NERELL && firstTry) {
+        if (rs.strategy() == Strategy.FINALE_1 && (robotName.id() == RobotName.RobotIdentification.NERELL || !rs.twoRobots())) {
             return 1000;
         } else {
             return super.order();
@@ -81,7 +79,7 @@ public class DistributeurCommunAdverse extends AbstractDistributeurCommun {
 
     @Override
     public void execute() {
-        if (rs.strategy() == Strategy.FINALE_1 && robotName.id() == RobotName.RobotIdentification.NERELL && firstTry) {
+        if (rs.strategy() == Strategy.FINALE_1 && (robotName.id() == RobotName.RobotIdentification.NERELL || !rs.twoRobots())) {
             try {
                 mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                 rs.enableAvoidance();
@@ -94,7 +92,8 @@ public class DistributeurCommunAdverse extends AbstractDistributeurCommun {
                 log.error("Erreur d'approche FINALE de l'action : {}", e.toString());
                 updateValidTime();
             } finally {
-                firstTry = false;
+                setDistributeurPris();
+                complete();
             }
 
         } else {
