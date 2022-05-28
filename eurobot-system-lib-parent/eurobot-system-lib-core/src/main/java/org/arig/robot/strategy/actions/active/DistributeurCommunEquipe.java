@@ -1,18 +1,22 @@
 package org.arig.robot.strategy.actions.active;
 
+import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
+import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.Galerie;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.StatutDistributeur;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.enums.GotoOption;
 import org.springframework.stereotype.Component;
 
 import java.awt.geom.Rectangle2D;
 import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 @Component
 public class DistributeurCommunEquipe extends AbstractDistributeurCommun {
 
@@ -35,17 +39,19 @@ public class DistributeurCommunEquipe extends AbstractDistributeurCommun {
 
     @Override
     public int order() {
+        // strategie basique (robot nord), deuxième action
         if (rs.strategy() == Strategy.BASIC && (
                 (robotName.id() == RobotName.RobotIdentification.NERELL) || (!rs.twoRobots() && robotName.id() == RobotName.RobotIdentification.ODIN)
         )) {
-            // Si c'est Nerell et que la strat est la basique.
-            // Ou si c'est Odin et qu'il n'y a qu'un seul robot en strat basique.
-            // C'est la seconde action
             return 500;
         }
-        // stragégie finale, deuxième action
+        // stragégie finale 1, deuxième action
         if (rs.strategy() == Strategy.FINALE_1 && robotName.id() == RobotName.RobotIdentification.NERELL && firstTry) {
             return 500;
+        }
+        // stragégie finale 2, première action
+        if (rs.strategy() == Strategy.FINALE_2 && robotName.id() == RobotName.RobotIdentification.NERELL && firstTry) {
+            return 1000;
         }
         return super.order() + 3; // 3 points par prise
     }
@@ -92,6 +98,22 @@ public class DistributeurCommunEquipe extends AbstractDistributeurCommun {
                 300, 300
         ));
 
-        super.execute();
+        if (rs.strategy() == Strategy.FINALE_2 && (robotName.id() == RobotName.RobotIdentification.NERELL || !rs.twoRobots())) {
+            try {
+                mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+                mv.setRampesDistance(config.rampeAccelDistance(130), config.rampeDecelDistance(90));
+                rs.enableAvoidance();
+                mv.gotoPoint(getX(750), 1550, GotoOption.SANS_ARRET, GotoOption.SANS_ORIENTATION);
+                mv.gotoPoint(entryPoint(), GotoOption.SANS_ORIENTATION);
+                doExecute();
+
+            } catch (AvoidingException e) {
+                log.error("Erreur d'approche FINALE de l'action : {}", e.toString());
+                updateValidTime();
+            }
+
+        } else {
+            super.execute();
+        }
     }
 }

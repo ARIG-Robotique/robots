@@ -91,6 +91,7 @@ public class PriseSiteDeFouilleAdverse extends AbstractPriseSiteDeFouille {
             try {
                 rs.enableAvoidance();
                 mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+                mv.setRampesDistance(config.rampeAccelDistance(130), config.rampeDecelDistance(90));
                 mv.gotoPoint(getX(1000), 930, GotoOption.SANS_ORIENTATION, GotoOption.SANS_ARRET);
 
                 Echantillon echantillonAPrendre = echantillonsSite(siteDeFouille()).get(0);

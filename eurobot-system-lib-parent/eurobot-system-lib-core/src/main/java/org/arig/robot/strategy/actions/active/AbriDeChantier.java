@@ -72,9 +72,8 @@ public class AbriDeChantier extends AbstractEurobotAction {
 
     @Override
     public int order() {
-        if ((rs.strategy() == Strategy.BASIC || rs.strategy() == Strategy.AGGRESSIVE) && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
-            // Si c'est Odin et que la strat est la basique avec deux robots
-            // C'est la première action
+        if ((rs.strategy() == Strategy.BASIC || rs.strategy() == Strategy.AGGRESSIVE || rs.strategy() == Strategy.FINALE_2)
+                && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
             firstAction = true;
             return 500;
         }

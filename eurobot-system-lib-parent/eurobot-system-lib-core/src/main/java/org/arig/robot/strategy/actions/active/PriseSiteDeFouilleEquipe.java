@@ -8,11 +8,14 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.enums.GotoOption;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static org.arig.robot.constants.EurobotConfig.ECHANTILLON_SIZE;
 
 @Slf4j
 @Component
@@ -57,6 +60,9 @@ public class PriseSiteDeFouilleEquipe extends AbstractPriseSiteDeFouille {
         if (rs.strategy() == Strategy.BASIC && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
             return 1000;
         }
+        if (rs.strategy() == Strategy.FINALE_2 && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
+            return 1000;
+        }
 
         int stock = rs.stockDisponible();
         return Math.min(stock, 3) * EurobotConfig.PTS_DEPOSE_PRISE + tableUtils.alterOrder(entryPoint());
@@ -93,11 +99,32 @@ public class PriseSiteDeFouilleEquipe extends AbstractPriseSiteDeFouille {
 
     @Override
     public void execute() {
-        super.execute();
+        if (rs.strategy() == Strategy.FINALE_2 && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
+            try {
+                rs.enableAvoidance();
+                mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+                mv.setRampesDistance(config.rampeAccelDistance(130), config.rampeDecelDistance(90));
+                mv.gotoPoint(getX(1000), 930, GotoOption.SANS_ORIENTATION, GotoOption.SANS_ARRET);
+                mv.gotoPoint(1500, 700, GotoOption.SANS_ORIENTATION);
 
-        if (rs.strategy() == Strategy.BASIC && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
-            notifySitePris();
-            complete();
+                Echantillon echantillonAPrendre = echantillonsSite(siteDeFouille()).get(0);
+                final Point approcheEchantillon = tableUtils.eloigner(echantillonAPrendre, -config.distanceCalageAvant() - (ECHANTILLON_SIZE / 2.0));
+                mv.gotoPoint(approcheEchantillon);
+                super.execute(true);
+
+            } catch (AvoidingException e) {
+                log.error("Erreur d'exécution de l'action : {}", e.toString());
+                notifySitePris();
+                complete();
+            }
+
+        } else {
+            super.execute();
+
+            if (rs.strategy() == Strategy.BASIC && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
+                notifySitePris();
+                complete();
+            }
         }
     }
 
