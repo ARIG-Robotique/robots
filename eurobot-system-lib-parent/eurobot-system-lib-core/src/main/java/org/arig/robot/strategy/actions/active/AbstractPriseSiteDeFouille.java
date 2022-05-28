@@ -23,6 +23,7 @@ public abstract class AbstractPriseSiteDeFouille extends AbstractPriseEchantillo
     protected static final int CENTRE_FOUILLE_Y = 625;
 
     protected abstract Echantillon.ID siteDeFouille();
+
     protected abstract void notifySitePris();
 
     @Override
@@ -62,19 +63,7 @@ public abstract class AbstractPriseSiteDeFouille extends AbstractPriseEchantillo
 
                     if (bras.waitEnableVentouseBas(echantillonAPrendre.getCouleur())) {
                         bras.setBrasBas(PositionBras.SOL_LEVEE); // on lève
-
-                        if (EurobotConfig.ECHANGE_PRISE && echantillonAPrendre.getCouleur().isNeedsEchange()) {
-                            if (bras.echangeBasHaut()) {
-                                bras.setBrasBas(PositionBras.HORIZONTAL);
-                                bras.stockageHaut();
-                                bras.setBrasHaut(PositionBras.HORIZONTAL);
-                            } else {
-                                bras.setBrasHaut(PositionBras.HORIZONTAL);
-                                bras.setBrasBas(PositionBras.STOCK_ENTREE);
-                            }
-                        } else {
-                            bras.stockageBas();
-                        }
+                        bras.stockageBas();
                     } else {
                         bras.setBrasBas(PositionBras.SOL_LEVEE);
                     }

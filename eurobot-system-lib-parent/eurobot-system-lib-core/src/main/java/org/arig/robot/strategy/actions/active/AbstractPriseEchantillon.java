@@ -59,6 +59,7 @@ public abstract class AbstractPriseEchantillon extends AbstractEurobotAction {
                 .filter(e -> e.getId() != null)
                 .filter(e -> e.getId().equals(site))
                 .sorted(Comparator.comparing(e -> e.distance(positionCourante)))
+                .limit(3)
                 .map(Echantillon::clone)
                 .collect(Collectors.toList());
     }
