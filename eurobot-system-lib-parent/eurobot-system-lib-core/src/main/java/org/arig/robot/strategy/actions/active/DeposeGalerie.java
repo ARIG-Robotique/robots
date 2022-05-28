@@ -24,6 +24,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.arig.robot.model.Galerie.Periode.*;
 
@@ -122,8 +123,10 @@ public class DeposeGalerie extends AbstractEurobotAction {
             Galerie.GaleriePosition lastPosition = null;
             Point entryPoint;
             boolean hasNextDepose = false;
+            AtomicBoolean needRecalage = new AtomicBoolean(true);
 
-            mainLoop: do {
+            mainLoop:
+            do {
                 Galerie.GaleriePosition pos = bestPosition(lastPosition);
                 if (pos == null) {
                     break;
@@ -192,6 +195,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
                             && pos.periode() != ROUGE && pos.periode() != BLEU) {
                         checkRecalageAngleDeg(90);
                         checkRecalageYmm(2000 - config.distanceCalageAvant() - 85);
+                        needRecalage.set(false);
                     }
 
                     yRefBordure = mv.currentYMm();
@@ -236,8 +240,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
                         bras.setBrasHaut(PositionBras.HORIZONTAL);
                         bras.setBrasBas(PositionBras.GALERIE_DEPOSE);
 
-                        rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
-                        mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
+                        avanceEnCalage(yRefBordure, entryPoint, needRecalage, pos);
 
                         switch (checkYAndDeminage(pos.etage(), pos.periode())) {
                             case CONTINUE:
@@ -284,8 +287,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
                             bras.setBrasHaut(PositionBras.GALERIE_DEPOSE_CENTRE);
                         }
 
-                        rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
-                        mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
+                        avanceEnCalage(yRefBordure, entryPoint, needRecalage, pos);
 
                         switch (checkYAndDeminage(pos.etage(), pos.periode())) {
                             case CONTINUE:
@@ -340,8 +342,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
                     moveTask.join();
 
                     if (okBas || okHaut) {
-                        rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
-                        mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
+                        avanceEnCalage(yRefBordure, entryPoint, needRecalage, pos);
 
                         switch (checkYAndDeminage(pos.etage(), pos.periode())) {
                             case CONTINUE:
@@ -397,6 +398,21 @@ public class DeposeGalerie extends AbstractEurobotAction {
         } finally {
             refreshCompleted();
             group.periodeGalerie(AUCUNE);
+        }
+    }
+
+    private void avanceEnCalage(double yRefBordure, Point entryPoint, AtomicBoolean needRecalage, Galerie.GaleriePosition pos) throws AvoidingException {
+        rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
+
+        if (needRecalage.get() && pos.periode() != ROUGE && pos.periode() != BLEU) {
+            mv.gotoPoint(entryPoint.getX(), yRefBordure - 10, GotoOption.AVANT);
+            rs.enableCalageBordure(TypeCalage.AVANT_BAS);
+            mv.avanceMMSansAngle(50);
+            checkRecalageAngleDeg(90);
+            checkRecalageYmm(2000 - config.distanceCalageAvant() - 85);
+            needRecalage.set(false);
+        } else {
+            mv.gotoPoint(entryPoint.getX(), yRefBordure, GotoOption.AVANT);
         }
     }
 
