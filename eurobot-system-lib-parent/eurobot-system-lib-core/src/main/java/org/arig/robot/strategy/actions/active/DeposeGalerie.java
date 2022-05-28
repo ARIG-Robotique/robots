@@ -166,7 +166,11 @@ public class DeposeGalerie extends AbstractEurobotAction {
 
                     mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
                     rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
-                    mv.avanceMM(100);
+                    if (pos.periode() != ROUGE && pos.periode() != BLEU) {
+                        mv.avanceMMSansAngle(100);
+                    } else {
+                        mv.avanceMM(100);
+                    }
 
                     switch (checkYAndDeminage(pos.etage(), pos.periode())) {
                         case CONTINUE:
@@ -176,8 +180,18 @@ public class DeposeGalerie extends AbstractEurobotAction {
                             // on termine le calage
                             rs.enableCalageBordure(TypeCalage.AVANT_BAS);
                             mv.gotoOrientationDeg(90);
-                            mv.avanceMM(100);
+                            if (pos.periode() != ROUGE && pos.periode() != BLEU) {
+                                mv.avanceMMSansAngle(100);
+                            } else {
+                                mv.avanceMM(100);
+                            }
                             break;
+                    }
+
+                    if (rs.calageCompleted().contains(TypeCalage.AVANT_BAS)
+                            && pos.periode() != ROUGE && pos.periode() != BLEU) {
+                        checkRecalageAngleDeg(90);
+                        checkRecalageYmm(2000 - config.distanceCalageAvant() - 85);
                     }
 
                     yRefBordure = mv.currentYMm();
