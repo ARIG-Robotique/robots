@@ -16,6 +16,8 @@ import java.util.List;
 @Component
 public class DistributeurCommunEquipe extends AbstractDistributeurCommun {
 
+    private boolean firstTry = true;
+
     @Override
     public String name() {
         return EurobotConfig.ACTION_PRISE_DISTRIB_COMMUN_EQUIPE;
@@ -39,6 +41,10 @@ public class DistributeurCommunEquipe extends AbstractDistributeurCommun {
             // Si c'est Nerell et que la strat est la basique.
             // Ou si c'est Odin et qu'il n'y a qu'un seul robot en strat basique.
             // C'est la seconde action
+            return 500;
+        }
+        // stragégie finale, deuxième action
+        if (rs.strategy() == Strategy.FINALE_1 && robotName.id() == RobotName.RobotIdentification.NERELL && firstTry) {
             return 500;
         }
         return super.order() + 3; // 3 points par prise

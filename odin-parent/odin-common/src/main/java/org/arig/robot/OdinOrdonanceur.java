@@ -349,6 +349,13 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             switch (odinRobotStatus.strategy()) {
+                case FINALE_1:
+                    if (!robotStatus.twoRobots()) {
+                        mv.gotoPoint(getX(240), 1430);
+                        mv.alignFrontTo(getX(750), 1550);
+                        groupService.initStep(InitStep.NERELL_EN_POSITION);
+                        break;
+                    }
                 case BASIC:
                 default:
                     if (robotStatus.twoRobots()) {
@@ -366,7 +373,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                         mv.gotoPoint(getX(240), 1430);
                         mv.alignFrontTo(getX(800), 1700);
                     }
-                    groupService.initStep(InitStep.ODIN_EN_POSITION_BASIC);
+                    groupService.initStep(InitStep.ODIN_EN_POSITION);
                     break;
             }
         } catch (AvoidingException e) {

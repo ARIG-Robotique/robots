@@ -147,7 +147,7 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
         }
     }
 
-    private void doExecute() throws AvoidingException {
+    protected void doExecute() throws AvoidingException {
         rs.disableAvoidance();
 
         // Calage sur X
@@ -198,7 +198,8 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
         complete();
 
         rs.enableAvoidance();
-        mv.reculeMM(150);
+        mv.reculeMM(100);
+        mv.gotoPoint(entryPoint());
     }
 
     private Echantillon deminageRequis() {

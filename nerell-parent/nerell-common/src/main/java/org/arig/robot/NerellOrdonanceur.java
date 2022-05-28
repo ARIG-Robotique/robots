@@ -322,18 +322,23 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
      */
     public void positionStrategy() {
         nerellEcranService.displayMessage("Attente Odin en position depart");
-        groupService.waitInitStep(InitStep.ODIN_EN_POSITION_BASIC);
+        groupService.waitInitStep(InitStep.ODIN_EN_POSITION);
         nerellEcranService.displayMessage("Mise en place");
 
         try {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             switch (nerellRobotStatus.strategy()) {
+                case FINALE_1:
+                    mv.gotoPoint(getX(240), 1430);
+                    mv.alignFrontTo(getX(750), 1550);
+                    groupService.initStep(InitStep.NERELL_EN_POSITION);
+                    break;
                 case BASIC:
                 default:
                     mv.gotoPoint(getX(240), 1430);
                     mv.alignFrontTo(getX(800), 1700);
-                    groupService.initStep(InitStep.NERELL_EN_POSITION_BASIC);
+                    groupService.initStep(InitStep.NERELL_EN_POSITION);
                     break;
             }
         } catch (AvoidingException e) {
