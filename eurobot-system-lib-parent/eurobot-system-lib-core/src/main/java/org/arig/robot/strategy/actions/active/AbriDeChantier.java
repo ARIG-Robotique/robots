@@ -18,6 +18,7 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.awt.Rectangle;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -52,6 +53,15 @@ public class AbriDeChantier extends AbstractEurobotAction {
     }
 
     @Override
+    public Rectangle blockingZone() {
+        if (rs.team() == Team.JAUNE) {
+            return new Rectangle(0, 0, 700, 850);
+        } else {
+            return new Rectangle(2300, 0, 700, 850);
+        }
+    }
+
+    @Override
     public String name() {
         return EurobotConfig.ACTION_ABRI_CHANTIER;
     }
@@ -72,7 +82,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
 
     @Override
     public int order() {
-        if ((rs.strategy() == Strategy.BASIC || rs.strategy() == Strategy.AGGRESSIVE || rs.strategy() == Strategy.FINALE_2)
+        if ((rs.strategy() == Strategy.BASIC || rs.strategy() == Strategy.FINALE_2)
                 && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
             firstAction = true;
             return 500;

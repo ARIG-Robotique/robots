@@ -349,7 +349,6 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
             switch (odinRobotStatus.strategy()) {
                 case FINALE_1:
-                case FINALE_2:
                     if (!robotStatus.twoRobots()) {
                         mv.gotoPoint(getX(265), 1430);
                         mv.alignFrontTo(getX(750), 1550);
@@ -362,21 +361,15 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                         mv.gotoOrientationDeg(odinRobotStatus.team() == Team.JAUNE ? 0 : 180);
                         odinEcranService.displayMessage("Attente calage Nerell");
                         groupService.waitInitStep(InitStep.NERELL_CALAGE_TERMINE); // Attente Nerell calé
-                        if (odinRobotStatus.strategy() == Strategy.FINALE_1) {
-                            mv.gotoPoint(getX(robotConfig.distanceCalageArriere() + 20), 1160);
-                            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
-                            robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
-                            mv.reculeMMSansAngle(30);
-                        } else {
-                            mv.gotoPoint(getX(robotConfig.distanceCalageArriere() + 20), 1160, GotoOption.AVANT);
-                            mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
-                            robotStatus.enableCalageBordure(TypeCalage.AVANT_BAS);
-                            mv.avanceMMSansAngle(30);
-                        }
+                        mv.gotoPoint(getX(robotConfig.distanceCalageArriere() + 20), 1160);
+                        mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
+                        robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
+                        mv.reculeMMSansAngle(30);
                     }
                     groupService.initStep(InitStep.ODIN_EN_POSITION);
                     break;
 
+                case FINALE_2:
                 case BASIC:
                 default:
                     if (robotStatus.twoRobots()) {

@@ -142,9 +142,9 @@ public interface OdinConstantesConfig {
     int pathFindingAngleSafe = 50;
     int pathFindingSeuilProximite = 440;
     int pathFindingSeuilProximiteSafe = 500;
-    int pathFindingSeuilProximiteArig = 400;
+    int pathFindingSeuilProximiteArig = 390;
     int pathFindingTailleObstacle = OdinConstantesConfig.pathFindingSeuilProximite * 2 + 50;
-    int pathFindingTailleObstacleArig = OdinConstantesConfig.pathFindingSeuilProximiteArig * 2 + 40;
+    int pathFindingTailleObstacleArig = OdinConstantesConfig.pathFindingSeuilProximiteArig * 2 + 50;
 
     int lidarClusterSizeMm = 50;
     int lidarOffsetPointMm = 30; // "recule" les points détectés pour prendre en compte qu'on ne detecte que les faces avant

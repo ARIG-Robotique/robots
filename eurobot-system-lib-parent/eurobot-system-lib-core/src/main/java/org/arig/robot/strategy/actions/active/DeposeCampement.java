@@ -38,7 +38,10 @@ public class DeposeCampement extends AbstractCampement {
         Point pointSud = new Point(getX(ENTRY_X), CENTER_X - (ENTRY_Y - CENTER_X));
 
         if (rs.otherCampement() == null) {
-            if (rs.tailleCampementRougeVertSud() == 0) {
+            if (rs.galerieComplete() && rs.tailleCampementRougeVertNord() == 0) {
+                position = Campement.Position.NORD;
+                return pointNord;
+            } else if (rs.tailleCampementRougeVertSud() == 0) {
                 position = Campement.Position.SUD;
                 return pointSud;
             } else {

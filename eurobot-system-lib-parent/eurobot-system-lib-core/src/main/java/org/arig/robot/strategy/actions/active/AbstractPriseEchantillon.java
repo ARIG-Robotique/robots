@@ -66,7 +66,6 @@ public abstract class AbstractPriseEchantillon extends AbstractEurobotAction {
                 .sorted(Comparator.comparing(e -> e.distance(positionCourante)))
                 .limit(3)
                 .map(Echantillon::clone)
-                .limit(3)
                 .collect(Collectors.toList());
     }
 }

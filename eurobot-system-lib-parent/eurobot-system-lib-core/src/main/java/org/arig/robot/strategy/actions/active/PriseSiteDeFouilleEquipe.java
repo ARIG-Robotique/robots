@@ -57,10 +57,8 @@ public class PriseSiteDeFouilleEquipe extends AbstractPriseSiteDeFouille {
 
     @Override
     public int order() {
-        if (rs.strategy() == Strategy.BASIC && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
-            return 1000;
-        }
-        if (rs.strategy() == Strategy.FINALE_2 && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
+        if ((rs.strategy() == Strategy.BASIC || rs.strategy() == Strategy.FINALE_2)
+                && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
             return 1000;
         }
 
@@ -99,38 +97,19 @@ public class PriseSiteDeFouilleEquipe extends AbstractPriseSiteDeFouille {
 
     @Override
     public void execute() {
-        if (rs.strategy() == Strategy.FINALE_2 && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
-            try {
-                rs.enableAvoidance();
-                mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-                mv.setRampesDistance(config.rampeAccelDistance(130), config.rampeDecelDistance(90));
-                mv.gotoPoint(getX(1000), 930, GotoOption.SANS_ORIENTATION, GotoOption.SANS_ARRET);
-                mv.gotoPoint(1500, 700, GotoOption.SANS_ORIENTATION);
+        super.execute();
 
-                Echantillon echantillonAPrendre = echantillonsSite(siteDeFouille()).get(0);
-                final Point approcheEchantillon = tableUtils.eloigner(echantillonAPrendre, -config.distanceCalageAvant() - (ECHANTILLON_SIZE / 2.0));
-                mv.gotoPoint(approcheEchantillon);
-                super.execute(true);
-
-            } catch (AvoidingException e) {
-                log.error("Erreur d'exécution de l'action : {}", e.toString());
-                notifySitePris();
-                complete();
-            }
-
-        } else {
-            super.execute();
-
-            if (rs.strategy() == Strategy.BASIC && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
-                notifySitePris();
-                complete();
-            }
+        if ((rs.strategy() == Strategy.BASIC || rs.strategy() == Strategy.FINALE_2)
+                && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
+            notifySitePris();
+            complete();
         }
     }
 
     @Override
     protected List<Echantillon> echantillonsSite(Echantillon.ID site) {
-        if (rs.strategy() == Strategy.BASIC && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
+        if ((rs.strategy() == Strategy.BASIC || rs.strategy() == Strategy.FINALE_2)
+                && rs.twoRobots() && (robotName.id() == RobotName.RobotIdentification.ODIN)) {
             return Arrays.asList(super.echantillonsSite(site).get(0));
         } else {
             return super.echantillonsSite(site);

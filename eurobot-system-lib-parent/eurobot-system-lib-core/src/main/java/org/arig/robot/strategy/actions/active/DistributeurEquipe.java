@@ -13,6 +13,7 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
+import java.awt.Rectangle;
 import java.util.concurrent.CompletableFuture;
 
 import static org.arig.robot.constants.EurobotConfig.PTS_DEPOSE_PRISE;
@@ -29,6 +30,15 @@ public class DistributeurEquipe extends AbstractDistributeur {
     @Override
     public String name() {
         return EurobotConfig.ACTION_PRISE_DISTRIB_EQUIPE;
+    }
+
+    @Override
+    public Rectangle blockingZone() {
+        if (rs.team() == Team.JAUNE) {
+            return new Rectangle(0, 500, 600, 500);
+        } else {
+            return new Rectangle(2500, 500, 600, 500);
+        }
     }
 
     @Override
