@@ -44,7 +44,7 @@ public class DeposeGalerie extends AbstractEurobotAction {
 
     private static final int ENTRY_Y = 1670;
 
-    private static final int OFFSET_Y_REF_POUR_PREPARATION = 165;
+    private static final int OFFSET_Y_REF_POUR_PREPARATION = 195;
 
     enum CheckYResult {
         OK,
