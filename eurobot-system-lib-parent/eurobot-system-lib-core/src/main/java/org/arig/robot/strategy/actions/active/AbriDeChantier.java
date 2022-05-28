@@ -76,7 +76,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
             // Si c'est Odin et que la strat est la basique avec deux robots
             // C'est la première action
             firstAction = true;
-            return 1000;
+            return 500;
         }
 
         refreshConditions();
@@ -186,11 +186,8 @@ public class AbriDeChantier extends AbstractEurobotAction {
                     needPath = false;
                     mv.pathTo(entryEchantillonDistributeur());
                 } else {
-                    if (firstAction) {
-                        mv.gotoPoint(entryEchantillonDistributeur(), GotoOption.SANS_ORIENTATION);
-                    } else {
-                        mv.gotoPoint(entryEchantillonDistributeur());
-                    }
+                    rs.enableAvoidance();
+                    mv.gotoPoint(entryEchantillonDistributeur());
                 }
                 mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? ORIENT_JAUNE_FACE_ABRI : ORIENT_VIOLET_FACE_ABRI);
                 task = processingPrise(CouleurEchantillon.ROCHER_BLEU, group::echantillonAbriChantierDistributeurPris);
