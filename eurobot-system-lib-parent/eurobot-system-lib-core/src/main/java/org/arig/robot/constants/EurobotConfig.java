@@ -22,8 +22,6 @@ public interface EurobotConfig {
 
     // Options de match
     String DOUBLE_DEPOSE_GALERIE = "Force dbl. dans galerie";
-    String PRISE_UNITAIRE = "Prise unitaire";
-    String SITE_DE_FOUILLE = "Site de fouille";
 
     // Noms des actions
     String ACTION_DECOUVERTE_CARRE_FOUILLE = "Découverte carré de fouille";

@@ -77,9 +77,7 @@ public class RobotGroupService implements RobotGroup.Handler {
                 break;
             case CONFIG:
                 rs.doubleDeposeGalerie(data[0] > 0);
-                rs.priseUnitaire(data[1] > 0);
-                rs.siteDeFouille(data[2] > 0);
-                rs.etalonageBaliseOk(data[3] > 0);
+                rs.etalonageBaliseOk(data[1] > 0);
                 break;
             case CURRENT_ACTION:
                 String actionName = null;
@@ -272,8 +270,6 @@ public class RobotGroupService implements RobotGroup.Handler {
     public void configuration() {
         byte[] data = new byte[]{
                 (byte) (rs.doubleDeposeGalerie() ? 1 : 0),
-                (byte) (rs.priseUnitaire() ? 1 : 0),
-                (byte) (rs.siteDeFouille() ? 1 : 0),
                 (byte) (rs.etalonageBaliseOk() ? 1 : 0)
         };
         sendEvent(StatusEvent.CONFIG, data);

@@ -92,9 +92,6 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
      */
 
     private boolean doubleDeposeGalerie = false;
-    private boolean priseUnitaire = false;
-    private boolean siteDeFouille = false;
-
 
     /**
      * STATUT

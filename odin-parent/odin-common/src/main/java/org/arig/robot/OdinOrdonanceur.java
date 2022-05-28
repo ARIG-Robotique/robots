@@ -237,8 +237,6 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
                 odinRobotStatus.twoRobots(odinEcranService.config().isTwoRobots());
                 odinRobotStatus.doubleDeposeGalerie(odinEcranService.config().hasOption(EurobotConfig.DOUBLE_DEPOSE_GALERIE));
-                odinRobotStatus.priseUnitaire(odinEcranService.config().hasOption(EurobotConfig.PRISE_UNITAIRE));
-                odinRobotStatus.siteDeFouille(odinEcranService.config().hasOption(EurobotConfig.SITE_DE_FOUILLE));
 
                 done = odinEcranService.config().isStartCalibration();
             }

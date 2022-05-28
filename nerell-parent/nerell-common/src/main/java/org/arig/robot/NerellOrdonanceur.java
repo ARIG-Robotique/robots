@@ -222,8 +222,6 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
             nerellRobotStatus.twoRobots(nerellEcranService.config().isTwoRobots());
             nerellRobotStatus.doubleDeposeGalerie(nerellEcranService.config().hasOption(EurobotConfig.DOUBLE_DEPOSE_GALERIE));
-            nerellRobotStatus.priseUnitaire(nerellEcranService.config().hasOption(EurobotConfig.PRISE_UNITAIRE));
-            nerellRobotStatus.siteDeFouille(nerellEcranService.config().hasOption(EurobotConfig.SITE_DE_FOUILLE));
 
             groupService.configuration();
 

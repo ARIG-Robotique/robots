@@ -31,7 +31,7 @@ public class PriseSiteDeFouilleAdverse extends AbstractPriseSiteDeFouille {
 
     @Override
     public boolean isValid() {
-        if (!rs.siteDeFouille() || rs.strategy() == Strategy.BASIC) {
+        if (rs.strategy() == Strategy.BASIC) {
             rs.siteDeFouilleAdversePris(true);
             return false;
         }
@@ -42,7 +42,7 @@ public class PriseSiteDeFouilleAdverse extends AbstractPriseSiteDeFouille {
 
     @Override
     public void refreshCompleted() {
-        if (rs.siteDeFouilleAdversePris() || !rs.siteDeFouille()) {
+        if (rs.siteDeFouilleAdversePris()) {
             complete();
         }
     }

@@ -41,17 +41,13 @@ public class PriseSiteDeFouilleEquipe extends AbstractPriseSiteDeFouille {
 
     @Override
     public boolean isValid() {
-        if (!rs.siteDeFouille()) {
-            return false;
-        }
-
         return isTimeValid() && timeBeforeRetourValid()
                 && !rs.siteDeFouillePris() && rs.stockDisponible() > 0;
     }
 
     @Override
     public void refreshCompleted() {
-        if (rs.siteDeFouillePris() || !rs.siteDeFouille()) {
+        if (rs.siteDeFouillePris()) {
             complete();
         }
     }
