@@ -6,6 +6,7 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.Echantillon;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Rectangle;
+import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.GotoOption;
@@ -44,6 +45,10 @@ public abstract class AbstractPriseEchantillon extends AbstractEurobotAction {
                     }
                     if (rs.siteDeFouilleAdversePris() && ((e.getId() == Echantillon.ID.SITE_FOUILLE_VIOLET && rs.team() == Team.JAUNE)
                             || (e.getId() == Echantillon.ID.SITE_FOUILLE_JAUNE && rs.team() == Team.VIOLET))) {
+                        return true;
+                    }
+                    if (rs.siteEchantillonPris() && (e.getId() == Echantillon.ID.SITE_ECHANTILLONS_JAUNE && rs.team() == Team.JAUNE
+                            || e.getId() == Echantillon.ID.SITE_ECHANTILLONS_VIOLET && rs.team() == Team.VIOLET)) {
                         return true;
                     }
                     return false;

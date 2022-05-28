@@ -59,6 +59,10 @@ public class PriseSiteEchantillonsEquipe extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
+        if (rs.strategy() == Strategy.FINALE_1 || rs.strategy() == Strategy.FINALE_2) {
+            rs.siteEchantillonPris(true);
+            return false;
+        }
         return isTimeValid() && timeBeforeRetourValid() && !rs.siteEchantillonPris();
     }
 
