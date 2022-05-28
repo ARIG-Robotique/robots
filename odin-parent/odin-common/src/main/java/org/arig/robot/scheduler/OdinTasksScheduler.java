@@ -49,7 +49,7 @@ public class OdinTasksScheduler {
         ecranService.process();
     }
 
-    @Scheduled(fixedDelay = 50)
+    @Scheduled(fixedDelay = 20)
     public void obstacleAvoidanceTask() {
         if (rs.avoidanceEnabled()) {
             avoidingService.process();

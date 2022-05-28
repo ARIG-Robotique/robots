@@ -82,6 +82,7 @@ public class DistributeurCommunAdverse extends AbstractDistributeurCommun {
         if (rs.strategy() == Strategy.FINALE_1 && (robotName.id() == RobotName.RobotIdentification.NERELL || !rs.twoRobots())) {
             try {
                 mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+                mv.setRampesDistance(config.rampeAccelDistance(130), config.rampeDecelDistance(90));
                 rs.enableAvoidance();
                 mv.gotoPoint(getX(750), 1550, GotoOption.SANS_ARRET, GotoOption.SANS_ORIENTATION);
                 mv.gotoPoint(3000 - getX(ENTRY_X), 1480, GotoOption.SANS_ORIENTATION);
