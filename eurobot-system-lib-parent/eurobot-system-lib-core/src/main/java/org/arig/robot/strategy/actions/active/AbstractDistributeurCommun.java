@@ -159,6 +159,13 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
         rs.enableCalageBordure(TypeCalage.AVANT_BAS);
         mv.avanceMM(100);
 
+        if (!rs.calageCompleted().contains(TypeCalage.AVANT_BAS)) {
+            log.warn("Echec de callage X");
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+            mv.reculeMM(100);
+            return;
+        }
+
         mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
         mv.reculeMM(55);
 
@@ -170,6 +177,13 @@ public abstract class AbstractDistributeurCommun extends AbstractDistributeur {
         mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
         rs.enableCalageBordure(TypeCalage.AVANT_BAS);
         mv.avanceMM(100);
+
+        if (!rs.calageCompleted().contains(TypeCalage.AVANT_BAS)) {
+            log.warn("Echec de callage Y");
+            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+            mv.reculeMM(100);
+            return;
+        }
 
         CompletableFuture<?> task = prepare();
 

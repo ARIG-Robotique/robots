@@ -147,7 +147,7 @@ public class DecouverteCarreDeFouille extends AbstractEurobotAction {
                     rs.enableAvoidance(true);
                     if (rs.stockTaille() >= 5 || mv.currentAngleDeg() > 0) {
                         mv.gotoOrientationDeg(90);
-                        mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
+                        mv.setVitesse(config.vitesse(60), config.vitesseOrientation());
                         rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
                         mv.reculeMM(start.getY() - config.distanceCalageArriere() - 10);
 
@@ -168,6 +168,7 @@ public class DecouverteCarreDeFouille extends AbstractEurobotAction {
                         }
 
                         rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
+                        mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
                         mv.reculeMMSansAngle(40);
                         checkRecalageYmm(config.distanceCalageArriere(), TypeCalage.ARRIERE);
                         checkRecalageAngleDeg(90, TypeCalage.ARRIERE);
@@ -178,7 +179,7 @@ public class DecouverteCarreDeFouille extends AbstractEurobotAction {
 
                     } else {
                         mv.gotoOrientationDeg(-90);
-                        mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
+                        mv.setVitesse(config.vitesse(60), config.vitesseOrientation());
                         rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
                         mv.avanceMM(start.getY() - config.distanceCalageAvant() - 10);
 
@@ -199,6 +200,7 @@ public class DecouverteCarreDeFouille extends AbstractEurobotAction {
                         }
 
                         rs.enableCalageBordure(TypeCalage.AVANT_BAS, TypeCalage.FORCE);
+                        mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
                         mv.avanceMMSansAngle(40);
                         checkRecalageYmm(config.distanceCalageAvant(), TypeCalage.AVANT_BAS);
                         checkRecalageAngleDeg(-90, TypeCalage.AVANT_BAS);
@@ -225,7 +227,7 @@ public class DecouverteCarreDeFouille extends AbstractEurobotAction {
                 if (!calageCarreFouilleDone && carreFouille.needRead()) {
                     log.info("Calage carré de fouille requis");
                     mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
-                    mv.setRampesDistance(config.rampeAccelDistance(20), config.rampeDecelDistance(20));
+                    mv.setRampesDistance(config.rampeAccelDistance(40), config.rampeDecelDistance(40));
 
                     // On est censé avoir un carré de fouille
                     boolean presence = ThreadUtils.waitUntil(() -> io.presenceCarreFouille(true), 5, WAIT_READ_BASCULE_MS);

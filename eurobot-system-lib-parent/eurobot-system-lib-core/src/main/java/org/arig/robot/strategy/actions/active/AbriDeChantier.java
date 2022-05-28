@@ -217,6 +217,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
             }
 
             // point d'entrée principal
+            rs.enableAvoidance(true);
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             if (needPath) {
                 mv.pathTo(entryStatuette());
@@ -301,6 +302,8 @@ public class AbriDeChantier extends AbstractEurobotAction {
                 servos.langueOuvert(true);
             }
 
+            rs.disableAvoidance();
+
             rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.gotoPoint(tableUtils.eloigner(new Point(getX(255), 255), -config.distanceCalageArriere() - FOURCHE_WIDTH), GotoOption.ARRIERE);
@@ -362,6 +365,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
         bras.setBrasBas(PositionBras.BORDURE_APPROCHE);
 
         rs.enableCalageBordure(TypeCalage.AVANT_HAUT, TypeCalage.FORCE);
+        rs.disableAvoidance();
         mv.setVitesse(config.vitesse(10), config.vitesseOrientation());
         mv.avanceMM(150);
         mv.setVitesse(config.vitesse(), config.vitesseOrientation());
@@ -370,6 +374,7 @@ public class AbriDeChantier extends AbstractEurobotAction {
         boolean priseOk = bras.waitEnableVentouseBas(couleur);
         bras.setBrasBas(PositionBras.BORDURE_APPROCHE);
 
+        rs.enableAvoidance(true);
         mv.reculeMM(EurobotConfig.ECHANTILLON_SIZE);
 
         if (priseOk) {

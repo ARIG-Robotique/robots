@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.Echantillon;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,7 @@ public class PriseSiteDeFouilleAdverse extends AbstractPriseSiteDeFouille {
 
     @Override
     public boolean isValid() {
-        if (!rs.siteDeFouille()) {
+        if (!rs.siteDeFouille() || rs.strategy() == Strategy.BASIC) {
             return false;
         }
 
