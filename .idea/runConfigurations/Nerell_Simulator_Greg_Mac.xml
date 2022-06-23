@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Nerell Simulator Greg" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <option name="ACTIVE_PROFILES" value="default,monitoring,simulateur,greg" />
+  <configuration default="false" name="Nerell Simulator Greg Mac" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="default,monitoring,simulateur,greg,greg-mac" />
     <option name="ALTERNATIVE_JRE_PATH" value="Oracle 1.8" />
     <module name="robots.nerell-parent.nerell-simulator.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="org.arig.robot.config.spring.NerellSimulator" />

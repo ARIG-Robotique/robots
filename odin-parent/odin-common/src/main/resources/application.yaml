@@ -89,12 +89,24 @@ spring:
 balise:
   impl: SOCKET
   socket:
-    host: sauron
+    host: localhost
 
 # Nerell
 nerell:
   socket:
     host: localhost
+
+---
+
+# Spring properties
+spring:
+  config:
+    activate:
+      on-profile: greg-mac
+
+# Écran
+ecran:
+  binary: ${user.home}/workspaces/arig-wksp/cpp-linux/build-robots-gui-Desktop_Qt_5_15_2_clang_64bit-Debug/robots-gui.app/Contents/MacOS/robots-gui
 
 ---
 
