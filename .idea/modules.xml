@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/eurobot-system-lib-parent/eurobot-system-lib-bouchon/robots.eurobot-system-lib-parent.eurobot-system-lib-bouchon.main.iml" filepath="$PROJECT_DIR$/.idea/modules/eurobot-system-lib-parent/eurobot-system-lib-bouchon/robots.eurobot-system-lib-parent.eurobot-system-lib-bouchon.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/eurobot-system-lib-parent/eurobot-system-lib-core/robots.eurobot-system-lib-parent.eurobot-system-lib-core.main.iml" filepath="$PROJECT_DIR$/.idea/modules/eurobot-system-lib-parent/eurobot-system-lib-core/robots.eurobot-system-lib-parent.eurobot-system-lib-core.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/eurobot-system-lib-parent/eurobot-system-lib-core/robots.eurobot-system-lib-parent.eurobot-system-lib-core.test.iml" filepath="$PROJECT_DIR$/.idea/modules/eurobot-system-lib-parent/eurobot-system-lib-core/robots.eurobot-system-lib-parent.eurobot-system-lib-core.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/nerell-parent/nerell-common/robots.nerell-parent.nerell-common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/nerell-parent/nerell-common/robots.nerell-parent.nerell-common.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/nerell-parent/nerell-robot/robots.nerell-parent.nerell-robot.main.iml" filepath="$PROJECT_DIR$/.idea/modules/nerell-parent/nerell-robot/robots.nerell-parent.nerell-robot.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/nerell-parent/nerell-simulator/robots.nerell-parent.nerell-simulator.main.iml" filepath="$PROJECT_DIR$/.idea/modules/nerell-parent/nerell-simulator/robots.nerell-parent.nerell-simulator.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/nerell-parent/nerell-utils/robots.nerell-parent.nerell-utils.main.iml" filepath="$PROJECT_DIR$/.idea/modules/nerell-parent/nerell-utils/robots.nerell-parent.nerell-utils.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/odin-parent/odin-common/robots.odin-parent.odin-common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/odin-parent/odin-common/robots.odin-parent.odin-common.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/odin-parent/odin-robot/robots.odin-parent.odin-robot.main.iml" filepath="$PROJECT_DIR$/.idea/modules/odin-parent/odin-robot/robots.odin-parent.odin-robot.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/odin-parent/odin-simulator/robots.odin-parent.odin-simulator.main.iml" filepath="$PROJECT_DIR$/.idea/modules/odin-parent/odin-simulator/robots.odin-parent.odin-simulator.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/odin-parent/odin-utils/robots.odin-parent.odin-utils.main.iml" filepath="$PROJECT_DIR$/.idea/modules/odin-parent/odin-utils/robots.odin-parent.odin-utils.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/robot-system-lib-parent/robot-system-lib-bouchon/robots.robot-system-lib-parent.robot-system-lib-bouchon.main.iml" filepath="$PROJECT_DIR$/.idea/modules/robot-system-lib-parent/robot-system-lib-bouchon/robots.robot-system-lib-parent.robot-system-lib-bouchon.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/robot-system-lib-parent/robot-system-lib-core/robots.robot-system-lib-parent.robot-system-lib-core.main.iml" filepath="$PROJECT_DIR$/.idea/modules/robot-system-lib-parent/robot-system-lib-core/robots.robot-system-lib-parent.robot-system-lib-core.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/robot-system-lib-parent/robot-system-lib-core/robots.robot-system-lib-parent.robot-system-lib-core.test.iml" filepath="$PROJECT_DIR$/.idea/modules/robot-system-lib-parent/robot-system-lib-core/robots.robot-system-lib-parent.robot-system-lib-core.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/robot-system-lib-parent/robot-system-lib-joycon/robots.robot-system-lib-parent.robot-system-lib-joycon.main.iml" filepath="$PROJECT_DIR$/.idea/modules/robot-system-lib-parent/robot-system-lib-joycon/robots.robot-system-lib-parent.robot-system-lib-joycon.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/robot-system-lib-parent/robot-system-lib-raspi/robots.robot-system-lib-parent.robot-system-lib-raspi.main.iml" filepath="$PROJECT_DIR$/.idea/modules/robot-system-lib-parent/robot-system-lib-raspi/robots.robot-system-lib-parent.robot-system-lib-raspi.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tinker-parent/tinker-robot/robots.tinker-parent.tinker-robot.main.iml" filepath="$PROJECT_DIR$/.idea/modules/tinker-parent/tinker-robot/robots.tinker-parent.tinker-robot.main.iml" />
+    </modules>
+  </component>
+</project>

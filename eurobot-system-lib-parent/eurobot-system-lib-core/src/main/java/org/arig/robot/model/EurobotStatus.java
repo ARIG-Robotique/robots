@@ -56,7 +56,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     @Override
     public void refreshState() {
-        if (matchEnabled()) {
+        /*if (matchEnabled()) {
             if (needRefreshStock) {
                 needRefreshStock = false;
                 try {
@@ -74,7 +74,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
                     log.warn("Erreur d'affichage des ventouses sur les LEDs", e);
                 }
             }
-        }
+        }*/
     }
 
     @Setter(AccessLevel.NONE)
@@ -578,7 +578,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         points += scoreAbriChantier();
         points += scoreRetourAuSite();
 
-        return points;
+        return 666; // points;
     }
 
     @Override
