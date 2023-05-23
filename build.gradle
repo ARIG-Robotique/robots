@@ -77,10 +77,10 @@ configure(allprojects) { project ->
 		annotationProcessor "org.projectlombok:lombok"
 		testAnnotationProcessor "org.projectlombok:lombok"
 
-		compile "org.springframework.boot:spring-boot-starter-webflux"
+		implementation "org.springframework.boot:spring-boot-starter-webflux"
 
-		testCompile "org.springframework.boot:spring-boot-starter-test"
-		testCompile "io.projectreactor:reactor-test"
+		testImplementation "org.springframework.boot:spring-boot-starter-test"
+		testImplementation "io.projectreactor:reactor-test"
 	}
 
 	// JAvaCOCOverage
@@ -165,7 +165,7 @@ configure(rootProject) {
 
 	wrapper {
 		description = "Generates gradlew[.bat] scripts"
-		gradleVersion = "6.8.3"
+		gradleVersion = "7.6.1"
 		distributionType = "all"
 	}
 }

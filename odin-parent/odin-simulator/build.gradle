@@ -3,6 +3,6 @@ description = "ARIG Association - Odin Simulator"
 apply plugin: 'org.springframework.boot'
 
 dependencies {
-	compile project(':eurobot-system-lib-parent:eurobot-system-lib-bouchon')
-	compile project(':odin-parent:odin-common')
+	implementation project(':eurobot-system-lib-parent:eurobot-system-lib-bouchon')
+	implementation project(':odin-parent:odin-common')
 }

@@ -1,5 +1,5 @@
 description = "ARIG Association - Robot System Librairie - JoyCon : Utilisation d'interface Nintendo JoyCon."
 
 dependencies {
-    compile "io.github.vveird:purejavahidapi:0.0.3"
+    implementation "io.github.vveird:purejavahidapi:0.0.3"
 }

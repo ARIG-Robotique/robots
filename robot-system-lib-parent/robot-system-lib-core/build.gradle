@@ -1,12 +1,12 @@
 description = "ARIG Association - Robot System Librairie - Core : Librairie coeur du système."
 
 dependencies {
-    compile "org.apache.commons:commons-lang3"
-    compile "org.apache.commons:commons-collections4:${apacheCommonsCollectionsVersion}"
-    compile "org.apache.commons:commons-math3:${apacheCommonsMathVersion}"
-    compile "commons-io:commons-io:${apacheCommonsIOVersion}"
-    compile "com.google.guava:guava:${googleGuavaVersion}"
-    compile "com.kohlschutter.junixsocket:junixsocket-native-common:${junixsocketVersion}"
-    compile "com.kohlschutter.junixsocket:junixsocket-common:${junixsocketVersion}"
-    compile "com.github.Ohohcakester:Any-Angle-Pathfinding:${anyAnglePathFindingGitVersion}"
+    implementation "org.apache.commons:commons-lang3"
+    implementation "org.apache.commons:commons-collections4:${apacheCommonsCollectionsVersion}"
+    implementation "org.apache.commons:commons-math3:${apacheCommonsMathVersion}"
+    implementation "commons-io:commons-io:${apacheCommonsIOVersion}"
+    implementation "com.google.guava:guava:${googleGuavaVersion}"
+    implementation "com.kohlschutter.junixsocket:junixsocket-native-common:${junixsocketVersion}"
+    implementation "com.kohlschutter.junixsocket:junixsocket-common:${junixsocketVersion}"
+    implementation "com.github.Ohohcakester:Any-Angle-Pathfinding:${anyAnglePathFindingGitVersion}"
 }

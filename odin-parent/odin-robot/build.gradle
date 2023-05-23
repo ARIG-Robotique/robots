@@ -7,10 +7,10 @@ jar {
 }
 
 bootJar {
-    classifier = 'exec'
+    archiveClassifier = 'exec'
 }
 
 dependencies {
-    compile project(':robot-system-lib-parent:robot-system-lib-raspi')
-    compile project(':odin-parent:odin-common')
+    implementation project(':robot-system-lib-parent:robot-system-lib-raspi')
+    implementation project(':odin-parent:odin-common')
 }
