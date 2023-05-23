@@ -1,5 +1,9 @@
 description = "ARIG Association - Robot System Librairie - JoyCon : Utilisation d'interface Nintendo JoyCon."
 
+plugins {
+    id("org.arig.robots.common-conventions")
+}
+
 dependencies {
-    implementation "io.github.vveird:purejavahidapi:0.0.3"
+    api(libs.pure.java.hid.api)
 }

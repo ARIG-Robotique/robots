@@ -6,12 +6,10 @@
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$USER_HOME$/.m2/repository/org/projectlombok/lombok/1.18.24/lombok-1.18.24.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.26/8f8cf0372abf564913e9796623aac4c8ea44025a/lombok-1.18.26.jar" />
         </processorPath>
         <module name="robots.eurobot-system-lib-parent.eurobot-system-lib-core.test" />
         <module name="robots.robot-system-lib-parent.robot-system-lib-bouchon.main" />
-        <module name="robots.test" />
-        <module name="robots.tinker-parent.main" />
         <module name="robots.odin-parent.odin-common.test" />
         <module name="robots.nerell-parent.nerell-robot.main" />
         <module name="robots.nerell-parent.nerell-common.main" />
@@ -19,16 +17,11 @@
         <module name="robots.robot-system-lib-parent.robot-system-lib-core.test" />
         <module name="robots.nerell-parent.nerell-robot.test" />
         <module name="robots.odin-parent.odin-robot.test" />
-        <module name="robots.eurobot-system-lib-parent.main" />
         <module name="robots.odin-parent.odin-utils.test" />
         <module name="robots.tinker-parent.tinker-robot.main" />
-        <module name="robots.odin-parent.test" />
         <module name="robots.robot-system-lib-parent.robot-system-lib-raspi.test" />
-        <module name="robots.nerell-parent.test" />
-        <module name="robots.robot-system-lib-parent.main" />
         <module name="robots.eurobot-system-lib-parent.eurobot-system-lib-bouchon.main" />
         <module name="robots.nerell-parent.nerell-utils.test" />
-        <module name="robots.odin-parent.main" />
         <module name="robots.nerell-parent.nerell-simulator.test" />
         <module name="robots.tinker-parent.tinker-robot.test" />
         <module name="robots.nerell-parent.nerell-utils.main" />
@@ -36,22 +29,30 @@
         <module name="robots.odin-parent.odin-common.main" />
         <module name="robots.robot-system-lib-parent.robot-system-lib-joycon.test" />
         <module name="robots.odin-parent.odin-simulator.main" />
-        <module name="robots.main" />
         <module name="robots.eurobot-system-lib-parent.eurobot-system-lib-core.main" />
         <module name="robots.nerell-parent.nerell-common.test" />
         <module name="robots.robot-system-lib-parent.robot-system-lib-bouchon.test" />
         <module name="robots.robot-system-lib-parent.robot-system-lib-raspi.main" />
         <module name="robots.odin-parent.odin-simulator.test" />
-        <module name="robots.eurobot-system-lib-parent.test" />
         <module name="robots.eurobot-system-lib-parent.eurobot-system-lib-bouchon.test" />
         <module name="robots.nerell-parent.nerell-simulator.main" />
-        <module name="robots.tinker-parent.test" />
         <module name="robots.robot-system-lib-parent.robot-system-lib-core.main" />
         <module name="robots.odin-parent.odin-robot.main" />
-        <module name="robots.nerell-parent.main" />
-        <module name="robots.robot-system-lib-parent.test" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="11" />
+    <bytecodeTargetLevel target="17">
+      <module name="robots.eurobot-system-lib-parent.main" target="11" />
+      <module name="robots.eurobot-system-lib-parent.test" target="11" />
+      <module name="robots.main" target="11" />
+      <module name="robots.nerell-parent.main" target="11" />
+      <module name="robots.nerell-parent.test" target="11" />
+      <module name="robots.odin-parent.main" target="11" />
+      <module name="robots.odin-parent.test" target="11" />
+      <module name="robots.robot-system-lib-parent.main" target="11" />
+      <module name="robots.robot-system-lib-parent.test" target="11" />
+      <module name="robots.test" target="11" />
+      <module name="robots.tinker-parent.main" target="11" />
+      <module name="robots.tinker-parent.test" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>

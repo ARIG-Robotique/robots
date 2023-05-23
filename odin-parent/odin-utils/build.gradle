@@ -1,9 +1,0 @@
-description = "ARIG Association - Odin utils"
-
-apply plugin: 'org.springframework.boot'
-
-dependencies {
-	implementation project(':odin-parent:odin-robot')
-
-	implementation "org.springframework.shell:spring-shell-starter:${springShellVersion}"
-}

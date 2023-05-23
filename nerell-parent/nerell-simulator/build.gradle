@@ -1,8 +1,0 @@
-description = "ARIG Association - Nerell Simulator"
-
-apply plugin: 'org.springframework.boot'
-
-dependencies {
-	implementation project(':eurobot-system-lib-parent:eurobot-system-lib-bouchon')
-	implementation project(':nerell-parent:nerell-common')
-}

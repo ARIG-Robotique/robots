@@ -1,9 +1,0 @@
-description = "ARIG Association - Nerell utils"
-
-apply plugin: 'org.springframework.boot'
-
-dependencies {
-	implementation project(':nerell-parent:nerell-robot')
-
-	implementation "org.springframework.shell:spring-shell-starter:${springShellVersion}"
-}

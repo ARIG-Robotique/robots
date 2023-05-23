@@ -1,5 +1,0 @@
-description = "ARIG Association - Odin Common"
-
-dependencies {
-	implementation project(':eurobot-system-lib-parent:eurobot-system-lib-core')
-}

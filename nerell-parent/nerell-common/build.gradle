@@ -1,5 +1,0 @@
-description = "ARIG Association - Nerell Common"
-
-dependencies {
-	implementation project(':eurobot-system-lib-parent:eurobot-system-lib-core')
-}
