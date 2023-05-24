@@ -5,16 +5,16 @@ import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
-import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author gdepuille on 21/12/13.
  */
-public class Raspi2007NoMux extends Abstract2007NoMux<Pin> {
+public class Raspi2007NoMux extends Abstract2007NoMux<Pin> implements InitializingBean {
 
     private final GpioController gpio;
 
@@ -25,8 +25,7 @@ public class Raspi2007NoMux extends Abstract2007NoMux<Pin> {
         this.gpio = gpio;
     }
 
-    @PostConstruct
-    public void check() {
+    public void afterPropertiesSet() {
         Assert.notNull(gpio, "Le controller GPIO doit être spécifié.");
     }
 

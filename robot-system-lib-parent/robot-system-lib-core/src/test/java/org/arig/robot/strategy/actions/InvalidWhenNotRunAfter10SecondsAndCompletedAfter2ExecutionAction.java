@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.Point;
 import org.arig.robot.strategy.AbstractAction;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -14,12 +13,11 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 public class InvalidWhenNotRunAfter10SecondsAndCompletedAfter2ExecutionAction extends AbstractAction {
 
-    private LocalDateTime ldt;
+    private final LocalDateTime ldt;
 
     private int executionCount = 0;
 
-    @PostConstruct
-    public void init() {
+    public InvalidWhenNotRunAfter10SecondsAndCompletedAfter2ExecutionAction() {
         ldt = LocalDateTime.now().plusSeconds(10);
     }
 

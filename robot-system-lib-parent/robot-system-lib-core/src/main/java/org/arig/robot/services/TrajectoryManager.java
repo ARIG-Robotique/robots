@@ -28,11 +28,11 @@ import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.pathfinding.PathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -43,7 +43,7 @@ import java.util.stream.Stream;
 
 @Slf4j
 @Service
-public class TrajectoryManager {
+public class TrajectoryManager implements InitializingBean {
 
     @Autowired
     private RobotConfig robotConfig;
@@ -123,8 +123,7 @@ public class TrajectoryManager {
     private SignalEdgeFilter obstacleFoundFilter = new SignalEdgeFilter(false, SignalEdgeFilter.Type.RISING);
     private SignalEdgeFilter obstacleNotFoundFilter = new SignalEdgeFilter(false, SignalEdgeFilter.Type.FALLING);
 
-    @PostConstruct
-    public void postConstruct() {
+    public void afterPropertiesSet() {
         log.info("Fenetre arret distance                  : {} pulse -> {} mm", robotConfig.fenetreArretDistance(), conv.pulseToMm(robotConfig.fenetreArretDistance()));
         log.info("Fenetre approche distance avec frein    : {} pulse -> {} mm", robotConfig.fenetreApprocheAvecFreinDistance(), conv.pulseToMm(robotConfig.fenetreApprocheAvecFreinDistance()));
         log.info("Fenetre approche distance sans frein    : {} pulse -> {} mm", robotConfig.fenetreApprocheSansFreinDistance(), conv.pulseToMm(robotConfig.fenetreApprocheSansFreinDistance()));
