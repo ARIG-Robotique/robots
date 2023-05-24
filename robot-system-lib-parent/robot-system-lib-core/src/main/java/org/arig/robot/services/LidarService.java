@@ -3,10 +3,8 @@ package org.arig.robot.services;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.math3.ml.clustering.Cluster;
-import org.apache.commons.math3.ml.clustering.Clusterable;
-import org.apache.commons.math3.ml.clustering.DBSCANClusterer;
-import org.apache.commons.math3.ml.clustering.evaluation.ClusterEvaluator;
+import org.apache.commons.math4.legacy.ml.clustering.Clusterable;
+import org.apache.commons.math4.legacy.ml.clustering.DBSCANClusterer;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.Cercle;
 import org.arig.robot.model.Point;
@@ -35,18 +33,6 @@ import java.util.stream.Collectors;
 @Service
 public class LidarService implements InitializingBean {
 
-    // passe plat pour pas recoder centroidOf(Cluster) qui n'est pas publique
-    private static class CustomClusterEvaluator<T extends Clusterable> extends ClusterEvaluator<T> {
-        public Clusterable getCenter(Cluster<T> cluster) {
-            return super.centroidOf(cluster);
-        }
-
-        @Override
-        public double score(List<? extends Cluster<T>> clusters) {
-            return 0;
-        }
-    }
-
     @Autowired
     private ILidarTelemeter lidar;
 
@@ -72,7 +58,6 @@ public class LidarService implements InitializingBean {
     private final AtomicBoolean cleanup = new AtomicBoolean(false);
 
     private DBSCANClusterer<Point> clusterer;
-    private CustomClusterEvaluator<Point> clusterEvaluator = new CustomClusterEvaluator<>();
 
     synchronized public boolean waitCleanup() {
         cleanup.set(true);
@@ -99,7 +84,6 @@ public class LidarService implements InitializingBean {
     public void afterPropertiesSet() {
         log.info("Initialisation du service d'évittement d'obstacle");
 
-        clusterEvaluator = new CustomClusterEvaluator<>();
         clusterer = new DBSCANClusterer<>(robotConfig.lidarClusterSizeMm(), 2);
 
         lidar.deviceInfo();
@@ -181,7 +165,7 @@ public class LidarService implements InitializingBean {
         return clusterer.cluster(input)
                 .stream()
                 .map(cluster -> {
-                    Clusterable center = clusterEvaluator.getCenter(cluster);
+                    Clusterable center = cluster.centroid();
                     return new Point(center.getPoint()[0], center.getPoint()[1]);
                 })
                 .map(point -> tableUtils.eloigner(point, robotConfig.lidarOffsetPointMm()))

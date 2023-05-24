@@ -3,7 +3,7 @@ package org.arig.robot.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.math3.ml.clustering.Clusterable;
+import org.apache.commons.math4.legacy.ml.clustering.Clusterable;
 
 /**
  * @author gdepuille on 29/12/13.
