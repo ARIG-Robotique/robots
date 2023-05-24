@@ -4,20 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.NerellOrdonanceur;
-import org.arig.robot.model.NerellRobotStatus;
-import org.arig.robot.nerell.utils.shell.providers.NerellActionsProvider;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.NerellIOService;
 import org.arig.robot.strategy.Action;
 import org.springframework.shell.Availability;
-import org.springframework.shell.standard.ShellCommandGroup;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.CompletionContext;
+import org.springframework.shell.CompletionProposal;
+import org.springframework.shell.standard.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @ShellComponent
@@ -26,7 +23,6 @@ import java.util.Optional;
 public class NerellActionsCommands {
 
     private final AbstractEnergyService energyService;
-    private final NerellRobotStatus rs;
 
     private NerellIOService ioService;
     private NerellOrdonanceur ordonanceur;
@@ -67,4 +63,14 @@ public class NerellActionsCommands {
         }
     }
 
+    static class NerellActionsProvider implements ValueProvider {
+        @Override
+        public List<CompletionProposal> complete(CompletionContext completionContext) {
+            NerellActionsCommands commands = (NerellActionsCommands) completionContext.getCommandRegistration().getTarget().getBean();
+            return commands.actions.stream()
+                    .filter(a -> a.getClass().getSimpleName().contains(completionContext.currentWordUpToCursor()))
+                    .map(a -> new CompletionProposal(a.getClass().getSimpleName()))
+                    .collect(Collectors.toList());
+        }
+    }
 }

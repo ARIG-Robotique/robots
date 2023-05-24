@@ -4,20 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.OdinOrdonanceur;
-import org.arig.robot.model.OdinRobotStatus;
-import org.arig.robot.odin.utils.shell.providers.OdinActionsProvider;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.OdinIOService;
 import org.arig.robot.strategy.Action;
 import org.springframework.shell.Availability;
-import org.springframework.shell.standard.ShellCommandGroup;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.CompletionContext;
+import org.springframework.shell.CompletionProposal;
+import org.springframework.shell.standard.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @ShellComponent
@@ -26,7 +23,6 @@ import java.util.Optional;
 public class OdinActionsCommands {
 
     private final AbstractEnergyService energyService;
-    private final OdinRobotStatus rs;
 
     private OdinIOService ioService;
     private OdinOrdonanceur ordonanceur;
@@ -68,4 +64,14 @@ public class OdinActionsCommands {
         }
     }
 
+    static class OdinActionsProvider implements ValueProvider {
+        @Override
+        public List<CompletionProposal> complete(CompletionContext completionContext) {
+            OdinActionsCommands commands = (OdinActionsCommands) completionContext.getCommandRegistration().getTarget().getBean();
+            return commands.actions.stream()
+                    .filter(a -> a.getClass().getSimpleName().contains(completionContext.currentWordUpToCursor()))
+                    .map(a -> new CompletionProposal(a.getClass().getSimpleName()))
+                    .collect(Collectors.toList());
+        }
+    }
 }
