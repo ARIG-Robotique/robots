@@ -1,8 +1,10 @@
 package org.arig.robot.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class Echantillon extends Point {
     public enum ID {
         SITE_ECHANTILLONS_JAUNE,
