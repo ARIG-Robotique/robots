@@ -1,5 +1,6 @@
 package org.arig.robot;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -43,6 +44,17 @@ import java.util.List;
 
 @Slf4j
 public abstract class AbstractOrdonanceur {
+
+    public enum OrdonanceurStep {
+        INIT,
+        WAIT_AU,
+        AFTER_INIT,
+        READY_TO_PLAY,
+        WAIT_START_MATCH,
+        EJECTION,
+        READY_TO_STORE,
+        END
+    }
 
     @Autowired
     protected RobotConfig robotConfig;
@@ -98,6 +110,9 @@ public abstract class AbstractOrdonanceur {
 
     protected String launchExecId;
 
+    @Getter
+    protected OrdonanceurStep step = OrdonanceurStep.INIT;
+
     /**
      * Construit le chemin de la map du pathfinder dans le classpath
      */
@@ -152,10 +167,12 @@ public abstract class AbstractOrdonanceur {
 
             initLidar();
 
+            step = OrdonanceurStep.WAIT_AU;
             waitAu();
 
             waitPower();
 
+            step = OrdonanceurStep.AFTER_INIT;
             afterInit(); // impl
 
             initPathfinder();
@@ -167,10 +184,12 @@ public abstract class AbstractOrdonanceur {
             startLidar();
 
             addDeadZones();
-
+            
+            step = OrdonanceurStep.READY_TO_PLAY;
             beforeMatch(ecranService.config().isSkipCalageBordure()); // impl
-
+            
             ecranService.displayMessage("!!! ... ATTENTE DEPART TIRETTE ... !!!");
+            step = OrdonanceurStep.WAIT_START_MATCH;
             robotStatus.waitTirette(true);
             while (waitTirette()) {
                 ThreadUtils.sleep(1);
@@ -202,6 +221,7 @@ public abstract class AbstractOrdonanceur {
             io.disableAlimServos();
             io.disableAlimMoteurs();
         }
+        step = OrdonanceurStep.END;
     }
 
     /**
@@ -437,10 +457,12 @@ public abstract class AbstractOrdonanceur {
                         robotStatus.calculerPoints())
         );
 
+        step = OrdonanceurStep.EJECTION;
         while (!io.tirette() || !io.auOk()) {
             ThreadUtils.sleep(1000);
         }
 
+        step = OrdonanceurStep.READY_TO_STORE;
         beforePowerOff(); // impl
     }
 
