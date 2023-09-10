@@ -31,23 +31,3 @@ jobs:
           AWS_DEFAULT_OUTPUT: ${{ secrets.AWS_DEFAULT_OUTPUT }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
         run: ./gradlew build
-
-      - name: Notify slack success
-        if: steps.build.outcome == 'success' && github.ref == 'refs/heads/dev'
-        uses: voxmedia/github-action-slack-notify-build@v1.1.2
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        with:
-          channel: builds
-          status: SUCCESS
-          color: good
-
-      - name: Notify slack fail
-        if: steps.build.outcome == 'failure' && github.ref == 'refs/heads/dev'
-        uses: voxmedia/github-action-slack-notify-build@v1.1.2
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        with:
-          channel: builds
-          status: FAILED
-          color: danger
