@@ -49,7 +49,7 @@ public abstract class Abstract2007NoMux<P> implements IDigitalInputSensor<P> {
         LUM_03(0x12, "Capteur barriere lumineuse 3"),
         LUM_04(0x13, "Capteur barriere lumineuse 4"),
 
-        IND_01(0x14, "Capteur inductid 1"),
+        IND_01(0x14, "Capteur inductif 1"),
         IND_02(0x15, "Capteur inductif 2"),
 
         EQUIPE(0x16, "Capteur couleur équipe"); // 22
