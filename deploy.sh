@@ -9,7 +9,11 @@ fi
 echo "$(date)"
 
 echo "Compilation ..."
-JAVA_HOME=~/apps/jdk-11 ./gradlew assemble --offline
+if [[ "$(uname)" == "Darwin" ]] ; then
+  JAVA_HOME=$(/usr/libexec/java_home -v 17) ./gradlew assemble --offline
+else
+  JAVA_HOME=~/apps/jdk-11 ./gradlew assemble --offline
+fi
 
 HOME_DIR=/home/pi
 DESKTOP_DIR=${HOME_DIR}/Desktop
