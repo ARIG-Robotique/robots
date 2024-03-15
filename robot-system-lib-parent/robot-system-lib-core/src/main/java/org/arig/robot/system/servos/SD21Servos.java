@@ -10,27 +10,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class SD21Servos implements InitializingBean {
+public class SD21Servos extends AbstractServos {
 
     private static final byte VERSION_REGISTER = 0x40;
     private static final byte BATTERY_VOLTS_REGISTER = 0x41;
     private static final int NB_SERVOS = 21;
 
-    protected String deviceName;
+    private final String deviceName;
 
     @Autowired
     private I2CManager i2cManager;
-
-    private Map<Byte, Integer> lastPositions = new HashMap<>(21);
-    private Map<Byte, Byte> lastSpeed = new HashMap<>(21);
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        for (byte i = 1; i <= NB_SERVOS; i++) {
-            lastPositions.put(i, 1500);
-            lastSpeed.put(i, (byte) 0);
-        }
-    }
 
     public SD21Servos() {
         this("SD21");
@@ -42,6 +31,7 @@ public class SD21Servos implements InitializingBean {
      * @param deviceName the address
      */
     public SD21Servos(final String deviceName) {
+        super(NB_SERVOS);
         this.deviceName = deviceName;
     }
 
@@ -63,17 +53,8 @@ public class SD21Servos implements InitializingBean {
      * @param servoNb  the servo nb
      * @param position the position
      */
-    public void setPosition(final byte servoNb, final int position) {
-        if (!checkServo(servoNb)) {
-            return;
-        }
-
-        if (getPosition(servoNb) == position) {
-            return;
-        }
-
-        lastPositions.put(servoNb, position);
-
+    @Override
+    protected void setPositionImpl(final byte servoNb, final int position) {
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Définition de la position du servo {} (Position = {})", servoNb, position);
@@ -90,17 +71,8 @@ public class SD21Servos implements InitializingBean {
      * @param servoNb the servo nb
      * @param speed   the speed
      */
-    public void setSpeed(final byte servoNb, final byte speed) {
-        if (!checkServo(servoNb)) {
-            return;
-        }
-
-        if (getSpeed(servoNb) == speed) {
-            return;
-        }
-
-        lastSpeed.put(servoNb, speed);
-
+    @Override
+    protected void setSpeedImpl(final byte servoNb, final byte speed) {
         try {
             log.info(String.format("Définiion de la vitesse du servo %d (Vitesse = %d)", servoNb, speed));
             i2cManager.sendData(deviceName, SD21Servos.getBaseRegister(servoNb), speed);
@@ -116,18 +88,8 @@ public class SD21Servos implements InitializingBean {
      * @param speed    the speed
      * @param position the position
      */
-    public void setPositionAndSpeed(final byte servoNb, final int position, final byte speed) {
-        if (!checkServo(servoNb)) {
-            return;
-        }
-
-        if (getPosition(servoNb) == position && getSpeed(servoNb) == speed) {
-            return;
-        }
-
-        lastPositions.put(servoNb, position);
-        lastSpeed.put(servoNb, speed);
-
+    @Override
+    protected void setPositionAndSpeedImpl(final byte servoNb, final int position, final byte speed) {
         try {
             if (log.isDebugEnabled()) {
                 log.debug(String.format("Comande du servo %d (Vitesse = %d,  Position = %d)", servoNb, speed, position));
@@ -139,41 +101,14 @@ public class SD21Servos implements InitializingBean {
     }
 
     /**
-     * Get the last position of servo
-     *
-     * @param servoNb Numero du servo
-     * @return La dernière position du servo
-     */
-    public int getPosition(final byte servoNb) {
-        if (!checkServo(servoNb)) {
-            return -1;
-        }
-
-        return lastPositions.get(servoNb);
-    }
-
-    /**
-     * Get the last speed of servo
-     *
-     * @param servoNb Numero du servo
-     * @return La dernière vitesse du servo
-     */
-    public int getSpeed(final byte servoNb) {
-        if (!checkServo(servoNb)) {
-            return -1;
-        }
-
-        return lastSpeed.get(servoNb);
-    }
-
-    /**
      * Prints the version.
      */
+    @Override
     public void printVersion() {
         try {
             i2cManager.sendData(deviceName, SD21Servos.VERSION_REGISTER);
             final int version = i2cManager.getData(deviceName);
-            log.info("SD21 ServoMotors (V : {})", version);
+            log.info("Carte SD21 {} version {} ({} servos)", deviceName, version, NB_SERVOS);
         } catch (I2CException e) {
             log.error("Erreur lors de la récupération de la version de la carte SD21");
         }
@@ -199,19 +134,4 @@ public class SD21Servos implements InitializingBean {
 
         return -1;
     }
-
-    /**
-     * Check servo.
-     *
-     * @param servoNb the servo nb
-     * @return true, if servo number are between 1 and 21. False otherwise
-     */
-    private boolean checkServo(final byte servoNb) {
-        final boolean result = servoNb >= 1 && servoNb <= NB_SERVOS;
-        if (!result) {
-            log.warn("Numéro de servo moteur invalide : {}", servoNb);
-        }
-        return result;
-    }
-
 }
