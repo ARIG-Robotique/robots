@@ -13,7 +13,7 @@ import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.OdinIOService;
 import org.arig.robot.services.TrajectoryManager;
-import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
+import org.arig.robot.system.encoders.ARIGI2C2WheelsEncoders;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
@@ -42,7 +42,7 @@ public class OdinOdometrieCommands {
     private final AbstractEnergyService energyService;
     private final TrajectoryManager trajectoryManager;
     private final OdinRobotStatus rs;
-    private final ARIG2WheelsEncoders encoders;
+    private final ARIGI2C2WheelsEncoders encoders;
     private final ConvertionRobotUnit convRobot;
     private final Position currentPosition;
 

@@ -22,7 +22,7 @@ import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
 import org.arig.robot.system.capteurs.VisionBaliseBouchon;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
-import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
+import org.arig.robot.system.encoders.ARIGI2C2WheelsEncoders;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.BouchonPropulsionsMotors;
@@ -85,7 +85,7 @@ public class NerellSimulatorContext {
 
     @Bean
     @SneakyThrows
-    public ARIG2WheelsEncoders encoders(ResourcePatternResolver patternResolver) {
+    public ARIGI2C2WheelsEncoders encoders(ResourcePatternResolver patternResolver) {
         InputStream is = patternResolver.getResource("classpath:nerell-propulsions.csv").getInputStream();
         List<String> lines = IOUtils.readLines(is, Charset.defaultCharset());
         List<BouchonEncoderValues> values = lines.parallelStream()

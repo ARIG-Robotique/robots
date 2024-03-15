@@ -6,14 +6,14 @@ import org.arig.robot.exception.I2CException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
-public class ARIGEncoder extends AbstractEncoder {
+public class ARIGI2CEncoder extends AbstractEncoder {
 
     private final String deviceName;
 
     @Autowired
     private I2CManager i2cManager;
 
-    public ARIGEncoder(final String deviceName) {
+    public ARIGI2CEncoder(final String deviceName) {
         super(deviceName + "_encoder");
         this.deviceName = deviceName;
     }

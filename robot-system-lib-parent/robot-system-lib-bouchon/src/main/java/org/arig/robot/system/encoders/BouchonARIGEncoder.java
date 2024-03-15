@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class BouchonARIGEncoder extends ARIGEncoder {
+public class BouchonARIGEncoder extends ARIGI2CEncoder {
 
     @Autowired
     private AbstractMotor motor;

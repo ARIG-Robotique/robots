@@ -32,7 +32,7 @@ import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.Gain;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor.IntegrationTime;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
-import org.arig.robot.system.encoders.ARIG2WheelsEncoders;
+import org.arig.robot.system.encoders.ARIGI2C2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.PropulsionsPCA9685Motors;
 import org.arig.robot.system.process.RPLidarBridgeProcess;
@@ -151,8 +151,8 @@ public class NerellRobotContext {
     }
 
     @Bean
-    public ARIG2WheelsEncoders encoders() {
-        final ARIG2WheelsEncoders encoders = new ARIG2WheelsEncoders(NerellConstantesI2C.CODEUR_MOTEUR_GAUCHE, NerellConstantesI2C.CODEUR_MOTEUR_DROIT);
+    public ARIGI2C2WheelsEncoders encoders() {
+        final ARIGI2C2WheelsEncoders encoders = new ARIGI2C2WheelsEncoders(NerellConstantesI2C.CODEUR_MOTEUR_GAUCHE, NerellConstantesI2C.CODEUR_MOTEUR_DROIT);
         encoders.setCoefs(NerellConstantesConfig.coefCodeurGauche, NerellConstantesConfig.coefCodeurDroit);
         return encoders;
     }

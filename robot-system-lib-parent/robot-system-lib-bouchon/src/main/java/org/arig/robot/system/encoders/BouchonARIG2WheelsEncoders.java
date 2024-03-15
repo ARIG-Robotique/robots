@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * @author gdepuille on 31/10/16.
  */
 @Slf4j
-public class BouchonARIG2WheelsEncoders extends ARIG2WheelsEncoders {
+public class BouchonARIG2WheelsEncoders extends ARIGI2C2WheelsEncoders {
 
     @Autowired
     private AbstractPropulsionsMotors motors;

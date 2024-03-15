@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author gdepuille
  */
 @Slf4j
-public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
+public class ARIGI2C2WheelsEncoders extends Abstract2WheelsEncoders {
 
     private final String deviceNameDroit;
     private final String deviceNameGauche;
@@ -19,7 +19,7 @@ public class ARIG2WheelsEncoders extends Abstract2WheelsEncoders {
     @Autowired
     private I2CManager i2cManager;
 
-    public ARIG2WheelsEncoders(final String deviceNameGauche, final String deviceNameDroit) {
+    public ARIGI2C2WheelsEncoders(final String deviceNameGauche, final String deviceNameDroit) {
         super("two_wheels_encoders");
         this.deviceNameGauche = deviceNameGauche;
         this.deviceNameDroit = deviceNameDroit;
