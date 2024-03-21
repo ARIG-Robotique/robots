@@ -16,6 +16,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.net.BindException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Stream;
@@ -38,19 +39,31 @@ class RobotGroupServiceTest {
     @BeforeEach
     @SneakyThrows
     void setUp() {
-        statusPrimary = new TestEurobotStatus(true);
-        rgPrimary = new RobotGroupOverSocket(statusPrimary, 9090, "localhost", 9091, executor);
-        rgPrimary.openSocket();
-        rgServicePrimary = new RobotGroupService(statusPrimary, rgPrimary, executor);
+        int nbTry = 3;
+        while(nbTry-- >= 0) {
+            try {
+                statusPrimary = new TestEurobotStatus(true);
+                rgPrimary = new RobotGroupOverSocket(statusPrimary, 9090 + nbTry, "localhost", 9091 + nbTry, executor);
+                rgPrimary.openSocket();
+                rgServicePrimary = new RobotGroupService(statusPrimary, rgPrimary, executor);
 
 
-        statusSecondary = new TestEurobotStatus(false);
-        rgSecondary = new RobotGroupOverSocket(statusSecondary, 9091, "localhost", 9090, executor);
-        rgSecondary.openSocket();
-        rgServiceSecondary = new RobotGroupService(statusSecondary, rgSecondary, executor);
+                statusSecondary = new TestEurobotStatus(false);
+                rgSecondary = new RobotGroupOverSocket(statusSecondary, 9091 + nbTry, "localhost", 9090 + nbTry, executor);
+                rgSecondary.openSocket();
+                rgServiceSecondary = new RobotGroupService(statusSecondary, rgSecondary, executor);
 
-        statusPrimary.groupOk(rgPrimary.tryConnect());
-        statusSecondary.groupOk(rgSecondary.tryConnect());
+                statusPrimary.groupOk(rgPrimary.tryConnect());
+                statusSecondary.groupOk(rgSecondary.tryConnect());
+                break;
+            } catch (BindException e) {
+                log.error("Error in setUp", e);
+                if (nbTry == 0) {
+                    throw e;
+                }
+                ThreadUtils.sleep(2000);
+            }
+        }
     }
 
     @AfterEach
