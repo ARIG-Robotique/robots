@@ -106,7 +106,7 @@ spring:
 
 # Écran
 ecran:
-  binary: ${user.home}/workspaces/arig-wksp/cpp-linux/build-robots-gui-Desktop_Qt_5_15_2_clang_64bit-Debug/robots-gui.app/Contents/MacOS/robots-gui
+  binary: ${user.home}/sogelink/workspaces/arig-workspaces/cpp-linux/build-robots-gui-Desktop_Qt_5_15_2_clang_64bit-Debug/robots-gui.app/Contents/MacOS/robots-gui
 
 ---
 
