@@ -1,1 +1,1 @@
-description = "ARIG Association - Elfa parent"
+description = "ARIG Association - Odin parent"
