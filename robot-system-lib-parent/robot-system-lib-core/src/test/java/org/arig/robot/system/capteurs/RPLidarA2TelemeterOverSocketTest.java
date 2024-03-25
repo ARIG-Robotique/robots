@@ -17,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  */
 @Slf4j
 @ExtendWith(SpringExtension.class)
-
 abstract class RPLidarA2TelemeterOverSocketTest {
 
     static RPLidarA2TelemeterOverSocket rpLidar;

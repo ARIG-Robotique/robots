@@ -4,11 +4,9 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.*;
 import org.arig.robot.system.RobotGroupOverSocket;
+import org.arig.robot.utils.SocketUtils;
 import org.arig.robot.utils.ThreadUtils;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -39,17 +37,20 @@ class RobotGroupServiceTest {
     @BeforeEach
     @SneakyThrows
     void setUp() {
+        int primaryPort = 9090;
+        int secondaryPort = 9095;
+
         int nbTry = 3;
         while(nbTry-- >= 0) {
             try {
                 statusPrimary = new TestEurobotStatus(true);
-                rgPrimary = new RobotGroupOverSocket(statusPrimary, 9090 + nbTry, "localhost", 9091 + nbTry, executor);
+                rgPrimary = new RobotGroupOverSocket(statusPrimary, primaryPort, "localhost", secondaryPort, executor);
                 rgPrimary.openSocket();
                 rgServicePrimary = new RobotGroupService(statusPrimary, rgPrimary, executor);
 
 
                 statusSecondary = new TestEurobotStatus(false);
-                rgSecondary = new RobotGroupOverSocket(statusSecondary, 9091 + nbTry, "localhost", 9090 + nbTry, executor);
+                rgSecondary = new RobotGroupOverSocket(statusSecondary, secondaryPort, "localhost", primaryPort, executor);
                 rgSecondary.openSocket();
                 rgServiceSecondary = new RobotGroupService(statusSecondary, rgSecondary, executor);
 
@@ -58,12 +59,15 @@ class RobotGroupServiceTest {
                 break;
             } catch (BindException e) {
                 log.error("Error in setUp", e);
-                if (nbTry == 0) {
-                    throw e;
-                }
                 ThreadUtils.sleep(2000);
             }
+
+            primaryPort++;
+            secondaryPort++;
         }
+
+        Assumptions.assumeTrue(SocketUtils.serverListening("localhost", primaryPort));
+        Assumptions.assumeTrue(SocketUtils.serverListening("localhost", secondaryPort));
     }
 
     @AfterEach
