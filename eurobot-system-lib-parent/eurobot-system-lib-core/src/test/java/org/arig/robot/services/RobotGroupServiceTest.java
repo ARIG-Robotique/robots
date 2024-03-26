@@ -4,7 +4,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.*;
 import org.arig.robot.system.RobotGroupOverSocket;
-import org.arig.robot.utils.SocketUtils;
 import org.arig.robot.utils.ThreadUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,6 +32,11 @@ class RobotGroupServiceTest {
     private EurobotStatus statusSecondary;
     private RobotGroupOverSocket rgSecondary;
     private RobotGroupService rgServiceSecondary;
+
+    @BeforeAll
+    public static void init(){
+        Assumptions.assumeTrue(System.getenv("CI") == null, "Run on CI. Tests skipped.");
+    }
 
     @BeforeEach
     @SneakyThrows
@@ -65,9 +69,6 @@ class RobotGroupServiceTest {
             primaryPort++;
             secondaryPort++;
         }
-
-        Assumptions.assumeTrue(SocketUtils.serverListening("localhost", primaryPort));
-        Assumptions.assumeTrue(SocketUtils.serverListening("localhost", secondaryPort));
     }
 
     @AfterEach
