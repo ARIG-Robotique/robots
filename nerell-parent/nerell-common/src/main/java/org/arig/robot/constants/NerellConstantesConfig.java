@@ -25,8 +25,8 @@ public interface NerellConstantesConfig {
     // -------------------------------- //
     // Configuration moteurs propulsion //
     // -------------------------------- //
-    int numeroMoteurGauche = 2;
-    int numeroMoteurDroit = 1;
+    int numeroMoteurGauche = 1;
+    int numeroMoteurDroit = 2;
 
     // ----------------------------- //
     // Configuration des convertions //

@@ -4,16 +4,11 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.PinState;
-import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.i2c.I2CBus;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
 import org.arig.robot.constants.NerellConstantesI2C;
-import org.arig.robot.model.CouleurEchantillon;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor;
-import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,26 +20,15 @@ import java.io.IOException;
 @Service("IOService")
 public class NerellIOServiceRobot implements NerellIOService, InitializingBean, DisposableBean {
 
-    private static final int POMPE_VENTOUSE_BAS = 1;
-    private static final int POMPE_VENTOUSE_HAUT = 4;
-
     @Autowired
     private I2CBus bus;
-
-    @Autowired
-    private AbstractARIGVacuumController vacuumController;
-
-    @Autowired
-    private TCS34725ColorSensor couleurVentouseBas;
-
-    @Autowired
-    private TCS34725ColorSensor couleurVentouseHaut;
 
     // Controlleur GPIO
     private GpioController gpio;
     private PCF8574GpioProvider pcfAlim;
     private PCF8574GpioProvider pcf1;
     private PCF8574GpioProvider pcf2;
+    private PCF8574GpioProvider pcf3;
 
     // Référence sur les PIN Inputs
     // ----------------------------
@@ -61,31 +45,38 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     // Input : Alimentation
     private GpioPinDigitalInput inAu;
 
-    // Input : Numerique 1 (+ Tirette)
-    private GpioPinDigitalInput inTirette;
-    private GpioPinDigitalInput inCalageArriereDroit;
-    private GpioPinDigitalInput inCalageArriereGauche;
-    private GpioPinDigitalInput inCalageAvantBasDroit;
-    private GpioPinDigitalInput inCalageAvantBasGauche;
-    private GpioPinDigitalInput inCalageAvantHautDroit;
-    private GpioPinDigitalInput inCalageAvantHautGauche;
-    private GpioPinDigitalInput inPresenceStatuette;
+    // Input : Numerique 1
+    private GpioPinDigitalInput calageBordureAvantGauche;
+    private GpioPinDigitalInput calageBordureArriereDroit;
+    private GpioPinDigitalInput inductifGauche;
+    private GpioPinDigitalInput inductifDroit;
+    private GpioPinDigitalInput pinceArriereCentre;
+    private GpioPinDigitalInput pinceAvantCentre;
+    private GpioPinDigitalInput calageBordureAvantDroit;
+    private GpioPinDigitalInput calageBordureArriereGauche;
 
     // Input : Numerique 2
-    private GpioPinDigitalInput inPresenceCarreFouille;
-    private GpioPinDigitalInput inPresencePriseBras;
-    private GpioPinDigitalInput inPresenceStock1; // Fond du robot
-    private GpioPinDigitalInput inPresenceStock2;
-    private GpioPinDigitalInput inPresenceStock3;
-    private GpioPinDigitalInput inPresenceStock4;
-    private GpioPinDigitalInput inPresenceStock5;
-    private GpioPinDigitalInput inPresenceStock6; // Bord du robot
+    private GpioPinDigitalInput tirette;
+    private GpioPinDigitalInput pinceAvantDroit;
+    private GpioPinDigitalInput pinceArriereDroit; // Fond du robot
+    private GpioPinDigitalInput pinceArriereGauche;
+    private GpioPinDigitalInput in2_5;
+    private GpioPinDigitalInput in2_6;
+    private GpioPinDigitalInput in2_7;
+    private GpioPinDigitalInput pinceAvantGauche; // Bord du robot
+
+    // Input : Numerique 3
+    private GpioPinDigitalInput presenceArriereDroit;
+    private GpioPinDigitalInput presenceArriereGauche;
+    private GpioPinDigitalInput presenceArriereCentre;
+    private GpioPinDigitalInput in3_4;
+    private GpioPinDigitalInput presenceAvantDroit;
+    private GpioPinDigitalInput presenceAvantGauche;
+    private GpioPinDigitalInput presenceAvantCentre;
+    private GpioPinDigitalInput in3_8;
 
     // Référence sur les PIN Output
     // ----------------------------
-
-    // GPIO
-    private GpioPinDigitalOutput outCmdLedCapteurRGB;
 
     // PCF
     private GpioPinDigitalOutput outAlimPuissanceServos;
@@ -115,6 +106,13 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
             log.warn("Problème de shutdown du {} : {}", NerellConstantesI2C.PCF2_DEVICE_NAME, e.getMessage());
         }
         try {
+            if (pcf3 != null) {
+                pcf3.shutdown();
+            }
+        } catch (Exception e) {
+            log.warn("Problème de shutdown du {} : {}", NerellConstantesI2C.PCF3_DEVICE_NAME, e.getMessage());
+        }
+        try {
             if (gpio != null) {
                 gpio.shutdown();
             }
@@ -130,52 +128,48 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         // ------------------- //
         gpio = GpioFactory.getInstance();
 
-        // Inputs
-//        inEquipe = gpio.provisionDigitalInputPin(RaspiPin.GPIO_02);
-//        inIrqAlim = gpio.provisionDigitalInputPin(RaspiPin.GPIO_07);
-//        inIrqPcf1 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_04);
-//        inIrq1 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
-//        inIrq3 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_01);
-//        inIrq4 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_16);
-//        inIrq5 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_15);
-//        inIrq6 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_06);
-
-        // Output
-        outCmdLedCapteurRGB = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, PinState.LOW);
-
         // Config PCF8574 //
         // -------------- //
         pcfAlim = new PCF8574GpioProvider(bus, NerellConstantesI2C.PCF_ALIM_ADDRESS, true);
         pcf1 = new PCF8574GpioProvider(bus, NerellConstantesI2C.PCF1_ADDRESS, true);
         pcf2 = new PCF8574GpioProvider(bus, NerellConstantesI2C.PCF2_ADDRESS, true);
+        pcf3 = new PCF8574GpioProvider(bus, NerellConstantesI2C.PCF3_ADDRESS, true);
 
         // Alim
         inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_00);
 
-        outAlimPuissanceServos = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
-        outAlimPuissanceMoteurs = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_02);
+        outAlimPuissanceServos = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_03);
+        outAlimPuissanceMoteurs = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_04);
 
-        // PCF1 (µSwitch)
-        inTirette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
-        inCalageArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
-        inCalageArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
-        inCalageAvantBasDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
-        inCalageAvantBasGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
-        inCalageAvantHautDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
-        inCalageAvantHautGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
-        inPresenceStatuette = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
+        // PCF1
+        calageBordureAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
+        calageBordureArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
+        inductifGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
+        inductifDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
+        pinceArriereCentre = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
+        pinceAvantCentre = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
+        calageBordureAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
+        calageBordureArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
 
-        // PCF2 (Pololu)
-        inPresencePriseBras = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
-        inPresenceCarreFouille = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
-        inPresenceStock1 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
-        inPresenceStock2 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
-        inPresenceStock3 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
-        inPresenceStock4 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
-        inPresenceStock5 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
-        inPresenceStock6 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_07);
+        // PCF2
+        tirette = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
+        pinceAvantDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
+        pinceArriereDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
+        pinceArriereGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
+        in2_5 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
+        in2_6 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
+        in2_7 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
+        pinceAvantGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_07);
 
-        disableLedCapteurCouleur();
+        // PCF3
+        presenceArriereDroit = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_00);
+        presenceArriereGauche = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_01);
+        presenceArriereCentre = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_02);
+        in3_4 = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_03);
+        presenceAvantDroit = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_04);
+        presenceAvantGauche = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_05);
+        presenceAvantCentre = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_06);
+        in3_8 = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_07);
     }
 
     @Override
@@ -197,14 +191,20 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         }
 
         try {
+            if (!pcf3.isShutdown()) {
+                pcf3.readAll();
+            }
+        } catch (IOException e) {
+            log.error("Erreur lecture " + NerellConstantesI2C.PCF3_DEVICE_NAME + " : " + e.getMessage(), e);
+        }
+
+        try {
             if (!pcfAlim.isShutdown()) {
                 pcfAlim.readAll();
             }
         } catch (IOException e) {
             log.error("Erreur lecture PCF Alim : " + e.getMessage(), e);
         }
-
-        vacuumController.readAllValues();
     }
 
     // --------------------------------------------------------- //
@@ -218,7 +218,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
 
     @Override
     public boolean tirette() {
-        return inTirette.isLow();
+        return false;
     }
 
     // --------------------------------------------------------- //
@@ -226,147 +226,129 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     // --------------------------------------------------------- //
 
     // Numerique
-
     @Override
-    public boolean presenceStatuette(boolean expectedSimulation) {
-        return inPresenceStatuette.isLow();
+    public boolean in1_1() {
+        return calageBordureAvantGauche.isLow();
     }
 
     @Override
-    public boolean presenceCarreFouille(final boolean expectedSimulation) {
-        return inPresenceCarreFouille.isLow();
+    public boolean in1_2() {
+        return calageBordureArriereDroit.isLow();
     }
 
     @Override
-    public boolean presenceVentouseBas() {
-        return vacuumController.getData(POMPE_VENTOUSE_BAS).presence();
+    public boolean in1_3() {
+        return inductifGauche.isLow();
     }
 
     @Override
-    public boolean presenceVentouseHaut() {
-        return vacuumController.getData(POMPE_VENTOUSE_HAUT).presence();
+    public boolean in1_4() {
+        return inductifDroit.isLow();
     }
 
     @Override
-    public boolean presencePriseBras(boolean expectedSimulation) {
-        return inPresencePriseBras.isLow();
+    public boolean in1_5() {
+        return pinceArriereCentre.isLow();
     }
 
     @Override
-    public boolean presenceStock1(boolean expectedSimulation) {
-        return inPresenceStock1.isLow();
+    public boolean in1_6() {
+        return pinceAvantCentre.isLow();
     }
 
     @Override
-    public boolean presenceStock2(boolean expectedSimulation) {
-        return inPresenceStock2.isLow();
+    public boolean in1_7() {
+        return calageBordureAvantDroit.isLow();
     }
 
     @Override
-    public boolean presenceStock3(boolean expectedSimulation) {
-        return inPresenceStock3.isLow();
+    public boolean in1_8() {
+        return calageBordureArriereGauche.isLow();
     }
 
     @Override
-    public boolean presenceStock4(boolean expectedSimulation) {
-        return inPresenceStock4.isLow();
+    public boolean in2_1() {
+        return tirette.isLow();
     }
 
     @Override
-    public boolean presenceStock5(boolean expectedSimulation) {
-        return inPresenceStock5.isLow();
+    public boolean in2_2() {
+        return pinceAvantDroit.isLow();
     }
 
     @Override
-    public boolean presenceStock6(boolean expectedSimulation) {
-        return inPresenceStock6.isLow();
+    public boolean in2_3() {
+        return pinceArriereDroit.isLow();
     }
 
     @Override
-    public boolean calageArriereDroit() {
-        return inCalageArriereDroit.isLow();
+    public boolean in2_4() {
+        return pinceArriereGauche.isLow();
     }
 
     @Override
-    public boolean calageArriereGauche() {
-        return inCalageArriereGauche.isLow();
+    public boolean in2_5() {
+        return in2_5.isLow();
     }
 
     @Override
-    public boolean calageAvantBasDroit() {
-        return inCalageAvantBasDroit.isLow();
+    public boolean in2_6() {
+        return in2_6.isLow();
     }
 
     @Override
-    public boolean calageAvantBasGauche() {
-        return inCalageAvantBasGauche.isLow();
+    public boolean in2_7() {
+        return in2_7.isLow();
     }
 
     @Override
-    public boolean calageAvantHautDroit() {
-        return inCalageAvantHautDroit.isLow();
+    public boolean in2_8() {
+        return pinceAvantGauche.isLow();
     }
 
     @Override
-    public boolean calageAvantHautGauche() {
-        return inCalageAvantHautGauche.isLow();
+    public boolean in3_1() {
+        return presenceArriereDroit.isLow();
     }
 
     @Override
-    public boolean calageLatteralDroit() {
-        return !presenceCarreFouille(false);
+    public boolean in3_2() {
+        return presenceArriereGauche.isLow();
     }
 
     @Override
-    public boolean calagePriseEchantillon() {
-        return presencePriseBras(true);
+    public boolean in3_3() {
+        return presenceArriereCentre.isLow();
     }
 
     @Override
-    public boolean calageVentouseBas() {
-        return presenceVentouseBas();
-    }
-
-    // Couleur
-    @Override
-    public CouleurEchantillon couleurVentouseBas() {
-        final TCS34725ColorSensor.ColorData c = couleurVentouseBas.getColorData();
-        log.info("{} R: {}, G: {}, B: {}", couleurVentouseBas.deviceName(), c.r(), c.g(), c.b());
-        return computeCouleur(c);
+    public boolean in3_4() {
+        return in3_4.isLow();
     }
 
     @Override
-    public CouleurEchantillon couleurVentouseHaut() {
-        final TCS34725ColorSensor.ColorData c = couleurVentouseHaut.getColorData();
-        log.info("{} R: {}, G: {}, B: {}", couleurVentouseHaut.deviceName(), c.r(), c.g(), c.b());
-        return computeCouleur(c);
+    public boolean in3_5() {
+        return presenceAvantDroit.isLow();
     }
 
     @Override
-    public TCS34725ColorSensor.ColorData couleurVentouseHautRaw() {
-        return couleurVentouseHaut.getColorData();
+    public boolean in3_6() {
+        return presenceAvantGauche.isLow();
     }
 
     @Override
-    public TCS34725ColorSensor.ColorData couleurVentouseBasRaw() {
-        return couleurVentouseBas.getColorData();
+    public boolean in3_7() {
+        return presenceAvantCentre.isLow();
+    }
+
+    @Override
+    public boolean in3_8() {
+        return in3_8.isLow();
     }
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
-
-    @Override
-    public void enableLedCapteurCouleur() {
-        log.debug("Led blanche capteur couleur allumé");
-        outCmdLedCapteurRGB.high();
-    }
-
-    @Override
-    public void disableLedCapteurCouleur() {
-        log.debug("Led blanche capteur couleur eteinte");
-        outCmdLedCapteurRGB.low();
-    }
 
     @Override
     public void enableAlimServos() {
@@ -395,55 +377,5 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     // ----------------------------------------------------------- //
     // -------------------------- BUSINESS ----------------------- //
     // ----------------------------------------------------------- //
-
-    @Override
-    public void disableAllPompes() {
-        vacuumController.disableAll();
-    }
-
-    @Override
-    public void enableAllPompes() {
-        vacuumController.onAll();
-    }
-
-    @Override
-    public void enableForceAllPompes() {
-        vacuumController.forceOnAll();
-    }
-
-    @Override
-    public void releaseAllPompes() {
-        vacuumController.offAll();
-    }
-
-    @Override
-    public void enableForcePompeVentouseBas() {
-        vacuumController.onForce(POMPE_VENTOUSE_BAS);
-    }
-
-    @Override
-    public void enableForcePompeVentouseHaut() {
-        vacuumController.onForce(POMPE_VENTOUSE_HAUT);
-    }
-
-    @Override
-    public void enablePompeVentouseBas() {
-        vacuumController.on(POMPE_VENTOUSE_BAS);
-    }
-
-    @Override
-    public void releasePompeVentouseBas() {
-        vacuumController.off(POMPE_VENTOUSE_BAS);
-    }
-
-    @Override
-    public void enablePompeVentouseHaut() {
-        vacuumController.on(POMPE_VENTOUSE_HAUT);
-    }
-
-    @Override
-    public void releasePompeVentouseHaut() {
-        vacuumController.off(POMPE_VENTOUSE_HAUT);
-    }
 
 }

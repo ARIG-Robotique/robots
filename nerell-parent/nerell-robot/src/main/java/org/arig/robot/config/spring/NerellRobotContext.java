@@ -23,21 +23,12 @@ import org.arig.robot.system.avoiding.BasicAvoidingService;
 import org.arig.robot.system.avoiding.BasicRetryAvoidingService;
 import org.arig.robot.system.avoiding.CompleteAvoidingService;
 import org.arig.robot.system.avoiding.SemiCompleteAvoidingService;
-import org.arig.robot.system.capteurs.CarreFouilleReader;
-import org.arig.robot.system.capteurs.ILidarTelemeter;
-import org.arig.robot.system.capteurs.IVisionBalise;
-import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
-import org.arig.robot.system.capteurs.TCA9548MultiplexerI2C;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor.Gain;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor.IntegrationTime;
-import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
+import org.arig.robot.system.capteurs.*;
 import org.arig.robot.system.encoders.ARIGI2C2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.PropulsionsPCA9685Motors;
 import org.arig.robot.system.process.RPLidarBridgeProcess;
 import org.arig.robot.system.servos.SD21Servos;
-import org.arig.robot.system.vacuum.ARIGVacuumController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -56,7 +47,7 @@ public class NerellRobotContext {
         return RobotName.builder()
                 .id(RobotIdentification.NERELL)
                 .name("Nerell (The less I do the better I am)")
-                .version("2022 (Age of bots)")
+                .version("2024 (Terraforming Mars)")
                 .build();
     }
 
@@ -69,6 +60,10 @@ public class NerellRobotContext {
     public I2CManager i2cManager(I2CBus i2cBus) throws IOException {
         final RaspiI2CManager manager = new RaspiI2CManager();
 
+        final I2CManagerDevice<I2CDevice> mux = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(NerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
+                .device(i2cBus.getDevice(NerellConstantesI2C.MULTIPLEXEUR_I2C_ADDRESS))
+                .build();
         final I2CManagerDevice<I2CDevice> pca9685 = I2CManagerDevice.<I2CDevice>builder()
                 .deviceName(NerellConstantesI2C.PCA9685_DEVICE_NAME)
                 .device(i2cBus.getDevice(NerellConstantesI2C.PCA9685_ADDRESS))
@@ -85,9 +80,17 @@ public class NerellRobotContext {
                 .deviceName(NerellConstantesI2C.PCF2_DEVICE_NAME)
                 .device(i2cBus.getDevice(NerellConstantesI2C.PCF2_ADDRESS))
                 .build();
-        final I2CManagerDevice<I2CDevice> sd21 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(NerellConstantesI2C.SERVO_DEVICE_NAME)
+        final I2CManagerDevice<I2CDevice> sd21Avant = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(NerellConstantesI2C.SERVO_AVANT_DEVICE_NAME)
                 .device(i2cBus.getDevice(NerellConstantesI2C.SD21_ADDRESS))
+                .multiplexerDeviceName(NerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
+                .multiplexerChannel(NerellConstantesI2C.SERVO_AVANT_MUX_CHANNEL)
+                .build();
+        final I2CManagerDevice<I2CDevice> sd21Arriere = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(NerellConstantesI2C.SERVO_ARRIERE_DEVICE_NAME)
+                .device(i2cBus.getDevice(NerellConstantesI2C.SD21_ADDRESS))
+                .multiplexerDeviceName(NerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
+                .multiplexerChannel(NerellConstantesI2C.SERVO_ARRIERE_MUX_CHANNEL)
                 .build();
         final I2CManagerDevice<I2CDevice> codeurMoteurDroit = I2CManagerDevice.<I2CDevice>builder()
                 .deviceName(NerellConstantesI2C.CODEUR_MOTEUR_DROIT)
@@ -97,57 +100,34 @@ public class NerellRobotContext {
                 .deviceName(NerellConstantesI2C.CODEUR_MOTEUR_GAUCHE)
                 .device(i2cBus.getDevice(NerellConstantesI2C.CODEUR_GAUCHE_ADDRESS))
                 .build();
-        /*final I2CManagerDevice<I2CDevice> alimMesure = I2CManagerDevice.<I2CDevice>builder()
+        final I2CManagerDevice<I2CDevice> alimMesure = I2CManagerDevice.<I2CDevice>builder()
                 .deviceName(NerellConstantesI2C.ALIM_MESURE_DEVICE_NAME)
                 .device(i2cBus.getDevice(NerellConstantesI2C.ALIM_MESURE_ADDRESS))
                 .scanCmd(new byte[]{0x00})
-                .build();*/
-        final I2CManagerDevice<I2CDevice> controlleurPompes = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(NerellConstantesI2C.VACUUM_CONTROLLER_DEVICE_NAME)
-                .device(i2cBus.getDevice(NerellConstantesI2C.VACUUM_CONTROLLER_ADDRESS))
-                .scanCmd(new byte[]{0x00, 0x00})
-                .build();
-        final I2CManagerDevice<I2CDevice> mux = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(NerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
-                .device(i2cBus.getDevice(NerellConstantesI2C.MULTIPLEXEUR_I2C_ADDRESS))
-                .build();
-        final I2CManagerDevice<I2CDevice> couleurVentouseBas = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(NerellConstantesI2C.COULEUR_VENTOUSE_BAS_NAME)
-                .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
-                .multiplexerDeviceName(NerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(NerellConstantesI2C.COULEUR_VENTOUSE_BAS_MUX_CHANNEL)
-                .build();
-        final I2CManagerDevice<I2CDevice> couleurVentouseHaut = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(NerellConstantesI2C.COULEUR_VENTOUSE_HAUT_NAME)
-                .device(i2cBus.getDevice(TCS34725ColorSensor.TCS34725_ADDRESS))
-                .multiplexerDeviceName(NerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(NerellConstantesI2C.COULEUR_VENTOUSE_HAUT_MUX_CHANNEL)
-                .build();
-        final I2CManagerDevice<I2CDevice> carreFouilleReader = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(NerellConstantesI2C.CARRE_FOUILLE_READER_NAME)
-                .device(i2cBus.getDevice(NerellConstantesI2C.CARRE_FOUILLE_READER_ADDRESS))
                 .build();
 
-        manager.registerDevice(sd21);
+        manager.registerDevice(mux);
+        manager.registerDevice(sd21Avant);
+        manager.registerDevice(sd21Arriere);
         manager.registerDevice(codeurMoteurDroit);
         manager.registerDevice(codeurMoteurGauche);
         manager.registerDevice(pcfAlim);
         manager.registerDevice(pcf1);
         manager.registerDevice(pcf2);
         manager.registerDevice(pca9685);
-        //manager.registerDevice(alimMesure);
-        manager.registerDevice(controlleurPompes);
-        manager.registerDevice(mux);
-        manager.registerDevice(couleurVentouseBas);
-        manager.registerDevice(couleurVentouseHaut);
-        manager.registerDevice(carreFouilleReader);
+        manager.registerDevice(alimMesure);
 
         return manager;
     }
 
     @Bean
-    public SD21Servos servos() {
-        return new SD21Servos(NerellConstantesI2C.SERVO_DEVICE_NAME);
+    public SD21Servos servosAvant() {
+        return new SD21Servos(NerellConstantesI2C.SERVO_AVANT_DEVICE_NAME);
+    }
+
+    @Bean
+    public SD21Servos servosArriere() {
+        return new SD21Servos(NerellConstantesI2C.SERVO_ARRIERE_DEVICE_NAME);
     }
 
     @Bean
@@ -157,27 +137,9 @@ public class NerellRobotContext {
         return encoders;
     }
 
-
-    @Bean
-    public ARIGVacuumController vacuumController() {
-        return new ARIGVacuumController(NerellConstantesI2C.VACUUM_CONTROLLER_DEVICE_NAME);
-    }
-
-    /*
     @Bean
     public ARIG2ChannelsAlimentationSensor alimentationSensor() {
         return new ARIG2ChannelsAlimentationSensor(NerellConstantesI2C.ALIM_MESURE_DEVICE_NAME);
-    }
-    */
-
-    @Bean
-    public TCS34725ColorSensor couleurVentouseBas() {
-        return new TCS34725ColorSensor(NerellConstantesI2C.COULEUR_VENTOUSE_BAS_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_154MS, Gain.TCS34725_GAIN_1X);
-    }
-
-    @Bean
-    public TCS34725ColorSensor couleurVentouseHaut() {
-        return new TCS34725ColorSensor(NerellConstantesI2C.COULEUR_VENTOUSE_HAUT_NAME, IntegrationTime.TCS34725_INTEGRATIONTIME_154MS, Gain.TCS34725_GAIN_1X);
     }
 
     @Bean
@@ -188,23 +150,23 @@ public class NerellRobotContext {
     }
 
     @Bean
-    public CarreFouilleReader carreFouilleReader(I2CManager i2CManager) {
-        return new CarreFouilleReader(i2CManager, NerellConstantesI2C.CARRE_FOUILLE_READER_NAME);
-    }
-
-    @Bean
     @SneakyThrows
     public PCA9685GpioProvider pca9685GpioControler(I2CBus bus) {
         final PCA9685GpioProvider gpioProvider = new PCA9685GpioProvider(bus, NerellConstantesI2C.PCA9685_ADDRESS, new BigDecimal(200));
 
         final GpioController gpio = GpioFactory.getInstance();
-        // Moteur Gauche
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_04); // PWM
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_05); // Direction
-
-        // Moteur Droit
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_02); // PWM
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_03); // Direction
         gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_06); // PWM
         gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_07); // Direction
+
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_08);
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_09);
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_10);
+
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_12);
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_13);
+        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_14);
 
         return gpioProvider;
     }
@@ -212,7 +174,7 @@ public class NerellRobotContext {
     @Bean
     public AbstractPropulsionsMotors motors() {
         // Configuration de la carte moteur propulsion.
-        final PropulsionsPCA9685Motors motors = new PropulsionsPCA9685Motors(PCA9685Pin.PWM_06, PCA9685Pin.PWM_07, PCA9685Pin.PWM_04, PCA9685Pin.PWM_05);
+        final PropulsionsPCA9685Motors motors = new PropulsionsPCA9685Motors(PCA9685Pin.PWM_02, PCA9685Pin.PWM_03, PCA9685Pin.PWM_06, PCA9685Pin.PWM_07);
         motors.assignMotors(NerellConstantesConfig.numeroMoteurGauche, NerellConstantesConfig.numeroMoteurDroit);
         return motors;
     }

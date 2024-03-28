@@ -21,7 +21,7 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     // --------------------------------------------------------- //
 
     // Calages
-    @Override
+    /*@Override
     public boolean calageArriereDroit() {
         return rs.calage().contains(TypeCalage.ARRIERE);
     }
@@ -30,186 +30,136 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     public boolean calageArriereGauche() {
         return rs.calage().contains(TypeCalage.ARRIERE);
     }
-
-    @Override
-    public boolean calageAvantBasDroit() {
-        return rs.calage().contains(TypeCalage.AVANT_BAS);
-    }
-
-    @Override
-    public boolean calageAvantBasGauche() {
-        return rs.calage().contains(TypeCalage.AVANT_BAS);
-    }
-
-    @Override
-    public boolean calageAvantHautDroit() {
-        return rs.calage().contains(TypeCalage.AVANT_HAUT);
-    }
-
-    @Override
-    public boolean calageAvantHautGauche() {
-        return rs.calage().contains(TypeCalage.AVANT_HAUT);
-    }
-
-    @Override
-    public boolean calageLatteralDroit() {
-        return rs.calage().contains(TypeCalage.LATERAL_DROIT);
-    }
-
-    @Override
-    public boolean calagePriseEchantillon() {
-        return rs.calage().contains(TypeCalage.PRISE_ECHANTILLON);
-    }
-
-    @Override
-    public boolean calageVentouseBas() {
-        return rs.calage().contains(TypeCalage.VENTOUSE_BAS) && presenceVentouseBas();
-    }
+    */
 
     // Numerique
     @Override
-    public boolean presenceVentouseBas() {
-        return presVentouseBas;
+    public boolean in1_1() {
+        return false;
     }
 
     @Override
-    public boolean presenceVentouseHaut() {
-        return presVentouseHaut;
+    public boolean in1_2() {
+        return false;
     }
 
     @Override
-    public boolean presencePriseBras(boolean expectedSimulation) {
-        return expectedSimulation;
+    public boolean in1_3() {
+        return false;
     }
 
     @Override
-    public boolean presenceStatuette(boolean expectedSimulation) {
-        return rs.statuettePriseDansCeRobot() || expectedSimulation;
+    public boolean in1_4() {
+        return false;
     }
 
     @Override
-    public boolean presenceCarreFouille(final boolean expectedSimulation) {
-        return expectedSimulation;
+    public boolean in1_5() {
+        return false;
     }
 
     @Override
-    public boolean presenceStock1(boolean expectedSimulation) {
-        return rs.stock()[0] != null || expectedSimulation;
+    public boolean in1_6() {
+        return false;
     }
 
     @Override
-    public boolean presenceStock2(boolean expectedSimulation) {
-        return rs.stock()[1] != null || expectedSimulation;
+    public boolean in1_7() {
+        return false;
     }
 
     @Override
-    public boolean presenceStock3(boolean expectedSimulation) {
-        return rs.stock()[2] != null || expectedSimulation;
+    public boolean in1_8() {
+        return false;
     }
 
     @Override
-    public boolean presenceStock4(boolean expectedSimulation) {
-        return rs.stock()[3] != null || expectedSimulation;
+    public boolean in2_1() {
+        return false;
     }
 
     @Override
-    public boolean presenceStock5(boolean expectedSimulation) {
-        return rs.stock()[4] != null || expectedSimulation;
+    public boolean in2_2() {
+        return false;
     }
 
     @Override
-    public boolean presenceStock6(boolean expectedSimulation) {
-        return rs.stock()[5] != null || expectedSimulation;
+    public boolean in2_3() {
+        return false;
     }
 
     @Override
-    public CouleurEchantillon couleurVentouseBas() {
-        return CouleurEchantillon.INCONNU;
+    public boolean in2_4() {
+        return false;
     }
 
     @Override
-    public CouleurEchantillon couleurVentouseHaut() {
-        return CouleurEchantillon.INCONNU;
+    public boolean in2_5() {
+        return false;
     }
 
     @Override
-    public TCS34725ColorSensor.ColorData couleurVentouseHautRaw() {
-        return new TCS34725ColorSensor.ColorData();
+    public boolean in2_6() {
+        return false;
     }
 
     @Override
-    public TCS34725ColorSensor.ColorData couleurVentouseBasRaw() {
-        return new TCS34725ColorSensor.ColorData();
+    public boolean in2_7() {
+        return false;
     }
+
+    @Override
+    public boolean in2_8() {
+        return false;
+    }
+
+    @Override
+    public boolean in3_1() {
+        return false;
+    }
+
+    @Override
+    public boolean in3_2() {
+        return false;
+    }
+
+    @Override
+    public boolean in3_3() {
+        return false;
+    }
+
+    @Override
+    public boolean in3_4() {
+        return false;
+    }
+
+    @Override
+    public boolean in3_5() {
+        return false;
+    }
+
+    @Override
+    public boolean in3_6() {
+        return false;
+    }
+
+    @Override
+    public boolean in3_7() {
+        return false;
+    }
+
+    @Override
+    public boolean in3_8() {
+        return false;
+    }
+
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
 
-    @Override
-    public void enableLedCapteurCouleur() {
-        // Nothing to do
-    }
-
-    @Override
-    public void disableLedCapteurCouleur() {
-        // Nothing to do
-    }
-
     // ----------------------------------------------------------- //
     // -------------------------- BUSINESS ----------------------- //
     // ----------------------------------------------------------- //
 
-
-    @Override
-    public void disableAllPompes() {
-        releaseAllPompes();
-    }
-
-    @Override
-    public void enableAllPompes() {
-        enablePompeVentouseBas();
-        enablePompeVentouseHaut();
-    }
-
-    @Override
-    public void enableForceAllPompes() {
-        enableAllPompes();
-    }
-
-    @Override
-    public void releaseAllPompes() {
-        releasePompeVentouseBas();
-        releasePompeVentouseHaut();
-    }
-
-    @Override
-    public void enableForcePompeVentouseBas() {
-        enablePompeVentouseBas();
-    }
-
-    @Override
-    public void enableForcePompeVentouseHaut() {
-        enablePompeVentouseHaut();
-    }
-
-    @Override
-    public void enablePompeVentouseBas() {
-        presVentouseBas = true;
-    }
-
-    @Override
-    public void enablePompeVentouseHaut() {
-        presVentouseHaut = true;
-    }
-
-    @Override
-    public void releasePompeVentouseBas() {
-        presVentouseBas = false;
-    }
-
-    @Override
-    public void releasePompeVentouseHaut() {
-        presVentouseBas = false;
-    }
 }

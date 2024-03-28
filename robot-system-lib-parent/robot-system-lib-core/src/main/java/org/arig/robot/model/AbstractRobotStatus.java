@@ -18,10 +18,6 @@ import java.util.stream.Collectors;
 public abstract class AbstractRobotStatus {
 
     private final int matchTimeMs;
-
-    /**
-     * Il s'agit du robot principal
-     */
     private final boolean mainRobot;
 
     protected AbstractRobotStatus(int matchTimeMs, boolean mainRobot) {

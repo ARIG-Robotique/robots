@@ -15,7 +15,6 @@ public class NerellQuitCommand implements Quit.Command {
 
     private final ILidarTelemeter lidar;
     private final NerellIOService ioService;
-    private final ARIGVacuumController vacuumController;
 
     @ShellMethod(value = "Exit the shell.", key = {"quit", "exit"})
     public void quit() {
@@ -23,9 +22,6 @@ public class NerellQuitCommand implements Quit.Command {
         // Stop le lidar en quittant
         lidar.stopScan();
         lidar.end();
-
-        // Désactivation des pompes
-        vacuumController.disableAll();
 
         // Stop les alimentations de puissance
         ioService.disableAlimMoteurs();

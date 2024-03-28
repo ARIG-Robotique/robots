@@ -5,28 +5,31 @@ import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 public interface NerellConstantesI2C {
 
     String CODEUR_MOTEUR_DROIT = "Codeur Moteur Droit";
-    int CODEUR_DROIT_ADDRESS = 0x30;
+    int CODEUR_DROIT_ADDRESS = 0x32;
 
     String CODEUR_MOTEUR_GAUCHE = "Codeur Moteur Gauche";
-    int CODEUR_GAUCHE_ADDRESS = 0x32;
+    int CODEUR_GAUCHE_ADDRESS = 0x30;
 
     String PCF_ALIM_DEVICE_NAME = "Carte alimentation";
     int PCF_ALIM_ADDRESS = PCF8574GpioProvider.PCF8574A_0x38;
 
-    String PCF1_DEVICE_NAME = "PCF 1 (Inputs µSwitch)";
-    int PCF1_ADDRESS = PCF8574GpioProvider.PCF8574A_0x3E;
+    String PCF1_DEVICE_NAME = "PCF 1";
+    int PCF1_ADDRESS = PCF8574GpioProvider.PCF8574_0x25;
 
-    String PCF2_DEVICE_NAME = "PCF 2 (Inputs Pololu)";
-    int PCF2_ADDRESS = PCF8574GpioProvider.PCF8574_0x27;
+    String PCF2_DEVICE_NAME = "PCF 2";
+    int PCF2_ADDRESS = PCF8574GpioProvider.PCF8574_0x26;
+
+    String PCF3_DEVICE_NAME = "PCF 3";
+    int PCF3_ADDRESS = PCF8574GpioProvider.PCF8574_0x27;
 
     String PCA9685_DEVICE_NAME = "PCA9685";
     int PCA9685_ADDRESS = 0x40;
 
-    String SERVO_DEVICE_NAME = "SD21";
+    String SERVO_AVANT_DEVICE_NAME = "SD21 Avant";
+    byte SERVO_AVANT_MUX_CHANNEL = 7;
+    String SERVO_ARRIERE_DEVICE_NAME = "SD21 Arriere";
+    byte SERVO_ARRIERE_MUX_CHANNEL = 2;
     int SD21_ADDRESS = 0x61;
-
-    String VACUUM_CONTROLLER_DEVICE_NAME = "Vacuum ctrl";
-    int VACUUM_CONTROLLER_ADDRESS = 0x26;
 
     String ALIM_MESURE_DEVICE_NAME = "Mesure alimentation";
     int ALIM_MESURE_ADDRESS = 0x20;
@@ -34,13 +37,6 @@ public interface NerellConstantesI2C {
     String MULTIPLEXEUR_I2C_NAME = "Mux TCA";
     int MULTIPLEXEUR_I2C_ADDRESS = 0x70;
 
-    String COULEUR_VENTOUSE_BAS_NAME = "Couleur ventouse bas";
-    byte COULEUR_VENTOUSE_BAS_MUX_CHANNEL = 2;
-
-    String COULEUR_VENTOUSE_HAUT_NAME = "Couleur ventouse haut";
-    byte COULEUR_VENTOUSE_HAUT_MUX_CHANNEL = 3;
-
-    String CARRE_FOUILLE_READER_NAME = "Carre fouille reader";
-    int CARRE_FOUILLE_READER_ADDRESS = 0x3C;
-
+    String I2C_ADC_DEVICE_NAME = "ADC";
+    int I2C_ADC_ADDRESS = 0x48;
 }

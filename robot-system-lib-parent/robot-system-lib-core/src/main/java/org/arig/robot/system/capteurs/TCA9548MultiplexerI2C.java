@@ -23,6 +23,7 @@ public class TCA9548MultiplexerI2C implements I2CMultiplexerDevice {
         this.deviceName = deviceName;
     }
 
+    @Override
     public boolean selectChannel(byte channel) {
         if (channel != lastSelectedChannel) {
             try {
@@ -38,6 +39,7 @@ public class TCA9548MultiplexerI2C implements I2CMultiplexerDevice {
         return true;
     }
 
+    @Override
     public void disable() {
         try {
             i2cManager.sendData(deviceName, (byte) 0x00);

@@ -48,7 +48,7 @@ public class NerellAlimentationCommands {
         ioService.disableAlimMoteurs();
     }
 
-    /*@SneakyThrows
+    @SneakyThrows
     @ShellMethod("Lecture des alimentations")
     public void readAlimentation(int nbRead) {
         alimentationSensor.printVersion();
@@ -63,5 +63,5 @@ public class NerellAlimentationCommands {
 
             ThreadUtils.sleep(200);
         }
-    }*/
+    }
 }

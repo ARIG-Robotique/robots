@@ -22,37 +22,30 @@ public class NerellCapteursController extends AbstractCapteursController {
     public void afterPropertiesSet() throws Exception {
         super.afterPropertiesSet();
 
-        numeriqueInfos.put("Calage arrière droit", ioService::calageArriereDroit);
-        numeriqueInfos.put("Calage arrière gauche", ioService::calageArriereGauche);
-        numeriqueInfos.put("Calage avant bas droit", ioService::calageAvantBasDroit);
-        numeriqueInfos.put("Calage avant bas gauche", ioService::calageAvantBasGauche);
-        numeriqueInfos.put("Calage avant haut droit", ioService::calageAvantHautDroit);
-        numeriqueInfos.put("Calage avant haut gauche", ioService::calageAvantHautGauche);
-        numeriqueInfos.put("Calage lateral droit", ioService::calageLatteralDroit);
-        numeriqueInfos.put("Calage echantillon", ioService::calagePriseEchantillon);
-
-        numeriqueInfos.put("Presence carre de fouille", () -> ioService.presenceCarreFouille(false));
-        numeriqueInfos.put("Presence prise bras", () -> ioService.presencePriseBras(false));
-        numeriqueInfos.put("Presence stock 1", () -> ioService.presenceStock1(false));
-        numeriqueInfos.put("Presence stock 2", () -> ioService.presenceStock2(false));
-        numeriqueInfos.put("Presence stock 3", () -> ioService.presenceStock3(false));
-        numeriqueInfos.put("Presence stock 4", () -> ioService.presenceStock4(false));
-        numeriqueInfos.put("Presence stock 5", () -> ioService.presenceStock5(false));
-        numeriqueInfos.put("Presence stock 6", () -> ioService.presenceStock6(false));
-        numeriqueInfos.put("Presence ventouse bas", ioService::presenceVentouseBas);
-        numeriqueInfos.put("Presence ventouse haut", ioService::presenceVentouseHaut);
-        numeriqueInfos.put("Presence statuette", () -> ioService.presenceStatuette(false));
-
-        couleursInfos.put("Ventouse haut", () -> {
-            TCS34725ColorSensor.ColorData colorData = ioService.couleurVentouseHautRaw();
-            CouleurEchantillon couleurEchantillon = ioService.computeCouleur(colorData);
-            return String.format("%s (%d %d %d)", couleurEchantillon.name(), colorData.r(), colorData.g(), colorData.b());
-        });
-        couleursInfos.put("Ventouse bas", () -> {
-            TCS34725ColorSensor.ColorData colorData = ioService.couleurVentouseBasRaw();
-            CouleurEchantillon couleurEchantillon = ioService.computeCouleur(colorData);
-            return String.format("%s (%d %d %d)", couleurEchantillon.name(), colorData.r(), colorData.g(), colorData.b());
-        });
+        numeriqueInfos.put("In 1 : 1", ioService::in1_1);
+        numeriqueInfos.put("In 1 : 2", ioService::in1_2);
+        numeriqueInfos.put("In 1 : 3", ioService::in1_3);
+        numeriqueInfos.put("In 1 : 4", ioService::in1_4);
+        numeriqueInfos.put("In 1 : 5", ioService::in1_5);
+        numeriqueInfos.put("In 1 : 6", ioService::in1_6);
+        numeriqueInfos.put("In 1 : 7", ioService::in1_7);
+        numeriqueInfos.put("In 1 : 8", ioService::in1_8);
+        numeriqueInfos.put("In 2 : 1", ioService::in2_1);
+        numeriqueInfos.put("In 2 : 2", ioService::in2_2);
+        numeriqueInfos.put("In 2 : 3", ioService::in2_3);
+        numeriqueInfos.put("In 2 : 4", ioService::in2_4);
+        numeriqueInfos.put("In 2 : 5", ioService::in2_5);
+        numeriqueInfos.put("In 2 : 6", ioService::in2_6);
+        numeriqueInfos.put("In 2 : 7", ioService::in2_7);
+        numeriqueInfos.put("In 2 : 8", ioService::in2_8);
+        numeriqueInfos.put("In 3 : 1", ioService::in3_1);
+        numeriqueInfos.put("In 3 : 2", ioService::in3_2);
+        numeriqueInfos.put("In 3 : 3", ioService::in3_3);
+        numeriqueInfos.put("In 3 : 4", ioService::in3_4);
+        numeriqueInfos.put("In 3 : 5", ioService::in3_5);
+        numeriqueInfos.put("In 3 : 6", ioService::in3_6);
+        numeriqueInfos.put("In 3 : 7", ioService::in3_7);
+        numeriqueInfos.put("In 3 : 8", ioService::in3_8);
 
         textInfos.put("Equipe", () -> (robotStatus.team() != null) ? robotStatus.team().name() : "???");
     }
