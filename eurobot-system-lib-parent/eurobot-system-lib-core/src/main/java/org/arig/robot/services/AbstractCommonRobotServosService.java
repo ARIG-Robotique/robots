@@ -52,6 +52,10 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final String POS_FERME = "Fermé";
     protected static final String POS_OUVERT = "Ouvert";
     protected static final String POS_PRISE = "Prise";
+    protected static final String POS_BAS = "Bas";
+    protected static final String POS_HAUT = "Haut";
+    protected static final String POS_RENTRE = "Rentré";
+    protected static final String POS_SORTI = "Sorti";
 
     protected static final String GROUP_BRAS_AVANT_GAUCHE = "Bras avant gauche";
     protected static final String GROUP_BRAS_AVANT_CENTRE = "Bras avant centre haut";
