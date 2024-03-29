@@ -1,10 +1,8 @@
 package org.arig.robot.services;
 
 import lombok.RequiredArgsConstructor;
-import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.enums.TypeCalage;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.springframework.stereotype.Service;
 
 @Service("IOService")
@@ -13,17 +11,39 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
 
     private final OdinRobotStatus rs;
 
-    private boolean presVentouseBas = false;
-    private boolean presVentouseHaut = false;
-
     // --------------------------------------------------------- //
     // -------------------------- INPUT ------------------------ //
     // --------------------------------------------------------- //
 
     // Calages
     @Override
-    public boolean calageArriereDroit() {
-        return rs.calage().contains(TypeCalage.ARRIERE);
+    public boolean calagePriseProduitAvant() {
+        return calagePriseProduitAvant(1);
+    }
+
+    @Override
+    public boolean calagePriseProduitAvant(int mandatorySensors) {
+        return false;
+    }
+
+    @Override
+    public boolean calagePrisePotArriere() {
+        return calagePrisePotArriere(1);
+    }
+
+    @Override
+    public boolean calagePrisePotArriere(int mandatorySensors) {
+        return false;
+    }
+
+    @Override
+    public boolean calageAvantGauche() {
+        return rs.calage().contains(TypeCalage.AVANT);
+    }
+
+    @Override
+    public boolean calageAvantDroit() {
+        return rs.calage().contains(TypeCalage.AVANT);
     }
 
     @Override
@@ -32,184 +52,89 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
     }
 
     @Override
-    public boolean calageAvantBasDroit() {
-        return rs.calage().contains(TypeCalage.AVANT_BAS);
-    }
-
-    @Override
-    public boolean calageAvantBasGauche() {
-        return rs.calage().contains(TypeCalage.AVANT_BAS);
-    }
-
-    @Override
-    public boolean calageAvantHautDroit() {
-        return rs.calage().contains(TypeCalage.AVANT_HAUT);
-    }
-
-    @Override
-    public boolean calageAvantHautGauche() {
-        return rs.calage().contains(TypeCalage.AVANT_HAUT);
-    }
-
-    @Override
-    public boolean calageLatteralDroit() {
-        return rs.calage().contains(TypeCalage.LATERAL_DROIT);
-    }
-
-    @Override
-    public boolean calagePriseEchantillon() {
-        return rs.calage().contains(TypeCalage.PRISE_ECHANTILLON);
-    }
-
-    @Override
-    public boolean calageVentouseBas() {
-        return rs.calage().contains(TypeCalage.VENTOUSE_BAS) && presenceVentouseBas();
+    public boolean calageArriereDroit() {
+        return rs.calage().contains(TypeCalage.ARRIERE);
     }
 
     // Numerique
+
     @Override
-    public boolean presenceVentouseBas() {
-        return presVentouseBas;
+    public boolean pinceAvantGauche() {
+        return false;
     }
 
     @Override
-    public boolean presenceVentouseHaut() {
-        return presVentouseHaut;
+    public boolean pinceAvantCentre() {
+        return false;
     }
 
     @Override
-    public boolean presencePriseBras(boolean expectedSimulation) {
-        return expectedSimulation;
+    public boolean pinceAvantDroite() {
+        return false;
     }
 
     @Override
-    public boolean presenceStatuette(boolean expectedSimulation) {
-        return rs.statuettePriseDansCeRobot() || expectedSimulation;
+    public boolean pinceArriereGauche() {
+        return false;
     }
 
     @Override
-    public boolean presenceCarreFouille(final boolean expectedSimulation) {
-        return expectedSimulation;
+    public boolean pinceArriereCentre() {
+        return false;
     }
 
     @Override
-    public boolean presenceStock1(boolean expectedSimulation) {
-        return rs.stock()[0] != null || expectedSimulation;
+    public boolean pinceArriereDroite() {
+        return false;
     }
 
     @Override
-    public boolean presenceStock2(boolean expectedSimulation) {
-        return rs.stock()[1] != null || expectedSimulation;
+    public boolean presenceAvantGauche() {
+        return false;
     }
 
     @Override
-    public boolean presenceStock3(boolean expectedSimulation) {
-        return rs.stock()[2] != null || expectedSimulation;
+    public boolean presenceAvantCentre() {
+        return false;
     }
 
     @Override
-    public boolean presenceStock4(boolean expectedSimulation) {
-        return rs.stock()[3] != null || expectedSimulation;
+    public boolean presenceAvantDroite() {
+        return false;
     }
 
     @Override
-    public boolean presenceStock5(boolean expectedSimulation) {
-        return rs.stock()[4] != null || expectedSimulation;
+    public boolean presenceArriereGauche() {
+        return false;
     }
 
     @Override
-    public boolean presenceStock6(boolean expectedSimulation) {
-        return rs.stock()[5] != null || expectedSimulation;
+    public boolean presenceArriereCentre() {
+        return false;
     }
 
     @Override
-    public CouleurEchantillon couleurVentouseBas() {
-        return CouleurEchantillon.INCONNU;
+    public boolean presenceArriereDroite() {
+        return false;
     }
 
     @Override
-    public CouleurEchantillon couleurVentouseHaut() {
-        return CouleurEchantillon.INCONNU;
+    public boolean inductifGauche() {
+        return false;
     }
 
     @Override
-    public TCS34725ColorSensor.ColorData couleurVentouseHautRaw() {
-        return new TCS34725ColorSensor.ColorData();
-    }
-
-    @Override
-    public TCS34725ColorSensor.ColorData couleurVentouseBasRaw() {
-        return new TCS34725ColorSensor.ColorData();
+    public boolean inductifDroit() {
+        return false;
     }
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
 
-    @Override
-    public void enableLedCapteurCouleur() {
-        // Nothing to do
-    }
-
-    @Override
-    public void disableLedCapteurCouleur() {
-        // Nothing to do
-    }
 
     // ----------------------------------------------------------- //
     // -------------------------- BUSINESS ----------------------- //
     // ----------------------------------------------------------- //
 
-
-    @Override
-    public void disableAllPompes() {
-        releaseAllPompes();
-    }
-
-    @Override
-    public void enableAllPompes() {
-        enablePompeVentouseBas();
-        enablePompeVentouseHaut();
-    }
-
-    @Override
-    public void enableForceAllPompes() {
-        enableAllPompes();
-    }
-
-    @Override
-    public void releaseAllPompes() {
-        releasePompeVentouseBas();
-        releasePompeVentouseHaut();
-    }
-
-    @Override
-    public void enableForcePompeVentouseBas() {
-        enablePompeVentouseBas();
-    }
-
-    @Override
-    public void enableForcePompeVentouseHaut() {
-        enablePompeVentouseHaut();
-    }
-
-    @Override
-    public void enablePompeVentouseBas() {
-        presVentouseBas = true;
-    }
-
-    @Override
-    public void enablePompeVentouseHaut() {
-        presVentouseHaut = true;
-    }
-
-    @Override
-    public void releasePompeVentouseBas() {
-        presVentouseBas = false;
-    }
-
-    @Override
-    public void releasePompeVentouseHaut() {
-        presVentouseBas = false;
-    }
 }

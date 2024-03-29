@@ -76,7 +76,7 @@ public class RobotGroupService implements RobotGroup.Handler {
                 rs.strategy(Strategy.values()[data[0]]);
                 break;
             case CONFIG:
-                rs.doubleDeposeGalerie(data[0] > 0);
+                rs.option1(data[0] > 0);
                 rs.etalonageBaliseOk(data[1] > 0);
                 break;
             case CURRENT_ACTION:
@@ -92,98 +92,10 @@ public class RobotGroupService implements RobotGroup.Handler {
                 rs.otherPosition(x, y);
                 break;
 
-            case DISTRIBUTEUR_EQUIPE:
-                rs.distributeurEquipe(StatutDistributeur.values()[data[0]]);
-                break;
-            case DISTRIBUTEUR_COMMUN_EQUIPE:
-                rs.distributeurCommunEquipe(StatutDistributeur.values()[data[0]]);
-                break;
-            case DISTRIBUTEUR_COMMUN_ADVERSE:
-                rs.distributeurCommunAdverse(StatutDistributeur.values()[data[0]]);
-                break;
-            case SITE_ECHANTILLON_PRIS:
-                rs.siteEchantillonPris(true);
-                break;
-            case SITE_ECHANTILLON_ADVERSE_PRIS:
-                rs.siteEchantillonAdversePris(true);
-                break;
-            case SITE_DE_FOUILLE_PRIS:
-                rs.siteDeFouillePris(true);
-                break;
-            case SITE_DE_FOUILLE_ADVERSE_PRIS:
-                rs.siteDeFouilleAdversePris(true);
-                break;
-            case VITRINE_ACTIVE:
-                rs.vitrineActive(true);
-                break;
-            case STATUETTE_PRIS:
-                rs.statuettePrise(true, false);
-                break;
-            case STATUETTE_DEPOSE:
-                rs.statuetteDepose(true);
-                rs.statuettePrise(true, false); // Si bug de prise, mais qu'elle est quand même la plus tardivement (vibrations, etc...)
-                break;
-            case REPLIQUE_DEPOSE:
-                rs.repliqueDepose(true);
-                break;
-            case ECHANTILLON_ABRI_CHANTIER_DISTRIBUTEUR_PRIS:
-                rs.echantillonAbriChantierDistributeurPris(true);
-                break;
-            case ECHANTILLON_ABRI_CHANTIER_CARRE_FOUILLE_PRIS:
-                rs.echantillonAbriChantierCarreFouillePris(true);
-                break;
-            case ECHANTILLON_CAMPEMENT_PRIS:
-                rs.echantillonCampementPris(true);
-                break;
-            case SITE_DE_RETOUR:
-                rs.siteDeRetourAutreRobot(SiteDeRetour.values()[data[0]]);
+            case SITE_DE_CHARGE:
+                rs.siteDeCharge(SiteDeCharge.values()[data[0]]);
                 break;
 
-            case COULEUR_CARRE_FOUILLE:
-                rs.couleurCarreFouille(data[0], CouleurCarreFouille.values()[data[1]]);
-                break;
-            case BASCULE_CARRE_FOUILLE:
-                rs.basculeCarreFouille(data[0]);
-                break;
-            case DEPOSE_CAMPEMENT_ROUGE_VERT_NORD:
-                rs.deposeCampementRougeVertNord(getEchantillons(data));
-                break;
-            case DEPOSE_CAMPEMENT_ROUGE_VERT_SUD:
-                rs.deposeCampementRougeVertSud(getEchantillons(data));
-                break;
-            case DEPOSE_CAMPEMENT_BLEU_VERT_NORD:
-                rs.deposeCampementBleuVertNord(getEchantillons(data));
-                break;
-            case DEPOSE_CAMPEMENT_BLEU_VERT_SUD:
-                rs.deposeCampementBleuVertSud(getEchantillons(data));
-                break;
-            case CURRENT_CAMPEMENT:
-                rs.otherCampement(Campement.Position.values()[data[0]]);
-                break;
-            case DEPOSE_GALERIE_ROUGE:
-                rs.deposeGalerieRouge(getEchantillons(data));
-                break;
-            case DEPOSE_GALERIE_ROUGE_VERT:
-                rs.deposeGalerieRougeVert(getEchantillons(data));
-                break;
-            case DEPOSE_GALERIE_VERT:
-                rs.deposeGalerieVert(getEchantillons(data));
-                break;
-            case DEPOSE_GALERIE_BLEU_VERT:
-                rs.deposeGalerieBleuVert(getEchantillons(data));
-                break;
-            case DEPOSE_GALERIE_BLEU:
-                rs.deposeGalerieBleu(getEchantillons(data));
-                break;
-            case DEPOSE_ABRI_CHANTIER:
-                rs.deposeAbriChantier(getEchantillons(data));
-                break;
-            case PERIODE_GALERIE:
-                rs.periodeGalerieAutreRobot(Galerie.Periode.values()[data[0]]);
-                break;
-            case GALERIE_BLOQUEE:
-                rs.periodeGalerieBloquee(Galerie.Periode.values()[data[0]]);
-                break;
             default:
                 log.warn("Reception d'un event inconnu : " + event);
                 break;
@@ -269,168 +181,24 @@ public class RobotGroupService implements RobotGroup.Handler {
 
     public void configuration() {
         byte[] data = new byte[]{
-                (byte) (rs.doubleDeposeGalerie() ? 1 : 0),
+                (byte) (rs.option1() ? 1 : 0),
                 (byte) (rs.etalonageBaliseOk() ? 1 : 0)
         };
         sendEvent(StatusEvent.CONFIG, data);
     }
 
-    public void distributeurEquipe(StatutDistributeur distributeurEquipe) {
-        rs.distributeurEquipe(distributeurEquipe);
-        sendEvent(StatusEvent.DISTRIBUTEUR_EQUIPE, distributeurEquipe);
+    /* ************************************************************************ */
+    /* ****************************** ACTIONS ********************************* */
+    /* ************************************************************************ */
+
+    public void siteDeCharge(SiteDeCharge siteDeCharge) {
+        rs.siteDeCharge(siteDeCharge);
+        sendEvent(StatusEvent.SITE_DE_CHARGE, siteDeCharge);
     }
 
-    public void distributeurCommunEquipe(StatutDistributeur distributeurCommunEquipe) {
-        rs.distributeurCommunEquipe(distributeurCommunEquipe);
-        sendEvent(StatusEvent.DISTRIBUTEUR_COMMUN_EQUIPE, distributeurCommunEquipe);
-    }
-
-    public void distributeurCommunAdverse(StatutDistributeur distributeurCommunEquipe) {
-        rs.distributeurCommunAdverse(distributeurCommunEquipe);
-        sendEvent(StatusEvent.DISTRIBUTEUR_COMMUN_ADVERSE, distributeurCommunEquipe);
-    }
-
-    public void siteEchantillonPris() {
-        rs.siteEchantillonPris(true);
-        sendEvent(StatusEvent.SITE_ECHANTILLON_PRIS);
-    }
-
-    public void siteEchantillonAdversePris() {
-        rs.siteEchantillonAdversePris(true);
-        sendEvent(StatusEvent.SITE_ECHANTILLON_ADVERSE_PRIS);
-    }
-
-    public void siteDeFouillePris() {
-        rs.siteDeFouillePris(true);
-        sendEvent(StatusEvent.SITE_DE_FOUILLE_PRIS);
-    }
-
-    public void siteDeFouilleAdversePris() {
-        rs.siteDeFouilleAdversePris(true);
-        sendEvent(StatusEvent.SITE_DE_FOUILLE_ADVERSE_PRIS);
-    }
-
-    public void vitrineActive() {
-        rs.vitrineActive(true);
-        sendEvent(StatusEvent.VITRINE_ACTIVE);
-    }
-
-    public void statuettePris() {
-        rs.statuettePrise(true, true);
-        sendEvent(StatusEvent.STATUETTE_PRIS);
-    }
-
-    public void statuetteDansVitrine() {
-        rs.statuetteDepose(true);
-        rs.statuettePrise(true, true); // Si bug de prise, mais qu'elle est quand même la plus tardivement (vibrations, etc...)
-        sendEvent(StatusEvent.STATUETTE_DEPOSE);
-    }
-
-    public void repliqueDepose() {
-        rs.repliqueDepose(true);
-        sendEvent(StatusEvent.REPLIQUE_DEPOSE);
-    }
-
-    public void echantillonAbriChantierDistributeurPris() {
-        rs.echantillonAbriChantierDistributeurPris(true);
-        sendEvent(StatusEvent.ECHANTILLON_ABRI_CHANTIER_DISTRIBUTEUR_PRIS);
-    }
-
-    public void echantillonAbriChantierCarreFouillePris() {
-        rs.echantillonAbriChantierCarreFouillePris(true);
-        sendEvent(StatusEvent.ECHANTILLON_ABRI_CHANTIER_CARRE_FOUILLE_PRIS);
-    }
-
-    public void echantillonCampementPris() {
-        rs.echantillonCampementPris(true);
-        sendEvent(StatusEvent.ECHANTILLON_CAMPEMENT_PRIS);
-    }
-
-    public void siteDeRetour(SiteDeRetour siteDeRetour) {
-        rs.siteDeRetour(siteDeRetour);
-        sendEvent(StatusEvent.SITE_DE_RETOUR, siteDeRetour);
-    }
-
-    public void basculeCarreFouille(int numero) {
-        rs.basculeCarreFouille(numero);
-        sendEvent(StatusEvent.BASCULE_CARRE_FOUILLE, new byte[]{(byte) numero});
-    }
-
-    public void couleurCarreFouille(int numero, CouleurCarreFouille carreFouille) {
-        rs.couleurCarreFouille(numero, carreFouille);
-        sendEvent(StatusEvent.COULEUR_CARRE_FOUILLE, new byte[]{(byte) numero, (byte) carreFouille.ordinal()});
-    }
-
-    public void deposeAbriChantier(CouleurEchantillon... echantillons) {
-        rs.deposeAbriChantier(echantillons);
-        sendEvent(StatusEvent.DEPOSE_ABRI_CHANTIER, echantillons);
-    }
-
-    public void deposeCampementRougeVertNord(CouleurEchantillon... echantillons) {
-        rs.deposeCampementRougeVertNord(echantillons);
-        sendEvent(StatusEvent.DEPOSE_CAMPEMENT_ROUGE_VERT_NORD, echantillons);
-    }
-
-    public void deposeCampementRougeVertSud(CouleurEchantillon... echantillons) {
-        rs.deposeCampementRougeVertSud(echantillons);
-        sendEvent(StatusEvent.DEPOSE_CAMPEMENT_ROUGE_VERT_SUD, echantillons);
-    }
-
-    public void deposeCampementBleuVertNord(CouleurEchantillon... echantillons) {
-        rs.deposeCampementBleuVertNord(echantillons);
-        sendEvent(StatusEvent.DEPOSE_CAMPEMENT_BLEU_VERT_NORD, echantillons);
-    }
-
-    public void deposeCampementBleuVertSud(CouleurEchantillon... echantillons) {
-        rs.deposeCampementBleuVertSud(echantillons);
-        sendEvent(StatusEvent.DEPOSE_CAMPEMENT_BLEU_VERT_SUD, echantillons);
-    }
-
-    public void positionCampement(Campement.Position pos) {
-        sendEvent(StatusEvent.CURRENT_CAMPEMENT, pos);
-    }
-
-    public void periodeGalerie(Galerie.Periode periode) {
-        sendEvent(StatusEvent.PERIODE_GALERIE, periode);
-    }
-
-    public void deposeGalerieRouge(CouleurEchantillon... echantillons) {
-        rs.deposeGalerieRouge(echantillons);
-        sendEvent(StatusEvent.DEPOSE_GALERIE_ROUGE, echantillons);
-    }
-
-    public void deposeGalerieRougeVert(CouleurEchantillon... echantillons) {
-        rs.deposeGalerieRougeVert(echantillons);
-        sendEvent(StatusEvent.DEPOSE_GALERIE_ROUGE_VERT, echantillons);
-    }
-
-    public void deposeGalerieVert(CouleurEchantillon... echantillons) {
-        rs.deposeGalerieVert(echantillons);
-        sendEvent(StatusEvent.DEPOSE_GALERIE_VERT, echantillons);
-    }
-
-    public void deposeGalerieBleuVert(CouleurEchantillon... echantillons) {
-        rs.deposeGalerieBleuVert(echantillons);
-        sendEvent(StatusEvent.DEPOSE_GALERIE_BLEU_VERT, echantillons);
-    }
-
-    public void deposeGalerieBleu(CouleurEchantillon... echantillons) {
-        rs.deposeGalerieBleu(echantillons);
-        sendEvent(StatusEvent.DEPOSE_GALERIE_BLEU, echantillons);
-    }
-
-    public void periodeGalerieBloquee(Galerie.Periode periode) {
-        rs.periodeGalerieBloquee(periode);
-        sendEvent(StatusEvent.GALERIE_BLOQUEE, periode);
-    }
-
-    private CouleurEchantillon[] getEchantillons(byte[] data) {
-        CouleurEchantillon[] echantillons = new CouleurEchantillon[data.length];
-        for (int i = 0; i < data.length; i++) {
-            echantillons[i] = CouleurEchantillon.values()[data[i]];
-        }
-        return echantillons;
-    }
+    /* ************************************************************************ */
+    /* ****************************** BUSINESS ******************************** */
+    /* ************************************************************************ */
 
     private void sendEvent(StatusEvent event) {
         sendEvent(event, new byte[]{});

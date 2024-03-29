@@ -1,9 +1,13 @@
 package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.capteurs.AlimentationSensorValue;
 import org.arig.robot.services.NerellIOService;
-import org.arig.robot.services.NerellServosService;
+import org.arig.robot.services.NerellRobotServosService;
+import org.arig.robot.system.capteurs.IAlimentationSensor;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -15,8 +19,8 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 public class NerellAlimentationCommands {
 
     private final NerellIOService ioService;
-    private final NerellServosService servosService;
-    //private final IAlimentationSensor alimentationSensor;
+    private final NerellRobotServosService servosService;
+    private final IAlimentationSensor alimentationSensor;
 
     public Availability auOK() {
         return ioService.auOk() ? Availability.available() : Availability.unavailable("Arret d'urgence non OK");
@@ -31,7 +35,7 @@ public class NerellAlimentationCommands {
     @ShellMethodAvailability("auOK")
     @ShellMethod("Activation alimentation servos")
     public void enableAlimentationServos() {
-        servosService.cyclePreparation();
+        //servosService.cyclePreparation();
         ioService.enableAlimServos();
     }
 

@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
  * @author gdepuille on 06/05/15.
  */
 @Configuration
-@ComponentScan({"org.arig.robot.strategy.actions.active"})
+@ComponentScan({"org.arig.robot.strategy.actions.active.common", "org.arig.robot.strategy.actions.active.robot"})
 public class NerellCommonStrategyContext {
 
     @Bean

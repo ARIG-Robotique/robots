@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@ShellComponent
-@ShellCommandGroup("Odométrie")
+//@ShellComponent
+//@ShellCommandGroup("Odométrie")
 @RequiredArgsConstructor
 public class NerellOdometrieCommands {
 
@@ -164,7 +164,7 @@ public class NerellOdometrieCommands {
             rs.enableForceMonitoring();
             currentPosition.updatePosition(0, 0, 0);
             trajectoryManager.gotoPoint(distanceReel - 50, 0, GotoOption.AVANT, GotoOption.SANS_ORIENTATION);
-            rs.enableCalageBordure(TypeCalage.AVANT_BAS);
+            rs.enableCalageBordure(TypeCalage.AVANT);
             trajectoryManager.avanceMMSansAngle(200);
             rs.disableForceMonitoring();
             ThreadUtils.sleep(1000); // Stabilisation

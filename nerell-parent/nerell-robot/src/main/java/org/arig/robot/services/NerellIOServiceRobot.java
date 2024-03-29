@@ -34,46 +34,48 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     // ----------------------------
 
     // IRQ
-//    private GpioPinDigitalInput inIrqAlim;
-//    private GpioPinDigitalInput inIrqPcf1;
-//    private GpioPinDigitalInput inIrq1;
-//    private GpioPinDigitalInput inIrq3;
-//    private GpioPinDigitalInput inIrq4;
-//    private GpioPinDigitalInput inIrq5;
-//    private GpioPinDigitalInput inIrq6;
+    // private GpioPinDigitalInput inIrqAlim;
+    // private GpioPinDigitalInput inIrqPcf1;
+    // private GpioPinDigitalInput inIrq1;
+    // private GpioPinDigitalInput inIrq3;
+    // private GpioPinDigitalInput inIrq4;
+    // private GpioPinDigitalInput inIrq5;
+    // private GpioPinDigitalInput inIrq6;
 
     // Input : Alimentation
     private GpioPinDigitalInput inAu;
 
     // Input : Numerique 1
-    private GpioPinDigitalInput calageBordureAvantGauche;
-    private GpioPinDigitalInput calageBordureArriereDroit;
+    private GpioPinDigitalInput calageAvantGauche;
+    private GpioPinDigitalInput calageAvantDroit;
+    private GpioPinDigitalInput calageArriereGauche;
+    private GpioPinDigitalInput calageArriereDroit;
     private GpioPinDigitalInput inductifGauche;
     private GpioPinDigitalInput inductifDroit;
-    private GpioPinDigitalInput pinceArriereCentre;
     private GpioPinDigitalInput pinceAvantCentre;
-    private GpioPinDigitalInput calageBordureAvantDroit;
-    private GpioPinDigitalInput calageBordureArriereGauche;
+    private GpioPinDigitalInput pinceArriereCentre;
 
     // Input : Numerique 2
     private GpioPinDigitalInput tirette;
+    private GpioPinDigitalInput pinceAvantGauche;
     private GpioPinDigitalInput pinceAvantDroit;
-    private GpioPinDigitalInput pinceArriereDroit; // Fond du robot
     private GpioPinDigitalInput pinceArriereGauche;
-    private GpioPinDigitalInput in2_5;
-    private GpioPinDigitalInput in2_6;
-    private GpioPinDigitalInput in2_7;
-    private GpioPinDigitalInput pinceAvantGauche; // Bord du robot
+    private GpioPinDigitalInput pinceArriereDroit;
+
+    // private GpioPinDigitalInput in2_5;
+    // private GpioPinDigitalInput in2_6;
+    // private GpioPinDigitalInput in2_7;
 
     // Input : Numerique 3
-    private GpioPinDigitalInput presenceArriereDroit;
-    private GpioPinDigitalInput presenceArriereGauche;
-    private GpioPinDigitalInput presenceArriereCentre;
-    private GpioPinDigitalInput in3_4;
-    private GpioPinDigitalInput presenceAvantDroit;
     private GpioPinDigitalInput presenceAvantGauche;
     private GpioPinDigitalInput presenceAvantCentre;
-    private GpioPinDigitalInput in3_8;
+    private GpioPinDigitalInput presenceAvantDroit;
+    private GpioPinDigitalInput presenceArriereGauche;
+    private GpioPinDigitalInput presenceArriereCentre;
+    private GpioPinDigitalInput presenceArriereDroit;
+
+    // private GpioPinDigitalInput in3_4;
+    // private GpioPinDigitalInput in3_8;
 
     // Référence sur les PIN Output
     // ----------------------------
@@ -142,34 +144,34 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         outAlimPuissanceMoteurs = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_04);
 
         // PCF1
-        calageBordureAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
-        calageBordureArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
+        calageAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
+        calageArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
         inductifGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
         inductifDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
         pinceArriereCentre = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
         pinceAvantCentre = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
-        calageBordureAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
-        calageBordureArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
+        calageAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
+        calageArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
 
         // PCF2
         tirette = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
         pinceAvantDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
         pinceArriereDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
         pinceArriereGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
-        in2_5 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
-        in2_6 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
-        in2_7 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
+        //in2_5 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
+        //in2_6 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
+        //in2_7 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
         pinceAvantGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_07);
 
         // PCF3
         presenceArriereDroit = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_00);
         presenceArriereGauche = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_01);
         presenceArriereCentre = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_02);
-        in3_4 = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_03);
+        //in3_4 = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_03);
         presenceAvantDroit = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_04);
         presenceAvantGauche = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_05);
         presenceAvantCentre = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_06);
-        in3_8 = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_07);
+        //in3_8 = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_07);
     }
 
     @Override
@@ -218,132 +220,136 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
 
     @Override
     public boolean tirette() {
-        return false;
+        return tirette.isLow();
     }
 
     // --------------------------------------------------------- //
     // -------------------------- INPUT ------------------------ //
     // --------------------------------------------------------- //
 
+    // Calages
+    @Override
+    public boolean calagePriseProduitAvant() {
+        return calagePriseProduitAvant(1);
+    }
+
+    @Override
+    public boolean calagePriseProduitAvant(int mandatorySensors) {
+        if (mandatorySensors > 3) {
+            throw new IllegalArgumentException("Le nombre de capteurs avant obligatoires ne peut pas être supérieur à 3");
+        }
+        int count = presenceAvantGauche() ? 1 : 0;
+        count += presenceAvantCentre() ? 1 : 0;
+        count += presenceAvantDroite() ? 1 : 0;
+        return count >= mandatorySensors;
+    }
+
+    @Override
+    public boolean calagePrisePotArriere() {
+        return calagePrisePotArriere(1);
+    }
+
+    @Override
+    public boolean calagePrisePotArriere(int mandatorySensors) {
+        if (mandatorySensors > 3) {
+            throw new IllegalArgumentException("Le nombre de capteurs arrière obligatoires ne peut pas être supérieur à 3");
+        }
+        int count = presenceArriereGauche() ? 1 : 0;
+        count += presenceArriereCentre() ? 1 : 0;
+        count += presenceArriereDroite() ? 1 : 0;
+        return count >= mandatorySensors;
+    }
+
+    @Override
+    public boolean calageAvantGauche() {
+        return calageAvantGauche.isLow();
+    }
+
+    @Override
+    public boolean calageAvantDroit() {
+        return calageAvantDroit.isLow();
+    }
+
+    @Override
+    public boolean calageArriereGauche() {
+        return calageArriereGauche.isLow();
+    }
+
+    @Override
+    public boolean calageArriereDroit() {
+        return calageArriereDroit.isLow();
+    }
+
     // Numerique
-    @Override
-    public boolean in1_1() {
-        return calageBordureAvantGauche.isLow();
-    }
 
     @Override
-    public boolean in1_2() {
-        return calageBordureArriereDroit.isLow();
-    }
-
-    @Override
-    public boolean in1_3() {
-        return inductifGauche.isLow();
-    }
-
-    @Override
-    public boolean in1_4() {
-        return inductifDroit.isLow();
-    }
-
-    @Override
-    public boolean in1_5() {
-        return pinceArriereCentre.isLow();
-    }
-
-    @Override
-    public boolean in1_6() {
-        return pinceAvantCentre.isLow();
-    }
-
-    @Override
-    public boolean in1_7() {
-        return calageBordureAvantDroit.isLow();
-    }
-
-    @Override
-    public boolean in1_8() {
-        return calageBordureArriereGauche.isLow();
-    }
-
-    @Override
-    public boolean in2_1() {
-        return tirette.isLow();
-    }
-
-    @Override
-    public boolean in2_2() {
-        return pinceAvantDroit.isLow();
-    }
-
-    @Override
-    public boolean in2_3() {
-        return pinceArriereDroit.isLow();
-    }
-
-    @Override
-    public boolean in2_4() {
-        return pinceArriereGauche.isLow();
-    }
-
-    @Override
-    public boolean in2_5() {
-        return in2_5.isLow();
-    }
-
-    @Override
-    public boolean in2_6() {
-        return in2_6.isLow();
-    }
-
-    @Override
-    public boolean in2_7() {
-        return in2_7.isLow();
-    }
-
-    @Override
-    public boolean in2_8() {
-        return pinceAvantGauche.isLow();
-    }
-
-    @Override
-    public boolean in3_1() {
-        return presenceArriereDroit.isLow();
-    }
-
-    @Override
-    public boolean in3_2() {
-        return presenceArriereGauche.isLow();
-    }
-
-    @Override
-    public boolean in3_3() {
-        return presenceArriereCentre.isLow();
-    }
-
-    @Override
-    public boolean in3_4() {
-        return in3_4.isLow();
-    }
-
-    @Override
-    public boolean in3_5() {
-        return presenceAvantDroit.isLow();
-    }
-
-    @Override
-    public boolean in3_6() {
+    public boolean presenceAvantGauche() {
         return presenceAvantGauche.isLow();
     }
 
     @Override
-    public boolean in3_7() {
+    public boolean presenceAvantCentre() {
         return presenceAvantCentre.isLow();
     }
 
     @Override
-    public boolean in3_8() {
-        return in3_8.isLow();
+    public boolean presenceAvantDroite() {
+        return presenceAvantDroit.isLow();
+    }
+
+    @Override
+    public boolean presenceArriereGauche() {
+        return presenceArriereGauche.isLow();
+    }
+
+    @Override
+    public boolean presenceArriereCentre() {
+        return presenceArriereCentre.isLow();
+    }
+
+    @Override
+    public boolean presenceArriereDroite() {
+        return presenceArriereDroit.isLow();
+    }
+
+    @Override
+    public boolean inductifGauche() {
+        return inductifGauche.isLow();
+    }
+
+    @Override
+    public boolean inductifDroit() {
+        return inductifDroit.isLow();
+    }
+
+    @Override
+    public boolean pinceAvantGauche() {
+        return pinceAvantGauche.isLow();
+    }
+
+    @Override
+    public boolean pinceAvantCentre() {
+        return pinceAvantCentre.isLow();
+    }
+
+    @Override
+    public boolean pinceAvantDroite() {
+        return pinceAvantDroit.isLow();
+    }
+
+    @Override
+    public boolean pinceArriereGauche() {
+        return pinceArriereGauche.isLow();
+    }
+
+    @Override
+    public boolean pinceArriereCentre() {
+        return pinceArriereCentre.isLow();
+    }
+
+    @Override
+    public boolean pinceArriereDroite() {
+        return pinceArriereDroit.isLow();
     }
 
     // --------------------------------------------------------- //

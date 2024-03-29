@@ -1,10 +1,8 @@
 package org.arig.robot.services;
 
 import lombok.RequiredArgsConstructor;
-import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.enums.TypeCalage;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.springframework.stereotype.Service;
 
 @Service("IOService")
@@ -13,146 +11,122 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
 
     private final NerellRobotStatus rs;
 
-    private boolean presVentouseBas = false;
-    private boolean presVentouseHaut = false;
-
     // --------------------------------------------------------- //
     // -------------------------- INPUT ------------------------ //
     // --------------------------------------------------------- //
 
     // Calages
-    /*@Override
-    public boolean calageArriereDroit() {
-        return rs.calage().contains(TypeCalage.ARRIERE);
+    @Override
+    public boolean calagePriseProduitAvant() {
+        return calagePriseProduitAvant(1);
+    }
+
+    @Override
+    public boolean calagePriseProduitAvant(int mandatorySensors) {
+        return false;
+    }
+
+    @Override
+    public boolean calagePrisePotArriere() {
+        return calagePrisePotArriere(1);
+    }
+
+    @Override
+    public boolean calagePrisePotArriere(int mandatorySensors) {
+        return false;
+    }
+
+    @Override
+    public boolean calageAvantGauche() {
+        return rs.calage().contains(TypeCalage.AVANT);
+    }
+
+    @Override
+    public boolean calageAvantDroit() {
+        return rs.calage().contains(TypeCalage.AVANT);
     }
 
     @Override
     public boolean calageArriereGauche() {
         return rs.calage().contains(TypeCalage.ARRIERE);
     }
-    */
+
+    @Override
+    public boolean calageArriereDroit() {
+        return rs.calage().contains(TypeCalage.ARRIERE);
+    }
 
     // Numerique
+
     @Override
-    public boolean in1_1() {
+    public boolean pinceAvantGauche() {
         return false;
     }
 
     @Override
-    public boolean in1_2() {
+    public boolean pinceAvantCentre() {
         return false;
     }
 
     @Override
-    public boolean in1_3() {
+    public boolean pinceAvantDroite() {
         return false;
     }
 
     @Override
-    public boolean in1_4() {
+    public boolean pinceArriereGauche() {
         return false;
     }
 
     @Override
-    public boolean in1_5() {
+    public boolean pinceArriereCentre() {
         return false;
     }
 
     @Override
-    public boolean in1_6() {
+    public boolean pinceArriereDroite() {
         return false;
     }
 
     @Override
-    public boolean in1_7() {
+    public boolean presenceAvantGauche() {
         return false;
     }
 
     @Override
-    public boolean in1_8() {
+    public boolean presenceAvantCentre() {
         return false;
     }
 
     @Override
-    public boolean in2_1() {
+    public boolean presenceAvantDroite() {
         return false;
     }
 
     @Override
-    public boolean in2_2() {
+    public boolean presenceArriereGauche() {
         return false;
     }
 
     @Override
-    public boolean in2_3() {
+    public boolean presenceArriereCentre() {
         return false;
     }
 
     @Override
-    public boolean in2_4() {
+    public boolean presenceArriereDroite() {
         return false;
     }
 
     @Override
-    public boolean in2_5() {
+    public boolean inductifGauche() {
         return false;
     }
 
     @Override
-    public boolean in2_6() {
+    public boolean inductifDroit() {
         return false;
     }
-
-    @Override
-    public boolean in2_7() {
-        return false;
-    }
-
-    @Override
-    public boolean in2_8() {
-        return false;
-    }
-
-    @Override
-    public boolean in3_1() {
-        return false;
-    }
-
-    @Override
-    public boolean in3_2() {
-        return false;
-    }
-
-    @Override
-    public boolean in3_3() {
-        return false;
-    }
-
-    @Override
-    public boolean in3_4() {
-        return false;
-    }
-
-    @Override
-    public boolean in3_5() {
-        return false;
-    }
-
-    @Override
-    public boolean in3_6() {
-        return false;
-    }
-
-    @Override
-    public boolean in3_7() {
-        return false;
-    }
-
-    @Override
-    public boolean in3_8() {
-        return false;
-    }
-
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

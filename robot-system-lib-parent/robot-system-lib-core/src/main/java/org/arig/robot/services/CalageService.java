@@ -26,77 +26,58 @@ public class CalageService {
 
     public void process() {
         if (!rs.calage().isEmpty()) {
+            boolean doneAvant = false;
             boolean doneArriere = false;
-            boolean doneAvantBas = false;
-            boolean doneAvantHaut = false;
-            boolean doneLatteralDroit = false;
-            boolean donePriseEchantillon = false;
-            boolean doneVentouseBas = false;
+            boolean donePriseProduitAvant = false;
+            boolean donePrisePotArriere = false;
 
             if (!rs.matchEnabled() && !ioService.auOk()) {
-                doneArriere = doneAvantBas = doneAvantHaut = doneLatteralDroit = donePriseEchantillon = doneVentouseBas = true;
+                doneAvant = doneArriere = donePriseProduitAvant = donePrisePotArriere = true;
             } else {
-                if (rs.calage().size() == 1 && rs.calage().contains(TypeCalage.LATERAL_DROIT)) {
-                    doneLatteralDroit = ioService.calageLatteralDroit();
+                if (rs.calage().size() == 1 && rs.calage().contains(TypeCalage.PRISE_PRODUIT_AVANT)) {
+                    donePriseProduitAvant = ioService.calagePriseProduitAvant();
                 }
-                if (rs.calage().size() == 1 && rs.calage().contains(TypeCalage.PRISE_ECHANTILLON)) {
-                    donePriseEchantillon = ioService.calagePriseEchantillon();
-                }
-                if (rs.calage().contains(TypeCalage.VENTOUSE_BAS)) {
-                    doneVentouseBas = ioService.calageVentouseBas();
+                if (rs.calage().size() == 1 && rs.calage().contains(TypeCalage.PRISE_POT_ARRIERE)) {
+                    donePrisePotArriere = ioService.calagePrisePotArriere();
                 }
 
                 if (cmdRobot.isType(TypeConsigne.DIST) && cmdRobot.isType(TypeConsigne.ANGLE)) {
                     // Calage bordure avec les deux asservissement. Un seul des capteurs suffit
+                    if (rs.calage().contains(TypeCalage.AVANT)) {
+                        doneAvant = ioService.calageAvantDroit() || ioService.calageAvantGauche();
+                    }
                     if (rs.calage().contains(TypeCalage.ARRIERE)) {
                         doneArriere = ioService.calageArriereDroit() || ioService.calageArriereGauche();
                     }
-                    if (rs.calage().contains(TypeCalage.AVANT_BAS)) {
-                        doneAvantBas = ioService.calageAvantBasDroit() || ioService.calageAvantBasGauche();
-                    }
-                    if (rs.calage().contains(TypeCalage.AVANT_HAUT)) {
-                        doneAvantHaut = ioService.calageAvantHautDroit() || ioService.calageAvantHautGauche();
-                    }
 
                 } else {
-                    // Calage bordure avec les un autre asservissement, ou uniquement la distance ou l'angle.
+                    // Calage bordure avec un autre asservissement, ou uniquement la distance ou l'angle.
                     // Les deux capteurs sont utilisés pour le calage.
+                    if (rs.calage().contains(TypeCalage.AVANT)) {
+                        doneAvant = ioService.calageAvantDroit() && ioService.calageAvantGauche();
+                    }
                     if (rs.calage().contains(TypeCalage.ARRIERE)) {
                         doneArriere = ioService.calageArriereDroit() && ioService.calageArriereGauche();
-                    }
-                    if (rs.calage().contains(TypeCalage.AVANT_BAS)) {
-                        doneAvantBas = ioService.calageAvantBasDroit() && ioService.calageAvantBasGauche();
-                    }
-                    if (rs.calage().contains(TypeCalage.AVANT_HAUT)) {
-                        doneAvantHaut = ioService.calageAvantHautDroit() && ioService.calageAvantHautGauche();
                     }
                 }
             }
 
-            if (doneAvantBas || doneAvantHaut || doneArriere || doneLatteralDroit || donePriseEchantillon || doneVentouseBas) {
-                if (doneAvantBas) {
-                    log.info("Callage complet : {}", TypeCalage.AVANT_BAS);
-                    rs.calageCompleted().add(TypeCalage.AVANT_BAS);
-                }
-                if (doneAvantHaut) {
-                    log.info("Callage complet : {}", TypeCalage.AVANT_HAUT);
-                    rs.calageCompleted().add(TypeCalage.AVANT_HAUT);
+            if (doneAvant || doneArriere || donePriseProduitAvant || donePrisePotArriere) {
+                if (doneAvant) {
+                    log.info("Callage complet : {}", TypeCalage.AVANT);
+                    rs.calageCompleted().add(TypeCalage.AVANT);
                 }
                 if (doneArriere) {
                     log.info("Callage complet : {}", TypeCalage.ARRIERE);
                     rs.calageCompleted().add(TypeCalage.ARRIERE);
                 }
-                if (doneLatteralDroit) {
-                    log.info("Callage complet : {}", TypeCalage.LATERAL_DROIT);
-                    rs.calageCompleted().add(TypeCalage.LATERAL_DROIT);
+                if (donePriseProduitAvant) {
+                    log.info("Callage complet : {}", TypeCalage.PRISE_PRODUIT_AVANT);
+                    rs.calageCompleted().add(TypeCalage.PRISE_PRODUIT_AVANT);
                 }
-                if (donePriseEchantillon) {
-                    log.info("Callage complet : {}", TypeCalage.PRISE_ECHANTILLON);
-                    rs.calageCompleted().add(TypeCalage.PRISE_ECHANTILLON);
-                }
-                if (doneVentouseBas) {
-                    log.info("Callage complet : {}", TypeCalage.VENTOUSE_BAS);
-                    rs.calageCompleted().add(TypeCalage.VENTOUSE_BAS);
+                if (donePrisePotArriere) {
+                    log.info("Callage complet : {}", TypeCalage.PRISE_POT_ARRIERE);
+                    rs.calageCompleted().add(TypeCalage.PRISE_POT_ARRIERE);
                 }
 
                 trajectoryManager.calageBordureDone(); // TODO Rename

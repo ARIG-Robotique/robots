@@ -5,9 +5,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.model.servos.Servo;
 import org.arig.robot.model.servos.ServoGroup;
 import org.arig.robot.model.servos.ServoPosition;
-import org.arig.robot.system.servos.SD21Servos;
+import org.arig.robot.system.servos.AbstractServos;
 import org.arig.robot.utils.ThreadUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -18,11 +17,20 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class AbstractServosService {
 
-    @Autowired
-    private SD21Servos ctrl;
+    private final Map<Byte, AbstractServos> servoDevices = new HashMap<>();
 
     private Map<String, Servo> servos = new HashMap<>();
     private Map<String, ServoGroup> groups = new HashMap<>();
+
+    protected AbstractServosService(AbstractServos servoDevice, AbstractServos ... servoDevices) {
+        byte nbServos = addServosDeviceMapping(servoDevice, (byte) 0);
+        for (AbstractServos sd : servoDevices) {
+            if (sd == servoDevice) {
+                continue;
+            }
+            nbServos = addServosDeviceMapping(sd, nbServos);
+        }
+    }
 
     protected Servo servo(int id, String name) {
         Servo servo = new Servo().id((byte) id).name(name);
@@ -60,13 +68,25 @@ public abstract class AbstractServosService {
 
     public List<ServoGroup> getGroups() {
         servos.forEach((name, s) -> {
-            s.currentPosition(ctrl.getPosition(s.id()));
-            s.currentSpeed(ctrl.getSpeed(s.id()));
+            s.currentPosition(getDevice(s.id()).getPosition(s.id()));
+            s.currentSpeed(getDevice(s.id()).getSpeed(s.id()));
         });
 
         return groups.values().stream()
                 .sorted(Comparator.comparing(ServoGroup::id))
                 .collect(Collectors.toList());
+    }
+
+    public AbstractServos getDevice(byte id) {
+        return servoDevices.get(id);
+    }
+
+    private byte addServosDeviceMapping(AbstractServos sd, byte nbServos) {
+        log.info("Enregistrement des servos {} -> {} sur le controlleur {}", nbServos + 1, nbServos + sd.getNbServos(), sd.deviceName());
+        for (byte i = 1; i <= sd.getNbServos(); i++) {
+            this.servoDevices.put((byte) (nbServos + i), sd);
+        }
+        return(byte) (nbServos + sd.getNbServos());
     }
 
     /* **************************************** */
@@ -104,7 +124,7 @@ public abstract class AbstractServosService {
      * Accès direct à la SD21
      */
     public void setPositionById(byte id, int position, byte speed) {
-        ctrl.setPositionAndSpeed(id, position, speed);
+        getDevice(id).setPositionAndSpeed(id, position, speed);
     }
 
     public boolean isInPosition(String servoName, String positionName) {
@@ -113,7 +133,7 @@ public abstract class AbstractServosService {
         ServoPosition position = servo.positions().get(positionName);
         assert position != null;
 
-        return position.value() == ctrl.getPosition(servo.id());
+        return position.value() == getDevice(servo.id()).getPosition(servo.id());
     }
 
     /**
@@ -143,9 +163,10 @@ public abstract class AbstractServosService {
     }
 
     private void setPosition(Servo servo, int position, byte speed, boolean wait) {
-        int currentPosition = ctrl.getPosition(servo.id());
+        AbstractServos device = getDevice(servo.id());
+        int currentPosition = device.getPosition(servo.id());
 
-        ctrl.setPositionAndSpeed(servo.id(), position, speed);
+        device.setPositionAndSpeed(servo.id(), position, speed);
 
         if (wait && currentPosition != position) {
             ThreadUtils.sleep(computeWaitTime(servo, currentPosition, position, speed));
@@ -164,7 +185,7 @@ public abstract class AbstractServosService {
 
             int angle = servoAngle.getValue();
             int targetPosition = servo.angleToPosition(angle);
-            int currentPosition = ctrl.getPosition(servo.id());
+            int currentPosition = getDevice(servo.id()).getPosition(servo.id());
             int dst = Math.abs(targetPosition - currentPosition);
 
             maxDst = Math.max(maxDst, dst);
@@ -177,14 +198,14 @@ public abstract class AbstractServosService {
 
             int angle = servoAngle.getValue();
             int targetPosition = servo.angleToPosition(angle);
-            int currentPosition = ctrl.getPosition(servo.id());
+            int currentPosition = getDevice(servo.id()).getPosition(servo.id());
             int dst = Math.abs(targetPosition - currentPosition);
 
             // la vitesse de chaque servo dépend de la distance à parcourir
             int finalSpeed = (int) Math.ceil(dst * 1.0 / maxDst * speed);
 
             //logPositionServo(servo.name(), angle + "°", targetPosition, finalSpeed, true);
-            ctrl.setPositionAndSpeed(servo.id(), targetPosition, (byte) finalSpeed);
+            getDevice(servo.id()).setPositionAndSpeed(servo.id(), targetPosition, (byte) finalSpeed);
 
             if (currentPosition != targetPosition && finalSpeed > 0) {
                 // finalSpeed peu tomber à zéro même si un (petit) mouvement est necessaire
@@ -212,9 +233,10 @@ public abstract class AbstractServosService {
                 continue;
             }
 
-            int currentPosition = ctrl.getPosition(servo.id());
+            AbstractServos device = getDevice(servo.id());
+            int currentPosition = device.getPosition(servo.id());
 
-            ctrl.setPositionAndSpeed(servo.id(), position.value(), position.speed());
+            device.setPositionAndSpeed(servo.id(), position.value(), position.speed());
 
             if (currentPosition != position.value()) {
                 waitTime = Math.max(waitTime, computeWaitTime(servo, currentPosition, position.value(), position.speed()));

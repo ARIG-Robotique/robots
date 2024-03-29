@@ -2,15 +2,11 @@ package org.arig.robot.strategy.actions;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
-import org.arig.robot.model.EurobotStatus;
-import org.arig.robot.model.Position;
-import org.arig.robot.model.RobotConfig;
-import org.arig.robot.model.RobotName;
+import org.arig.robot.model.*;
 import org.arig.robot.model.RobotName.RobotIdentification;
-import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.TypeCalage;
-import org.arig.robot.services.AbstractCommonServosService;
-import org.arig.robot.services.CommonIOService;
+import org.arig.robot.services.AbstractCommonRobotServosService;
+import org.arig.robot.services.CommonRobotIOService;
 import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.strategy.AbstractAction;
@@ -33,10 +29,10 @@ public abstract class AbstractEurobotAction extends AbstractAction {
     protected RobotName robotName;
 
     @Autowired
-    protected AbstractCommonServosService servos;
+    protected AbstractCommonRobotServosService servos;
 
     @Autowired
-    protected CommonIOService io;
+    protected CommonRobotIOService io;
 
     @Autowired
     protected TrajectoryManager mv;
@@ -61,7 +57,7 @@ public abstract class AbstractEurobotAction extends AbstractAction {
     private Position position;
 
     protected int getX(int x) {
-        return tableUtils.getX(rs.team() == Team.VIOLET, x);
+        return tableUtils.getX(rs.team() == Team.JAUNE, x);
     }
 
     public abstract int executionTimeMs();
@@ -83,8 +79,11 @@ public abstract class AbstractEurobotAction extends AbstractAction {
     }
 
     protected boolean timeBeforeRetourValid() {
-        int time = robotName.id() == RobotIdentification.NERELL ? EurobotConfig.validRetourSiteDeFouilleRemainingTimeNerell : EurobotConfig.validRetourSiteDeFouilleRemainingTimeOdin;
-        return rs.getRemainingTime() > time;
+        if (robotName.id() == RobotIdentification.NERELL) {
+            return rs.getRemainingTime() > EurobotConfig.validRetourSiteDeChargeRemainingTimeNerell;
+        }
+
+        return false;
     }
 
     private boolean isCalage(TypeCalage ... calages) {

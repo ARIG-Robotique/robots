@@ -13,10 +13,9 @@ import org.arig.robot.model.RobotName.RobotIdentification;
 import org.arig.robot.model.bouchon.BouchonEncoderValues;
 import org.arig.robot.model.bouchon.BouchonI2CDevice;
 import org.arig.robot.model.bouchon.BouchonI2CMultiplexer;
+import org.arig.robot.services.NerellRobotServosService;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
-import org.arig.robot.system.capteurs.CarreFouilleReader;
-import org.arig.robot.system.capteurs.CarreFouilleReaderBouchon;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
@@ -72,8 +71,18 @@ public class NerellSimulatorContext {
     }
 
     @Bean
-    public SD21Servos servos() {
-        return new SD21Servos();
+    public SD21Servos servosAvant() {
+        return new SD21Servos("SD21 Avant");
+    }
+
+    @Bean
+    public SD21Servos servosArriere() {
+        return new SD21Servos("SD21 Arriere");
+    }
+
+    @Bean
+    public NerellRobotServosService servosService(SD21Servos servosAvant, SD21Servos servosArriere) {
+        return new NerellRobotServosService(servosAvant, servosArriere);
     }
 
     @Bean
@@ -128,8 +137,4 @@ public class NerellSimulatorContext {
         return new AvoidingServiceBouchon();
     }
 
-    @Bean
-    public CarreFouilleReader carreFouilleReader(I2CManager i2cManager, @Lazy EurobotStatus status) {
-        return new CarreFouilleReaderBouchon(i2cManager, "CarreFouilleBouchon", status);
-    }
 }

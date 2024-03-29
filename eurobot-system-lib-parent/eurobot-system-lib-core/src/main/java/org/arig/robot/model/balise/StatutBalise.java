@@ -1,12 +1,11 @@
 package org.arig.robot.model.balise;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.arig.robot.model.CouleurEchantillon;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.TypePlante;
 
 import java.io.Serializable;
 import java.util.List;
@@ -23,7 +22,7 @@ public class StatutBalise implements Serializable {
     @Getter
     @NoArgsConstructor
     public static class Echantillon implements Serializable {
-        private CouleurEchantillon c;
+        private TypePlante c;
         private int x;
         private int y;
 

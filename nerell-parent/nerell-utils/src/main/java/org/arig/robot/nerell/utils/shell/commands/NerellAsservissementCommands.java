@@ -32,8 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@ShellComponent
-@ShellCommandGroup("Asservissement")
+//@ShellComponent
+//@ShellCommandGroup("Asservissement")
 @RequiredArgsConstructor
 public class NerellAsservissementCommands {
 

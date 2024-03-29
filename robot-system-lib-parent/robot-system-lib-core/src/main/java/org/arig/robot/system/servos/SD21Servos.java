@@ -1,5 +1,7 @@
 package org.arig.robot.system.servos;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.I2CManager;
 import org.arig.robot.exception.I2CException;
@@ -16,6 +18,8 @@ public class SD21Servos extends AbstractServos {
     private static final byte BATTERY_VOLTS_REGISTER = 0x41;
     private static final int NB_SERVOS = 21;
 
+    @Getter
+    @Accessors(fluent = true)
     private final String deviceName;
 
     @Autowired

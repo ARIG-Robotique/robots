@@ -50,8 +50,8 @@ public class NerellCodeursCommands {
     }
 
     @SneakyThrows
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Capture des valeurs de codeurs des roues de propulsions")
+    //@ShellMethodAvailability("alimentationOk")
+    //@ShellMethod("Capture des valeurs de codeurs des roues de propulsions")
     public void captureCodeursPropulsions() {
         rs.enableCapture();
         ThreadUtils.sleep(2000);
@@ -102,5 +102,4 @@ public class NerellCodeursCommands {
         private final int vitesse;
         private final double gauche, droit;
     }
-
 }

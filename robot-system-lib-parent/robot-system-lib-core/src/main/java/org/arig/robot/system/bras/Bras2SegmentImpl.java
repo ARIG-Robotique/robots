@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.Point3D;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * @author mythril on 04/01/14.
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class Bras2SegmentImpl extends AbstractBras {
 
     @Autowired
+    @Qualifier("servosAvant")
     private SD21Servos servos;
 
     private final double r1;

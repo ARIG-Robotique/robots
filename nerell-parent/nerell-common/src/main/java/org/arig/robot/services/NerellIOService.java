@@ -1,6 +1,6 @@
 package org.arig.robot.services;
 
-public interface NerellIOService extends CommonIOService {
+public interface NerellIOService extends CommonRobotIOService {
 
     @Override
     default boolean puissanceServosOk() {

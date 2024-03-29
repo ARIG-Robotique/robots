@@ -3,6 +3,7 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 public class NerellEnergyServiceRobot extends AbstractEnergyService {
 
     @Autowired
+    @Qualifier("servosAvant")
     private SD21Servos sd21Servos;
 
     @Autowired
@@ -18,7 +20,7 @@ public class NerellEnergyServiceRobot extends AbstractEnergyService {
     @Override
     public double tensionServos() {
         if (iioService.auOk() && iioService.puissanceServosOk()) {
-            return sd21Servos.getTension();
+            return 5; //sd21Servos.getTension();
         } else {
             return 0;
         }

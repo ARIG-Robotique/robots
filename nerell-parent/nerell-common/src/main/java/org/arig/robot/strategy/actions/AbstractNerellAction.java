@@ -2,7 +2,7 @@ package org.arig.robot.strategy.actions;
 
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.services.NerellIOService;
-import org.arig.robot.services.NerellServosService;
+import org.arig.robot.services.NerellRobotServosService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractNerellAction extends AbstractEurobotAction {
@@ -11,7 +11,7 @@ public abstract class AbstractNerellAction extends AbstractEurobotAction {
     protected NerellRobotStatus rsNerell;
 
     @Autowired
-    protected NerellServosService servosNerell;
+    protected NerellRobotServosService servosNerell;
 
     @Autowired
     protected NerellIOService ioService;

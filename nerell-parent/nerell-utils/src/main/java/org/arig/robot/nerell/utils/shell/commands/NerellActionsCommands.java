@@ -17,8 +17,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
-@ShellComponent
-@ShellCommandGroup("Actions")
+//@ShellComponent
+//@ShellCommandGroup("Actions")
 @AllArgsConstructor
 public class NerellActionsCommands {
 

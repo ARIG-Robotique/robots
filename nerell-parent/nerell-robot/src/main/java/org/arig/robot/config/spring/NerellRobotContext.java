@@ -18,6 +18,7 @@ import org.arig.robot.constants.NerellConstantesI2C;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.RobotName.RobotIdentification;
 import org.arig.robot.model.balise.StatutBalise;
+import org.arig.robot.services.NerellRobotServosService;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.avoiding.BasicAvoidingService;
 import org.arig.robot.system.avoiding.BasicRetryAvoidingService;
@@ -128,6 +129,11 @@ public class NerellRobotContext {
     @Bean
     public SD21Servos servosArriere() {
         return new SD21Servos(NerellConstantesI2C.SERVO_ARRIERE_DEVICE_NAME);
+    }
+
+    @Bean
+    public NerellRobotServosService servosService(SD21Servos servosAvant, SD21Servos servosArriere) {
+        return new NerellRobotServosService(servosAvant, servosArriere);
     }
 
     @Bean

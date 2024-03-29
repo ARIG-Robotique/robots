@@ -6,6 +6,7 @@ import org.arig.robot.model.servos.ServoGroup;
 import org.arig.robot.services.AbstractServosService;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,9 +24,6 @@ import java.util.List;
 public class ServosController {
 
     @Autowired
-    protected SD21Servos sd21Servos;
-
-    @Autowired
     protected AbstractServosService servos;
 
     @GetMapping
@@ -41,10 +39,10 @@ public class ServosController {
 
         if (speed != null) {
             log.info("Modification du servo moteur {} : Pos -> {} ; Speed -> {}", idServo, position, speed);
-            sd21Servos.setPositionAndSpeed(idServo, position, speed);
+            servos.getDevice(idServo).setPositionAndSpeed(idServo, position, speed);
         } else {
             log.info("Modification du servo moteur {} : Pos -> {}", idServo, position);
-            sd21Servos.setPosition(idServo, position);
+            servos.getDevice(idServo).setPosition(idServo, position);
         }
     }
 

@@ -2,11 +2,9 @@ package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.services.AbstractEnergyService;
-import org.arig.robot.services.BrasService;
 import org.arig.robot.services.NerellIOService;
-import org.arig.robot.services.NerellServosService;
+import org.arig.robot.services.NerellRobotServosService;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -19,9 +17,7 @@ import org.springframework.shell.standard.ShellMethod;
 @AllArgsConstructor
 public class NerellServosCommands {
 
-    private final NerellRobotStatus rs;
-    private final NerellServosService servosService;
-    private final BrasService brasService;
+    private final NerellRobotServosService servosService;
     private final NerellIOService ioService;
     private final AbstractEnergyService energyService;
 
@@ -48,7 +44,7 @@ public class NerellServosCommands {
         }
         servosService.setPositionById(id, 1500, speed);
     }
-
+/*
     @ShellMethod("Configuration attente moustache gauche")
     public void configWaitMoustacheGauche(int wait) {
         for (int i = 0; i < nbLoop; i++) {
@@ -127,4 +123,5 @@ public class NerellServosCommands {
                 break;
         }
     }
+ */
 }

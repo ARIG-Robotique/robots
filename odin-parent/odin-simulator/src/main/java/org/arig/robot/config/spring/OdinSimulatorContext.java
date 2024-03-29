@@ -15,8 +15,6 @@ import org.arig.robot.model.bouchon.BouchonI2CDevice;
 import org.arig.robot.model.bouchon.BouchonI2CMultiplexer;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
-import org.arig.robot.system.capteurs.CarreFouilleReader;
-import org.arig.robot.system.capteurs.CarreFouilleReaderBouchon;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
@@ -133,8 +131,4 @@ public class OdinSimulatorContext {
         return new AvoidingServiceBouchon();
     }
 
-    @Bean
-    public CarreFouilleReader carreFouilleReader(I2CManager i2cManager, @Lazy EurobotStatus status) {
-        return new CarreFouilleReaderBouchon(i2cManager, "CarreFouilleBouchon", status);
-    }
 }

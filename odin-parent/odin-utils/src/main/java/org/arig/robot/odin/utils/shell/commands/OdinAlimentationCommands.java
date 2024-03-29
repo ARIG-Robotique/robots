@@ -3,7 +3,7 @@ package org.arig.robot.odin.utils.shell.commands;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.services.OdinIOService;
-import org.arig.robot.services.OdinServosService;
+import org.arig.robot.services.OdinRobotServosService;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -15,7 +15,7 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 public class OdinAlimentationCommands {
 
     private final OdinIOService ioService;
-    private final OdinServosService servosService;
+    private final OdinRobotServosService servosService;
     //private final IAlimentationSensor alimentationSensor;
 
     public Availability auOK() {

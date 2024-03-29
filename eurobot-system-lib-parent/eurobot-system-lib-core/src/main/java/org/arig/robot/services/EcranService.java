@@ -39,11 +39,11 @@ public class EcranService extends AbstractEcranService<EcranConfig, EcranState> 
         EcranParams ecranParams = new EcranParams();
         ecranParams.setTeams(Map.of(
                 Team.JAUNE.name(), "yellow",
-                Team.VIOLET.name(), "magenta"
+                Team.BLEU.name(), "blue"
         ));
         ecranParams.setStrategies(Stream.of(Strategy.values()).map(Enum::name).collect(Collectors.toList()));
         ecranParams.setOptions(List.of(
-                EurobotConfig.DOUBLE_DEPOSE_GALERIE
+                EurobotConfig.OPTION_1
         ));
         return ecranParams;
     }

@@ -4,37 +4,50 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.arig.robot.model.EurobotStatus;
-import org.arig.robot.model.bras.AnglesBras;
-import org.arig.robot.model.bras.ConfigBras;
-import org.arig.robot.model.bras.CurrentBras;
-import org.arig.robot.model.bras.OptionBras;
-import org.arig.robot.model.bras.PointBras;
-import org.arig.robot.model.bras.PositionBras;
-import org.arig.robot.model.bras.TransitionBras;
+import org.arig.robot.model.bras.*;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import static org.arig.robot.services.AbstractCommonServosService.*;
-
+import static org.arig.robot.services.AbstractCommonRobotServosService.*;
 /**
  * API de bas niveau pour les bras
  */
 @Slf4j
 public abstract class BrasServiceInternal {
 
-    private final AbstractCommonServosService servos;
+    private final AbstractCommonRobotServosService servos;
     protected final ThreadPoolExecutor executor;
     protected final EurobotStatus rs;
 
-    ConfigBras CONFIG_BRAS_BAS = new ConfigBras(
+    ConfigBras CONFIG_BRAS_AVANT_GAUCHE = new ConfigBras(
+            54, 51,
+            64, 71, 35,
+            true
+    );
+    ConfigBras CONFIG_BRAS_AVANT_CENTRE = new ConfigBras(
+            54, 51,
+            64, 71, 35,
+            true
+    );
+    ConfigBras CONFIG_BRAS_AVANT_DROIT = new ConfigBras(
             54, 51,
             64, 71, 35,
             true
     );
 
-    ConfigBras CONFIG_BRAS_HAUT = new ConfigBras(
+    ConfigBras CONFIG_BRAS_ARRIERE_GAUCHE = new ConfigBras(
+            54, 261,
+            64, 71, 35,
+            false
+    );
+    ConfigBras CONFIG_BRAS_ARRIERE_CENTRE = new ConfigBras(
+            54, 261,
+            64, 71, 35,
+            false
+    );
+    ConfigBras CONFIG_BRAS_ARRIERE_DROIT = new ConfigBras(
             54, 261,
             64, 71, 35,
             false
@@ -42,81 +55,168 @@ public abstract class BrasServiceInternal {
 
     @AllArgsConstructor
     public static class AllConfigBras {
-        public ConfigBras bas;
-        public ConfigBras haut;
-        public Set<PositionBras> statesBas;
-        public Set<PositionBras> statesHaut;
-        public Set<Pair<PositionBras, PositionBras>> transitionsBas;
-        public Set<Pair<PositionBras, PositionBras>> transitionsHaut;
+        public ConfigBras avantGauche;
+        public ConfigBras avantCentre;
+        public ConfigBras avantDroit;
+        public ConfigBras arriereGauche;
+        public ConfigBras arriereCentre;
+        public ConfigBras arriereDroit;
+        public Set<PositionBras> statesAvantGauche;
+        public Set<PositionBras> statesAvantCentre;
+        public Set<PositionBras> statesAvantDroit;
+        public Set<PositionBras> statesArriereGauche;
+        public Set<PositionBras> statesArriereCentre;
+        public Set<PositionBras> statesArriereDroit;
+        public Set<Pair<PositionBras, PositionBras>> transitionsAvantGauche;
+        public Set<Pair<PositionBras, PositionBras>> transitionsAvantCentre;
+        public Set<Pair<PositionBras, PositionBras>> transitionsAvantDroit;
+        public Set<Pair<PositionBras, PositionBras>> transitionsArriereGauche;
+        public Set<Pair<PositionBras, PositionBras>> transitionsArriereCentre;
+        public Set<Pair<PositionBras, PositionBras>> transitionsArriereDroit;
     }
 
-    private final BrasBasStateMachine brasBas = new BrasBasStateMachine(CONFIG_BRAS_BAS);
-    private final BrasHautStateMachine brasHaut = new BrasHautStateMachine(CONFIG_BRAS_HAUT);
+    private final BrasAvantGaucheStateMachine brasAvantGauche = new BrasAvantGaucheStateMachine(CONFIG_BRAS_AVANT_GAUCHE);
+    private final BrasAvantCentreStateMachine brasAvantCentre = new BrasAvantCentreStateMachine(CONFIG_BRAS_AVANT_CENTRE);
+    private final BrasAvantDroitStateMachine brasAvantDroit = new BrasAvantDroitStateMachine(CONFIG_BRAS_AVANT_DROIT);
 
-    private CurrentBras positionBrasBas;
-    private CurrentBras positionBrasHaut;
+    private final BrasArriereGaucheStateMachine brasArriereGauche = new BrasArriereGaucheStateMachine(CONFIG_BRAS_ARRIERE_GAUCHE);
+    private final BrasArriereCentreStateMachine brasArriereCentre = new BrasArriereCentreStateMachine(CONFIG_BRAS_ARRIERE_CENTRE);
+    private final BrasArriereDroitStateMachine brasArriereDroit = new BrasArriereDroitStateMachine(CONFIG_BRAS_ARRIERE_DROIT);
 
-    public BrasServiceInternal(final AbstractCommonServosService servos,
+    private CurrentBras positionBrasAvantGauche;
+    private CurrentBras positionBrasAvantCentre;
+    private CurrentBras positionBrasAvantDroit;
+    private CurrentBras positionBrasArriereGauche;
+    private CurrentBras positionBrasArriereCentre;
+    private CurrentBras positionBrasArriereDroit;
+
+    public BrasServiceInternal(final AbstractCommonRobotServosService servos,
                                final ThreadPoolExecutor executor,
                                final EurobotStatus rs) {
         this.servos = servos;
         this.executor = executor;
         this.rs = rs;
 
-        CONFIG_BRAS_BAS.a1Min = servos.servo(BRAS_BAS_EPAULE).angleMin();
-        CONFIG_BRAS_BAS.a1Max = servos.servo(BRAS_BAS_EPAULE).angleMax();
-        CONFIG_BRAS_BAS.a2Min = servos.servo(BRAS_BAS_COUDE).angleMin();
-        CONFIG_BRAS_BAS.a2Max = servos.servo(BRAS_BAS_COUDE).angleMax();
-        CONFIG_BRAS_BAS.a3Min = servos.servo(BRAS_BAS_POIGNET).angleMin();
-        CONFIG_BRAS_BAS.a3Max = servos.servo(BRAS_BAS_POIGNET).angleMax();
-        CONFIG_BRAS_HAUT.a1Min = servos.servo(BRAS_HAUT_EPAULE).angleMin();
-        CONFIG_BRAS_HAUT.a1Max = servos.servo(BRAS_HAUT_EPAULE).angleMax();
-        CONFIG_BRAS_HAUT.a2Min = servos.servo(BRAS_HAUT_COUDE).angleMin();
-        CONFIG_BRAS_HAUT.a2Max = servos.servo(BRAS_HAUT_COUDE).angleMax();
-        CONFIG_BRAS_HAUT.a3Min = servos.servo(BRAS_HAUT_POIGNET).angleMin();
-        CONFIG_BRAS_HAUT.a3Max = servos.servo(BRAS_HAUT_POIGNET).angleMax();
+        CONFIG_BRAS_AVANT_GAUCHE.a1Min = servos.servo(BRAS_AVANT_GAUCHE_EPAULE).angleMin();
+        CONFIG_BRAS_AVANT_GAUCHE.a1Max = servos.servo(BRAS_AVANT_GAUCHE_EPAULE).angleMax();
+        CONFIG_BRAS_AVANT_GAUCHE.a2Min = servos.servo(BRAS_AVANT_GAUCHE_COUDE).angleMin();
+        CONFIG_BRAS_AVANT_GAUCHE.a2Max = servos.servo(BRAS_AVANT_GAUCHE_COUDE).angleMax();
+        CONFIG_BRAS_AVANT_GAUCHE.a3Min = servos.servo(BRAS_AVANT_GAUCHE_POIGNET).angleMin();
+        CONFIG_BRAS_AVANT_GAUCHE.a3Max = servos.servo(BRAS_AVANT_GAUCHE_POIGNET).angleMax();
 
-        brasBas.onState(this::setBrasBas).build();
-        brasHaut.onState(this::setBrasHaut).build();
+        CONFIG_BRAS_AVANT_CENTRE.a1Min = servos.servo(BRAS_AVANT_CENTRE_EPAULE).angleMin();
+        CONFIG_BRAS_AVANT_CENTRE.a1Max = servos.servo(BRAS_AVANT_CENTRE_EPAULE).angleMax();
+        CONFIG_BRAS_AVANT_CENTRE.a2Min = servos.servo(BRAS_AVANT_CENTRE_COUDE).angleMin();
+        CONFIG_BRAS_AVANT_CENTRE.a2Max = servos.servo(BRAS_AVANT_CENTRE_COUDE).angleMax();
+        CONFIG_BRAS_AVANT_CENTRE.a3Min = servos.servo(BRAS_AVANT_CENTRE_POIGNET).angleMin();
+        CONFIG_BRAS_AVANT_CENTRE.a3Max = servos.servo(BRAS_AVANT_CENTRE_POIGNET).angleMax();
 
-        this.positionBrasBas = new CurrentBras(brasBas.current(), calculerBrasBas(brasBas.currentState()), brasBas.currentState());
-        this.positionBrasHaut = new CurrentBras(brasHaut.current(), calculerBrasHaut(brasHaut.currentState()), brasHaut.currentState());
+        CONFIG_BRAS_AVANT_DROIT.a1Min = servos.servo(BRAS_AVANT_DROIT_EPAULE).angleMin();
+        CONFIG_BRAS_AVANT_DROIT.a1Max = servos.servo(BRAS_AVANT_DROIT_EPAULE).angleMax();
+        CONFIG_BRAS_AVANT_DROIT.a2Min = servos.servo(BRAS_AVANT_DROIT_COUDE).angleMin();
+        CONFIG_BRAS_AVANT_DROIT.a2Max = servos.servo(BRAS_AVANT_DROIT_COUDE).angleMax();
+        CONFIG_BRAS_AVANT_DROIT.a3Min = servos.servo(BRAS_AVANT_DROIT_POIGNET).angleMin();
+        CONFIG_BRAS_AVANT_DROIT.a3Max = servos.servo(BRAS_AVANT_DROIT_POIGNET).angleMax();
+
+        CONFIG_BRAS_ARRIERE_GAUCHE.a1Min = servos.servo(BRAS_ARRIERE_GAUCHE_EPAULE).angleMin();
+        CONFIG_BRAS_ARRIERE_GAUCHE.a1Max = servos.servo(BRAS_ARRIERE_GAUCHE_EPAULE).angleMax();
+        CONFIG_BRAS_ARRIERE_GAUCHE.a2Min = servos.servo(BRAS_ARRIERE_GAUCHE_COUDE).angleMin();
+        CONFIG_BRAS_ARRIERE_GAUCHE.a2Max = servos.servo(BRAS_ARRIERE_GAUCHE_COUDE).angleMax();
+        CONFIG_BRAS_ARRIERE_GAUCHE.a3Min = servos.servo(BRAS_ARRIERE_GAUCHE_POIGNET).angleMin();
+        CONFIG_BRAS_ARRIERE_GAUCHE.a3Max = servos.servo(BRAS_ARRIERE_GAUCHE_POIGNET).angleMax();
+
+        CONFIG_BRAS_ARRIERE_CENTRE.a1Min = servos.servo(BRAS_ARRIERE_CENTRE_EPAULE).angleMin();
+        CONFIG_BRAS_ARRIERE_CENTRE.a1Max = servos.servo(BRAS_ARRIERE_CENTRE_EPAULE).angleMax();
+        CONFIG_BRAS_ARRIERE_CENTRE.a2Min = servos.servo(BRAS_ARRIERE_CENTRE_COUDE).angleMin();
+        CONFIG_BRAS_ARRIERE_CENTRE.a2Max = servos.servo(BRAS_ARRIERE_CENTRE_COUDE).angleMax();
+        CONFIG_BRAS_ARRIERE_CENTRE.a3Min = servos.servo(BRAS_ARRIERE_CENTRE_POIGNET).angleMin();
+        CONFIG_BRAS_ARRIERE_CENTRE.a3Max = servos.servo(BRAS_ARRIERE_CENTRE_POIGNET).angleMax();
+
+        CONFIG_BRAS_ARRIERE_DROIT.a1Min = servos.servo(BRAS_ARRIERE_DROIT_EPAULE).angleMin();
+        CONFIG_BRAS_ARRIERE_DROIT.a1Max = servos.servo(BRAS_ARRIERE_DROIT_EPAULE).angleMax();
+        CONFIG_BRAS_ARRIERE_DROIT.a2Min = servos.servo(BRAS_ARRIERE_DROIT_COUDE).angleMin();
+        CONFIG_BRAS_ARRIERE_DROIT.a2Max = servos.servo(BRAS_ARRIERE_DROIT_COUDE).angleMax();
+        CONFIG_BRAS_ARRIERE_DROIT.a3Min = servos.servo(BRAS_ARRIERE_DROIT_POIGNET).angleMin();
+        CONFIG_BRAS_ARRIERE_DROIT.a3Max = servos.servo(BRAS_ARRIERE_DROIT_POIGNET).angleMax();
+
+        brasAvantGauche.onState(this::setBrasAvantGauche).build();
+        brasAvantCentre.onState(this::setBrasAvantCentre).build();
+        brasAvantDroit.onState(this::setBrasAvantDroit).build();
+        brasArriereGauche.onState(this::setBrasArriereGauche).build();
+        brasArriereCentre.onState(this::setBrasArriereCentre).build();
+        brasArriereDroit.onState(this::setBrasArriereDroit).build();
+
+        this.positionBrasAvantGauche = new CurrentBras(brasAvantGauche.current(), calculerBrasAvantGauche(brasAvantGauche.currentState()), brasAvantGauche.currentState());
+        this.positionBrasAvantCentre = new CurrentBras(brasAvantCentre.current(), calculerBrasAvantCentre(brasAvantCentre.currentState()), brasAvantCentre.currentState());
+        this.positionBrasAvantDroit = new CurrentBras(brasAvantDroit.current(), calculerBrasAvantDroit(brasAvantDroit.currentState()), brasAvantDroit.currentState());
+        this.positionBrasArriereGauche = new CurrentBras(brasArriereGauche.current(), calculerBrasArriereGauche(brasArriereGauche.currentState()), brasArriereGauche.currentState());
+        this.positionBrasArriereCentre = new CurrentBras(brasArriereCentre.current(), calculerBrasArriereCentre(brasArriereCentre.currentState()), brasArriereCentre.currentState());
+        this.positionBrasArriereDroit = new CurrentBras(brasArriereDroit.current(), calculerBrasArriereDroit(brasArriereDroit.currentState()), brasArriereDroit.currentState());
     }
 
     public AllConfigBras getConfig() {
-        return new AllConfigBras(CONFIG_BRAS_BAS, CONFIG_BRAS_HAUT, brasBas.states(), brasHaut.states(), brasBas.transisions(), brasHaut.transisions());
+        return new AllConfigBras(
+                CONFIG_BRAS_AVANT_GAUCHE, CONFIG_BRAS_AVANT_CENTRE, CONFIG_BRAS_AVANT_DROIT,
+                CONFIG_BRAS_ARRIERE_GAUCHE, CONFIG_BRAS_ARRIERE_CENTRE, CONFIG_BRAS_ARRIERE_DROIT,
+                brasAvantGauche.states(), brasAvantCentre.states(), brasAvantDroit.states(),
+                brasArriereGauche.states(), brasArriereCentre.states(), brasArriereDroit.states(),
+                brasAvantGauche.transisions(), brasAvantCentre.transisions(), brasAvantDroit.transisions(),
+                brasArriereGauche.transisions(), brasArriereCentre.transisions(), brasArriereDroit.transisions());
     }
 
     public Map<String, CurrentBras> getCurrent() {
-        return Map.of("bas", positionBrasBas, "haut", positionBrasHaut);
+        return Map.of(
+                "avantGauche", positionBrasAvantGauche,
+                "avantCentre", positionBrasAvantCentre,
+                "avantDroit", positionBrasAvantDroit,
+                "arriereGauche", positionBrasArriereGauche,
+                "arriereCentre", positionBrasArriereCentre,
+                "arriereDroit", positionBrasArriereDroit
+        );
     }
 
-    public AnglesBras calculerBrasBas(PointBras pt) {
-        return calculerAngles(CONFIG_BRAS_BAS, pt.x, pt.y, pt.a, false, null);
+    public AnglesBras calculerBrasAvantGauche(PointBras pt) {
+        return calculerAngles(CONFIG_BRAS_AVANT_GAUCHE, pt.x, pt.y, pt.a, false, null);
     }
 
-    public AnglesBras calculerBrasHaut(PointBras pt) {
-        return calculerAngles(CONFIG_BRAS_HAUT, pt.x, pt.y, pt.a, false, null);
+    public AnglesBras calculerBrasAvantCentre(PointBras pt) {
+        return calculerAngles(CONFIG_BRAS_AVANT_CENTRE, pt.x, pt.y, pt.a, false, null);
+    }
+
+    public AnglesBras calculerBrasAvantDroit(PointBras pt) {
+        return calculerAngles(CONFIG_BRAS_AVANT_DROIT, pt.x, pt.y, pt.a, false, null);
+    }
+
+    public AnglesBras calculerBrasArriereGauche(PointBras pt) {
+        return calculerAngles(CONFIG_BRAS_ARRIERE_GAUCHE, pt.x, pt.y, pt.a, false, null);
+    }
+
+    public AnglesBras calculerBrasArriereCentre(PointBras pt) {
+        return calculerAngles(CONFIG_BRAS_ARRIERE_CENTRE, pt.x, pt.y, pt.a, false, null);
+    }
+
+    public AnglesBras calculerBrasArriereDroit(PointBras pt) {
+        return calculerAngles(CONFIG_BRAS_ARRIERE_DROIT, pt.x, pt.y, pt.a, false, null);
     }
 
     /**
      * Change la position du bras en direct sans passer par la state machine
      */
-    public boolean setBrasBas(PointBras pt, PositionBras state, int speed) {
+    public boolean setBrasAvantGauche(PointBras pt, PositionBras state, int speed) {
         log.debug("Bras bas x={} y={} a={}", pt.x, pt.y, pt.a);
-        AnglesBras angles = calculerAngles(CONFIG_BRAS_BAS, pt.x, pt.y, pt.a, true, null);
+        AnglesBras angles = calculerAngles(CONFIG_BRAS_AVANT_GAUCHE, pt.x, pt.y, pt.a, true, null);
 
         if (angles == null || angles.isError()) {
             return false;
         }
 
         if (state == null) {
-            brasBas.current(null);
+            brasAvantGauche.current(null);
         }
 
         log.debug("Bras bas a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
-        servos.brasBas(angles.a1, angles.a2, angles.a3, speed);
-        positionBrasBas = new CurrentBras(state, angles, pt);
+        servos.brasAvantGauche(angles.a1, angles.a2, angles.a3, speed);
+        positionBrasAvantGauche = new CurrentBras(state, angles, pt);
 
         return true;
     }
@@ -124,13 +224,13 @@ public abstract class BrasServiceInternal {
     /**
      * Change la position du bras bas en passant par la state machine
      */
-    public void setBrasBas(PositionBras position) {
-        setBrasBas(position, null);
+    public void setBrasAvantGauche(PositionBras position) {
+        setBrasAvantGauche(position, null);
     }
 
-    public void setBrasBas(PositionBras position, OptionBras opt) {
+    public void setBrasAvantGauche(PositionBras position, OptionBras opt) {
         try {
-            brasBas.goTo(position, opt);
+            brasAvantGauche.goTo(position, opt);
         } catch (Throwable e) {
             log.warn(e.getMessage(), e);
         }
@@ -139,21 +239,95 @@ public abstract class BrasServiceInternal {
     /**
      * Change la position du bras en direct sans passer par la state machine
      */
-    public boolean setBrasHaut(PointBras pt, PositionBras state, Integer speed) {
-        log.debug("Bras haut x={} y={} a={}", pt.x, pt.y, pt.a);
-        AnglesBras angles = calculerAngles(CONFIG_BRAS_HAUT, pt.x, pt.y, pt.a, true, null);
+    public boolean setBrasAvantCentre(PointBras pt, PositionBras state, int speed) {
+        log.debug("Bras bas x={} y={} a={}", pt.x, pt.y, pt.a);
+        AnglesBras angles = calculerAngles(CONFIG_BRAS_AVANT_CENTRE, pt.x, pt.y, pt.a, true, null);
 
         if (angles == null || angles.isError()) {
             return false;
         }
 
         if (state == null) {
-            brasHaut.current(null);
+            brasAvantCentre.current(null);
+        }
+
+        log.debug("Bras bas a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
+        servos.brasAvantCentre(angles.a1, angles.a2, angles.a3, speed);
+        positionBrasAvantCentre = new CurrentBras(state, angles, pt);
+
+        return true;
+    }
+
+    /**
+     * Change la position du bras bas en passant par la state machine
+     */
+    public void setBrasAvantCentre(PositionBras position) {
+        setBrasAvantCentre(position, null);
+    }
+
+    public void setBrasAvantCentre(PositionBras position, OptionBras opt) {
+        try {
+            brasAvantCentre.goTo(position, opt);
+        } catch (Throwable e) {
+            log.warn(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Change la position du bras en direct sans passer par la state machine
+     */
+    public boolean setBrasAvantDroit(PointBras pt, PositionBras state, int speed) {
+        log.debug("Bras bas x={} y={} a={}", pt.x, pt.y, pt.a);
+        AnglesBras angles = calculerAngles(CONFIG_BRAS_AVANT_DROIT, pt.x, pt.y, pt.a, true, null);
+
+        if (angles == null || angles.isError()) {
+            return false;
+        }
+
+        if (state == null) {
+            brasAvantDroit.current(null);
+        }
+
+        log.debug("Bras bas a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
+        servos.brasAvantDroit(angles.a1, angles.a2, angles.a3, speed);
+        positionBrasAvantDroit = new CurrentBras(state, angles, pt);
+
+        return true;
+    }
+
+    /**
+     * Change la position du bras bas en passant par la state machine
+     */
+    public void setBrasAvantDroit(PositionBras position) {
+        setBrasAvantDroit(position, null);
+    }
+
+    public void setBrasAvantDroit(PositionBras position, OptionBras opt) {
+        try {
+            brasAvantDroit.goTo(position, opt);
+        } catch (Throwable e) {
+            log.warn(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Change la position du bras en direct sans passer par la state machine
+     */
+    public boolean setBrasArriereGauche(PointBras pt, PositionBras state, Integer speed) {
+        log.debug("Bras haut x={} y={} a={}", pt.x, pt.y, pt.a);
+        AnglesBras angles = calculerAngles(CONFIG_BRAS_ARRIERE_GAUCHE, pt.x, pt.y, pt.a, true, null);
+
+        if (angles == null || angles.isError()) {
+            return false;
+        }
+
+        if (state == null) {
+            brasArriereGauche.current(null);
         }
 
         log.debug("Bras haut a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
-        servos.brasHaut(angles.a1, angles.a2, angles.a3, speed);
-        positionBrasHaut = new CurrentBras(state, angles, pt);
+        servos.brasArriereGauche(angles.a1, angles.a2, angles.a3, speed);
+        positionBrasArriereGauche = new CurrentBras(state, angles, pt);
 
         return true;
     }
@@ -161,13 +335,87 @@ public abstract class BrasServiceInternal {
     /**
      * Change la position du bras haut en passant par la state machine
      */
-    public void setBrasHaut(PositionBras position) {
-        setBrasHaut(position, null);
+    public void setBrasArriereGauche(PositionBras position) {
+        setBrasArriereGauche(position, null);
     }
 
-    public void setBrasHaut(PositionBras position, OptionBras opt) {
+    public void setBrasArriereGauche(PositionBras position, OptionBras opt) {
         try {
-            brasHaut.goTo(position, opt);
+            brasArriereGauche.goTo(position, opt);
+        } catch (Throwable e) {
+            log.warn(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Change la position du bras en direct sans passer par la state machine
+     */
+    public boolean setBrasArriereCentre(PointBras pt, PositionBras state, Integer speed) {
+        log.debug("Bras haut x={} y={} a={}", pt.x, pt.y, pt.a);
+        AnglesBras angles = calculerAngles(CONFIG_BRAS_ARRIERE_CENTRE, pt.x, pt.y, pt.a, true, null);
+
+        if (angles == null || angles.isError()) {
+            return false;
+        }
+
+        if (state == null) {
+            brasArriereCentre.current(null);
+        }
+
+        log.debug("Bras haut a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
+        servos.brasArriereCentre(angles.a1, angles.a2, angles.a3, speed);
+        positionBrasArriereCentre = new CurrentBras(state, angles, pt);
+
+        return true;
+    }
+
+    /**
+     * Change la position du bras haut en passant par la state machine
+     */
+    public void setBrasArriereCentre(PositionBras position) {
+        setBrasArriereCentre(position, null);
+    }
+
+    public void setBrasArriereCentre(PositionBras position, OptionBras opt) {
+        try {
+            brasArriereCentre.goTo(position, opt);
+        } catch (Throwable e) {
+            log.warn(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Change la position du bras en direct sans passer par la state machine
+     */
+    public boolean setBrasArriereDroit(PointBras pt, PositionBras state, Integer speed) {
+        log.debug("Bras haut x={} y={} a={}", pt.x, pt.y, pt.a);
+        AnglesBras angles = calculerAngles(CONFIG_BRAS_ARRIERE_DROIT, pt.x, pt.y, pt.a, true, null);
+
+        if (angles == null || angles.isError()) {
+            return false;
+        }
+
+        if (state == null) {
+            brasArriereDroit.current(null);
+        }
+
+        log.debug("Bras haut a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
+        servos.brasArriereDroit(angles.a1, angles.a2, angles.a3, speed);
+        positionBrasArriereDroit = new CurrentBras(state, angles, pt);
+
+        return true;
+    }
+
+    /**
+     * Change la position du bras haut en passant par la state machine
+     */
+    public void setBrasArriereDroit(PositionBras position) {
+        setBrasArriereDroit(position, null);
+    }
+
+    public void setBrasArriereDroit(PositionBras position, OptionBras opt) {
+        try {
+            brasArriereDroit.goTo(position, opt);
         } catch (Throwable e) {
             log.warn(e.getMessage(), e);
         }
@@ -177,56 +425,83 @@ public abstract class BrasServiceInternal {
      * Depuis n'importe quelle position, repasse en position de repos
      */
     public void safeHoming() {
-        PositionBras currentHaut = brasHaut.current();
-        PositionBras currentBas = brasBas.current();
+        PositionBras repos = PositionBras.repos(0);
 
-        PositionBras repos = PositionBras.repos(rs.stockTaille());
+        boolean brasAvantGaucheDisableCheck = brasAvantGauche.disableCheck();
+        boolean brasAvantCentreDisableCheck = brasAvantCentre.disableCheck();
+        boolean brasAvantDroitDisableCheck = brasAvantDroit.disableCheck();
+        boolean brasArriereGaucheDisableCheck = brasArriereGauche.disableCheck();
+        boolean brasArriereCentreDisableCheck = brasArriereCentre.disableCheck();
+        boolean brasArriereDroitDisableCheck = brasArriereDroit.disableCheck();
 
-        boolean brasHautDisableCheck = brasHaut.disableCheck();
-        boolean brasBasDisableCheck = brasBas.disableCheck();
+        brasAvantGauche.disableCheck(true);
+        brasAvantCentre.disableCheck(true);
+        brasAvantDroit.disableCheck(true);
+        brasArriereGauche.disableCheck(true);
+        brasArriereCentre.disableCheck(true);
+        brasArriereDroit.disableCheck(true);
 
-        brasHaut.disableCheck(true);
-        brasBas.disableCheck(true);
+        brasAvantGauche.goTo(repos);
+        brasAvantCentre.goTo(repos);
+        brasAvantDroit.goTo(repos);
+        brasArriereGauche.goTo(repos);
+        brasArriereCentre.goTo(repos);
+        brasArriereDroit.goTo(repos);
 
-        if (!currentHaut.isInside() || !currentBas.isInside()) {
-            log.info("Safe homing; haut inside: {}; bas inside: {}", currentHaut.isInside(), currentBas.isInside());
-
-            if (currentHaut.isInside()) {
-                // le haut à l'intérieur et le bas à l'exterieur
-                brasBas.goTo(PositionBras.HORIZONTAL);
-                brasHaut.goTo(PositionBras.HORIZONTAL);
-                brasBas.goTo(repos);
-                brasHaut.goTo(repos);
-            } else if (currentBas.isInside()) {
-                // le haut à l'extérieur et le bas à l'intérieur
-                brasBas.goTo(repos);
-                brasHaut.goTo(repos);
-            } else {
-                // les deux à l'extérieur
-                brasHaut.goTo(PositionBras.HORIZONTAL);
-                brasBas.goTo(repos);
-                brasHaut.goTo(repos);
-            }
-        }
-
-        brasHaut.disableCheck(brasHautDisableCheck);
-        brasBas.disableCheck(brasBasDisableCheck);
+        brasAvantGauche.disableCheck(brasAvantGaucheDisableCheck);
+        brasAvantCentre.disableCheck(brasAvantCentreDisableCheck);
+        brasAvantDroit.disableCheck(brasAvantDroitDisableCheck);
+        brasArriereGauche.disableCheck(brasArriereGaucheDisableCheck);
+        brasArriereCentre.disableCheck(brasArriereCentreDisableCheck);
+        brasArriereDroit.disableCheck(brasArriereDroitDisableCheck);
     }
 
-    private void setBrasBas(PositionBras state, PointBras pt, TransitionBras transition, OptionBras opt) {
+    private void setBrasAvantGauche(PositionBras state, PointBras pt, TransitionBras transition, OptionBras opt) {
         for (PointBras point : transition.points()) {
-            setBrasBas(point, state, opt == OptionBras.SLOW ? 80 : 100);
+            setBrasAvantGauche(point, state, opt == OptionBras.SLOW ? 80 : 100);
         }
 
-        setBrasBas(pt, state, opt == OptionBras.SLOW ? 80 : 100);
+        setBrasAvantGauche(pt, state, opt == OptionBras.SLOW ? 80 : 100);
     }
 
-    private void setBrasHaut(PositionBras state, PointBras pt, TransitionBras transition, OptionBras opt) {
+    private void setBrasAvantCentre(PositionBras state, PointBras pt, TransitionBras transition, OptionBras opt) {
         for (PointBras point : transition.points()) {
-            setBrasHaut(point, state, opt == OptionBras.SLOW ? 80 : 100);
+            setBrasAvantCentre(point, state, opt == OptionBras.SLOW ? 80 : 100);
         }
 
-        setBrasHaut(pt, state, opt == OptionBras.SLOW ? 80 : 100);
+        setBrasAvantCentre(pt, state, opt == OptionBras.SLOW ? 80 : 100);
+    }
+
+    private void setBrasAvantDroit(PositionBras state, PointBras pt, TransitionBras transition, OptionBras opt) {
+        for (PointBras point : transition.points()) {
+            setBrasAvantDroit(point, state, opt == OptionBras.SLOW ? 80 : 100);
+        }
+
+        setBrasAvantDroit(pt, state, opt == OptionBras.SLOW ? 80 : 100);
+    }
+
+    private void setBrasArriereGauche(PositionBras state, PointBras pt, TransitionBras transition, OptionBras opt) {
+        for (PointBras point : transition.points()) {
+            setBrasArriereGauche(point, state, opt == OptionBras.SLOW ? 80 : 100);
+        }
+
+        setBrasArriereGauche(pt, state, opt == OptionBras.SLOW ? 80 : 100);
+    }
+
+    private void setBrasArriereCentre(PositionBras state, PointBras pt, TransitionBras transition, OptionBras opt) {
+        for (PointBras point : transition.points()) {
+            setBrasArriereCentre(point, state, opt == OptionBras.SLOW ? 80 : 100);
+        }
+
+        setBrasArriereCentre(pt, state, opt == OptionBras.SLOW ? 80 : 100);
+    }
+
+    private void setBrasArriereDroit(PositionBras state, PointBras pt, TransitionBras transition, OptionBras opt) {
+        for (PointBras point : transition.points()) {
+            setBrasArriereDroit(point, state, opt == OptionBras.SLOW ? 80 : 100);
+        }
+
+        setBrasArriereDroit(pt, state, opt == OptionBras.SLOW ? 80 : 100);
     }
 
     private AnglesBras calculerAngles(ConfigBras configBras, int x, int y, int a, boolean enableLog, Boolean preferA1Min) {

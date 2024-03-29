@@ -39,7 +39,4 @@ public interface OdinConstantesI2C {
 
     String COULEUR_VENTOUSE_HAUT_NAME = "Couleur ventouse haut";
     byte COULEUR_VENTOUSE_HAUT_MUX_CHANNEL = 5;
-
-    String CARRE_FOUILLE_READER_NAME = "Carre fouille reader";
-    int CARRE_FOUILLE_READER_ADDRESS = 0x3C;
 }

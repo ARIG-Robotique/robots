@@ -3,10 +3,9 @@ package org.arig.robot.odin.utils.shell.commands;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.CouleurEchantillon;
+import org.arig.robot.model.TypePlante;
 import org.arig.robot.services.OdinIOServiceRobot;
-import org.arig.robot.services.OdinServosService;
-import org.arig.robot.system.capteurs.CarreFouilleReader;
+import org.arig.robot.services.OdinRobotServosService;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -21,21 +20,10 @@ import org.springframework.shell.standard.ShellOption;
 public class OdinIOCommands {
 
     private final OdinIOServiceRobot odinIOServiceRobot;
-    private final OdinServosService odinServosService;
-    private final CarreFouilleReader carreFouilleReader;
+    private final OdinRobotServosService odinServosService;
     private final TCS34725ColorSensor couleurVentouseBas;
     private final TCS34725ColorSensor couleurVentouseHaut;
 
-    @ShellMethod("Read couleur ventouse")
-    public void readCouleurVentouse() {
-        odinIOServiceRobot.enableLedCapteurCouleur();
-        ThreadUtils.sleep(500);
-        CouleurEchantillon echantillonHaut = odinIOServiceRobot.couleurVentouseHaut();
-        CouleurEchantillon echantillonBas = odinIOServiceRobot.couleurVentouseBas();
-        log.info("Couleur ventouse haut : {}", echantillonHaut);
-        log.info("Couleur ventouse bas : {}", echantillonBas);
-        odinIOServiceRobot.disableLedCapteurCouleur();
-    }
 
     @ShellMethod("Calibration couleur")
     public void calibrationCouleur(
@@ -60,7 +48,7 @@ public class OdinIOCommands {
         log.info("Integration time : {}", timeValue.getDelay());
         log.info("Gain : {}", gainValue.getValue());
 
-        odinIOServiceRobot.enableLedCapteurCouleur();
+        //odinIOServiceRobot.enableLedCapteurCouleur();
         ThreadUtils.sleep(500);
 
         for (int i = 0; i < 3; i++) {
@@ -79,9 +67,10 @@ public class OdinIOCommands {
             ThreadUtils.sleep(500);
         }
 
-        odinIOServiceRobot.disableLedCapteurCouleur();
+        //odinIOServiceRobot.disableLedCapteurCouleur();
     }
 
+    /*
     @SneakyThrows
     @ShellMethod("Read carré de fouille")
     public void readCarreFouille() {
@@ -96,13 +85,13 @@ public class OdinIOCommands {
     @SneakyThrows
     @ShellMethod("State ventouse")
     public void printStateVentouses() {
-        for (CouleurEchantillon couleur : CouleurEchantillon.values()) {
+        for (TypePlante couleur : TypePlante.values()) {
             log.info("State ventouse bas : {}", couleur);
             carreFouilleReader.printStateVentouse(couleur, null);
             ThreadUtils.sleep(500);
         }
 
-        for (CouleurEchantillon couleur : CouleurEchantillon.values()) {
+        for (TypePlante couleur : TypePlante.values()) {
             log.info("State ventouse haut : {}", couleur);
             carreFouilleReader.printStateVentouse(null, couleur);
             ThreadUtils.sleep(500);
@@ -115,8 +104,8 @@ public class OdinIOCommands {
     @ShellMethod("State stock")
     public void printStateStock() {
         for (int i = 0; i < 6; i++) {
-            CouleurEchantillon[] couleurs = new CouleurEchantillon[]{null, null, null, null, null, null};
-            for (CouleurEchantillon echantillon : CouleurEchantillon.values()) {
+            TypePlante[] couleurs = new TypePlante[]{null, null, null, null, null, null};
+            for (TypePlante echantillon : TypePlante.values()) {
                 log.info("State stock {} : {}", i + 1, echantillon);
                 couleurs[i] = echantillon;
                 carreFouilleReader.printStateStock(couleurs[0], couleurs[1], couleurs[2], couleurs[3], couleurs[4], couleurs[5]);
@@ -126,4 +115,5 @@ public class OdinIOCommands {
 
         carreFouilleReader.printStateStock(null, null, null, null, null, null);
     }
+    */
 }

@@ -23,7 +23,6 @@ import org.arig.robot.system.avoiding.BasicAvoidingService;
 import org.arig.robot.system.avoiding.BasicRetryAvoidingService;
 import org.arig.robot.system.avoiding.CompleteAvoidingService;
 import org.arig.robot.system.avoiding.SemiCompleteAvoidingService;
-import org.arig.robot.system.capteurs.CarreFouilleReader;
 import org.arig.robot.system.capteurs.ILidarTelemeter;
 import org.arig.robot.system.capteurs.IVisionBalise;
 import org.arig.robot.system.capteurs.RPLidarA2TelemeterOverSocket;
@@ -123,10 +122,6 @@ public class OdinRobotContext {
                 .multiplexerDeviceName(OdinConstantesI2C.MULTIPLEXEUR_I2C_NAME)
                 .multiplexerChannel(OdinConstantesI2C.COULEUR_VENTOUSE_HAUT_MUX_CHANNEL)
                 .build();
-        final I2CManagerDevice<I2CDevice> carreFouilleReader = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(OdinConstantesI2C.CARRE_FOUILLE_READER_NAME)
-                .device(i2cBus.getDevice(OdinConstantesI2C.CARRE_FOUILLE_READER_ADDRESS))
-                .build();
 
         manager.registerDevice(sd21);
         manager.registerDevice(codeurMoteurDroit);
@@ -140,7 +135,6 @@ public class OdinRobotContext {
         manager.registerDevice(mux);
         manager.registerDevice(couleurVentouseBas);
         manager.registerDevice(couleurVentouseHaut);
-        manager.registerDevice(carreFouilleReader);
 
         return manager;
     }
@@ -184,11 +178,6 @@ public class OdinRobotContext {
         final TCA9548MultiplexerI2C mux = new TCA9548MultiplexerI2C(OdinConstantesI2C.MULTIPLEXEUR_I2C_NAME);
         i2CManager.registerMultiplexerDevice(OdinConstantesI2C.MULTIPLEXEUR_I2C_NAME, mux);
         return mux;
-    }
-
-    @Bean
-    public CarreFouilleReader carreFouilleReader(I2CManager i2CManager) {
-        return new CarreFouilleReader(i2CManager, OdinConstantesI2C.CARRE_FOUILLE_READER_NAME);
     }
 
     @Bean

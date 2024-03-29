@@ -1,5 +1,7 @@
 package org.arig.robot.system.servos;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.I2CException;
 import org.springframework.beans.factory.InitializingBean;
@@ -10,6 +12,7 @@ import java.util.Map;
 @Slf4j
 public abstract class AbstractServos implements InitializingBean {
 
+    @Getter
     private final int nbServos;
     private final Map<Byte, Integer> lastPositions;
     private final Map<Byte, Byte> lastSpeed;
@@ -28,6 +31,7 @@ public abstract class AbstractServos implements InitializingBean {
         }
     }
 
+    public abstract String deviceName();
     public abstract void printVersion() throws I2CException;
     protected abstract void setPositionImpl(final byte servoNb, final int position);
     protected abstract void setSpeedImpl(final byte servoNb, final byte speed);

@@ -19,7 +19,6 @@ import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.system.RobotGroupOverSocket;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.arig.robot.system.blockermanager.SystemBlockerManagerImpl;
-import org.arig.robot.system.capteurs.CarreFouilleReader;
 import org.arig.robot.system.capteurs.EcranOverSocket;
 import org.arig.robot.system.capteurs.IEcran;
 import org.arig.robot.system.group.RobotGroup;
@@ -170,8 +169,8 @@ public class OdinCommonContext {
     }
 
     @Bean
-    public OdinRobotStatus robotStatus(CarreFouilleReader carreFouilleReader) {
-        return new OdinRobotStatus(carreFouilleReader);
+    public OdinRobotStatus robotStatus() {
+        return new OdinRobotStatus();
     }
 
     @Bean

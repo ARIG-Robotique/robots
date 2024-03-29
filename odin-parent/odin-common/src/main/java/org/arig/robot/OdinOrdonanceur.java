@@ -13,20 +13,17 @@ import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.InitStep;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.SiteDeRetour;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.ecran.EcranPhoto;
-import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.BrasService;
 import org.arig.robot.services.OdinEcranService;
 import org.arig.robot.services.OdinIOService;
-import org.arig.robot.services.OdinServosService;
+import org.arig.robot.services.OdinRobotServosService;
 import org.arig.robot.services.RobotGroupService;
-import org.arig.robot.system.capteurs.CarreFouilleReader;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
@@ -53,13 +50,10 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
     private BrasService brasService;
 
     @Autowired
-    private OdinServosService odinServosService;
-
-    @Autowired
-    private CarreFouilleReader carreFouilleReader;
+    private OdinRobotServosService odinServosService;
 
     private int getX(int x) {
-        return tableUtils.getX(odinRobotStatus.team() == Team.VIOLET, x);
+        return tableUtils.getX(odinRobotStatus.team() == Team.JAUNE, x);
     }
 
     private int getX(double x) {
@@ -73,23 +67,11 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void afterInit() {
-        try {
-            carreFouilleReader.printStateStock(null, null, null, null, null, null);
-            carreFouilleReader.printStateVentouse(null, null);
-        } catch (Exception e) {
-            // NOPE
-        }
         choixEquipeStrategy();
     }
 
     @Override
     public void addDeadZones() {
-        // campement
-//        if (odinRobotStatus.team() == Team.JAUNE) {
-//            tableUtils.addPersistentDeadZone(new Rectangle2D.Double(0, 1000, 400, 600));
-//        } else {
-//            tableUtils.addPersistentDeadZone(new Rectangle2D.Double(2600, 1000, 400, 600));
-//        }
     }
 
     @Override
@@ -97,36 +79,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
         if (!skip) {
             positionStrategy();
         }
-
-        // Lancement d'une première lecture de couleurs pour initialiser les capteurs
-        odinIO.enableLedCapteurCouleur();
-        ThreadUtils.sleep(OdinConstantesConfig.WAIT_LED);
-        odinIO.couleurVentouseBas();
-        odinIO.couleurVentouseHaut();
-        odinIO.disableLedCapteurCouleur();
-
         choixConfig();
-
-        if (!skip && !robotStatus.twoRobots()) {
-            try {
-                ThreadUtils.sleep(2000);
-                mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation(20));
-                mv.tourneDeg(180);
-
-            } catch (AvoidingException e) {
-                odinEcranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
-                throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);
-            }
-        }
-
-        if (odinRobotStatus.etalonageBaliseOk()) {
-            odinRobotStatus.enableBalise();
-        }
-
-        // Visu après la tirette
-        odinIO.enableLedCapteurCouleur();
-        ThreadUtils.sleep(OdinConstantesConfig.WAIT_LED);
-        odinIO.disableLedCapteurCouleur();
     }
 
     @Override
@@ -146,53 +99,12 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void afterMatch() {
-        double currentX = mv.currentXMm();
-        double currentY = mv.currentYMm();
-        if ((currentX <= 500 || currentX >= 2500) && currentY <= 1700 && currentY >= 900) {
-            groupService.siteDeRetour(currentY > 1300 ? SiteDeRetour.CAMPEMENT_NORD : SiteDeRetour.CAMPEMENT_SUD);
-        }
-
-        odinIO.releaseAllPompes();
-        if (!robotStatus.twoRobots()) {
-            baliseService.idle();
-        }
-        odinRobotStatus.disableBalise();
+        // Nope
     }
 
     @Override
     public void beforePowerOff() {
-        odinIO.disableAllPompes();
-        odinIO.enableAlimServos();
 
-        odinEcranService.displayMessage("FIN - Enlever la tirette quand stock vide.");
-
-        brasService.setBrasHaut(PositionBras.HORIZONTAL);
-        brasService.setBrasBas(PositionBras.HORIZONTAL);
-
-        if (!odinRobotStatus.repliqueDepose()) {
-            odinServosService.langueOuvert(true);
-            odinServosService.pousseRepliquePoussette(false);
-        }
-
-        while (io.tirette()) {
-            ThreadUtils.sleep(1000);
-        }
-
-        try {
-            odinRobotStatus.ventouseBas(null);
-            odinRobotStatus.ventouseHaut(null);
-            while (odinRobotStatus.stockTaille() > 0) {
-                odinRobotStatus.destockage();
-            }
-            carreFouilleReader.printStateVentouse(null, null);
-            carreFouilleReader.printStateStock(null, null, null, null, null, null);
-        } catch (Exception e) {
-            // NOPE
-        }
-
-        brasService.setBrasBas(PositionBras.INIT);
-        brasService.setBrasHaut(PositionBras.INIT);
-        odinServosService.homes();
     }
 
     /**
@@ -237,7 +149,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 }
 
                 odinRobotStatus.twoRobots(odinEcranService.config().isTwoRobots());
-                odinRobotStatus.doubleDeposeGalerie(odinEcranService.config().hasOption(EurobotConfig.DOUBLE_DEPOSE_GALERIE));
+                odinRobotStatus.option1(odinEcranService.config().hasOption(EurobotConfig.OPTION_1));
 
                 done = odinEcranService.config().isStartCalibration();
             }
@@ -317,9 +229,9 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 mv.avanceMM(70);
                 mv.gotoOrientationDeg(90);
 
-                robotStatus.enableCalageBordure(TypeCalage.AVANT_BAS);
+                robotStatus.enableCalageBordure(TypeCalage.AVANT);
                 mv.avanceMM(400);
-                robotStatus.enableCalageBordure(TypeCalage.AVANT_BAS);
+                robotStatus.enableCalageBordure(TypeCalage.AVANT);
                 mv.avanceMMSansAngle(100);
 
                 if (!io.auOk()) {
@@ -356,7 +268,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                     } else {
                         mv.gotoPoint(getX(240), 1740);
                         mv.gotoPoint(getX(570), 1740);
-                        groupService.initStep(InitStep.ODIN_DEVANT_GALERIE); // Odin calé, en attente devant la galerie
+                        //groupService.initStep(InitStep.ODIN_DEVANT_GALERIE); // Odin calé, en attente devant la galerie
                         mv.gotoPoint(getX(570), 1160);
                         mv.gotoOrientationDeg(odinRobotStatus.team() == Team.JAUNE ? 0 : 180);
                         odinEcranService.displayMessage("Attente calage Nerell");
@@ -366,7 +278,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                         robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
                         mv.reculeMMSansAngle(30);
                     }
-                    groupService.initStep(InitStep.ODIN_EN_POSITION);
+                    //groupService.initStep(InitStep.ODIN_EN_POSITION);
                     break;
 
                 case FINALE_2:
@@ -375,7 +287,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                     if (robotStatus.twoRobots()) {
                         mv.gotoPoint(getX(240), 1740);
                         mv.gotoPoint(getX(570), 1740);
-                        groupService.initStep(InitStep.ODIN_DEVANT_GALERIE); // Odin calé, en attente devant la galerie
+                        //groupService.initStep(InitStep.ODIN_DEVANT_GALERIE); // Odin calé, en attente devant la galerie
                         mv.gotoPoint(getX(570), 1130);
                         odinEcranService.displayMessage("Attente calage Nerell");
                         groupService.waitInitStep(InitStep.NERELL_CALAGE_TERMINE); // Attente Nerell calé
@@ -387,7 +299,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                         mv.gotoPoint(getX(240), 1430);
                         mv.alignFrontTo(getX(800), 1700);
                     }
-                    groupService.initStep(InitStep.ODIN_EN_POSITION);
+                    //groupService.initStep(InitStep.ODIN_EN_POSITION);
                     break;
             }
         } catch (AvoidingException e) {
