@@ -5,11 +5,7 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.I2CManager;
 import org.arig.robot.exception.I2CException;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 public class SD21Servos extends AbstractServos {

@@ -10,7 +10,10 @@ import org.arig.robot.strategy.Action;
 import org.springframework.shell.Availability;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
-import org.springframework.shell.standard.*;
+import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellMethodAvailability;
+import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.standard.ValueProvider;
 
 import java.util.List;
 import java.util.Optional;

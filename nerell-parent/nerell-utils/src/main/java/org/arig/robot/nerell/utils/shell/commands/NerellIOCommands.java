@@ -2,13 +2,8 @@ package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.services.AbstractEnergyService;
-import org.arig.robot.services.NerellIOService;
 import org.arig.robot.services.NerellIOServiceRobot;
-import org.arig.robot.services.NerellRobotServosService;
-import org.arig.robot.system.motors.AbstractPropulsionsMotors;
-import org.arig.robot.web.controller.IOController;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;

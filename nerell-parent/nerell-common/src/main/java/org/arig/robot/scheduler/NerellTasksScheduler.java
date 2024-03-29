@@ -1,11 +1,6 @@
 package org.arig.robot.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.StopWatch;
-import org.arig.robot.constants.NerellConstantesConfig;
-import org.arig.robot.filters.common.ChangeFilter;
-import org.arig.robot.filters.common.SignalEdgeFilter;
-import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.BaliseService;
@@ -16,8 +11,6 @@ import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component

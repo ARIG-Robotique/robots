@@ -4,7 +4,7 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Chemin;
 import org.arig.robot.model.Point;
 
-import java.awt.Shape;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.util.List;

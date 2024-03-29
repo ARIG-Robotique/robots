@@ -1,12 +1,9 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.RobotConfig;
 import org.arig.robot.model.TypePlante;
-import org.arig.robot.model.bras.OptionBras;
-import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Service;
 

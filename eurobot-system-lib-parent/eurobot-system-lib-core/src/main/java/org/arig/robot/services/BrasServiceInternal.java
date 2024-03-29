@@ -4,7 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.arig.robot.model.EurobotStatus;
-import org.arig.robot.model.bras.*;
+import org.arig.robot.model.bras.AnglesBras;
+import org.arig.robot.model.bras.ConfigBras;
+import org.arig.robot.model.bras.CurrentBras;
+import org.arig.robot.model.bras.OptionBras;
+import org.arig.robot.model.bras.PointBras;
+import org.arig.robot.model.bras.PositionBras;
+import org.arig.robot.model.bras.TransitionBras;
 
 import java.util.Map;
 import java.util.Set;

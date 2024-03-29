@@ -12,8 +12,6 @@ import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.stereotype.Component;
 
-import java.awt.geom.Rectangle2D;
-
 @Slf4j
 @Component
 public class RetourSiteDeCharge extends AbstractEurobotAction {

@@ -4,8 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.Plante;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.Team;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -1,10 +1,7 @@
 package org.arig.robot.system.motors;
 
 import com.pi4j.gpio.extension.pca.PCA9685GpioProvider;
-import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.Pin;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class PCA9685SimpleMotor extends AbstractMotor {

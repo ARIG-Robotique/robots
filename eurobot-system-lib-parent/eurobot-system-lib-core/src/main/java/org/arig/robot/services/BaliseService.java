@@ -2,13 +2,8 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.EurobotStatus;
-import org.arig.robot.model.Point;
-import org.arig.robot.model.StockPlantes;
-import org.arig.robot.model.Team;
 import org.arig.robot.model.balise.StatutBalise;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 @Slf4j
 public class BaliseService extends AbstractBaliseService<StatutBalise> {

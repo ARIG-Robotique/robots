@@ -2,8 +2,12 @@ package org.arig.robot.strategy.actions;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
-import org.arig.robot.model.*;
+import org.arig.robot.model.EurobotStatus;
+import org.arig.robot.model.Position;
+import org.arig.robot.model.RobotConfig;
+import org.arig.robot.model.RobotName;
 import org.arig.robot.model.RobotName.RobotIdentification;
+import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.AbstractCommonRobotServosService;
 import org.arig.robot.services.CommonRobotIOService;

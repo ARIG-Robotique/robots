@@ -15,7 +15,6 @@ import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
-import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BaliseService;

@@ -1,9 +1,7 @@
 package org.arig.robot.odin.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.TypePlante;
 import org.arig.robot.services.OdinIOServiceRobot;
 import org.arig.robot.services.OdinRobotServosService;
 import org.arig.robot.system.capteurs.TCS34725ColorSensor;

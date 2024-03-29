@@ -7,7 +7,6 @@ import org.arig.robot.communication.I2CManager;
 import org.arig.robot.communication.I2CManagerDevice;
 import org.arig.robot.communication.bouchon.BouchonI2CManager;
 import org.arig.robot.exception.I2CException;
-import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.RobotName.RobotIdentification;
 import org.arig.robot.model.bouchon.BouchonEncoderValues;
@@ -29,7 +28,6 @@ import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
 import org.arig.robot.system.vacuum.BouchonARIGVacuumController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.support.ResourcePatternResolver;
 

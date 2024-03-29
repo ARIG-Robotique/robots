@@ -1,7 +1,6 @@
 package org.arig.robot.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.OdinConstantesConfig;
 import org.arig.robot.model.OdinRobotStatus;
 import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractEnergyService;
@@ -13,8 +12,6 @@ import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component

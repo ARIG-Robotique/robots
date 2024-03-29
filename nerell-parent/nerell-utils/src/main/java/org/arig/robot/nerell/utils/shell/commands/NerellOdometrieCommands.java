@@ -17,8 +17,6 @@ import org.arig.robot.system.encoders.ARIGI2C2WheelsEncoders;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
-import org.springframework.shell.standard.ShellCommandGroup;
-import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 
