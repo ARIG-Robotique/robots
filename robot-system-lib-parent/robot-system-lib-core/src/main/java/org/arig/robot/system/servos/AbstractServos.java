@@ -1,6 +1,7 @@
 package org.arig.robot.system.servos;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.I2CException;
@@ -16,6 +17,10 @@ public abstract class AbstractServos implements InitializingBean {
     private final int nbServos;
     private final Map<Byte, Integer> lastPositions;
     private final Map<Byte, Byte> lastSpeed;
+
+    @Setter
+    @Accessors(fluent = true)
+    private int offsetNumServos = 0;
 
     protected AbstractServos(int nbServos) {
         this.nbServos = nbServos;
@@ -44,16 +49,17 @@ public abstract class AbstractServos implements InitializingBean {
      * @param position the position
      */
     public final void setPosition(final byte servoNb, final int position) {
-        if (!checkServo(servoNb)) {
+        byte finalServoNb = (byte) (servoNb - offsetNumServos);
+        if (!checkServo(finalServoNb)) {
             return;
         }
 
-        if (getPosition(servoNb) == position) {
+        if (getPosition(finalServoNb) == position) {
             return;
         }
 
-        lastPositions.put(servoNb, position);
-        setPositionImpl(servoNb, position);
+        lastPositions.put(finalServoNb, position);
+        setPositionImpl(finalServoNb, position);
     }
 
     /**
@@ -63,16 +69,17 @@ public abstract class AbstractServos implements InitializingBean {
      * @param speed   the speed
      */
     public final void setSpeed(final byte servoNb, final byte speed) {
-        if (!checkServo(servoNb)) {
+        byte finalServoNb = (byte) (servoNb - offsetNumServos);
+        if (!checkServo(finalServoNb)) {
             return;
         }
 
-        if (getSpeed(servoNb) == speed) {
+        if (getSpeed(finalServoNb) == speed) {
             return;
         }
 
-        lastSpeed.put(servoNb, speed);
-        setSpeedImpl(servoNb, speed);
+        lastSpeed.put(finalServoNb, speed);
+        setSpeedImpl(finalServoNb, speed);
     }
 
     /**
@@ -83,17 +90,18 @@ public abstract class AbstractServos implements InitializingBean {
      * @param position the position
      */
     public final void setPositionAndSpeed(final byte servoNb, final int position, final byte speed) {
-        if (!checkServo(servoNb)) {
+        byte finalServoNb = (byte) (servoNb - offsetNumServos);
+        if (!checkServo(finalServoNb)) {
             return;
         }
 
-        if (getPosition(servoNb) == position && getSpeed(servoNb) == speed) {
+        if (getPosition(finalServoNb) == position && getSpeed(finalServoNb) == speed) {
             return;
         }
 
-        lastPositions.put(servoNb, position);
-        lastSpeed.put(servoNb, speed);
-        setPositionAndSpeedImpl(servoNb, position, speed);
+        lastPositions.put(finalServoNb, position);
+        lastSpeed.put(finalServoNb, speed);
+        setPositionAndSpeedImpl(finalServoNb, position, speed);
     }
 
     /**
@@ -103,11 +111,12 @@ public abstract class AbstractServos implements InitializingBean {
      * @return La dernière position du servo
      */
     public int getPosition(final byte servoNb) {
-        if (!checkServo(servoNb)) {
+        byte finalServoNb = (byte) (servoNb - offsetNumServos);
+        if (!checkServo(finalServoNb)) {
             return -1;
         }
 
-        return lastPositions.get(servoNb);
+        return lastPositions.get(finalServoNb);
     }
 
     /**
@@ -117,11 +126,12 @@ public abstract class AbstractServos implements InitializingBean {
      * @return La dernière vitesse du servo
      */
     public int getSpeed(final byte servoNb) {
-        if (!checkServo(servoNb)) {
+        byte finalServoNb = (byte) (servoNb - offsetNumServos);
+        if (!checkServo(finalServoNb)) {
             return -1;
         }
 
-        return lastSpeed.get(servoNb);
+        return lastSpeed.get(finalServoNb);
     }
 
     /**
@@ -131,9 +141,10 @@ public abstract class AbstractServos implements InitializingBean {
      * @return true, if servo number are between 1 and 21. False otherwise
      */
     private boolean checkServo(final byte servoNb) {
-        final boolean result = servoNb >= 1 && servoNb <= nbServos;
+        byte finalServoNb = (byte) (servoNb - offsetNumServos);
+        final boolean result = finalServoNb >= 1 && finalServoNb <= nbServos;
         if (!result) {
-            log.warn("Numéro de servo moteur invalide : {}", servoNb);
+            log.warn("Numéro de servo moteur invalide : {} (real check {})", finalServoNb, servoNb);
         }
         return result;
     }

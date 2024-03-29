@@ -28,6 +28,7 @@ public abstract class AbstractServosService {
             if (sd == servoDevice) {
                 continue;
             }
+            sd.offsetNumServos(nbServos);
             nbServos = addServosDeviceMapping(sd, nbServos);
         }
     }
