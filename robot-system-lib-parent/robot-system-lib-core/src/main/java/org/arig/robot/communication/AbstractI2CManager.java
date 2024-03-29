@@ -68,7 +68,7 @@ public abstract class AbstractI2CManager<D> implements I2CManager {
                 scanDevice(d);
                 log.info("Scan du device {} [OK]", d.deviceName());
             } catch (IOException | I2CException e) {
-                log.warn("Impossible de communiquer avec le périphérique {}", d.deviceName());
+                log.warn("Scan du device {} [KO]", d.deviceName());
                 deviceNotFound.add(d.deviceName());
             }
         };
@@ -77,19 +77,18 @@ public abstract class AbstractI2CManager<D> implements I2CManager {
         log.info("Verification des devices enregistrés non multiplexé");
         getDeviceMap().values().stream()
                 .filter(i2CDeviceI2CManagerDevice -> !i2CDeviceI2CManagerDevice.isMultiplexed())
-                .collect(Collectors.toList())
+                .toList()
                 .forEach(processScan);
 
-        if (deviceNotFound.isEmpty()) {
-            log.info("Verification des devices enregistrés multiplexé");
-            getDeviceMap().values().stream()
-                    .filter(I2CManagerDevice::isMultiplexed)
-                    .collect(Collectors.toList())
-                    .forEach(processScan);
+        log.info("Verification des devices enregistrés multiplexé");
+        getDeviceMap().values().stream()
+                .filter(I2CManagerDevice::isMultiplexed)
+                .toList()
+                .forEach(processScan);
 
-            log.info("Désactivation de tous les multiplexeurs");
-            getMultiplexerDeviceMap().forEach((k, v) -> v.disable());
-        }
+        log.info("Désactivation de tous les multiplexeurs");
+        getMultiplexerDeviceMap().forEach((k, v) -> v.disable());
+
 
         if (!deviceNotFound.isEmpty()) {
             status = false;

@@ -132,6 +132,30 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
 
+    @Override
+    public void enableElectroAimant() {
+
+    }
+
+    @Override
+    public void disableElectroAiment() {
+
+    }
+
+    @Override
+    public void tournePanneauArriere() {
+
+    }
+
+    @Override
+    public void tournePanneauAvant() {
+
+    }
+
+    @Override
+    public void stopTournePanneau() {
+
+    }
 
     // ----------------------------------------------------------- //
     // -------------------------- BUSINESS ----------------------- //

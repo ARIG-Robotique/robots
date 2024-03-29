@@ -2,12 +2,18 @@ package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.AbstractRobotStatus;
+import org.arig.robot.services.AbstractEnergyService;
+import org.arig.robot.services.NerellIOService;
 import org.arig.robot.services.NerellIOServiceRobot;
 import org.arig.robot.services.NerellRobotServosService;
+import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.web.controller.IOController;
+import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellMethodAvailability;
 
 @Slf4j
 @ShellComponent
@@ -16,7 +22,12 @@ import org.springframework.shell.standard.ShellMethod;
 public class NerellIOCommands {
 
     private final NerellIOServiceRobot nerellIOServiceRobot;
-    private final NerellRobotServosService nerellServosService;
+    private final AbstractEnergyService energyService;
+
+    public Availability alimentationOk() {
+        return nerellIOServiceRobot.auOk() && energyService.checkMoteurs()
+                ? Availability.available() : Availability.unavailable("Alimentation moteurs KO");
+    }
 
     @ShellMethod("Read all IOs")
     public void readAllIO() {
@@ -39,5 +50,33 @@ public class NerellIOCommands {
         log.info("Présence arriere gauche = {}", nerellIOServiceRobot.presenceArriereGauche());
         log.info("Présence arriere centre = {}", nerellIOServiceRobot.presenceArriereCentre());
         log.info("Présence arriere droite = {}", nerellIOServiceRobot.presenceArriereDroite());
+    }
+
+    @ShellMethod("Enable Electro Aimant")
+    @ShellMethodAvailability("alimentationOk")
+    public void enableElectroAimant() {
+        nerellIOServiceRobot.enableElectroAimant();
+    }
+
+    @ShellMethod("Enable Electro Aimant")
+    @ShellMethodAvailability("alimentationOk")
+    public void disableElectroAimant() {
+        nerellIOServiceRobot.disableElectroAiment();
+    }
+
+    @ShellMethod("Tourne solar wheel")
+    @ShellMethodAvailability("alimentationOk")
+    public void tourneSolarWheel(boolean avant) {
+        if (avant) {
+            nerellIOServiceRobot.tournePanneauAvant();
+        } else {
+            nerellIOServiceRobot.tournePanneauArriere();
+        }
+    }
+
+    @ShellMethod("Stop solar wheel")
+    @ShellMethodAvailability("alimentationOk")
+    public void stopSolarWheel() {
+        nerellIOServiceRobot.stopTournePanneau();
     }
 }

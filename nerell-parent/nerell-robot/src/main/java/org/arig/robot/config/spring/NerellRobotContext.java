@@ -4,6 +4,7 @@ import com.pi4j.gpio.extension.pca.PCA9685GpioProvider;
 import com.pi4j.gpio.extension.pca.PCA9685Pin;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
@@ -27,7 +28,8 @@ import org.arig.robot.system.avoiding.SemiCompleteAvoidingService;
 import org.arig.robot.system.capteurs.*;
 import org.arig.robot.system.encoders.ARIGI2C2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
-import org.arig.robot.system.motors.PropulsionsPCA9685Motors;
+import org.arig.robot.system.motors.PCA9685ToTB6612Motor;
+import org.arig.robot.system.motors.PropulsionsPCA9685SimpleMotors;
 import org.arig.robot.system.process.RPLidarBridgeProcess;
 import org.arig.robot.system.servos.SD21Servos;
 import org.springframework.context.annotation.Bean;
@@ -81,6 +83,10 @@ public class NerellRobotContext {
                 .deviceName(NerellConstantesI2C.PCF2_DEVICE_NAME)
                 .device(i2cBus.getDevice(NerellConstantesI2C.PCF2_ADDRESS))
                 .build();
+        final I2CManagerDevice<I2CDevice> pcf3 = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(NerellConstantesI2C.PCF3_DEVICE_NAME)
+                .device(i2cBus.getDevice(NerellConstantesI2C.PCF3_ADDRESS))
+                .build();
         final I2CManagerDevice<I2CDevice> sd21Avant = I2CManagerDevice.<I2CDevice>builder()
                 .deviceName(NerellConstantesI2C.SERVO_AVANT_DEVICE_NAME)
                 .device(i2cBus.getDevice(NerellConstantesI2C.SD21_ADDRESS))
@@ -115,6 +121,7 @@ public class NerellRobotContext {
         manager.registerDevice(pcfAlim);
         manager.registerDevice(pcf1);
         manager.registerDevice(pcf2);
+        manager.registerDevice(pcf3);
         manager.registerDevice(pca9685);
         manager.registerDevice(alimMesure);
 
@@ -158,31 +165,26 @@ public class NerellRobotContext {
     @Bean
     @SneakyThrows
     public PCA9685GpioProvider pca9685GpioControler(I2CBus bus) {
-        final PCA9685GpioProvider gpioProvider = new PCA9685GpioProvider(bus, NerellConstantesI2C.PCA9685_ADDRESS, new BigDecimal(200));
+        PCA9685GpioProvider pca9685 = new PCA9685GpioProvider(bus, NerellConstantesI2C.PCA9685_ADDRESS, new BigDecimal(200));
 
         final GpioController gpio = GpioFactory.getInstance();
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_02); // PWM
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_03); // Direction
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_06); // PWM
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_07); // Direction
-
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_08);
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_09);
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_10);
-
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_12);
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_13);
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_14);
-
-        return gpioProvider;
+        for (Pin pin : PCA9685Pin.ALL) {
+            gpio.provisionPwmOutputPin(pca9685, pin);
+        }
+        return pca9685;
     }
 
     @Bean
     public AbstractPropulsionsMotors motors() {
         // Configuration de la carte moteur propulsion.
-        final PropulsionsPCA9685Motors motors = new PropulsionsPCA9685Motors(PCA9685Pin.PWM_02, PCA9685Pin.PWM_03, PCA9685Pin.PWM_06, PCA9685Pin.PWM_07);
+        final PropulsionsPCA9685SimpleMotors motors = new PropulsionsPCA9685SimpleMotors(PCA9685Pin.PWM_02, PCA9685Pin.PWM_03, PCA9685Pin.PWM_06, PCA9685Pin.PWM_07);
         motors.assignMotors(NerellConstantesConfig.numeroMoteurGauche, NerellConstantesConfig.numeroMoteurDroit);
         return motors;
+    }
+
+    @Bean
+    public PCA9685ToTB6612Motor solarWheelMotor() {
+        return new PCA9685ToTB6612Motor(PCA9685Pin.PWM_08, PCA9685Pin.PWM_09, PCA9685Pin.PWM_10);
     }
 
     @Bean

@@ -39,7 +39,7 @@ public class OdinCodeursCommands {
 
     public Availability alimentationOk() {
         return ioService.auOk() && energyService.checkMoteurs()
-                ? Availability.available() : Availability.unavailable("Alimentation moeteurs KO");
+                ? Availability.available() : Availability.unavailable("Alimentation moteurs KO");
     }
 
     @SneakyThrows

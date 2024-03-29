@@ -5,7 +5,6 @@ import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.OdinIOService;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
-import org.arig.robot.system.motors.PCA9685Motor;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -25,7 +24,7 @@ public class OdinMoteursCommands {
 
     public Availability alimentationOk() {
         return ioService.auOk() && energyService.checkMoteurs()
-                ? Availability.available() : Availability.unavailable("Alimentation moeteurs KO");
+                ? Availability.available() : Availability.unavailable("Alimentation moteurs KO");
     }
 
     @ShellMethodAvailability("alimentationOk")

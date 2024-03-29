@@ -132,6 +132,31 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
 
+    @Override
+    public void enableElectroAimant() {
+
+    }
+
+    @Override
+    public void disableElectroAiment() {
+
+    }
+
+    @Override
+    public void tournePanneauArriere() {
+
+    }
+
+    @Override
+    public void tournePanneauAvant() {
+
+    }
+
+    @Override
+    public void stopTournePanneau() {
+
+    }
+
     // ----------------------------------------------------------- //
     // -------------------------- BUSINESS ----------------------- //
     // ----------------------------------------------------------- //

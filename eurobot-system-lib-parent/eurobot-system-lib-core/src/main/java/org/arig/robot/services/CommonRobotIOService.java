@@ -28,6 +28,12 @@ public interface CommonRobotIOService extends IOService {
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
 
+    void enableElectroAimant();
+    void disableElectroAiment();
+
+    void tournePanneauArriere();
+    void tournePanneauAvant();
+    void stopTournePanneau();
 
     // ----------------------------------------------------------- //
     // -------------------------- BUSINESS ----------------------- //

@@ -33,7 +33,7 @@ import org.arig.robot.system.capteurs.TCS34725ColorSensor.IntegrationTime;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.encoders.ARIGI2C2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
-import org.arig.robot.system.motors.PropulsionsPCA9685Motors;
+import org.arig.robot.system.motors.PropulsionsPCA9685SimpleMotors;
 import org.arig.robot.system.process.RPLidarBridgeProcess;
 import org.arig.robot.system.servos.SD21Servos;
 import org.arig.robot.system.vacuum.ARIGVacuumController;
@@ -183,24 +183,13 @@ public class OdinRobotContext {
     @Bean
     @SneakyThrows
     public PCA9685GpioProvider pca9685GpioControler(I2CBus bus) {
-        final PCA9685GpioProvider gpioProvider = new PCA9685GpioProvider(bus, OdinConstantesI2C.PCA9685_ADDRESS, new BigDecimal(200));
-
-        final GpioController gpio = GpioFactory.getInstance();
-        // Moteur Gauche
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_00); // PWM
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_01); // Direction
-
-        // Moteur Droit
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_02); // PWM
-        gpio.provisionPwmOutputPin(gpioProvider, PCA9685Pin.PWM_03); // Direction
-
-        return gpioProvider;
+        return new PCA9685GpioProvider(bus, OdinConstantesI2C.PCA9685_ADDRESS, new BigDecimal(200));
     }
 
     @Bean
     public AbstractPropulsionsMotors motors() {
         // Configuration de la carte moteur propulsion.
-        final PropulsionsPCA9685Motors motors = new PropulsionsPCA9685Motors(PCA9685Pin.PWM_02, PCA9685Pin.PWM_03, PCA9685Pin.PWM_00, PCA9685Pin.PWM_01);
+        final PropulsionsPCA9685SimpleMotors motors = new PropulsionsPCA9685SimpleMotors(PCA9685Pin.PWM_02, PCA9685Pin.PWM_03, PCA9685Pin.PWM_00, PCA9685Pin.PWM_01);
         motors.assignMotors(OdinConstantesConfig.numeroMoteurGauche, OdinConstantesConfig.numeroMoteurDroit);
         return motors;
     }

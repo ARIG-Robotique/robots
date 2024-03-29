@@ -324,6 +324,31 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
         outAlimPuissanceMoteurs.high();
     }
 
+    @Override
+    public void enableElectroAimant() {
+
+    }
+
+    @Override
+    public void disableElectroAiment() {
+
+    }
+
+    @Override
+    public void tournePanneauArriere() {
+
+    }
+
+    @Override
+    public void tournePanneauAvant() {
+
+    }
+
+    @Override
+    public void stopTournePanneau() {
+
+    }
+
     // ----------------------------------------------------------- //
     // -------------------------- BUSINESS ----------------------- //
     // ----------------------------------------------------------- //

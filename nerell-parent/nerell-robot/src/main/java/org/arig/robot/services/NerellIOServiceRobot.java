@@ -1,14 +1,14 @@
 package org.arig.robot.services;
 
-import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalInput;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.gpio.extension.pca.PCA9685GpioProvider;
+import com.pi4j.gpio.extension.pca.PCA9685Pin;
+import com.pi4j.io.gpio.*;
 import com.pi4j.io.i2c.I2CBus;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
 import org.arig.robot.constants.NerellConstantesI2C;
+import org.arig.robot.system.motors.PCA9685ToTB6612Motor;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +29,11 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     private PCF8574GpioProvider pcf1;
     private PCF8574GpioProvider pcf2;
     private PCF8574GpioProvider pcf3;
+
+    @Autowired
+    private PCA9685GpioProvider pca9695;
+    @Autowired
+    private PCA9685ToTB6612Motor solarWheelMotor;
 
     // Référence sur les PIN Inputs
     // ----------------------------
@@ -83,6 +88,11 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     // PCF
     private GpioPinDigitalOutput outAlimPuissanceServos;
     private GpioPinDigitalOutput outAlimPuissanceMoteurs;
+
+    // PCA 9685
+    private final Pin eaIn1Pin = PCA9685Pin.PWM_14;
+    private final Pin eaIn2Pin = PCA9685Pin.PWM_13;
+    private final Pin eaPwmPin = PCA9685Pin.PWM_12;
 
     @Override
     public void destroy() throws Exception {
@@ -172,6 +182,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         presenceAvantGauche = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_05);
         presenceAvantCentre = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_06);
         //in3_8 = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_07);
+
     }
 
     @Override
@@ -378,6 +389,40 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     public void disableAlimMoteurs() {
         log.info("Desactivation puissance moteurs");
         outAlimPuissanceMoteurs.high();
+    }
+
+    @Override
+    public void enableElectroAimant() {
+        log.info("Activation electro aimant");
+        pca9695.setAlwaysOn(eaIn1Pin);
+        pca9695.setAlwaysOff(eaIn2Pin);
+        pca9695.setAlwaysOn(eaPwmPin);
+    }
+
+    @Override
+    public void disableElectroAiment() {
+        log.info("Desactivation electro aimant");
+        pca9695.setAlwaysOff(eaIn1Pin);
+        pca9695.setAlwaysOff(eaIn2Pin);
+        pca9695.setAlwaysOff(eaPwmPin);
+    }
+
+    @Override
+    public void tournePanneauArriere() {
+        log.info("Demarrage du moteur de rotation du panneau vers l'arrière");
+        solarWheelMotor.speed(2048);
+    }
+
+    @Override
+    public void tournePanneauAvant() {
+        log.info("Demarrage du moteur de rotation du panneau vers l'avant");
+        solarWheelMotor.speed(-2048);
+    }
+
+    @Override
+    public void stopTournePanneau() {
+        log.info("Arret du moteur de rotation du panneau");
+        solarWheelMotor.stop();
     }
 
     // ----------------------------------------------------------- //

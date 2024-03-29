@@ -26,9 +26,9 @@ public interface NerellConstantesI2C {
     int PCA9685_ADDRESS = 0x40;
 
     String SERVO_AVANT_DEVICE_NAME = "SD21 Avant";
-    byte SERVO_AVANT_MUX_CHANNEL = 7;
+    byte SERVO_AVANT_MUX_CHANNEL = 6;
     String SERVO_ARRIERE_DEVICE_NAME = "SD21 Arriere";
-    byte SERVO_ARRIERE_MUX_CHANNEL = 2;
+    byte SERVO_ARRIERE_MUX_CHANNEL = 1;
     int SD21_ADDRESS = 0x61;
 
     String ALIM_MESURE_DEVICE_NAME = "Mesure alimentation";

@@ -1,13 +1,16 @@
 package org.arig.robot.system.motors;
 
 import com.pi4j.gpio.extension.pca.PCA9685GpioProvider;
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.Pin;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * NON TESTE
  */
-public class PCA9685MotorServos extends AbstractMotor {
+public class PCA9685ServosDriverMotor extends AbstractMotor {
 
     public static int OFFSET = 1500;
     public static int MIN = 1100;
@@ -18,7 +21,7 @@ public class PCA9685MotorServos extends AbstractMotor {
     @Autowired
     private PCA9685GpioProvider pca9685;
 
-    public PCA9685MotorServos(final Pin motorPin) {
+    public PCA9685ServosDriverMotor(final Pin motorPin) {
         super(OFFSET);
 
         this.motorPin = motorPin;

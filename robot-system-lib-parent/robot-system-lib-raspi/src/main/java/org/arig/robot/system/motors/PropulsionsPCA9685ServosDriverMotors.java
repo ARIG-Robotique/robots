@@ -6,18 +6,21 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-public class PropulsionsPCA9685Motors extends AbstractPropulsionsMotors implements ApplicationContextAware, InitializingBean {
+/**
+ * NON TESTE
+ */
+public class PropulsionsPCA9685ServosDriverMotors extends AbstractPropulsionsMotors implements ApplicationContextAware, InitializingBean {
 
-    private PCA9685Motor motor1;
-    private PCA9685Motor motor2;
+    private PCA9685ServosDriverMotor motor1;
+    private PCA9685ServosDriverMotor motor2;
 
     @Setter
     private ApplicationContext applicationContext;
 
-    public PropulsionsPCA9685Motors(final Pin motor1Pin, final Pin motor1Direction, final Pin motor2Pin, final Pin motor2Direction) {
-        super(PCA9685Motor.OFFSET);
-        motor1 = new PCA9685Motor(motor1Pin, motor1Direction);
-        motor2 = new PCA9685Motor(motor2Pin, motor2Direction);
+    public PropulsionsPCA9685ServosDriverMotors(final Pin motor1Pin, final Pin motor2Pin) {
+        super(PCA9685ServosDriverMotor.OFFSET);
+        motor1 = new PCA9685ServosDriverMotor(motor1Pin);
+        motor2 = new PCA9685ServosDriverMotor(motor2Pin);
     }
 
     @Override
