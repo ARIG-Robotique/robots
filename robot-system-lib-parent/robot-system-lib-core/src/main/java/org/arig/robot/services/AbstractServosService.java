@@ -17,18 +17,19 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class AbstractServosService {
 
-    private final Map<Byte, AbstractServos> servoDevices = new HashMap<>();
+    public record OffsetedDevice(AbstractServos servo, int offset) {}
 
-    private Map<String, Servo> servos = new HashMap<>();
-    private Map<String, ServoGroup> groups = new HashMap<>();
+    private final Map<Integer, OffsetedDevice> servoDevices = new HashMap<>();
+
+    private final Map<String, Servo> servos = new HashMap<>();
+    private final Map<String, ServoGroup> groups = new HashMap<>();
 
     protected AbstractServosService(AbstractServos servoDevice, AbstractServos ... servoDevices) {
-        byte nbServos = addServosDeviceMapping(servoDevice, (byte) 0);
+        int nbServos = addServosDeviceMapping(servoDevice, (byte) 0);
         for (AbstractServos sd : servoDevices) {
             if (sd == servoDevice) {
                 continue;
             }
-            sd.offsetNumServos(nbServos);
             nbServos = addServosDeviceMapping(sd, nbServos);
         }
     }
@@ -69,8 +70,9 @@ public abstract class AbstractServosService {
 
     public List<ServoGroup> getGroups() {
         servos.forEach((name, s) -> {
-            s.currentPosition(getDevice(s.id()).getPosition(s.id()));
-            s.currentSpeed(getDevice(s.id()).getSpeed(s.id()));
+            OffsetedDevice device = getDevice(s.id());
+            s.currentPosition(device.servo().getPosition((byte) (s.id() - device.offset())));
+            s.currentSpeed(device.servo().getSpeed((byte) (s.id() - device.offset())));
         });
 
         return groups.values().stream()
@@ -78,16 +80,16 @@ public abstract class AbstractServosService {
                 .collect(Collectors.toList());
     }
 
-    public AbstractServos getDevice(byte id) {
+    public OffsetedDevice getDevice(int id) {
         return servoDevices.get(id);
     }
 
-    private byte addServosDeviceMapping(AbstractServos sd, byte nbServos) {
+    private int addServosDeviceMapping(AbstractServos sd, int nbServos) {
         log.info("Enregistrement des servos {} -> {} sur le controlleur {}", nbServos + 1, nbServos + sd.getNbServos(), sd.deviceName());
         for (byte i = 1; i <= sd.getNbServos(); i++) {
-            this.servoDevices.put((byte) (nbServos + i), sd);
+            this.servoDevices.put(nbServos + i, new OffsetedDevice(sd, nbServos));
         }
-        return(byte) (nbServos + sd.getNbServos());
+        return nbServos + sd.getNbServos();
     }
 
     /* **************************************** */
@@ -122,10 +124,11 @@ public abstract class AbstractServosService {
     //*******************************************//
 
     /**
-     * Accès direct à la SD21
+     * Accès direct au device servo
      */
     public void setPositionById(byte id, int position, byte speed) {
-        getDevice(id).setPositionAndSpeed(id, position, speed);
+        OffsetedDevice device = getDevice(id);
+        device.servo().setPositionAndSpeed((byte) (id - device.offset()), position, speed);
     }
 
     public boolean isInPosition(String servoName, String positionName) {
@@ -134,7 +137,8 @@ public abstract class AbstractServosService {
         ServoPosition position = servo.positions().get(positionName);
         assert position != null;
 
-        return position.value() == getDevice(servo.id()).getPosition(servo.id());
+        OffsetedDevice device = getDevice(servo.id());
+        return position.value() == device.servo().getPosition((byte) (servo.id() - device.offset()));
     }
 
     /**
@@ -164,10 +168,10 @@ public abstract class AbstractServosService {
     }
 
     private void setPosition(Servo servo, int position, byte speed, boolean wait) {
-        AbstractServos device = getDevice(servo.id());
-        int currentPosition = device.getPosition(servo.id());
+        OffsetedDevice device = getDevice(servo.id());
+        int currentPosition = device.servo().getPosition((byte) (servo.id() - device.offset()));
 
-        device.setPositionAndSpeed(servo.id(), position, speed);
+        device.servo().setPositionAndSpeed((byte) (servo.id() - device.offset()), position, speed);
 
         if (wait && currentPosition != position) {
             ThreadUtils.sleep(computeWaitTime(servo, currentPosition, position, speed));
@@ -184,9 +188,10 @@ public abstract class AbstractServosService {
             Servo servo = servos.get(servoAngle.getKey());
             assert servo != null;
 
+            OffsetedDevice device = getDevice(servo.id());
             int angle = servoAngle.getValue();
             int targetPosition = servo.angleToPosition(angle);
-            int currentPosition = getDevice(servo.id()).getPosition(servo.id());
+            int currentPosition = device.servo().getPosition((byte) (servo.id() - device.offset()));
             int dst = Math.abs(targetPosition - currentPosition);
 
             maxDst = Math.max(maxDst, dst);
@@ -197,16 +202,17 @@ public abstract class AbstractServosService {
             Servo servo = servos.get(servoAngle.getKey());
             assert servo != null;
 
+            OffsetedDevice device = getDevice(servo.id());
             int angle = servoAngle.getValue();
             int targetPosition = servo.angleToPosition(angle);
-            int currentPosition = getDevice(servo.id()).getPosition(servo.id());
+            int currentPosition = device.servo().getPosition((byte) (servo.id() - device.offset()));
             int dst = Math.abs(targetPosition - currentPosition);
 
             // la vitesse de chaque servo dépend de la distance à parcourir
             int finalSpeed = (int) Math.ceil(dst * 1.0 / maxDst * speed);
 
             //logPositionServo(servo.name(), angle + "°", targetPosition, finalSpeed, true);
-            getDevice(servo.id()).setPositionAndSpeed(servo.id(), targetPosition, (byte) finalSpeed);
+            device.servo().setPositionAndSpeed((byte) (servo.id() - device.offset()), targetPosition, (byte) finalSpeed);
 
             if (currentPosition != targetPosition && finalSpeed > 0) {
                 // finalSpeed peu tomber à zéro même si un (petit) mouvement est necessaire
@@ -234,10 +240,10 @@ public abstract class AbstractServosService {
                 continue;
             }
 
-            AbstractServos device = getDevice(servo.id());
-            int currentPosition = device.getPosition(servo.id());
+            OffsetedDevice device = getDevice(servo.id());
+            int currentPosition = device.servo().getPosition((byte) (servo.id() - device.offset()));
 
-            device.setPositionAndSpeed(servo.id(), position.value(), position.speed());
+            device.servo().setPositionAndSpeed((byte) (servo.id() - device.offset()), position.value(), position.speed());
 
             if (currentPosition != position.value()) {
                 waitTime = Math.max(waitTime, computeWaitTime(servo, currentPosition, position.value(), position.speed()));

@@ -35,12 +35,13 @@ public class ServosController {
             @RequestParam("position") final Integer position,
             @RequestParam(value = "speed", required = false) final Byte speed) {
 
+        org.arig.robot.services.AbstractServosService.OffsetedDevice device = servos.getDevice(idServo);
         if (speed != null) {
             log.info("Modification du servo moteur {} : Pos -> {} ; Speed -> {}", idServo, position, speed);
-            servos.getDevice(idServo).setPositionAndSpeed(idServo, position, speed);
+            device.servo().setPositionAndSpeed((byte) (idServo - device.offset()), position, speed);
         } else {
             log.info("Modification du servo moteur {} : Pos -> {}", idServo, position);
-            servos.getDevice(idServo).setPosition(idServo, position);
+            device.servo().setPosition((byte) (idServo - device.offset()), position);
         }
     }
 

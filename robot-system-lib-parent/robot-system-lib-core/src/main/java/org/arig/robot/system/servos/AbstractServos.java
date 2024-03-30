@@ -18,10 +18,6 @@ public abstract class AbstractServos implements InitializingBean {
     private final Map<Byte, Integer> lastPositions;
     private final Map<Byte, Byte> lastSpeed;
 
-    @Setter
-    @Accessors(fluent = true)
-    private int offsetNumServos = 0;
-
     protected AbstractServos(int nbServos) {
         this.nbServos = nbServos;
         this.lastPositions = new HashMap<>(nbServos);
@@ -49,17 +45,16 @@ public abstract class AbstractServos implements InitializingBean {
      * @param position the position
      */
     public final void setPosition(final byte servoNb, final int position) {
-        byte finalServoNb = (byte) (servoNb - offsetNumServos);
-        if (!checkServo(finalServoNb)) {
+        if (!checkServo(servoNb)) {
             return;
         }
 
-        if (getPosition(finalServoNb) == position) {
+        if (getPosition(servoNb) == position) {
             return;
         }
 
-        lastPositions.put(finalServoNb, position);
-        setPositionImpl(finalServoNb, position);
+        lastPositions.put(servoNb, position);
+        setPositionImpl(servoNb, position);
     }
 
     /**
@@ -69,17 +64,16 @@ public abstract class AbstractServos implements InitializingBean {
      * @param speed   the speed
      */
     public final void setSpeed(final byte servoNb, final byte speed) {
-        byte finalServoNb = (byte) (servoNb - offsetNumServos);
-        if (!checkServo(finalServoNb)) {
+        if (!checkServo(servoNb)) {
             return;
         }
 
-        if (getSpeed(finalServoNb) == speed) {
+        if (getSpeed(servoNb) == speed) {
             return;
         }
 
-        lastSpeed.put(finalServoNb, speed);
-        setSpeedImpl(finalServoNb, speed);
+        lastSpeed.put(servoNb, speed);
+        setSpeedImpl(servoNb, speed);
     }
 
     /**
@@ -90,18 +84,17 @@ public abstract class AbstractServos implements InitializingBean {
      * @param position the position
      */
     public final void setPositionAndSpeed(final byte servoNb, final int position, final byte speed) {
-        byte finalServoNb = (byte) (servoNb - offsetNumServos);
-        if (!checkServo(finalServoNb)) {
+        if (!checkServo(servoNb)) {
             return;
         }
 
-        if (getPosition(finalServoNb) == position && getSpeed(finalServoNb) == speed) {
+        if (getPosition(servoNb) == position && getSpeed(servoNb) == speed) {
             return;
         }
 
-        lastPositions.put(finalServoNb, position);
-        lastSpeed.put(finalServoNb, speed);
-        setPositionAndSpeedImpl(finalServoNb, position, speed);
+        lastPositions.put(servoNb, position);
+        lastSpeed.put(servoNb, speed);
+        setPositionAndSpeedImpl(servoNb, position, speed);
     }
 
     /**
@@ -111,12 +104,11 @@ public abstract class AbstractServos implements InitializingBean {
      * @return La dernière position du servo
      */
     public int getPosition(final byte servoNb) {
-        byte finalServoNb = (byte) (servoNb - offsetNumServos);
-        if (!checkServo(finalServoNb)) {
+        if (!checkServo(servoNb)) {
             return -1;
         }
 
-        return lastPositions.get(finalServoNb);
+        return lastPositions.get(servoNb);
     }
 
     /**
@@ -126,12 +118,11 @@ public abstract class AbstractServos implements InitializingBean {
      * @return La dernière vitesse du servo
      */
     public int getSpeed(final byte servoNb) {
-        byte finalServoNb = (byte) (servoNb - offsetNumServos);
-        if (!checkServo(finalServoNb)) {
+        if (!checkServo(servoNb)) {
             return -1;
         }
 
-        return lastSpeed.get(finalServoNb);
+        return lastSpeed.get(servoNb);
     }
 
     /**
@@ -141,10 +132,9 @@ public abstract class AbstractServos implements InitializingBean {
      * @return true, if servo number are between 1 and 21. False otherwise
      */
     private boolean checkServo(final byte servoNb) {
-        byte finalServoNb = (byte) (servoNb - offsetNumServos);
-        final boolean result = finalServoNb >= 1 && finalServoNb <= nbServos;
+        final boolean result = servoNb >= 1 && servoNb <= nbServos;
         if (!result) {
-            log.warn("Numéro de servo moteur invalide : {} (real check {})", finalServoNb, servoNb);
+            log.warn("Numéro de servo moteur invalide : {}", servoNb);
         }
         return result;
     }
