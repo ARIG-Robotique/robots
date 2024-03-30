@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -167,12 +168,14 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         r.put("Jardinière Centre", "EMPTY");
         r.put("Jardinière Droite", "EMPTY");
 
-        r.put("Dépose au sol Nord 1/2", Arrays.stream(aireDeDeposeNord.rang1).map(p -> p.getType().name() + " (" + (p.isDansPot() ? "dans pot" : "sans pot") + ")").collect(Collectors.joining(",")));
-        r.put("Dépose au sol Nord 2/2", Arrays.stream(aireDeDeposeNord.rang2).map(p -> p.getType().name() + " (" + (p.isDansPot() ? "dans pot" : "sans pot") + ")").collect(Collectors.joining(",")));
-        r.put("Dépose au sol Milieu 1/2", Arrays.stream(aireDeDeposeMilieu.rang1).map(p -> p.getType().name() + " (" + (p.isDansPot() ? "dans pot" : "sans pot") + ")").collect(Collectors.joining(",")));
-        r.put("Dépose au sol Milieu 2/2", Arrays.stream(aireDeDeposeMilieu.rang2).map(p -> p.getType().name() + " (" + (p.isDansPot() ? "dans pot" : "sans pot") + ")").collect(Collectors.joining(",")));
-        r.put("Dépose au sol Sud 1/2", Arrays.stream(aireDeDeposeSud.rang1).map(p -> p.getType().name() + " (" + (p.isDansPot() ? "dans pot" : "sans pot") + ")").collect(Collectors.joining(",")));
-        r.put("Dépose au sol Sud 2/2", Arrays.stream(aireDeDeposeSud.rang2).map(p -> p.getType().name() + " (" + (p.isDansPot() ? "dans pot" : "sans pot") + ")").collect(Collectors.joining(",")));
+        Function<Plante, String> mapper = p -> p != null ? p.getType().name() + " (" + (p.isDansPot() ? "dans pot" : "sans pot") + ")" : "EMPTY";
+
+        r.put("Dépose au sol Nord 1/2", Arrays.stream(aireDeDeposeNord.rang1).map(mapper).collect(Collectors.joining(",")));
+        r.put("Dépose au sol Nord 2/2", Arrays.stream(aireDeDeposeNord.rang2).map(mapper).collect(Collectors.joining(",")));
+        r.put("Dépose au sol Milieu 1/2", Arrays.stream(aireDeDeposeMilieu.rang1).map(mapper).collect(Collectors.joining(",")));
+        r.put("Dépose au sol Milieu 2/2", Arrays.stream(aireDeDeposeMilieu.rang2).map(mapper).collect(Collectors.joining(",")));
+        r.put("Dépose au sol Sud 1/2", Arrays.stream(aireDeDeposeSud.rang1).map(mapper).collect(Collectors.joining(",")));
+        r.put("Dépose au sol Sud 2/2", Arrays.stream(aireDeDeposeSud.rang2).map(mapper).collect(Collectors.joining(",")));
         return r;
     }
 }
