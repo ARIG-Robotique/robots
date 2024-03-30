@@ -82,7 +82,6 @@ public class RetourSiteDeCharge extends AbstractEurobotAction {
             mv.pathTo(entry, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
             group.siteDeCharge(destSite);
             log.info("Arrivée au site de charge : {}", destSite);
-            group.siteDeCharge(gotoSite);
 
             boolean alt = false;
             mv.setVitesse(config.vitesse(), config.vitesseOrientation(50));
