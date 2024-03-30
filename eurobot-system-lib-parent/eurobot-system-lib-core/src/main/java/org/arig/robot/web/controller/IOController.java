@@ -20,17 +20,26 @@ public class IOController {
     @Autowired
     private CommonRobotIOService ioService;
 
-    @PostMapping("/pumps/{pump}")
-    public void setPumpState(@PathVariable("pump") final String pump,
-                             @RequestParam("state") final boolean state) {
-        assert pump != null;
-        switch (pump) {
-            case "bas":
+    @PostMapping("/electro-aimant/{state}")
+    public void setPumpState(@PathVariable("state") final boolean state) {
+        if (state) {
+            ioService.enableElectroAimant();
+        } else {
+            ioService.disableElectroAimant();
+        }
+    }
 
+    @PostMapping("/solar-wheel/{state}")
+    public void setPumpState(@PathVariable("state") final String state, @RequestParam("speed") final int speed) {
+        switch(state) {
+            case "avant":
+                ioService.tournePanneauAvant(speed);
                 break;
-            case "haut":
-
+            case "arriere":
+                ioService.tournePanneauArriere(speed);
                 break;
+            default:
+                ioService.stopTournePanneau();
         }
     }
 

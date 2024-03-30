@@ -138,7 +138,7 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
     }
 
     @Override
-    public void disableElectroAiment() {
+    public void disableElectroAimant() {
 
     }
 
@@ -148,7 +148,17 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
     }
 
     @Override
+    public void tournePanneauArriere(int speed) {
+
+    }
+
+    @Override
     public void tournePanneauAvant() {
+
+    }
+
+    @Override
+    public void tournePanneauAvant(int speed) {
 
     }
 

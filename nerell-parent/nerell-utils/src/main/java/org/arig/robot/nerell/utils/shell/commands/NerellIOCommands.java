@@ -56,7 +56,7 @@ public class NerellIOCommands {
     @ShellMethod("Enable Electro Aimant")
     @ShellMethodAvailability("alimentationOk")
     public void disableElectroAimant() {
-        nerellIOServiceRobot.disableElectroAiment();
+        nerellIOServiceRobot.disableElectroAimant();
     }
 
     @ShellMethod("Tourne solar wheel")

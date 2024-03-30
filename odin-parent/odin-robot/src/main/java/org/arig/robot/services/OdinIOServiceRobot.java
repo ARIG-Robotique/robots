@@ -330,7 +330,7 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
     }
 
     @Override
-    public void disableElectroAiment() {
+    public void disableElectroAimant() {
 
     }
 
@@ -340,7 +340,17 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
     }
 
     @Override
+    public void tournePanneauArriere(int speed) {
+
+    }
+
+    @Override
     public void tournePanneauAvant() {
+
+    }
+
+    @Override
+    public void tournePanneauAvant(int speed) {
 
     }
 

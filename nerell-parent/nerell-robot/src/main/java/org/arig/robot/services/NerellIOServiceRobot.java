@@ -404,7 +404,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     }
 
     @Override
-    public void disableElectroAiment() {
+    public void disableElectroAimant() {
         log.info("Desactivation electro aimant");
         pca9695.setAlwaysOff(eaIn1Pin);
         pca9695.setAlwaysOff(eaIn2Pin);
@@ -413,14 +413,25 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
 
     @Override
     public void tournePanneauArriere() {
-        log.info("Demarrage du moteur de rotation du panneau vers l'arrière");
-        solarWheelMotor.speed(2048);
+        tournePanneauArriere(512);
+    }
+
+    public void tournePanneauArriere(int speed) {
+        log.info("Demarrage du moteur de rotation du panneau vers l'arriere");
+        solarWheelMotor.speed(speed);
     }
 
     @Override
     public void tournePanneauAvant() {
+        tournePanneauAvant(512);
+    }
+
+    public void tournePanneauAvant(int speed) {
         log.info("Demarrage du moteur de rotation du panneau vers l'avant");
-        solarWheelMotor.speed(-2048);
+        if (speed > 0) {
+            speed = -speed;
+        }
+        solarWheelMotor.speed(speed);
     }
 
     @Override

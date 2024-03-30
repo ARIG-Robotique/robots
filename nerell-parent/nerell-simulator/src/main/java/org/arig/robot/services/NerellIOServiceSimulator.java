@@ -138,7 +138,7 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     }
 
     @Override
-    public void disableElectroAiment() {
+    public void disableElectroAimant() {
 
     }
 
@@ -148,7 +148,17 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     }
 
     @Override
+    public void tournePanneauArriere(int speed) {
+
+    }
+
+    @Override
     public void tournePanneauAvant() {
+
+    }
+
+    @Override
+    public void tournePanneauAvant(int speed) {
 
     }
 
