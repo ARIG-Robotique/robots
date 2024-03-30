@@ -85,7 +85,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     private PanneauxSolaire panneauxSolaire = new PanneauxSolaire();
 
     public int panneauxSolairePointRestant() {
-        return 25 - panneauxSolaire.score();
+        return 30 - panneauxSolaire.score();
     }
 
     public PanneauSolaire panneauSolaire(int numero) {
@@ -109,7 +109,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     }
 
     private int scoreDeposeAuSol() {
-        return 0;
+        return aireDeDeposeNord.score() + aireDeDeposeMilieu.score() + aireDeDeposeSud().score();
     }
 
     private int scorePanneauxSolaire() {
