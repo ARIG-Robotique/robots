@@ -279,33 +279,33 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
 
         Servo pinceAvantGauche = servo(BRAS_AVANT_GAUCHE_PINCE_ID, BRAS_AVANT_GAUCHE_PINCE)
                 .time(500)
-                .position(POS_INIT, 1100, 50);
+                .position(POS_FERME, 1100, 50);
         Servo pinceAvantCentre = servo(BRAS_AVANT_CENTRE_PINCE_ID, BRAS_AVANT_CENTRE_PINCE)
                 .time(500)
-                .position(POS_INIT, 700, 50);
+                .position(POS_FERME, 700, 50);
         Servo pinceAvantDroit = servo(BRAS_AVANT_DROIT_PINCE_ID, BRAS_AVANT_DROIT_PINCE)
                 .time(500)
-                .position(POS_INIT, 1120, 50);
+                .position(POS_FERME, 1120, 50);
         group(GROUP_PINCE_AVANT_ID, GROUP_PINCE_AVANT)
                 .addServo(pinceAvantGauche)
                 .addServo(pinceAvantCentre)
                 .addServo(pinceAvantDroit)
-                .batch(POS_INIT);
+                .batch(POS_FERME);
 
         Servo pinceArriereGauche = servo(BRAS_ARRIERE_GAUCHE_PINCE_ID, BRAS_ARRIERE_GAUCHE_PINCE)
                 .time(500)
-                .position(POS_INIT, 730);
+                .position(POS_FERME, 730);
         Servo pinceArriereCentre = servo(BRAS_ARRIERE_CENTRE_PINCE_ID, BRAS_ARRIERE_CENTRE_PINCE)
                 .time(500)
-                .position(POS_INIT, 1240);
+                .position(POS_FERME, 1240);
         Servo pinceArriereDroit = servo(BRAS_ARRIERE_DROIT_PINCE_ID, BRAS_ARRIERE_DROIT_PINCE)
                 .time(500)
-                .position(POS_INIT, 1000);
+                .position(POS_FERME, 1000);
         group(GROUP_PINCE_ARRIERE_ID, GROUP_PINCE_ARRIERE)
                 .addServo(pinceArriereGauche)
                 .addServo(pinceArriereCentre)
                 .addServo(pinceArriereDroit)
-                .batch(POS_INIT);
+                .batch(POS_FERME);
 
         Servo bloquePlanteAvantGauche = servo(BLOQUE_PLANTE_AVANT_GAUCHE_ID, BLOQUE_PLANTE_AVANT_GAUCHE)
                 .time(500)
@@ -326,14 +326,14 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
                 .batch(POS_OUVERT)
                 .batch(POS_FERME);
 
-        Servo panneauSolaireSki = servo(PANNEAU_SOLAIRE_ROUE_ID, PANNEAU_SOLAIRE_ROUE)
+        Servo panneauSolaireSki = servo(PANNEAU_SOLAIRE_SKI_ID, PANNEAU_SOLAIRE_ROUE)
                 .time(500)
-                .position(POS_FERME, 670)
-                .position(POS_OUVERT, 2240);
-        Servo panneauSolaireRoue = servo(PANNEAU_SOLAIRE_SKI_ID, PANNEAU_SOLAIRE_SKI)
-                .time(500)
-                .position(POS_FERME, 1320)
+                .position(POS_FERME, 870)
                 .position(POS_OUVERT, 2110);
+        Servo panneauSolaireRoue = servo(PANNEAU_SOLAIRE_ROUE_ID, PANNEAU_SOLAIRE_SKI)
+                .time(500)
+                .position(POS_FERME, 1270)
+                .position(POS_OUVERT, 2120);
         group(GROUP_PANNEAU_SOLAIRE_ID, GROUP_PANNEAU_SOLAIRE)
                 .addServo(panneauSolaireSki)
                 .addServo(panneauSolaireRoue)
@@ -350,6 +350,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
                 .position(POS_SORTI, 1130);
         group(GROUP_PORTE_POT_ID, GROUP_PORTE_POT)
                 .addServo(portePot)
-                .addServo(portePotGlissiere);
+                .addServo(portePotGlissiere)
+        ;
     }
 }

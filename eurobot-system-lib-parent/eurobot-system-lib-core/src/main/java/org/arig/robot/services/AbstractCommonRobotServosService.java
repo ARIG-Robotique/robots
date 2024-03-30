@@ -93,41 +93,47 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
         setPosition(BRAS_AVANT_GAUCHE_POIGNET, POS_INIT, false);
         setPosition(BRAS_AVANT_GAUCHE_COUDE, POS_INIT, false);
         setPosition(BRAS_AVANT_GAUCHE_EPAULE, POS_INIT, false);
-        setPosition(BRAS_AVANT_GAUCHE_PINCE, POS_INIT, false);
+        //setPosition(BRAS_AVANT_GAUCHE_PINCE, POS_INIT, false);
 
         setPosition(BRAS_AVANT_CENTRE_POIGNET, POS_INIT, false);
         setPosition(BRAS_AVANT_CENTRE_COUDE, POS_INIT, false);
         setPosition(BRAS_AVANT_CENTRE_EPAULE, POS_INIT, false);
-        setPosition(BRAS_AVANT_CENTRE_PINCE, POS_INIT, false);
+        //setPosition(BRAS_AVANT_CENTRE_PINCE, POS_INIT, false);
 
         setPosition(BRAS_AVANT_DROIT_POIGNET, POS_INIT, false);
         setPosition(BRAS_AVANT_DROIT_COUDE, POS_INIT, false);
         setPosition(BRAS_AVANT_DROIT_EPAULE, POS_INIT, false);
-        setPosition(BRAS_AVANT_DROIT_PINCE, POS_INIT, false);
+        //setPosition(BRAS_AVANT_DROIT_PINCE, POS_INIT, false);
 
         setPosition(BRAS_ARRIERE_GAUCHE_POIGNET, POS_INIT, false);
         setPosition(BRAS_ARRIERE_GAUCHE_COUDE, POS_INIT, false);
         setPosition(BRAS_ARRIERE_GAUCHE_EPAULE, POS_INIT, false);
-        setPosition(BRAS_ARRIERE_GAUCHE_PINCE, POS_INIT, false);
+        //setPosition(BRAS_ARRIERE_GAUCHE_PINCE, POS_INIT, false);
 
         setPosition(BRAS_ARRIERE_CENTRE_POIGNET, POS_INIT, false);
         setPosition(BRAS_ARRIERE_CENTRE_COUDE, POS_INIT, false);
         setPosition(BRAS_ARRIERE_CENTRE_EPAULE, POS_INIT, false);
-        setPosition(BRAS_ARRIERE_CENTRE_PINCE, POS_INIT, false);
+        //setPosition(BRAS_ARRIERE_CENTRE_PINCE, POS_INIT, false);
 
         setPosition(BRAS_ARRIERE_DROIT_POIGNET, POS_INIT, false);
         setPosition(BRAS_ARRIERE_DROIT_COUDE, POS_INIT, false);
         setPosition(BRAS_ARRIERE_DROIT_EPAULE, POS_INIT, false);
-        setPosition(BRAS_ARRIERE_DROIT_PINCE, POS_INIT, false);
+        //setPosition(BRAS_ARRIERE_DROIT_PINCE, POS_INIT, false);
+
+        setPosition(PORTE_POT, POS_BAS, false);
+        setPosition(PORTE_POT_GLISSIERE, POS_RENTRE, false);
 
         groupePanneauFerme(false);
+        groupePinceArriereFerme(false);
+        groupePinceAvantFerme(false);
+        groupeBloquePlanteFerme(false);
     }
 
     //*******************************************//
     //* Déplacements de groupe                  *//
     //*******************************************//
 
-    public void groupePunceAvantOuvert(boolean wait) {
+    public void groupePinceAvantOuvert(boolean wait) {
         setPositionBatch(GROUP_PINCE_AVANT, POS_OUVERT, wait);
     }
     public void groupePinceAvantFerme(boolean wait) {
@@ -146,13 +152,6 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     }
     public void groupePanneauFerme(boolean wait) {
         setPositionBatch(GROUP_PANNEAU_SOLAIRE, POS_FERME, wait);
-    }
-
-    public void groupePotOuvert(boolean wait) {
-        setPositionBatch(GROUP_PORTE_POT, POS_OUVERT, wait);
-    }
-    public void groupePotFerme(boolean wait) {
-        setPositionBatch(GROUP_PORTE_POT, POS_FERME, wait);
     }
 
     public void groupeBloquePlanteOuvert(boolean wait) {
