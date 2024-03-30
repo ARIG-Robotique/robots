@@ -29,7 +29,7 @@ public class BaladeSurTable extends AbstractEurobotAction {
 
     @Override
     public int order() {
-        return 100; // C'est 10 points et puis c'est tout
+        return 1;
     }
 
     @Override
