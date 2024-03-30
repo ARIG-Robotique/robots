@@ -4,13 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class BaladeSurTable extends AbstractEurobotAction {
+    private int nbTry = 0;
 
     @Override
     public String name() {
@@ -24,7 +24,18 @@ public class BaladeSurTable extends AbstractEurobotAction {
 
     @Override
     public Point entryPoint() {
-        return new Point(getX(1500), 1000);
+        if (nbTry == 0) {
+            return new Point(getX(1500), 1000);
+        } else if (nbTry == 1) {
+            return new Point(getX(1000), 1300);
+        } else if (nbTry == 2) {
+            return new Point(getX(1825), 815);
+        } else if (nbTry == 3) {
+            return new Point(getX(1180), 815);
+        } else if (nbTry == 4) {
+            return new Point(getX(1865), 1165);
+        }
+        return null;
     }
 
     @Override
@@ -34,7 +45,7 @@ public class BaladeSurTable extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return timeBeforeRetourValid();
+        return !ilEstTempsDeRentrer();
     }
 
     @Override
@@ -42,17 +53,15 @@ public class BaladeSurTable extends AbstractEurobotAction {
         try {
             // L'entry point calcul le chemin le plus court et défini gotoSite et destSite
             final Point entry = entryPoint();
-
+            nbTry++;
+            if (nbTry > 4) {
+                nbTry = 0;
+            }
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.pathTo(entry);
-            mv.pathTo(new Point(getX(1000), 1300));
-            mv.pathTo(new Point(getX(1825), 815));
-            mv.pathTo(new Point(getX(1180), 815));
-            mv.pathTo(new Point(getX(1865), 1165));
 
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         }
-        updateValidTime();
     }
 }

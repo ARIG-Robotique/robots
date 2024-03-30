@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class PanneauSolaireAction extends AbstractNerellAction {
 
-    private final int Y_ENTRY = 200;
-    private final int Y_ACTION = 200;
+    private final int Y_ENTRY = 230;
+    private final int Y_ACTION = 230;
 
     PanneauSolaire firstPanneau;
 

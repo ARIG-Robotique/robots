@@ -1,14 +1,10 @@
 package org.arig.robot.strategy.actions.active.robot;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
-import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Plante;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.SiteDeCharge;
-import org.arig.robot.model.Team;
 import org.arig.robot.model.TypePlante;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
@@ -40,7 +36,7 @@ public class PoussePlante extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return timeBeforeRetourValid();
+        return !ilEstTempsDeRentrer();
     }
 
     @Override

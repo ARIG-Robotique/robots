@@ -66,10 +66,10 @@ public class PanneauSolaire implements Serializable {
 
         int entraxeComplementaire = 0;
         if (numero > 3) {
-            entraxeComplementaire += 550;
+            entraxeComplementaire += 325;
         }
         if (numero > 6) {
-            entraxeComplementaire += 550;
+            entraxeComplementaire += 325;
         }
         return 275 + entraxeComplementaire + ((numero - 1) * 225);
     }

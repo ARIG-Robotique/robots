@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled;
+package org.arig.robot.strategy.actions.active.robot;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
@@ -16,9 +16,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class RetourSiteDeCharge extends AbstractEurobotAction {
 
-    private static final int CENTER_X = 975;
-    private static final int CENTER_Y = 625;
-    private static final int OFFSET = 175;
+    private static final int CENTER_X = 450;
+    private static final int CENTER_Y = 1000;
+    private static final int OFFSET = 550;
 
     private SiteDeCharge gotoSite;
     private SiteDeCharge destSite;
@@ -35,16 +35,16 @@ public class RetourSiteDeCharge extends AbstractEurobotAction {
 
     @Override
     public Point entryPoint() {
-        final double distanceNord = rs.otherPosition().distance(pointNord());
+        /*final double distanceNord = rs.otherPosition().distance(pointNord());
         final double distanceMilieu = rs.otherPosition().distance(pointMilieu());
         final double distanceSud = rs.otherPosition().distance(pointSud());
 
         final double distanceMin = Math.min(distanceNord, Math.min(distanceSud, distanceMilieu));
-        /*if (distanceMin == distanceNord) {
+        if (distanceMin == distanceNord) {
             gotoSite = rs.team() == Team.BLEU ? SiteDeCharge.WIP_BLEU_NORD : SiteDeCharge.WIP_JAUNE_NORD;
             destSite = rs.team() == Team.BLEU ? SiteDeCharge.BLEU_NORD : SiteDeCharge.JAUNE_NORD;
             return pointNord();
-        } else */ if (distanceMin == distanceSud) {
+        } else if (distanceMin == distanceSud) {
             gotoSite = rs.team() == Team.BLEU ? SiteDeCharge.WIP_BLEU_SUD : SiteDeCharge.WIP_JAUNE_SUD;
             destSite = rs.team() == Team.BLEU ? SiteDeCharge.BLEU_SUD : SiteDeCharge.JAUNE_SUD;
             return pointSud();
@@ -52,7 +52,11 @@ public class RetourSiteDeCharge extends AbstractEurobotAction {
             gotoSite = rs.team() == Team.BLEU ? SiteDeCharge.WIP_BLEU_MILIEU : SiteDeCharge.WIP_JAUNE_MILIEU;
             destSite = rs.team() == Team.BLEU ? SiteDeCharge.BLEU_MILIEU : SiteDeCharge.JAUNE_MILIEU;
             return pointMilieu();
-        }
+        }*/
+
+        gotoSite = rs.team() == Team.BLEU ? SiteDeCharge.WIP_BLEU_SUD : SiteDeCharge.WIP_JAUNE_SUD;
+        destSite = rs.team() == Team.BLEU ? SiteDeCharge.BLEU_SUD : SiteDeCharge.JAUNE_SUD;
+        return pointSud();
     }
 
     @Override
@@ -62,7 +66,7 @@ public class RetourSiteDeCharge extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        return timeBeforeRetourValid();
+        return ilEstTempsDeRentrer();
     }
 
     @Override
@@ -78,6 +82,7 @@ public class RetourSiteDeCharge extends AbstractEurobotAction {
             mv.pathTo(entry, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
             group.siteDeCharge(destSite);
             log.info("Arrivée au site de charge : {}", destSite);
+            group.siteDeCharge(gotoSite);
 
             boolean alt = false;
             mv.setVitesse(config.vitesse(), config.vitesseOrientation(50));
