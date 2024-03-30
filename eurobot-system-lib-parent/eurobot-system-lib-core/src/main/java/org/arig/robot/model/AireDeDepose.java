@@ -23,6 +23,9 @@ public class AireDeDepose {
         AtomicInteger points = new AtomicInteger(0);
 
         Consumer<Plante> consumer = plante -> {
+            if (plante == null) {
+                return;
+            }
             if (plante.isDansPot()) {
                 points.addAndGet(4);
             } else if (plante.getType() == TypePlante.RESISTANTE) {
