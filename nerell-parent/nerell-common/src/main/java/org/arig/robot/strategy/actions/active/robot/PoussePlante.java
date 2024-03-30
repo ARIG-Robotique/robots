@@ -49,7 +49,7 @@ public class PoussePlante extends AbstractEurobotAction {
             // L'entry point calcul le chemin le plus court et défini gotoSite et destSite
             final Point entry = entryPoint();
 
-            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+            mv.setVitesse(config.vitesse(50), config.vitesseOrientation());
             mv.pathTo(entry);
             mv.pathTo(new Point(getX(1330), 1125));
 
