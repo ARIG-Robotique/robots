@@ -1,13 +1,13 @@
-package org.arig.robot.strategy.actions.active;
+package org.arig.robot.strategy.actions.active.robot;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.CouleurPanneauSolaire;
 import org.arig.robot.model.PanneauSolaire;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Team;
-import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Component;
@@ -33,7 +33,7 @@ public class PanneauSolaireAction extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        firstPanneau = rs.nextPanneauSolaire(Integer.MAX_VALUE, false);
+        firstPanneau = rs.nextPanneauSolaire(10, false);
         return firstPanneau != null;
     }
 
@@ -55,10 +55,10 @@ public class PanneauSolaireAction extends AbstractNerellAction {
             boolean first = true;
 
             do {
-                log.info("Goto panneau solaire {}", firstPanneau.numero());
+                panneau.incrementTry();
+                log.info("Goto panneau solaire {} / Try {}", panneau.numero(), panneau.nbTry());
 
                 if (first) {
-                    rs.enableAvoidance();
                     mv.setVitesse(config.vitesse(), config.vitesseOrientation());
                     mv.pathTo(entry);
                 }
@@ -71,16 +71,17 @@ public class PanneauSolaireAction extends AbstractNerellAction {
                 servosNerell.groupePanneauOuvert(true);
 
                 if (rs.team() == Team.BLEU) {
-                    ioService.tournePanneauArriere();
-                } else {
                     ioService.tournePanneauAvant();
+                } else {
+                    ioService.tournePanneauArriere();
                 }
                 ThreadUtils.sleep(1000);
+                panneau.couleur(rs.team() == Team.JAUNE ? CouleurPanneauSolaire.JAUNE : CouleurPanneauSolaire.BLEU);
 
                 servosNerell.groupePanneauFerme(false);
 
                 first = false;
-                panneau = rs.nextPanneauSolaire(Integer.MAX_VALUE, false);
+                panneau = rs.nextPanneauSolaire(10, false);
 
             } while (panneau != null);
 
@@ -88,7 +89,11 @@ public class PanneauSolaireAction extends AbstractNerellAction {
             mv.gotoPoint(mv.currentXMm(), Y_ENTRY);
 
         } catch (NoPathFoundException | AvoidingException e) {
+            updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
+        } finally {
+            servosNerell.groupePanneauFerme(false);
+            ioService.stopTournePanneau();
         }
     }
 }
