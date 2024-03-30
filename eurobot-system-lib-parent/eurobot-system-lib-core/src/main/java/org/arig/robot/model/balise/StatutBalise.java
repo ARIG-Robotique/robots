@@ -21,21 +21,13 @@ public class StatutBalise implements Serializable {
 
     @Getter
     @NoArgsConstructor
-    public static class Echantillon implements Serializable {
+    public static class Plante implements Serializable {
         private TypePlante c;
         private int x;
         private int y;
 
         public Point getPoint() {
-            double correctedY;
-            if (y < 555) {
-                correctedY = lerp(y, 190, 555, 170, 555);
-            } else if (y > 795) {
-                correctedY = lerp(y, 795, 1885, 795, 1925);
-            } else {
-                correctedY = y;
-            }
-            return new Point(x, 2000 - correctedY);
+            return new Point(x, y);
         }
 
         public double lerp(double val, double start_1, double end_1, double start_2, double end_2) {
@@ -48,7 +40,7 @@ public class StatutBalise implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class DetectionResult implements Serializable {
         private List<PresenceDistrib> distribs;
-        private List<Echantillon> echantillons;
+        private List<Plante> plantes;
     }
 
     boolean etalonnageDone;

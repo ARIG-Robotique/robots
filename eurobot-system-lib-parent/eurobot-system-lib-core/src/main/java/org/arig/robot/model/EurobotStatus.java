@@ -68,16 +68,16 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     private AireDeDepose aireDeDeposeSud = new AireDeDepose();
 
     private SiteDeCharge siteDeCharge = SiteDeCharge.AUCUN;
-    private SiteDeCharge siteDeChargeAutreRobot = SiteDeCharge.AUCUN;
+    private SiteDeCharge siteDeDepart = SiteDeCharge.AUCUN;
 
     public void siteDeCharge(SiteDeCharge siteDeCharge) {
         log.info("[RS] site de charge : {}", siteDeCharge);
         this.siteDeCharge = siteDeCharge;
     }
 
-    public void setSiteDeChargeAutreRobot(SiteDeCharge siteDeCharge) {
-        log.info("[RS] site de charge autre robot : {}", siteDeCharge);
-        this.siteDeChargeAutreRobot = siteDeCharge;
+    public void setSiteDeDepart(SiteDeCharge siteDeCharge) {
+        log.info("[RS] site de départ : {}", siteDeCharge);
+        this.siteDeDepart = siteDeCharge;
     }
 
     @Setter(AccessLevel.NONE)
@@ -85,7 +85,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     private PanneauxSolaire panneauxSolaire = new PanneauxSolaire();
 
     public int panneauxSolairePointRestant() {
-        return 30 - panneauxSolaire.score();
+        return Math.max(0, 30 - panneauxSolaire.score());
     }
 
     public PanneauSolaire panneauSolaire(int numero) {

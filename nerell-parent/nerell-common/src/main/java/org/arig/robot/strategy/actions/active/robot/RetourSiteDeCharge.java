@@ -103,7 +103,7 @@ public class RetourSiteDeCharge extends AbstractEurobotAction {
     }
 
     private Point pointMilieu() {
-        return new Point(getX(CENTER_X), CENTER_Y);
+        return new Point(tableUtils.getX(rs.team() == Team.BLEU, CENTER_X), CENTER_Y);
     }
 
     private Point pointNord() {

@@ -58,7 +58,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final String POS_SORTI = "Sorti";
 
     protected static final String GROUP_BRAS_AVANT_GAUCHE = "Bras avant gauche";
-    protected static final String GROUP_BRAS_AVANT_CENTRE = "Bras avant centre haut";
+    protected static final String GROUP_BRAS_AVANT_CENTRE = "Bras avant centre";
     protected static final String GROUP_BRAS_AVANT_DROIT = "Bras avant droit";
     protected static final String GROUP_BRAS_ARRIERE_GAUCHE = "Bras arrière gauche";
     protected static final String GROUP_BRAS_ARRIERE_CENTRE = "Bras arrière centre";
