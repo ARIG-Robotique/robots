@@ -40,11 +40,11 @@ public class RetourSiteDeCharge extends AbstractEurobotAction {
         final double distanceSud = rs.otherPosition().distance(pointSud());
 
         final double distanceMin = Math.min(distanceNord, Math.min(distanceSud, distanceMilieu));
-        if (distanceMin == distanceNord) {
+        /*if (distanceMin == distanceNord) {
             gotoSite = rs.team() == Team.BLEU ? SiteDeCharge.WIP_BLEU_NORD : SiteDeCharge.WIP_JAUNE_NORD;
             destSite = rs.team() == Team.BLEU ? SiteDeCharge.BLEU_NORD : SiteDeCharge.JAUNE_NORD;
             return pointNord();
-        } else if (distanceMin == distanceSud) {
+        } else */ if (distanceMin == distanceSud) {
             gotoSite = rs.team() == Team.BLEU ? SiteDeCharge.WIP_BLEU_SUD : SiteDeCharge.WIP_JAUNE_SUD;
             destSite = rs.team() == Team.BLEU ? SiteDeCharge.BLEU_SUD : SiteDeCharge.JAUNE_SUD;
             return pointSud();
@@ -57,7 +57,7 @@ public class RetourSiteDeCharge extends AbstractEurobotAction {
 
     @Override
     public int order() {
-        return 10; // C'est 20 point et puis c'est tout
+        return 10; // C'est 10 points et puis c'est tout
     }
 
     @Override
@@ -77,7 +77,7 @@ public class RetourSiteDeCharge extends AbstractEurobotAction {
             mv.setVitesse(config.vitesse(), config.vitesseOrientation());
             mv.pathTo(entry, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
             group.siteDeCharge(destSite);
-            log.info("Arrivée au site de fouille : {}", destSite);
+            log.info("Arrivée au site de charge : {}", destSite);
 
             boolean alt = false;
             mv.setVitesse(config.vitesse(), config.vitesseOrientation(50));
