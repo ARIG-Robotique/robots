@@ -91,7 +91,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
                     case BASIC:
                     default:
-                        mv.tourneDeg(180);
+                        //mv.tourneDeg(180);
                         break;
                 }
 
@@ -108,7 +108,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
         // Visu après la tirette
         //nerellIO.enableLedCapteurCouleur();
-        ThreadUtils.sleep(NerellConstantesConfig.WAIT_LED);
+        //ThreadUtils.sleep(NerellConstantesConfig.WAIT_LED);
         //nerellIO.disableLedCapteurCouleur();
     }
 
