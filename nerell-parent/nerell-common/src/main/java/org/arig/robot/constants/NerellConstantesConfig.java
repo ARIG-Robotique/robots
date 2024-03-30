@@ -77,7 +77,7 @@ public interface NerellConstantesConfig {
     long vitesseOrientationMax = 1000;
     long vitesseOrientationMin = 150;
 
-    long vitesseMax = 1000;
+    long vitesseMax = 500; // 1000
     long vitesseMin = 100;
 
 
