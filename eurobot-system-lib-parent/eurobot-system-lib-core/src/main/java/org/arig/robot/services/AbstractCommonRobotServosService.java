@@ -52,6 +52,8 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final String POS_FERME = "Fermé";
     protected static final String POS_OUVERT = "Ouvert";
     protected static final String POS_PRISE = "Prise";
+    protected static final String POS_PRISE_PLANTE = "Prise plante";
+    protected static final String POS_PRISE_POT = "Prise pot";
     protected static final String POS_BAS = "Bas";
     protected static final String POS_HAUT = "Haut";
     protected static final String POS_RENTRE = "Rentré";
@@ -93,32 +95,26 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
         setPosition(BRAS_AVANT_GAUCHE_POIGNET, POS_INIT, false);
         setPosition(BRAS_AVANT_GAUCHE_COUDE, POS_INIT, false);
         setPosition(BRAS_AVANT_GAUCHE_EPAULE, POS_INIT, false);
-        //setPosition(BRAS_AVANT_GAUCHE_PINCE, POS_INIT, false);
 
         setPosition(BRAS_AVANT_CENTRE_POIGNET, POS_INIT, false);
         setPosition(BRAS_AVANT_CENTRE_COUDE, POS_INIT, false);
         setPosition(BRAS_AVANT_CENTRE_EPAULE, POS_INIT, false);
-        //setPosition(BRAS_AVANT_CENTRE_PINCE, POS_INIT, false);
 
         setPosition(BRAS_AVANT_DROIT_POIGNET, POS_INIT, false);
         setPosition(BRAS_AVANT_DROIT_COUDE, POS_INIT, false);
         setPosition(BRAS_AVANT_DROIT_EPAULE, POS_INIT, false);
-        //setPosition(BRAS_AVANT_DROIT_PINCE, POS_INIT, false);
 
         setPosition(BRAS_ARRIERE_GAUCHE_POIGNET, POS_INIT, false);
         setPosition(BRAS_ARRIERE_GAUCHE_COUDE, POS_INIT, false);
         setPosition(BRAS_ARRIERE_GAUCHE_EPAULE, POS_INIT, false);
-        //setPosition(BRAS_ARRIERE_GAUCHE_PINCE, POS_INIT, false);
 
         setPosition(BRAS_ARRIERE_CENTRE_POIGNET, POS_INIT, false);
         setPosition(BRAS_ARRIERE_CENTRE_COUDE, POS_INIT, false);
         setPosition(BRAS_ARRIERE_CENTRE_EPAULE, POS_INIT, false);
-        //setPosition(BRAS_ARRIERE_CENTRE_PINCE, POS_INIT, false);
 
         setPosition(BRAS_ARRIERE_DROIT_POIGNET, POS_INIT, false);
         setPosition(BRAS_ARRIERE_DROIT_COUDE, POS_INIT, false);
         setPosition(BRAS_ARRIERE_DROIT_EPAULE, POS_INIT, false);
-        //setPosition(BRAS_ARRIERE_DROIT_PINCE, POS_INIT, false);
 
         setPosition(PORTE_POT, POS_BAS, false);
         setPosition(PORTE_POT_GLISSIERE, POS_RENTRE, false);

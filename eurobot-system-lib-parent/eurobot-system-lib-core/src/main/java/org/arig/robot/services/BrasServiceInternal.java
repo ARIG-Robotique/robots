@@ -431,8 +431,6 @@ public abstract class BrasServiceInternal {
      * Depuis n'importe quelle position, repasse en position de repos
      */
     public void safeHoming() {
-        PositionBras repos = PositionBras.repos(0);
-
         boolean brasAvantGaucheDisableCheck = brasAvantGauche.disableCheck();
         boolean brasAvantCentreDisableCheck = brasAvantCentre.disableCheck();
         boolean brasAvantDroitDisableCheck = brasAvantDroit.disableCheck();
@@ -447,12 +445,12 @@ public abstract class BrasServiceInternal {
         brasArriereCentre.disableCheck(true);
         brasArriereDroit.disableCheck(true);
 
-        brasAvantGauche.goTo(repos);
-        brasAvantCentre.goTo(repos);
-        brasAvantDroit.goTo(repos);
-        brasArriereGauche.goTo(repos);
-        brasArriereCentre.goTo(repos);
-        brasArriereDroit.goTo(repos);
+        brasAvantGauche.goTo(PositionBras.INIT);
+        brasAvantCentre.goTo(PositionBras.INIT);
+        brasAvantDroit.goTo(PositionBras.INIT);
+        brasArriereGauche.goTo(PositionBras.INIT);
+        brasArriereCentre.goTo(PositionBras.INIT);
+        brasArriereDroit.goTo(PositionBras.INIT);
 
         brasAvantGauche.disableCheck(brasAvantGaucheDisableCheck);
         brasAvantCentre.disableCheck(brasAvantCentreDisableCheck);

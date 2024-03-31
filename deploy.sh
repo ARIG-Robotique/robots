@@ -12,7 +12,7 @@ echo "Compilation ..."
 if [[ "$(uname)" == "Darwin" ]] ; then
   JAVA_HOME=$(/usr/libexec/java_home -v 17) ./gradlew assemble --offline
 else
-  JAVA_HOME=~/apps/jdk-11 ./gradlew assemble --offline
+  JAVA_HOME=~/sogelink/softwares/SDK/jdk/jdk-17.0.4.1 ./gradlew assemble --offline
 fi
 
 HOME_DIR=/home/pi
