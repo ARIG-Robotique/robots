@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class ConfigBras {
+    public final boolean back;
     // position de l'axe principal en mm
     public final int x;
     public final int y;

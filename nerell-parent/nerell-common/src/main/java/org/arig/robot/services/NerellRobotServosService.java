@@ -215,8 +215,8 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
                 .angular()
                 .center(550)
                 .mult(-1)
-                .angleMin(-10)
-                .angleMax(150)
+                .angleMin(-150)
+                .angleMax(10)
                 .build();
         group(GROUP_BRAS_ARRIERE_CENTRE_ID, GROUP_BRAS_ARRIERE_CENTRE)
                 .addServo(brasArriereCentreEpaule)

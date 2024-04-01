@@ -29,35 +29,41 @@ public abstract class BrasServiceInternal {
     protected final EurobotStatus rs;
 
     ConfigBras CONFIG_BRAS_AVANT_GAUCHE = new ConfigBras(
+            false,
             105, 261,
             73, 73, 110,
-            false
+            true
     );
     ConfigBras CONFIG_BRAS_AVANT_CENTRE = new ConfigBras(
+            false,
             105, 261,
             73, 73, 110,
-            false
+            true
     );
     ConfigBras CONFIG_BRAS_AVANT_DROIT = new ConfigBras(
+            false,
             105, 261,
             73, 73, 110,
-            false
+            true
     );
 
     ConfigBras CONFIG_BRAS_ARRIERE_GAUCHE = new ConfigBras(
+            true,
             105, 261,
             73, 73, 110,
-            false
+            true
     );
     ConfigBras CONFIG_BRAS_ARRIERE_CENTRE = new ConfigBras(
+            true,
             105, 261,
             73, 73, 110,
-            false
+            true
     );
     ConfigBras CONFIG_BRAS_ARRIERE_DROIT = new ConfigBras(
+            true,
             105, 261,
             73, 73, 110,
-            false
+            true
     );
 
     @AllArgsConstructor
