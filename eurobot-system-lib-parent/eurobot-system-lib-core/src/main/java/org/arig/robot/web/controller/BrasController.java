@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-
 @Slf4j
 @RestController
 @RequestMapping("/bras")
@@ -30,7 +29,7 @@ public class BrasController {
     private BrasService brasService;
 
     @GetMapping("/config")
-    public BrasServiceInternal.AllConfigBras getConfig() {
+    public Map<String, BrasServiceInternal.FullConfigBras> getConfig() {
         return brasService.getConfig();
     }
 

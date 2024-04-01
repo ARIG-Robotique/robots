@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import static org.arig.robot.services.AbstractCommonRobotServosService.*;
+
 /**
  * API de bas niveau pour les bras
  */
@@ -60,25 +61,10 @@ public abstract class BrasServiceInternal {
     );
 
     @AllArgsConstructor
-    public static class AllConfigBras {
-        public ConfigBras avantGauche;
-        public ConfigBras avantCentre;
-        public ConfigBras avantDroit;
-        public ConfigBras arriereGauche;
-        public ConfigBras arriereCentre;
-        public ConfigBras arriereDroit;
-        public Set<PositionBras> statesAvantGauche;
-        public Set<PositionBras> statesAvantCentre;
-        public Set<PositionBras> statesAvantDroit;
-        public Set<PositionBras> statesArriereGauche;
-        public Set<PositionBras> statesArriereCentre;
-        public Set<PositionBras> statesArriereDroit;
-        public Set<Pair<PositionBras, PositionBras>> transitionsAvantGauche;
-        public Set<Pair<PositionBras, PositionBras>> transitionsAvantCentre;
-        public Set<Pair<PositionBras, PositionBras>> transitionsAvantDroit;
-        public Set<Pair<PositionBras, PositionBras>> transitionsArriereGauche;
-        public Set<Pair<PositionBras, PositionBras>> transitionsArriereCentre;
-        public Set<Pair<PositionBras, PositionBras>> transitionsArriereDroit;
+    public static class FullConfigBras {
+        public ConfigBras config;
+        public Set<PositionBras> states;
+        public Set<Pair<PositionBras, PositionBras>> transitions;
     }
 
     private final BrasAvantGaucheStateMachine brasAvantGauche = new BrasAvantGaucheStateMachine(CONFIG_BRAS_AVANT_GAUCHE);
@@ -160,14 +146,15 @@ public abstract class BrasServiceInternal {
         this.positionBrasArriereDroit = new CurrentBras(brasArriereDroit.current(), calculerBrasArriereDroit(brasArriereDroit.currentState()), brasArriereDroit.currentState());
     }
 
-    public AllConfigBras getConfig() {
-        return new AllConfigBras(
-                CONFIG_BRAS_AVANT_GAUCHE, CONFIG_BRAS_AVANT_CENTRE, CONFIG_BRAS_AVANT_DROIT,
-                CONFIG_BRAS_ARRIERE_GAUCHE, CONFIG_BRAS_ARRIERE_CENTRE, CONFIG_BRAS_ARRIERE_DROIT,
-                brasAvantGauche.states(), brasAvantCentre.states(), brasAvantDroit.states(),
-                brasArriereGauche.states(), brasArriereCentre.states(), brasArriereDroit.states(),
-                brasAvantGauche.transisions(), brasAvantCentre.transisions(), brasAvantDroit.transisions(),
-                brasArriereGauche.transisions(), brasArriereCentre.transisions(), brasArriereDroit.transisions());
+    public Map<String, FullConfigBras> getConfig() {
+        return Map.of(
+                "avantGauche", new FullConfigBras(CONFIG_BRAS_AVANT_GAUCHE, brasAvantGauche.states(), brasAvantGauche.transisions()),
+                "avantCentre", new FullConfigBras(CONFIG_BRAS_AVANT_CENTRE, brasAvantCentre.states(), brasAvantCentre.transisions()),
+                "avantDroit", new FullConfigBras(CONFIG_BRAS_AVANT_DROIT, brasAvantDroit.states(), brasAvantDroit.transisions()),
+                "arriereGauche", new FullConfigBras(CONFIG_BRAS_ARRIERE_GAUCHE, brasArriereGauche.states(), brasArriereGauche.transisions()),
+                "arriereCentre", new FullConfigBras(CONFIG_BRAS_ARRIERE_CENTRE, brasArriereCentre.states(), brasArriereCentre.transisions()),
+                "arriereDroit", new FullConfigBras(CONFIG_BRAS_ARRIERE_DROIT, brasArriereCentre.states(), brasArriereCentre.transisions())
+        );
     }
 
     public Map<String, CurrentBras> getCurrent() {
