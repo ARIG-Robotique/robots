@@ -27,6 +27,7 @@ public class Servo {
     private int max = 0;
 
     // pour les servos commandés en angle
+    private boolean angular = false;
     private int center = 1500; // position du "0 degré"
     private double mult = 1; // direction de angles positifs / correction de dérive
     private int angleMin = -90;
@@ -39,6 +40,7 @@ public class Servo {
     private int currentPosition;
 
     public int angleToPosition(int angle) {
+        assert angular;
         return (int) Math.round(center + mult * angle * 10); // 0.1°/µsec
     }
 
@@ -54,6 +56,7 @@ public class Servo {
     }
 
     public ServoAngular angular() {
+        Servo.this.angular = true;
         return new ServoAngular();
     }
 
