@@ -11,32 +11,32 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public static final String BRAS_AVANT_GAUCHE_EPAULE = "Bras avant gauche épaule";
     public static final String BRAS_AVANT_GAUCHE_COUDE = "Bras avant gauche coude";
     public static final String BRAS_AVANT_GAUCHE_POIGNET = "Bras avant gauche poignet";
-    public static final String BRAS_AVANT_GAUCHE_PINCE = "Bras avant gauche pince";
+    public static final String BRAS_AVANT_GAUCHE_PINCE = "Pince avant gauche";
 
     public static final String BRAS_AVANT_CENTRE_EPAULE = "Bras avant centre épaule";
     public static final String BRAS_AVANT_CENTRE_COUDE = "Bras avant centre coude";
     public static final String BRAS_AVANT_CENTRE_POIGNET = "Bras avant centre poignet";
-    public static final String BRAS_AVANT_CENTRE_PINCE = "Bras avant centre pince";
+    public static final String BRAS_AVANT_CENTRE_PINCE = "Pince avant centre";
 
     public static final String BRAS_AVANT_DROIT_EPAULE = "Bras avant droit épaule";
     public static final String BRAS_AVANT_DROIT_COUDE = "Bras avant droit coude";
     public static final String BRAS_AVANT_DROIT_POIGNET = "Bras avant droit poignet";
-    public static final String BRAS_AVANT_DROIT_PINCE = "Bras avant droit pince";
+    public static final String BRAS_AVANT_DROIT_PINCE = "Pince avant droite";
 
     public static final String BRAS_ARRIERE_GAUCHE_EPAULE = "Bras arrière gauche épaule";
     public static final String BRAS_ARRIERE_GAUCHE_COUDE = "Bras arrière gauche coude";
     public static final String BRAS_ARRIERE_GAUCHE_POIGNET = "Bras arrière gauche poignet";
-    public static final String BRAS_ARRIERE_GAUCHE_PINCE = "Bras arrière gauche pince";
+    public static final String BRAS_ARRIERE_GAUCHE_PINCE = "Pince arrière gauche";
 
     public static final String BRAS_ARRIERE_CENTRE_EPAULE = "Bras arrière centre épaule";
     public static final String BRAS_ARRIERE_CENTRE_COUDE = "Bras arrière centre coude";
     public static final String BRAS_ARRIERE_CENTRE_POIGNET = "Bras arrière centre poignet";
-    public static final String BRAS_ARRIERE_CENTRE_PINCE = "Bras arrière centre pince";
+    public static final String BRAS_ARRIERE_CENTRE_PINCE = "Pince arrière centre";
 
     public static final String BRAS_ARRIERE_DROIT_EPAULE = "Bras arrière droit épaule";
     public static final String BRAS_ARRIERE_DROIT_COUDE = "Bras arrière droit coude";
     public static final String BRAS_ARRIERE_DROIT_POIGNET = "Bras arrière droit poignet";
-    public static final String BRAS_ARRIERE_DROIT_PINCE = "Bras arrière droit pince";
+    public static final String BRAS_ARRIERE_DROIT_PINCE = "Pince arrière droite";
 
     protected static final String BLOQUE_PLANTE_AVANT_GAUCHE = "Bloque plante avant gauche";
     protected static final String BLOQUE_PLANTE_AVANT_CENTRE = "Bloque plante avant centre";
@@ -65,8 +65,8 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final String GROUP_BRAS_ARRIERE_GAUCHE = "Bras arrière gauche";
     protected static final String GROUP_BRAS_ARRIERE_CENTRE = "Bras arrière centre";
     protected static final String GROUP_BRAS_ARRIERE_DROIT = "Bras arrière droit";
-    protected static final String GROUP_PINCE_AVANT = "Pince avant";
-    protected static final String GROUP_PINCE_ARRIERE = "Pince arrière";
+    protected static final String GROUP_PINCE_AVANT = "Pinces avant";
+    protected static final String GROUP_PINCE_ARRIERE = "Pinces arrière";
     protected static final String GROUP_PANNEAU_SOLAIRE = "Panneau solaire";
     protected static final String GROUP_BLOQUE_PLANTE_AVANT = "Bloque plantes avant";
     protected static final String GROUP_PORTE_POT = "Porte Pot magnetique";

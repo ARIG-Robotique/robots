@@ -175,35 +175,35 @@ public abstract class BrasServiceInternal {
     }
 
     public AnglesBras calculerBrasAvantGauche(PointBras pt) {
-        return calculerAngles(CONFIG_BRAS_AVANT_GAUCHE, pt.x, pt.y, pt.a, false, null);
+        return calculerAngles(CONFIG_BRAS_AVANT_GAUCHE, pt.x, pt.y, pt.a, pt.invertA1, false);
     }
 
     public AnglesBras calculerBrasAvantCentre(PointBras pt) {
-        return calculerAngles(CONFIG_BRAS_AVANT_CENTRE, pt.x, pt.y, pt.a, false, null);
+        return calculerAngles(CONFIG_BRAS_AVANT_CENTRE, pt.x, pt.y, pt.a, pt.invertA1, false);
     }
 
     public AnglesBras calculerBrasAvantDroit(PointBras pt) {
-        return calculerAngles(CONFIG_BRAS_AVANT_DROIT, pt.x, pt.y, pt.a, false, null);
+        return calculerAngles(CONFIG_BRAS_AVANT_DROIT, pt.x, pt.y, pt.a, pt.invertA1, false);
     }
 
     public AnglesBras calculerBrasArriereGauche(PointBras pt) {
-        return calculerAngles(CONFIG_BRAS_ARRIERE_GAUCHE, pt.x, pt.y, pt.a, false, null);
+        return calculerAngles(CONFIG_BRAS_ARRIERE_GAUCHE, pt.x, pt.y, pt.a, pt.invertA1, false);
     }
 
     public AnglesBras calculerBrasArriereCentre(PointBras pt) {
-        return calculerAngles(CONFIG_BRAS_ARRIERE_CENTRE, pt.x, pt.y, pt.a, false, null);
+        return calculerAngles(CONFIG_BRAS_ARRIERE_CENTRE, pt.x, pt.y, pt.a, pt.invertA1, false);
     }
 
     public AnglesBras calculerBrasArriereDroit(PointBras pt) {
-        return calculerAngles(CONFIG_BRAS_ARRIERE_DROIT, pt.x, pt.y, pt.a, false, null);
+        return calculerAngles(CONFIG_BRAS_ARRIERE_DROIT, pt.x, pt.y, pt.a, pt.invertA1, false);
     }
 
     /**
      * Change la position du bras en direct sans passer par la state machine
      */
     public boolean setBrasAvantGauche(PointBras pt, PositionBras state, int speed) {
-        log.debug("Bras bas x={} y={} a={}", pt.x, pt.y, pt.a);
-        AnglesBras angles = calculerAngles(CONFIG_BRAS_AVANT_GAUCHE, pt.x, pt.y, pt.a, true, null);
+        log.debug("Bras avant gauche x={} y={} a={} invertA1={}", pt.x, pt.y, pt.a, pt.invertA1);
+        AnglesBras angles = calculerAngles(CONFIG_BRAS_AVANT_GAUCHE, pt.x, pt.y, pt.a, pt.invertA1, true);
 
         if (angles == null || angles.isError()) {
             return false;
@@ -213,7 +213,7 @@ public abstract class BrasServiceInternal {
             brasAvantGauche.current(null);
         }
 
-        log.debug("Bras bas a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
+        log.debug("Bras avant gauche a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
         servos.brasAvantGauche(angles.a1, angles.a2, angles.a3, speed);
         positionBrasAvantGauche = new CurrentBras(state, angles, pt);
 
@@ -239,8 +239,8 @@ public abstract class BrasServiceInternal {
      * Change la position du bras en direct sans passer par la state machine
      */
     public boolean setBrasAvantCentre(PointBras pt, PositionBras state, int speed) {
-        log.debug("Bras bas x={} y={} a={}", pt.x, pt.y, pt.a);
-        AnglesBras angles = calculerAngles(CONFIG_BRAS_AVANT_CENTRE, pt.x, pt.y, pt.a, true, null);
+        log.debug("Bras avant centre x={} y={} a={} invertA1={}", pt.x, pt.y, pt.a, pt.invertA1);
+        AnglesBras angles = calculerAngles(CONFIG_BRAS_AVANT_CENTRE, pt.x, pt.y, pt.a, pt.invertA1, true);
 
         if (angles == null || angles.isError()) {
             return false;
@@ -250,7 +250,7 @@ public abstract class BrasServiceInternal {
             brasAvantCentre.current(null);
         }
 
-        log.debug("Bras bas a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
+        log.debug("Bras avant centre a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
         servos.brasAvantCentre(angles.a1, angles.a2, angles.a3, speed);
         positionBrasAvantCentre = new CurrentBras(state, angles, pt);
 
@@ -276,8 +276,8 @@ public abstract class BrasServiceInternal {
      * Change la position du bras en direct sans passer par la state machine
      */
     public boolean setBrasAvantDroit(PointBras pt, PositionBras state, int speed) {
-        log.debug("Bras bas x={} y={} a={}", pt.x, pt.y, pt.a);
-        AnglesBras angles = calculerAngles(CONFIG_BRAS_AVANT_DROIT, pt.x, pt.y, pt.a, true, null);
+        log.debug("Bras avant droit x={} y={} a={} invertA1={}", pt.x, pt.y, pt.a, pt.invertA1);
+        AnglesBras angles = calculerAngles(CONFIG_BRAS_AVANT_DROIT, pt.x, pt.y, pt.a, pt.invertA1, true);
 
         if (angles == null || angles.isError()) {
             return false;
@@ -287,7 +287,7 @@ public abstract class BrasServiceInternal {
             brasAvantDroit.current(null);
         }
 
-        log.debug("Bras bas a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
+        log.debug("Bras avant droit a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
         servos.brasAvantDroit(angles.a1, angles.a2, angles.a3, speed);
         positionBrasAvantDroit = new CurrentBras(state, angles, pt);
 
@@ -313,8 +313,8 @@ public abstract class BrasServiceInternal {
      * Change la position du bras en direct sans passer par la state machine
      */
     public boolean setBrasArriereGauche(PointBras pt, PositionBras state, Integer speed) {
-        log.debug("Bras haut x={} y={} a={}", pt.x, pt.y, pt.a);
-        AnglesBras angles = calculerAngles(CONFIG_BRAS_ARRIERE_GAUCHE, pt.x, pt.y, pt.a, true, null);
+        log.debug("Bras arriere gauche x={} y={} a={} invertA1={}", pt.x, pt.y, pt.a, pt.invertA1);
+        AnglesBras angles = calculerAngles(CONFIG_BRAS_ARRIERE_GAUCHE, pt.x, pt.y, pt.a, pt.invertA1, true);
 
         if (angles == null || angles.isError()) {
             return false;
@@ -324,7 +324,7 @@ public abstract class BrasServiceInternal {
             brasArriereGauche.current(null);
         }
 
-        log.debug("Bras haut a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
+        log.debug("Bras arriere gauche a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
         servos.brasArriereGauche(angles.a1, angles.a2, angles.a3, speed);
         positionBrasArriereGauche = new CurrentBras(state, angles, pt);
 
@@ -350,8 +350,8 @@ public abstract class BrasServiceInternal {
      * Change la position du bras en direct sans passer par la state machine
      */
     public boolean setBrasArriereCentre(PointBras pt, PositionBras state, Integer speed) {
-        log.debug("Bras haut x={} y={} a={}", pt.x, pt.y, pt.a);
-        AnglesBras angles = calculerAngles(CONFIG_BRAS_ARRIERE_CENTRE, pt.x, pt.y, pt.a, true, null);
+        log.debug("Bras arriere centre x={} y={} a={} invertA1={}", pt.x, pt.y, pt.a, pt.invertA1);
+        AnglesBras angles = calculerAngles(CONFIG_BRAS_ARRIERE_CENTRE, pt.x, pt.y, pt.a, pt.invertA1, true);
 
         if (angles == null || angles.isError()) {
             return false;
@@ -361,7 +361,7 @@ public abstract class BrasServiceInternal {
             brasArriereCentre.current(null);
         }
 
-        log.debug("Bras haut a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
+        log.debug("Bras arriere centre a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
         servos.brasArriereCentre(angles.a1, angles.a2, angles.a3, speed);
         positionBrasArriereCentre = new CurrentBras(state, angles, pt);
 
@@ -387,8 +387,8 @@ public abstract class BrasServiceInternal {
      * Change la position du bras en direct sans passer par la state machine
      */
     public boolean setBrasArriereDroit(PointBras pt, PositionBras state, Integer speed) {
-        log.debug("Bras haut x={} y={} a={}", pt.x, pt.y, pt.a);
-        AnglesBras angles = calculerAngles(CONFIG_BRAS_ARRIERE_DROIT, pt.x, pt.y, pt.a, true, null);
+        log.debug("Bras arriere droit x={} y={} a={} invertA1={}", pt.x, pt.y, pt.a, pt.invertA1);
+        AnglesBras angles = calculerAngles(CONFIG_BRAS_ARRIERE_DROIT, pt.x, pt.y, pt.a, pt.invertA1, true);
 
         if (angles == null || angles.isError()) {
             return false;
@@ -398,7 +398,7 @@ public abstract class BrasServiceInternal {
             brasArriereDroit.current(null);
         }
 
-        log.debug("Bras haut a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
+        log.debug("Bras arriere droit a1={} a2={} a3={}", angles.a1, angles.a2, angles.a3);
         servos.brasArriereDroit(angles.a1, angles.a2, angles.a3, speed);
         positionBrasArriereDroit = new CurrentBras(state, angles, pt);
 
@@ -501,11 +501,9 @@ public abstract class BrasServiceInternal {
         setBrasArriereDroit(pt, state, opt == OptionBras.SLOW ? 80 : 100);
     }
 
-    private AnglesBras calculerAngles(ConfigBras configBras, int x, int y, int a, boolean enableLog, Boolean preferA1Min) {
-        boolean first = preferA1Min == null;
-
-        if (preferA1Min == null) {
-            preferA1Min = configBras.preferA1Min;
+    private AnglesBras calculerAngles(ConfigBras configBras, int x, int y, int a, Boolean invertA1, boolean enableLog) {
+        if (invertA1 == null) {
+            invertA1 = configBras.preferA1Min;
         }
 
         double a3Absolute = Math.toRadians(a);
@@ -536,7 +534,7 @@ public abstract class BrasServiceInternal {
         double alpha2 = alpha6 - Math.PI;
 
         // symétrise alpha1 et alpha2
-        if (preferA1Min) {
+        if (invertA1) {
             alpha1 -= (alpha1 - alpha3) * 2;
             alpha2 *= -1;
         }
@@ -561,12 +559,12 @@ public abstract class BrasServiceInternal {
         result.a3Error = result.a3 < configBras.a3Min || result.a3 > configBras.a3Max;
 
         // si l'inversion entraine une erreur, on essaye sans inversion
-        if (first && result.isError()) {
-            AnglesBras newResult = calculerAngles(configBras, x, y, a, false, !preferA1Min);
-            if (newResult != null && !newResult.isError()) {
-                return newResult;
-            }
-        }
+//        if (first && result.isError()) {
+//            AnglesBras newResult = calculerAngles(configBras, x, y, a, false, !preferA1Min);
+//            if (newResult != null && !newResult.isError()) {
+//                return newResult;
+//            }
+//        }
 
         if (enableLog) {
             if (result.a1Error) {

@@ -11,8 +11,8 @@ public class BrasArriereCentreStateMachine extends AbstractBrasStateMachine {
 
         disableCheck(true);
 
-        state(PositionBras.INIT, new PointBras(110, 60, -90)); // dois matcher la position "Init" du service servos
-        state(PositionBras.HORIZONTAL, new PointBras(configBras.x + configBras.r1 + configBras.r2 + configBras.r3, configBras.y, 0));
+        state(PositionBras.INIT, new PointBras(110, 60, -90, true)); // dois matcher la position "Init" du service servos
+        state(PositionBras.HORIZONTAL, new PointBras(configBras.x + configBras.r1 + configBras.r2 + configBras.r3, configBras.y, 0, true));
     }
 
 }

@@ -13,8 +13,9 @@ public class CurrentBras implements Serializable {
     public final int x;
     public final int y;
     public final int a;
+    public final boolean invertA1;
 
     public CurrentBras(PositionBras state, AnglesBras angles, PointBras point) {
-        this(state, angles.a1, angles.a2, angles.a3, point.x, point.y, point.a);
+        this(state, angles.a1, angles.a2, angles.a3, point.x, point.y, point.a, point.invertA1);
     }
 }

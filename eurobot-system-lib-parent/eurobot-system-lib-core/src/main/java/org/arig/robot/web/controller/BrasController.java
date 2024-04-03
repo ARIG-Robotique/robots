@@ -42,21 +42,22 @@ public class BrasController {
     public boolean setBras(@PathVariable("bras") final String bras,
                            @RequestParam("x") final int x,
                            @RequestParam("y") final int y,
-                           @RequestParam("a") final int a) {
+                           @RequestParam("a") final int a,
+                           @RequestParam("invertA1") final Boolean invertA1) {
         assert bras != null;
         switch (bras) {
             case "avantGauche":
-                return brasService.setBrasAvantGauche(new PointBras(x, y, a), null, 40);
+                return brasService.setBrasAvantGauche(new PointBras(x, y, a, invertA1), null, 40);
             case "avantCentre":
-                return brasService.setBrasAvantCentre(new PointBras(x, y, a), null, 40);
+                return brasService.setBrasAvantCentre(new PointBras(x, y, a, invertA1), null, 40);
             case "avantDroit":
-                return brasService.setBrasAvantDroit(new PointBras(x, y, a), null, 40);
+                return brasService.setBrasAvantDroit(new PointBras(x, y, a, invertA1), null, 40);
             case "arriereGauche":
-                return brasService.setBrasArriereGauche(new PointBras(x, y, a), null, 40);
+                return brasService.setBrasArriereGauche(new PointBras(x, y, a, invertA1), null, 40);
             case "arriereCentre":
-                return brasService.setBrasArriereCentre(new PointBras(x, y, a), null, 40);
+                return brasService.setBrasArriereCentre(new PointBras(x, y, a, invertA1), null, 40);
             case "arriereDroit":
-                return brasService.setBrasArriereDroit(new PointBras(x, y, a), null, 40);
+                return brasService.setBrasArriereDroit(new PointBras(x, y, a, invertA1), null, 40);
             default:
                 return false;
         }
@@ -92,21 +93,22 @@ public class BrasController {
     public AnglesBras calculerAngles(@PathVariable("bras") final String bras,
                                      @RequestParam("x") final int x,
                                      @RequestParam("y") final int y,
-                                     @RequestParam("a") final int a) {
+                                     @RequestParam("a") final int a,
+                                     @RequestParam("invertA1") final Boolean invertA1) {
         assert bras != null;
         switch (bras) {
             case "avantGauche":
-                return brasService.calculerBrasAvantGauche(new PointBras(x, y, a));
+                return brasService.calculerBrasAvantGauche(new PointBras(x, y, a, invertA1));
             case "avantCentre":
-                return brasService.calculerBrasAvantCentre(new PointBras(x, y, a));
+                return brasService.calculerBrasAvantCentre(new PointBras(x, y, a, invertA1));
             case "avantDroit":
-                return brasService.calculerBrasAvantDroit(new PointBras(x, y, a));
+                return brasService.calculerBrasAvantDroit(new PointBras(x, y, a, invertA1));
             case "arriereGauche":
-                return brasService.calculerBrasArriereGauche(new PointBras(x, y, a));
+                return brasService.calculerBrasArriereGauche(new PointBras(x, y, a, invertA1));
             case "arriereCentre":
-                return brasService.calculerBrasArriereCentre(new PointBras(x, y, a));
+                return brasService.calculerBrasArriereCentre(new PointBras(x, y, a, invertA1));
             case "arriereDroit":
-                return brasService.calculerBrasArriereDroit(new PointBras(x, y, a));
+                return brasService.calculerBrasArriereDroit(new PointBras(x, y, a, invertA1));
             default:
                 return null;
         }

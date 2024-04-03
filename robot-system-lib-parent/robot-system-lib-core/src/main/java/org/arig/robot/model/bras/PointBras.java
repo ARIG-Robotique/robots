@@ -9,4 +9,5 @@ public class PointBras implements Serializable {
     public int x;
     public int y;
     public int a;
+    public Boolean invertA1;
 }
