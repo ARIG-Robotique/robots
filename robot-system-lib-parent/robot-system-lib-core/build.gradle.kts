@@ -14,4 +14,7 @@ dependencies {
     api(libs.junixsocket.common)
     api(libs.junixsocket.native.common)
     api(libs.anyangle.path.finding)
+    api(libs.javacan.core)
+    api(libs.javacan.epoll)
+
 }

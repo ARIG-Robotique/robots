@@ -3,18 +3,21 @@ spring-boot = "3.1.0"
 graalvm-buildtools = "0.9.20"
 
 junixsocket = "2.6.2"
+javacan = "3.3.2"
 
 [libraries]
-spring-shell-starter = { module = "org.springframework.shell:spring-shell-starter", version = "3.0.3" }
-apache-commons-io = { module = "commons-io:commons-io", version = "2.12.0" }
-apache-commons-collections = { module = "org.apache.commons:commons-collections4", version = "4.4" }
+anyangle-path-finding = { module = "com.github.Ohohcakester:Any-Angle-Pathfinding", version = "master-7b196baf6b-1" }
+apache-commons-collections = { module = "org.apache.commons:commons-collections4", version = "4.5.0-M1" }
+apache-commons-io = { module = "commons-io:commons-io", version = "2.16.0" }
 apache-commons-math = { module = "org.apache.commons:commons-math4-legacy", version = "4.0-beta1" }
-google-guava = { module = "com.google.guava:guava", version = "31.0.1-jre" }
-pi4j-core = { module = "com.pi4j:pi4j-core", version = "1.4" }
+google-guava = { module = "com.google.guava:guava", version = "33.1.0-jre" }
+javacan-core = { module = "tel.schich:javacan-core", version.ref = "javacan" }
+javacan-epoll = { module = "tel.schich:javacan-epoll", version.ref = "javacan" }
 junixsocket-common = { module = "com.kohlschutter.junixsocket:junixsocket-common", version.ref = "junixsocket" }
 junixsocket-native-common = { module = "com.kohlschutter.junixsocket:junixsocket-native-common", version.ref = "junixsocket" }
-anyangle-path-finding = { module = "com.github.Ohohcakester:Any-Angle-Pathfinding", version = "master-7b196baf6b-1" }
+pi4j-core = { module = "com.pi4j:pi4j-core", version = "1.4" }
 pure-java-hid-api = { module = "io.github.vveird:purejavahidapi", version = "0.0.3" }
+spring-shell-starter = { module = "org.springframework.shell:spring-shell-starter", version = "3.0.3" }
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }

@@ -7,4 +7,9 @@ plugins {
 dependencies {
     api(project(":robot-system-lib-parent:robot-system-lib-core"))
     api(libs.pi4j.core)
+    api(libs.javacan.core) {
+        artifact {
+            classifier = "aarch64"
+        }
+    }
 }
