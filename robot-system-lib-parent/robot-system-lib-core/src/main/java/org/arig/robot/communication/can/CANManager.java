@@ -1,56 +1,72 @@
 package org.arig.robot.communication.can;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.exception.CANException;
+import org.springframework.util.Assert;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
- * @author gdepuille on 18/12/13.
+ * The Class AbstractCANManager.
+ *
+ * @author gdepuille
  */
-public interface CANManager {
+@Slf4j
+@Accessors(fluent = true)
+@RequiredArgsConstructor
+public class CANManager {
+
+    @Getter
+    private boolean scanStatus = false;
+
+    private final ArrayList<CANDevice> deviceMap;
 
     /**
-     * Etat du manager après scan.
+     * Nb device registered.
      *
-     * @return
+     * @return the int
      */
-    boolean scanStatus();
+    public int nbDeviceRegistered() {
+        return deviceMap.size();
+    }
 
     /**
-     * Execute un scan CAN afin de detecter que tous les périphérique enregistré sont bien présent.
-     *
-     * @throws CANException
-     */
-    void executeScan() throws CANException;
-
-    /**
-     * Reset.
+     * Execute scan.
      *
      * @throws CANException the i2 c exception
      */
-    void reset() throws CANException;
+    public final void executeScan() throws CANException {
+        Assert.notEmpty(deviceMap, "Le mapping des cartes CAN est obligatoire");
 
-    /**
-     * Send data.
-     *
-     * @param deviceName the address
-     * @param data       the data
-     */
-    void sendData(final String deviceName, final byte... data) throws CANException;
+        final List<String> deviceNotFound = new ArrayList<>();
+        final Consumer<CANDevice> processScan = d -> {
+            try {
+                d.scan();
+                log.info("Scan du device {} [OK]", d.signature());
+            } catch (IOException e) {
+                log.warn("Scan du device {} [KO]", d.deviceName());
+                deviceNotFound.add(d.deviceName());
+            }
+        };
 
-    /**
-     * Gets the data.
-     *
-     * @param deviceName the address
-     *
-     * @return the data
-     */
-    byte getData(final String deviceName) throws CANException;
+        // Contrôle que les devices enregistré sont bien présent.
+        log.info("Verification des devices enregistrés");
+        deviceMap.forEach(processScan);
 
-    /**
-     * Gets the data.
-     *
-     * @param deviceName the address
-     *
-     * @return the data
-     */
-    byte[] getData(final String deviceName, final int size) throws CANException;
+        if (!deviceNotFound.isEmpty()) {
+            scanStatus = false;
+            String errorMessage = "Tout les devices enregistrés ne sont pas disponible : " + StringUtils.join(deviceNotFound, ", ");
+            log.error(errorMessage);
+            throw new CANException(errorMessage);
+        }
+
+        scanStatus = true;
+    }
 }
