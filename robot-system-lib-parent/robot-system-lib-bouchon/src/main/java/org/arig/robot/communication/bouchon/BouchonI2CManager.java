@@ -1,8 +1,8 @@
 package org.arig.robot.communication.bouchon;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.AbstractI2CManager;
-import org.arig.robot.communication.I2CManagerDevice;
+import org.arig.robot.communication.i2c.AbstractI2CManager;
+import org.arig.robot.communication.i2c.I2CManagerDevice;
 import org.arig.robot.model.bouchon.BouchonI2CDevice;
 
 /**
@@ -24,10 +24,6 @@ public class BouchonI2CManager extends AbstractI2CManager<BouchonI2CDevice> {
 
     @Override
     public byte[] getData(String deviceName, int size) {
-        byte[] result = new byte[size];
-        for (int i = 0 ; i < size ; i++) {
-            result[i] = 0;
-        }
-        return result;
+      return new byte[size];
     }
 }

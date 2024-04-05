@@ -2,7 +2,10 @@ package org.arig.robot.communication;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.I2CManagerDevice.I2CManagerDeviceBuilder;
+import org.arig.robot.communication.i2c.AbstractI2CManager;
+import org.arig.robot.communication.i2c.I2CManagerDevice;
+import org.arig.robot.communication.i2c.I2CManagerDevice.I2CManagerDeviceBuilder;
+import org.arig.robot.communication.i2c.I2CMultiplexerDevice;
 import org.arig.robot.exception.I2CException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -65,7 +68,7 @@ public class AbstractI2CManagerTest {
     @Test
     public void testAlreadyRegisteredBoard() {
         Assertions.assertThrows(IllegalStateException.class,
-                () -> impl.registerDevice(impl.getDeviceMap().values().iterator().next())
+                () -> impl.registerDevice(impl.deviceMap().values().iterator().next())
         );
     }
 
@@ -132,7 +135,7 @@ public class AbstractI2CManagerTest {
     @Test
     public void textExecuteScan() throws I2CException {
         impl.executeScan();
-        Assertions.assertTrue(impl.status());
+        Assertions.assertTrue(impl.scanStatus());
     }
 
     @Test

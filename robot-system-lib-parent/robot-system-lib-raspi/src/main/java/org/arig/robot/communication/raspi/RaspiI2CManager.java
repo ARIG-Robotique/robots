@@ -2,8 +2,8 @@ package org.arig.robot.communication.raspi;
 
 import com.pi4j.io.i2c.I2CDevice;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.AbstractI2CManager;
-import org.arig.robot.communication.I2CManagerDevice;
+import org.arig.robot.communication.i2c.AbstractI2CManager;
+import org.arig.robot.communication.i2c.I2CManagerDevice;
 import org.arig.robot.exception.I2CException;
 
 import java.io.IOException;

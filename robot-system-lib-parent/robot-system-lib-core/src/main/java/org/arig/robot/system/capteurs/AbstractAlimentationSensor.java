@@ -1,7 +1,7 @@
 package org.arig.robot.system.capteurs;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.I2CManager;
+import org.arig.robot.communication.i2c.I2CManager;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.capteurs.AlimentationSensorValue;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package org.arig.robot.communication;
+package org.arig.robot.communication.i2c;
 
 import org.arig.robot.exception.I2CException;
 
@@ -12,7 +12,7 @@ public interface I2CManager {
      *
      * @return
      */
-    boolean status();
+    boolean scanStatus();
 
     /**
      * Execute un scan I2C afin de detecter que tous les périphérique enregistré sont bien présent.

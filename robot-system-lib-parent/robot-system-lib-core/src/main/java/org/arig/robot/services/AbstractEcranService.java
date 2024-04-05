@@ -5,7 +5,7 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.arig.robot.communication.I2CManager;
+import org.arig.robot.communication.i2c.I2CManager;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.ecran.AbstractEcranConfig;
 import org.arig.robot.model.ecran.AbstractEcranState;
@@ -98,7 +98,7 @@ public abstract class AbstractEcranService<CONFIG extends AbstractEcranConfig, S
     }
 
     public void updateStateInfo(STATE stateInfos) {
-        stateInfos.setI2c(i2CManager.status());
+        stateInfos.setI2c(i2CManager.scanStatus());
         stateInfos.setLidar(lidarService.isConnected());
         stateInfos.setAu(ioService.auOk());
         stateInfos.setAlimMoteurs(energyService.checkMoteurs(false));

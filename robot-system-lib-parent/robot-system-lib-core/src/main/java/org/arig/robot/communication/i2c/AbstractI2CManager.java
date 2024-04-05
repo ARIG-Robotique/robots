@@ -1,7 +1,8 @@
-package org.arig.robot.communication;
+package org.arig.robot.communication.i2c;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.exception.I2CException;
@@ -20,20 +21,17 @@ import java.util.function.Consumer;
  * @author gdepuille
  */
 @Slf4j
+@Accessors(fluent = true)
 public abstract class AbstractI2CManager<D> implements I2CManager {
 
-    private boolean status = false;
+    @Getter
+    private boolean scanStatus = false;
 
     @Getter(value = AccessLevel.PROTECTED)
     private final Map<String, I2CManagerDevice<D>> deviceMap = new TreeMap<>();
 
     @Getter(value = AccessLevel.PROTECTED)
     private final Map<String, I2CMultiplexerDevice> multiplexerDeviceMap = new TreeMap<>();
-
-    @Override
-    public boolean status() {
-        return status;
-    }
 
     /**
      * Nb device registered.
@@ -58,7 +56,7 @@ public abstract class AbstractI2CManager<D> implements I2CManager {
      * @throws I2CException the i2 c exception
      */
     public final void executeScan() throws I2CException {
-        Assert.notEmpty(deviceMap, "Le mapping des cartes est obligatoire");
+        Assert.notEmpty(deviceMap, "Le mapping des cartes I2C est obligatoire");
 
         final List<String> deviceNotFound = new ArrayList<>();
         final Consumer<I2CManagerDevice<D>> processScan = d -> {
@@ -74,29 +72,29 @@ public abstract class AbstractI2CManager<D> implements I2CManager {
 
         // Contrôle que les devices enregistré sont bien présent.
         log.info("Verification des devices enregistrés non multiplexé");
-        getDeviceMap().values().stream()
+        deviceMap().values().stream()
                 .filter(i2CDeviceI2CManagerDevice -> !i2CDeviceI2CManagerDevice.isMultiplexed())
                 .toList()
                 .forEach(processScan);
 
         log.info("Verification des devices enregistrés multiplexé");
-        getDeviceMap().values().stream()
+        deviceMap().values().stream()
                 .filter(I2CManagerDevice::isMultiplexed)
                 .toList()
                 .forEach(processScan);
 
         log.info("Désactivation de tous les multiplexeurs");
-        getMultiplexerDeviceMap().forEach((k, v) -> v.disable());
+        multiplexerDeviceMap().forEach((k, v) -> v.disable());
 
 
         if (!deviceNotFound.isEmpty()) {
-            status = false;
+            scanStatus = false;
             String errorMessage = "Tout les devices enregistrés ne sont pas disponible : " + StringUtils.join(deviceNotFound, ", ");
             log.error(errorMessage);
             throw new I2CException(errorMessage);
         }
 
-        status = true;
+        scanStatus = true;
     }
 
     /**
@@ -109,7 +107,7 @@ public abstract class AbstractI2CManager<D> implements I2CManager {
         log.info("Reset des cartes enregistrées");
         deviceMap.clear();
         multiplexerDeviceMap.clear();
-        status = false;
+        scanStatus = false;
     }
 
     /**
@@ -169,7 +167,7 @@ public abstract class AbstractI2CManager<D> implements I2CManager {
 
     protected void selectMuxIfNecessary(I2CManagerDevice<D> device) {
         if (device.isMultiplexed()) {
-            final I2CMultiplexerDevice mux = getMultiplexerDeviceMap().get(device.multiplexerDeviceName());
+            final I2CMultiplexerDevice mux = multiplexerDeviceMap().get(device.multiplexerDeviceName());
             mux.selectChannel(device.multiplexerChannel());
         }
     }

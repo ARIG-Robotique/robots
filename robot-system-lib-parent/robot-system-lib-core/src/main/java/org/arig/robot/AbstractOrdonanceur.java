@@ -3,7 +3,7 @@ package org.arig.robot;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.arig.robot.communication.I2CManager;
+import org.arig.robot.communication.i2c.I2CManager;
 import org.arig.robot.constants.ConstantesConfig;
 import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.exception.I2CException;

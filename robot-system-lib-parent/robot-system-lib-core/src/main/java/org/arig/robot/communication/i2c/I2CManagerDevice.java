@@ -1,4 +1,4 @@
-package org.arig.robot.communication;
+package org.arig.robot.communication.i2c;
 
 import lombok.Builder;
 import lombok.Data;

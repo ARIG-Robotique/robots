@@ -1,7 +1,7 @@
 package org.arig.robot.model.bouchon;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.I2CMultiplexerDevice;
+import org.arig.robot.communication.i2c.I2CMultiplexerDevice;
 
 @Slf4j
 public class BouchonI2CMultiplexer implements I2CMultiplexerDevice {

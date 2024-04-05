@@ -1,4 +1,4 @@
-package org.arig.robot.communication;
+package org.arig.robot.communication.rs232;
 
 /**
  * The class AbstractRs232Manager.

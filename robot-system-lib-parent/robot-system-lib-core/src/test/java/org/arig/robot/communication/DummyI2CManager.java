@@ -1,6 +1,8 @@
 package org.arig.robot.communication;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.communication.i2c.AbstractI2CManager;
+import org.arig.robot.communication.i2c.I2CManagerDevice;
 
 /**
  * @author gdepuille on 15/03/15.
@@ -16,7 +18,7 @@ public class DummyI2CManager extends AbstractI2CManager<Byte> {
 
     @Override
     public byte getData(String deviceName) {
-        return (byte) Math.random();
+        return 0;
     }
 
     @Override

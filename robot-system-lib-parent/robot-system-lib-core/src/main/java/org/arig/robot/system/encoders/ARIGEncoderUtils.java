@@ -3,7 +3,7 @@ package org.arig.robot.system.encoders;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.I2CManager;
+import org.arig.robot.communication.i2c.I2CManager;
 import org.arig.robot.exception.I2CException;
 
 @Slf4j
