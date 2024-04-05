@@ -1,6 +1,7 @@
 package org.arig.robot.system.encoders;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.MonitoringWrapper;
@@ -15,6 +16,7 @@ public abstract class AbstractEncoder {
     @Getter
     private double value = 0;
 
+    @Setter
     private double coef = 1.0;
 
     private final String name;
@@ -26,10 +28,6 @@ public abstract class AbstractEncoder {
     public void lectureValeur() {
         value = lecture() * coef;
         sendMonitoring();
-    }
-
-    public void setCoef(final double coef) {
-        this.coef = coef;
     }
 
     public abstract void reset();

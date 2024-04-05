@@ -193,6 +193,16 @@ public class PamiIOServiceRobot implements PamiIOService, InitializingBean, Disp
     }
 
     @Override
+    public boolean calagePriseProduitArriere() {
+        return false;
+    }
+
+    @Override
+    public boolean calagePriseProduitArriere(int mandatorySensors) {
+        return false;
+    }
+
+    @Override
     public boolean calagePrisePotArriere() {
         return false;
     }

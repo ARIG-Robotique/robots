@@ -2,7 +2,7 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.servos.Servo;
-import org.arig.robot.system.servos.SD21Servos;
+import org.arig.robot.system.servos.i2c.SD21Servos;
 
 import static org.arig.robot.services.BrasInstance.*;
 

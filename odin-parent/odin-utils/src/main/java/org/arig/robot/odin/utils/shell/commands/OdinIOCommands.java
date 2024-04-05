@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.services.OdinIOServiceRobot;
 import org.arig.robot.services.OdinRobotServosService;
-import org.arig.robot.system.capteurs.TCS34725ColorSensor;
+import org.arig.robot.system.capteurs.i2c.TCS34725ColorSensor;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;

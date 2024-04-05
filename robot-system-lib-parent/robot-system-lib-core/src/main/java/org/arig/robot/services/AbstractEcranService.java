@@ -13,8 +13,8 @@ import org.arig.robot.model.ecran.EcranMatchInfo;
 import org.arig.robot.model.ecran.EcranParams;
 import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.strategy.StrategyManager;
-import org.arig.robot.system.capteurs.IEcran;
-import org.arig.robot.system.capteurs.IVisionBalise;
+import org.arig.robot.system.capteurs.socket.IEcran;
+import org.arig.robot.system.capteurs.socket.IVisionBalise;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
 

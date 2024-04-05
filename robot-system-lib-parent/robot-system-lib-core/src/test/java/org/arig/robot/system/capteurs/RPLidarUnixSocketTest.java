@@ -1,6 +1,7 @@
 package org.arig.robot.system.capteurs;
 
 import lombok.SneakyThrows;
+import org.arig.robot.system.capteurs.socket.RPLidarA2TelemeterOverSocket;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 

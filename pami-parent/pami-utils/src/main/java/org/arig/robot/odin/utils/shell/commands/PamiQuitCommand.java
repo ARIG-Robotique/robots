@@ -2,7 +2,7 @@ package org.arig.robot.odin.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import org.arig.robot.services.PamiIOService;
-import org.arig.robot.system.capteurs.ILidarTelemeter;
+import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.arig.robot.system.vacuum.ARIGVacuumController;
 import org.springframework.shell.ExitRequest;
 import org.springframework.shell.standard.ShellComponent;

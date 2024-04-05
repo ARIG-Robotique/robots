@@ -4,6 +4,7 @@ import org.arig.robot.communication.socket.balise.EtalonnageResponse;
 import org.arig.robot.communication.socket.balise.PhotoResponse;
 import org.arig.robot.communication.socket.balise.enums.BaliseAction;
 import org.arig.robot.communication.socket.enums.StatusResponse;
+import org.arig.robot.system.capteurs.socket.IVisionBalise;
 
 import java.io.Serializable;
 

@@ -7,6 +7,7 @@ import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.Scan;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.model.lidar.enums.HealthState;
+import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 
 import java.util.ArrayList;
 import java.util.List;

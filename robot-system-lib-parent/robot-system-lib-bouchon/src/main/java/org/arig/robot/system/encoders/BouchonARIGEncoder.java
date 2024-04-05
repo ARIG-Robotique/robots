@@ -1,6 +1,7 @@
 package org.arig.robot.system.encoders;
 
 import org.arig.robot.model.bouchon.BouchonEncoderValue;
+import org.arig.robot.system.encoders.i2c.ARIGI2CEncoder;
 import org.arig.robot.system.motors.AbstractMotor;
 import org.springframework.beans.factory.annotation.Autowired;
 

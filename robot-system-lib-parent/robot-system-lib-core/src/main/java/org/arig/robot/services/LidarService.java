@@ -11,7 +11,7 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotConfig;
 import org.arig.robot.model.Shape;
 import org.arig.robot.model.lidar.ScanInfos;
-import org.arig.robot.system.capteurs.ILidarTelemeter;
+import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.arig.robot.system.pathfinding.PathFinder;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.InitializingBean;

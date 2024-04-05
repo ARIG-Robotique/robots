@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.i2c.I2CManager;
 import org.arig.robot.communication.i2c.I2CManagerDevice;
 import org.arig.robot.communication.raspi.RaspiI2CManager;
-import org.arig.robot.system.motors.PropulsionsMD22Motors;
+import org.arig.robot.system.motors.i2c.PropulsionsMD22Motors;
 import org.arig.robot.tinker.constants.TinkerConstantesI2C;
 import org.arig.robot.tinker.constants.TinkerConstantesServos;
 import org.springframework.context.annotation.Bean;

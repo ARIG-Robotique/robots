@@ -7,6 +7,7 @@ import org.arig.robot.communication.socket.AbstractResponseWithData;
 import org.arig.robot.communication.socket.ecran.enums.EcranAction;
 import org.arig.robot.model.ecran.EcranConfig;
 import org.arig.robot.model.ecran.EcranState;
+import org.arig.robot.system.capteurs.socket.AbstractEcranOverSocket;
 
 import java.io.File;
 

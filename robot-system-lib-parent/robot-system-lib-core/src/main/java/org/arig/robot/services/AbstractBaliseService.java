@@ -3,7 +3,7 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.socket.balise.EtalonnageResponse;
 import org.arig.robot.communication.socket.balise.PhotoResponse;
-import org.arig.robot.system.capteurs.IVisionBalise;
+import org.arig.robot.system.capteurs.socket.IVisionBalise;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;

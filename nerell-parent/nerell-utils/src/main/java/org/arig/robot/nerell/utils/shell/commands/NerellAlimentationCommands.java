@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.capteurs.AlimentationSensorValue;
 import org.arig.robot.services.NerellIOService;
 import org.arig.robot.services.NerellRobotServosService;
-import org.arig.robot.system.capteurs.IAlimentationSensor;
+import org.arig.robot.system.capteurs.i2c.IAlimentationSensor;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;

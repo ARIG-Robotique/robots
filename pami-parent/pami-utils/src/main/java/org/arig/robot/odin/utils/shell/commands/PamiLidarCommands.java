@@ -7,7 +7,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.lidar.Scan;
 import org.arig.robot.model.lidar.ScanInfos;
-import org.arig.robot.system.capteurs.ILidarTelemeter;
+import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;

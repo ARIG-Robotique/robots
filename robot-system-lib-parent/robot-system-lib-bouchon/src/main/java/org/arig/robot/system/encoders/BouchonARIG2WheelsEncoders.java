@@ -2,6 +2,7 @@ package org.arig.robot.system.encoders;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.bouchon.BouchonEncoderValues;
+import org.arig.robot.system.encoders.i2c.ARIGI2C2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.springframework.beans.factory.annotation.Autowired;
 

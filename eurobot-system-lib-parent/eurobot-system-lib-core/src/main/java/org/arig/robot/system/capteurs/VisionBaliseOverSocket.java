@@ -3,6 +3,7 @@ package org.arig.robot.system.capteurs;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.socket.balise.StatutResponse;
 import org.arig.robot.model.balise.StatutBalise;
+import org.arig.robot.system.capteurs.socket.AbstractVisionBaliseOverSocket;
 
 import java.io.File;
 

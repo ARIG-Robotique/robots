@@ -12,6 +12,7 @@ import org.arig.robot.model.ecran.AbstractEcranConfig;
 import org.arig.robot.model.ecran.AbstractEcranState;
 import org.arig.robot.model.ecran.EcranMatchInfo;
 import org.arig.robot.model.ecran.EcranParams;
+import org.arig.robot.system.capteurs.socket.AbstractEcranOverSocket;
 import org.arig.robot.utils.SocketUtils;
 import org.arig.robot.utils.ThreadUtils;
 import org.junit.jupiter.api.AfterAll;

@@ -1,6 +1,7 @@
 package org.arig.robot.system.capteurs;
 
 import org.arig.robot.model.capteurs.AlimentationSensorValue;
+import org.arig.robot.system.capteurs.i2c.AbstractAlimentationSensor;
 
 public class ARIG2ChannelsAlimentationSensorBouchon extends AbstractAlimentationSensor {
 
