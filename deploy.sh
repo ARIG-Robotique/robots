@@ -15,34 +15,42 @@ else
   JAVA_HOME=~/sogelink/softwares/SDK/jdk/jdk-17.0.4.1 ./gradlew assemble --offline
 fi
 
-HOME_DIR=/home/pi
-DESKTOP_DIR=${HOME_DIR}/Desktop
-
+echo "Déploiement ..."
 for ROBOT_NAME in "${@}" ; do
+  # If ROBOT_NAME contains 'pami' then we are deploying on a PAMI robot
+  if [[ ${ROBOT_NAME} == *"pami"* ]] ; then
+    HOME_DIR=/home/arig
+    PROJECT_NAME=pami
+  else
+    HOME_DIR=/home/pi
+    PROJECT_NAME=${ROBOT_NAME}
+  fi
   INSTALL_DIR=${HOME_DIR}/${ROBOT_NAME}
+  DESKTOP_DIR=${HOME_DIR}/Desktop
 
   echo "Déploiement de ${ROBOT_NAME} ..."
   echo "Cleaning ..."
+  ssh ${ROBOT_NAME} mkdir -p ${INSTALL_DIR}
   ssh ${ROBOT_NAME} rm -vf ${INSTALL_DIR}/*.sh
 
-  if [ -d "./${ROBOT_NAME}-parent" ] ; then
+  if [ -d "./${PROJECT_NAME}-parent" ] ; then
 
-    if [ -d "./${ROBOT_NAME}-parent/${ROBOT_NAME}-robot" ] ; then
+    if [ -d "./${PROJECT_NAME}-parent/${PROJECT_NAME}-robot" ] ; then
       echo "Déploiement Applicatif ..."
-      scp ./${ROBOT_NAME}-parent/${ROBOT_NAME}-robot/build/libs/${ROBOT_NAME}-robot-BUILD-SNAPSHOT-exec.jar ${ROBOT_NAME}:${INSTALL_DIR}/${ROBOT_NAME}-robot-BUILD-SNAPSHOT.jar
-      if [ -d "./${ROBOT_NAME}-parent/${ROBOT_NAME}-robot/src/main/scripts" ] ; then
-        scp -r ./${ROBOT_NAME}-parent/${ROBOT_NAME}-robot/src/main/scripts/*.sh ${ROBOT_NAME}:${INSTALL_DIR}/
+      scp ./${PROJECT_NAME}-parent/${PROJECT_NAME}-robot/build/libs/${PROJECT_NAME}-robot-BUILD-SNAPSHOT-exec.jar ${ROBOT_NAME}:${INSTALL_DIR}/${PROJECT_NAME}-robot-BUILD-SNAPSHOT.jar
+      if [ -d "./${PROJECT_NAME}-parent/${PROJECT_NAME}-robot/src/main/scripts" ] ; then
+        scp -r ./${PROJECT_NAME}-parent/${PROJECT_NAME}-robot/src/main/scripts/*.sh ${ROBOT_NAME}:${INSTALL_DIR}/
       fi
-      if [ -d "./${ROBOT_NAME}-parent/${ROBOT_NAME}-robot/src/main/desktop" ] ; then
-        scp ./${ROBOT_NAME}-parent/${ROBOT_NAME}-robot/src/main/desktop/*.desktop ${ROBOT_NAME}:${DESKTOP_DIR}/
+      if [ -d "./${PROJECT_NAME}-parent/${PROJECT_NAME}-robot/src/main/desktop" ] ; then
+        scp ./${PROJECT_NAME}-parent/${PROJECT_NAME}-robot/src/main/desktop/*.desktop ${ROBOT_NAME}:${DESKTOP_DIR}/
       fi
     fi
 
-    if [ -d "./${ROBOT_NAME}-parent/${ROBOT_NAME}-utils" ] ; then
+    if [ -d "./${PROJECT_NAME}-parent/${PROJECT_NAME}-utils" ] ; then
       echo "Déploiement Utils ..."
-      scp ./${ROBOT_NAME}-parent/${ROBOT_NAME}-utils/build/libs/${ROBOT_NAME}-utils-BUILD-SNAPSHOT.jar ${ROBOT_NAME}:${INSTALL_DIR}/
-      if [ -d "./${ROBOT_NAME}-parent/${ROBOT_NAME}-utils/src/main/scripts" ] ; then
-        scp -r ./${ROBOT_NAME}-parent/${ROBOT_NAME}-utils/src/main/scripts/*.sh ${ROBOT_NAME}:${INSTALL_DIR}/
+      scp ./${PROJECT_NAME}-parent/${PROJECT_NAME}-utils/build/libs/${PROJECT_NAME}-utils-BUILD-SNAPSHOT.jar ${ROBOT_NAME}:${INSTALL_DIR}/
+      if [ -d "./${PROJECT_NAME}-parent/${PROJECT_NAME}-utils/src/main/scripts" ] ; then
+        scp -r ./${PROJECT_NAME}-parent/${PROJECT_NAME}-utils/src/main/scripts/*.sh ${ROBOT_NAME}:${INSTALL_DIR}/
       fi
     fi
   fi
