@@ -7,9 +7,9 @@ import java.io.Serializable;
 @RequiredArgsConstructor
 public class CurrentBras implements Serializable {
     public final PositionBras state;
-    public final int a1;
-    public final int a2;
-    public final int a3;
+    public final double a1;
+    public final double a2;
+    public final double a3;
     public final int x;
     public final int y;
     public final int a;

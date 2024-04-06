@@ -2,18 +2,22 @@ package org.arig.robot.model.servos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Data
+@ToString(doNotUseGetters = true)
+@EqualsAndHashCode(doNotUseGetters = true)
 @Accessors(chain = true, fluent = true)
 public class Servo {
-
-    public static final String POS_0DEG = "0°";
-    public static final String POS_90DEG = "90°";
-    public static final String POS_MIN90DEG = "-90°";
 
     @JsonProperty("id")
     private byte id;
@@ -28,10 +32,15 @@ public class Servo {
 
     // pour les servos commandés en angle
     private boolean angular = false;
-    private int center = 1500; // position du "0 degré"
-    private double mult = 1; // direction de angles positifs / correction de dérive
-    private int angleMin = -90;
-    private int angleMax = 90;
+    private List<Pair<Integer, Integer>> angles;
+
+    public Integer getAngleMin() {
+        return angular ? angles.get(0).getKey() : null;
+    }
+
+    public Integer getAngleMax() {
+        return angular ? angles.get(angles.size() - 1).getKey() : null;
+    }
 
     // monitoring
     @JsonProperty("currentSpeed")
@@ -39,9 +48,41 @@ public class Servo {
     @JsonProperty("currentPosition")
     private int currentPosition;
 
-    public int angleToPosition(int angle) {
+    public int angleToPosition(double angle) {
         assert angular;
-        return (int) Math.round(center + mult * angle * 10); // 0.1°/µsec
+
+        final int l = angles.size();
+
+        // find the correct range
+        int index = -1;
+        for (int i = 0; i < l - 1; i++) {
+            if (angle >= angles.get(i).getKey() && angle <= angles.get(i+1).getKey()) {
+                index = i;
+                break;
+            }
+        }
+
+        // out of bounds
+        if (index == -1) {
+            if (angle < angles.get(0).getKey()) {
+                return angles.get(0).getValue();
+            } else {
+                return angles.get(l - 1).getValue();
+            }
+        }
+
+        // apply lerp on range
+        return (int) Math.round(
+                lerp(angle,
+                        angles.get(index).getKey(), angles.get(index + 1).getKey(),
+                        angles.get(index).getValue(), angles.get(index + 1).getValue()
+                )
+        );
+    }
+
+    private double lerp(double val, double start_1, double end_1, double start_2, double end_2) {
+        double lambda = (val - start_1) / (end_1 - start_1);
+        return start_2 + lambda * (end_2 - start_2);
     }
 
     public Servo position(String name, int value) {
@@ -56,44 +97,36 @@ public class Servo {
     }
 
     public ServoAngular angular() {
-        Servo.this.angular = true;
+        this.angular = true;
+        this.angles = new ArrayList<>();
         return new ServoAngular();
     }
 
     public class ServoAngular {
-        public ServoAngular center(int center) {
-            Servo.this.center = center;
-            return this;
+        private boolean ordered;
+
+        private void order() {
+            if (!ordered) {
+                assert Servo.this.angles.size() > 1;
+                Servo.this.angles.sort(Comparator.comparingInt(Pair::getKey));
+                ordered = true;
+            }
         }
 
-        public ServoAngular mult(double mult) {
-            Servo.this.mult = mult;
-            return this;
-        }
-
-        public ServoAngular angleMin(int angleMin) {
-            Servo.this.angleMin = angleMin;
-            return this;
-        }
-
-        public ServoAngular angleMax(int angleMax) {
-            Servo.this.angleMax = angleMax;
+        public ServoAngular angle(int a, int pulses) {
+            assert !ordered;
+            Servo.this.angles.add(Pair.of(a, pulses));
             return this;
         }
 
         public ServoAngular position(String name, int angle, int speed) {
+            order();
             Servo.this.position(name, Servo.this.angleToPosition(angle), speed);
             return this;
         }
 
         public Servo build() {
-            Servo.this.position(POS_0DEG, Servo.this.center);
-            if (Servo.this.angleMax >= 90) {
-                this.position(POS_90DEG, 90, 0);
-            }
-            if (Servo.this.angleMin <= -90) {
-                this.position(POS_MIN90DEG, -90, 0);
-            }
+            order();
             return Servo.this;
         }
     }

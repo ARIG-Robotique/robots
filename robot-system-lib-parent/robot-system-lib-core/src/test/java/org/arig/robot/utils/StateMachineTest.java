@@ -46,7 +46,7 @@ public class StateMachineTest {
                 .transition(Key.TWO, Key.THREE, new Transition())
                 .transition(Key.THREE, Key.ONE)
 
-                .current(Key.ONE)
+                .currentState(Key.ONE)
                 .onState((key, state, transition, opt) -> {
             newKey.set(key);
             hadTransition.set(transition != null);
@@ -71,7 +71,7 @@ public class StateMachineTest {
             // not fail
         }
         assertNull(newKey.get());
-        assertEquals(machine.current(), Key.THREE);
+        assertEquals(machine.currentState(), Key.THREE);
 
         // 3->1->2->1
         machine.goTo(Key.ONE);
@@ -80,7 +80,7 @@ public class StateMachineTest {
 
         // null->3
         newKey.set(null);
-        machine.current(null);
+        machine.currentState(null);
         machine.goTo(Key.THREE);
         assertEquals(newKey.get(), Key.THREE);
         assertFalse(hadTransition.get());

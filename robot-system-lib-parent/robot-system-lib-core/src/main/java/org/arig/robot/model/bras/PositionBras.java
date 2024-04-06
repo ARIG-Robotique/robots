@@ -10,8 +10,13 @@ public enum PositionBras {
     INIT(true),
     HORIZONTAL(true),
     CALLAGE_BORDURE(false),
-    PRISE_SOL_1(false),
-    PRISE_SOL_2(false),
+
+    PRISE_PLANTE_AVANT(false), // dans le bloque plantes avant
+    PRISE_POT(false),
+    PRISE_POT_POT(false), // un pot dans un pot
+    SORTIE_POT_POT(false), // pour sortir un pot d'un autre pot
+    DEPOSE_PLANTE_POT(false), // pour poser une plante dans un pot
+
     DEPOSE_SOL(false),
     DEPOSE_JARDINIERE(false),
 

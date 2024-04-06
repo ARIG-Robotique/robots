@@ -58,6 +58,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final String POS_HAUT = "Haut";
     protected static final String POS_RENTRE = "Rentré";
     protected static final String POS_SORTI = "Sorti";
+    protected static final String POS_0DEG = "0°";
 
     protected static final String GROUP_BRAS_AVANT_GAUCHE = "Bras avant gauche";
     protected static final String GROUP_BRAS_AVANT_CENTRE = "Bras avant centre";
@@ -240,27 +241,27 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
         setPosition(BRAS_ARRIERE_DROIT_PINCE, POS_OUVERT, wait);
     }
 
-    public void brasAvantGauche(int a1, int a2, int a3, int speed) {
+    public void brasAvantGauche(double a1, double a2, double a3, int speed) {
         setAngles(Map.of(BRAS_AVANT_GAUCHE_EPAULE, a1, BRAS_AVANT_GAUCHE_COUDE, a2, BRAS_AVANT_GAUCHE_POIGNET, a3), speed);
     }
 
-    public void brasAvantCentre(int a1, int a2, int a3, int speed) {
+    public void brasAvantCentre(double a1, double a2, double a3, int speed) {
         setAngles(Map.of(BRAS_AVANT_CENTRE_EPAULE, a1, BRAS_AVANT_CENTRE_COUDE, a2, BRAS_AVANT_CENTRE_POIGNET, a3), speed);
     }
 
-    public void brasAvantDroit(int a1, int a2, int a3, int speed) {
+    public void brasAvantDroit(double a1, double a2, double a3, int speed) {
         setAngles(Map.of(BRAS_AVANT_DROIT_EPAULE, a1, BRAS_AVANT_DROIT_COUDE, a2, BRAS_AVANT_DROIT_POIGNET, a3), speed);
     }
 
-    public void brasArriereGauche(int a1, int a2, int a3, int speed) {
+    public void brasArriereGauche(double a1, double a2, double a3, int speed) {
         setAngles(Map.of(BRAS_ARRIERE_GAUCHE_EPAULE, a1, BRAS_ARRIERE_GAUCHE_COUDE, a2, BRAS_ARRIERE_GAUCHE_POIGNET, a3), speed);
     }
 
-    public void brasArriereCentre(int a1, int a2, int a3, int speed) {
+    public void brasArriereCentre(double a1, double a2, double a3, int speed) {
         setAngles(Map.of(BRAS_ARRIERE_CENTRE_EPAULE, a1, BRAS_ARRIERE_CENTRE_COUDE, a2, BRAS_ARRIERE_CENTRE_POIGNET, a3), speed);
     }
 
-    public void brasArriereDroit(int a1, int a2, int a3, int speed) {
+    public void brasArriereDroit(double a1, double a2, double a3, int speed) {
         setAngles(Map.of(BRAS_ARRIERE_DROIT_EPAULE, a1, BRAS_ARRIERE_DROIT_COUDE, a2, BRAS_ARRIERE_DROIT_POIGNET, a3), speed);
     }
 

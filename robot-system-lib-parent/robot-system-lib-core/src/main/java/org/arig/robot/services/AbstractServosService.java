@@ -181,15 +181,15 @@ public abstract class AbstractServosService {
     /**
      * Déplace plusieurs servos à différents angles, toujours avec attente
      */
-    public void setAngles(Map<String, Integer> servosAngles, int speed) {
+    public void setAngles(Map<String, Double> servosAngles, int speed) {
         // calcul la distance maximal à parcourir
         int maxDst = 0;
-        for (Map.Entry<String, Integer> servoAngle : servosAngles.entrySet()) {
+        for (Map.Entry<String, Double> servoAngle : servosAngles.entrySet()) {
             Servo servo = servos.get(servoAngle.getKey());
             assert servo != null;
 
             OffsetedDevice device = getDevice(servo.id());
-            int angle = servoAngle.getValue();
+            double angle = servoAngle.getValue();
             int targetPosition = servo.angleToPosition(angle);
             int currentPosition = device.servo().getPosition((byte) (servo.id() - device.offset()));
             int dst = Math.abs(targetPosition - currentPosition);
@@ -198,12 +198,12 @@ public abstract class AbstractServosService {
         }
 
         int waitTime = 0;
-        for (Map.Entry<String, Integer> servoAngle : servosAngles.entrySet()) {
+        for (Map.Entry<String, Double> servoAngle : servosAngles.entrySet()) {
             Servo servo = servos.get(servoAngle.getKey());
             assert servo != null;
 
             OffsetedDevice device = getDevice(servo.id());
-            int angle = servoAngle.getValue();
+            double angle = servoAngle.getValue();
             int targetPosition = servo.angleToPosition(angle);
             int currentPosition = device.servo().getPosition((byte) (servo.id() - device.offset()));
             int dst = Math.abs(targetPosition - currentPosition);

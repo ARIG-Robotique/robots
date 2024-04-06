@@ -20,22 +20,22 @@ public class IOController {
     @Autowired
     private CommonRobotIOService ioService;
 
-    @PostMapping("/electro-aimant/{state}")
-    public void setPumpState(@PathVariable("state") final boolean state) {
-        if (state) {
+    @PostMapping("/electro-aimant")
+    public void setElectroAimant(@RequestParam("state") final String state) {
+        if ("on".equals(state)) {
             ioService.enableElectroAimant();
         } else {
             ioService.disableElectroAimant();
         }
     }
 
-    @PostMapping("/solar-wheel/{state}")
-    public void setPumpState(@PathVariable("state") final String state, @RequestParam("speed") final int speed) {
+    @PostMapping("/solar-wheel")
+    public void setSolarWheel(@RequestParam("state") final String state, @RequestParam("speed") final int speed) {
         switch(state) {
-            case "avant":
+            case "bleu":
                 ioService.tournePanneauAvant(speed);
                 break;
-            case "arriere":
+            case "jaune":
                 ioService.tournePanneauArriere(speed);
                 break;
             default:

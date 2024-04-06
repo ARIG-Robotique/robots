@@ -28,11 +28,11 @@ public class StateMachine<KEY extends Enum<?>, STATE extends Serializable, TRANS
     private final Map<KEY, STATE> states = new HashMap<>();
     private final Map<Pair<KEY, KEY>, TRANSITION> transitions = new HashMap<>();
 
-    private final String name;
+    protected final String name;
 
     @Getter
     @Setter
-    private KEY current = null;
+    private KEY currentState = null;
 
     @Setter
     private TRANSITION defaultTransition = null;
@@ -50,10 +50,6 @@ public class StateMachine<KEY extends Enum<?>, STATE extends Serializable, TRANS
 
     public Set<Pair<KEY, KEY>> transisions() {
         return transitions.keySet();
-    }
-
-    public STATE currentState() {
-        return current != null ? states.get(current) : null;
     }
 
     public void build() {
@@ -100,24 +96,24 @@ public class StateMachine<KEY extends Enum<?>, STATE extends Serializable, TRANS
     }
 
     public void goTo(@NonNull KEY to, OPTION option) {
-        if (to == current) {
+        if (to == currentState) {
             return;
         }
 
         log.info("{} -> {}", name, to);
         Assert.isTrue(states.containsKey(to), "[" + name + "] " + to.name() + " state not registered");
 
-        if (current != null) {
-            Pair<KEY, KEY> key = Pair.of(current, to);
+        if (currentState != null) {
+            Pair<KEY, KEY> key = Pair.of(currentState, to);
             if (!disableCheck) {
-                Assert.isTrue(transitions.containsKey(key), "[" + name + "] " + current.name() + "->" + to.name() + " transition not registered");
+                Assert.isTrue(transitions.containsKey(key), "[" + name + "] " + currentState.name() + "->" + to.name() + " transition not registered");
             }
             onState.accept(to, states.get(to), transitions.getOrDefault(key, defaultTransition), option);
         } else {
             onState.accept(to, states.get(to), defaultTransition, option);
         }
 
-        current = to;
+        currentState = to;
     }
 
 }

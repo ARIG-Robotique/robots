@@ -11,16 +11,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class TransitionBras implements Serializable {
 
-    public static final int MAX_SPEED = 70;
-
-    public static final TransitionBras DEFAULT = new TransitionBras(MAX_SPEED, new PointBras[0]);
-
     private int speed;
 
     private PointBras[] points;
-
-    public static TransitionBras withPoints(PointBras... points) {
-        return new TransitionBras(MAX_SPEED, points);
-    }
 
 }
