@@ -55,7 +55,9 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
      * CONFIGURATION
      */
 
-    private boolean option1 = false;
+    private boolean preferePanneaux = false;
+    private boolean activeVolAuSol = false;
+    private boolean activeVolJardinieres = false;
 
     /**
      * STATUT
