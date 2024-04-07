@@ -71,9 +71,9 @@ public class PanneauSolaireAction extends AbstractNerellAction {
                 servosNerell.groupePanneauOuvert(true);
 
                 if (rs.team() == Team.BLEU) {
-                    ioService.tournePanneauAvant();
+                    ioService.tournePanneauBleu();
                 } else {
-                    ioService.tournePanneauArriere();
+                    ioService.tournePanneauJaune();
                 }
                 ThreadUtils.sleep(1000);
                 panneau.couleur(rs.team() == Team.JAUNE ? CouleurPanneauSolaire.JAUNE : CouleurPanneauSolaire.BLEU);

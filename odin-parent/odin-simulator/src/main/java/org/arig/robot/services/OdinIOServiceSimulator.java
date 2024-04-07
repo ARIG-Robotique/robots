@@ -143,22 +143,22 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
     }
 
     @Override
-    public void tournePanneauArriere() {
+    public void tournePanneauJaune() {
 
     }
 
     @Override
-    public void tournePanneauArriere(int speed) {
+    public void tournePanneauJaune(int speed) {
 
     }
 
     @Override
-    public void tournePanneauAvant() {
+    public void tournePanneauBleu() {
 
     }
 
     @Override
-    public void tournePanneauAvant(int speed) {
+    public void tournePanneauBleu(int speed) {
 
     }
 

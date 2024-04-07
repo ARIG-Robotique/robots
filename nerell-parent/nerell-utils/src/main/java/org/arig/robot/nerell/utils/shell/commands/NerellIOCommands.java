@@ -63,9 +63,9 @@ public class NerellIOCommands {
     @ShellMethodAvailability("alimentationOk")
     public void tourneSolarWheel(boolean avant) {
         if (avant) {
-            nerellIOServiceRobot.tournePanneauAvant();
+            nerellIOServiceRobot.tournePanneauBleu();
         } else {
-            nerellIOServiceRobot.tournePanneauArriere();
+            nerellIOServiceRobot.tournePanneauJaune();
         }
     }
 

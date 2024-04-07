@@ -412,21 +412,21 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     }
 
     @Override
-    public void tournePanneauArriere() {
-        tournePanneauArriere(512);
+    public void tournePanneauJaune() {
+        tournePanneauJaune(512);
     }
 
-    public void tournePanneauArriere(int speed) {
+    public void tournePanneauJaune(int speed) {
         log.info("Demarrage du moteur de rotation du panneau vers l'arriere");
         solarWheelMotor.speed(speed);
     }
 
     @Override
-    public void tournePanneauAvant() {
-        tournePanneauAvant(512);
+    public void tournePanneauBleu() {
+        tournePanneauBleu(512);
     }
 
-    public void tournePanneauAvant(int speed) {
+    public void tournePanneauBleu(int speed) {
         log.info("Demarrage du moteur de rotation du panneau vers l'avant");
         if (speed > 0) {
             speed = -speed;

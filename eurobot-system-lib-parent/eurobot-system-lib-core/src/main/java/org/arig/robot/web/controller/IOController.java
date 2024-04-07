@@ -5,7 +5,6 @@ import org.arig.robot.constants.ConstantesConfig;
 import org.arig.robot.services.CommonRobotIOService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,10 +32,10 @@ public class IOController {
     public void setSolarWheel(@RequestParam("state") final String state, @RequestParam("speed") final int speed) {
         switch(state) {
             case "bleu":
-                ioService.tournePanneauAvant(speed);
+                ioService.tournePanneauBleu(speed);
                 break;
             case "jaune":
-                ioService.tournePanneauArriere(speed);
+                ioService.tournePanneauJaune(speed);
                 break;
             default:
                 ioService.stopTournePanneau();
