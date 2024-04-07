@@ -110,6 +110,18 @@ public class BrasService {
         };
     }
 
+    public void setBrasAvant(PositionBras positionBras) {
+        setBras(Bras.AVANT_GAUCHE, positionBras, OptionBras.NO_WAIT);
+        setBras(Bras.AVANT_CENTRE, positionBras, OptionBras.NO_WAIT);
+        setBras(Bras.AVANT_DROIT, positionBras, null);
+    }
+
+    public void setBrasArriere(PositionBras positionBras) {
+        setBras(Bras.ARRIERE_GAUCHE, positionBras, OptionBras.NO_WAIT);
+        setBras(Bras.ARRIERE_CENTRE, positionBras, OptionBras.NO_WAIT);
+        setBras(Bras.ARRIERE_DROIT, positionBras, null);
+    }
+
     /**
      * Change la position du bras en passant par la state machine
      */

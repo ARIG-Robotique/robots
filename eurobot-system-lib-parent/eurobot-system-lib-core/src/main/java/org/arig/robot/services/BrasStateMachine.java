@@ -3,6 +3,7 @@ package org.arig.robot.services;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.arig.robot.model.bras.AnglesBras;
 import org.arig.robot.model.bras.ConfigBras;
 import org.arig.robot.model.bras.CurrentBras;
@@ -43,7 +44,7 @@ public class BrasStateMachine extends StateMachine<PositionBras, PointBras, Tran
 
     @FunctionalInterface
     public interface ServoCallback {
-        void accept(double a1, double a2, double a3, int speed);
+        void accept(double a1, double a2, double a3, int speed, boolean wait);
     }
 
     public BrasStateMachine(String name, boolean back, ServoCallback servo) {
@@ -60,10 +61,13 @@ public class BrasStateMachine extends StateMachine<PositionBras, PointBras, Tran
 
         onState((state, pt, transition, opt) -> {
             for (PointBras point : transition.points()) {
-                set(point, state, opt == OptionBras.SLOW ? SLOW_SPEED : MAX_SPEED);
+                set(point, state, ArrayUtils.contains(opt, OptionBras.SLOW) ? SLOW_SPEED : MAX_SPEED);
             }
 
-            set(pt, state, opt == OptionBras.SLOW ? SLOW_SPEED : MAX_SPEED);
+            set(pt, state,
+                    ArrayUtils.contains(opt, OptionBras.SLOW) ? SLOW_SPEED : MAX_SPEED,
+                    !ArrayUtils.contains(opt, OptionBras.NO_WAIT)
+            );
         });
 
         PointBras initstate = new PointBras(105, 95, -90, true); // dois matcher les angles init
@@ -75,6 +79,9 @@ public class BrasStateMachine extends StateMachine<PositionBras, PointBras, Tran
 
         /* STATES */
 
+        state(PositionBras.CALLAGE_PANNEAUX, new PointBras(215, 205, 0, true));
+
+        // a valider
         final int PRISE_PLANTE_SOL_Y = 55;
         final int PRISE_POT_SOL_Y = 60;
         final int DEPOSE_SOL_Y = PRISE_POT_SOL_Y + 10;
@@ -96,6 +103,10 @@ public class BrasStateMachine extends StateMachine<PositionBras, PointBras, Tran
      * Change la position du bras en direct sans passer par la state machine
      */
     public boolean set(PointBras pt, PositionBras state, int speed) {
+        return set(pt, state, speed, true);
+    }
+
+    public boolean set(PointBras pt, PositionBras state, int speed, boolean wait) {
         log.debug("Bras {} x={} y={} a={} invertA1={}", name, pt.x, pt.y, pt.a, pt.invertA1);
         AnglesBras angles = calculerAngles(pt.x, pt.y, pt.a, pt.invertA1, true);
 
@@ -108,7 +119,7 @@ public class BrasStateMachine extends StateMachine<PositionBras, PointBras, Tran
         }
 
         log.debug("Bras {} a1={} a2={} a3={}", name, angles.a1, angles.a2, angles.a3);
-        servoCallback.accept(angles.a1, angles.a2, angles.a3, speed);
+        servoCallback.accept(angles.a1, angles.a2, angles.a3, speed, wait);
         current = new CurrentBras(state, angles, pt);
 
         return true;

@@ -22,7 +22,7 @@ public class StateMachine<KEY extends Enum<?>, STATE extends Serializable, TRANS
 
     @FunctionalInterface
     public static interface OnState<KEY extends Enum<?>, STATE extends Serializable, TRANSITION extends Serializable, OPTION extends Serializable> {
-        void accept(KEY key, STATE state, TRANSITION transition, OPTION options);
+        void accept(KEY key, STATE state, TRANSITION transition, OPTION ...options);
     }
 
     private final Map<KEY, STATE> states = new HashMap<>();
@@ -95,7 +95,7 @@ public class StateMachine<KEY extends Enum<?>, STATE extends Serializable, TRANS
         goTo(to, null);
     }
 
-    public void goTo(@NonNull KEY to, OPTION option) {
+    public void goTo(@NonNull KEY to, OPTION ...option) {
         if (to == currentState) {
             return;
         }

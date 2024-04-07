@@ -181,7 +181,7 @@ public abstract class AbstractServosService {
     /**
      * Déplace plusieurs servos à différents angles, toujours avec attente
      */
-    public void setAngles(Map<String, Double> servosAngles, int speed) {
+    public void setAngles(Map<String, Double> servosAngles, int speed, boolean wait) {
         // calcul la distance maximal à parcourir
         int maxDst = 0;
         for (Map.Entry<String, Double> servoAngle : servosAngles.entrySet()) {
@@ -220,7 +220,9 @@ public abstract class AbstractServosService {
             }
         }
 
-        ThreadUtils.sleep(waitTime);
+        if (wait) {
+            ThreadUtils.sleep(waitTime);
+        }
     }
 
     /**

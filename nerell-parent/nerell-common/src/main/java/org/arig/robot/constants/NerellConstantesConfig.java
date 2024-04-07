@@ -77,7 +77,7 @@ public interface NerellConstantesConfig {
     long vitesseOrientationMax = 1000;
     long vitesseOrientationMin = 150;
 
-    long vitesseMax = 500; // 1000
+    long vitesseMax = 1000;
     long vitesseMin = 100;
 
 
@@ -158,4 +158,5 @@ public interface NerellConstantesConfig {
     int WAIT_LED = 200;
     int TIMEOUT_POMPE = 1000;
     int TIMEOUT_COLOR = 800;
+    int VITESSE_ROUE_PANNEAU = 2048;
 }

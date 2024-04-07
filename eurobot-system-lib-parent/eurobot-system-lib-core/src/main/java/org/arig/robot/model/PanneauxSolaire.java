@@ -50,7 +50,7 @@ public class PanneauxSolaire {
                     return ps;
                 }
             }
-        } else if (team == Team.JAUNE) {
+        } else {
             int init = reverse ? 4 : panneauxSolaire.length;
             int inc = reverse ? 1 : -1;
             for (int i = init; reverse ? i <= panneauxSolaire.length : i >= 4; i += inc) {
@@ -88,5 +88,35 @@ public class PanneauxSolaire {
         }
 
         return points;
+    }
+
+    public boolean equipeDone() {
+        if (team == Team.BLEU) {
+            for (int i = 1; i <= 3; i++) {
+                if (panneauxSolaire[i-1].besoinDeTourner(team)) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            for (int i = 7; i <= 9; i++) {
+                if (panneauxSolaire[i-1].besoinDeTourner(team)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    public void equipeDone(int nb) {
+        if (team == Team.BLEU) {
+            for (int i = 1; i <= nb; i++) {
+                panneauxSolaire[i-1].couleur(CouleurPanneauSolaire.BLEU);
+            }
+        } else {
+            for (int i = 7; i < 7 + nb; i++) {
+                panneauxSolaire[i-1].couleur(CouleurPanneauSolaire.JAUNE);
+            }
+        }
     }
 }

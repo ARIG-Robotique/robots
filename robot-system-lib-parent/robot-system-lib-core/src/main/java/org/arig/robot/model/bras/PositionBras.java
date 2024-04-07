@@ -9,7 +9,7 @@ public enum PositionBras {
     // commun
     INIT(true),
     HORIZONTAL(true),
-    CALLAGE_BORDURE(false),
+    CALLAGE_PANNEAUX(false),
 
     PRISE_PLANTE_AVANT(false), // dans le bloque plantes avant
     PRISE_POT(false),

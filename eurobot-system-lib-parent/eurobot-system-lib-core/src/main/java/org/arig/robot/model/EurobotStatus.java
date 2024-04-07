@@ -90,6 +90,14 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         return Math.max(0, 30 - panneauxSolaire.score());
     }
 
+    public boolean panneauxSolaireEquipeDone() {
+        return panneauxSolaire.equipeDone();
+    }
+
+    public void panneauxSolaireEquipeDone(int nb) {
+        panneauxSolaire.equipeDone(nb);
+    }
+
     public PanneauSolaire panneauSolaire(int numero) {
         return panneauxSolaire.get(numero);
     }
