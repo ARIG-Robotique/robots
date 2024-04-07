@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 public class RobotName {
 
     public enum RobotIdentification {
-        NERELL, ODIN, TINKER
+        NERELL, ODIN, TINKER, PAMI_TRIANGLE, PAMI_CARRE, PAMI_ROND
     }
 
     private String name;

@@ -18,6 +18,9 @@ public class PamiRobot {
         final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
         System.setProperty(ConstantesConfig.keyExecutionId, execId);
 
+        // TODO : Get PAMI ID from configuration
+        System.setProperty(ConstantesConfig.keyPamiId, "triangle");
+
         ConfigurableApplicationContext context = SpringApplication.run(PamiRobot.class, args);
         context.getBean(PamiOrdonanceur.class).run();
         SpringApplication.exit(context);

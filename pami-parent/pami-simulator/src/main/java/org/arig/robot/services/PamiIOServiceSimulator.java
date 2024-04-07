@@ -68,114 +68,13 @@ public class PamiIOServiceSimulator extends AbstractIOServiceBouchon implements 
 
     // Numerique
 
-    @Override
-    public boolean pinceAvantGauche() {
-        return false;
-    }
 
-    @Override
-    public boolean pinceAvantCentre() {
-        return false;
-    }
+    // Analogique
 
-    @Override
-    public boolean pinceAvantDroite() {
-        return false;
-    }
-
-    @Override
-    public boolean pinceArriereGauche() {
-        return false;
-    }
-
-    @Override
-    public boolean pinceArriereCentre() {
-        return false;
-    }
-
-    @Override
-    public boolean pinceArriereDroite() {
-        return false;
-    }
-
-    @Override
-    public boolean presenceAvantGauche() {
-        return false;
-    }
-
-    @Override
-    public boolean presenceAvantCentre() {
-        return false;
-    }
-
-    @Override
-    public boolean presenceAvantDroite() {
-        return false;
-    }
-
-    @Override
-    public boolean presenceArriereGauche() {
-        return false;
-    }
-
-    @Override
-    public boolean presenceArriereCentre() {
-        return false;
-    }
-
-    @Override
-    public boolean presenceArriereDroite() {
-        return false;
-    }
-
-    @Override
-    public boolean inductifGauche() {
-        return false;
-    }
-
-    @Override
-    public boolean inductifDroit() {
-        return false;
-    }
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
-
-    @Override
-    public void enableElectroAimant() {
-
-    }
-
-    @Override
-    public void disableElectroAimant() {
-
-    }
-
-    @Override
-    public void tournePanneauBleu() {
-
-    }
-
-    @Override
-    public void tournePanneauBleu(int speed) {
-
-    }
-
-    @Override
-    public void tournePanneauJaune() {
-
-    }
-
-    @Override
-    public void tournePanneauJaune(int speed) {
-
-    }
-
-    @Override
-    public void stopTournePanneau() {
-
-    }
 
     // ----------------------------------------------------------- //
     // -------------------------- BUSINESS ----------------------- //

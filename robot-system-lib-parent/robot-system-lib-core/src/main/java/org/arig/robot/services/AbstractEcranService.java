@@ -41,6 +41,7 @@ public abstract class AbstractEcranService<CONFIG extends AbstractEcranConfig, S
 
     @Autowired(required = false)
     private IVisionBalise<?> balise;
+
     @Autowired
     private IEcran<CONFIG, STATE> ecran;
 

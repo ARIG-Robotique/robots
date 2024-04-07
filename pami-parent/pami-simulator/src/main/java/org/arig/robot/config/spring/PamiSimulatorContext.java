@@ -11,21 +11,20 @@ import org.arig.robot.model.RobotName;
 import org.arig.robot.model.RobotName.RobotIdentification;
 import org.arig.robot.model.bouchon.BouchonEncoderValues;
 import org.arig.robot.model.bouchon.BouchonI2CDevice;
-import org.arig.robot.model.bouchon.BouchonI2CMultiplexer;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
+import org.arig.robot.system.capteurs.ARIG2ChannelsAlimentationSensorBouchon;
 import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
 import org.arig.robot.system.capteurs.VisionBaliseBouchon;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
+import org.arig.robot.system.capteurs.i2c.IAlimentationSensor;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.arig.robot.system.capteurs.socket.IVisionBalise;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.i2c.ARIGI2C2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.BouchonPropulsionsMotors;
-import org.arig.robot.system.servos.i2c.SD21Servos;
-import org.arig.robot.system.vacuum.AbstractARIGVacuumController;
-import org.arig.robot.system.vacuum.BouchonARIGVacuumController;
+import org.arig.robot.system.servos.AbstractServos;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -46,8 +45,8 @@ public class PamiSimulatorContext {
     @Bean
     public RobotName robotName() {
         return RobotName.builder()
-                .id(RobotIdentification.ODIN)
-                .name("Odin (simulator)")
+                .id(RobotIdentification.PAMI_TRIANGLE)
+                .name("Pami (simulator)")
                 .version("latest")
                 .build();
     }
@@ -55,21 +54,39 @@ public class PamiSimulatorContext {
     @Bean
     public I2CManager i2cManager() throws I2CException {
         final BouchonI2CManager manager = new BouchonI2CManager();
-        BouchonI2CDevice simpleMultiplexerI2C = new BouchonI2CDevice().address(0x10);
         BouchonI2CDevice simpleDevice = new BouchonI2CDevice().address(0x12);
-        BouchonI2CDevice simpleMultiplexedDevice = new BouchonI2CDevice().address(0x14);
-
-        manager.registerMultiplexerDevice("Multiplexeur", new BouchonI2CMultiplexer());
-        manager.registerDevice(I2CManagerDevice.<BouchonI2CDevice>builder().deviceName("Multiplexeur").device(simpleMultiplexerI2C).scanCmd(new byte[]{0x2A}).build());
         manager.registerDevice(I2CManagerDevice.<BouchonI2CDevice>builder().deviceName("Simple device").device(simpleDevice).build());
-        manager.registerDevice(I2CManagerDevice.<BouchonI2CDevice>builder().deviceName("Simple device multiplexé").device(simpleMultiplexedDevice).multiplexerDeviceName("Multiplexeur").multiplexerChannel((byte) 2).build());
-
         return manager;
     }
 
     @Bean
-    public SD21Servos servos() {
-        return new SD21Servos();
+    public AbstractServos servos() {
+        return new AbstractServos(2) {
+            @Override
+            public String deviceName() {
+                return "";
+            }
+
+            @Override
+            public void printVersion() throws I2CException {
+
+            }
+
+            @Override
+            protected void setPositionImpl(byte servoNb, int position) {
+
+            }
+
+            @Override
+            protected void setSpeedImpl(byte servoNb, byte speed) {
+
+            }
+
+            @Override
+            protected void setPositionAndSpeedImpl(byte servoNb, int position, byte speed) {
+
+            }
+        };
     }
 
     @Bean
@@ -99,14 +116,9 @@ public class PamiSimulatorContext {
     }
 
     @Bean
-    public AbstractARIGVacuumController vacuumController() {
-        return new BouchonARIGVacuumController();
-    }
-
-    /*@Bean
     public IAlimentationSensor alimentationSensor() {
         return new ARIG2ChannelsAlimentationSensorBouchon("alim sensor");
-    }*/
+    }
 
     @Bean
     public ILidarTelemeter rplidar() {

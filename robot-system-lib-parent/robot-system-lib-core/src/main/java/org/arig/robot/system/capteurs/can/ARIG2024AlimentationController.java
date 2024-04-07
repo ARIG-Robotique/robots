@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.communication.can.CANDevice;
 import org.arig.robot.model.capteurs.AlimentationSensorValue;
 import org.arig.robot.model.capteurs.BatterySensorValue;
+import org.arig.robot.system.capteurs.i2c.IAlimentationSensor;
 import tel.schich.javacan.CanChannels;
 import tel.schich.javacan.CanFilter;
 import tel.schich.javacan.CanFrame;
@@ -21,7 +22,7 @@ import java.util.function.Consumer;
 
 @Slf4j
 @Accessors(fluent = true)
-public class ARIG2024AlimentationController implements CANDevice, AutoCloseable {
+public class ARIG2024AlimentationController implements IAlimentationSensor, CANDevice, AutoCloseable {
 
   private final RawCanChannel manualChannel;
   private final RawCanChannel fluxChannel;
@@ -32,18 +33,18 @@ public class ARIG2024AlimentationController implements CANDevice, AutoCloseable 
   @Getter
   private final String deviceName = "ARIG AlimController 2024";
 
-  @Getter
-  private Boolean au = null;
-
+  private Boolean auOK = null;
   private String version = StringUtils.EMPTY;
 
   @Getter
   @RequiredArgsConstructor
   enum AlimControlerManual {
-    SET_INTERNAL_ALIM(1),
-    SET_EXTERNAL_ALIM(2),
+    SET_CONFIG(1),
+    SET_INTERNAL_ALIM(2),
+    SET_EXTERNAL_ALIM(3),
 
-    GET_VERSION(3);
+    GET_VERSION(5),
+    GET_SOUND(10);
 
     private final int id;
     private static CanFilter[] filters() {
@@ -58,9 +59,11 @@ public class ARIG2024AlimentationController implements CANDevice, AutoCloseable 
   @Getter
   @RequiredArgsConstructor
   enum AlimControlerFlux {
-    GET_AU_STATE(4),
-    GET_ALIMS_STATE(5),
-    GET_BATTERY_STATE(6);
+    GET_AU_STATE(6),
+    GET_INTERNAL_ALIM_STATE(7),
+    GET_EXTERNAL_ALIM_STATE(8),
+    GET_BATTERY_STATE(9);
+
 
     private final int id;
     private static CanFilter[] filters() {
@@ -103,8 +106,26 @@ public class ARIG2024AlimentationController implements CANDevice, AutoCloseable 
   @Override
   public boolean scan() throws IOException {
     version();
-    refresh();
+    internalRefresh();
     return StringUtils.isNotBlank(version);
+  }
+
+  public boolean auOk() {
+    return auOK != null && auOK;
+  }
+
+  @Override
+  public void printVersion() {
+    log.info("Version : {}", version());
+  }
+
+  public void sound() {
+    try {
+      CanFrame frame = CanFrame.create(AlimControlerManual.GET_SOUND.id, CanFrame.FD_NO_FLAGS, new byte[]{});
+      manualChannel.write(frame);
+    } catch (IOException e) {
+      log.error("Error while sound request", e);
+    }
   }
 
   public void setInternalAlimentation(boolean enable) {
@@ -145,7 +166,8 @@ public class ARIG2024AlimentationController implements CANDevice, AutoCloseable 
     return version;
   }
 
-  public AlimentationSensorValue alimentation(byte channel) {
+  @Override
+  public AlimentationSensorValue get(byte channel) {
     if (channel < 1 || channel > alimentations.length + 1) {
       throw new IllegalArgumentException("Le canal doit être compris entre 1 et " + (alimentations.length));
     }
@@ -156,7 +178,7 @@ public class ARIG2024AlimentationController implements CANDevice, AutoCloseable 
     return battery;
   }
 
-  private void refresh() {
+  private void internalRefresh() {
     for (AlimControlerFlux flux : AlimControlerFlux.values()) {
       try {
         CanFrame refreshFrame = CanFrame.create(flux.id, CanFrame.FD_NO_FLAGS, new byte[]{});
@@ -167,30 +189,34 @@ public class ARIG2024AlimentationController implements CANDevice, AutoCloseable 
     }
   }
 
+  private void updateAlimentation(int index, byte[] data) {
+    int faultByte = 4;
+    // 0-1           : Alim tension
+    // 2-3           : Alim current
+    // 4 : Alim fault
+    double rawTension = ((double) (data[0] << 8)) + (data[1] & 0xff);
+    double rawCurrent = ((double) (data[2] << 8)) + (data[3] & 0xff);
+    boolean fault = (data[4] & 0x01) == 1;
+    alimentations[index].tension(rawTension / 100);
+    alimentations[index].current(rawCurrent / 100);
+    alimentations[index].fault(fault);
+  }
+
   private final Consumer<CanFrame> fluxDispatcher = frame -> {
     if (frame.getId() == AlimControlerFlux.GET_AU_STATE.id) {
       byte[] data = new byte[frame.getDataLength()];
       frame.getData(data, 0, data.length);
-      au = data[0] == 1;
+      auOK = data[0] == 1;
 
-    } else if (frame.getId() == AlimControlerFlux.GET_ALIMS_STATE.id) {
+    } else if (frame.getId() == AlimControlerFlux.GET_INTERNAL_ALIM_STATE.id) {
       byte[] data = new byte[frame.getDataLength()];
       frame.getData(data, 0, data.length);
+      updateAlimentation(0, data);
 
-      int faultByte = alimentations.length * 4;
-      for (int channel = 0 ; channel < alimentations.length ; channel++) {
-        int firstByte = channel * 4;
-
-        // 0-1           : Alim tension
-        // 2-3           : Alim current
-        // last byte + 1 : Alim fault
-        double rawTension = ((double) (data[firstByte] << 8)) + (data[firstByte + 1] & 0xff);
-        double rawCurrent = ((double) (data[firstByte + 2] << 8)) + (data[firstByte + 3] & 0xff);
-        boolean fault = (data[faultByte] & (channel + 1)) == 1;
-        alimentations[channel].tension(rawTension / 100);
-        alimentations[channel].current(rawCurrent / 100);
-        alimentations[channel].fault(fault);
-      }
+    } else if (frame.getId() == AlimControlerFlux.GET_EXTERNAL_ALIM_STATE.id) {
+      byte[] data = new byte[frame.getDataLength()];
+      frame.getData(data, 0, data.length);
+      updateAlimentation(1, data);
 
     } else if (frame.getId() == AlimControlerFlux.GET_BATTERY_STATE.id) {
       byte[] data = new byte[frame.getDataLength()];

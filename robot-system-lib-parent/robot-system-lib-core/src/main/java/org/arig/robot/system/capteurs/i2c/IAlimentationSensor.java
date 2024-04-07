@@ -7,7 +7,9 @@ public interface IAlimentationSensor {
 
     AlimentationSensorValue get(byte channel);
 
-    void refresh() throws I2CException;
+    default void refresh() throws Exception {
+        // NOP
+    };
 
-    void printVersion() throws I2CException;
+    void printVersion() throws Exception;
 }

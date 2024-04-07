@@ -8,6 +8,9 @@ public interface ConstantesConfig {
     // Clé pour la récupération de l'identifiant d'exécution
     String keyExecutionId = "execution.id";
 
+    // Clé pour l'identification du PAMI
+    String keyPamiId = "pami.id";
+
     String executiondIdFormat = "yyyyMMddHHmmss";
     String executiondDateFormat = "yyyy-MM-dd HH:mm:ss";
 

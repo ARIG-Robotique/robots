@@ -2,6 +2,7 @@ package org.arig.robot.system.capteurs.i2c;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.i2c.I2CManager;
 import org.arig.robot.exception.I2CException;
@@ -9,12 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 @Data
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ARIG2024IoPamiSensors {
 
-    @Autowired
-    private I2CManager i2cManager;
-
+    private final I2CManager i2cManager;
     private final String deviceName;
 
     private boolean input1;

@@ -6,7 +6,7 @@ public interface IOService {
     // --------------------- INFOS TECHNIQUE ------------------- //
     // --------------------------------------------------------- //
 
-    void refreshAllIO();
+    default void refreshAllIO() {}
     boolean auOk();
     boolean puissanceServosOk();
     boolean puissanceMoteursOk();

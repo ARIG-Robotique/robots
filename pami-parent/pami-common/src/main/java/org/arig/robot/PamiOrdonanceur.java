@@ -1,8 +1,6 @@
 package org.arig.robot;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.socket.balise.EtalonnageResponse;
-import org.arig.robot.communication.socket.balise.PhotoResponse;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.constants.PamiConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
@@ -15,7 +13,6 @@ import org.arig.robot.model.PamiRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
-import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.PamiIOService;
@@ -23,7 +20,6 @@ import org.arig.robot.services.PamiRobotServosService;
 import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.logging.LogLevel;
 
 @Slf4j
 public class PamiOrdonanceur extends AbstractOrdonanceur {
