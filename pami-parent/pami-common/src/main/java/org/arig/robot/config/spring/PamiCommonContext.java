@@ -184,20 +184,6 @@ public class PamiCommonContext {
     }
 
     @Bean
-    public EcranProcess ecranProcess(Environment env) {
-        final String ecranSocket = env.getRequiredProperty("ecran.socket");
-        final String ecranBinary = env.getRequiredProperty("ecran.binary");
-        return new EcranProcess(ecranBinary, ecranSocket);
-    }
-
-    @Bean
-    public IEcran<EcranConfig, EcranState> ecran(EcranProcess ecranProcess) throws Exception {
-        final File socketFile = new File(ecranProcess.getSocketPath());
-        return new EcranOverSocket(socketFile);
-    }
-
-    @Bean
-    @DependsOn({"ecran", "rplidar"})
     public PamiOrdonanceur ordonanceur() {
         return new PamiOrdonanceur();
     }

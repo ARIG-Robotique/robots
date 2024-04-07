@@ -6,7 +6,6 @@ import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.IOService;
-import org.arig.robot.services.PamiEcranService;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +26,6 @@ public class PamiTasksScheduler {
     private SystemBlockerManager systemBlockerManager;
 
     @Autowired
-    private PamiEcranService ecranService;
-
-    @Autowired
     private BaliseService baliseService;
 
     @Autowired
@@ -40,11 +36,6 @@ public class PamiTasksScheduler {
 
     @Autowired
     protected MonitoringWrapper monitoringWrapper;
-
-    @Scheduled(fixedRate = 1000)
-    public void ecranTask() {
-        ecranService.process();
-    }
 
     @Scheduled(fixedDelay = 20)
     public void obstacleAvoidanceTask() {

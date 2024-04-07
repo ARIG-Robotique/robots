@@ -28,6 +28,8 @@ public interface CommonRobotIOService extends IOService {
     boolean inductifGauche();
     boolean inductifDroit();
 
+    // Analogique
+
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //

@@ -21,7 +21,6 @@ public class PamiServosCommands {
 
     private final PamiRobotStatus rs;
     private final PamiRobotServosService servosService;
-    private final BrasService brasService;
     private final PamiIOService ioService;
     private final AbstractEnergyService energyService;
 
@@ -47,22 +46,5 @@ public class PamiServosCommands {
             ThreadUtils.sleep(1000);
         }
         servosService.setPositionById(id, 1500, speed);
-    }
-
-    enum Bras {
-        AVANT_GAUCHE,
-        AVANT_CENTRE
-    }
-
-    @ShellMethod("Déplacement de bras")
-    public void mouvementBras(Bras bras, int a1, int a2, int a3) {
-        switch (bras) {
-            case AVANT_GAUCHE:
-                servosService.brasAvantGauche(a1, a2, a3, 40);
-                break;
-            case AVANT_CENTRE:
-                servosService.brasAvantCentre(a1, a2, a3, 40);
-                break;
-        }
     }
 }
