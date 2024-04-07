@@ -153,22 +153,22 @@ public class PamiIOServiceSimulator extends AbstractIOServiceBouchon implements 
     }
 
     @Override
-    public void tournePanneauArriere() {
+    public void tournePanneauBleu() {
 
     }
 
     @Override
-    public void tournePanneauArriere(int speed) {
+    public void tournePanneauBleu(int speed) {
 
     }
 
     @Override
-    public void tournePanneauAvant() {
+    public void tournePanneauJaune() {
 
     }
 
     @Override
-    public void tournePanneauAvant(int speed) {
+    public void tournePanneauJaune(int speed) {
 
     }
 
