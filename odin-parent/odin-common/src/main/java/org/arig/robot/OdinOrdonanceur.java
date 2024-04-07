@@ -148,7 +148,9 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 }
 
                 odinRobotStatus.twoRobots(odinEcranService.config().isTwoRobots());
-                //odinRobotStatus.option1(odinEcranService.config().hasOption(EurobotConfig.OPTION_1));
+                odinRobotStatus.preferePanneaux(odinEcranService.config().hasOption(EurobotConfig.PREFERE_PANNEAUX));
+                odinRobotStatus.activeVolAuSol(odinEcranService.config().hasOption(EurobotConfig.ACTIVE_VOL_AU_SOL));
+                odinRobotStatus.activeVolJardinieres(odinEcranService.config().hasOption(EurobotConfig.ACTIVE_VOL_JARDINIERES));
 
                 done = odinEcranService.config().isStartCalibration();
             }
