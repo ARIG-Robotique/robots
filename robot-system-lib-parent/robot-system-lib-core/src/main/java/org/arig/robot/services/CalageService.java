@@ -35,13 +35,13 @@ public class CalageService {
             if (!rs.matchEnabled() && !ioService.auOk()) {
                 doneAvant = doneArriere = donePriseProduitAvant = donePrisePotArriere = true;
             } else {
-                if (rs.calage().size() == 1 && rs.calage().contains(TypeCalage.PRISE_PRODUIT_AVANT)) {
+                if (rs.calage().contains(TypeCalage.PRISE_PRODUIT_AVANT)) {
                     donePriseProduitAvant = ioService.calagePriseProduitAvant();
                 }
-                if (rs.calage().size() == 1 && rs.calage().contains(TypeCalage.PRISE_PRODUIT_ARRIERE)) {
+                if (rs.calage().contains(TypeCalage.PRISE_PRODUIT_ARRIERE)) {
                     donePriseProduitArriere = ioService.calagePriseProduitArriere();
                 }
-                if (rs.calage().size() == 1 && rs.calage().contains(TypeCalage.PRISE_POT_ARRIERE)) {
+                if (rs.calage().contains(TypeCalage.PRISE_POT_ARRIERE)) {
                     donePrisePotArriere = ioService.calagePrisePotArriere();
                 }
 
