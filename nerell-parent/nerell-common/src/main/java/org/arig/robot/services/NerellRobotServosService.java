@@ -350,11 +350,11 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
                 .batch(POS_PRISE_PLANTE)
                 .batch(POS_FERME);
 
-        Servo panneauSolaireSki = servo(PANNEAU_SOLAIRE_SKI_ID, PANNEAU_SOLAIRE_ROUE)
+        Servo panneauSolaireSki = servo(PANNEAU_SOLAIRE_SKI_ID, PANNEAU_SOLAIRE_SKI)
                 .time(500)
                 .position(POS_FERME, 850)
                 .position(POS_OUVERT, 2100);
-        Servo panneauSolaireRoue = servo(PANNEAU_SOLAIRE_ROUE_ID, PANNEAU_SOLAIRE_SKI)
+        Servo panneauSolaireRoue = servo(PANNEAU_SOLAIRE_ROUE_ID, PANNEAU_SOLAIRE_ROUE)
                 .time(500)
                 .position(POS_FERME, 1300)
                 .position(POS_OUVERT, 2100);
