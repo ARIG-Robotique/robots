@@ -260,18 +260,33 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     }
 
     @Override
-    public boolean calagePrisePotArriere() {
-        return calagePrisePotArriere(1);
+    public boolean calagePriseProduitArriere() {
+        return calagePriseProduitArriere(1);
     }
 
     @Override
-    public boolean calagePrisePotArriere(int mandatorySensors) {
+    public boolean calagePriseProduitArriere(int mandatorySensors) {
         if (mandatorySensors > 3) {
             throw new IllegalArgumentException("Le nombre de capteurs arrière obligatoires ne peut pas être supérieur à 3");
         }
         int count = presenceArriereGauche() ? 1 : 0;
         count += presenceArriereCentre() ? 1 : 0;
         count += presenceArriereDroite() ? 1 : 0;
+        return count >= mandatorySensors;
+    }
+
+    @Override
+    public boolean calagePrisePotArriere() {
+        return calagePrisePotArriere(1);
+    }
+
+    @Override
+    public boolean calagePrisePotArriere(int mandatorySensors) {
+        if (mandatorySensors > 2) {
+            throw new IllegalArgumentException("Le nombre de capteurs inductifs obligatoires ne peut pas être supérieur à 2");
+        }
+        int count = inductifGauche() ? 1 : 0;
+        count += inductifDroit() ? 1 : 0;
         return count >= mandatorySensors;
     }
 

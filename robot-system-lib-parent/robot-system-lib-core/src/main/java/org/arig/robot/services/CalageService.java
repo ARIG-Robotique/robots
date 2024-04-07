@@ -29,6 +29,7 @@ public class CalageService {
             boolean doneAvant = false;
             boolean doneArriere = false;
             boolean donePriseProduitAvant = false;
+            boolean donePriseProduitArriere = false;
             boolean donePrisePotArriere = false;
 
             if (!rs.matchEnabled() && !ioService.auOk()) {
@@ -36,6 +37,9 @@ public class CalageService {
             } else {
                 if (rs.calage().size() == 1 && rs.calage().contains(TypeCalage.PRISE_PRODUIT_AVANT)) {
                     donePriseProduitAvant = ioService.calagePriseProduitAvant();
+                }
+                if (rs.calage().size() == 1 && rs.calage().contains(TypeCalage.PRISE_PRODUIT_ARRIERE)) {
+                    donePriseProduitArriere = ioService.calagePriseProduitArriere();
                 }
                 if (rs.calage().size() == 1 && rs.calage().contains(TypeCalage.PRISE_POT_ARRIERE)) {
                     donePrisePotArriere = ioService.calagePrisePotArriere();
@@ -62,7 +66,7 @@ public class CalageService {
                 }
             }
 
-            if (doneAvant || doneArriere || donePriseProduitAvant || donePrisePotArriere) {
+            if (doneAvant || doneArriere || donePriseProduitAvant || donePriseProduitArriere || donePrisePotArriere) {
                 if (doneAvant) {
                     log.info("Callage complet : {}", TypeCalage.AVANT);
                     rs.calageCompleted().add(TypeCalage.AVANT);
@@ -74,6 +78,10 @@ public class CalageService {
                 if (donePriseProduitAvant) {
                     log.info("Callage complet : {}", TypeCalage.PRISE_PRODUIT_AVANT);
                     rs.calageCompleted().add(TypeCalage.PRISE_PRODUIT_AVANT);
+                }
+                if (donePriseProduitArriere) {
+                    log.info("Callage complet : {}", TypeCalage.PRISE_PRODUIT_ARRIERE);
+                    rs.calageCompleted().add(TypeCalage.PRISE_PRODUIT_ARRIERE);
                 }
                 if (donePrisePotArriere) {
                     log.info("Callage complet : {}", TypeCalage.PRISE_POT_ARRIERE);

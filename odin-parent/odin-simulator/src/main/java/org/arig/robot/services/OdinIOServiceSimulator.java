@@ -27,6 +27,16 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
     }
 
     @Override
+    public boolean calagePriseProduitArriere() {
+        return calagePriseProduitArriere(1);
+    }
+
+    @Override
+    public boolean calagePriseProduitArriere(int mandatorySensors) {
+        return false;
+    }
+
+    @Override
     public boolean calagePrisePotArriere() {
         return calagePrisePotArriere(1);
     }

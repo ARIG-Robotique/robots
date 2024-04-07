@@ -184,7 +184,7 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
 
     @Override
     public boolean calagePriseProduitAvant() {
-        return false;
+        return calagePriseProduitAvant(3);
     }
 
     @Override
@@ -193,8 +193,18 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
     }
 
     @Override
-    public boolean calagePrisePotArriere() {
+    public boolean calagePriseProduitArriere() {
+        return calagePriseProduitArriere(3);
+    }
+
+    @Override
+    public boolean calagePriseProduitArriere(int mandatorySensors) {
         return false;
+    }
+
+    @Override
+    public boolean calagePrisePotArriere() {
+        return calagePrisePotArriere(2);
     }
 
     @Override
