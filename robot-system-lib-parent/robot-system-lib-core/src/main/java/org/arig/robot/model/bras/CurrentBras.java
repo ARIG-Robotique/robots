@@ -6,7 +6,6 @@ import java.io.Serializable;
 
 @RequiredArgsConstructor
 public class CurrentBras implements Serializable {
-    public final PositionBras state;
     public final double a1;
     public final double a2;
     public final double a3;
@@ -15,7 +14,7 @@ public class CurrentBras implements Serializable {
     public final int a;
     public final boolean invertA1;
 
-    public CurrentBras(PositionBras state, AnglesBras angles, PointBras point) {
-        this(state, angles.a1, angles.a2, angles.a3, point.x, point.y, point.a, point.invertA1);
+    public CurrentBras(AnglesBras angles, PointBras point) {
+        this(angles.a1, angles.a2, angles.a3, point.x, point.y, point.a, point.invertA1);
     }
 }

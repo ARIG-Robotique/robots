@@ -3,124 +3,108 @@ package org.arig.robot.services;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
 import org.arig.robot.model.bras.AnglesBras;
 import org.arig.robot.model.bras.ConfigBras;
 import org.arig.robot.model.bras.CurrentBras;
-import org.arig.robot.model.bras.OptionBras;
 import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.bras.PositionBras;
-import org.arig.robot.model.bras.TransitionBras;
-import org.arig.robot.utils.StateMachine;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @Accessors(fluent = true)
-public class BrasStateMachine extends StateMachine<PositionBras, PointBras, TransitionBras, OptionBras> {
+public class BrasInstance {
 
+    // position du pivot de l'epaule (origine = sol au milieu du robot)
     public static final int X = 105;
     public static final int Y = 261;
+    // rayon de chaque segment
     public static final int R1 = 72;
     public static final int R2 = 72;
     public static final int R3 = 110;
+    // angles limites
     public static final int A1_MIN = -158;
     public static final int A1_MAX = 19;
-    public static final int A1_INIT = A1_MIN;
     public static final int A2_MIN = -44;
     public static final int A2_MAX = 135;
-    public static final int A2_INIT = A2_MAX;
     public static final int A3_MIN = -127;
     public static final int A3_MAX = 33;
+    // angles initiaux
+    public static final int A2_INIT = A2_MAX;
+    public static final int A1_INIT = A1_MIN;
     public static final int A3_INIT = -66;
 
-    private final int MAX_SPEED = 100;
-    private final int SLOW_SPEED = 50;
+    private static final int MAX_SPEED = 100;
 
-    @Getter
-    private final ConfigBras config;
-    private final ServoCallback servoCallback;
-
-    @Getter
-    private CurrentBras current;
+    // positions caractéristiques
+    public static final int PRISE_PLANTE_SOL_Y = 55;
+    public static final int PRISE_POT_SOL_Y = 60;
+    public static final int PRISE_POT_POT_Y = PRISE_POT_SOL_Y + 10;
+    public static final int SORTIE_POT_POT_Y = 145;
+    public static final int DEPOSE_SOL_Y = PRISE_POT_SOL_Y + 10;
 
     @FunctionalInterface
     public interface ServoCallback {
         void accept(double a1, double a2, double a3, int speed, boolean wait);
     }
+    
+    private final String name;
+    private final ServoCallback servoCallback;
 
-    public BrasStateMachine(String name, boolean back, ServoCallback servo) {
-        super(name);
+    @Getter
+    private final ConfigBras config;
 
+    @Getter
+    private CurrentBras current;
+
+    private final Map<PositionBras, PointBras> positions = new HashMap<>();
+
+    public Set<PositionBras> states() {
+        return positions.keySet();
+    }
+    
+    public BrasInstance(String name, boolean back, ServoCallback servoCallback) {
+        this.name = name;
+        this.servoCallback = servoCallback;
         this.config = new ConfigBras(back, X, Y, R1, R2, R3, A1_MIN, A1_MAX, A2_MIN, A2_MAX, A3_MIN, A3_MAX, true);
-        this.servoCallback = servo;
-
-        disableCheck(true);
-
-        /* INIT */
-        defaultTransition(new TransitionBras(MAX_SPEED, new PointBras[0]));
-        currentState(PositionBras.INIT);
-
-        onState((state, pt, transition, opt) -> {
-            for (PointBras point : transition.points()) {
-                set(point, state, ArrayUtils.contains(opt, OptionBras.SLOW) ? SLOW_SPEED : MAX_SPEED);
-            }
-
-            set(pt, state,
-                    ArrayUtils.contains(opt, OptionBras.SLOW) ? SLOW_SPEED : MAX_SPEED,
-                    !ArrayUtils.contains(opt, OptionBras.NO_WAIT)
-            );
-        });
 
         PointBras initstate = new PointBras(105, 95, -90, true); // dois matcher les angles init
+        current = new CurrentBras(new AnglesBras(A1_INIT, A2_INIT, A3_INIT), initstate);
 
-        state(PositionBras.INIT, initstate);
-        state(PositionBras.HORIZONTAL, new PointBras(X + R1 + R2 + R3, Y, 0, true));
-
-        current = new CurrentBras(PositionBras.INIT, new AnglesBras(A1_INIT, A2_INIT, A3_INIT), initstate);
-
-        /* STATES */
-
-        state(PositionBras.CALLAGE_PANNEAUX, new PointBras(215, 205, 0, true));
-
-        // a valider
-        final int PRISE_PLANTE_SOL_Y = 55;
-        final int PRISE_POT_SOL_Y = 60;
-        final int DEPOSE_SOL_Y = PRISE_POT_SOL_Y + 10;
-
-        final int WORK_X = 220;
-
-        state(PositionBras.PRISE_PLANTE_AVANT, new PointBras(110, PRISE_PLANTE_SOL_Y, -90, true));
-        state(PositionBras.PRISE_POT, new PointBras(140, PRISE_POT_SOL_Y, -90, true));
-        state(PositionBras.PRISE_POT_POT, new PointBras(WORK_X, PRISE_POT_SOL_Y + 15, -90, true));
-        state(PositionBras.SORTIE_POT_POT, new PointBras(WORK_X, 145, -90, true));
-        state(PositionBras.DEPOSE_PLANTE_POT, new PointBras(WORK_X, 120, -90, true));
-        state(PositionBras.DEPOSE_SOL, new PointBras(WORK_X, DEPOSE_SOL_Y, -90, true));
-        state(PositionBras.DEPOSE_JARDINIERE, new PointBras(250, 150, -90, true));
-
-        build();
+        positions.put(PositionBras.INIT, initstate);
+        positions.put(PositionBras.HORIZONTAL, new PointBras(X + R1 + R2 + R3, Y, 0, true));
+        positions.put(PositionBras.TRANSPORT, new PointBras(125, 95, -90, true)); // position quand on transporte un truc
+        positions.put(PositionBras.CALLAGE_PANNEAUX, new PointBras(215, 205, 0, true)); // position d'init avec la pince à l'horizontale
     }
 
-    /**
-     * Change la position du bras en direct sans passer par la state machine
-     */
-    public boolean set(PointBras pt, PositionBras state, int speed) {
-        return set(pt, state, speed, true);
+    public boolean setByName(PositionBras positionBras, int speed, boolean wait) {
+        assert positions.containsKey(positionBras);
+        return set(positions.get(positionBras), speed, wait);
     }
 
-    public boolean set(PointBras pt, PositionBras state, int speed, boolean wait) {
-        log.debug("Bras {} x={} y={} a={} invertA1={}", name, pt.x, pt.y, pt.a, pt.invertA1);
+    public boolean set(PointBras pt, int speed, boolean wait) {
+        resolvePoint(pt);
+
+        if (pt.invertA1 == null) {
+            pt.invertA1 = config.preferA1Min;
+        }
+
+        if (speed == 0) {
+            speed = MAX_SPEED;
+        }
+
+        log.info("Bras {} x={} y={} a={} invertA1={}", name, pt.x, pt.y, pt.a, pt.invertA1);
         AnglesBras angles = calculerAngles(pt.x, pt.y, pt.a, pt.invertA1, true);
 
         if (angles == null || angles.isError()) {
             return false;
         }
 
-        if (state == null) {
-            currentState(null);
-        }
-
-        log.debug("Bras {} a1={} a2={} a3={}", name, angles.a1, angles.a2, angles.a3);
+        log.info("Bras {} a1={} a2={} a3={}", name, angles.a1, angles.a2, angles.a3);
         servoCallback.accept(angles.a1, angles.a2, angles.a3, speed, wait);
-        current = new CurrentBras(state, angles, pt);
+        current = new CurrentBras(angles, pt);
 
         return true;
     }
@@ -207,6 +191,32 @@ public class BrasStateMachine extends StateMachine<PositionBras, PointBras, Tran
 
     private double alKashiAngleRad(double a, double b, double c) {
         return Math.acos((Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2 * a * b));
+    }
+
+    private void resolvePoint(PointBras pt) {
+        if (pt instanceof PointBras.PointBrasTranslated) {
+            pt.x += current.x;
+            pt.y += current.y;
+            pt.a = current.a;
+            pt.invertA1 = current.invertA1;
+        }
+        else if (pt instanceof PointBras.PointBrasRotated) {
+            // position du doigt dans le réferentiel du poignet
+            double currentA = Math.toRadians(current.a);
+            double xOrig = Math.cos(currentA) * config.r3;
+            double yOrig = Math.sin(currentA) * config.r3;
+
+            // rotation du doigt
+            double toRotate = Math.toRadians(pt.a);
+            double xNew = xOrig * Math.cos(toRotate) - yOrig * Math.sin(toRotate);
+            double yNew = xOrig * Math.sin(toRotate) + yOrig * Math.cos(toRotate);
+
+            // remise dans le referentiel global
+            pt.x = (int) Math.round(current.x - xOrig + xNew);
+            pt.y = (int) Math.round(current.y - yOrig + yNew);
+            pt.a += current.a;
+            pt.invertA1 = current.invertA1;
+        }
     }
 
 }

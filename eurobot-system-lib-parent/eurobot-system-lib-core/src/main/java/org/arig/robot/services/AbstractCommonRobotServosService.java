@@ -136,12 +136,18 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void groupePinceAvantFerme(boolean wait) {
         setPositionBatch(GROUP_PINCE_AVANT, POS_FERME, wait);
     }
+    public void groupePinceAvantPrise(boolean wait) {
+        setPositionBatch(GROUP_PINCE_AVANT, POS_PRISE, wait);
+    }
 
     public void groupePinceArriereOuvert(boolean wait) {
         setPositionBatch(GROUP_PINCE_ARRIERE, POS_OUVERT, wait);
     }
     public void groupePinceArriereFerme(boolean wait) {
         setPositionBatch(GROUP_PINCE_ARRIERE, POS_FERME, wait);
+    }
+    public void groupePinceArrierePrise(boolean wait) {
+        setPositionBatch(GROUP_PINCE_ARRIERE, POS_PRISE, wait);
     }
 
     public void groupePanneauOuvert(boolean wait) {
@@ -181,20 +187,20 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
         setPosition(PANNEAU_SOLAIRE_SKI, POS_FERME, wait);
     }
 
-    public void setPortePotOuvert(boolean wait) {
-        setPosition(PORTE_POT, POS_OUVERT, wait);
+    public void setPortePotHaut(boolean wait) {
+        setPosition(PORTE_POT, POS_HAUT, wait);
     }
 
-    public void setPortePotFerme(boolean wait) {
-        setPosition(PORTE_POT, POS_FERME, wait);
+    public void setPortePotBas(boolean wait) {
+        setPosition(PORTE_POT, POS_BAS, wait);
     }
 
-    public void setPortePotGlissiereOuvert(boolean wait) {
-        setPosition(PORTE_POT_GLISSIERE, POS_OUVERT, wait);
+    public void setPortePotGlissiereSorti(boolean wait) {
+        setPosition(PORTE_POT_GLISSIERE, POS_SORTI, wait);
     }
 
-    public void setPortePotGlissiereFerme(boolean wait) {
-        setPosition(PORTE_POT_GLISSIERE, POS_FERME, wait);
+    public void setPortePotGlissiereRentre(boolean wait) {
+        setPosition(PORTE_POT_GLISSIERE, POS_RENTRE, wait);
     }
 
     public void brasAvantGauchePinceOuvert(boolean wait) {

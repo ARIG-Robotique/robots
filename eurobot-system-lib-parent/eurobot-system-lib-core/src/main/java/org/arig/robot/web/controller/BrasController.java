@@ -5,7 +5,6 @@ import org.arig.robot.constants.ConstantesConfig;
 import org.arig.robot.model.Bras;
 import org.arig.robot.model.bras.AnglesBras;
 import org.arig.robot.model.bras.CurrentBras;
-import org.arig.robot.model.bras.OptionBras;
 import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.services.BrasService;
@@ -45,19 +44,21 @@ public class BrasController {
             @RequestParam("x") final int x,
             @RequestParam("y") final int y,
             @RequestParam("a") final int a,
-            @RequestParam(name = "invertA1", required = false) final Boolean invertA1
+            @RequestParam(name = "invertA1", required = false) final Boolean invertA1,
+            @RequestParam(name = "speed", required = false) final int speed
     ) {
         assert bras != null;
-        return brasService.setBras(bras, new PointBras(x, y, a, invertA1), null, 40);
+        return brasService.setBras(bras, new PointBras(x, y, a, invertA1), speed, true);
     }
 
     @PostMapping("/{bras}/byName")
     public void setBrasByName(
             @PathVariable("bras") final Bras bras,
-            @RequestParam("name") final PositionBras position
+            @RequestParam("name") final PositionBras position,
+            @RequestParam(name = "speed", required = false) final int speed
     ) {
         assert bras != null;
-        brasService.setBras(bras, position, OptionBras.SLOW);
+        brasService.setBrasByName(bras, position, speed, true);
     }
 
     @GetMapping("/{bras}/compute")
