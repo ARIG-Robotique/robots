@@ -12,11 +12,17 @@ import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.PamiRobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
+import org.arig.robot.model.ecran.EcranConfig;
+import org.arig.robot.model.ecran.EcranMatchInfo;
+import org.arig.robot.model.ecran.EcranParams;
+import org.arig.robot.model.ecran.EcranPhoto;
+import org.arig.robot.model.ecran.EcranState;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.system.RobotGroupOverSocket;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.arig.robot.system.blockermanager.SystemBlockerManagerImpl;
+import org.arig.robot.system.capteurs.socket.IEcran;
 import org.arig.robot.system.group.RobotGroup;
 import org.arig.robot.system.motion.AsservissementPolaireDistanceOrientation;
 import org.arig.robot.system.motion.IAsservissementPolaire;
@@ -189,5 +195,32 @@ public class PamiCommonContext {
                 PamiConstantesConfig.maxErrorSumDistance,
                 PamiConstantesConfig.maxErrorSumOrientation
         );
+    }
+
+    @Bean
+    public IEcran<EcranConfig, EcranState> ecran() {
+        return new IEcran<>() {
+            @Override
+            public void end() { }
+
+            @Override
+            public boolean setParams(EcranParams params) {
+                return true;
+            }
+
+            @Override
+            public EcranConfig configInfos() {
+                return new EcranConfig();
+            }
+
+            @Override
+            public void updateState(EcranState data) { }
+
+            @Override
+            public void updateMatch(EcranMatchInfo data) { }
+
+            @Override
+            public void updatePhoto(EcranPhoto photo) { }
+        };
     }
 }

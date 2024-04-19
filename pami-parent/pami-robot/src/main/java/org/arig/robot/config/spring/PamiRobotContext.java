@@ -167,33 +167,6 @@ public class PamiRobotContext {
     }
 
     @Bean
-    public IEcran<EcranConfig, EcranState> ecran() {
-        return new IEcran<>() {
-            @Override
-            public void end() { }
-
-            @Override
-            public boolean setParams(EcranParams params) {
-                return true;
-            }
-
-            @Override
-            public EcranConfig configInfos() {
-                return new EcranConfig();
-            }
-
-            @Override
-            public void updateState(EcranState data) { }
-
-            @Override
-            public void updateMatch(EcranMatchInfo data) { }
-
-            @Override
-            public void updatePhoto(EcranPhoto photo) { }
-        };
-    }
-
-    @Bean
     public IVisionBalise<StatutBalise> visionBalise(Environment env) {
         final String host = env.getRequiredProperty("balise.socket.host");
         final Integer port = env.getRequiredProperty("balise.socket.port", Integer.class);

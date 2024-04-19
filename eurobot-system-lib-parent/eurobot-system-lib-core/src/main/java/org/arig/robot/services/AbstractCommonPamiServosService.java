@@ -12,7 +12,6 @@ public abstract class AbstractCommonPamiServosService extends AbstractServosServ
     public static final String TOUCHE_PLANTE_DROITE = "Touche plante droite";
 
 
-    protected static final String POS_INIT = "Init";
     protected static final String POS_FERME = "Fermé";
     protected static final String POS_OUVERT = "Ouvert";
 
