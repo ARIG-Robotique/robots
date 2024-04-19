@@ -1,4 +1,4 @@
-package org.arig.robot.system.capteurs.can;
+package org.arig.robot.system.communication;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

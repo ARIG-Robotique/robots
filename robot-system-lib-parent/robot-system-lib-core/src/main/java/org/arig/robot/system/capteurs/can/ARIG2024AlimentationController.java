@@ -9,6 +9,7 @@ import org.arig.robot.communication.can.CANDevice;
 import org.arig.robot.model.capteurs.AlimentationSensorValue;
 import org.arig.robot.model.capteurs.BatterySensorValue;
 import org.arig.robot.system.capteurs.i2c.IAlimentationSensor;
+import org.arig.robot.system.communication.CANRefreshThread;
 import tel.schich.javacan.CanChannels;
 import tel.schich.javacan.CanFilter;
 import tel.schich.javacan.CanFrame;
@@ -75,7 +76,7 @@ public class ARIG2024AlimentationController implements IAlimentationSensor, CAND
     }
   }
 
-  public ARIG2024AlimentationController(NetworkDevice canDevice) throws IOException {
+  public ARIG2024AlimentationController(final NetworkDevice canDevice) throws IOException {
     this.manualChannel = CanChannels.newRawChannel(canDevice);
     this.manualChannel.setOption(CanSocketOptions.FILTER, AlimControlerManual.filters());
 
