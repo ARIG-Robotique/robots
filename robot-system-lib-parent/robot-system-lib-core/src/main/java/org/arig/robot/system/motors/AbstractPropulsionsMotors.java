@@ -1,5 +1,7 @@
 package org.arig.robot.system.motors;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -14,7 +16,11 @@ public abstract class AbstractPropulsionsMotors {
     public static final int MOTOR_1 = 1;
     public static final int MOTOR_2 = 2;
 
+    @Getter
+    @Accessors(fluent = true)
     private int numMoteurGauche;
+    @Getter
+    @Accessors(fluent = true)
     private int numMoteurDroit;
     private boolean alternate;
 
@@ -47,7 +53,7 @@ public abstract class AbstractPropulsionsMotors {
      * @param gauche the gauche
      * @param droit  the droit
      */
-    public final void generateMouvement(final int gauche, final int droit) {
+    public void generateMouvement(final int gauche, final int droit) {
         alternate = !alternate;
         if (alternate) {
             moteurGauche(gauche);
@@ -95,7 +101,7 @@ public abstract class AbstractPropulsionsMotors {
     /**
      * Méthode pour commander l'arret des moteurs configurés
      */
-    public final void stopAll() {
+    public void stopAll() {
         stop1();
         stop2();
     }
@@ -233,7 +239,7 @@ public abstract class AbstractPropulsionsMotors {
     /**
      * Exception assignation moteur gauche.
      */
-    private void exceptionAssignationMoteurGauche() {
+    protected void exceptionAssignationMoteurGauche() {
         if (numMoteurGauche == AbstractPropulsionsMotors.UNDEF_MOTOR) {
             log.error("L'assignation du moteur gauche n'est pas faite");
             throw new IllegalStateException("L'assignation du moteur gauche n'est pas faite");
@@ -243,7 +249,7 @@ public abstract class AbstractPropulsionsMotors {
     /**
      * Exception assignation moteur droit.
      */
-    private void exceptionAssignationMoteurDroit() {
+    protected void exceptionAssignationMoteurDroit() {
         if (numMoteurDroit == AbstractPropulsionsMotors.UNDEF_MOTOR) {
             log.error("L'assignation du moteur droit n'est pas faite");
             throw new IllegalStateException("L'assignation du moteur droit n'est pas faite");

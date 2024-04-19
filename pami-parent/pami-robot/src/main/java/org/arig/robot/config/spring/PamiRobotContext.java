@@ -38,6 +38,7 @@ import org.arig.robot.system.capteurs.socket.IVisionBalise;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.encoders.can.ARIG2024Can2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
+import org.arig.robot.system.motors.can.ARIG2024CanPropulsionsMotors;
 import org.arig.robot.system.servos.i2c.ARIG2024IoPamiServos;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -107,30 +108,11 @@ public class PamiRobotContext {
     }
 
     @Bean
-    public AbstractPropulsionsMotors motors() {
+    public AbstractPropulsionsMotors motors(NetworkDevice canBus) throws IOException {
         // Configuration de la carte moteur propulsion.
-        final AbstractPropulsionsMotors motors = new AbstractPropulsionsMotors(0) {
-            @Override
-            public void init() {
-
-            }
-
-            @Override
-            public void speedMoteur1(int val) {
-
-            }
-
-            @Override
-            public void speedMoteur2(int val) {
-
-            }
-
-            @Override
-            public void printVersion() {
-
-            }
-        };
+        ARIG2024CanPropulsionsMotors motors = new ARIG2024CanPropulsionsMotors(canBus);
         motors.assignMotors(PamiConstantesConfig.numeroMoteurGauche, PamiConstantesConfig.numeroMoteurDroit);
+        motors.setMotorConfiguration(false, true);
         return motors;
     }
 
@@ -143,14 +125,10 @@ public class PamiRobotContext {
             }
 
             @Override
-            public void printDeviceInfo() {
-
-            }
+            public void printDeviceInfo() { }
 
             @Override
-            public void end() {
-
-            }
+            public void end() { }
 
             @Override
             public DeviceInfos deviceInfo() {
@@ -167,20 +145,16 @@ public class PamiRobotContext {
             }
 
             @Override
-            public void startScan() {
-            }
+            public void startScan() { }
 
             @Override
-            public void startScan(Short speed) {
-            }
+            public void startScan(Short speed) { }
 
             @Override
-            public void stopScan() {
-            }
+            public void stopScan() { }
 
             @Override
-            public void setSpeed(Short speed) {
-            }
+            public void setSpeed(Short speed) { }
 
             @Override
             public ScanInfos grabData() {
@@ -196,9 +170,7 @@ public class PamiRobotContext {
     public IEcran<EcranConfig, EcranState> ecran() {
         return new IEcran<>() {
             @Override
-            public void end() {
-
-            }
+            public void end() { }
 
             @Override
             public boolean setParams(EcranParams params) {
@@ -211,19 +183,13 @@ public class PamiRobotContext {
             }
 
             @Override
-            public void updateState(EcranState data) {
-
-            }
+            public void updateState(EcranState data) { }
 
             @Override
-            public void updateMatch(EcranMatchInfo data) {
-
-            }
+            public void updateMatch(EcranMatchInfo data) { }
 
             @Override
-            public void updatePhoto(EcranPhoto photo) {
-
-            }
+            public void updatePhoto(EcranPhoto photo) { }
         };
     }
 
