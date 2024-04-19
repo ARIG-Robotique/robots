@@ -36,6 +36,7 @@ import org.arig.robot.system.capteurs.socket.IEcran;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.arig.robot.system.capteurs.socket.IVisionBalise;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
+import org.arig.robot.system.encoders.can.ARIG2024Can2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.servos.i2c.ARIG2024IoPamiServos;
 import org.springframework.context.annotation.Bean;
@@ -89,23 +90,9 @@ public class PamiRobotContext {
     }
 
     @Bean
-    public Abstract2WheelsEncoders encoders() {
-        final Abstract2WheelsEncoders encoders = new Abstract2WheelsEncoders("Sample encoders") {
-            @Override
-            public void reset() {
-
-            }
-
-            @Override
-            protected double lectureGauche() {
-                return 0;
-            }
-
-            @Override
-            protected double lectureDroit() {
-                return 0;
-            }
-        };
+    public Abstract2WheelsEncoders encoders(NetworkDevice canBus) throws IOException {
+        ARIG2024Can2WheelsEncoders encoders = new ARIG2024Can2WheelsEncoders(canBus);
+        encoders.setEncoderConfiguration(true, false);
         return encoders;
     }
 
