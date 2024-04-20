@@ -51,17 +51,17 @@ public class ARIG2024Can2WheelsEncoders extends Abstract2WheelsEncoders implemen
   }
 
   public ARIG2024Can2WheelsEncoders(final NetworkDevice canDevice) throws IOException {
-    this(canDevice, (byte) 1, (byte) 2);
+    this(canDevice, 1, 2);
   }
 
-  public ARIG2024Can2WheelsEncoders(final NetworkDevice canDevice, byte encoderGaucheId, byte encoderDroitId) throws IOException {
+  public ARIG2024Can2WheelsEncoders(final NetworkDevice canDevice, int encoderGaucheId, int encoderDroitId) throws IOException {
     super("two_wheels_encoders");
 
     Assert.isTrue(encoderGaucheId != encoderDroitId, "Encoder id must be different");
     Assert.isTrue(encoderGaucheId == 1 || encoderGaucheId == 2, "Encoder gauche id must be 1 or 2");
     Assert.isTrue(encoderDroitId == 1 || encoderDroitId == 2, "Encoder droit id must be 1 or 2");
-    this.encoderGaucheId = encoderGaucheId;
-    this.encoderDroitId = encoderDroitId;
+    this.encoderGaucheId = (byte) encoderGaucheId;
+    this.encoderDroitId = (byte) encoderDroitId;
 
     this.manualChannel = CanChannels.newRawChannel(canDevice);
     this.manualChannel.setOption(CanSocketOptions.FILTER, ARIG2024Can2WheelsEncodersManual.filters());
