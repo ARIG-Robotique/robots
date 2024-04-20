@@ -1,19 +1,19 @@
-package org.arig.robot.odin.utils.shell.commands;
+package org.arig.robot.pami.utils.shell.commands;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.OdinConstantesConfig;
-import org.arig.robot.model.OdinRobotStatus;
+import org.arig.robot.constants.PamiConstantesConfig;
+import org.arig.robot.model.PamiRobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractEnergyService;
-import org.arig.robot.services.OdinIOService;
+import org.arig.robot.services.PamiIOService;
 import org.arig.robot.services.TrajectoryManager;
-import org.arig.robot.system.encoders.i2c.ARIGI2C2WheelsEncoders;
+import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @ShellComponent
 @ShellCommandGroup("Odométrie")
 @RequiredArgsConstructor
-public class OdinOdometrieCommands {
+public class PamiOdometrieCommands {
 
     private static final String LOG_SEPARATOR = "-------------------------------------";
     private static final String LOG_CYCLE = "Cycle {} / {}";
@@ -38,11 +38,11 @@ public class OdinOdometrieCommands {
     private static final double DISTANCE_TABLE = 2997; // Table Greg 2022
 
     private final MonitoringWrapper monitoringWrapper;
-    private final OdinIOService ioService;
+    private final PamiIOService ioService;
     private final AbstractEnergyService energyService;
     private final TrajectoryManager trajectoryManager;
-    private final OdinRobotStatus rs;
-    private final ARIGI2C2WheelsEncoders encoders;
+    private final PamiRobotStatus rs;
+    private final Abstract2WheelsEncoders encoders;
     private final ConvertionRobotUnit convRobot;
     private final Position currentPosition;
 
@@ -140,7 +140,7 @@ public class OdinOdometrieCommands {
     @ShellMethodAvailability("alimentationOk")
     public void odometrieDistance(int nbCycle) {
 
-        double distanceReel = DISTANCE_TABLE - (OdinConstantesConfig.dstCallage * 2);
+        double distanceReel = DISTANCE_TABLE - (PamiConstantesConfig.dstCallage * 2);
 
         encoders.reset();
         rs.enableAsserv();
@@ -184,7 +184,7 @@ public class OdinOdometrieCommands {
             countPerMmByCycle.add(((localRoueDroite + localRoueGauche) / 2) / distanceReel);
 
             rs.enableForceMonitoring();
-            currentPosition.updatePosition(convRobot.mmToPulse(DISTANCE_TABLE - OdinConstantesConfig.dstCallage), 0, 0);
+            currentPosition.updatePosition(convRobot.mmToPulse(DISTANCE_TABLE - PamiConstantesConfig.dstCallage), 0, 0);
             trajectoryManager.gotoPoint(DISTANCE_TABLE - distanceReel - 50, 0, GotoOption.ARRIERE, GotoOption.SANS_ORIENTATION);
             rs.enableCalageBordure(TypeCalage.ARRIERE);
             trajectoryManager.reculeMMSansAngle(200);

@@ -1,4 +1,4 @@
-package org.arig.robot.odin.utils.shell.commands;
+package org.arig.robot.pami.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package org.arig.robot.odin.utils.shell.commands;
+package org.arig.robot.pami.utils.shell.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.arig.robot.model.AbstractRobotStatus;
@@ -37,7 +37,7 @@ public class PamiMoteursCommands {
     @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Arret des moteurs de propulsions")
     public void stopMoteursPropulsions() {
-        propulsionsMotors.generateMouvement(propulsionsMotors.getStopSpeed(), propulsionsMotors.getStopSpeed());
+        propulsionsMotors.stopAll();
         rs.disableCapture();
     }
 

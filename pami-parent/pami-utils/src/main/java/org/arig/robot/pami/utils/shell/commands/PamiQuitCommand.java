@@ -1,8 +1,9 @@
-package org.arig.robot.odin.utils.shell.commands;
+package org.arig.robot.pami.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import org.arig.robot.services.PamiIOService;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
+import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.springframework.shell.ExitRequest;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -13,6 +14,7 @@ import org.springframework.shell.standard.commands.Quit;
 public class PamiQuitCommand implements Quit.Command {
 
     private final ILidarTelemeter lidar;
+    private final AbstractPropulsionsMotors motors;
     private final PamiIOService ioService;
 
     @ShellMethod(value = "Exit the shell.", key = {"quit", "exit"})
@@ -20,6 +22,9 @@ public class PamiQuitCommand implements Quit.Command {
         // Stop le lidar en quittant
         lidar.stopScan();
         lidar.end();
+
+        // Stop les moteurs
+        motors.stopAll();
 
         // Stop les alimentations de puissance
         ioService.disableAlimMoteurs();

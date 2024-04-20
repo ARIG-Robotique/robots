@@ -1,4 +1,4 @@
-package org.arig.robot.odin.utils;
+package org.arig.robot.pami.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jline.reader.LineReader;

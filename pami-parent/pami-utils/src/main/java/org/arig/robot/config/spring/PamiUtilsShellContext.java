@@ -1,6 +1,7 @@
 package org.arig.robot.config.spring;
 
-import org.arig.robot.odin.utils.PamiShellInputReader;
+import org.arig.robot.constants.ConstantesConfig;
+import org.arig.robot.pami.utils.PamiShellInputReader;
 import org.jline.reader.LineReader;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
@@ -11,12 +12,13 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.jline.PromptProvider;
 
 @Configuration
-@ComponentScan("org.arig.robot.odin.utils")
+@ComponentScan("org.arig.robot.pami.utils")
 public class PamiUtilsShellContext {
 
     @Bean
     public PromptProvider myPromptProvider() {
-        return () -> new AttributedString("odin-utils:> ", AttributedStyle.DEFAULT.background(AttributedStyle.YELLOW));
+        String pamiId = System.getProperty(ConstantesConfig.keyPamiId);
+        return () -> new AttributedString(pamiId + "-utils:> ", AttributedStyle.DEFAULT.background(AttributedStyle.YELLOW));
     }
 
     @Bean

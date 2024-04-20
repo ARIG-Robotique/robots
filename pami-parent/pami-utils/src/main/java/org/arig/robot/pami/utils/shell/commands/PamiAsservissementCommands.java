@@ -1,4 +1,4 @@
-package org.arig.robot.odin.utils.shell.commands;
+package org.arig.robot.pami.utils.shell.commands;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
