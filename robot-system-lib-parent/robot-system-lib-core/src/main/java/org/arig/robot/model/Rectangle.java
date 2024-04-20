@@ -22,4 +22,12 @@ public class Rectangle extends Shape {
         return pt.getX() >= x && pt.getX() < x + w && pt.getY() >= y && pt.getY() < y + h;
     }
 
+    public Point center() {
+        return new Point(x + w / 2, y + h / 2);
+    }
+
+    public static Rectangle byCenter(double x, double y, double w, double h) {
+        return new Rectangle(x - w / 2, y - h / 2, w, h);
+    }
+
 }

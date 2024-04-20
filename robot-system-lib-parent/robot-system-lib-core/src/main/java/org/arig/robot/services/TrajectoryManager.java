@@ -179,6 +179,13 @@ public class TrajectoryManager implements InitializingBean {
         asservissementPolaire.reset(true);
     }
 
+    public Point currentPositionMm() {
+        return new Point(
+                conv.pulseToMm(currentPosition.getPt().getX()),
+                conv.pulseToMm(currentPosition.getPt().getY())
+        );
+    }
+
     public double currentXMm() {
         return conv.pulseToMm(currentPosition.getPt().getX());
     }
@@ -989,12 +996,16 @@ public class TrajectoryManager implements InitializingBean {
         applyVitesse(vDistance, vOrientation);
     }
 
-    public void setRampesDistance(double rampeAccel, double rampeDecel) {
-        asservissementPolaire.setRampDistance(rampeAccel, rampeDecel);
+    public void setVitessePercent(int vDistance, int vOrientation) {
+        setVitesse(robotConfig.vitesse(vDistance), robotConfig.vitesseOrientation(vOrientation));
     }
 
-    public void setRampeOrientation(double rampeAccel, double rampeDecel) {
-        asservissementPolaire.setRampOriantation(rampeAccel, rampeDecel);
+    public void setRampesDistancePercent(int rampeAccel, int rampeDecel) {
+        asservissementPolaire.setRampDistance(robotConfig.rampeAccelDistance(rampeAccel), robotConfig.rampeDecelDistance(rampeDecel));
+    }
+
+    public void setRampeOrientationPercent(int rampeAccel, int rampeDecel) {
+        asservissementPolaire.setRampOriantation(robotConfig.rampeAccelOrientation(rampeAccel), robotConfig.rampeDecelOrientation(rampeDecel));
     }
 
     public void setLowSpeed(final boolean lowSpeed) {

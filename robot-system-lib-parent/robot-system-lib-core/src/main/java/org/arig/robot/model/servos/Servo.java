@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.arig.robot.utils.ArigUtils.lerp;
+
 @Data
 @ToString(doNotUseGetters = true)
 @EqualsAndHashCode(doNotUseGetters = true)
@@ -78,11 +80,6 @@ public class Servo {
                         angles.get(index).getValue(), angles.get(index + 1).getValue()
                 )
         );
-    }
-
-    private double lerp(double val, double start_1, double end_1, double start_2, double end_2) {
-        double lambda = (val - start_1) / (end_1 - start_1);
-        return start_2 + lambda * (end_2 - start_2);
     }
 
     public Servo position(String name, int value) {

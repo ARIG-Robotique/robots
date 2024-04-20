@@ -109,9 +109,9 @@ public class TableUtils {
                 && pt.getY() > 0 && pt.getY() < tableHeight;
     }
 
-    public Polygon createPolygonObstacle(Point pt, double tailleObstacle) {
-        int r1 = (int) (Math.cos(Math.toRadians(22.5)) * tailleObstacle / 2 / 10);
-        int r2 = (int) (Math.sin(Math.toRadians(22.5)) * tailleObstacle / 2 / 10);
+    public Polygon createPolygonObstacle(Point pt, double diametre) {
+        int r1 = (int) (Math.cos(Math.toRadians(22.5)) * diametre / 2 / 10);
+        int r2 = (int) (Math.sin(Math.toRadians(22.5)) * diametre / 2 / 10);
 
         Polygon obstacle = new Polygon();
         obstacle.addPoint(r2, r1);
