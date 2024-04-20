@@ -14,7 +14,6 @@ import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.PamiIOService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
-import org.arig.robot.system.encoders.i2c.ARIGI2C2WheelsEncoders;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;

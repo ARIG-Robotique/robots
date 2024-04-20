@@ -3,11 +3,7 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.servos.Servo;
 import org.arig.robot.system.servos.AbstractServos;
-import org.arig.robot.system.servos.i2c.ARIG2024IoPamiServos;
 import org.springframework.stereotype.Service;
-
-import static org.arig.robot.services.BrasInstance.*;
-import static org.arig.robot.services.BrasInstance.A3_INIT;
 
 @Slf4j
 @Service
