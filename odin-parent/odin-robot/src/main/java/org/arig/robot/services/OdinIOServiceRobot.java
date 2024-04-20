@@ -264,6 +264,21 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
     }
 
     @Override
+    public boolean presenceStockGauche() {
+        return false;
+    }
+
+    @Override
+    public boolean presenceStockCentre() {
+        return false;
+    }
+
+    @Override
+    public boolean presenceStockDroite() {
+        return false;
+    }
+
+    @Override
     public boolean presenceAvantGauche() {
         return false;
     }

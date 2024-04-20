@@ -21,6 +21,10 @@ public interface CommonRobotIOService extends IOService {
     boolean presenceArriereCentre();
     boolean presenceArriereDroite();
 
+    boolean presenceStockGauche();
+    boolean presenceStockCentre();
+    boolean presenceStockDroite();
+
     boolean inductifGauche();
     boolean inductifDroit();
 

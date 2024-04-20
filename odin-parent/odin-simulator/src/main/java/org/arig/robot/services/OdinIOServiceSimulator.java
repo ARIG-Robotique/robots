@@ -99,6 +99,21 @@ public class OdinIOServiceSimulator extends AbstractIOServiceBouchon implements 
     }
 
     @Override
+    public boolean presenceStockGauche() {
+        return false;
+    }
+
+    @Override
+    public boolean presenceStockCentre() {
+        return false;
+    }
+
+    @Override
+    public boolean presenceStockDroite() {
+        return false;
+    }
+
+    @Override
     public boolean presenceAvantGauche() {
         return false;
     }

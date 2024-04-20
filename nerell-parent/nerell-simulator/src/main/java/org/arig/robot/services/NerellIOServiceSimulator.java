@@ -129,6 +129,21 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     }
 
     @Override
+    public boolean presenceStockGauche() {
+        return false;
+    }
+
+    @Override
+    public boolean presenceStockCentre() {
+        return false;
+    }
+
+    @Override
+    public boolean presenceStockDroite() {
+        return false;
+    }
+
+    @Override
     public boolean inductifGauche() {
         return false;
     }

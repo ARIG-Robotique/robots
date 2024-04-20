@@ -70,10 +70,9 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     private GpioPinDigitalInput pinceAvantDroit;
     private GpioPinDigitalInput pinceArriereGauche;
     private GpioPinDigitalInput pinceArriereDroit;
-
-    // private GpioPinDigitalInput in2_5;
-    // private GpioPinDigitalInput in2_6;
-    // private GpioPinDigitalInput in2_7;
+    private GpioPinDigitalInput presenceStockGauche;
+    private GpioPinDigitalInput presenceStockCentre;
+    private GpioPinDigitalInput presenceStockDroit;
 
     // Input : Numerique 3
     private GpioPinDigitalInput presenceAvantGauche;
@@ -172,9 +171,9 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         pinceAvantDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
         pinceArriereDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
         pinceArriereGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
-        //in2_5 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
-        //in2_6 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
-        //in2_7 = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
+        presenceStockGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
+        presenceStockDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
+        presenceStockCentre = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
         pinceAvantGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_07);
 
         // PCF3
@@ -340,6 +339,21 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     @Override
     public boolean presenceArriereDroite() {
         return presenceArriereDroit.isLow();
+    }
+
+    @Override
+    public boolean presenceStockGauche() {
+        return presenceStockGauche.isLow();
+    }
+
+    @Override
+    public boolean presenceStockCentre() {
+        return presenceStockCentre.isLow();
+    }
+
+    @Override
+    public boolean presenceStockDroite() {
+        return presenceStockDroit.isLow();
     }
 
     @Override
