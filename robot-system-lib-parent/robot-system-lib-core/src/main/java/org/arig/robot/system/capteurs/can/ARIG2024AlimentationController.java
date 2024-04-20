@@ -35,6 +35,9 @@ public class ARIG2024AlimentationController implements IAlimentationSensor, CAND
   private final String deviceName = "ARIG AlimController 2024";
 
   private Boolean auOK = null;
+  private boolean monitoredInternalAlim = false;
+  private boolean monitoredExternalAlim = false;
+  private boolean monitoredBattery = false;
   private String version = StringUtils.EMPTY;
 
   @Getter
@@ -96,6 +99,8 @@ public class ARIG2024AlimentationController implements IAlimentationSensor, CAND
     log.info("Close {}", deviceName);
     this.refreshThread.stopThread();
 
+    configMonitoring(false, false, false);
+
     if (this.manualChannel != null) {
       this.manualChannel.close();
     }
@@ -126,6 +131,22 @@ public class ARIG2024AlimentationController implements IAlimentationSensor, CAND
       manualChannel.write(frame);
     } catch (IOException e) {
       log.error("Error while sound request", e);
+    }
+  }
+
+  public void configMonitoring(boolean monitoredInternalAlim, boolean monitoredExternalAlim, boolean monitoredBattery) {
+    this.monitoredInternalAlim = monitoredInternalAlim;
+    this.monitoredExternalAlim = monitoredExternalAlim;
+    this.monitoredBattery = monitoredBattery;
+
+    try {
+      byte config = (byte) (monitoredInternalAlim ? 1 : 0);
+      config += (byte) (monitoredExternalAlim ? 2 : 0);
+      config += (byte) (monitoredBattery ? 4 : 0);
+      CanFrame frame = CanFrame.create(AlimControlerManual.SET_CONFIG.id, CanFrame.FD_NO_FLAGS, new byte[]{config});
+      manualChannel.write(frame);
+    } catch (IOException e) {
+      log.error("Error while sending config request", e);
     }
   }
 
