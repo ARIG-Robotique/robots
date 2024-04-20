@@ -92,8 +92,8 @@ public class PamiRobotContext {
 
     @Bean
     public Abstract2WheelsEncoders encoders(NetworkDevice canBus) throws IOException {
-        ARIG2024Can2WheelsEncoders encoders = new ARIG2024Can2WheelsEncoders(canBus);
-        encoders.setEncoderConfiguration(true, false);
+        ARIG2024Can2WheelsEncoders encoders = new ARIG2024Can2WheelsEncoders(canBus, 2, 1);
+        encoders.setEncoderConfiguration(false, true);
         return encoders;
     }
 
@@ -104,7 +104,9 @@ public class PamiRobotContext {
 
     @Bean
     public ARIG2024AlimentationController alimentationController(NetworkDevice canBus) throws IOException {
-        return new ARIG2024AlimentationController(canBus);
+        ARIG2024AlimentationController controller = new ARIG2024AlimentationController(canBus);
+        controller.configMonitoring(true, false, false);
+        return controller;
     }
 
     @Bean
@@ -112,7 +114,7 @@ public class PamiRobotContext {
         // Configuration de la carte moteur propulsion.
         ARIG2024CanPropulsionsMotors motors = new ARIG2024CanPropulsionsMotors(canBus);
         motors.assignMotors(PamiConstantesConfig.numeroMoteurGauche, PamiConstantesConfig.numeroMoteurDroit);
-        motors.setMotorConfiguration(false, true);
+        motors.setMotorConfiguration(false, false);
         return motors;
     }
 
