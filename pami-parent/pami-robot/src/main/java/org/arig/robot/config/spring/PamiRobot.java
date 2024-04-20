@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -18,8 +19,8 @@ public class PamiRobot {
         final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
         System.setProperty(ConstantesConfig.keyExecutionId, execId);
 
-        // TODO : Get PAMI ID from configuration
-        System.setProperty(ConstantesConfig.keyPamiId, "triangle");
+        String pamiId = InetAddress.getLocalHost().getHostName().replace("pami-", "");
+        System.setProperty(ConstantesConfig.keyPamiId, pamiId);
 
         ConfigurableApplicationContext context = SpringApplication.run(PamiRobot.class, args);
         context.getBean(PamiOrdonanceur.class).run();
