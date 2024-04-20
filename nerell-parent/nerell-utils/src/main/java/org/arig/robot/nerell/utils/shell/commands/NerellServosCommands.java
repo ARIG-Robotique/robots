@@ -2,7 +2,10 @@ package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.Bras;
+import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.services.AbstractEnergyService;
+import org.arig.robot.services.BrasService;
 import org.arig.robot.services.NerellIOService;
 import org.arig.robot.services.NerellRobotServosService;
 import org.arig.robot.utils.ThreadUtils;
@@ -20,6 +23,7 @@ public class NerellServosCommands {
     private final NerellRobotServosService servosService;
     private final NerellIOService ioService;
     private final AbstractEnergyService energyService;
+    private final BrasService bras;
 
     private final int nbLoop = 5;
 
@@ -44,84 +48,78 @@ public class NerellServosCommands {
         }
         servosService.setPositionById(id, 1500, speed);
     }
-/*
-    @ShellMethod("Configuration attente moustache gauche")
-    public void configWaitMoustacheGauche(int wait) {
+
+    @ShellMethod("Configuration attente pince")
+    public void configWaitPince(int wait) {
+        bras.setBrasAvant(PositionBras.CALLAGE_PANNEAUX);
+
         for (int i = 0; i < nbLoop; i++) {
-            servosService.moustacheGaucheOuvert(false);
+            servosService.groupePinceAvantOuvert(false);
             ThreadUtils.sleep(wait);
-            servosService.moustacheGaucheFerme(false);
+            servosService.groupePinceAvantFerme(false);
             ThreadUtils.sleep(wait);
         }
+
+        bras.setBrasAvant(PositionBras.INIT);
     }
 
-    @ShellMethod("Configuration attente moustache droite")
-    public void configWaitMoustacheDroite(int wait) {
+    @ShellMethod("Configuration attente moustache")
+    public void configWaitBloquePlante(int wait) {
         for (int i = 0; i < nbLoop; i++) {
-            servosService.moustacheDroiteOuvert(false);
+            servosService.groupeBloquePlanteOuvert(false);
             ThreadUtils.sleep(wait);
-            servosService.moustacheDroiteFerme(false);
+            servosService.groupeBloquePlanteFerme(false);
             ThreadUtils.sleep(wait);
         }
     }
 
-    @ShellMethod("Configuration attente langue")
-    public void configWaitLangue(int wait) {
+    @ShellMethod("Configuration attente ski")
+    public void configWaitSki(int wait) {
         for (int i = 0; i < nbLoop; i++) {
-            servosService.langueOuvert(false);
+            servosService.setPanneauSolaireSkiOuvert(false);
             ThreadUtils.sleep(wait);
-            servosService.langueFerme(false);
+            servosService.setPanneauSolaireSkiFerme(false);
             ThreadUtils.sleep(wait);
         }
     }
 
-    @ShellMethod("Configuration attente fourche statuette")
-    public void configWaitFourcheStatuette(int wait) {
+    @ShellMethod("Configuration attente roue")
+    public void configWaitRoue(int wait) {
         for (int i = 0; i < nbLoop; i++) {
-            servosService.fourcheStatuettePriseDepose(false);
+            servosService.setPanneauSolaireRoueOuvert(false);
             ThreadUtils.sleep(wait);
-            servosService.fourcheStatuetteFerme(false);
+            servosService.setPanneauSolaireRoueFerme(false);
             ThreadUtils.sleep(wait);
         }
     }
 
-    @ShellMethod("Configuration attente ohmmetre")
-    public void configWaitOhmmetre(int wait) {
+    @ShellMethod("Configuration attente glissiere")
+    public void configWaitGlissiere(int wait) {
+        bras.setBrasArriere(PositionBras.CALLAGE_PANNEAUX);
+
         for (int i = 0; i < nbLoop; i++) {
-            servosService.carreFouilleOhmmetreMesure(false);
+            servosService.setPortePotGlissiereSorti(false);
             ThreadUtils.sleep(wait);
-            servosService.carreFouilleOhmmetreFerme(false);
+            servosService.setPortePotGlissiereRentre(false);
             ThreadUtils.sleep(wait);
         }
+
+        bras.setBrasArriere(PositionBras.INIT);
     }
 
-    @ShellMethod("Configuration attente pousse carre fouille")
-    public void configWaitPousseCarreFouille(int wait) {
-        servosService.carreFouilleOhmmetreOuvert(true);
+    @ShellMethod("Configuration attente porte pot")
+    public void configWaitPortePot(int wait) {
+        bras.setBrasArriere(PositionBras.CALLAGE_PANNEAUX);
+        servosService.setPortePotGlissiereSorti(true);
+
         for (int i = 0; i < nbLoop; i++) {
-            servosService.carreFouillePoussoirPoussette(false);
+            servosService.setPortePotHaut(false);
             ThreadUtils.sleep(wait);
-            servosService.carreFouillePoussoirFerme(false);
+            servosService.setPortePotBas(false);
             ThreadUtils.sleep(wait);
         }
-        servosService.carreFouilleOhmmetreFerme(false);
-    }
 
-    enum Bras {
-        HAUT,
-        BAS
+        servosService.setPortePotGlissiereRentre(true);
+        bras.setBrasArriere(PositionBras.INIT);
     }
-
-    @ShellMethod("Déplacement de bras")
-    public void mouvementBras(Bras bras, int a1, int a2, int a3) {
-        switch (bras) {
-            case HAUT:
-                servosService.brasHaut(a1, a2, a3, 40);
-                break;
-            case BAS:
-                servosService.brasBas(a1, a2, a3, 40);
-                break;
-        }
-    }
- */
 }

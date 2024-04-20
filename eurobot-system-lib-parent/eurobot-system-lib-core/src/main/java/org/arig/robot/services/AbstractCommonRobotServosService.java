@@ -163,8 +163,8 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void groupeBloquePlanteFerme(boolean wait) {
         setPositionBatch(GROUP_BLOQUE_PLANTE_AVANT, POS_FERME, wait);
     }
-    public void groupeBloquePlantePrise(boolean wait) {
-        setPositionBatch(GROUP_BLOQUE_PLANTE_AVANT, POS_PRISE, wait);
+    public void groupeBloquePlantePrisePlante(boolean wait) {
+        setPositionBatch(GROUP_BLOQUE_PLANTE_AVANT, POS_PRISE_PLANTE, wait);
     }
 
     //*******************************************//
