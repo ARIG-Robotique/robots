@@ -175,6 +175,9 @@ public abstract class AbstractRobotStatus {
     @Setter(AccessLevel.NONE)
     private List<TypeCalage> calage = new ArrayList<>(3);
 
+    @Setter(AccessLevel.NONE)
+    private long callageTime;
+
     private List<TypeCalage> calageCompleted = new ArrayList<>(3);
 
     public void enableCalageBordure(TypeCalage main, TypeCalage ... others) {
@@ -186,6 +189,11 @@ public abstract class AbstractRobotStatus {
         }
         log.info("Activation calage bordure : {}", calage.stream()
                 .map(Enum::name).collect(Collectors.joining(", ")));
+    }
+
+    public void enableCalageTempo(long timeMs) {
+        enableCalageBordure(TypeCalage.TEMPO);
+        callageTime = System.currentTimeMillis() + timeMs;
     }
 
     public void disableCalageBordure() {

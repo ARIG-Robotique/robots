@@ -275,12 +275,12 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     }
 
     @Override
-    public boolean calagePrisePotArriere() {
-        return calagePrisePotArriere(1);
+    public boolean calageElectroaimant() {
+        return calageElectroaimant(1);
     }
 
     @Override
-    public boolean calagePrisePotArriere(int mandatorySensors) {
+    public boolean calageElectroaimant(int mandatorySensors) {
         if (mandatorySensors > 2) {
             throw new IllegalArgumentException("Le nombre de capteurs inductifs obligatoires ne peut pas être supérieur à 2");
         }

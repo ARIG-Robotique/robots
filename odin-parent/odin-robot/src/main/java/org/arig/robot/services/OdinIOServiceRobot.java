@@ -203,12 +203,12 @@ public class OdinIOServiceRobot implements OdinIOService, InitializingBean, Disp
     }
 
     @Override
-    public boolean calagePrisePotArriere() {
-        return calagePrisePotArriere(2);
+    public boolean calageElectroaimant() {
+        return calageElectroaimant(2);
     }
 
     @Override
-    public boolean calagePrisePotArriere(int mandatorySensors) {
+    public boolean calageElectroaimant(int mandatorySensors) {
         return false;
     }
 

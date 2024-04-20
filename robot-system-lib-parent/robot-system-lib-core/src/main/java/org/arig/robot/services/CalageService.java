@@ -28,21 +28,26 @@ public class CalageService {
         if (!rs.calage().isEmpty()) {
             boolean doneAvant = false;
             boolean doneArriere = false;
+            boolean doneTempo = false;
             boolean donePriseProduitAvant = false;
             boolean donePriseProduitArriere = false;
-            boolean donePrisePotArriere = false;
+            boolean doneElectroaimant = false;
 
             if (!rs.matchEnabled() && !ioService.auOk()) {
-                doneAvant = doneArriere = donePriseProduitAvant = donePrisePotArriere = true;
+                doneAvant = doneArriere = doneTempo = donePriseProduitAvant = donePriseProduitArriere = doneElectroaimant = true;
             } else {
+                if (rs.calage().contains(TypeCalage.TEMPO)) {
+                    doneTempo = rs.callageTime() < System.currentTimeMillis();
+                }
+
                 if (rs.calage().contains(TypeCalage.PRISE_PRODUIT_AVANT)) {
-                    donePriseProduitAvant = ioService.calagePriseProduitAvant();
+                    donePriseProduitAvant = ioService.calagePriseProduitAvant(2);
                 }
                 if (rs.calage().contains(TypeCalage.PRISE_PRODUIT_ARRIERE)) {
-                    donePriseProduitArriere = ioService.calagePriseProduitArriere();
+                    donePriseProduitArriere = ioService.calagePriseProduitArriere(2);
                 }
-                if (rs.calage().contains(TypeCalage.PRISE_POT_ARRIERE)) {
-                    donePrisePotArriere = ioService.calagePrisePotArriere();
+                if (rs.calage().contains(TypeCalage.PRISE_ELECTROAIMANT)) {
+                    doneElectroaimant = ioService.calageElectroaimant(2);
                 }
 
                 if (cmdRobot.isType(TypeConsigne.DIST) && cmdRobot.isType(TypeConsigne.ANGLE)) {
@@ -66,7 +71,7 @@ public class CalageService {
                 }
             }
 
-            if (doneAvant || doneArriere || donePriseProduitAvant || donePriseProduitArriere || donePrisePotArriere) {
+            if (doneAvant || doneArriere || doneTempo || donePriseProduitAvant || donePriseProduitArriere || doneElectroaimant) {
                 if (doneAvant) {
                     log.info("Callage complet : {}", TypeCalage.AVANT);
                     rs.calageCompleted().add(TypeCalage.AVANT);
@@ -74,6 +79,10 @@ public class CalageService {
                 if (doneArriere) {
                     log.info("Callage complet : {}", TypeCalage.ARRIERE);
                     rs.calageCompleted().add(TypeCalage.ARRIERE);
+                }
+                if (doneTempo) {
+                    log.info("Callage complet : {}", TypeCalage.TEMPO);
+                    rs.calageCompleted().add(TypeCalage.TEMPO);
                 }
                 if (donePriseProduitAvant) {
                     log.info("Callage complet : {}", TypeCalage.PRISE_PRODUIT_AVANT);
@@ -83,9 +92,9 @@ public class CalageService {
                     log.info("Callage complet : {}", TypeCalage.PRISE_PRODUIT_ARRIERE);
                     rs.calageCompleted().add(TypeCalage.PRISE_PRODUIT_ARRIERE);
                 }
-                if (donePrisePotArriere) {
-                    log.info("Callage complet : {}", TypeCalage.PRISE_POT_ARRIERE);
-                    rs.calageCompleted().add(TypeCalage.PRISE_POT_ARRIERE);
+                if (doneElectroaimant) {
+                    log.info("Callage complet : {}", TypeCalage.PRISE_ELECTROAIMANT);
+                    rs.calageCompleted().add(TypeCalage.PRISE_ELECTROAIMANT);
                 }
 
                 trajectoryManager.calageBordureDone(); // TODO Rename

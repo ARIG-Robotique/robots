@@ -26,8 +26,8 @@ public interface IOService {
     boolean calagePriseProduitAvant(int mandatorySensors);
     boolean calagePriseProduitArriere();
     boolean calagePriseProduitArriere(int mandatorySensors);
-    boolean calagePrisePotArriere();
-    boolean calagePrisePotArriere(int mandatorySensors);
+    boolean calageElectroaimant();
+    boolean calageElectroaimant(int mandatorySensors);
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
