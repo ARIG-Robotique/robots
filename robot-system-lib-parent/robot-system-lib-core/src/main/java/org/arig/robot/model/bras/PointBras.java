@@ -19,10 +19,18 @@ public class PointBras implements Serializable {
     }
 
     /**
-     * Rotation du poignet (le point cible n'est pas conervé)
+     * Rotation du poignet (le point cible n'est pas conservé)
      */
     public static PointBrasRotated rotated(int a) {
         return new PointBrasRotated(a);
+    }
+
+    public static PointBrasWithY withY(int y) {
+        return new PointBrasWithY(y);
+    }
+
+    public static PointBrasWithAngle withAngle(int a) {
+        return new PointBrasWithAngle(a);
     }
 
     public static class PointBrasTranslated extends PointBras {
@@ -33,6 +41,18 @@ public class PointBras implements Serializable {
 
     public static class PointBrasRotated extends PointBras {
         public PointBrasRotated(int a) {
+            super(0, 0, a, null);
+        }
+    }
+
+    public static class PointBrasWithY extends PointBras {
+        public PointBrasWithY(int y) {
+            super(0, y, 0, null);
+        }
+    }
+
+    public static class PointBrasWithAngle extends PointBras {
+        public PointBrasWithAngle(int a) {
             super(0, 0, a, null);
         }
     }

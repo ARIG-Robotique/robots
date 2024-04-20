@@ -226,6 +226,30 @@ public abstract class AbstractServosService {
     }
 
     /**
+     * Déplace un ensemble de servos avec valeurs en dur
+     */
+    public void setPositionsRaw(Map<String, Integer> positions, int speed, boolean wait) {
+        int waitTime = 0;
+        for (Map.Entry<String, Integer> e : positions.entrySet()) {
+            Servo servo = servos.get(e.getKey());
+            assert servo != null;
+
+            OffsetedDevice device = getDevice(servo.id());
+            int currentPosition = device.servo().getPosition((byte) (servo.id() - device.offset()));
+
+            device.servo().setPositionAndSpeed((byte) (servo.id() - device.offset()), e.getValue(), (byte) speed);
+
+            if (currentPosition != e.getValue()) {
+                waitTime = Math.max(waitTime, computeWaitTime(servo, currentPosition, e.getValue(), speed));
+            }
+        }
+
+        if (wait) {
+            ThreadUtils.sleep(waitTime);
+        }
+    }
+
+    /**
      * Déplace un groupe de servos à une position nommée
      */
     public void setPositionBatch(String groupName, String positionName, boolean wait) {

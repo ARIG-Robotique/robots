@@ -38,6 +38,15 @@ public class BrasController {
         return brasService.getCurrent();
     }
 
+    @PostMapping("/macro")
+    public void executeMacro(@RequestParam("name") final String name) {
+        switch (name) {
+            case "STOCKAGE":
+                brasService.brasAvantStockage();
+                break;
+        }
+    }
+
     @PostMapping("/{bras}")
     public boolean setBras(
             @PathVariable("bras") final Bras bras,

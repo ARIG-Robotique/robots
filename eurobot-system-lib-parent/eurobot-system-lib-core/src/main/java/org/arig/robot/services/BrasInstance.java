@@ -49,7 +49,7 @@ public class BrasInstance {
     public interface ServoCallback {
         void accept(double a1, double a2, double a3, int speed, boolean wait);
     }
-    
+
     private final String name;
     private final ServoCallback servoCallback;
 
@@ -64,7 +64,7 @@ public class BrasInstance {
     public Set<PositionBras> states() {
         return positions.keySet();
     }
-    
+
     public BrasInstance(String name, boolean back, ServoCallback servoCallback) {
         this.name = name;
         this.servoCallback = servoCallback;
@@ -75,7 +75,7 @@ public class BrasInstance {
 
         positions.put(PositionBras.INIT, initstate);
         positions.put(PositionBras.HORIZONTAL, new PointBras(X + R1 + R2 + R3, Y, 0, true));
-        positions.put(PositionBras.TRANSPORT, new PointBras(125, 95, -90, true)); // position quand on transporte un truc
+        positions.put(PositionBras.TRANSPORT, new PointBras(155, 95, -90, true)); // position quand on transporte un truc
         positions.put(PositionBras.CALLAGE_PANNEAUX, new PointBras(215, 205, 0, true)); // position d'init avec la pince à l'horizontale
     }
 
@@ -85,7 +85,7 @@ public class BrasInstance {
     }
 
     public boolean set(PointBras pt, int speed, boolean wait) {
-        resolvePoint(pt);
+        pt = resolvePoint(pt);
 
         if (pt.invertA1 == null) {
             pt.invertA1 = config.preferA1Min;
@@ -193,14 +193,29 @@ public class BrasInstance {
         return Math.acos((Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2 * a * b));
     }
 
-    private void resolvePoint(PointBras pt) {
+    private PointBras resolvePoint(PointBras pt) {
         if (pt instanceof PointBras.PointBrasTranslated) {
-            pt.x += current.x;
-            pt.y += current.y;
-            pt.a = current.a;
-            pt.invertA1 = current.invertA1;
-        }
-        else if (pt instanceof PointBras.PointBrasRotated) {
+            return new PointBras(
+                    pt.x + current.x,
+                    pt.y + current.y,
+                    current.a,
+                    current.invertA1
+            );
+        } else if (pt instanceof PointBras.PointBrasWithY) {
+            return new PointBras(
+                    current.x,
+                    pt.y,
+                    current.a,
+                    current.invertA1
+            );
+        } else if (pt instanceof PointBras.PointBrasWithAngle) {
+            return new PointBras(
+                    current.x,
+                    current.y,
+                    pt.a,
+                    current.invertA1
+            );
+        } else if (pt instanceof PointBras.PointBrasRotated) {
             // position du doigt dans le réferentiel du poignet
             double currentA = Math.toRadians(current.a);
             double xOrig = Math.cos(currentA) * config.r3;
@@ -212,10 +227,14 @@ public class BrasInstance {
             double yNew = xOrig * Math.sin(toRotate) + yOrig * Math.cos(toRotate);
 
             // remise dans le referentiel global
-            pt.x = (int) Math.round(current.x - xOrig + xNew);
-            pt.y = (int) Math.round(current.y - yOrig + yNew);
-            pt.a += current.a;
-            pt.invertA1 = current.invertA1;
+            return new PointBras(
+                    (int) Math.round(current.x - xOrig + xNew),
+                    (int) Math.round(current.y - yOrig + yNew),
+                    pt.a + current.a,
+                    current.invertA1
+            );
+        } else {
+            return pt;
         }
     }
 
