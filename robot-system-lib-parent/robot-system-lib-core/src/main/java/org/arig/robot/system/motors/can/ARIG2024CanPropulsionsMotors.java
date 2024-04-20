@@ -36,7 +36,7 @@ public class ARIG2024CanPropulsionsMotors extends AbstractPropulsionsMotors impl
   @RequiredArgsConstructor
   enum ARIG2024CanPropulsionsMotorsManual {
     SET_MOTOR_CONFIGURATION(11),
-    SET_MOTOR_SPEED(14),
+    SET_MOTOR_SPEED(13),
 
     GET_VERSION(16);
 
