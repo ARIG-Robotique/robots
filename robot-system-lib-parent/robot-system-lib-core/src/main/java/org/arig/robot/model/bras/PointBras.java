@@ -25,6 +25,10 @@ public class PointBras implements Serializable {
         return new PointBrasRotated(a);
     }
 
+    public static PointBrasWithX withX(int x) {
+        return new PointBrasWithX(x);
+    }
+
     public static PointBrasWithY withY(int y) {
         return new PointBrasWithY(y);
     }
@@ -42,6 +46,12 @@ public class PointBras implements Serializable {
     public static class PointBrasRotated extends PointBras {
         public PointBrasRotated(int a) {
             super(0, 0, a, null);
+        }
+    }
+
+    public static class PointBrasWithX extends PointBras {
+        public PointBrasWithX(int x) {
+            super(x, 0, 0, null);
         }
     }
 

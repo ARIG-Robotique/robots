@@ -49,6 +49,7 @@ public class PCA9685ToTB6612Motor extends AbstractMotor {
     @Override
     public void stop() {
         prevDirection = null;
+        prev = Integer.MAX_VALUE;
         pca9685.setAlwaysOff(motorPin);
         if (stopMode == TB6612StopMode.BRAKE) {
             pca9685.setAlwaysOn(in1Pin);

@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active.robot;
+package org.arig.robot.strategy.actions.disabled;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
@@ -8,10 +8,8 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.TypeCalage;
-import org.arig.robot.services.BrasService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.arig.robot.constants.NerellConstantesConfig.VITESSE_ROUE_PANNEAU;
@@ -23,9 +21,6 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction {
     final int ENTRY_Y = 210;
 
     final int WORK_Y = 230;
-
-    @Autowired
-    private BrasService bras;
 
     @Override
     public String name() {
@@ -40,7 +35,9 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction {
     @Override
     public boolean isValid() {
         // TODO 1er interdit si zone de depose pleine
-        return rs.bras().arriereLibre() && !rs.panneauxSolaire().equipeDone();
+        return isTimeValid()
+                && rs.bras().arriereLibre()
+                && !rs.panneauxSolaire().equipeDone();
     }
 
     @Override
@@ -65,13 +62,13 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction {
             mv.pathTo(entry);
 
             // callage Y
-            mv.setVitesse(config.vitesse(60), config.vitesseOrientation());
+            mv.setVitessePercent(60, 100);
             mv.gotoOrientationDeg(90);
             bras.setBrasArriere(PositionBras.CALLAGE_PANNEAUX);
             rs.enableCalageBordure(TypeCalage.ARRIERE);
             mv.reculeMM(ENTRY_Y - config.distanceCalageArriere() - 10);
 
-            mv.setVitesse(config.vitesse(0), config.vitesseOrientation());
+            mv.setVitessePercent(0, 100);
             rs.enableCalageBordure(TypeCalage.ARRIERE);
             mv.reculeMMSansAngle(40);
             checkRecalageYmm(config.distanceCalageArriere(), TypeCalage.ARRIERE);
@@ -80,11 +77,17 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction {
             // les déplacements sont relatifs pour rester à la bonne distance de la bordure
             mv.setVitesse(config.vitesse(60), config.vitesseOrientation());
             mv.avanceMM(WORK_Y - (int) config.distanceCalageArriere());
-            bras.setBrasArriere(PositionBras.INIT);
+            if (rs.team() == Team.BLEU) {
+                runAsync(() -> {
+                    bras.setBrasArriere(PositionBras.INIT);
+                });
+            }
             mv.gotoOrientationDeg(180);
-
+/*
             // callage X
             if (rs.team() == Team.BLEU) {
+                bras.setBrasAvant(PositionBras.CALLAGE_PANNEAUX);
+
                 rs.enableCalageBordure(TypeCalage.AVANT);
                 mv.avanceMM(ENTRY_X - config.distanceCalageAvant() - 10);
 
@@ -95,6 +98,10 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction {
 
                 mv.setVitesse(config.vitesse(35), config.vitesseOrientation());
                 mv.reculeMM(ENTRY_X - config.distanceCalageAvant());
+
+                runAsync(() -> {
+                    bras.setBrasAvant(PositionBras.INIT);
+                });
             } else {
                 rs.enableCalageBordure(TypeCalage.ARRIERE);
                 mv.reculeMM(ENTRY_X - config.distanceCalageAvant() - 10);
@@ -106,17 +113,21 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction {
 
                 mv.setVitesse(config.vitesse(35), config.vitesseOrientation());
                 mv.avanceMM(ENTRY_X - config.distanceCalageArriere());
-            }
 
+                runAsync(() -> {
+                    bras.setBrasArriere(PositionBras.INIT);
+                });
+            }
+*/
             enZone = true;
 
-            servos.groupePanneauOuvert(false);
-
             if (rs.team() == Team.BLEU) {
-                io.tournePanneauBleu(VITESSE_ROUE_PANNEAU);
+               // io.tournePanneauBleu(VITESSE_ROUE_PANNEAU);
+                servos.groupePanneauOuvert(true);
                 mv.reculeMM(275 - ENTRY_X + 225 * 2 + 40);
             } else {
-                io.tournePanneauJaune(VITESSE_ROUE_PANNEAU);
+                //io.tournePanneauJaune(VITESSE_ROUE_PANNEAU);
+                servos.groupePanneauOuvert(true);
                 mv.avanceMM(275 - ENTRY_X + 225 * 2 + 40);
             }
             ThreadUtils.sleep(500);

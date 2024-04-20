@@ -13,14 +13,17 @@ import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.InitStep;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.SiteDeCharge;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.BrasService;
 import org.arig.robot.services.NerellEcranService;
 import org.arig.robot.services.NerellIOService;
+import org.arig.robot.services.NerellRobotServosService;
 import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +48,10 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     private NerellEcranService nerellEcranService;
 
     @Autowired
-    private BrasService brasService;
+    private BrasService bras;
+
+    @Autowired
+    private NerellRobotServosService nerellServos;
 
     private int getX(int x) {
         return tableUtils.getX(nerellRobotStatus.team() == Team.JAUNE, x);
@@ -128,8 +134,15 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     public void afterMatch() {
         double currentX = mv.currentXMm();
         double currentY = mv.currentYMm();
-        if ((currentX <= 500 || currentX >= 2500) && currentY <= 1700 && currentY >= 900) {
-            // TODO : Gestion des site de charge au niveau coordonnées
+
+        if (nerellRobotStatus.team() == Team.BLEU) {
+            if (currentX <= 500 && currentY <= 500) {
+                nerellRobotStatus.siteDeCharge(SiteDeCharge.BLEU_SUD);
+            }
+        } else {
+            if (currentX >= 2500 && currentY <= 500) {
+                nerellRobotStatus.siteDeCharge(SiteDeCharge.BLEU_SUD);
+            }
         }
 
         baliseService.idle();
@@ -139,6 +152,11 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     @Override
     public void beforePowerOff() {
         nerellIO.enableAlimServos();
+
+        bras.setBrasAvant(new PointBras(194, 104, -90, null));
+        bras.setBrasArriere(new PointBras(194, 104, -90, null));
+        nerellServos.groupePinceAvantOuvert(false);
+        nerellServos.groupePinceArriereOuvert(false);
 
         nerellEcranService.displayMessage("FIN - Enlever la tirette quand stock vide.");
         while (io.tirette()) {

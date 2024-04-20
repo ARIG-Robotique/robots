@@ -136,8 +136,11 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void groupePinceAvantFerme(boolean wait) {
         setPositionBatch(GROUP_PINCE_AVANT, POS_FERME, wait);
     }
-    public void groupePinceAvantPrise(boolean wait) {
-        setPositionBatch(GROUP_PINCE_AVANT, POS_PRISE, wait);
+    public void groupePinceAvantPrisePot(boolean wait) {
+        setPositionBatch(GROUP_PINCE_AVANT, POS_PRISE_POT, wait);
+    }
+    public void groupePinceAvantPrisePlante(boolean wait) {
+        setPositionBatch(GROUP_PINCE_AVANT, POS_PRISE_PLANTE, wait);
     }
 
     public void groupePinceArriereOuvert(boolean wait) {
@@ -146,8 +149,8 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void groupePinceArriereFerme(boolean wait) {
         setPositionBatch(GROUP_PINCE_ARRIERE, POS_FERME, wait);
     }
-    public void groupePinceArrierePrise(boolean wait) {
-        setPositionBatch(GROUP_PINCE_ARRIERE, POS_PRISE, wait);
+    public void groupePinceArrierePrisePot(boolean wait) {
+        setPositionBatch(GROUP_PINCE_ARRIERE, POS_PRISE_POT, wait);
     }
 
     public void groupePanneauOuvert(boolean wait) {

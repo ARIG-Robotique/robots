@@ -45,6 +45,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public void setTeam(Team team) {
         this.team = team;
         panneauxSolaire.team(team);
+        plantes.team(team);
     }
 
     /**
@@ -61,12 +62,18 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     private Plantes plantes = new Plantes();
 
+    @Setter(AccessLevel.NONE)
     private ZoneDepose aireDeDeposeNord = new ZoneDepose(false);
+    @Setter(AccessLevel.NONE)
     private ZoneDepose aireDeDeposeMilieu = new ZoneDepose(false);
+    @Setter(AccessLevel.NONE)
     private ZoneDepose aireDeDeposeSud = new ZoneDepose(false);
 
+    @Setter(AccessLevel.NONE)
     private ZoneDepose jardiniereNord = new ZoneDepose(true);
+    @Setter(AccessLevel.NONE)
     private ZoneDepose jardiniereMilieu = new ZoneDepose(true);
+    @Setter(AccessLevel.NONE)
     private ZoneDepose jardiniereSud = new ZoneDepose(true);
 
     private SiteDeCharge siteDeCharge = SiteDeCharge.AUCUN;
@@ -113,6 +120,9 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public boolean stockLibre() {
         return stock[0] == null && stock[1] == null && stock[2] == null;
     }
+
+    private int potsInZoneDepart = 0;
+    private Point positionPotsZoneDepart;
 
     /* *************************** SCORE *************************** */
     /* ************************************************************* */

@@ -18,10 +18,6 @@ public class StocksPots implements Iterable<StockPots> {
             new StockPots(StockPots.ID.JAUNE_SUD, 2000, 35, 90)
     );
 
-    public StocksPots() {
-        data.iterator().next().pris();
-    }
-
     @Override
     public Iterator<StockPots> iterator() {
         return data.iterator();
@@ -29,7 +25,7 @@ public class StocksPots implements Iterable<StockPots> {
 
     public StockPots getClosest(Point point) {
         return data.stream()
-                .filter(StockPots::isPresent)
+                .filter(s -> s.isPresent() && !s.isBloque())
                 .min(Comparator.comparing(stock -> stock.distance(point)))
                 .orElse(null);
     }
@@ -37,5 +33,12 @@ public class StocksPots implements Iterable<StockPots> {
     public Map<StockPots.ID, Boolean> gameStatus() {
         return data.stream()
                 .collect(Collectors.toMap(StockPots::getId, StockPots::isPresent));
+    }
+
+    public StockPots get(StockPots.ID id) {
+        return data.stream()
+                .filter(s -> s.getId() == id)
+                .findFirst()
+                .get();
     }
 }

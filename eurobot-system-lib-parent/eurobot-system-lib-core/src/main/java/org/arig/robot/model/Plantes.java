@@ -1,12 +1,15 @@
 package org.arig.robot.model;
 
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Plantes implements Iterable<Plante> {
 
@@ -25,6 +28,10 @@ public class Plantes implements Iterable<Plante> {
     @Getter
     private List<Plante> plantes = new ArrayList<>();
 
+    @Setter
+    @Accessors(fluent = true, chain = true)
+    private Team team;
+
     @Override
     public Iterator<Plante> iterator() {
         return plantes.iterator();
@@ -40,6 +47,11 @@ public class Plantes implements Iterable<Plante> {
     public void priseStock(Plante.ID id) {
         stocks.stream().filter(s -> s.getId() == id).findFirst().get().setPresent(false);
         plantes.removeIf(plante -> plante.getId() == id);
+    }
+
+    public Stream<StockPlantes> stocksPresents() {
+        return stocks.stream()
+                .filter(StockPlantes::isPresent);
     }
 
     // TODO automatiquement marquer comme pris les stocks qui n'ont plus assez de plantes
@@ -84,9 +96,23 @@ public class Plantes implements Iterable<Plante> {
     }
 
     public StockPlantes getClosest(Point point) {
+        int malus = 500;
+
         return stocks.stream()
                 .filter(StockPlantes::isPresent)
-                .min(Comparator.comparing(stock -> stock.distance(point)))
+                .min(Comparator.comparing(s -> {
+                    double dst = s.distance(point);
+                    if (team == Team.JAUNE) {
+                        if (s.getId() == Plante.ID.STOCK_NORD_OUEST || s.getId() == Plante.ID.STOCK_SUD_OUEST) {
+                            dst += malus;
+                        }
+                    } else {
+                        if (s.getId() == Plante.ID.STOCK_NORD_EST || s.getId() == Plante.ID.STOCK_SUD_EST) {
+                            dst += malus;
+                        }
+                    }
+                    return dst;
+                }))
                 .orElse(null);
     }
 }

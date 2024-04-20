@@ -32,15 +32,15 @@ public class PanneauxSolaire {
         return data[numero - 1];
     }
 
-    boolean isComplete() {
+    public boolean isComplete() {
         return nextPanneauSolaireToProcess(Integer.MAX_VALUE) == null;
     }
 
-    PanneauSolaire nextPanneauSolaireToProcess(int nbTry) {
+    public PanneauSolaire nextPanneauSolaireToProcess(int nbTry) {
         return nextPanneauSolaireToProcess(nbTry, false);
     }
 
-    PanneauSolaire nextPanneauSolaireToProcess(int nbTry, boolean reverse) {
+    public PanneauSolaire nextPanneauSolaireToProcess(int nbTry, boolean reverse) {
         if (team == Team.BLEU) {
             int init = reverse ? data.length - 3 : 1;
             int inc = reverse ? -1 : 1;

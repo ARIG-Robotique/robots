@@ -8,13 +8,19 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.SiteDeCharge;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.bras.PointBras;
+import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
+import org.arig.robot.strategy.actions.AbstractNerellAction;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Component;
+
+import static org.arig.robot.services.BrasInstance.*;
 
 @Slf4j
 @Component
-public class RetourSiteDeCharge extends AbstractEurobotAction {
+public class RetourSiteDeCharge extends AbstractNerellAction {
 
     private static final int CENTER_X = 450;
     private static final int CENTER_Y = 1000;
@@ -83,12 +89,28 @@ public class RetourSiteDeCharge extends AbstractEurobotAction {
             group.siteDeCharge(destSite);
             log.info("Arrivée au site de charge : {}", destSite);
 
-            boolean alt = false;
-            mv.setVitesse(config.vitesse(), config.vitesseOrientation(50));
-            do {
-                alt = !alt;
-                mv.tourneDeg(alt ? 90 : 45);
-            } while (rs.getRemainingTime() > 100);
+            if (!rs.bras().avantLibre()) {
+                mv.gotoOrientationDeg(rs.team() == Team.BLEU ? -145 : - 45);
+                bras.setBrasAvant(new PointBras(195, DEPOSE_SOL_Y, -90, null));
+                servos.groupePinceAvantOuvert(true);
+                ThreadUtils.sleep(500);
+
+                rs.aireDeDeposeSud().setFromBras(rs.bras().getAvant());
+
+                bras.setBrasAvant(PointBras.withY(SORTIE_POT_POT_Y));
+                servos.groupePinceAvantFerme(true);
+                mv.reculeMM(50);
+                bras.setBrasAvant(PositionBras.INIT);
+            }
+
+            // TODO pareil pour l'arriere
+
+//            boolean alt = false;
+//            mv.setVitesse(config.vitesse(), config.vitesseOrientation(50));
+//            do {
+//                alt = !alt;
+//                mv.tourneDeg(alt ? 90 : 45);
+//            } while (rs.getRemainingTime() > 100);
 
             complete(true);
 

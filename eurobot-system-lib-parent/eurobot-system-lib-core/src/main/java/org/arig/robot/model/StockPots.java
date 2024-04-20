@@ -19,6 +19,7 @@ public class StockPots extends Point {
     private final ID id;
     private final double entryAngle;
     private boolean present = true;
+    private boolean bloque = false;
 
     public StockPots(ID id, int x, int y, double a) {
         super(x, y);
@@ -31,8 +32,8 @@ public class StockPots extends Point {
         present = false;
     }
 
-    public void absent() {
-        log.info("[RS] Stock pot {} absent", id);
+    public void bloque() {
+        log.warn("[RS] Stock pot {} absent", id);
         present = false;
     }
 

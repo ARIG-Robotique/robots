@@ -207,7 +207,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
                 .time(500)
                 .angular()
                 .angle(A1_MAX, 2520)
-                .angle(0, 2300)
+                .angle(0, 2270)
                 .angle(-90, 1370)
                 .angle(A1_MIN, 630)
                 .position(POS_INIT, A1_INIT, 50)
@@ -281,65 +281,69 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
                 .time(300)
                 .position(POS_FERME, 1000)
                 .position(POS_OUVERT, 1900)
-                .position(POS_PRISE, 1350);
+                .position(POS_PRISE_POT, 1350)
+                .position(POS_PRISE_PLANTE, 1150);
         Servo pinceAvantCentre = servo(BRAS_AVANT_CENTRE_PINCE_ID, BRAS_AVANT_CENTRE_PINCE)
                 .time(300)
                 .position(POS_FERME, 700)
                 .position(POS_OUVERT, 1600)
-                .position(POS_PRISE, 1100);
+                .position(POS_PRISE_POT, 1100)
+                .position(POS_PRISE_PLANTE, 900);
         Servo pinceAvantDroit = servo(BRAS_AVANT_DROIT_PINCE_ID, BRAS_AVANT_DROIT_PINCE)
                 .time(300)
                 .position(POS_FERME, 1200)
                 .position(POS_OUVERT, 2100)
-                .position(POS_PRISE, 1600);
+                .position(POS_PRISE_POT, 1600)
+                .position(POS_PRISE_PLANTE, 1400);
         group(GROUP_PINCE_AVANT_ID, GROUP_PINCE_AVANT)
                 .addServo(pinceAvantGauche)
                 .addServo(pinceAvantCentre)
                 .addServo(pinceAvantDroit)
                 .batch(POS_FERME)
                 .batch(POS_OUVERT)
-                .batch(POS_PRISE);
+                .batch(POS_PRISE_POT)
+                .batch(POS_PRISE_PLANTE);
 
         Servo pinceArriereGauche = servo(BRAS_ARRIERE_GAUCHE_PINCE_ID, BRAS_ARRIERE_GAUCHE_PINCE)
                 .time(300)
                 .position(POS_FERME, 800)
                 .position(POS_OUVERT, 1500)
-                .position(POS_PRISE, 1100);
+                .position(POS_PRISE_POT, 950);
         Servo pinceArriereCentre = servo(BRAS_ARRIERE_CENTRE_PINCE_ID, BRAS_ARRIERE_CENTRE_PINCE)
                 .time(300)
                 .position(POS_FERME, 1300)
                 .position(POS_OUVERT, 2100)
-                .position(POS_PRISE, 1600);
+                .position(POS_PRISE_POT, 1450);
         Servo pinceArriereDroit = servo(BRAS_ARRIERE_DROIT_PINCE_ID, BRAS_ARRIERE_DROIT_PINCE)
                 .time(300)
                 .position(POS_FERME, 1000)
                 .position(POS_OUVERT, 1800)
-                .position(POS_PRISE, 1300);
+                .position(POS_PRISE_POT, 1200);
         group(GROUP_PINCE_ARRIERE_ID, GROUP_PINCE_ARRIERE)
                 .addServo(pinceArriereGauche)
                 .addServo(pinceArriereCentre)
                 .addServo(pinceArriereDroit)
                 .batch(POS_FERME)
                 .batch(POS_OUVERT)
-                .batch(POS_PRISE);
+                .batch(POS_PRISE_POT);
 
         Servo bloquePlanteAvantGauche = servo(BLOQUE_PLANTE_AVANT_GAUCHE_ID, BLOQUE_PLANTE_AVANT_GAUCHE)
                 .time(300)
-                .position(POS_OUVERT, 2260)
+                .position(POS_OUVERT, 2310)
                 .position(POS_PRISE_POT, 1840)
-                .position(POS_PRISE_PLANTE, 1760)
+                .position(POS_PRISE_PLANTE, 1800)
                 .position(POS_FERME, 1000);
         Servo bloquePlanteAvantCentre = servo(BLOQUE_PLANTE_AVANT_CENTRE_ID, BLOQUE_PLANTE_AVANT_CENTRE)
                 .time(300)
-                .position(POS_OUVERT, 1800)
+                .position(POS_OUVERT, 1860)
                 .position(POS_PRISE_POT, 1400)
-                .position(POS_PRISE_PLANTE, 1300)
+                .position(POS_PRISE_PLANTE, 1290)
                 .position(POS_FERME, 690);
         Servo bloquePlanteAvantDroit = servo(BLOQUE_PLANTE_AVANT_DROIT_ID, BLOQUE_PLANTE_AVANT_DROIT)
                 .time(300)
-                .position(POS_OUVERT, 1380)
+                .position(POS_OUVERT, 1310)
                 .position(POS_PRISE_POT, 1750)
-                .position(POS_PRISE_PLANTE, 1830)
+                .position(POS_PRISE_PLANTE, 1820)
                 .position(POS_FERME, 2540);
         group(GROUP_BLOQUE_PLANTE_AVANT_ID, GROUP_BLOQUE_PLANTE_AVANT)
                 .addServo(bloquePlanteAvantGauche)
@@ -366,7 +370,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
 
         Servo portePot = servo(PORTE_POT_ID, PORTE_POT)
                 .time(400)
-                .position(POS_BAS, 1700)
+                .position(POS_BAS, 1730)
                 .position(POS_HAUT, 2440);
         Servo portePotGlissiere = servo(PORTE_POT_GLISSIERE_ID, PORTE_POT_GLISSIERE)
                 .time(450)

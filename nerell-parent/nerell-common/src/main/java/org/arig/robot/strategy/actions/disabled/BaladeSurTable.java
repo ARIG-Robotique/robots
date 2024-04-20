@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active.robot;
+package org.arig.robot.strategy.actions.disabled;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;

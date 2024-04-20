@@ -29,7 +29,7 @@ public class StockPlantes extends Point {
                 TypePlante.RESISTANTE,
                 getX(),
                 getY(),
-                true
+                false
         ));
 
         for (int i = 1; i < 6; i++) {
@@ -39,7 +39,7 @@ public class StockPlantes extends Point {
                     i == 1 ? TypePlante.RESISTANTE : TypePlante.FRAGILE,
                     getX() + 70 * Math.cos(a),
                     getY() + 70 * Math.sin(a),
-                    true
+                    false
             ));
         }
 

@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import static org.arig.robot.services.AbstractCommonRobotServosService.*;
 
 @Slf4j
+@Service
 public class BrasService {
 
     private final RobotConfig config;
@@ -114,6 +115,15 @@ public class BrasService {
         setBras(Bras.ARRIERE_GAUCHE, pointBras, 30, false);
         setBras(Bras.ARRIERE_CENTRE, pointBras, 30, false);
         setBras(Bras.ARRIERE_DROIT, pointBras, 30, true);
+    }
+
+    public void brasAvantDestockage() {
+        setBrasAvant(new PointBras(131, 145, -150, false));
+        servos.groupePinceAvantOuvert(true);
+        setBrasAvant(new PointBras(67, 137, -180, false));
+        servos.groupePinceAvantFerme(true);
+        setBrasAvant(new PointBras(76, 153, -180, false));
+        setBrasAvant(new PointBras(167, 147, -130, false));
     }
 
     public void brasAvantStockage() {

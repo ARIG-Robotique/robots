@@ -382,6 +382,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     public boolean inductifGauche() {
         return inductifGauche.isLow();
     }
+    @Override
     public boolean inductifGaucheAverage() {
         return inductifGaucheAverage.lastResult();
     }
@@ -390,6 +391,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     public boolean inductifDroit() {
         return inductifDroit.isLow();
     }
+    @Override
     public boolean inductifDroitAverage() {
         return inductifDroitAverage.lastResult();
     }
@@ -398,6 +400,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     public boolean pinceAvantGauche() {
         return pinceAvantGauche.isLow();
     }
+    @Override
     public boolean pinceAvantGaucheAverage() {
         return pinceAvantGaucheAverage.lastResult();
     }
@@ -406,6 +409,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     public boolean pinceAvantCentre() {
         return pinceAvantCentre.isLow();
     }
+    @Override
     public boolean pinceAvantCentreAverage() {
         return pinceAvantCentreAverage.lastResult();
     }
@@ -414,6 +418,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     public boolean pinceAvantDroite() {
         return pinceAvantDroite.isLow();
     }
+    @Override
     public boolean pinceAvantDroiteAverage() {
         return pinceAvantDroiteAverage.lastResult();
     }
@@ -422,6 +427,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     public boolean pinceArriereGauche() {
         return pinceArriereGauche.isLow();
     }
+    @Override
     public boolean pinceArriereGaucheAverage() {
         return pinceArriereGaucheAverage.lastResult();
     }
@@ -430,6 +436,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     public boolean pinceArriereCentre() {
         return pinceArriereCentre.isLow();
     }
+    @Override
     public boolean pinceArriereCentreAverage() {
         return pinceArriereCentreAverage.lastResult();
     }
@@ -438,6 +445,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     public boolean pinceArriereDroite() {
         return pinceArriereDroite.isLow();
     }
+    @Override
     public boolean pinceArriereDroiteAverage() {
         return pinceArriereDroiteAverage.lastResult();
     }

@@ -100,17 +100,17 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
 
     @Override
     public boolean presenceAvantGauche() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean presenceAvantCentre() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean presenceAvantDroite() {
-        return false;
+        return true;
     }
 
     @Override
@@ -145,13 +145,22 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
 
     @Override
     public boolean inductifGauche() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean inductifDroit() {
-        return false;
+        return true;
     }
+
+    @Override public boolean inductifGaucheAverage() { return false; }
+    @Override public boolean inductifDroitAverage() { return false; }
+    @Override public boolean pinceAvantGaucheAverage() { return false; }
+    @Override public boolean pinceAvantCentreAverage() { return false; }
+    @Override public boolean pinceAvantDroiteAverage() { return false; }
+    @Override public boolean pinceArriereGaucheAverage() { return false; }
+    @Override public boolean pinceArriereCentreAverage() { return false; }
+    @Override public boolean pinceArriereDroiteAverage() { return false; }
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

@@ -32,6 +32,13 @@ public class Plante extends Point {
         this.blocking = false;
     }
 
+    public Plante(TypePlante type, boolean dansPot) {
+        this.id = null;
+        this.type = type;
+        this.dansPot = dansPot;
+        this.blocking = false;
+    }
+
     public Plante(ID id, TypePlante type, double x, double y, boolean blocking) {
         super(x, y);
         this.id = id;

@@ -39,9 +39,9 @@ public class BrasInstance {
     private static final int MAX_SPEED = 100;
 
     // positions caractéristiques
-    public static final int PRISE_PLANTE_SOL_Y = 55;
+    public static final int PRISE_PLANTE_SOL_Y = 40;
     public static final int PRISE_POT_SOL_Y = 60;
-    public static final int PRISE_POT_POT_Y = PRISE_POT_SOL_Y + 10;
+    public static final int PRISE_POT_POT_Y = PRISE_POT_SOL_Y + 16;
     public static final int SORTIE_POT_POT_Y = 145;
     public static final int DEPOSE_SOL_Y = PRISE_POT_SOL_Y + 10;
 
@@ -198,6 +198,13 @@ public class BrasInstance {
             return new PointBras(
                     pt.x + current.x,
                     pt.y + current.y,
+                    current.a,
+                    current.invertA1
+            );
+        } else if (pt instanceof PointBras.PointBrasWithX) {
+            return new PointBras(
+                    pt.x,
+                    current.y,
                     current.a,
                     current.invertA1
             );

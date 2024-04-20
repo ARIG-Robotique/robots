@@ -842,7 +842,7 @@ public class TrajectoryManager implements InitializingBean {
     }
 
     private void cmdAvanceMMByType(final double distance, TypeConsigne... types) throws AvoidingException {
-        if (distance > 0) {
+        if (distance != 0) {
             log.info("{} de {}mm en mode : {}", distance > 0 ? "Avance" : "Recul", distance, StringUtils.join(types, ", "));
         }
 
