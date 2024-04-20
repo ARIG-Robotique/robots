@@ -34,6 +34,6 @@ public interface EurobotConfig {
     // Actions d'échappement
     String ACTION_ECHAPPEMENT_ARUCO_PREFIX = "Echappement Aruco ";
 
-    int PATHFINDER_ZONE_FLEUR_CENTRAL_SIZE = 500;
     int PATHFINDER_FLEUR_SIZE = 500;
+    int PATHFINDER_STOCK_POTS_SZIE = 600;
 }

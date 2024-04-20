@@ -39,9 +39,8 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        // TODO interdit si on transporte des trucs
-        // 1er interdit si zone de depose pleine
-        return !rs.panneauxSolaireEquipeDone();
+        // TODO 1er interdit si zone de depose pleine
+        return rs.bras().arriereLibre() && !rs.panneauxSolaire().equipeDone();
     }
 
     @Override
@@ -133,11 +132,11 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction {
             if (enZone) {
                 int x = getX((int) mv.currentXMm());
                 if (x > 725) {
-                    rs.panneauxSolaireEquipeDone(3);
+                    rs.panneauxSolaire().equipeDone(3);
                 } else if (x > 500) {
-                    rs.panneauxSolaireEquipeDone(2);
+                    rs.panneauxSolaire().equipeDone(2);
                 } else if (x > 275) {
-                    rs.panneauxSolaireEquipeDone(1);
+                    rs.panneauxSolaire().equipeDone(1);
                 }
             }
         }

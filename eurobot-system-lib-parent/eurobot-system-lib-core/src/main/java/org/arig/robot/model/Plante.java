@@ -1,5 +1,6 @@
 package org.arig.robot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,7 +21,9 @@ public class Plante extends Point {
     private final ID id;
     private final TypePlante type;
     private boolean dansPot; // la plante est dans un pot
+    @JsonIgnore
     private boolean blocking; // génère un masque sur la pathfinder
+    @JsonIgnore
     private Long existence;
 
     public Plante(TypePlante type) {

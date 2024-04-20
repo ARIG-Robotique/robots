@@ -9,12 +9,8 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Data
@@ -63,11 +59,15 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
      * STATUT
      */
 
-    private StockPlantes stockPlantes = new StockPlantes();
+    private Plantes plantes = new Plantes();
 
-    private AireDeDepose aireDeDeposeNord = new AireDeDepose();
-    private AireDeDepose aireDeDeposeMilieu = new AireDeDepose();
-    private AireDeDepose aireDeDeposeSud = new AireDeDepose();
+    private ZoneDepose aireDeDeposeNord = new ZoneDepose(false);
+    private ZoneDepose aireDeDeposeMilieu = new ZoneDepose(false);
+    private ZoneDepose aireDeDeposeSud = new ZoneDepose(false);
+
+    private ZoneDepose jardiniereNord = new ZoneDepose(true);
+    private ZoneDepose jardiniereMilieu = new ZoneDepose(true);
+    private ZoneDepose jardiniereSud = new ZoneDepose(true);
 
     private SiteDeCharge siteDeCharge = SiteDeCharge.AUCUN;
     private SiteDeCharge siteDeDepart = SiteDeCharge.AUCUN;
@@ -83,27 +83,10 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     }
 
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private PanneauxSolaire panneauxSolaire = new PanneauxSolaire();
 
     public int panneauxSolairePointRestant() {
         return Math.max(0, 30 - panneauxSolaire.score());
-    }
-
-    public boolean panneauxSolaireEquipeDone() {
-        return panneauxSolaire.equipeDone();
-    }
-
-    public void panneauxSolaireEquipeDone(int nb) {
-        panneauxSolaire.equipeDone(nb);
-    }
-
-    public PanneauSolaire panneauSolaire(int numero) {
-        return panneauxSolaire.get(numero);
-    }
-
-    public PanneauSolaire nextPanneauSolaire(int nbTry, boolean reverse) {
-        return panneauxSolaire.nextPanneauSolaireToProcess(nbTry, reverse);
     }
 
     public void couleurPanneauSolaire(int numero, CouleurPanneauSolaire couleur) {
@@ -111,11 +94,31 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         panneauxSolaire.get(numero).couleur(couleur);
     }
 
+    @Setter(AccessLevel.NONE)
+    private StocksPots stocksPots = new StocksPots();
+
+    @Setter(AccessLevel.NONE)
+    private BrasListe bras = new BrasListe();
+
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private TypePlante[] stock = new TypePlante[]{null, null, null};
+
+    public void setStock(TypePlante gauche, TypePlante centre, TypePlante droite) {
+        stock[0] = gauche;
+        stock[1] = centre;
+        stock[2] = droite;
+    }
+
+    public boolean stockLibre() {
+        return stock[0] == null && stock[1] == null && stock[2] == null;
+    }
+
     /* *************************** SCORE *************************** */
     /* ************************************************************* */
 
     private int scoreJardinieres() {
-        return 0;
+        return jardiniereSud.score() + jardiniereMilieu.score() + jardiniereNord.score();
     }
 
     private int scoreDeposeAuSol() {
@@ -150,8 +153,8 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public Map<String, Integer> scoreStatus() {
         Map<String, Integer> r = new HashMap<>();
         r.put("Jardinières", scoreJardinieres());
-        r.put("Dépose au sol", scoreDeposeAuSol());
-        r.put("Panneaux Solaire", scorePanneauxSolaire());
+        r.put("Aires de dépose", scoreDeposeAuSol());
+        r.put("Panneaux solaire", scorePanneauxSolaire());
         r.put("Site de charge", scoreSiteDeCharge());
         return r;
     }
@@ -159,33 +162,39 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Override
     public Map<String, Object> gameStatus() {
         Map<String, Object> r = new HashMap<>();
-        r.put("panneauxSolaire", panneauxSolaire.panneauxSolaire);
+        r.put("panneaux", panneauxSolaire.data);
         r.put("siteDeRetour", siteDeCharge);
+        r.put("stocksPots", stocksPots.gameStatus());
+        r.put("plantes", plantes.getPlantes());
+        r.put("airesDepose", Map.of(
+                "NORD", aireDeDeposeNord.data,
+                "MILIEU", aireDeDeposeMilieu.data,
+                "SUD", aireDeDeposeSud.data
+        ));
+        r.put("jardinieres", Map.of(
+                "NORD", jardiniereNord.data,
+                "MILIEU", jardiniereMilieu.data,
+                "SUD", jardiniereSud.data
+        ));
         return r;
     }
 
     @Override
     public Map<String, Boolean> gameFlags() {
-        Map<String, Boolean> r = new LinkedHashMap<>();
+        Map<String, Boolean> r = new HashMap<>();
         r.put("Panneaux solaire terminés", panneauxSolaire.isComplete());
         return r;
     }
 
     @Override
     public Map<String, String> deposesStatus() {
-        Map<String, String> r = new LinkedHashMap<>();
-        r.put("Jardinière Gauche", "EMPTY");
-        r.put("Jardinière Centre", "EMPTY");
-        r.put("Jardinière Droite", "EMPTY");
-
-        Function<Plante, String> mapper = p -> p != null ? p.getType().name() + " (" + (p.isDansPot() ? "dans pot" : "sans pot") + ")" : "EMPTY";
-
-        r.put("Dépose au sol Nord 1/2", Arrays.stream(aireDeDeposeNord.rang1).map(mapper).collect(Collectors.joining(",")));
-        r.put("Dépose au sol Nord 2/2", Arrays.stream(aireDeDeposeNord.rang2).map(mapper).collect(Collectors.joining(",")));
-        r.put("Dépose au sol Milieu 1/2", Arrays.stream(aireDeDeposeMilieu.rang1).map(mapper).collect(Collectors.joining(",")));
-        r.put("Dépose au sol Milieu 2/2", Arrays.stream(aireDeDeposeMilieu.rang2).map(mapper).collect(Collectors.joining(",")));
-        r.put("Dépose au sol Sud 1/2", Arrays.stream(aireDeDeposeSud.rang1).map(mapper).collect(Collectors.joining(",")));
-        r.put("Dépose au sol Sud 2/2", Arrays.stream(aireDeDeposeSud.rang2).map(mapper).collect(Collectors.joining(",")));
+        Map<String, String> r = new HashMap<>();
+        r.put("Jardinière Nord", jardiniereNord.toString());
+        r.put("Jardinière Milieu", jardiniereMilieu.toString());
+        r.put("Jardinière Sud", jardiniereSud.toString());
+        r.put("Aire de dépose Nord", aireDeDeposeNord.toString());
+        r.put("Aire de dépose Milieu", aireDeDeposeMilieu.toString());
+        r.put("Aire de dépose Sud", aireDeDeposeSud.toString());
         return r;
     }
 }

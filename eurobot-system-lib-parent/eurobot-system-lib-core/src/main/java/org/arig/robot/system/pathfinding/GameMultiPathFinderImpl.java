@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.Plante;
+import org.arig.robot.model.StockPots;
+import org.arig.robot.model.Team;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,20 +23,33 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
 
     @Override
     public void setObstacles(final List<Shape> obstacles) {
+        final int rayonRobotCm = 20;
+
+        // zone des PAMI
+        obstacles.add(new Rectangle(150 - 45 - rayonRobotCm, 200 - 15 - rayonRobotCm, 45 * 2 + rayonRobotCm * 2, 15 + rayonRobotCm));
+
+        // zones adverses
+        if (rs.team() == Team.BLEU) {
+            obstacles.add(new Rectangle(255 - rayonRobotCm, 155 - rayonRobotCm, 45 + rayonRobotCm, 45 + rayonRobotCm));
+        } else {
+            obstacles.add(new Rectangle(0, 155 - rayonRobotCm, 45 + rayonRobotCm, 45 + rayonRobotCm));
+        }
 
         if (rs.getRemainingTime() > 10000) {
             // ajout des plantes
-            for (Plante plante : rs.stockPlantes()) {
+            for (Plante plante : rs.plantes()) {
                 if (plante.isBlocking()) {
                     obstacles.add(tableUtils.createPolygonObstacle(plante, EurobotConfig.PATHFINDER_FLEUR_SIZE));
                 }
             }
-        }
 
-        // ajout pots
-        /*if (rs.tailleCampementRougeVertNord() > 0) {
-            obstacles.add(tableUtils.createPolygonObstacle(new Point(tableUtils.getX(rs.team() == Team.VIOLET, 133), 1380), EurobotConfig.PATHFINDER_FLEUR_SIZE));
-        }*/
+            // ajout des stocks de pots
+            for (StockPots stocksPot : rs.stocksPots()) {
+                if (stocksPot.isPresent()) {
+                    obstacles.add(tableUtils.createPolygonObstacle(stocksPot, EurobotConfig.PATHFINDER_STOCK_POTS_SZIE));
+                }
+            }
+        }
 
         super.setObstacles(obstacles);
     }
