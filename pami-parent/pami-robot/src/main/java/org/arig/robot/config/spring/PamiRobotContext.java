@@ -97,6 +97,7 @@ public class PamiRobotContext {
     public ARIG2024AlimentationController alimentationController(NetworkDevice canBus) throws IOException {
         ARIG2024AlimentationController controller = new ARIG2024AlimentationController(canBus);
         controller.configMonitoring(true, false, false);
+        controller.scan();
         return controller;
     }
 

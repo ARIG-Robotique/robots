@@ -1,7 +1,9 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.NotImplementedException;
 import org.arig.robot.system.capteurs.can.ARIG2024AlimentationController;
+import org.arig.robot.system.capteurs.i2c.ARIG2024IoPamiSensors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,17 @@ public class PamiIOServiceRobot implements PamiIOService {
 
     @Autowired
     private ARIG2024AlimentationController alimentationController;
+
+    @Autowired
+    private PamiEnergyServiceRobot pamiEnergyService;
+
+    @Autowired
+    private ARIG2024IoPamiSensors arig2024IoPamiSensors;
+
+    @Override
+    public void refreshAllIO() {
+        arig2024IoPamiSensors.refreshSensors();
+    }
 
     // --------------------------------------------------------- //
     // --------------------- INFOS TECHNIQUE ------------------- //
@@ -26,7 +39,7 @@ public class PamiIOServiceRobot implements PamiIOService {
     }
 
     public boolean puissanceMoteursOk() {
-        return auOk();
+        return pamiEnergyService.checkMoteurs();
     }
 
     @Override
@@ -42,52 +55,52 @@ public class PamiIOServiceRobot implements PamiIOService {
 
     @Override
     public boolean calagePriseProduitAvant() {
-        return false;
+        return calagePriseProduitAvant(1);
     }
 
     @Override
     public boolean calagePriseProduitAvant(int mandatorySensors) {
-        return false;
+        throw new NotImplementedException("calagePriseProduitAvant not implemented on PAMI");
     }
 
     @Override
     public boolean calagePriseProduitArriere() {
-        return false;
+        return calagePriseProduitArriere(1);
     }
 
     @Override
     public boolean calagePriseProduitArriere(int mandatorySensors) {
-        return false;
+        throw new NotImplementedException("calagePriseProduitArriere not implemented on PAMI");
     }
 
     @Override
-    public boolean calagePrisePotArriere() {
-        return false;
+    public boolean calageElectroaimant() {
+        return calageElectroaimant(1);
     }
 
     @Override
-    public boolean calagePrisePotArriere(int mandatorySensors) {
-        return false;
+    public boolean calageElectroaimant(int mandatorySensors) {
+        throw new NotImplementedException("calageElectroaimant not implemented on PAMI");
     }
 
     @Override
     public boolean calageAvantGauche() {
-        return false;
+        throw new NotImplementedException("calageAvantGauche not implemented on PAMI");
     }
 
     @Override
     public boolean calageAvantDroit() {
-        return false;
+        throw new NotImplementedException("calageAvantDroit not implemented on PAMI");
     }
 
     @Override
     public boolean calageArriereGauche() {
-        return false;
+        return arig2024IoPamiSensors.isArriereGauche();
     }
 
     @Override
     public boolean calageArriereDroit() {
-        return false;
+        return arig2024IoPamiSensors.isArriereDroite();
     }
 
     // Numerique

@@ -23,10 +23,10 @@ public class PamiIOCommands {
     public void readAllIo() {
         log.info("Lecture des IOs");
         arig2024IoPamiSensors.refreshSensors();
-        log.info("IO 1 : {}", arig2024IoPamiSensors.isInput1());
-        log.info("IO 2 : {}", arig2024IoPamiSensors.isInput2());
-        log.info("GP2D 1 : {}", arig2024IoPamiSensors.getGp2d1());
-        log.info("GP2D 2 : {}", arig2024IoPamiSensors.getGp2d2());
-        log.info("GP2D 3 : {}", arig2024IoPamiSensors.getGp2d3());
+        log.info("IO 1 : {}", arig2024IoPamiSensors.isArriereGauche());
+        log.info("IO 2 : {}", arig2024IoPamiSensors.isArriereDroite());
+        log.info("GP2D 1 : {}", arig2024IoPamiSensors.getGp2dGauche());
+        log.info("GP2D 2 : {}", arig2024IoPamiSensors.getGp2dCentre());
+        log.info("GP2D 3 : {}", arig2024IoPamiSensors.getGp2dDroite());
     }
 }
