@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574Pin;
 import org.arig.robot.constants.NerellConstantesI2C;
+import org.arig.robot.filters.average.BooleanValueAverage;
 import org.arig.robot.system.motors.PCA9685ToTB6612Motor;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -67,9 +68,9 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     // Input : Numerique 2
     private GpioPinDigitalInput tirette;
     private GpioPinDigitalInput pinceAvantGauche;
-    private GpioPinDigitalInput pinceAvantDroit;
+    private GpioPinDigitalInput pinceAvantDroite;
     private GpioPinDigitalInput pinceArriereGauche;
-    private GpioPinDigitalInput pinceArriereDroit;
+    private GpioPinDigitalInput pinceArriereDroite;
     private GpioPinDigitalInput presenceStockGauche;
     private GpioPinDigitalInput presenceStockCentre;
     private GpioPinDigitalInput presenceStockDroit;
@@ -84,6 +85,17 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
 
     // private GpioPinDigitalInput in3_4;
     // private GpioPinDigitalInput in3_8;
+
+    // Input : Virtual averaged
+    private final int virtualAverageIntegratedValues = 5;
+    private BooleanValueAverage pinceAvantGaucheAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
+    private BooleanValueAverage pinceAvantCentreAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
+    private BooleanValueAverage pinceAvantDroiteAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
+    private BooleanValueAverage pinceArriereGaucheAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
+    private BooleanValueAverage pinceArriereCentreAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
+    private BooleanValueAverage pinceArriereDroiteAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
+    private BooleanValueAverage inductifGaucheAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
+    private BooleanValueAverage inductifDroitAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
 
     // Référence sur les PIN Output
     // ----------------------------
@@ -168,8 +180,8 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
 
         // PCF2
         tirette = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
-        pinceAvantDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
-        pinceArriereDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
+        pinceAvantDroite = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
+        pinceArriereDroite = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
         pinceArriereGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
         presenceStockGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
         presenceStockDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
@@ -221,6 +233,16 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         } catch (IOException e) {
             log.error("Erreur lecture PCF Alim : " + e.getMessage(), e);
         }
+
+        // Refresh virtual IOs
+        pinceAvantGaucheAverage.filter(pinceAvantGauche());
+        pinceAvantCentreAverage.filter(pinceAvantCentre());
+        pinceAvantDroiteAverage.filter(pinceAvantDroite());
+        pinceArriereGaucheAverage.filter(pinceArriereGauche());
+        pinceArriereCentreAverage.filter(pinceArriereCentre());
+        pinceArriereDroiteAverage.filter(pinceArriereDroite());
+        inductifGaucheAverage.filter(inductifGauche());
+        inductifDroitAverage.filter(inductifDroit());
     }
 
     // --------------------------------------------------------- //
@@ -360,40 +382,64 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     public boolean inductifGauche() {
         return inductifGauche.isLow();
     }
+    public boolean inductifGaucheAverage() {
+        return inductifGaucheAverage.lastResult();
+    }
 
     @Override
     public boolean inductifDroit() {
         return inductifDroit.isLow();
+    }
+    public boolean inductifDroitAverage() {
+        return inductifDroitAverage.lastResult();
     }
 
     @Override
     public boolean pinceAvantGauche() {
         return pinceAvantGauche.isLow();
     }
+    public boolean pinceAvantGaucheAverage() {
+        return pinceAvantGaucheAverage.lastResult();
+    }
 
     @Override
     public boolean pinceAvantCentre() {
         return pinceAvantCentre.isLow();
     }
+    public boolean pinceAvantCentreAverage() {
+        return pinceAvantCentreAverage.lastResult();
+    }
 
     @Override
     public boolean pinceAvantDroite() {
-        return pinceAvantDroit.isLow();
+        return pinceAvantDroite.isLow();
+    }
+    public boolean pinceAvantDroiteAverage() {
+        return pinceAvantDroiteAverage.lastResult();
     }
 
     @Override
     public boolean pinceArriereGauche() {
         return pinceArriereGauche.isLow();
     }
+    public boolean pinceArriereGaucheAverage() {
+        return pinceArriereGaucheAverage.lastResult();
+    }
 
     @Override
     public boolean pinceArriereCentre() {
         return pinceArriereCentre.isLow();
     }
+    public boolean pinceArriereCentreAverage() {
+        return pinceArriereCentreAverage.lastResult();
+    }
 
     @Override
     public boolean pinceArriereDroite() {
-        return pinceArriereDroit.isLow();
+        return pinceArriereDroite.isLow();
+    }
+    public boolean pinceArriereDroiteAverage() {
+        return pinceArriereDroiteAverage.lastResult();
     }
 
     // --------------------------------------------------------- //
