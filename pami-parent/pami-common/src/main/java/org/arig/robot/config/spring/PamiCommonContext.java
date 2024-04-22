@@ -100,13 +100,13 @@ public class PamiCommonContext {
 
     @Bean
     public ConvertionRobotUnit convertisseur() {
-        return new ConvertionRobotUnit(PamiConstantesConfig.countPerMm, PamiConstantesConfig.entraxe, true);
+        return new ConvertionRobotUnit(PamiConstantesConfig.countPerMm, PamiConstantesConfig.countPerDeg);
     }
 
     @Bean
     public IAsservissementPolaire asservissement() {
-        LimiterFilter limiterMoteurGauche = new LimiterFilter(100d, 4095d, LimiterType.MIRROR);
-        LimiterFilter limiterMoteurDroit = new LimiterFilter(100d, 4095d, LimiterType.MIRROR);
+        LimiterFilter limiterMoteurGauche = new LimiterFilter(0d, 4095d, LimiterType.MIRROR);
+        LimiterFilter limiterMoteurDroit = new LimiterFilter(0d, 4095d, LimiterType.MIRROR);
         return new AsservissementPolaireDistanceOrientation(limiterMoteurGauche, limiterMoteurDroit);
     }
 

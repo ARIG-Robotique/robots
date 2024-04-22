@@ -17,12 +17,12 @@ public class PamiRobotServosService extends AbstractCommonPamiServosService {
 
         Servo touchePlanteGauche = servo(TOUCHE_PLANTE_GAUCHE_ID, TOUCHE_PLANTE_GAUCHE)
             .time(500)
-            .position(POS_OUVERT, 1500)
-            .position(POS_FERME, 1500);
+            .position(POS_OUVERT, 810)
+            .position(POS_FERME, 1910);
         Servo touchePlanteDroite = servo(TOUCHE_PLANTE_DROITE_ID, TOUCHE_PLANTE_DROITE)
             .time(500)
-            .position(POS_OUVERT, 1500)
-            .position(POS_FERME, 1500);
+            .position(POS_OUVERT, 2210)
+            .position(POS_FERME, 1010);
         group(GROUP_TOUCHE_PLANTE_ID, GROUP_TOUCHE_PLANTE)
             .addServo(touchePlanteGauche)
             .addServo(touchePlanteDroite)

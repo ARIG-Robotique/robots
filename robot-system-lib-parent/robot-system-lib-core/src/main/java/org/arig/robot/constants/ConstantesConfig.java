@@ -11,6 +11,9 @@ public interface ConstantesConfig {
     // Clé pour l'identification du PAMI
     String keyPamiId = "pami.id";
 
+    // Clé pour les profiles Spring
+    String keySpringProfiles = "spring.profiles.active";
+
     String executiondIdFormat = "yyyyMMddHHmmss";
     String executiondDateFormat = "yyyy-MM-dd HH:mm:ss";
 

@@ -20,6 +20,13 @@ public class PamiCapteursController extends AbstractCapteursController {
     public void afterPropertiesSet() throws Exception {
         super.afterPropertiesSet();
 
+        numeriqueInfos.put("Calage arriere gauche", ioService::calageArriereGauche);
+        numeriqueInfos.put("Calage arriere droit", ioService::calageArriereDroit);
+
+        analogiqueInfos.put("Distance Gauche", ioService::distanceGauche);
+        analogiqueInfos.put("Distance Centre", ioService::distanceGauche);
+        analogiqueInfos.put("Distance Droit", ioService::distanceGauche);
+
         textInfos.put("Equipe", () -> (robotStatus.team() != null) ? robotStatus.team().name() : "???");
     }
 }

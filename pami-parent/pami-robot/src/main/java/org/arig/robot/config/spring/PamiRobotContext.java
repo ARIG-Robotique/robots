@@ -16,6 +16,7 @@ import org.arig.robot.model.balise.StatutBalise;
 import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
+import org.arig.robot.model.lidar.enums.HealthState;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.avoiding.BasicAvoidingService;
 import org.arig.robot.system.avoiding.BasicRetryAvoidingService;
@@ -85,6 +86,7 @@ public class PamiRobotContext {
     public Abstract2WheelsEncoders encoders(NetworkDevice canBus) throws IOException {
         ARIG2024Can2WheelsEncoders encoders = new ARIG2024Can2WheelsEncoders(canBus, 2, 1);
         encoders.setEncoderConfiguration(false, true);
+        encoders.setCoefs(PamiConstantesConfig.coefCodeurGauche, PamiConstantesConfig.coefCodeurDroit);
         return encoders;
     }
 
@@ -135,7 +137,9 @@ public class PamiRobotContext {
 
             @Override
             public HealthInfos healthInfo() {
-                return null;
+                HealthInfos hi = new HealthInfos();
+                hi.setState(HealthState.OK);
+                return hi;
             }
 
             @Override

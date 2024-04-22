@@ -70,6 +70,20 @@ public class PamiIOServiceSimulator extends AbstractIOServiceBouchon implements 
 
 
     // Analogique
+    @Override
+    public double distanceGauche() {
+        return 0;
+    }
+
+    @Override
+    public double distanceCentre() {
+        return 0;
+    }
+
+    @Override
+    public double distanceDroit() {
+        return 0;
+    }
 
 
     // --------------------------------------------------------- //

@@ -22,6 +22,9 @@ public class PamiRobot {
         String pamiId = InetAddress.getLocalHost().getHostName().replace("pami-", "");
         System.setProperty(ConstantesConfig.keyPamiId, pamiId);
 
+        String springProfiles = System.getProperty(ConstantesConfig.keySpringProfiles);
+        System.setProperty(ConstantesConfig.keySpringProfiles, springProfiles + "," + pamiId);
+
         ConfigurableApplicationContext context = SpringApplication.run(PamiRobot.class, args);
         context.getBean(PamiOrdonanceur.class).run();
         SpringApplication.exit(context);

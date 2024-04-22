@@ -15,9 +15,6 @@ public class PamiIOServiceRobot implements PamiIOService {
     private ARIG2024AlimentationController alimentationController;
 
     @Autowired
-    private PamiEnergyServiceRobot pamiEnergyService;
-
-    @Autowired
     private ARIG2024IoPamiSensors arig2024IoPamiSensors;
 
     @Override
@@ -32,14 +29,6 @@ public class PamiIOServiceRobot implements PamiIOService {
     @Override
     public boolean auOk() {
         return alimentationController.auOk();
-    }
-
-    public boolean puissanceServosOk() {
-        return auOk();
-    }
-
-    public boolean puissanceMoteursOk() {
-        return pamiEnergyService.checkMoteurs();
     }
 
     @Override
@@ -107,6 +96,21 @@ public class PamiIOServiceRobot implements PamiIOService {
 
 
     // Analogique
+
+    @Override
+    public double distanceGauche() {
+        return arig2024IoPamiSensors.getGp2dGauche();
+    }
+
+    @Override
+    public double distanceCentre() {
+        return arig2024IoPamiSensors.getGp2dCentre();
+    }
+
+    @Override
+    public double distanceDroit() {
+        return arig2024IoPamiSensors.getGp2dDroite();
+    }
 
 
     // --------------------------------------------------------- //
