@@ -55,6 +55,11 @@ public class ARIG2024CanPropulsionsMotors extends AbstractPropulsionsMotors impl
 
     this.manualChannel = CanChannels.newRawChannel(canDevice);
     this.manualChannel.setOption(CanSocketOptions.FILTER, ARIG2024CanPropulsionsMotorsManual.filters());
+
+    maxVal = 4096;
+    minVal = -maxVal;
+    prevM1 = maxVal + 1;
+    prevM2 = maxVal + 1;
   }
 
   @Override
