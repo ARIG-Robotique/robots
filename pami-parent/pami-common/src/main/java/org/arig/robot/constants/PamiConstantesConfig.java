@@ -54,11 +54,11 @@ public interface PamiConstantesConfig {
     double gainVitesseRampeDistanceSimulateur = 3;
     double gainVitesseRampeOrientationSimulateur = gainVitesseRampeDistanceSimulateur * 2;
 
-    double rampAccDistance = 1000.0; // en mm/s2
-    double rampDecDistance = 1000.0; // en mm/s2
+    double rampAccDistance = 300.0; // en mm/s2
+    double rampDecDistance = 300.0; // en mm/s2
 
-    double rampAccOrientation = 1000.0; // en mm/s2
-    double rampDecOrientation = 1000.0; // en mm/s2
+    double rampAccOrientation = 300.0; // en mm/s2
+    double rampDecOrientation = 300.0; // en mm/s2
 
     // -------------------------- //
     // Configuration des vitesses //
@@ -75,18 +75,18 @@ public interface PamiConstantesConfig {
     // -------------- //
     double kcrDistance = 21.5;
     double tcrDistance = 0.04;
-    double kpDistance = 100;
-    double kiDistance = 0;
-    double kdDistance = 0;
+    double kpDistance = 70;
+    double kiDistance = 5;
+    double kdDistance = 300;
     double kpDistanceSimu = 12.9;
     double kiDistanceSimu = 0.0;
     double kdDistanceSimu = 0.008;
 
     double kcrOrientation = 10.0;
     double tcrOrientation = 0.05;
-    double kpOrientation = 100;
-    double kiOrientation = 0;
-    double kdOrientation = 0;
+    double kpOrientation = 70;
+    double kiOrientation = 5;
+    double kdOrientation = 300;
     double kpOrientationSimu = 6.0;
     double kiOrientationSimu = 0.0;
     double kdOrientationSimu = 0.01;
