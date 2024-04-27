@@ -113,9 +113,8 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         }
 
         // Visu après la tirette
-        //nerellIO.enableLedCapteurCouleur();
-        //ThreadUtils.sleep(NerellConstantesConfig.WAIT_LED);
-        //nerellIO.disableLedCapteurCouleur();
+        // TODO Envoyer une demande de sound aux PAMIs
+
     }
 
     @Override
