@@ -133,14 +133,31 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     public void afterMatch() {
         double currentX = mv.currentXMm();
         double currentY = mv.currentYMm();
-
         if (nerellRobotStatus.team() == Team.BLEU) {
-            if (currentX <= 500 && currentY <= 500) {
+            // Nord
+            if (nerellRobotStatus.siteDeDepart() != SiteDeCharge.BLEU_NORD && currentX <= 500 && currentY >= 1500) {
+                nerellRobotStatus.siteDeCharge(SiteDeCharge.BLEU_NORD);
+            }
+            // Milieu
+            if (nerellRobotStatus.siteDeDepart() != SiteDeCharge.BLEU_MILIEU && currentX >= 2500 && currentY >= 500 && currentY <= 1500) {
+                nerellRobotStatus.siteDeCharge(SiteDeCharge.BLEU_MILIEU);
+            }
+            // Sud
+            if (nerellRobotStatus.siteDeDepart() != SiteDeCharge.BLEU_SUD && currentX <= 500 && currentY <= 500) {
                 nerellRobotStatus.siteDeCharge(SiteDeCharge.BLEU_SUD);
             }
         } else {
-            if (currentX >= 2500 && currentY <= 500) {
-                nerellRobotStatus.siteDeCharge(SiteDeCharge.BLEU_SUD);
+            // Nord
+            if (nerellRobotStatus.siteDeDepart() != SiteDeCharge.JAUNE_NORD && currentX >= 2500 && currentY >= 1500) {
+                nerellRobotStatus.siteDeCharge(SiteDeCharge.JAUNE_NORD);
+            }
+            // Milieu
+            if (nerellRobotStatus.siteDeDepart() != SiteDeCharge.JAUNE_MILIEU && currentX <= 500 && currentY >= 500 && currentY <= 1500) {
+                nerellRobotStatus.siteDeCharge(SiteDeCharge.JAUNE_MILIEU);
+            }
+            // Sud
+            if (nerellRobotStatus.siteDeDepart() != SiteDeCharge.JAUNE_SUD && currentX >= 2500 && currentY <= 500) {
+                nerellRobotStatus.siteDeCharge(SiteDeCharge.JAUNE_SUD);
             }
         }
 
