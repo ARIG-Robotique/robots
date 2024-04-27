@@ -333,6 +333,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                     mv.gotoPoint(getX(240), 1775);
                     mv.alignFrontTo(getX(1220), 1490);
                     groupService.initStep(InitStep.NERELL_EN_POSITION);
+                    nerellRobotStatus.siteDeDepart(nerellRobotStatus.team() == Team.BLEU ? SiteDeCharge.BLEU_NORD : SiteDeCharge.JAUNE_NORD);
                     break;
             }
         } catch (AvoidingException e) {
