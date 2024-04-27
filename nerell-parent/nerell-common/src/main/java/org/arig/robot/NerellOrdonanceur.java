@@ -326,9 +326,13 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
             switch (nerellRobotStatus.strategy()) {
                 case FINALE_1:
+                    // Start ???
                 case FINALE_2:
+                    // Start milieu coté adverse
                 case BASIC:
+                    // Start solar panel (sud)
                 case AGGRESSIVE:
+                    // Start plant (nord)
                 default:
                     mv.gotoPoint(getX(240), 1775);
                     mv.alignFrontTo(getX(1220), 1490);
