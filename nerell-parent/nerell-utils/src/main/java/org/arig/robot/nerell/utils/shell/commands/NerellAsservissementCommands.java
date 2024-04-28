@@ -20,6 +20,8 @@ import org.arig.robot.services.NerellIOService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.shell.Availability;
+import org.springframework.shell.standard.ShellCommandGroup;
+import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 
@@ -30,8 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-//@ShellComponent
-//@ShellCommandGroup("Asservissement")
+@ShellComponent
+@ShellCommandGroup("Asservissement")
 @RequiredArgsConstructor
 public class NerellAsservissementCommands {
 
