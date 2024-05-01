@@ -36,7 +36,9 @@ public class PanneauSolaireAction extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        if (!isTimeValid()) {
+        boolean valid = isTimeValid()
+                && rs.panneauxSolaire().triedActionEquipe();
+        if (!valid) {
             return false;
         }
         firstPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(10, false);

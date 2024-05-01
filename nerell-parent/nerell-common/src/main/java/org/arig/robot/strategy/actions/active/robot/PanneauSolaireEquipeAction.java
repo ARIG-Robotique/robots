@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled;
+package org.arig.robot.strategy.actions.active.robot;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
@@ -10,17 +10,23 @@ import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 import static org.arig.robot.constants.NerellConstantesConfig.VITESSE_ROUE_PANNEAU;
 
 @Slf4j
 @Component
-public class PanneauSolaireEquipeAction extends AbstractNerellAction {
+public class PanneauSolaireEquipeAction extends AbstractNerellAction implements InitializingBean {
     final int ENTRY_X = 210;
     final int ENTRY_Y = 210;
 
     final int WORK_Y = 230;
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        rs.panneauxSolaire().triedActionEquipe(false);
+    }
 
     @Override
     public String name() {
@@ -37,7 +43,8 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction {
         // TODO 1er interdit si zone de depose pleine
         return isTimeValid()
                 && rs.bras().arriereLibre()
-                && !rs.panneauxSolaire().equipeDone();
+                && !rs.panneauxSolaire().equipeDone()
+                && !rs.panneauxSolaire().triedActionEquipe();
     }
 
     @Override
@@ -149,6 +156,9 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction {
                 } else if (x > 275) {
                     rs.panneauxSolaire().equipeDone(1);
                 }
+
+                rs.panneauxSolaire().triedActionEquipe(true);
+                complete(true);
             }
         }
     }

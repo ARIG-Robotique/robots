@@ -1,15 +1,23 @@
 package org.arig.robot.model;
 
+import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Accessors(fluent = true, chain = true)
 public class PanneauxSolaire {
 
     @Setter
-    @Accessors(fluent = true, chain = true)
     private Team team;
+
+    // indique que l'action des panneaux équipe a déjà été essayée
+    // et que les panneaux équipe peuvent être traités par l'action unitaire si besoin
+    // initialisé à true mais mis à false dans le conctructeur de PanneauSolaireEquipeAction
+    @Getter
+    @Setter
+    private boolean triedActionEquipe = true;
 
     PanneauSolaire[] data = new PanneauSolaire[]{
             // Bleu
