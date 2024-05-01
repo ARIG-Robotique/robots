@@ -127,6 +127,10 @@ odin:
   socket:
     host: localhost
 
+# Ecran
+ecran:
+  binary: /home/damiensorel@sglk.local/arig/cpp-linux/build-robots-gui-Desktop-Debug/robots-gui
+
 ---
 
 # Spring properties
