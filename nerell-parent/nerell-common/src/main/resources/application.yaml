@@ -149,3 +149,26 @@ balise:
 odin:
   socket:
     host: localhost
+
+---
+
+# Spring properties
+spring:
+  config:
+    activate:
+      on-profile: eliott
+
+# Balise de vision
+balise:
+  impl: SOCKET
+  socket:
+    host: sauron
+
+# Odin
+odin:
+  socket:
+    host: localhost
+
+# Ecran
+ecran:
+  binary: ${user.home}/dev/ARIG/arig-wksp/cpp-linux/robots-gui/build/Desktop-Debug/robots-gui
