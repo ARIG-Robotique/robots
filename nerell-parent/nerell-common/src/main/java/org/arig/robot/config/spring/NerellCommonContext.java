@@ -3,8 +3,10 @@ package org.arig.robot.config.spring;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.NerellOrdonanceur;
 import org.arig.robot.constants.NerellConstantesConfig;
+import org.arig.robot.filters.chain.SerialChainFilter;
 import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.common.LimiterFilter.LimiterType;
+import org.arig.robot.filters.common.OffsetFilter;
 import org.arig.robot.filters.pid.PidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
@@ -111,9 +113,19 @@ public class NerellCommonContext {
 
     @Bean
     public IAsservissementPolaire asservissement() {
-        LimiterFilter limiterMoteurGauche = new LimiterFilter(100d, 4095d, LimiterType.MIRROR);
-        LimiterFilter limiterMoteurDroit = new LimiterFilter(100d, 4095d, LimiterType.MIRROR);
-        return new AsservissementPolaireDistanceOrientation(limiterMoteurGauche, limiterMoteurDroit);
+        OffsetFilter offsetMoteurGauche = new OffsetFilter(650d);
+        LimiterFilter limiterMoteurGauche = new LimiterFilter(0d, 4095d, LimiterType.MIRROR);
+        SerialChainFilter<Double> moteurGauche = new SerialChainFilter<>();
+        moteurGauche.addFilter(offsetMoteurGauche);
+        moteurGauche.addFilter(limiterMoteurGauche);
+
+        OffsetFilter offsetMoteurDroit = new OffsetFilter(650d);
+        LimiterFilter limiterMoteurDroit = new LimiterFilter(0d, 4095d, LimiterType.MIRROR);
+        SerialChainFilter<Double> moteurDroit = new SerialChainFilter<>();
+        moteurDroit.addFilter(offsetMoteurDroit);
+        moteurDroit.addFilter(limiterMoteurDroit);
+
+        return new AsservissementPolaireDistanceOrientation(moteurGauche, moteurDroit);
     }
 
     @Bean
