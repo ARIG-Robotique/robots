@@ -9,6 +9,7 @@ import org.arig.robot.filters.pid.PidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
 import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
@@ -16,6 +17,9 @@ import org.arig.robot.model.ecran.EcranConfig;
 import org.arig.robot.model.ecran.EcranState;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.monitoring.MonitoringWrapper;
+import org.arig.robot.services.AbstractCommonRobotServosService;
+import org.arig.robot.services.BrasService;
+import org.arig.robot.services.CommonRobotIOService;
 import org.arig.robot.system.RobotGroupOverSocket;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.arig.robot.system.blockermanager.SystemBlockerManagerImpl;
@@ -182,6 +186,17 @@ public class NerellCommonContext {
         RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(nerellRobotStatus, serverPort, odinHost, odinPort, threadPoolTaskExecutor);
         robotGroupOverSocket.openSocket();
         return robotGroupOverSocket;
+    }
+
+    @Bean
+    public BrasService brasService(
+        final AbstractCommonRobotServosService servos,
+        final ThreadPoolExecutor executor,
+        final RobotConfig config,
+        final EurobotStatus rs,
+        final CommonRobotIOService io
+    ) {
+        return new BrasService(servos, executor, config, rs, io);
     }
 
     @Bean

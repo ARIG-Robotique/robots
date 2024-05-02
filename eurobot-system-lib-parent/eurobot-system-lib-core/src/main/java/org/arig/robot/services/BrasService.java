@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 import static org.arig.robot.services.AbstractCommonRobotServosService.*;
 
 @Slf4j
-@Service
 public class BrasService {
 
     private final RobotConfig config;
