@@ -1,5 +1,6 @@
 package org.arig.robot.system.motion;
 
+import org.arig.robot.filters.Filter;
 import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.pid.PidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
@@ -38,8 +39,8 @@ public class AsservissementPolaireDistanceOrientation implements IAsservissement
     @Qualifier("rampOrientation")
     private TrapezoidalRampFilter rampOrientation;
 
-    private final LimiterFilter limiterMoteurGauche;
-    private final LimiterFilter limiterMoteurDroit;
+    private final Filter<Double, Double> moteurGaucheFilter;
+    private final Filter<Double, Double> moteurDroitFilter;
 
     /**
      * Instantiates a new asservissement polaire.
@@ -48,10 +49,10 @@ public class AsservissementPolaireDistanceOrientation implements IAsservissement
         this(new LimiterFilter(-Double.MAX_VALUE + 1, Double.MAX_VALUE), new LimiterFilter(-Double.MAX_VALUE + 1, Double.MAX_VALUE));
     }
 
-    public AsservissementPolaireDistanceOrientation(LimiterFilter limiterMoteurGauche, LimiterFilter limiterMoteurDroit) {
+    public AsservissementPolaireDistanceOrientation(Filter<Double, Double> moteurGaucheFilter, Filter<Double, Double> moteurDroitFilter) {
         super();
-        this.limiterMoteurGauche = limiterMoteurGauche;
-        this.limiterMoteurDroit = limiterMoteurDroit;
+        this.moteurGaucheFilter = moteurGaucheFilter;
+        this.moteurDroitFilter = moteurDroitFilter;
     }
 
     @Override
@@ -100,8 +101,8 @@ public class AsservissementPolaireDistanceOrientation implements IAsservissement
         double cmdMotGauche = distance - orientation;
         double cmdMotDroit = distance + orientation;
 
-        cmdRobot.getMoteur().setGauche(limiterMoteurGauche.filter(cmdMotGauche).intValue());
-        cmdRobot.getMoteur().setDroit(limiterMoteurDroit.filter(cmdMotDroit).intValue());
+        cmdRobot.getMoteur().setGauche(moteurGaucheFilter.filter(cmdMotGauche).intValue());
+        cmdRobot.getMoteur().setDroit(moteurDroitFilter.filter(cmdMotDroit).intValue());
     }
 
     @Override
