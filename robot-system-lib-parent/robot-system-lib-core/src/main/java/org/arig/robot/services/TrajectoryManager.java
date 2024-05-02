@@ -834,17 +834,15 @@ public class TrajectoryManager implements InitializingBean {
      * @param distance the distance
      */
     public void avanceMM(final double distance) throws AvoidingException {
-        cmdAvanceMMByType(distance, TypeConsigne.DIST, TypeConsigne.ANGLE);
+        cmdMouvementMMByType(distance, TypeConsigne.DIST, TypeConsigne.ANGLE);
     }
 
     public void avanceMMSansAngle(final double distance) throws AvoidingException {
-        cmdAvanceMMByType(distance, TypeConsigne.DIST);
+        cmdMouvementMMByType(distance, TypeConsigne.DIST);
     }
 
-    private void cmdAvanceMMByType(final double distance, TypeConsigne... types) throws AvoidingException {
-        if (distance != 0) {
-            log.info("{} de {}mm en mode : {}", distance > 0 ? "Avance" : "Recul", distance, StringUtils.join(types, ", "));
-        }
+    private void cmdMouvementMMByType(final double distance, TypeConsigne... types) throws AvoidingException {
+        log.info("Déplacement de {}mm en mode : {}", distance, StringUtils.join(types, ", "));
 
         synchronized (this) {
             cmdRobot.setTypes(types);
