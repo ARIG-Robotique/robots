@@ -108,7 +108,7 @@ public class PamiRobotContext {
         // Configuration de la carte moteur propulsion.
         ARIG2024CanPropulsionsMotors motors = new ARIG2024CanPropulsionsMotors(canBus);
         motors.assignMotors(PamiConstantesConfig.numeroMoteurGauche, PamiConstantesConfig.numeroMoteurDroit);
-        motors.setMotorConfiguration(false, false);
+        motors.setMotorConfiguration(true, false);
         return motors;
     }
 
