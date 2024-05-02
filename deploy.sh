@@ -19,7 +19,7 @@ echo "Déploiement ..."
 for ROBOT_NAME in "${@}" ; do
   # If ROBOT_NAME contains 'pami' then we are deploying on a PAMI robot
   if [[ ${ROBOT_NAME} == *"pami"* ]] ; then
-    HOME_DIR=/home/arig
+    HOME_DIR=/home/pi
     PROJECT_NAME=pami
   else
     HOME_DIR=/home/pi
