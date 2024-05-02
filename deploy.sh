@@ -1,10 +1,15 @@
 #!/bin/bash
 set -e
 
-if [[ -z ${1} ]] ; then
-    echo "Il faut préciser le nom du robot à déployer"
-    exit 1
-fi
+touch /tmp/robots.sel
+(
+  echo "nerell"
+  echo "pami-triangle"
+  echo "pami-carre"
+  echo "pami-rond"
+) | fzf -m --prompt="Choisir le nom des robots à déployer (tab pour selectionner)" > /tmp/robots.sel
+ROBOTS=$(cat /tmp/robots.sel)
+rm -f /tmp/robots.sel
 
 echo "$(date)"
 
@@ -16,7 +21,7 @@ else
 fi
 
 echo "Déploiement ..."
-for ROBOT_NAME in "${@}" ; do
+for ROBOT_NAME in ${ROBOTS} ; do
   # If ROBOT_NAME contains 'pami' then we are deploying on a PAMI robot
   if [[ ${ROBOT_NAME} == *"pami"* ]] ; then
     HOME_DIR=/home/pi
