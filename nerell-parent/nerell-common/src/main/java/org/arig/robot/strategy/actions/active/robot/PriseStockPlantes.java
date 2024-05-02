@@ -178,7 +178,6 @@ public class PriseStockPlantes extends AbstractNerellAction {
             );
 
             rs.plantes().priseStock(stockPlantes.getId());
-            servos.groupeBloquePlanteFerme(false);
 
             runAsync(() -> {
                 bras.setBrasAvant(PositionBras.INIT);
@@ -235,7 +234,7 @@ public class PriseStockPlantes extends AbstractNerellAction {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
-
+            servos.groupeBloquePlanteFerme(false);
         }
     }
 

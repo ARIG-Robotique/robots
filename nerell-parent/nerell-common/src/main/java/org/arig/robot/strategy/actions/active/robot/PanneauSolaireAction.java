@@ -24,6 +24,9 @@ public class PanneauSolaireAction extends AbstractNerellAction {
 
     PanneauSolaire firstPanneau;
 
+    // Nombre de tentative de récupération des carrés de fouille
+    protected int nbTry = 0;
+
     @Override
     public String name() {
         return EurobotConfig.ACTION_PANNEAU_SOLAIRE_COMMUN;
@@ -41,7 +44,7 @@ public class PanneauSolaireAction extends AbstractNerellAction {
         if (!valid) {
             return false;
         }
-        firstPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(10, false);
+        firstPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(nbTry, false);
         return firstPanneau != null;
     }
 
@@ -62,8 +65,7 @@ public class PanneauSolaireAction extends AbstractNerellAction {
             final Point entry = entryPoint();
             PanneauSolaire panneau = firstPanneau;
             boolean first = true;
-            int nbDone = 0;
-            double yActionReal = 0;
+            Double yActionReal = null;
 
             do {
                 panneau.incrementTry();
@@ -74,12 +76,17 @@ public class PanneauSolaireAction extends AbstractNerellAction {
                     mv.pathTo(entry);
                     yActionReal = callageY();
 
+                    if (yActionReal == null) {
+                        panneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(nbTry, false);
+                        if (panneau == null) {
+                            break;
+                        }
+                        continue;
+                    }
+
                     mv.gotoOrientationDeg(-180);
                 } else {
                     mv.gotoPoint(panneau.getX(), yActionReal);
-                    if (nbDone == 3) {
-                        yActionReal = callageY();
-                    }
                 }
 
                 if (rs.team() == Team.BLEU) {
@@ -98,22 +105,15 @@ public class PanneauSolaireAction extends AbstractNerellAction {
                 servosNerell.groupePanneauFerme(false);
 
                 first = false;
-                nbDone++;
 
-                // FIXME
-                if (panneau.numero() == 3 || panneau.numero() == 7) {
-                    break;
+                PanneauSolaire nextPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(nbTry, false);
+
+                if (nextPanneau != null) {
+                    // si on change de groupe on refait un path + callage
+                    if (((panneau.numero() - 1) / 3) != ((nextPanneau.numero() - 1) / 3)) {
+                        first = true;
+                    }
                 }
-                PanneauSolaire nextPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(10, false);
-
-//                if (nextPanneau != null) {
-//                    if (panneau.numero() == 3 && nextPanneau.numero() == 4
-//                            || panneau.numero() == 4 && nextPanneau.numero() == 3
-//                            || panneau.numero() == 6 && nextPanneau.numero() == 7
-//                            || panneau.numero() == 7 && nextPanneau.numero() == 6) {
-//                        stockPotEnVrac = true;
-//                    }
-//                }
 
                 panneau = nextPanneau;
             } while (panneau != null);
@@ -122,6 +122,8 @@ public class PanneauSolaireAction extends AbstractNerellAction {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
+            nbTry++;
+
             servosNerell.groupePanneauFerme(false);
             ioService.stopTournePanneau();
 
@@ -135,14 +137,19 @@ public class PanneauSolaireAction extends AbstractNerellAction {
         }
     }
 
-    private double callageY() throws AvoidingException {
+    private Double callageY() throws AvoidingException {
         // callage Y
         // TODO callage avant si plus rapide
         mv.setVitessePercent(60, 100);
         mv.gotoOrientationDeg(90);
         bras.setBrasArriere(PositionBras.CALLAGE_PANNEAUX);
-        rs.enableCalageBordure(TypeCalage.ARRIERE);
+        rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
         mv.reculeMM(Y_ENTRY - config.distanceCalageArriere() - 10);
+
+        if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
+            log.warn("Blocage pendant le callage du panneau");
+            return null;
+        }
 
         mv.setVitessePercent(0, 100);
         rs.enableCalageBordure(TypeCalage.ARRIERE);

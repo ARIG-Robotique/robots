@@ -51,12 +51,12 @@ public class PoussePlante2 extends AbstractEurobotAction {
             mv.setVitesse(300, config.vitesseOrientation());
             mv.gotoPoint(new Point(getX(2710), 1000), GotoOption.AVANT);
 
-            rs.aireDeDeposeMilieu().addRang1(0, new Plante(TypePlante.FRAGILE));
-            rs.aireDeDeposeMilieu().addRang1(1, new Plante(TypePlante.FRAGILE));
-            rs.aireDeDeposeMilieu().addRang1(2, new Plante(TypePlante.FRAGILE));
-            rs.aireDeDeposeMilieu().addRang2(0, new Plante(TypePlante.FRAGILE));
-            rs.aireDeDeposeMilieu().addRang2(1, new Plante(TypePlante.RESISTANTE));
-            rs.aireDeDeposeMilieu().addRang2(2, new Plante(TypePlante.RESISTANTE));
+//            rs.aireDeDeposeMilieu().addRang1(0, new Plante(TypePlante.FRAGILE));
+//            rs.aireDeDeposeMilieu().addRang1(1, new Plante(TypePlante.FRAGILE));
+//            rs.aireDeDeposeMilieu().addRang1(2, new Plante(TypePlante.FRAGILE));
+//            rs.aireDeDeposeMilieu().addRang2(0, new Plante(TypePlante.FRAGILE));
+//            rs.aireDeDeposeMilieu().addRang2(1, new Plante(TypePlante.RESISTANTE));
+//            rs.aireDeDeposeMilieu().addRang2(2, new Plante(TypePlante.RESISTANTE));
 
             mv.reculeMM(200);
 

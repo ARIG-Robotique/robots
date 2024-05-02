@@ -7,6 +7,7 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.BrasListe;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPots;
+import org.arig.robot.model.Strategy;
 import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.TypeCalage;
@@ -37,7 +38,8 @@ public class PriseStockPots extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        boolean isValid = isTimeValid()
+        boolean isValid = rs.strategy() != Strategy.BASIC
+                && isTimeValid()
                 && rs.bras().arriereLibre()
                 && rs.getRemainingTime() > EurobotConfig.validTimePrisePots;
 
@@ -160,7 +162,7 @@ public class PriseStockPots extends AbstractNerellAction {
             servos.groupePinceArriereOuvert(true);
             s();
             // attrape le pot du bas
-            bras.setBrasArriere(PointBras.withY(PRISE_POT_SOL_Y-5));
+            bras.setBrasArriere(PointBras.withY(PRISE_POT_SOL_Y - 5));
             servos.groupePinceArrierePrisePot(true);
             s();
 

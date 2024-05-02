@@ -72,11 +72,11 @@ public class PanneauxSolaire {
         return null;
     }
 
-    public void refreshFromCamera(CouleurPanneauSolaire ... couleurPanneaux) {
+    public void refreshFromCamera(CouleurPanneauSolaire... couleurPanneaux) {
         if (couleurPanneaux.length != data.length) {
             throw new IllegalArgumentException("Nombre de couleur de panneaux incorrect");
         }
-        for (int i = 0 ; i < couleurPanneaux.length ; i++) {
+        for (int i = 0; i < couleurPanneaux.length; i++) {
             CouleurPanneauSolaire newColor = couleurPanneaux[i];
             CouleurPanneauSolaire oldColor = data[i].couleur();
             if (oldColor == CouleurPanneauSolaire.AUCUNE && newColor != CouleurPanneauSolaire.AUCUNE) {
@@ -101,14 +101,14 @@ public class PanneauxSolaire {
     public boolean equipeDone() {
         if (team == Team.BLEU) {
             for (int i = 1; i <= 3; i++) {
-                if (data[i-1].besoinDeTourner(team)) {
+                if (data[i - 1].besoinDeTourner(team)) {
                     return false;
                 }
             }
             return true;
         } else {
             for (int i = 7; i <= 9; i++) {
-                if (data[i-1].besoinDeTourner(team)) {
+                if (data[i - 1].besoinDeTourner(team)) {
                     return false;
                 }
             }
@@ -120,11 +120,11 @@ public class PanneauxSolaire {
         log.info("[RS] panneaux solaires équipe done : {}", nb);
         if (team == Team.BLEU) {
             for (int i = 1; i <= nb; i++) {
-                data[i-1].couleur(CouleurPanneauSolaire.BLEU);
+                data[i - 1].couleur(CouleurPanneauSolaire.WIP_BLEU);
             }
         } else {
-            for (int i = 7; i < 7 + nb; i++) {
-                data[i-1].couleur(CouleurPanneauSolaire.JAUNE);
+            for (int i = 1; i <= nb; i++) {
+                data[9 - i].couleur(CouleurPanneauSolaire.WIP_JAUNE);
             }
         }
     }

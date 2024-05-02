@@ -2,6 +2,7 @@ package org.arig.robot.strategy.actions;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
+import org.arig.robot.exception.MatchDoneException;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
@@ -88,6 +89,12 @@ public abstract class AbstractEurobotAction extends AbstractAction {
         }
 
         return false;
+    }
+
+    public void checkMatchDone() throws MatchDoneException {
+        if (!rs.matchRunning()) {
+            throw new MatchDoneException();
+        }
     }
 
     private boolean isCalage(TypeCalage ... calages) {

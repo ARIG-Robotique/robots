@@ -1,22 +1,28 @@
 package org.arig.robot.strategy.actions.active.robot;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Triple;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
-import org.arig.robot.exception.MovementCancelledException;
+import org.arig.robot.exception.MatchDoneException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.SiteDeCharge;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.ZoneDepose;
 import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Component;
 
-import static org.arig.robot.services.BrasInstance.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import static org.arig.robot.services.BrasInstance.DEPOSE_SOL_Y;
+import static org.arig.robot.services.BrasInstance.SORTIE_POT_POT_Y;
 
 @Slf4j
 @Component
@@ -25,9 +31,6 @@ public class RetourSiteDeCharge extends AbstractNerellAction {
     private static final int CENTER_X = 450;
     private static final int CENTER_Y = 1000;
     private static final int OFFSET = 550;
-
-    private SiteDeCharge gotoSite;
-    private SiteDeCharge destSite;
 
     @Override
     public String name() {
@@ -41,28 +44,7 @@ public class RetourSiteDeCharge extends AbstractNerellAction {
 
     @Override
     public Point entryPoint() {
-        /*final double distanceNord = rs.otherPosition().distance(pointNord());
-        final double distanceMilieu = rs.otherPosition().distance(pointMilieu());
-        final double distanceSud = rs.otherPosition().distance(pointSud());
-
-        final double distanceMin = Math.min(distanceNord, Math.min(distanceSud, distanceMilieu));
-        if (distanceMin == distanceNord) {
-            gotoSite = rs.team() == Team.BLEU ? SiteDeCharge.WIP_BLEU_NORD : SiteDeCharge.WIP_JAUNE_NORD;
-            destSite = rs.team() == Team.BLEU ? SiteDeCharge.BLEU_NORD : SiteDeCharge.JAUNE_NORD;
-            return pointNord();
-        } else if (distanceMin == distanceSud) {
-            gotoSite = rs.team() == Team.BLEU ? SiteDeCharge.WIP_BLEU_SUD : SiteDeCharge.WIP_JAUNE_SUD;
-            destSite = rs.team() == Team.BLEU ? SiteDeCharge.BLEU_SUD : SiteDeCharge.JAUNE_SUD;
-            return pointSud();
-        } else {
-            gotoSite = rs.team() == Team.BLEU ? SiteDeCharge.WIP_BLEU_MILIEU : SiteDeCharge.WIP_JAUNE_MILIEU;
-            destSite = rs.team() == Team.BLEU ? SiteDeCharge.BLEU_MILIEU : SiteDeCharge.JAUNE_MILIEU;
-            return pointMilieu();
-        }*/
-
-        gotoSite = rs.team() == Team.BLEU ? SiteDeCharge.WIP_BLEU_SUD : SiteDeCharge.WIP_JAUNE_SUD;
-        destSite = rs.team() == Team.BLEU ? SiteDeCharge.BLEU_SUD : SiteDeCharge.JAUNE_SUD;
-        return pointSud();
+        return candidates().get(0).getRight();
     }
 
     @Override
@@ -77,49 +59,104 @@ public class RetourSiteDeCharge extends AbstractNerellAction {
 
     @Override
     public void execute() {
-        try {
-            // L'entry point calcul le chemin le plus court et défini gotoSite et destSite
-            final Point entry = entryPoint();
+        var candidates = candidates();
 
-            log.info("Go site de charge : {}", gotoSite);
-            group.siteDeCharge(gotoSite);
+        mv.setVitessePercent(100, 100);
 
-            mv.setVitesse(config.vitesse(), config.vitesseOrientation());
-            mv.pathTo(entry, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
-            group.siteDeCharge(destSite);
-            log.info("Arrivée au site de charge : {}", destSite);
+        for (var candidate : candidates) {
+            final var destSite = candidate.getLeft();
+            final var gotoSite = candidate.getMiddle();
+            final var entry = candidate.getRight();
 
-            if (!rs.bras().avantLibre()) {
-                mv.gotoOrientationDeg(rs.team() == Team.BLEU ? -145 : - 45);
-                bras.setBrasAvant(new PointBras(195, DEPOSE_SOL_Y, -90, null));
-                servos.groupePinceAvantOuvert(true);
-                ThreadUtils.sleep(500);
+            try {
+                log.info("Go site de charge : {}", gotoSite);
+                group.siteDeCharge(gotoSite);
 
-                rs.aireDeDeposeSud().setFromBras(rs.bras().getAvant());
+                mv.pathTo(entry, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                group.siteDeCharge(destSite);
+                log.info("Arrivée au site de charge : {}", destSite);
 
-                bras.setBrasAvant(PointBras.withY(SORTIE_POT_POT_Y));
-                servos.groupePinceAvantFerme(true);
-                mv.reculeMM(50);
-                bras.setBrasAvant(PositionBras.INIT);
+                complete(true);
+                rs.disableAvoidance();
+
+                mv.setVitessePercent(50, 100);
+
+                boolean isEnAvant = false;
+                if (!rs.bras().avantLibre() && !rs.bras().arriereLibre()) {
+                    mv.gotoOrientationDeg(destSite.getAngleDeposeAvant());
+                    checkMatchDone();
+                    mv.avanceMM(200);
+                    checkMatchDone();
+                    isEnAvant = true;
+                } else if (!rs.bras().avantLibre()) {
+                    mv.gotoOrientationDeg(destSite.getAngleDeposeAvant());
+                    checkMatchDone();
+                    mv.avanceMM(100);
+                    checkMatchDone();
+                    isEnAvant = true;
+                } else if (!rs.bras().arriereLibre()) {
+                    mv.gotoOrientationDeg(destSite.getAngleDeposeAvant() + 180);
+                    checkMatchDone();
+                    mv.reculeMM(100);
+                    checkMatchDone();
+                }
+
+                if (!rs.bras().avantLibre()) {
+                    log.info("Dépose des bras avant");
+
+                    bras.setBrasAvant(new PointBras(215, DEPOSE_SOL_Y, -90, null));
+                    checkMatchDone();
+                    servos.groupePinceAvantOuvert(true);
+                    zoneDepose(destSite).addFromBras(rs.bras().getAvant());
+                    ThreadUtils.sleep(500);
+                    checkMatchDone();
+
+                    bras.setBrasAvant(PointBras.withY(SORTIE_POT_POT_Y));
+                    checkMatchDone();
+                    servos.groupePinceAvantFerme(false);
+                    mv.reculeMM(100);
+                    checkMatchDone();
+                    bras.setBrasAvant(PositionBras.INIT);
+                    checkMatchDone();
+                }
+
+                if (!rs.bras().arriereLibre()) {
+                    log.info("Dépose des bras arrière");
+
+                    if (isEnAvant) {
+                        mv.gotoOrientationDeg(destSite.getAngleDeposeAvant() + 180);
+                        checkMatchDone();
+                    }
+
+                    bras.setBrasArriere(new PointBras(215, DEPOSE_SOL_Y, -90, null));
+                    checkMatchDone();
+                    servos.groupePinceArriereOuvert(true);
+                    zoneDepose(destSite).addFromBras(rs.bras().getArriere());
+                    ThreadUtils.sleep(500);
+                    checkMatchDone();
+
+                    bras.setBrasArriere(PointBras.withY(SORTIE_POT_POT_Y));
+                    checkMatchDone();
+                    servos.groupePinceArriereFerme(false);
+                    mv.avanceMM(100);
+                    checkMatchDone();
+                    bras.setBrasArriere(PositionBras.INIT);
+                }
+
+                break;
+
+            } catch (NoPathFoundException | AvoidingException e) {
+                log.warn("Impossible d'aller au site " + destSite.name() + ": {}", e.toString());
+            } catch (MatchDoneException e) {
+                log.info("La fin de match est survenue pendant l'action");
+                return;
             }
+        }
 
-            // TODO pareil pour l'arriere
-
-//            boolean alt = false;
-//            mv.setVitesse(config.vitesse(), config.vitesseOrientation(50));
-//            do {
-//                alt = !alt;
-//                mv.tourneDeg(alt ? 90 : 45);
-//            } while (rs.getRemainingTime() > 100);
-
-            complete(true);
-
-        } catch (NoPathFoundException | AvoidingException e) {
-            log.error("Erreur d'exécution de l'action : {}", e.toString());
-
-            if (!rs.siteDeCharge().isEnCharge() && !(e instanceof MovementCancelledException)) {
-                group.siteDeCharge(SiteDeCharge.AUCUN);
-            }
+        if (!isCompleted()) {
+            log.error("Erreur d'exécution de l'action");
+            updateValidTime();
+            group.siteDeCharge(SiteDeCharge.AUCUN);
         }
     }
 
@@ -134,4 +171,49 @@ public class RetourSiteDeCharge extends AbstractNerellAction {
     private Point pointSud() {
         return new Point(getX(CENTER_X), CENTER_Y - OFFSET);
     }
+
+    private List<Triple<SiteDeCharge, SiteDeCharge, Point>> candidates() {
+        final List<Triple<SiteDeCharge, SiteDeCharge, Point>> candidates = new ArrayList<>();
+
+        if (rs.siteDeDepart() != SiteDeCharge.BLEU_NORD && rs.siteDeDepart() != SiteDeCharge.JAUNE_NORD) {
+            candidates.add(Triple.of(
+                    rs.team() == Team.BLEU ? SiteDeCharge.BLEU_NORD : SiteDeCharge.JAUNE_NORD,
+                    rs.team() == Team.BLEU ? SiteDeCharge.WIP_BLEU_NORD : SiteDeCharge.WIP_JAUNE_NORD,
+                    pointNord()
+            ));
+        }
+        if (rs.siteDeDepart() != SiteDeCharge.BLEU_MILIEU && rs.siteDeDepart() != SiteDeCharge.JAUNE_MILIEU) {
+            candidates.add(Triple.of(
+                    rs.team() == Team.BLEU ? SiteDeCharge.BLEU_MILIEU : SiteDeCharge.JAUNE_MILIEU,
+                    rs.team() == Team.BLEU ? SiteDeCharge.WIP_BLEU_MILIEU : SiteDeCharge.WIP_JAUNE_MILIEU,
+                    pointMilieu()
+            ));
+        }
+        if (rs.siteDeDepart() != SiteDeCharge.BLEU_SUD && rs.siteDeDepart() != SiteDeCharge.JAUNE_SUD) {
+            candidates.add(Triple.of(
+                    rs.team() == Team.BLEU ? SiteDeCharge.BLEU_SUD : SiteDeCharge.JAUNE_SUD,
+                    rs.team() == Team.BLEU ? SiteDeCharge.WIP_BLEU_SUD : SiteDeCharge.WIP_JAUNE_SUD,
+                    pointSud()
+            ));
+        }
+
+        final Point currentPosition = mv.currentPositionMm();
+        candidates.sort(Comparator.comparing((Triple<SiteDeCharge, SiteDeCharge, Point> c) -> currentPosition.distance(c.getRight())).reversed());
+
+        return candidates;
+    }
+
+    private ZoneDepose zoneDepose(SiteDeCharge site) {
+        switch (site) {
+            case JAUNE_MILIEU:
+            case BLEU_MILIEU:
+                return rs.aireDeDeposeMilieu();
+            case JAUNE_NORD:
+            case BLEU_NORD:
+                return rs.aireDeDeposeNord();
+            default:
+                return rs.aireDeDeposeSud();
+        }
+    }
+
 }

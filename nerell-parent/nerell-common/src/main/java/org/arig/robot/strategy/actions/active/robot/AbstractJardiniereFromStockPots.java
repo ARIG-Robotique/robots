@@ -102,7 +102,7 @@ public abstract class AbstractJardiniereFromStockPots extends AbstractNerellActi
         servos.groupePinceAvantOuvert(true);
         s();
 
-        jardiniere.setFromBras(rs.bras().getAvant());
+        jardiniere.addFromBras(rs.bras().getAvant());
         rs.bras().setAvant(null, null, null);
 
         // fin

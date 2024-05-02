@@ -49,9 +49,9 @@ public class PanneauSolaire implements Serializable {
         if (couleur == CouleurPanneauSolaire.AUCUNE) return false;
         if (couleur == CouleurPanneauSolaire.JAUNE_ET_BLEU) return true;
         if (team == Team.JAUNE) {
-            return couleur == CouleurPanneauSolaire.JAUNE || couleur == CouleurPanneauSolaire.TEMP_JAUNE;
+            return couleur == CouleurPanneauSolaire.JAUNE || couleur == CouleurPanneauSolaire.WIP_JAUNE;
         } else {
-            return couleur == CouleurPanneauSolaire.BLEU || couleur == CouleurPanneauSolaire.TEMP_BLEU;
+            return couleur == CouleurPanneauSolaire.BLEU || couleur == CouleurPanneauSolaire.WIP_BLEU;
         }
     }
 

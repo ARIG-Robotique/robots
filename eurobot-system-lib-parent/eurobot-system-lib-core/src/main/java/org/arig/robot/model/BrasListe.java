@@ -80,4 +80,12 @@ public class BrasListe {
         };
     }
 
+    public Contenu[] getArriere() {
+        return new Contenu[]{
+                contenu.get(Bras.ARRIERE_GAUCHE),
+                contenu.get(Bras.ARRIERE_CENTRE),
+                contenu.get(Bras.ARRIERE_DROIT)
+        };
+    }
+
 }

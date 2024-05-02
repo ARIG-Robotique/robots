@@ -17,6 +17,7 @@ import org.arig.robot.model.SiteDeCharge;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.bras.PointBras;
+import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BaliseService;
@@ -25,6 +26,7 @@ import org.arig.robot.services.NerellEcranService;
 import org.arig.robot.services.NerellIOService;
 import org.arig.robot.services.NerellRobotServosService;
 import org.arig.robot.services.RobotGroupService;
+import org.arig.robot.strategy.actions.active.robot.PanneauSolaireEquipeAction;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
@@ -87,7 +89,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             try {
                 ThreadUtils.sleep(2000);
                 mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation(20));
-                switch(nerellRobotStatus.strategy()) {
+                switch (nerellRobotStatus.strategy()) {
                     case FINALE_1:
                     case FINALE_2:
                         mv.tourneDeg(180);
@@ -290,7 +292,13 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 }
 
                 mv.avanceMM(70);
-                mv.gotoOrientationDeg(90);
+
+                if (nerellRobotStatus.strategy() == Strategy.BASIC) {
+                    mv.gotoOrientationDeg(-90);
+                    bras.setBrasAvant(PositionBras.CALLAGE_PANNEAUX);
+                } else {
+                    mv.gotoOrientationDeg(90);
+                }
 
                 robotStatus.enableCalageBordure(TypeCalage.AVANT);
                 mv.avanceMM(1000);
@@ -302,10 +310,17 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                     throw new ExitProgram(true);
                 }
 
-                position.getPt().setY(conv.mmToPulse(EurobotConfig.tableHeight - NerellConstantesConfig.dstCallage));
-                position.setAngle(conv.degToPulse(90));
+                if (nerellRobotStatus.strategy() == Strategy.BASIC) {
+                    position.getPt().setY(conv.mmToPulse(NerellConstantesConfig.dstCallage));
+                    position.setAngle(conv.degToPulse(-90));
+                } else {
+                    position.getPt().setY(conv.mmToPulse(EurobotConfig.tableHeight - NerellConstantesConfig.dstCallage));
+                    position.setAngle(conv.degToPulse(90));
+                }
 
                 mv.reculeMM(70);
+
+                bras.setBrasAvant(PositionBras.INIT);
 
                 groupService.initStep(InitStep.NERELL_CALAGE_TERMINE); // Nerell calé
             }
@@ -325,12 +340,16 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             switch (nerellRobotStatus.strategy()) {
+                case BASIC:
+                    mv.gotoPoint(getX(PanneauSolaireEquipeAction.ENTRY_X), PanneauSolaireEquipeAction.WORK_Y);
+                    mv.gotoOrientationDeg(180);
+                    groupService.initStep(InitStep.NERELL_EN_POSITION);
+                    nerellRobotStatus.siteDeDepart(nerellRobotStatus.team() == Team.BLEU ? SiteDeCharge.BLEU_SUD : SiteDeCharge.JAUNE_SUD);
+                    break;
                 case FINALE_1:
                     // Start ???
                 case FINALE_2:
                     // Start milieu coté adverse
-                case BASIC:
-                    // Start solar panel (sud)
                 case AGGRESSIVE:
                     // Start plant (nord)
                 default:

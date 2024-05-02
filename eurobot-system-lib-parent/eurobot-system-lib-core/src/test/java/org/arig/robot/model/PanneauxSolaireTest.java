@@ -29,6 +29,36 @@ class PanneauxSolaireTest {
     }
 
     @Test
+    void testEquipeDone5Jaune() {
+        panneauxSolaire.team(Team.JAUNE);
+        panneauxSolaire.equipeDone(5);
+        Assertions.assertEquals(panneauxSolaire.get(1).couleur(), CouleurPanneauSolaire.AUCUNE);
+        Assertions.assertEquals(panneauxSolaire.get(2).couleur(), CouleurPanneauSolaire.AUCUNE);
+        Assertions.assertEquals(panneauxSolaire.get(3).couleur(), CouleurPanneauSolaire.AUCUNE);
+        Assertions.assertEquals(panneauxSolaire.get(4).couleur(), CouleurPanneauSolaire.AUCUNE);
+        Assertions.assertEquals(panneauxSolaire.get(5).couleur(), CouleurPanneauSolaire.WIP_JAUNE);
+        Assertions.assertEquals(panneauxSolaire.get(6).couleur(), CouleurPanneauSolaire.WIP_JAUNE);
+        Assertions.assertEquals(panneauxSolaire.get(7).couleur(), CouleurPanneauSolaire.WIP_JAUNE);
+        Assertions.assertEquals(panneauxSolaire.get(8).couleur(), CouleurPanneauSolaire.WIP_JAUNE);
+        Assertions.assertEquals(panneauxSolaire.get(9).couleur(), CouleurPanneauSolaire.WIP_JAUNE);
+    }
+
+    @Test
+    void testEquipeDone3Bleu() {
+        panneauxSolaire.team(Team.BLEU);
+        panneauxSolaire.equipeDone(3);
+        Assertions.assertEquals(panneauxSolaire.get(1).couleur(), CouleurPanneauSolaire.WIP_BLEU);
+        Assertions.assertEquals(panneauxSolaire.get(2).couleur(), CouleurPanneauSolaire.WIP_BLEU);
+        Assertions.assertEquals(panneauxSolaire.get(3).couleur(), CouleurPanneauSolaire.WIP_BLEU);
+        Assertions.assertEquals(panneauxSolaire.get(4).couleur(), CouleurPanneauSolaire.AUCUNE);
+        Assertions.assertEquals(panneauxSolaire.get(5).couleur(), CouleurPanneauSolaire.AUCUNE);
+        Assertions.assertEquals(panneauxSolaire.get(6).couleur(), CouleurPanneauSolaire.AUCUNE);
+        Assertions.assertEquals(panneauxSolaire.get(7).couleur(), CouleurPanneauSolaire.AUCUNE);
+        Assertions.assertEquals(panneauxSolaire.get(8).couleur(), CouleurPanneauSolaire.AUCUNE);
+        Assertions.assertEquals(panneauxSolaire.get(9).couleur(), CouleurPanneauSolaire.AUCUNE);
+    }
+
+    @Test
     void testFirst() {
         panneauxSolaire.team(Team.JAUNE);
 
@@ -76,13 +106,13 @@ class PanneauxSolaireTest {
             if (i <= 6) {
                 panneauSolaire.couleur(CouleurPanneauSolaire.BLEU);
             } else {
-                panneauSolaire.couleur(CouleurPanneauSolaire.TEMP_JAUNE);
+                panneauSolaire.couleur(CouleurPanneauSolaire.WIP_JAUNE);
             }
         }
         Assertions.assertEquals(15, panneauxSolaire.score());
 
-        panneauxSolaire.get(5).couleur(CouleurPanneauSolaire.TEMP_JAUNE);
-        panneauxSolaire.get(6).couleur(CouleurPanneauSolaire.TEMP_JAUNE);
+        panneauxSolaire.get(5).couleur(CouleurPanneauSolaire.WIP_JAUNE);
+        panneauxSolaire.get(6).couleur(CouleurPanneauSolaire.WIP_JAUNE);
         panneauxSolaire.refreshFromCamera(
                 CouleurPanneauSolaire.BLEU, CouleurPanneauSolaire.BLEU, CouleurPanneauSolaire.BLEU,
                 CouleurPanneauSolaire.BLEU, CouleurPanneauSolaire.AUCUNE, CouleurPanneauSolaire.AUCUNE,
