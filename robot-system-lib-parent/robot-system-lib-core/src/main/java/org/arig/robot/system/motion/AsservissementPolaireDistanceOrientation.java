@@ -111,7 +111,7 @@ public class AsservissementPolaireDistanceOrientation implements IAsservissement
     }
 
     @Override
-    public void setRampOriantation(double accel, double decel) {
+    public void setRampOrientation(double accel, double decel) {
         rampOrientation.setRamps(accel, decel);
     }
 }

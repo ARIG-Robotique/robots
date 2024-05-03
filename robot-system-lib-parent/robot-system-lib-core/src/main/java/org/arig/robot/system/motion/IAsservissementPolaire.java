@@ -5,5 +5,5 @@ package org.arig.robot.system.motion;
  */
 public interface IAsservissementPolaire extends IAsservissement {
     void setRampDistance(double accel, double decel);
-    void setRampOriantation(double accel, double decel);
+    void setRampOrientation(double accel, double decel);
 }

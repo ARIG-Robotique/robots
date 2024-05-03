@@ -990,7 +990,7 @@ public class TrajectoryManager implements InitializingBean {
         this.vitesseDistance.set(vDistance);
         this.vitesseOrientation.set(vOrientation);
         asservissementPolaire.setRampDistance(robotConfig.rampeAccelDistance(), robotConfig.rampeDecelDistance());
-        asservissementPolaire.setRampOriantation(robotConfig.rampeAccelOrientation(), robotConfig.rampeDecelOrientation());
+        asservissementPolaire.setRampOrientation(robotConfig.rampeAccelOrientation(), robotConfig.rampeDecelOrientation());
         applyVitesse(vDistance, vOrientation);
     }
 
@@ -1003,7 +1003,7 @@ public class TrajectoryManager implements InitializingBean {
     }
 
     public void setRampeOrientationPercent(int rampeAccel, int rampeDecel) {
-        asservissementPolaire.setRampOriantation(robotConfig.rampeAccelOrientation(rampeAccel), robotConfig.rampeDecelOrientation(rampeDecel));
+        asservissementPolaire.setRampOrientation(robotConfig.rampeAccelOrientation(rampeAccel), robotConfig.rampeDecelOrientation(rampeDecel));
     }
 
     public void setLowSpeed(final boolean lowSpeed) {
