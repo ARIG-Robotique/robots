@@ -48,12 +48,15 @@ public interface NerellConstantesConfig {
     //double countPerDeg = 133.86663837508056; // 5 tours
     //double countPerDeg = 133.86778649410599; // 10 tours
 
-    double coefCodeurDroit = 1.0;
+    double coefCodeurGauche = 1.0;
+
     // 10 cycles : 0.9991086296802006
     // 20 cycles : 0.9990845254418886
     // 30 cycles : 0.9990466918451644
     // 30 cycles : 0.9990741125307827
-    double coefCodeurGauche = (0.9990466918451644 + 0.9990741125307827) / 2; // 0.9992895892534229 <- 5 cycles 3: 0.9992203095908642 old:(0.9989161414636104 + 0.998509395055139) / 2;
+
+    // 10 Cycle 2024 : 0.9976442656120189
+    double coefCodeurDroit = (0.9990466918451644 + 0.9990741125307827) / 2; // 0.9992895892534229 <- 5 cycles 3: 0.9992203095908642 old:(0.9989161414636104 + 0.998509395055139) / 2;
 
 
     // ------------------------ //
