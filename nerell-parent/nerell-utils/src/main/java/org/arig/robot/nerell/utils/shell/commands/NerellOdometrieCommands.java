@@ -17,6 +17,8 @@ import org.arig.robot.system.encoders.i2c.ARIGI2C2WheelsEncoders;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
+import org.springframework.shell.standard.ShellCommandGroup;
+import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 
@@ -25,8 +27,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-//@ShellComponent
-//@ShellCommandGroup("Odométrie")
+@ShellComponent
+@ShellCommandGroup("Odométrie")
 @RequiredArgsConstructor
 public class NerellOdometrieCommands {
 
@@ -78,7 +80,7 @@ public class NerellOdometrieCommands {
         trajectoryManager.setVitesse(100, 1000);
         trajectoryManager.reculeMM(100);
         rs.enableCalageBordure(TypeCalage.ARRIERE);
-        trajectoryManager.reculeMMSansAngle(100);
+        trajectoryManager.reculeMMSansAngle(1000);
         rs.disableForceMonitoring();
         ThreadUtils.sleep(5000); // Stabilisation
         rs.disableAsserv();
