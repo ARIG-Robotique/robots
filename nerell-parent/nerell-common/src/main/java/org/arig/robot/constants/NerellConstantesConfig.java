@@ -65,7 +65,7 @@ public interface NerellConstantesConfig {
     double gainVitesseRampeOrientationSimulateur = gainVitesseRampeDistanceSimulateur * 2;
 
     double rampAccDistance = 1000.0; // en mm/s2
-    double rampDecDistance = 1000.0; // en mm/s2
+    double rampDecDistance = 750.0; // en mm/s2
 
     double rampAccOrientation = 1000.0; // en mm/s2
     double rampDecOrientation = 1000.0; // en mm/s2
