@@ -18,6 +18,7 @@ import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.NerellIOService;
 import org.arig.robot.services.TrajectoryManager;
+import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -48,6 +49,7 @@ public class NerellAsservissementCommands {
     private final Position currentPosition;
     private final PidFilter pidDistance;
     private final PidFilter pidOrientation;
+    private final IAsservissementPolaire asservissement;
 
     private enum PIDCoef {
         KP, KI, KD
@@ -104,14 +106,24 @@ public class NerellAsservissementCommands {
     }
 
     @ShellMethod("Réglage des vitesses")
-    public void vitesseRobot(@NotNull long vitesseDistance, @NotNull long vitesseOrientation) {
-        trajectoryManager.setVitesse(vitesseDistance, vitesseOrientation);
+    public void vitesseRobotPercent(@NotNull int vitesseDistance, @NotNull int vitesseOrientation) {
+        trajectoryManager.setVitessePercent(vitesseDistance, vitesseOrientation);
+    }
+
+    @ShellMethod("Réglage des rampes de distance")
+    public void rampDistanceRobotPercent(@NotNull int accel, @NotNull int decel) {
+        trajectoryManager.setRampesDistancePercent(accel, decel);
     }
 
     @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Asservissement du robot")
     public void asservRobot(@NotNull long distance, @NotNull long orientation, SensDeplacement sens, TypeConsigne[] typeConsignes) {
         startMonitoring();
+
+        trajectoryManager.setVitessePercent(50, 100);
+        trajectoryManager.setRampesDistancePercent(50, 50);
+
+        asservissement.reset(true);
 
         cmdRobot.setTypes(ArrayUtils.getLength(typeConsignes) == 0 ? new TypeConsigne[]{TypeConsigne.DIST, TypeConsigne.ANGLE} : typeConsignes);
         cmdRobot.setSensDeplacement(sens == null ? SensDeplacement.AUTO : sens);
