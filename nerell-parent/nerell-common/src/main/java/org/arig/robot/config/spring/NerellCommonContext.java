@@ -113,13 +113,13 @@ public class NerellCommonContext {
 
     @Bean
     public IAsservissementPolaire asservissement() {
-        OffsetFilter offsetMoteurGauche = new OffsetFilter(650d);
+        OffsetFilter offsetMoteurGauche = new OffsetFilter(400d);
         LimiterFilter limiterMoteurGauche = new LimiterFilter(0d, 4095d, LimiterType.MIRROR);
         SerialChainFilter<Double> moteurGauche = new SerialChainFilter<>();
         moteurGauche.addFilter(offsetMoteurGauche);
         moteurGauche.addFilter(limiterMoteurGauche);
 
-        OffsetFilter offsetMoteurDroit = new OffsetFilter(650d);
+        OffsetFilter offsetMoteurDroit = new OffsetFilter(400d);
         LimiterFilter limiterMoteurDroit = new LimiterFilter(0d, 4095d, LimiterType.MIRROR);
         SerialChainFilter<Double> moteurDroit = new SerialChainFilter<>();
         moteurDroit.addFilter(offsetMoteurDroit);

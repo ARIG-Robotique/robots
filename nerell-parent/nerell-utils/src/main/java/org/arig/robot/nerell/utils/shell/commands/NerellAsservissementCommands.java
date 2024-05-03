@@ -25,6 +25,7 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 
+import java.io.Console;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -47,6 +48,10 @@ public class NerellAsservissementCommands {
     private final Position currentPosition;
     private final PidFilter pidDistance;
     private final PidFilter pidOrientation;
+
+    private enum PIDCoef {
+        KP, KI, KD
+    }
 
     private boolean monitoringRun = false;
 
@@ -121,6 +126,91 @@ public class NerellAsservissementCommands {
     public void disableAsservRobot() {
         rs.disableAsserv();
         endMonitoring();
+    }
+
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Reglage asserv orientation")
+    public void reglageAsservOrientation(double dplct, double increment, double kp, double ki, double kd) {
+        startMonitoring();
+
+        trajectoryManager.setVitessePercent(100, 100);
+
+        Console console = System.console();
+        String tmpCoef = console.readLine("Quel coefficient ? (KP, KI, KD) : ");
+        PIDCoef coefToChange = tmpCoef.equals("KP") ? PIDCoef.KP : tmpCoef.equals("KI") ? PIDCoef.KI : PIDCoef.KD;
+        boolean continueInc;
+        boolean alt = false;
+        do {
+            alt = !alt;
+            pidOrientation.setTunings(kp, ki, kd);
+            switch(coefToChange) {
+                case KP:
+                    kp += increment;
+                    break;
+                case KI:
+                    ki += increment;
+                    break;
+                case KD:
+                    kd += increment;
+                    break;
+            }
+
+            cmdRobot.setTypes(new TypeConsigne[]{TypeConsigne.ANGLE});
+            cmdRobot.setSensDeplacement(SensDeplacement.AUTO);
+            cmdRobot.getConsigne().setOrientation((long) convRobot.degToPulse(alt ? dplct : -dplct));
+            cmdRobot.setFrein(true);
+
+            rs.enableAsserv();
+
+            String checkContinue = console.readLine("Continuer ? (O/N) : ");
+            continueInc = !checkContinue.equals("N");
+
+        } while (continueInc);
+
+        disableAsservRobot();
+    }
+
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Reglage asserv distance")
+    public void reglageAsservDistance(double dplct, double increment, double kp, double ki, double kd) {
+        startMonitoring();
+
+        trajectoryManager.setVitessePercent(100, 100);
+
+        Console console = System.console();
+        String tmpCoef = console.readLine("Quel coefficient ? (KP, KI, KD) : ");
+        PIDCoef coefToChange = tmpCoef.equals("KP") ? PIDCoef.KP : tmpCoef.equals("KI") ? PIDCoef.KI : PIDCoef.KD;
+        boolean continueInc;
+        boolean alt = false;
+        do {
+            alt = !alt;
+            pidDistance.setTunings(kp, ki, kd);
+            switch(coefToChange) {
+                case KP:
+                    kp += increment;
+                    break;
+                case KI:
+                    ki += increment;
+                    break;
+                case KD:
+                    kd += increment;
+                    break;
+            }
+
+            cmdRobot.setTypes(new TypeConsigne[]{TypeConsigne.ANGLE, TypeConsigne.DIST});
+            cmdRobot.setSensDeplacement(SensDeplacement.AUTO);
+            cmdRobot.getConsigne().setOrientation(0);
+            cmdRobot.getConsigne().setDistance((long) convRobot.mmToPulse(alt ? dplct : -dplct));
+            cmdRobot.setFrein(true);
+
+            rs.enableAsserv();
+
+            String checkContinue = console.readLine("Continuer ? (O/N) : ");
+            continueInc = !checkContinue.equals("N");
+
+        } while (continueInc);
+
+        disableAsservRobot();
     }
 
     @ShellMethod("Lecture de la position actuelle")
