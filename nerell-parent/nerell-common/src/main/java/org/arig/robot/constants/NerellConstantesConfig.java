@@ -87,8 +87,8 @@ public interface NerellConstantesConfig {
 
     double kcrDistance = 21.5;
     double tcrDistance = 0.04;
-    double kpDistance = 30;
-    double kiDistance = 0.005;
+    double kpDistance = 55;
+    double kiDistance = 0;
     double kdDistance = 50;
     double kpDistanceSimu = 12.9;
     double kiDistanceSimu = 0.0;
@@ -96,8 +96,8 @@ public interface NerellConstantesConfig {
 
     double kcrOrientation = 10.0;
     double tcrOrientation = 0.05;
-    double kpOrientation = 30;
-    double kiOrientation = 0.005;
+    double kpOrientation = 55;
+    double kiOrientation = 0;
     double kdOrientation = 50;
     double kpOrientationSimu = 6.0;
     double kiOrientationSimu = 0.0;
