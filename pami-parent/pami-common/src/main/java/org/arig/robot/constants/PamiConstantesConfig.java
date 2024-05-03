@@ -32,16 +32,19 @@ public interface PamiConstantesConfig {
     // Configuration des convertions //
     // ----------------------------- //
 
-    //double entraxe = 280;
-    double entraxe = 279.4632765693719;
+    double entraxe = 137.5;
 
     // Diam <d_roue> mm => périmètre <xx> mm
     // <pulse_tour> p => <distance_tour> mm : <pulse_tour> / <distance_tour> = countPerMm
-    double countPerMm = 1.0;
+    // 0 : 3.7901084122349
+    // 1 : 3.542157394612056
+    // 2 : 3.5433385074478716
+    // 3 : 3.5421577881851434
+    double countPerMm = (3.542157394612056 + 3.5433385074478716 + 3.5421577881851434) / 3;
 
-    // Entraxe 280mm => périmètre 879.64594300514200000 mm (1 roue)
-    // 879.64594300514200000 mm => 180° : 879.64594300514200000 * 27.74036795337890000 / 180 =
-    double countPerDeg = 1; // 10 tours
+    // Entraxe <entraxe>mm => périmètre <entraxe> * PI mm (1 roue)
+    // <perimetre_roue> mm => <countPerMM> * <perimetre> / 180 = countPerDeg
+    double countPerDeg = 9.09560723514212; // X4
 
     double coefCodeurDroit = 1.0;
     double coefCodeurGauche = 1.0;
@@ -54,39 +57,35 @@ public interface PamiConstantesConfig {
     double gainVitesseRampeDistanceSimulateur = 3;
     double gainVitesseRampeOrientationSimulateur = gainVitesseRampeDistanceSimulateur * 2;
 
-    double rampAccDistance = 300.0; // en mm/s2
+    double rampAccDistance = 500.0; // en mm/s2
     double rampDecDistance = 300.0; // en mm/s2
 
-    double rampAccOrientation = 300.0; // en mm/s2
+    double rampAccOrientation = 500.0; // en mm/s2
     double rampDecOrientation = 300.0; // en mm/s2
 
     // -------------------------- //
     // Configuration des vitesses //
     // -------------------------- //
 
-    long vitesseOrientationMax = 1000;
-    long vitesseOrientationMin = 150;
+    long vitesseOrientationMax = 600;
+    long vitesseOrientationMin = 300;
 
-    long vitesseMax = 1000;
-    long vitesseMin = 100;
+    long vitesseMax = 600;
+    long vitesseMin = 300;
 
     // -------------- //
     // Parametres PID //
     // -------------- //
-    double kcrDistance = 21.5;
-    double tcrDistance = 0.04;
-    double kpDistance = 70;
-    double kiDistance = 5;
-    double kdDistance = 300;
+    double kpDistance = 90;
+    double kiDistance = 0.5;
+    double kdDistance = 125;
     double kpDistanceSimu = 12.9;
     double kiDistanceSimu = 0.0;
     double kdDistanceSimu = 0.008;
 
-    double kcrOrientation = 10.0;
-    double tcrOrientation = 0.05;
-    double kpOrientation = 70;
-    double kiOrientation = 5;
-    double kdOrientation = 300;
+    double kpOrientation = 98;
+    double kiOrientation = 0.28;
+    double kdOrientation = 30;
     double kpOrientationSimu = 6.0;
     double kiOrientationSimu = 0.0;
     double kdOrientationSimu = 0.01;
@@ -94,8 +93,8 @@ public interface PamiConstantesConfig {
     // --------------------------- //
     // Paramètre mouvement manager //
     // --------------------------- //
-    double arretDistanceMm = 1;
-    double arretOrientDeg = 0.5;
+    double arretDistanceMm = 2;
+    double arretOrientDeg = 1;
     double approcheAvecFreinDistanceMm = 10;
     double approcheAvecFreinOrientationDeg = 5;
     double approcheSansFreinDistanceMm = 50;
@@ -114,7 +113,7 @@ public interface PamiConstantesConfig {
     // Paramètre Physiques        //
     // -------------------------- //
 
-    double dstCallage = 110.0; // dos du robot <=> milieu du robot
+    double dstCallage = 1.0; // dos du robot <=> milieu du robot
 
     // -------------------------- //
     // Paramètre Avoiding service //

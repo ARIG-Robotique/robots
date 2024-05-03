@@ -100,7 +100,7 @@ public class PamiCommonContext {
 
     @Bean
     public ConvertionRobotUnit convertisseur() {
-        return new ConvertionRobotUnit(PamiConstantesConfig.countPerMm, PamiConstantesConfig.countPerDeg);
+        return new ConvertionRobotUnit(PamiConstantesConfig.countPerMm, PamiConstantesConfig.entraxe, true);
     }
 
     @Bean

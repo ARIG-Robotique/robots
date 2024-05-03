@@ -8,16 +8,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.arig.robot.constants.ConstantesConfig;
+import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.filters.pid.PidFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.PamiRobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.SensDeplacement;
+import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.PamiIOService;
 import org.arig.robot.services.TrajectoryManager;
+import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
+import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -25,6 +29,7 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 
+import java.io.Console;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -47,6 +52,12 @@ public class PamiAsservissementCommands {
     private final Position currentPosition;
     private final PidFilter pidDistance;
     private final PidFilter pidOrientation;
+    private final IAsservissementPolaire asservissement;
+    private final Abstract2WheelsEncoders wheelsEncoders;
+
+    private enum PIDCoef {
+        KP, KI, KD
+    }
 
     private boolean monitoringRun = false;
 
@@ -99,17 +110,58 @@ public class PamiAsservissementCommands {
     }
 
     @ShellMethod("Réglage des vitesses")
-    public void vitesseRobot(@NotNull long vitesseDistance, @NotNull long vitesseOrientation) {
-        trajectoryManager.setVitesse(vitesseDistance, vitesseOrientation);
+    public void vitesseRobotPercent(@NotNull int vitesseDistance, @NotNull int vitesseOrientation) {
+        trajectoryManager.setVitessePercent(vitesseDistance, vitesseOrientation);
+    }
+
+    @ShellMethod("Réglage des rampes de distance")
+    public void rampDistanceRobotPercent(@NotNull int accel, @NotNull int decel) {
+        trajectoryManager.setRampesDistancePercent(accel, decel);
+    }
+
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Avance le robot")
+    public void avanceRobot(@NotNull long distance) throws AvoidingException {
+        startMonitoring();
+
+        wheelsEncoders.reset();
+        rs.enableAsserv();
+        rs.disableAvoidance();
+
+        rs.enableCalageTempo(10000);
+
+        trajectoryManager.avanceMM(distance);
+
+        endMonitoring();
+        rs.disableAsserv();
+    }
+
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Tourne le robot")
+    public void tourneRobot(@NotNull long angle) throws AvoidingException {
+        startMonitoring();
+
+        wheelsEncoders.reset();
+        rs.enableAsserv();
+        rs.disableAvoidance();
+
+        rs.enableCalageTempo(10000);
+
+        trajectoryManager.tourneDeg(angle);
+
+        endMonitoring();
+        rs.disableAsserv();
     }
 
     @ShellMethodAvailability("alimentationOk")
     @ShellMethod("Asservissement du robot")
-    public void asservRobot(@NotNull long distance, @NotNull long orientation, SensDeplacement sens, TypeConsigne[] typeConsignes) {
+    public void asservRobot(@NotNull long distance, @NotNull long orientation, @NotNull SensDeplacement sens, TypeConsigne[] typeConsignes) {
         startMonitoring();
 
+        trajectoryManager.stop();
+
         cmdRobot.setTypes(ArrayUtils.getLength(typeConsignes) == 0 ? new TypeConsigne[]{TypeConsigne.DIST, TypeConsigne.ANGLE} : typeConsignes);
-        cmdRobot.setSensDeplacement(sens == null ? SensDeplacement.AUTO : sens);
+        cmdRobot.setSensDeplacement(sens);
         cmdRobot.getConsigne().setDistance((long) convRobot.mmToPulse(distance));
         cmdRobot.getConsigne().setOrientation((long) convRobot.degToPulse(orientation));
         cmdRobot.setFrein(true);
@@ -121,6 +173,91 @@ public class PamiAsservissementCommands {
     public void disableAsservRobot() {
         rs.disableAsserv();
         endMonitoring();
+    }
+
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Reglage asserv orientation")
+    public void reglageAsservOrientation(double dplct, double increment, double kp, double ki, double kd) {
+        startMonitoring();
+
+        Console console = System.console();
+        String tmpCoef = console.readLine("Quel coefficient ? (KP, KI, KD) : ");
+        PIDCoef coefToChange = tmpCoef.equals("KP") ? PIDCoef.KP : tmpCoef.equals("KI") ? PIDCoef.KI : PIDCoef.KD;
+        boolean continueInc;
+        boolean alt = false;
+        do {
+            alt = !alt;
+            pidOrientation.setTunings(kp, ki, kd);
+            asservissement.reset(true);
+            switch(coefToChange) {
+                case KP:
+                    kp += increment;
+                    break;
+                case KI:
+                    ki += increment;
+                    break;
+                case KD:
+                    kd += increment;
+                    break;
+            }
+
+            cmdRobot.setTypes(new TypeConsigne[]{TypeConsigne.ANGLE});
+            cmdRobot.setSensDeplacement(SensDeplacement.AUTO);
+            cmdRobot.getConsigne().setOrientation((long) convRobot.degToPulse(alt ? dplct : -dplct));
+            cmdRobot.setFrein(true);
+
+            rs.enableAsserv();
+
+            String checkContinue = console.readLine("Continuer ? (O/N) : ");
+            continueInc = !checkContinue.equals("N");
+
+        } while (continueInc);
+
+        disableAsservRobot();
+    }
+
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Reglage asserv distance")
+    public void reglageAsservDistance(double dplct, double increment, double kp, double ki, double kd) {
+        startMonitoring();
+
+        trajectoryManager.setVitessePercent(100, 100);
+
+        Console console = System.console();
+        String tmpCoef = console.readLine("Quel coefficient ? (KP, KI, KD) : ");
+        PIDCoef coefToChange = tmpCoef.equals("KP") ? PIDCoef.KP : tmpCoef.equals("KI") ? PIDCoef.KI : PIDCoef.KD;
+        boolean continueInc;
+        boolean alt = false;
+        do {
+            alt = !alt;
+            pidDistance.setTunings(kp, ki, kd);
+            asservissement.reset(true);
+            switch(coefToChange) {
+                case KP:
+                    kp += increment;
+                    break;
+                case KI:
+                    ki += increment;
+                    break;
+                case KD:
+                    kd += increment;
+                    break;
+            }
+
+            cmdRobot.setTypes(new TypeConsigne[]{TypeConsigne.ANGLE, TypeConsigne.DIST});
+            cmdRobot.setSensDeplacement(SensDeplacement.AUTO);
+            cmdRobot.getConsigne().setOrientation(0);
+            cmdRobot.getConsigne().setDistance((long) convRobot.mmToPulse(alt ? dplct : -dplct));
+            cmdRobot.setFrein(true);
+
+            rs.enableAsserv();
+
+            String checkContinue = console.readLine("Continuer ? (O/N) : ");
+            continueInc = !checkContinue.equals("N");
+
+        } while (continueInc);
+
+        disableAsservRobot();
     }
 
     @ShellMethod("Lecture de la position actuelle")
