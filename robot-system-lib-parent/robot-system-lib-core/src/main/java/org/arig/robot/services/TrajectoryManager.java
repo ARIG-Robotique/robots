@@ -174,8 +174,7 @@ public class TrajectoryManager implements InitializingBean {
      * Stop.
      */
     public void stop() {
-        propulsionsMotors.stopDroit();
-        propulsionsMotors.stopGauche();
+        propulsionsMotors.stopAll();
         asservissementPolaire.reset(true);
     }
 
