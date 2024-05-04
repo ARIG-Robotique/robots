@@ -9,20 +9,29 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPots;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
-import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
 
+/**
+ * ATTENTION subtilité !!!!
+ * getX est surchargé pour fonctionner dans l'autre sens
+ * sinon c'est presque la même implém que jardiniyère milieu
+ */
 @Slf4j
 @Component
-public class JardiniereMilieuAction extends AbstractJardiniereAction {
+public class JardiniereSudAction extends AbstractJardiniereAction {
+
+    @Override
+    protected int getX(int x) {
+        return tableUtils.getX(rs.team() == Team.BLEU, x);
+    }
 
     @Override
     public String name() {
-        return "Jardinière centre";
+        return "Jardinière sud";
     }
 
     @Override
@@ -32,7 +41,7 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
 
     @Override
     public Point entryPoint() {
-        return new Point(getX(300), 1390);
+        return new Point(getX(300), 1390-775);
     }
 
     @Override
@@ -53,9 +62,9 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
 
         if (stockPots.isBloque() || stockPots.isPresent()) {
             if (rs.team() == Team.BLEU) {
-                return new Rectangle(0, 775, 450, 450);
+                return new Rectangle(2545, 0, 450, 450);
             } else {
-                return new Rectangle(2545, 775, 450, 450);
+                return new Rectangle(0, 0, 450, 450);
             }
         }
 
@@ -63,11 +72,11 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
     }
 
     private StockPots stockPots() {
-        return rs.stocksPots().get(rs.team() == Team.BLEU ? StockPots.ID.BLEU_NORD : StockPots.ID.JAUNE_NORD);
+        return rs.stocksPots().get(rs.team() == Team.BLEU ? StockPots.ID.JAUNE_MILIEU : StockPots.ID.BLEU_MILIEU);
     }
 
     protected Jardiniere jardiniere() {
-        return rs.jardiniereMilieu();
+        return rs.jardiniereSud();
     }
 
     private void executeInternal() throws AvoidingException {
@@ -101,12 +110,12 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
             if (stockPots.isBloque() || stockPots.isPresent()) {
                 mv.setVitessePercent(100, 100);
                 // point intermédaire dans la zone nord pour ensuite pousser les pots
-                mv.pathTo(getX(185), 1740);
-                mv.setVitessePercent(50, 100);
-                mv.gotoPoint(getX(170), 1640, GotoOption.ARRIERE);
-                mv.gotoPoint(getX(170), 1250, GotoOption.ARRIERE);
+                mv.pathTo(getX(185), 1740 - 775);
+                mv.setVitessePercent(50, 80);
+                mv.gotoPoint(getX(170), 1640 - 775, GotoOption.ARRIERE);
+                mv.gotoPoint(getX(170), 1250 - 775, GotoOption.ARRIERE);
                 stockPots.pris();
-                mv.gotoOrientationDegSansDistance(145);
+                mv.gotoOrientationDegSansDistance(35);
                 mv.gotoPoint(entry);
 
             } else {
@@ -114,7 +123,7 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
                 mv.pathTo(entry);
             }
 
-            mv.gotoOrientationDeg(rs.team() == Team.BLEU ? 180 : 0);
+            mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
 
             executeInternal();
 

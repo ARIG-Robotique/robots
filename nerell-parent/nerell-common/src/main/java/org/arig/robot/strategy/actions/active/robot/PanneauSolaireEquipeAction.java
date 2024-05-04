@@ -80,7 +80,9 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
 
                 if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
                     log.warn("Blocage pendant le callage du panneau");
+                    runAsync(() -> bras.setBrasArriere(PositionBras.INIT));
                     rs.panneauxSolaire().triedActionEquipe(true);
+                    complete();
                     return;
                 }
 
@@ -93,7 +95,7 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
                 // les déplacements sont relatifs pour rester à la bonne distance de la bordure
                 mv.setVitessePercent(60, 100);
                 mv.avanceMM(WORK_Y - (int) config.distanceCalageArriere());
-                runAsync(() -> bras.brasAvantInit());
+                runAsync(() -> bras.setBrasArriere(PositionBras.INIT));
                 mv.gotoOrientationDeg(180);
             }
 
@@ -107,22 +109,22 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
                 distanceAvance += 550 // distance entre 3 et 4
                         + 225 * 2; // distance entre 4 et 6
             }
-            distanceAvance += 40; // un peu de marge
 
             if (rs.team() == Team.BLEU) {
-                // io.tournePanneauBleu(VITESSE_ROUE_PANNEAU);
                 servos.groupePanneauOuvert(true);
                 mv.reculeMM(distanceAvance);
+                io.tournePanneauBleu(VITESSE_ROUE_PANNEAU);
             } else {
-                //io.tournePanneauJaune(VITESSE_ROUE_PANNEAU);
                 servos.groupePanneauOuvert(true);
                 mv.avanceMM(distanceAvance);
+                io.tournePanneauJaune(VITESSE_ROUE_PANNEAU);
             }
             ThreadUtils.sleep(500);
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
+
         } finally {
             servosNerell.groupePanneauFerme(false);
             ioService.stopTournePanneau();

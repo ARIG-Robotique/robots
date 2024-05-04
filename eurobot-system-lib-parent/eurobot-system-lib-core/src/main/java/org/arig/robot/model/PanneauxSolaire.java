@@ -14,7 +14,7 @@ public class PanneauxSolaire {
 
     // indique que l'action des panneaux équipe a déjà été essayée
     // et que les panneaux équipe peuvent être traités par l'action unitaire si besoin
-    // initialisé à true mais mis à false dans le conctructeur de PanneauSolaireEquipeAction
+    // initialisé à true mais mis à false dans le constructeur de PanneauSolaireEquipeAction
     @Getter
     @Setter
     private boolean triedActionEquipe = true;

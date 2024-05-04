@@ -55,13 +55,15 @@ public class StrategyManager {
 
         if (!nextAction.isPresent()) {
             if (rs.currentAction() != null) {
-                log.warn("0/{} actions disponible pour le moment", actionsCount());
+                log.warn("0/{} actions disponibles pour le moment", actionsCount());
+                rs.currentAction(null);
                 group.setCurrentAction(null);
             }
             return;
         }
 
         final Action action = nextAction.get();
+        rs.currentAction(action.name());
         group.setCurrentAction(action.name());
         log.info("Execution de l'action {}", action.name());
         tableUtils.clearDynamicDeadZones();
@@ -74,11 +76,11 @@ public class StrategyManager {
         }
 
         if (action.isCompleted()) {
-            log.info("L'action {} est terminé.", action.name());
+            log.info("L'action {} est terminée.", action.name());
         }
 
         // Purge des actions terminé par l'autre robot entre temps
-        log.info("Purge des actions terminés entre temps");
+        log.info("Purge des actions terminées entre temps");
         final List<Action> completedActions = actions().stream()
                 .peek(Action::refreshCompleted)
                 .filter(Action::isCompleted)

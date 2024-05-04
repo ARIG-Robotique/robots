@@ -27,7 +27,7 @@ import static org.arig.robot.services.BrasInstance.PRISE_PLANTE_SOL_Y;
 @Component
 public class PriseStockPlantes extends AbstractNerellAction {
 
-    final int DST_APPROCHE = 270;
+    final int DST_APPROCHE = EurobotConfig.PATHFINDER_STOCK_PLANTES_SIZE / 2 + 5;
 
     private StockPlantes stockPlantes;
 
@@ -104,6 +104,7 @@ public class PriseStockPlantes extends AbstractNerellAction {
             // pour les stocks nord et sud application du l'algo de recherche de point proche
             if (stockPlantes.getId() == Plante.ID.STOCK_NORD || stockPlantes.getId() == Plante.ID.STOCK_SUD) {
                 Point entryCm = new Point(entry.getX() / 10, entry.getY() / 10);
+                pathFinder.setObstacles(new ArrayList<>());
                 if (pathFinder.isBlocked(entryCm)) {
                     Point fromCm = new Point(mv.currentXMm() / 10, mv.currentYMm() / 10);
                     entryCm = pathFinder.getNearestPoint(fromCm, entryCm);
@@ -163,7 +164,11 @@ public class PriseStockPlantes extends AbstractNerellAction {
                 mv.tourneDeg(360);
             }
 
-            bras.refreshStock();
+            rs.setStock(
+                    stockgauche ? TypePlante.INCONNU : null,
+                    stockcentre ? TypePlante.INCONNU : null,
+                    stockdroite ? TypePlante.INCONNU : null
+            );
 
             // SECONDE PRISE
             servos.groupeBloquePlanteOuvert(false);
@@ -191,7 +196,6 @@ public class PriseStockPlantes extends AbstractNerellAction {
             servos.groupePinceAvantPrisePlante(true);
             ThreadUtils.sleep(500);
 
-            //bras.refreshStock();
             bras.setBrasAvant(PositionBras.TRANSPORT);
 
             gauche = true;//ioService.pinceAvantGaucheAverage(true);

@@ -56,7 +56,7 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
             // ajout des stocks de pots
             for (StockPots stocksPot : rs.stocksPots()) {
                 if (stocksPot.isPresent()) {
-                    obstacles.add(tableUtils.createPolygonObstacle(stocksPot, EurobotConfig.PATHFINDER_STOCK_POTS_SZIE));
+                    obstacles.add(tableUtils.createPolygonObstacle(stocksPot, EurobotConfig.PATHFINDER_STOCK_POTS_SIZE));
                 }
             }
         }
