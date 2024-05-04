@@ -18,8 +18,6 @@ public class ChangeFilter<T> implements Filter<T, Boolean> {
     private Boolean lastResult;
 
     public ChangeFilter(T initial) {
-        super();
-
         this.initial = initial;
         this.lastValue = initial;
     }

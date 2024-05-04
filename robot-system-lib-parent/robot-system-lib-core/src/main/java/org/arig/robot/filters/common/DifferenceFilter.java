@@ -16,8 +16,6 @@ public class DifferenceFilter implements Filter<Double, Double> {
     private Double lastResult;
 
     public DifferenceFilter(Double reference) {
-        super();
-
         Assert.notNull(reference, REFERENCE_VALUE_NULL_MESSAGE);
         this.reference = reference;
     }

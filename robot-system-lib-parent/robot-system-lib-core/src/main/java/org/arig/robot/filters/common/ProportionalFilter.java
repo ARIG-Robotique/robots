@@ -17,7 +17,6 @@ public class ProportionalFilter implements Filter<Double, Double> {
     private Double lastResult;
 
     public ProportionalFilter(Double gain) {
-        super();
         setGain(gain);
     }
 

@@ -21,7 +21,6 @@ public class TrapezoidalRampFilter extends AbstractGainFactorRampFilter {
 
     private double posToDecel;
     private double currentVitesse;
-    private double vitesseMax;
 
     @Setter
     private boolean frein;
@@ -56,7 +55,6 @@ public class TrapezoidalRampFilter extends AbstractGainFactorRampFilter {
         super.reset();
         posToDecel = 0;
         currentVitesse = 0;
-        vitesseMax = 0;
     }
 
     @Override
@@ -64,7 +62,6 @@ public class TrapezoidalRampFilter extends AbstractGainFactorRampFilter {
         final Map<String, Number> fields = new HashMap<>();
         fields.put("distanceDeceleration", posToDecel);
         fields.put("currentVitesse", currentVitesse);
-        fields.put("vitesseMax", vitesseMax);
         fields.put("frein", frein ? 1 : 0);
 
         return fields;

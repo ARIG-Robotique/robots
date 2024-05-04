@@ -20,8 +20,6 @@ public class SignalEdgeFilter implements Filter<Boolean, Boolean> {
     private Boolean lastValue;
 
     public SignalEdgeFilter(Boolean initial, Type ... types) {
-        super();
-
         Assert.notNull(initial, INITIAL_VALUE_NULL_MESSAGE);
         this.initial = initial;
         this.lastValue = initial;

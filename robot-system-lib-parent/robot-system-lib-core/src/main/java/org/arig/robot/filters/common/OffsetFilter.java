@@ -25,8 +25,6 @@ public class OffsetFilter implements Filter<Double, Double> {
     }
 
     public OffsetFilter(Double offset, OffsetType type) {
-        super();
-
         Assert.notNull(offset, OFFSET_VALUE_NULL_MESSAGE);
         this.offset = offset;
         this.type = type;

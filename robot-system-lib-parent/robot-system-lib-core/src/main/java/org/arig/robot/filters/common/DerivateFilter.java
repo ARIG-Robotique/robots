@@ -19,8 +19,6 @@ public class DerivateFilter implements Filter<Double, Double> {
     private Double lastResult;
 
     public DerivateFilter(Double initial) {
-        super();
-
         Assert.notNull(initial, INITIAL_VALUE_NULL_MESSAGE);
         this.initial = initial;
         this.lastValue = initial;
