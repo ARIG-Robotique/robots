@@ -43,4 +43,5 @@ public interface PathFinder {
 
     BufferedImage getWorkImage();
 
+    Point getNearestPoint(Point from, Point to);
 }

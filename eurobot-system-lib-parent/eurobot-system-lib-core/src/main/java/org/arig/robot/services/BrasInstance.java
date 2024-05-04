@@ -39,7 +39,7 @@ public class BrasInstance {
     private static final int MAX_SPEED = 100;
 
     // positions caractéristiques
-    public static final int PRISE_PLANTE_SOL_Y = 40;
+    public static final int PRISE_PLANTE_SOL_Y = 45;
     public static final int PRISE_POT_SOL_Y = 60;
     public static final int PRISE_POT_POT_Y = PRISE_POT_SOL_Y + 16;
     public static final int SORTIE_POT_POT_Y = 145;

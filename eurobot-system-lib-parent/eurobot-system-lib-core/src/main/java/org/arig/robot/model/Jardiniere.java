@@ -9,8 +9,8 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class Jardiniere extends ZoneDepose {
 
-    private boolean rang1 = false;
-    private boolean rang2 = false;
+    private boolean rang1 = false; // dépose au rang 1 (plus proche de la table)
+    private boolean rang2 = false; // dépose au rang 2 (plus au fond)
 
     @Override
     public int score() {

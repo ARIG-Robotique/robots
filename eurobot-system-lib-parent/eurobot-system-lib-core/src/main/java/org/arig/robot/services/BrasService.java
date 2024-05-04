@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Triple;
 import org.arig.robot.model.Bras;
 import org.arig.robot.model.EurobotStatus;
+import org.arig.robot.model.Plante;
 import org.arig.robot.model.RobotConfig;
+import org.arig.robot.model.TypePlante;
 import org.arig.robot.model.bras.AnglesBras;
 import org.arig.robot.model.bras.ConfigBras;
 import org.arig.robot.model.bras.CurrentBras;
@@ -118,6 +120,7 @@ public class BrasService {
     }
 
     public void brasAvantDestockage() {
+        refreshStock();
         setBrasAvant(new PointBras(131, 145, -150, false));
         servos.groupePinceAvantOuvert(true);
         setBrasAvant(new PointBras(67, 137, -180, false));
@@ -129,12 +132,39 @@ public class BrasService {
     public void brasAvantStockage() {
         setBrasAvant(new PointBras(170, 155, -130, false));
         setBrasAvant(new PointBras(136, 152, -150, false));
+        ThreadUtils.sleep(100);
         setBrasAvant(new PointBras(96, 151, -170, false));
+        ThreadUtils.sleep(100);
         setBrasAvant(new PointBras(58, 127, -170, false));
         servos.groupePinceAvantOuvert(true);
         setBrasAvant(new PointBras(174, 147, -130, false));
         servos.groupePinceAvantFerme(false);
-        setBrasAvant(PositionBras.TRANSPORT);
+    }
+
+    public void brasAvantInit() {
+        refreshStock();
+        setBrasAvant(rs.stockLibre() ? PositionBras.INIT : PositionBras.TRANSPORT);
+    }
+
+    public void refreshStock() {
+        if (!rs.simulateur()) {
+            boolean[] vals = new boolean[]{
+                    io.stockGaucheAverage(false),
+                    io.stockCentreAverage(false),
+                    io.stockDroiteAverage(false)
+            };
+
+            Plante[] stock = rs.stock();
+
+            for (int i = 0; i < 3; i++) {
+                if (vals[i] && stock[i].getType() == TypePlante.AUCUNE) {
+                    stock[i] = new Plante(TypePlante.INCONNU);
+                }
+                if (!vals[i] && stock[i].getType() != TypePlante.AUCUNE) {
+                    stock[i] = new Plante(TypePlante.AUCUNE);
+                }
+            }
+        }
     }
 
 }

@@ -33,9 +33,9 @@ public class NerellIOCommands {
         log.info("Calage arriere droit = {}", nerellIOServiceRobot.calageArriereDroit());
         log.info("Inductif gauche = {}", nerellIOServiceRobot.inductifGauche());
         log.info("Inductif droit = {}", nerellIOServiceRobot.inductifDroit());
-        log.info("Stock gauche = {}", nerellIOServiceRobot.presenceStockGauche());
-        log.info("Stock centre = {}", nerellIOServiceRobot.presenceStockCentre());
-        log.info("Stock droite = {}", nerellIOServiceRobot.presenceStockDroite());
+        log.info("Stock gauche = {}", nerellIOServiceRobot.presenceStockGauche(false));
+        log.info("Stock centre = {}", nerellIOServiceRobot.presenceStockCentre(false));
+        log.info("Stock droite = {}", nerellIOServiceRobot.presenceStockDroite(false));
         log.info("Pince avant gauche = {}", nerellIOServiceRobot.pinceAvantGauche(false));
         log.info("Pince avant centre = {}", nerellIOServiceRobot.pinceAvantCentre(false));
         log.info("Pince avant droite = {}", nerellIOServiceRobot.pinceAvantDroite(false));

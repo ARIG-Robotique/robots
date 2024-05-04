@@ -293,7 +293,8 @@ public class MultiPathFinderImpl extends AbstractPathFinder {
             new Point(ROOT_THREE_BY_TWO, -0.5)
     );
 
-    private Point getNearestPoint(final Point from, final Point to) {
+    @Override
+    public Point getNearestPoint(final Point from, final Point to) {
         double angle = Math.atan2(to.getX() - from.getX(), to.getY() - from.getY());
         if (angle < 0) {
             angle += Math.PI * 2;

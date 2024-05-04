@@ -93,9 +93,7 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
                 // les déplacements sont relatifs pour rester à la bonne distance de la bordure
                 mv.setVitessePercent(60, 100);
                 mv.avanceMM(WORK_Y - (int) config.distanceCalageArriere());
-                runAsync(() -> {
-                    bras.setBrasArriere(PositionBras.INIT);
-                });
+                runAsync(() -> bras.brasAvantInit());
                 mv.gotoOrientationDeg(180);
             }
 

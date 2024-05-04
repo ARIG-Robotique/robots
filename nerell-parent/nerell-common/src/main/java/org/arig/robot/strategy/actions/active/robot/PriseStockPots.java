@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.BrasListe;
 import org.arig.robot.model.Plante;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPots;
@@ -17,7 +16,8 @@ import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Component;
 
-import static org.arig.robot.services.BrasInstance.*;
+import static org.arig.robot.services.BrasInstance.PRISE_POT_SOL_Y;
+import static org.arig.robot.services.BrasInstance.SORTIE_POT_POT_Y;
 
 @Slf4j
 @Component
@@ -49,8 +49,7 @@ public class PriseStockPots extends AbstractNerellAction {
             return false;
         }
 
-        stockPots = rs.stocksPots().getClosest(mv.currentPositionMm());
-        return stockPots != null;
+        return rs.stocksPots().stocksPresents().findAny().isPresent();
     }
 
     @Override
@@ -60,6 +59,8 @@ public class PriseStockPots extends AbstractNerellAction {
 
     @Override
     public Point entryPoint() {
+        stockPots = rs.stocksPots().getClosest(mv.currentPositionMm());
+
         switch (stockPots.getId()) {
             case BLEU_NORD:
             case BLEU_MILIEU:
@@ -78,10 +79,10 @@ public class PriseStockPots extends AbstractNerellAction {
 
     @Override
     public void execute() {
+        final Point entry = entryPoint();
         log.info("Prise stock pots {}", stockPots.getId());
 
         try {
-            final Point entry = entryPoint();
 
             mv.setVitessePercent(100, 100);
             mv.pathTo(entry);
@@ -171,51 +172,18 @@ public class PriseStockPots extends AbstractNerellAction {
             stockPots.pris();
 
             // FIN
+            bras.setBrasArriere(PositionBras.TRANSPORT);
 
-            if (stockPots.getId() == StockPots.ID.JAUNE_NORD || stockPots.getId() == StockPots.ID.BLEU_NORD) {
-                // stockage dans la zone de départ
-                deposeZoneDepart();
-
-            } else {
-                bras.setBrasArriere(PositionBras.TRANSPORT);
-
-                rs.bras().setArriere(
-                        new Plante(TypePlante.AUCUNE, true),
-                        new Plante(TypePlante.AUCUNE, true),
-                        new Plante(TypePlante.AUCUNE, true)
-                );
-
-                // stockage dans la zone de départ
-                if (rs.potsInZoneDepart() == 0) {
-                    mv.setVitessePercent(100, 100);
-                    mv.pathTo(getX(330), 1390);
-
-                    deposeZoneDepart();
-                }
-            }
+            rs.bras().setArriere(
+                    new Plante(TypePlante.AUCUNE, true),
+                    new Plante(TypePlante.AUCUNE, true),
+                    new Plante(TypePlante.AUCUNE, true)
+            );
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
-        } finally {
-
         }
-    }
-
-    private void deposeZoneDepart() throws AvoidingException {
-        mv.gotoOrientationDeg(-90);
-        bras.setBrasArriere(new PointBras(215, PRISE_POT_SOL_Y, -90, null));
-        servos.groupePinceArriereOuvert(true);
-        s();
-        bras.setBrasArriere(PointBras.withY(SORTIE_POT_POT_Y));
-        servos.groupePinceArriereFerme(false);
-        runAsync(() -> {
-            bras.setBrasArriere(PositionBras.INIT);
-        });
-
-        rs.bras().setArriere(null, null, null);
-        rs.potsInZoneDepart(2);
-        rs.positionPotsZoneDepart(mv.currentPositionMm());
     }
 
     private void safeExit() throws AvoidingException {

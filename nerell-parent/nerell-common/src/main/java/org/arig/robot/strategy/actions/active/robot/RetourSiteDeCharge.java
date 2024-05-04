@@ -81,6 +81,8 @@ public class RetourSiteDeCharge extends AbstractNerellAction {
 
                 mv.setVitessePercent(50, 100);
 
+                // TODO stock avant
+
                 boolean isEnAvant = false;
                 if (!rs.bras().avantLibre() && !rs.bras().arriereLibre()) {
                     mv.gotoOrientationDeg(destSite.getAngleDeposeAvant());

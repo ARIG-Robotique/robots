@@ -31,6 +31,11 @@ public class NoPathFinderImpl extends AbstractPathFinder {
     }
 
     @Override
+    public Point getNearestPoint(Point from, Point to) {
+        return to;
+    }
+
+    @Override
     public boolean isBlockedByObstacle(Point pointCm) {
         return false;
     }

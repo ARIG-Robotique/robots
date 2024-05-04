@@ -129,18 +129,18 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     }
 
     @Override
-    public boolean presenceStockGauche() {
-        return false;
+    public boolean presenceStockGauche(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
-    public boolean presenceStockCentre() {
-        return false;
+    public boolean presenceStockCentre(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
-    public boolean presenceStockDroite() {
-        return false;
+    public boolean presenceStockDroite(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
@@ -153,14 +153,60 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
         return true;
     }
 
-    @Override public boolean inductifGaucheAverage() { return false; }
-    @Override public boolean inductifDroitAverage() { return false; }
-    @Override public boolean pinceAvantGaucheAverage(boolean expectedSimulateur) { return expectedSimulateur; }
-    @Override public boolean pinceAvantCentreAverage(boolean expectedSimulateur) { return expectedSimulateur; }
-    @Override public boolean pinceAvantDroiteAverage(boolean expectedSimulateur) { return expectedSimulateur; }
-    @Override public boolean pinceArriereGaucheAverage(boolean expectedSimulateur) { return expectedSimulateur; }
-    @Override public boolean pinceArriereCentreAverage(boolean expectedSimulateur) { return expectedSimulateur; }
-    @Override public boolean pinceArriereDroiteAverage(boolean expectedSimulateur) { return expectedSimulateur; }
+    @Override
+    public boolean inductifGaucheAverage() {
+        return false;
+    }
+
+    @Override
+    public boolean inductifDroitAverage() {
+        return false;
+    }
+
+    @Override
+    public boolean stockGaucheAverage(boolean expectedSimulateur) {
+        return expectedSimulateur;
+    }
+
+    @Override
+    public boolean stockCentreAverage(boolean expectedSimulateur) {
+        return expectedSimulateur;
+    }
+
+    @Override
+    public boolean stockDroiteAverage(boolean expectedSimulateur) {
+        return expectedSimulateur;
+    }
+
+    @Override
+    public boolean pinceAvantGaucheAverage(boolean expectedSimulateur) {
+        return expectedSimulateur;
+    }
+
+    @Override
+    public boolean pinceAvantCentreAverage(boolean expectedSimulateur) {
+        return expectedSimulateur;
+    }
+
+    @Override
+    public boolean pinceAvantDroiteAverage(boolean expectedSimulateur) {
+        return expectedSimulateur;
+    }
+
+    @Override
+    public boolean pinceArriereGaucheAverage(boolean expectedSimulateur) {
+        return expectedSimulateur;
+    }
+
+    @Override
+    public boolean pinceArriereCentreAverage(boolean expectedSimulateur) {
+        return expectedSimulateur;
+    }
+
+    @Override
+    public boolean pinceArriereDroiteAverage(boolean expectedSimulateur) {
+        return expectedSimulateur;
+    }
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

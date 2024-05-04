@@ -3,6 +3,8 @@ package org.arig.robot.strategy.actions.active.robot;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.Jardiniere;
+import org.arig.robot.model.Plante;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPots;
 import org.arig.robot.model.Team;
@@ -12,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class JardiniereNordAction extends AbstractJardiniereFromStockPots {
+public class JardiniereNordAction extends AbstractJardiniereAction {
 
     @Override
     public String name() {
@@ -26,86 +28,65 @@ public class JardiniereNordAction extends AbstractJardiniereFromStockPots {
 
     @Override
     public Point entryPoint() {
-        if (rs.potsInZoneDepart() > 0) {
-            return super.entryPoint();
-        } else {
-            return entryDirect();
-        }
+        return new Point(getX(760), 1700);
     }
 
-    public Point entryDirect() {
-        return new Point(getX(762), 2000 - 230);
+    protected Jardiniere jardiniere() {
+        return rs.jardiniereNord();
     }
 
     @Override
     public boolean isValid() {
-        StockPots stockPots = rs.stocksPots().get(rs.team() == Team.BLEU ? StockPots.ID.BLEU_NORD : StockPots.ID.JAUNE_NORD);
-
-        if (rs.potsInZoneDepart() > 0) {
-            return super.isValid()
-                    && rs.jardiniereNord().isEmpty()
-                    && (!rs.jardiniereMilieu().isEmpty()
-                    || stockPots.isBloque()
-                    || stockPots.isPresent()
-            );
-        } else {
-            return super.isValid()
-                    && rs.jardiniereNord().isEmpty();
-        }
+        return super.isValid();
     }
 
-    @Override
-    public int order() {
-        return rs.potsInZoneDepart() > 0 ? 15 : 10; // trois plantes (avec ou sans pot)
+    private void executeInternal() throws AvoidingException {
+        final Point entry = entryPoint();
+
+        prepareBras();
+
+        rs.disableAvoidance();
+
+        rs.enableCalageBordure(TypeCalage.AVANT, TypeCalage.FORCE);
+        mv.setVitessePercent(60, 100);
+        mv.avanceMM(2000 - entry.getY() - config.distanceCalageAvant() - 10);
+
+        if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
+            depose(true);
+        }
+
+        mv.setVitessePercent(0, 100);
+        rs.enableCalageBordure(TypeCalage.AVANT, TypeCalage.FORCE);
+        mv.avanceMMSansAngle(40);
+        checkRecalageYmm(2000 - config.distanceCalageAvant(), TypeCalage.AVANT);
+
+        depose(false);
     }
 
     @Override
     public void execute() {
         try {
-            final Point entry = entryDirect();
-            if (rs.potsInZoneDepart() > 0) {
-                gotoAndTake();
+            final Point entry = entryPoint();
 
-                // va à la jardinière
-                mv.setVitessePercent(100, 100);
-                rs.enableAvoidance();
-                mv.gotoPoint(entry);
-            } else {
-                mv.setVitessePercent(100, 100);
-                mv.pathTo(new Point(getX(450), 1775));
-                mv.pathTo(entry);
-            }
+            mv.setVitessePercent(100, 100);
+            // point intermédiare dans l'aire de dépose nord si on traine des trucs
+            mv.pathTo(new Point(getX(450), 1775));
+            mv.gotoPoint(entry);
 
-            runAsync(() -> {
-                bras.setBrasAvant(new PointBras(225, 155, -90, null));
-            });
-
-            // callage en face de la jardinière
             mv.gotoOrientationDeg(90);
 
-            rs.enableCalageBordure(TypeCalage.AVANT, TypeCalage.FORCE);
-            mv.setVitessePercent(60, 200);
-            mv.avanceMM(2000 - entry.getY() - config.distanceCalageAvant() - 10);
+            executeInternal();
 
-            if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
-                depose(rs.jardiniereNord(), true);
-                return;
+            if (!rs.stockLibre() && !jardiniere().rang2()) {
+                executeInternal();
             }
-
-            mv.setVitessePercent(0, 100);
-            rs.enableCalageBordure(TypeCalage.AVANT, TypeCalage.FORCE);
-            mv.avanceMMSansAngle(40);
-            checkRecalageYmm(2000 - config.distanceCalageAvant(), TypeCalage.AVANT);
-
-            if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
-                depose(rs.jardiniereNord(), true);
-                return;
-            }
-
-            depose(rs.jardiniereNord(), false);
 
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
+            updateValidTime();
+
+        } finally {
+            runAsync(() -> bras.brasAvantInit());
         }
     }
 }

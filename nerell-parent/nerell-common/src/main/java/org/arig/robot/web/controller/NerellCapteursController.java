@@ -39,6 +39,9 @@ public class NerellCapteursController extends AbstractCapteursController {
         numeriqueInfos.put("Présence arriere gauche", () -> ioService.presenceArriereGauche(false));
         numeriqueInfos.put("Présence arriere centre", () -> ioService.presenceArriereCentre(false));
         numeriqueInfos.put("Présence arriere droite", () -> ioService.presenceArriereDroite(false));
+        numeriqueInfos.put("Présence stock gauche", () -> ioService.presenceStockGauche(false));
+        numeriqueInfos.put("Présence stock centre", () -> ioService.presenceStockCentre(false));
+        numeriqueInfos.put("Présence stock droite", () -> ioService.presenceStockDroite(false));
 
         textInfos.put("Equipe", () -> (robotStatus.team() != null) ? robotStatus.team().name() : "???");
     }

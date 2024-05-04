@@ -14,6 +14,8 @@ public class StockPlantes extends Point {
 
     private final Plante.ID id;
     private final Rectangle rect;
+    // instant auquel le stock a été marqué inaccessible
+    private long timevalid = 0;
     private boolean present = true;
 
     public StockPlantes(Plante.ID id, double x, double y) {

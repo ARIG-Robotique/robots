@@ -7,12 +7,14 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Plante;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPlantes;
-import org.arig.robot.model.Team;
 import org.arig.robot.model.TypePlante;
 import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.bras.PositionBras;
+import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
+import org.arig.robot.system.pathfinding.PathFinder;
 import org.arig.robot.utils.ThreadUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -25,9 +27,12 @@ import static org.arig.robot.services.BrasInstance.PRISE_PLANTE_SOL_Y;
 @Component
 public class PriseStockPlantes extends AbstractNerellAction {
 
-    final int DST_APPROCHE = 300;
+    final int DST_APPROCHE = 270;
 
     private StockPlantes stockPlantes;
+
+    @Autowired
+    private PathFinder pathFinder;
 
     @Override
     public String name() {
@@ -50,59 +55,40 @@ public class PriseStockPlantes extends AbstractNerellAction {
             return false;
         }
 
-        stockPlantes = rs.plantes().getClosest(mv.currentPositionMm());
-        return stockPlantes != null;
+        return rs.plantes().stocksPresents().findAny().isPresent();
     }
 
     @Override
     public int order() {
-        return rs.potsInZoneDepart() > 1 ? 15 : 10; // TODO
+        return 18;
     }
 
     @Override
     public Point entryPoint() {
-        // FIXME meilleur système qui prend en compte le pathfinding
-        // FIXME points d'approches débloqués si site voisin déjà pris
+        stockPlantes = rs.plantes().getClosestStock(mv.currentPositionMm());
         List<Point> points = new ArrayList<>();
         switch (stockPlantes.getId()) {
             case STOCK_NORD:
-                points.add(new Point(1500, 1200));
-                points.add(new Point(getX(1200), 1600));
+                points.add(tableUtils.eloigner(new Point(1500, 1500), -DST_APPROCHE));
                 break;
             case STOCK_SUD:
-                points.add(new Point(1500, 200));
-                if (rs.team() == Team.BLEU) {
-                    points.add(new Point(1200, 400));
-                }
-                if (rs.team() == Team.JAUNE) {
-                    points.add(new Point(1800, 400));
-                }
+                points.add(tableUtils.eloigner(new Point(1500, 500), -DST_APPROCHE));
                 break;
             case STOCK_NORD_OUEST:
-                points.add(new Point(1250, 1100));
-                if (rs.team() == Team.BLEU) {
-                    points.add(new Point(700, 1300));
-                }
+                points.add(new Point(1000 - DST_APPROCHE, 1300));
+                points.add(new Point(1000 + DST_APPROCHE, 1300));
                 break;
             case STOCK_SUD_OUEST:
-                points.add(new Point(1250, 900));
-                points.add(new Point(1000, 400));
-                if (rs.team() == Team.BLEU) {
-                    points.add(new Point(700, 700));
-                }
+                points.add(new Point(1000 - DST_APPROCHE, 700));
+                points.add(new Point(1000 + DST_APPROCHE, 700));
                 break;
             case STOCK_NORD_EST:
-                points.add(new Point(3000 - 1250, 1100));
-                if (rs.team() == Team.JAUNE) {
-                    points.add(new Point(3000 - 700, 1300));
-                }
+                points.add(new Point(2000 - DST_APPROCHE, 1300));
+                points.add(new Point(2000 + DST_APPROCHE, 1300));
                 break;
             case STOCK_SUD_EST:
-                points.add(new Point(3000 - 1250, 900));
-                points.add(new Point(3000 - 1000, 400));
-                if (rs.team() == Team.JAUNE) {
-                    points.add(new Point(3000 - 700, 700));
-                }
+                points.add(new Point(2000 - DST_APPROCHE, 700));
+                points.add(new Point(2000 + DST_APPROCHE, 700));
                 break;
         }
         Point currentPositionMm = mv.currentPositionMm();
@@ -111,10 +97,22 @@ public class PriseStockPlantes extends AbstractNerellAction {
 
     @Override
     public void execute() {
+        Point entry = entryPoint();
         log.info("Prise stock plantes {}", stockPlantes.getId());
 
         try {
-            final Point entry = entryPoint();
+            // pour les stocks nord et sud application du l'algo de recherche de point proche
+            if (stockPlantes.getId() == Plante.ID.STOCK_NORD || stockPlantes.getId() == Plante.ID.STOCK_SUD) {
+                Point entryCm = new Point(entry.getX() / 10, entry.getY() / 10);
+                if (pathFinder.isBlocked(entryCm)) {
+                    Point fromCm = new Point(mv.currentXMm() / 10, mv.currentYMm() / 10);
+                    entryCm = pathFinder.getNearestPoint(fromCm, entryCm);
+                    if (entryCm == null) {
+                        throw new NoPathFoundException(NoPathFoundException.ErrorType.NO_PATH_FOUND);
+                    }
+                    entry = new Point(entryCm.getX() * 10, entryCm.getY() * 10);
+                }
+            }
 
             mv.setVitessePercent(100, 100);
             mv.pathTo(entry);
@@ -129,48 +127,76 @@ public class PriseStockPlantes extends AbstractNerellAction {
             servos.groupeBloquePlanteOuvert(false);
             bras.setBrasAvant(pointBrasApproche);
 
-            mv.gotoPoint(stockPlantes);
+            rs.enableCalageBordure(TypeCalage.PRISE_PRODUIT_AVANT);
+            mv.gotoPoint(tableUtils.eloigner(stockPlantes, -100));
 
-            // TODO les capteurs pinguent trop tot
-            // TODO avancer un peu plus ? augmenter le temps d'intégration ?
-            //rs.enableCalageBordure(TypeCalage.PRISE_PRODUIT_AVANT);
-//            mv.gotoPoint(tableUtils.eloigner(stockPlantes, -100));
-
-//            if (!rs.calageCompleted().contains(TypeCalage.PRISE_PRODUIT_AVANT)) {
-//                log.info("Le stock plantes {} est vide", stockPlantes.getId());
-//                rs.plantes().priseStock(stockPlantes.getId());
-//                bras.setBrasAvant(PositionBras.INIT);
-//                servos.groupeBloquePlanteFerme(false);
-//                return;
-//            }
+            if (!rs.calageCompleted().contains(TypeCalage.PRISE_PRODUIT_AVANT)) {
+                onCancel();
+                return;
+            }
 
             boolean gauche = io.presenceAvantGauche(true);
             boolean centre = io.presenceAvantCentre(true);
             boolean droite = io.presenceAvantDroite(true);
 
-            if (!gauche && !centre && !droite) {
-                log.warn("Le stock de plantes {} est vide", stockPlantes.getId());
-                rs.plantes().priseStock(stockPlantes.getId());
-                runAsync(() -> {
-                    bras.setBrasAvant(PositionBras.INIT);
-                });
-                return;
-            }
+            mv.setVitessePercent(100, 100);
 
             servos.groupeBloquePlantePrisePlante(true);
-            mv.setVitessePercent(100, 100);
             mv.reculeMM(50);
             servos.groupeBloquePlanteOuvert(true);
             servos.groupePinceAvantOuvert(false);
             mv.reculeMM(100);
             bras.setBrasAvant(PointBras.withY(PRISE_PLANTE_SOL_Y));
-
             servos.groupePinceAvantPrisePlante(true);
             ThreadUtils.sleep(500);
 
-            gauche |= io.pinceAvantGauche(true);
-            centre |= io.pinceAvantCentre(true);
-            droite |= io.pinceAvantDroite(true);
+            bras.brasAvantStockage();
+
+            boolean stockgauche = ioService.stockGaucheAverage(true);
+            boolean stockcentre = ioService.stockCentreAverage(true);
+            boolean stockdroite = ioService.stockDroiteAverage(true);
+
+            // le stockage à foiré
+            if (gauche != stockgauche || centre != stockcentre || droite != stockdroite) {
+                log.warn("Le stockage à foiré, dégagement");
+                bras.setBrasAvant(PositionBras.TRANSPORT);
+                mv.tourneDeg(360);
+            }
+
+            bras.refreshStock();
+
+            // SECONDE PRISE
+            servos.groupeBloquePlanteOuvert(false);
+            bras.setBrasAvant(pointBrasApproche);
+
+            mv.setVitessePercent(20, 100);
+            mv.setRampesDistancePercent(100, 10);
+
+            rs.enableCalageBordure(TypeCalage.PRISE_PRODUIT_AVANT);
+            mv.gotoPoint(tableUtils.eloigner(stockPlantes, 50));
+
+            if (!rs.calageCompleted().contains(TypeCalage.PRISE_PRODUIT_AVANT)) {
+                onCancel();
+                return;
+            }
+
+            mv.setVitessePercent(100, 100);
+
+            servos.groupeBloquePlantePrisePlante(true);
+            mv.reculeMM(50);
+            servos.groupeBloquePlanteOuvert(true);
+            servos.groupePinceAvantOuvert(false);
+            mv.reculeMM(100);
+            bras.setBrasAvant(PointBras.withY(PRISE_PLANTE_SOL_Y));
+            servos.groupePinceAvantPrisePlante(true);
+            ThreadUtils.sleep(500);
+
+            //bras.refreshStock();
+            bras.setBrasAvant(PositionBras.TRANSPORT);
+
+            gauche = true;//ioService.pinceAvantGaucheAverage(true);
+            centre = true;//ioService.pinceAvantCentreAverage(true);
+            droite = true;//ioService.pinceAvantDroiteAverage(true);
 
             rs.bras().setAvant(
                     gauche ? new Plante(TypePlante.INCONNU) : null,
@@ -180,63 +206,24 @@ public class PriseStockPlantes extends AbstractNerellAction {
 
             rs.plantes().priseStock(stockPlantes.getId());
 
-            runAsync(() -> {
-                bras.setBrasAvant(PositionBras.INIT);
-            });
-
-            /*
-            bras.brasAvantStockage();
-
-            gauche = io.presenceStockGauche();
-            centre = io.presenceStockCentre();
-            droite = io.presenceStockDroite();
-
-            // FIXME vrais transfert des états
-            rs.setStock(
-                    gauche ? TypePlante.INCONNU : null,
-                    centre ? TypePlante.INCONNU : null,
-                    droite ? TypePlante.INCONNU : null
-            );
-            rs.bras().setAvant(null, null, null);
-
-            // SECONDE PRISE
-            servos.groupeBloquePlanteOuvert(false);
-            bras.setBrasAvant(pointBrasApproche);
-            mv.gotoPoint(stockPlantes);
-
-            gauche = io.presenceAvantGauche();
-            centre = io.presenceAvantCentre();
-            droite = io.presenceAvantDroite();
-
-            servos.groupeBloquePlantePrisePlante(true);
-            mv.reculeMM(50);
-            servos.groupeBloquePlanteOuvert(true);
-            servos.groupePinceAvantOuvert(false);
-            mv.reculeMM(90);
-            servos.groupeBloquePlanteFerme(false);
-            bras.setBrasAvant(PointBras.withY(PRISE_PLANTE_SOL_Y));
-            servos.groupePinceAvantFerme(true);
-            bras.setBrasAvant(PositionBras.TRANSPORT);
-
-            gauche |= io.pinceAvantGauche();
-            centre |= io.pinceAvantCentre();
-            droite |= io.pinceAvantDroite();
-
-            rs.bras().setAvant(
-                    gauche ? BrasListe.Contenu.PLANTE_INCONNU : null,
-                    centre ? BrasListe.Contenu.PLANTE_INCONNU : null,
-                    droite ? BrasListe.Contenu.PLANTE_INCONNU : null
-            );
-
-            rs.plantes().priseStock(stockPlantes.getId());
-             */
-
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
+
+            if (e instanceof NoPathFoundException) {
+                stockPlantes.setTimevalid(System.currentTimeMillis());
+            }
         } finally {
             servos.groupeBloquePlanteFerme(false);
         }
+    }
+
+    private void onCancel() {
+        log.warn("Le stock de plantes {} est vide", stockPlantes.getId());
+        rs.plantes().priseStock(stockPlantes.getId());
+        runAsync(() -> bras.brasAvantInit());
+        servos.groupePinceAvantFerme(false);
+        servos.groupeBloquePlanteFerme(false);
     }
 
 }

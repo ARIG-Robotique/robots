@@ -132,9 +132,6 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
                 && stock[2].getType() == TypePlante.AUCUNE;
     }
 
-    private int potsInZoneDepart = 0;
-    private Point positionPotsZoneDepart;
-
     /* *************************** SCORE *************************** */
     /* ************************************************************* */
 

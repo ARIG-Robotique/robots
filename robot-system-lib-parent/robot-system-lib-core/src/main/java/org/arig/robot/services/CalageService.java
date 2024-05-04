@@ -1,12 +1,15 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -23,6 +26,8 @@ public class CalageService {
 
     @Autowired
     private CommandeRobot cmdRobot;
+
+    private StopWatch stopWatchPriseProduit = new StopWatch();
 
     public void process() {
         if (!rs.calage().isEmpty()) {
@@ -71,7 +76,29 @@ public class CalageService {
                 }
             }
 
-            if (doneAvant || doneArriere || doneTempo || donePriseProduitAvant || donePriseProduitArriere || doneElectroaimant) {
+            // le callage sur produit se fait avec un retard
+            if (donePriseProduitAvant || donePriseProduitArriere) {
+                if (stopWatchPriseProduit.isStopped()) {
+                    stopWatchPriseProduit.start();
+                } else if (stopWatchPriseProduit.getTime(TimeUnit.MILLISECONDS) >= 500) {
+                    stopWatchPriseProduit.reset();
+
+                    if (donePriseProduitAvant) {
+                        log.info("Callage complet : {}", TypeCalage.PRISE_PRODUIT_AVANT);
+                        rs.calageCompleted().add(TypeCalage.PRISE_PRODUIT_AVANT);
+                    }
+                    if (donePriseProduitArriere) {
+                        log.info("Callage complet : {}", TypeCalage.PRISE_PRODUIT_ARRIERE);
+                        rs.calageCompleted().add(TypeCalage.PRISE_PRODUIT_ARRIERE);
+                    }
+
+                    trajectoryManager.calageBordureDone();
+                }
+            } else if (stopWatchPriseProduit.isStarted()) {
+                stopWatchPriseProduit.reset();
+            }
+
+            if (doneAvant || doneArriere || doneTempo || doneElectroaimant) {
                 if (doneAvant) {
                     log.info("Callage complet : {}", TypeCalage.AVANT);
                     rs.calageCompleted().add(TypeCalage.AVANT);
@@ -83,14 +110,6 @@ public class CalageService {
                 if (doneTempo) {
                     log.info("Callage complet : {}", TypeCalage.TEMPO);
                     rs.calageCompleted().add(TypeCalage.TEMPO);
-                }
-                if (donePriseProduitAvant) {
-                    log.info("Callage complet : {}", TypeCalage.PRISE_PRODUIT_AVANT);
-                    rs.calageCompleted().add(TypeCalage.PRISE_PRODUIT_AVANT);
-                }
-                if (donePriseProduitArriere) {
-                    log.info("Callage complet : {}", TypeCalage.PRISE_PRODUIT_ARRIERE);
-                    rs.calageCompleted().add(TypeCalage.PRISE_PRODUIT_ARRIERE);
                 }
                 if (doneElectroaimant) {
                     log.info("Callage complet : {}", TypeCalage.PRISE_ELECTROAIMANT);

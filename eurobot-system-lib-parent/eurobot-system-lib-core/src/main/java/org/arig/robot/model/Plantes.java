@@ -51,7 +51,8 @@ public class Plantes implements Iterable<Plante> {
 
     public Stream<StockPlantes> stocksPresents() {
         return stocks.stream()
-                .filter(StockPlantes::isPresent);
+                .filter(StockPlantes::isPresent)
+                .filter(s -> s.getTimevalid() < System.currentTimeMillis() - 5000);
     }
 
     // TODO automatiquement marquer comme pris les stocks qui n'ont plus assez de plantes
@@ -95,11 +96,10 @@ public class Plantes implements Iterable<Plante> {
         return Math.abs(e.getX() - pt.getX()) < DELTA && Math.abs(e.getY() - pt.getY()) < DELTA;
     }
 
-    public StockPlantes getClosest(Point point) {
+    public StockPlantes getClosestStock(Point point) {
         int malus = 500;
 
-        return stocks.stream()
-                .filter(StockPlantes::isPresent)
+        return stocksPresents()
                 .min(Comparator.comparing(s -> {
                     double dst = s.distance(point);
                     if (team == Team.JAUNE) {
