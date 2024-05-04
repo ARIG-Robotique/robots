@@ -44,6 +44,9 @@ public class BrasController {
             case "STOCKAGE":
                 brasService.brasAvantStockage();
                 break;
+            case "DESTOCKAGE":
+                brasService.brasAvantDestockage();
+                break;
         }
     }
 

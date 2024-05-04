@@ -11,6 +11,7 @@ import org.arig.robot.model.bras.ConfigBras;
 import org.arig.robot.model.bras.CurrentBras;
 import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.bras.PositionBras;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -126,48 +127,14 @@ public class BrasService {
     }
 
     public void brasAvantStockage() {
-        servos.setPositionsRaw(
-                Map.of(
-                        BRAS_AVANT_GAUCHE_EPAULE, 2365, BRAS_AVANT_GAUCHE_COUDE, 2445, BRAS_AVANT_GAUCHE_POIGNET, 1735,
-                        BRAS_AVANT_CENTRE_EPAULE, 2380, BRAS_AVANT_CENTRE_COUDE, 545, BRAS_AVANT_CENTRE_POIGNET, 1015,
-                        BRAS_AVANT_DROIT_EPAULE, 2390, BRAS_AVANT_DROIT_COUDE, 2510, BRAS_AVANT_DROIT_POIGNET, 1960
-                ),
-                50,
-                true
-        );
-
-        servos.setPositionsRaw(
-                Map.of(
-                        BRAS_AVANT_GAUCHE_EPAULE, 1935, BRAS_AVANT_GAUCHE_COUDE, 2445, BRAS_AVANT_GAUCHE_POIGNET, 1735,
-                        BRAS_AVANT_CENTRE_EPAULE, 1910, BRAS_AVANT_CENTRE_COUDE, 545, BRAS_AVANT_CENTRE_POIGNET, 1015,
-                        BRAS_AVANT_DROIT_EPAULE, 1940, BRAS_AVANT_DROIT_COUDE, 2510, BRAS_AVANT_DROIT_POIGNET, 1960
-                ),
-                20,
-                true
-        );
-
-        servos.setPositionsRaw(
-                Map.of(
-                        BRAS_AVANT_GAUCHE_EPAULE, 1815, BRAS_AVANT_GAUCHE_COUDE, 2415, BRAS_AVANT_GAUCHE_POIGNET, 1595,
-                        BRAS_AVANT_CENTRE_EPAULE, 1790, BRAS_AVANT_CENTRE_COUDE, 575, BRAS_AVANT_CENTRE_POIGNET, 1125,
-                        BRAS_AVANT_DROIT_EPAULE, 1820, BRAS_AVANT_DROIT_COUDE, 2480, BRAS_AVANT_DROIT_POIGNET, 1780
-                ),
-                20,
-                true
-        );
-
+        setBrasAvant(new PointBras(170, 155, -130, false));
+        setBrasAvant(new PointBras(136, 152, -150, false));
+        setBrasAvant(new PointBras(96, 151, -170, false));
+        setBrasAvant(new PointBras(58, 127, -170, false));
         servos.groupePinceAvantOuvert(true);
-
-        servos.setPositionsRaw(
-                Map.of(
-                        BRAS_AVANT_GAUCHE_EPAULE, 2215, BRAS_AVANT_GAUCHE_COUDE, 2415, BRAS_AVANT_GAUCHE_POIGNET, 1595,
-                        BRAS_AVANT_CENTRE_EPAULE, 2190, BRAS_AVANT_CENTRE_COUDE, 575, BRAS_AVANT_CENTRE_POIGNET, 1125,
-                        BRAS_AVANT_DROIT_EPAULE, 2220, BRAS_AVANT_DROIT_COUDE, 2480, BRAS_AVANT_DROIT_POIGNET, 1780
-                ), 50,
-                true
-        );
-
+        setBrasAvant(new PointBras(174, 147, -130, false));
         servos.groupePinceAvantFerme(false);
+        setBrasAvant(PositionBras.TRANSPORT);
     }
 
 }

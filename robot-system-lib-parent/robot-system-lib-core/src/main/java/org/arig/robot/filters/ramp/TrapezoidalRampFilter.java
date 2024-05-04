@@ -104,7 +104,7 @@ public class TrapezoidalRampFilter extends AbstractGainFactorRampFilter {
             }
 
         } else if (input < 0 && currentVitesse > 0) {
-            // Distance dépasser en avant
+            // Distance dépassée en avant
             currentVitesse -= getStepVitesseDecel();
 
         } else if (input < 0 && currentVitesse <= 0) {
@@ -126,7 +126,7 @@ public class TrapezoidalRampFilter extends AbstractGainFactorRampFilter {
             }
 
         } else if (input > 0 && currentVitesse < 0) {
-            // Distance dépasser en arrière
+            // Distance dépassée en arrière
             currentVitesse += getStepVitesseDecel();
 
         } else {

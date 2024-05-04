@@ -26,8 +26,8 @@ public class BrasInstance {
     public static final int R3 = 110;
     // angles limites
     public static final int A1_MIN = -158;
-    public static final int A1_MAX = 19;
-    public static final int A2_MIN = -44;
+    public static final int A1_MAX = 20;
+    public static final int A2_MIN = -52;
     public static final int A2_MAX = 135;
     public static final int A3_MIN = -127;
     public static final int A3_MAX = 33;

@@ -10,6 +10,7 @@ import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
+import org.arig.robot.model.Bras;
 import org.arig.robot.model.InitStep;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
@@ -30,6 +31,8 @@ import org.arig.robot.strategy.actions.active.robot.PanneauSolaireEquipeAction;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
+
+import java.util.stream.Stream;
 
 @Slf4j
 public class NerellOrdonanceur extends AbstractOrdonanceur {
@@ -171,8 +174,9 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     public void beforePowerOff() {
         nerellIO.enableAlimServos();
 
-        bras.setBrasAvant(new PointBras(194, 104, -90, null));
-        bras.setBrasArriere(new PointBras(194, 104, -90, null));
+        Stream.of(Bras.values()).forEach(b -> {
+            bras.setBras(b, new PointBras(194, 104, -90, null), 30, false);
+        });
         nerellServos.groupePinceAvantOuvert(false);
         nerellServos.groupePinceArriereOuvert(false);
 

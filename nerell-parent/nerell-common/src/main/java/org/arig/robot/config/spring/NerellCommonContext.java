@@ -136,7 +136,7 @@ public class NerellCommonContext {
     @Bean(name = "pidDistance")
     public PidFilter pidDistance() {
         log.info("Configuration PID Distance");
-        SimplePidFilter pid = new SimplePidFilter("distance");
+        SimplePidFilter pid = new SimplePidFilter("distance", true);
         pid.setTunings(NerellConstantesConfig.kpDistance, NerellConstantesConfig.kiDistance, NerellConstantesConfig.kdDistance);
         return pid;
     }
@@ -144,7 +144,7 @@ public class NerellCommonContext {
     @Bean(name = "pidOrientation")
     public PidFilter pidOrientation() {
         log.info("Configuration PID Orientation");
-        SimplePidFilter pid = new SimplePidFilter("orientation");
+        SimplePidFilter pid = new SimplePidFilter("orientation", true);
         pid.setTunings(NerellConstantesConfig.kpOrientation, NerellConstantesConfig.kiOrientation, NerellConstantesConfig.kdOrientation);
         return pid;
     }
