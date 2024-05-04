@@ -120,11 +120,11 @@ public class PanneauxSolaire {
         log.info("[RS] panneaux solaires équipe done : {}", nb);
         if (team == Team.BLEU) {
             for (int i = 1; i <= nb; i++) {
-                data[i - 1].couleur(CouleurPanneauSolaire.WIP_BLEU);
+                data[i - 1].couleur(CouleurPanneauSolaire.BLEU);
             }
         } else {
             for (int i = 1; i <= nb; i++) {
-                data[9 - i].couleur(CouleurPanneauSolaire.WIP_JAUNE);
+                data[9 - i].couleur(CouleurPanneauSolaire.JAUNE);
             }
         }
     }

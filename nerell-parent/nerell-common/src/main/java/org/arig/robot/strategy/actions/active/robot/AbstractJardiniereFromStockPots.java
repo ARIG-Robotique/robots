@@ -3,7 +3,7 @@ package org.arig.robot.strategy.actions.active.robot;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.BrasListe;
+import org.arig.robot.model.Plante;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.ZoneDepose;
@@ -78,7 +78,7 @@ public abstract class AbstractJardiniereFromStockPots extends AbstractNerellActi
             mv.reculeMM(100);
         }
 
-        BrasListe.Contenu[] contenuBras = rs.bras().getAvant();
+        Plante[] contenuBras = rs.bras().getAvant();
         rs.bras().setAvant(
                 contenuBras[0].withPot(),
                 contenuBras[1].withPot(),
@@ -102,7 +102,7 @@ public abstract class AbstractJardiniereFromStockPots extends AbstractNerellActi
         servos.groupePinceAvantOuvert(true);
         s();
 
-        jardiniere.addFromBras(rs.bras().getAvant());
+        jardiniere.add(rs.bras().getAvant());
         rs.bras().setAvant(null, null, null);
 
         // fin

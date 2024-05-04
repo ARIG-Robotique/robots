@@ -3,7 +3,6 @@ package org.arig.robot.model;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +19,13 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     protected EurobotStatus(boolean mainRobot) {
         super(EurobotConfig.matchTimeMs, mainRobot);
+    }
+
+    @Override
+    public void startMatch() {
+        super.startMatch();
+
+        stocksPots.get(team == Team.BLEU ? StockPots.ID.JAUNE_NORD : StockPots.ID.BLEU_NORD).pris();
     }
 
     private boolean etalonageBaliseOk = false;
@@ -63,18 +69,18 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     private Plantes plantes = new Plantes();
 
     @Setter(AccessLevel.NONE)
-    private ZoneDepose aireDeDeposeNord = new ZoneDepose(false);
+    private ZoneDepose aireDeDeposeNord = new ZoneDepose();
     @Setter(AccessLevel.NONE)
-    private ZoneDepose aireDeDeposeMilieu = new ZoneDepose(false);
+    private ZoneDepose aireDeDeposeMilieu = new ZoneDepose();
     @Setter(AccessLevel.NONE)
-    private ZoneDepose aireDeDeposeSud = new ZoneDepose(false);
+    private ZoneDepose aireDeDeposeSud = new ZoneDepose();
 
     @Setter(AccessLevel.NONE)
-    private ZoneDepose jardiniereNord = new ZoneDepose(true);
+    private Jardiniere jardiniereNord = new Jardiniere();
     @Setter(AccessLevel.NONE)
-    private ZoneDepose jardiniereMilieu = new ZoneDepose(true);
+    private Jardiniere jardiniereMilieu = new Jardiniere();
     @Setter(AccessLevel.NONE)
-    private ZoneDepose jardiniereSud = new ZoneDepose(true);
+    private Jardiniere jardiniereSud = new Jardiniere();
 
     private SiteDeCharge siteDeCharge = SiteDeCharge.AUCUN;
     private SiteDeCharge siteDeDepart = SiteDeCharge.AUCUN;
@@ -107,18 +113,23 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Setter(AccessLevel.NONE)
     private BrasListe bras = new BrasListe();
 
-    @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    private TypePlante[] stock = new TypePlante[]{null, null, null};
+    private Plante[] stock = new Plante[]{
+            new Plante(TypePlante.AUCUNE),
+            new Plante(TypePlante.AUCUNE),
+            new Plante(TypePlante.AUCUNE)
+    };
 
     public void setStock(TypePlante gauche, TypePlante centre, TypePlante droite) {
-        stock[0] = gauche;
-        stock[1] = centre;
-        stock[2] = droite;
+        stock[0] = new Plante(gauche);
+        stock[1] = new Plante(centre);
+        stock[2] = new Plante(droite);
     }
 
     public boolean stockLibre() {
-        return stock[0] == null && stock[1] == null && stock[2] == null;
+        return stock[0].getType() == TypePlante.AUCUNE
+                && stock[1].getType() == TypePlante.AUCUNE
+                && stock[2].getType() == TypePlante.AUCUNE;
     }
 
     private int potsInZoneDepart = 0;
@@ -172,9 +183,10 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Override
     public Map<String, Object> gameStatus() {
         Map<String, Object> r = new HashMap<>();
+        r.put("siteDeDepart", siteDeDepart);
+        r.put("siteDeCharge", siteDeCharge);
         r.put("panneaux", panneauxSolaire.data);
-        r.put("siteDeRetour", siteDeCharge);
-        r.put("stocksPots", stocksPots.gameStatus());
+        r.put("stocksPots", stocksPots.data);
         r.put("plantes", plantes.getPlantes());
         r.put("airesDepose", Map.of(
                 "NORD", aireDeDeposeNord.data,
@@ -186,6 +198,9 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
                 "MILIEU", jardiniereMilieu.data,
                 "SUD", jardiniereSud.data
         ));
+        r.put("brasAvant", bras.getAvant());
+        r.put("brasArriere", bras.getArriere());
+        r.put("stock", stock);
         return r;
     }
 

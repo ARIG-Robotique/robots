@@ -28,29 +28,24 @@ public class Plante extends Point {
 
     public Plante(TypePlante type) {
         this.id = null;
-        this.type = type;
+        this.type = type == null ? TypePlante.AUCUNE : type;
         this.blocking = false;
     }
 
     public Plante(TypePlante type, boolean dansPot) {
-        this.id = null;
-        this.type = type;
+        this(type);
         this.dansPot = dansPot;
-        this.blocking = false;
     }
 
     public Plante(ID id, TypePlante type, double x, double y, boolean blocking) {
         super(x, y);
         this.id = id;
-        this.type = type;
+        this.type = type == null ? TypePlante.AUCUNE : type;
         this.blocking = blocking;
     }
 
     public Plante(ID id, TypePlante type, double x, double y, Long existence) {
-        super(x, y);
-        this.id = id;
-        this.type = type;
-        this.blocking = false;
+        this(id, type, x, y, false);
         this.existence = existence;
     }
 
@@ -63,6 +58,10 @@ public class Plante extends Point {
         return existence == null || (System.currentTimeMillis() - existence) >= 5000;
     }
 
+    public Plante withPot() {
+        return new Plante(type, true);
+    }
+
     public Plante clone() {
         Plante newPlante = new Plante(id, type, getX(), getY(), blocking);
         newPlante.dansPot = this.dansPot;
@@ -72,6 +71,6 @@ public class Plante extends Point {
 
     @Override
     public String toString() {
-        return "Plante{" + "x=" + getX() + ",y=" + getY() + ",type=" + type + "}";
+        return "Plante{" + "x=" + getX() + ",y=" + getY() + ",type=" + type + ",pot=" + dansPot + "}";
     }
 }

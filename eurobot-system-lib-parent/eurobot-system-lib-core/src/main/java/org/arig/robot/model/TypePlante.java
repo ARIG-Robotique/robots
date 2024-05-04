@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum TypePlante {
-    FRAGILE, RESISTANTE, INCONNU
+    FRAGILE, RESISTANTE, INCONNU, AUCUNE
 }

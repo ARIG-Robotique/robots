@@ -11,20 +11,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ZoneDepose {
 
-    public final boolean jardiniere;
-
     final List<Plante> data = new ArrayList<>();
 
-    public void addFromBras(BrasListe.Contenu[] bras) {
+    public void add(Plante[] bras) {
         for (int i = 0; i < bras.length; i++) {
-            switch (bras[i]) {
-                case PLANTE_FRAGILE:
-                case PLANTE_INCONNU:
-                case PLANTE_RESISTANTE:
-                case PLANTE_DANS_POT:
-                    data.add(new Plante(bras[i].getTypePlante(), bras[i] == BrasListe.Contenu.PLANTE_DANS_POT));
-                    break;
-            }
+            data.add(bras[i].clone());
         }
     }
 
@@ -33,16 +24,24 @@ public class ZoneDepose {
     }
 
     public int score() {
+        return score(false);
+    }
+
+    protected int score(boolean jardiniere) {
         return data.stream()
                 .map(plante -> {
                     int points = 0;
-                    if (plante.isDansPot()) {
-                        points += 4;
-                    } else if (jardiniere || plante.getType() == TypePlante.RESISTANTE) {
-                        points += 3;
-                    }
-                    if (jardiniere) {
-                        points += 1;
+                    if (plante.getType() != TypePlante.AUCUNE) {
+                        if (plante.isDansPot()) {
+                            points += 4;
+                        } else if (jardiniere || plante.getType() == TypePlante.RESISTANTE) {
+                            points += 3;
+                        } else if (plante.getType() == TypePlante.INCONNU) {
+                            points += 1; // 1 chance sur 3 que ça rapporte 3 points
+                        }
+                        if (jardiniere) {
+                            points += 1;
+                        }
                     }
                     return points;
                 })

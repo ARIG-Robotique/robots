@@ -1,5 +1,6 @@
 package org.arig.robot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,6 +18,7 @@ public class StockPots extends Point {
     }
 
     private final ID id;
+    @JsonIgnore
     private final double entryAngle;
     private boolean present = true;
     private boolean bloque = false;
@@ -33,8 +35,8 @@ public class StockPots extends Point {
     }
 
     public void bloque() {
-        log.warn("[RS] Stock pot {} absent", id);
-        present = false;
+        log.warn("[RS] Stock pot {} bloqué", id);
+        bloque = true;
     }
 
 }

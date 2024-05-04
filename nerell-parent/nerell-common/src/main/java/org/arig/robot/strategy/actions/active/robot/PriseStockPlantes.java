@@ -4,10 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.BrasListe;
+import org.arig.robot.model.Plante;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPlantes;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.TypePlante;
 import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
@@ -172,9 +173,9 @@ public class PriseStockPlantes extends AbstractNerellAction {
             droite |= io.pinceAvantDroite();
 
             rs.bras().setAvant(
-                    gauche ? BrasListe.Contenu.PLANTE_INCONNU : null,
-                    centre ? BrasListe.Contenu.PLANTE_INCONNU : null,
-                    droite ? BrasListe.Contenu.PLANTE_INCONNU : null
+                    gauche ? new Plante(TypePlante.INCONNU) : null,
+                    centre ? new Plante(TypePlante.INCONNU) : null,
+                    droite ? new Plante(TypePlante.INCONNU) : null
             );
 
             rs.plantes().priseStock(stockPlantes.getId());

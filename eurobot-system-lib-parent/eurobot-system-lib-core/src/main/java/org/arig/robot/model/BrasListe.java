@@ -1,7 +1,5 @@
 package org.arig.robot.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -10,78 +8,53 @@ import java.util.Map;
 @Slf4j
 public class BrasListe {
 
-    @RequiredArgsConstructor
-    @Getter
-    public enum Contenu {
-        VIDE(null),
-        PLANTE_INCONNU(TypePlante.INCONNU),
-        PLANTE_RESISTANTE(TypePlante.RESISTANTE),
-        PLANTE_FRAGILE(TypePlante.FRAGILE),
-        PLANTE_DANS_POT(TypePlante.INCONNU),
-        POT(null),
-        DEUX_POTS(null);
-
-        private final TypePlante typePlante;
-
-        public Contenu withPot() {
-            switch (this) {
-                case VIDE: return POT;
-                case PLANTE_INCONNU: return PLANTE_DANS_POT;
-                case PLANTE_RESISTANTE: return PLANTE_DANS_POT;
-                case PLANTE_FRAGILE: return PLANTE_DANS_POT;
-                case POT: return DEUX_POTS;
-                default: throw new IllegalArgumentException("oula");
-            }
-        }
-    }
-
-    private Map<Bras, Contenu> contenu = new HashMap<>();
+    private Map<Bras, Plante> contenu = new HashMap<>();
 
     public BrasListe() {
-        contenu.put(Bras.AVANT_GAUCHE, Contenu.VIDE);
-        contenu.put(Bras.AVANT_CENTRE, Contenu.VIDE);
-        contenu.put(Bras.AVANT_DROIT, Contenu.VIDE);
-        contenu.put(Bras.ARRIERE_GAUCHE, Contenu.VIDE);
-        contenu.put(Bras.ARRIERE_CENTRE, Contenu.VIDE);
-        contenu.put(Bras.ARRIERE_DROIT, Contenu.VIDE);
+        contenu.put(Bras.AVANT_GAUCHE, new Plante(TypePlante.AUCUNE));
+        contenu.put(Bras.AVANT_CENTRE, new Plante(TypePlante.AUCUNE));
+        contenu.put(Bras.AVANT_DROIT, new Plante(TypePlante.AUCUNE));
+        contenu.put(Bras.ARRIERE_GAUCHE, new Plante(TypePlante.AUCUNE));
+        contenu.put(Bras.ARRIERE_CENTRE, new Plante(TypePlante.AUCUNE));
+        contenu.put(Bras.ARRIERE_DROIT, new Plante(TypePlante.AUCUNE));
     }
 
     public boolean avantLibre() {
-        return contenu.get(Bras.AVANT_DROIT) == Contenu.VIDE
-                && contenu.get(Bras.AVANT_CENTRE) == Contenu.VIDE
-                && contenu.get(Bras.AVANT_GAUCHE) == Contenu.VIDE;
+        return contenu.get(Bras.AVANT_DROIT).getType() == TypePlante.AUCUNE
+                && contenu.get(Bras.AVANT_CENTRE).getType() == TypePlante.AUCUNE
+                && contenu.get(Bras.AVANT_GAUCHE).getType() == TypePlante.AUCUNE;
     }
 
     public boolean arriereLibre() {
-        return contenu.get(Bras.ARRIERE_DROIT) == Contenu.VIDE
-                && contenu.get(Bras.ARRIERE_CENTRE) == Contenu.VIDE
-                && contenu.get(Bras.ARRIERE_GAUCHE) == Contenu.VIDE;
+        return contenu.get(Bras.ARRIERE_DROIT).getType() == TypePlante.AUCUNE
+                && contenu.get(Bras.ARRIERE_CENTRE).getType() == TypePlante.AUCUNE
+                && contenu.get(Bras.ARRIERE_GAUCHE).getType() == TypePlante.AUCUNE;
     }
 
-    public void setAvant(Contenu gauche, Contenu centre, Contenu droite) {
+    public void setAvant(Plante gauche, Plante centre, Plante droite) {
         log.info("[RS] Bras avant {} {} {}", gauche, centre, droite);
-        contenu.put(Bras.AVANT_GAUCHE, gauche == null ? Contenu.VIDE : gauche);
-        contenu.put(Bras.AVANT_CENTRE, centre == null ? Contenu.VIDE : centre);
-        contenu.put(Bras.AVANT_DROIT, droite == null ? Contenu.VIDE : droite);
+        contenu.put(Bras.AVANT_GAUCHE, gauche == null ? new Plante(TypePlante.AUCUNE) : gauche);
+        contenu.put(Bras.AVANT_CENTRE, centre == null ? new Plante(TypePlante.AUCUNE) : centre);
+        contenu.put(Bras.AVANT_DROIT, droite == null ? new Plante(TypePlante.AUCUNE) : droite);
     }
 
-    public void setArriere(Contenu gauche, Contenu centre, Contenu droite) {
+    public void setArriere(Plante gauche, Plante centre, Plante droite) {
         log.info("[RS] Bras arrière {} {} {}", gauche, centre, droite);
-        contenu.put(Bras.ARRIERE_GAUCHE, gauche == null ? Contenu.VIDE : gauche);
-        contenu.put(Bras.ARRIERE_CENTRE, centre == null ? Contenu.VIDE : centre);
-        contenu.put(Bras.ARRIERE_DROIT, droite == null ? Contenu.VIDE : droite);
+        contenu.put(Bras.ARRIERE_GAUCHE, gauche == null ? new Plante(TypePlante.AUCUNE) : gauche);
+        contenu.put(Bras.ARRIERE_CENTRE, centre == null ? new Plante(TypePlante.AUCUNE) : centre);
+        contenu.put(Bras.ARRIERE_DROIT, droite == null ? new Plante(TypePlante.AUCUNE) : droite);
     }
 
-    public Contenu[] getAvant() {
-        return new Contenu[]{
+    public Plante[] getAvant() {
+        return new Plante[]{
                 contenu.get(Bras.AVANT_GAUCHE),
                 contenu.get(Bras.AVANT_CENTRE),
                 contenu.get(Bras.AVANT_DROIT)
         };
     }
 
-    public Contenu[] getArriere() {
-        return new Contenu[]{
+    public Plante[] getArriere() {
+        return new Plante[]{
                 contenu.get(Bras.ARRIERE_GAUCHE),
                 contenu.get(Bras.ARRIERE_CENTRE),
                 contenu.get(Bras.ARRIERE_DROIT)

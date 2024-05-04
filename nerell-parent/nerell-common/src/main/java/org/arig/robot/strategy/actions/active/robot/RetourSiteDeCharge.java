@@ -107,7 +107,7 @@ public class RetourSiteDeCharge extends AbstractNerellAction {
                     bras.setBrasAvant(new PointBras(215, DEPOSE_SOL_Y, -90, null));
                     checkMatchDone();
                     servos.groupePinceAvantOuvert(true);
-                    zoneDepose(destSite).addFromBras(rs.bras().getAvant());
+                    zoneDepose(destSite).add(rs.bras().getAvant());
                     ThreadUtils.sleep(500);
                     checkMatchDone();
 
@@ -131,7 +131,7 @@ public class RetourSiteDeCharge extends AbstractNerellAction {
                     bras.setBrasArriere(new PointBras(215, DEPOSE_SOL_Y, -90, null));
                     checkMatchDone();
                     servos.groupePinceArriereOuvert(true);
-                    zoneDepose(destSite).addFromBras(rs.bras().getArriere());
+                    zoneDepose(destSite).add(rs.bras().getArriere());
                     ThreadUtils.sleep(500);
                     checkMatchDone();
 
@@ -198,8 +198,7 @@ public class RetourSiteDeCharge extends AbstractNerellAction {
         }
 
         final Point currentPosition = mv.currentPositionMm();
-        candidates.sort(Comparator.comparing((Triple<SiteDeCharge, SiteDeCharge, Point> c) -> currentPosition.distance(c.getRight())).reversed());
-
+        candidates.sort(Comparator.comparing((Triple<SiteDeCharge, SiteDeCharge, Point> c) -> currentPosition.distance(c.getRight())));
         return candidates;
     }
 

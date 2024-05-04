@@ -5,9 +5,11 @@ import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.BrasListe;
+import org.arig.robot.model.Plante;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPots;
 import org.arig.robot.model.Strategy;
+import org.arig.robot.model.TypePlante;
 import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.TypeCalage;
@@ -177,7 +179,11 @@ public class PriseStockPots extends AbstractNerellAction {
             } else {
                 bras.setBrasArriere(PositionBras.TRANSPORT);
 
-                rs.bras().setArriere(BrasListe.Contenu.DEUX_POTS, BrasListe.Contenu.DEUX_POTS, BrasListe.Contenu.DEUX_POTS);
+                rs.bras().setArriere(
+                        new Plante(TypePlante.AUCUNE, true),
+                        new Plante(TypePlante.AUCUNE, true),
+                        new Plante(TypePlante.AUCUNE, true)
+                );
 
                 // stockage dans la zone de départ
                 if (rs.potsInZoneDepart() == 0) {
