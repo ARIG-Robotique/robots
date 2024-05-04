@@ -36,18 +36,18 @@ public class NerellIOCommands {
         log.info("Stock gauche = {}", nerellIOServiceRobot.presenceStockGauche());
         log.info("Stock centre = {}", nerellIOServiceRobot.presenceStockCentre());
         log.info("Stock droite = {}", nerellIOServiceRobot.presenceStockDroite());
-        log.info("Pince avant gauche = {}", nerellIOServiceRobot.pinceAvantGauche());
-        log.info("Pince avant centre = {}", nerellIOServiceRobot.pinceAvantCentre());
-        log.info("Pince avant droite = {}", nerellIOServiceRobot.pinceAvantDroite());
-        log.info("Pince arriere gauche = {}", nerellIOServiceRobot.pinceArriereGauche());
-        log.info("Pince arriere centre = {}", nerellIOServiceRobot.pinceArriereCentre());
-        log.info("Pince arriere droite = {}", nerellIOServiceRobot.pinceArriereDroite());
-        log.info("Présence avant gauche = {}", nerellIOServiceRobot.presenceAvantGauche());
-        log.info("Présence avant centre = {}", nerellIOServiceRobot.presenceAvantCentre());
-        log.info("Présence avant droite = {}", nerellIOServiceRobot.presenceAvantDroite());
-        log.info("Présence arriere gauche = {}", nerellIOServiceRobot.presenceArriereGauche());
-        log.info("Présence arriere centre = {}", nerellIOServiceRobot.presenceArriereCentre());
-        log.info("Présence arriere droite = {}", nerellIOServiceRobot.presenceArriereDroite());
+        log.info("Pince avant gauche = {}", nerellIOServiceRobot.pinceAvantGauche(false));
+        log.info("Pince avant centre = {}", nerellIOServiceRobot.pinceAvantCentre(false));
+        log.info("Pince avant droite = {}", nerellIOServiceRobot.pinceAvantDroite(false));
+        log.info("Pince arriere gauche = {}", nerellIOServiceRobot.pinceArriereGauche(false));
+        log.info("Pince arriere centre = {}", nerellIOServiceRobot.pinceArriereCentre(false));
+        log.info("Pince arriere droite = {}", nerellIOServiceRobot.pinceArriereDroite(false));
+        log.info("Présence avant gauche = {}", nerellIOServiceRobot.presenceAvantGauche(false));
+        log.info("Présence avant centre = {}", nerellIOServiceRobot.presenceAvantCentre(false));
+        log.info("Présence avant droite = {}", nerellIOServiceRobot.presenceAvantDroite(false));
+        log.info("Présence arriere gauche = {}", nerellIOServiceRobot.presenceArriereGauche(false));
+        log.info("Présence arriere centre = {}", nerellIOServiceRobot.presenceArriereCentre(false));
+        log.info("Présence arriere droite = {}", nerellIOServiceRobot.presenceArriereDroite(false));
     }
 
     @ShellMethod("Enable Electro Aimant")

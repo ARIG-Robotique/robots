@@ -69,63 +69,63 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     // Numerique
 
     @Override
-    public boolean pinceAvantGauche() {
-        return false;
+    public boolean pinceAvantGauche(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
-    public boolean pinceAvantCentre() {
-        return false;
+    public boolean pinceAvantCentre(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
-    public boolean pinceAvantDroite() {
-        return false;
+    public boolean pinceAvantDroite(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
-    public boolean pinceArriereGauche() {
-        return false;
+    public boolean pinceArriereGauche(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
-    public boolean pinceArriereCentre() {
-        return false;
+    public boolean pinceArriereCentre(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
-    public boolean pinceArriereDroite() {
-        return false;
+    public boolean pinceArriereDroite(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
-    public boolean presenceAvantGauche() {
-        return true;
+    public boolean presenceAvantGauche(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
-    public boolean presenceAvantCentre() {
-        return true;
+    public boolean presenceAvantCentre(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
-    public boolean presenceAvantDroite() {
-        return true;
+    public boolean presenceAvantDroite(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
-    public boolean presenceArriereGauche() {
-        return false;
+    public boolean presenceArriereGauche(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
-    public boolean presenceArriereCentre() {
-        return false;
+    public boolean presenceArriereCentre(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
-    public boolean presenceArriereDroite() {
-        return false;
+    public boolean presenceArriereDroite(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
@@ -155,12 +155,12 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
 
     @Override public boolean inductifGaucheAverage() { return false; }
     @Override public boolean inductifDroitAverage() { return false; }
-    @Override public boolean pinceAvantGaucheAverage() { return false; }
-    @Override public boolean pinceAvantCentreAverage() { return false; }
-    @Override public boolean pinceAvantDroiteAverage() { return false; }
-    @Override public boolean pinceArriereGaucheAverage() { return false; }
-    @Override public boolean pinceArriereCentreAverage() { return false; }
-    @Override public boolean pinceArriereDroiteAverage() { return false; }
+    @Override public boolean pinceAvantGaucheAverage(boolean expectedSimulateur) { return expectedSimulateur; }
+    @Override public boolean pinceAvantCentreAverage(boolean expectedSimulateur) { return expectedSimulateur; }
+    @Override public boolean pinceAvantDroiteAverage(boolean expectedSimulateur) { return expectedSimulateur; }
+    @Override public boolean pinceArriereGaucheAverage(boolean expectedSimulateur) { return expectedSimulateur; }
+    @Override public boolean pinceArriereCentreAverage(boolean expectedSimulateur) { return expectedSimulateur; }
+    @Override public boolean pinceArriereDroiteAverage(boolean expectedSimulateur) { return expectedSimulateur; }
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

@@ -144,9 +144,9 @@ public class PriseStockPlantes extends AbstractNerellAction {
 //                return;
 //            }
 
-            boolean gauche = io.presenceAvantGauche();
-            boolean centre = io.presenceAvantCentre();
-            boolean droite = io.presenceAvantDroite();
+            boolean gauche = io.presenceAvantGauche(true);
+            boolean centre = io.presenceAvantCentre(true);
+            boolean droite = io.presenceAvantDroite(true);
 
             if (!gauche && !centre && !droite) {
                 log.warn("Le stock de plantes {} est vide", stockPlantes.getId());
@@ -168,9 +168,9 @@ public class PriseStockPlantes extends AbstractNerellAction {
             servos.groupePinceAvantPrisePlante(true);
             ThreadUtils.sleep(500);
 
-            gauche |= io.pinceAvantGauche();
-            centre |= io.pinceAvantCentre();
-            droite |= io.pinceAvantDroite();
+            gauche |= io.pinceAvantGauche(true);
+            centre |= io.pinceAvantCentre(true);
+            droite |= io.pinceAvantDroite(true);
 
             rs.bras().setAvant(
                     gauche ? new Plante(TypePlante.INCONNU) : null,

@@ -16,15 +16,15 @@ public interface NerellIOService extends CommonRobotIOService {
 
     boolean inductifDroitAverage();
 
-    boolean pinceAvantGaucheAverage();
+    boolean pinceAvantGaucheAverage(boolean expectedSimulateur);
 
-    boolean pinceAvantCentreAverage();
+    boolean pinceAvantCentreAverage(boolean expectedSimulateur);
 
-    boolean pinceAvantDroiteAverage();
+    boolean pinceAvantDroiteAverage(boolean expectedSimulateur);
 
-    boolean pinceArriereGaucheAverage();
+    boolean pinceArriereGaucheAverage(boolean expectedSimulateur);
 
-    boolean pinceArriereCentreAverage();
+    boolean pinceArriereCentreAverage(boolean expectedSimulateur);
 
-    boolean pinceArriereDroiteAverage();
+    boolean pinceArriereDroiteAverage(boolean expectedSimulateur);
 }

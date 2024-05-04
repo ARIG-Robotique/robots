@@ -235,12 +235,12 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         }
 
         // Refresh virtual IOs
-        pinceAvantGaucheAverage.filter(pinceAvantGauche());
-        pinceAvantCentreAverage.filter(pinceAvantCentre());
-        pinceAvantDroiteAverage.filter(pinceAvantDroite());
-        pinceArriereGaucheAverage.filter(pinceArriereGauche());
-        pinceArriereCentreAverage.filter(pinceArriereCentre());
-        pinceArriereDroiteAverage.filter(pinceArriereDroite());
+        pinceAvantGaucheAverage.filter(pinceAvantGauche(true));
+        pinceAvantCentreAverage.filter(pinceAvantCentre(true));
+        pinceAvantDroiteAverage.filter(pinceAvantDroite(true));
+        pinceArriereGaucheAverage.filter(pinceArriereGauche(true));
+        pinceArriereCentreAverage.filter(pinceArriereCentre(true));
+        pinceArriereDroiteAverage.filter(pinceArriereDroite(true));
         inductifGaucheAverage.filter(inductifGauche());
         inductifDroitAverage.filter(inductifDroit());
     }
@@ -274,9 +274,9 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         if (mandatorySensors > 3) {
             throw new IllegalArgumentException("Le nombre de capteurs avant obligatoires ne peut pas être supérieur à 3");
         }
-        int count = presenceAvantGauche() ? 1 : 0;
-        count += presenceAvantCentre() ? 1 : 0;
-        count += presenceAvantDroite() ? 1 : 0;
+        int count = presenceAvantGauche(true) ? 1 : 0;
+        count += presenceAvantCentre(true) ? 1 : 0;
+        count += presenceAvantDroite(true) ? 1 : 0;
         return count >= mandatorySensors;
     }
 
@@ -290,9 +290,9 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         if (mandatorySensors > 3) {
             throw new IllegalArgumentException("Le nombre de capteurs arrière obligatoires ne peut pas être supérieur à 3");
         }
-        int count = presenceArriereGauche() ? 1 : 0;
-        count += presenceArriereCentre() ? 1 : 0;
-        count += presenceArriereDroite() ? 1 : 0;
+        int count = presenceArriereGauche(true) ? 1 : 0;
+        count += presenceArriereCentre(true) ? 1 : 0;
+        count += presenceArriereDroite(true) ? 1 : 0;
         return count >= mandatorySensors;
     }
 
@@ -334,32 +334,32 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     // Numerique
 
     @Override
-    public boolean presenceAvantGauche() {
+    public boolean presenceAvantGauche(boolean expectedSimulator) {
         return presenceAvantGauche.isLow();
     }
 
     @Override
-    public boolean presenceAvantCentre() {
+    public boolean presenceAvantCentre(boolean expectedSimulator) {
         return presenceAvantCentre.isLow();
     }
 
     @Override
-    public boolean presenceAvantDroite() {
+    public boolean presenceAvantDroite(boolean expectedSimulator) {
         return presenceAvantDroit.isLow();
     }
 
     @Override
-    public boolean presenceArriereGauche() {
+    public boolean presenceArriereGauche(boolean expectedSimulator) {
         return presenceArriereGauche.isLow();
     }
 
     @Override
-    public boolean presenceArriereCentre() {
+    public boolean presenceArriereCentre(boolean expectedSimulator) {
         return presenceArriereCentre.isLow();
     }
 
     @Override
-    public boolean presenceArriereDroite() {
+    public boolean presenceArriereDroite(boolean expectedSimulator) {
         return presenceArriereDroit.isLow();
     }
 
@@ -397,56 +397,56 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     }
 
     @Override
-    public boolean pinceAvantGauche() {
+    public boolean pinceAvantGauche(boolean expectedSimulator) {
         return pinceAvantGauche.isLow();
     }
     @Override
-    public boolean pinceAvantGaucheAverage() {
+    public boolean pinceAvantGaucheAverage(boolean expectedSimulateur) {
         return pinceAvantGaucheAverage.lastResult();
     }
 
     @Override
-    public boolean pinceAvantCentre() {
+    public boolean pinceAvantCentre(boolean expectedSimulator) {
         return pinceAvantCentre.isLow();
     }
     @Override
-    public boolean pinceAvantCentreAverage() {
+    public boolean pinceAvantCentreAverage(boolean expectedSimulateur) {
         return pinceAvantCentreAverage.lastResult();
     }
 
     @Override
-    public boolean pinceAvantDroite() {
+    public boolean pinceAvantDroite(boolean expectedSimulator) {
         return pinceAvantDroite.isLow();
     }
     @Override
-    public boolean pinceAvantDroiteAverage() {
+    public boolean pinceAvantDroiteAverage(boolean expectedSimulateur) {
         return pinceAvantDroiteAverage.lastResult();
     }
 
     @Override
-    public boolean pinceArriereGauche() {
+    public boolean pinceArriereGauche(boolean expectedSimulator) {
         return pinceArriereGauche.isLow();
     }
     @Override
-    public boolean pinceArriereGaucheAverage() {
+    public boolean pinceArriereGaucheAverage(boolean expectedSimulateur) {
         return pinceArriereGaucheAverage.lastResult();
     }
 
     @Override
-    public boolean pinceArriereCentre() {
+    public boolean pinceArriereCentre(boolean expectedSimulator) {
         return pinceArriereCentre.isLow();
     }
     @Override
-    public boolean pinceArriereCentreAverage() {
+    public boolean pinceArriereCentreAverage(boolean expectedSimulateur) {
         return pinceArriereCentreAverage.lastResult();
     }
 
     @Override
-    public boolean pinceArriereDroite() {
+    public boolean pinceArriereDroite(boolean expectedSimulator) {
         return pinceArriereDroite.isLow();
     }
     @Override
-    public boolean pinceArriereDroiteAverage() {
+    public boolean pinceArriereDroiteAverage(boolean expectedSimulateur) {
         return pinceArriereDroiteAverage.lastResult();
     }
 
