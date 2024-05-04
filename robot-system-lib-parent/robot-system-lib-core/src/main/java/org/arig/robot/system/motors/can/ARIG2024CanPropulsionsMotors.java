@@ -130,13 +130,17 @@ public class ARIG2024CanPropulsionsMotors extends AbstractPropulsionsMotors impl
 
   @Override
   public void stopAll() {
-    generateMouvement(getStopSpeed(), getStopSpeed());
+    super.stopAll();
+    refreshMotors();
   }
 
   @Override
   public void generateMouvement(int gauche, int droit) {
     super.generateMouvement(gauche, droit);
+    refreshMotors();
+  }
 
+  private void refreshMotors() {
     try {
       int absMotor1 = Math.abs(speedMoteur1);
       int absMotor2 = Math.abs(speedMoteur2);
