@@ -128,7 +128,7 @@ public class PamiCommonContext {
     @Bean(name = "pidDistance")
     public PidFilter pidDistance() {
         log.info("Configuration PID Distance");
-        SimplePidFilter pid = new SimplePidFilter("distance");
+        SimplePidFilter pid = new SimplePidFilter("distance", 128d);
         pid.setTunings(PamiConstantesConfig.kpDistance, PamiConstantesConfig.kiDistance, PamiConstantesConfig.kdDistance);
         return pid;
     }
@@ -136,7 +136,7 @@ public class PamiCommonContext {
     @Bean(name = "pidOrientation")
     public PidFilter pidOrientation() {
         log.info("Configuration PID Orientation");
-        SimplePidFilter pid = new SimplePidFilter("orientation");
+        SimplePidFilter pid = new SimplePidFilter("orientation", 128d);
         pid.setTunings(PamiConstantesConfig.kpOrientation, PamiConstantesConfig.kiOrientation, PamiConstantesConfig.kdOrientation);
         return pid;
     }
