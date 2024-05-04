@@ -8,7 +8,7 @@ public class IntegralFilter implements Filter<Double, Double> {
 
     public static final String INITIAL_VALUE_NULL_MESSAGE = "La valeur initial ne peut être null";
 
-    private final Double initial;
+    protected final Double initial;
 
     @Getter
     private Double sum;

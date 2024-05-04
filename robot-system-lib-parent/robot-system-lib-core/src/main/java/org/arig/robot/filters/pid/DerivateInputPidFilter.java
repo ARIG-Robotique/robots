@@ -5,6 +5,8 @@ import org.arig.robot.filters.chain.ParallelChainFilter;
 import org.arig.robot.filters.chain.SerialChainFilter;
 import org.arig.robot.filters.common.DerivateFilter;
 import org.arig.robot.filters.common.IntegralFilter;
+import org.arig.robot.filters.common.IntegralLimitedFilter;
+import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.common.ProportionalFilter;
 
 import java.util.HashMap;
@@ -20,9 +22,17 @@ public class DerivateInputPidFilter extends AbstractPidFilter {
     private final ParallelChainFilter pi;
 
     public DerivateInputPidFilter(String name) {
+        this(name, null);
+    }
+
+    public DerivateInputPidFilter(String name, Double integralLimit) {
         super(name);
 
-        integral = new IntegralFilter(0d);
+        if (integralLimit != null) {
+            integral = new IntegralLimitedFilter(0d, new LimiterFilter(0d, integralLimit, LimiterFilter.LimiterType.MIRROR));
+        } else {
+            integral = new IntegralFilter(0d);
+        }
         derivate = new DerivateFilter(0d);
 
         integralChain = new SerialChainFilter<>();

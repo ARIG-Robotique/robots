@@ -23,7 +23,7 @@ public class PidTestContext {
 
     @Bean
     public SimplePidFilter simplePIDIntegralLimit() {
-        SimplePidFilter pid = new SimplePidFilter("test", true);
+        SimplePidFilter pid = new SimplePidFilter("test", 4096d);
         pid.setTunings(1, 0, 0);
 
         return pid;

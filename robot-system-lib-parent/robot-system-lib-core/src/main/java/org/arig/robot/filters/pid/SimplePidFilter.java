@@ -5,6 +5,7 @@ import org.arig.robot.filters.chain.ParallelChainFilter;
 import org.arig.robot.filters.chain.SerialChainFilter;
 import org.arig.robot.filters.common.DerivateFilter;
 import org.arig.robot.filters.common.IntegralFilter;
+import org.arig.robot.filters.common.IntegralLimitedFilter;
 import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.common.LimiterFilter.LimiterType;
 
@@ -22,20 +23,21 @@ public class SimplePidFilter extends AbstractPidFilter {
     private final ParallelChainFilter pid;
 
     public SimplePidFilter(String name) {
-        this(name, false);
+        this(name, null);
     }
 
-    public SimplePidFilter(String name, boolean integralLimit) {
+    public SimplePidFilter(String name, Double integralLimit) {
         super(name);
 
-        integral = new IntegralFilter(0d);
+        if (integralLimit != null) {
+            integral = new IntegralLimitedFilter(0d, new LimiterFilter(0d, integralLimit, LimiterType.MIRROR));
+        } else {
+            integral = new IntegralFilter(0d);
+        }
         derivate = new DerivateFilter(0d);
 
         integralChain = new SerialChainFilter<>();
         integralChain.addFilter(integral);
-        if (integralLimit) {
-            integralChain.addFilter(new LimiterFilter(0d, 4096d, LimiterType.MIRROR));
-        }
         integralChain.addFilter(ki());
         integralChain.addFilter(integralTime());
 
