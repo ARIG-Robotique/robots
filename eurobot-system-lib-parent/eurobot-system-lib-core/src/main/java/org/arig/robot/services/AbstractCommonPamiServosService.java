@@ -13,7 +13,9 @@ public abstract class AbstractCommonPamiServosService extends AbstractServosServ
 
 
     protected static final String POS_FERME = "Fermé";
-    protected static final String POS_OUVERT = "Ouvert";
+    protected static final String POS_OUVERT_NORD = "Ouvert Nord";
+    protected static final String POS_OUVERT_MILIEU = "Ouvert Milieu";
+    protected static final String POS_OUVERT_SUD = "Ouvert Sud";
 
     protected static final String GROUP_TOUCHE_PLANTE = "Touche plante";
 
@@ -35,8 +37,8 @@ public abstract class AbstractCommonPamiServosService extends AbstractServosServ
     //* Déplacements de groupe                  *//
     //*******************************************//
 
-    public void groupeTouchePlanteOuvert(boolean wait) {
-        setPositionBatch(GROUP_TOUCHE_PLANTE, POS_OUVERT, wait);
+    public void groupeTouchePlanteOuvertNord(boolean wait) {
+        setPositionBatch(GROUP_TOUCHE_PLANTE, POS_OUVERT_NORD, wait);
     }
     public void groupeTouchePlanteFerme(boolean wait) {
         setPositionBatch(GROUP_TOUCHE_PLANTE, POS_FERME, wait);
@@ -46,16 +48,16 @@ public abstract class AbstractCommonPamiServosService extends AbstractServosServ
     //* Déplacements de servo                   *//
     //*******************************************//
 
-    public void setTouchePlanteGaucheOuvert(boolean wait) {
-        setPosition(TOUCHE_PLANTE_GAUCHE, POS_OUVERT, wait);
+    public void setTouchePlanteGaucheOuvertNord(boolean wait) {
+        setPosition(TOUCHE_PLANTE_GAUCHE, POS_OUVERT_NORD, wait);
     }
 
     public void setTouchePlanteGaucheFerme(boolean wait) {
         setPosition(TOUCHE_PLANTE_GAUCHE, POS_FERME, wait);
     }
 
-    public void setTouchePlanteDroiteOuvert(boolean wait) {
-        setPosition(TOUCHE_PLANTE_DROITE, POS_OUVERT, wait);
+    public void setTouchePlanteDroiteOuvertNord(boolean wait) {
+        setPosition(TOUCHE_PLANTE_DROITE, POS_OUVERT_NORD, wait);
     }
 
     public void setTouchePlanteDroiteFerme(boolean wait) {

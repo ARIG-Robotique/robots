@@ -19,10 +19,16 @@ robot:
     points:
       enable: True
 
+nerell:
+  socket:
+    host: nerell
+    #host: 192.168.0.101 # IP de Greg au Gite
+
 # Écran
 ecran:
   socket:
-    host: 192.168.0.101 # IP de Greg au Gite
+    host: overlord
+    #host: 192.168.0.101 # IP de Greg au Gite
 
 # Balise de vision
 balise:

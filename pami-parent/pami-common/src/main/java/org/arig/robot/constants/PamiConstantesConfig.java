@@ -83,8 +83,8 @@ public interface PamiConstantesConfig {
     double kiDistanceSimu = 0.0;
     double kdDistanceSimu = 0.008;
 
-    double kpOrientation = 98;
-    double kiOrientation = 0.28;
+    double kpOrientation = 100;
+    double kiOrientation = 0.4;
     double kdOrientation = 30;
     double kpOrientationSimu = 6.0;
     double kiOrientationSimu = 0.0;
@@ -93,8 +93,8 @@ public interface PamiConstantesConfig {
     // --------------------------- //
     // Paramètre mouvement manager //
     // --------------------------- //
-    double arretDistanceMm = 2;
-    double arretOrientDeg = 1;
+    double arretDistanceMm = 5;
+    double arretOrientDeg = 3;
     double approcheAvecFreinDistanceMm = 10;
     double approcheAvecFreinOrientationDeg = 5;
     double approcheSansFreinDistanceMm = 50;
