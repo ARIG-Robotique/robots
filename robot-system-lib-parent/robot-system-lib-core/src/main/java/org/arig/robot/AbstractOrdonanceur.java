@@ -333,7 +333,7 @@ public abstract class AbstractOrdonanceur {
     /**
      * Démarre le scan du lidar et attente du capot de protection
      */
-    private void startLidar() {
+    protected void startLidar() {
         ecranService.displayMessage("Démarrage du lidar");
         lidar.startScan(RPLidarA2TelemeterOverSocket.MAX_MOTOR_PWM);
 

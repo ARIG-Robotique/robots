@@ -11,6 +11,7 @@ public enum StatusEvent {
     CURRENT_ACTION,
     CURRENT_POSITION,
     END,
+    QUIT,
 
     SITE_DE_CHARGE
 }

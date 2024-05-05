@@ -49,6 +49,9 @@ public class RobotGroupService implements RobotGroup.Handler {
     private boolean end;
 
     @Getter
+    private boolean quit;
+
+    @Getter
     private int initStep = 0;
 
     public RobotGroupService(final EurobotStatus rs, final RobotGroup group, final ThreadPoolExecutor threadPoolTaskExecutor) {
@@ -79,6 +82,9 @@ public class RobotGroupService implements RobotGroup.Handler {
                 break;
             case END:
                 end = true;
+                break;
+            case QUIT:
+                quit = true;
                 break;
             case TEAM:
                 rs.setTeam(Team.values()[data[0]]);
@@ -188,6 +194,14 @@ public class RobotGroupService implements RobotGroup.Handler {
     public void end() {
         end = true;
         sendEvent(StatusEvent.END);
+    }
+
+    /**
+     * Appellé par le principal pour arreter le programme de manière synchronisé
+     */
+    public void quit() {
+        quit = true;
+        sendEvent(StatusEvent.QUIT);
     }
 
     public void team(Team team) {

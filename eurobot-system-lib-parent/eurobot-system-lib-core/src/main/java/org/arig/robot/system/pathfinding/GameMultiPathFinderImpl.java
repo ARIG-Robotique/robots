@@ -26,7 +26,9 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
         final int rayonRobotCm = 20;
 
         // zone des PAMI
-        obstacles.add(new Rectangle(150 - 45 - rayonRobotCm, 200 - 15 - rayonRobotCm, 45 * 2 + rayonRobotCm * 2, 15 + rayonRobotCm));
+        if (!rs.pamiRobot()) {
+            obstacles.add(new Rectangle(150 - 45 - rayonRobotCm, 200 - 15 - rayonRobotCm, 45 * 2 + rayonRobotCm * 2, 15 + rayonRobotCm));
+        }
 
         // zones adverses
         if (rs.team() == Team.BLEU) {

@@ -91,6 +91,17 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     }
 
     @Override
+    protected void exitFromScreen() {
+        if (ecranService.config() != null && ecranService.config().isExit()) {
+            ecranService.displayMessage("Arret du programme");
+            pamiTriangleGroupService.quit();
+            pamiCarreGroupService.quit();
+            pamiRondGroupService.quit();
+            throw new ExitProgram(true);
+        }
+    }
+
+    @Override
     public void afterInit() {
         choixEquipeStrategy();
     }

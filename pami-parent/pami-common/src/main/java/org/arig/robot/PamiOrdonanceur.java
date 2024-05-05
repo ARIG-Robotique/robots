@@ -66,6 +66,20 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
     }
 
     @Override
+    protected void startLidar() {
+        log.info("Pas de Lidar sur un pami !");
+    }
+
+    @Override
+    protected void exitFromScreen() {
+        super.exitFromScreen();
+        if (groupService.isQuit()) {
+            ecranService.displayMessage("Arret du programme depuis Nerell");
+            throw new ExitProgram(true);
+        }
+    }
+
+    @Override
     public void afterInit() {
         choixEquipeStrategy();
     }
@@ -327,6 +341,12 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
                 ThreadUtils.sleep(manuel ? 4000 : 200);
             }
         }
+
+        // Sound screen vérrouillé
+        for (int i = 0 ; i < 10 ; i++) {
+            pamiIOService.sound();
+            ThreadUtils.sleep(300);
+        }
     }
 
     @Override
@@ -336,13 +356,12 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
                 robotStatus.calculerPoints())
         );
 
-        while (!groupService.isEnd() && !io.auOk()) {
+        while (!groupService.isEnd() || !io.auOk()) {
             pamiIOService.sound();
             ThreadUtils.sleep(1000);
         }
 
         ecranService.displayMessage("FIN - Extinction");
-        ecranService.updateStateInfo(new EcranState());
         ThreadUtils.sleep(500);
 
         beforePowerOff(); // impl
