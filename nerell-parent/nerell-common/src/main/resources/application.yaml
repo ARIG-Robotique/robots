@@ -137,25 +137,6 @@ ecran:
 spring:
   config:
     activate:
-      on-profile: mathieu
-
-# Balise de vision
-balise:
-  impl: SOCKET
-  socket:
-    host: localhost
-
-# Odin
-odin:
-  socket:
-    host: localhost
-
----
-
-# Spring properties
-spring:
-  config:
-    activate:
       on-profile: eliott
 
 # Balise de vision
