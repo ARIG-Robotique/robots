@@ -144,23 +144,18 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     }
 
     @Override
-    public boolean inductifGauche() {
-        return true;
+    public boolean inductifGauche(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
-    public boolean inductifDroit() {
-        return true;
+    public boolean inductifCentre(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
-    public boolean inductifGaucheAverage() {
-        return false;
-    }
-
-    @Override
-    public boolean inductifDroitAverage() {
-        return false;
+    public boolean inductifDroite(boolean expectedSimulator) {
+        return expectedSimulator;
     }
 
     @Override
@@ -223,17 +218,7 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     }
 
     @Override
-    public void tournePanneauJaune() {
-
-    }
-
-    @Override
     public void tournePanneauJaune(int speed) {
-
-    }
-
-    @Override
-    public void tournePanneauBleu() {
 
     }
 

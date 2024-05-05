@@ -25,11 +25,9 @@ public interface CommonRobotIOService extends IOService {
     boolean presenceStockCentre(boolean expectedSimulator);
     boolean presenceStockDroite(boolean expectedSimulator);
 
-    boolean inductifGauche();
-    boolean inductifDroit();
-
-    boolean inductifGaucheAverage();
-    boolean inductifDroitAverage();
+    boolean inductifGauche(boolean expectedSimulator);
+    boolean inductifCentre(boolean expectedSimulator);
+    boolean inductifDroite(boolean expectedSimulator);
 
     boolean stockGaucheAverage(boolean expectedSimulateur);
     boolean stockCentreAverage(boolean expectedSimulateur);
@@ -52,9 +50,7 @@ public interface CommonRobotIOService extends IOService {
     void enableElectroAimant();
     void disableElectroAimant();
 
-    void tournePanneauJaune();
     void tournePanneauJaune(int speed);
-    void tournePanneauBleu();
     void tournePanneauBleu(int speed);
     void stopTournePanneau();
 

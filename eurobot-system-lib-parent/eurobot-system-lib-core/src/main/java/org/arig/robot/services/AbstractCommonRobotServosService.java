@@ -45,20 +45,12 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final String PANNEAU_SOLAIRE_ROUE = "Panneau solaire roue";
     protected static final String PANNEAU_SOLAIRE_SKI = "Panneau solaire ski";
 
-    protected static final String PORTE_POT = "Porte pot";
-    protected static final String PORTE_POT_GLISSIERE = "Porte pot glissière";
-
     protected static final String POS_INIT = "Init";
     protected static final String POS_FERME = "Fermé";
     protected static final String POS_OUVERT = "Ouvert";
-    protected static final String POS_PRISE = "Prise";
     protected static final String POS_PRISE_PLANTE = "Plante";
     protected static final String POS_PRISE_POT = "Pot";
     protected static final String POS_PRISE_POT_INT = "Pot int";
-    protected static final String POS_BAS = "Bas";
-    protected static final String POS_HAUT = "Haut";
-    protected static final String POS_RENTRE = "Rentré";
-    protected static final String POS_SORTI = "Sorti";
     protected static final String POS_0DEG = "0°";
 
     protected static final String GROUP_BRAS_AVANT_GAUCHE = "Bras avant gauche";
@@ -71,7 +63,6 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final String GROUP_PINCE_ARRIERE = "Pinces arrière";
     protected static final String GROUP_PANNEAU_SOLAIRE = "Panneau solaire";
     protected static final String GROUP_BLOQUE_PLANTE_AVANT = "Bloque plantes avant";
-    protected static final String GROUP_PORTE_POT = "Porte Pot magnetique";
 
     protected static final byte GROUP_BRAS_AVANT_GAUCHE_ID = 1;
     protected static final byte GROUP_BRAS_AVANT_CENTRE_ID = 2;
@@ -83,7 +74,6 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final byte GROUP_PINCE_ARRIERE_ID = 8;
     protected static final byte GROUP_PANNEAU_SOLAIRE_ID = 9;
     protected static final byte GROUP_BLOQUE_PLANTE_AVANT_ID = 10;
-    protected static final byte GROUP_PORTE_POT_ID = 11;
 
     protected AbstractCommonRobotServosService(AbstractServos servoDevice, AbstractServos... servoDevices) {
         super(servoDevice, servoDevices);
@@ -117,9 +107,6 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
         setPosition(BRAS_ARRIERE_DROIT_POIGNET, POS_INIT, false);
         setPosition(BRAS_ARRIERE_DROIT_COUDE, POS_INIT, false);
         setPosition(BRAS_ARRIERE_DROIT_EPAULE, POS_INIT, false);
-
-        setPosition(PORTE_POT, POS_BAS, false);
-        setPosition(PORTE_POT_GLISSIERE, POS_RENTRE, false);
 
         groupePanneauFerme(false);
         groupePinceArriereFerme(false);
@@ -189,22 +176,6 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
 
     public void setPanneauSolaireSkiFerme(boolean wait) {
         setPosition(PANNEAU_SOLAIRE_SKI, POS_FERME, wait);
-    }
-
-    public void setPortePotHaut(boolean wait) {
-        setPosition(PORTE_POT, POS_HAUT, wait);
-    }
-
-    public void setPortePotBas(boolean wait) {
-        setPosition(PORTE_POT, POS_BAS, wait);
-    }
-
-    public void setPortePotGlissiereSorti(boolean wait) {
-        setPosition(PORTE_POT_GLISSIERE, POS_SORTI, wait);
-    }
-
-    public void setPortePotGlissiereRentre(boolean wait) {
-        setPosition(PORTE_POT_GLISSIERE, POS_RENTRE, wait);
     }
 
     public void brasAvantGauchePinceOuvert(boolean wait) {

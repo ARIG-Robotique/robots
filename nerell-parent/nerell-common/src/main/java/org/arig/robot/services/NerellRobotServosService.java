@@ -49,9 +49,6 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
     private static final byte PANNEAU_SOLAIRE_ROUE_ID = 18;
     private static final byte PANNEAU_SOLAIRE_SKI_ID = 21;
 
-    private static final byte PORTE_POT_ID = 34;
-    private static final byte PORTE_POT_GLISSIERE_ID = 25;
-
     public NerellRobotServosService(SD21Servos servosAvant, SD21Servos servosArriere) {
         super(servosAvant, servosArriere);
 
@@ -375,17 +372,5 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
                 .addServo(panneauSolaireRoue)
                 .batch(POS_FERME)
                 .batch(POS_OUVERT);
-
-        Servo portePot = servo(PORTE_POT_ID, PORTE_POT)
-                .time(400)
-                .position(POS_BAS, 1730)
-                .position(POS_HAUT, 2440);
-        Servo portePotGlissiere = servo(PORTE_POT_GLISSIERE_ID, PORTE_POT_GLISSIERE)
-                .time(450)
-                .position(POS_RENTRE, 2310)
-                .position(POS_SORTI, 1080);
-        group(GROUP_PORTE_POT_ID, GROUP_PORTE_POT)
-                .addServo(portePot)
-                .addServo(portePotGlissiere);
     }
 }

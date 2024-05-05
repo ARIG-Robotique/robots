@@ -25,8 +25,9 @@ public class NerellCapteursController extends AbstractCapteursController {
         numeriqueInfos.put("Calage avant droit", ioService::calageAvantDroit);
         numeriqueInfos.put("Calage arriere gauche", ioService::calageArriereGauche);
         numeriqueInfos.put("Calage arriere droit", ioService::calageArriereDroit);
-        numeriqueInfos.put("Inductif gauche", ioService::inductifGauche);
-        numeriqueInfos.put("Inductif droit", ioService::inductifDroit);
+        numeriqueInfos.put("Inductif gauche", () -> ioService.inductifGauche(false));
+        numeriqueInfos.put("Inductif centre", () -> ioService.inductifCentre(false));
+        numeriqueInfos.put("Inductif droite", () -> ioService.inductifDroite(false));
         numeriqueInfos.put("Pince avant gauche", () -> ioService.pinceAvantGauche(false));
         numeriqueInfos.put("Pince avant centre", () -> ioService.pinceAvantCentre(false));
         numeriqueInfos.put("Pince avant droite", () -> ioService.pinceAvantDroite(false));

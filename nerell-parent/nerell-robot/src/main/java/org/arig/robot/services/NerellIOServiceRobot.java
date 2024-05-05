@@ -60,8 +60,8 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     private GpioPinDigitalInput calageAvantDroit;
     private GpioPinDigitalInput calageArriereGauche;
     private GpioPinDigitalInput calageArriereDroit;
-    private GpioPinDigitalInput inductifGauche;
-    private GpioPinDigitalInput inductifDroit;
+    private GpioPinDigitalInput inductifDroite;
+    private GpioPinDigitalInput inductifCentre;
     private GpioPinDigitalInput pinceAvantCentre;
     private GpioPinDigitalInput pinceArriereCentre;
 
@@ -82,6 +82,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     private GpioPinDigitalInput presenceArriereGauche;
     private GpioPinDigitalInput presenceArriereCentre;
     private GpioPinDigitalInput presenceArriereDroit;
+    private GpioPinDigitalInput inductifGauche;
 
     // private GpioPinDigitalInput in3_4;
     // private GpioPinDigitalInput in3_8;
@@ -97,8 +98,6 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     private BooleanValueAverage pinceArriereGaucheAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
     private BooleanValueAverage pinceArriereCentreAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
     private BooleanValueAverage pinceArriereDroiteAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
-    private BooleanValueAverage inductifGaucheAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
-    private BooleanValueAverage inductifDroitAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
 
     // Référence sur les PIN Output
     // ----------------------------
@@ -174,8 +173,8 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         // PCF1
         calageAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
         calageArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
-        inductifGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
-        inductifDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
+        inductifDroite = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
+        inductifCentre = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
         pinceArriereCentre = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
         pinceAvantCentre = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
         calageAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
@@ -199,8 +198,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         presenceAvantDroit = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_04);
         presenceAvantGauche = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_05);
         presenceAvantCentre = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_06);
-        //in3_8 = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_07);
-
+        inductifGauche = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_07);
     }
 
     @Override
@@ -238,7 +236,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         }
 
         // Refresh virtual IOs
-        stockGaucheAverage.filter(presenceStockCentre(true));
+        stockGaucheAverage.filter(presenceStockGauche(true));
         stockCentreAverage.filter(presenceStockCentre(true));
         stockDroiteAverage.filter(presenceStockDroite(true));
         pinceAvantGaucheAverage.filter(pinceAvantGauche(true));
@@ -247,8 +245,6 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         pinceArriereGaucheAverage.filter(pinceArriereGauche(true));
         pinceArriereCentreAverage.filter(pinceArriereCentre(true));
         pinceArriereDroiteAverage.filter(pinceArriereDroite(true));
-        inductifGaucheAverage.filter(inductifGauche());
-        inductifDroitAverage.filter(inductifDroit());
     }
 
     // --------------------------------------------------------- //
@@ -309,11 +305,12 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
 
     @Override
     public boolean calageElectroaimant(int mandatorySensors) {
-        if (mandatorySensors > 2) {
-            throw new IllegalArgumentException("Le nombre de capteurs inductifs obligatoires ne peut pas être supérieur à 2");
+        if (mandatorySensors > 3) {
+            throw new IllegalArgumentException("Le nombre de capteurs inductifs obligatoires ne peut pas être supérieur à 3");
         }
-        int count = inductifGauche() ? 1 : 0;
-        count += inductifDroit() ? 1 : 0;
+        int count = inductifGauche(true) ? 1 : 0;
+        count += inductifCentre(true) ? 1 : 0;
+        count += inductifDroite(true) ? 1 : 0;
         return count >= mandatorySensors;
     }
 
@@ -396,25 +393,22 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
 
     @Override
     public boolean stockDroiteAverage(boolean expectedSimulateur) {
-        return stockCentreAverage.lastResult();
+        return stockDroiteAverage.lastResult();
     }
 
     @Override
-    public boolean inductifGauche() {
+    public boolean inductifGauche(boolean expectedSimulator) {
         return inductifGauche.isLow();
     }
+
     @Override
-    public boolean inductifGaucheAverage() {
-        return inductifGaucheAverage.lastResult();
+    public boolean inductifCentre(boolean expectedSimulator) {
+        return inductifCentre.isLow();
     }
 
     @Override
-    public boolean inductifDroit() {
-        return inductifDroit.isLow();
-    }
-    @Override
-    public boolean inductifDroitAverage() {
-        return inductifDroitAverage.lastResult();
+    public boolean inductifDroite(boolean expectedSimulator) {
+        return inductifDroite.isLow();
     }
 
     @Override
@@ -515,19 +509,9 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         pca9695.setAlwaysOff(eaPwmPin);
     }
 
-    @Override
-    public void tournePanneauJaune() {
-        tournePanneauJaune(512);
-    }
-
     public void tournePanneauJaune(int speed) {
         log.info("Demarrage du moteur de rotation du panneau vers l'arriere");
         solarWheelMotor.speed(speed);
-    }
-
-    @Override
-    public void tournePanneauBleu() {
-        tournePanneauBleu(512);
     }
 
     public void tournePanneauBleu(int speed) {

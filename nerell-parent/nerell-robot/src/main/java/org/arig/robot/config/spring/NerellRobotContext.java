@@ -27,6 +27,7 @@ import org.arig.robot.system.avoiding.CompleteAvoidingService;
 import org.arig.robot.system.avoiding.SemiCompleteAvoidingService;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.capteurs.i2c.ARIG2ChannelsAlimentationSensor;
+import org.arig.robot.system.capteurs.i2c.I2CAdcAnalogInput;
 import org.arig.robot.system.capteurs.i2c.TCA9548MultiplexerI2C;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.arig.robot.system.capteurs.socket.IVisionBalise;
@@ -117,6 +118,10 @@ public class NerellRobotContext {
                 .device(i2cBus.getDevice(NerellConstantesI2C.ALIM_MESURE_ADDRESS))
                 .scanCmd(new byte[]{0x00})
                 .build();
+        final I2CManagerDevice<I2CDevice> adc = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(NerellConstantesI2C.I2C_ADC_DEVICE_NAME)
+                .device(i2cBus.getDevice(NerellConstantesI2C.I2C_ADC_ADDRESS))
+                .build();
 
         manager.registerDevice(mux);
         manager.registerDevice(sd21Avant);
@@ -129,6 +134,7 @@ public class NerellRobotContext {
         manager.registerDevice(pcf3);
         manager.registerDevice(pca9685);
         manager.registerDevice(alimMesure);
+        manager.registerDevice(adc);
 
         return manager;
     }
@@ -202,6 +208,11 @@ public class NerellRobotContext {
     public ILidarTelemeter rplidar() throws Exception {
         final File socketFile = new File(RPLidarBridgeProcess.socketPath);
         return new RPLidarA2TelemeterOverSocket(socketFile);
+    }
+
+    @Bean
+    public I2CAdcAnalogInput analogReader() {
+        return new I2CAdcAnalogInput(NerellConstantesI2C.I2C_ADC_DEVICE_NAME);
     }
 
     @Bean

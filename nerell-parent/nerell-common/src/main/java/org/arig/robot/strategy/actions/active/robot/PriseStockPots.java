@@ -116,7 +116,7 @@ public class PriseStockPots extends AbstractNerellAction {
             mv.setVitessePercent(20, 100);
             mv.setRampesDistancePercent(100, 10);
 
-            servos.setPortePotGlissiereSorti(false);
+            //servos.setPortePotGlissiereSorti(false);
             io.enableElectroAimant();
             bras.setBrasArriere(new PointBras(220, SORTIE_POT_POT_Y - 4, -90, true));
 //            s();
@@ -132,7 +132,7 @@ public class PriseStockPots extends AbstractNerellAction {
 
             mv.avanceMM(20);
 
-            servos.setPortePotHaut(true);
+            //servos.setPortePotHaut(true);
 
             rs.enableCalageTempo(2000);
             mv.reculeMM(130); // FIXME tempo et distance à revoir
@@ -145,8 +145,8 @@ public class PriseStockPots extends AbstractNerellAction {
             io.disableElectroAimant();
             s();
             mv.avanceMM(90);
-            servos.setPortePotBas(false);
-            servos.setPortePotGlissiereRentre(true);
+            //servos.setPortePotBas(false);
+            //servos.setPortePotGlissiereRentre(true);
 
             // PRISE
 
@@ -190,8 +190,8 @@ public class PriseStockPots extends AbstractNerellAction {
         io.disableElectroAimant();
         rs.enableAvoidance();
         mv.avanceMM(150);
-        servos.setPortePotBas(false);
-        servos.setPortePotGlissiereRentre(false);
+        //servos.setPortePotBas(false);
+        //servos.setPortePotGlissiereRentre(false);
         bras.setBrasArriere(PositionBras.INIT);
     }
 }

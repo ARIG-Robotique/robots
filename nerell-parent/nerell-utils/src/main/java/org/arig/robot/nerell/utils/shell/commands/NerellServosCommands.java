@@ -2,7 +2,6 @@ package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.Bras;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.BrasService;
@@ -91,35 +90,5 @@ public class NerellServosCommands {
             servosService.setPanneauSolaireRoueFerme(false);
             ThreadUtils.sleep(wait);
         }
-    }
-
-    @ShellMethod("Configuration attente glissiere")
-    public void configWaitGlissiere(int wait) {
-        bras.setBrasArriere(PositionBras.CALLAGE_PANNEAUX);
-
-        for (int i = 0; i < nbLoop; i++) {
-            servosService.setPortePotGlissiereSorti(false);
-            ThreadUtils.sleep(wait);
-            servosService.setPortePotGlissiereRentre(false);
-            ThreadUtils.sleep(wait);
-        }
-
-        bras.setBrasArriere(PositionBras.INIT);
-    }
-
-    @ShellMethod("Configuration attente porte pot")
-    public void configWaitPortePot(int wait) {
-        bras.setBrasArriere(PositionBras.CALLAGE_PANNEAUX);
-        servosService.setPortePotGlissiereSorti(true);
-
-        for (int i = 0; i < nbLoop; i++) {
-            servosService.setPortePotHaut(false);
-            ThreadUtils.sleep(wait);
-            servosService.setPortePotBas(false);
-            ThreadUtils.sleep(wait);
-        }
-
-        servosService.setPortePotGlissiereRentre(true);
-        bras.setBrasArriere(PositionBras.INIT);
     }
 }

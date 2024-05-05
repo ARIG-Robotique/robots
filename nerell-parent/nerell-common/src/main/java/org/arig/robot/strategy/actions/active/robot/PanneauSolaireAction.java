@@ -15,6 +15,8 @@ import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Component;
 
+import static org.arig.robot.constants.NerellConstantesConfig.VITESSE_ROUE_PANNEAU;
+
 @Slf4j
 @Component
 public class PanneauSolaireAction extends AbstractNerellAction {
@@ -90,9 +92,9 @@ public class PanneauSolaireAction extends AbstractNerellAction {
                 }
 
                 if (rs.team() == Team.BLEU) {
-                    ioService.tournePanneauBleu();
+                    ioService.tournePanneauBleu(VITESSE_ROUE_PANNEAU);
                 } else {
-                    ioService.tournePanneauJaune();
+                    ioService.tournePanneauJaune(VITESSE_ROUE_PANNEAU);
                 }
 
                 // FIXME position du ski en fonction de la position initiale théorique du panneau
