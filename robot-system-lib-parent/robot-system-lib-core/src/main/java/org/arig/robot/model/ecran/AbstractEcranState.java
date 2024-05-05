@@ -20,5 +20,8 @@ public abstract class AbstractEcranState implements Serializable {
     private boolean lidar = false;
     private boolean balise = false;
     private boolean otherRobot = false;
+    private boolean pamiTriangle = false;
+    private boolean pamiCarre = false;
+    private boolean pamiRond = false;
     private Map<String, Boolean> options;
 }
