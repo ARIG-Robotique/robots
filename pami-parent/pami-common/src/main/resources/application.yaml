@@ -36,8 +36,8 @@ nerell:
 # Balise de vision
 balise:
   socket:
-    host: sauron
-    port: 9042
+    host: overlord
+    port: 50667
 
 # Logging
 logging:
