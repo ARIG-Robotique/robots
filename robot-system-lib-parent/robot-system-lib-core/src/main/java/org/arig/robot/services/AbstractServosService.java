@@ -182,7 +182,7 @@ public abstract class AbstractServosService {
      * Déplace plusieurs servos à différents angles, toujours avec attente
      */
     public void setAngles(Map<String, Double> servosAngles, int speed, boolean wait) {
-        // calcul la distance maximal à parcourir
+        // calcul la distance maximale à parcourir
         int maxDst = 0;
         for (Map.Entry<String, Double> servoAngle : servosAngles.entrySet()) {
             Servo servo = servos.get(servoAngle.getKey());
@@ -217,30 +217,6 @@ public abstract class AbstractServosService {
             if (currentPosition != targetPosition && finalSpeed > 0) {
                 // finalSpeed peu tomber à zéro même si un (petit) mouvement est necessaire
                 waitTime = Math.max(waitTime, computeWaitTime(servo, currentPosition, targetPosition, finalSpeed));
-            }
-        }
-
-        if (wait) {
-            ThreadUtils.sleep(waitTime);
-        }
-    }
-
-    /**
-     * Déplace un ensemble de servos avec valeurs en dur
-     */
-    public void setPositionsRaw(Map<String, Integer> positions, int speed, boolean wait) {
-        int waitTime = 0;
-        for (Map.Entry<String, Integer> e : positions.entrySet()) {
-            Servo servo = servos.get(e.getKey());
-            assert servo != null;
-
-            OffsetedDevice device = getDevice(servo.id());
-            int currentPosition = device.servo().getPosition((byte) (servo.id() - device.offset()));
-
-            device.servo().setPositionAndSpeed((byte) (servo.id() - device.offset()), e.getValue(), (byte) speed);
-
-            if (currentPosition != e.getValue()) {
-                waitTime = Math.max(waitTime, computeWaitTime(servo, currentPosition, e.getValue(), speed));
             }
         }
 

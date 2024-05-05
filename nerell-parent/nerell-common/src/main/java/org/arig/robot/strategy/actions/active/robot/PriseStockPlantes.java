@@ -153,9 +153,9 @@ public class PriseStockPlantes extends AbstractNerellAction {
 
             bras.brasAvantStockage();
 
-            boolean stockgauche = ioService.stockGaucheAverage(true);
-            boolean stockcentre = ioService.stockCentreAverage(true);
-            boolean stockdroite = ioService.stockDroiteAverage(true);
+            boolean stockgauche = io.presenceStockGauche(true);
+            boolean stockcentre = io.presenceStockCentre(true);
+            boolean stockdroite = io.presenceStockDroite(true);
 
             // le stockage à foiré
             if (gauche != stockgauche || centre != stockcentre || droite != stockdroite) {
@@ -198,9 +198,10 @@ public class PriseStockPlantes extends AbstractNerellAction {
 
             bras.setBrasAvant(PositionBras.TRANSPORT);
 
-            gauche = true;//ioService.pinceAvantGaucheAverage(true);
-            centre = true;//ioService.pinceAvantCentreAverage(true);
-            droite = true;//ioService.pinceAvantDroiteAverage(true);
+            // FIXME
+            gauche = true;//io.pinceAvantGaucheAverage(true);
+            centre = true;//io.pinceAvantCentreAverage(true);
+            droite = true;//io.pinceAvantDroiteAverage(true);
 
             rs.bras().setAvant(
                     gauche ? new Plante(TypePlante.INCONNU) : null,

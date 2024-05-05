@@ -1045,10 +1045,6 @@ public class TrajectoryManager implements InitializingBean {
             }
             log.info("Point de passage atteint");
         }
-
-        if (!rs.calage().isEmpty()) {
-            calageBordureDone();
-        }
     }
 
     public void obstacleFound() {

@@ -4,12 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Jardiniere;
-import org.arig.robot.model.Plante;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.StockPots;
-import org.arig.robot.model.Team;
-import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.enums.TypeCalage;
+import org.arig.robot.strategy.actions.active.robot.AbstractJardiniereAction;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -59,6 +56,7 @@ public class JardiniereNordAction extends AbstractJardiniereAction {
         rs.enableCalageBordure(TypeCalage.AVANT, TypeCalage.FORCE);
         mv.avanceMMSansAngle(40);
         checkRecalageYmm(2000 - config.distanceCalageAvant(), TypeCalage.AVANT);
+        checkRecalageAngleDeg(90);
 
         depose(false);
     }

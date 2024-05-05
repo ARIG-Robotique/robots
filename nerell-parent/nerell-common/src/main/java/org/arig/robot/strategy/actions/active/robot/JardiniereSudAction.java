@@ -11,6 +11,7 @@ import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
+import org.arig.robot.strategy.actions.active.robot.AbstractJardiniereAction;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
@@ -50,6 +51,7 @@ public class JardiniereSudAction extends AbstractJardiniereAction {
 
         // en strat basique ou si plus de temps, on va pousser les pots
         return super.isValid()
+                && rs.strategy() != Strategy.BASIC
                 && (
                 !stockPots.isBloque() && !stockPots.isPresent()
                         || rs.strategy() == Strategy.BASIC
@@ -97,6 +99,7 @@ public class JardiniereSudAction extends AbstractJardiniereAction {
         rs.enableCalageBordure(TypeCalage.AVANT);
         mv.avanceMMSansAngle(40);
         checkRecalageXmm(getX((int) config.distanceCalageAvant()), TypeCalage.AVANT);
+        checkRecalageAngleDeg(rs.team() == Team.BLEU ? 0 : 180);
 
         depose(false);
     }

@@ -272,6 +272,7 @@ public abstract class AbstractOrdonanceur {
 
         ecranService.displayMessage("Activation puissances servos et moteurs");
         io.enableAlimServos();
+        ThreadUtils.sleep(1000);
         io.enableAlimMoteurs();
         ThreadUtils.sleep(1000);
         int nbTryMoteurs = 0;

@@ -29,10 +29,6 @@ public interface CommonRobotIOService extends IOService {
     boolean inductifCentre(boolean expectedSimulator);
     boolean inductifDroite(boolean expectedSimulator);
 
-    boolean stockGaucheAverage(boolean expectedSimulateur);
-    boolean stockCentreAverage(boolean expectedSimulateur);
-    boolean stockDroiteAverage(boolean expectedSimulateur);
-
     boolean pinceAvantGaucheAverage(boolean expectedSimulateur);
     boolean pinceAvantCentreAverage(boolean expectedSimulateur);
     boolean pinceAvantDroiteAverage(boolean expectedSimulateur);

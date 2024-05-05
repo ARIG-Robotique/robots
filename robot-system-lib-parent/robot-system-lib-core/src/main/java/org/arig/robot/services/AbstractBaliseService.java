@@ -26,7 +26,7 @@ public abstract class AbstractBaliseService<STATUT extends Serializable> {
             log.info("Connecté à la balise");
             return true;
         } catch (Exception e) {
-            log.warn("Impossible de se connecter à la balise");
+            //log.warn("Impossible de se connecter à la balise");
             return false;
         }
     }

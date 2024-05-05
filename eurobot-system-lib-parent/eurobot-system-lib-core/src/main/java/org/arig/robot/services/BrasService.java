@@ -123,7 +123,7 @@ public class BrasService {
         refreshStock();
         setBrasAvant(new PointBras(131, 145, -150, false));
         servos.groupePinceAvantOuvert(true);
-        setBrasAvant(new PointBras(67, 137, -180, false));
+        setBrasAvant(new PointBras(71, 121, -165, false));
         servos.groupePinceAvantFerme(true);
         setBrasAvant(new PointBras(76, 153, -180, false));
         setBrasAvant(new PointBras(167, 147, -130, false));
@@ -149,9 +149,9 @@ public class BrasService {
     public void refreshStock() {
         if (!rs.simulateur()) {
             boolean[] vals = new boolean[]{
-                    io.stockGaucheAverage(false),
-                    io.stockCentreAverage(false),
-                    io.stockDroiteAverage(false)
+                    io.presenceStockGauche(false),
+                    io.presenceStockCentre(false),
+                    io.presenceStockDroite(false)
             };
 
             Plante[] stock = rs.stock();

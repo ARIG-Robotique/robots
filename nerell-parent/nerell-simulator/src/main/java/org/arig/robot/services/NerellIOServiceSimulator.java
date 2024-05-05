@@ -159,21 +159,6 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     }
 
     @Override
-    public boolean stockGaucheAverage(boolean expectedSimulateur) {
-        return expectedSimulateur;
-    }
-
-    @Override
-    public boolean stockCentreAverage(boolean expectedSimulateur) {
-        return expectedSimulateur;
-    }
-
-    @Override
-    public boolean stockDroiteAverage(boolean expectedSimulateur) {
-        return expectedSimulateur;
-    }
-
-    @Override
     public boolean pinceAvantGaucheAverage(boolean expectedSimulateur) {
         return expectedSimulateur;
     }

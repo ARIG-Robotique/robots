@@ -61,7 +61,7 @@ public abstract class AbstractJardiniereAction extends AbstractNerellAction {
         if (!jardiniere().rang1()) {
             bras.setBrasAvant(new PointBras(225, 155, -90, null));
         } else {
-            bras.setBrasAvant(new PointBras(240, 175, -90, null));
+            bras.setBrasAvant(new PointBras(235, 175, -95, null));
         }
     }
 
@@ -85,7 +85,8 @@ public abstract class AbstractJardiniereAction extends AbstractNerellAction {
 
             jardiniere().rang1(true);
         } else {
-            bras.setBrasAvant(new PointBras(235, 100, -90, null));
+            bras.setBrasAvant(new PointBras(240, 120, -90, null));
+            bras.setBrasAvant(new PointBras(245, 96, -85, null));
             ThreadUtils.sleep(200);
             servos.groupePinceAvantOuvert(true);
             ThreadUtils.sleep(200);

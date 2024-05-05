@@ -9,7 +9,6 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPots;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
-import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.springframework.stereotype.Component;
@@ -88,6 +87,7 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
         rs.enableCalageBordure(TypeCalage.AVANT);
         mv.avanceMMSansAngle(40);
         checkRecalageXmm(getX((int) config.distanceCalageAvant()), TypeCalage.AVANT);
+        checkRecalageAngleDeg(rs.team() == Team.BLEU ? 180 : 0);
 
         depose(false);
     }

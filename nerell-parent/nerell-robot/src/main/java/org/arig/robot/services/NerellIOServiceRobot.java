@@ -89,9 +89,6 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
 
     // Input : Virtual averaged
     private final int virtualAverageIntegratedValues = 5;
-    private BooleanValueAverage stockGaucheAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
-    private BooleanValueAverage stockCentreAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
-    private BooleanValueAverage stockDroiteAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
     private BooleanValueAverage pinceAvantGaucheAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
     private BooleanValueAverage pinceAvantCentreAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
     private BooleanValueAverage pinceAvantDroiteAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
@@ -236,9 +233,6 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         }
 
         // Refresh virtual IOs
-        stockGaucheAverage.filter(presenceStockGauche(true));
-        stockCentreAverage.filter(presenceStockCentre(true));
-        stockDroiteAverage.filter(presenceStockDroite(true));
         pinceAvantGaucheAverage.filter(pinceAvantGauche(true));
         pinceAvantCentreAverage.filter(pinceAvantCentre(true));
         pinceAvantDroiteAverage.filter(pinceAvantDroite(true));
@@ -372,28 +366,13 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     }
 
     @Override
-    public boolean stockGaucheAverage(boolean expectedSimulateur) {
-        return stockGaucheAverage.lastResult();
-    }
-
-    @Override
     public boolean presenceStockCentre(boolean expectedSimulator) {
         return presenceStockCentre.isLow();
     }
 
     @Override
-    public boolean stockCentreAverage(boolean expectedSimulateur) {
-        return stockCentreAverage.lastResult();
-    }
-
-    @Override
     public boolean presenceStockDroite(boolean expectedSimulator) {
         return presenceStockDroit.isLow();
-    }
-
-    @Override
-    public boolean stockDroiteAverage(boolean expectedSimulateur) {
-        return stockDroiteAverage.lastResult();
     }
 
     @Override

@@ -9,6 +9,7 @@ import org.arig.robot.model.StockPots;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.bras.PositionBras;
+import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
@@ -103,20 +104,16 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
 
             enZone = true;
 
-            int distanceAvance = 275 - ENTRY_X // distance jusqu'au premier
-                    + 225 * 2; // distance entre 1 et 3
+            int targetX = getX(725);
             if (rs.strategy() == Strategy.BASIC) {
-                distanceAvance += 550 // distance entre 3 et 4
-                        + 225 * 2; // distance entre 4 et 6
+                targetX = getX(1725);
             }
 
+            servos.groupePanneauOuvert(true);
+            mv.gotoPoint(targetX, mv.currentYMm(), GotoOption.SANS_ORIENTATION);
             if (rs.team() == Team.BLEU) {
-                servos.groupePanneauOuvert(true);
-                mv.reculeMM(distanceAvance);
                 io.tournePanneauBleu(VITESSE_ROUE_PANNEAU);
             } else {
-                servos.groupePanneauOuvert(true);
-                mv.avanceMM(distanceAvance);
                 io.tournePanneauJaune(VITESSE_ROUE_PANNEAU);
             }
             ThreadUtils.sleep(500);
@@ -132,17 +129,17 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
             // le nombre de panneaux tournés depend de jusqu'ou on a pu avancer
             if (enZone) {
                 int x = getX((int) mv.currentXMm());
-                if (x > 1725) {
+                if (x > 1725 - 40) {
                     rs.panneauxSolaire().equipeDone(6);
-                } else if (x > 1500) {
+                } else if (x > 1500 - 40) {
                     rs.panneauxSolaire().equipeDone(5);
-                } else if (x > 1275) {
+                } else if (x > 1275 - 40) {
                     rs.panneauxSolaire().equipeDone(4);
-                } else if (x > 725) {
+                } else if (x > 725 - 40) {
                     rs.panneauxSolaire().equipeDone(3);
-                } else if (x > 500) {
+                } else if (x > 500 - 40) {
                     rs.panneauxSolaire().equipeDone(2);
-                } else if (x > 275) {
+                } else if (x > 275 - 40) {
                     rs.panneauxSolaire().equipeDone(1);
                 }
 
