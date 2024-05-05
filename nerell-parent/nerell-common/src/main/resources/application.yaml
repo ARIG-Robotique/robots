@@ -27,11 +27,20 @@ ecran:
   binary: /home/pi/robots-gui
   socket: /tmp/ecran-nerell.sock
 
-# Odin
-odin:
-  socket:
-    host: odin
-    port: 9101
+# PAMIs
+pamis:
+  triangle:
+    socket:
+      host: pami-triangle
+      port: 9101
+  carre:
+    socket:
+      host: pami-carre
+      port: 9102
+  rond:
+    socket:
+      host: pami-rond
+      port: 9103
 
 # Balise de vision
 balise:
@@ -91,10 +100,17 @@ balise:
   socket:
     host: localhost
 
-# Odin
-odin:
-  socket:
-    host: localhost
+# PAMIs
+pamis:
+  triangle:
+    socket:
+      host: localhost
+  carre:
+    socket:
+      host: localhost
+  rond:
+    socket:
+      host: localhost
 
 ---
 
@@ -122,10 +138,17 @@ balise:
   socket:
     host: sauron
 
-# Odin
-odin:
-  socket:
-    host: localhost
+# PAMIs
+pamis:
+  triangle:
+    socket:
+      host: localhost
+  carre:
+    socket:
+      host: localhost
+  rond:
+    socket:
+      host: localhost
 
 # Ecran
 ecran:
@@ -145,10 +168,17 @@ balise:
   socket:
     host: sauron
 
-# Odin
-odin:
-  socket:
-    host: localhost
+# PAMIs
+pamis:
+  triangle:
+    socket:
+      host: localhost
+  carre:
+    socket:
+      host: localhost
+  rond:
+    socket:
+      host: localhost
 
 # Ecran
 ecran:

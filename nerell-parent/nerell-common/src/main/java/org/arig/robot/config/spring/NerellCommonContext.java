@@ -183,9 +183,9 @@ public class NerellCommonContext {
     @Bean
     public RobotGroup robotGroup(NerellRobotStatus nerellRobotStatus, Environment env, ThreadPoolExecutor threadPoolTaskExecutor) throws IOException {
         final Integer serverPort = env.getRequiredProperty("robot.server.port", Integer.class);
-        final String odinHost = env.getRequiredProperty("odin.socket.host");
-        final Integer odinPort = env.getRequiredProperty("odin.socket.port", Integer.class);
-        RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(nerellRobotStatus, serverPort, odinHost, odinPort, threadPoolTaskExecutor);
+        final String triangleHost = env.getRequiredProperty("pamis.triangle.socket.host");
+        final Integer trianglePort = env.getRequiredProperty("pamis.triangle.socket.port", Integer.class);
+        RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(nerellRobotStatus, serverPort, triangleHost, trianglePort, threadPoolTaskExecutor);
         robotGroupOverSocket.openSocket();
         return robotGroupOverSocket;
     }

@@ -69,6 +69,11 @@ spring:
 server:
   port: 8082
 
+# Écran
+ecran:
+  socket:
+    port: 8681
+
 ---
 
 # Spring properties
@@ -81,6 +86,12 @@ spring:
 server:
   port: 8083
 
+
+# Écran
+ecran:
+  socket:
+    port: 8682
+
 ---
 
 # Spring properties
@@ -92,6 +103,11 @@ spring:
 # Server config
 server:
   port: 8084
+
+# Écran
+ecran:
+  socket:
+    port: 8683
 
 ---
 
@@ -128,6 +144,12 @@ nerell:
   socket:
     host: localhost
 
+# Écran
+ecran:
+  socket:
+    host: localhost
+    port: 8686
+
 ---
 
 # Spring properties
@@ -135,10 +157,6 @@ spring:
   config:
     activate:
       on-profile: greg-mac
-
-# Écran
-ecran:
-  binary: ${user.home}/workspaces/arig-wksp/cpp-linux/build-robots-gui-Desktop_Qt_5_15_2_clang_64bit-Debug/robots-gui.app/Contents/MacOS/robots-gui
 
 ---
 
@@ -158,3 +176,9 @@ balise:
 nerell:
   socket:
     host: localhost
+
+# Écran
+ecran:
+  socket:
+    host: localhost
+    port: 8686

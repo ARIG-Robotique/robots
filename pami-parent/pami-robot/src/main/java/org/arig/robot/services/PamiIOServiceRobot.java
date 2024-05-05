@@ -33,6 +33,7 @@ public class PamiIOServiceRobot implements PamiIOService {
 
     @Override
     public boolean tirette() {
+        // TODO : Implementer la tirette en réseau
         return false;
     }
 

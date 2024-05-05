@@ -19,6 +19,7 @@ public class NerellEcranService extends EcranService {
         EcranParams params = super.getParams();
         params.setName("Nerell");
         params.setPrimary(true);
+        params.setPami(false);
         return params;
     }
 }

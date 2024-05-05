@@ -15,11 +15,13 @@ import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BaliseService;
+import org.arig.robot.services.PamiEcranService;
 import org.arig.robot.services.PamiIOService;
 import org.arig.robot.services.PamiRobotServosService;
 import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.logging.LogLevel;
 
 @Slf4j
 public class PamiOrdonanceur extends AbstractOrdonanceur {
@@ -37,6 +39,9 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
     private BaliseService baliseService;
 
     @Autowired
+    private PamiEcranService pamiEcranService;
+
+    @Autowired
     private PamiRobotServosService pamiServosService;
 
     private int getX(int x) {
@@ -49,7 +54,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public String getPathfinderMap() {
-        return pamiRobotStatus.team().pathfinderMap("odin");
+        return pamiRobotStatus.team().pathfinderMap("pamis");
     }
 
     @Override
@@ -91,7 +96,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void beforePowerOff() {
-
+        pamiServosService.groupeTouchePlanteFerme(true);
     }
 
     /**
@@ -104,7 +109,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
         SignalEdgeFilter updatePhotoFilter = new SignalEdgeFilter(false, Type.RISING);
         SignalEdgeFilter doEtalonnageFilter = new SignalEdgeFilter(false, Type.RISING);
 
-        boolean done = false;
+        boolean done;
         do {
             exitFromScreen();
             connectBalise();
@@ -116,14 +121,32 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
             if (Boolean.TRUE.equals(groupChangeFilter.filter(robotStatus.groupOk()))) {
                 // TODO : Sound to Alim board
                 if (robotStatus.groupOk()) {
-
+                    pamiEcranService.displayMessage("Attente configuration Nerell");
                 } else {
-
+                    pamiEcranService.displayMessage("Choix équipe et lancement calage bordure");
                 }
             }
 
             if (robotStatus.groupOk()) {
                 done = groupService.isCalage();
+
+            } else {
+                if (Boolean.TRUE.equals(teamChangeFilter.filter(pamiEcranService.config().getTeam()))) {
+                    pamiRobotStatus.setTeam(pamiEcranService.config().getTeam());
+                    log.info("Team {}", pamiRobotStatus.team().name());
+                }
+
+                if (Boolean.TRUE.equals(strategyChangeFilter.filter(pamiEcranService.config().getStrategy()))) {
+                    pamiRobotStatus.strategy(pamiEcranService.config().getStrategy());
+                    log.info("Strategy {}", pamiRobotStatus.strategy().name());
+                }
+
+                pamiRobotStatus.twoRobots(pamiEcranService.config().isTwoRobots());
+                pamiRobotStatus.preferePanneaux(pamiEcranService.config().hasOption(EurobotConfig.PREFERE_PANNEAUX));
+                pamiRobotStatus.activeVolAuSol(pamiEcranService.config().hasOption(EurobotConfig.ACTIVE_VOL_AU_SOL));
+                pamiRobotStatus.activeVolJardinieres(pamiEcranService.config().hasOption(EurobotConfig.ACTIVE_VOL_JARDINIERES));
+
+                done = pamiEcranService.config().isStartCalibration();
             }
 
             ThreadUtils.sleep(200);
@@ -174,50 +197,34 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
      */
     @Override
     public void calageBordure(boolean skip) {
-        //pamiEcranService.displayMessage("Calage bordure");
+        pamiEcranService.displayMessage("Calage bordure");
 
         try {
             robotStatus.disableAvoidance();
+            // TODO Gérer le point de chaaque PAMIs
             position.setPt(new Point(
-                    conv.mmToPulse(getX(PamiConstantesConfig.dstCallage)),
-                    conv.mmToPulse(1785)
+                    conv.mmToPulse(getX(1500)),
+                    conv.mmToPulse(1000)
             ));
-            if (pamiRobotStatus.team() == Team.JAUNE) {
-                position.setAngle(conv.degToPulse(0));
-            } else {
-                position.setAngle(conv.degToPulse(180));
-            }
+            position.setAngle(conv.degToPulse(-90));
+
             if (!skip) {
                 robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
                 mv.reculeMMSansAngle(300);
 
-                position.getPt().setX(conv.mmToPulse(getX(PamiConstantesConfig.dstCallage)));
-                if (pamiRobotStatus.team() == Team.JAUNE) {
-                    position.setAngle(conv.degToPulse(0));
-                } else {
-                    position.setAngle(conv.degToPulse(180));
-                }
-
-                mv.avanceMM(70);
-                mv.gotoOrientationDeg(90);
-
-                robotStatus.enableCalageBordure(TypeCalage.AVANT);
-                mv.avanceMM(400);
-                robotStatus.enableCalageBordure(TypeCalage.AVANT);
-                mv.avanceMMSansAngle(100);
+                position.setPt(new Point(
+                    conv.mmToPulse(getX((EurobotConfig.tableWidth / 2.0) - PamiConstantesConfig.dstCallageCote)),
+                    conv.mmToPulse(EurobotConfig.tableHeight - PamiConstantesConfig.dstCallageArriere)
+                ));
+                position.setAngle(conv.degToPulse(-90));
 
                 if (!io.auOk()) {
-                    //pamiEcranService.displayMessage("Echappement calage bordure car mauvais sens", LogLevel.ERROR);
+                    pamiEcranService.displayMessage("Echappement calage bordure car mauvais sens", LogLevel.ERROR);
                     throw new ExitProgram(true);
                 }
-
-                position.getPt().setY(conv.mmToPulse(EurobotConfig.tableHeight - PamiConstantesConfig.dstCallage));
-                position.setAngle(conv.degToPulse(90));
-
-                mv.reculeMM(70);
             }
         } catch (AvoidingException e) {
-            //pamiEcranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
+            pamiEcranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
             throw new RuntimeException("Impossible de se placer pour le départ", e);
         }
     }
@@ -226,33 +233,13 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
      * Positionnement en fonction de la stratégie
      */
     public void positionStrategy() {
-        //pamiEcranService.displayMessage("Mise en place");
+        pamiEcranService.displayMessage("Mise en place");
 
         try {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
-            switch (pamiRobotStatus.strategy()) {
+            /*switch (pamiRobotStatus.strategy()) {
                 case FINALE_1:
-                    if (!robotStatus.twoRobots()) {
-                        mv.gotoPoint(getX(265), 1430);
-                        mv.alignFrontTo(getX(750), 1550);
-                        break;
-                    } else {
-                        mv.gotoPoint(getX(240), 1740);
-                        mv.gotoPoint(getX(570), 1740);
-                        //groupService.initStep(InitStep.ODIN_DEVANT_GALERIE); // Odin calé, en attente devant la galerie
-                        mv.gotoPoint(getX(570), 1160);
-                        mv.gotoOrientationDeg(pamiRobotStatus.team() == Team.JAUNE ? 0 : 180);
-                        //pamiEcranService.displayMessage("Attente calage Nerell");
-                        groupService.waitInitStep(InitStep.NERELL_CALAGE_TERMINE); // Attente Nerell calé
-                        mv.gotoPoint(getX(robotConfig.distanceCalageArriere() + 20), 1160);
-                        mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
-                        robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
-                        mv.reculeMMSansAngle(30);
-                    }
-                    //groupService.initStep(InitStep.ODIN_EN_POSITION);
-                    break;
-
                 case FINALE_2:
                 case BASIC:
                 default:
@@ -273,12 +260,11 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
                     }
                     //groupService.initStep(InitStep.ODIN_EN_POSITION);
                     break;
-            }
-        } catch (AvoidingException e) {
-            //pamiEcranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
+            }*/
+        } catch (/*AvoidingException*/ Exception e) {
+            pamiEcranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
             throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);
         }
-
     }
 
     /**
@@ -286,24 +272,24 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
      */
     private void choixConfig() {
         if (robotStatus.groupOk()) {
-            //pamiEcranService.displayMessage("Attente démarrage Nerell");
+            pamiEcranService.displayMessage("Attente démarrage Nerell");
 
             while (!groupService.isReady()) {
                 exitFromScreen();
                 robotStatus.twoRobots(true);
-                //avoidingService.setSafeAvoidance(pamiEcranService.config().isSafeAvoidance());
+                avoidingService.setSafeAvoidance(pamiEcranService.config().isSafeAvoidance());
                 ThreadUtils.sleep(200);
             }
 
         } else {
-            //pamiEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
+            pamiEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
 
-            //SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(pamiEcranService.config().isModeManuel(), Type.RISING);
-            //SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(pamiEcranService.config().isModeManuel(), Type.FALLING);
+            SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(pamiEcranService.config().isModeManuel(), Type.RISING);
+            SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(pamiEcranService.config().isModeManuel(), Type.FALLING);
 
-            //boolean manuel = pamiEcranService.config().isModeManuel();
+            boolean manuel = pamiEcranService.config().isModeManuel();
 
-            /*while (!io.tirette()) {
+            while (!io.tirette()) {
                 exitFromScreen();
 
                 if (Boolean.TRUE.equals(manuelRisingEdge.filter(pamiEcranService.config().isModeManuel()))) {
@@ -325,7 +311,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
                 avoidingService.setSafeAvoidance(pamiEcranService.config().isSafeAvoidance());
 
                 ThreadUtils.sleep(manuel ? 4000 : 200);
-            }*/
+            }
         }
     }
 }

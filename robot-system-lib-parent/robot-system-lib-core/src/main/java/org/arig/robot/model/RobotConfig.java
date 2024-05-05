@@ -53,6 +53,7 @@ public class RobotConfig {
     /**
      * Mécanique
      */
+    double distanceCalageCote;
     double distanceCalageAvant;
     double distanceCalageArriere;
 

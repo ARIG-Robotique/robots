@@ -22,6 +22,7 @@ import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.system.RobotGroupOverSocket;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.arig.robot.system.blockermanager.SystemBlockerManagerImpl;
+import org.arig.robot.system.capteurs.EcranOverSocket;
 import org.arig.robot.system.capteurs.socket.IEcran;
 import org.arig.robot.system.group.RobotGroup;
 import org.arig.robot.system.motion.AsservissementPolaireDistanceOrientation;
@@ -70,8 +71,9 @@ public class PamiCommonContext {
                 .seuilTensionServos(PamiConstantesConfig.seuilAlimentationServosVolts)
                 .seuilTensionMoteurs(PamiConstantesConfig.seuilAlimentationMoteursVolts)
 
-                .distanceCalageAvant(PamiConstantesConfig.dstCallage)
-                .distanceCalageArriere(PamiConstantesConfig.dstCallage)
+                .distanceCalageCote(PamiConstantesConfig.dstCallageCote)
+                .distanceCalageAvant(PamiConstantesConfig.dstCallageArriere)
+                .distanceCalageArriere(PamiConstantesConfig.dstCallageArriere)
 
                 .vitesse(PamiConstantesConfig.vitesseMin, PamiConstantesConfig.vitesseMax, 100)
                 .rampeDistance(PamiConstantesConfig.rampAccDistance, PamiConstantesConfig.rampDecDistance)
@@ -199,28 +201,8 @@ public class PamiCommonContext {
 
     @Bean
     public IEcran<EcranConfig, EcranState> ecran() {
-        return new IEcran<>() {
-            @Override
-            public void end() { }
-
-            @Override
-            public boolean setParams(EcranParams params) {
-                return true;
-            }
-
-            @Override
-            public EcranConfig configInfos() {
-                return new EcranConfig();
-            }
-
-            @Override
-            public void updateState(EcranState data) { }
-
-            @Override
-            public void updateMatch(EcranMatchInfo data) { }
-
-            @Override
-            public void updatePhoto(EcranPhoto photo) { }
-        };
+        final String ecranHost = env.getRequiredProperty("ecran.socket.host");
+        final Integer ecranPort = env.getRequiredProperty("ecran.socket.port", Integer.class);
+        return new EcranOverSocket(ecranHost, ecranPort);
     }
 }

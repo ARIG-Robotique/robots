@@ -13,6 +13,7 @@ public class EcranParams implements Serializable {
 
     private String name;
     private boolean primary;
+    private boolean pami;
     private Map<String, String> teams;
     private List<String> strategies;
     private List<String> options;

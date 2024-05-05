@@ -113,7 +113,8 @@ public interface PamiConstantesConfig {
     // Paramètre Physiques        //
     // -------------------------- //
 
-    double dstCallage = 1.0; // dos du robot <=> milieu du robot
+    double dstCallageCote = 74; // coté du robot <=> milieu du robot
+    double dstCallageArriere = 65.0; // dos du robot <=> milieu du robot
 
     // -------------------------- //
     // Paramètre Avoiding service //
