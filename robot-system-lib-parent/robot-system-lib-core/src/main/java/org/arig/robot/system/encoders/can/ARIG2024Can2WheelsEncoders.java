@@ -142,10 +142,13 @@ public class ARIG2024Can2WheelsEncoders extends Abstract2WheelsEncoders implemen
 
       byte[] data = new byte[response.getDataLength()];
       response.getData(data, 0, data.length);
-
-      rawEncoder1 = ((short) ((data[0] << 8) + (data[1] & 0xFF)));
-      rawEncoder2 = ((short) ((data[2] << 8) + (data[3] & 0xFF)));
-
+      if (response.getDataLength() == 0) {
+        log.error("Encoder invalid response length: {}", response.getDataLength());
+        rawEncoder1 = rawEncoder2 = 0;
+      } else {
+        rawEncoder1 = ((short) ((data[0] << 8) + (data[1] & 0xFF)));
+        rawEncoder2 = ((short) ((data[2] << 8) + (data[3] & 0xFF)));
+      }
       super.lectureValeurs();
     } catch (IOException e) {
       log.error("Error while sending read encoders request", e);
