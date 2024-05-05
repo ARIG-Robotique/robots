@@ -22,7 +22,12 @@ public class PamiIOServiceRobot implements PamiIOService {
         arig2024IoPamiSensors.refreshSensors();
     }
 
-    // --------------------------------------------------------- //
+    @Override
+    public void sound() {
+        alimentationController.sound();
+    }
+
+// --------------------------------------------------------- //
     // --------------------- INFOS TECHNIQUE ------------------- //
     // --------------------------------------------------------- //
 

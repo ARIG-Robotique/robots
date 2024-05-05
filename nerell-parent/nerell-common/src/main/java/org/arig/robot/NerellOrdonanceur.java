@@ -44,7 +44,13 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     private NerellIOService nerellIO;
 
     @Autowired
-    private RobotGroupService groupService;
+    private RobotGroupService pamiTriangleGroupService;
+
+    @Autowired
+    private RobotGroupService pamiCarreGroupService;
+
+    @Autowired
+    private RobotGroupService pamiRondGroupService;
 
     @Autowired
     private BaliseService baliseService;
@@ -69,6 +75,19 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     @Override
     public String getPathfinderMap() {
         return nerellRobotStatus.team().pathfinderMap("nerell");
+    }
+
+    @Override
+    protected void connectGroups() {
+        if (!pamiTriangleGroupService.getGroup().isOpen()) {
+            robotStatus.pamiTriangleGroupOk(pamiTriangleGroupService.getGroup().tryConnect());
+        }
+        if (!pamiCarreGroupService.getGroup().isOpen()) {
+            robotStatus.pamiCarreGroupOk(pamiCarreGroupService.getGroup().tryConnect());
+        }
+        if (!pamiRondGroupService.getGroup().isOpen()) {
+            robotStatus.pamiRondGroupOk(pamiRondGroupService.getGroup().tryConnect());
+        }
     }
 
     @Override
@@ -124,8 +143,14 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void startMatch() {
-        if (robotStatus.groupOk()) {
-            groupService.start();
+        if (robotStatus.pamiTriangleGroupOk()) {
+            pamiTriangleGroupService.start();
+        }
+        if (robotStatus.pamiCarreGroupOk()) {
+            pamiCarreGroupService.start();
+        }
+        if (robotStatus.pamiRondGroupOk()) {
+            pamiRondGroupService.start();
         }
     }
 
@@ -172,6 +197,10 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void beforePowerOff() {
+        pamiTriangleGroupService.end();
+        pamiCarreGroupService.end();
+        pamiRondGroupService.end();
+
         nerellIO.enableAlimServos();
 
         Stream.of(Bras.values()).forEach(b -> {
@@ -200,17 +229,21 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
         do {
             exitFromScreen();
-            connectGroup();
+            connectGroups();
             connectBalise();
             configBalise(updatePhotoFilter, doEtalonnageFilter);
 
             if (Boolean.TRUE.equals(teamChangeFilter.filter(nerellEcranService.config().getTeam()))) {
-                groupService.team(nerellEcranService.config().getTeam());
+                pamiTriangleGroupService.team(nerellEcranService.config().getTeam());
+                pamiCarreGroupService.team(nerellEcranService.config().getTeam());
+                pamiRondGroupService.team(nerellEcranService.config().getTeam());
                 log.info("Team {}", nerellRobotStatus.team().name());
             }
 
             if (Boolean.TRUE.equals(strategyChangeFilter.filter(nerellEcranService.config().getStrategy()))) {
-                groupService.strategy(nerellEcranService.config().getStrategy());
+                pamiTriangleGroupService.strategy(nerellEcranService.config().getStrategy());
+                pamiCarreGroupService.strategy(nerellEcranService.config().getStrategy());
+                pamiRondGroupService.strategy(nerellEcranService.config().getStrategy());
                 log.info("Strategy {}", nerellRobotStatus.strategy().name());
             }
 
@@ -219,7 +252,9 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             nerellRobotStatus.activeVolAuSol(nerellEcranService.config().hasOption(EurobotConfig.ACTIVE_VOL_AU_SOL));
             nerellRobotStatus.activeVolJardinieres(nerellEcranService.config().hasOption(EurobotConfig.ACTIVE_VOL_JARDINIERES));
 
-            groupService.configuration();
+            pamiTriangleGroupService.configuration();
+            pamiCarreGroupService.configuration();
+            pamiRondGroupService.configuration();
 
             ThreadUtils.sleep(200);
         } while (!nerellEcranService.config().isStartCalibration());
@@ -271,7 +306,9 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     public void calageBordure(boolean skip) {
         nerellEcranService.displayMessage("Calage bordure");
 
-        groupService.calage();
+        pamiTriangleGroupService.calage();
+        pamiCarreGroupService.calage();
+        pamiRondGroupService.calage();
 
         try {
             robotStatus.disableAvoidance();
@@ -326,7 +363,9 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
                 bras.setBrasAvant(PositionBras.INIT);
 
-                groupService.initStep(InitStep.NERELL_CALAGE_TERMINE); // Nerell calé
+                pamiTriangleGroupService.initStep(InitStep.NERELL_CALAGE_TERMINE); // Nerell calé
+                pamiCarreGroupService.initStep(InitStep.NERELL_CALAGE_TERMINE); // Nerell calé
+                pamiRondGroupService.initStep(InitStep.NERELL_CALAGE_TERMINE); // Nerell calé
             }
         } catch (AvoidingException e) {
             nerellEcranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
@@ -347,7 +386,9 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 case BASIC:
                     mv.gotoPoint(getX(PanneauSolaireEquipeAction.ENTRY_X), PanneauSolaireEquipeAction.WORK_Y);
                     mv.gotoOrientationDeg(180);
-                    groupService.initStep(InitStep.NERELL_EN_POSITION);
+                    pamiTriangleGroupService.initStep(InitStep.NERELL_EN_POSITION);
+                    pamiCarreGroupService.initStep(InitStep.NERELL_EN_POSITION);
+                    pamiRondGroupService.initStep(InitStep.NERELL_EN_POSITION);
                     nerellRobotStatus.siteDeDepart(nerellRobotStatus.team() == Team.BLEU ? SiteDeCharge.BLEU_SUD : SiteDeCharge.JAUNE_SUD);
                     break;
                 case FINALE_1:
@@ -359,7 +400,9 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 default:
                     mv.gotoPoint(getX(240), 1775);
                     mv.alignFrontTo(getX(1220), 1490);
-                    groupService.initStep(InitStep.NERELL_EN_POSITION);
+                    pamiTriangleGroupService.initStep(InitStep.NERELL_EN_POSITION);
+                    pamiCarreGroupService.initStep(InitStep.NERELL_EN_POSITION);
+                    pamiRondGroupService.initStep(InitStep.NERELL_EN_POSITION);
                     nerellRobotStatus.siteDeDepart(nerellRobotStatus.team() == Team.BLEU ? SiteDeCharge.BLEU_NORD : SiteDeCharge.JAUNE_NORD);
                     break;
             }
@@ -399,21 +442,29 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             if (!manuel && !nerellEcranService.config().isSkipCalageBordure()) {
                 nerellEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
 
-                groupService.configuration();
+                pamiTriangleGroupService.configuration();
+                pamiCarreGroupService.configuration();
+                pamiRondGroupService.configuration();
             }
 
             robotStatus.twoRobots(nerellEcranService.config().isTwoRobots());
             avoidingService.setSafeAvoidance(nerellEcranService.config().isSafeAvoidance());
 
-            connectGroup();
+            connectGroups();
             connectBalise();
             configBalise(updatePhotoFilter, doEtalonnageFilter);
 
             ThreadUtils.sleep(manuel ? 4000 : 200);
         }
 
-        if (robotStatus.groupOk()) {
-            groupService.ready();
+        if (robotStatus.pamiTriangleGroupOk()) {
+            pamiTriangleGroupService.ready();
+        }
+        if (robotStatus.pamiCarreGroupOk()) {
+            pamiCarreGroupService.ready();
+        }
+        if (robotStatus.pamiRondGroupOk()) {
+            pamiRondGroupService.ready();
         }
     }
 }

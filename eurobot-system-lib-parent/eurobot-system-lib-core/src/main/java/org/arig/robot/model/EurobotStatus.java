@@ -18,7 +18,11 @@ import java.util.Map;
 public abstract class EurobotStatus extends AbstractRobotStatus {
 
     protected EurobotStatus(boolean mainRobot) {
-        super(EurobotConfig.matchTimeMs, mainRobot);
+        super(EurobotConfig.matchTimeMs, mainRobot, false);
+    }
+
+    protected EurobotStatus(boolean mainRobot, boolean pamiRobot) {
+        super(EurobotConfig.matchTimeMs, mainRobot, pamiRobot);
     }
 
     @Override
@@ -155,7 +159,8 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         int points = 0;
 
         // le robot secondaire ne compte pas les points si la comm est ok
-        if (groupOk() && !mainRobot()) {
+        // le pami ne compte pas les points tous le temps
+        if ((robotGroupOk() && !mainRobot()) || pamiRobot()) {
             return points;
         }
 

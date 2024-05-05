@@ -10,6 +10,7 @@ import org.arig.robot.filters.common.OffsetFilter;
 import org.arig.robot.filters.pid.PidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
+import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.NerellRobotStatus;
@@ -22,6 +23,7 @@ import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractCommonRobotServosService;
 import org.arig.robot.services.BrasService;
 import org.arig.robot.services.CommonRobotIOService;
+import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.system.RobotGroupOverSocket;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.arig.robot.system.blockermanager.SystemBlockerManagerImpl;
@@ -181,13 +183,54 @@ public class NerellCommonContext {
     }
 
     @Bean
-    public RobotGroup robotGroup(NerellRobotStatus nerellRobotStatus, Environment env, ThreadPoolExecutor threadPoolTaskExecutor) throws IOException {
-        final Integer serverPort = env.getRequiredProperty("robot.server.port", Integer.class);
-        final String triangleHost = env.getRequiredProperty("pamis.triangle.socket.host");
-        final Integer trianglePort = env.getRequiredProperty("pamis.triangle.socket.port", Integer.class);
-        RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(nerellRobotStatus, serverPort, triangleHost, trianglePort, threadPoolTaskExecutor);
+    public RobotGroup pamiTriangleGroup(NerellRobotStatus nerellRobotStatus, Environment env, ThreadPoolExecutor threadPoolTaskExecutor) throws IOException {
+        final Integer serverPort = env.getRequiredProperty("robot.server.pamis.triangle.port", Integer.class);
+
+        final String otherHost = env.getRequiredProperty("pamis.triangle.socket.host");
+        final Integer otherPort = env.getRequiredProperty("pamis.triangle.socket.port", Integer.class);
+
+        RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(nerellRobotStatus, AbstractRobotStatus::pamiTriangleGroupOk, serverPort, otherHost, otherPort, threadPoolTaskExecutor);
         robotGroupOverSocket.openSocket();
         return robotGroupOverSocket;
+    }
+
+    @Bean
+    public RobotGroupService pamiTriangleGroupService(final EurobotStatus rs, final RobotGroup pamiTriangleGroup, final ThreadPoolExecutor threadPoolTaskExecutor) {
+        return new RobotGroupService(rs, pamiTriangleGroup, threadPoolTaskExecutor);
+    }
+
+    @Bean
+    public RobotGroup pamiCarreGroup(NerellRobotStatus nerellRobotStatus, Environment env, ThreadPoolExecutor threadPoolTaskExecutor) throws IOException {
+        final Integer serverPort = env.getRequiredProperty("robot.server.pamis.carre.port", Integer.class);
+
+        final String otherHost = env.getRequiredProperty("pamis.carre.socket.host");
+        final Integer otherPort = env.getRequiredProperty("pamis.carre.socket.port", Integer.class);
+
+        RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(nerellRobotStatus, AbstractRobotStatus::pamiCarreGroupOk, serverPort, otherHost, otherPort, threadPoolTaskExecutor);
+        robotGroupOverSocket.openSocket();
+        return robotGroupOverSocket;
+    }
+
+    @Bean
+    public RobotGroupService pamiCarreGroupService(final EurobotStatus rs, final RobotGroup pamiCarreGroup, final ThreadPoolExecutor threadPoolTaskExecutor) {
+        return new RobotGroupService(rs, pamiCarreGroup, threadPoolTaskExecutor);
+    }
+
+    @Bean
+    public RobotGroup pamiRondGroup(NerellRobotStatus nerellRobotStatus, Environment env, ThreadPoolExecutor threadPoolTaskExecutor) throws IOException {
+        final Integer serverPort = env.getRequiredProperty("robot.server.pamis.rond.port", Integer.class);
+
+        final String otherHost = env.getRequiredProperty("pamis.rond.socket.host");
+        final Integer otherPort = env.getRequiredProperty("pamis.rond.socket.port", Integer.class);
+
+        RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(nerellRobotStatus, AbstractRobotStatus::pamiRondGroupOk, serverPort, otherHost, otherPort, threadPoolTaskExecutor);
+        robotGroupOverSocket.openSocket();
+        return robotGroupOverSocket;
+    }
+
+    @Bean
+    public RobotGroupService pamiRondGroupService(final EurobotStatus rs, final RobotGroup pamiRondGroup, final ThreadPoolExecutor threadPoolTaskExecutor) {
+        return new RobotGroupService(rs, pamiRondGroup, threadPoolTaskExecutor);
     }
 
     @Bean

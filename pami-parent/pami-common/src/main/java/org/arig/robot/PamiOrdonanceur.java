@@ -13,6 +13,7 @@ import org.arig.robot.model.PamiRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.ecran.EcranState;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.PamiEcranService;
@@ -58,6 +59,13 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
     }
 
     @Override
+    protected void connectGroups() {
+        if (!groupService.getGroup().isOpen()) {
+            robotStatus.robotGroupOk(groupService.getGroup().tryConnect());
+        }
+    }
+
+    @Override
     public void afterInit() {
         choixEquipeStrategy();
     }
@@ -76,7 +84,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     protected boolean waitTirette() {
-        return robotStatus.groupOk() ? !groupService.isStart() : io.tirette();
+        return robotStatus.robotGroupOk() ? !groupService.isStart() : io.tirette();
     }
 
     @Override
@@ -84,14 +92,19 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
         // Nope
     }
 
+    private boolean servoOpened = false;
+
     @Override
     public void inMatch() {
-        // Nope
+        if (!servoOpened && robotStatus.getRemainingTime() < 2000) {
+            pamiServosService.groupeTouchePlanteOuvert(false);
+            servoOpened = true;
+        }
     }
 
     @Override
     public void afterMatch() {
-        // Nope
+        pamiRobotStatus.disableBalise();
     }
 
     @Override
@@ -111,23 +124,24 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
 
         boolean done;
         do {
+            pamiIOService.sound();
+
             exitFromScreen();
             connectBalise();
-            connectGroup();
+            connectGroups();
             if (!robotStatus.twoRobots()) {
                 configBalise(updatePhotoFilter, doEtalonnageFilter);
             }
 
-            if (Boolean.TRUE.equals(groupChangeFilter.filter(robotStatus.groupOk()))) {
-                // TODO : Sound to Alim board
-                if (robotStatus.groupOk()) {
+            if (Boolean.TRUE.equals(groupChangeFilter.filter(robotStatus.robotGroupOk()))) {
+                if (robotStatus.robotGroupOk()) {
                     pamiEcranService.displayMessage("Attente configuration Nerell");
                 } else {
                     pamiEcranService.displayMessage("Choix équipe et lancement calage bordure");
                 }
             }
 
-            if (robotStatus.groupOk()) {
+            if (robotStatus.robotGroupOk()) {
                 done = groupService.isCalage();
 
             } else {
@@ -149,7 +163,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
                 done = pamiEcranService.config().isStartCalibration();
             }
 
-            ThreadUtils.sleep(200);
+            ThreadUtils.sleep(1000);
         } while (!done);
     }
 
@@ -271,7 +285,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
      * Etape du choix des options + config balise
      */
     private void choixConfig() {
-        if (robotStatus.groupOk()) {
+        if (robotStatus.robotGroupOk()) {
             pamiEcranService.displayMessage("Attente démarrage Nerell");
 
             while (!groupService.isReady()) {
@@ -313,5 +327,24 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
                 ThreadUtils.sleep(manuel ? 4000 : 200);
             }
         }
+    }
+
+    @Override
+    protected void cycleFin() {
+        ecranService.displayMessage(
+            String.format("FIN - Tirette Nerell et AU OK pour fin - Score %s",
+                robotStatus.calculerPoints())
+        );
+
+        while (!groupService.isEnd() && !io.auOk()) {
+            pamiIOService.sound();
+            ThreadUtils.sleep(1000);
+        }
+
+        ecranService.displayMessage("FIN - Extinction");
+        ecranService.updateStateInfo(new EcranState());
+        ThreadUtils.sleep(500);
+
+        beforePowerOff(); // impl
     }
 }

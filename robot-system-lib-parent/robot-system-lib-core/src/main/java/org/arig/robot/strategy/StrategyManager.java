@@ -29,7 +29,7 @@ public class StrategyManager {
     private TableUtils tableUtils;
 
     @Autowired
-    private RobotGroup group;
+    private List<RobotGroup> robotGroups;
 
     @Autowired
     private LidarService lidarService;
@@ -57,14 +57,14 @@ public class StrategyManager {
             if (rs.currentAction() != null) {
                 log.warn("0/{} actions disponibles pour le moment", actionsCount());
                 rs.currentAction(null);
-                group.setCurrentAction(null);
+                robotGroups.forEach(r -> r.setCurrentAction(null));
             }
             return;
         }
 
         final Action action = nextAction.get();
         rs.currentAction(action.name());
-        group.setCurrentAction(action.name());
+        robotGroups.forEach(r -> r.setCurrentAction(action.name()));
         log.info("Execution de l'action {}", action.name());
         tableUtils.clearDynamicDeadZones();
 

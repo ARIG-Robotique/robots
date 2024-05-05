@@ -45,8 +45,10 @@ public class TasksScheduler implements InitializingBean {
     @Autowired
     private RobotConfig robotConfig;
 
+    /*
     @Autowired
     private RobotGroup group;
+    */
 
     @Override
     public void afterPropertiesSet() {
@@ -117,6 +119,7 @@ public class TasksScheduler implements InitializingBean {
                 }
 
                 // position
+                /*
                 if (rs.groupOk() && rs.matchEnabled()) {
                     long timeStartRefreshPosition = System.nanoTime();
                     long ellapsedRefreshPosition = timeStartRefreshPosition - lastTimeRefreshPosition;
@@ -125,6 +128,7 @@ public class TasksScheduler implements InitializingBean {
                         lastTimeRefreshPosition = timeStartRefreshPosition;
                     }
                 }
+                */
 
                 // state
                 long timeStartRefreshState = System.nanoTime();

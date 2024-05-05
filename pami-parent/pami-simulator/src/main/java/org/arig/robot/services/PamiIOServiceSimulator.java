@@ -1,17 +1,24 @@
 package org.arig.robot.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.PamiRobotStatus;
 import org.arig.robot.model.enums.TypeCalage;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service("IOService")
 @RequiredArgsConstructor
 public class PamiIOServiceSimulator extends AbstractIOServiceBouchon implements PamiIOService {
 
     private final PamiRobotStatus rs;
 
-    // --------------------------------------------------------- //
+    @Override
+    public void sound() {
+        log.info("Bip Bip Bip ...");
+    }
+
+// --------------------------------------------------------- //
     // -------------------------- INPUT ------------------------ //
     // --------------------------------------------------------- //
 

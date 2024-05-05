@@ -81,9 +81,6 @@ public abstract class AbstractOrdonanceur {
     protected ILidarTelemeter lidar;
 
     @Autowired
-    protected RobotGroup group;
-
-    @Autowired
     protected TableUtils tableUtils;
 
     @Autowired
@@ -205,13 +202,9 @@ public abstract class AbstractOrdonanceur {
     }
 
     /**
-     * Tente de se connecter à l'autre robot
+     * Tente de se connecter aux autres robots
      */
-    protected void connectGroup() {
-        if (!group.isOpen()) {
-            robotStatus.groupOk(group.tryConnect());
-        }
-    }
+    protected abstract void connectGroups();
 
     /**
      * Emet ExitProgram à la demande de l'écran
@@ -432,7 +425,7 @@ public abstract class AbstractOrdonanceur {
     /**
      * Attente fin de match
      */
-    private void cycleFin() {
+    protected void cycleFin() {
         ecranService.displayMessage(
                 String.format("FIN - Tirette et AU OK pour ejection stock - Score %s",
                         robotStatus.calculerPoints())

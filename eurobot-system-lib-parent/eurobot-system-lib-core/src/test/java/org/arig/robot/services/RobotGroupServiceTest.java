@@ -2,6 +2,7 @@ package org.arig.robot.services;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.InitStep;
 import org.arig.robot.model.Point;
@@ -58,18 +59,18 @@ class RobotGroupServiceTest {
         while(nbTry-- >= 0) {
             try {
                 statusPrimary = new TestEurobotStatus(true);
-                rgPrimary = new RobotGroupOverSocket(statusPrimary, primaryPort, "localhost", secondaryPort, executor);
+                rgPrimary = new RobotGroupOverSocket(statusPrimary, AbstractRobotStatus::robotGroupOk, primaryPort, "localhost", secondaryPort, executor);
                 rgPrimary.openSocket();
                 rgServicePrimary = new RobotGroupService(statusPrimary, rgPrimary, executor);
 
 
                 statusSecondary = new TestEurobotStatus(false);
-                rgSecondary = new RobotGroupOverSocket(statusSecondary, secondaryPort, "localhost", primaryPort, executor);
+                rgSecondary = new RobotGroupOverSocket(statusSecondary, AbstractRobotStatus::robotGroupOk, secondaryPort, "localhost", primaryPort, executor);
                 rgSecondary.openSocket();
                 rgServiceSecondary = new RobotGroupService(statusSecondary, rgSecondary, executor);
 
-                statusPrimary.groupOk(rgPrimary.tryConnect());
-                statusSecondary.groupOk(rgSecondary.tryConnect());
+                statusPrimary.robotGroupOk(rgPrimary.tryConnect());
+                statusSecondary.robotGroupOk(rgSecondary.tryConnect());
                 break;
             } catch (BindException e) {
                 log.error("Error in setUp", e);

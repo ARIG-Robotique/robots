@@ -22,10 +22,19 @@ public abstract class AbstractRobotStatus {
 
     private final int matchTimeMs;
     private final boolean mainRobot;
+    private final boolean pamiRobot;
 
     protected AbstractRobotStatus(int matchTimeMs, boolean mainRobot) {
+        this(matchTimeMs, mainRobot, false);
+        if (!mainRobot) {
+            throw new IllegalArgumentException("La définition d'un robot secondaire doit être plus explicite");
+        }
+    }
+
+    protected AbstractRobotStatus(int matchTimeMs, boolean mainRobot, boolean pamiRobot) {
         this.matchTimeMs = matchTimeMs;
         this.mainRobot = mainRobot;
+        this.pamiRobot = pamiRobot;
     }
 
     /**
@@ -55,13 +64,16 @@ public abstract class AbstractRobotStatus {
     private boolean twoRobots = false;
 
     public boolean twoRobots() {
-        return groupOk ? true : twoRobots;
+        return robotGroupOk ? true : twoRobots;
     }
 
     /**
-     * Les deux robots communiquent
+     * Les robots/pamis communiquent
      */
-    private boolean groupOk = false;
+    private boolean robotGroupOk = false;
+    private boolean pamiTriangleGroupOk = false;
+    private boolean pamiCarreGroupOk = false;
+    private boolean pamiRondGroupOk = false;
 
     private boolean simulateur = false;
 

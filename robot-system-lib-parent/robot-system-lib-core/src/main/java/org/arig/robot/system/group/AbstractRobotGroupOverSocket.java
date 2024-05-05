@@ -11,21 +11,20 @@ import org.arig.robot.system.communication.AbstractBidirectionalSocket;
 import java.util.concurrent.Executor;
 
 @Slf4j
-public class AbstractRobotGroupOverSocket extends AbstractBidirectionalSocket<GroupAction> implements RobotGroup {
-
-    private final AbstractRobotStatus rs;
+public abstract class AbstractRobotGroupOverSocket extends AbstractBidirectionalSocket<GroupAction> implements RobotGroup {
 
     private Handler handler = null;
 
-    public AbstractRobotGroupOverSocket(AbstractRobotStatus rs, int serverPort, String otherHost, int otherPort, Executor executor) {
+    public AbstractRobotGroupOverSocket(int serverPort, String otherHost, int otherPort, Executor executor) {
         super(serverPort, otherHost, otherPort, 2000, executor);
-        this.rs = rs;
     }
 
     @Override
     public void listen(Handler handler) {
         this.handler = handler;
     }
+
+    protected abstract boolean groupOk();
 
     @Override
     protected Class<GroupAction> getActionEnum() {
@@ -73,7 +72,7 @@ public class AbstractRobotGroupOverSocket extends AbstractBidirectionalSocket<Gr
 
     @Override
     public synchronized <E extends Enum<E>> void sendEventLog(E event, byte[] value) {
-        if (!rs.groupOk()) {
+        if (!groupOk()) {
             return;
         }
 
@@ -83,5 +82,4 @@ public class AbstractRobotGroupOverSocket extends AbstractBidirectionalSocket<Gr
             log.warn("Impossible d'échanger l'event log");
         }
     }
-
 }

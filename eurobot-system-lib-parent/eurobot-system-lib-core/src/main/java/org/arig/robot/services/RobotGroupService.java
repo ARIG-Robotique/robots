@@ -20,10 +20,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Stream;
 
 @Slf4j
-@Service
 public class RobotGroupService implements RobotGroup.Handler {
 
     private final EurobotStatus rs;
+    @Getter
     private final RobotGroup group;
     private final ThreadPoolExecutor threadPoolTaskExecutor;
 
@@ -40,10 +40,13 @@ public class RobotGroupService implements RobotGroup.Handler {
     private boolean ready;
 
     /**
-     * Indique au secondaire le début de match
+     * Indique aux secondaires le début de match
      */
     @Getter
     private boolean start;
+
+    @Getter
+    private boolean end;
 
     @Getter
     private int initStep = 0;
@@ -73,6 +76,9 @@ public class RobotGroupService implements RobotGroup.Handler {
                 break;
             case START:
                 start = true;
+                break;
+            case END:
+                end = true;
                 break;
             case TEAM:
                 rs.setTeam(Team.values()[data[0]]);
@@ -174,6 +180,14 @@ public class RobotGroupService implements RobotGroup.Handler {
     public void start() {
         start = true;
         sendEvent(StatusEvent.START);
+    }
+
+    /**
+     * Appellé par le principal pour la fin de match
+     */
+    public void end() {
+        end = true;
+        sendEvent(StatusEvent.END);
     }
 
     public void team(Team team) {

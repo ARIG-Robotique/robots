@@ -106,7 +106,10 @@ public abstract class AbstractEcranService<CONFIG extends AbstractEcranConfig, S
         stateInfos.setAlimServos(energyService.checkServos(false));
         stateInfos.setTirette(ioService.tirette());
         stateInfos.setBalise(balise != null && balise.isOpen());
-        stateInfos.setOtherRobot(rs.groupOk());
+        stateInfos.setOtherRobot(rs.robotGroupOk());
+        stateInfos.setPamiTriangle(rs.pamiTriangleGroupOk());
+        stateInfos.setPamiCarre(rs.pamiCarreGroupOk());
+        stateInfos.setPamiRond(rs.pamiRondGroupOk());
     }
 
     public void updatePhoto(EcranPhoto query) {
@@ -116,7 +119,7 @@ public abstract class AbstractEcranService<CONFIG extends AbstractEcranConfig, S
     private void updateMatch() {
         matchInfos.setScore(rs.calculerPoints());
         if (rs.matchEnabled()) {
-            if (rs.groupOk()) {
+            if (rs.robotGroupOk()) {
                 matchInfos.setMessage(String.format("%s / %s (%s restantes) - %ss",
                         ObjectUtils.firstNonNull(rs.currentAction(), "AUCUNE"),
                         ObjectUtils.firstNonNull(rs.otherCurrentAction(), "AUCUNE"),
@@ -134,5 +137,4 @@ public abstract class AbstractEcranService<CONFIG extends AbstractEcranConfig, S
 
         ecran.updateMatch(matchInfos);
     }
-
 }

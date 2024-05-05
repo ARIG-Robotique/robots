@@ -12,4 +12,5 @@ public interface PamiIOService extends CommonPamiIOService {
     return true;
   }
 
+  void sound();
 }

@@ -20,6 +20,7 @@ import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Supplier;
@@ -46,7 +47,7 @@ public abstract class AbstractEurobotAction extends AbstractAction {
     protected TableUtils tableUtils;
 
     @Autowired
-    protected RobotGroupService group;
+    protected List<RobotGroupService> groups;
 
     @Autowired
     protected EurobotStatus rs;

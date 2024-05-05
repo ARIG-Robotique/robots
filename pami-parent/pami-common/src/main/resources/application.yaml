@@ -19,19 +19,10 @@ robot:
     points:
       enable: True
 
-  server:
-    port: 9101
-
 # Écran
 ecran:
-  binary: /home/pi/robots-gui
-  socket: /tmp/ecran-odin.sock
-
-# Nerell
-nerell:
   socket:
-    host: nerell
-    port: 9100
+    host: 192.168.0.101 # IP de Greg au Gite
 
 # Balise de vision
 balise:
@@ -69,10 +60,21 @@ spring:
 server:
   port: 8082
 
+# Nerell
+nerell:
+  socket:
+    host: nerell
+    port: 9102
+
+# Socket server
+robot:
+  server:
+    port: 9202
+
 # Écran
 ecran:
   socket:
-    port: 8681
+    port: 8682
 
 ---
 
@@ -86,11 +88,21 @@ spring:
 server:
   port: 8083
 
+# Nerell
+nerell:
+  socket:
+    host: nerell
+    port: 9103
+
+# Socket server
+robot:
+  server:
+    port: 9203
 
 # Écran
 ecran:
   socket:
-    port: 8682
+    port: 8683
 
 ---
 
@@ -104,10 +116,21 @@ spring:
 server:
   port: 8084
 
+# Nerell
+nerell:
+  socket:
+    host: nerell
+    port: 9104
+
+# Socket server
+robot:
+  server:
+    port: 9204
+
 # Écran
 ecran:
   socket:
-    port: 8683
+    port: 8684
 
 ---
 
@@ -148,7 +171,6 @@ nerell:
 ecran:
   socket:
     host: localhost
-    port: 8686
 
 ---
 

@@ -12,6 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 public class PamiRobotStatus extends EurobotStatus {
 
     public PamiRobotStatus() {
-        super(false);
+        super(false, true);
     }
 }

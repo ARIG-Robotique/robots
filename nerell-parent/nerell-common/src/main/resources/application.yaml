@@ -21,6 +21,13 @@ robot:
 
   server:
     port: 9100
+    pamis:
+      triangle:
+        port: 9102
+      carre:
+        port: 9103
+      rond:
+        port: 9104
 
 # Écran
 ecran:
@@ -32,15 +39,15 @@ pamis:
   triangle:
     socket:
       host: pami-triangle
-      port: 9101
+      port: 9202
   carre:
     socket:
       host: pami-carre
-      port: 9102
+      port: 9203
   rond:
     socket:
       host: pami-rond
-      port: 9103
+      port: 9204
 
 # Balise de vision
 balise:

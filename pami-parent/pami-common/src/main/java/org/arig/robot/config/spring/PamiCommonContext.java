@@ -8,7 +8,9 @@ import org.arig.robot.filters.common.LimiterFilter.LimiterType;
 import org.arig.robot.filters.pid.PidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
+import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.PamiRobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
@@ -19,6 +21,7 @@ import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.model.ecran.EcranState;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.monitoring.MonitoringWrapper;
+import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.system.RobotGroupOverSocket;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.arig.robot.system.blockermanager.SystemBlockerManagerImpl;
@@ -179,9 +182,14 @@ public class PamiCommonContext {
         final Integer serverPort = env.getRequiredProperty("robot.server.port", Integer.class);
         final String nerellHost = env.getRequiredProperty("nerell.socket.host");
         final Integer nerellPort = env.getRequiredProperty("nerell.socket.port", Integer.class);
-        RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(pamiRobotStatus, serverPort, nerellHost, nerellPort, threadPoolTaskExecutor);
+        RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(pamiRobotStatus, AbstractRobotStatus::pamiTriangleGroupOk, serverPort, nerellHost, nerellPort, threadPoolTaskExecutor);
         robotGroupOverSocket.openSocket();
         return robotGroupOverSocket;
+    }
+
+    @Bean
+    public RobotGroupService robotGroupService(final EurobotStatus rs, final RobotGroup robotGroup, final ThreadPoolExecutor threadPoolTaskExecutor) {
+        return new RobotGroupService(rs, robotGroup, threadPoolTaskExecutor);
     }
 
     @Bean

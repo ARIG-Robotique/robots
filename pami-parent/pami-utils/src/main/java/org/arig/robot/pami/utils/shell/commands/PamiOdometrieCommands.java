@@ -134,7 +134,7 @@ public class PamiOdometrieCommands {
     @ShellMethodAvailability("alimentationOk")
     public void odometrieDistance(int nbCycle) {
 
-        double distanceReel = DISTANCE_TABLE - (PamiConstantesConfig.dstCallage * 2);
+        double distanceReel = DISTANCE_TABLE - (PamiConstantesConfig.dstCallageArriere * 2);
 
         encoders.reset();
         rs.enableAsserv();
@@ -178,7 +178,7 @@ public class PamiOdometrieCommands {
             countPerMmByCycle.add(((localRoueDroite + localRoueGauche) / 2) / distanceReel);
 
             rs.enableForceMonitoring();
-            currentPosition.updatePosition(convRobot.mmToPulse(DISTANCE_TABLE - PamiConstantesConfig.dstCallage), 0, 0);
+            currentPosition.updatePosition(convRobot.mmToPulse(DISTANCE_TABLE - PamiConstantesConfig.dstCallageArriere), 0, 0);
             trajectoryManager.gotoPoint(DISTANCE_TABLE - distanceReel - 50, 0, GotoOption.ARRIERE, GotoOption.SANS_ORIENTATION);
             rs.enableCalageBordure(TypeCalage.ARRIERE);
             trajectoryManager.reculeMMSansAngle(200);

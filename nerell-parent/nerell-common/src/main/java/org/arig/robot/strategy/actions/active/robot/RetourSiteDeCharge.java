@@ -70,10 +70,10 @@ public class RetourSiteDeCharge extends AbstractNerellAction {
 
             try {
                 log.info("Go site de charge : {}", gotoSite);
-                group.siteDeCharge(gotoSite);
+                groups.forEach(g -> g.siteDeCharge(gotoSite));
 
                 mv.pathTo(entry, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
-                group.siteDeCharge(destSite);
+                groups.forEach(g -> g.siteDeCharge(destSite));
                 log.info("Arrivée au site de charge : {}", destSite);
 
                 complete(true);
@@ -158,7 +158,7 @@ public class RetourSiteDeCharge extends AbstractNerellAction {
         if (!isCompleted()) {
             log.error("Erreur d'exécution de l'action");
             updateValidTime();
-            group.siteDeCharge(SiteDeCharge.AUCUN);
+            groups.forEach(g -> g.siteDeCharge(SiteDeCharge.AUCUN));
         }
     }
 
