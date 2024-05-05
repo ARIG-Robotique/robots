@@ -8,12 +8,16 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.ActionSuperviseur;
 import org.arig.robot.model.CommandeRobot;
+import org.arig.robot.model.Position;
+import org.arig.robot.model.RobotConfig;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.SensRotation;
+import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.LidarService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.strategy.StrategyManager;
 import org.arig.robot.system.pathfinding.PathFinder;
+import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
@@ -47,6 +51,9 @@ public class MouvementController {
     private AbstractRobotStatus rs;
 
     @Autowired
+    private RobotConfig config;
+
+    @Autowired
     private CommandeRobot cmdRobot;
 
     @Autowired
@@ -55,6 +62,13 @@ public class MouvementController {
     @Autowired
     @Qualifier("trajectoryManager")
     private TrajectoryManager trajectoryManager;
+
+    @Autowired
+    @Qualifier("currentPosition")
+    private Position position;
+
+    @Autowired
+    private ConvertionRobotUnit conv;
 
     @Autowired
     private StrategyManager strategyManager;
@@ -148,5 +162,100 @@ public class MouvementController {
     @PostMapping(value = "/recule")
     public void recule(@RequestParam("distance") final double distance) throws AvoidingException {
         trajectoryManager.reculeMM(distance);
+    }
+
+    @PostMapping(value = "/calage")
+    public void calage(@RequestParam("type") final TypeCalage type) throws AvoidingException {
+        double angle = trajectoryManager.currentAngleDeg();
+        double currX = trajectoryManager.currentXMm();
+        double currY = trajectoryManager.currentYMm();
+
+        // détermine ou on va se caller
+        double dstToBorder;
+        double finalAngle;
+        Double finalX = null;
+        Double finalY = null;
+        if (type == TypeCalage.AVANT) {
+            if (Math.abs(angle) >= 178) {
+                dstToBorder = currX;
+                finalAngle = 180;
+                finalX = config.distanceCalageAvant();
+            } else if (Math.abs(angle) <= 2) {
+                dstToBorder = 3000 - currX;
+                finalAngle = 0;
+                finalX = 3000 - config.distanceCalageAvant();
+            } else if (Math.abs(angle - 90) <= 2) {
+                dstToBorder = 2000 - currY;
+                finalAngle = 90;
+                finalY = 2000 - config.distanceCalageAvant();
+            } else if (Math.abs(angle + 90) <= 2) {
+                dstToBorder = currY;
+                finalAngle = -90;
+                finalY = config.distanceCalageAvant();
+            } else {
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+            }
+        } else if (type == TypeCalage.ARRIERE) {
+            if (Math.abs(angle) >= 178) {
+                dstToBorder = 3000 - currX;
+                finalAngle = 180;
+                finalX = 3000 - config.distanceCalageArriere();
+            } else if (Math.abs(angle) <= 2) {
+                dstToBorder = currX;
+                finalAngle = 0;
+                finalX = config.distanceCalageArriere();
+            } else if (Math.abs(angle - 90) <= 2) {
+                dstToBorder = currY;
+                finalAngle = 90;
+                finalY = config.distanceCalageArriere();
+            } else if (Math.abs(angle + 90) <= 2) {
+                dstToBorder = 2000 - currY;
+                finalAngle = -90;
+                finalY = 2000 - config.distanceCalageArriere();
+            } else {
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if (type == TypeCalage.AVANT) {
+            double mvt = dstToBorder - config.distanceCalageAvant() - 10;
+            if (mvt > 0) {
+                rs.enableCalageBordure(type, TypeCalage.FORCE);
+                trajectoryManager.setVitessePercent(50, 100);
+                trajectoryManager.avanceMM(mvt);
+            }
+        } else {
+            double mvt = dstToBorder - config.distanceCalageArriere() - 10;
+            if (mvt > 0) {
+                rs.enableCalageBordure(type, TypeCalage.FORCE);
+                trajectoryManager.setVitessePercent(50, 100);
+                trajectoryManager.reculeMM(mvt);
+            }
+        }
+
+        if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
+            return;
+        }
+
+        trajectoryManager.setVitessePercent(0, 100);
+        rs.enableCalageBordure(type);
+
+        if (type == TypeCalage.AVANT) {
+            trajectoryManager.avanceMMSansAngle(40);
+        } else {
+            trajectoryManager.reculeMMSansAngle(40);
+        }
+
+        position.setAngle(conv.degToPulse(finalAngle));
+        if (finalX != null) {
+            position.getPt().setX(conv.mmToPulse(finalX));
+        }
+        if (finalY != null) {
+            position.getPt().setY(conv.mmToPulse(finalY));
+        }
+
+        trajectoryManager.setVitessePercent(50, 100);
     }
 }
