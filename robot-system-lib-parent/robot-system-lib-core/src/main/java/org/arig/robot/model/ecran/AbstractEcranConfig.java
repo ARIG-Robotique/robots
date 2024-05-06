@@ -18,8 +18,6 @@ public abstract class AbstractEcranConfig implements Serializable {
     private boolean modeManuel;
     private boolean skipCalageBordure;
     private boolean updatePhoto;
-    private boolean etalonnageBalise;
-    private boolean etalonnageOk;
     private Map<String, Boolean> options;
 
     public boolean hasOption(String name) {

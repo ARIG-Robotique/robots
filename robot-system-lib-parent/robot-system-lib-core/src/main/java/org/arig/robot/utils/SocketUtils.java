@@ -15,6 +15,7 @@ public class SocketUtils {
         try (Socket s = new Socket()) {
             s.setSoTimeout(timeout);
             s.connect(new java.net.InetSocketAddress(host, port), timeout);
+            s.close();
             return true;
         } catch (Exception e) {
             return false;

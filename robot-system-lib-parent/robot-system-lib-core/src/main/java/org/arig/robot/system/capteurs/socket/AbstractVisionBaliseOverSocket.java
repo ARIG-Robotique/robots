@@ -1,20 +1,25 @@
 package org.arig.robot.system.capteurs.socket;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.socket.AbstractResponseWithData;
-import org.arig.robot.communication.socket.balise.DetectionQuery;
-import org.arig.robot.communication.socket.balise.DetectionResponse;
-import org.arig.robot.communication.socket.balise.EchoQuery;
-import org.arig.robot.communication.socket.balise.EchoResponse;
-import org.arig.robot.communication.socket.balise.EtalonnageQuery;
-import org.arig.robot.communication.socket.balise.EtalonnageResponse;
+import org.arig.robot.communication.socket.balise.AbstractBaliseResponseWithData;
+import org.arig.robot.communication.socket.balise.AliveQuery;
+import org.arig.robot.communication.socket.balise.ConfigQuery;
+import org.arig.robot.communication.socket.balise.ConfigQueryData;
+import org.arig.robot.communication.socket.balise.DataQuery;
+import org.arig.robot.communication.socket.balise.DataQueryData;
+import org.arig.robot.communication.socket.balise.EmptyResponse;
 import org.arig.robot.communication.socket.balise.ExitQuery;
-import org.arig.robot.communication.socket.balise.ExitResponse;
 import org.arig.robot.communication.socket.balise.IdleQuery;
+import org.arig.robot.communication.socket.balise.IdleQueryData;
 import org.arig.robot.communication.socket.balise.IdleResponse;
-import org.arig.robot.communication.socket.balise.PhotoQuery;
-import org.arig.robot.communication.socket.balise.PhotoResponse;
-import org.arig.robot.communication.socket.balise.StatutQuery;
+import org.arig.robot.communication.socket.balise.ImageQuery;
+import org.arig.robot.communication.socket.balise.ImageQueryData;
+import org.arig.robot.communication.socket.balise.ImageResponse;
+import org.arig.robot.communication.socket.balise.ProcessQuery;
+import org.arig.robot.communication.socket.balise.StatusQuery;
+import org.arig.robot.communication.socket.balise.StatusResponse;
+import org.arig.robot.communication.socket.balise.TeamQuery;
+import org.arig.robot.communication.socket.balise.TeamQueryData;
 import org.arig.robot.communication.socket.balise.enums.BaliseAction;
 import org.arig.robot.system.communication.AbstractSocketClient;
 
@@ -22,30 +27,29 @@ import java.io.File;
 import java.io.Serializable;
 
 @Slf4j
-public abstract class AbstractVisionBaliseOverSocket<STATUT extends Serializable>
+public abstract class AbstractVisionBaliseOverSocket<DATA extends Serializable>
         extends AbstractSocketClient<BaliseAction>
-        implements IVisionBalise<STATUT> {
+    implements IVisionBalise<DATA> {
 
-    // type de retour de la méthode "getStatut"
-    private final Class<? extends AbstractResponseWithData<BaliseAction, STATUT>> statutReponseType;
+    private final Class<? extends AbstractBaliseResponseWithData<DATA>> dataResponseType;
 
     public AbstractVisionBaliseOverSocket(String hostname, Integer port,
-                                          Class<? extends AbstractResponseWithData<BaliseAction, STATUT>> statutReponseType) {
+                                          Class<? extends AbstractBaliseResponseWithData<DATA>> statutReponseType) {
         super(hostname, port, 10000);
-        this.statutReponseType = statutReponseType;
+        this.dataResponseType = statutReponseType;
     }
 
     public AbstractVisionBaliseOverSocket(File socketFile,
-                                          Class<? extends AbstractResponseWithData<BaliseAction, STATUT>> statutReponseType) {
+                                          Class<? extends AbstractBaliseResponseWithData<DATA>> statutReponseType) {
         super(socketFile);
-        this.statutReponseType = statutReponseType;
+        this.dataResponseType = statutReponseType;
     }
 
     @Override
     public void end() {
         if (isOpen()) {
             try {
-                sendToSocketAndGet(new ExitQuery(), ExitResponse.class);
+                sendToSocketAndGet(new ExitQuery(), EmptyResponse.class);
             } catch (Exception e) {
                 log.warn("Erreur de lecture", e);
             }
@@ -54,58 +58,32 @@ public abstract class AbstractVisionBaliseOverSocket<STATUT extends Serializable
     }
 
     @Override
-    public void idle() {
-        if (isOpen()) {
-            try {
-                sendToSocketAndGet(new IdleQuery(), IdleResponse.class);
-            } catch (Exception e) {
-                log.warn("Erreur de lecture", e);
-            }
-        }
-    }
-
-    @Override
-    public void heartbeat() {
-        if (isOpen()) {
-            try {
-                sendToSocketAndGet(new EchoQuery("hello"), EchoResponse.class);
-            } catch (Exception e) {
-                log.warn("Erreur de lecture", e);
-            }
-        }
-    }
-
-    @Override
-    public EtalonnageResponse etalonnage() {
+    public EmptyResponse keepAlive() {
         try {
             openIfNecessary();
-            return sendToSocketAndGet(new EtalonnageQuery(), EtalonnageResponse.class);
-
+            return sendToSocketAndGet(new AliveQuery(), EmptyResponse.class);
         } catch (Exception e) {
-            log.warn("Erreur de récupération de l'étalonnage", e);
+            log.warn("Erreur de recupération de la photo", e);
             return null;
         }
     }
 
     @Override
-    public boolean startDetection() {
+    public EmptyResponse setConfig(ConfigQueryData queryData) {
         try {
             openIfNecessary();
-            DetectionResponse detectionResponse = sendToSocketAndGet(new DetectionQuery(), DetectionResponse.class);
-            return detectionResponse.isOk();
+            return sendToSocketAndGet(new ConfigQuery(queryData), EmptyResponse.class);
         } catch (Exception e) {
-            log.warn("Erreur de récupération de la detection", e);
-            return false;
+            log.warn("Erreur de modification de la configuration", e);
+            return null;
         }
     }
 
     @Override
-    public STATUT getStatut() {
+    public StatusResponse getStatus() {
         try {
             openIfNecessary();
-            AbstractResponseWithData<?, STATUT> response = sendToSocketAndGet(new StatutQuery(), statutReponseType);
-            return response.getData();
-
+            return sendToSocketAndGet(new StatusQuery(), StatusResponse.class);
         } catch (Exception e) {
             log.warn("Erreur de recupération du statut", e);
             return null;
@@ -113,14 +91,59 @@ public abstract class AbstractVisionBaliseOverSocket<STATUT extends Serializable
     }
 
     @Override
-    public PhotoResponse getPhoto() {
+    public EmptyResponse setTeam(TeamQueryData queryData) {
         try {
             openIfNecessary();
-            return sendToSocketAndGet(new PhotoQuery(), PhotoResponse.class);
-
+            return sendToSocketAndGet(new TeamQuery(queryData), EmptyResponse.class);
         } catch (Exception e) {
-            log.warn("Erreur de recupération de la photo", e);
+            log.warn("Erreur de modification de la team", e);
             return null;
         }
     }
+
+    @Override
+    public AbstractBaliseResponseWithData<DATA> getData(DataQueryData<?> queryData) {
+        try {
+            openIfNecessary();
+            return sendToSocketAndGet(new DataQuery(queryData), dataResponseType);
+        } catch (Exception e) {
+            log.warn("Erreur de lecture des données de vision", e);
+            return null;
+        }
+    }
+
+    @Override
+    public ImageResponse getImage(ImageQueryData queryData) {
+        try {
+            openIfNecessary();
+            return sendToSocketAndGet(new ImageQuery(queryData), ImageResponse.class);
+
+        } catch (Exception e) {
+            log.warn("Erreur de recupération de l'image", e);
+            return null;
+        }
+    }
+
+    @Override
+    public EmptyResponse process() {
+        try {
+            openIfNecessary();
+            return sendToSocketAndGet(new ProcessQuery(), EmptyResponse.class);
+        } catch (Exception e) {
+            log.warn("Erreur de traitement de l'image", e);
+            return null;
+        }
+    }
+
+    @Override
+    public IdleResponse setIdle(IdleQueryData queryData) {
+        try {
+            openIfNecessary();
+            return sendToSocketAndGet(new IdleQuery(queryData), IdleResponse.class);
+        } catch (Exception e) {
+            log.warn("Erreur de modification de l'idle", e);
+            return null;
+        }
+    }
+
 }

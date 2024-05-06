@@ -2,13 +2,13 @@ package org.arig.robot.config.spring;
 
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.communication.bouchon.BouchonI2CManager;
 import org.arig.robot.communication.i2c.I2CManager;
 import org.arig.robot.communication.i2c.I2CManagerDevice;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.RobotName.RobotIdentification;
+import org.arig.robot.model.balise.BaliseData;
 import org.arig.robot.model.bouchon.BouchonEncoderValues;
 import org.arig.robot.model.bouchon.BouchonI2CDevice;
 import org.arig.robot.system.avoiding.AvoidingService;
@@ -16,7 +16,6 @@ import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
 import org.arig.robot.system.capteurs.ARIG2ChannelsAlimentationSensorBouchon;
 import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
 import org.arig.robot.system.capteurs.VisionBaliseBouchon;
-import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.capteurs.i2c.IAlimentationSensor;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.arig.robot.system.capteurs.socket.IVisionBalise;
@@ -120,20 +119,15 @@ public class PamiSimulatorContext {
         return new ARIG2ChannelsAlimentationSensorBouchon("alim sensor");
     }
 
+
     @Bean
     public ILidarTelemeter rplidar() {
         return new LidarTelemeterBouchon();
     }
 
     @Bean
-    public IVisionBalise visionBalise(Environment env) {
-        if (StringUtils.equalsIgnoreCase(env.getProperty("balise.impl", String.class, "bouchon"), "bouchon")) {
-            return new VisionBaliseBouchon();
-        } else {
-            final String host = env.getRequiredProperty("balise.socket.host");
-            final Integer port = env.getRequiredProperty("balise.socket.port", Integer.class);
-            return new VisionBaliseOverSocket(host, port);
-        }
+    public IVisionBalise<BaliseData> visionBalise(Environment env) {
+        return new VisionBaliseBouchon();
     }
 
     @Bean

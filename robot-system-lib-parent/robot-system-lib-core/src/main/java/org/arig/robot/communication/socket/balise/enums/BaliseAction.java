@@ -1,11 +1,14 @@
 package org.arig.robot.communication.socket.balise.enums;
 
 public enum BaliseAction {
+  ALIVE,
+  CONFIG,
+  LOCK_CAMERA,
     STATUS,
-    PHOTO,
-    ETALONNAGE,
-    DETECTION,
+  TEAM,
+  DATA,
+  IMAGE,
+  PROCESS,
     IDLE,
-    EXIT,
-    ECHO
+  EXIT
 }

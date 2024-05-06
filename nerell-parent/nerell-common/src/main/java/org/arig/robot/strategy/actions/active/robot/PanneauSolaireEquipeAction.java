@@ -130,18 +130,18 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
             // le nombre de panneaux tournés depend de jusqu'ou on a pu avancer
             if (enZone) {
                 int x = getX((int) mv.currentXMm());
-                if (x > 1725 - 40) {
-                    rs.panneauxSolaire().equipeDone(6);
-                } else if (x > 1500 - 40) {
-                    rs.panneauxSolaire().equipeDone(5);
-                } else if (x > 1275 - 40) {
-                    rs.panneauxSolaire().equipeDone(4);
-                } else if (x > 725 - 40) {
-                    rs.panneauxSolaire().equipeDone(3);
-                } else if (x > 500 - 40) {
-                    rs.panneauxSolaire().equipeDone(2);
-                } else if (x > 275 - 40) {
-                    rs.panneauxSolaire().equipeDone(1);
+                if (x > 1725) {
+                    rs.panneauxSolaire().equipeDone(6, rsNerell.getElapsedTime());
+                } else if (x > 1500) {
+                    rs.panneauxSolaire().equipeDone(5, rsNerell.getElapsedTime());
+                } else if (x > 1275) {
+                    rs.panneauxSolaire().equipeDone(4, rsNerell.getElapsedTime());
+                } else if (x > 725) {
+                    rs.panneauxSolaire().equipeDone(3, rsNerell.getElapsedTime());
+                } else if (x > 500) {
+                    rs.panneauxSolaire().equipeDone(2, rsNerell.getElapsedTime());
+                } else if (x > 275) {
+                    rs.panneauxSolaire().equipeDone(1, rsNerell.getElapsedTime());
                 }
 
                 if (x > 900) {

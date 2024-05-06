@@ -15,6 +15,7 @@ import org.arig.robot.model.RobotConfig;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.monitoring.MonitoringWrapper;
+import org.arig.robot.services.AbstractBaliseService;
 import org.arig.robot.services.AbstractEcranService;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.AbstractServosService;
@@ -23,7 +24,6 @@ import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.arig.robot.system.capteurs.socket.RPLidarA2TelemeterOverSocket;
-import org.arig.robot.system.group.RobotGroup;
 import org.arig.robot.system.pathfinding.PathFinder;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.arig.robot.utils.TableUtils;
@@ -79,6 +79,9 @@ public abstract class AbstractOrdonanceur {
 
     @Autowired
     protected ILidarTelemeter lidar;
+
+    @Autowired
+    protected AbstractBaliseService<?> baliseService;
 
     @Autowired
     protected TableUtils tableUtils;
@@ -194,6 +197,7 @@ public abstract class AbstractOrdonanceur {
             ThreadUtils.sleep(500);
 
             lidar.stopScan();
+            baliseService.stopDetection();
 
             // On coupe le jus
             io.disableAlimServos();
@@ -241,6 +245,13 @@ public abstract class AbstractOrdonanceur {
             ecranService.displayMessage(error, LogLevel.ERROR);
             throw new ExitProgram(true);
         }
+    }
+
+    /**
+     * Prend en compte la config de la balise
+     */
+    protected void configBalise(String team) {
+        baliseService.setTeam(team);
     }
 
     /**

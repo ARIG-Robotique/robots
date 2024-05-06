@@ -1,13 +1,12 @@
 package org.arig.robot.communication.socket.balise;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.arig.robot.model.balise.BaliseData;
 
 import java.io.Serializable;
 
-@Data
 @EqualsAndHashCode(callSuper = true)
-public class IdleResponse
-    extends AbstractBaliseResponse
+public class DataResponse
+    extends AbstractBaliseResponseWithData<BaliseData>
     implements Serializable {
 }

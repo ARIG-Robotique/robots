@@ -31,7 +31,7 @@ class PanneauxSolaireTest {
     @Test
     void testEquipeDone5Jaune() {
         panneauxSolaire.team(Team.JAUNE);
-        panneauxSolaire.equipeDone(5);
+      panneauxSolaire.equipeDone(5, 0);
         Assertions.assertEquals(panneauxSolaire.get(1).couleur(), CouleurPanneauSolaire.AUCUNE);
         Assertions.assertEquals(panneauxSolaire.get(2).couleur(), CouleurPanneauSolaire.AUCUNE);
         Assertions.assertEquals(panneauxSolaire.get(3).couleur(), CouleurPanneauSolaire.AUCUNE);
@@ -46,7 +46,7 @@ class PanneauxSolaireTest {
     @Test
     void testEquipeDone3Bleu() {
         panneauxSolaire.team(Team.BLEU);
-        panneauxSolaire.equipeDone(3);
+      panneauxSolaire.equipeDone(3, 0);
         Assertions.assertEquals(panneauxSolaire.get(1).couleur(), CouleurPanneauSolaire.BLEU);
         Assertions.assertEquals(panneauxSolaire.get(2).couleur(), CouleurPanneauSolaire.BLEU);
         Assertions.assertEquals(panneauxSolaire.get(3).couleur(), CouleurPanneauSolaire.BLEU);
@@ -113,11 +113,6 @@ class PanneauxSolaireTest {
 
         panneauxSolaire.get(5).couleur(CouleurPanneauSolaire.JAUNE);
         panneauxSolaire.get(6).couleur(CouleurPanneauSolaire.JAUNE);
-        panneauxSolaire.refreshFromCamera(
-                CouleurPanneauSolaire.BLEU, CouleurPanneauSolaire.BLEU, CouleurPanneauSolaire.BLEU,
-                CouleurPanneauSolaire.BLEU, CouleurPanneauSolaire.AUCUNE, CouleurPanneauSolaire.AUCUNE,
-                CouleurPanneauSolaire.JAUNE, CouleurPanneauSolaire.JAUNE, CouleurPanneauSolaire.JAUNE
-        );
         Assertions.assertEquals(25, panneauxSolaire.score());
     }
 

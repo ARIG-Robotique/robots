@@ -11,7 +11,6 @@ import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.system.group.RobotGroup;
 import org.arig.robot.utils.ThreadUtils;
-import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -96,7 +95,6 @@ public class RobotGroupService implements RobotGroup.Handler {
                 rs.preferePanneaux(data[0] > 0);
                 rs.activeVolAuSol(data[1] > 0);
                 rs.activeVolJardinieres(data[2] > 0);
-                rs.etalonageBaliseOk(data[3] > 0);
                 break;
             case CURRENT_ACTION:
                 String actionName = null;
@@ -218,8 +216,7 @@ public class RobotGroupService implements RobotGroup.Handler {
         byte[] data = new byte[]{
                 (byte) (rs.preferePanneaux() ? 1 : 0),
                 (byte) (rs.activeVolAuSol() ? 1 : 0),
-                (byte) (rs.activeVolJardinieres() ? 1 : 0),
-                (byte) (rs.etalonageBaliseOk() ? 1 : 0)
+            (byte) (rs.activeVolJardinieres() ? 1 : 0)
         };
         sendEvent(StatusEvent.CONFIG, data);
     }

@@ -7,16 +7,16 @@ import org.arig.robot.communication.socket.balise.enums.BaliseAction;
 import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
-public class IdleQuery
-    extends AbstractQueryWithData<BaliseAction, IdleQueryData>
+public class TeamQuery
+    extends AbstractQueryWithData<BaliseAction, TeamQueryData>
     implements Serializable {
 
-    public IdleQuery() {
-        super(BaliseAction.IDLE);
+    public TeamQuery() {
+        super(BaliseAction.TEAM);
     }
 
-  public IdleQuery(IdleQueryData data) {
-    super(BaliseAction.IDLE, data);
-  }
+    public TeamQuery(TeamQueryData data) {
+        super(BaliseAction.TEAM, data);
+    }
 
 }

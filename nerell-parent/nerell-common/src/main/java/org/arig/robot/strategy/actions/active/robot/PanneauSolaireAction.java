@@ -102,7 +102,8 @@ public class PanneauSolaireAction extends AbstractNerellAction {
                 servosNerell.groupePanneauOuvert(true);
 
                 ThreadUtils.sleep(500);
-                panneau.couleur(rs.team() == Team.JAUNE ? CouleurPanneauSolaire.JAUNE : CouleurPanneauSolaire.BLEU);
+                panneau.couleur(rs.team() == Team.JAUNE ? CouleurPanneauSolaire.JAUNE : CouleurPanneauSolaire.BLEU)
+                    .millis(rsNerell.getElapsedTime());
 
                 servosNerell.groupePanneauFerme(false);
 

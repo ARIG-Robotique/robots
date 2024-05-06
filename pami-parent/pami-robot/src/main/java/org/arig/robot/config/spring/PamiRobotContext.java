@@ -12,7 +12,7 @@ import org.arig.robot.constants.PamiConstantesConfig;
 import org.arig.robot.constants.PamiConstantesI2C;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.RobotName.RobotIdentification;
-import org.arig.robot.model.balise.StatutBalise;
+import org.arig.robot.model.balise.BaliseData;
 import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
@@ -165,7 +165,7 @@ public class PamiRobotContext {
     }
 
     @Bean
-    public IVisionBalise<StatutBalise> visionBalise(Environment env) {
+    public IVisionBalise<BaliseData> visionBalise(Environment env) {
         final String host = env.getRequiredProperty("balise.socket.host");
         final Integer port = env.getRequiredProperty("balise.socket.port", Integer.class);
         return new VisionBaliseOverSocket(host, port);

@@ -18,7 +18,9 @@ public class PanneauSolaire implements Serializable {
     @JsonProperty("color")
     private CouleurPanneauSolaire couleur;
 
-    @JsonIgnore
+  private long millis;
+
+  @JsonIgnore
     @Setter(AccessLevel.NONE)
     private byte nbTry = 0;
 

@@ -1,17 +1,18 @@
 package org.arig.robot.communication.socket.balise;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.arig.robot.communication.socket.AbstractQueryWithData;
 import org.arig.robot.communication.socket.balise.enums.BaliseAction;
 
-@Data
 @EqualsAndHashCode(callSuper = true)
-public class EchoQuery extends AbstractQueryWithData<BaliseAction, String> {
+public class ConfigQuery extends AbstractQueryWithData<BaliseAction, ConfigQueryData> {
 
-    public EchoQuery(final String msg) {
-        super(BaliseAction.ECHO);
-        setData(msg);
+  public ConfigQuery() {
+    super(BaliseAction.CONFIG);
+  }
+
+  public ConfigQuery(ConfigQueryData data) {
+    super(BaliseAction.CONFIG, data);
     }
 
 }

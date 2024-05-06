@@ -5,7 +5,14 @@ import lombok.EqualsAndHashCode;
 import org.arig.robot.communication.socket.AbstractResponse;
 import org.arig.robot.communication.socket.balise.enums.BaliseAction;
 
+import java.io.Serializable;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class DetectionResponse extends AbstractResponse<BaliseAction> {
+public abstract class AbstractBaliseResponse
+    extends AbstractResponse<BaliseAction>
+    implements Serializable {
+
+  private int index;
+
 }

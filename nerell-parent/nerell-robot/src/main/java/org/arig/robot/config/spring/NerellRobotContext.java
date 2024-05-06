@@ -18,7 +18,7 @@ import org.arig.robot.constants.NerellConstantesConfig;
 import org.arig.robot.constants.NerellConstantesI2C;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.RobotName.RobotIdentification;
-import org.arig.robot.model.balise.StatutBalise;
+import org.arig.robot.model.balise.BaliseData;
 import org.arig.robot.services.NerellRobotServosService;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.avoiding.BasicAvoidingService;
@@ -216,7 +216,7 @@ public class NerellRobotContext {
     }
 
     @Bean
-    public IVisionBalise<StatutBalise> visionBalise(Environment env) {
+    public IVisionBalise<BaliseData> visionBalise(Environment env) {
         final String host = env.getRequiredProperty("balise.socket.host");
         final Integer port = env.getRequiredProperty("balise.socket.port", Integer.class);
         return new VisionBaliseOverSocket(host, port);

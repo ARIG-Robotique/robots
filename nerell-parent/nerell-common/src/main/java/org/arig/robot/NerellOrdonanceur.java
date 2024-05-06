@@ -1,8 +1,6 @@
 package org.arig.robot;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.socket.balise.EtalonnageResponse;
-import org.arig.robot.communication.socket.balise.PhotoResponse;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.constants.NerellConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
@@ -19,7 +17,6 @@ import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.bras.PositionBras;
-import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.BrasService;
@@ -113,6 +110,8 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void beforeMatch(boolean skip) {
+        configBalise(nerellRobotStatus.team().name());
+
         if (!skip) {
             positionStrategy();
         }
@@ -141,10 +140,6 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 nerellEcranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
                 throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);
             }
-        }
-
-        if (nerellRobotStatus.etalonageBaliseOk()) {
-            nerellRobotStatus.enableBalise();
         }
 
         // Visu après la tirette
@@ -203,7 +198,6 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         }
 
         baliseService.idle();
-        nerellRobotStatus.disableBalise();
     }
 
     @Override
@@ -241,8 +235,6 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         do {
             exitFromScreen();
             connectGroups();
-            connectBalise();
-            configBalise(updatePhotoFilter, doEtalonnageFilter);
 
             if (Boolean.TRUE.equals(teamChangeFilter.filter(nerellEcranService.config().getTeam()))) {
                 pamiTriangleGroupService.team(nerellEcranService.config().getTeam());
@@ -272,45 +264,6 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     }
 
     /**
-     * Tente de se connecter à la balise ou envoie un heartbeat
-     */
-    private void connectBalise() {
-        if (!baliseService.isConnected()) {
-            baliseService.tryConnect();
-        } else {
-            baliseService.heartbeat();
-        }
-    }
-
-    /**
-     * Prend en compte la config de la balise
-     */
-    private void configBalise(SignalEdgeFilter updatePhotoFilter, SignalEdgeFilter doEtalonnageFilter) {
-        if (baliseService.isConnected()) {
-            if (Boolean.TRUE.equals(updatePhotoFilter.filter(nerellEcranService.config().isUpdatePhoto()))) {
-                // sur front montant de "updatePhoto" on prend une photo et l'envoie à l'écran
-                PhotoResponse photo = baliseService.getPhoto();
-                EcranPhoto query = new EcranPhoto();
-                query.setMessage(photo == null ? "Erreur inconnue" : photo.getErrorMessage());
-                query.setPhoto(photo == null ? null : photo.getData());
-                nerellEcranService.updatePhoto(query);
-
-            } else if (Boolean.TRUE.equals(doEtalonnageFilter.filter(nerellEcranService.config().isEtalonnageBalise()))) {
-                // sur front montant de "etalonnageBalise" on lance l'étalonnage et envoie le résultat à l'écran
-                EtalonnageResponse etalonnage = baliseService.etalonnage();
-                EcranPhoto query = new EcranPhoto();
-                query.setMessage(etalonnage == null ? "Erreur inconnue" : etalonnage.getErrorMessage());
-                query.setPhoto(etalonnage == null ? null : etalonnage.getData());
-                nerellEcranService.updatePhoto(query);
-            }
-
-            nerellRobotStatus.etalonageBaliseOk(nerellEcranService.config().isEtalonnageOk());
-        } else {
-            nerellRobotStatus.etalonageBaliseOk(false);
-        }
-    }
-
-    /**
      * Calage sur la bordure
      */
     @Override
@@ -324,8 +277,8 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         try {
             robotStatus.disableAvoidance();
             position.setPt(new Point(
-                    conv.mmToPulse(getX(500)),
-                    conv.mmToPulse(1000)
+                conv.mmToPulse(getX(500)),
+                conv.mmToPulse(1000)
             ));
             if (nerellRobotStatus.team() == Team.BLEU) {
                 position.setAngle(conv.degToPulse(0));
@@ -462,8 +415,6 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             avoidingService.setSafeAvoidance(nerellEcranService.config().isSafeAvoidance());
 
             connectGroups();
-            connectBalise();
-            configBalise(updatePhotoFilter, doEtalonnageFilter);
 
             ThreadUtils.sleep(manuel ? 4000 : 200);
         }

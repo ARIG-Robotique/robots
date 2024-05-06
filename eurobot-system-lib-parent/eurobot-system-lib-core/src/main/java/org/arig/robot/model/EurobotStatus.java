@@ -31,22 +31,6 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
         stocksPots.get(team == Team.BLEU ? StockPots.ID.JAUNE_NORD : StockPots.ID.BLEU_NORD).pris();
     }
-
-    private boolean etalonageBaliseOk = false;
-
-    @Setter(AccessLevel.NONE)
-    private boolean baliseEnabled = false;
-
-    public void enableBalise() {
-        log.info("[RS] activation de la balise");
-        baliseEnabled = true;
-    }
-
-    public void disableBalise() {
-        log.info("[RS] désactivation de la balise");
-        baliseEnabled = false;
-    }
-
     @Setter(AccessLevel.NONE)
     private Team team;
 
@@ -104,11 +88,6 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     public int panneauxSolairePointRestant() {
         return Math.max(0, 30 - panneauxSolaire.score());
-    }
-
-    public void couleurPanneauSolaire(int numero, CouleurPanneauSolaire couleur) {
-        log.info("[RS] couleur panneau solaire {} : {}", numero, couleur);
-        panneauxSolaire.get(numero).couleur(couleur);
     }
 
     @Setter(AccessLevel.NONE)

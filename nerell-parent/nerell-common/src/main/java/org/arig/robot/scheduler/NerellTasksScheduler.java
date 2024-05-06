@@ -68,18 +68,25 @@ public class NerellTasksScheduler {
         }
     }
 
-    @Scheduled(fixedDelay = 2000)
-    public void updateBaliseStatus() {
-        if (!rs.baliseEnabled()) {
-            return;
+    @Scheduled(fixedDelay = 1000)
+    public void sendBaliseKeepAlive() {
+        if (rs.matchEnabled()) return;
+
+        if (!baliseService.isOK()) {
+            baliseService.startDetection();
+        } else {
+            baliseService.updateStatus();
         }
+    }
 
-        if (!baliseService.isConnected()) {
-            baliseService.tryConnect();
+    @Scheduled(fixedDelay = 1000)
+    public void updateBaliseData() {
+        if (!rs.matchEnabled()) return;
 
+        if (baliseService.isOK()) {
+            baliseService.updateData();
         } else {
             baliseService.startDetection();
-            baliseService.updateStatus();
         }
     }
 }

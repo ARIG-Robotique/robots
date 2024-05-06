@@ -21,19 +21,19 @@ public class PanneauxSolaire {
 
     PanneauSolaire[] data = new PanneauSolaire[]{
             // Bleu
-            new PanneauSolaire(1),
-            new PanneauSolaire(2),
-            new PanneauSolaire(3),
+        new PanneauSolaire(1).millis(Long.MIN_VALUE),
+        new PanneauSolaire(2).millis(Long.MIN_VALUE),
+        new PanneauSolaire(3).millis(Long.MIN_VALUE),
 
             // Common
-            new PanneauSolaire(4),
-            new PanneauSolaire(5),
-            new PanneauSolaire(6),
+        new PanneauSolaire(4).millis(Long.MIN_VALUE),
+        new PanneauSolaire(5).millis(Long.MIN_VALUE),
+        new PanneauSolaire(6).millis(Long.MIN_VALUE),
 
             // Jaune
-            new PanneauSolaire(7),
-            new PanneauSolaire(8),
-            new PanneauSolaire(9)
+        new PanneauSolaire(7).millis(Long.MIN_VALUE),
+        new PanneauSolaire(8).millis(Long.MIN_VALUE),
+        new PanneauSolaire(9).millis(Long.MIN_VALUE)
     };
 
     public PanneauSolaire get(int numero) {
@@ -72,18 +72,12 @@ public class PanneauxSolaire {
         return null;
     }
 
-    public void refreshFromCamera(CouleurPanneauSolaire... couleurPanneaux) {
-        if (couleurPanneaux.length != data.length) {
-            throw new IllegalArgumentException("Nombre de couleur de panneaux incorrect");
-        }
-        for (int i = 0; i < couleurPanneaux.length; i++) {
-            CouleurPanneauSolaire newColor = couleurPanneaux[i];
-            CouleurPanneauSolaire oldColor = data[i].couleur();
-            if (oldColor == CouleurPanneauSolaire.AUCUNE && newColor != CouleurPanneauSolaire.AUCUNE) {
-                log.info("Panneau {}, changement depuis la camera {} -> {}", i + 1, oldColor.name(), newColor.name());
-                data[i].couleur(newColor);
-            }
-        }
+  public void refreshFromCamera(int nb, CouleurPanneauSolaire couleur, long millis) {
+    if (data[nb - 1].millis() >= millis) {
+      return;
+    }
+
+    data[nb - 1].couleur(couleur).millis(millis);
     }
 
     int score() {
@@ -116,15 +110,15 @@ public class PanneauxSolaire {
         }
     }
 
-    public void equipeDone(int nb) {
+  public void equipeDone(int nb, long millis) {
         log.info("[RS] panneaux solaires équipe done : {}", nb);
         if (team == Team.BLEU) {
             for (int i = 1; i <= nb; i++) {
-                data[i - 1].couleur(CouleurPanneauSolaire.BLEU);
+              data[i - 1].couleur(CouleurPanneauSolaire.BLEU).millis(millis);
             }
         } else {
             for (int i = 1; i <= nb; i++) {
-                data[9 - i].couleur(CouleurPanneauSolaire.JAUNE);
+              data[9 - i].couleur(CouleurPanneauSolaire.JAUNE).millis(millis);
             }
         }
     }

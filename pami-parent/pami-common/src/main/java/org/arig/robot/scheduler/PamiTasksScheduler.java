@@ -71,21 +71,4 @@ public class PamiTasksScheduler {
             }
         }
     }
-
-    @Scheduled(fixedDelay = 2000)
-    public void updateBaliseStatus() {
-        if (!rs.baliseEnabled()) {
-            return;
-        }
-
-        if (!baliseService.isConnected()) {
-            baliseService.tryConnect();
-
-        } else {
-            if (!rs.twoRobots()) {
-                baliseService.startDetection();
-            }
-            baliseService.updateStatus();
-        }
-    }
 }

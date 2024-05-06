@@ -9,6 +9,7 @@ import org.arig.robot.communication.i2c.I2CManagerDevice;
 import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.RobotName.RobotIdentification;
+import org.arig.robot.model.balise.BaliseData;
 import org.arig.robot.model.bouchon.BouchonEncoderValues;
 import org.arig.robot.model.bouchon.BouchonI2CDevice;
 import org.arig.robot.model.bouchon.BouchonI2CMultiplexer;
@@ -120,7 +121,7 @@ public class NerellSimulatorContext {
     }
 
     @Bean
-    public IVisionBalise visionBalise(Environment env) {
+    public IVisionBalise<BaliseData> visionBalise(Environment env) {
         if (StringUtils.equalsIgnoreCase(env.getProperty("balise.impl", String.class, "bouchon"), "bouchon")) {
             return new VisionBaliseBouchon();
         } else {

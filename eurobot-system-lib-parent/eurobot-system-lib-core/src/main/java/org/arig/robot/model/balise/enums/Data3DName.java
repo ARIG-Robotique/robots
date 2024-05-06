@@ -1,0 +1,30 @@
+package org.arig.robot.model.balise.enums;
+
+public enum Data3DName {
+    UNKNOWN,
+    BOARD,
+    BLEU,
+    JAUNE,
+    TRIANGLE,
+    CARE,
+    ROND,
+    SOLAR_PANEL_0,
+    SOLAR_PANEL_1,
+    SOLAR_PANEL_2,
+    SOLAR_PANEL_3,
+    SOLAR_PANEL_4,
+    SOLAR_PANEL_5,
+    SOLAR_PANEL_6,
+    SOLAR_PANEL_7,
+    SOLAR_PANEL_8,
+    FRAGILE,
+    RESISTANTE,
+    POT,
+    PLANTEPOT,
+    STOCK_NORD,
+    STOCK_NORD_OUEST,
+    STOCK_NORD_EST,
+    STOCK_SUD,
+    STOCK_SUD_EST,
+    STOCK_SUD_OUEST
+}

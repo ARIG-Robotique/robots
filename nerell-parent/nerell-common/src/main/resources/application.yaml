@@ -173,7 +173,8 @@ spring:
 balise:
   impl: SOCKET
   socket:
-    host: sauron
+    host: overlord
+    port: 50667
 
 # PAMIs
 pamis:
@@ -189,4 +190,4 @@ pamis:
 
 # Ecran
 ecran:
-  binary: ${user.home}/dev/ARIG/arig-wksp/cpp-linux/robots-gui/build/Desktop-Debug/robots-gui
+  binary: ${user.home}/dev/ARIG/arig-wksp/cpp-linux/robots-gui-build/robots-gui

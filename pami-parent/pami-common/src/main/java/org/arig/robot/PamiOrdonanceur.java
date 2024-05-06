@@ -8,14 +8,11 @@ import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
-import org.arig.robot.model.InitStep;
 import org.arig.robot.model.PamiRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
-import org.arig.robot.model.ecran.EcranState;
 import org.arig.robot.model.enums.TypeCalage;
-import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.PamiEcranService;
 import org.arig.robot.services.PamiIOService;
 import org.arig.robot.services.PamiRobotServosService;
@@ -35,9 +32,6 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
 
     @Autowired
     private RobotGroupService groupService;
-
-    @Autowired
-    private BaliseService baliseService;
 
     @Autowired
     private PamiEcranService pamiEcranService;
@@ -118,7 +112,6 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void afterMatch() {
-        pamiRobotStatus.disableBalise();
     }
 
     @Override
@@ -141,11 +134,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
             pamiIOService.sound();
 
             exitFromScreen();
-            connectBalise();
             connectGroups();
-            if (!robotStatus.twoRobots()) {
-                configBalise(updatePhotoFilter, doEtalonnageFilter);
-            }
 
             if (Boolean.TRUE.equals(groupChangeFilter.filter(robotStatus.robotGroupOk()))) {
                 if (robotStatus.robotGroupOk()) {
@@ -179,45 +168,6 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
 
             ThreadUtils.sleep(1000);
         } while (!done);
-    }
-
-    /**
-     * Tente de se connecter à la balise ou envoie un heartbeat
-     */
-    private void connectBalise() {
-        if (!baliseService.isConnected()) {
-            baliseService.tryConnect();
-        } else {
-            baliseService.heartbeat();
-        }
-    }
-
-    /**
-     * Prend en compte la config de la balise
-     */
-    private void configBalise(SignalEdgeFilter updatePhotoFilter, SignalEdgeFilter doEtalonnageFilter) {
-        if (baliseService.isConnected()) {
-            /*if (Boolean.TRUE.equals(updatePhotoFilter.filter(pamiEcranService.config().isUpdatePhoto()))) {
-                // sur front montant de "updatePhoto" on prend une photo et l'envoie à l'écran
-                PhotoResponse photo = baliseService.getPhoto();
-                EcranPhoto query = new EcranPhoto();
-                query.setMessage(photo == null ? "Erreur inconnue" : photo.getErrorMessage());
-                query.setPhoto(photo == null ? null : photo.getData());
-                pamiEcranService.updatePhoto(query);
-
-            } else if (Boolean.TRUE.equals(doEtalonnageFilter.filter(pamiEcranService.config().isEtalonnageBalise()))) {
-                // sur front montant de "etalonnageBalise" on lance l'étalonnage et envoie le résultat à l'écran
-                EtalonnageResponse etalonnage = baliseService.etalonnage();
-                EcranPhoto query = new EcranPhoto();
-                query.setMessage(etalonnage == null ? "Erreur inconnue" : etalonnage.getErrorMessage());
-                query.setPhoto(etalonnage == null ? null : etalonnage.getData());
-                pamiEcranService.updatePhoto(query);
-            }
-
-            pamiRobotStatus.etalonageBaliseOk(pamiEcranService.config().isEtalonnageOk());*/
-        } else {
-            pamiRobotStatus.etalonageBaliseOk(false);
-        }
     }
 
     /**
@@ -296,7 +246,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
     }
 
     /**
-     * Etape du choix des options + config balise
+     * Etape du choix des options
      */
     private void choixConfig() {
         if (robotStatus.robotGroupOk()) {

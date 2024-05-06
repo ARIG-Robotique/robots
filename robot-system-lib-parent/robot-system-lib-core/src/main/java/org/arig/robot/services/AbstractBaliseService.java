@@ -1,62 +1,141 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.communication.socket.balise.EtalonnageResponse;
-import org.arig.robot.communication.socket.balise.PhotoResponse;
+import org.arig.robot.communication.socket.balise.ConfigQueryData;
+import org.arig.robot.communication.socket.balise.EmptyResponse;
+import org.arig.robot.communication.socket.balise.IdleQueryData;
+import org.arig.robot.communication.socket.balise.IdleResponse;
+import org.arig.robot.communication.socket.balise.ImageQueryData;
+import org.arig.robot.communication.socket.balise.ImageResponse;
+import org.arig.robot.communication.socket.balise.ImageResponseData;
+import org.arig.robot.communication.socket.balise.StatusResponse;
+import org.arig.robot.communication.socket.balise.TeamQueryData;
+import org.arig.robot.communication.socket.balise.enums.BaliseMode;
 import org.arig.robot.system.capteurs.socket.IVisionBalise;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 
 @Slf4j
-public abstract class AbstractBaliseService<STATUT extends Serializable> {
+public abstract class AbstractBaliseService<DATA extends Serializable> {
 
     @Autowired
-    protected IVisionBalise<STATUT> balise;
+    protected IVisionBalise<DATA> balise;
 
-    private boolean detectionStarted = false;
+    protected boolean isOK = false;
 
-    public boolean isConnected() {
-        return balise.isOpen();
-    }
+    protected boolean idle = true;
 
-    public boolean tryConnect() {
-        try {
-            balise.openSocket();
-            log.info("Connecté à la balise");
+    protected BaliseMode mode = BaliseMode.MILLIMETER_2D;
+
+    protected String team = "";
+
+    public boolean startDetection() {
+        if (isOK && !isIdling()) return true;
+
+        if (updateStatus() &&
+            (!isIdling() || exitIdle())
+        ) {
+            log.info("Initialisation de la balise réussie");
             return true;
-        } catch (Exception e) {
-            //log.warn("Impossible de se connecter à la balise");
+        } else {
             return false;
         }
     }
 
-    public void heartbeat() {
-        balise.heartbeat();
+    public void stopDetection() {
+        balise.end();
     }
 
-    abstract public void updateStatus();
+    public boolean configure(BaliseMode mode) {
+        EmptyResponse response = balise.setConfig(new ConfigQueryData(mode));
 
-    public void startDetection() {
-        if (!detectionStarted) {
-            log.info("Démarrage de la détection balise");
-            this.detectionStarted = balise.startDetection();
+        if (response == null) {
+            isOK = false;
+            return false;
         }
+
+        return response.isOk();
     }
 
-    public PhotoResponse getPhoto() {
-        log.info("Prise d'une photo");
-        return balise.getPhoto();
+    public boolean isOK() {
+        return isOK;
     }
 
-    public EtalonnageResponse etalonnage() {
-        log.info("Étalonnage de la balise");
-        detectionStarted = false;
-        return balise.etalonnage();
+    public boolean updateStatus() {
+        StatusResponse response = balise.getStatus();
+
+        if (response == null || !response.isOk() || response.getData() == null) {
+            isOK = false;
+            return false;
+        }
+
+        idle = response.getData().getIdle();
+        team = response.getData().getTeam();
+        mode = response.getData().getMode();
+
+        isOK = response.getData().isAllOK();
+        return isOK;
+    }
+
+    public boolean setTeam(String newTeam) {
+        EmptyResponse response = balise.setTeam(new TeamQueryData(newTeam));
+
+        if (response == null) {
+            isOK = false;
+            return false;
+        }
+
+        return response.isOk();
+    }
+
+    abstract public void updateData();
+
+    public ImageResponseData getImage() {
+        ImageResponse response = balise.getImage(new ImageQueryData());
+
+        if (response == null) {
+            isOK = false;
+            return null;
+        }
+
+        if (!response.isOk() || response.getData() == null) {
+            return null;
+        }
+
+        return response.getData();
+    }
+
+    public boolean isIdling() {
+        return idle;
     }
 
     public void idle() {
-        detectionStarted = false;
-        balise.idle();
+        idle = true;
+        balise.setIdle(new IdleQueryData(true));
     }
+
+    public boolean exitIdle() {
+        IdleResponse response = balise.setIdle(new IdleQueryData(false));
+
+        if (response == null) {
+            isOK = false;
+            return false;
+        }
+
+        idle = !response.isOk();
+        return idle;
+    }
+
+    public boolean sendKeepAlive() {
+        EmptyResponse response = balise.keepAlive();
+
+        if (response == null) {
+            isOK = false;
+            return false;
+        }
+
+        return response.isOk();
+    }
+
 }
