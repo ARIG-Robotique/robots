@@ -7,6 +7,7 @@ import org.arig.robot.exception.NoPathFoundException;
 
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.RobotName;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
@@ -22,16 +23,16 @@ import org.springframework.stereotype.Component;
 public class LadybugFlight extends AbstractAction {
 
     @Autowired
-    protected TableUtils tableUtils;
+    private TableUtils tableUtils;
 
     @Autowired
-    protected EurobotStatus rs;
+    private EurobotStatus rs;
 
     @Autowired
-    protected TrajectoryManager mv;
+    private TrajectoryManager mv;
 
     @Autowired
-    protected PamiRobotServosService servos;
+    private RobotName robotName;
 
     @Getter
     private final boolean completed = false;
@@ -47,7 +48,13 @@ public class LadybugFlight extends AbstractAction {
 
     @Override
     public Point entryPoint() {
-        return new Point(getX(145), 1475);
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
+            return new Point(getX(145), 455);
+        } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+            return new Point(getX(145), 1475);
+        }
+        // ROND
+        return new Point(getX(830), 700);
     }
 
     @Override
@@ -64,9 +71,24 @@ public class LadybugFlight extends AbstractAction {
     public void execute() {
         try {
             mv.setVitessePercent(100, 100);
-            mv.avanceMM(100);
-            mv.pathTo(entryPoint(), GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
-            mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 30 : 150);
+
+            if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
+                mv.avanceMM(150);
+                mv.pathTo(entryPoint(), GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                mv.gotoOrientationDeg(rs.team() == Team.BLEU ? -150 : -30);
+
+            } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+                mv.avanceMM(100);
+                mv.pathTo(entryPoint(), GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                mv.gotoOrientationDeg(rs.team() == Team.BLEU ? 150 : 30);
+
+            } else {
+                mv.avanceMM(50);
+                mv.pathTo(entryPoint(), GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                mv.gotoOrientationDeg(rs.team() == Team.BLEU ? 150 : 30);
+
+            }
+
             rs.enableCalageBordure(TypeCalage.FORCE);
             mv.avanceMM(100);
 

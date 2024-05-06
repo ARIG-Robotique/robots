@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.i2c.I2CManager;
 import org.arig.robot.communication.i2c.I2CManagerDevice;
 import org.arig.robot.communication.raspi.RaspiI2CManager;
+import org.arig.robot.constants.ConstantesConfig;
 import org.arig.robot.constants.PamiConstantesConfig;
 import org.arig.robot.constants.PamiConstantesI2C;
 import org.arig.robot.model.RobotName;
@@ -47,8 +48,8 @@ public class PamiRobotContext {
     @Bean
     public RobotName robotName() {
         return RobotName.builder()
-                .id(RobotIdentification.PAMI_TRIANGLE)
-                .name("Pami (One beetle to rule them all)")
+                .id(RobotName.fromPamiID())
+                .name(RobotName.fromPamiID() + " (One beetle to rule them all)")
                 .version("2024 (Terraforming Mars)")
                 .build();
     }
