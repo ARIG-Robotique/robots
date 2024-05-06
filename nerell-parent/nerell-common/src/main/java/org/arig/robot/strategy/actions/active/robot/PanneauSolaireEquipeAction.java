@@ -81,6 +81,7 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
 
                 if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
                     log.warn("Blocage pendant le callage du panneau");
+                    mv.avanceMM(100);
                     runAsync(() -> bras.setBrasArriere(PositionBras.INIT));
                     rs.panneauxSolaire().triedActionEquipe(true);
                     complete();

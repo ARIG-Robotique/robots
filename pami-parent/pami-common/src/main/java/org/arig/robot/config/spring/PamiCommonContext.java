@@ -197,15 +197,10 @@ public class PamiCommonContext {
         return new PamiOrdonanceur();
     }
 
-    @Bean
-    public SystemBlockerManager systemBlockerManager(ConvertionRobotUnit conv) {
-        return new SystemBlockerManagerImpl(
-                conv.mmToPulse(PamiConstantesConfig.seuilErreurDistanceMm),
-                conv.degToPulse(PamiConstantesConfig.seuilErreurOrientationDeg),
-                PamiConstantesConfig.maxErrorSumDistance,
-                PamiConstantesConfig.maxErrorSumOrientation
-        );
-    }
+//    @Bean
+//    public SystemBlockerManager systemBlockerManager() {
+//        return new SystemBlockerManagerImpl();
+//    }
 
     @Bean
     public IEcran<EcranConfig, EcranState> ecran() {

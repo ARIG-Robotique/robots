@@ -118,13 +118,6 @@ public interface NerellConstantesConfig {
     double startAngleDemiTourDeg = 75;
     double startAngleLimitVitesseDistance = 15;
 
-    // TODO : A déterminer de manière empirique
-    double seuilErreurOrientationDeg = arretOrientDeg;
-    double seuilErreurDistanceMm = arretDistanceMm;
-
-    double maxErrorSumDistance = 20000;
-    double maxErrorSumOrientation = 40000;
-
     // -------------------------- //
     // Paramètre Physiques        //
     // -------------------------- //

@@ -51,7 +51,7 @@ public class NerellTasksScheduler {
 
     @Scheduled(fixedDelay = 500)
     public void systemBlockerManagerTask() {
-        if (rs.matchEnabled()) {
+        if (rs.matchEnabled() && !rs.simulateur()) {
             systemBlockerManager.process();
         }
     }

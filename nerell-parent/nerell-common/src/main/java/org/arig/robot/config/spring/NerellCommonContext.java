@@ -3,10 +3,8 @@ package org.arig.robot.config.spring;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.NerellOrdonanceur;
 import org.arig.robot.constants.NerellConstantesConfig;
-import org.arig.robot.filters.chain.SerialChainFilter;
 import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.common.LimiterFilter.LimiterType;
-import org.arig.robot.filters.common.OffsetFilter;
 import org.arig.robot.filters.pid.PidFilter;
 import org.arig.robot.filters.pid.SimplePidFilter;
 import org.arig.robot.filters.ramp.TrapezoidalRampFilter;
@@ -264,12 +262,7 @@ public class NerellCommonContext {
     }
 
     @Bean
-    public SystemBlockerManager systemBlockerManager(ConvertionRobotUnit conv) {
-        return new SystemBlockerManagerImpl(
-                conv.mmToPulse(NerellConstantesConfig.seuilErreurDistanceMm),
-                conv.degToPulse(NerellConstantesConfig.seuilErreurOrientationDeg),
-                NerellConstantesConfig.maxErrorSumDistance,
-                NerellConstantesConfig.maxErrorSumOrientation
-        );
+    public SystemBlockerManager systemBlockerManager() {
+        return new SystemBlockerManagerImpl();
     }
 }

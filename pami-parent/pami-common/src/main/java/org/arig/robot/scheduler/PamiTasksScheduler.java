@@ -23,7 +23,7 @@ public class PamiTasksScheduler {
     @Autowired
     private AvoidingService avoidingService;
 
-    @Autowired
+    @Autowired(required = false)
     private SystemBlockerManager systemBlockerManager;
 
     @Autowired
@@ -55,7 +55,7 @@ public class PamiTasksScheduler {
 
     @Scheduled(fixedDelay = 500)
     public void systemBlockerManagerTask() {
-        if (rs.matchEnabled()) {
+        if (systemBlockerManager != null && rs.matchEnabled() && !rs.simulateur()) {
             systemBlockerManager.process();
         }
     }

@@ -141,7 +141,6 @@ public class PanneauSolaireAction extends AbstractNerellAction {
 
     private Double callageY() throws AvoidingException {
         // callage Y
-        // TODO callage avant si plus rapide
         mv.setVitessePercent(60, 100);
         mv.gotoOrientationDeg(90);
         bras.setBrasArriere(PositionBras.CALLAGE_PANNEAUX);
@@ -150,6 +149,8 @@ public class PanneauSolaireAction extends AbstractNerellAction {
 
         if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
             log.warn("Blocage pendant le callage du panneau");
+            runAsync(() -> bras.setBrasArriere(PositionBras.INIT));
+            mv.avanceMM(100);
             return null;
         }
 

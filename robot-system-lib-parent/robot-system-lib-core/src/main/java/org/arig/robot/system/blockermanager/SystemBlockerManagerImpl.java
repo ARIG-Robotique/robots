@@ -1,14 +1,12 @@
 package org.arig.robot.system.blockermanager;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.filters.pid.PidFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 @Slf4j
 public class SystemBlockerManagerImpl implements SystemBlockerManager {
@@ -20,14 +18,6 @@ public class SystemBlockerManagerImpl implements SystemBlockerManager {
     private CommandeRobot cmdRobot;
 
     @Autowired
-    @Qualifier("pidDistance")
-    private PidFilter pidDistance;
-
-    @Autowired
-    @Qualifier("pidOrientation")
-    private PidFilter pidOrientation;
-
-    @Autowired
     private TrajectoryManager trajectoryManager;
 
     @Autowired
@@ -36,26 +26,11 @@ public class SystemBlockerManagerImpl implements SystemBlockerManager {
     @Autowired
     protected MonitoringWrapper monitoringWrapper;
 
-    private final double seuilDistancePulse;
-    private final double seuilOrientationPulse;
-
-    private final Double maxErrorSumDistance;
-    private final Double maxErrorSumOrientation;
-
-    private byte countErrorDistance = 0;
-    private byte countErrorOrientation = 0;
-
-    public SystemBlockerManagerImpl(double seuilDistancePulse, double seuilOrientationPulse, Double maxErrorSumDistance, Double maxErrorSumOrientation) {
-        this.seuilDistancePulse = seuilDistancePulse;
-        this.seuilOrientationPulse = seuilOrientationPulse;
-        this.maxErrorSumDistance = maxErrorSumDistance;
-        this.maxErrorSumOrientation = maxErrorSumOrientation;
-    }
+    private byte countError = 0;
 
     @Override
     public void reset() {
-        countErrorDistance = 0;
-        countErrorOrientation = 0;
+        countError = 0;
     }
 
     @Override
@@ -65,21 +40,13 @@ public class SystemBlockerManagerImpl implements SystemBlockerManager {
 
         // Detection du non-deplacement ou de saturation de commande d'asservissement
         if (!trajectoryManager.isTrajetAtteint() &&
-                Math.abs(motDroit) > 500 &&
-                Math.abs(encoders.getDroit()) < maxErrorSumDistance) {
-            countErrorDistance++;
+                (Math.abs(motDroit) > 500 || Math.abs(motGauche) > 500) &&
+                Math.abs(encoders.getDroit()) < 2 &&
+                Math.abs(encoders.getGauche()) < 2) {
+            countError++;
 
         } else {
-            countErrorDistance = 0;
-        }
-
-        if (!trajectoryManager.isTrajetAtteint() &&
-                Math.abs(motGauche) > 500 &&
-                Math.abs(encoders.getGauche()) < maxErrorSumDistance) {
-            countErrorDistance++;
-
-        } else {
-            countErrorDistance = 0;
+            countError = 0;
         }
 
         // Construction du monitoring
@@ -87,16 +54,13 @@ public class SystemBlockerManagerImpl implements SystemBlockerManager {
                 .measurementName("blocker")
                 .addField("maxErrorDistance", MAX_ERROR_DISTANCE)
                 .addField("maxErrorOrientation", MAX_ERROR_ORIENTATION)
-                .addField("seuilDistance", seuilDistancePulse)
-                .addField("seuilOrientation", seuilOrientationPulse)
-                .addField("countErrorDistance", countErrorDistance)
-                .addField("countErrorOrientation", countErrorOrientation);
+                .addField("countError", countError);
 
         monitoringWrapper.addTimeSeriePoint(serie);
 
         // x itérations de 500 ms (cf Scheduler)
-        if (countErrorDistance >= MAX_ERROR_DISTANCE && countErrorOrientation >= MAX_ERROR_ORIENTATION) {
-            log.warn("Détection de blocage trop importante : distance {} ; orientation {}", countErrorDistance, countErrorOrientation);
+        if (countError >= MAX_ERROR_DISTANCE) {
+            log.warn("Détection de blocage trop importante");
 
             trajectoryManager.cancelMouvement();
             reset();
