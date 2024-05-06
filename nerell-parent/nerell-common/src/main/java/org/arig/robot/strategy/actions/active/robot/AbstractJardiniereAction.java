@@ -98,12 +98,12 @@ public abstract class AbstractJardiniereAction extends AbstractNerellAction {
         rs.bras().setAvant(null, null, null);
 
         // fin
-        bras.setBrasAvant(new PointBras(215, SORTIE_POT_POT_Y, -90, null));
-        servos.groupePinceAvantFerme(false);
+        bras.setBrasAvant(new PointBras(215, 145, -90, null));
 
         mv.setVitessePercent(100, 100);
         rs.enableAvoidance();
         mv.reculeMM(150);
+        servos.groupePinceAvantFerme(false);
 
         if (jardiniere().rang2()) {
             complete(true);

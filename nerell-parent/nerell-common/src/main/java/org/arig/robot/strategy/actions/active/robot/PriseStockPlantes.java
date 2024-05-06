@@ -10,6 +10,7 @@ import org.arig.robot.model.StockPlantes;
 import org.arig.robot.model.TypePlante;
 import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.bras.PositionBras;
+import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.pathfinding.PathFinder;
@@ -119,17 +120,18 @@ public class PriseStockPlantes extends AbstractNerellAction {
             mv.pathTo(entry);
             mv.alignFrontTo(stockPlantes);
 
-            mv.setVitessePercent(20, 100);
-            mv.setRampesDistancePercent(100, 10);
+            mv.setVitessePercent(30, 100);
 
-            final PointBras pointBrasApproche = new PointBras(195, 130, -90, null);
+            final PointBras pointBrasApproche = new PointBras(218, 145, -100, false);
+            final PointBras pointBrasPrise = new PointBras(195, PRISE_PLANTE_SOL_Y, -90, null);
 
             // PREMIERE PRISE
             servos.groupeBloquePlanteOuvert(false);
+            bras.setBrasAvant(new PointBras(106, 97, -120, true));
             bras.setBrasAvant(pointBrasApproche);
 
             rs.enableCalageBordure(TypeCalage.PRISE_PRODUIT_AVANT);
-            mv.gotoPoint(tableUtils.eloigner(stockPlantes, -100));
+            mv.gotoPoint(stockPlantes, GotoOption.SANS_ORIENTATION);
 
             if (!rs.calageCompleted().contains(TypeCalage.PRISE_PRODUIT_AVANT)) {
                 onCancel();
@@ -147,9 +149,9 @@ public class PriseStockPlantes extends AbstractNerellAction {
             servos.groupeBloquePlanteOuvert(true);
             servos.groupePinceAvantOuvert(false);
             mv.reculeMM(100);
-            bras.setBrasAvant(PointBras.withY(PRISE_PLANTE_SOL_Y));
+            bras.setBrasAvant(pointBrasPrise);
             servos.groupePinceAvantPrisePlante(true);
-            ThreadUtils.sleep(500);
+            ThreadUtils.sleep(200);
 
             bras.brasAvantStockage();
 
@@ -158,7 +160,7 @@ public class PriseStockPlantes extends AbstractNerellAction {
             boolean stockdroite = io.presenceStockDroite(true);
 
             // le stockage à foiré
-            if (gauche != stockgauche || centre != stockcentre || droite != stockdroite) {
+            if (gauche && !stockgauche || centre && !stockcentre || droite && !stockdroite) {
                 log.warn("Le stockage à foiré, dégagement");
                 bras.setBrasAvant(PositionBras.TRANSPORT);
                 mv.tourneDeg(360);
@@ -172,29 +174,33 @@ public class PriseStockPlantes extends AbstractNerellAction {
 
             // SECONDE PRISE
             servos.groupeBloquePlanteOuvert(false);
+            servos.groupePinceAvantOuvert(false);
             bras.setBrasAvant(pointBrasApproche);
 
-            mv.setVitessePercent(20, 100);
-            mv.setRampesDistancePercent(100, 10);
+            mv.setVitessePercent(30, 100);
+            mv.setRampesDistancePercent(100, 20);
 
             rs.enableCalageBordure(TypeCalage.PRISE_PRODUIT_AVANT);
-            mv.gotoPoint(tableUtils.eloigner(stockPlantes, 50));
+            mv.gotoPoint(tableUtils.eloigner(stockPlantes, 100), GotoOption.SANS_ORIENTATION);
 
-            if (!rs.calageCompleted().contains(TypeCalage.PRISE_PRODUIT_AVANT)) {
+            servos.groupeBloquePlantePrisePlante(true);
+
+            gauche = io.presenceAvantGauche(true);
+            centre = io.presenceAvantCentre(true);
+            droite = io.presenceAvantDroite(true);
+
+            if (!gauche && !centre && !droite) {
                 onCancel();
                 return;
             }
 
             mv.setVitessePercent(100, 100);
 
-            servos.groupeBloquePlantePrisePlante(true);
-            mv.reculeMM(50);
             servos.groupeBloquePlanteOuvert(true);
-            servos.groupePinceAvantOuvert(false);
             mv.reculeMM(100);
-            bras.setBrasAvant(PointBras.withY(PRISE_PLANTE_SOL_Y));
+            bras.setBrasAvant(pointBrasPrise);
             servos.groupePinceAvantPrisePlante(true);
-            ThreadUtils.sleep(500);
+            ThreadUtils.sleep(200);
 
             bras.setBrasAvant(PositionBras.TRANSPORT);
 
@@ -223,8 +229,9 @@ public class PriseStockPlantes extends AbstractNerellAction {
         }
     }
 
-    private void onCancel() {
+    private void onCancel() throws AvoidingException {
         log.warn("Le stock de plantes {} est vide", stockPlantes.getId());
+        mv.reculeMM(100);
         rs.plantes().priseStock(stockPlantes.getId());
         runAsync(() -> bras.brasAvantInit());
         servos.groupePinceAvantFerme(false);

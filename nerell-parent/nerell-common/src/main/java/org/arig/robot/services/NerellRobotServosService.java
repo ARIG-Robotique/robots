@@ -336,19 +336,19 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
                 .time(300)
                 .position(POS_OUVERT, 2310)
                 .position(POS_PRISE_POT, 1840)
-                .position(POS_PRISE_PLANTE, 1800)
+                .position(POS_PRISE_PLANTE, 1800, 50)
                 .position(POS_FERME, 1000);
         Servo bloquePlanteAvantCentre = servo(BLOQUE_PLANTE_AVANT_CENTRE_ID, BLOQUE_PLANTE_AVANT_CENTRE)
                 .time(300)
                 .position(POS_OUVERT, 1860)
                 .position(POS_PRISE_POT, 1400)
-                .position(POS_PRISE_PLANTE, 1290)
+                .position(POS_PRISE_PLANTE, 1290, 50)
                 .position(POS_FERME, 690);
         Servo bloquePlanteAvantDroit = servo(BLOQUE_PLANTE_AVANT_DROIT_ID, BLOQUE_PLANTE_AVANT_DROIT)
                 .time(300)
                 .position(POS_OUVERT, 1310)
                 .position(POS_PRISE_POT, 1750)
-                .position(POS_PRISE_PLANTE, 1820)
+                .position(POS_PRISE_PLANTE, 1820, 50)
                 .position(POS_FERME, 2540);
         group(GROUP_BLOQUE_PLANTE_AVANT_ID, GROUP_BLOQUE_PLANTE_AVANT)
                 .addServo(bloquePlanteAvantGauche)

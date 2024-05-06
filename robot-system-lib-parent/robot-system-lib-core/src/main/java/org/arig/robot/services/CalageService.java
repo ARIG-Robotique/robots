@@ -80,7 +80,7 @@ public class CalageService {
             if (donePriseProduitAvant || donePriseProduitArriere) {
                 if (stopWatchPriseProduit.isStopped()) {
                     stopWatchPriseProduit.start();
-                } else if (stopWatchPriseProduit.getTime(TimeUnit.MILLISECONDS) >= 500) {
+                } else if (stopWatchPriseProduit.getTime(TimeUnit.MILLISECONDS) >= 400) {
                     stopWatchPriseProduit.reset();
 
                     if (donePriseProduitAvant) {

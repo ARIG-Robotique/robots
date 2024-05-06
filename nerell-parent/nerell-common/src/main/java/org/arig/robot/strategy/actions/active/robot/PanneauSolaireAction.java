@@ -165,7 +165,7 @@ public class PanneauSolaireAction extends AbstractNerellAction {
         mv.avanceMM(Y_ACTION - config.distanceCalageArriere());
         double yActionReal = mv.currentYMm();
 
-        runAsync(() -> bras.brasAvantInit());
+        runAsync(() -> bras.setBrasArriere(PositionBras.INIT));
 
         return yActionReal;
     }

@@ -101,7 +101,7 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
             if (stockPots.isBloque() || stockPots.isPresent()) {
                 mv.setVitessePercent(100, 100);
                 // point intermédaire dans la zone nord pour ensuite pousser les pots
-                mv.pathTo(getX(185), 1740);
+                mv.pathTo(getX(185), 1740, GotoOption.ARRIERE);
                 mv.setVitessePercent(50, 100);
                 mv.gotoPoint(getX(170), 1640, GotoOption.ARRIERE);
                 mv.gotoPoint(getX(170), 1250, GotoOption.ARRIERE);
