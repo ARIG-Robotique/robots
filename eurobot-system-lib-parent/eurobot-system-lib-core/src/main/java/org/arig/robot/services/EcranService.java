@@ -43,9 +43,9 @@ public class EcranService extends AbstractEcranService<EcranConfig, EcranState> 
         ));
         ecranParams.setStrategies(Stream.of(Strategy.values()).map(Enum::name).collect(Collectors.toList()));
         ecranParams.setOptions(List.of(
+                EurobotConfig.STOCKAGE,
                 EurobotConfig.PREFERE_PANNEAUX,
-                EurobotConfig.ACTIVE_VOL_AU_SOL,
-                EurobotConfig.ACTIVE_VOL_JARDINIERES
+                EurobotConfig.ACTIVE_VOL_AU_SOL
         ));
         return ecranParams;
     }

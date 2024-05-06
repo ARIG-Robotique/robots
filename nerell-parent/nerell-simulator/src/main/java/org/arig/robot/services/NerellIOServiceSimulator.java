@@ -23,7 +23,7 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
 
     @Override
     public boolean calagePriseProduitAvant(int mandatorySensors) {
-        return false;
+        return true;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
 
     @Override
     public boolean calagePriseProduitArriere(int mandatorySensors) {
-        return false;
+        return true;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
 
     @Override
     public boolean calageElectroaimant(int mandatorySensors) {
-        return false;
+        return true;
     }
 
     @Override

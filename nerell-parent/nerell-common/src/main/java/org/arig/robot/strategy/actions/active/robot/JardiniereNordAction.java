@@ -6,12 +6,16 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Jardiniere;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.TypeCalage;
-import org.arig.robot.strategy.actions.active.robot.AbstractJardiniereAction;
+import org.arig.robot.strategy.actions.disabled.PoussePlanteNord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class JardiniereNordAction extends AbstractJardiniereAction {
+
+    @Autowired(required = false)
+    private PoussePlanteNord actionPoussePlante;
 
     @Override
     public String name() {
@@ -37,46 +41,73 @@ public class JardiniereNordAction extends AbstractJardiniereAction {
         return super.isValid();
     }
 
-    private void executeInternal() throws AvoidingException {
+    private void executeInternal(boolean arriere) throws AvoidingException {
         final Point entry = entryPoint();
 
-        prepareBras();
+        prepareBras(arriere);
 
         rs.disableAvoidance();
 
-        rs.enableCalageBordure(TypeCalage.AVANT, TypeCalage.FORCE);
         mv.setVitessePercent(60, 100);
-        mv.avanceMM(2000 - entry.getY() - config.distanceCalageAvant() - 10);
+        if (arriere) {
+            rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
+            mv.reculeMM(2000 - entry.getY() - config.distanceCalageArriere() - 10);
+        } else {
+            rs.enableCalageBordure(TypeCalage.AVANT, TypeCalage.FORCE);
+            mv.avanceMM(2000 - entry.getY() - config.distanceCalageAvant() - 10);
+        }
 
         if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
-            depose(true);
+            depose(arriere, true);
         }
 
         mv.setVitessePercent(0, 100);
-        rs.enableCalageBordure(TypeCalage.AVANT, TypeCalage.FORCE);
-        mv.avanceMMSansAngle(40);
-        checkRecalageYmm(2000 - config.distanceCalageAvant(), TypeCalage.AVANT);
-        checkRecalageAngleDeg(90);
+        if (arriere) {
+            rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
+            mv.reculeMMSansAngle(40);
+            checkRecalageYmm(2000 - config.distanceCalageArriere(), TypeCalage.ARRIERE);
+            checkRecalageAngleDeg(-90);
+        } else {
+            rs.enableCalageBordure(TypeCalage.AVANT, TypeCalage.FORCE);
+            mv.avanceMMSansAngle(40);
+            checkRecalageYmm(2000 - config.distanceCalageAvant(), TypeCalage.AVANT);
+            checkRecalageAngleDeg(90);
+        }
 
-        depose(false);
+        depose(arriere, false);
     }
 
     @Override
     public void execute() {
         try {
+            final Point pointApproche = new Point(getX(450), 1775);
             final Point entry = entryPoint();
+
+            boolean skipApproche = false;
+            if (actionPoussePlante != null && actionPoussePlante.isValid()) {
+                actionPoussePlante.execute(pointApproche);
+                skipApproche = true;
+            }
+
 
             mv.setVitessePercent(100, 100);
             // point intermédiare dans l'aire de dépose nord si on traine des trucs
-            mv.pathTo(new Point(getX(450), 1775));
+            if (!skipApproche) {
+                mv.pathTo(pointApproche);
+            }
             mv.gotoPoint(entry);
 
-            mv.gotoOrientationDeg(90);
+            if (!rs.bras().arriereLibre()) {
+                mv.gotoOrientationDeg(-90);
+                executeInternal(true);
+            } else {
+                mv.gotoOrientationDeg(90);
+                executeInternal(false);
+            }
 
-            executeInternal();
-
-            if (!rs.stockLibre() && !jardiniere().rang2()) {
-                executeInternal();
+            if (!jardiniere().rang2() && (!rs.bras().avantLibre() || !rs.stockLibre())) {
+                mv.gotoOrientationDeg(90);
+                executeInternal(false);
             }
 
         } catch (NoPathFoundException | AvoidingException e) {

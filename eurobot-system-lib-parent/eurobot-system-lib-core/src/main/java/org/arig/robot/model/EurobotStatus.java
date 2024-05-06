@@ -46,9 +46,9 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
      * CONFIGURATION
      */
 
+    private boolean stockage = false;
     private boolean preferePanneaux = false;
     private boolean activeVolAuSol = false;
-    private boolean activeVolJardinieres = false;
 
     /**
      * STATUT
@@ -57,18 +57,18 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     private Plantes plantes = new Plantes();
 
     @Setter(AccessLevel.NONE)
-    private ZoneDepose aireDeDeposeNord = new ZoneDepose();
+    private AireDepose aireDeDeposeNord = new AireDepose("Aire nord");
     @Setter(AccessLevel.NONE)
-    private ZoneDepose aireDeDeposeMilieu = new ZoneDepose();
+    private AireDepose aireDeDeposeMilieu = new AireDepose("Aire milieu");
     @Setter(AccessLevel.NONE)
-    private ZoneDepose aireDeDeposeSud = new ZoneDepose();
+    private AireDepose aireDeDeposeSud = new AireDepose("Aire sud");
 
     @Setter(AccessLevel.NONE)
-    private Jardiniere jardiniereNord = new Jardiniere();
+    private Jardiniere jardiniereNord = new Jardiniere("Jardinière nord");
     @Setter(AccessLevel.NONE)
-    private Jardiniere jardiniereMilieu = new Jardiniere();
+    private Jardiniere jardiniereMilieu = new Jardiniere("Jardinière milieu");
     @Setter(AccessLevel.NONE)
-    private Jardiniere jardiniereSud = new Jardiniere();
+    private Jardiniere jardiniereSud = new Jardiniere("Jardinière sud");
 
     private SiteDeCharge siteDeCharge = SiteDeCharge.AUCUN;
     private SiteDeCharge siteDeDepart = SiteDeCharge.AUCUN;
@@ -104,6 +104,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     };
 
     public void setStock(TypePlante gauche, TypePlante centre, TypePlante droite) {
+        log.info("[RS] Stockage {} {} {}", gauche, centre, droite);
         stock[0] = new Plante(gauche);
         stock[1] = new Plante(centre);
         stock[2] = new Plante(droite);
@@ -170,14 +171,14 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         r.put("stocksPots", stocksPots.data);
         r.put("plantes", plantes.getPlantes());
         r.put("airesDepose", Map.of(
-                "NORD", aireDeDeposeNord.data,
-                "MILIEU", aireDeDeposeMilieu.data,
-                "SUD", aireDeDeposeSud.data
+                "NORD", aireDeDeposeNord.data(),
+                "MILIEU", aireDeDeposeMilieu.data(),
+                "SUD", aireDeDeposeSud.data()
         ));
         r.put("jardinieres", Map.of(
-                "NORD", jardiniereNord.data,
-                "MILIEU", jardiniereMilieu.data,
-                "SUD", jardiniereSud.data
+                "NORD", jardiniereNord.data(),
+                "MILIEU", jardiniereMilieu.data(),
+                "SUD", jardiniereSud.data()
         ));
         r.put("brasAvant", bras.getAvant());
         r.put("brasArriere", bras.getArriere());

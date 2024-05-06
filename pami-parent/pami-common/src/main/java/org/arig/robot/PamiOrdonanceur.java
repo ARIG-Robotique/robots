@@ -164,9 +164,9 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
                 }
 
                 pamiRobotStatus.twoRobots(pamiEcranService.config().isTwoRobots());
+                pamiRobotStatus.stockage(pamiEcranService.config().hasOption(EurobotConfig.STOCKAGE));
                 pamiRobotStatus.preferePanneaux(pamiEcranService.config().hasOption(EurobotConfig.PREFERE_PANNEAUX));
                 pamiRobotStatus.activeVolAuSol(pamiEcranService.config().hasOption(EurobotConfig.ACTIVE_VOL_AU_SOL));
-                pamiRobotStatus.activeVolJardinieres(pamiEcranService.config().hasOption(EurobotConfig.ACTIVE_VOL_JARDINIERES));
 
                 done = pamiEcranService.config().isStartCalibration();
             }

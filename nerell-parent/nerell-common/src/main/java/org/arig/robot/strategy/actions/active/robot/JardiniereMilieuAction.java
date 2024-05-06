@@ -11,6 +11,8 @@ import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
+import org.arig.robot.strategy.actions.disabled.PoussePlanteNord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
@@ -18,6 +20,9 @@ import java.awt.*;
 @Slf4j
 @Component
 public class JardiniereMilieuAction extends AbstractJardiniereAction {
+
+    @Autowired(required = false)
+    private PoussePlanteNord actionPoussePlante;
 
     @Override
     public String name() {
@@ -69,39 +74,60 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
         return rs.jardiniereMilieu();
     }
 
-    private void executeInternal() throws AvoidingException {
-        prepareBras();
+    private void executeInternal(boolean arriere) throws AvoidingException {
+        prepareBras(arriere);
 
         rs.disableAvoidance();
 
-        rs.enableCalageBordure(TypeCalage.AVANT, TypeCalage.FORCE);
         mv.setVitessePercent(60, 100);
-        mv.avanceMM(getX((int) mv.currentXMm()) - config.distanceCalageAvant() - 10);
+        if (arriere) {
+            rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
+            mv.reculeMM(getX((int) mv.currentXMm()) - config.distanceCalageArriere() - 10);
+        } else {
+            rs.enableCalageBordure(TypeCalage.AVANT, TypeCalage.FORCE);
+            mv.avanceMM(getX((int) mv.currentXMm()) - config.distanceCalageAvant() - 10);
+        }
 
         if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
-            depose(true);
+            depose(arriere, true);
             return;
         }
 
         mv.setVitessePercent(0, 100);
-        rs.enableCalageBordure(TypeCalage.AVANT);
-        mv.avanceMMSansAngle(40);
-        checkRecalageXmm(getX((int) config.distanceCalageAvant()), TypeCalage.AVANT);
-        checkRecalageAngleDeg(rs.team() == Team.BLEU ? 180 : 0);
+        if (arriere) {
+            rs.enableCalageBordure(TypeCalage.ARRIERE);
+            mv.reculeMMSansAngle(40);
+            checkRecalageXmm(getX((int) config.distanceCalageArriere()), TypeCalage.ARRIERE);
+            checkRecalageAngleDeg(rs.team() == Team.BLEU ? 0 : 180);
+        } else {
+            rs.enableCalageBordure(TypeCalage.AVANT);
+            mv.avanceMMSansAngle(40);
+            checkRecalageXmm(getX((int) config.distanceCalageAvant()), TypeCalage.AVANT);
+            checkRecalageAngleDeg(rs.team() == Team.BLEU ? 180 : 0);
+        }
 
-        depose(false);
+        depose(arriere, false);
     }
 
     @Override
     public void execute() {
         try {
+            final Point pointApproche = new Point(getX(185), 1740);
             final Point entry = entryPoint();
             final StockPots stockPots = stockPots();
+
+            boolean skipApproche = false;
+            if (actionPoussePlante != null && actionPoussePlante.isValid()) {
+                actionPoussePlante.execute(pointApproche);
+                skipApproche = true;
+            }
 
             if (stockPots.isBloque() || stockPots.isPresent()) {
                 mv.setVitessePercent(100, 100);
                 // point intermédaire dans la zone nord pour ensuite pousser les pots
-                mv.pathTo(getX(185), 1740, GotoOption.ARRIERE);
+                if (!skipApproche) {
+                    mv.pathTo(pointApproche, GotoOption.AVANT);
+                }
                 mv.setVitessePercent(50, 100);
                 mv.gotoPoint(getX(170), 1640, GotoOption.ARRIERE);
                 mv.gotoPoint(getX(170), 1250, GotoOption.ARRIERE);
@@ -114,12 +140,17 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
                 mv.pathTo(entry);
             }
 
-            mv.gotoOrientationDeg(rs.team() == Team.BLEU ? 180 : 0);
+            if (!rs.bras().arriereLibre()) {
+                mv.gotoOrientationDeg(rs.team() == Team.BLEU ? 0 : 180);
+                executeInternal(true);
+            } else {
+                mv.gotoOrientationDeg(rs.team() == Team.BLEU ? 180 : 0);
+                executeInternal(false);
+            }
 
-            executeInternal();
-
-            if (!rs.stockLibre() && !jardiniere().rang2()) {
-                executeInternal();
+            if (!jardiniere().rang2() && (!rs.bras().avantLibre() || !rs.stockLibre())) {
+                mv.gotoOrientationDeg(rs.team() == Team.BLEU ? 180 : 0);
+                executeInternal(false);
             }
 
         } catch (NoPathFoundException | AvoidingException e) {

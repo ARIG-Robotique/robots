@@ -28,7 +28,7 @@ import static org.arig.robot.services.BrasInstance.PRISE_PLANTE_SOL_Y;
 @Component
 public class PriseStockPlantes extends AbstractNerellAction {
 
-    final int DST_APPROCHE = EurobotConfig.PATHFINDER_STOCK_PLANTES_SIZE / 2 + 5;
+    public static final int DST_APPROCHE = 350;
 
     private StockPlantes stockPlantes;
 
@@ -121,26 +121,27 @@ public class PriseStockPlantes extends AbstractNerellAction {
             mv.alignFrontTo(stockPlantes);
 
             mv.setVitessePercent(30, 100);
+            mv.setRampesDistancePercent(100, 20);
 
-            final PointBras pointBrasApproche = new PointBras(218, 145, -100, false);
+            final PointBras pointBrasApproche = new PointBras(220, 145, -100, null);
             final PointBras pointBrasPrise = new PointBras(195, PRISE_PLANTE_SOL_Y, -90, null);
 
             // PREMIERE PRISE
             servos.groupeBloquePlanteOuvert(false);
-            bras.setBrasAvant(new PointBras(106, 97, -120, true));
             bras.setBrasAvant(pointBrasApproche);
 
             rs.enableCalageBordure(TypeCalage.PRISE_PRODUIT_AVANT);
             mv.gotoPoint(stockPlantes, GotoOption.SANS_ORIENTATION);
 
             if (!rs.calageCompleted().contains(TypeCalage.PRISE_PRODUIT_AVANT)) {
-                onCancel();
+                onCancel(true);
+                servos.groupePinceAvantFerme(false);
                 return;
             }
 
-            boolean gauche = io.presenceAvantGauche(true);
-            boolean centre = io.presenceAvantCentre(true);
-            boolean droite = io.presenceAvantDroite(true);
+//            boolean gauche = io.presenceAvantGauche(true);
+//            boolean centre = io.presenceAvantCentre(true);
+//            boolean droite = io.presenceAvantDroite(true);
 
             mv.setVitessePercent(100, 100);
 
@@ -151,69 +152,128 @@ public class PriseStockPlantes extends AbstractNerellAction {
             mv.reculeMM(100);
             bras.setBrasAvant(pointBrasPrise);
             servos.groupePinceAvantPrisePlante(true);
-            ThreadUtils.sleep(200);
 
-            bras.brasAvantStockage();
+            boolean[] result = waitCapteursPinces(1000, true);
+            boolean gauche = result[0];
+            boolean centre = result[1];
+            boolean droite = result[2];
 
-            boolean stockgauche = io.presenceStockGauche(true);
-            boolean stockcentre = io.presenceStockCentre(true);
-            boolean stockdroite = io.presenceStockDroite(true);
+            if (rs.stockage()) {
+                bras.brasAvantStockage();
 
-            // le stockage à foiré
-            if (gauche && !stockgauche || centre && !stockcentre || droite && !stockdroite) {
-                log.warn("Le stockage à foiré, dégagement");
-                bras.setBrasAvant(PositionBras.TRANSPORT);
-                mv.tourneDeg(360);
+                boolean stockgauche = io.presenceStockGauche(true);
+                boolean stockcentre = io.presenceStockCentre(true);
+                boolean stockdroite = io.presenceStockDroite(true);
+
+                // le stockage à foiré
+                if (gauche && !stockgauche || centre && !stockcentre || droite && !stockdroite) {
+                    log.warn("Le stockage à foiré, dégagement");
+                    bras.setBrasAvant(PositionBras.TRANSPORT);
+                    mv.tourneDeg(360);
+                }
+
+                rs.setStock(
+                        stockgauche ? TypePlante.INCONNU : null,
+                        stockcentre ? TypePlante.INCONNU : null,
+                        stockdroite ? TypePlante.INCONNU : null
+                );
+
+                // SECONDE PRISE
+                servos.groupeBloquePlanteOuvert(false);
+                servos.groupePinceAvantOuvert(false);
+                bras.setBrasAvant(pointBrasApproche);
+
+                mv.setVitessePercent(30, 100);
+                mv.setRampesDistancePercent(100, 20);
+
+                rs.enableCalageBordure(TypeCalage.PRISE_PRODUIT_AVANT);
+                mv.gotoPoint(tableUtils.eloigner(stockPlantes, 100), GotoOption.SANS_ORIENTATION);
+
+                servos.groupeBloquePlantePrisePlante(true);
+
+                gauche = io.presenceAvantGauche(true);
+                centre = io.presenceAvantCentre(true);
+                droite = io.presenceAvantDroite(true);
+
+                if (!gauche && !centre && !droite) {
+                    onCancel(true);
+                    servos.groupePinceAvantFerme(false);
+                    return;
+                }
+
+                mv.setVitessePercent(100, 100);
+
+                servos.groupeBloquePlanteOuvert(true);
+                mv.reculeMM(100);
+                bras.setBrasAvant(pointBrasPrise);
+                servos.groupePinceAvantPrisePlante(true);
+
+                result = waitCapteursPinces(1000, true);
+                gauche = result[0];
+                centre = result[1];
+                droite = result[2];
+
+                rs.bras().setAvant(
+                        gauche ? new Plante(TypePlante.INCONNU) : null,
+                        centre ? new Plante(TypePlante.INCONNU) : null,
+                        droite ? new Plante(TypePlante.INCONNU) : null
+                );
+
+                bras.setBrasAvant(PointBras.withY(80));
+
+            } else {
+                rs.bras().setAvant(
+                        gauche ? new Plante(TypePlante.INCONNU) : null,
+                        centre ? new Plante(TypePlante.INCONNU) : null,
+                        droite ? new Plante(TypePlante.INCONNU) : null
+                );
+
+                servos.groupeBloquePlanteFerme(false);
+                runAsync(() -> {
+                    bras.setBrasAvant(PointBras.withY(80));
+                    bras.brasAvantInit();
+                });
+
+                mv.tourneDeg(180);
+                bras.setBrasArriere(pointBrasApproche);
+
+                mv.setVitessePercent(20, 100);
+                mv.setRampesDistancePercent(100, 20);
+
+                rs.enableCalageBordure(TypeCalage.PRISE_PRODUIT_ARRIERE);
+                mv.gotoPoint(stockPlantes, GotoOption.SANS_ORIENTATION);
+
+                if (!rs.calageCompleted().contains(TypeCalage.PRISE_PRODUIT_ARRIERE)) {
+                    onCancel(false);
+                    runAsync(() -> bras.setBrasArriere(PositionBras.INIT));
+                    servos.groupePinceArriereFerme(false);
+                    return;
+                }
+
+                gauche = io.presenceArriereGauche(true);
+                centre = io.presenceArriereCentre(true);
+                droite = io.presenceArriereDroite(true);
+
+                mv.setVitessePercent(100, 100);
+
+                servos.groupePinceArriereOuvert(false);
+                mv.avanceMM(100);
+                bras.setBrasArriere(pointBrasPrise);
+                servos.groupePinceArrierePrisePlante(true);
+
+                result = waitCapteursPinces(1000, false);
+                gauche = result[0];
+                centre = result[1];
+                droite = result[2];
+
+                rs.bras().setArriere(
+                        gauche ? new Plante(TypePlante.INCONNU) : null,
+                        centre ? new Plante(TypePlante.INCONNU) : null,
+                        droite ? new Plante(TypePlante.INCONNU) : null
+                );
+
+                bras.setBrasArriere(PointBras.withY(80));
             }
-
-            rs.setStock(
-                    stockgauche ? TypePlante.INCONNU : null,
-                    stockcentre ? TypePlante.INCONNU : null,
-                    stockdroite ? TypePlante.INCONNU : null
-            );
-
-            // SECONDE PRISE
-            servos.groupeBloquePlanteOuvert(false);
-            servos.groupePinceAvantOuvert(false);
-            bras.setBrasAvant(pointBrasApproche);
-
-            mv.setVitessePercent(30, 100);
-            mv.setRampesDistancePercent(100, 20);
-
-            rs.enableCalageBordure(TypeCalage.PRISE_PRODUIT_AVANT);
-            mv.gotoPoint(tableUtils.eloigner(stockPlantes, 100), GotoOption.SANS_ORIENTATION);
-
-            servos.groupeBloquePlantePrisePlante(true);
-
-            gauche = io.presenceAvantGauche(true);
-            centre = io.presenceAvantCentre(true);
-            droite = io.presenceAvantDroite(true);
-
-            if (!gauche && !centre && !droite) {
-                onCancel();
-                return;
-            }
-
-            mv.setVitessePercent(100, 100);
-
-            servos.groupeBloquePlanteOuvert(true);
-            mv.reculeMM(100);
-            bras.setBrasAvant(pointBrasPrise);
-            servos.groupePinceAvantPrisePlante(true);
-            ThreadUtils.sleep(200);
-
-            bras.setBrasAvant(PositionBras.TRANSPORT);
-
-            // FIXME
-            gauche = true;//io.pinceAvantGaucheAverage(true);
-            centre = true;//io.pinceAvantCentreAverage(true);
-            droite = true;//io.pinceAvantDroiteAverage(true);
-
-            rs.bras().setAvant(
-                    gauche ? new Plante(TypePlante.INCONNU) : null,
-                    centre ? new Plante(TypePlante.INCONNU) : null,
-                    droite ? new Plante(TypePlante.INCONNU) : null
-            );
 
             rs.plantes().priseStock(stockPlantes.getId());
 
@@ -225,17 +285,45 @@ public class PriseStockPlantes extends AbstractNerellAction {
                 stockPlantes.setTimevalid(System.currentTimeMillis());
             }
         } finally {
+            runAsync(() -> {
+                bras.brasAvantInit();
+                bras.setBrasArriere(PositionBras.INIT);
+            });
             servos.groupeBloquePlanteFerme(false);
         }
     }
 
-    private void onCancel() throws AvoidingException {
+    private void onCancel(boolean enAvant) throws AvoidingException {
         log.warn("Le stock de plantes {} est vide", stockPlantes.getId());
-        mv.reculeMM(100);
+        if (enAvant) mv.reculeMM(100);
+        else mv.avanceMM(100);
         rs.plantes().priseStock(stockPlantes.getId());
-        runAsync(() -> bras.brasAvantInit());
-        servos.groupePinceAvantFerme(false);
-        servos.groupeBloquePlanteFerme(false);
+    }
+
+    private boolean[] waitCapteursPinces(int maxTimeMs, boolean avant) {
+        long endTimeMs = System.currentTimeMillis() + maxTimeMs;
+        boolean[] result = new boolean[]{ false, false, false };
+
+        do {
+            if (avant) {
+                result[0] = result[0] || io.pinceAvantGauche(true);
+                result[1] = result[1] || io.pinceAvantCentre(true);
+                result[2] = result[2] || io.pinceAvantDroite(true);
+            } else {
+                result[0] = result[0] || io.pinceArriereGauche(true);
+                result[1] = result[1] || io.pinceArriereCentre(true);
+                result[2] = result[2] || io.pinceArriereDroite(true);
+            }
+
+            if (result[0] && result[1] && result[2]) {
+                break;
+            }
+
+            ThreadUtils.sleep(config.i2cReadTimeMs());
+
+        } while (System.currentTimeMillis() < endTimeMs);
+
+        return result;
     }
 
 }

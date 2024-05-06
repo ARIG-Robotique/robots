@@ -9,17 +9,22 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class Jardiniere extends ZoneDepose {
 
-    private boolean rang1 = false; // dépose au rang 1 (plus proche de la table)
-    private boolean rang2 = false; // dépose au rang 2 (plus au fond)
+    // jardinière: dépose au rang 1 (plus proche de la table)
+    private boolean rang1 = false;
+    // jardinière: dépose au rang 2 (plus au fond)
+    private boolean rang2 = false;
 
-    @Override
+    public Jardiniere(String name) {
+        super(name);
+    }
+
     public int score() {
         return score(true);
     }
 
     public Jardiniere clone() {
-        Jardiniere newJardiniere = new Jardiniere();
-        newJardiniere.add(data.toArray(new Plante[0]));
+        Jardiniere newJardiniere = new Jardiniere(null);
+        newJardiniere.add(data().toArray(new Plante[0]));
         return newJardiniere;
     }
 

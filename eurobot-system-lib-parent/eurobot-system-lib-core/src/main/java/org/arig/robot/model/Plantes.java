@@ -49,6 +49,10 @@ public class Plantes implements Iterable<Plante> {
         plantes.removeIf(plante -> plante.getId() == id);
     }
 
+    public StockPlantes stock(Plante.ID id) {
+        return stocks.stream().filter(s -> s.getId() == id).findFirst().get();
+    }
+
     public Stream<StockPlantes> stocksPresents() {
         return stocks.stream()
                 .filter(StockPlantes::isPresent)

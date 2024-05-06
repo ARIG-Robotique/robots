@@ -1,6 +1,10 @@
 package org.arig.robot.model;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -8,23 +12,27 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
+@Getter
+@Setter
+@Accessors(fluent = true)
 @RequiredArgsConstructor
-public class ZoneDepose {
+public abstract class ZoneDepose {
 
-    final List<Plante> data = new ArrayList<>();
+    private final List<Plante> data = new ArrayList<>();
+    private final String name;
 
     public void add(Plante[] bras) {
         for (int i = 0; i < bras.length; i++) {
+            if (name != null) {
+                log.info("[RS] Ajout dans {}: {}", name, bras[i].getType());
+            }
             data.add(bras[i].clone());
         }
     }
 
     public boolean isEmpty() {
         return data.isEmpty();
-    }
-
-    public int score() {
-        return score(false);
     }
 
     protected int score(boolean jardiniere) {

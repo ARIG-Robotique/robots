@@ -308,27 +308,31 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
         Servo pinceArriereGauche = servo(BRAS_ARRIERE_GAUCHE_PINCE_ID, BRAS_ARRIERE_GAUCHE_PINCE)
                 .time(300)
                 .position(POS_FERME, 730)
-                .position(POS_OUVERT, 1500)
+                .position(POS_OUVERT, 1650)
                 .position(POS_PRISE_POT, 1200)
-                .position(POS_PRISE_POT_INT, 1500);
+                .position(POS_PRISE_POT_INT, 1500)
+                .position(POS_PRISE_PLANTE, 900);
         Servo pinceArriereCentre = servo(BRAS_ARRIERE_CENTRE_PINCE_ID, BRAS_ARRIERE_CENTRE_PINCE)
                 .time(300)
                 .position(POS_FERME, 1220)
-                .position(POS_OUVERT, 2100)
+                .position(POS_OUVERT, 2200)
                 .position(POS_PRISE_POT, 1700)
-                .position(POS_PRISE_POT_INT, 2000);
+                .position(POS_PRISE_POT_INT, 2000)
+                .position(POS_PRISE_PLANTE, 1500);
         Servo pinceArriereDroit = servo(BRAS_ARRIERE_DROIT_PINCE_ID, BRAS_ARRIERE_DROIT_PINCE)
                 .time(300)
                 .position(POS_FERME, 960)
-                .position(POS_OUVERT, 1800)
+                .position(POS_OUVERT, 1900)
                 .position(POS_PRISE_POT, 1400)
-                .position(POS_PRISE_POT_INT, 1800);
+                .position(POS_PRISE_POT_INT, 1800)
+                .position(POS_PRISE_PLANTE, 1200);
         group(GROUP_PINCE_ARRIERE_ID, GROUP_PINCE_ARRIERE)
                 .addServo(pinceArriereGauche)
                 .addServo(pinceArriereCentre)
                 .addServo(pinceArriereDroit)
                 .batch(POS_FERME)
                 .batch(POS_OUVERT)
+                .batch(POS_PRISE_PLANTE)
                 .batch(POS_PRISE_POT)
                 .batch(POS_PRISE_POT_INT);
 

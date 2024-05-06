@@ -146,6 +146,10 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
         setPositionBatch(GROUP_PINCE_ARRIERE, POS_PRISE_POT, wait);
     }
 
+    public void groupePinceArrierePrisePlante(boolean wait) {
+        setPositionBatch(GROUP_PINCE_ARRIERE, POS_PRISE_PLANTE, wait);
+    }
+
     public void groupePinceArrierePrisePotInterieur(boolean wait) {
         setPositionBatch(GROUP_PINCE_ARRIERE, POS_PRISE_POT_INT, wait);
     }

@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.active.robot;
+package org.arig.robot.strategy.actions.disabled;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
@@ -82,26 +82,26 @@ public class JardiniereSudAction extends AbstractJardiniereAction {
     }
 
     private void executeInternal() throws AvoidingException {
-        prepareBras();
-
-        rs.disableAvoidance();
-
-        rs.enableCalageBordure(TypeCalage.AVANT, TypeCalage.FORCE);
-        mv.setVitessePercent(60, 100);
-        mv.avanceMM(getX((int) mv.currentXMm()) - config.distanceCalageAvant() - 10);
-
-        if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
-            depose(true);
-            return;
-        }
-
-        mv.setVitessePercent(0, 100);
-        rs.enableCalageBordure(TypeCalage.AVANT);
-        mv.avanceMMSansAngle(40);
-        checkRecalageXmm(getX((int) config.distanceCalageAvant()), TypeCalage.AVANT);
-        checkRecalageAngleDeg(rs.team() == Team.BLEU ? 0 : 180);
-
-        depose(false);
+//        prepareBras();
+//
+//        rs.disableAvoidance();
+//
+//        rs.enableCalageBordure(TypeCalage.AVANT, TypeCalage.FORCE);
+//        mv.setVitessePercent(60, 100);
+//        mv.avanceMM(getX((int) mv.currentXMm()) - config.distanceCalageAvant() - 10);
+//
+//        if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
+//            depose(true);
+//            return;
+//        }
+//
+//        mv.setVitessePercent(0, 100);
+//        rs.enableCalageBordure(TypeCalage.AVANT);
+//        mv.avanceMMSansAngle(40);
+//        checkRecalageXmm(getX((int) config.distanceCalageAvant()), TypeCalage.AVANT);
+//        checkRecalageAngleDeg(rs.team() == Team.BLEU ? 0 : 180);
+//
+//        depose(false);
     }
 
     @Override

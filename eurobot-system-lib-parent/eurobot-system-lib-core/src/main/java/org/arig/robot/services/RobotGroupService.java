@@ -92,9 +92,9 @@ public class RobotGroupService implements RobotGroup.Handler {
                 rs.strategy(Strategy.values()[data[0]]);
                 break;
             case CONFIG:
-                rs.preferePanneaux(data[0] > 0);
-                rs.activeVolAuSol(data[1] > 0);
-                rs.activeVolJardinieres(data[2] > 0);
+                rs.stockage(data[0] > 0);
+                rs.preferePanneaux(data[1] > 0);
+                rs.activeVolAuSol(data[2] > 0);
                 break;
             case CURRENT_ACTION:
                 String actionName = null;
@@ -214,9 +214,9 @@ public class RobotGroupService implements RobotGroup.Handler {
 
     public void configuration() {
         byte[] data = new byte[]{
+                (byte) (rs.stockage() ? 1 : 0),
                 (byte) (rs.preferePanneaux() ? 1 : 0),
-                (byte) (rs.activeVolAuSol() ? 1 : 0),
-            (byte) (rs.activeVolJardinieres() ? 1 : 0)
+                (byte) (rs.activeVolAuSol() ? 1 : 0)
         };
         sendEvent(StatusEvent.CONFIG, data);
     }

@@ -23,9 +23,9 @@ public interface EurobotConfig {
     int tableBorder = 50;
 
     // Options de match
+    String STOCKAGE = "Stockage";
     String PREFERE_PANNEAUX = "Prefere panneaux";
     String ACTIVE_VOL_AU_SOL = "Active vol au sol";
-    String ACTIVE_VOL_JARDINIERES = "Active vol jardinières";
 
     // Noms des actions
     String ACTION_PRISE_SITE_DE_PLANTES = "Prise site de plantes";

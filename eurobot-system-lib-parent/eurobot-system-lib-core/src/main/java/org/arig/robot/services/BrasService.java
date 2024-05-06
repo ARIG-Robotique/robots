@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.arig.robot.services.AbstractCommonRobotServosService.*;
 
@@ -96,15 +97,15 @@ public class BrasService {
     }
 
     public void setBrasAvant(PositionBras positionBras) {
-        setBrasByName(Bras.AVANT_GAUCHE, positionBras, 40, false);
-        setBrasByName(Bras.AVANT_CENTRE, positionBras, 40, false);
-        setBrasByName(Bras.AVANT_DROIT, positionBras, 40, true);
+        setBrasByName(Bras.AVANT_GAUCHE, positionBras, 30, false);
+        setBrasByName(Bras.AVANT_CENTRE, positionBras, 30, false);
+        setBrasByName(Bras.AVANT_DROIT, positionBras, 30, true);
     }
 
     public void setBrasArriere(PositionBras positionBras) {
-        setBrasByName(Bras.ARRIERE_GAUCHE, positionBras, 40, false);
-        setBrasByName(Bras.ARRIERE_CENTRE, positionBras, 40, false);
-        setBrasByName(Bras.ARRIERE_DROIT, positionBras, 40, true);
+        setBrasByName(Bras.ARRIERE_GAUCHE, positionBras, 30, false);
+        setBrasByName(Bras.ARRIERE_CENTRE, positionBras, 30, false);
+        setBrasByName(Bras.ARRIERE_DROIT, positionBras, 30, true);
     }
 
     public void setBrasAvant(PointBras pointBras) {
@@ -121,6 +122,7 @@ public class BrasService {
 
     public void brasAvantDestockage() {
         refreshStock();
+        log.info("Déstockage plantes");
         setBrasAvant(new PointBras(131, 145, -150, false));
         servos.groupePinceAvantOuvert(true);
         setBrasAvant(new PointBras(71, 121, -165, false));
@@ -130,6 +132,7 @@ public class BrasService {
     }
 
     public void brasAvantStockage() {
+        log.info("Stockage plantes");
         setBrasAvant(new PointBras(170, 155, -130, false));
         setBrasAvant(new PointBras(136, 152, -150, false));
         ThreadUtils.sleep(100);
@@ -156,13 +159,21 @@ public class BrasService {
 
             Plante[] stock = rs.stock();
 
+            boolean changed = false;
+
             for (int i = 0; i < 3; i++) {
                 if (vals[i] && stock[i].getType() == TypePlante.AUCUNE) {
                     stock[i] = new Plante(TypePlante.INCONNU);
+                    changed = true;
                 }
-                if (!vals[i] && stock[i].getType() != TypePlante.AUCUNE) {
+                else if (!vals[i] && stock[i].getType() != TypePlante.AUCUNE) {
                     stock[i] = new Plante(TypePlante.AUCUNE);
+                    changed = true;
                 }
+            }
+
+            if (changed) {
+                log.warn("[RS] Le statut du stock a été mis à jour: {}", Stream.of(stock).map(Plante::getType).map(Enum::name).collect(Collectors.joining(",")));
             }
         }
     }

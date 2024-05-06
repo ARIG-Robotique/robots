@@ -115,6 +115,10 @@ public class PanneauSolaireAction extends AbstractNerellAction {
 
                 first = false;
 
+                if (ilEstTempsDeRentrer()) {
+                    break;
+                }
+
                 PanneauSolaire nextPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(nbTry, false);
 
                 if (nextPanneau != null) {

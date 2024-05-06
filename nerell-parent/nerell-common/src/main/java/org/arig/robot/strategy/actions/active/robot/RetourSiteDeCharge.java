@@ -30,7 +30,7 @@ public class RetourSiteDeCharge extends AbstractNerellAction {
 
     private static final int CENTER_X = 450;
     private static final int CENTER_Y = 1000;
-    private static final int OFFSET = 550;
+    private static final int OFFSET = 800;
 
     @Override
     public String name() {

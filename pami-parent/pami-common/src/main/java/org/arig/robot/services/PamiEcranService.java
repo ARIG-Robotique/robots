@@ -23,9 +23,9 @@ public class PamiEcranService extends EcranService {
       stateInfos.setTeam(rs.team());
       stateInfos.setStrategy(rs.strategy());
       stateInfos.setOptions(Map.of(
+          EurobotConfig.STOCKAGE, rs.stockage(),
           EurobotConfig.PREFERE_PANNEAUX, rs.preferePanneaux(),
-          EurobotConfig.ACTIVE_VOL_AU_SOL, rs.activeVolAuSol(),
-          EurobotConfig.ACTIVE_VOL_JARDINIERES, rs.activeVolJardinieres()
+          EurobotConfig.ACTIVE_VOL_AU_SOL, rs.activeVolAuSol()
       ));
     }
   }
