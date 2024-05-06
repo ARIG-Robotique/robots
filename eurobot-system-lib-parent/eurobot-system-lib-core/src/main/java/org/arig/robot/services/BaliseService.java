@@ -23,7 +23,7 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
     private List<Data3D> data3D;
 
     public void updateData() {
-        DataResponse response = (DataResponse) balise.getData(new DataQueryData<>(FiltreBalise.ALL));
+        DataResponse response = (DataResponse) balise.getData(new DataQueryData<>(FiltreBalise.SOLAR_PANEL));
 
         if (response == null) {
             isOK = false;

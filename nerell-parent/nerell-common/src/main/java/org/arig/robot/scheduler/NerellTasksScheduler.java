@@ -68,8 +68,8 @@ public class NerellTasksScheduler {
         }
     }
 
-    @Scheduled(fixedDelay = 1000)
-    public void sendBaliseKeepAlive() {
+    @Scheduled(fixedDelay = 2500)
+    public void getBaliseStatus() {
         if (rs.matchEnabled()) return;
 
         if (!baliseService.isOK()) {
