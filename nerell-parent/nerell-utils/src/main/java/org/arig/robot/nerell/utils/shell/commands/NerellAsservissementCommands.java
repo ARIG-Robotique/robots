@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.arig.robot.constants.ConstantesConfig;
+import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.filters.pid.PidFilter;
 import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.NerellRobotStatus;
@@ -18,6 +19,7 @@ import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.NerellIOService;
 import org.arig.robot.services.TrajectoryManager;
+import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.motion.IAsservissementPolaire;
 import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.shell.Availability;
@@ -50,6 +52,7 @@ public class NerellAsservissementCommands {
     private final PidFilter pidDistance;
     private final PidFilter pidOrientation;
     private final IAsservissementPolaire asservissement;
+    private final Abstract2WheelsEncoders wheelsEncoders;
 
     private enum PIDCoef {
         KP, KI, KD
@@ -113,6 +116,40 @@ public class NerellAsservissementCommands {
     @ShellMethod("Réglage des rampes de distance")
     public void rampDistanceRobotPercent(@NotNull int accel, @NotNull int decel) {
         trajectoryManager.setRampesDistancePercent(accel, decel);
+    }
+
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Avance le robot")
+    public void avanceRobot(@NotNull long distance) throws AvoidingException {
+        startMonitoring();
+
+        wheelsEncoders.reset();
+        rs.enableAsserv();
+        rs.disableAvoidance();
+
+        rs.enableCalageTempo(10000);
+
+        trajectoryManager.avanceMM(distance);
+
+        endMonitoring();
+        rs.disableAsserv();
+    }
+
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Tourne le robot")
+    public void tourneRobot(@NotNull long angle) throws AvoidingException {
+        startMonitoring();
+
+        wheelsEncoders.reset();
+        rs.enableAsserv();
+        rs.disableAvoidance();
+
+        rs.enableCalageTempo(10000);
+
+        trajectoryManager.tourneDeg(angle);
+
+        endMonitoring();
+        rs.disableAsserv();
     }
 
     @ShellMethodAvailability("alimentationOk")
