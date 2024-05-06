@@ -1,25 +1,47 @@
 package org.arig.robot.nerell.utils.shell.commands;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.exception.I2CException;
+import org.apache.commons.io.FileUtils;
+import org.arig.robot.constants.ConstantesConfig;
+import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.model.NerellRobotStatus;
+import org.arig.robot.model.RobotConfig;
+import org.arig.robot.model.monitor.MonitorTimeSerie;
+import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.NerellIOServiceRobot;
+import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.system.capteurs.i2c.I2CAdcAnalogInput;
+import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 
+import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 @Slf4j
 @ShellComponent
 @ShellCommandGroup("IO")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class NerellIOCommands {
 
     private final NerellIOServiceRobot nerellIOServiceRobot;
     private final AbstractEnergyService energyService;
+    private final MonitoringWrapper monitoringWrapper;
+    private final Abstract2WheelsEncoders wheelsEncoders;
+    private final TrajectoryManager trajectoryManager;
+    private final RobotConfig config;
+    private final NerellRobotStatus rs;
     private final I2CAdcAnalogInput adc;
 
     public Availability alimentationOk() {
@@ -55,16 +77,122 @@ public class NerellIOCommands {
     }
 
     @ShellMethod("Read ADC")
-    public void readAdc() throws I2CException {
+    @SneakyThrows
+    public void readAdc() {
         for (int i = 0; i < 8; i++) {
             int value = adc.readCapteurValue((byte) i);
-            log.info("ADC {}: raw={} 10bits={}", i, value, convertTo10BitValue(value));
+            log.info("ADC {}: {}", i, value);
         }
     }
 
-    private int convertTo10BitValue(int value) {
-        short min10Bit = 0, min12Bit = 0, max10Bit = 1023, max12Bit = 4095;
-        return (value - min12Bit) * (max10Bit - min10Bit) / (max12Bit - min12Bit) + min12Bit;
+    private void startMonitoring() {
+        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
+        System.setProperty(ConstantesConfig.keyExecutionId, execId);
+        rs.enableForceMonitoring();
+        monitoringWrapper.cleanAllPoints();
+    }
+
+    @SneakyThrows
+    private void endMonitoring() {
+        monitoringWrapper.save();
+        rs.disableForceMonitoring();
+
+        final String execId = System.getProperty(ConstantesConfig.keyExecutionId);
+        final File execFile = new File("./logs/" + execId + ".exec");
+        DateTimeFormatter execIdPattern = DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat);
+        DateTimeFormatter savePattern = DateTimeFormatter.ofPattern(ConstantesConfig.executiondDateFormat);
+        List<String> lines = new ArrayList<>();
+        lines.add(LocalDateTime.parse(execId, execIdPattern).format(savePattern));
+        lines.add(LocalDateTime.now().format(savePattern));
+        FileUtils.writeLines(execFile, lines);
+    }
+
+    @SneakyThrows
+    @ShellMethod("Monitor ADC")
+    public void monitorAdc(int duration) {
+        startMonitoring();
+
+        long end = System.currentTimeMillis() + duration * 1000L;
+
+        do {
+            int value1 = adc.readCapteurValue((byte) 1);
+            int value2 = adc.readCapteurValue((byte) 5);
+            int value3 = adc.readCapteurValue((byte) 4);
+            int value4 = adc.readCapteurValue((byte) 0);
+
+            log.info("{} {} {} {}", value1, value2, value3, value4);
+
+            MonitorTimeSerie serie = new MonitorTimeSerie()
+                    .measurementName("adc")
+                    .addField("value1", value1)
+                    .addField("value2", value2)
+                    .addField("value3", value3)
+                    .addField("value4", value4);
+
+            monitoringWrapper.addTimeSeriePoint(serie);
+
+            ThreadUtils.sleep(20);
+
+        } while (System.currentTimeMillis() < end);
+
+        endMonitoring();
+    }
+
+    /**
+     * Avance de 1000mm tout en tracant les valeurs des GP2D
+     *
+     * @example Query Flux
+     *
+     * from(bucket: "robots")
+     * |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+     * |> filter(fn: (r) => r["_measurement"] == "adc")
+     * |> filter(fn: (r) => r["_field"] == "x" or r["_field"] == "value1" or r["_field"] == "value2" or r["_field"] == "value3" or r["_field"] == "value4")
+     * |> aggregateWindow(every: 100ms, fn: mean, createEmpty: false)
+     * |> map(fn: (r) =>  ({ r with _value: if r._field == "x" then r._value else 230000.0 / r._value - 50.0 }))
+     * |> yield(name: "mean")
+     */
+    @SneakyThrows
+    @ShellMethod()
+    @ShellMethodAvailability("alimentationOk")
+    public void calibrationGp() {
+        startMonitoring();
+
+        wheelsEncoders.reset();
+        rs.enableAsserv();
+
+        trajectoryManager.setVitessePercent(10, 100);
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                trajectoryManager.avanceMM(1000);
+            } catch (AvoidingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        do {
+            double currentX = trajectoryManager.currentXMm();
+            int value1 = adc.readCapteurValue((byte) 1);
+            int value2 = adc.readCapteurValue((byte) 5);
+            int value3 = adc.readCapteurValue((byte) 4);
+            int value4 = adc.readCapteurValue((byte) 0);
+
+            MonitorTimeSerie serie = new MonitorTimeSerie()
+                    .measurementName("adc")
+                    .addField("x", currentX)
+                    .addField("value1", value1)
+                    .addField("value2", value2)
+                    .addField("value3", value3)
+                    .addField("value4", value4);
+
+            monitoringWrapper.addTimeSeriePoint(serie);
+
+            ThreadUtils.sleep(20);
+
+        } while (!trajectoryManager.isTrajetAtteint());
+
+        endMonitoring();
+        rs.disableAsserv();
     }
 
     @ShellMethod("Enable Electro Aimant")
