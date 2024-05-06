@@ -67,10 +67,10 @@ public interface PamiConstantesConfig {
     // Configuration des vitesses //
     // -------------------------- //
 
-    long vitesseOrientationMax = 600;
+    long vitesseOrientationMax = 800;
     long vitesseOrientationMin = 300;
 
-    long vitesseMax = 600;
+    long vitesseMax = 800;
     long vitesseMin = 300;
 
     // -------------- //
@@ -83,8 +83,8 @@ public interface PamiConstantesConfig {
     double kiDistanceSimu = 0.0;
     double kdDistanceSimu = 0.008;
 
-    double kpOrientation = 100;
-    double kiOrientation = 0.4;
+    double kpOrientation = 45;
+    double kiOrientation = 0.6;
     double kdOrientation = 30;
     double kpOrientationSimu = 6.0;
     double kiOrientationSimu = 0.0;
