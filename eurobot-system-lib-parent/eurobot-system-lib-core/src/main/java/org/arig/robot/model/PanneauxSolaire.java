@@ -72,12 +72,13 @@ public class PanneauxSolaire {
         return null;
     }
 
-  public void refreshFromCamera(int nb, CouleurPanneauSolaire couleur, long millis) {
+  public void refreshFromCamera(int nb, CouleurPanneauSolaire couleur, long millis, int r) {
     if (data[nb - 1].millis() >= millis) {
       return;
     }
 
-    data[nb - 1].couleur(couleur).millis(millis);
+    data[nb - 1].couleur(couleur).millis(millis).rotation(r);
+    log.info("[rs] panneau solaire changed: {}", data[nb - 1].toString());
     }
 
     int score() {
@@ -114,11 +115,11 @@ public class PanneauxSolaire {
         log.info("[RS] panneaux solaires équipe done : {}", nb);
         if (team == Team.BLEU) {
             for (int i = 1; i <= nb; i++) {
-              data[i - 1].couleur(CouleurPanneauSolaire.BLEU).millis(millis);
+              data[i - 1].couleur(CouleurPanneauSolaire.BLEU).millis(millis).rotation(null);
             }
         } else {
             for (int i = 1; i <= nb; i++) {
-              data[9 - i].couleur(CouleurPanneauSolaire.JAUNE).millis(millis);
+              data[9 - i].couleur(CouleurPanneauSolaire.JAUNE).millis(millis).rotation(null);
             }
         }
     }

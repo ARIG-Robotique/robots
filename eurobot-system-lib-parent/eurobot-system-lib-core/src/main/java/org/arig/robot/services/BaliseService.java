@@ -5,6 +5,7 @@ import org.arig.robot.communication.socket.balise.DataQueryData;
 import org.arig.robot.communication.socket.balise.DataResponse;
 import org.arig.robot.model.CouleurPanneauSolaire;
 import org.arig.robot.model.EurobotStatus;
+import org.arig.robot.model.PanneauSolaire;
 import org.arig.robot.model.balise.BaliseData;
 import org.arig.robot.model.balise.Data3D;
 import org.arig.robot.model.balise.enums.Data3DTeam;
@@ -49,8 +50,10 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
                 if (solarPanel.getTeam() == Data3DTeam.INCONNUE) return;
                 int numero = Integer.parseInt(solarPanel.getName().name().split("_")[2]) + 1;
                 CouleurPanneauSolaire couleur = CouleurPanneauSolaire.valueOf(solarPanel.getTeam().name());
+                PanneauSolaire oldValue = rs.panneauxSolaire().get(numero);
+                if (couleur == oldValue.couleur() && oldValue.rotation() != null && solarPanel.getR() == oldValue.rotation()) return;
                 long millis = rs.getElapsedTime() - solarPanel.getAge();
-                rs.panneauxSolaire().refreshFromCamera(numero, couleur, millis);
+                rs.panneauxSolaire().refreshFromCamera(numero, couleur, millis, solarPanel.getR());
             });
     }
 

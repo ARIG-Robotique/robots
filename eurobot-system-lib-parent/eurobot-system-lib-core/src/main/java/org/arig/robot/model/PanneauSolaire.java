@@ -20,6 +20,8 @@ public class PanneauSolaire implements Serializable {
 
   private long millis;
 
+  private Integer rotation = null;
+
   @JsonIgnore
     @Setter(AccessLevel.NONE)
     private byte nbTry = 0;
@@ -81,6 +83,6 @@ public class PanneauSolaire implements Serializable {
 
     @Override
     public String toString() {
-        return "PanneauSolaire{" + "numero=" + numero + ", couleur=" + couleur + "}";
+        return "PanneauSolaire{" + "numero=" + numero + ", couleur=" + couleur + ", millis=" + millis + ", rotation=" + rotation + "}";
     }
 }

@@ -21,8 +21,8 @@ import static org.arig.robot.constants.NerellConstantesConfig.VITESSE_ROUE_PANNE
 @Component
 public class PanneauSolaireAction extends AbstractNerellAction {
 
-    private final int Y_ENTRY = 230;
-    private final int Y_ACTION = 230;
+    private final int Y_ENTRY = 235;
+    private final int Y_ACTION = 235;
 
     PanneauSolaire firstPanneau;
 
@@ -92,18 +92,24 @@ public class PanneauSolaireAction extends AbstractNerellAction {
                 }
 
                 if (rs.team() == Team.BLEU) {
-                    ioService.tournePanneauBleu(VITESSE_ROUE_PANNEAU);
+                    ioService.tournePanneauBleu(1024);
                 } else {
-                    ioService.tournePanneauJaune(VITESSE_ROUE_PANNEAU);
+                    ioService.tournePanneauJaune(1024);
                 }
 
-                // FIXME position du ski en fonction de la position initiale théorique du panneau
+                if (panneau.rotation() != null && (panneau.rotation() >= 155 || panneau.rotation() <= -155)){
+                    servosNerell.setPanneauSolaireRoueOuvert(true);
+                    ThreadUtils.sleep(50);
+                    servosNerell.setPanneauSolaireSkiOuvert(true);
+                    ThreadUtils.sleep(400);
+                } else {
+                    servosNerell.groupePanneauOuvert(true);
+                    ThreadUtils.sleep(500);
+                }
 
-                servosNerell.groupePanneauOuvert(true);
-
-                ThreadUtils.sleep(500);
                 panneau.couleur(rs.team() == Team.JAUNE ? CouleurPanneauSolaire.JAUNE : CouleurPanneauSolaire.BLEU)
-                    .millis(rsNerell.getElapsedTime());
+                    .millis(rsNerell.getElapsedTime())
+                    .rotation(null);
 
                 servosNerell.groupePanneauFerme(false);
 

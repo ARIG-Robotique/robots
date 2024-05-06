@@ -16,7 +16,7 @@ public abstract class AbstractData3D<
     protected NAME name;
     protected TYPE type;
     protected TEAM team;
-    private float r;
+    private int r;
     private int x;
     private int y;
     private long age;
