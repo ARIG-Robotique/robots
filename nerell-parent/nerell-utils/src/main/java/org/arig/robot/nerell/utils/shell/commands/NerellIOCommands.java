@@ -40,7 +40,6 @@ public class NerellIOCommands {
     private final MonitoringWrapper monitoringWrapper;
     private final Abstract2WheelsEncoders wheelsEncoders;
     private final TrajectoryManager trajectoryManager;
-    private final RobotConfig config;
     private final NerellRobotStatus rs;
     private final I2CAdcAnalogInput adc;
 
