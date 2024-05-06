@@ -121,12 +121,15 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void groupePinceAvantOuvert(boolean wait) {
         setPositionBatch(GROUP_PINCE_AVANT, POS_OUVERT, wait);
     }
+
     public void groupePinceAvantFerme(boolean wait) {
         setPositionBatch(GROUP_PINCE_AVANT, POS_FERME, wait);
     }
+
     public void groupePinceAvantPrisePot(boolean wait) {
         setPositionBatch(GROUP_PINCE_AVANT, POS_PRISE_POT, wait);
     }
+
     public void groupePinceAvantPrisePlante(boolean wait) {
         setPositionBatch(GROUP_PINCE_AVANT, POS_PRISE_PLANTE, wait);
     }
@@ -134,16 +137,23 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void groupePinceArriereOuvert(boolean wait) {
         setPositionBatch(GROUP_PINCE_ARRIERE, POS_OUVERT, wait);
     }
+
     public void groupePinceArriereFerme(boolean wait) {
         setPositionBatch(GROUP_PINCE_ARRIERE, POS_FERME, wait);
     }
+
     public void groupePinceArrierePrisePot(boolean wait) {
         setPositionBatch(GROUP_PINCE_ARRIERE, POS_PRISE_POT, wait);
+    }
+
+    public void groupePinceArrierePrisePotInterieur(boolean wait) {
+        setPositionBatch(GROUP_PINCE_ARRIERE, POS_PRISE_POT_INT, wait);
     }
 
     public void groupePanneauOuvert(boolean wait) {
         setPositionBatch(GROUP_PANNEAU_SOLAIRE, POS_OUVERT, wait);
     }
+
     public void groupePanneauFerme(boolean wait) {
         setPositionBatch(GROUP_PANNEAU_SOLAIRE, POS_FERME, wait);
     }
@@ -151,9 +161,11 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void groupeBloquePlanteOuvert(boolean wait) {
         setPositionBatch(GROUP_BLOQUE_PLANTE_AVANT, POS_OUVERT, wait);
     }
+
     public void groupeBloquePlanteFerme(boolean wait) {
         setPositionBatch(GROUP_BLOQUE_PLANTE_AVANT, POS_FERME, wait);
     }
+
     public void groupeBloquePlantePrisePlante(boolean wait) {
         setPositionBatch(GROUP_BLOQUE_PLANTE_AVANT, POS_PRISE_PLANTE, wait);
     }
@@ -178,48 +190,16 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
         setPosition(PANNEAU_SOLAIRE_SKI, POS_FERME, wait);
     }
 
-    public void brasAvantGauchePinceOuvert(boolean wait) {
-        setPosition(BRAS_AVANT_GAUCHE_PINCE, POS_OUVERT, wait);
+    public void pinceArriereGauchePrisePotInterieur(boolean wait) {
+        setPosition(BRAS_ARRIERE_GAUCHE_PINCE, POS_PRISE_POT_INT, wait);
     }
 
-    public void brasAvantGauchePinceFerme(boolean wait) {
-        setPosition(BRAS_AVANT_GAUCHE_PINCE, POS_FERME, wait);
+    public void pinceArriereCentrePrisePotInterieur(boolean wait) {
+        setPosition(BRAS_ARRIERE_CENTRE_PINCE, POS_PRISE_POT_INT, wait);
     }
 
-    public void brasAvantCentrePinceOuvert(boolean wait) {
-        setPosition(BRAS_AVANT_CENTRE_PINCE, POS_OUVERT, wait);
-    }
-
-    public void brasAvantCentrePinceFerme(boolean wait) {
-        setPosition(BRAS_AVANT_CENTRE_PINCE, POS_FERME, wait);
-    }
-
-    public void brasAvantDroitPinceOuvert(boolean wait) {
-        setPosition(BRAS_AVANT_DROIT_PINCE, POS_OUVERT, wait);
-    }
-
-    public void brasAvantDroitPinceFerme(boolean wait) {
-        setPosition(BRAS_AVANT_DROIT_PINCE, POS_FERME, wait);
-    }
-
-    public void brasArriereGauchePinceOuvert(boolean wait) {
-        setPosition(BRAS_ARRIERE_GAUCHE_PINCE, POS_OUVERT, wait);
-    }
-
-    public void brasArriereGauchePinceFerme(boolean wait) {
-        setPosition(BRAS_ARRIERE_GAUCHE_PINCE, POS_FERME, wait);
-    }
-
-    public void brasArriereCentrePinceOuvert(boolean wait) {
-        setPosition(BRAS_ARRIERE_CENTRE_PINCE, POS_OUVERT, wait);
-    }
-
-    public void brasArriereCentrePinceFerme(boolean wait) {
-        setPosition(BRAS_ARRIERE_CENTRE_PINCE, POS_FERME, wait);
-    }
-
-    public void brasArriereDroitPinceOuvert(boolean wait) {
-        setPosition(BRAS_ARRIERE_DROIT_PINCE, POS_OUVERT, wait);
+    public void pinceArriereDroitPrisePotInterieur(boolean wait) {
+        setPosition(BRAS_ARRIERE_DROIT_PINCE, POS_PRISE_POT_INT, wait);
     }
 
     public void brasAvantGauche(double a1, double a2, double a3, int speed, boolean wait) {
@@ -245,5 +225,4 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void brasArriereDroit(double a1, double a2, double a3, int speed, boolean wait) {
         setAngles(Map.of(BRAS_ARRIERE_DROIT_EPAULE, a1, BRAS_ARRIERE_DROIT_COUDE, a2, BRAS_ARRIERE_DROIT_POIGNET, a3), speed, wait);
     }
-
 }
