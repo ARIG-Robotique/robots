@@ -23,6 +23,7 @@ import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -33,8 +34,18 @@ import java.util.stream.Collectors;
 @Service
 public class LidarService implements InitializingBean {
 
+    public static class ObstaclePoint extends Point {
+        @Getter
+        private final int tailleObstacle;
+
+        public ObstaclePoint(Point pt, int taille) {
+            super(pt);
+            tailleObstacle = taille;
+        }
+    }
+
     @Autowired
-    private ILidarTelemeter lidar;
+    private List<ILidarTelemeter> telemeters;
 
     @Autowired
     private TableUtils tableUtils;
@@ -49,7 +60,7 @@ public class LidarService implements InitializingBean {
     private PathFinder pathFinder;
 
     @Getter
-    private final List<Point> detectedPointsMm = Collections.synchronizedList(new ArrayList<>());
+    private final List<ObstaclePoint> detectedPointsMm = Collections.synchronizedList(new ArrayList<>());
     @Getter
     protected final List<Shape> collisionsShape = Collections.synchronizedList(new ArrayList<>());
     @Getter
@@ -57,7 +68,7 @@ public class LidarService implements InitializingBean {
 
     private final AtomicBoolean cleanup = new AtomicBoolean(false);
 
-    private DBSCANClusterer<Point> clusterer;
+    private DBSCANClusterer<ObstaclePoint> clusterer;
 
     synchronized public boolean waitCleanup() {
         cleanup.set(true);
@@ -74,7 +85,7 @@ public class LidarService implements InitializingBean {
     }
 
     public boolean isConnected() {
-        return lidar.isOpen();
+        return telemeters.stream().allMatch(ILidarTelemeter::isOpen);
     }
 
     public boolean mustCleanup() {
@@ -85,22 +96,34 @@ public class LidarService implements InitializingBean {
         log.info("Initialisation du service d'évittement d'obstacle");
 
         clusterer = new DBSCANClusterer<>(robotConfig.lidarClusterSizeMm(), 2);
-
-        lidar.deviceInfo();
     }
 
     public void refreshDetectedPoints() {
-        ScanInfos lidarScan = lidar.grabData();
 
-        List<Point> detectedPointsMm = new ArrayList<>(robotStatus.adversaryPosition());
+        List<ObstaclePoint> detectedPointsMm = new ArrayList<>();
 
-        if (lidarScan != null) {
-            detectedPointsMm.addAll(
-                    lidarScan.getScan().parallelStream()
-                            .map(scan -> tableUtils.getPointFromAngle(scan.getDistanceMm(), scan.getAngleDeg()))
-                            .filter(pt -> tableUtils.isInTable(pt) /*&& checkValidPointForSeuil(pt, IConstantesNerellConfig.pathFindingSeuilAvoidance)*/)
-                            .collect(Collectors.toList())
-            );
+        for (ILidarTelemeter telemeter : telemeters) {
+            ScanInfos lidarScan = telemeter.grabData();
+
+            if (lidarScan != null) {
+                detectedPointsMm.addAll(
+                        lidarScan.getScan().parallelStream()
+                                .map(scan -> {
+                                    Point pt = tableUtils.getPointFromAngle(scan.getDistanceMm(), scan.getAngleDeg());
+                                    if (!tableUtils.isInTable(pt)) {
+                                        return null;
+                                    }
+                                    int taille = lidarScan.getTailleObstacle() != null
+                                            ? lidarScan.getTailleObstacle()
+                                            : isOtherRobot(pt)
+                                            ? robotConfig.pathFindingTailleObstacleArig()
+                                            : robotConfig.pathFindingTailleObstacle();
+                                    return new ObstaclePoint(pt, taille);
+                                })
+                                .filter(Objects::nonNull)
+                                .toList()
+                );
+            }
         }
 
         this.detectedPointsMm.clear();
@@ -124,13 +147,11 @@ public class LidarService implements InitializingBean {
         List<java.awt.Shape> obstacles = new ArrayList<>();
 
         pointLidar:
-        for (Point pt : applyClustering(detectedPointsMm)) {
-            int tailleObstacle = isOtherRobot(pt) ? robotConfig.pathFindingTailleObstacleArig() : robotConfig.pathFindingTailleObstacle();
-
-            collisionsShape.add(new Cercle(pt, tailleObstacle / 2));
+        for (ObstaclePoint pt : applyClustering(detectedPointsMm)) {
+            collisionsShape.add(new Cercle(pt, pt.tailleObstacle / 2));
 //            collisionsShape.add(new org.arig.robot.model.Rectangle(pt.getX() - tailleObstacle / 2., pt.getY() - tailleObstacle / 2., tailleObstacle, tailleObstacle));
 
-            Polygon obstacle = tableUtils.createPolygonObstacle(pt, tailleObstacle);
+            Polygon obstacle = tableUtils.createPolygonObstacle(pt, pt.tailleObstacle);
 
             if (CollectionUtils.isEmpty(lines)) {
                 log.info("Ajout polygon : {} {}", pt, obstacle.toString());
@@ -182,14 +203,16 @@ public class LidarService implements InitializingBean {
         return hasObstacle.get();
     }
 
-    private List<Point> applyClustering(List<Point> input) {
+    private List<ObstaclePoint> applyClustering(List<ObstaclePoint> input) {
         return clusterer.cluster(input)
                 .stream()
                 .map(cluster -> {
                     Clusterable center = cluster.centroid();
-                    return new Point(center.getPoint()[0], center.getPoint()[1]);
+                    int taille = cluster.getPoints().stream().mapToInt(ObstaclePoint::getTailleObstacle).max().getAsInt();
+                    Point point = new Point(center.getPoint()[0], center.getPoint()[1]);
+                    point = tableUtils.eloigner(point, robotConfig.lidarOffsetPointMm());
+                    return new ObstaclePoint(point, taille);
                 })
-                .map(point -> tableUtils.eloigner(point, robotConfig.lidarOffsetPointMm()))
                 .collect(Collectors.toList());
     }
 

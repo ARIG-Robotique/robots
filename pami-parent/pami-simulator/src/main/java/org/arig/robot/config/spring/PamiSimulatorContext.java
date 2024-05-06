@@ -120,8 +120,7 @@ public class PamiSimulatorContext {
         return new ARIG2ChannelsAlimentationSensorBouchon("alim sensor");
     }
 
-
-    @Bean
+    @Bean("rplidar")
     public ILidarTelemeter rplidar() {
         return new LidarTelemeterBouchon();
     }

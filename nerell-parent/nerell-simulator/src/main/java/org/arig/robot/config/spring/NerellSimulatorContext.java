@@ -115,7 +115,7 @@ public class NerellSimulatorContext {
         return new BouchonARIGVacuumController();
     }
 
-    @Bean
+    @Bean("rplidar")
     public ILidarTelemeter rplidar() {
         return new LidarTelemeterBouchon();
     }

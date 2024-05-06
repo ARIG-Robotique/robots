@@ -27,6 +27,7 @@ import org.arig.robot.system.avoiding.CompleteAvoidingService;
 import org.arig.robot.system.avoiding.SemiCompleteAvoidingService;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.capteurs.i2c.ARIG2ChannelsAlimentationSensor;
+import org.arig.robot.system.capteurs.i2c.GP2D12Telemeter;
 import org.arig.robot.system.capteurs.i2c.I2CAdcAnalogInput;
 import org.arig.robot.system.capteurs.i2c.TCA9548MultiplexerI2C;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
@@ -46,6 +47,8 @@ import org.springframework.core.env.Environment;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Configuration
@@ -203,7 +206,7 @@ public class NerellRobotContext {
         return new RPLidarBridgeProcess("/home/pi/rplidar_bridge");
     }
 
-    @Bean
+    @Bean("rplidar")
     @DependsOn("rplidarBridgeProcess")
     public ILidarTelemeter rplidar() throws Exception {
         final File socketFile = new File(RPLidarBridgeProcess.socketPath);
@@ -213,6 +216,16 @@ public class NerellRobotContext {
     @Bean
     public I2CAdcAnalogInput analogReader() {
         return new I2CAdcAnalogInput(NerellConstantesI2C.I2C_ADC_DEVICE_NAME);
+    }
+
+    @Bean("gp2d")
+    public ILidarTelemeter gp2d12Telemeter() {
+        List<GP2D12Telemeter.Device> devices = new ArrayList<>();
+        devices.add(new GP2D12Telemeter.Device((byte) 1, -80, 70, 160, 4));
+        devices.add(new GP2D12Telemeter.Device((byte) 5, -90, 39, 177, 4));
+        devices.add(new GP2D12Telemeter.Device((byte) 4, -90, -39, -177, 4));
+        devices.add(new GP2D12Telemeter.Device((byte) 0, -80, -70, -160, 4));
+        return new GP2D12Telemeter(devices, NerellConstantesConfig.pathFindingTailleObstaclePami);
     }
 
     @Bean

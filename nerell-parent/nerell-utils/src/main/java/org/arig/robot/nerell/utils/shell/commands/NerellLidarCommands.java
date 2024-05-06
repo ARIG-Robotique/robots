@@ -3,12 +3,13 @@ package org.arig.robot.nerell.utils.shell.commands;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.lidar.Scan;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
+import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -17,16 +18,19 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 
 @Slf4j
 @ShellComponent
-@ShellCommandGroup("Lidar")
+@ShellCommandGroup("lidar")
 public class NerellLidarCommands {
 
     private final ILidarTelemeter lidar;
+    private final ILidarTelemeter gp2d;
 
     private boolean startScanRunned;
 
     @Autowired
-    public NerellLidarCommands(ILidarTelemeter lidar) {
+    public NerellLidarCommands(@Qualifier("rplidar") ILidarTelemeter lidar,
+                               @Qualifier("gp2d") ILidarTelemeter gp2d) {
         this.lidar = lidar;
+        this.gp2d = gp2d;
     }
 
     public Availability lidarCmdAvailable() {
@@ -34,36 +38,44 @@ public class NerellLidarCommands {
     }
 
     @ShellMethod("Controle fonctionnement du lidar")
-    public void info() {
+    public void infoLidar() {
         lidar.printDeviceInfo();
     }
 
-    @ShellMethod("Demarre le scan")
+    @ShellMethod("Demarre le scan du Lidar")
     public void startScan() {
         lidar.startScan();
         startScanRunned = true;
     }
 
     @ShellMethodAvailability("lidarCmdAvailable")
-    @ShellMethod("Arrete le scan")
+    @ShellMethod("Arrete le scan du Lidar")
     public void stopScan() {
         lidar.stopScan();
         startScanRunned = false;
     }
 
     @ShellMethodAvailability("lidarCmdAvailable")
-    @ShellMethod("Vitesse de rotation")
-    public void setSpeed(@NotNull @Min(250) @Max(1023) short speed) {
+    @ShellMethod("Vitesse de rotation du Lidar")
+    public void setLidarSpeed(@NotNull @Min(250) @Max(1023) short speed) {
         lidar.setSpeed(speed);
     }
 
-    @SneakyThrows
     @ShellMethodAvailability("lidarCmdAvailable")
-    @ShellMethod("Grab des données")
-    public void grabData() {
+    @ShellMethod("Grab des données Lidar")
+    public void grabLidarData() {
+        grabData(lidar, 100);
+    }
+
+    @ShellMethod("Grab les données des GP2D12")
+    public void grabGpData() {
+        grabData(gp2d, 100);
+    }
+
+    private void grabData(ILidarTelemeter telemeter, int it) {
         int cpt = 0;
         do {
-            final ScanInfos scanInfos = lidar.grabData();
+            final ScanInfos scanInfos = telemeter.grabData();
             StringBuilder res = new StringBuilder();
             for (int i = 0 ; i < Math.min(10, scanInfos.getScan().size()) ; i++) {
                 Scan s = scanInfos.getScan().get(i);
@@ -77,7 +89,7 @@ public class NerellLidarCommands {
                 res.append(" mm");
             }
             log.info("{} data ignoré, {} data acquise (sample : {})", scanInfos.getIgnored(), scanInfos.getScan().size(), res);
-            Thread.sleep(50);
-        } while(++cpt < 100);
+            ThreadUtils.sleep(50);
+        } while(++cpt < it);
     }
 }

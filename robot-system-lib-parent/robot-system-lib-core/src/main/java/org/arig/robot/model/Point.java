@@ -50,8 +50,8 @@ public class Point implements Clusterable {
     }
 
     public double angle(Point other) {
-        double dY = other.getY() - y;
-        double dX = other.getX() - x;
+        double dX = x - other.getX();
+        double dY = y - other.getY();
         return Math.toDegrees(Math.atan2(dY, dX));
     }
 

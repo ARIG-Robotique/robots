@@ -1,19 +1,23 @@
 package org.arig.robot.nerell.utils.shell.commands;
 
-import lombok.AllArgsConstructor;
 import org.arig.robot.services.NerellIOService;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.shell.ExitRequest;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.commands.Quit;
 
 @ShellComponent
-@AllArgsConstructor
 public class NerellQuitCommand implements Quit.Command {
 
     private final ILidarTelemeter lidar;
     private final NerellIOService ioService;
+
+    public NerellQuitCommand(@Qualifier("rplidar") ILidarTelemeter lidar, NerellIOService ioService) {
+        this.lidar = lidar;
+        this.ioService = ioService;
+    }
 
     @ShellMethod(value = "Exit the shell.", key = {"quit", "exit"})
     public void quit() {

@@ -141,7 +141,7 @@ public class PamiRobotContext {
         return motors;
     }
 
-    @Bean
+    @Bean("rplidar")
     public ILidarTelemeter rplidar() throws Exception {
         return new ILidarTelemeter() {
             @Override

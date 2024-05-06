@@ -143,6 +143,7 @@ public interface NerellConstantesConfig {
     int pathFindingSeuilProximiteArig = 390;
     int pathFindingTailleObstacle = NerellConstantesConfig.pathFindingSeuilProximite * 2 + 50;
     int pathFindingTailleObstacleArig = NerellConstantesConfig.pathFindingSeuilProximiteArig * 2 + 50;
+    int pathFindingTailleObstaclePami = 600;
 
     int lidarClusterSizeMm = 50;
     int lidarOffsetPointMm = 30; // "recule" les points détectés pour prendre en compte qu'on ne detecte que les faces avant

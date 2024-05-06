@@ -8,6 +8,7 @@ import org.arig.robot.services.NerellEcranService;
 import org.arig.robot.services.NerellIOService;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
+import org.arig.robot.system.capteurs.i2c.GP2D12Telemeter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -37,6 +38,9 @@ public class NerellTasksScheduler {
     @Autowired
     private AbstractEnergyService energyService;
 
+    @Autowired
+    private GP2D12Telemeter gp2D12Telemeter;
+
     @Scheduled(fixedRate = 1000)
     public void ecranTask() {
         if (rs.ecranEnabled()) {
@@ -47,6 +51,10 @@ public class NerellTasksScheduler {
     @Scheduled(fixedDelay = 20)
     public void obstacleAvoidanceTask() {
         if (rs.avoidanceEnabled()) {
+            if (rs.getRemainingTime() < 10000 && !gp2D12Telemeter.isEnabled()) {
+                gp2D12Telemeter.setEnabled(true);
+            }
+
             avoidingService.process();
         }
     }

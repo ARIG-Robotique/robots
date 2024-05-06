@@ -7,6 +7,7 @@ import org.apache.commons.io.FileUtils;
 import org.arig.robot.constants.ConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.NerellRobotStatus;
+import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.MonitoringWrapper;
@@ -16,6 +17,8 @@ import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.system.capteurs.i2c.I2CAdcAnalogInput;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.utils.ThreadUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -42,6 +45,7 @@ public class NerellIOCommands {
     private final TrajectoryManager trajectoryManager;
     private final NerellRobotStatus rs;
     private final I2CAdcAnalogInput adc;
+    private final Position currentPosition;
 
     public Availability alimentationOk() {
         return nerellIOServiceRobot.auOk() && energyService.checkMoteurs()
@@ -147,7 +151,7 @@ public class NerellIOCommands {
      * |> filter(fn: (r) => r["_measurement"] == "adc")
      * |> filter(fn: (r) => r["_field"] == "x" or r["_field"] == "value1" or r["_field"] == "value2" or r["_field"] == "value3" or r["_field"] == "value4")
      * |> aggregateWindow(every: 100ms, fn: mean, createEmpty: false)
-     * |> map(fn: (r) =>  ({ r with _value: if r._field == "x" then r._value else 230000.0 / r._value - 50.0 }))
+     * |> map(fn: (r) =>  ({ r with _value: if r._field == "x" then r._value / 10.0 else 26208.0 / r._value - 4.693 }))
      * |> yield(name: "mean")
      */
     @SneakyThrows
@@ -157,6 +161,7 @@ public class NerellIOCommands {
         startMonitoring();
 
         wheelsEncoders.reset();
+        currentPosition.updatePosition(0, 0, 0);
         rs.enableAsserv();
 
         trajectoryManager.setVitessePercent(10, 100);

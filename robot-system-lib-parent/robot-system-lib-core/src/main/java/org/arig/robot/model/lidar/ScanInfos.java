@@ -14,4 +14,5 @@ import java.util.List;
 public class ScanInfos implements Serializable {
     private List<Scan> scan;
     private Short ignored;
+    private Integer tailleObstacle = null;
 }
