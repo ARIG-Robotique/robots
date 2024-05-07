@@ -195,10 +195,29 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
                 robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
                 mv.reculeMMSansAngle(300);
 
-                position.setPt(new Point(
-                    conv.mmToPulse(getX((EurobotConfig.tableWidth / 2.0) - PamiConstantesConfig.dstCallageCote)),
-                    conv.mmToPulse(EurobotConfig.tableHeight - PamiConstantesConfig.dstCallageArriere)
-                ));
+                RobotName.RobotIdentification id = robotName.id();
+                if (id == RobotName.RobotIdentification.PAMI_TRIANGLE) {
+                    position.setPt(new Point(
+                        conv.mmToPulse(getX((EurobotConfig.tableWidth / 2.0) - PamiConstantesConfig.dstCallageCote)),
+                        conv.mmToPulse(EurobotConfig.tableHeight - PamiConstantesConfig.dstCallageArriere)
+                    ));
+                    groupService.initStep(InitStep.PAMI_TRIANGLE_CALAGE_TERMINE);
+
+                } else if (id == RobotName.RobotIdentification.PAMI_CARRE) {
+                    position.setPt(new Point(
+                        conv.mmToPulse(getX(1275)),
+                        conv.mmToPulse(EurobotConfig.tableHeight - PamiConstantesConfig.dstCallageArriere)
+                    ));
+                    groupService.initStep(InitStep.PAMI_CARRE_CALAGE_TERMINE);
+
+                } else {
+                    position.setPt(new Point(
+                        conv.mmToPulse(getX(1050 + PamiConstantesConfig.dstCallageCote)),
+                        conv.mmToPulse(EurobotConfig.tableHeight - PamiConstantesConfig.dstCallageArriere)
+                    ));
+                    groupService.initStep(InitStep.PAMI_ROND_CALAGE_TERMINE);
+                }
+
                 position.setAngle(conv.degToPulse(-90));
 
                 if (!io.auOk()) {
