@@ -3,6 +3,7 @@ package org.arig.robot.services;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.InitStep;
 import org.arig.robot.model.SiteDeCharge;
@@ -16,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -160,14 +162,20 @@ public class RobotGroupService implements RobotGroup.Handler {
      * Attends que l'autre robot ait terminé une étape d'init
      */
     public void waitInitStep(InitStep s) {
+        waitInitStep(s, 60);
+    }
+
+    public void waitInitStep(InitStep s, int timeoutSecond) {
         if (!rs.twoRobots()) {
             log.warn("Un seul robot, on ne peut pas attendre l'autre robot !");
             return;
         }
 
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         do {
             ThreadUtils.sleep(200);
-        } while (this.initStep != s.step());
+        } while (this.initStep != s.step() && stopWatch.getTime(TimeUnit.SECONDS) < timeoutSecond);
     }
 
     /**

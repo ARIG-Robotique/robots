@@ -17,6 +17,7 @@ import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.bras.PositionBras;
+import org.arig.robot.model.ecran.EcranConfig;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.BrasService;
@@ -234,8 +235,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
         ChangeFilter<Team> teamChangeFilter = new ChangeFilter<>(null);
         ChangeFilter<Strategy> strategyChangeFilter = new ChangeFilter<>(null);
-        SignalEdgeFilter updatePhotoFilter = new SignalEdgeFilter(false, Type.RISING);
-        SignalEdgeFilter doEtalonnageFilter = new SignalEdgeFilter(false, Type.RISING);
+        ChangeFilter<EcranConfig> configChangeFilter = new ChangeFilter<>(null);
 
         do {
             exitFromScreen();
@@ -260,9 +260,12 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             nerellRobotStatus.preferePanneaux(nerellEcranService.config().hasOption(EurobotConfig.PREFERE_PANNEAUX));
             nerellRobotStatus.activeVolAuSol(nerellEcranService.config().hasOption(EurobotConfig.ACTIVE_VOL_AU_SOL));
 
-            pamiTriangleGroupService.configuration();
-            pamiCarreGroupService.configuration();
-            pamiRondGroupService.configuration();
+            if (Boolean.TRUE.equals(configChangeFilter.filter(nerellEcranService.config()))) {
+                pamiTriangleGroupService.configuration();
+                pamiCarreGroupService.configuration();
+                pamiRondGroupService.configuration();
+                log.info("Config {}", nerellEcranService.config());
+            }
 
             ThreadUtils.sleep(200);
         } while (!nerellEcranService.config().isStartCalibration());
@@ -273,12 +276,25 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
      */
     @Override
     public void calageBordure(boolean skip) {
+        if (pamiTriangleGroupService.getGroup().isOpen()) {
+            nerellEcranService.displayMessage("Calage Triangle");
+            pamiTriangleGroupService.calage();
+            pamiTriangleGroupService.waitInitStep(InitStep.PAMI_TRIANGLE_CALAGE_TERMINE, 5);
+        }
+
+        if (pamiCarreGroupService.getGroup().isOpen()) {
+            nerellEcranService.displayMessage("Calage Carre");
+            pamiCarreGroupService.calage();
+            pamiCarreGroupService.waitInitStep(InitStep.PAMI_CARRE_CALAGE_TERMINE, 5);
+        }
+
+        if (pamiRondGroupService.getGroup().isOpen()) {
+            nerellEcranService.displayMessage("Calage Rond");
+            pamiRondGroupService.calage();
+            pamiRondGroupService.waitInitStep(InitStep.PAMI_ROND_CALAGE_TERMINE, 5);
+        }
+
         nerellEcranService.displayMessage("Calage bordure");
-
-        pamiTriangleGroupService.calage();
-        pamiCarreGroupService.calage();
-        pamiRondGroupService.calage();
-
         try {
             robotStatus.disableAvoidance();
             position.setPt(new Point(
@@ -331,10 +347,6 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 mv.reculeMM(70);
 
                 bras.setBrasAvant(PositionBras.INIT);
-
-                pamiTriangleGroupService.initStep(InitStep.NERELL_CALAGE_TERMINE); // Nerell calé
-                pamiCarreGroupService.initStep(InitStep.NERELL_CALAGE_TERMINE); // Nerell calé
-                pamiRondGroupService.initStep(InitStep.NERELL_CALAGE_TERMINE); // Nerell calé
             }
         } catch (AvoidingException e) {
             nerellEcranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
@@ -355,9 +367,6 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 case BASIC:
                     mv.gotoPoint(getX(PanneauSolaireEquipeAction.ENTRY_X), PanneauSolaireEquipeAction.WORK_Y);
                     mv.gotoOrientationDeg(180);
-                    pamiTriangleGroupService.initStep(InitStep.NERELL_EN_POSITION);
-                    pamiCarreGroupService.initStep(InitStep.NERELL_EN_POSITION);
-                    pamiRondGroupService.initStep(InitStep.NERELL_EN_POSITION);
                     nerellRobotStatus.siteDeDepart(nerellRobotStatus.team() == Team.BLEU ? SiteDeCharge.BLEU_SUD : SiteDeCharge.JAUNE_SUD);
                     break;
                 case FINALE_1:
@@ -369,12 +378,10 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 default:
                     mv.gotoPoint(getX(240), 1775);
                     mv.alignFrontTo(getX(1220), 1490);
-                    pamiTriangleGroupService.initStep(InitStep.NERELL_EN_POSITION);
-                    pamiCarreGroupService.initStep(InitStep.NERELL_EN_POSITION);
-                    pamiRondGroupService.initStep(InitStep.NERELL_EN_POSITION);
                     nerellRobotStatus.siteDeDepart(nerellRobotStatus.team() == Team.BLEU ? SiteDeCharge.BLEU_NORD : SiteDeCharge.JAUNE_NORD);
                     break;
             }
+
         } catch (AvoidingException e) {
             nerellEcranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
             throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);
@@ -389,8 +396,6 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
         SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(nerellEcranService.config().isModeManuel(), Type.RISING);
         SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(nerellEcranService.config().isModeManuel(), Type.FALLING);
-        SignalEdgeFilter updatePhotoFilter = new SignalEdgeFilter(false, Type.RISING);
-        SignalEdgeFilter doEtalonnageFilter = new SignalEdgeFilter(false, Type.RISING);
 
         boolean manuel = nerellEcranService.config().isModeManuel();
 

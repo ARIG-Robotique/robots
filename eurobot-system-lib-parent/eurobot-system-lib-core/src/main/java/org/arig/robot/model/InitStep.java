@@ -8,8 +8,10 @@ import lombok.experimental.Accessors;
 public enum InitStep {
     // Steps de calage des robots
     START(0),
-    NERELL_CALAGE_TERMINE(1),
-    NERELL_EN_POSITION(2);
+
+    PAMI_TRIANGLE_CALAGE_TERMINE(1),
+    PAMI_CARRE_CALAGE_TERMINE(2),
+    PAMI_ROND_CALAGE_TERMINE(3);
 
     @Getter
     @Accessors(fluent = true)

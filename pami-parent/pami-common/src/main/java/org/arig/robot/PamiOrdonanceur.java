@@ -8,8 +8,10 @@ import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
+import org.arig.robot.model.InitStep;
 import org.arig.robot.model.PamiRobotStatus;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.RobotName;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.TypeCalage;
@@ -182,7 +184,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
 
         try {
             robotStatus.disableAvoidance();
-            // TODO Gérer le point de chaaque PAMIs
+
             position.setPt(new Point(
                     conv.mmToPulse(getX(1500)),
                     conv.mmToPulse(1000)
