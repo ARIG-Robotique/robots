@@ -173,7 +173,7 @@ spring:
 balise:
   impl: SOCKET
   socket:
-    host: overlord
+    host: localhost
     port: 50667
 
 # PAMIs

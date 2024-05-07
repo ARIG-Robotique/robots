@@ -100,6 +100,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void afterInit() {
+        nerellRobotStatus.baliseEnabled(true);
         choixEquipeStrategy();
     }
 
@@ -149,6 +150,10 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void startMatch() {
+        if (!baliseService.isOK()) {
+            nerellRobotStatus.baliseEnabled(false);
+        }
+
         if (robotStatus.pamiTriangleGroupOk()) {
             pamiTriangleGroupService.start();
         }

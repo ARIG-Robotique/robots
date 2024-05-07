@@ -70,7 +70,7 @@ public class NerellTasksScheduler {
 
     @Scheduled(fixedDelay = 2500)
     public void getBaliseStatus() {
-        if (rs.matchEnabled()) return;
+        if (rs.matchEnabled() || !rs.baliseEnabled()) return;
 
         if (!baliseService.isOK()) {
             baliseService.startDetection();
@@ -81,7 +81,7 @@ public class NerellTasksScheduler {
 
     @Scheduled(fixedDelay = 1000)
     public void updateBaliseData() {
-        if (!rs.matchEnabled()) return;
+        if (!rs.matchEnabled() || !rs.baliseEnabled()) return;
 
         if (baliseService.isOK()) {
             baliseService.updateData();

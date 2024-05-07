@@ -85,7 +85,7 @@ public abstract class AbstractVisionBaliseOverSocket<DATA extends Serializable>
             openIfNecessary();
             return sendToSocketAndGet(new StatusQuery(), StatusResponse.class);
         } catch (Exception e) {
-//            log.warn("Erreur de recupération du statut", e);
+            log.warn("Erreur de recupération du statut", e);
             return null;
         }
     }

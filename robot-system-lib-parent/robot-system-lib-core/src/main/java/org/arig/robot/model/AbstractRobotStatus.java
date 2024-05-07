@@ -59,6 +59,11 @@ public abstract class AbstractRobotStatus {
     }
 
     /**
+     * Balise activée
+     */
+    private boolean baliseEnabled = false;
+
+    /**
      * Il y'a deux robots sur la table
      */
     private boolean twoRobots = false;
