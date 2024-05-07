@@ -131,8 +131,6 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
         ChangeFilter<Team> teamChangeFilter = new ChangeFilter<>(null);
         ChangeFilter<Strategy> strategyChangeFilter = new ChangeFilter<>(null);
         ChangeFilter<Boolean> groupChangeFilter = new ChangeFilter<>(null);
-        SignalEdgeFilter updatePhotoFilter = new SignalEdgeFilter(false, Type.RISING);
-        SignalEdgeFilter doEtalonnageFilter = new SignalEdgeFilter(false, Type.RISING);
 
         boolean done;
         do {
