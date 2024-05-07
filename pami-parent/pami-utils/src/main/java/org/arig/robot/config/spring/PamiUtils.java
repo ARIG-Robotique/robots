@@ -26,6 +26,7 @@ public class PamiUtils {
 
         // FIXME : Workaround
         System.setProperty("spring.main.allow-circular-references", "true");
+        System.setProperty("spring.main.allow-bean-definition-overriding", "true");
 
         SpringApplication.run(PamiUtils.class, args);
     }
