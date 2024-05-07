@@ -84,8 +84,18 @@ public class PamiRobotContext {
     }
 
     @Bean
-    public Abstract2WheelsEncoders encoders(NetworkDevice canBus) throws IOException {
-        ARIG2024Can2WheelsEncoders encoders = new ARIG2024Can2WheelsEncoders(canBus, 2, 1);
+    public Abstract2WheelsEncoders encoders(NetworkDevice canBus, RobotName robotName) throws IOException {
+        final ARIG2024Can2WheelsEncoders encoders;
+
+        if (robotName.id() == RobotIdentification.PAMI_TRIANGLE) {
+            encoders = new ARIG2024Can2WheelsEncoders(canBus, 2, 1);
+
+        } else if (robotName.id() == RobotIdentification.PAMI_CARRE) {
+            encoders = new ARIG2024Can2WheelsEncoders(canBus, 1, 2);
+        } else {
+            encoders = new ARIG2024Can2WheelsEncoders(canBus, 1, 2);
+        }
+
         encoders.setEncoderConfiguration(false, true);
         encoders.setCoefs(PamiConstantesConfig.coefCodeurGauche, PamiConstantesConfig.coefCodeurDroit);
         return encoders;
@@ -105,11 +115,21 @@ public class PamiRobotContext {
     }
 
     @Bean
-    public AbstractPropulsionsMotors motors(NetworkDevice canBus) throws IOException {
-        // Configuration de la carte moteur propulsion.
-        ARIG2024CanPropulsionsMotors motors = new ARIG2024CanPropulsionsMotors(canBus);
-        motors.assignMotors(PamiConstantesConfig.numeroMoteurGauche, PamiConstantesConfig.numeroMoteurDroit);
-        motors.setMotorConfiguration(true, false);
+    public AbstractPropulsionsMotors motors(NetworkDevice canBus, RobotName robotName) throws IOException {
+        final ARIG2024CanPropulsionsMotors motors;
+        if (robotName.id() == RobotIdentification.PAMI_TRIANGLE) {
+            motors = new ARIG2024CanPropulsionsMotors(canBus);
+            motors.assignMotors(2, 1);
+            motors.setMotorConfiguration(true, false);
+        } else if (robotName.id() == RobotIdentification.PAMI_CARRE) {
+            motors = new ARIG2024CanPropulsionsMotors(canBus);
+            motors.assignMotors(1, 2);
+            motors.setMotorConfiguration(false, false);
+        } else {
+            motors = new ARIG2024CanPropulsionsMotors(canBus);
+            motors.assignMotors(1, 2);
+            motors.setMotorConfiguration(false, true);
+        }
         return motors;
     }
 

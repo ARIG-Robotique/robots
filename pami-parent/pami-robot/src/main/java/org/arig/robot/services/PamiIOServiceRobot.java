@@ -2,6 +2,7 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
+import org.arig.robot.model.RobotName;
 import org.arig.robot.system.capteurs.can.ARIG2024AlimentationController;
 import org.arig.robot.system.capteurs.i2c.ARIG2024IoPamiSensors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class PamiIOServiceRobot implements PamiIOService {
 
     @Autowired
     private ARIG2024IoPamiSensors arig2024IoPamiSensors;
+
+    @Autowired
+    private RobotName robotName;
 
     @Override
     public void refreshAllIO() {
@@ -105,17 +109,23 @@ public class PamiIOServiceRobot implements PamiIOService {
 
     @Override
     public double distanceGauche() {
-        return arig2024IoPamiSensors.getGp2dGauche();
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+            return arig2024IoPamiSensors.getGp2d2();
+        }
+        return arig2024IoPamiSensors.getGp2d1();
     }
 
     @Override
     public double distanceCentre() {
-        return arig2024IoPamiSensors.getGp2dCentre();
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+            return arig2024IoPamiSensors.getGp2d1();
+        }
+        return arig2024IoPamiSensors.getGp2d2();
     }
 
     @Override
     public double distanceDroit() {
-        return arig2024IoPamiSensors.getGp2dDroite();
+        return arig2024IoPamiSensors.getGp2d3();
     }
 
 
