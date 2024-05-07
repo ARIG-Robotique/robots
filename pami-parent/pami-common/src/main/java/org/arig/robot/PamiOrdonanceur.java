@@ -76,6 +76,11 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
     }
 
     @Override
+    protected void customWaitAu() {
+        pamiIOService.sound();
+    }
+
+    @Override
     public void afterInit() {
         choixEquipeStrategy();
     }
@@ -136,8 +141,6 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
 
         boolean done;
         do {
-            pamiIOService.sound();
-
             exitFromScreen();
             connectGroups();
 

@@ -12,6 +12,7 @@ import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
+import org.arig.robot.model.RobotName;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.monitoring.MonitoringWrapper;
@@ -46,6 +47,9 @@ public abstract class AbstractOrdonanceur {
 
     @Autowired
     protected RobotConfig robotConfig;
+
+    @Autowired
+    protected RobotName robotName;
 
     @Autowired
     protected ResourcePatternResolver patternResolver;
@@ -254,6 +258,8 @@ public abstract class AbstractOrdonanceur {
         baliseService.setTeam(team);
     }
 
+    protected void customWaitAu() {}
+
     /**
      * Attends le dévérouillage de l'AU
      */
@@ -262,7 +268,8 @@ public abstract class AbstractOrdonanceur {
             ecranService.displayMessage("L'arrêt d'urgence est coupé", LogLevel.WARN);
             while (!io.auOk()) {
                 exitFromScreen();
-                ThreadUtils.sleep(500);
+                customWaitAu();
+                ThreadUtils.sleep(1000);
             }
         }
     }
