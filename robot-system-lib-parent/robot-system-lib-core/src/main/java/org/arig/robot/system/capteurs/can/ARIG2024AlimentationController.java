@@ -35,9 +35,6 @@ public class ARIG2024AlimentationController implements IAlimentationSensor, CAND
   private final String deviceName = "ARIG AlimController 2024";
 
   private Boolean auOK = null;
-  private boolean monitoredInternalAlim = false;
-  private boolean monitoredExternalAlim = false;
-  private boolean monitoredBattery = false;
   private String version = StringUtils.EMPTY;
 
   @Getter
@@ -135,10 +132,6 @@ public class ARIG2024AlimentationController implements IAlimentationSensor, CAND
   }
 
   public void configMonitoring(boolean monitoredInternalAlim, boolean monitoredExternalAlim, boolean monitoredBattery) {
-    this.monitoredInternalAlim = monitoredInternalAlim;
-    this.monitoredExternalAlim = monitoredExternalAlim;
-    this.monitoredBattery = monitoredBattery;
-
     try {
       byte config = (byte) (monitoredInternalAlim ? 1 : 0);
       config += (byte) (monitoredExternalAlim ? 2 : 0);
