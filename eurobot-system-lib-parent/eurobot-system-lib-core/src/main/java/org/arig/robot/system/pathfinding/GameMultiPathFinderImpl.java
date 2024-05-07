@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.Plante;
+import org.arig.robot.model.StockPlantes;
 import org.arig.robot.model.StockPots;
 import org.arig.robot.model.Team;
 import org.arig.robot.utils.TableUtils;
@@ -51,7 +52,7 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
                 }
             }
 
-            rs.plantes().stocksPresents().forEach(stock -> {
+            rs.plantes().stocksPresents(StockPlantes.Status.PARTIAL).forEach(stock -> {
                 obstacles.add(tableUtils.createPolygonObstacle(stock, EurobotConfig.PATHFINDER_STOCK_PLANTES_SIZE));
             });
 

@@ -56,17 +56,17 @@ public class PriseStockPlantes extends AbstractNerellAction {
             return false;
         }
 
-        return rs.plantes().stocksPresents().findAny().isPresent();
+        return rs.plantes().stocksPresents(rs.stockage() ? StockPlantes.Status.FULL : StockPlantes.Status.PARTIAL).findAny().isPresent();
     }
 
     @Override
     public int order() {
-        return 18;
+        return rs.stockage() ? 18 : 9;
     }
 
     @Override
     public Point entryPoint() {
-        stockPlantes = rs.plantes().getClosestStock(mv.currentPositionMm());
+        stockPlantes = rs.plantes().getClosestStock(mv.currentPositionMm(), rs.stockage() ? StockPlantes.Status.FULL : StockPlantes.Status.PARTIAL);
         List<Point> points = new ArrayList<>();
         switch (stockPlantes.getId()) {
             case STOCK_NORD:
@@ -102,7 +102,7 @@ public class PriseStockPlantes extends AbstractNerellAction {
         log.info("Prise stock plantes {}", stockPlantes.getId());
 
         try {
-            // pour les stocks nord et sud application du l'algo de recherche de point proche
+            // pour les stocks nord et sud application de l'algo de recherche de point proche
             if (stockPlantes.getId() == Plante.ID.STOCK_NORD || stockPlantes.getId() == Plante.ID.STOCK_SUD) {
                 Point entryCm = new Point(entry.getX() / 10, entry.getY() / 10);
                 pathFinder.setObstacles(new ArrayList<>());
@@ -153,7 +153,7 @@ public class PriseStockPlantes extends AbstractNerellAction {
             bras.setBrasAvant(pointBrasPrise);
             servos.groupePinceAvantPrisePlante(true);
 
-            boolean[] result = waitCapteursPinces(1000, true);
+            boolean[] result = waitCapteursPinces(1000);
             boolean gauche = result[0];
             boolean centre = result[1];
             boolean droite = result[2];
@@ -208,7 +208,7 @@ public class PriseStockPlantes extends AbstractNerellAction {
                 bras.setBrasAvant(pointBrasPrise);
                 servos.groupePinceAvantPrisePlante(true);
 
-                result = waitCapteursPinces(1000, true);
+                result = waitCapteursPinces(1000);
                 gauche = result[0];
                 centre = result[1];
                 droite = result[2];
@@ -219,7 +219,7 @@ public class PriseStockPlantes extends AbstractNerellAction {
                         droite ? new Plante(TypePlante.INCONNU) : null
                 );
 
-                bras.setBrasAvant(PointBras.withY(80));
+                rs.plantes().priseStock(stockPlantes.getId(), StockPlantes.Status.EMPTY);
 
             } else {
                 rs.bras().setAvant(
@@ -228,54 +228,10 @@ public class PriseStockPlantes extends AbstractNerellAction {
                         droite ? new Plante(TypePlante.INCONNU) : null
                 );
 
-                servos.groupeBloquePlanteFerme(false);
-                runAsync(() -> {
-                    bras.setBrasAvant(PointBras.withY(80));
-                    bras.brasAvantInit();
-                });
+                bras.setBrasAvant(PointBras.withY(80));
 
-                mv.tourneDeg(180);
-                bras.setBrasArriere(pointBrasApproche);
-
-                mv.setVitessePercent(20, 100);
-                mv.setRampesDistancePercent(100, 20);
-
-                rs.enableCalageBordure(TypeCalage.PRISE_PRODUIT_ARRIERE);
-                mv.gotoPoint(stockPlantes, GotoOption.SANS_ORIENTATION);
-
-                if (!rs.calageCompleted().contains(TypeCalage.PRISE_PRODUIT_ARRIERE)) {
-                    onCancel(false);
-                    runAsync(() -> bras.setBrasArriere(PositionBras.INIT));
-                    servos.groupePinceArriereFerme(false);
-                    return;
-                }
-
-                gauche = io.presenceArriereGauche(true);
-                centre = io.presenceArriereCentre(true);
-                droite = io.presenceArriereDroite(true);
-
-                mv.setVitessePercent(100, 100);
-
-                servos.groupePinceArriereOuvert(false);
-                mv.avanceMM(100);
-                bras.setBrasArriere(pointBrasPrise);
-                servos.groupePinceArrierePrisePlante(true);
-
-                result = waitCapteursPinces(1000, false);
-                gauche = result[0];
-                centre = result[1];
-                droite = result[2];
-
-                rs.bras().setArriere(
-                        gauche ? new Plante(TypePlante.INCONNU) : null,
-                        centre ? new Plante(TypePlante.INCONNU) : null,
-                        droite ? new Plante(TypePlante.INCONNU) : null
-                );
-
-                bras.setBrasArriere(PointBras.withY(80));
+                rs.plantes().priseStock(stockPlantes.getId(), StockPlantes.Status.PARTIAL);
             }
-
-            rs.plantes().priseStock(stockPlantes.getId());
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
@@ -285,10 +241,7 @@ public class PriseStockPlantes extends AbstractNerellAction {
                 stockPlantes.setTimevalid(System.currentTimeMillis());
             }
         } finally {
-            runAsync(() -> {
-                bras.brasAvantInit();
-                bras.setBrasArriere(PositionBras.INIT);
-            });
+            runAsync(() -> bras.brasAvantInit());
             servos.groupeBloquePlanteFerme(false);
         }
     }
@@ -297,23 +250,17 @@ public class PriseStockPlantes extends AbstractNerellAction {
         log.warn("Le stock de plantes {} est vide", stockPlantes.getId());
         if (enAvant) mv.reculeMM(100);
         else mv.avanceMM(100);
-        rs.plantes().priseStock(stockPlantes.getId());
+        rs.plantes().priseStock(stockPlantes.getId(), StockPlantes.Status.EMPTY);
     }
 
-    private boolean[] waitCapteursPinces(int maxTimeMs, boolean avant) {
+    private boolean[] waitCapteursPinces(int maxTimeMs) {
         long endTimeMs = System.currentTimeMillis() + maxTimeMs;
-        boolean[] result = new boolean[]{ false, false, false };
+        boolean[] result = new boolean[]{false, false, false};
 
         do {
-            if (avant) {
-                result[0] = result[0] || io.pinceAvantGauche(true);
-                result[1] = result[1] || io.pinceAvantCentre(true);
-                result[2] = result[2] || io.pinceAvantDroite(true);
-            } else {
-                result[0] = result[0] || io.pinceArriereGauche(true);
-                result[1] = result[1] || io.pinceArriereCentre(true);
-                result[2] = result[2] || io.pinceArriereDroite(true);
-            }
+            result[0] = result[0] || io.pinceAvantGauche(true);
+            result[1] = result[1] || io.pinceAvantCentre(true);
+            result[2] = result[2] || io.pinceAvantDroite(true);
 
             if (result[0] && result[1] && result[2]) {
                 break;

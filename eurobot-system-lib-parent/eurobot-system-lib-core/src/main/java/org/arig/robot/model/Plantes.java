@@ -44,8 +44,19 @@ public class Plantes implements Iterable<Plante> {
         }
     }
 
-    public void priseStock(Plante.ID id) {
-        stocks.stream().filter(s -> s.getId() == id).findFirst().get().setPresent(false);
+//    public void priseStock(Plante.ID id) {
+//        priseStock(id, StockPlantes.Status.EMPTY);
+//    }
+
+    public void priseStock(Plante.ID id, StockPlantes.Status status) {
+        assert status != StockPlantes.Status.FULL;
+        stocks.stream().filter(s -> s.getId() == id).findFirst().ifPresent(stock -> {
+            if (stock.getStatus() == StockPlantes.Status.PARTIAL) {
+                stock.setStatus(StockPlantes.Status.EMPTY);
+            } else {
+                stock.setStatus(status);
+            }
+        });
         plantes.removeIf(plante -> plante.getId() == id);
     }
 
@@ -53,9 +64,16 @@ public class Plantes implements Iterable<Plante> {
         return stocks.stream().filter(s -> s.getId() == id).findFirst().get();
     }
 
-    public Stream<StockPlantes> stocksPresents() {
+    public Stream<StockPlantes> stocksPresents(StockPlantes.Status status) {
+        assert status != StockPlantes.Status.EMPTY;
         return stocks.stream()
-                .filter(StockPlantes::isPresent)
+                .filter(s -> {
+                    if (status == StockPlantes.Status.FULL) {
+                        return s.isFull();
+                    } else {
+                        return !s.isEmpty();
+                    }
+                })
                 .filter(s -> s.getTimevalid() < System.currentTimeMillis() - 5000);
     }
 
@@ -100,10 +118,11 @@ public class Plantes implements Iterable<Plante> {
         return Math.abs(e.getX() - pt.getX()) < DELTA && Math.abs(e.getY() - pt.getY()) < DELTA;
     }
 
-    public StockPlantes getClosestStock(Point point) {
+    public StockPlantes getClosestStock(Point point, StockPlantes.Status status) {
+        assert status != StockPlantes.Status.EMPTY;
         int malus = 500;
 
-        return stocksPresents()
+        return stocksPresents(status)
                 .min(Comparator.comparing(s -> {
                     double dst = s.distance(point);
                     if (team == Team.JAUNE) {

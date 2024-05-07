@@ -1,4 +1,4 @@
-package org.arig.robot.strategy.actions.disabled;
+package org.arig.robot.strategy.actions.active.robot;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;
@@ -8,13 +8,15 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPlantes;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.TypePlante;
+import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
+import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PoussePlanteNord extends AbstractEurobotAction {
+public class PoussePlanteNord extends AbstractNerellAction {
 
     @Override
     public String name() {
@@ -40,7 +42,7 @@ public class PoussePlanteNord extends AbstractEurobotAction {
     public boolean isValid() {
         Plante.ID stockSurLePassage = rs.team() == Team.BLEU ? Plante.ID.STOCK_NORD_OUEST : Plante.ID.STOCK_NORD_EST;
         return new Point(1500, 1000).distance(mv.currentPositionMm()) < 700
-                && rs.plantes().stock(stockSurLePassage).isPresent();
+                && !rs.plantes().stock(stockSurLePassage).isEmpty();
     }
 
     @Override
@@ -57,10 +59,16 @@ public class PoussePlanteNord extends AbstractEurobotAction {
             mv.setVitessePercent(100, 100);
             mv.pathTo(getX(1250), 1150);
 
+            if (rs.stockLibre()) {
+                bras.setBrasAvant(PositionBras.POUSSETTE);
+            }
+
             mv.setVitessePercent(40, 100);
             mv.gotoPoint(entry, GotoOption.AVANT);
 
-            rs.plantes().priseStock(stockSurLePassage);
+            runAsync(() -> bras.brasAvantInit());
+
+            rs.plantes().priseStock(stockSurLePassage, StockPlantes.Status.EMPTY);
             rs.aireDeDeposeNord().add(new Plante[]{
                     new Plante(TypePlante.FRAGILE),
                     new Plante(TypePlante.FRAGILE),

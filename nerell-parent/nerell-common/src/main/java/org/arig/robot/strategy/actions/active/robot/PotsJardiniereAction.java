@@ -112,7 +112,7 @@ public class PotsJardiniereAction extends AbstractNerellAction {
                 stockPots.bloque();
                 servos.groupePinceArriereFerme(false);
                 mv.avanceMM(150);
-                bras.setBrasArriere(PositionBras.TRANSPORT);
+                bras.setBrasArriere(PositionBras.INIT);
                 complete();
                 return;
             }

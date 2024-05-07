@@ -6,7 +6,6 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Jardiniere;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.enums.TypeCalage;
-import org.arig.robot.strategy.actions.disabled.PoussePlanteNord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

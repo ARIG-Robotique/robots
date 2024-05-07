@@ -12,16 +12,30 @@ import static org.arig.robot.utils.ArigUtils.lerp;
 @Setter
 public class StockPlantes extends Point {
 
+    public enum Status {
+        FULL,
+        PARTIAL,
+        EMPTY
+    }
+
     private final Plante.ID id;
     private final Rectangle rect;
     // instant auquel le stock a été marqué inaccessible
     private long timevalid = 0;
-    private boolean present = true;
+    private Status status = Status.FULL;
 
     public StockPlantes(Plante.ID id, double x, double y) {
         super(x, y);
         this.id = id;
         this.rect = Rectangle.byCenter(x, y, 300, 300);
+    }
+
+    public boolean isFull() {
+        return status == Status.FULL;
+    }
+
+    public boolean isEmpty() {
+        return status == Status.EMPTY;
     }
 
     public List<Plante> getInit() {
