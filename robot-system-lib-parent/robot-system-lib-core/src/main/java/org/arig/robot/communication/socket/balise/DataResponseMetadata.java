@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class DataResponseMetadata {
 
     private int confidence;
+    private int numPlantes;
 
 }

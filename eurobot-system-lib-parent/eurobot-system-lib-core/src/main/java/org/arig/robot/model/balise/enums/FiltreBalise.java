@@ -2,6 +2,7 @@ package org.arig.robot.model.balise.enums;
 
 public enum FiltreBalise {
     ALL,
+    DATA3D,
     UNKNOWN,
     TAG,
     REFERENCE_ABSOLUTE,
@@ -12,6 +13,7 @@ public enum FiltreBalise {
     TOP_TRACKER,
     TEAM_TRACKER,
     SOLAR_PANEL,
+    PLANTSTOCK,
     TEAM,
     ARUCO,
     YOLO

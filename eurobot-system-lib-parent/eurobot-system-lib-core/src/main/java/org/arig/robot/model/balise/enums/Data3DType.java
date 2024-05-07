@@ -8,9 +8,7 @@ public enum Data3DType {
     CAMERA,
     OBJECT,
     ROBOT,
-    TOP_TRACKER,
-    TEAM_TRACKER,
     SOLAR_PANEL,
-    TEAM,
-    YOLO
+    YOLO3D,
+    PLANTSTOCK
 }
