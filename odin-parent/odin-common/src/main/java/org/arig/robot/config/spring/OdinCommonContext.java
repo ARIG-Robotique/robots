@@ -185,7 +185,7 @@ public class OdinCommonContext {
 
     @Bean
     public EcranProcess ecranProcess(Environment env) {
-        final String ecranSocket = env.getRequiredProperty("ecran.socket");
+        final String ecranSocket = env.getRequiredProperty("ecran.socket.file");
         final String ecranBinary = env.getRequiredProperty("ecran.binary");
         return new EcranProcess(ecranBinary, ecranSocket);
     }

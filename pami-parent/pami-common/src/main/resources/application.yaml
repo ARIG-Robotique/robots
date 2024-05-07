@@ -146,6 +146,8 @@ spring:
 # Écran
 ecran:
   binary: /opt/robots-gui
+  socket:
+    host: localhost
 
 # Balise de vision
 balise:
@@ -170,11 +172,6 @@ nerell:
   socket:
     host: localhost
 
-# Écran
-ecran:
-  socket:
-    host: localhost
-
 ---
 
 # Spring properties
@@ -182,6 +179,9 @@ spring:
   config:
     activate:
       on-profile: greg-mac
+
+ecran:
+  binary: ${user.home}/sogelink/workspaces/arig-workspaces/cpp-linux/build-robots-gui-Desktop_Qt_5_15_2_clang_64bit-Debug/robots-gui.app/Contents/MacOS/robots-gui
 
 ---
 

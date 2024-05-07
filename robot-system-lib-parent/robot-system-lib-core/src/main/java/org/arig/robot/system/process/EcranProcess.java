@@ -2,6 +2,7 @@ package org.arig.robot.system.process;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.constants.ConstantesConfig;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -17,6 +18,7 @@ public class EcranProcess implements InitializingBean, DisposableBean {
     private final String executablePath;
     @Getter
     private final String socketPath;
+    private final int port;
     private final boolean debug;
 
     public EcranProcess(String executablePath, String socketPath) {
@@ -27,6 +29,20 @@ public class EcranProcess implements InitializingBean, DisposableBean {
         this.executablePath = executablePath;
         this.socketPath = socketPath;
         this.debug = debug;
+
+        this.port = -1;
+    }
+
+    public EcranProcess(String executablePath, int port) {
+        this(executablePath, port, false);
+    }
+
+    public EcranProcess(String executablePath, int port, boolean debug) {
+        this.executablePath = executablePath;
+        this.port = port;
+        this.debug = debug;
+
+        this.socketPath = null;
     }
 
     @Override
@@ -43,8 +59,13 @@ public class EcranProcess implements InitializingBean, DisposableBean {
 
         List<String> args = new ArrayList<>();
         args.add(executablePath);
-        args.add("unix");
-        args.add(socketPath);
+        if (StringUtils.isNotBlank(socketPath)) {
+            args.add("unix");
+            args.add(socketPath);
+        } else {
+            args.add("inet");
+            args.add(String.valueOf(port));
+        }
 
         if (debug) {
             args.add("debug");
