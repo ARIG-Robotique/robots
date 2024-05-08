@@ -39,13 +39,13 @@ public class PamiUtilsCommonContext extends PamiCommonContext {
       }
 
       @Override
-      public void updateState(EcranState data) {
-
+      public boolean updateState(EcranState data) {
+        return true;
       }
 
       @Override
-      public void updateMatch(EcranMatchInfo data) {
-
+      public boolean updateMatch(EcranMatchInfo data) {
+        return true;
       }
 
       @Override

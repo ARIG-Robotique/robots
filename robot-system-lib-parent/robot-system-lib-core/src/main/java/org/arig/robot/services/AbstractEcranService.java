@@ -45,6 +45,10 @@ public abstract class AbstractEcranService<CONFIG extends AbstractEcranConfig, S
     @Autowired
     private IEcran<CONFIG, STATE> ecran;
 
+    // indique qu'on n'arrive pas à communiquer avec l'écran
+    @Getter
+    private boolean isOK = true;
+
     @Getter
     @Accessors(fluent = true)
     private CONFIG config;
@@ -66,8 +70,11 @@ public abstract class AbstractEcranService<CONFIG extends AbstractEcranConfig, S
             paramsSend = ecran.setParams(getParams());
         }
         if (!paramsSend) {
+            isOK = false;
             return;
         }
+
+        isOK = true;
 
         if (rs.matchEnabled() && !matchHasRunned) {
             matchHasRunned = true;
@@ -78,8 +85,12 @@ public abstract class AbstractEcranService<CONFIG extends AbstractEcranConfig, S
 
         } else {
             updateStateInfo(stateInfos);
-            ecran.updateState(stateInfos);
-            config = ecran.configInfos();
+
+            if (!ecran.updateState(stateInfos)) {
+                isOK = false;
+            } else {
+                config = ecran.configInfos();
+            }
         }
     }
 
@@ -135,6 +146,8 @@ public abstract class AbstractEcranService<CONFIG extends AbstractEcranConfig, S
             }
         }
 
-        ecran.updateMatch(matchInfos);
+        if (!ecran.updateMatch(matchInfos)) {
+            isOK = false;
+        }
     }
 }

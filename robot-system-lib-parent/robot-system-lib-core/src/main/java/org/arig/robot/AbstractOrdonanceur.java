@@ -176,6 +176,10 @@ public abstract class AbstractOrdonanceur {
 
             ecranService.displayMessage("!!! ... ATTENTE DEPART TIRETTE ... !!!");
             robotStatus.waitTirette(true);
+            if (!ecranService.isOK()) {
+                log.warn("Démarrage de match sans écran");
+                robotStatus.ecranEnabled(false);
+            }
             while (waitTirette()) {
                 ThreadUtils.sleep(1);
             }

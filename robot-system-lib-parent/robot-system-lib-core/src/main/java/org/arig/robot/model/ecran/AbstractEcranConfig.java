@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 @Data
@@ -18,7 +19,7 @@ public abstract class AbstractEcranConfig implements Serializable {
     private boolean modeManuel;
     private boolean skipCalageBordure;
     private boolean updatePhoto;
-    private Map<String, Boolean> options;
+    private Map<String, Boolean> options = new HashMap<>();
 
     public boolean hasOption(String name) {
         return options.getOrDefault(name, false);

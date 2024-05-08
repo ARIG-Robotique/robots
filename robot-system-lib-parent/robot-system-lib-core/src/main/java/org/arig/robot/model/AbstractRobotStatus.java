@@ -59,6 +59,11 @@ public abstract class AbstractRobotStatus {
     }
 
     /**
+     * Activation/Désactivation de l'écran
+     */
+    private boolean ecranEnabled = true;
+
+    /**
      * Balise activée
      */
     private boolean baliseEnabled = false;

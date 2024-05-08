@@ -43,7 +43,9 @@ public class PamiTasksScheduler {
 
     @Scheduled(fixedRate = 1000)
     public void ecranTask() {
-        ecranService.process();
+        if (rs.ecranEnabled()) {
+            ecranService.process();
+        }
     }
 
     @Scheduled(fixedDelay = 20)

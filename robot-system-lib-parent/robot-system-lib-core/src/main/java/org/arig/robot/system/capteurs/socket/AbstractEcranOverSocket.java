@@ -77,26 +77,30 @@ public abstract class AbstractEcranOverSocket<CONFIG extends AbstractEcranConfig
     }
 
     @Override
-    public void updateState(STATE data) {
+    public boolean updateState(STATE data) {
         try {
             openIfNecessary();
             UpdateStateQuery query = new UpdateStateQuery();
             query.setData(data);
             sendToSocketAndGet(query, EmptyResponse.class);
+            return true;
         } catch (Exception e) {
             log.error("Erreur de lecture", e);
+            return false;
         }
     }
 
     @Override
-    public void updateMatch(EcranMatchInfo data) {
+    public boolean updateMatch(EcranMatchInfo data) {
         try {
             openIfNecessary();
             UpdateMatchQuery query = new UpdateMatchQuery();
             query.setData(data);
             sendToSocketAndGet(query, EmptyResponse.class);
+            return true;
         } catch (Exception e) {
             log.error("Erreur de lecture", e);
+            return false;
         }
     }
 

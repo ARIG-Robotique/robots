@@ -12,8 +12,8 @@ public interface IEcran<CONFIG extends AbstractEcranConfig, STATE extends Abstra
 
     boolean setParams(EcranParams params);
     CONFIG configInfos();
-    void updateState(STATE data);
-    void updateMatch(EcranMatchInfo data);
+    boolean updateState(STATE data);
+    boolean updateMatch(EcranMatchInfo data);
     void updatePhoto(EcranPhoto photo);
 
 }
