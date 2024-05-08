@@ -4,16 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.constants.ConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.filters.average.DoubleValueAverage;
 import org.arig.robot.model.PamiRobotStatus;
 import org.arig.robot.model.monitor.MonitorTimeSerie;
 import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.PamiIOServiceRobot;
-import org.arig.robot.services.PamiRobotServosService;
 import org.arig.robot.services.TrajectoryManager;
-import org.arig.robot.system.capteurs.i2c.ARIG2024IoPamiSensors;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
@@ -76,7 +76,31 @@ public class PamiIOCommands {
         log.info("Calage arriere droit  : {}", pamiIOServiceRobot.calageArriereDroit());
         log.info("GP2D gauche           : {}", pamiIOServiceRobot.distanceGauche());
         log.info("GP2D centre           : {}", pamiIOServiceRobot.distanceCentre());
-        log.info("GP2D droit            : {}", pamiIOServiceRobot.distanceDroit());
+        log.info("GP2D droit            : {}", pamiIOServiceRobot.distanceDroite());
+    }
+
+    @ShellMethod("Lecture d'un GP")
+    public void readGp(int gp) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        DoubleValueAverage average = new DoubleValueAverage(10);
+        do {
+            double value;
+            if (gp == 1) {
+                value = pamiIOServiceRobot.distanceGauche();
+            } else if (gp == 2) {
+                value = pamiIOServiceRobot.distanceCentre();
+            } else {
+                value = pamiIOServiceRobot.distanceDroite();
+            }
+            if (value >= 300) {
+                average.filter(value);
+                log.info("GP2D{} : {} -> {} (avg)", gp,
+                    value, average.lastResult()
+                );
+            }
+            ThreadUtils.sleep(20);
+        } while (stopWatch.getTime() < 5000);
     }
 
     @SneakyThrows
@@ -89,7 +113,7 @@ public class PamiIOCommands {
         do {
             double gauche = pamiIOServiceRobot.distanceGauche();
             double centre = pamiIOServiceRobot.distanceCentre();
-            double droit = pamiIOServiceRobot.distanceDroit();
+            double droit = pamiIOServiceRobot.distanceDroite();
 
             log.info("{} {} {}", gauche, centre, droit);
 
@@ -144,7 +168,7 @@ public class PamiIOCommands {
             double currentX = trajectoryManager.currentXMm();
             double gauche = pamiIOServiceRobot.distanceGauche();
             double centre = pamiIOServiceRobot.distanceCentre();
-            double droit = pamiIOServiceRobot.distanceDroit();
+            double droit = pamiIOServiceRobot.distanceDroite();
 
             MonitorTimeSerie serie = new MonitorTimeSerie()
                 .measurementName("adc")

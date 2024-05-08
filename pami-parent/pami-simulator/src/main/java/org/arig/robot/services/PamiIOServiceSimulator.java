@@ -88,7 +88,7 @@ public class PamiIOServiceSimulator extends AbstractIOServiceBouchon implements 
     }
 
     @Override
-    public double distanceDroit() {
+    public double distanceDroite() {
         return 0;
     }
 

@@ -124,7 +124,7 @@ public class PamiIOServiceRobot implements PamiIOService {
     }
 
     @Override
-    public double distanceDroit() {
+    public double distanceDroite() {
         return arig2024IoPamiSensors.getGp2d3();
     }
 

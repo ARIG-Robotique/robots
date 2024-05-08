@@ -11,7 +11,7 @@ public interface CommonPamiIOService extends IOService {
     // Analogique
     double distanceGauche();
     double distanceCentre();
-    double distanceDroit();
+    double distanceDroite();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
