@@ -55,7 +55,7 @@ public class LadybugFlight extends AbstractAction {
             return new Point(getX(145), 1475);
         }
         // ROND
-        return new Point(getX(830), 700);
+        return new Point(getX(830), 1885);
     }
 
     @Override
@@ -72,14 +72,14 @@ public class LadybugFlight extends AbstractAction {
     public void execute() {
         try {
             mv.setVitessePercent(100, 100);
-
+            rs.disableAvoidance();
             if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
-                mv.avanceMM(150);
+                mv.avanceMM(350);
                 mv.pathTo(entryPoint(), GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
                 mv.gotoOrientationDeg(rs.team() == Team.BLEU ? -150 : -30);
 
             } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
-                mv.avanceMM(100);
+                mv.avanceMM(200);
                 mv.pathTo(entryPoint(), GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
                 mv.gotoOrientationDeg(rs.team() == Team.BLEU ? 150 : 30);
 
