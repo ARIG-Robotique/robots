@@ -6,8 +6,7 @@ public interface EurobotConfig {
     int matchTimeMs = 100000;
 
     // Temps écoulés
-    int baliseElapsedTimeMs = 50000;
-    int pamiStartElapsedTimeMs = 90000;
+    int pamiStartRemainingTimeMs = 10300;
 
     // Temps restants
     int validRetourSiteDeChargeRemainingTimeNerell = 10000;

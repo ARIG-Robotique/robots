@@ -2,6 +2,7 @@ package org.arig.robot.strategy.actions.active.pami;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 
@@ -64,7 +65,7 @@ public class LadybugFlight extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && rs.getRemainingTime() < 10000;
+        return isTimeValid() && rs.getRemainingTime() <= EurobotConfig.pamiStartRemainingTimeMs;
     }
 
     @Override
