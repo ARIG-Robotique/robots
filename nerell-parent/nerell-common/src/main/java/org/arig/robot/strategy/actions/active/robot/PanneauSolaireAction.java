@@ -15,8 +15,6 @@ import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Component;
 
-import static org.arig.robot.constants.NerellConstantesConfig.VITESSE_ROUE_PANNEAU;
-
 @Slf4j
 @Component
 public class PanneauSolaireAction extends AbstractNerellAction {
@@ -25,9 +23,7 @@ public class PanneauSolaireAction extends AbstractNerellAction {
     private final int Y_ACTION = 235;
 
     PanneauSolaire firstPanneau;
-
-    // Nombre de tentative de récupération des carrés de fouille
-    protected int nbTry = 0;
+    PanneauSolaire entryPanneau;
 
     @Override
     public String name() {
@@ -46,8 +42,8 @@ public class PanneauSolaireAction extends AbstractNerellAction {
         if (!valid) {
             return false;
         }
-        firstPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(nbTry, false);
-        return firstPanneau != null;
+        PanneauSolaire firstPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(false);
+        return firstPanneau != null && rs.panneauxSolaire().entryPanneau(firstPanneau) != null;
     }
 
     @Override
@@ -57,7 +53,9 @@ public class PanneauSolaireAction extends AbstractNerellAction {
 
     @Override
     public Point entryPoint() {
-        return new Point(firstPanneau.getX(), Y_ENTRY);
+        firstPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(false);
+        entryPanneau = firstPanneau != null ? rs.panneauxSolaire().entryPanneau(firstPanneau) : null;
+        return new Point(entryPanneau.getX(), Y_ENTRY);
     }
 
     @Override
@@ -70,8 +68,7 @@ public class PanneauSolaireAction extends AbstractNerellAction {
             Double yActionReal = null;
 
             do {
-                panneau.incrementTry();
-                log.info("Goto panneau solaire {} / Try {}", panneau.numero(), panneau.nbTry());
+                log.info("Goto panneau solaire {}", panneau.numero());
 
                 if (first) {
                     mv.setVitessePercent(100, 100);
@@ -79,14 +76,16 @@ public class PanneauSolaireAction extends AbstractNerellAction {
                     yActionReal = callageY();
 
                     if (yActionReal == null) {
-                        panneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(nbTry, false);
-                        if (panneau == null) {
-                            break;
-                        }
-                        continue;
+                        entryPanneau.blocked(true);
+                        log.info("[rs] panneau {} blocked", entryPanneau.numero());
+                        break;
                     }
 
                     mv.gotoOrientationDeg(-180);
+
+                    if (panneau.blocked()) {
+                        mv.gotoPoint(panneau.getX(), yActionReal);
+                    }
                 } else {
                     mv.gotoPoint(panneau.getX(), yActionReal);
                 }
@@ -97,7 +96,10 @@ public class PanneauSolaireAction extends AbstractNerellAction {
                     ioService.tournePanneauJaune(1024);
                 }
 
-                if (panneau.rotation() != null && (panneau.rotation() >= 155 || panneau.rotation() <= -155)){
+                int rotationMinPourPanneauDeuxEquipes = rs.team() == Team.BLEU ? 140 : 155;
+                int rotationMinPourPanneauAdverse = rs.team() == Team.BLEU ? -155 : -140;
+                if (panneau.rotation() != null &&
+                    (panneau.rotation() >= rotationMinPourPanneauDeuxEquipes || panneau.rotation() <= rotationMinPourPanneauAdverse)) {
                     servosNerell.setPanneauSolaireRoueOuvert(true);
                     ThreadUtils.sleep(50);
                     servosNerell.setPanneauSolaireSkiOuvert(true);
@@ -118,8 +120,7 @@ public class PanneauSolaireAction extends AbstractNerellAction {
                 if (ilEstTempsDeRentrer()) {
                     break;
                 }
-
-                PanneauSolaire nextPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(nbTry, false);
+                PanneauSolaire nextPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(false);
 
                 if (nextPanneau != null) {
                     // si on change de groupe on refait un path + callage
@@ -135,8 +136,6 @@ public class PanneauSolaireAction extends AbstractNerellAction {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
         } finally {
-            nbTry++;
-
             servosNerell.groupePanneauFerme(false);
             ioService.stopTournePanneau();
 

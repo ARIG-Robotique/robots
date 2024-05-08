@@ -62,11 +62,11 @@ class PanneauxSolaireTest {
     void testFirst() {
         panneauxSolaire.team(Team.JAUNE);
 
-        Assertions.assertEquals(9, panneauxSolaire.nextPanneauSolaireToProcess(10, false).numero());
+        Assertions.assertEquals(9, panneauxSolaire.nextPanneauSolaireToProcess(false).numero());
 
         panneauxSolaire.team(Team.BLEU);
 
-        Assertions.assertEquals(1, panneauxSolaire.nextPanneauSolaireToProcess(10, false).numero());
+        Assertions.assertEquals(1, panneauxSolaire.nextPanneauSolaireToProcess(false).numero());
     }
 
     @Test

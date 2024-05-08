@@ -41,20 +41,20 @@ public class PanneauxSolaire {
     }
 
     public boolean isComplete() {
-        return nextPanneauSolaireToProcess(Integer.MAX_VALUE) == null;
+        return nextPanneauSolaireToProcess() == null;
     }
 
-    public PanneauSolaire nextPanneauSolaireToProcess(int nbTry) {
-        return nextPanneauSolaireToProcess(nbTry, false);
+    public PanneauSolaire nextPanneauSolaireToProcess() {
+        return nextPanneauSolaireToProcess(false);
     }
 
-    public PanneauSolaire nextPanneauSolaireToProcess(int nbTry, boolean reverse) {
+    public PanneauSolaire nextPanneauSolaireToProcess(boolean reverse) {
         if (team == Team.BLEU) {
             int init = reverse ? data.length - 3 : 1;
             int inc = reverse ? -1 : 1;
             for (int i = init; reverse ? i >= 1 : i <= data.length - 3; i += inc) {
                 PanneauSolaire ps = get(i);
-                if (ps.besoinDeTourner(team) && ps.nbTry() <= nbTry) {
+                if (ps.besoinDeTourner(team) && entryPanneau(ps) != null) {
                     return ps;
                 }
             }
@@ -63,10 +63,34 @@ public class PanneauxSolaire {
             int inc = reverse ? 1 : -1;
             for (int i = init; reverse ? i <= data.length : i >= 4; i += inc) {
                 PanneauSolaire ps = get(i);
-                if (ps.besoinDeTourner(team) && ps.nbTry() <= nbTry) {
+                if (ps.besoinDeTourner(team) && entryPanneau(ps) != null) {
                     return ps;
                 }
             }
+        }
+
+        return null;
+    }
+
+    public PanneauSolaire entryPanneau(PanneauSolaire firstPanneau) {
+        if (!firstPanneau.blocked()) {
+            return firstPanneau;
+        }
+
+        if (firstPanneau.numero() == 1 || firstPanneau.numero() == 4 || firstPanneau.numero() == 7) {
+            for (int i = firstPanneau.numero(); i <= firstPanneau.numero() + 2; i++) {
+                if (get(i).blocked()) continue;
+                return get(i);
+            }
+        } else if (firstPanneau.numero() == 3 || firstPanneau.numero() == 6 || firstPanneau.numero() == 9) {
+            for (int i = firstPanneau.numero(); i >= firstPanneau.numero() - 2; i--) {
+                if (get(i).blocked()) continue;
+                return get(i);
+            }
+        } else if (!get(firstPanneau.numero() - 1).blocked()) {
+            return get(firstPanneau.numero() - 1);
+        } else if (!get(firstPanneau.numero() + 1).blocked()) {
+            return get(firstPanneau.numero() + 1);
         }
 
         return null;

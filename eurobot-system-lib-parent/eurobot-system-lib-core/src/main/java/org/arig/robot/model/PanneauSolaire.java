@@ -2,9 +2,7 @@ package org.arig.robot.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -22,9 +20,7 @@ public class PanneauSolaire implements Serializable {
 
   private Integer rotation = null;
 
-  @JsonIgnore
-    @Setter(AccessLevel.NONE)
-    private byte nbTry = 0;
+    private boolean blocked = false;
 
     public PanneauSolaire(final int numero) {
         this(numero, CouleurPanneauSolaire.AUCUNE);
@@ -33,14 +29,6 @@ public class PanneauSolaire implements Serializable {
     public PanneauSolaire(final int numero, final CouleurPanneauSolaire couleur) {
         this.numero = numero;
         this.couleur = couleur;
-    }
-
-    public void incrementTry() {
-        nbTry++;
-    }
-
-    public void decrementTry() {
-        nbTry--;
     }
 
     public boolean besoinDeTourner(Team team) {
@@ -83,6 +71,6 @@ public class PanneauSolaire implements Serializable {
 
     @Override
     public String toString() {
-        return "PanneauSolaire{" + "numero=" + numero + ", couleur=" + couleur + ", millis=" + millis + ", rotation=" + rotation + "}";
+        return "PanneauSolaire{" + "numero=" + numero + ", couleur=" + couleur + ", millis=" + millis + ", rotation=" + rotation + ", blocked=" + blocked + "}";
     }
 }
