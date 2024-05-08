@@ -18,10 +18,12 @@ import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.model.lidar.enums.HealthState;
+import org.arig.robot.services.PamiIOService;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.avoiding.BasicAvoidingService;
 import org.arig.robot.system.avoiding.BasicRetryAvoidingService;
 import org.arig.robot.system.avoiding.CompleteAvoidingService;
+import org.arig.robot.system.avoiding.GP2D120AvoidingService;
 import org.arig.robot.system.avoiding.SemiCompleteAvoidingService;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.capteurs.can.ARIG2024AlimentationController;
@@ -193,8 +195,8 @@ public class PamiRobotContext {
     }
 
     @Bean
-    public AvoidingService avoidingService(Environment env) {
-        AvoidingService.Mode mode = env.getProperty("robot.avoidance.implementation", AvoidingService.Mode.class, AvoidingService.Mode.BASIC);
+    public AvoidingService avoidingService(PamiIOService pamiIOService) {
+        /*voidingService.Mode mode = env.getProperty("robot.avoidance.implementation", AvoidingService.Mode.class, AvoidingService.Mode.BASIC);
 
         switch (mode) {
             case BASIC:
@@ -206,6 +208,8 @@ public class PamiRobotContext {
             case FULL:
             default:
                 return new CompleteAvoidingService();
-        }
+        }*/
+
+        return new GP2D120AvoidingService(pamiIOService);
     }
 }
