@@ -15,6 +15,7 @@ import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.PamiIOServiceRobot;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
+import org.arig.robot.system.leds.ARIG2024IoPamiLeds;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -41,6 +42,7 @@ public class PamiIOCommands {
     private final PamiRobotStatus rs;
     private final Abstract2WheelsEncoders wheelsEncoders;
     private final TrajectoryManager trajectoryManager;
+    private final ARIG2024IoPamiLeds arig2024IoPamiLeds;
 
     public Availability alimentationOk() {
         return pamiIOServiceRobot.auOk() && energyService.checkMoteurs()
@@ -69,7 +71,7 @@ public class PamiIOCommands {
         FileUtils.writeLines(execFile, lines);
     }
 
-    @ShellMethod("Identification des servos")
+    @ShellMethod("Identification des IOs")
     public void readAllIo() {
         log.info("Lecture des IOs");
         log.info("Calage arriere gauche : {}", pamiIOServiceRobot.calageArriereGauche());
@@ -77,6 +79,27 @@ public class PamiIOCommands {
         log.info("GP2D gauche           : {}", pamiIOServiceRobot.distanceGauche());
         log.info("GP2D centre           : {}", pamiIOServiceRobot.distanceCentre());
         log.info("GP2D droit            : {}", pamiIOServiceRobot.distanceDroite());
+    }
+
+    @ShellMethod
+    public void testLeds() {
+        for (ARIG2024IoPamiLeds.LedColor c : ARIG2024IoPamiLeds.LedColor.values()) {
+            arig2024IoPamiLeds.setLedAU(c);
+            ThreadUtils.sleep(1000);
+        }
+        for (ARIG2024IoPamiLeds.LedColor c : ARIG2024IoPamiLeds.LedColor.values()) {
+            arig2024IoPamiLeds.setLedTeam(c);
+            ThreadUtils.sleep(1000);
+        }
+        for (ARIG2024IoPamiLeds.LedColor c : ARIG2024IoPamiLeds.LedColor.values()) {
+            arig2024IoPamiLeds.setLedCalage(c);
+            ThreadUtils.sleep(1000);
+        }
+        for (ARIG2024IoPamiLeds.LedColor c : ARIG2024IoPamiLeds.LedColor.values()) {
+            arig2024IoPamiLeds.setAllLeds(c);
+            ThreadUtils.sleep(1000);
+        }
+        arig2024IoPamiLeds.setAllLeds(ARIG2024IoPamiLeds.LedColor.Black);
     }
 
     @ShellMethod("Lecture d'un GP")

@@ -32,6 +32,7 @@ import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.arig.robot.system.capteurs.socket.IVisionBalise;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.encoders.can.ARIG2024Can2WheelsEncoders;
+import org.arig.robot.system.leds.ARIG2024IoPamiLeds;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.can.ARIG2024CanPropulsionsMotors;
 import org.arig.robot.system.servos.i2c.ARIG2024IoPamiServos;
@@ -83,6 +84,11 @@ public class PamiRobotContext {
     @Bean
     public ARIG2024IoPamiSensors sensors(I2CManager i2cManager) {
         return new ARIG2024IoPamiSensors(i2cManager, PamiConstantesI2C.ARIG_2024_PAMI_IO_NAME);
+    }
+
+    @Bean
+    public ARIG2024IoPamiLeds leds(I2CManager i2cManager) {
+        return new ARIG2024IoPamiLeds(i2cManager, PamiConstantesI2C.ARIG_2024_PAMI_IO_NAME);
     }
 
     @Bean
