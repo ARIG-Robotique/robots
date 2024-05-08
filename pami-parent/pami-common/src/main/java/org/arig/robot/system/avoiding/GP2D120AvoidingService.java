@@ -24,6 +24,6 @@ public class GP2D120AvoidingService extends BasicAvoidingService {
   }
 
   private boolean isObstacle(double distance) {
-    return distance >= 300 && distance <= 320;
+    return distance >= 150 && distance <= 430;
   }
 }
