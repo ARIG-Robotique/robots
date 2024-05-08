@@ -91,7 +91,8 @@ public class LadybugFlight extends AbstractAction {
             }
 
             rs.enableCalageBordure(TypeCalage.FORCE);
-            mv.avanceMM(100);
+            mv.avanceMM(300);
+            rs.disableAsserv();
 
         } catch (AvoidingException | NoPathFoundException e) {
             log.error("AvoidingException", e);
