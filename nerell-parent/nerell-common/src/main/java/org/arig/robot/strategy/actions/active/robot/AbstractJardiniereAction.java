@@ -76,8 +76,6 @@ public abstract class AbstractJardiniereAction extends AbstractNerellAction {
     protected void depose(boolean arriere, boolean callageForce) throws AvoidingException {
         // FIXME check capteurs pinces
 
-        rs.disableAvoidance();
-
         if (callageForce) {
             if (arriere) {
                 servos.groupePinceArriereOuvert(true);

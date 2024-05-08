@@ -57,14 +57,11 @@ public class PoussePlanteNord extends AbstractNerellAction {
             rs.enableAvoidance();
 
             mv.setVitessePercent(100, 100);
-            mv.pathTo(getX(1250), 1150);
-
-            if (rs.stockLibre()) {
-                bras.setBrasAvant(PositionBras.POUSSETTE);
-            }
+            mv.pathTo(getX(1250), 1150, GotoOption.ARRIERE);
 
             mv.setVitessePercent(40, 100);
-            mv.gotoPoint(entry, GotoOption.AVANT);
+            mv.gotoPoint(entry);
+            mv.avanceMM(100);
 
             runAsync(() -> bras.brasAvantInit());
 

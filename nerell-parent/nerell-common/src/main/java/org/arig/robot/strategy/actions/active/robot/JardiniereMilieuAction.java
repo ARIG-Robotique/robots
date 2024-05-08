@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Component
@@ -76,6 +77,13 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
     private void executeInternal(boolean arriere) throws AvoidingException {
         prepareBras(arriere);
 
+        CompletableFuture<boolean[]> refreshBras;
+        if (arriere) {
+            refreshBras = bras.refreshPincesArriere();
+        } else {
+            refreshBras = bras.refreshPincesAvant();
+        }
+
         rs.disableAvoidance();
 
         mv.setVitessePercent(60, 100);
@@ -88,6 +96,7 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
         }
 
         if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
+            refreshBras.join();
             depose(arriere, true);
             return;
         }
@@ -105,33 +114,34 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
             checkRecalageAngleDeg(rs.team() == Team.BLEU ? 180 : 0);
         }
 
+        refreshBras.join();
         depose(arriere, false);
     }
 
     @Override
     public void execute() {
         try {
-            final Point pointApproche = new Point(getX(185), 1740);
+            final Point pointApproche = new Point(getX(200), 1650);
             final Point entry = entryPoint();
             final StockPots stockPots = stockPots();
 
             boolean skipApproche = false;
             if (actionPoussePlante != null && actionPoussePlante.isValid()) {
-                actionPoussePlante.execute(pointApproche);
+                actionPoussePlante.execute(new Point(getX(450), 2000 - 225));
                 skipApproche = true;
             }
 
             if (stockPots.isBloque() || stockPots.isPresent()) {
                 mv.setVitessePercent(100, 100);
                 // point intermédaire dans la zone nord pour ensuite pousser les pots
-                if (!skipApproche) {
+                //if (!skipApproche) {
                     mv.pathTo(pointApproche, GotoOption.AVANT);
-                }
+                //}
                 mv.setVitessePercent(50, 100);
-                mv.gotoPoint(getX(170), 1640, GotoOption.ARRIERE);
+                mv.gotoPoint(getX(170), 1550, GotoOption.ARRIERE);
                 mv.gotoPoint(getX(170), 1250, GotoOption.ARRIERE);
                 stockPots.pris();
-                mv.gotoOrientationDegSansDistance(145);
+                mv.gotoPoint(pointApproche.getX(), entry.getY());
                 mv.gotoPoint(entry);
 
             } else {

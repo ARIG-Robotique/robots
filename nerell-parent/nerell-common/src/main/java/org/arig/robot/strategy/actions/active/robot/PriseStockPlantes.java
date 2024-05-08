@@ -7,6 +7,7 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Plante;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPlantes;
+import org.arig.robot.model.Strategy;
 import org.arig.robot.model.TypePlante;
 import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.bras.PositionBras;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static org.arig.robot.services.BrasInstance.PRISE_PLANTE_SOL_Y;
 
@@ -131,17 +133,18 @@ public class PriseStockPlantes extends AbstractNerellAction {
             bras.setBrasAvant(pointBrasApproche);
 
             rs.enableCalageBordure(TypeCalage.PRISE_PRODUIT_AVANT);
-            mv.gotoPoint(stockPlantes, GotoOption.SANS_ORIENTATION);
+
+            if (stockPlantes.getStatus() == StockPlantes.Status.PARTIAL) {
+                mv.gotoPoint(tableUtils.eloigner(stockPlantes, 100), GotoOption.SANS_ORIENTATION);
+            } else {
+                mv.gotoPoint(stockPlantes, GotoOption.SANS_ORIENTATION);
+            }
 
             if (!rs.calageCompleted().contains(TypeCalage.PRISE_PRODUIT_AVANT)) {
                 onCancel(true);
                 servos.groupePinceAvantFerme(false);
                 return;
             }
-
-//            boolean gauche = io.presenceAvantGauche(true);
-//            boolean centre = io.presenceAvantCentre(true);
-//            boolean droite = io.presenceAvantDroite(true);
 
             mv.setVitessePercent(100, 100);
 
@@ -153,12 +156,14 @@ public class PriseStockPlantes extends AbstractNerellAction {
             bras.setBrasAvant(pointBrasPrise);
             servos.groupePinceAvantPrisePlante(true);
 
-            boolean[] result = waitCapteursPinces(1000);
-            boolean gauche = result[0];
-            boolean centre = result[1];
-            boolean droite = result[2];
+            CompletableFuture<boolean[]> refreshPinces = bras.refreshPincesAvant();
 
             if (rs.stockage()) {
+                boolean[] result = refreshPinces.join();
+                boolean gauche = result[0];
+                boolean centre = result[1];
+                boolean droite = result[2];
+
                 bras.brasAvantStockage();
 
                 boolean stockgauche = io.presenceStockGauche(true);
@@ -172,6 +177,7 @@ public class PriseStockPlantes extends AbstractNerellAction {
                     mv.tourneDeg(360);
                 }
 
+                rs.bras().setAvant(null, null, null);
                 rs.setStock(
                         stockgauche ? TypePlante.INCONNU : null,
                         stockcentre ? TypePlante.INCONNU : null,
@@ -222,25 +228,22 @@ public class PriseStockPlantes extends AbstractNerellAction {
                 rs.plantes().priseStock(stockPlantes.getId(), StockPlantes.Status.EMPTY);
 
             } else {
-                rs.bras().setAvant(
-                        gauche ? new Plante(TypePlante.INCONNU) : null,
-                        centre ? new Plante(TypePlante.INCONNU) : null,
-                        droite ? new Plante(TypePlante.INCONNU) : null
-                );
-
                 bras.setBrasAvant(PointBras.withY(80));
 
-                rs.plantes().priseStock(stockPlantes.getId(), StockPlantes.Status.PARTIAL);
+                refreshPinces.join();
+
+                if (rs.strategy() == Strategy.SUD && stockPlantes.getId() == Plante.ID.STOCK_SUD) {
+                    rs.plantes().priseStock(stockPlantes.getId(), StockPlantes.Status.EMPTY);
+                } else {
+                    rs.plantes().priseStock(stockPlantes.getId(), StockPlantes.Status.PARTIAL);
+                }
             }
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();
             log.error("Erreur d'exécution de l'action : {}", e.toString());
-
-            if (e instanceof NoPathFoundException) {
-                stockPlantes.setTimevalid(System.currentTimeMillis());
-            }
         } finally {
+            stockPlantes.setTimevalid(System.currentTimeMillis());
             runAsync(() -> bras.brasAvantInit());
             servos.groupeBloquePlanteFerme(false);
         }

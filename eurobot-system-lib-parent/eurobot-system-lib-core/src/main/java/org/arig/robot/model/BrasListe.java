@@ -32,17 +32,25 @@ public class BrasListe {
     }
 
     public void setAvant(Plante gauche, Plante centre, Plante droite) {
-        log.info("[RS] Bras avant {} {} {}", gauche, centre, droite);
         contenu.put(Bras.AVANT_GAUCHE, gauche == null ? new Plante(TypePlante.AUCUNE) : gauche);
         contenu.put(Bras.AVANT_CENTRE, centre == null ? new Plante(TypePlante.AUCUNE) : centre);
         contenu.put(Bras.AVANT_DROIT, droite == null ? new Plante(TypePlante.AUCUNE) : droite);
+        log.info("[RS] Bras avant {} {} {}",
+                contenu.get(Bras.AVANT_GAUCHE).getType(),
+                contenu.get(Bras.AVANT_CENTRE).getType(),
+                contenu.get(Bras.AVANT_DROIT).getType()
+        );
     }
 
     public void setArriere(Plante gauche, Plante centre, Plante droite) {
-        log.info("[RS] Bras arrière {} {} {}", gauche, centre, droite);
         contenu.put(Bras.ARRIERE_GAUCHE, gauche == null ? new Plante(TypePlante.AUCUNE) : gauche);
         contenu.put(Bras.ARRIERE_CENTRE, centre == null ? new Plante(TypePlante.AUCUNE) : centre);
         contenu.put(Bras.ARRIERE_DROIT, droite == null ? new Plante(TypePlante.AUCUNE) : droite);
+        log.info("[RS] Bras arrière {} {} {}",
+                contenu.get(Bras.ARRIERE_GAUCHE).getType(),
+                contenu.get(Bras.ARRIERE_CENTRE).getType(),
+                contenu.get(Bras.ARRIERE_DROIT).getType()
+        );
     }
 
     public Plante[] getAvant() {

@@ -11,7 +11,6 @@ public enum PositionBras {
     HORIZONTAL(false),
     CALLAGE_PANNEAUX(false),
     TRANSPORT(false),
-    POUSSETTE(false), // sans stock
 
     // avant
     PRISE_STOCK(false),

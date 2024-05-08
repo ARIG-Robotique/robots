@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -176,6 +177,86 @@ public class BrasService {
                 log.warn("[RS] Le statut du stock a été mis à jour: {}", Stream.of(stock).map(Plante::getType).map(Enum::name).collect(Collectors.joining(",")));
             }
         }
+    }
+
+    public CompletableFuture<boolean[]> refreshPincesAvant() {
+        return CompletableFuture.supplyAsync(() -> {
+            long start = System.currentTimeMillis();
+            boolean[] vals = new boolean[]{false, false, false};
+
+            do {
+                vals[0] = vals[0] || io.pinceAvantGauche(true);
+                vals[1] = vals[1] || io.pinceAvantCentre(true);
+                vals[2] = vals[2] || io.pinceAvantDroite(true);
+
+                if (vals[0] && vals[1] && vals[2]) {
+                    break;
+                }
+
+                ThreadUtils.sleep(config.i2cReadTimeMs());
+
+            } while (System.currentTimeMillis() - start < 1000);
+
+            Plante[] stock = rs.bras().getAvant();
+            boolean changed = false;
+
+            for (int i = 0; i < 3; i++) {
+                if (vals[i] && stock[i].getType() == TypePlante.AUCUNE) {
+                    stock[i] = new Plante(TypePlante.INCONNU);
+                    changed = true;
+                }
+                else if (!vals[i] && stock[i].getType() != TypePlante.AUCUNE) {
+                    stock[i] = new Plante(TypePlante.AUCUNE);
+                    changed = true;
+                }
+            }
+
+            if (changed) {
+                rs.bras().setAvant(stock[0], stock[1], stock[2]);
+            }
+
+            return vals;
+        }, executor);
+    }
+
+    public CompletableFuture<boolean[]> refreshPincesArriere() {
+        return CompletableFuture.supplyAsync(() -> {
+            long start = System.currentTimeMillis();
+            boolean[] vals = new boolean[]{false, false, false};
+
+            do {
+                vals[0] = vals[0] || io.pinceArriereGauche(true);
+                vals[1] = vals[1] || io.pinceArriereCentre(true);
+                vals[2] = vals[2] || io.pinceArriereDroite(true);
+
+                if (vals[0] && vals[1] && vals[2]) {
+                    break;
+                }
+
+                ThreadUtils.sleep(config.i2cReadTimeMs());
+
+            } while (System.currentTimeMillis() - start < 1000);
+
+            Plante[] stock = rs.bras().getArriere();
+            boolean changed = false;
+
+            for (int i = 0; i < 3; i++) {
+                if (vals[i] && stock[i].getType() == TypePlante.AUCUNE) {
+                    stock[i] = new Plante(TypePlante.INCONNU);
+                    changed = true;
+                }
+                else if (!vals[i] && stock[i].getType() != TypePlante.AUCUNE) {
+                    stock[i] = new Plante(TypePlante.AUCUNE);
+                    changed = true;
+                }
+            }
+
+            if (changed) {
+                rs.bras().setArriere(stock[0], stock[1], stock[2]);
+            }
+
+            return vals;
+        }, executor);
     }
 
 }

@@ -74,7 +74,7 @@ public class Plantes implements Iterable<Plante> {
                         return !s.isEmpty();
                     }
                 })
-                .filter(s -> s.getTimevalid() < System.currentTimeMillis() - 5000);
+                .filter(s -> s.getTimevalid() < System.currentTimeMillis() - 2000);
     }
 
     // TODO automatiquement marquer comme pris les stocks qui n'ont plus assez de plantes

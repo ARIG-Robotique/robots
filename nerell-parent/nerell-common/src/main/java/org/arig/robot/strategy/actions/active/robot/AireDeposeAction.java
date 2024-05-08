@@ -177,15 +177,15 @@ public class AireDeposeAction extends AbstractNerellAction {
             mv.pathTo(entry);
             mv.gotoOrientationDeg(getAngle());
 
-            CompletableFuture<Boolean> destockFuture = supplyAsync(() -> {
-                if (rs.bras().avantLibre()) {
-                    destockage();
-                    return true;
-                }
-                return false;
-            });
+            boolean fromStock = false;
+            if (rs.bras().avantLibre()) {
+                destockage();
+                fromStock = true;
+            } else {
+                //bras.refreshPincesAvant().join();
+            }
 
-            depose(destockFuture.join());
+            depose(fromStock);
 
             if (!aire.rang2() && !rs.stockLibre()) {
                 destockage();

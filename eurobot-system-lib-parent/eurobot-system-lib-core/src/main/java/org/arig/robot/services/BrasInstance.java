@@ -77,7 +77,6 @@ public class BrasInstance {
         positions.put(PositionBras.HORIZONTAL, new PointBras(X + R1 + R2 + R3, Y, 0, true));
         positions.put(PositionBras.TRANSPORT, new PointBras(155, 95, -90, true)); // position quand on transporte un truc
         positions.put(PositionBras.CALLAGE_PANNEAUX, new PointBras(215, 205, 0, true)); // position d'init avec la pince à l'horizontale
-        positions.put(PositionBras.POUSSETTE, new PointBras(125, 60, -90, true));
     }
 
     public boolean setByName(PositionBras positionBras, int speed, boolean wait) {

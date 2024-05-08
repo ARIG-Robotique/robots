@@ -88,7 +88,6 @@ public class JardiniereNordAction extends AbstractJardiniereAction {
                 skipApproche = true;
             }
 
-
             mv.setVitessePercent(100, 100);
             // point intermédiare dans l'aire de dépose nord si on traine des trucs
             if (!skipApproche) {
