@@ -69,7 +69,7 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
             if (rs.strategy() != Strategy.SUD) {
                 final Point entry = entryPoint();
 
-                mv.setVitesse(config.vitesse(), config.vitesseOrientation());
+                mv.setVitessePercent(100, 100);
                 mv.pathTo(entry);
 
                 // callage Y
@@ -77,13 +77,14 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
                 mv.gotoOrientationDeg(90);
                 bras.setBrasArriere(PositionBras.CALLAGE_PANNEAUX);
                 rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
-                mv.reculeMM(ENTRY_Y - config.distanceCalageArriere() - 10);
+                mv.reculeMM((int) mv.currentYMm() - config.distanceCalageArriere() - 10);
 
                 if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
                     log.warn("Blocage pendant le callage du panneau");
                     mv.avanceMM(100);
                     runAsync(() -> bras.setBrasArriere(PositionBras.INIT));
                     rs.panneauxSolaire().triedActionEquipe(true);
+                    rs.panneauxSolaire().get(rs.team() == Team.BLEU ? 1 : 9).blocked(true);
                     complete();
                     return;
                 }
@@ -117,7 +118,7 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
             } else {
                 io.tournePanneauJaune(VITESSE_ROUE_PANNEAU);
             }
-            ThreadUtils.sleep(500);
+            ThreadUtils.sleep(300);
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();

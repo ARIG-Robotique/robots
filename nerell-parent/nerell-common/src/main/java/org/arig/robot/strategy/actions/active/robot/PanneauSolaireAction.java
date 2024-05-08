@@ -96,10 +96,7 @@ public class PanneauSolaireAction extends AbstractNerellAction {
                     ioService.tournePanneauJaune(1024);
                 }
 
-                int rotationMinPourPanneauDeuxEquipes = rs.team() == Team.BLEU ? 140 : 155;
-                int rotationMinPourPanneauAdverse = rs.team() == Team.BLEU ? -155 : -140;
-                if (panneau.rotation() != null &&
-                    (panneau.rotation() >= rotationMinPourPanneauDeuxEquipes || panneau.rotation() <= rotationMinPourPanneauAdverse)) {
+                if (panneau.rotation() != null && Math.abs(panneau.rotation()) >= 125) {
                     servosNerell.setPanneauSolaireRoueOuvert(true);
                     ThreadUtils.sleep(50);
                     servosNerell.setPanneauSolaireSkiOuvert(true);
