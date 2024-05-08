@@ -131,7 +131,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                         mv.alignBackTo(getX(750), 1550);
                         break;
 
-                    case BASIC:
+                    case SUD:
                     default:
                         //mv.tourneDeg(180);
                         break;
@@ -319,7 +319,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
                 mv.avanceMM(70);
 
-                if (nerellRobotStatus.strategy() == Strategy.BASIC) {
+                if (nerellRobotStatus.strategy() == Strategy.SUD) {
                     mv.gotoOrientationDeg(-90);
                     bras.setBrasAvant(PositionBras.CALLAGE_PANNEAUX);
                 } else {
@@ -336,7 +336,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                     throw new ExitProgram(true);
                 }
 
-                if (nerellRobotStatus.strategy() == Strategy.BASIC) {
+                if (nerellRobotStatus.strategy() == Strategy.SUD) {
                     position.getPt().setY(conv.mmToPulse(NerellConstantesConfig.dstCallage));
                     position.setAngle(conv.degToPulse(-90));
                 } else {
@@ -364,7 +364,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             switch (nerellRobotStatus.strategy()) {
-                case BASIC:
+                case SUD:
                     mv.gotoPoint(getX(PanneauSolaireEquipeAction.ENTRY_X), PanneauSolaireEquipeAction.WORK_Y);
                     mv.gotoOrientationDeg(180);
                     nerellRobotStatus.siteDeDepart(nerellRobotStatus.team() == Team.BLEU ? SiteDeCharge.BLEU_SUD : SiteDeCharge.JAUNE_SUD);
@@ -373,7 +373,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                     // Start ???
                 case FINALE_2:
                     // Start milieu coté adverse
-                case AGGRESSIVE:
+                case NORD:
                     // Start plant (nord)
                 default:
                     mv.gotoPoint(getX(240), 1775);

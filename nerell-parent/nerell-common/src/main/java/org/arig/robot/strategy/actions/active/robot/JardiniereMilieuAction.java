@@ -46,7 +46,7 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
         return super.isValid()
                 && (
                 !stockPots.isBloque() && !stockPots.isPresent()
-                        || rs.strategy() == Strategy.BASIC
+                        || rs.strategy() == Strategy.SUD
                         || rs.getRemainingTime() < EurobotConfig.validTimePrisePots);
     }
 

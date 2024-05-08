@@ -40,7 +40,7 @@ public class PotsJardiniereAction extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        boolean isValid = rs.strategy() != Strategy.BASIC
+        boolean isValid = rs.strategy() != Strategy.SUD
                 && isTimeValid()
                 && rs.bras().arriereLibre()
                 && rs.getRemainingTime() > EurobotConfig.validTimePrisePots;

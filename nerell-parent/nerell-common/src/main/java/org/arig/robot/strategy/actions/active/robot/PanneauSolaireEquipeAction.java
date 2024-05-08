@@ -52,7 +52,7 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
 
     @Override
     public int order() {
-        return rs.strategy() == Strategy.BASIC ? 1000 : 15;
+        return rs.strategy() == Strategy.SUD ? 1000 : 15;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
         boolean enZone = false;
 
         try {
-            if (rs.strategy() != Strategy.BASIC) {
+            if (rs.strategy() != Strategy.SUD) {
                 final Point entry = entryPoint();
 
                 mv.setVitesse(config.vitesse(), config.vitesseOrientation());
@@ -106,7 +106,7 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
             enZone = true;
 
             int targetX = getX(725);
-            if (rs.strategy() == Strategy.BASIC) {
+            if (rs.strategy() == Strategy.SUD) {
                 targetX = getX(1725);
             }
 

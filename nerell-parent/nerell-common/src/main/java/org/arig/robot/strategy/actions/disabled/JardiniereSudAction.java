@@ -10,7 +10,6 @@ import org.arig.robot.model.StockPots;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.strategy.actions.active.robot.AbstractJardiniereAction;
 import org.springframework.stereotype.Component;
 
@@ -51,10 +50,10 @@ public class JardiniereSudAction extends AbstractJardiniereAction {
 
         // en strat basique ou si plus de temps, on va pousser les pots
         return super.isValid()
-                && rs.strategy() != Strategy.BASIC
+                && rs.strategy() != Strategy.SUD
                 && (
                 !stockPots.isBloque() && !stockPots.isPresent()
-                        || rs.strategy() == Strategy.BASIC
+                        || rs.strategy() == Strategy.SUD
                         || rs.getRemainingTime() < EurobotConfig.validTimePrisePots);
     }
 

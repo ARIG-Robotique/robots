@@ -34,7 +34,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Setter(AccessLevel.NONE)
     private Team team;
 
-    private Strategy strategy = Strategy.BASIC;
+    private Strategy strategy = Strategy.SUD;
 
     public void setTeam(Team team) {
         this.team = team;
