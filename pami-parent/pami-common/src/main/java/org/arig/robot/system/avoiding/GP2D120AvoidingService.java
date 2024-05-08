@@ -11,9 +11,9 @@ public class GP2D120AvoidingService extends BasicAvoidingService {
 
   private final PamiIOService pamiIOService;
 
-  private final DoubleValueAverage gaucheAverage = new DoubleValueAverage(10);
-  private final DoubleValueAverage centreAverage = new DoubleValueAverage(10);
-  private final DoubleValueAverage droiteAverage = new DoubleValueAverage(10);
+  private final DoubleValueAverage gaucheAverage = new DoubleValueAverage(1);
+  private final DoubleValueAverage centreAverage = new DoubleValueAverage(1);
+  private final DoubleValueAverage droiteAverage = new DoubleValueAverage(1);
 
   @Override
   protected boolean hasProximite() {
