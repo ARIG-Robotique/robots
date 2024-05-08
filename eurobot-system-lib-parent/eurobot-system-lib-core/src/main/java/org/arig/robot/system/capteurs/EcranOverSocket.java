@@ -16,9 +16,7 @@ public class EcranOverSocket extends AbstractEcranOverSocket<EcranConfig, EcranS
 
     @Data
     @EqualsAndHashCode(callSuper = true)
-    private static class EcranConfigInfoResponse extends AbstractResponseWithData<EcranAction, EcranConfig> {
-
-    }
+    private static class EcranConfigInfoResponse extends AbstractResponseWithData<EcranAction, EcranConfig> { }
 
     public EcranOverSocket(String hostname, Integer port) {
         super(hostname, port, EcranConfigInfoResponse.class);

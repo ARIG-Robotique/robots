@@ -23,6 +23,7 @@ import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.i2c.ARIGI2C2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.BouchonPropulsionsMotors;
+import org.arig.robot.system.process.EcranProcess;
 import org.arig.robot.system.servos.AbstractServos;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -133,6 +134,13 @@ public class PamiSimulatorContext {
     @Bean
     public AvoidingService avoidingService() {
         return new AvoidingServiceBouchon();
+    }
+
+    @Bean
+    public EcranProcess ecranProcess(Environment env) {
+        final Integer ecranPort = env.getRequiredProperty("ecran.socket.port", Integer.class);
+        final String ecranBinary = env.getRequiredProperty("ecran.binary");
+        return new EcranProcess(ecranBinary, ecranPort);
     }
 
 }

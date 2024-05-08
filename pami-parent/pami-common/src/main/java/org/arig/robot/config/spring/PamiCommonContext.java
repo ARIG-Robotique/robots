@@ -40,6 +40,7 @@ import org.arig.robot.utils.ConvertionRobotUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 
 import java.io.IOException;
@@ -203,6 +204,7 @@ public class PamiCommonContext {
 //    }
 
     @Bean
+    @Profile("!simulateur")
     public IEcran<EcranConfig, EcranState> ecran() {
         final String ecranHost = env.getRequiredProperty("ecran.socket.host");
         final Integer ecranPort = env.getRequiredProperty("ecran.socket.port", Integer.class);

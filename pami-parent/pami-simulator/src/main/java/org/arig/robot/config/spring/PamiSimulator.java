@@ -24,6 +24,8 @@ public class PamiSimulator {
         final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
         System.setProperty(ConstantesConfig.keyExecutionId, execId);
 
+        System.setProperty("spring.main.allow-bean-definition-overriding", "true");
+
         ConfigurableApplicationContext context = SpringApplication.run(PamiSimulator.class, args);
         PamiRobotStatus rs = context.getBean(PamiRobotStatus.class);
         rs.simulateur(true);
