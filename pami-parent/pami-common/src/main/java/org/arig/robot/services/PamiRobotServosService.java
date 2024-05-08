@@ -21,43 +21,45 @@ public class PamiRobotServosService extends AbstractCommonPamiServosService {
         if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
             touchePlanteGauche = servo(TOUCHE_PLANTE_GAUCHE_ID, TOUCHE_PLANTE_GAUCHE)
                 .time(500)
-                .position(POS_OUVERT_BLEU, 1500)
-                .position(POS_OUVERT_JAUNE, 1600)
+                .position(POS_INIT, 1910)
+                .position(POS_OUVERT_MATCH, 1600)
                 .position(POS_FERME, 1910);
             touchePlanteDroite = servo(TOUCHE_PLANTE_DROITE_ID, TOUCHE_PLANTE_DROITE)
                 .time(500)
-                .position(POS_OUVERT_BLEU, 1500)
-                .position(POS_OUVERT_JAUNE, 1810)
+                .position(POS_INIT, 1010)
+                .position(POS_OUVERT_MATCH, 1810)
                 .position(POS_FERME, 1010);
+
         } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
             touchePlanteGauche = servo(TOUCHE_PLANTE_GAUCHE_ID, TOUCHE_PLANTE_GAUCHE)
                 .time(500)
-                .position(POS_OUVERT_BLEU, 1500)
-                .position(POS_OUVERT_JAUNE, 1600)
-                .position(POS_FERME, 1910);
+                .position(POS_INIT, 1300)
+                .position(POS_OUVERT_MATCH, 600)
+                .position(POS_FERME, 1900);
             touchePlanteDroite = servo(TOUCHE_PLANTE_DROITE_ID, TOUCHE_PLANTE_DROITE)
                 .time(500)
-                .position(POS_OUVERT_BLEU, 1500)
-                .position(POS_OUVERT_JAUNE, 1810)
-                .position(POS_FERME, 1010);
+                .position(POS_INIT, 1800)
+                .position(POS_OUVERT_MATCH, 1600)
+                .position(POS_FERME, 1800);
+
         } else {
             touchePlanteGauche = servo(TOUCHE_PLANTE_GAUCHE_ID, TOUCHE_PLANTE_GAUCHE)
                 .time(500)
-                .position(POS_OUVERT_BLEU, 1500)
-                .position(POS_OUVERT_JAUNE, 1500)
-                .position(POS_FERME, 1910);
+                .position(POS_INIT, 1500)
+                .position(POS_OUVERT_MATCH, 660)
+                .position(POS_FERME, 1960);
             touchePlanteDroite = servo(TOUCHE_PLANTE_DROITE_ID, TOUCHE_PLANTE_DROITE)
                 .time(500)
-                .position(POS_OUVERT_BLEU, 1500)
-                .position(POS_OUVERT_JAUNE, 1500)
-                .position(POS_FERME, 1010);
+                .position(POS_INIT, 1500)
+                .position(POS_OUVERT_MATCH, 2150)
+                .position(POS_FERME, 960);
         }
 
         group(GROUP_TOUCHE_PLANTE_ID, GROUP_TOUCHE_PLANTE)
             .addServo(touchePlanteGauche)
             .addServo(touchePlanteDroite)
-            .batch(POS_OUVERT_BLEU)
-            .batch(POS_OUVERT_JAUNE)
+            .batch(POS_INIT)
+            .batch(POS_OUVERT_MATCH)
             .batch(POS_FERME);
     }
 }

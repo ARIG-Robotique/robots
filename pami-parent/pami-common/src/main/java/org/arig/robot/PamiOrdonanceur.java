@@ -112,12 +112,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
     @Override
     public void inMatch() {
         if (!servoOpened && robotStatus.getRemainingTime() < 2000) {
-            if (pamiRobotStatus.team() == Team.BLEU) {
-                pamiServosService.groupeTouchePlanteOuvertBleu(false);
-            } else {
-                pamiServosService.groupeTouchePlanteOuvertJaune(false);
-            }
-
+            pamiServosService.groupeTouchePlanteOuvertMatch(false);
             servoOpened = true;
         }
     }

@@ -10,8 +10,8 @@ public abstract class AbstractCommonPamiServosService extends AbstractServosServ
     public static final String TOUCHE_PLANTE_DROITE = "Touche plante droite";
 
     protected static final String POS_FERME = "Fermé";
-    protected static final String POS_OUVERT_BLEU = "Ouvert Bleu";
-    protected static final String POS_OUVERT_JAUNE = "Ouvert Jaune";
+    protected static final String POS_INIT = "Init";
+    protected static final String POS_OUVERT_MATCH = "Ouvert Match";
 
     protected static final String GROUP_TOUCHE_PLANTE = "Touche plante";
 
@@ -26,18 +26,18 @@ public abstract class AbstractCommonPamiServosService extends AbstractServosServ
     /* **************************************** */
 
     public void homes() {
-        groupeTouchePlanteFerme(false);
+        groupeTouchePlanteInit(false);
     }
 
     //*******************************************//
     //* Déplacements de groupe                  *//
     //*******************************************//
 
-    public void groupeTouchePlanteOuvertBleu(boolean wait) {
-        setPositionBatch(GROUP_TOUCHE_PLANTE, POS_OUVERT_BLEU, wait);
+    public void groupeTouchePlanteOuvertMatch(boolean wait) {
+        setPositionBatch(GROUP_TOUCHE_PLANTE, POS_OUVERT_MATCH, wait);
     }
-    public void groupeTouchePlanteOuvertJaune(boolean wait) {
-        setPositionBatch(GROUP_TOUCHE_PLANTE, POS_OUVERT_JAUNE, wait);
+    public void groupeTouchePlanteInit(boolean wait) {
+        setPositionBatch(GROUP_TOUCHE_PLANTE, POS_INIT, wait);
     }
     public void groupeTouchePlanteFerme(boolean wait) {
         setPositionBatch(GROUP_TOUCHE_PLANTE, POS_FERME, wait);
@@ -47,27 +47,4 @@ public abstract class AbstractCommonPamiServosService extends AbstractServosServ
     //* Déplacements de servo                   *//
     //*******************************************//
 
-    public void setTouchePlanteGaucheOuvertBleu(boolean wait) {
-        setPosition(TOUCHE_PLANTE_GAUCHE, POS_OUVERT_BLEU, wait);
-    }
-
-    public void setTouchePlanteGaucheOuvertJaune(boolean wait) {
-        setPosition(TOUCHE_PLANTE_GAUCHE, POS_OUVERT_JAUNE, wait);
-    }
-
-    public void setTouchePlanteGaucheFerme(boolean wait) {
-        setPosition(TOUCHE_PLANTE_GAUCHE, POS_FERME, wait);
-    }
-
-    public void setTouchePlanteDroiteOuvertBleu(boolean wait) {
-        setPosition(TOUCHE_PLANTE_DROITE, POS_OUVERT_BLEU, wait);
-    }
-
-    public void setTouchePlanteDroiteOuvertJAUNE(boolean wait) {
-        setPosition(TOUCHE_PLANTE_DROITE, POS_OUVERT_JAUNE, wait);
-    }
-
-    public void setTouchePlanteDroiteFerme(boolean wait) {
-        setPosition(TOUCHE_PLANTE_DROITE, POS_FERME, wait);
-    }
 }
