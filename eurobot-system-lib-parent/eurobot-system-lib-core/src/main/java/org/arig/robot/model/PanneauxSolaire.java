@@ -12,6 +12,9 @@ public class PanneauxSolaire {
     @Setter
     private Team team;
 
+    @Setter
+    private boolean preferPanneaux;
+
     // indique que l'action des panneaux équipe a déjà été essayée
     // et que les panneaux équipe peuvent être traités par l'action unitaire si besoin
     // initialisé à true mais mis à false dans le constructeur de PanneauSolaireEquipeAction
@@ -21,19 +24,19 @@ public class PanneauxSolaire {
 
     PanneauSolaire[] data = new PanneauSolaire[]{
             // Bleu
-        new PanneauSolaire(1).millis(Long.MIN_VALUE),
-        new PanneauSolaire(2).millis(Long.MIN_VALUE),
-        new PanneauSolaire(3).millis(Long.MIN_VALUE),
+            new PanneauSolaire(1).millis(Long.MIN_VALUE),
+            new PanneauSolaire(2).millis(Long.MIN_VALUE),
+            new PanneauSolaire(3).millis(Long.MIN_VALUE),
 
             // Common
-        new PanneauSolaire(4).millis(Long.MIN_VALUE),
-        new PanneauSolaire(5).millis(Long.MIN_VALUE),
-        new PanneauSolaire(6).millis(Long.MIN_VALUE),
+            new PanneauSolaire(4).millis(Long.MIN_VALUE),
+            new PanneauSolaire(5).millis(Long.MIN_VALUE),
+            new PanneauSolaire(6).millis(Long.MIN_VALUE),
 
             // Jaune
-        new PanneauSolaire(7).millis(Long.MIN_VALUE),
-        new PanneauSolaire(8).millis(Long.MIN_VALUE),
-        new PanneauSolaire(9).millis(Long.MIN_VALUE)
+            new PanneauSolaire(7).millis(Long.MIN_VALUE),
+            new PanneauSolaire(8).millis(Long.MIN_VALUE),
+            new PanneauSolaire(9).millis(Long.MIN_VALUE)
     };
 
     public PanneauSolaire get(int numero) {
@@ -54,7 +57,7 @@ public class PanneauxSolaire {
             int inc = reverse ? -1 : 1;
             for (int i = init; reverse ? i >= 1 : i <= data.length - 3; i += inc) {
                 PanneauSolaire ps = get(i);
-                if (ps.besoinDeTourner(team) && entryPanneau(ps) != null) {
+                if (ps.besoinDeTourner(team, preferPanneaux) && entryPanneau(ps) != null) {
                     return ps;
                 }
             }
@@ -63,7 +66,7 @@ public class PanneauxSolaire {
             int inc = reverse ? 1 : -1;
             for (int i = init; reverse ? i <= data.length : i >= 4; i += inc) {
                 PanneauSolaire ps = get(i);
-                if (ps.besoinDeTourner(team) && entryPanneau(ps) != null) {
+                if (ps.besoinDeTourner(team, preferPanneaux) && entryPanneau(ps) != null) {
                     return ps;
                 }
             }
@@ -96,13 +99,13 @@ public class PanneauxSolaire {
         return null;
     }
 
-  public void refreshFromCamera(int nb, CouleurPanneauSolaire couleur, long millis, int r) {
-    if (data[nb - 1].millis() >= millis) {
-      return;
-    }
+    public void refreshFromCamera(int nb, CouleurPanneauSolaire couleur, long millis, int r) {
+        if (data[nb - 1].millis() >= millis) {
+            return;
+        }
 
-    data[nb - 1].couleur(couleur).millis(millis).rotation(r);
-    log.info("[rs] panneau solaire changed: {}", data[nb - 1].toString());
+        data[nb - 1].couleur(couleur).millis(millis).rotation(r);
+        log.info("[rs] panneau solaire changed: {}", data[nb - 1].toString());
     }
 
     int score() {
@@ -120,14 +123,14 @@ public class PanneauxSolaire {
     public boolean equipeDone() {
         if (team == Team.BLEU) {
             for (int i = 1; i <= 3; i++) {
-                if (data[i - 1].besoinDeTourner(team)) {
+                if (data[i - 1].besoinDeTourner(team, false)) {
                     return false;
                 }
             }
             return true;
         } else {
             for (int i = 7; i <= 9; i++) {
-                if (data[i - 1].besoinDeTourner(team)) {
+                if (data[i - 1].besoinDeTourner(team, false)) {
                     return false;
                 }
             }
@@ -135,15 +138,15 @@ public class PanneauxSolaire {
         }
     }
 
-  public void equipeDone(int nb, long millis) {
+    public void equipeDone(int nb, long millis) {
         log.info("[RS] panneaux solaires équipe done : {}", nb);
         if (team == Team.BLEU) {
             for (int i = 1; i <= nb; i++) {
-              data[i - 1].couleur(CouleurPanneauSolaire.BLEU).millis(millis).rotation(null);
+                data[i - 1].couleur(CouleurPanneauSolaire.BLEU).millis(millis).rotation(null);
             }
         } else {
             for (int i = 1; i <= nb; i++) {
-              data[9 - i].couleur(CouleurPanneauSolaire.JAUNE).millis(millis).rotation(null);
+                data[9 - i].couleur(CouleurPanneauSolaire.JAUNE).millis(millis).rotation(null);
             }
         }
     }

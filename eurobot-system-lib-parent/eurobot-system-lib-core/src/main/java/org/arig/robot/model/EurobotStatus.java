@@ -10,6 +10,7 @@ import org.arig.robot.constants.EurobotConfig;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @Slf4j
 @Data
@@ -47,8 +48,14 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
      */
 
     private boolean stockage = false;
+    @Setter(AccessLevel.NONE)
     private boolean preferePanneaux = false;
     private boolean activeVolAuSol = false;
+
+    public void preferePanneaux(boolean preferePanneaux) {
+        this.preferePanneaux = preferePanneaux;
+        panneauxSolaire.preferPanneaux(preferePanneaux);
+    }
 
     /**
      * STATUT
@@ -87,7 +94,26 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     private PanneauxSolaire panneauxSolaire = new PanneauxSolaire();
 
     public int panneauxSolairePointRestant() {
-        return Math.max(0, 30 - panneauxSolaire.score());
+        int score = Math.max(0, 30 - panneauxSolaire.score());
+        if (preferePanneaux) {
+            // on ajoute les points que ça peut enlever à l'adversaire
+            score += Stream.of(panneauxSolaire.data)
+                    .filter(p -> p.numero() >= 4 && p.numero() <= 6)
+                    .mapToInt(p -> {
+                        if (team == Team.JAUNE) {
+                            if (p.couleur() == CouleurPanneauSolaire.BLEU || p.couleur() == CouleurPanneauSolaire.JAUNE_ET_BLEU) {
+                                return 5;
+                            }
+                        } else {
+                            if (p.couleur() == CouleurPanneauSolaire.JAUNE || p.couleur() == CouleurPanneauSolaire.JAUNE_ET_BLEU) {
+                                return 5;
+                            }
+                        }
+                        return 0;
+                    })
+                    .sum();
+        }
+        return score;
     }
 
     @Setter(AccessLevel.NONE)

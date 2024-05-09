@@ -31,11 +31,15 @@ public class PanneauSolaire implements Serializable {
         this.couleur = couleur;
     }
 
-    public boolean besoinDeTourner(Team team) {
+    public boolean besoinDeTourner(Team team, boolean preferPanneaux) {
         if (team == Team.JAUNE) {
-            return couleur == CouleurPanneauSolaire.BLEU || couleur == CouleurPanneauSolaire.AUCUNE;
+            return couleur == CouleurPanneauSolaire.BLEU
+                    || couleur == CouleurPanneauSolaire.AUCUNE
+                    || preferPanneaux && couleur == CouleurPanneauSolaire.JAUNE_ET_BLEU;
         } else {
-            return couleur == CouleurPanneauSolaire.JAUNE || couleur == CouleurPanneauSolaire.AUCUNE;
+            return couleur == CouleurPanneauSolaire.JAUNE
+                    || couleur == CouleurPanneauSolaire.AUCUNE
+                    || preferPanneaux && couleur == CouleurPanneauSolaire.JAUNE_ET_BLEU;
         }
     }
 
