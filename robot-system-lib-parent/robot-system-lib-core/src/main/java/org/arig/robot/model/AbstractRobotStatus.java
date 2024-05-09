@@ -218,6 +218,11 @@ public abstract class AbstractRobotStatus {
         callageTime = System.currentTimeMillis() + timeMs;
     }
 
+    public void enableCalageTempo(long timeMs, TypeCalage ... others) {
+        enableCalageBordure(TypeCalage.TEMPO, others);
+        callageTime = System.currentTimeMillis() + timeMs;
+    }
+
     public void disableCalageBordure() {
         log.info("Désactivation calage bordure");
         calage.clear();
