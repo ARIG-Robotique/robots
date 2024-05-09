@@ -38,9 +38,9 @@ public class PamiRobotServosService extends AbstractCommonPamiServosService {
                 .position(POS_FERME, 1900);
             touchePlanteDroite = servo(TOUCHE_PLANTE_DROITE_ID, TOUCHE_PLANTE_DROITE)
                 .time(500)
-                .position(POS_INIT, 1800)
-                .position(POS_OUVERT_MATCH, 1600)
-                .position(POS_FERME, 1800);
+                .position(POS_INIT, 1700)
+                .position(POS_OUVERT_MATCH, 2150)
+                .position(POS_FERME, 960);
 
         } else {
             touchePlanteGauche = servo(TOUCHE_PLANTE_GAUCHE_ID, TOUCHE_PLANTE_GAUCHE)
