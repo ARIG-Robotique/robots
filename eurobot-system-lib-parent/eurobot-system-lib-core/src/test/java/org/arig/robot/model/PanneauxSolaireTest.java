@@ -31,7 +31,7 @@ class PanneauxSolaireTest {
     @Test
     void testEquipeDone5Jaune() {
         panneauxSolaire.team(Team.JAUNE);
-      panneauxSolaire.equipeDone(5, 0);
+        panneauxSolaire.equipeDone(5, 0);
         Assertions.assertEquals(panneauxSolaire.get(1).couleur(), CouleurPanneauSolaire.AUCUNE);
         Assertions.assertEquals(panneauxSolaire.get(2).couleur(), CouleurPanneauSolaire.AUCUNE);
         Assertions.assertEquals(panneauxSolaire.get(3).couleur(), CouleurPanneauSolaire.AUCUNE);
@@ -46,7 +46,7 @@ class PanneauxSolaireTest {
     @Test
     void testEquipeDone3Bleu() {
         panneauxSolaire.team(Team.BLEU);
-      panneauxSolaire.equipeDone(3, 0);
+        panneauxSolaire.equipeDone(3, 0);
         Assertions.assertEquals(panneauxSolaire.get(1).couleur(), CouleurPanneauSolaire.BLEU);
         Assertions.assertEquals(panneauxSolaire.get(2).couleur(), CouleurPanneauSolaire.BLEU);
         Assertions.assertEquals(panneauxSolaire.get(3).couleur(), CouleurPanneauSolaire.BLEU);
@@ -73,7 +73,7 @@ class PanneauxSolaireTest {
     void testScoreTeamBourrinTournePlusQuilNeFautLesSiens() {
         panneauxSolaire.team(Team.JAUNE);
 
-        for (int i = 1 ; i <= 6 ; i++) {
+        for (int i = 1; i <= 6; i++) {
             PanneauSolaire panneauSolaire = panneauxSolaire.get(i);
             panneauSolaire.couleur(CouleurPanneauSolaire.JAUNE_ET_BLEU);
         }
@@ -85,7 +85,7 @@ class PanneauxSolaireTest {
     void testScoreTeamBourrinTournePlusQuilNeFautLesSiensEtNousCorrectementLesNotres() {
         panneauxSolaire.team(Team.JAUNE);
 
-        for (int i = 1 ; i <= 9 ; i++) {
+        for (int i = 1; i <= 9; i++) {
             PanneauSolaire panneauSolaire = panneauxSolaire.get(i);
             if (i <= 6) {
                 panneauSolaire.couleur(CouleurPanneauSolaire.JAUNE_ET_BLEU);
@@ -101,7 +101,7 @@ class PanneauxSolaireTest {
     void testScoreNormal() {
         panneauxSolaire.team(Team.JAUNE);
 
-        for (int i = 1 ; i <= 9 ; i++) {
+        for (int i = 1; i <= 9; i++) {
             PanneauSolaire panneauSolaire = panneauxSolaire.get(i);
             if (i <= 6) {
                 panneauSolaire.couleur(CouleurPanneauSolaire.BLEU);

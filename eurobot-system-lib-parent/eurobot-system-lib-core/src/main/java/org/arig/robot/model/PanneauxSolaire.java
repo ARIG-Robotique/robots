@@ -15,13 +15,6 @@ public class PanneauxSolaire {
     @Setter
     private boolean preferPanneaux;
 
-    // indique que l'action des panneaux équipe a déjà été essayée
-    // et que les panneaux équipe peuvent être traités par l'action unitaire si besoin
-    // initialisé à true mais mis à false dans le constructeur de PanneauSolaireEquipeAction
-    @Getter
-    @Setter
-    private boolean triedActionEquipe = true;
-
     PanneauSolaire[] data = new PanneauSolaire[]{
             // Bleu
             new PanneauSolaire(1).millis(Long.MIN_VALUE),
@@ -149,5 +142,15 @@ public class PanneauxSolaire {
                 data[9 - i].couleur(CouleurPanneauSolaire.JAUNE).millis(millis).rotation(null);
             }
         }
+    }
+
+    public boolean communModifiedByOpponent() {
+        for (int i = 3; i <= 5; i++) {
+            if (data[i].couleur() == CouleurPanneauSolaire.JAUNE_ET_BLEU
+                    || data[i].couleur() == (team == Team.BLEU ? CouleurPanneauSolaire.JAUNE : CouleurPanneauSolaire.BLEU)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

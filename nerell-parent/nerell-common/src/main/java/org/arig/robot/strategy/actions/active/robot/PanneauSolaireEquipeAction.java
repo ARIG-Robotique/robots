@@ -13,23 +13,17 @@ import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 import static org.arig.robot.constants.NerellConstantesConfig.VITESSE_ROUE_PANNEAU;
 
 @Slf4j
 @Component
-public class PanneauSolaireEquipeAction extends AbstractNerellAction implements InitializingBean {
+public class PanneauSolaireEquipeAction extends AbstractNerellAction  {
     public static final int ENTRY_X = 210;
     public static final int ENTRY_Y = 210;
 
     public static final int WORK_Y = 230;
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        rs.panneauxSolaire().triedActionEquipe(false);
-    }
 
     @Override
     public String name() {
@@ -46,13 +40,18 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
         // TODO 1er interdit si zone de depose pleine
         return isTimeValid()
                 && rs.bras().arriereLibre()
-                && !rs.panneauxSolaire().equipeDone()
-                && !rs.panneauxSolaire().triedActionEquipe();
+                && !rs.panneauxSolaire().equipeDone();
     }
 
     @Override
     public int order() {
-        return rs.strategy() == Strategy.SUD ? 1000 : 15;
+        if (rs.strategy() == Strategy.SUD) {
+            return 1000;
+        }
+        if (!rs.panneauxSolaire().communModifiedByOpponent()) {
+            return 30;
+        }
+        return 15;
     }
 
     @Override
@@ -83,7 +82,6 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
                     log.warn("Blocage pendant le callage du panneau");
                     mv.avanceMM(100);
                     runAsync(() -> bras.setBrasArriere(PositionBras.INIT));
-                    rs.panneauxSolaire().triedActionEquipe(true);
                     rs.panneauxSolaire().get(rs.team() == Team.BLEU ? 1 : 9).blocked(true);
                     complete();
                     return;
@@ -107,7 +105,7 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
             enZone = true;
 
             int targetX = getX(725);
-            if (rs.strategy() == Strategy.SUD) {
+            if (rs.strategy() == Strategy.SUD || !rs.panneauxSolaire().communModifiedByOpponent()) {
                 targetX = getX(1725);
             }
 
@@ -149,7 +147,6 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction implements 
                     rs.stocksPots().get(rs.team() == Team.JAUNE ? StockPots.ID.JAUNE_SUD : StockPots.ID.BLEU_SUD).bloque();
                 }
 
-                rs.panneauxSolaire().triedActionEquipe(true);
                 complete(true);
             }
         }

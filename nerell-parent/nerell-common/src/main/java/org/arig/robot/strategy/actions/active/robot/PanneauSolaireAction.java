@@ -13,15 +13,20 @@ import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class PanneauSolaireAction extends AbstractNerellAction {
 
+    @Autowired(required = false)
+    PanneauSolaireEquipeAction panneauSolaireEquipeAction;
+
     private final int Y_ENTRY = 235;
     private final int Y_ACTION = 235;
 
+    boolean reverse;
     PanneauSolaire firstPanneau;
     PanneauSolaire entryPanneau;
 
@@ -37,13 +42,22 @@ public class PanneauSolaireAction extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        boolean valid = isTimeValid()
-                && rs.panneauxSolaire().triedActionEquipe();
-        if (!valid) {
+        if (!isTimeValid()) {
             return false;
         }
-        PanneauSolaire firstPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(false);
-        return firstPanneau != null && rs.panneauxSolaire().entryPanneau(firstPanneau) != null;
+
+        // prio à l'action qui fait tout d'un coup
+        if (panneauSolaireEquipeAction != null && panneauSolaireEquipeAction.isValid() && !panneauSolaireEquipeAction.isCompleted()) {
+            return false;
+        }
+
+        // vraiment quelque chose à faire
+        if (rs.panneauxSolaire().nextPanneauSolaireToProcess(false)  == null) {
+            return false;
+        }
+
+        // prio en fin de match on si l'adversaire est déjà venu les faire
+        return rs.getRemainingTime() < 30000 || rs.panneauxSolaire().communModifiedByOpponent();
     }
 
     @Override
@@ -53,8 +67,9 @@ public class PanneauSolaireAction extends AbstractNerellAction {
 
     @Override
     public Point entryPoint() {
-        firstPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(false);
-        entryPanneau = firstPanneau != null ? rs.panneauxSolaire().entryPanneau(firstPanneau) : null;
+        reverse = getX((int) mv.currentXMm()) > 1500;
+        firstPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(reverse);
+        entryPanneau = rs.panneauxSolaire().entryPanneau(firstPanneau);
         return new Point(entryPanneau.getX(), Y_ENTRY);
     }
 
@@ -117,7 +132,7 @@ public class PanneauSolaireAction extends AbstractNerellAction {
                 if (ilEstTempsDeRentrer()) {
                     break;
                 }
-                PanneauSolaire nextPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(false);
+                PanneauSolaire nextPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(reverse);
 
                 if (nextPanneau != null) {
                     // si on change de groupe on refait un path + callage
