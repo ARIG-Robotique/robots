@@ -85,7 +85,7 @@ public class LadybugFlight extends AbstractAction {
 
             } else {
                 mv.avanceMM(50);
-                mv.pathTo(entryPoint(), GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                mv.gotoPoint(entryPoint());
                 mv.gotoOrientationDeg(rs.team() == Team.BLEU ? 150 : 30);
 
             }
