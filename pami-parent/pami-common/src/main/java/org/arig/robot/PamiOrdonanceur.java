@@ -114,6 +114,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
     @Override
     public void startMatch() {
         // Nope
+        leds.setAllLeds(ARIG2024IoPamiLeds.LedColor.White);
     }
 
     private boolean servoOpened = false;
@@ -336,7 +337,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
         }
 
         // Sound screen vérrouillé
-        leds.setAllLeds(ARIG2024IoPamiLeds.LedColor.White);
+        leds.setAllLeds(ARIG2024IoPamiLeds.LedColor.Green);
         for (int i = 0 ; i < 10 ; i++) {
             pamiIOService.sound();
             ThreadUtils.sleep(300);
