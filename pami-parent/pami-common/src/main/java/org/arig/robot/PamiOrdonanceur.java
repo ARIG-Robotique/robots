@@ -210,7 +210,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
             position.setAngle(conv.degToPulse(-90));
 
             if (!skip) {
-                robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
+                robotStatus.enableCalageTempo(5000, TypeCalage.ARRIERE);
                 mv.reculeMMSansAngle(300);
 
                 RobotName.RobotIdentification id = robotName.id();
