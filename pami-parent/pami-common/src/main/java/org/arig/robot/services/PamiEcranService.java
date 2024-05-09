@@ -24,6 +24,7 @@ public class PamiEcranService extends EcranService {
       stateInfos.setStrategy(rs.strategy());
       stateInfos.setOptions(Map.of(
           EurobotConfig.STOCKAGE, rs.stockage(),
+          EurobotConfig.PRISE_POTS, rs.prisePots(),
           EurobotConfig.PREFERE_PANNEAUX, rs.preferePanneaux(),
           EurobotConfig.ACTIVE_VOL_AU_SOL, rs.activeVolAuSol()
       ));

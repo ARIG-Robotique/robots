@@ -22,6 +22,36 @@ public class Jardiniere extends ZoneDepose {
         return score(true);
     }
 
+    public boolean hasPots() {
+        return data().stream().anyMatch(Plante::isDansPot);
+    }
+
+    @Override
+    public void add(Plante[] plantes) {
+        if (hasPots()) {
+            for (Plante plante : plantes) {
+                if (plante.getType() == TypePlante.AUCUNE && plante.isDansPot()) {
+                    // cas des ajouts de pots sans plantes
+                    data.add(plante);
+                } else if (plante.getType() != TypePlante.AUCUNE) {
+                    boolean done = false;
+                    for (int i = 0; i < data.size(); i++) {
+                        if (data.get(i).getType() == TypePlante.AUCUNE) {
+                            data.set(i, plante.withPot());
+                            done = true;
+                            break;
+                        }
+                    }
+                    if (!done) {
+                        data.add(plante);
+                    }
+                }
+            }
+        } else {
+            super.add(plantes);
+        }
+    }
+
     public Jardiniere clone() {
         Jardiniere newJardiniere = new Jardiniere(null);
         newJardiniere.add(data().toArray(new Plante[0]));

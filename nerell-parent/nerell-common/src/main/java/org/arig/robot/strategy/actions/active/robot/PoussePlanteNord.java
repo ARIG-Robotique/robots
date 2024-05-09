@@ -54,6 +54,8 @@ public class PoussePlanteNord extends AbstractNerellAction {
         try {
             Plante.ID stockSurLePassage = rs.team() == Team.BLEU ? Plante.ID.STOCK_NORD_OUEST : Plante.ID.STOCK_NORD_EST;
 
+            log.info("Poussage des plantes {} dans site {}", stockSurLePassage, rs.aireDeDeposeNord().siteDeCharge(rs.team()));
+
             rs.enableAvoidance();
 
             mv.setVitessePercent(100, 100);
@@ -76,8 +78,6 @@ public class PoussePlanteNord extends AbstractNerellAction {
             });
             rs.aireDeDeposeNord().rang1(true);
             rs.aireDeDeposeNord().rang2(true);
-
-            //mv.reculeMM(100);
 
             complete(true);
 

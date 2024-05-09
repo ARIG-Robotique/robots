@@ -19,15 +19,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public abstract class ZoneDepose {
 
-    private final List<Plante> data = new ArrayList<>();
+    protected final List<Plante> data = new ArrayList<>();
     private final String name;
 
-    public void add(Plante[] bras) {
-        for (int i = 0; i < bras.length; i++) {
+    public void add(Plante[] plantes) {
+        for (int i = 0; i < plantes.length; i++) {
             if (name != null) {
-                log.info("[RS] Ajout dans {}: {}", name, bras[i].getType());
+                log.info("[RS] Ajout dans {}: {}", name, plantes[i].getType());
             }
-            data.add(bras[i].clone());
+            data.add(plantes[i].clone());
         }
     }
 

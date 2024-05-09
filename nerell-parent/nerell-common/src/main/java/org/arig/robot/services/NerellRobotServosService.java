@@ -262,7 +262,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
                 .angular()
                 .angle(A3_MAX, 2470)
                 .angle(0, 2120)
-                .angle(-90, 1260)
+                .angle(-90, 1230)
                 .angle(A3_MIN, 890)
                 .position(POS_INIT, A3_INIT, 50)
                 .position(POS_0DEG, 0, 50)

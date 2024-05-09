@@ -16,6 +16,7 @@ import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.arig.robot.services.BrasInstance.*;
@@ -23,6 +24,12 @@ import static org.arig.robot.services.BrasInstance.*;
 @Slf4j
 @Component
 public class PotsJardiniereAction extends AbstractNerellAction {
+
+    @Autowired(required = false)
+    private JardiniereMilieuAction jardiniereMilieuAction;
+
+    @Autowired(required = false)
+    private PoussePlanteNord actionPoussePlante;
 
     @Override
     public String name() {
@@ -40,21 +47,28 @@ public class PotsJardiniereAction extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        boolean isValid = rs.strategy() != Strategy.SUD
+        return rs.prisePots()
                 && isTimeValid()
                 && rs.bras().arriereLibre()
-                && rs.getRemainingTime() > EurobotConfig.validTimePrisePots;
-
-        if (!isValid) {
-            return false;
-        }
-
-        return stockPots().isPresent() && !stockPots().isBloque();
+                && rs.getRemainingTime() > EurobotConfig.validTimePrisePots
+                && stockPots().isPresent() && !stockPots().isBloque();
     }
 
     @Override
     public int order() {
-        return 0; // TODO
+        int nbDeposesPlantes = 0;
+        if (jardiniereMilieuAction != null) {
+            if (!rs.bras().avantLibre()) {
+                nbDeposesPlantes += 1;
+            }
+            if (!rs.bras().arriereLibre()) {
+                nbDeposesPlantes += 1;
+            }
+            if (!rs.stockLibre()) {
+                nbDeposesPlantes += 1;
+            }
+        }
+        return 15 * Math.min(2, nbDeposesPlantes);
     }
 
     @Override
@@ -68,13 +82,21 @@ public class PotsJardiniereAction extends AbstractNerellAction {
 
     @Override
     public void execute() {
-        final Point entry = entryPoint();
-        StockPots stockPots = stockPots();
-        log.info("Prise stock pots {}", stockPots.getId());
 
         try {
-            mv.setVitessePercent(100, 100);
-            mv.pathTo(entry);
+            final Point pointApproche = new Point(getX(450), 1775);
+            final Point entry = entryPoint();
+            StockPots stockPots = stockPots();
+            log.info("Prise stock pots {}", stockPots.getId());
+
+            if (actionPoussePlante != null && actionPoussePlante.isValid() && !actionPoussePlante.isCompleted()) {
+                actionPoussePlante.execute(pointApproche);
+            } else {
+                mv.setVitessePercent(100, 100);
+                mv.pathTo(pointApproche);
+            }
+
+            mv.gotoPoint(entry);
 
             rs.disableAvoidance();
 
@@ -94,7 +116,7 @@ public class PotsJardiniereAction extends AbstractNerellAction {
             bras.setBras(Bras.ARRIERE_DROIT, PointBras.withY(PRISE_POT_SOL_Y), 30, true);
             servos.pinceArriereDroitPrisePotInterieur(true);
             s();
-            bras.setBras(Bras.ARRIERE_DROIT, PointBras.withY(SORTIE_POT_POT_Y), 30, true);
+            bras.setBrasArriere(PointBras.withY(SORTIE_POT_POT_Y));
             // prise pot centre
             mv.gotoOrientationDeg(stockPots.getEntryAngle());
             mv.reculeMM(85);
@@ -119,9 +141,15 @@ public class PotsJardiniereAction extends AbstractNerellAction {
 
             // lache rangée 1
             bras.setBrasArriere(new PointBras(230, 80, -90, null));
-            bras.setBrasArriere(new PointBras(210, 70, -90, null));
+            bras.setBrasArriere(new PointBras(210, 70, -95, null));
             servos.groupePinceArriereFerme(true);
             bras.setBrasArriere(new PointBras(195, 90, -90, null));
+
+            rs.jardiniereMilieu().add(new Plante[]{
+                    new Plante(TypePlante.AUCUNE, true),
+                    new Plante(TypePlante.AUCUNE, true),
+                    new Plante(TypePlante.AUCUNE, true)
+            });
 
             // prise rangée 2
             mv.avanceMM(100);
@@ -131,8 +159,35 @@ public class PotsJardiniereAction extends AbstractNerellAction {
             bras.setBrasArriere(PointBras.withY(130));
 
             // callage bordure
-            rs.enableCalageBordure(TypeCalage.ARRIERE);
+            rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.CONTACT_INDUCTIF, TypeCalage.FORCE);
             mv.reculeMM(getX((int) mv.currentXMm()) - config.distanceCalageArriere() - 10);
+
+            if (rs.calageCompleted().contains(TypeCalage.CONTACT_INDUCTIF)) {
+                // il y a des pots devant
+                io.enableElectroAimant();
+                ThreadUtils.sleep(200);
+                mv.avanceMM(50);
+                mv.gotoOrientationDeg(-90);
+                mv.reculeMM(50);
+                io.disableElectroAimant();
+                ThreadUtils.sleep(200);
+                mv.avanceMM(50);
+                mv.gotoOrientationDeg(stockPots.getEntryAngle());
+
+                rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
+                mv.reculeMM(getX((int) mv.currentXMm()) - config.distanceCalageArriere() - 10);
+            }
+
+            if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
+                // il y a des plantes devant ?
+                stockPots.bloque();
+                servos.groupePinceArriereFerme(false);
+                mv.avanceMM(150);
+                bras.setBrasArriere(PositionBras.INIT);
+                complete();
+                return;
+            }
+
             rs.enableCalageBordure(TypeCalage.ARRIERE);
             mv.setVitessePercent(0, 100);
             mv.reculeMMSansAngle(40);
@@ -142,7 +197,7 @@ public class PotsJardiniereAction extends AbstractNerellAction {
             mv.setVitessePercent(50, 100);
 
             // lache rangée 2
-            bras.setBrasArriere(new PointBras(245, 120, -80, null));
+            bras.setBrasArriere(new PointBras(245, 120, -85, null));
             bras.setBrasArriere(new PointBras(238, 96, -90, null));
             servos.groupePinceArriereFerme(true);
             bras.setBrasArriere(PointBras.withY(120));
@@ -155,12 +210,13 @@ public class PotsJardiniereAction extends AbstractNerellAction {
             rs.jardiniereMilieu().add(new Plante[]{
                     new Plante(TypePlante.AUCUNE, true),
                     new Plante(TypePlante.AUCUNE, true),
-                    new Plante(TypePlante.AUCUNE, true),
-                    new Plante(TypePlante.AUCUNE, true),
-                    new Plante(TypePlante.AUCUNE, true),
-                    new Plante(TypePlante.AUCUNE, true),
+                    new Plante(TypePlante.AUCUNE, true)
             });
             complete(true);
+
+            if (jardiniereMilieuAction != null && (!rs.bras().avantLibre() || !rs.bras().arriereLibre() || !rs.stockLibre())) {
+                jardiniereMilieuAction.execute();
+            }
 
         } catch (NoPathFoundException | AvoidingException e) {
             updateValidTime();

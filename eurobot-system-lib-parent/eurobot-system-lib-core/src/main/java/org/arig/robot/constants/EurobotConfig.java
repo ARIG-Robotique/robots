@@ -23,6 +23,7 @@ public interface EurobotConfig {
 
     // Options de match
     String STOCKAGE = "Stockage";
+    String PRISE_POTS = "Prise des pots";
     String PREFERE_PANNEAUX = "Prefere panneaux";
     String ACTIVE_VOL_AU_SOL = "Active vol au sol";
 

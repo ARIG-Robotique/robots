@@ -95,8 +95,9 @@ public class RobotGroupService implements RobotGroup.Handler {
                 break;
             case CONFIG:
                 rs.stockage(data[0] > 0);
-                rs.preferePanneaux(data[1] > 0);
-                rs.activeVolAuSol(data[2] > 0);
+                rs.prisePots(data[1] > 0);
+                rs.preferePanneaux(data[2] > 0);
+                rs.activeVolAuSol(data[3] > 0);
                 break;
             case CURRENT_ACTION:
                 String actionName = null;
@@ -223,6 +224,7 @@ public class RobotGroupService implements RobotGroup.Handler {
     public void configuration() {
         byte[] data = new byte[]{
                 (byte) (rs.stockage() ? 1 : 0),
+                (byte) (rs.prisePots() ? 1 : 0),
                 (byte) (rs.preferePanneaux() ? 1 : 0),
                 (byte) (rs.activeVolAuSol() ? 1 : 0)
         };

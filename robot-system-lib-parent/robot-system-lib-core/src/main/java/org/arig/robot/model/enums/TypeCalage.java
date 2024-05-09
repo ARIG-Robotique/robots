@@ -9,5 +9,6 @@ public enum TypeCalage {
 
     PRISE_PRODUIT_AVANT,
     PRISE_PRODUIT_ARRIERE,
-    PRISE_ELECTROAIMANT
+    PRISE_ELECTROAIMANT, // 2 inductifs
+    CONTACT_INDUCTIF // 1 seul inductif
 }

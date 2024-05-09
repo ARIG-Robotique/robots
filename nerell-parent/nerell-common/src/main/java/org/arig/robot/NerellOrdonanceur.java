@@ -257,6 +257,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
             nerellRobotStatus.twoRobots(nerellEcranService.config().isTwoRobots());
             nerellRobotStatus.stockage(nerellEcranService.config().hasOption(EurobotConfig.STOCKAGE));
+            nerellRobotStatus.prisePots(nerellEcranService.config().hasOption(EurobotConfig.PRISE_POTS));
             nerellRobotStatus.preferePanneaux(nerellEcranService.config().hasOption(EurobotConfig.PREFERE_PANNEAUX));
             nerellRobotStatus.activeVolAuSol(nerellEcranService.config().hasOption(EurobotConfig.ACTIVE_VOL_AU_SOL));
 

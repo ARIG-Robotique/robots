@@ -9,6 +9,8 @@ import org.arig.robot.model.enums.TypeCalage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.CompletableFuture;
+
 @Slf4j
 @Component
 public class JardiniereNordAction extends AbstractJardiniereAction {
@@ -43,7 +45,7 @@ public class JardiniereNordAction extends AbstractJardiniereAction {
     private void executeInternal(boolean arriere) throws AvoidingException {
         final Point entry = entryPoint();
 
-        prepareBras(arriere);
+        CompletableFuture<?> refresh = prepareBras(arriere);
 
         rs.disableAvoidance();
 
@@ -57,6 +59,7 @@ public class JardiniereNordAction extends AbstractJardiniereAction {
         }
 
         if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
+            refresh.join();
             depose(arriere, true);
         }
 
@@ -73,6 +76,7 @@ public class JardiniereNordAction extends AbstractJardiniereAction {
             checkRecalageAngleDeg(90);
         }
 
+        refresh.join();
         depose(arriere, false);
     }
 
@@ -82,17 +86,13 @@ public class JardiniereNordAction extends AbstractJardiniereAction {
             final Point pointApproche = new Point(getX(450), 1775);
             final Point entry = entryPoint();
 
-            boolean skipApproche = false;
-            if (actionPoussePlante != null && actionPoussePlante.isValid()) {
+            if (actionPoussePlante != null && actionPoussePlante.isValid() && !actionPoussePlante.isCompleted()) {
                 actionPoussePlante.execute(pointApproche);
-                skipApproche = true;
-            }
-
-            mv.setVitessePercent(100, 100);
-            // point intermédiare dans l'aire de dépose nord si on traine des trucs
-            if (!skipApproche) {
+            } else {
+                mv.setVitessePercent(100, 100);
                 mv.pathTo(pointApproche);
             }
+
             mv.gotoPoint(entry);
 
             if (!rs.bras().arriereLibre()) {

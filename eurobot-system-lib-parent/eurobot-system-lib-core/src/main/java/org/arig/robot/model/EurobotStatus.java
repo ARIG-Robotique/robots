@@ -50,6 +50,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     private boolean stockage = false;
     @Setter(AccessLevel.NONE)
     private boolean preferePanneaux = false;
+    private boolean prisePots = true;
     private boolean activeVolAuSol = false;
 
     public void preferePanneaux(boolean preferePanneaux) {

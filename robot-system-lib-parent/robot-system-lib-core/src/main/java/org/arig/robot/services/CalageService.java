@@ -37,9 +37,10 @@ public class CalageService {
             boolean donePriseProduitAvant = false;
             boolean donePriseProduitArriere = false;
             boolean doneElectroaimant = false;
+            boolean doneInductif = false;
 
             if (!rs.matchEnabled() && !ioService.auOk()) {
-                doneAvant = doneArriere = doneTempo = donePriseProduitAvant = donePriseProduitArriere = doneElectroaimant = true;
+                doneAvant = doneArriere = doneTempo = donePriseProduitAvant = donePriseProduitArriere = doneElectroaimant = doneInductif = true;
             } else {
                 if (rs.calage().contains(TypeCalage.TEMPO)) {
                     doneTempo = rs.callageTime() < System.currentTimeMillis();
@@ -53,6 +54,9 @@ public class CalageService {
                 }
                 if (rs.calage().contains(TypeCalage.PRISE_ELECTROAIMANT)) {
                     doneElectroaimant = ioService.calageElectroaimant(2);
+                }
+                if (rs.calage().contains(TypeCalage.CONTACT_INDUCTIF)) {
+                    doneInductif = ioService.calageElectroaimant(1);
                 }
 
                 if (cmdRobot.isType(TypeConsigne.DIST) && cmdRobot.isType(TypeConsigne.ANGLE)) {
@@ -98,7 +102,7 @@ public class CalageService {
                 stopWatchPriseProduit.reset();
             }
 
-            if (doneAvant || doneArriere || doneTempo || doneElectroaimant) {
+            if (doneAvant || doneArriere || doneTempo || doneElectroaimant || doneInductif) {
                 if (doneAvant) {
                     log.info("Callage complet : {}", TypeCalage.AVANT);
                     rs.calageCompleted().add(TypeCalage.AVANT);
@@ -114,6 +118,10 @@ public class CalageService {
                 if (doneElectroaimant) {
                     log.info("Callage complet : {}", TypeCalage.PRISE_ELECTROAIMANT);
                     rs.calageCompleted().add(TypeCalage.PRISE_ELECTROAIMANT);
+                }
+                if (doneInductif) {
+                    log.info("Callage complet : {}", TypeCalage.CONTACT_INDUCTIF);
+                    rs.calageCompleted().add(TypeCalage.CONTACT_INDUCTIF);
                 }
 
                 trajectoryManager.calageBordureDone(); // TODO Rename

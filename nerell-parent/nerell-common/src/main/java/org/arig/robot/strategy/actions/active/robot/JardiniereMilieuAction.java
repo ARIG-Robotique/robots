@@ -47,7 +47,7 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
         return super.isValid()
                 && (
                 !stockPots.isBloque() && !stockPots.isPresent()
-                        || rs.strategy() == Strategy.SUD
+                        || !rs.prisePots()
                         || rs.getRemainingTime() < EurobotConfig.validTimePrisePots);
     }
 
@@ -75,14 +75,7 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
     }
 
     private void executeInternal(boolean arriere) throws AvoidingException {
-        prepareBras(arriere);
-
-        CompletableFuture<boolean[]> refreshBras;
-        if (arriere) {
-            refreshBras = bras.refreshPincesArriere();
-        } else {
-            refreshBras = bras.refreshPincesAvant();
-        }
+        CompletableFuture<?> refreshBras = prepareBras(arriere);
 
         rs.disableAvoidance();
 
@@ -125,12 +118,11 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
             final Point entry = entryPoint();
             final StockPots stockPots = stockPots();
 
-            boolean skipApproche = false;
-            if (actionPoussePlante != null && actionPoussePlante.isValid()) {
+            if (actionPoussePlante != null && actionPoussePlante.isValid() && !actionPoussePlante.isCompleted()) {
                 actionPoussePlante.execute(new Point(getX(450), 2000 - 225));
-                skipApproche = true;
             }
 
+            // les pots sont présents, on les pousse dans la zone au sud
             if (stockPots.isBloque() || stockPots.isPresent()) {
                 mv.setVitessePercent(100, 100);
                 // point intermédaire dans la zone nord pour ensuite pousser les pots
@@ -144,9 +136,14 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
                 mv.gotoPoint(pointApproche.getX(), entry.getY());
                 mv.gotoPoint(entry);
 
-            } else {
+            }
+            // sinon accès au points d'entrée avec gestion d'enchainement depuis l'action pots jardinière
+            else if (entry.distance(mv.currentPositionMm()) > 200) {
                 mv.setVitessePercent(100, 100);
                 mv.pathTo(entry);
+
+            } else if (Math.abs(entry.getY() - mv.currentYMm()) > 10) {
+                mv.gotoPoint(mv.currentXMm(), entry.getY());
             }
 
             if (!rs.bras().arriereLibre()) {

@@ -10,6 +10,8 @@ import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.CompletableFuture;
+
 import static org.arig.robot.services.BrasInstance.PRISE_POT_POT_Y;
 
 @Slf4j
@@ -50,8 +52,10 @@ public abstract class AbstractJardiniereAction extends AbstractNerellAction {
         return next.score() - jardiniere().score();
     }
 
-    protected void prepareBras(boolean arriere) {
+    protected CompletableFuture<?> prepareBras(boolean arriere) {
+        CompletableFuture<?> refresh;
         if (arriere) {
+            refresh = bras.refreshPincesArriere();
             if (!jardiniere().rang1()) {
                 bras.setBrasArriere(new PointBras(225, 155, -90, null));
             } else {
@@ -63,6 +67,9 @@ public abstract class AbstractJardiniereAction extends AbstractNerellAction {
                 Plante[] stock = rs.stock();
                 rs.bras().setAvant(stock[0], stock[1], stock[2]);
                 rs.setStock(null, null, null);
+                refresh = CompletableFuture.completedFuture(null);
+            } else {
+                refresh = bras.refreshPincesAvant();
             }
 
             if (!jardiniere().rang1()) {
@@ -71,6 +78,8 @@ public abstract class AbstractJardiniereAction extends AbstractNerellAction {
                 bras.setBrasAvant(new PointBras(235, 175, -95, null));
             }
         }
+
+        return refresh;
     }
 
     protected void depose(boolean arriere, boolean callageForce) throws AvoidingException {
@@ -88,13 +97,26 @@ public abstract class AbstractJardiniereAction extends AbstractNerellAction {
             jardiniere().rang2(true);
 
         } else if (!jardiniere().rang1()) {
+            PointBras point;
+            if (jardiniere().hasPots()) {
+                point = new PointBras(215, 145, -90, null);
+            } else {
+                point = new PointBras(190, PRISE_POT_POT_Y, -90, null);
+            }
+
             if (arriere) {
-                bras.setBrasArriere(new PointBras(190, PRISE_POT_POT_Y, -90, null));
+                bras.setBrasArriere(point);
+                if (jardiniere().hasPots()) {
+                    mv.avanceMM(50);
+                }
                 ThreadUtils.sleep(200);
                 servos.groupePinceArriereOuvert(true);
                 ThreadUtils.sleep(200);
             } else {
-                bras.setBrasAvant(new PointBras(190, PRISE_POT_POT_Y, -90, null));
+                bras.setBrasAvant(point);
+                if (jardiniere().hasPots()) {
+                    mv.reculeMM(50);
+                }
                 ThreadUtils.sleep(200);
                 servos.groupePinceAvantOuvert(true);
                 ThreadUtils.sleep(200);
@@ -102,15 +124,30 @@ public abstract class AbstractJardiniereAction extends AbstractNerellAction {
 
             jardiniere().rang1(true);
         } else {
+            PointBras[] points;
+
+            if (jardiniere().hasPots()) {
+                points = new PointBras[] {
+                        new PointBras(240, 145, -90, null)
+                };
+            } else {
+                points = new PointBras[] {
+                        new PointBras(240, 120, -90, null),
+                        new PointBras(245, 96, -85, null)
+                };
+            }
+
             if (arriere) {
-                bras.setBrasArriere(new PointBras(240, 120, -90, null));
-                bras.setBrasArriere(new PointBras(245, 96, -85, null));
+                for (PointBras point : points) {
+                    bras.setBrasArriere(point);
+                }
                 ThreadUtils.sleep(200);
                 servos.groupePinceArriereOuvert(true);
                 ThreadUtils.sleep(200);
             } else {
-                bras.setBrasAvant(new PointBras(240, 120, -90, null));
-                bras.setBrasAvant(new PointBras(245, 96, -85, null));
+                for (PointBras point : points) {
+                    bras.setBrasAvant(point);
+                }
                 ThreadUtils.sleep(200);
                 servos.groupePinceAvantOuvert(true);
                 ThreadUtils.sleep(200);
@@ -127,7 +164,9 @@ public abstract class AbstractJardiniereAction extends AbstractNerellAction {
             jardiniere().add(rs.bras().getArriere());
             rs.bras().setArriere(null, null, null);
 
-            bras.setBrasArriere(new PointBras(215, 145, -90, null));
+            if (!jardiniere().hasPots() || callageForce) {
+                bras.setBrasArriere(new PointBras(215, 145, -90, null));
+            }
             mv.avanceMM(150);
             servos.groupePinceArriereFerme(false);
             runAsync(() -> bras.setBrasArriere(PositionBras.INIT));
@@ -135,7 +174,9 @@ public abstract class AbstractJardiniereAction extends AbstractNerellAction {
             jardiniere().add(rs.bras().getAvant());
             rs.bras().setAvant(null, null, null);
 
-            bras.setBrasAvant(new PointBras(215, 145, -90, null));
+            if (!jardiniere().hasPots() || callageForce) {
+                bras.setBrasAvant(new PointBras(215, 145, -90, null));
+            }
             mv.reculeMM(150);
             servos.groupePinceAvantFerme(false);
         }
