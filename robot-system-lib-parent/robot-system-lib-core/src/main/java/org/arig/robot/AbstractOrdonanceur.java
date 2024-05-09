@@ -152,6 +152,8 @@ public abstract class AbstractOrdonanceur {
             final LocalDateTime startOrdonnanceur = LocalDateTime.now();
             ecranService.displayMessage("Demarrage de l'ordonancement du match ...");
 
+            initRun();
+
             initI2C();
 
             initLidar();
@@ -226,6 +228,12 @@ public abstract class AbstractOrdonanceur {
             ecranService.displayMessage("Arret du programme");
             throw new ExitProgram(true);
         }
+    }
+
+    /**
+     * Initialisation du robot
+     */
+    protected void initRun() {
     }
 
     /**

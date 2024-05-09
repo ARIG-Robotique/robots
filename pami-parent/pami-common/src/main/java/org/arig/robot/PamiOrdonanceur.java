@@ -19,6 +19,7 @@ import org.arig.robot.services.PamiEcranService;
 import org.arig.robot.services.PamiIOService;
 import org.arig.robot.services.PamiRobotServosService;
 import org.arig.robot.services.RobotGroupService;
+import org.arig.robot.system.leds.ARIG2024IoPamiLeds;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
@@ -41,6 +42,9 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
     @Autowired
     private PamiRobotServosService pamiServosService;
 
+    @Autowired
+    private ARIG2024IoPamiLeds leds;
+
     private int getX(int x) {
         return tableUtils.getX(pamiRobotStatus.team() == Team.JAUNE, x);
     }
@@ -59,6 +63,11 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
         if (!groupService.getGroup().isOpen()) {
             robotStatus.robotGroupOk(groupService.getGroup().tryConnect());
         }
+    }
+
+    @Override
+    protected void initRun() {
+        leds.setAllLeds(ARIG2024IoPamiLeds.LedColor.Red);
     }
 
     @Override
@@ -124,6 +133,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
     @Override
     public void beforePowerOff() {
         pamiServosService.groupeTouchePlanteFerme(true);
+        leds.setAllLeds(ARIG2024IoPamiLeds.LedColor.Red);
     }
 
     /**
@@ -133,6 +143,9 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
         ChangeFilter<Team> teamChangeFilter = new ChangeFilter<>(null);
         ChangeFilter<Strategy> strategyChangeFilter = new ChangeFilter<>(null);
         ChangeFilter<Boolean> groupChangeFilter = new ChangeFilter<>(null);
+
+        leds.setAllLeds(ARIG2024IoPamiLeds.LedColor.Black);
+        leds.setLedAU(ARIG2024IoPamiLeds.LedColor.Green);
 
         boolean done;
         do {
@@ -169,8 +182,14 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
                 done = pamiEcranService.config().isStartCalibration();
             }
 
+            if (pamiRobotStatus.team() != null) {
+                leds.setLedTeam(pamiRobotStatus.team() == Team.JAUNE ? ARIG2024IoPamiLeds.LedColor.Yellow : ARIG2024IoPamiLeds.LedColor.Blue);
+            }
+
             ThreadUtils.sleep(1000);
         } while (!done);
+
+        leds.setLedCalage(ARIG2024IoPamiLeds.LedColor.Red);
     }
 
     /**
@@ -223,6 +242,8 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
                     throw new ExitProgram(true);
                 }
             }
+
+            leds.setLedCalage(ARIG2024IoPamiLeds.LedColor.Green);
         } catch (AvoidingException e) {
             pamiEcranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
             throw new RuntimeException("Impossible de se placer pour le départ", e);
@@ -315,6 +336,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
         }
 
         // Sound screen vérrouillé
+        leds.setAllLeds(ARIG2024IoPamiLeds.LedColor.White);
         for (int i = 0 ; i < 10 ; i++) {
             pamiIOService.sound();
             ThreadUtils.sleep(300);
