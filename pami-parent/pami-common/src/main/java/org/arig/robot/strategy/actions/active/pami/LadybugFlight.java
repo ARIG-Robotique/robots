@@ -75,17 +75,17 @@ public class LadybugFlight extends AbstractAction {
             rs.disableAvoidance();
             if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
                 mv.avanceMM(350);
-                mv.pathTo(entryPoint(), GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                mv.pathTo(entryPoint(), GotoOption.AVANT, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
                 mv.gotoOrientationDeg(rs.team() == Team.BLEU ? -150 : -30);
 
             } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
                 mv.avanceMM(200);
-                mv.pathTo(entryPoint(), GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                mv.pathTo(entryPoint(), GotoOption.AVANT, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
                 mv.gotoOrientationDeg(rs.team() == Team.BLEU ? 150 : 30);
 
             } else {
                 mv.avanceMM(50);
-                mv.gotoPoint(entryPoint());
+                mv.gotoPoint(entryPoint(), GotoOption.AVANT);
                 mv.gotoOrientationDeg(rs.team() == Team.BLEU ? 150 : 30);
 
             }
