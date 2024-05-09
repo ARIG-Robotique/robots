@@ -145,6 +145,8 @@ public class RetourSiteDeCharge extends AbstractNerellAction {
                     bras.setBrasArriere(PositionBras.INIT);
                 }
 
+                ThreadUtils.sleep((int) rs.getRemainingTime());
+
                 break;
 
             } catch (NoPathFoundException | AvoidingException e) {
