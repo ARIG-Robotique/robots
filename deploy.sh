@@ -1,15 +1,21 @@
 #!/bin/bash
 set -e
 
-touch /tmp/robots.sel
-(
-  echo "nerell"
-  echo "pami-triangle"
-  echo "pami-carre"
-  echo "pami-rond"
-) | fzf -m --prompt="Choisir le nom des robots à déployer (tab pour selectionner)" > /tmp/robots.sel
-ROBOTS=$(cat /tmp/robots.sel)
-rm -f /tmp/robots.sel
+ROBOTS=$(
+  (
+    echo "nerell"
+    echo "pami-triangle"
+    echo "pami-carre"
+    echo "pami-rond"
+  ) | fzf -m --prompt="Choisir le nom des robots à déployer (tab pour selectionner)"
+)
+
+UTILS=$(
+  (
+    echo "oui"
+    echo "non"
+  ) | fzf -m --prompt="Déployer le shell"
+)
 
 echo "$(date)"
 
@@ -51,7 +57,7 @@ for ROBOT_NAME in ${ROBOTS} ; do
       fi
     fi
 
-    if [ -d "./${PROJECT_NAME}-parent/${PROJECT_NAME}-utils" ] ; then
+    if [ -d "./${PROJECT_NAME}-parent/${PROJECT_NAME}-utils" ] && [ "${UTILS}" == "oui" ] ; then
       echo "Déploiement Utils ..."
       scp ./${PROJECT_NAME}-parent/${PROJECT_NAME}-utils/build/libs/${PROJECT_NAME}-utils-BUILD-SNAPSHOT.jar ${ROBOT_NAME}:${INSTALL_DIR}/
       if [ -d "./${PROJECT_NAME}-parent/${PROJECT_NAME}-utils/src/main/scripts" ] ; then
