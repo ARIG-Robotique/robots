@@ -42,7 +42,7 @@ public class PanneauSolaireAction extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        if (!isTimeValid()) {
+        if (!isTimeValid() || ilEstTempsDeRentrer()) {
             return false;
         }
 
@@ -167,7 +167,7 @@ public class PanneauSolaireAction extends AbstractNerellAction {
         mv.gotoOrientationDeg(90);
         bras.setBrasArriere(PositionBras.CALLAGE_PANNEAUX);
         rs.enableCalageBordure(TypeCalage.ARRIERE, TypeCalage.FORCE);
-        mv.reculeMM(Y_ENTRY - config.distanceCalageArriere() - 10);
+        mv.reculeMM((int) mv.currentYMm() - config.distanceCalageArriere() - 10);
 
         if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
             log.warn("Blocage pendant le callage du panneau");

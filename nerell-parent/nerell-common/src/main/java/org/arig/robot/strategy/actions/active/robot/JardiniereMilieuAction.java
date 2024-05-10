@@ -26,7 +26,7 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
 
     @Override
     public String name() {
-        return "Jardinière centre";
+        return EurobotConfig.ACTION_JARDINIERE_MILIEU;
     }
 
     @Override

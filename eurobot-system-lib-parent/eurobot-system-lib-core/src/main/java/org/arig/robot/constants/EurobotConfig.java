@@ -14,7 +14,7 @@ public interface EurobotConfig {
     // Durée de validités
     int validTimeEchappement = 20000;
     int validTimePrisePots = 40000;
-    int validTimePrisePlantes = 25000;
+    int validTimePrisePlantes = 5000;
 
     // Valeurs min / max en mm des axes du repères
     int tableWidth = 3000;
@@ -33,6 +33,8 @@ public interface EurobotConfig {
     String ACTION_PANNEAU_SOLAIRE_EQUIPE = "Panneau solaire équipe";
     String ACTION_PANNEAU_SOLAIRE_COMMUN = "Panneau solaire commun";
     String ACTION_PRISE_STOCK_POTS = "Prise stock pots";
+    String ACTION_JARDINIERE_NORD = "Jardinière nord";
+    String ACTION_JARDINIERE_MILIEU = "Jardinière centre";
 
     // Actions d'échappement
     String ACTION_ECHAPPEMENT_ARUCO_PREFIX = "Echappement Aruco ";

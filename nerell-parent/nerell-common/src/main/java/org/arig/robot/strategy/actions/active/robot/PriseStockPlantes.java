@@ -7,7 +7,6 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Plante;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPlantes;
-import org.arig.robot.model.Strategy;
 import org.arig.robot.model.TypePlante;
 import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.bras.PositionBras;
@@ -15,7 +14,6 @@ import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.system.pathfinding.PathFinder;
-import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +31,8 @@ public class PriseStockPlantes extends AbstractNerellAction {
     public static final int DST_APPROCHE = 350;
 
     private StockPlantes stockPlantes;
+
+    private boolean didPriseArriere = true;
 
     @Autowired
     private PathFinder pathFinder;
@@ -130,10 +130,15 @@ public class PriseStockPlantes extends AbstractNerellAction {
 
             // PREMIERE PRISE
             servos.groupeBloquePlanteOuvert(false);
-            bras.setBrasAvant(pointBrasApproche);
+
+            boolean priseArriere = !didPriseArriere && rs.bras().arriereLibre() && !rs.stockage() && !ilEstTempsDeRentrer();
+            if (priseArriere) {
+                bras.setBrasAvant(PositionBras.CALLAGE_PANNEAUX);
+            } else {
+                bras.setBrasAvant(pointBrasApproche);
+            }
 
             rs.enableCalageBordure(TypeCalage.PRISE_PRODUIT_AVANT);
-
             if (stockPlantes.getStatus() == StockPlantes.Status.PARTIAL) {
                 mv.gotoPoint(tableUtils.eloigner(stockPlantes, 100), GotoOption.SANS_ORIENTATION);
             } else {
@@ -141,7 +146,7 @@ public class PriseStockPlantes extends AbstractNerellAction {
             }
 
             if (!rs.calageCompleted().contains(TypeCalage.PRISE_PRODUIT_AVANT)) {
-                onCancel(true);
+                onCancel();
                 servos.groupePinceAvantFerme(false);
                 return;
             }
@@ -151,14 +156,34 @@ public class PriseStockPlantes extends AbstractNerellAction {
             servos.groupeBloquePlantePrisePlante(true);
             mv.reculeMM(50);
             servos.groupeBloquePlanteOuvert(true);
-            servos.groupePinceAvantOuvert(false);
+            if (!priseArriere) {
+                servos.groupePinceAvantOuvert(false);
+            }
             mv.reculeMM(100);
-            bras.setBrasAvant(pointBrasPrise);
-            servos.groupePinceAvantPrisePlante(true);
 
-            CompletableFuture<boolean[]> refreshPinces = bras.refreshPincesAvant();
+            CompletableFuture<boolean[]> refreshPinces;
+            if (priseArriere) {
+                runAsync(() -> bras.brasAvantInit());
+                mv.tourneDeg(180);
+                mv.avanceMM(50);
+                servos.groupePinceArriereOuvert(false);
+                bras.setBrasArriere(pointBrasApproche);
+                mv.reculeMM(50);
+                bras.setBrasArriere(pointBrasPrise);
+                servos.groupePinceArrierePrisePlante(true);
+                refreshPinces = bras.refreshPincesArriere();
+                bras.setBrasArriere(PositionBras.INIT);
+                mv.tourneDeg(180);
+                didPriseArriere = true;
+            } else {
+                bras.setBrasAvant(pointBrasPrise);
+                servos.groupePinceAvantPrisePlante(true);
+                refreshPinces = bras.refreshPincesAvant();
+            }
 
-            if (rs.stockage()) {
+            rs.plantes().priseStock(stockPlantes.getId(), StockPlantes.Status.PARTIAL);
+
+            if (rs.stockage() && !ilEstTempsDeRentrer()) {
                 boolean[] result = refreshPinces.join();
                 boolean gauche = result[0];
                 boolean centre = result[1];
@@ -195,35 +220,56 @@ public class PriseStockPlantes extends AbstractNerellAction {
                 rs.enableCalageBordure(TypeCalage.PRISE_PRODUIT_AVANT);
                 mv.gotoPoint(tableUtils.eloigner(stockPlantes, 100), GotoOption.SANS_ORIENTATION);
 
-                servos.groupeBloquePlantePrisePlante(true);
-
-                gauche = io.presenceAvantGauche(true);
-                centre = io.presenceAvantCentre(true);
-                droite = io.presenceAvantDroite(true);
-
-                if (!gauche && !centre && !droite) {
-                    onCancel(true);
+                if (!rs.calageCompleted().contains(TypeCalage.PRISE_PRODUIT_AVANT)) {
+                    onCancel();
                     servos.groupePinceAvantFerme(false);
                     return;
                 }
 
                 mv.setVitessePercent(100, 100);
 
-                servos.groupeBloquePlanteOuvert(true);
                 mv.reculeMM(100);
                 bras.setBrasAvant(pointBrasPrise);
                 servos.groupePinceAvantPrisePlante(true);
+                refreshPinces = bras.refreshPincesAvant();
 
-                result = waitCapteursPinces(1000);
-                gauche = result[0];
-                centre = result[1];
-                droite = result[2];
+                bras.setBrasAvant(PointBras.withY(80));
 
-                rs.bras().setAvant(
-                        gauche ? new Plante(TypePlante.INCONNU) : null,
-                        centre ? new Plante(TypePlante.INCONNU) : null,
-                        droite ? new Plante(TypePlante.INCONNU) : null
-                );
+                refreshPinces.join();
+
+                rs.plantes().priseStock(stockPlantes.getId(), StockPlantes.Status.EMPTY);
+
+            } else if (priseArriere) {
+                refreshPinces.join();
+
+                servos.groupeBloquePlanteOuvert(false);
+                servos.groupePinceAvantOuvert(false);
+                bras.setBrasAvant(pointBrasApproche);
+
+                mv.setVitessePercent(30, 100);
+                mv.setRampesDistancePercent(100, 20);
+
+                rs.enableCalageBordure(TypeCalage.PRISE_PRODUIT_AVANT);
+                mv.gotoPoint(tableUtils.eloigner(stockPlantes, 100), GotoOption.SANS_ORIENTATION);
+
+                if (!rs.calageCompleted().contains(TypeCalage.PRISE_PRODUIT_AVANT)) {
+                    onCancel();
+                    servos.groupePinceAvantFerme(false);
+                    return;
+                }
+
+                mv.setVitessePercent(100, 100);
+
+                servos.groupePinceAvantOuvert(false);
+                mv.reculeMM(100);
+
+                bras.setBrasAvant(pointBrasPrise);
+                servos.groupePinceAvantPrisePlante(true);
+                refreshPinces = bras.refreshPincesAvant();
+
+                bras.setBrasAvant(PointBras.withY(80));
+
+                refreshPinces.join();
 
                 rs.plantes().priseStock(stockPlantes.getId(), StockPlantes.Status.EMPTY);
 
@@ -232,11 +278,7 @@ public class PriseStockPlantes extends AbstractNerellAction {
 
                 refreshPinces.join();
 
-                if (rs.strategy() == Strategy.SUD && stockPlantes.getId() == Plante.ID.STOCK_SUD) {
-                    rs.plantes().priseStock(stockPlantes.getId(), StockPlantes.Status.EMPTY);
-                } else {
-                    rs.plantes().priseStock(stockPlantes.getId(), StockPlantes.Status.PARTIAL);
-                }
+                rs.plantes().priseStock(stockPlantes.getId(), StockPlantes.Status.PARTIAL);
             }
 
         } catch (NoPathFoundException | AvoidingException e) {
@@ -249,31 +291,10 @@ public class PriseStockPlantes extends AbstractNerellAction {
         }
     }
 
-    private void onCancel(boolean enAvant) throws AvoidingException {
+    private void onCancel() throws AvoidingException {
         log.warn("Le stock de plantes {} est vide", stockPlantes.getId());
-        if (enAvant) mv.reculeMM(100);
-        else mv.avanceMM(100);
+        mv.reculeMM(100);
         rs.plantes().priseStock(stockPlantes.getId(), StockPlantes.Status.EMPTY);
-    }
-
-    private boolean[] waitCapteursPinces(int maxTimeMs) {
-        long endTimeMs = System.currentTimeMillis() + maxTimeMs;
-        boolean[] result = new boolean[]{false, false, false};
-
-        do {
-            result[0] = result[0] || io.pinceAvantGauche(true);
-            result[1] = result[1] || io.pinceAvantCentre(true);
-            result[2] = result[2] || io.pinceAvantDroite(true);
-
-            if (result[0] && result[1] && result[2]) {
-                break;
-            }
-
-            ThreadUtils.sleep(config.i2cReadTimeMs());
-
-        } while (System.currentTimeMillis() < endTimeMs);
-
-        return result;
     }
 
 }

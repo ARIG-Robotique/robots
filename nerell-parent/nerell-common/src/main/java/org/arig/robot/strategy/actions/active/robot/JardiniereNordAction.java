@@ -1,6 +1,7 @@
 package org.arig.robot.strategy.actions.active.robot;
 
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Jardiniere;
@@ -20,7 +21,7 @@ public class JardiniereNordAction extends AbstractJardiniereAction {
 
     @Override
     public String name() {
-        return "Jardinière nord";
+        return EurobotConfig.ACTION_JARDINIERE_NORD;
     }
 
     @Override
