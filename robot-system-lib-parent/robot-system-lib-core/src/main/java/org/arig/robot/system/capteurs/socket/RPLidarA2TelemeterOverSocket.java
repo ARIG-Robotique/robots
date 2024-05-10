@@ -1,5 +1,6 @@
 package org.arig.robot.system.capteurs.socket;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.socket.lidar.DeviceInfosQuery;
 import org.arig.robot.communication.socket.lidar.DeviceInfosResponse;
@@ -35,6 +36,9 @@ public class RPLidarA2TelemeterOverSocket extends AbstractSocketClient<LidarActi
     public static short MAX_MOTOR_PWM = 1023;
     public static short DEFAULT_MOTOR_PWM = 660;
 
+    @Getter
+    private final boolean clusterable = true;
+
     public RPLidarA2TelemeterOverSocket(String hostname, Integer port) throws Exception {
         this(hostname, port, 1000);
     }
@@ -45,6 +49,15 @@ public class RPLidarA2TelemeterOverSocket extends AbstractSocketClient<LidarActi
 
     public RPLidarA2TelemeterOverSocket(File socketFile) throws Exception {
         super(socketFile);
+    }
+
+    @Override
+    public boolean enabled() {
+        return true;
+    }
+
+    @Override
+    public void enabled(boolean enabled) {
     }
 
     @Override

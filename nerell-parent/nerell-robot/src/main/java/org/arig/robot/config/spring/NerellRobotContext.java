@@ -221,10 +221,10 @@ public class NerellRobotContext {
     @Bean("gp2d")
     public ILidarTelemeter gp2d12Telemeter() {
         List<GP2D12Telemeter.Device> devices = new ArrayList<>();
-        devices.add(new GP2D12Telemeter.Device((byte) 1, -80, 70, 160, 4));
-        devices.add(new GP2D12Telemeter.Device((byte) 5, -90, 39, 177, 4));
-        devices.add(new GP2D12Telemeter.Device((byte) 4, -90, -39, -177, 4));
-        devices.add(new GP2D12Telemeter.Device((byte) 0, -80, -70, -160, 4));
+        devices.add(new GP2D12Telemeter.Device((byte) 1, -80, 70, 160));
+        devices.add(new GP2D12Telemeter.Device((byte) 5, -90, 39, 177));
+        devices.add(new GP2D12Telemeter.Device((byte) 4, -90, -39, -177));
+        devices.add(new GP2D12Telemeter.Device((byte) 0, -80, -70, -160));
         return new GP2D12Telemeter(devices, NerellConstantesConfig.pathFindingTailleObstaclePami);
     }
 

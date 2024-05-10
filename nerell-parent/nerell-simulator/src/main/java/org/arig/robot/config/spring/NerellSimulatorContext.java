@@ -19,6 +19,7 @@ import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
 import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
 import org.arig.robot.system.capteurs.VisionBaliseBouchon;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
+import org.arig.robot.system.capteurs.i2c.GP2D12Telemeter;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.arig.robot.system.capteurs.socket.IVisionBalise;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
@@ -35,6 +36,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -117,6 +119,11 @@ public class NerellSimulatorContext {
 
     @Bean("rplidar")
     public ILidarTelemeter rplidar() {
+        return new LidarTelemeterBouchon();
+    }
+
+    @Bean("gp2d")
+    public ILidarTelemeter gp2d() {
         return new LidarTelemeterBouchon();
     }
 

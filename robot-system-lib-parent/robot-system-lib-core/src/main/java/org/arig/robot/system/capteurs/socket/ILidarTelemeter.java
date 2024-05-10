@@ -9,6 +9,9 @@ import org.arig.robot.model.lidar.ScanInfos;
  */
 public interface ILidarTelemeter {
 
+    boolean enabled();
+    void enabled(boolean enabled);
+    boolean isClusterable();
     boolean isOpen();
     void printDeviceInfo();
     void end();

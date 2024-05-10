@@ -1,5 +1,6 @@
 package org.arig.robot.system.capteurs;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.lidar.DeviceInfos;
@@ -22,11 +23,23 @@ public class LidarTelemeterBouchon implements ILidarTelemeter {
 
     private final Random random = new Random();
 
+    @Getter
+    private final boolean clusterable = true;
+
     @Override
     public void printDeviceInfo() {
         DeviceInfos d = deviceInfo();
         log.info("Lidar Bouchon version [Firmware : {} ; Hardware {} ; Serial number : {}",
                 d.getFirmwareVersion(), d.getHardwareVersion(), d.getSerialNumber());
+    }
+
+    @Override
+    public boolean enabled() {
+        return true;
+    }
+
+    @Override
+    public void enabled(boolean enabled) {
     }
 
     @Override

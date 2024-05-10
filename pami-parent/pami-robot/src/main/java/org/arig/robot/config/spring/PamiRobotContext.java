@@ -28,6 +28,7 @@ import org.arig.robot.system.avoiding.SemiCompleteAvoidingService;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.capteurs.can.ARIG2024AlimentationController;
 import org.arig.robot.system.capteurs.i2c.ARIG2024IoPamiSensors;
+import org.arig.robot.system.capteurs.i2c.GP2D120Telemeter;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.arig.robot.system.capteurs.socket.IVisionBalise;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
@@ -43,6 +44,7 @@ import tel.schich.javacan.NetworkDevice;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Configuration
@@ -145,6 +147,20 @@ public class PamiRobotContext {
     public ILidarTelemeter rplidar() throws Exception {
         return new ILidarTelemeter() {
             @Override
+            public boolean enabled() {
+                return true;
+            }
+
+            @Override
+            public void enabled(boolean enabled) {
+            }
+
+            @Override
+            public boolean isClusterable() {
+                return true;
+            }
+
+            @Override
             public boolean isOpen() {
                 return true;
             }
@@ -193,6 +209,16 @@ public class PamiRobotContext {
         };
     }
 
+    @Bean("gp2d")
+    public ILidarTelemeter gp2d120Telemeter() {
+        List<GP2D120Telemeter.Device> devices = new ArrayList<>();
+        devices.add(new GP2D120Telemeter.Device((byte) 1, 56, 47, 30));
+        devices.add(new GP2D120Telemeter.Device((byte) 2, 75, 0, 0));
+        devices.add(new GP2D120Telemeter.Device((byte) 3, 56, -47, -30));
+
+        return new GP2D120Telemeter(devices, 300);
+    }
+
     @Bean
     public IVisionBalise<BaliseData> visionBalise(Environment env) {
         final String host = env.getRequiredProperty("balise.socket.host");
@@ -201,8 +227,8 @@ public class PamiRobotContext {
     }
 
     @Bean
-    public AvoidingService avoidingService(PamiIOService pamiIOService) {
-        /*voidingService.Mode mode = env.getProperty("robot.avoidance.implementation", AvoidingService.Mode.class, AvoidingService.Mode.BASIC);
+    public AvoidingService avoidingService(Environment env) {
+        AvoidingService.Mode mode = env.getProperty("robot.avoidance.implementation", AvoidingService.Mode.class, AvoidingService.Mode.BASIC);
 
         switch (mode) {
             case BASIC:
@@ -214,8 +240,6 @@ public class PamiRobotContext {
             case FULL:
             default:
                 return new CompleteAvoidingService();
-        }*/
-
-        return new GP2D120AvoidingService(pamiIOService);
+        }
     }
 }

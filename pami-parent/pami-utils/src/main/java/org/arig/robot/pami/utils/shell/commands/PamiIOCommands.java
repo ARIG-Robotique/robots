@@ -103,7 +103,7 @@ public class PamiIOCommands {
     }
 
     @ShellMethod("Lecture d'un GP")
-    public void readGp(int gp) {
+    public void readGp(int gp, long limitS) {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         DoubleValueAverage average = new DoubleValueAverage(10);
@@ -123,7 +123,7 @@ public class PamiIOCommands {
                 );
             }
             ThreadUtils.sleep(20);
-        } while (stopWatch.getTime() < 5000);
+        } while (stopWatch.getTime() < limitS * 1000);
     }
 
     @SneakyThrows
@@ -135,16 +135,22 @@ public class PamiIOCommands {
 
         do {
             double gauche = pamiIOServiceRobot.distanceGauche();
+            double gaucheCm = pamiIOServiceRobot.distanceGaucheCm();
             double centre = pamiIOServiceRobot.distanceCentre();
+            double centreCm = pamiIOServiceRobot.distanceCentreCm();
             double droit = pamiIOServiceRobot.distanceDroite();
+            double droitCm = pamiIOServiceRobot.distanceDroiteCm();
 
             log.info("{} {} {}", gauche, centre, droit);
 
             MonitorTimeSerie serie = new MonitorTimeSerie()
                 .measurementName("adc")
                 .addField("gauche", gauche)
+                .addField("gaucheCm", gaucheCm)
                 .addField("centre", centre)
-                .addField("droit", droit);
+                .addField("centreCm", centreCm)
+                .addField("droit", droit)
+                .addField("droitCm", droitCm);
 
             monitoringWrapper.addTimeSeriePoint(serie);
 
@@ -190,15 +196,21 @@ public class PamiIOCommands {
         do {
             double currentX = trajectoryManager.currentXMm();
             double gauche = pamiIOServiceRobot.distanceGauche();
+            double gaucheCm = pamiIOServiceRobot.distanceGaucheCm();
             double centre = pamiIOServiceRobot.distanceCentre();
+            double centreCm = pamiIOServiceRobot.distanceCentreCm();
             double droit = pamiIOServiceRobot.distanceDroite();
+            double droitCm = pamiIOServiceRobot.distanceDroiteCm();
 
             MonitorTimeSerie serie = new MonitorTimeSerie()
                 .measurementName("adc")
                 .addField("x", currentX)
                 .addField("gauche", gauche)
+                .addField("gaucheCm", gaucheCm)
                 .addField("centre", centre)
-                .addField("droit", droit);
+                .addField("centreCm", centreCm)
+                .addField("droit", droit)
+                .addField("droitCm", droitCm);
 
             monitoringWrapper.addTimeSeriePoint(serie);
 

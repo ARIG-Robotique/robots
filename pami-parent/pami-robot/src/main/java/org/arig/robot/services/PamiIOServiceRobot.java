@@ -115,6 +115,13 @@ public class PamiIOServiceRobot implements PamiIOService {
         return arig2024IoPamiSensors.getGp2d1();
     }
 
+    public double distanceGaucheCm() {
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+            return arig2024IoPamiSensors.getDistanceCmGP2D120(2);
+        }
+        return arig2024IoPamiSensors.getDistanceCmGP2D120(1);
+    }
+
     @Override
     public double distanceCentre() {
         if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
@@ -123,9 +130,20 @@ public class PamiIOServiceRobot implements PamiIOService {
         return arig2024IoPamiSensors.getGp2d2();
     }
 
+    public double distanceCentreCm() {
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+            return arig2024IoPamiSensors.getDistanceCmGP2D120(1);
+        }
+        return arig2024IoPamiSensors.getDistanceCmGP2D120(2);
+    }
+
     @Override
     public double distanceDroite() {
         return arig2024IoPamiSensors.getGp2d3();
+    }
+
+    public double distanceDroiteCm() {
+        return arig2024IoPamiSensors.getDistanceCmGP2D120(3);
     }
 
 

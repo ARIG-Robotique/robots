@@ -11,6 +11,19 @@ import java.util.Collections;
 public class LidarTelemeterMock implements ILidarTelemeter {
 
     @Override
+    public boolean enabled() {
+        return true;
+    }
+
+    @Override
+    public void enabled(boolean enabled) { }
+
+    @Override
+    public boolean isClusterable() {
+        return true;
+    }
+
+    @Override
     public boolean isOpen() {
         return true;
     }

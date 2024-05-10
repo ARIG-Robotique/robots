@@ -38,4 +38,21 @@ public class ARIG2024IoPamiSensors {
             log.error("Erreur lors de la récupération des sensors du capteur IO PAMI {}", deviceName);
         }
     }
+
+    public double getDistanceCmGP2D120(int id) {
+        switch (id) {
+            case 1:
+                return convertGP2D120ToCm(gp2d1);
+            case 2:
+                return convertGP2D120ToCm(gp2d2);
+            case 3:
+                return convertGP2D120ToCm(gp2d3);
+            default:
+                throw new IllegalArgumentException("Invalid id for GP2D120 sensor");
+        }
+    }
+
+    private double convertGP2D120ToCm(short value) {
+        return 2 * (12.08 * Math.pow((double) (value * 5) / 1023, -1.058));
+    }
 }

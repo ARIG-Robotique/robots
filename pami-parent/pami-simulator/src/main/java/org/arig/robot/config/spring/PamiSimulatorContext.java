@@ -141,5 +141,4 @@ public class PamiSimulatorContext {
         final String ecranBinary = env.getRequiredProperty("ecran.binary");
         return new EcranProcess(ecranBinary, ecranPort);
     }
-
 }

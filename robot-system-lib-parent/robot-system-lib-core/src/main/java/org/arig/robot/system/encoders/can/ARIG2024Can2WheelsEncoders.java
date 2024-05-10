@@ -27,7 +27,7 @@ public class ARIG2024Can2WheelsEncoders extends Abstract2WheelsEncoders implemen
   private final byte encoderDroitId;
 
   @Getter
-  private final String deviceName = "ARIG AsservController ::  2 Wheels Encoders 2024";
+  private final String deviceName = "ARIG AsservController :: 2 Wheels Encoders 2024";
 
   private String version = StringUtils.EMPTY;
   private double rawEncoder1 = 0;

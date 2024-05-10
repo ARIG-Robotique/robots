@@ -3,9 +3,7 @@ package org.arig.robot.system.capteurs.i2c;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.filters.Filter;
 import org.arig.robot.filters.average.DoubleValueAverage;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.lidar.DeviceInfos;
@@ -13,6 +11,7 @@ import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.Scan;
 import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.model.lidar.enums.HealthState;
+import org.arig.robot.services.PamiIOService;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,24 +20,24 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-public class GP2D12Telemeter implements ILidarTelemeter {
+public class GP2D120Telemeter implements ILidarTelemeter {
 
     @Autowired
-    private I2CAdcAnalogInput analogReader;
+    private PamiIOService pamiIOService;
 
     @Setter
     @Getter
     private boolean enabled = true;
 
     @Getter
-    private final boolean clusterable = false;
+    private boolean clusterable = false;
 
     private final static Point ORIG = new Point(0, 0);
 
     public static class Device extends Point {
         private final byte adcId;
         private final double angleRad;
-        private final DeviceFilter filter = new DeviceFilter(50);
+        private final GP2D12Telemeter.DeviceFilter filter = new GP2D12Telemeter.DeviceFilter(1);
 
         public Device(
                 byte adcId,
@@ -50,22 +49,6 @@ public class GP2D12Telemeter implements ILidarTelemeter {
             this.setX(x);
             this.setY(y);
             this.angleRad = Math.toRadians(angleDeg);
-        }
-    }
-
-    public static class DeviceFilter extends DoubleValueAverage {
-        public static final double INVALID = 0;
-
-        private final int size;
-
-        public DeviceFilter(int size) {
-            super(size);
-            this.size = size;
-        }
-
-        @Override
-        protected Double effectiveAverage(Double reducedValue, int queueSize) {
-            return queueSize < size / 2 ? DeviceFilter.INVALID : super.effectiveAverage(reducedValue, queueSize);
         }
     }
 
@@ -89,7 +72,7 @@ public class GP2D12Telemeter implements ILidarTelemeter {
 
     @Override
     public void printDeviceInfo() {
-        log.info("GP2D12 telemeter, {} sensors", devices.size());
+        log.info("GP2D120 telemeter, {} sensors", devices.size());
     }
 
     @Override
@@ -142,18 +125,25 @@ public class GP2D12Telemeter implements ILidarTelemeter {
         List<Scan> scans = new ArrayList<>();
         for (Device device : devices) {
             try {
-                double value = analogReader.readCapteurValue(device.adcId);
+                final double value;
+                if (device.adcId == 1) {
+                    value = pamiIOService.distanceGauche();
+                } else if (device.adcId == 2) {
+                    value = pamiIOService.distanceCentre();
+                } else {
+                    value = pamiIOService.distanceDroite();
+                }
 
                 // ignore les out of range
-                if (value < 450 || value > 2000) {
+                if (value < 100 || value > 500) {
                     device.filter.reset();
                     ignored++;
                     continue;
                 }
 
-                double dstValue = device.filter.filter((26208 / value - 4.693) * 10); // empirique, cf NerellIOCommands
+                double dstValue = device.filter.filter(20 * (12.08 * Math.pow(value * 5 / 1023, -1.058)));
 
-                if (dstValue == DeviceFilter.INVALID) {
+                if (dstValue == GP2D12Telemeter.DeviceFilter.INVALID) {
                     ignored++;
                     continue;
                 }

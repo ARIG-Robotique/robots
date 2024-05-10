@@ -38,9 +38,13 @@ public class LidarService implements InitializingBean {
         @Getter
         private final int tailleObstacle;
 
-        public ObstaclePoint(Point pt, int taille) {
+        @Getter
+        private final boolean clusterable;
+
+        public ObstaclePoint(Point pt, int taille, boolean clusterable) {
             super(pt);
-            tailleObstacle = taille;
+            this.tailleObstacle = taille;
+            this.clusterable = clusterable;
         }
     }
 
@@ -101,27 +105,30 @@ public class LidarService implements InitializingBean {
     public void refreshDetectedPoints() {
 
         List<ObstaclePoint> detectedPointsMm = new ArrayList<>();
+        robotStatus.adversaryPosition().parallelStream()
+            .map(ap -> new ObstaclePoint(ap, robotConfig.pathFindingTailleObstacle(), false))
+                .forEach(detectedPointsMm::add);
 
         for (ILidarTelemeter telemeter : telemeters) {
             ScanInfos lidarScan = telemeter.grabData();
 
             if (lidarScan != null) {
                 detectedPointsMm.addAll(
-                        lidarScan.getScan().parallelStream()
-                                .map(scan -> {
-                                    Point pt = tableUtils.getPointFromAngle(scan.getDistanceMm(), scan.getAngleDeg());
-                                    if (!tableUtils.isInTable(pt)) {
-                                        return null;
-                                    }
-                                    int taille = lidarScan.getTailleObstacle() != null
-                                            ? lidarScan.getTailleObstacle()
-                                            : isOtherRobot(pt)
-                                            ? robotConfig.pathFindingTailleObstacleArig()
-                                            : robotConfig.pathFindingTailleObstacle();
-                                    return new ObstaclePoint(pt, taille);
-                                })
-                                .filter(Objects::nonNull)
-                                .toList()
+                    lidarScan.getScan().parallelStream()
+                        .map(scan -> {
+                            Point pt = tableUtils.getPointFromAngle(scan.getDistanceMm(), scan.getAngleDeg());
+                            if (!tableUtils.isInTable(pt)) {
+                                return null;
+                            }
+                            int taille = lidarScan.getTailleObstacle() != null
+                                    ? lidarScan.getTailleObstacle()
+                                    : isOtherRobot(pt)
+                                    ? robotConfig.pathFindingTailleObstacleArig()
+                                    : robotConfig.pathFindingTailleObstacle();
+                            return new ObstaclePoint(pt, taille, telemeter.isClusterable());
+                        })
+                        .filter(Objects::nonNull)
+                        .toList()
                 );
             }
         }
@@ -146,10 +153,17 @@ public class LidarService implements InitializingBean {
         List<org.arig.robot.model.Shape> collisionsShape = new ArrayList<>();
         List<java.awt.Shape> obstacles = new ArrayList<>();
 
-        pointLidar:
-        for (ObstaclePoint pt : applyClustering(detectedPointsMm)) {
+        List<ObstaclePoint> filteredPoints = applyClustering(detectedPointsMm);
+        filteredPoints.addAll(
+            detectedPointsMm.parallelStream()
+                .filter(op -> !op.isClusterable())
+                .toList()
+        );
+
+        filteredPoints:
+        for (ObstaclePoint pt : filteredPoints) {
             collisionsShape.add(new Cercle(pt, pt.tailleObstacle / 2));
-//            collisionsShape.add(new org.arig.robot.model.Rectangle(pt.getX() - tailleObstacle / 2., pt.getY() - tailleObstacle / 2., tailleObstacle, tailleObstacle));
+            //collisionsShape.add(new org.arig.robot.model.Rectangle(pt.getX() - tailleObstacle / 2., pt.getY() - tailleObstacle / 2., tailleObstacle, tailleObstacle));
 
             Polygon obstacle = tableUtils.createPolygonObstacle(pt, pt.tailleObstacle);
 
@@ -161,28 +175,7 @@ public class LidarService implements InitializingBean {
                     if (l.intersects(obstacle.getBounds())) {
                         log.info("Collision détectée, ajout polygon : {} {}", pt, obstacle.toString());
                         obstacles.add(obstacle);
-                        continue pointLidar;
-                    }
-                }
-            }
-        }
-
-        pointAdversary:
-        for (Point pt : robotStatus.adversaryPosition()) {
-            int tailleObstacle = robotConfig.pathFindingTailleObstacle();
-            collisionsShape.add(new Cercle(pt, tailleObstacle / 2));
-
-            Polygon obstacle = tableUtils.createPolygonObstacle(pt, tailleObstacle);
-
-            if (CollectionUtils.isEmpty(lines)) {
-                log.info("Ajout polygon : {} {}", pt, obstacle.toString());
-                obstacles.add(obstacle);
-            } else {
-                for (Line2D l : lines) {
-                    if (l.intersects(obstacle.getBounds())) {
-                        log.info("Collision détectée, ajout polygon : {} {}", pt, obstacle.toString());
-                        obstacles.add(obstacle);
-                        continue pointAdversary;
+                        continue filteredPoints;
                     }
                 }
             }
@@ -211,7 +204,7 @@ public class LidarService implements InitializingBean {
                     int taille = cluster.getPoints().stream().mapToInt(ObstaclePoint::getTailleObstacle).max().getAsInt();
                     Point point = new Point(center.getPoint()[0], center.getPoint()[1]);
                     point = tableUtils.eloigner(point, robotConfig.lidarOffsetPointMm());
-                    return new ObstaclePoint(point, taille);
+                    return new ObstaclePoint(point, taille, true);
                 })
                 .collect(Collectors.toList());
     }
