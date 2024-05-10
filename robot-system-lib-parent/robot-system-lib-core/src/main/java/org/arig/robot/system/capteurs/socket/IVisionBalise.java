@@ -10,6 +10,8 @@ import org.arig.robot.communication.socket.balise.ImageQueryData;
 import org.arig.robot.communication.socket.balise.ImageResponse;
 import org.arig.robot.communication.socket.balise.StatusResponse;
 import org.arig.robot.communication.socket.balise.TeamQueryData;
+import org.arig.robot.communication.socket.balise.ZoneQueryData;
+import org.arig.robot.communication.socket.balise.ZoneResponse;
 
 import java.io.Serializable;
 
@@ -34,6 +36,8 @@ public interface IVisionBalise<DATA extends Serializable> {
     ImageResponse getImage(ImageQueryData queryData);
 
     EmptyResponse process();
+
+    ZoneResponse getMines(ZoneQueryData queryData);
 
     IdleResponse setIdle(IdleQueryData queryData);
 

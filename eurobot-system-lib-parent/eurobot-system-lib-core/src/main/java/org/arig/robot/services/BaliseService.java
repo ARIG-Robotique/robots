@@ -3,6 +3,8 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.socket.balise.DataQueryData;
 import org.arig.robot.communication.socket.balise.DataResponse;
+import org.arig.robot.communication.socket.balise.ZoneQueryData;
+import org.arig.robot.communication.socket.balise.ZoneResponse;
 import org.arig.robot.model.CouleurPanneauSolaire;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.PanneauSolaire;
@@ -17,8 +19,10 @@ import org.arig.robot.model.balise.enums.Data3DTeam;
 import org.arig.robot.model.balise.enums.Data3DType;
 import org.arig.robot.model.balise.enums.FiltreBalise;
 import org.arig.robot.utils.TableUtils;
+import org.arig.robot.model.balise.enums.ZoneMines;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,6 +58,7 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
         updatePanneauxSolaire();
         updateStocksPlantesEtPots();
         updatePositionAdverse();
+        updateMines();
     }
 
     private void updatePanneauxSolaire() {
@@ -105,6 +110,42 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
                 .collect(Collectors.toList());
 
         rs.adversaryPosition(positions);
+    }
+
+    private void updateMines() {
+        List<ZoneQueryData.Zone> zones = Arrays.stream(ZoneMines.values())
+            .filter(zone -> zone.getTeam() == null || zone.getTeam() == rs.team())
+            .map(ZoneMines::toQueryZone)
+            .toList();
+
+        ZoneResponse response = balise.getMines(new ZoneQueryData(zones));
+
+        if (response == null) {
+            isOK = false;
+            return;
+        }
+
+        if (response.isError() || response.getData().getZones() == null) {
+            return;
+        }
+
+        List<ZoneMines> zoneBloquees = response.getData().getZones().stream()
+            .map(zoneString -> {
+                if (!rs.mines().contains(ZoneMines.valueOf(zoneString))) {
+                    log.info("[rs] zone {} miné", zoneString);
+                }
+
+                return ZoneMines.valueOf(zoneString);
+            })
+            .toList();
+
+        rs.mines().forEach(mine -> {
+            if (!response.getData().getZones().contains(mine.name())) {
+                log.info("[rs] zone {} plus miné", mine);
+            }
+        });
+
+        rs.mines(zoneBloquees);
     }
 
 }

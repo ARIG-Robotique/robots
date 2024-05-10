@@ -10,12 +10,15 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPots;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.balise.enums.ZoneMines;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.awt.*;
 
 @Slf4j
 @Component
@@ -49,7 +52,7 @@ public class PanneauSolaireAction extends AbstractNerellAction {
         }
 
         // vraiment quelque chose à faire
-        if (firstPanneau() == null) {
+        if (firstPanneau()  == null) {
             return false;
         }
 
@@ -73,11 +76,11 @@ public class PanneauSolaireAction extends AbstractNerellAction {
     }
 
     private PanneauSolaire firstPanneau() {
-        return rs.panneauxSolaire().nextPanneauSolaireToProcess(isReverse());
+        return rs.panneauxSolaire().nextPanneauSolaireToProcess(isReverse(), rs.mines());
     }
 
     private PanneauSolaire entryPanneau(PanneauSolaire firstPanneau) {
-        return rs.panneauxSolaire().entryPanneau(firstPanneau);
+        return rs.panneauxSolaire().entryPanneau(firstPanneau, rs.mines());
     }
 
     @Override

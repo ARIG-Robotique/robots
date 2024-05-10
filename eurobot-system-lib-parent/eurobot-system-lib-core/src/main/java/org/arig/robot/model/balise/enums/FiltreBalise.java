@@ -16,5 +16,5 @@ public enum FiltreBalise {
     PLANTSTOCK,
     TEAM,
     ARUCO,
-    YOLO
+    YOLO,
 }

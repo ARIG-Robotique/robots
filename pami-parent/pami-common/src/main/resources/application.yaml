@@ -207,3 +207,28 @@ ecran:
   socket:
     host: localhost
     port: 8686
+
+---
+
+# Spring properties
+spring:
+  config:
+    activate:
+      on-profile: eliott
+
+# Balise de vision
+balise:
+  impl: SOCKET
+  socket:
+    host: Overlord.local
+    port: 50667
+
+# Nerell
+nerell:
+  socket:
+    host: localhost
+
+# Écran
+ecran:
+  socket:
+    host: localhost

@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.balise.enums.ZoneMines;
+
+import java.util.List;
 
 @Slf4j
 @Accessors(fluent = true, chain = true)
@@ -36,21 +39,21 @@ public class PanneauxSolaire {
         return data[numero - 1];
     }
 
-    public boolean isComplete() {
-        return nextPanneauSolaireToProcess() == null;
+    public boolean isComplete(List<ZoneMines> mines) {
+        return nextPanneauSolaireToProcess(mines) == null;
     }
 
-    public PanneauSolaire nextPanneauSolaireToProcess() {
-        return nextPanneauSolaireToProcess(false);
+    public PanneauSolaire nextPanneauSolaireToProcess(List<ZoneMines> mines) {
+        return nextPanneauSolaireToProcess(false, mines);
     }
 
-    public PanneauSolaire nextPanneauSolaireToProcess(boolean reverse) {
+    public PanneauSolaire nextPanneauSolaireToProcess(boolean reverse, List<ZoneMines> mines) {
         if (team == Team.BLEU) {
             int init = reverse ? data.length - 3 : 1;
             int inc = reverse ? -1 : 1;
             for (int i = init; reverse ? i >= 1 : i <= data.length - 3; i += inc) {
                 PanneauSolaire ps = get(i);
-                if (ps.besoinDeTourner(team, preferPanneaux) && entryPanneau(ps) != null) {
+                if (ps.besoinDeTourner(team, preferPanneaux) && entryPanneau(ps, mines) != null) {
                     return ps;
                 }
             }
@@ -59,7 +62,7 @@ public class PanneauxSolaire {
             int inc = reverse ? 1 : -1;
             for (int i = init; reverse ? i <= data.length : i >= 4; i += inc) {
                 PanneauSolaire ps = get(i);
-                if (ps.besoinDeTourner(team, preferPanneaux) && entryPanneau(ps) != null) {
+                if (ps.besoinDeTourner(team, preferPanneaux) && entryPanneau(ps, mines) != null) {
                     return ps;
                 }
             }
@@ -68,24 +71,30 @@ public class PanneauxSolaire {
         return null;
     }
 
-    public PanneauSolaire entryPanneau(PanneauSolaire firstPanneau) {
-        if (!firstPanneau.blocked()) {
+    public PanneauSolaire entryPanneau(PanneauSolaire firstPanneau, List<ZoneMines> mines) {
+        if (firstPanneau == null) {
+            return null;
+        }
+
+        if (!firstPanneau.blocked() && !mines.contains(ZoneMines.getPanneau(firstPanneau.numero()))) {
             return firstPanneau;
         }
 
         if (firstPanneau.numero() == 1 || firstPanneau.numero() == 4 || firstPanneau.numero() == 7) {
             for (int i = firstPanneau.numero(); i <= firstPanneau.numero() + 2; i++) {
-                if (get(i).blocked()) continue;
+                if (get(i).blocked() || mines.contains(ZoneMines.getPanneau(i))) continue;
                 return get(i);
             }
+            return null;
         } else if (firstPanneau.numero() == 3 || firstPanneau.numero() == 6 || firstPanneau.numero() == 9) {
             for (int i = firstPanneau.numero(); i >= firstPanneau.numero() - 2; i--) {
-                if (get(i).blocked()) continue;
+                if (get(i).blocked() || mines.contains(ZoneMines.getPanneau(i))) continue;
                 return get(i);
             }
-        } else if (!get(firstPanneau.numero() - 1).blocked()) {
+            return null;
+        } else if (!get(firstPanneau.numero() - 1).blocked() && !mines.contains(ZoneMines.getPanneau(firstPanneau.numero() - 1))) {
             return get(firstPanneau.numero() - 1);
-        } else if (!get(firstPanneau.numero() + 1).blocked()) {
+        } else if (!get(firstPanneau.numero() + 1).blocked() && !mines.contains(ZoneMines.getPanneau(firstPanneau.numero() + 1))) {
             return get(firstPanneau.numero() + 1);
         }
 

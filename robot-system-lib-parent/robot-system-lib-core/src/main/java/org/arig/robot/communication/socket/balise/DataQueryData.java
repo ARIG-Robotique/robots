@@ -10,8 +10,6 @@ public class DataQueryData<FILTER extends Enum<FILTER>> implements Serializable 
 
     private List<FILTER> filters;
 
-    ;
-
     @SafeVarargs
     public DataQueryData(FILTER... filters) {
         this.filters = List.of(filters);

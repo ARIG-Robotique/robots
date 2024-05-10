@@ -1,8 +1,12 @@
 package org.arig.robot.model;
 
+import org.arig.robot.model.balise.enums.ZoneMines;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 class PanneauxSolaireTest {
 
@@ -62,11 +66,11 @@ class PanneauxSolaireTest {
     void testFirst() {
         panneauxSolaire.team(Team.JAUNE);
 
-        Assertions.assertEquals(9, panneauxSolaire.nextPanneauSolaireToProcess(false).numero());
+        Assertions.assertEquals(9, panneauxSolaire.nextPanneauSolaireToProcess(false, new ArrayList<>()).numero());
 
         panneauxSolaire.team(Team.BLEU);
 
-        Assertions.assertEquals(1, panneauxSolaire.nextPanneauSolaireToProcess(false).numero());
+        Assertions.assertEquals(1, panneauxSolaire.nextPanneauSolaireToProcess(false, new ArrayList<>()).numero());
     }
 
     @Test
@@ -114,6 +118,54 @@ class PanneauxSolaireTest {
         panneauxSolaire.get(5).couleur(CouleurPanneauSolaire.JAUNE);
         panneauxSolaire.get(6).couleur(CouleurPanneauSolaire.JAUNE);
         Assertions.assertEquals(25, panneauxSolaire.score());
+    }
+
+    @Test
+    void entryPointMines() {
+        panneauxSolaire.team(Team.JAUNE);
+        panneauxSolaire.equipeDone(3, 0);
+        List<ZoneMines> mines = new ArrayList<>();
+        mines.add(ZoneMines.SOLAR_PANEL_6);
+        PanneauSolaire firstPanneau = panneauxSolaire.nextPanneauSolaireToProcess(mines);
+        Assertions.assertEquals(5, panneauxSolaire.entryPanneau(firstPanneau, mines).numero());
+        mines.add(ZoneMines.SOLAR_PANEL_5);
+        firstPanneau = panneauxSolaire.nextPanneauSolaireToProcess(mines);
+        Assertions.assertEquals(4, panneauxSolaire.entryPanneau(firstPanneau, mines).numero());
+        mines.add(ZoneMines.SOLAR_PANEL_4);
+        firstPanneau = panneauxSolaire.nextPanneauSolaireToProcess(mines);
+        Assertions.assertNull(panneauxSolaire.entryPanneau(firstPanneau, mines));
+    }
+
+    @Test
+    void entryPointMinesReverse() {
+        panneauxSolaire.team(Team.JAUNE);
+        panneauxSolaire.equipeDone(3, 0);
+        List<ZoneMines> mines = new ArrayList<>();
+        mines.add(ZoneMines.SOLAR_PANEL_4);
+        PanneauSolaire firstPanneau = panneauxSolaire.nextPanneauSolaireToProcess(true, mines);
+        Assertions.assertEquals(5, panneauxSolaire.entryPanneau(firstPanneau, mines).numero());
+        mines.add(ZoneMines.SOLAR_PANEL_5);
+        firstPanneau = panneauxSolaire.nextPanneauSolaireToProcess(true, mines);
+        Assertions.assertEquals(6, panneauxSolaire.entryPanneau(firstPanneau, mines).numero());
+        mines.add(ZoneMines.SOLAR_PANEL_6);
+        firstPanneau = panneauxSolaire.nextPanneauSolaireToProcess(true, mines);
+        Assertions.assertNull(panneauxSolaire.entryPanneau(firstPanneau, mines));
+    }
+
+    @Test
+    void entryPointMinesMillieu() {
+        panneauxSolaire.team(Team.BLEU);
+        panneauxSolaire.equipeDone(3, 0);
+        List<ZoneMines> mines = new ArrayList<>();
+        mines.add(ZoneMines.SOLAR_PANEL_5);
+        PanneauSolaire firstPanneau = panneauxSolaire.nextPanneauSolaireToProcess(true, mines);
+        Assertions.assertEquals(6, panneauxSolaire.entryPanneau(firstPanneau, mines).numero());
+        mines.add(ZoneMines.SOLAR_PANEL_6);
+        firstPanneau = panneauxSolaire.nextPanneauSolaireToProcess(true, mines);
+        Assertions.assertEquals(4, panneauxSolaire.entryPanneau(firstPanneau, mines).numero());
+        mines.add(ZoneMines.SOLAR_PANEL_4);
+        firstPanneau = panneauxSolaire.nextPanneauSolaireToProcess(true, mines);
+        Assertions.assertNull(panneauxSolaire.entryPanneau(firstPanneau, mines));
     }
 
 

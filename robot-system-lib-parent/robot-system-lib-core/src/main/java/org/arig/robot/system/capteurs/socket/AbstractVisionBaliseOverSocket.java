@@ -20,6 +20,9 @@ import org.arig.robot.communication.socket.balise.StatusQuery;
 import org.arig.robot.communication.socket.balise.StatusResponse;
 import org.arig.robot.communication.socket.balise.TeamQuery;
 import org.arig.robot.communication.socket.balise.TeamQueryData;
+import org.arig.robot.communication.socket.balise.ZoneQuery;
+import org.arig.robot.communication.socket.balise.ZoneQueryData;
+import org.arig.robot.communication.socket.balise.ZoneResponse;
 import org.arig.robot.communication.socket.balise.enums.BaliseAction;
 import org.arig.robot.system.communication.AbstractSocketClient;
 
@@ -131,6 +134,17 @@ public abstract class AbstractVisionBaliseOverSocket<DATA extends Serializable>
             return sendToSocketAndGet(new ProcessQuery(), EmptyResponse.class);
         } catch (Exception e) {
             log.warn("Erreur de traitement de l'image", e);
+            return null;
+        }
+    }
+
+    @Override
+    public ZoneResponse getMines(ZoneQueryData queryData) {
+        try {
+            openIfNecessary();
+            return sendToSocketAndGet(new ZoneQuery(queryData), ZoneResponse.class);
+        } catch (Exception e) {
+            log.warn("Erreur de récuperation des mines");
             return null;
         }
     }

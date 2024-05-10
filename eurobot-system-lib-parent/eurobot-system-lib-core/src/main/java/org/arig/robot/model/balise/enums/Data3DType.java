@@ -9,6 +9,7 @@ public enum Data3DType {
     OBJECT,
     ROBOT,
     SOLAR_PANEL,
-    YOLO3D,
-    PLANTSTOCK
+    PLANTSTOCK,
+    TEAM,
+    YOLO
 }

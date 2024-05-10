@@ -7,8 +7,11 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
+import org.arig.robot.model.balise.enums.ZoneMines;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -80,6 +83,8 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     private SiteDeCharge siteDeCharge = SiteDeCharge.AUCUN;
     private SiteDeCharge siteDeDepart = SiteDeCharge.AUCUN;
+
+    private List<ZoneMines> mines = new ArrayList<>();
 
     public void siteDeCharge(SiteDeCharge siteDeCharge) {
         log.info("[RS] site de charge : {}", siteDeCharge);
@@ -217,7 +222,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Override
     public Map<String, Boolean> gameFlags() {
         Map<String, Boolean> r = new HashMap<>();
-        r.put("Panneaux solaire terminés", panneauxSolaire.isComplete());
+        r.put("Panneaux solaire terminés", panneauxSolaire.isComplete(mines));
         return r;
     }
 

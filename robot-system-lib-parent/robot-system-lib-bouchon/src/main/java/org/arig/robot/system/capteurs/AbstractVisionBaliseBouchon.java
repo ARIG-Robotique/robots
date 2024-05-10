@@ -11,6 +11,8 @@ import org.arig.robot.communication.socket.balise.ImageResponseData;
 import org.arig.robot.communication.socket.balise.StatusResponse;
 import org.arig.robot.communication.socket.balise.StatusResponseData;
 import org.arig.robot.communication.socket.balise.TeamQueryData;
+import org.arig.robot.communication.socket.balise.ZoneQueryData;
+import org.arig.robot.communication.socket.balise.ZoneResponse;
 import org.arig.robot.communication.socket.balise.enums.BaliseAction;
 import org.arig.robot.communication.socket.balise.enums.BaliseMode;
 import org.arig.robot.system.capteurs.socket.IVisionBalise;
@@ -109,6 +111,11 @@ public abstract class AbstractVisionBaliseBouchon<DATA extends Serializable> imp
         response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
 
         return response;
+    }
+
+    @Override
+    public ZoneResponse getMines(ZoneQueryData queryData) {
+        return null;
     }
 
     @Override
