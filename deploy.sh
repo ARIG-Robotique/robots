@@ -14,7 +14,7 @@ UTILS=$(
   (
     echo "oui"
     echo "non"
-  ) | fzf -m --prompt="Déployer le shell"
+  ) | fzf --prompt="Déployer le shell"
 )
 
 echo "$(date)"
