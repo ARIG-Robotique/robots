@@ -7,16 +7,20 @@ import org.arig.robot.model.CouleurPanneauSolaire;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.PanneauSolaire;
 import org.arig.robot.model.Plante;
+import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPlantes;
+import org.arig.robot.model.Team;
 import org.arig.robot.model.balise.BaliseData;
 import org.arig.robot.model.balise.Data3D;
 import org.arig.robot.model.balise.enums.Data3DName;
 import org.arig.robot.model.balise.enums.Data3DTeam;
 import org.arig.robot.model.balise.enums.Data3DType;
 import org.arig.robot.model.balise.enums.FiltreBalise;
+import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class BaliseService extends AbstractBaliseService<BaliseData> {
@@ -24,10 +28,17 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
     @Autowired
     private EurobotStatus rs;
 
+    @Autowired
+    private TableUtils tableUtils;
+
     private List<Data3D> data3D;
 
     public void updateData() {
-        DataResponse response = (DataResponse) balise.getData(new DataQueryData<>(FiltreBalise.SOLAR_PANEL, FiltreBalise.PLANTSTOCK));
+        DataResponse response = (DataResponse) balise.getData(new DataQueryData<>(
+                FiltreBalise.SOLAR_PANEL,
+                FiltreBalise.PLANTSTOCK,
+                FiltreBalise.ROBOT
+        ));
 
         if (response == null) {
             isOK = false;
@@ -42,6 +53,7 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
 
         updatePanneauxSolaire();
         updateStocksPlantesEtPots();
+        updatePositionAdverse();
     }
 
     private void updatePanneauxSolaire() {
@@ -68,7 +80,7 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
     private void updateStocksPlantesEtPots() {
         data3D.stream()
                 .filter(object -> object.getType() == Data3DType.PLANTSTOCK)
-                .filter(plantStock -> plantStock.getMetadata().getNumPlantes() <= 3)
+                .filter(plantStock -> plantStock.getMetadata().getNumPlantes() <= 2)
                 .forEach(plantStock -> {
                     Plante.ID stockPlantesID = Data3DName.getStockPlantesID(plantStock.getName());
                     if (stockPlantesID == null) {
@@ -78,6 +90,21 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
                         rs.plantes().priseStock(stockPlantesID, StockPlantes.Status.EMPTY);
                     }
                 });
+    }
+
+    private void updatePositionAdverse() {
+        List<Point> positions = data3D.stream()
+                .filter(object -> object.getType() == Data3DType.ROBOT)
+                .filter(robot -> {
+                    Team robotTeam = Data3DName.getRobotTeam(robot.getName());
+                    return robotTeam != null && robotTeam != rs.team()
+                            && robot.getAge() < 1000
+                            && tableUtils.isInTable(new Point(robot.getX(), robot.getY()));
+                })
+                .map(robot -> new Point(robot.getX(), robot.getY()))
+                .collect(Collectors.toList());
+
+        rs.adversaryPosition(positions);
     }
 
 }

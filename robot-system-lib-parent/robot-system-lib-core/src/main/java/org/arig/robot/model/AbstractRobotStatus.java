@@ -11,6 +11,7 @@ import org.arig.robot.model.enums.TypeCalage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -247,6 +248,8 @@ public abstract class AbstractRobotStatus {
             otherPosition.setY(y);
         }
     }
+
+    private List<Point> adversaryPosition = Collections.emptyList();
 
     public abstract int calculerPoints();
 

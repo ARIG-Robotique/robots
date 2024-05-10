@@ -92,7 +92,7 @@ public class LidarService implements InitializingBean {
     public void refreshDetectedPoints() {
         ScanInfos lidarScan = lidar.grabData();
 
-        List<Point> detectedPointsMm = new ArrayList<>();
+        List<Point> detectedPointsMm = new ArrayList<>(robotStatus.adversaryPosition());
 
         if (lidarScan != null) {
             detectedPointsMm.addAll(
@@ -141,6 +141,27 @@ public class LidarService implements InitializingBean {
                         log.info("Collision détectée, ajout polygon : {} {}", pt, obstacle.toString());
                         obstacles.add(obstacle);
                         continue pointLidar;
+                    }
+                }
+            }
+        }
+
+        pointAdversary:
+        for (Point pt : robotStatus.adversaryPosition()) {
+            int tailleObstacle = robotConfig.pathFindingTailleObstacle();
+            collisionsShape.add(new Cercle(pt, tailleObstacle / 2));
+
+            Polygon obstacle = tableUtils.createPolygonObstacle(pt, tailleObstacle);
+
+            if (CollectionUtils.isEmpty(lines)) {
+                log.info("Ajout polygon : {} {}", pt, obstacle.toString());
+                obstacles.add(obstacle);
+            } else {
+                for (Line2D l : lines) {
+                    if (l.intersects(obstacle.getBounds())) {
+                        log.info("Collision détectée, ajout polygon : {} {}", pt, obstacle.toString());
+                        obstacles.add(obstacle);
+                        continue pointAdversary;
                     }
                 }
             }

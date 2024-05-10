@@ -15,6 +15,8 @@ public class AvoidingServiceBouchon implements AvoidingService {
 
     @Override
     public void process() {
+        lidarService.refreshDetectedPoints();
+
         if (lidarService.mustCleanup()) {
             lidarService.refreshObstacles();
         }
