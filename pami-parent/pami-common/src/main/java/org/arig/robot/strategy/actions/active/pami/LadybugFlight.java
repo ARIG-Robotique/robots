@@ -90,11 +90,11 @@ public class LadybugFlight extends AbstractAction {
             if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
                 mv.avanceMM(350);
                 mv.pathTo(entryPoint(), GotoOption.AVANT, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
-                mv.gotoOrientationDeg(-90);
+                mv.gotoPoint(getX(60), 455);
 
             } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
                 mv.avanceMM(200);
-                mv.pathTo(entryPoint(), GotoOption.AVANT, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                mv.gotoPoint(entryPoint(), GotoOption.AVANT);
                 mv.gotoPoint(getX(145), 1475);
                 mv.gotoOrientationDeg(rs.team() == Team.BLEU ? 150 : 30);
 
