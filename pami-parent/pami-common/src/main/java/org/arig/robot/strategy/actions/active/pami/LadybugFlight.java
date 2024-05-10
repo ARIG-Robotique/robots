@@ -19,6 +19,9 @@ import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.List;
+
 @Slf4j
 @Component
 public class LadybugFlight extends AbstractAction {
@@ -50,17 +53,28 @@ public class LadybugFlight extends AbstractAction {
     @Override
     public Point entryPoint() {
         if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
-            return new Point(getX(145), 455);
+            return new Point(getX(200), 455);
         } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
-            return new Point(getX(145), 1475);
+            return new Point(getX(450), 1390);
+        } else {
+            return new Point(getX(830), 1885);
         }
-        // ROND
-        return new Point(getX(830), 1885);
     }
 
     @Override
     public int order() {
         return 10;
+    }
+
+    @Override
+    public List<String> blockingActions() {
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
+            return Collections.singletonList(EurobotConfig.ACTION_JARDINIERE_NORD);
+        } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+            return Collections.singletonList(EurobotConfig.ACTION_JARDINIERE_MILIEU);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     @Override
@@ -76,15 +90,16 @@ public class LadybugFlight extends AbstractAction {
             if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
                 mv.avanceMM(350);
                 mv.pathTo(entryPoint(), GotoOption.AVANT, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
-                mv.gotoOrientationDeg(rs.team() == Team.BLEU ? -150 : -30);
+                mv.gotoOrientationDeg(-90);
 
             } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
                 mv.avanceMM(200);
                 mv.pathTo(entryPoint(), GotoOption.AVANT, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                mv.gotoPoint(getX(145), 1475);
                 mv.gotoOrientationDeg(rs.team() == Team.BLEU ? 150 : 30);
 
             } else {
-                mv.avanceMM(50);
+                mv.avanceMM(100);
                 mv.gotoPoint(entryPoint(), GotoOption.AVANT);
                 mv.gotoOrientationDeg(rs.team() == Team.BLEU ? 150 : 30);
 
@@ -97,7 +112,7 @@ public class LadybugFlight extends AbstractAction {
         } catch (AvoidingException | NoPathFoundException e) {
             log.error("AvoidingException", e);
         } finally {
-           complete(true);
+            complete(true);
         }
     }
 }

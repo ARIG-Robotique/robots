@@ -56,15 +56,19 @@ public class StrategyManager {
         if (!nextAction.isPresent()) {
             if (rs.currentAction() != null) {
                 log.warn("0/{} actions disponibles pour le moment", actionsCount());
-                rs.currentAction(null);
-                robotGroups.forEach(r -> r.setCurrentAction(null));
+                if (!rs.pamiRobot()) {
+                    rs.currentAction(null);
+                    robotGroups.forEach(r -> r.setCurrentAction(null));
+                }
             }
             return;
         }
 
         final Action action = nextAction.get();
-        rs.currentAction(action.name());
-        robotGroups.forEach(r -> r.setCurrentAction(action.name()));
+        if (!rs.pamiRobot()) {
+            rs.currentAction(action.name());
+            robotGroups.forEach(r -> r.setCurrentAction(action.name()));
+        }
         log.info("Execution de l'action {}", action.name());
         tableUtils.clearDynamicDeadZones();
 

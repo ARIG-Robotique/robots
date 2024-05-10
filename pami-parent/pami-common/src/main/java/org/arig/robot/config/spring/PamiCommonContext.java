@@ -183,7 +183,7 @@ public class PamiCommonContext {
         final Integer serverPort = env.getRequiredProperty("robot.server.port", Integer.class);
         final String nerellHost = env.getRequiredProperty("nerell.socket.host");
         final Integer nerellPort = env.getRequiredProperty("nerell.socket.port", Integer.class);
-        RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(pamiRobotStatus, AbstractRobotStatus::pamiTriangleGroupOk, serverPort, nerellHost, nerellPort, threadPoolTaskExecutor);
+        RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(pamiRobotStatus, AbstractRobotStatus::robotGroupOk, serverPort, nerellHost, nerellPort, threadPoolTaskExecutor);
         robotGroupOverSocket.openSocket();
         return robotGroupOverSocket;
     }
