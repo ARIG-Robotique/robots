@@ -39,21 +39,21 @@ ecran:
 pamis:
   triangle:
     socket:
-      host: pami-triangle
+      host: pami-triangle.local
       port: 9202
   carre:
     socket:
-      host: pami-carre
+      host: pami-carre.local
       port: 9203
   rond:
     socket:
-      host: pami-rond
+      host: pami-rond.local
       port: 9204
 
 # Balise de vision
 balise:
   socket:
-    host: overlord
+    host: Overlord.local
     port: 50667
 
 # Logging

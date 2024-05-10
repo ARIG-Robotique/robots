@@ -21,19 +21,19 @@ robot:
 
 nerell:
   socket:
-    host: nerell
+    host: nerell.local
     #host: 192.168.0.101 # IP de Greg au Gite
 
 # Écran
 ecran:
   socket:
-    host: overlord
+    host: Overlord.local
     #host: 192.168.0.101 # IP de Greg au Gite
 
 # Balise de vision
 balise:
   socket:
-    host: overlord
+    host: Overlord.local
     port: 50667
 
 # Logging

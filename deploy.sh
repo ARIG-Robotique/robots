@@ -39,6 +39,8 @@ for ROBOT_NAME in ${ROBOTS} ; do
   INSTALL_DIR=${HOME_DIR}/${ROBOT_NAME}
   DESKTOP_DIR=${HOME_DIR}/Desktop
 
+  ROBOT_NAME="${ROBOT_NAME}.local"
+
   echo "Déploiement de ${ROBOT_NAME} ..."
   echo "Cleaning ..."
   ssh ${ROBOT_NAME} mkdir -p ${INSTALL_DIR}
