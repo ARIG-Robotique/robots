@@ -143,8 +143,8 @@ spring:
 # Balise de vision
 balise:
   impl: SOCKET
-  socket:
-    host: sauron
+#  socket:
+#    host: sauron
 
 # PAMIs
 pamis:

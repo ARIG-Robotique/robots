@@ -45,6 +45,8 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final String PANNEAU_SOLAIRE_ROUE = "Panneau solaire roue";
     protected static final String PANNEAU_SOLAIRE_SKI = "Panneau solaire ski";
 
+    protected static final String LEVE_STOCK = "Leve stock";
+
     protected static final String POS_INIT = "Init";
     protected static final String POS_FERME = "Fermé";
     protected static final String POS_OUVERT = "Ouvert";
@@ -63,6 +65,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final String GROUP_PINCE_ARRIERE = "Pinces arrière";
     protected static final String GROUP_PANNEAU_SOLAIRE = "Panneau solaire";
     protected static final String GROUP_BLOQUE_PLANTE_AVANT = "Bloque plantes avant";
+    protected static final String GROUP_STOCK = "Stock";
 
     protected static final byte GROUP_BRAS_AVANT_GAUCHE_ID = 1;
     protected static final byte GROUP_BRAS_AVANT_CENTRE_ID = 2;
@@ -74,6 +77,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final byte GROUP_PINCE_ARRIERE_ID = 8;
     protected static final byte GROUP_PANNEAU_SOLAIRE_ID = 9;
     protected static final byte GROUP_BLOQUE_PLANTE_AVANT_ID = 10;
+    protected static final byte GROUP_LEVE_STOCK_ID = 11;
 
     protected AbstractCommonRobotServosService(AbstractServos servoDevice, AbstractServos... servoDevices) {
         super(servoDevice, servoDevices);
@@ -96,6 +100,11 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
         setPosition(BRAS_AVANT_DROIT_COUDE, POS_INIT, false);
         setPosition(BRAS_AVANT_DROIT_EPAULE, POS_INIT, false);
 
+        setPosition(LEVE_STOCK, POS_INIT, false);
+        groupePinceAvantFerme(false);
+        groupePanneauFerme(false);
+        groupeBloquePlanteFerme(false);
+
         setPosition(BRAS_ARRIERE_GAUCHE_POIGNET, POS_INIT, false);
         setPosition(BRAS_ARRIERE_GAUCHE_COUDE, POS_INIT, false);
         setPosition(BRAS_ARRIERE_GAUCHE_EPAULE, POS_INIT, false);
@@ -108,10 +117,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
         setPosition(BRAS_ARRIERE_DROIT_COUDE, POS_INIT, false);
         setPosition(BRAS_ARRIERE_DROIT_EPAULE, POS_INIT, false);
 
-        groupePanneauFerme(false);
         groupePinceArriereFerme(false);
-        groupePinceAvantFerme(false);
-        groupeBloquePlanteFerme(false);
     }
 
     //*******************************************//
@@ -228,5 +234,13 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
 
     public void brasArriereDroit(double a1, double a2, double a3, int speed, boolean wait) {
         setAngles(Map.of(BRAS_ARRIERE_DROIT_EPAULE, a1, BRAS_ARRIERE_DROIT_COUDE, a2, BRAS_ARRIERE_DROIT_POIGNET, a3), speed, wait);
+    }
+
+    public void leveStockHaut(boolean wait) {
+        setPosition(LEVE_STOCK, POS_FERME, wait);
+    }
+
+    public void leveStockBas(boolean wait) {
+        setPosition(LEVE_STOCK, POS_INIT, wait);
     }
 }

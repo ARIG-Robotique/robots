@@ -91,12 +91,16 @@ public class PotsJardiniereAction extends AbstractNerellAction {
 
             if (actionPoussePlante != null && actionPoussePlante.isValid() && !actionPoussePlante.isCompleted()) {
                 actionPoussePlante.execute(pointApproche);
-            } else {
+                mv.setVitessePercent(100, 100);
+                mv.gotoPoint(entry);
+            } else if (rs.getElapsedTime() > 30000) {
                 mv.setVitessePercent(100, 100);
                 mv.pathTo(pointApproche);
+                mv.gotoPoint(entry);
+            } else {
+                mv.setVitessePercent(100, 100);
+                mv.pathTo(entry);
             }
-
-            mv.gotoPoint(entry);
 
             rs.disableAvoidance();
 

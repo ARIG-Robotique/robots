@@ -91,4 +91,14 @@ public class NerellServosCommands {
             ThreadUtils.sleep(wait);
         }
     }
+
+    @ShellMethod("Configuration attente leve stock")
+    public void configWaitStock(int wait) {
+        for (int i = 0; i < nbLoop; i++) {
+            servosService.leveStockHaut(false);
+            ThreadUtils.sleep(wait);
+            servosService.leveStockBas(false);
+            ThreadUtils.sleep(wait);
+        }
+    }
 }

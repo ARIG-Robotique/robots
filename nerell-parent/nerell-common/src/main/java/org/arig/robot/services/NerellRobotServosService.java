@@ -43,11 +43,13 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
     private static final byte BRAS_ARRIERE_DROIT_PINCE_ID = 27;
 
     private static final byte BLOQUE_PLANTE_AVANT_GAUCHE_ID = 19;
-    private static final byte BLOQUE_PLANTE_AVANT_CENTRE_ID = 10;
-    private static final byte BLOQUE_PLANTE_AVANT_DROIT_ID = 16;
+    private static final byte BLOQUE_PLANTE_AVANT_CENTRE_ID = 16;
+    private static final byte BLOQUE_PLANTE_AVANT_DROIT_ID = 10;
 
     private static final byte PANNEAU_SOLAIRE_ROUE_ID = 18;
     private static final byte PANNEAU_SOLAIRE_SKI_ID = 21;
+
+    private static final byte LEVE_STOCK_ID = 1;
 
     public NerellRobotServosService(SD21Servos servosAvant, SD21Servos servosArriere) {
         super(servosAvant, servosArriere);
@@ -376,5 +378,13 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
                 .addServo(panneauSolaireRoue)
                 .batch(POS_FERME)
                 .batch(POS_OUVERT);
+
+        Servo leveStock = servo(LEVE_STOCK_ID, LEVE_STOCK)
+                .time(300)
+                .position(POS_OUVERT, 830)
+                .position(POS_INIT, 950)
+                .position(POS_FERME, 1500);
+        group(GROUP_LEVE_STOCK_ID, GROUP_STOCK)
+                .addServo(leveStock);
     }
 }

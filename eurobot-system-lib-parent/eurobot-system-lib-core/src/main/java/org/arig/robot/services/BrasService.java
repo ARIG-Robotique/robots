@@ -123,6 +123,7 @@ public class BrasService {
 
     public void brasAvantDestockage() {
         refreshStock();
+        servos.leveStockBas(false);
         log.info("Déstockage plantes");
         setBrasAvant(new PointBras(131, 145, -150, false));
         servos.groupePinceAvantOuvert(true);
@@ -134,15 +135,18 @@ public class BrasService {
 
     public void brasAvantStockage() {
         log.info("Stockage plantes");
+        servos.leveStockBas(false);
         setBrasAvant(new PointBras(170, 155, -130, false));
-        setBrasAvant(new PointBras(136, 152, -150, false));
         ThreadUtils.sleep(100);
-        setBrasAvant(new PointBras(96, 151, -170, false));
+        setBrasAvant(new PointBras(98, 159, -170, false));
         ThreadUtils.sleep(100);
-        setBrasAvant(new PointBras(58, 127, -170, false));
+        setBrasAvant(new PointBras(53, 145, -180, false));
+        // leve stock 1050
+        // pince centre 1300
         servos.groupePinceAvantOuvert(true);
         setBrasAvant(new PointBras(174, 147, -130, false));
         servos.groupePinceAvantFerme(false);
+        servos.leveStockHaut(false);
     }
 
     public void brasAvantInit() {

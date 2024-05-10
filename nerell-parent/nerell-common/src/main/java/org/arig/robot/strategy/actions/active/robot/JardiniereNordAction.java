@@ -67,6 +67,7 @@ public class JardiniereNordAction extends AbstractJardiniereAction {
         if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
             refresh.join();
             depose(arriere, true);
+            return;
         }
 
         mv.setVitessePercent(0, 100);
