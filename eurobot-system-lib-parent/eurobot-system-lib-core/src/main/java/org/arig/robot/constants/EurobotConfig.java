@@ -14,7 +14,7 @@ public interface EurobotConfig {
     // Durée de validités
     int validTimeEchappement = 20000;
     int validTimePrisePots = 40000;
-    int validTimePrisePlantes = 5000;
+    int validTimePrisePlantes = 15000;
 
     // Valeurs min / max en mm des axes du repères
     int tableWidth = 3000;

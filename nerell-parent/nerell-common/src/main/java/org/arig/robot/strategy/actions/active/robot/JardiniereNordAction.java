@@ -40,7 +40,12 @@ public class JardiniereNordAction extends AbstractJardiniereAction {
 
     @Override
     public boolean isValid() {
-        return super.isValid();
+        return super.isValid() && rs.getRemainingTime() > 15000;
+    }
+
+    @Override
+    public int order() {
+        return super.order() + tableUtils.alterOrder(entryPoint());
     }
 
     private void executeInternal(boolean arriere) throws AvoidingException {

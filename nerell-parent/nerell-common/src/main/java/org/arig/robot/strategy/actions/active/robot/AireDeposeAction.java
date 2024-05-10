@@ -13,13 +13,9 @@ import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.CompletableFuture;
-
 @Slf4j
 @Component
 public class AireDeposeAction extends AbstractNerellAction {
-
-    private AireDepose aire;
 
     @Override
     public String name() {
@@ -110,12 +106,12 @@ public class AireDeposeAction extends AbstractNerellAction {
             bonusRetour = 10;
         }
 
-        return next.score() - zone.score() + bonusRetour;
+        return next.score() - zone.score() + bonusRetour + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
     public Point entryPoint() {
-        aire = getAire();
+        AireDepose aire = getAire();
 
         int x;
         if (!aire.rang1()) {
@@ -135,7 +131,7 @@ public class AireDeposeAction extends AbstractNerellAction {
         return new Point(getX(x), 300);
     }
 
-    private int getAngle() {
+    private int getAngle(AireDepose aire) {
         if (aire == rs.aireDeDeposeMilieu()) {
             return rs.team() == Team.BLEU ? 0 : 180;
         } else {
@@ -151,7 +147,7 @@ public class AireDeposeAction extends AbstractNerellAction {
         rs.setStock(null, null, null);
     }
 
-    private void depose(boolean fromStock) throws AvoidingException {
+    private void depose(AireDepose aire) throws AvoidingException {
         bras.setBrasAvant(new PointBras(195, 60, -90, null));
         ThreadUtils.sleep(200);
         servos.groupePinceAvantOuvert(true);
@@ -171,11 +167,12 @@ public class AireDeposeAction extends AbstractNerellAction {
     @Override
     public void execute() {
         final Point entry = entryPoint();
+        final AireDepose aire = getAire();
 
         try {
             mv.setVitessePercent(100, 100);
             mv.pathTo(entry);
-            mv.gotoOrientationDeg(getAngle());
+            mv.gotoOrientationDeg(getAngle(aire));
 
             boolean fromStock = false;
             if (rs.bras().avantLibre()) {
@@ -185,12 +182,12 @@ public class AireDeposeAction extends AbstractNerellAction {
                 //bras.refreshPincesAvant().join();
             }
 
-            depose(fromStock);
+            depose(aire);
 
             if (!aire.rang2() && !rs.stockLibre()) {
                 destockage();
 
-                depose(true);
+                depose(aire);
             }
 
             servos.groupePinceAvantFerme(false);

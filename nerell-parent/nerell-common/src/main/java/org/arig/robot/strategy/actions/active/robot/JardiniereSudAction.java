@@ -1,19 +1,19 @@
-package org.arig.robot.strategy.actions.disabled;
+package org.arig.robot.strategy.actions.active.robot;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.exception.MovementCancelledException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Jardiniere;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPots;
-import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
-import org.arig.robot.strategy.actions.active.robot.AbstractJardiniereAction;
+import org.arig.robot.model.enums.TypeCalage;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * ATTENTION subtilité !!!!
@@ -46,15 +46,12 @@ public class JardiniereSudAction extends AbstractJardiniereAction {
 
     @Override
     public boolean isValid() {
-        StockPots stockPots = stockPots();
+        return super.isValid();
+    }
 
-        // en strat basique ou si plus de temps, on va pousser les pots
-        return super.isValid()
-                && rs.strategy() != Strategy.SUD
-                && (
-                !stockPots.isBloque() && !stockPots.isPresent()
-                        || rs.strategy() == Strategy.SUD
-                        || rs.getRemainingTime() < EurobotConfig.validTimePrisePots);
+    @Override
+    public int order() {
+        return super.order() + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
@@ -81,61 +78,69 @@ public class JardiniereSudAction extends AbstractJardiniereAction {
     }
 
     private void executeInternal() throws AvoidingException {
-//        prepareBras();
-//
-//        rs.disableAvoidance();
-//
-//        rs.enableCalageBordure(TypeCalage.AVANT, TypeCalage.FORCE);
-//        mv.setVitessePercent(60, 100);
-//        mv.avanceMM(getX((int) mv.currentXMm()) - config.distanceCalageAvant() - 10);
-//
-//        if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
-//            depose(true);
-//            return;
-//        }
-//
-//        mv.setVitessePercent(0, 100);
-//        rs.enableCalageBordure(TypeCalage.AVANT);
-//        mv.avanceMMSansAngle(40);
-//        checkRecalageXmm(getX((int) config.distanceCalageAvant()), TypeCalage.AVANT);
-//        checkRecalageAngleDeg(rs.team() == Team.BLEU ? 0 : 180);
-//
-//        depose(false);
+        CompletableFuture<?> refreshBras = prepareBras(false);
+
+        rs.disableAvoidance();
+
+        mv.setVitessePercent(60, 100);
+        rs.enableCalageBordure(TypeCalage.AVANT, TypeCalage.FORCE);
+        mv.avanceMM(getX((int) mv.currentXMm()) - config.distanceCalageAvant() - 10);
+
+        if (rs.calageCompleted().contains(TypeCalage.FORCE)) {
+            refreshBras.join();
+            depose(false, true);
+            return;
+        }
+
+        mv.setVitessePercent(0, 100);
+        rs.enableCalageBordure(TypeCalage.AVANT);
+        mv.avanceMMSansAngle(40);
+        checkRecalageXmm(getX((int) config.distanceCalageAvant()), TypeCalage.AVANT);
+        checkRecalageAngleDeg(rs.team() == Team.BLEU ? 0 : 180);
+
+        refreshBras.join();
+        depose(false, false);
     }
 
     @Override
     public void execute() {
         try {
+            final Point pointApproche = new Point(getX(200), 1650 - 775);
             final Point entry = entryPoint();
             final StockPots stockPots = stockPots();
 
-            if (stockPots.isBloque() || stockPots.isPresent()) {
+            // on pousse toujours les pots
+            //if (stockPots.isBloque() || stockPots.isPresent()) {
                 mv.setVitessePercent(100, 100);
                 // point intermédaire dans la zone nord pour ensuite pousser les pots
-                mv.pathTo(getX(185), 1740 - 775);
+                mv.pathTo(pointApproche, GotoOption.AVANT);
                 mv.setVitessePercent(50, 80);
-                mv.gotoPoint(getX(170), 1640 - 775, GotoOption.ARRIERE);
+                mv.gotoPoint(getX(170), 1550 - 775, GotoOption.ARRIERE);
                 mv.gotoPoint(getX(170), 1250 - 775, GotoOption.ARRIERE);
                 stockPots.pris();
-                mv.gotoOrientationDegSansDistance(35);
+                mv.gotoPoint(pointApproche.getX(), entry.getY());
                 mv.gotoPoint(entry);
 
-            } else {
-                mv.setVitessePercent(100, 100);
-                mv.pathTo(entry);
-            }
+//            } else {
+//                mv.setVitessePercent(100, 100);
+//                mv.pathTo(entry);
+//            }
 
             mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
-
             executeInternal();
 
-            if (!rs.stockLibre() && !jardiniere().rang2()) {
+            if (!jardiniere().rang2() && !rs.stockLibre()) {
+                mv.gotoOrientationDeg(rs.team() == Team.JAUNE ? 180 : 0);
                 executeInternal();
             }
 
         } catch (NoPathFoundException | AvoidingException e) {
             log.error("Erreur d'exécution de l'action : {}", e.toString());
             updateValidTime();
+
+            if (e instanceof MovementCancelledException) {
+                complete();
+            }
 
         } finally {
             runAsync(() -> bras.brasAvantInit());

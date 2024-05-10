@@ -4,15 +4,12 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
-import org.arig.robot.exception.NoPathFoundException;
-
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
-import org.arig.robot.services.PamiRobotServosService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.utils.TableUtils;
@@ -79,7 +76,11 @@ public class LadybugFlight extends AbstractAction {
 
     @Override
     public boolean isValid() {
-        return isTimeValid() && rs.getRemainingTime() <= EurobotConfig.pamiStartRemainingTimeMs;
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
+            return isTimeValid() && rs.getRemainingTime() <= EurobotConfig.pamiStartRemainingTimeMs / 2;
+        } else {
+            return isTimeValid() && rs.getRemainingTime() <= EurobotConfig.pamiStartRemainingTimeMs;
+        }
     }
 
     @Override
@@ -89,8 +90,8 @@ public class LadybugFlight extends AbstractAction {
             rs.disableAvoidance();
             if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
                 mv.avanceMM(350);
-                mv.pathTo(entryPoint(), GotoOption.AVANT, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
-                mv.gotoPoint(getX(60), 455);
+                mv.gotoPoint(entryPoint(), GotoOption.AVANT, GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+                mv.gotoOrientationDeg(-90);
 
             } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
                 mv.avanceMM(200);
@@ -109,7 +110,7 @@ public class LadybugFlight extends AbstractAction {
             mv.avanceMM(300);
             rs.disableAsserv();
 
-        } catch (AvoidingException | NoPathFoundException e) {
+        } catch (AvoidingException e) {
             log.error("AvoidingException", e);
         } finally {
             complete(true);

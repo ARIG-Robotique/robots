@@ -8,6 +8,7 @@ import org.arig.robot.model.CouleurPanneauSolaire;
 import org.arig.robot.model.PanneauSolaire;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPots;
+import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.TypeCalage;
@@ -26,10 +27,6 @@ public class PanneauSolaireAction extends AbstractNerellAction {
     private final int Y_ENTRY = 235;
     private final int Y_ACTION = 235;
 
-    boolean reverse;
-    PanneauSolaire firstPanneau;
-    PanneauSolaire entryPanneau;
-
     @Override
     public String name() {
         return EurobotConfig.ACTION_PANNEAU_SOLAIRE_COMMUN;
@@ -42,17 +39,17 @@ public class PanneauSolaireAction extends AbstractNerellAction {
 
     @Override
     public boolean isValid() {
-        if (!isTimeValid() || ilEstTempsDeRentrer()) {
+        if (!isTimeValid() || ilEstTempsDeRentrer() || !rs.bras().arriereLibre()) {
             return false;
         }
 
         // prio à l'action qui fait tout d'un coup
-        if (panneauSolaireEquipeAction != null && panneauSolaireEquipeAction.isValid() && !panneauSolaireEquipeAction.isCompleted()) {
+        if (panneauSolaireEquipeAction != null && !panneauSolaireEquipeAction.isCompleted()) {
             return false;
         }
 
         // vraiment quelque chose à faire
-        if (rs.panneauxSolaire().nextPanneauSolaireToProcess(false)  == null) {
+        if (firstPanneau() == null) {
             return false;
         }
 
@@ -62,15 +59,25 @@ public class PanneauSolaireAction extends AbstractNerellAction {
 
     @Override
     public int order() {
-        return rs.panneauxSolairePointRestant();
+        return rs.panneauxSolairePointRestant() + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
     public Point entryPoint() {
-        reverse = getX((int) mv.currentXMm()) > 1500;
-        firstPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(reverse);
-        entryPanneau = rs.panneauxSolaire().entryPanneau(firstPanneau);
+        PanneauSolaire entryPanneau = entryPanneau(firstPanneau());
         return new Point(entryPanneau.getX(), Y_ENTRY);
+    }
+
+    private boolean isReverse() {
+        return getX((int) mv.currentXMm()) > 1500;
+    }
+
+    private PanneauSolaire firstPanneau() {
+        return rs.panneauxSolaire().nextPanneauSolaireToProcess(isReverse());
+    }
+
+    private PanneauSolaire entryPanneau(PanneauSolaire firstPanneau) {
+        return rs.panneauxSolaire().entryPanneau(firstPanneau);
     }
 
     @Override
@@ -78,7 +85,8 @@ public class PanneauSolaireAction extends AbstractNerellAction {
         boolean stockPotEnVrac = false;
         try {
             final Point entry = entryPoint();
-            PanneauSolaire panneau = firstPanneau;
+            PanneauSolaire panneau = firstPanneau();
+            PanneauSolaire entryPanneau = entryPanneau(panneau);
             boolean first = true;
             Double yActionReal = null;
 
@@ -129,10 +137,10 @@ public class PanneauSolaireAction extends AbstractNerellAction {
 
                 first = false;
 
-                if (ilEstTempsDeRentrer()) {
+                if (rs.getRemainingTime() < 10000) {
                     break;
                 }
-                PanneauSolaire nextPanneau = rs.panneauxSolaire().nextPanneauSolaireToProcess(reverse);
+                PanneauSolaire nextPanneau = firstPanneau();
 
                 if (nextPanneau != null) {
                     // si on change de groupe on refait un path + callage

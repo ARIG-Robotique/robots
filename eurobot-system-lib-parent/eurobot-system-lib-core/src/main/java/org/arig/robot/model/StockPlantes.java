@@ -12,6 +12,15 @@ import static org.arig.robot.utils.ArigUtils.lerp;
 @Setter
 public class StockPlantes extends Point {
 
+    @Override
+    public String toString() {
+        return "StockPlantes{" +
+                "id=" + id +
+                ", timevalid=" + timevalid +
+                ", status=" + status +
+                '}';
+    }
+
     public enum Status {
         FULL,
         PARTIAL,

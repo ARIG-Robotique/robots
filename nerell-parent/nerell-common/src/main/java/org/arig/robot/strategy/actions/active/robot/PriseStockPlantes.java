@@ -7,6 +7,7 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Plante;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPlantes;
+import org.arig.robot.model.Strategy;
 import org.arig.robot.model.TypePlante;
 import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.bras.PositionBras;
@@ -278,7 +279,9 @@ public class PriseStockPlantes extends AbstractNerellAction {
 
                 refreshPinces.join();
 
-                rs.plantes().priseStock(stockPlantes.getId(), StockPlantes.Status.PARTIAL);
+                if (stockPlantes.getId() == Plante.ID.STOCK_SUD && rs.strategy() == Strategy.SUD) {
+                    rs.plantes().priseStock(Plante.ID.STOCK_SUD, StockPlantes.Status.EMPTY);
+                }
             }
 
         } catch (NoPathFoundException | AvoidingException e) {

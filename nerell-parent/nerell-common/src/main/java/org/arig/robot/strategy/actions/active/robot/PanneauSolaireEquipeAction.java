@@ -37,6 +37,10 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction  {
 
     @Override
     public boolean isValid() {
+        if (rs.strategy() == Strategy.NORD && rs.getRemainingTime() > EurobotConfig.matchTimeMs / 2) {
+            return false;
+        }
+
         // TODO 1er interdit si zone de depose pleine
         return isTimeValid()
                 && rs.bras().arriereLibre()
@@ -49,9 +53,9 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction  {
             return 1000;
         }
         if (!rs.panneauxSolaire().communModifiedByOpponent()) {
-            return 30;
+            return 30 + tableUtils.alterOrder(entryPoint());
         }
-        return 15;
+        return 15 + tableUtils.alterOrder(entryPoint());
     }
 
     @Override

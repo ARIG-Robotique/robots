@@ -49,7 +49,7 @@ public class RetourSiteDeCharge extends AbstractNerellAction {
 
     @Override
     public int order() {
-        return 10; // C'est 10 points et puis c'est tout
+        return 10 + tableUtils.alterOrder(entryPoint());
     }
 
     @Override

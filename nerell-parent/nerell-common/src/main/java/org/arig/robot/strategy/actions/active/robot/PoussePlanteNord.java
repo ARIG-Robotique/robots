@@ -35,7 +35,7 @@ public class PoussePlanteNord extends AbstractNerellAction {
 
     @Override
     public int order() {
-        return 0;
+        return -1000;
     }
 
     @Override

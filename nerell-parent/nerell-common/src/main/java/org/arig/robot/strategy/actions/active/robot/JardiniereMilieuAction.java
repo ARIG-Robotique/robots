@@ -52,6 +52,11 @@ public class JardiniereMilieuAction extends AbstractJardiniereAction {
     }
 
     @Override
+    public int order() {
+        return super.order() + tableUtils.alterOrder(entryPoint());
+    }
+
+    @Override
     public Rectangle blockingZone() {
         final StockPots stockPots = stockPots();
 

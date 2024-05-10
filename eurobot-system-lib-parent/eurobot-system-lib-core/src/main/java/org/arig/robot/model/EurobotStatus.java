@@ -197,6 +197,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         r.put("panneaux", panneauxSolaire.data);
         r.put("stocksPots", stocksPots.data);
         r.put("plantes", plantes.getPlantes());
+        r.put("stocksPlantes", plantes.getStocks());
         r.put("airesDepose", Map.of(
                 "NORD", aireDeDeposeNord.data(),
                 "MILIEU", aireDeDeposeMilieu.data(),

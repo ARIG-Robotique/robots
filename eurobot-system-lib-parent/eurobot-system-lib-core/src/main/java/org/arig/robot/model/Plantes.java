@@ -3,6 +3,7 @@ package org.arig.robot.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,11 +12,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
+@Slf4j
 public class Plantes implements Iterable<Plante> {
 
     // delta en mm pour considérer que deux  sont les mêmes
     private static final int DELTA = 50;
 
+    @Getter
     private final List<StockPlantes> stocks = Arrays.asList(
             new StockPlantes(Plante.ID.STOCK_NORD_OUEST, 1000, 1300),
             new StockPlantes(Plante.ID.STOCK_NORD, 1500, 1500),
@@ -52,8 +55,10 @@ public class Plantes implements Iterable<Plante> {
         assert status != StockPlantes.Status.FULL;
         stocks.stream().filter(s -> s.getId() == id).findFirst().ifPresent(stock -> {
             if (stock.getStatus() == StockPlantes.Status.PARTIAL) {
+                log.info("[rs] Stock plantes {} {}", id, StockPlantes.Status.EMPTY);
                 stock.setStatus(StockPlantes.Status.EMPTY);
             } else {
+                log.info("[rs] Stock plantes {} {}", id, status);
                 stock.setStatus(status);
             }
         });
