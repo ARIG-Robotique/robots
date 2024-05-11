@@ -133,6 +133,9 @@ class PanneauxSolaireTest {
         Assertions.assertEquals(4, panneauxSolaire.entryPanneau(firstPanneau, mines).numero());
         mines.add(ZoneMines.SOLAR_PANEL_4);
         firstPanneau = panneauxSolaire.nextPanneauSolaireToProcess(mines);
+        Assertions.assertEquals(7, panneauxSolaire.entryPanneau(firstPanneau, mines).numero());
+        mines.add(ZoneMines.SOLAR_PANEL_7);
+        firstPanneau = panneauxSolaire.nextPanneauSolaireToProcess(mines);
         Assertions.assertNull(panneauxSolaire.entryPanneau(firstPanneau, mines));
     }
 
@@ -149,6 +152,9 @@ class PanneauxSolaireTest {
         Assertions.assertEquals(6, panneauxSolaire.entryPanneau(firstPanneau, mines).numero());
         mines.add(ZoneMines.SOLAR_PANEL_6);
         firstPanneau = panneauxSolaire.nextPanneauSolaireToProcess(true, mines);
+        Assertions.assertEquals(7, panneauxSolaire.entryPanneau(firstPanneau, mines).numero());
+        mines.add(ZoneMines.SOLAR_PANEL_7);
+        firstPanneau = panneauxSolaire.nextPanneauSolaireToProcess(mines);
         Assertions.assertNull(panneauxSolaire.entryPanneau(firstPanneau, mines));
     }
 
@@ -165,8 +171,29 @@ class PanneauxSolaireTest {
         Assertions.assertEquals(4, panneauxSolaire.entryPanneau(firstPanneau, mines).numero());
         mines.add(ZoneMines.SOLAR_PANEL_4);
         firstPanneau = panneauxSolaire.nextPanneauSolaireToProcess(true, mines);
+        Assertions.assertEquals(3, panneauxSolaire.entryPanneau(firstPanneau, mines).numero());
+        mines.add(ZoneMines.SOLAR_PANEL_3);
+        firstPanneau = panneauxSolaire.nextPanneauSolaireToProcess(mines);
         Assertions.assertNull(panneauxSolaire.entryPanneau(firstPanneau, mines));
     }
 
+    @Test
+    void entryPointMinesToutesBloquees() {
+        panneauxSolaire.team(Team.BLEU);
+        panneauxSolaire.equipeDone(3, 0);
+        List<ZoneMines> mines = List.of(
+            ZoneMines.SOLAR_PANEL_3,
+            ZoneMines.SOLAR_PANEL_4,
+            ZoneMines.SOLAR_PANEL_5,
+            ZoneMines.SOLAR_PANEL_6,
+            ZoneMines.SOLAR_PANEL_7
+        );
+        PanneauSolaire firstPanneau = panneauxSolaire.nextPanneauSolaireToProcess(mines);
+        Assertions.assertNull(panneauxSolaire.entryPanneau(firstPanneau, mines));
+        panneauxSolaire.team(Team.JAUNE);
+        panneauxSolaire.equipeDone(3, 0);
+        firstPanneau = panneauxSolaire.nextPanneauSolaireToProcess(true, mines);
+        Assertions.assertNull(panneauxSolaire.entryPanneau(firstPanneau, mines));
+    }
 
 }

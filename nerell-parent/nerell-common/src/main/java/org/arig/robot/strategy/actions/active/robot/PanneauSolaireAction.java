@@ -48,7 +48,8 @@ public class PanneauSolaireAction extends AbstractNerellAction {
         }
 
         // vraiment quelque chose à faire
-        if (firstPanneau()  == null) {
+        PanneauSolaire firstPanneau = firstPanneau();
+        if (firstPanneau == null || entryPanneau(firstPanneau) == null) {
             return false;
         }
 
@@ -58,12 +59,19 @@ public class PanneauSolaireAction extends AbstractNerellAction {
 
     @Override
     public int order() {
-        return rs.panneauxSolairePointRestant() + tableUtils.alterOrder(entryPoint());
+        Point entryPoint = entryPoint();
+        if (entryPoint == null) {
+            return 0;
+        }
+        return rs.panneauxSolairePointRestant() + tableUtils.alterOrder(entryPoint);
     }
 
     @Override
     public Point entryPoint() {
         PanneauSolaire entryPanneau = entryPanneau(firstPanneau());
+        if (entryPanneau == null) {
+            return null;
+        }
         return new Point(entryPanneau.getX(), Y_ENTRY);
     }
 
@@ -76,6 +84,9 @@ public class PanneauSolaireAction extends AbstractNerellAction {
     }
 
     private PanneauSolaire entryPanneau(PanneauSolaire firstPanneau) {
+        if (firstPanneau == null) {
+            return null;
+        }
         return rs.panneauxSolaire().entryPanneau(firstPanneau, rs.mines());
     }
 

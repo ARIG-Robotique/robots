@@ -84,17 +84,26 @@ public class PanneauxSolaire {
                 if (get(i).blocked() || mines.contains(ZoneMines.getPanneau(i))) continue;
                 return get(i);
             }
-            return null;
         } else if (firstPanneau.numero() == 3 || firstPanneau.numero() == 6 || firstPanneau.numero() == 9) {
             for (int i = firstPanneau.numero(); i >= firstPanneau.numero() - 2; i--) {
                 if (get(i).blocked() || mines.contains(ZoneMines.getPanneau(i))) continue;
                 return get(i);
             }
-            return null;
         } else if (!get(firstPanneau.numero() - 1).blocked() && !mines.contains(ZoneMines.getPanneau(firstPanneau.numero() - 1))) {
             return get(firstPanneau.numero() - 1);
         } else if (!get(firstPanneau.numero() + 1).blocked() && !mines.contains(ZoneMines.getPanneau(firstPanneau.numero() + 1))) {
             return get(firstPanneau.numero() + 1);
+        }
+
+        if (firstPanneau.numero() >= 4 && firstPanneau.numero() <= 6
+            && (get(4).blocked() || mines.contains(ZoneMines.getPanneau(4)))
+            && (get(5).blocked() || mines.contains(ZoneMines.getPanneau(5)))
+            && (get(6).blocked() || mines.contains(ZoneMines.getPanneau(6)))) {
+            if (team == Team.BLEU) {
+                return (get(3).blocked() || mines.contains(ZoneMines.getPanneau(3))) ? null : get(3);
+            } else {
+                return (get(7).blocked() || mines.contains(ZoneMines.getPanneau(7))) ? null : get(7);
+            }
         }
 
         return null;
