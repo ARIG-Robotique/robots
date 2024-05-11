@@ -7,6 +7,7 @@ import org.arig.robot.communication.socket.balise.ZoneQueryData;
 import org.arig.robot.communication.socket.balise.ZoneResponse;
 import org.arig.robot.model.CouleurPanneauSolaire;
 import org.arig.robot.model.EurobotStatus;
+import org.arig.robot.model.JardiniereAdverse;
 import org.arig.robot.model.PanneauSolaire;
 import org.arig.robot.model.Plante;
 import org.arig.robot.model.Point;
@@ -41,7 +42,8 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
         DataResponse response = (DataResponse) balise.getData(new DataQueryData<>(
                 FiltreBalise.SOLAR_PANEL,
                 FiltreBalise.PLANTSTOCK,
-                FiltreBalise.ROBOT
+                FiltreBalise.ROBOT,
+                rs.vol() ? FiltreBalise.JARDINIERE : null
         ));
 
         if (response == null) {
@@ -59,6 +61,9 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
         updateStocksPlantesEtPots();
         updatePositionAdverse();
         updateMines();
+        if (rs.vol()) {
+            updateJardiniereAdverse();
+        }
     }
 
     private void updatePanneauxSolaire() {
@@ -85,7 +90,8 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
     private void updateStocksPlantesEtPots() {
         data3D.stream()
                 .filter(object -> object.getType() == Data3DType.PLANTSTOCK)
-                .filter(plantStock -> plantStock.getMetadata().getNumPlantes() <= 2)
+                .filter(plantStock -> plantStock.getMetadata().getNumPlantes() != null
+                        && plantStock.getMetadata().getNumPlantes() <= 2)
                 .forEach(plantStock -> {
                     Plante.ID stockPlantesID = Data3DName.getStockPlantesID(plantStock.getName());
                     if (stockPlantesID == null) {
@@ -146,6 +152,34 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
         });
 
         rs.mines(zoneBloquees);
+    }
+
+    private void updateJardiniereAdverse() {
+        data3D.stream()
+                .filter(object -> object.getType() == Data3DType.JARDINIERE)
+                .filter(jardiniere -> {
+                    return jardiniere.getMetadata().getLastContactStopAge() != null
+                            && jardiniere.getMetadata().getLastContactStopAge() > 5000;
+                })
+                .filter(jardiniere -> {
+                    if (rs.team() == Team.BLEU) {
+                        return jardiniere.getName() == Data3DName.JAUNE_SUD || jardiniere.getName() == Data3DName.JAUNE_MILIEU;
+                    } else {
+                        return jardiniere.getName() == Data3DName.BLEU_SUD || jardiniere.getName() == Data3DName.BLEU_MILIEU;
+                    }
+                })
+                .forEach(jardiniere -> {
+                    JardiniereAdverse rsJard;
+                    if (jardiniere.getName() == Data3DName.JAUNE_SUD || jardiniere.getName() == Data3DName.BLEU_SUD) {
+                        rsJard = rs.jardiniereAdverseSud();
+                    } else {
+                        rsJard = rs.jardiniereAdverseMilieu();
+                    }
+
+                    if (!rsJard.contacted()) {
+                        rsJard.contacted(true);
+                    }
+                });
     }
 
 }

@@ -35,6 +35,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
         stocksPots.get(team == Team.BLEU ? StockPots.ID.JAUNE_NORD : StockPots.ID.BLEU_NORD).pris();
     }
+
     @Setter(AccessLevel.NONE)
     private Team team;
 
@@ -54,7 +55,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Setter(AccessLevel.NONE)
     private boolean preferePanneaux = false;
     private boolean prisePots = true;
-    private boolean activeVolAuSol = false;
+    private boolean vol = false;
 
     public void preferePanneaux(boolean preferePanneaux) {
         this.preferePanneaux = preferePanneaux;
@@ -80,6 +81,11 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     private Jardiniere jardiniereMilieu = new Jardiniere("Jardinière milieu");
     @Setter(AccessLevel.NONE)
     private Jardiniere jardiniereSud = new Jardiniere("Jardinière sud");
+
+    @Setter(AccessLevel.NONE)
+    private JardiniereAdverse jardiniereAdverseSud = new JardiniereAdverse("Jardinière adverse sud");
+    @Setter(AccessLevel.NONE)
+    private JardiniereAdverse jardiniereAdverseMilieu = new JardiniereAdverse("Jardinière adverse milieu");
 
     private SiteDeCharge siteDeCharge = SiteDeCharge.AUCUN;
     private SiteDeCharge siteDeDepart = SiteDeCharge.AUCUN;

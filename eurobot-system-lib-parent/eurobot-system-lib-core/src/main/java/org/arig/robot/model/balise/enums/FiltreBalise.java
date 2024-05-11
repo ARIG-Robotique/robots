@@ -17,4 +17,5 @@ public enum FiltreBalise {
     TEAM,
     ARUCO,
     YOLO,
+    JARDINIERE
 }

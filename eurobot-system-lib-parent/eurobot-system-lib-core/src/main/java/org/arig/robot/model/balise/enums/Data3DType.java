@@ -11,5 +11,6 @@ public enum Data3DType {
     SOLAR_PANEL,
     PLANTSTOCK,
     TEAM,
-    YOLO
+    YOLO,
+    JARDINIERE
 }

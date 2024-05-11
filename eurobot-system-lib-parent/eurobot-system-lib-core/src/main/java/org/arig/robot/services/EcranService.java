@@ -46,7 +46,7 @@ public class EcranService extends AbstractEcranService<EcranConfig, EcranState> 
                 EurobotConfig.STOCKAGE,
                 EurobotConfig.PRISE_POTS,
                 EurobotConfig.PREFERE_PANNEAUX,
-                EurobotConfig.ACTIVE_VOL_AU_SOL
+                EurobotConfig.VOL
         ));
         return ecranParams;
     }

@@ -37,7 +37,13 @@ public enum Data3DName {
     NORD_EST,
     SUD,
     SUD_EST,
-    SUD_OUEST;
+    SUD_OUEST,
+    JAUNE_MILIEU,
+    JAUNE_SUD,
+    JAUNE_NORD,
+    BLEU_MILIEU,
+    BLEU_SUD,
+    BLEU_NORD;
 
     public static Integer getSolarPannelNumber(Data3DName data3DName) {
         return switch (data3DName) {
