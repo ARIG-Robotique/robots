@@ -378,7 +378,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                     // Start plant (nord)
                 default:
                     mv.gotoPoint(getX(240), 1775);
-                    mv.alignFrontTo(getX(1220), 1490);
+                    mv.alignFrontTo(getX(650), 1300);
                     nerellRobotStatus.siteDeDepart(nerellRobotStatus.team() == Team.BLEU ? SiteDeCharge.BLEU_NORD : SiteDeCharge.JAUNE_NORD);
                     break;
             }
