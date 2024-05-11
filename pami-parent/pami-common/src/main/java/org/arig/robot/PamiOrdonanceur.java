@@ -117,13 +117,19 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
         leds.setAllLeds(ARIG2024IoPamiLeds.LedColor.White);
     }
 
+    private boolean servoInit = false;
     private boolean servoOpened = false;
 
     @Override
     public void inMatch() {
+        if (!servoInit && robotStatus.getRemainingTime() < EurobotConfig.pamiStartRemainingTimeMs) {
+            servoInit = true;
+            pamiServosService.groupeTouchePlanteOuvert(true);
+            pamiServosService.groupeTouchePlanteFerme(false);
+        }
         if (!servoOpened && robotStatus.getRemainingTime() < 2000) {
-            pamiServosService.groupeTouchePlanteOuvertMatch(false);
             servoOpened = true;
+            pamiServosService.groupeTouchePlanteOuvertMatch(pamiRobotStatus.team());
         }
     }
 
