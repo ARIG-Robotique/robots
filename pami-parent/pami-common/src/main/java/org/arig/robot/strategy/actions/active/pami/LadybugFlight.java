@@ -96,7 +96,7 @@ public class LadybugFlight extends AbstractAction {
             } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
                 mv.avanceMM(200);
                 mv.gotoPoint(entryPoint(), GotoOption.AVANT);
-                mv.gotoPoint(getX(145), 1475);
+                mv.gotoPoint(getX(145), 1435);
                 mv.gotoOrientationDeg(rs.team() == Team.BLEU ? 150 : 30);
 
             } else {
