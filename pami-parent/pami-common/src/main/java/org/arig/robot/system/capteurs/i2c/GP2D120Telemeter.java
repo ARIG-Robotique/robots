@@ -37,7 +37,6 @@ public class GP2D120Telemeter implements ILidarTelemeter {
     public static class Device extends Point {
         private final byte adcId;
         private final double angleRad;
-        private final GP2D12Telemeter.DeviceFilter filter = new GP2D12Telemeter.DeviceFilter(1);
 
         public Device(
                 byte adcId,
@@ -136,12 +135,11 @@ public class GP2D120Telemeter implements ILidarTelemeter {
 
                 // ignore les out of range
                 if (value < 100 || value > 500) {
-                    device.filter.reset();
                     ignored++;
                     continue;
                 }
 
-                double dstValue = device.filter.filter(20 * (12.08 * Math.pow(value * 5 / 1023, -1.058)));
+                double dstValue = 20 * (12.08 * Math.pow(value * 5 / 1023, -1.058));
 
                 if (dstValue == GP2D12Telemeter.DeviceFilter.INVALID) {
                     ignored++;
