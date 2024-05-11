@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.Filter;
 import org.arig.robot.filters.average.DoubleValueAverage;
+import org.arig.robot.filters.sensors.GP2DPhantomFilter;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
@@ -20,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
 public class GP2D12Telemeter implements ILidarTelemeter {
 
     @Autowired
@@ -69,8 +69,16 @@ public class GP2D12Telemeter implements ILidarTelemeter {
         }
     }
 
+
     private final List<Device> devices;
     private final int tailleObstacle;
+    private final GP2DPhantomFilter phantomFilter;
+
+    public GP2D12Telemeter(List<Device> devices, int tailleObstacle) {
+        this.devices = devices;
+        this.tailleObstacle = tailleObstacle;
+        this.phantomFilter = new GP2DPhantomFilter(3, 5);
+    }
 
     @Override
     public boolean enabled() {
@@ -151,7 +159,8 @@ public class GP2D12Telemeter implements ILidarTelemeter {
                     continue;
                 }
 
-                double dstValue = device.filter.filter((26208 / value - 4.693) * 10); // empirique, cf NerellIOCommands
+                //double dstValue = device.filter.filter((26208 / value - 4.693) * 10); // empirique, cf NerellIOCommands
+                double dstValue = phantomFilter.filter((26208 / value - 4.693) * 10); // empirique, cf NerellIOCommands
 
                 if (dstValue == DeviceFilter.INVALID) {
                     ignored++;

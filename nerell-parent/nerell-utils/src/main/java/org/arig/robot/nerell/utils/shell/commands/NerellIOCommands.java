@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.arig.robot.constants.ConstantesConfig;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.filters.sensors.GP2DPhantomFilter;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
@@ -110,27 +111,51 @@ public class NerellIOCommands {
         FileUtils.writeLines(execFile, lines);
     }
 
+    private double toCM(int value) {
+        return (double) 26208 / value - 4.693;
+    }
+
     @SneakyThrows
     @ShellMethod("Monitor ADC")
-    public void monitorAdc(int duration) {
+    public void monitorAdc(int duration, int medianValuesSize, int aroundValue) {
         startMonitoring();
+
 
         long end = System.currentTimeMillis() + duration * 1000L;
 
-        do {
-            int value1 = adc.readCapteurValue((byte) 1);
-            int value2 = adc.readCapteurValue((byte) 5);
-            int value3 = adc.readCapteurValue((byte) 4);
-            int value4 = adc.readCapteurValue((byte) 0);
+        GP2DPhantomFilter phantomFilter1 = new GP2DPhantomFilter(medianValuesSize, aroundValue);
+        GP2DPhantomFilter phantomFilter2 = new GP2DPhantomFilter(medianValuesSize, aroundValue);
+        GP2DPhantomFilter phantomFilter3 = new GP2DPhantomFilter(medianValuesSize, aroundValue);
+        GP2DPhantomFilter phantomFilter4 = new GP2DPhantomFilter(medianValuesSize, aroundValue);
 
-            log.info("{} {} {} {}", value1, value2, value3, value4);
+        do {
+            int value1 = adc.readCapteurValue((byte) 1) ;
+            double value1cm = toCM(value1);
+            double filteredValue1 = phantomFilter1.filter(value1cm);
+            int value2 = adc.readCapteurValue((byte) 5);
+            double value2cm = toCM(value2);
+            double filteredValue2 = phantomFilter2.filter(value2cm);
+            int value3 = adc.readCapteurValue((byte) 4);
+            double value3cm = toCM(value3);
+            double filteredValue3 = phantomFilter3.filter(value3cm);
+            int value4 = adc.readCapteurValue((byte) 0);
+            double value4cm = toCM(value4);
+            double filteredValue4 = phantomFilter4.filter(value4cm);
+            phantomFilter4.filter((double) value4);
+
+            log.info("{} {} | {} {} | {} {} | {} {}", value1cm, filteredValue1, value2cm, filteredValue2,
+                value3cm, filteredValue3, value4cm, filteredValue4);
 
             MonitorTimeSerie serie = new MonitorTimeSerie()
-                    .measurementName("adc")
-                    .addField("value1", value1)
-                    .addField("value2", value2)
-                    .addField("value3", value3)
-                    .addField("value4", value4);
+                .measurementName("adc")
+                .addField("value1", value1cm)
+                .addField("filteredValue1", value1cm)
+                .addField("value2", value2cm)
+                .addField("filteredValue2", value2cm)
+                .addField("value3", value3cm)
+                .addField("filteredValue3", value2cm)
+                .addField("value4", value4cm)
+                .addField("filteredValue4", value4cm);
 
             monitoringWrapper.addTimeSeriePoint(serie);
 
