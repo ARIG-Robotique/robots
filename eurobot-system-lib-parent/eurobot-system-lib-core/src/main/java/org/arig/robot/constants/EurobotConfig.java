@@ -9,12 +9,12 @@ public interface EurobotConfig {
     int pamiStartRemainingTimeMs = 10300;
 
     // Temps restants
-    int validRetourSiteDeChargeRemainingTimeNerell = 10000;
+    int validRetourSiteDeChargeRemainingTimeNerell = 15000;
 
     // Durée de validités
     int validTimeEchappement = 20000;
     int validTimePrisePots = 40000;
-    int validTimePrisePlantes = 15000;
+    int validTimePrisePlantes = 20000;
 
     // Valeurs min / max en mm des axes du repères
     int tableWidth = 3000;
