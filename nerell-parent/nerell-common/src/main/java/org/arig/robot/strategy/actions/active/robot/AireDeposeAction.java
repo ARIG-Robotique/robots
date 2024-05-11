@@ -151,7 +151,7 @@ public class AireDeposeAction extends AbstractNerellAction {
         bras.setBrasAvant(new PointBras(195, 60, -90, null));
         ThreadUtils.sleep(200);
         servos.groupePinceAvantOuvert(true);
-        ThreadUtils.sleep(300);
+        ThreadUtils.sleep(200);
         bras.setBrasAvant(PointBras.withY(130));
         mv.reculeMM(150);
 

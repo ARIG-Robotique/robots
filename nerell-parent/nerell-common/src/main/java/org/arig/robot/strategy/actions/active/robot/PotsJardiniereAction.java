@@ -50,6 +50,7 @@ public class PotsJardiniereAction extends AbstractNerellAction {
         return rs.prisePots()
                 && isTimeValid()
                 && rs.bras().arriereLibre()
+                && (jardiniereMilieuAction == null || !rs.bras().avantLibre() || !rs.bras().arriereLibre() || !rs.stockLibre())
                 && rs.getRemainingTime() > EurobotConfig.validTimePrisePots
                 && stockPots().isPresent() && !stockPots().isBloque();
     }
@@ -68,7 +69,7 @@ public class PotsJardiniereAction extends AbstractNerellAction {
                 nbDeposesPlantes += 1;
             }
         }
-        return 15 * Math.min(2, nbDeposesPlantes);
+        return 15 * Math.min(2, nbDeposesPlantes) + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
