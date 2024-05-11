@@ -1,11 +1,8 @@
 package org.arig.robot.system.capteurs.i2c;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.filters.Filter;
 import org.arig.robot.filters.average.DoubleValueAverage;
 import org.arig.robot.filters.sensors.GP2DPhantomFilter;
 import org.arig.robot.model.Point;

@@ -6,7 +6,6 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.i2c.I2CManager;
 import org.arig.robot.exception.I2CException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 public class ARIG2024IoPamiLeds {

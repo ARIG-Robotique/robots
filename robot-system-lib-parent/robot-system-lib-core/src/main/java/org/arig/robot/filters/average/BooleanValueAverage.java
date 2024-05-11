@@ -3,8 +3,6 @@ package org.arig.robot.filters.average;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import java.util.function.BinaryOperator;
-
 /**
  * @author gdepuille on 08/05/15.
  */

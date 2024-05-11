@@ -14,7 +14,6 @@ import org.arig.robot.model.CommandeRobot;
 import org.arig.robot.model.PamiRobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.SensDeplacement;
-import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.model.enums.TypeConsigne;
 import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractEnergyService;

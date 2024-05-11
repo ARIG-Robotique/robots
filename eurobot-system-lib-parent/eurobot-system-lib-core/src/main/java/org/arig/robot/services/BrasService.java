@@ -2,7 +2,6 @@ package org.arig.robot.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Triple;
 import org.arig.robot.model.Bras;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.Plante;
@@ -14,20 +13,13 @@ import org.arig.robot.model.bras.CurrentBras;
 import org.arig.robot.model.bras.PointBras;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.utils.ThreadUtils;
-import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static org.arig.robot.services.AbstractCommonRobotServosService.*;
 
 @Slf4j
 public class BrasService {

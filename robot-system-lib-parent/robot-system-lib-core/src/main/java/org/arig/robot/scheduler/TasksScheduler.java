@@ -10,7 +10,6 @@ import org.arig.robot.services.CalageService;
 import org.arig.robot.services.IOService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.strategy.StrategyManager;
-import org.arig.robot.system.group.RobotGroup;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;

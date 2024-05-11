@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.filters.average.DoubleValueAverage;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;

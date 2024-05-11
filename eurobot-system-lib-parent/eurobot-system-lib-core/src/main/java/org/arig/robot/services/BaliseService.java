@@ -18,8 +18,8 @@ import org.arig.robot.model.balise.enums.Data3DName;
 import org.arig.robot.model.balise.enums.Data3DTeam;
 import org.arig.robot.model.balise.enums.Data3DType;
 import org.arig.robot.model.balise.enums.FiltreBalise;
-import org.arig.robot.utils.TableUtils;
 import org.arig.robot.model.balise.enums.ZoneMines;
+import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;

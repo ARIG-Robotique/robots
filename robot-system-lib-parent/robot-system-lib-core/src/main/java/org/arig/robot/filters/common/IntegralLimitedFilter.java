@@ -1,7 +1,6 @@
 package org.arig.robot.filters.common;
 
 import lombok.Getter;
-import org.arig.robot.filters.Filter;
 import org.springframework.util.Assert;
 
 public class IntegralLimitedFilter extends IntegralFilter {

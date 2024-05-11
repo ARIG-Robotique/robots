@@ -1,6 +1,5 @@
 package org.arig.robot.system.capteurs.i2c;
 
-import org.arig.robot.exception.I2CException;
 import org.arig.robot.model.capteurs.AlimentationSensorValue;
 
 public interface IAlimentationSensor {

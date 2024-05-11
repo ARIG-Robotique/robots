@@ -5,7 +5,6 @@ import org.arig.robot.communication.socket.AbstractQuery;
 import org.arig.robot.communication.socket.AbstractResponse;
 import org.arig.robot.communication.socket.group.EventLogQuery;
 import org.arig.robot.communication.socket.group.enums.GroupAction;
-import org.arig.robot.model.AbstractRobotStatus;
 import org.arig.robot.system.communication.AbstractBidirectionalSocket;
 
 import java.util.concurrent.Executor;

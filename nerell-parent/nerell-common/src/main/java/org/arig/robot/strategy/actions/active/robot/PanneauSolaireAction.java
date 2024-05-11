@@ -8,17 +8,13 @@ import org.arig.robot.model.CouleurPanneauSolaire;
 import org.arig.robot.model.PanneauSolaire;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPots;
-import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
-import org.arig.robot.model.balise.enums.ZoneMines;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.awt.*;
 
 @Slf4j
 @Component

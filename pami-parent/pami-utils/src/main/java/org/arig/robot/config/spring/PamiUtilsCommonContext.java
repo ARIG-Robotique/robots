@@ -8,11 +8,9 @@ import org.arig.robot.model.ecran.EcranPhoto;
 import org.arig.robot.model.ecran.EcranState;
 import org.arig.robot.services.PamiEcranService;
 import org.arig.robot.system.capteurs.socket.IEcran;
-import org.arig.robot.system.process.EcranProcess;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.lang.Nullable;
 
 @Slf4j
 @Configuration

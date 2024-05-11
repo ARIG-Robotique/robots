@@ -4,8 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.socket.balise.AbstractBaliseResponseWithData;
 import org.arig.robot.communication.socket.balise.DataQueryData;
 import org.arig.robot.communication.socket.balise.DataResponse;
-import org.arig.robot.communication.socket.balise.ZoneQueryData;
-import org.arig.robot.communication.socket.balise.ZoneResponse;
 import org.arig.robot.communication.socket.balise.enums.BaliseAction;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.balise.BaliseData;

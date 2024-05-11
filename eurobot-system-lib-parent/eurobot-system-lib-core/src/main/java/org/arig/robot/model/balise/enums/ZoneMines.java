@@ -2,7 +2,6 @@ package org.arig.robot.model.balise.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.arig.robot.communication.socket.balise.DataQueryData;
 import org.arig.robot.communication.socket.balise.ZoneQueryData;
 import org.arig.robot.model.Team;
 

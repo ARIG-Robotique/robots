@@ -8,7 +8,6 @@ import org.arig.robot.model.Bras;
 import org.arig.robot.model.Plante;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.StockPots;
-import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.TypePlante;
 import org.arig.robot.model.bras.PointBras;

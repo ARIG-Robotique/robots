@@ -14,7 +14,6 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
-import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.PamiEcranService;
 import org.arig.robot.services.PamiIOService;
 import org.arig.robot.services.PamiRobotServosService;

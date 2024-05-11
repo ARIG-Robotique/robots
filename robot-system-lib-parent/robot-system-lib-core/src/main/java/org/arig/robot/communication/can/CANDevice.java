@@ -1,8 +1,5 @@
 package org.arig.robot.communication.can;
 
-import org.apache.commons.lang3.StringUtils;
-import tel.schich.javacan.CanFilter;
-
 import java.io.IOException;
 
 public interface CANDevice {
