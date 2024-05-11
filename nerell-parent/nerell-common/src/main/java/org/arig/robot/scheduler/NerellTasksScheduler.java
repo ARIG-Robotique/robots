@@ -54,9 +54,9 @@ public class NerellTasksScheduler {
     @Scheduled(fixedDelay = 20)
     public void obstacleAvoidanceTask() {
         if (rs.avoidanceEnabled()) {
-            if (rs.getRemainingTime() < 10000 && !gp2D12Telemeter.enabled()) {
+            /*if (rs.getRemainingTime() < 10000 && !gp2D12Telemeter.enabled()) {
                 gp2D12Telemeter.enabled(true);
-            }
+            }*/
 
             avoidingService.process();
         }

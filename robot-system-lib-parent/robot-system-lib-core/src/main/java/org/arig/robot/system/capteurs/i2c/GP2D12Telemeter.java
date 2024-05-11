@@ -28,7 +28,7 @@ public class GP2D12Telemeter implements ILidarTelemeter {
 
     @Setter
     @Getter
-    private boolean enabled = true;
+    private boolean enabled = false;
 
     @Getter
     private final boolean clusterable = false;
@@ -78,16 +78,6 @@ public class GP2D12Telemeter implements ILidarTelemeter {
         this.devices = devices;
         this.tailleObstacle = tailleObstacle;
         this.phantomFilter = new GP2DPhantomFilter(3, 5);
-    }
-
-    @Override
-    public boolean enabled() {
-        return this.enabled;
-    }
-
-    @Override
-    public void enabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     @Override

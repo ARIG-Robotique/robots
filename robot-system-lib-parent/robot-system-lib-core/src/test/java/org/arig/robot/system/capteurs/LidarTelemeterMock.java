@@ -1,5 +1,7 @@
 package org.arig.robot.system.capteurs;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
@@ -10,13 +12,9 @@ import java.util.Collections;
 
 public class LidarTelemeterMock implements ILidarTelemeter {
 
-    @Override
-    public boolean enabled() {
-        return true;
-    }
-
-    @Override
-    public void enabled(boolean enabled) { }
+    @Setter
+    @Getter
+    private boolean enabled = true;
 
     @Override
     public boolean isClusterable() {

@@ -4,6 +4,8 @@ import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.i2c.I2CManager;
 import org.arig.robot.communication.i2c.I2CManagerDevice;
@@ -146,14 +148,9 @@ public class PamiRobotContext {
     @Bean("rplidar")
     public ILidarTelemeter rplidar() throws Exception {
         return new ILidarTelemeter() {
-            @Override
-            public boolean enabled() {
-                return true;
-            }
-
-            @Override
-            public void enabled(boolean enabled) {
-            }
+            @Getter
+            @Setter
+            private boolean enabled = true;
 
             @Override
             public boolean isClusterable() {

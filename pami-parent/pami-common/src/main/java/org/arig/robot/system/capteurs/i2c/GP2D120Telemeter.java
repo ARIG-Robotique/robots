@@ -55,16 +55,6 @@ public class GP2D120Telemeter implements ILidarTelemeter {
     private final int tailleObstacle;
 
     @Override
-    public boolean enabled() {
-        return this.enabled;
-    }
-
-    @Override
-    public void enabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    @Override
     public boolean isOpen() {
         return true;
     }
