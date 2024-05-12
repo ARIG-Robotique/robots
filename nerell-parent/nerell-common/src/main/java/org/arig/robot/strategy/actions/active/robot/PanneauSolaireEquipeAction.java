@@ -116,10 +116,10 @@ public class PanneauSolaireEquipeAction extends AbstractNerellAction {
 
             int targetX = getX(725);
             boolean doCommun = true;
-//            if (rs.strategy() == Strategy.SUD || !rs.panneauxSolaire().communModifiedByOpponent()) {
-//                targetX = getX(1725);
-//                doCommun = false;
-//            }
+            if (rs.strategy() == Strategy.SUD || !rs.panneauxSolaire().communModifiedByOpponent()) {
+                targetX = getX(1725);
+                doCommun = false;
+            }
 
             servos.groupePanneauOuvert(true);
             mv.gotoPoint(targetX, yCallage, GotoOption.SANS_ORIENTATION);
