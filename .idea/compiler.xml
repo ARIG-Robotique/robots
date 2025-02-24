@@ -53,4 +53,26 @@
       <module name="robots.tinker-parent.test" target="11" />
     </bytecodeTargetLevel>
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="robots.nerell-parent.nerell-robot" options="-parameters" />
+      <module name="robots.nerell-parent.nerell-robot.main" options="-parameters" />
+      <module name="robots.nerell-parent.nerell-robot.test" options="-parameters" />
+      <module name="robots.nerell-parent.nerell-simulator" options="-parameters" />
+      <module name="robots.nerell-parent.nerell-simulator.main" options="-parameters" />
+      <module name="robots.nerell-parent.nerell-simulator.test" options="-parameters" />
+      <module name="robots.nerell-parent.nerell-utils" options="-parameters" />
+      <module name="robots.nerell-parent.nerell-utils.main" options="-parameters" />
+      <module name="robots.nerell-parent.nerell-utils.test" options="-parameters" />
+      <module name="robots.pami-parent.pami-robot" options="-parameters" />
+      <module name="robots.pami-parent.pami-robot.main" options="-parameters" />
+      <module name="robots.pami-parent.pami-robot.test" options="-parameters" />
+      <module name="robots.pami-parent.pami-simulator" options="-parameters" />
+      <module name="robots.pami-parent.pami-simulator.main" options="-parameters" />
+      <module name="robots.pami-parent.pami-simulator.test" options="-parameters" />
+      <module name="robots.pami-parent.pami-utils" options="-parameters" />
+      <module name="robots.pami-parent.pami-utils.main" options="-parameters" />
+      <module name="robots.pami-parent.pami-utils.test" options="-parameters" />
+    </option>
+  </component>
 </project>
