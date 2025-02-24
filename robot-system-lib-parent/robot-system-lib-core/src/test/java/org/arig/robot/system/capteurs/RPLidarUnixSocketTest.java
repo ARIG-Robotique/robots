@@ -12,7 +12,7 @@ public class RPLidarUnixSocketTest extends RPLidarA2TelemeterOverSocketTest {
     @BeforeAll
     @SneakyThrows
     static void initTest() {
-        File socketFile = new File("/tmp/lidar.sock");
+        File socketFile = new File("/tmp/rplidar.sock");
         Assumptions.assumeTrue(socketFile.exists());
 
         rpLidar = new RPLidarA2TelemeterOverSocket(socketFile);
