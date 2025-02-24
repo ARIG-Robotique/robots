@@ -31,7 +31,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'liberica'
-          java-version: 17
+          java-version: ${{ matrix.java }}
           cache: 'gradle'
 
       - name: Build with Gradle
