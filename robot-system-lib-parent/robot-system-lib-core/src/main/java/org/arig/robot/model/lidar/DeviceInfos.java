@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeviceInfos implements Serializable {
+    private String driver;
     private String firmwareVersion;
     private Short hardwareVersion;
     private String serialNumber;
