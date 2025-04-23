@@ -7,11 +7,10 @@ public interface CommonPamiIOService extends IOService {
     // --------------------------------------------------------- //
 
     // Numerique
+    boolean presenceSolGauche(boolean expectedSimulator);
+    boolean presenceSolDroit(boolean expectedSimulator);
 
     // Analogique
-    double distanceGauche();
-    double distanceCentre();
-    double distanceDroite();
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

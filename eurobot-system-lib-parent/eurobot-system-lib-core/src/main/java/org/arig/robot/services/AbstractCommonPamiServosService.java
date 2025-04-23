@@ -7,18 +7,11 @@ import org.arig.robot.system.servos.AbstractServos;
 @Slf4j
 public abstract class AbstractCommonPamiServosService extends AbstractServosService {
 
-    public static final String TOUCHE_PLANTE_GAUCHE = "Touche plante gauche";
-    public static final String TOUCHE_PLANTE_DROITE = "Touche plante droite";
+    public static final String HAND = "Hand";
 
     protected static final String POS_FERME = "Fermé";
-    protected static final String POS_INIT = "Init";
-    protected static final String POS_OUVERT = "Ouvert";
-    protected static final String POS_OUVERT_JAUNE = "Ouvert Jaune";
-    protected static final String POS_OUVERT_BLEU = "Ouvert Bleu";
-
-    protected static final String GROUP_TOUCHE_PLANTE = "Touche plante";
-
-    protected static final byte GROUP_TOUCHE_PLANTE_ID = 1;
+    protected static final String POS_OUVERT_1 = "Ouvert 1";
+    protected static final String POS_OUVERT_2 = "Ouvert 2";
 
     protected AbstractCommonPamiServosService(AbstractServos servoDevice, AbstractServos... servoDevices) {
         super(servoDevice, servoDevices);
@@ -29,28 +22,26 @@ public abstract class AbstractCommonPamiServosService extends AbstractServosServ
     /* **************************************** */
 
     public void homes() {
-        groupeTouchePlanteInit(false);
+        handFerme(false);
     }
 
     //*******************************************//
     //* Déplacements de groupe                  *//
     //*******************************************//
 
-    public void groupeTouchePlanteOuvertMatch(Team team) {
-        setPositionBatch(GROUP_TOUCHE_PLANTE, team == Team.JAUNE ? POS_OUVERT_JAUNE : POS_OUVERT_BLEU, false);
-    }
-    public void groupeTouchePlanteInit(boolean wait) {
-        setPositionBatch(GROUP_TOUCHE_PLANTE, POS_INIT, wait);
-    }
-    public void groupeTouchePlanteOuvert(boolean wait) {
-        setPositionBatch(GROUP_TOUCHE_PLANTE, POS_OUVERT, wait);
-    }
-    public void groupeTouchePlanteFerme(boolean wait) {
-        setPositionBatch(GROUP_TOUCHE_PLANTE, POS_FERME, wait);
-    }
-
     //*******************************************//
     //* Déplacements de servo                   *//
     //*******************************************//
 
+    public void handFerme(boolean wait) {
+        setPosition(HAND, POS_FERME, wait);
+    }
+
+    public void handOuvert1(boolean wait) {
+        setPosition(HAND, POS_OUVERT_1, wait);
+    }
+
+    public void handOuvert2(boolean wait) {
+        setPosition(HAND, POS_OUVERT_2, wait);
+    }
 }

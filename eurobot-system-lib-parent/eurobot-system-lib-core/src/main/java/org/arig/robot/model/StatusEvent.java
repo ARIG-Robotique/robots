@@ -13,5 +13,5 @@ public enum StatusEvent {
     END,
     QUIT,
 
-    SITE_DE_CHARGE
+    BACKSTAGE
 }

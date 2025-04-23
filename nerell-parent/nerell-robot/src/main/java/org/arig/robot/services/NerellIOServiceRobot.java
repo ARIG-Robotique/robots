@@ -33,12 +33,9 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     private PCF8574GpioProvider pcfAlim;
     private PCF8574GpioProvider pcf1;
     private PCF8574GpioProvider pcf2;
-    private PCF8574GpioProvider pcf3;
 
     @Autowired
     private PCA9685GpioProvider pca9695;
-    @Autowired
-    private PCA9685ToTB6612Motor solarWheelMotor;
 
     // Référence sur les PIN Inputs
     // ----------------------------
@@ -52,6 +49,8 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     // private GpioPinDigitalInput inIrq5;
     // private GpioPinDigitalInput inIrq6;
 
+    private GpioPinDigitalInput tirette;
+
     // Input : Alimentation
     private GpioPinDigitalInput inAu;
 
@@ -60,41 +59,22 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     private GpioPinDigitalInput calageAvantDroit;
     private GpioPinDigitalInput calageArriereGauche;
     private GpioPinDigitalInput calageArriereDroit;
-    private GpioPinDigitalInput inductifDroite;
-    private GpioPinDigitalInput inductifCentre;
-    private GpioPinDigitalInput pinceAvantCentre;
-    private GpioPinDigitalInput pinceArriereCentre;
+    private GpioPinDigitalInput stockAvantGauche;
+    private GpioPinDigitalInput stockAvantDroit;
+    private GpioPinDigitalInput stockArriereGauche;
+    private GpioPinDigitalInput stockArriereDroit;
 
     // Input : Numerique 2
-    private GpioPinDigitalInput tirette;
     private GpioPinDigitalInput pinceAvantGauche;
     private GpioPinDigitalInput pinceAvantDroite;
     private GpioPinDigitalInput pinceArriereGauche;
     private GpioPinDigitalInput pinceArriereDroite;
-    private GpioPinDigitalInput presenceStockGauche;
-    private GpioPinDigitalInput presenceStockCentre;
-    private GpioPinDigitalInput presenceStockDroit;
-
-    // Input : Numerique 3
-    private GpioPinDigitalInput presenceAvantGauche;
-    private GpioPinDigitalInput presenceAvantCentre;
-    private GpioPinDigitalInput presenceAvantDroit;
-    private GpioPinDigitalInput presenceArriereGauche;
-    private GpioPinDigitalInput presenceArriereCentre;
-    private GpioPinDigitalInput presenceArriereDroit;
-    private GpioPinDigitalInput inductifGauche;
-
-    // private GpioPinDigitalInput in3_4;
-    // private GpioPinDigitalInput in3_8;
+    private GpioPinDigitalInput tiroirAvantHaut;
+    private GpioPinDigitalInput tiroirAvantBas;
+    private GpioPinDigitalInput tiroirArriereHaut;
+    private GpioPinDigitalInput tiroirArriereBas;
 
     // Input : Virtual averaged
-    private final int virtualAverageIntegratedValues = 5;
-    private BooleanValueAverage pinceAvantGaucheAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
-    private BooleanValueAverage pinceAvantCentreAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
-    private BooleanValueAverage pinceAvantDroiteAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
-    private BooleanValueAverage pinceArriereGaucheAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
-    private BooleanValueAverage pinceArriereCentreAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
-    private BooleanValueAverage pinceArriereDroiteAverage = new BooleanValueAverage(virtualAverageIntegratedValues);
 
     // Référence sur les PIN Output
     // ----------------------------
@@ -103,41 +83,18 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     private GpioPinDigitalOutput outAlimPuissanceServos;
     private GpioPinDigitalOutput outAlimPuissanceMoteurs;
 
-    // PCA 9685
-    private final Pin eaIn1Pin = PCA9685Pin.PWM_14;
-    private final Pin eaIn2Pin = PCA9685Pin.PWM_13;
-    private final Pin eaPwmPin = PCA9685Pin.PWM_12;
-
     @Override
     public void destroy() throws Exception {
-        try {
-            if (pcfAlim != null) {
-                pcfAlim.shutdown();
+        for (PCF8574GpioProvider pcf : new PCF8574GpioProvider[]{pcfAlim, pcf1, pcf2}) {
+            try {
+                if (pcf != null) {
+                    pcf.shutdown();
+                }
+            } catch (Exception e) {
+                log.warn("Problème de shutdown du PCF : {} #{}", e.getMessage(), pcf.i2cAddress());
             }
-        } catch (Exception e) {
-            log.warn("Problème de shutdown du PCF ALim : {}", e.getMessage());
         }
-        try {
-            if (pcf1 != null) {
-                pcf1.shutdown();
-            }
-        } catch (Exception e) {
-            log.warn("Problème de shutdown du {} : {}", NerellConstantesI2C.PCF1_DEVICE_NAME, e.getMessage());
-        }
-        try {
-            if (pcf2 != null) {
-                pcf2.shutdown();
-            }
-        } catch (Exception e) {
-            log.warn("Problème de shutdown du {} : {}", NerellConstantesI2C.PCF2_DEVICE_NAME, e.getMessage());
-        }
-        try {
-            if (pcf3 != null) {
-                pcf3.shutdown();
-            }
-        } catch (Exception e) {
-            log.warn("Problème de shutdown du {} : {}", NerellConstantesI2C.PCF3_DEVICE_NAME, e.getMessage());
-        }
+
         try {
             if (gpio != null) {
                 gpio.shutdown();
@@ -159,7 +116,6 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         pcfAlim = new PCF8574GpioProvider(bus, NerellConstantesI2C.PCF_ALIM_ADDRESS, true);
         pcf1 = new PCF8574GpioProvider(bus, NerellConstantesI2C.PCF1_ADDRESS, true);
         pcf2 = new PCF8574GpioProvider(bus, NerellConstantesI2C.PCF2_ADDRESS, true);
-        pcf3 = new PCF8574GpioProvider(bus, NerellConstantesI2C.PCF3_ADDRESS, true);
 
         // Alim
         inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_00);
@@ -167,78 +123,43 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         outAlimPuissanceServos = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_03);
         outAlimPuissanceMoteurs = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_04);
 
+        tirette = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
+
         // PCF1
         calageAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
         calageArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
-        inductifDroite = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
-        inductifCentre = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
-        pinceArriereCentre = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
-        pinceAvantCentre = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
-        calageAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
-        calageArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
+        calageAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
+        calageArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
+        stockAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
+        stockAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
+        stockArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
+        stockArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
 
         // PCF2
-        tirette = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
+        pinceAvantGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
         pinceAvantDroite = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
-        pinceArriereDroite = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
-        pinceArriereGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
-        presenceStockGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
-        presenceStockDroit = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
-        presenceStockCentre = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
-        pinceAvantGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_07);
-
-        // PCF3
-        presenceArriereDroit = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_00);
-        presenceArriereGauche = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_01);
-        presenceArriereCentre = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_02);
-        //in3_4 = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_03);
-        presenceAvantDroit = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_04);
-        presenceAvantGauche = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_05);
-        presenceAvantCentre = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_06);
-        inductifGauche = gpio.provisionDigitalInputPin(pcf3, PCF8574Pin.GPIO_07);
+        pinceArriereGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
+        pinceArriereDroite = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
+        tiroirAvantHaut = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
+        tiroirAvantBas = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
+        tiroirArriereHaut = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
+        tiroirArriereBas = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_07);
     }
 
     @Override
     public void refreshAllIO() {
-        try {
-            if (!pcf1.isShutdown()) {
-                pcf1.readAll();
+        for (PCF8574GpioProvider pcf : new PCF8574GpioProvider[]{pcfAlim, pcf1, pcf2}) {
+            try {
+                if (!pcf.isShutdown()) {
+                    pcf.readAll();
+                }
+            } catch (IOException e) {
+                log.error("Erreur lecture {} -> #{}", e.getMessage(), pcf.i2cAddress());
             }
-        } catch (IOException e) {
-            log.error("Erreur lecture " + NerellConstantesI2C.PCF1_DEVICE_NAME + " : " + e.getMessage(), e);
-        }
-
-        try {
-            if (!pcf2.isShutdown()) {
-                pcf2.readAll();
-            }
-        } catch (IOException e) {
-            log.error("Erreur lecture " + NerellConstantesI2C.PCF2_DEVICE_NAME + " : " + e.getMessage(), e);
-        }
-
-        try {
-            if (!pcf3.isShutdown()) {
-                pcf3.readAll();
-            }
-        } catch (IOException e) {
-            log.error("Erreur lecture " + NerellConstantesI2C.PCF3_DEVICE_NAME + " : " + e.getMessage(), e);
-        }
-
-        try {
-            if (!pcfAlim.isShutdown()) {
-                pcfAlim.readAll();
-            }
-        } catch (IOException e) {
-            log.error("Erreur lecture PCF Alim : " + e.getMessage(), e);
         }
 
         // Refresh virtual IOs
-        pinceAvantGaucheAverage.filter(pinceAvantGauche(true));
-        pinceAvantCentreAverage.filter(pinceAvantCentre(true));
-        pinceAvantDroiteAverage.filter(pinceAvantDroite(true));
-        pinceArriereGaucheAverage.filter(pinceArriereGauche(true));
-        pinceArriereCentreAverage.filter(pinceArriereCentre(true));
-        pinceArriereDroiteAverage.filter(pinceArriereDroite(true));
+
     }
 
     // --------------------------------------------------------- //
@@ -267,12 +188,11 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
 
     @Override
     public boolean calagePriseProduitAvant(int mandatorySensors) {
-        if (mandatorySensors > 3) {
-            throw new IllegalArgumentException("Le nombre de capteurs avant obligatoires ne peut pas être supérieur à 3");
+        if (mandatorySensors > 2) {
+            throw new IllegalArgumentException("Le nombre de capteurs avant obligatoires ne peut pas être supérieur à 2");
         }
-        int count = presenceAvantGauche(true) ? 1 : 0;
-        count += presenceAvantCentre(true) ? 1 : 0;
-        count += presenceAvantDroite(true) ? 1 : 0;
+        int count = pinceAvantGauche(true) ? 1 : 0;
+        count += pinceAvantDroite(true) ? 1 : 0;
         return count >= mandatorySensors;
     }
 
@@ -283,28 +203,11 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
 
     @Override
     public boolean calagePriseProduitArriere(int mandatorySensors) {
-        if (mandatorySensors > 3) {
-            throw new IllegalArgumentException("Le nombre de capteurs arrière obligatoires ne peut pas être supérieur à 3");
+        if (mandatorySensors > 2) {
+            throw new IllegalArgumentException("Le nombre de capteurs arrière obligatoires ne peut pas être supérieur à 2");
         }
-        int count = presenceArriereGauche(true) ? 1 : 0;
-        count += presenceArriereCentre(true) ? 1 : 0;
-        count += presenceArriereDroite(true) ? 1 : 0;
-        return count >= mandatorySensors;
-    }
-
-    @Override
-    public boolean calageElectroaimant() {
-        return calageElectroaimant(1);
-    }
-
-    @Override
-    public boolean calageElectroaimant(int mandatorySensors) {
-        if (mandatorySensors > 3) {
-            throw new IllegalArgumentException("Le nombre de capteurs inductifs obligatoires ne peut pas être supérieur à 3");
-        }
-        int count = inductifGauche(true) ? 1 : 0;
-        count += inductifCentre(true) ? 1 : 0;
-        count += inductifDroite(true) ? 1 : 0;
+        int count = pinceArriereGauche(true) ? 1 : 0;
+        count += pinceArriereDroite(true) ? 1 : 0;
         return count >= mandatorySensors;
     }
 
@@ -331,117 +234,63 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     // Numerique
 
     @Override
-    public boolean presenceAvantGauche(boolean expectedSimulator) {
-        return presenceAvantGauche.isLow();
-    }
-
-    @Override
-    public boolean presenceAvantCentre(boolean expectedSimulator) {
-        return presenceAvantCentre.isLow();
-    }
-
-    @Override
-    public boolean presenceAvantDroite(boolean expectedSimulator) {
-        return presenceAvantDroit.isLow();
-    }
-
-    @Override
-    public boolean presenceArriereGauche(boolean expectedSimulator) {
-        return presenceArriereGauche.isLow();
-    }
-
-    @Override
-    public boolean presenceArriereCentre(boolean expectedSimulator) {
-        return presenceArriereCentre.isLow();
-    }
-
-    @Override
-    public boolean presenceArriereDroite(boolean expectedSimulator) {
-        return presenceArriereDroit.isLow();
-    }
-
-    @Override
-    public boolean presenceStockGauche(boolean expectedSimulator) {
-        return presenceStockGauche.isLow();
-    }
-
-    @Override
-    public boolean presenceStockCentre(boolean expectedSimulator) {
-        return presenceStockCentre.isLow();
-    }
-
-    @Override
-    public boolean presenceStockDroite(boolean expectedSimulator) {
-        return presenceStockDroit.isLow();
-    }
-
-    @Override
-    public boolean inductifGauche(boolean expectedSimulator) {
-        return inductifGauche.isLow();
-    }
-
-    @Override
-    public boolean inductifCentre(boolean expectedSimulator) {
-        return inductifCentre.isLow();
-    }
-
-    @Override
-    public boolean inductifDroite(boolean expectedSimulator) {
-        return inductifDroite.isLow();
-    }
-
-    @Override
     public boolean pinceAvantGauche(boolean expectedSimulator) {
         return pinceAvantGauche.isLow();
-    }
-    @Override
-    public boolean pinceAvantGaucheAverage(boolean expectedSimulateur) {
-        return pinceAvantGaucheAverage.lastResult();
-    }
-
-    @Override
-    public boolean pinceAvantCentre(boolean expectedSimulator) {
-        return pinceAvantCentre.isLow();
-    }
-    @Override
-    public boolean pinceAvantCentreAverage(boolean expectedSimulateur) {
-        return pinceAvantCentreAverage.lastResult();
     }
 
     @Override
     public boolean pinceAvantDroite(boolean expectedSimulator) {
         return pinceAvantDroite.isLow();
     }
-    @Override
-    public boolean pinceAvantDroiteAverage(boolean expectedSimulateur) {
-        return pinceAvantDroiteAverage.lastResult();
-    }
 
     @Override
     public boolean pinceArriereGauche(boolean expectedSimulator) {
         return pinceArriereGauche.isLow();
-    }
-    @Override
-    public boolean pinceArriereGaucheAverage(boolean expectedSimulateur) {
-        return pinceArriereGaucheAverage.lastResult();
-    }
-
-    @Override
-    public boolean pinceArriereCentre(boolean expectedSimulator) {
-        return pinceArriereCentre.isLow();
-    }
-    @Override
-    public boolean pinceArriereCentreAverage(boolean expectedSimulateur) {
-        return pinceArriereCentreAverage.lastResult();
     }
 
     @Override
     public boolean pinceArriereDroite(boolean expectedSimulator) {
         return pinceArriereDroite.isLow();
     }
+
     @Override
-    public boolean pinceArriereDroiteAverage(boolean expectedSimulateur) {
-        return pinceArriereDroiteAverage.lastResult();
+    public boolean stockAvantGauche(boolean expectedSimulator) {
+        return stockAvantGauche.isLow();
+    }
+
+    @Override
+    public boolean stockAvantDroite(boolean expectedSimulator) {
+        return stockAvantDroit.isLow();
+    }
+
+    @Override
+    public boolean stockArriereGauche(boolean expectedSimulator) {
+        return stockArriereGauche.isLow();
+    }
+
+    @Override
+    public boolean stockArriereDroite(boolean expectedSimulator) {
+        return stockArriereDroit.isLow();
+    }
+
+    @Override
+    public boolean tiroirAvantHaut(boolean expectedSimulator) {
+        return tiroirAvantHaut.isLow();
+    }
+
+    @Override
+    public boolean tiroirAvantBas(boolean expectedSimulator) {
+        return tiroirAvantBas.isLow();
+    }
+
+    @Override
+    public boolean tiroirArriereHaut(boolean expectedSimulator) {
+        return tiroirArriereHaut.isLow();
+    }
+
+    @Override
+    public boolean tiroirArriereBas(boolean expectedSimulator) {
+        return tiroirArriereBas.isLow();
     }
 
     // --------------------------------------------------------- //
@@ -470,41 +319,6 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     public void disableAlimMoteurs() {
         log.info("Desactivation puissance moteurs");
         outAlimPuissanceMoteurs.high();
-    }
-
-    @Override
-    public void enableElectroAimant() {
-        log.info("Activation electro aimant");
-        pca9695.setAlwaysOn(eaIn1Pin);
-        pca9695.setAlwaysOff(eaIn2Pin);
-        pca9695.setAlwaysOn(eaPwmPin);
-    }
-
-    @Override
-    public void disableElectroAimant() {
-        log.info("Desactivation electro aimant");
-        pca9695.setAlwaysOff(eaIn1Pin);
-        pca9695.setAlwaysOff(eaIn2Pin);
-        pca9695.setAlwaysOff(eaPwmPin);
-    }
-
-    public void tournePanneauJaune(int speed) {
-        log.info("Demarrage du moteur de rotation du panneau vers l'arriere");
-        solarWheelMotor.speed(speed);
-    }
-
-    public void tournePanneauBleu(int speed) {
-        log.info("Demarrage du moteur de rotation du panneau vers l'avant");
-        if (speed > 0) {
-            speed = -speed;
-        }
-        solarWheelMotor.speed(speed);
-    }
-
-    @Override
-    public void stopTournePanneau() {
-        log.info("Arret du moteur de rotation du panneau");
-        solarWheelMotor.stop();
     }
 
     // ----------------------------------------------------------- //

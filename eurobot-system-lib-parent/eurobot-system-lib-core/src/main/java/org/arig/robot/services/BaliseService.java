@@ -5,18 +5,12 @@ import org.arig.robot.communication.socket.balise.DataQueryData;
 import org.arig.robot.communication.socket.balise.DataResponse;
 import org.arig.robot.communication.socket.balise.ZoneQueryData;
 import org.arig.robot.communication.socket.balise.ZoneResponse;
-import org.arig.robot.model.CouleurPanneauSolaire;
 import org.arig.robot.model.EurobotStatus;
-import org.arig.robot.model.JardiniereAdverse;
-import org.arig.robot.model.PanneauSolaire;
-import org.arig.robot.model.Plante;
 import org.arig.robot.model.Point;
-import org.arig.robot.model.StockPlantes;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.balise.BaliseData;
 import org.arig.robot.model.balise.Data3D;
 import org.arig.robot.model.balise.enums.Data3DName;
-import org.arig.robot.model.balise.enums.Data3DTeam;
 import org.arig.robot.model.balise.enums.Data3DType;
 import org.arig.robot.model.balise.enums.FiltreBalise;
 import org.arig.robot.model.balise.enums.ZoneMines;
@@ -39,12 +33,12 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
     private List<Data3D> data3D;
 
     public void updateData() {
-        DataResponse response = (DataResponse) balise.getData(new DataQueryData<>(
-                FiltreBalise.SOLAR_PANEL,
-                FiltreBalise.PLANTSTOCK,
+        DataResponse response = (DataResponse)
+            balise.getData(new DataQueryData<>(
                 FiltreBalise.ROBOT,
-                rs.vol() ? FiltreBalise.JARDINIERE : null
-        ));
+                FiltreBalise.RAW_TRIBUNE
+              )
+            );
 
         if (response == null) {
             isOK = false;
@@ -57,50 +51,29 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
 
         data3D = response.getData().getData3D();
 
-        updatePanneauxSolaire();
-        updateStocksPlantesEtPots();
         updatePositionAdverse();
+        updateStocksRawTribune();
         updateMines();
-        if (rs.vol()) {
-            updateJardiniereAdverse();
-        }
     }
 
-    private void updatePanneauxSolaire() {
-        data3D.stream()
-                .filter(object -> object.getType() == Data3DType.SOLAR_PANEL)
-                .forEach(solarPanel -> {
-                    if (solarPanel.getTeam() == Data3DTeam.INCONNUE) {
-                        return;
-                    }
-                    Integer numero = Data3DName.getSolarPannelNumber(solarPanel.getName());
-                    if (numero == null) {
-                        return;
-                    }
-                    CouleurPanneauSolaire couleur = CouleurPanneauSolaire.valueOf(solarPanel.getTeam().name());
-                    PanneauSolaire oldValue = rs.panneauxSolaire().get(numero);
-                    if (couleur == oldValue.couleur() && oldValue.rotation() != null && solarPanel.getR() == oldValue.rotation()) {
-                        return;
-                    }
-                    long millis = rs.getElapsedTime() - solarPanel.getAge();
-                    rs.panneauxSolaire().refreshFromCamera(numero, couleur, millis, solarPanel.getR());
-                });
-    }
 
-    private void updateStocksPlantesEtPots() {
+
+    private void updateStocksRawTribune() {
+        /*
         data3D.stream()
-                .filter(object -> object.getType() == Data3DType.PLANTSTOCK)
+                .filter(object -> object.getType() == Data3DType.RAW_TRIBUNE)
                 .filter(plantStock -> plantStock.getMetadata().getNumPlantes() != null
                         && plantStock.getMetadata().getNumPlantes() <= 2)
                 .forEach(plantStock -> {
-                    Plante.ID stockPlantesID = Data3DName.getStockPlantesID(plantStock.getName());
-                    if (stockPlantesID == null) {
+                    RawTribune.ID stockRawTribuneId = Data3DName.getStockPlantesID(plantStock.getName());
+                    if (stockRawTribuneId == null) {
                         return;
                     }
                     if (!rs.plantes().stock(stockPlantesID).isEmpty()) {
                         rs.plantes().priseStock(stockPlantesID, StockPlantes.Status.EMPTY);
                     }
                 });
+         */
     }
 
     private void updatePositionAdverse() {
@@ -138,7 +111,7 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
         List<ZoneMines> zoneBloquees = response.getData().getZones().stream()
             .map(zoneString -> {
                 if (!rs.mines().contains(ZoneMines.valueOf(zoneString))) {
-                    log.info("[rs] zone {} miné", zoneString);
+                    log.info("[RS] Zone {} miné", zoneString);
                 }
 
                 return ZoneMines.valueOf(zoneString);
@@ -147,39 +120,10 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
 
         rs.mines().forEach(mine -> {
             if (!response.getData().getZones().contains(mine.name())) {
-                log.info("[rs] zone {} plus miné", mine);
+                log.info("[RS] Zone {} plus miné", mine);
             }
         });
 
         rs.mines(zoneBloquees);
     }
-
-    private void updateJardiniereAdverse() {
-        data3D.stream()
-                .filter(object -> object.getType() == Data3DType.JARDINIERE)
-                .filter(jardiniere -> {
-                    return jardiniere.getMetadata().getLastContactStopAge() != null
-                            && jardiniere.getMetadata().getLastContactStopAge() > 5000;
-                })
-                .filter(jardiniere -> {
-                    if (rs.team() == Team.BLEU) {
-                        return jardiniere.getName() == Data3DName.JAUNE_SUD || jardiniere.getName() == Data3DName.JAUNE_MILIEU;
-                    } else {
-                        return jardiniere.getName() == Data3DName.BLEU_SUD || jardiniere.getName() == Data3DName.BLEU_MILIEU;
-                    }
-                })
-                .forEach(jardiniere -> {
-                    JardiniereAdverse rsJard;
-                    if (jardiniere.getName() == Data3DName.JAUNE_SUD || jardiniere.getName() == Data3DName.BLEU_SUD) {
-                        rsJard = rs.jardiniereAdverseSud();
-                    } else {
-                        rsJard = rs.jardiniereAdverseMilieu();
-                    }
-
-                    if (!rsJard.contacted()) {
-                        rsJard.contacted(true);
-                    }
-                });
-    }
-
 }

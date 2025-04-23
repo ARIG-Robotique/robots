@@ -13,6 +13,7 @@ import org.arig.robot.model.PamiRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.model.Strategy;
+import org.arig.robot.model.StrategyOption;
 import org.arig.robot.model.Team;
 import org.arig.robot.services.PamiEcranService;
 import org.arig.robot.services.PamiIOService;
@@ -116,19 +117,10 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
         leds.setAllLeds(ARIG2024IoPamiLeds.LedColor.White);
     }
 
-    private boolean servoInit = false;
-    private boolean servoOpened = false;
-
     @Override
     public void inMatch() {
-        if (!servoInit && robotStatus.getRemainingTime() < EurobotConfig.pamiStartRemainingTimeMs) {
-            servoInit = true;
-            pamiServosService.groupeTouchePlanteOuvert(true);
-            pamiServosService.groupeTouchePlanteFerme(false);
-        }
-        if (!servoOpened && robotStatus.getRemainingTime() < 2000) {
-            servoOpened = true;
-            pamiServosService.groupeTouchePlanteOuvertMatch(pamiRobotStatus.team());
+        if (robotStatus.getRemainingTime() < EurobotConfig.pamiStartRemainingTimeMs) {
+            // TODO MANAGE HAND MOVEMENT
         }
     }
 
@@ -138,7 +130,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void beforePowerOff() {
-        pamiServosService.groupeTouchePlanteFerme(true);
+        pamiServosService.handFerme(true);
         leds.setAllLeds(ARIG2024IoPamiLeds.LedColor.Red);
     }
 
@@ -171,7 +163,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
 
             } else {
                 if (Boolean.TRUE.equals(teamChangeFilter.filter(pamiEcranService.config().getTeam()))) {
-                    pamiRobotStatus.setTeam(pamiEcranService.config().getTeam());
+                    pamiRobotStatus.team(pamiEcranService.config().getTeam());
                     log.info("Team {}", pamiRobotStatus.team().name());
                 }
 
@@ -181,10 +173,8 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
                 }
 
                 pamiRobotStatus.twoRobots(pamiEcranService.config().isTwoRobots());
-                pamiRobotStatus.stockage(pamiEcranService.config().hasOption(EurobotConfig.STOCKAGE));
-                pamiRobotStatus.prisePots(pamiEcranService.config().hasOption(EurobotConfig.PRISE_POTS));
-                pamiRobotStatus.preferePanneaux(pamiEcranService.config().hasOption(EurobotConfig.PREFERE_PANNEAUX));
-                pamiRobotStatus.vol(pamiEcranService.config().hasOption(EurobotConfig.VOL));
+                pamiRobotStatus.option_1(pamiEcranService.config().hasOption(StrategyOption.OPTION_1.name()));
+                pamiRobotStatus.option_2(pamiEcranService.config().hasOption(StrategyOption.OPTION_2.name()));
 
                 done = pamiEcranService.config().isStartCalibration();
             }

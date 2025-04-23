@@ -1,6 +1,7 @@
 package org.arig.robot.strategy.actions.active.pami;
 
 import lombok.Getter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
@@ -12,6 +13,7 @@ import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.strategy.AbstractAction;
+import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,7 +23,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class LadybugFlight extends AbstractAction {
+public class LadybugFlight extends AbstractEurobotAction {
 
     @Autowired
     private TableUtils tableUtils;
@@ -38,8 +40,8 @@ public class LadybugFlight extends AbstractAction {
     @Getter
     private final boolean completed = false;
 
-    protected int getX(int x) {
-        return tableUtils.getX(rs.team() == Team.JAUNE, x);
+    public int executionTimeMs() {
+        return 0;
     }
 
     @Override
@@ -61,17 +63,6 @@ public class LadybugFlight extends AbstractAction {
     @Override
     public int order() {
         return 10;
-    }
-
-    @Override
-    public List<String> blockingActions() {
-        if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
-            return Collections.singletonList(EurobotConfig.ACTION_JARDINIERE_NORD);
-        } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
-            return Collections.singletonList(EurobotConfig.ACTION_JARDINIERE_MILIEU);
-        } else {
-            return Collections.emptyList();
-        }
     }
 
     @Override

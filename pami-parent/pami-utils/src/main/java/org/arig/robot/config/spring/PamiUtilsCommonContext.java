@@ -16,8 +16,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class PamiUtilsCommonContext extends PamiCommonContext {
 
-
-
   @Override
   public IEcran<EcranConfig, EcranState> ecran() {
     return new IEcran<>() {

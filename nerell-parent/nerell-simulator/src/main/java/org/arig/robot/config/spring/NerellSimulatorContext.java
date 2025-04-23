@@ -72,18 +72,13 @@ public class NerellSimulatorContext {
     }
 
     @Bean
-    public SD21Servos servosAvant() {
-        return new SD21Servos("SD21 Avant");
+    public SD21Servos servos() {
+        return new SD21Servos("SD21");
     }
 
     @Bean
-    public SD21Servos servosArriere() {
-        return new SD21Servos("SD21 Arriere");
-    }
-
-    @Bean
-    public NerellRobotServosService servosService(SD21Servos servosAvant, SD21Servos servosArriere) {
-        return new NerellRobotServosService(servosAvant, servosArriere);
+    public NerellRobotServosService servosService(SD21Servos servosAvant) {
+        return new NerellRobotServosService(servosAvant);
     }
 
     @Bean

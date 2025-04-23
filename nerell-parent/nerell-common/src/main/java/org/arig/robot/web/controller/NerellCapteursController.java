@@ -21,28 +21,26 @@ public class NerellCapteursController extends AbstractCapteursController {
         super.afterPropertiesSet();
 
         numeriqueInfos.put("Tirette", ioService::tirette);
+
         numeriqueInfos.put("Calage avant gauche", ioService::calageAvantGauche);
         numeriqueInfos.put("Calage avant droit", ioService::calageAvantDroit);
         numeriqueInfos.put("Calage arriere gauche", ioService::calageArriereGauche);
         numeriqueInfos.put("Calage arriere droit", ioService::calageArriereDroit);
-        numeriqueInfos.put("Inductif gauche", () -> ioService.inductifGauche(false));
-        numeriqueInfos.put("Inductif centre", () -> ioService.inductifCentre(false));
-        numeriqueInfos.put("Inductif droite", () -> ioService.inductifDroite(false));
+
+        numeriqueInfos.put("Stock avant gauche", () -> ioService.stockAvantGauche(false));
+        numeriqueInfos.put("Stock avant droite", () -> ioService.stockAvantDroite(false));
+        numeriqueInfos.put("Stock arriere gauche", () -> ioService.stockArriereGauche(false));
+        numeriqueInfos.put("Stock arriere droite", () -> ioService.stockArriereDroite(false));
+
         numeriqueInfos.put("Pince avant gauche", () -> ioService.pinceAvantGauche(false));
-        numeriqueInfos.put("Pince avant centre", () -> ioService.pinceAvantCentre(false));
         numeriqueInfos.put("Pince avant droite", () -> ioService.pinceAvantDroite(false));
         numeriqueInfos.put("Pince arriere gauche", () -> ioService.pinceArriereGauche(false));
-        numeriqueInfos.put("Pince arriere centre", () -> ioService.pinceArriereCentre(false));
         numeriqueInfos.put("Pince arriere droite", () -> ioService.pinceArriereDroite(false));
-        numeriqueInfos.put("Présence avant gauche", () -> ioService.presenceAvantGauche(false));
-        numeriqueInfos.put("Présence avant centre", () -> ioService.presenceAvantCentre(false));
-        numeriqueInfos.put("Présence avant droite", () -> ioService.presenceAvantDroite(false));
-        numeriqueInfos.put("Présence arriere gauche", () -> ioService.presenceArriereGauche(false));
-        numeriqueInfos.put("Présence arriere centre", () -> ioService.presenceArriereCentre(false));
-        numeriqueInfos.put("Présence arriere droite", () -> ioService.presenceArriereDroite(false));
-        numeriqueInfos.put("Présence stock gauche", () -> ioService.presenceStockGauche(false));
-        numeriqueInfos.put("Présence stock centre", () -> ioService.presenceStockCentre(false));
-        numeriqueInfos.put("Présence stock droite", () -> ioService.presenceStockDroite(false));
+
+        numeriqueInfos.put("Tiroir avant haut", () -> ioService.tiroirAvantHaut(false));
+        numeriqueInfos.put("Tiroir avant bas", () -> ioService.tiroirAvantBas(false));
+        numeriqueInfos.put("Tiroir arriere haut", () -> ioService.tiroirArriereHaut(false));
+        numeriqueInfos.put("Tiroir arriere bas", () -> ioService.tiroirArriereBas(false));
 
         textInfos.put("Equipe", () -> (robotStatus.team() != null) ? robotStatus.team().name() : "???");
     }

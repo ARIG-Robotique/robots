@@ -7,10 +7,8 @@ public enum Data3DType {
     REFERENCE_RELATIVE,
     CAMERA,
     OBJECT,
-    ROBOT,
-    SOLAR_PANEL,
-    PLANTSTOCK,
     TEAM,
     YOLO,
-    JARDINIERE
+    ROBOT,
+    RAW_TRIBUNE
 }

@@ -3,6 +3,7 @@ package org.arig.robot.services;
 import org.arig.robot.constants.ConstantesConfig;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.EurobotStatus;
+import org.arig.robot.model.StrategyOption;
 import org.arig.robot.model.ecran.EcranParams;
 import org.arig.robot.model.ecran.EcranState;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,8 @@ public class PamiEcranService extends EcranService {
       stateInfos.setTeam(rs.team());
       stateInfos.setStrategy(rs.strategy());
       stateInfos.setOptions(Map.of(
-          EurobotConfig.STOCKAGE, rs.stockage(),
-          EurobotConfig.PRISE_POTS, rs.prisePots(),
-          EurobotConfig.PREFERE_PANNEAUX, rs.preferePanneaux(),
-          EurobotConfig.VOL, rs.vol()
+          StrategyOption.OPTION_1.description(), rs.option_1(),
+          StrategyOption.OPTION_2.description(), rs.option_2()
       ));
     }
   }

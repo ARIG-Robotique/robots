@@ -22,15 +22,12 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 public class NerellLidarCommands {
 
     private final ILidarTelemeter lidar;
-    private final ILidarTelemeter gp2d;
 
     private boolean startScanRunned;
 
     @Autowired
-    public NerellLidarCommands(@Qualifier("rplidar") ILidarTelemeter lidar,
-                               @Qualifier("gp2d") ILidarTelemeter gp2d) {
+    public NerellLidarCommands(@Qualifier("rplidar") ILidarTelemeter lidar) {
         this.lidar = lidar;
-        this.gp2d = gp2d;
     }
 
     public Availability lidarCmdAvailable() {
@@ -65,11 +62,6 @@ public class NerellLidarCommands {
     @ShellMethod("Grab des données Lidar")
     public void grabLidarData() {
         grabData(lidar, 100);
-    }
-
-    @ShellMethod("Grab les données des GP2D12")
-    public void grabGpData() {
-        grabData(gp2d, 100);
     }
 
     private void grabData(ILidarTelemeter telemeter, int it) {

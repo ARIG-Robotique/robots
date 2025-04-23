@@ -25,6 +25,10 @@ public abstract class AbstractRobotStatus {
     private final boolean mainRobot;
     private final boolean pamiRobot;
 
+    private AbstractRobotStatus() {
+        this(0, false, false);
+    }
+
     protected AbstractRobotStatus(int matchTimeMs, boolean mainRobot) {
         this(matchTimeMs, mainRobot, false);
         if (!mainRobot) {

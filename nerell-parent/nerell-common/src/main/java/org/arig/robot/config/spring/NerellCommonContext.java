@@ -19,7 +19,6 @@ import org.arig.robot.model.ecran.EcranState;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractCommonRobotServosService;
-import org.arig.robot.services.BrasService;
 import org.arig.robot.services.CommonRobotIOService;
 import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.system.RobotGroupOverSocket;
@@ -229,17 +228,6 @@ public class NerellCommonContext {
     @Bean
     public RobotGroupService pamiRondGroupService(final EurobotStatus rs, final RobotGroup pamiRondGroup, final ThreadPoolExecutor threadPoolTaskExecutor) {
         return new RobotGroupService(rs, pamiRondGroup, threadPoolTaskExecutor);
-    }
-
-    @Bean
-    public BrasService brasService(
-        final AbstractCommonRobotServosService servos,
-        final ThreadPoolExecutor executor,
-        final RobotConfig config,
-        final EurobotStatus rs,
-        final CommonRobotIOService io
-    ) {
-        return new BrasService(servos, executor, config, rs, io);
     }
 
     @Bean

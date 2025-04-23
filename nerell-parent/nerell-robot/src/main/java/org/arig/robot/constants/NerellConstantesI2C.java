@@ -19,24 +19,12 @@ public interface NerellConstantesI2C {
     String PCF2_DEVICE_NAME = "PCF 2";
     int PCF2_ADDRESS = PCF8574GpioProvider.PCF8574_0x26;
 
-    String PCF3_DEVICE_NAME = "PCF 3";
-    int PCF3_ADDRESS = PCF8574GpioProvider.PCF8574_0x27;
-
     String PCA9685_DEVICE_NAME = "PCA9685";
     int PCA9685_ADDRESS = 0x40;
 
-    String SERVO_AVANT_DEVICE_NAME = "SD21 Avant";
-    byte SERVO_AVANT_MUX_CHANNEL = 6;
-    String SERVO_ARRIERE_DEVICE_NAME = "SD21 Arriere";
-    byte SERVO_ARRIERE_MUX_CHANNEL = 1;
+    String SERVO_DEVICE_NAME = "SD21";
     int SD21_ADDRESS = 0x61;
 
     String ALIM_MESURE_DEVICE_NAME = "Mesure alimentation";
     int ALIM_MESURE_ADDRESS = 0x20;
-
-    String MULTIPLEXEUR_I2C_NAME = "Mux TCA";
-    int MULTIPLEXEUR_I2C_ADDRESS = 0x70;
-
-    String I2C_ADC_DEVICE_NAME = "ADC";
-    int I2C_ADC_ADDRESS = 0x48;
 }

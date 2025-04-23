@@ -59,7 +59,7 @@ public class NerellRobotContext {
         return RobotName.builder()
                 .id(RobotIdentification.NERELL)
                 .name("Nerell (The less I do the better I am)")
-                .version("2024 (Terraforming Mars)")
+                .version("2025 (The show must go on)")
                 .build();
     }
 
@@ -72,10 +72,6 @@ public class NerellRobotContext {
     public I2CManager i2cManager(I2CBus i2cBus) throws IOException {
         final RaspiI2CManager manager = new RaspiI2CManager();
 
-        final I2CManagerDevice<I2CDevice> mux = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(NerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
-                .device(i2cBus.getDevice(NerellConstantesI2C.MULTIPLEXEUR_I2C_ADDRESS))
-                .build();
         final I2CManagerDevice<I2CDevice> pca9685 = I2CManagerDevice.<I2CDevice>builder()
                 .deviceName(NerellConstantesI2C.PCA9685_DEVICE_NAME)
                 .device(i2cBus.getDevice(NerellConstantesI2C.PCA9685_ADDRESS))
@@ -92,21 +88,9 @@ public class NerellRobotContext {
                 .deviceName(NerellConstantesI2C.PCF2_DEVICE_NAME)
                 .device(i2cBus.getDevice(NerellConstantesI2C.PCF2_ADDRESS))
                 .build();
-        final I2CManagerDevice<I2CDevice> pcf3 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(NerellConstantesI2C.PCF3_DEVICE_NAME)
-                .device(i2cBus.getDevice(NerellConstantesI2C.PCF3_ADDRESS))
-                .build();
-        final I2CManagerDevice<I2CDevice> sd21Avant = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(NerellConstantesI2C.SERVO_AVANT_DEVICE_NAME)
+        final I2CManagerDevice<I2CDevice> sd21 = I2CManagerDevice.<I2CDevice>builder()
+                .deviceName(NerellConstantesI2C.SERVO_DEVICE_NAME)
                 .device(i2cBus.getDevice(NerellConstantesI2C.SD21_ADDRESS))
-                .multiplexerDeviceName(NerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(NerellConstantesI2C.SERVO_AVANT_MUX_CHANNEL)
-                .build();
-        final I2CManagerDevice<I2CDevice> sd21Arriere = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(NerellConstantesI2C.SERVO_ARRIERE_DEVICE_NAME)
-                .device(i2cBus.getDevice(NerellConstantesI2C.SD21_ADDRESS))
-                .multiplexerDeviceName(NerellConstantesI2C.MULTIPLEXEUR_I2C_NAME)
-                .multiplexerChannel(NerellConstantesI2C.SERVO_ARRIERE_MUX_CHANNEL)
                 .build();
         final I2CManagerDevice<I2CDevice> codeurMoteurDroit = I2CManagerDevice.<I2CDevice>builder()
                 .deviceName(NerellConstantesI2C.CODEUR_MOTEUR_DROIT)
@@ -121,40 +105,27 @@ public class NerellRobotContext {
                 .device(i2cBus.getDevice(NerellConstantesI2C.ALIM_MESURE_ADDRESS))
                 .scanCmd(new byte[]{0x00})
                 .build();
-        final I2CManagerDevice<I2CDevice> adc = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(NerellConstantesI2C.I2C_ADC_DEVICE_NAME)
-                .device(i2cBus.getDevice(NerellConstantesI2C.I2C_ADC_ADDRESS))
-                .build();
 
-        manager.registerDevice(mux);
-        manager.registerDevice(sd21Avant);
-        manager.registerDevice(sd21Arriere);
         manager.registerDevice(codeurMoteurDroit);
         manager.registerDevice(codeurMoteurGauche);
         manager.registerDevice(pcfAlim);
         manager.registerDevice(pcf1);
         manager.registerDevice(pcf2);
-        manager.registerDevice(pcf3);
         manager.registerDevice(pca9685);
         manager.registerDevice(alimMesure);
-        manager.registerDevice(adc);
+        manager.registerDevice(sd21);
 
         return manager;
     }
 
     @Bean
-    public SD21Servos servosAvant() {
-        return new SD21Servos(NerellConstantesI2C.SERVO_AVANT_DEVICE_NAME);
+    public SD21Servos servos() {
+        return new SD21Servos(NerellConstantesI2C.SERVO_DEVICE_NAME);
     }
 
     @Bean
-    public SD21Servos servosArriere() {
-        return new SD21Servos(NerellConstantesI2C.SERVO_ARRIERE_DEVICE_NAME);
-    }
-
-    @Bean
-    public NerellRobotServosService servosService(SD21Servos servosAvant, SD21Servos servosArriere) {
-        return new NerellRobotServosService(servosAvant, servosArriere);
+    public NerellRobotServosService servosService(SD21Servos servos) {
+        return new NerellRobotServosService(servos);
     }
 
     @Bean
@@ -167,13 +138,6 @@ public class NerellRobotContext {
     @Bean
     public ARIG2ChannelsAlimentationSensor alimentationSensor() {
         return new ARIG2ChannelsAlimentationSensor(NerellConstantesI2C.ALIM_MESURE_DEVICE_NAME);
-    }
-
-    @Bean
-    public TCA9548MultiplexerI2C mux(I2CManager i2CManager) {
-        final TCA9548MultiplexerI2C mux = new TCA9548MultiplexerI2C(NerellConstantesI2C.MULTIPLEXEUR_I2C_NAME);
-        i2CManager.registerMultiplexerDevice(NerellConstantesI2C.MULTIPLEXEUR_I2C_NAME, mux);
-        return mux;
     }
 
     @Bean
@@ -211,21 +175,6 @@ public class NerellRobotContext {
     public ILidarTelemeter rplidar() throws Exception {
         final File socketFile = new File(RPLidarBridgeProcess.socketPath);
         return new RPLidarA2TelemeterOverSocket(socketFile);
-    }
-
-    @Bean
-    public I2CAdcAnalogInput analogReader() {
-        return new I2CAdcAnalogInput(NerellConstantesI2C.I2C_ADC_DEVICE_NAME);
-    }
-
-    @Bean("gp2d")
-    public ILidarTelemeter gp2d12Telemeter() {
-        List<GP2D12Telemeter.Device> devices = new ArrayList<>();
-        devices.add(new GP2D12Telemeter.Device((byte) 1, -80, 70, 160));
-        devices.add(new GP2D12Telemeter.Device((byte) 5, -90, 39, 177));
-        devices.add(new GP2D12Telemeter.Device((byte) 4, -90, -39, -177));
-        devices.add(new GP2D12Telemeter.Device((byte) 0, -80, -70, -160));
-        return new GP2D12Telemeter(devices, NerellConstantesConfig.pathFindingTailleObstaclePami);
     }
 
     @Bean

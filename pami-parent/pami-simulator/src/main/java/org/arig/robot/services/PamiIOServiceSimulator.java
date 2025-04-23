@@ -44,16 +44,6 @@ public class PamiIOServiceSimulator extends AbstractIOServiceBouchon implements 
     }
 
     @Override
-    public boolean calageElectroaimant() {
-        return calageElectroaimant(1);
-    }
-
-    @Override
-    public boolean calageElectroaimant(int mandatorySensors) {
-        return false;
-    }
-
-    @Override
     public boolean calageAvantGauche() {
         return rs.calage().contains(TypeCalage.AVANT);
     }
@@ -75,23 +65,17 @@ public class PamiIOServiceSimulator extends AbstractIOServiceBouchon implements 
 
     // Numerique
 
+    @Override
+    public boolean presenceSolGauche(boolean expectedSimulator) {
+        return expectedSimulator;
+    }
+
+    @Override
+    public boolean presenceSolDroit(boolean expectedSimulator) {
+        return expectedSimulator;
+    }
 
     // Analogique
-    @Override
-    public double distanceGauche() {
-        return 0;
-    }
-
-    @Override
-    public double distanceCentre() {
-        return 0;
-    }
-
-    @Override
-    public double distanceDroite() {
-        return 0;
-    }
-
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

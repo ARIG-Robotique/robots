@@ -23,9 +23,8 @@ public class PamiCapteursController extends AbstractCapteursController {
         numeriqueInfos.put("Calage arriere gauche", ioService::calageArriereGauche);
         numeriqueInfos.put("Calage arriere droit", ioService::calageArriereDroit);
 
-        analogiqueInfos.put("Distance Gauche", ioService::distanceGauche);
-        analogiqueInfos.put("Distance Centre", ioService::distanceCentre);
-        analogiqueInfos.put("Distance Droit", ioService::distanceDroite);
+        numeriqueInfos.put("Présence sol gauche", () -> ioService.presenceSolGauche(false));
+        numeriqueInfos.put("Présence sol droit", () -> ioService.presenceSolDroit(false));
 
         textInfos.put("Equipe", () -> (robotStatus.team() != null) ? robotStatus.team().name() : "???");
     }

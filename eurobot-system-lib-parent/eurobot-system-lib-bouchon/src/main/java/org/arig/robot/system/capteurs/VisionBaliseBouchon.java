@@ -37,14 +37,6 @@ public class VisionBaliseBouchon extends AbstractVisionBaliseBouchon<BaliseData>
         List<Data2D> data2D = List.of(new Data2D());
         List<Data3D> data3D = new ArrayList<>();
 
-        for (int i = 0; i < 9; i++) {
-            data3D.add(new Data3D(
-                Data3DName.valueOf("SOLAR_PANEL_" + i),
-                Data3DType.SOLAR_PANEL,
-                Data3DTeam.values()[random.nextInt(4)]
-            ));
-        }
-
         BaliseData data = new BaliseData(data2D, data3D);
 
         response.setData(data);

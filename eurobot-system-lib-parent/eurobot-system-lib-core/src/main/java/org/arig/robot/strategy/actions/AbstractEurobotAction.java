@@ -63,7 +63,7 @@ public abstract class AbstractEurobotAction extends AbstractAction {
     private Position position;
 
     protected int getX(int x) {
-        return tableUtils.getX(rs.team() == Team.JAUNE, x);
+        return tableUtils.getX(rs.team() == Team.BLEU, x);
     }
 
     public abstract int executionTimeMs();
@@ -86,7 +86,7 @@ public abstract class AbstractEurobotAction extends AbstractAction {
 
     protected boolean ilEstTempsDeRentrer() {
         if (robotName.id() == RobotIdentification.NERELL) {
-            return rs.getRemainingTime() < EurobotConfig.validRetourSiteDeChargeRemainingTimeNerell;
+            return rs.getRemainingTime() < EurobotConfig.validRetourBackstageRemainingTimeNerell;
         }
 
         return false;

@@ -1,6 +1,6 @@
 package org.arig.robot.model.balise.enums;
 
-import org.arig.robot.model.Plante;
+import org.arig.robot.model.GradinBrut;
 import org.arig.robot.model.Team;
 
 public enum Data3DName {
@@ -68,14 +68,17 @@ public enum Data3DName {
         };
     }
 
-    public static Plante.ID getStockPlantesID(Data3DName data3DName) {
+    public static GradinBrut.ID getStockPlantesID(Data3DName data3DName) {
         return switch (data3DName) {
+            // TODO : Add vision name !
+            /*
             case NORD -> Plante.ID.STOCK_NORD;
             case NORD_OUEST -> Plante.ID.STOCK_NORD_OUEST;
             case NORD_EST -> Plante.ID.STOCK_NORD_EST;
             case SUD -> Plante.ID.STOCK_SUD;
             case SUD_EST -> Plante.ID.STOCK_SUD_EST;
             case SUD_OUEST -> Plante.ID.STOCK_SUD_OUEST;
+             */
             default -> null;
         };
     }

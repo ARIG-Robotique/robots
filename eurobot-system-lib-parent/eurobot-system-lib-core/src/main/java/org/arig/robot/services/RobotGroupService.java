@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.InitStep;
-import org.arig.robot.model.SiteDeCharge;
+import org.arig.robot.model.BackstageState;
 import org.arig.robot.model.StatusEvent;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.Team;
@@ -88,16 +88,14 @@ public class RobotGroupService implements RobotGroup.Handler {
                 quit = true;
                 break;
             case TEAM:
-                rs.setTeam(Team.values()[data[0]]);
+                rs.team(Team.values()[data[0]]);
                 break;
             case STRATEGY:
                 rs.strategy(Strategy.values()[data[0]]);
                 break;
             case CONFIG:
-                rs.stockage(data[0] > 0);
-                rs.prisePots(data[1] > 0);
-                rs.preferePanneaux(data[2] > 0);
-                rs.vol(data[3] > 0);
+                rs.option_1(data[0] > 0);
+                rs.option_2(data[1] > 0);
                 break;
             case CURRENT_ACTION:
                 String actionName = null;
@@ -112,8 +110,8 @@ public class RobotGroupService implements RobotGroup.Handler {
                 rs.otherPosition(x, y);
                 break;
 
-            case SITE_DE_CHARGE:
-                rs.siteDeCharge(SiteDeCharge.values()[data[0]]);
+            case BACKSTAGE:
+                rs.backstage(BackstageState.values()[data[0]]);
                 break;
 
             default:
@@ -212,7 +210,7 @@ public class RobotGroupService implements RobotGroup.Handler {
     }
 
     public void team(Team team) {
-        rs.setTeam(team);
+        rs.team(team);
         sendEvent(StatusEvent.TEAM, team);
     }
 
@@ -223,10 +221,8 @@ public class RobotGroupService implements RobotGroup.Handler {
 
     public void configuration() {
         byte[] data = new byte[]{
-                (byte) (rs.stockage() ? 1 : 0),
-                (byte) (rs.prisePots() ? 1 : 0),
-                (byte) (rs.preferePanneaux() ? 1 : 0),
-                (byte) (rs.vol() ? 1 : 0)
+                (byte) (rs.option_1() ? 1 : 0),
+                (byte) (rs.option_2() ? 1 : 0)
         };
         sendEvent(StatusEvent.CONFIG, data);
     }
@@ -235,9 +231,9 @@ public class RobotGroupService implements RobotGroup.Handler {
     /* ****************************** ACTIONS ********************************* */
     /* ************************************************************************ */
 
-    public void siteDeCharge(SiteDeCharge siteDeCharge) {
-        rs.siteDeCharge(siteDeCharge);
-        sendEvent(StatusEvent.SITE_DE_CHARGE, siteDeCharge);
+    public void backstage(BackstageState backstageState) {
+        rs.backstage(backstageState);
+        sendEvent(StatusEvent.BACKSTAGE, backstageState);
     }
 
     /* ************************************************************************ */

@@ -26,8 +26,7 @@ import org.arig.robot.system.avoiding.CompleteAvoidingService;
 import org.arig.robot.system.avoiding.SemiCompleteAvoidingService;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
 import org.arig.robot.system.capteurs.can.ARIG2024AlimentationController;
-import org.arig.robot.system.capteurs.i2c.ARIG2024IoPamiSensors;
-import org.arig.robot.system.capteurs.i2c.GP2D120Telemeter;
+import org.arig.robot.system.capteurs.i2c.ARIG2025IoPamiSensors;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.arig.robot.system.capteurs.socket.IVisionBalise;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
@@ -43,7 +42,6 @@ import tel.schich.javacan.NetworkDevice;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Configuration
@@ -53,8 +51,8 @@ public class PamiRobotContext {
     public RobotName robotName() {
         return RobotName.builder()
                 .id(RobotName.fromPamiID())
-                .name(RobotName.fromPamiID() + " (One beetle to rule them all)")
-                .version("2024 (Terraforming Mars)")
+                .name(RobotName.fromPamiID() + " (A huge fan, but it's not a fan)")
+                .version("expectedSimulator")
                 .build();
     }
 
@@ -83,8 +81,8 @@ public class PamiRobotContext {
     }
 
     @Bean
-    public ARIG2024IoPamiSensors sensors(I2CManager i2cManager) {
-        return new ARIG2024IoPamiSensors(i2cManager, PamiConstantesI2C.ARIG_2024_PAMI_IO_NAME);
+    public ARIG2025IoPamiSensors sensors(I2CManager i2cManager) {
+        return new ARIG2025IoPamiSensors(i2cManager, PamiConstantesI2C.ARIG_2024_PAMI_IO_NAME);
     }
 
     @Bean
@@ -201,16 +199,6 @@ public class PamiRobotContext {
                 return si;
             }
         };
-    }
-
-    @Bean("gp2d")
-    public ILidarTelemeter gp2d120Telemeter() {
-        List<GP2D120Telemeter.Device> devices = new ArrayList<>();
-        devices.add(new GP2D120Telemeter.Device((byte) 1, 56, 47, 30));
-        devices.add(new GP2D120Telemeter.Device((byte) 2, 75, 0, 0));
-        devices.add(new GP2D120Telemeter.Device((byte) 3, 56, -47, -30));
-
-        return new GP2D120Telemeter(devices, 300);
     }
 
     @Bean

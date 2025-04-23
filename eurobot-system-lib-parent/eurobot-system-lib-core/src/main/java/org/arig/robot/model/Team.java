@@ -4,6 +4,6 @@ public enum Team {
     JAUNE, BLEU;
 
     public String pathfinderMap(String robot) {
-        return String.format("classpath:maps/terraforming-mars-%s-%s.png", name(), robot);
+        return String.format("classpath:maps/%s-%s.png", name(), robot);
     }
 }

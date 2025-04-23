@@ -9,37 +9,23 @@ public interface EurobotConfig {
     int pamiStartRemainingTimeMs = 10300;
 
     // Temps restants
-    int validRetourSiteDeChargeRemainingTimeNerell = 15000;
+    int validRetourBackstageRemainingTimeNerell = 15000;
 
     // Durée de validités
     int validTimeEchappement = 20000;
-    int validTimePrisePots = 40000;
-    int validTimePrisePlantes = 20000;
+    int validTimePrise = 25000;
 
     // Valeurs min / max en mm des axes du repères
     int tableWidth = 3000;
     int tableHeight = 2000;
     int tableBorder = 50;
 
-    // Options de match
-    String STOCKAGE = "Stockage";
-    String PRISE_POTS = "Prise des pots";
-    String PREFERE_PANNEAUX = "Prefere panneaux";
-    String VOL = "Surprise";
-
     // Noms des actions
-    String ACTION_PRISE_SITE_DE_PLANTES = "Prise site de plantes";
-    String ACTION_RETOUR_SITE_DE_CHARGE = "Retour site de charge";
-    String ACTION_PANNEAU_SOLAIRE_EQUIPE = "Panneau solaire équipe";
-    String ACTION_PANNEAU_SOLAIRE_COMMUN = "Panneau solaire commun";
-    String ACTION_PRISE_STOCK_POTS = "Prise stock pots";
-    String ACTION_JARDINIERE_NORD = "Jardinière nord";
-    String ACTION_JARDINIERE_MILIEU = "Jardinière centre";
+    String ACTION_RETOUR_BACKSTAGE = "Retour backstage";
+    String ACTION_PRISE_STOCK_GRADIN_EQUIPE = "Prise stock gradin équipe";
 
     // Actions d'échappement
     String ACTION_ECHAPPEMENT_ARUCO_PREFIX = "Echappement Aruco ";
 
-    int PATHFINDER_FLEUR_SIZE = 500;
-    int PATHFINDER_STOCK_POTS_SIZE = 600;
-    int PATHFINDER_STOCK_PLANTES_SIZE = 580;
+    int PATHFINDER_COLONE_SIZE = 500;
 }

@@ -37,215 +37,27 @@ import java.util.concurrent.CompletableFuture;
 public class NerellIOCommands {
 
     private final NerellIOServiceRobot nerellIOServiceRobot;
-    private final AbstractEnergyService energyService;
-    private final MonitoringWrapper monitoringWrapper;
-    private final Abstract2WheelsEncoders wheelsEncoders;
-    private final TrajectoryManager trajectoryManager;
-    private final NerellRobotStatus rs;
-    private final I2CAdcAnalogInput adc;
-    private final Position currentPosition;
-
-    public Availability alimentationOk() {
-        return nerellIOServiceRobot.auOk() && energyService.checkMoteurs()
-                ? Availability.available() : Availability.unavailable("Alimentation moteurs KO");
-    }
 
     @ShellMethod("Read all IOs")
     public void readAllIO() {
         log.info("Tirette = {}", nerellIOServiceRobot.tirette());
+        log.info("================== FIXE ==================");
         log.info("Calage avant gauche = {}", nerellIOServiceRobot.calageAvantGauche());
         log.info("Calage avant droit = {}", nerellIOServiceRobot.calageAvantDroit());
         log.info("Calage arriere gauche = {}", nerellIOServiceRobot.calageArriereGauche());
         log.info("Calage arriere droit = {}", nerellIOServiceRobot.calageArriereDroit());
-        log.info("Inductif gauche = {}", nerellIOServiceRobot.inductifGauche(false));
-        log.info("Inductif centre = {}", nerellIOServiceRobot.inductifCentre(false));
-        log.info("Inductif droite = {}", nerellIOServiceRobot.inductifDroite(false));
-        log.info("Stock gauche = {}", nerellIOServiceRobot.presenceStockGauche(false));
-        log.info("Stock centre = {}", nerellIOServiceRobot.presenceStockCentre(false));
-        log.info("Stock droite = {}", nerellIOServiceRobot.presenceStockDroite(false));
+        log.info("Stock avant gauche = {}", nerellIOServiceRobot.stockAvantGauche(false));
+        log.info("Stock avant droit = {}", nerellIOServiceRobot.stockAvantDroite(false));
+        log.info("Stock arriere gauche = {}", nerellIOServiceRobot.stockArriereGauche(false));
+        log.info("Stock arriere droit = {}", nerellIOServiceRobot.stockArriereDroite(false));
+        log.info("================= MOBILE =================");
         log.info("Pince avant gauche = {}", nerellIOServiceRobot.pinceAvantGauche(false));
-        log.info("Pince avant centre = {}", nerellIOServiceRobot.pinceAvantCentre(false));
         log.info("Pince avant droite = {}", nerellIOServiceRobot.pinceAvantDroite(false));
         log.info("Pince arriere gauche = {}", nerellIOServiceRobot.pinceArriereGauche(false));
-        log.info("Pince arriere centre = {}", nerellIOServiceRobot.pinceArriereCentre(false));
         log.info("Pince arriere droite = {}", nerellIOServiceRobot.pinceArriereDroite(false));
-        log.info("Présence avant gauche = {}", nerellIOServiceRobot.presenceAvantGauche(false));
-        log.info("Présence avant centre = {}", nerellIOServiceRobot.presenceAvantCentre(false));
-        log.info("Présence avant droite = {}", nerellIOServiceRobot.presenceAvantDroite(false));
-        log.info("Présence arriere gauche = {}", nerellIOServiceRobot.presenceArriereGauche(false));
-        log.info("Présence arriere centre = {}", nerellIOServiceRobot.presenceArriereCentre(false));
-        log.info("Présence arriere droite = {}", nerellIOServiceRobot.presenceArriereDroite(false));
-    }
-
-    @ShellMethod("Read ADC")
-    @SneakyThrows
-    public void readAdc() {
-        for (int i = 0; i < 8; i++) {
-            int value = adc.readCapteurValue((byte) i);
-            log.info("ADC {}: {}", i, value);
-        }
-    }
-
-    private void startMonitoring() {
-        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
-        System.setProperty(ConstantesConfig.keyExecutionId, execId);
-        rs.enableForceMonitoring();
-        monitoringWrapper.cleanAllPoints();
-    }
-
-    @SneakyThrows
-    private void endMonitoring() {
-        monitoringWrapper.save();
-        rs.disableForceMonitoring();
-
-        final String execId = System.getProperty(ConstantesConfig.keyExecutionId);
-        final File execFile = new File("./logs/" + execId + ".exec");
-        DateTimeFormatter execIdPattern = DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat);
-        DateTimeFormatter savePattern = DateTimeFormatter.ofPattern(ConstantesConfig.executiondDateFormat);
-        List<String> lines = new ArrayList<>();
-        lines.add(LocalDateTime.parse(execId, execIdPattern).format(savePattern));
-        lines.add(LocalDateTime.now().format(savePattern));
-        FileUtils.writeLines(execFile, lines);
-    }
-
-    private double toCM(int value) {
-        return (double) 26208 / value - 4.693;
-    }
-
-    @SneakyThrows
-    @ShellMethod("Monitor ADC")
-    public void monitorAdc(int duration, int medianValuesSize, int aroundValue) {
-        startMonitoring();
-
-
-        long end = System.currentTimeMillis() + duration * 1000L;
-
-        GP2DPhantomFilter phantomFilter1 = new GP2DPhantomFilter(medianValuesSize, aroundValue);
-        GP2DPhantomFilter phantomFilter2 = new GP2DPhantomFilter(medianValuesSize, aroundValue);
-        GP2DPhantomFilter phantomFilter3 = new GP2DPhantomFilter(medianValuesSize, aroundValue);
-        GP2DPhantomFilter phantomFilter4 = new GP2DPhantomFilter(medianValuesSize, aroundValue);
-
-        do {
-            int value1 = adc.readCapteurValue((byte) 1) ;
-            double value1cm = toCM(value1);
-            double filteredValue1 = phantomFilter1.filter(value1cm);
-            int value2 = adc.readCapteurValue((byte) 5);
-            double value2cm = toCM(value2);
-            double filteredValue2 = phantomFilter2.filter(value2cm);
-            int value3 = adc.readCapteurValue((byte) 4);
-            double value3cm = toCM(value3);
-            double filteredValue3 = phantomFilter3.filter(value3cm);
-            int value4 = adc.readCapteurValue((byte) 0);
-            double value4cm = toCM(value4);
-            double filteredValue4 = phantomFilter4.filter(value4cm);
-            phantomFilter4.filter((double) value4);
-
-            log.info("{} {} | {} {} | {} {} | {} {}", value1cm, filteredValue1, value2cm, filteredValue2,
-                value3cm, filteredValue3, value4cm, filteredValue4);
-
-            MonitorTimeSerie serie = new MonitorTimeSerie()
-                .measurementName("adc")
-                .addField("value1", value1cm)
-                .addField("filteredValue1", value1cm)
-                .addField("value2", value2cm)
-                .addField("filteredValue2", value2cm)
-                .addField("value3", value3cm)
-                .addField("filteredValue3", value2cm)
-                .addField("value4", value4cm)
-                .addField("filteredValue4", value4cm);
-
-            monitoringWrapper.addTimeSeriePoint(serie);
-
-            ThreadUtils.sleep(20);
-
-        } while (System.currentTimeMillis() < end);
-
-        endMonitoring();
-    }
-
-    /**
-     * Avance de 1000mm tout en tracant les valeurs des GP2D
-     *
-     * @example Query Flux
-     *
-     * from(bucket: "robots")
-     * |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
-     * |> filter(fn: (r) => r["_measurement"] == "adc")
-     * |> filter(fn: (r) => r["_field"] == "x" or r["_field"] == "value1" or r["_field"] == "value2" or r["_field"] == "value3" or r["_field"] == "value4")
-     * |> aggregateWindow(every: 100ms, fn: mean, createEmpty: false)
-     * |> map(fn: (r) =>  ({ r with _value: if r._field == "x" then r._value / 10.0 else 26208.0 / r._value - 4.693 }))
-     * |> yield(name: "mean")
-     */
-    @SneakyThrows
-    @ShellMethod()
-    @ShellMethodAvailability("alimentationOk")
-    public void calibrationGp() {
-        startMonitoring();
-
-        wheelsEncoders.reset();
-        currentPosition.updatePosition(0, 0, 0);
-        rs.enableAsserv();
-
-        trajectoryManager.setVitessePercent(10, 100);
-
-        CompletableFuture.runAsync(() -> {
-            try {
-                trajectoryManager.avanceMM(1000);
-            } catch (AvoidingException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        do {
-            double currentX = trajectoryManager.currentXMm();
-            int value1 = adc.readCapteurValue((byte) 1);
-            int value2 = adc.readCapteurValue((byte) 5);
-            int value3 = adc.readCapteurValue((byte) 4);
-            int value4 = adc.readCapteurValue((byte) 0);
-
-            MonitorTimeSerie serie = new MonitorTimeSerie()
-                    .measurementName("adc")
-                    .addField("x", currentX)
-                    .addField("value1", value1)
-                    .addField("value2", value2)
-                    .addField("value3", value3)
-                    .addField("value4", value4);
-
-            monitoringWrapper.addTimeSeriePoint(serie);
-
-            ThreadUtils.sleep(20);
-
-        } while (!trajectoryManager.isTrajetAtteint());
-
-        endMonitoring();
-        rs.disableAsserv();
-    }
-
-    @ShellMethod("Enable Electro Aimant")
-    @ShellMethodAvailability("alimentationOk")
-    public void enableElectroAimant() {
-        nerellIOServiceRobot.enableElectroAimant();
-    }
-
-    @ShellMethod("Enable Electro Aimant")
-    @ShellMethodAvailability("alimentationOk")
-    public void disableElectroAimant() {
-        nerellIOServiceRobot.disableElectroAimant();
-    }
-
-    @ShellMethod("Tourne solar wheel")
-    @ShellMethodAvailability("alimentationOk")
-    public void tourneSolarWheel(boolean avant, int speed) {
-        if (avant) {
-            nerellIOServiceRobot.tournePanneauBleu(speed);
-        } else {
-            nerellIOServiceRobot.tournePanneauJaune(speed);
-        }
-    }
-
-    @ShellMethod("Stop solar wheel")
-    @ShellMethodAvailability("alimentationOk")
-    public void stopSolarWheel() {
-        nerellIOServiceRobot.stopTournePanneau();
+        log.info("Tiroir avant haut = {}", nerellIOServiceRobot.tiroirAvantHaut(false));
+        log.info("Tiroir avant bas = {}", nerellIOServiceRobot.tiroirAvantBas(false));
+        log.info("Tiroir arriere haut = {}", nerellIOServiceRobot.tiroirArriereHaut(false));
+        log.info("Tiroir arriere bas = {}", nerellIOServiceRobot.tiroirArriereBas(false));
     }
 }

@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
 import org.arig.robot.model.RobotName;
 import org.arig.robot.system.capteurs.can.ARIG2024AlimentationController;
-import org.arig.robot.system.capteurs.i2c.ARIG2024IoPamiSensors;
+import org.arig.robot.system.capteurs.i2c.ARIG2025IoPamiSensors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +16,14 @@ public class PamiIOServiceRobot implements PamiIOService {
     private ARIG2024AlimentationController alimentationController;
 
     @Autowired
-    private ARIG2024IoPamiSensors arig2024IoPamiSensors;
+    private ARIG2025IoPamiSensors arig2025IoPamiSensors;
 
     @Autowired
     private RobotName robotName;
 
     @Override
     public void refreshAllIO() {
-        arig2024IoPamiSensors.refreshSensors();
+        arig2025IoPamiSensors.refreshSensors();
     }
 
     @Override
@@ -73,16 +73,6 @@ public class PamiIOServiceRobot implements PamiIOService {
     }
 
     @Override
-    public boolean calageElectroaimant() {
-        return calageElectroaimant(1);
-    }
-
-    @Override
-    public boolean calageElectroaimant(int mandatorySensors) {
-        throw new NotImplementedException("calageElectroaimant not implemented on PAMI");
-    }
-
-    @Override
     public boolean calageAvantGauche() {
         throw new NotImplementedException("calageAvantGauche not implemented on PAMI");
     }
@@ -94,57 +84,27 @@ public class PamiIOServiceRobot implements PamiIOService {
 
     @Override
     public boolean calageArriereGauche() {
-        return arig2024IoPamiSensors.isArriereGauche();
+        return arig2025IoPamiSensors.isArriereGauche();
     }
 
     @Override
     public boolean calageArriereDroit() {
-        return arig2024IoPamiSensors.isArriereDroite();
+        return arig2025IoPamiSensors.isArriereDroite();
     }
 
     // Numerique
 
+    @Override
+    public boolean presenceSolGauche(boolean expectedSimulator) {
+        return arig2025IoPamiSensors.isSolGauche();
+    }
+
+    @Override
+    public boolean presenceSolDroit(boolean expectedSimulator) {
+        return arig2025IoPamiSensors.isSolDroit();
+    }
 
     // Analogique
-
-    @Override
-    public double distanceGauche() {
-        if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
-            return arig2024IoPamiSensors.getGp2d2();
-        }
-        return arig2024IoPamiSensors.getGp2d1();
-    }
-
-    public double distanceGaucheCm() {
-        if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
-            return arig2024IoPamiSensors.getDistanceCmGP2D120(2);
-        }
-        return arig2024IoPamiSensors.getDistanceCmGP2D120(1);
-    }
-
-    @Override
-    public double distanceCentre() {
-        if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
-            return arig2024IoPamiSensors.getGp2d1();
-        }
-        return arig2024IoPamiSensors.getGp2d2();
-    }
-
-    public double distanceCentreCm() {
-        if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
-            return arig2024IoPamiSensors.getDistanceCmGP2D120(1);
-        }
-        return arig2024IoPamiSensors.getDistanceCmGP2D120(2);
-    }
-
-    @Override
-    public double distanceDroite() {
-        return arig2024IoPamiSensors.getGp2d3();
-    }
-
-    public double distanceDroiteCm() {
-        return arig2024IoPamiSensors.getDistanceCmGP2D120(3);
-    }
 
 
     // --------------------------------------------------------- //
@@ -153,12 +113,12 @@ public class PamiIOServiceRobot implements PamiIOService {
 
     @Override
     public void enableAlimServos() {
-        log.warn("Activation puissance servos -> NOT IMPLEMENTED");
+        log.warn("Activation puissance servos -> NOT EXISTS");
     }
 
     @Override
     public void disableAlimServos() {
-        log.warn("Desactivation puissance servos -> NOT IMPLEMENTED");
+        log.warn("Desactivation puissance servos -> NOT EXISTS");
     }
 
     @Override

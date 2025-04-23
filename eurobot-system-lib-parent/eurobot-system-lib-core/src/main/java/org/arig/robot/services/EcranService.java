@@ -3,6 +3,7 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.Strategy;
+import org.arig.robot.model.StrategyOption;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.ecran.EcranConfig;
 import org.arig.robot.model.ecran.EcranParams;
@@ -42,12 +43,7 @@ public class EcranService extends AbstractEcranService<EcranConfig, EcranState> 
                 Team.BLEU.name(), "blue"
         ));
         ecranParams.setStrategies(Stream.of(Strategy.values()).map(Enum::name).collect(Collectors.toList()));
-        ecranParams.setOptions(List.of(
-                EurobotConfig.STOCKAGE,
-                EurobotConfig.PRISE_POTS,
-                EurobotConfig.PREFERE_PANNEAUX,
-                EurobotConfig.VOL
-        ));
+        ecranParams.setOptions(Stream.of(StrategyOption.values()).map(StrategyOption::description).collect(Collectors.toList()));
         return ecranParams;
     }
 }

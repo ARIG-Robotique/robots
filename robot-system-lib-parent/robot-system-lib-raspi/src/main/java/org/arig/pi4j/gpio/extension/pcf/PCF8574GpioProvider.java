@@ -145,6 +145,13 @@ public class PCF8574GpioProvider extends MonitorGpioProviderBase implements Moni
         return NAME;
     }
 
+    public String i2cAddress() {
+        if (device == null) {
+            return "Ox<null>";
+        }
+        return "0x" + Integer.toHexString(device.getAddress());
+    }
+
     @Override
     public void export(Pin pin, PinMode mode) {
         // make sure to set the pin mode

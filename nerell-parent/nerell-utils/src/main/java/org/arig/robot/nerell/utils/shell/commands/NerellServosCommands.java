@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.services.AbstractEnergyService;
-import org.arig.robot.services.BrasService;
 import org.arig.robot.services.NerellIOService;
 import org.arig.robot.services.NerellRobotServosService;
 import org.arig.robot.utils.ThreadUtils;
@@ -22,7 +21,6 @@ public class NerellServosCommands {
     private final NerellRobotServosService servosService;
     private final NerellIOService ioService;
     private final AbstractEnergyService energyService;
-    private final BrasService bras;
 
     private final int nbLoop = 5;
 
@@ -49,55 +47,21 @@ public class NerellServosCommands {
     }
 
     @ShellMethod("Configuration attente pince")
-    public void configWaitPince(int wait) {
-        bras.setBrasAvant(PositionBras.CALLAGE_PANNEAUX);
-
+    public void configWaitPinceAvant(int wait) {
         for (int i = 0; i < nbLoop; i++) {
-            servosService.groupePinceAvantOuvert(false);
+            servosService.groupePincesAvantPrise(false);
             ThreadUtils.sleep(wait);
-            servosService.groupePinceAvantFerme(false);
-            ThreadUtils.sleep(wait);
-        }
-
-        bras.setBrasAvant(PositionBras.INIT);
-    }
-
-    @ShellMethod("Configuration attente moustache")
-    public void configWaitBloquePlante(int wait) {
-        for (int i = 0; i < nbLoop; i++) {
-            servosService.groupeBloquePlanteOuvert(false);
-            ThreadUtils.sleep(wait);
-            servosService.groupeBloquePlanteFerme(false);
+            servosService.groupePincesAvantFerme(false);
             ThreadUtils.sleep(wait);
         }
     }
 
     @ShellMethod("Configuration attente ski")
-    public void configWaitSki(int wait) {
+    public void configWaitTiroirAvant(int wait) {
         for (int i = 0; i < nbLoop; i++) {
-            servosService.setPanneauSolaireSkiOuvert(false);
+            servosService.tirroirAvantOuvert(false);
             ThreadUtils.sleep(wait);
-            servosService.setPanneauSolaireSkiFerme(false);
-            ThreadUtils.sleep(wait);
-        }
-    }
-
-    @ShellMethod("Configuration attente roue")
-    public void configWaitRoue(int wait) {
-        for (int i = 0; i < nbLoop; i++) {
-            servosService.setPanneauSolaireRoueOuvert(false);
-            ThreadUtils.sleep(wait);
-            servosService.setPanneauSolaireRoueFerme(false);
-            ThreadUtils.sleep(wait);
-        }
-    }
-
-    @ShellMethod("Configuration attente leve stock")
-    public void configWaitStock(int wait) {
-        for (int i = 0; i < nbLoop; i++) {
-            servosService.leveStockHaut(false);
-            ThreadUtils.sleep(wait);
-            servosService.leveStockBas(false);
+            servosService.tirroirAvantStock(false);
             ThreadUtils.sleep(wait);
         }
     }

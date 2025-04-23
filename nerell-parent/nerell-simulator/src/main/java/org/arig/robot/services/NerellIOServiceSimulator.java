@@ -37,16 +37,6 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     }
 
     @Override
-    public boolean calageElectroaimant() {
-        return calageElectroaimant(1);
-    }
-
-    @Override
-    public boolean calageElectroaimant(int mandatorySensors) {
-        return true;
-    }
-
-    @Override
     public boolean calageAvantGauche() {
         return rs.calage().contains(TypeCalage.AVANT);
     }
@@ -74,11 +64,6 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     }
 
     @Override
-    public boolean pinceAvantCentre(boolean expectedSimulator) {
-        return expectedSimulator;
-    }
-
-    @Override
     public boolean pinceAvantDroite(boolean expectedSimulator) {
         return expectedSimulator;
     }
@@ -89,133 +74,54 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     }
 
     @Override
-    public boolean pinceArriereCentre(boolean expectedSimulator) {
-        return expectedSimulator;
-    }
-
-    @Override
     public boolean pinceArriereDroite(boolean expectedSimulator) {
         return expectedSimulator;
     }
 
     @Override
-    public boolean presenceAvantGauche(boolean expectedSimulator) {
+    public boolean stockAvantGauche(boolean expectedSimulator) {
         return expectedSimulator;
     }
 
     @Override
-    public boolean presenceAvantCentre(boolean expectedSimulator) {
+    public boolean stockAvantDroite(boolean expectedSimulator) {
         return expectedSimulator;
     }
 
     @Override
-    public boolean presenceAvantDroite(boolean expectedSimulator) {
+    public boolean stockArriereGauche(boolean expectedSimulator) {
         return expectedSimulator;
     }
 
     @Override
-    public boolean presenceArriereGauche(boolean expectedSimulator) {
+    public boolean stockArriereDroite(boolean expectedSimulator) {
         return expectedSimulator;
     }
 
     @Override
-    public boolean presenceArriereCentre(boolean expectedSimulator) {
+    public boolean tiroirAvantHaut(boolean expectedSimulator) {
         return expectedSimulator;
     }
 
     @Override
-    public boolean presenceArriereDroite(boolean expectedSimulator) {
+    public boolean tiroirAvantBas(boolean expectedSimulator) {
         return expectedSimulator;
     }
 
     @Override
-    public boolean presenceStockGauche(boolean expectedSimulator) {
+    public boolean tiroirArriereHaut(boolean expectedSimulator) {
         return expectedSimulator;
     }
 
     @Override
-    public boolean presenceStockCentre(boolean expectedSimulator) {
+    public boolean tiroirArriereBas(boolean expectedSimulator) {
         return expectedSimulator;
-    }
-
-    @Override
-    public boolean presenceStockDroite(boolean expectedSimulator) {
-        return expectedSimulator;
-    }
-
-    @Override
-    public boolean inductifGauche(boolean expectedSimulator) {
-        return expectedSimulator;
-    }
-
-    @Override
-    public boolean inductifCentre(boolean expectedSimulator) {
-        return expectedSimulator;
-    }
-
-    @Override
-    public boolean inductifDroite(boolean expectedSimulator) {
-        return expectedSimulator;
-    }
-
-    @Override
-    public boolean pinceAvantGaucheAverage(boolean expectedSimulateur) {
-        return expectedSimulateur;
-    }
-
-    @Override
-    public boolean pinceAvantCentreAverage(boolean expectedSimulateur) {
-        return expectedSimulateur;
-    }
-
-    @Override
-    public boolean pinceAvantDroiteAverage(boolean expectedSimulateur) {
-        return expectedSimulateur;
-    }
-
-    @Override
-    public boolean pinceArriereGaucheAverage(boolean expectedSimulateur) {
-        return expectedSimulateur;
-    }
-
-    @Override
-    public boolean pinceArriereCentreAverage(boolean expectedSimulateur) {
-        return expectedSimulateur;
-    }
-
-    @Override
-    public boolean pinceArriereDroiteAverage(boolean expectedSimulateur) {
-        return expectedSimulateur;
     }
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //
     // --------------------------------------------------------- //
 
-    @Override
-    public void enableElectroAimant() {
-
-    }
-
-    @Override
-    public void disableElectroAimant() {
-
-    }
-
-    @Override
-    public void tournePanneauJaune(int speed) {
-
-    }
-
-    @Override
-    public void tournePanneauBleu(int speed) {
-
-    }
-
-    @Override
-    public void stopTournePanneau() {
-
-    }
 
     // ----------------------------------------------------------- //
     // -------------------------- BUSINESS ----------------------- //

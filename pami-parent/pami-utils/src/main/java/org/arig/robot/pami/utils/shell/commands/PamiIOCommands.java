@@ -76,9 +76,8 @@ public class PamiIOCommands {
         log.info("Lecture des IOs");
         log.info("Calage arriere gauche : {}", pamiIOServiceRobot.calageArriereGauche());
         log.info("Calage arriere droit  : {}", pamiIOServiceRobot.calageArriereDroit());
-        log.info("GP2D gauche           : {}", pamiIOServiceRobot.distanceGauche());
-        log.info("GP2D centre           : {}", pamiIOServiceRobot.distanceCentre());
-        log.info("GP2D droit            : {}", pamiIOServiceRobot.distanceDroite());
+        log.info("Sol gauche            : {}", pamiIOServiceRobot.presenceSolGauche(false));
+        log.info("Sol droit             : {}", pamiIOServiceRobot.presenceSolDroit(false));
     }
 
     @ShellMethod
@@ -100,125 +99,5 @@ public class PamiIOCommands {
             ThreadUtils.sleep(1000);
         }
         arig2024IoPamiLeds.setAllLeds(ARIG2024IoPamiLeds.LedColor.Black);
-    }
-
-    @ShellMethod("Lecture d'un GP")
-    public void readGp(int gp, long limitS) {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-        DoubleValueAverage average = new DoubleValueAverage(10);
-        do {
-            double value;
-            if (gp == 1) {
-                value = pamiIOServiceRobot.distanceGauche();
-            } else if (gp == 2) {
-                value = pamiIOServiceRobot.distanceCentre();
-            } else {
-                value = pamiIOServiceRobot.distanceDroite();
-            }
-            if (value >= 300) {
-                average.filter(value);
-                log.info("GP2D{} : {} -> {} (avg)", gp,
-                    value, average.lastResult()
-                );
-            }
-            ThreadUtils.sleep(20);
-        } while (stopWatch.getTime() < limitS * 1000);
-    }
-
-    @SneakyThrows
-    @ShellMethod("Monitor ADC")
-    public void monitorAdc(int duration) {
-        startMonitoring();
-
-        long end = System.currentTimeMillis() + duration * 1000L;
-
-        do {
-            double gauche = pamiIOServiceRobot.distanceGauche();
-            double gaucheCm = pamiIOServiceRobot.distanceGaucheCm();
-            double centre = pamiIOServiceRobot.distanceCentre();
-            double centreCm = pamiIOServiceRobot.distanceCentreCm();
-            double droit = pamiIOServiceRobot.distanceDroite();
-            double droitCm = pamiIOServiceRobot.distanceDroiteCm();
-
-            log.info("{} {} {}", gauche, centre, droit);
-
-            MonitorTimeSerie serie = new MonitorTimeSerie()
-                .measurementName("adc")
-                .addField("gauche", gauche)
-                .addField("gaucheCm", gaucheCm)
-                .addField("centre", centre)
-                .addField("centreCm", centreCm)
-                .addField("droit", droit)
-                .addField("droitCm", droitCm);
-
-            monitoringWrapper.addTimeSeriePoint(serie);
-
-            ThreadUtils.sleep(20);
-
-        } while (System.currentTimeMillis() < end);
-
-        endMonitoring();
-    }
-
-    /**
-     * Recul de 1000mm tout en tracant les valeurs des GP2D
-     *
-     * @example Query Flux
-     *
-     from(bucket: "robots")
-     |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
-     |> filter(fn: (r) => r["_measurement"] == "adc")
-     |> filter(fn: (r) => r["_field"] == "x" or r["_field"] == "value1" or r["_field"] == "value2" or r["_field"] == "value3" or r["_field"] == "value4")
-     |> aggregateWindow(every: 100ms, fn: mean, createEmpty: false)
-     |> map(fn: (r) =>  ({ r with _value: if r._field == "x" then r._value else 230000.0 / r._value - 50.0 }))
-     |> yield(name: "mean")
-     */
-    @SneakyThrows
-    @ShellMethod()
-    @ShellMethodAvailability("alimentationOk")
-    public void calibrationGp() {
-        startMonitoring();
-
-        wheelsEncoders.reset();
-        rs.enableAsserv();
-
-        trajectoryManager.setVitessePercent(30, 100);
-
-        CompletableFuture.runAsync(() -> {
-            try {
-                trajectoryManager.reculeMM(1000);
-            } catch (AvoidingException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        do {
-            double currentX = trajectoryManager.currentXMm();
-            double gauche = pamiIOServiceRobot.distanceGauche();
-            double gaucheCm = pamiIOServiceRobot.distanceGaucheCm();
-            double centre = pamiIOServiceRobot.distanceCentre();
-            double centreCm = pamiIOServiceRobot.distanceCentreCm();
-            double droit = pamiIOServiceRobot.distanceDroite();
-            double droitCm = pamiIOServiceRobot.distanceDroiteCm();
-
-            MonitorTimeSerie serie = new MonitorTimeSerie()
-                .measurementName("adc")
-                .addField("x", currentX)
-                .addField("gauche", gauche)
-                .addField("gaucheCm", gaucheCm)
-                .addField("centre", centre)
-                .addField("centreCm", centreCm)
-                .addField("droit", droit)
-                .addField("droitCm", droitCm);
-
-            monitoringWrapper.addTimeSeriePoint(serie);
-
-            ThreadUtils.sleep(20);
-
-        } while (!trajectoryManager.isTrajetAtteint());
-
-        endMonitoring();
-        rs.disableAsserv();
     }
 }

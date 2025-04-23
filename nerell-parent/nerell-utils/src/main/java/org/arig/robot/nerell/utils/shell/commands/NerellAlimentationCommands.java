@@ -19,7 +19,6 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 public class NerellAlimentationCommands {
 
     private final NerellIOService ioService;
-    private final NerellRobotServosService servosService;
     private final IAlimentationSensor alimentationSensor;
 
     public Availability auOK() {
@@ -35,7 +34,6 @@ public class NerellAlimentationCommands {
     @ShellMethodAvailability("auOK")
     @ShellMethod("Activation alimentation servos")
     public void enableAlimentationServos() {
-        //servosService.cyclePreparation();
         ioService.enableAlimServos();
     }
 
