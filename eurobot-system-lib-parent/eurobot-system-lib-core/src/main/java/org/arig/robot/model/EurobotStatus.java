@@ -45,6 +45,9 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
      */
 
     @Setter(AccessLevel.NONE)
+    private boolean banderolleDansRobot = false;
+
+    @Setter(AccessLevel.NONE)
     private boolean banderolleDeployee = false;
 
     private GradinBrutStocks gradinBrutStocks = new GradinBrutStocks();
@@ -136,6 +139,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Override
     public Map<String, Boolean> gameFlags() {
         Map<String, Boolean> r = new HashMap<>();
+        r.put("Banderolle dans le robot", banderolleDansRobot);
         r.put("Banderolle déployé", banderolleDeployee);
         return r;
     }
