@@ -110,6 +110,9 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public Map<String, Integer> scoreStatus() {
         Map<String, Integer> r = new HashMap<>();
         r.put("Grand gradin equipe", grandGradinEquipe.score());
+        r.put("Petit gradin equipe", petitGradinEquipe.score());
+        r.put("Grand gradin adverse", grandGradinAdverse.score());
+        r.put("Petit gradin adverse", petitGradinAdverse.score());
         r.put("Banderolle", scoreBanderolle());
         r.put("Retour backstage", scoreRetourBackstage());
         return r;
