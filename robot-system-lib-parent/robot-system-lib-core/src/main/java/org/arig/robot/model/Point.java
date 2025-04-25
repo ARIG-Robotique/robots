@@ -1,5 +1,6 @@
 package org.arig.robot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -55,6 +56,7 @@ public class Point implements Clusterable {
         return Math.toDegrees(Math.atan2(dY, dX));
     }
 
+    @JsonIgnore
     @Override
     public double[] getPoint() {
         return new double[]{x, y};
