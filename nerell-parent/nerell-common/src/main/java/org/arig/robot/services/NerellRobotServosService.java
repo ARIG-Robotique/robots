@@ -29,5 +29,126 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
 
     public NerellRobotServosService(SD21Servos servos) {
         super(servos);
+
+        servo(TIROIR_AVANT_ID, TIROIR_AVANT)
+            .time(500)
+            .position(POS_INIT, 1500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+        servo(TIROIR_ARRIERE_ID, TIRROIR_ARRIERE)
+            .time(500)
+            .position(POS_INIT, 1500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+
+        servo(BEC_AVANT_ID, BEC_AVANT)
+            .time(500)
+            .position(POS_INIT, 1500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+        servo(BEC_ARRIERE_ID, BEC_ARRIERE)
+            .time(500)
+            .position(POS_INIT, 1500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+
+        servo(ASCENSEUR_AVANT_ID, ASCENSEUR_AVANT)
+            .time(500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+        servo(ASCENSEUR_ARRIERE_ID, ASCENSEUR_ARRIERE)
+            .time(500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+
+        Servo pinceAvantGauche = servo(PINCE_AVANT_GAUCHE_ID, PINCE_AVANT_GAUCHE)
+            .time(500)
+            .position(POS_INIT, 1500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+        Servo pinceAvantDroite = servo(PINCE_AVANT_DROIT_ID, PINCE_AVANT_DROIT)
+            .time(500)
+            .position(POS_INIT, 1500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+        group(GROUP_PINCES_AVANT_ID, GROUP_PINCES_AVANT)
+            .addServo(pinceAvantGauche)
+            .addServo(pinceAvantDroite)
+            .batch(POS_INIT)
+            .batch(POS_OUVERT)
+            .batch(POS_FERME);
+
+        Servo pinceArriereGauche = servo(PINCE_ARRIERE_GAUCHE_ID, PINCE_ARRIERE_GAUCHE)
+            .time(500)
+            .position(POS_INIT, 1500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+        Servo pinceArriereDroite = servo(PINCE_ARRIERE_DROIT_ID, PINCE_ARRIERE_DROIT)
+            .time(500)
+            .position(POS_INIT, 1500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+        group(GROUP_PINCES_ARRIERE_ID, GROUP_PINCES_ARRIERE)
+            .addServo(pinceArriereGauche)
+            .addServo(pinceArriereDroite)
+            .batch(POS_INIT)
+            .batch(POS_OUVERT)
+            .batch(POS_FERME);
+
+        Servo doigtAvantGauche = servo(DOIGT_AVANT_GAUCHE_ID, DOIGT_AVANT_GAUCHE)
+            .time(500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+        Servo doigtAvantDroite = servo(DOIGT_AVANT_DROIT_ID, DOIGT_AVANT_DROIT)
+            .time(500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+        group(GROUP_DOIGTS_AVANT_ID, GROUP_DOIGTS_AVANT)
+            .addServo(doigtAvantGauche)
+            .addServo(doigtAvantDroite)
+            .batch(POS_OUVERT)
+            .batch(POS_FERME);
+
+        Servo doigtArriereGauche = servo(DOIGT_ARRIERE_GAUCHE_ID, DOIGT_ARRIERE_GAUCHE)
+            .time(500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+        Servo doigtArriereDroite = servo(DOIGT_ARRIERE_DROIT_ID, DOIGT_ARRIERE_DROIT)
+            .time(500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+        group(GROUP_DOIGTS_ARRIERE_ID, GROUP_DOIGTS_ARRIERE)
+            .addServo(doigtArriereGauche)
+            .addServo(doigtArriereDroite)
+            .batch(POS_OUVERT)
+            .batch(POS_FERME);
+
+        Servo blockColonneAvantGauche = servo(BLOCK_COLONNE_AVANT_GAUCHE_ID, BLOCK_COLONNE_AVANT_GAUCHE)
+            .time(500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+        Servo blockColonneAvantDroite = servo(BLOCK_COLONNE_AVANT_DROIT_ID, BLOCK_COLONNE_AVANT_DROIT)
+            .time(500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+        group(GROUP_BLOCK_COLONNE_AVANT_ID, GROUP_BLOCK_COLONNE_AVANT)
+            .addServo(blockColonneAvantGauche)
+            .addServo(blockColonneAvantDroite)
+            .batch(POS_OUVERT)
+            .batch(POS_FERME);
+
+        Servo blockColonneArriereGauche = servo(BLOCK_COLONNE_ARRIERE_GAUCHE_ID, BLOCK_COLONNE_ARRIERE_GAUCHE)
+            .time(500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+        Servo blockColonneArriereDroite = servo(BLOCK_COLONNE_ARRIERE_DROIT_ID, BLOCK_COLONNE_ARRIERE_DROIT)
+            .time(500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+        group(GROUP_BLOCK_COLONNE_ARRIERE_ID, GROUP_BLOCK_COLONNE_ARRIERE)
+            .addServo(blockColonneArriereGauche)
+            .addServo(blockColonneArriereDroite)
+            .batch(POS_OUVERT)
+            .batch(POS_FERME);
     }
 }
