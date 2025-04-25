@@ -1,7 +1,6 @@
 package org.arig.robot.services;
 
 import org.arig.robot.constants.ConstantesConfig;
-import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.StrategyOption;
 import org.arig.robot.model.ecran.EcranParams;

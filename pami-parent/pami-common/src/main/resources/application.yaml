@@ -141,6 +141,33 @@ ecran:
 spring:
   config:
     activate:
+      on-profile: star
+
+# Server config
+server:
+  port: 8085
+
+# Nerell
+nerell:
+  socket:
+    port: 9105
+
+# Socket server
+robot:
+  server:
+    port: 9205
+
+# Écran
+ecran:
+  socket:
+    port: 8685
+
+---
+
+# Spring properties
+spring:
+  config:
+    activate:
       on-profile: simulateur
 
 # Écran
@@ -181,7 +208,7 @@ spring:
       on-profile: greg-mac
 
 ecran:
-  binary: ${user.home}/sogelink/workspaces/arig-workspaces/cpp-linux/build-robots-gui-Desktop_Qt_5_15_2_clang_64bit-Debug/robots-gui.app/Contents/MacOS/robots-gui
+  binary: ${user.home}/sogelink/workspaces/arig-workspaces/cpp-linux/robots-gui/build/Qt_6_8_3_for_macOS-Debug/robots-gui.app/Contents/MacOS/robots-gui
 
 ---
 

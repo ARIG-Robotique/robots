@@ -28,6 +28,8 @@ robot:
         port: 9103
       rond:
         port: 9104
+      star:
+        port: 9105
 
 # Écran
 ecran:
@@ -49,6 +51,11 @@ pamis:
     socket:
       host: pami-rond.local
       port: 9204
+  star:
+    socket:
+      host: pami-star.local
+      port: 9205
+
 
 # Balise de vision
 balise:
@@ -119,6 +126,9 @@ pamis:
   rond:
     socket:
       host: localhost
+  star:
+    socket:
+      host: localhost
 
 ---
 
@@ -130,7 +140,7 @@ spring:
 
 # Écran
 ecran:
-  binary: ${user.home}/sogelink/workspaces/arig-workspaces/cpp-linux/build-robots-gui-Desktop_Qt_5_15_2_clang_64bit-Debug/robots-gui.app/Contents/MacOS/robots-gui
+  binary: ${user.home}/sogelink/workspaces/arig-workspaces/cpp-linux/robots-gui/build/Qt_6_8_3_for_macOS-Debug/robots-gui.app/Contents/MacOS/robots-gui
 
 ---
 
@@ -155,6 +165,9 @@ pamis:
     socket:
       host: localhost
   rond:
+    socket:
+      host: localhost
+  star:
     socket:
       host: localhost
 
@@ -186,6 +199,9 @@ pamis:
     socket:
       host: localhost
   rond:
+    socket:
+      host: localhost
+  star:
     socket:
       host: localhost
 
