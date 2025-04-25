@@ -1,5 +1,6 @@
 package org.arig.robot.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +29,12 @@ public class GradinBrut extends Point {
         BLEU_BAS_CENTRE
     }
 
+    @JsonProperty("id")
     private final ID id;
     private final boolean bordure;
+    @JsonProperty("present")
     private boolean present = true;
+    @JsonProperty("bloque")
     private boolean bloque = false;
 
     public GradinBrut(ID id, int x, int y, boolean bordure) {
@@ -40,12 +44,12 @@ public class GradinBrut extends Point {
     }
 
     public void pris() {
-        log.info("[RS] Raw tribune {} prise", id);
+        log.info("[RS] Gradin brut {} pris", id);
         present = false;
     }
 
-    public void enableBloqking() {
-        log.warn("[RS] Raw tribune {} bloqué", id);
+    public void bloquage() {
+        log.warn("[RS] Gradin brut {} bloqué", id);
         bloque = true;
     }
 }

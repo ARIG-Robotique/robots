@@ -5,13 +5,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Getter
@@ -21,7 +15,8 @@ public class ConstructionArea {
 
     private final String name;
     private final byte nbRang;
-    private final boolean[][] data = new boolean[3][3];
+    private final byte nbEtage = 3;
+    private final boolean[][] data;
 
     public ConstructionArea(String name) {
         this(name, (byte) 1);
@@ -30,12 +25,13 @@ public class ConstructionArea {
     public ConstructionArea(String name, byte nbRang) {
         this.name = name;
         this.nbRang = nbRang;
+        this.data = new boolean[nbRang][nbEtage];
     }
 
     public int score() {
         int score = 0;
         for (int row = 0; row < nbRang; row++) {
-            for (int col = 0; col < 3; col++) {
+            for (int col = 0; col < nbEtage; col++) {
                 if (data[row][col]) {
                     switch(col) {
                         case 0 -> score += 4;
@@ -63,7 +59,7 @@ public class ConstructionArea {
 
     public boolean isEmpty() {
         for (int row = 0; row < nbRang; row++) {
-            for (int col = 0; col < 3; col++) {
+            for (int col = 0; col < nbEtage; col++) {
                 if (data[row][col]) {
                     return false;
                 }
@@ -81,7 +77,7 @@ public class ConstructionArea {
         if (rang < 0 || rang >= nbRang) {
             throw new IllegalArgumentException("Rang " + rang + " out of bounds");
         }
-        if (etage < 0 || etage >= 3) {
+        if (etage < 0 || etage >= nbEtage) {
             throw new IllegalArgumentException("Etage " + etage + " out of bounds");
         }
     }

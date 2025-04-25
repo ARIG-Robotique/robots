@@ -119,12 +119,14 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public Map<String, Object> gameStatus() {
         Map<String, Object> r = new HashMap<>();
         r.put("gradinBrutStock", gradinBrutStocks.data);
-        r.put("airesConstruction", Map.of(
+        r.put("airesConstruction",
+            Map.of(
                 "grandEquipe", grandGradinEquipe.data(),
                 "petitEquipe", petitGradinEquipe.data(),
                 "grandAdverse", grandGradinAdverse.data(),
                 "petitAdverse", petitGradinAdverse.data()
-        ));
+            )
+        );
         return r;
     }
 
