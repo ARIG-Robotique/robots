@@ -54,7 +54,7 @@ public abstract class AbstractVisionBaliseOverSocket<DATA extends Serializable>
             try {
                 sendToSocketAndGet(new ExitQuery(), EmptyResponse.class);
             } catch (Exception e) {
-                log.warn("Erreur de lecture", e);
+                log.warn("Erreur de lecture : {}", e.toString());
             }
         }
         super.end();
@@ -66,7 +66,7 @@ public abstract class AbstractVisionBaliseOverSocket<DATA extends Serializable>
             openIfNecessary();
             return sendToSocketAndGet(new AliveQuery(), EmptyResponse.class);
         } catch (Exception e) {
-            log.warn("Erreur de recupération de la photo", e);
+            log.warn("Erreur de recupération de la photo : {}", e.toString());
             return null;
         }
     }
@@ -77,7 +77,7 @@ public abstract class AbstractVisionBaliseOverSocket<DATA extends Serializable>
             openIfNecessary();
             return sendToSocketAndGet(new ConfigQuery(queryData), EmptyResponse.class);
         } catch (Exception e) {
-            log.warn("Erreur de modification de la configuration", e);
+            log.warn("Erreur de modification de la configuration : {}", e.toString());
             return null;
         }
     }
@@ -88,7 +88,7 @@ public abstract class AbstractVisionBaliseOverSocket<DATA extends Serializable>
             openIfNecessary();
             return sendToSocketAndGet(new StatusQuery(), StatusResponse.class);
         } catch (Exception e) {
-            log.warn("Erreur de recupération du statut", e);
+            log.warn("Erreur de recupération du statut : {}", e.toString());
             return null;
         }
     }
@@ -99,7 +99,7 @@ public abstract class AbstractVisionBaliseOverSocket<DATA extends Serializable>
             openIfNecessary();
             return sendToSocketAndGet(new TeamQuery(queryData), EmptyResponse.class);
         } catch (Exception e) {
-            log.warn("Erreur de modification de la team", e);
+            log.warn("Erreur de modification de la team : {}", e.toString());
             return null;
         }
     }
@@ -110,7 +110,7 @@ public abstract class AbstractVisionBaliseOverSocket<DATA extends Serializable>
             openIfNecessary();
             return sendToSocketAndGet(new DataQuery(queryData), dataResponseType);
         } catch (Exception e) {
-            log.warn("Erreur de lecture des données de vision", e);
+            log.warn("Erreur de lecture des données de vision : {}", e.toString());
             return null;
         }
     }
@@ -122,7 +122,7 @@ public abstract class AbstractVisionBaliseOverSocket<DATA extends Serializable>
             return sendToSocketAndGet(new ImageQuery(queryData), ImageResponse.class);
 
         } catch (Exception e) {
-            log.warn("Erreur de recupération de l'image", e);
+            log.warn("Erreur de recupération de l'image : {}", e.toString());
             return null;
         }
     }
@@ -159,5 +159,4 @@ public abstract class AbstractVisionBaliseOverSocket<DATA extends Serializable>
             return null;
         }
     }
-
 }

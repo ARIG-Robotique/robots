@@ -148,7 +148,7 @@ public abstract class AbstractSocketClient<T extends Enum<T>> {
             log.warn("Timeout lors de la requete");
             throw new IllegalStateException("Timeout lors de la requete");
         } catch (IOException e) {
-            log.warn("Connexion perdue", e);
+            log.warn("Connexion perdue : {}", e.toString());
             end(true);
             throw new IllegalStateException("Socket perdu");
         } catch (IllegalStateException e) {

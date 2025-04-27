@@ -59,7 +59,7 @@ public abstract class AbstractEcranOverSocket<CONFIG extends AbstractEcranConfig
             EmptyResponse rawResponse = sendToSocketAndGet(query, EmptyResponse.class);
             return rawResponse.isOk();
         } catch (Exception e) {
-            log.error("Erreur de lecture", e);
+            logException(e);
             return false;
         }
     }
@@ -71,7 +71,7 @@ public abstract class AbstractEcranOverSocket<CONFIG extends AbstractEcranConfig
             AbstractResponseWithData<EcranAction, CONFIG> rawResponse = sendToSocketAndGet(new GetConfigQuery(), configInfosReponseType);
             return rawResponse.getData();
         } catch (Exception e) {
-            log.error("Erreur de lecture", e);
+            logException(e);
             return null;
         }
     }
@@ -85,7 +85,7 @@ public abstract class AbstractEcranOverSocket<CONFIG extends AbstractEcranConfig
             sendToSocketAndGet(query, EmptyResponse.class);
             return true;
         } catch (Exception e) {
-            log.error("Erreur de lecture", e);
+            logException(e);
             return false;
         }
     }
@@ -99,7 +99,7 @@ public abstract class AbstractEcranOverSocket<CONFIG extends AbstractEcranConfig
             sendToSocketAndGet(query, EmptyResponse.class);
             return true;
         } catch (Exception e) {
-            log.error("Erreur de lecture", e);
+            logException(e);
             return false;
         }
     }
@@ -112,7 +112,14 @@ public abstract class AbstractEcranOverSocket<CONFIG extends AbstractEcranConfig
             query.setData(data);
             sendToSocketAndGet(query, EmptyResponse.class);
         } catch (Exception e) {
-            log.error("Erreur de lecture", e);
+            logException(e);
+        }
+    }
+
+    private void logException(Exception e) {
+        log.error("Erreur de lecture : {}", e.toString());
+        if (log.isDebugEnabled()) {
+            log.debug("Erreur de lecture", e);
         }
     }
 }
