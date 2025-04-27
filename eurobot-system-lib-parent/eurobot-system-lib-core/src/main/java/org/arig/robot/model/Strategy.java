@@ -1,5 +1,6 @@
 package org.arig.robot.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,4 +15,14 @@ public enum Strategy {
     @Getter
     @Accessors(fluent = true)
     private final String description;
+
+    @JsonCreator
+    public static Strategy fromDescription(String description) {
+        for (Strategy strategy : values()) {
+            if (strategy.description.equalsIgnoreCase(description)) {
+                return strategy;
+            }
+        }
+        throw new IllegalArgumentException("Unknown strategy: " + description);
+    }
 }
