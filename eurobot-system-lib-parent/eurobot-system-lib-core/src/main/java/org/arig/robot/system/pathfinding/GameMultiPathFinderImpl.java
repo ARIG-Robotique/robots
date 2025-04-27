@@ -22,7 +22,7 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
 
     @Override
     public void setObstacles(final List<Shape> obstacles) {
-        final int rayonRobotCm = 20;
+        final int rayonRobotCm = 15;
 
         // Zone des PAMI
         if (!rs.pamiRobot()) {
@@ -36,7 +36,7 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
         // Zones adverses
         if (rs.team() == Team.JAUNE) {
             // Backstage bleu
-            obstacles.add(new Rectangle(195 - rayonRobotCm, 155 - rayonRobotCm, 105 + rayonRobotCm, 45 + rayonRobotCm));
+            obstacles.add(new Rectangle(105 - rayonRobotCm, 155 - rayonRobotCm, 195, 45 + rayonRobotCm));
             // Mileu grand bleu
             obstacles.add(new Rectangle(0, 65 - rayonRobotCm, 45 + rayonRobotCm, 45 + (2 * rayonRobotCm)));
             // Bas gauche petit bleu
@@ -47,7 +47,7 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
             obstacles.add(new Rectangle(200 - rayonRobotCm, 0, 45 + (2 * rayonRobotCm), 15 + rayonRobotCm));
         } else {
             // Backstage jaune
-            obstacles.add(new Rectangle(0, 155 - rayonRobotCm, 105 + rayonRobotCm, 45 + rayonRobotCm));
+            obstacles.add(new Rectangle(0, 155 - rayonRobotCm, 195 + rayonRobotCm, 45 + rayonRobotCm));
             // Mileu grand jaune
             obstacles.add(new Rectangle(255 - rayonRobotCm, 65 - rayonRobotCm, 45 + rayonRobotCm, 45 + (2 * rayonRobotCm)));
             // Bas droit petit jaune
