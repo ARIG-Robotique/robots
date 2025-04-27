@@ -30,36 +30,45 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
     public NerellRobotServosService(SD21Servos servos) {
         super(servos);
 
-        servo(TIROIR_AVANT_ID, TIROIR_AVANT)
+        Servo tiroirAvant = servo(TIROIR_AVANT_ID, TIROIR_AVANT)
             .time(500)
             .position(POS_INIT, 1500)
             .position(POS_OUVERT, 1500)
             .position(POS_FERME, 1500);
-        servo(TIROIR_ARRIERE_ID, TIRROIR_ARRIERE)
-            .time(500)
-            .position(POS_INIT, 1500)
-            .position(POS_OUVERT, 1500)
-            .position(POS_FERME, 1500);
-
-        servo(BEC_AVANT_ID, BEC_AVANT)
-            .time(500)
-            .position(POS_INIT, 1500)
-            .position(POS_OUVERT, 1500)
-            .position(POS_FERME, 1500);
-        servo(BEC_ARRIERE_ID, BEC_ARRIERE)
+        Servo tiroirArriere = servo(TIROIR_ARRIERE_ID, TIRROIR_ARRIERE)
             .time(500)
             .position(POS_INIT, 1500)
             .position(POS_OUVERT, 1500)
             .position(POS_FERME, 1500);
 
-        servo(ASCENSEUR_AVANT_ID, ASCENSEUR_AVANT)
+        Servo becAvant = servo(BEC_AVANT_ID, BEC_AVANT)
+            .time(500)
+            .position(POS_INIT, 1500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+        Servo becArriere = servo(BEC_ARRIERE_ID, BEC_ARRIERE)
+            .time(500)
+            .position(POS_INIT, 1500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_FERME, 1500);
+
+        Servo ascAvant = servo(ASCENSEUR_AVANT_ID, ASCENSEUR_AVANT)
             .time(500)
             .position(POS_OUVERT, 1500)
             .position(POS_FERME, 1500);
-        servo(ASCENSEUR_ARRIERE_ID, ASCENSEUR_ARRIERE)
+        Servo ascArriere = servo(ASCENSEUR_ARRIERE_ID, ASCENSEUR_ARRIERE)
             .time(500)
             .position(POS_OUVERT, 1500)
             .position(POS_FERME, 1500);
+
+        group(GROUP_INDIVIDUAL_AVANT_ID, "Individuel avant")
+            .addServo(tiroirAvant)
+            .addServo(becAvant)
+            .addServo(ascAvant);
+        group(GROUP_INDIVIDUAL_ARRIERE_ID, "Individuel arrière")
+            .addServo(tiroirArriere)
+            .addServo(becArriere)
+            .addServo(ascArriere);
 
         Servo pinceAvantGauche = servo(PINCE_AVANT_GAUCHE_ID, PINCE_AVANT_GAUCHE)
             .time(500)

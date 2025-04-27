@@ -42,12 +42,14 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final String GROUP_BLOCK_COLONNE_AVANT = "Block colonne avant";
     protected static final String GROUP_BLOCK_COLONNE_ARRIERE = "Block colonne arrière";
 
-    protected static final byte GROUP_PINCES_AVANT_ID = 1;
-    protected static final byte GROUP_PINCES_ARRIERE_ID = 2;
-    protected static final byte GROUP_DOIGTS_AVANT_ID = 3;
-    protected static final byte GROUP_DOIGTS_ARRIERE_ID = 4;
-    protected static final byte GROUP_BLOCK_COLONNE_AVANT_ID = 5;
-    protected static final byte GROUP_BLOCK_COLONNE_ARRIERE_ID = 6;
+    protected static final byte GROUP_INDIVIDUAL_AVANT_ID = 1;
+    protected static final byte GROUP_INDIVIDUAL_ARRIERE_ID = 2;
+    protected static final byte GROUP_PINCES_AVANT_ID = 3;
+    protected static final byte GROUP_PINCES_ARRIERE_ID = 4;
+    protected static final byte GROUP_DOIGTS_AVANT_ID = 5;
+    protected static final byte GROUP_DOIGTS_ARRIERE_ID = 6;
+    protected static final byte GROUP_BLOCK_COLONNE_AVANT_ID = 7;
+    protected static final byte GROUP_BLOCK_COLONNE_ARRIERE_ID = 8;
 
     protected AbstractCommonRobotServosService(AbstractServos servoDevice, AbstractServos... servoDevices) {
         super(servoDevice, servoDevices);
