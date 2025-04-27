@@ -9,9 +9,6 @@ import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.balise.BaliseData;
 import org.arig.robot.model.balise.Data2D;
 import org.arig.robot.model.balise.Data3D;
-import org.arig.robot.model.balise.enums.Data3DName;
-import org.arig.robot.model.balise.enums.Data3DTeam;
-import org.arig.robot.model.balise.enums.Data3DType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
