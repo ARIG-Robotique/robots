@@ -34,6 +34,11 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final String POS_OUVERT_PRISE = "Ouvert prise";
     protected static final String POS_OUVERT_DEPOSE = "Ouvert dépose";
     protected static final String POS_STOCK = "Stock";
+    protected static final String POS_HAUT = "Haut";
+    protected static final String POS_HAUT_SPLIT = "Haut split";
+    protected static final String POS_BAS = "Bas";
+    protected static final String POS_BAS_PRISE = "Bas prise";
+    protected static final String POS_BANDEROLLE = "Banderolle";
 
     protected static final String GROUP_INDIVIDUAL_AVANT = "Individuel avant";
     protected static final String GROUP_INDIVIDUAL_ARRIERE = "Individuel arrière";
@@ -76,6 +81,8 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
         setPosition(TIRROIR_ARRIERE, POS_INIT, false);
         setPosition(BEC_AVANT, POS_INIT, false);
         setPosition(BEC_ARRIERE, POS_INIT, false);
+        setPosition(ASCENSEUR_AVANT, POS_BAS, false);
+        setPosition(ASCENSEUR_ARRIERE, POS_BAS, false);
     }
 
     //*******************************************//
