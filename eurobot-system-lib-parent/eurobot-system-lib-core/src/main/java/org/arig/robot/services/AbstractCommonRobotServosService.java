@@ -35,6 +35,8 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final String POS_OUVERT_DEPOSE = "Ouvert dépose";
     protected static final String POS_STOCK = "Stock";
 
+    protected static final String GROUP_INDIVIDUAL_AVANT = "Individuel avant";
+    protected static final String GROUP_INDIVIDUAL_ARRIERE = "Individuel arrière";
     protected static final String GROUP_PINCES_AVANT = "Pinces avant";
     protected static final String GROUP_PINCES_ARRIERE = "Pinces arrière";
     protected static final String GROUP_DOIGTS_AVANT = "Doigts avant";

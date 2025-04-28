@@ -61,11 +61,11 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
             .position(POS_OUVERT, 1500)
             .position(POS_FERME, 1500);
 
-        group(GROUP_INDIVIDUAL_AVANT_ID, "Individuel avant")
+        group(GROUP_INDIVIDUAL_AVANT_ID, GROUP_INDIVIDUAL_AVANT)
             .addServo(tiroirAvant)
             .addServo(becAvant)
             .addServo(ascAvant);
-        group(GROUP_INDIVIDUAL_ARRIERE_ID, "Individuel arrière")
+        group(GROUP_INDIVIDUAL_ARRIERE_ID, GROUP_INDIVIDUAL_ARRIERE)
             .addServo(tiroirArriere)
             .addServo(becArriere)
             .addServo(ascArriere);
