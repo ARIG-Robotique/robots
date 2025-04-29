@@ -3,8 +3,6 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.system.servos.AbstractServos;
 
-import java.util.Map;
-
 @Slf4j
 public abstract class AbstractCommonRobotServosService extends AbstractServosService {
 
@@ -18,7 +16,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public static final String BLOCK_COLONNE_AVANT_GAUCHE = "Block colonne avant gauche";
     public static final String BLOCK_COLONNE_AVANT_DROIT = "Block colonne avant droit";
 
-    public static final String TIRROIR_ARRIERE = "Tiroir arrière";
+    public static final String TIROIR_ARRIERE = "Tiroir arrière";
     public static final String BEC_ARRIERE = "Bec arrière";
     public static final String ASCENSEUR_ARRIERE = "Ascenseur arrière";
     public static final String PINCE_ARRIERE_GAUCHE = "Pince arrière gauche";
@@ -78,7 +76,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
 
         // Servo
         setPosition(TIROIR_AVANT, POS_INIT, false);
-        setPosition(TIRROIR_ARRIERE, POS_INIT, false);
+        setPosition(TIROIR_ARRIERE, POS_INIT, false);
         setPosition(BEC_AVANT, POS_INIT, false);
         setPosition(BEC_ARRIERE, POS_INIT, false);
         setPosition(ASCENSEUR_AVANT, POS_BAS, false);
@@ -88,6 +86,9 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     //*******************************************//
     //* Déplacements de groupe                  *//
     //*******************************************//
+    public void groupePincesAvantOuvert(boolean wait) {
+        setPositionBatch(GROUP_PINCES_AVANT, POS_OUVERT, wait);
+    }
     public void groupePincesAvantPrise(boolean wait) {
         setPositionBatch(GROUP_PINCES_AVANT, POS_OUVERT_PRISE, wait);
     }
@@ -98,6 +99,9 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
         setPositionBatch(GROUP_PINCES_AVANT, POS_FERME, wait);
     }
 
+    public void groupePincesArriereOuvert(boolean wait) {
+        setPositionBatch(GROUP_PINCES_ARRIERE, POS_OUVERT, wait);
+    }
     public void groupePincesArrierePrise(boolean wait) {
         setPositionBatch(GROUP_PINCES_ARRIERE, POS_OUVERT_PRISE, wait);
     }
@@ -140,18 +144,18 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     //* Déplacements de servo                   *//
     //*******************************************//
 
-    public void tirroirAvantOuvert(boolean wait) {
+    public void tiroirAvantOuvert(boolean wait) {
         setPosition(TIROIR_AVANT, POS_OUVERT, wait);
     }
-    public void tirroirAvantStock(boolean wait) {
+    public void tiroirAvantStock(boolean wait) {
         setPosition(TIROIR_AVANT, POS_STOCK, wait);
     }
 
-    public void tirroirArriereOuvert(boolean wait) {
-        setPosition(TIRROIR_ARRIERE, POS_OUVERT, wait);
+    public void tiroirArriereOuvert(boolean wait) {
+        setPosition(TIROIR_ARRIERE, POS_OUVERT, wait);
     }
-    public void tirroirArriereStock(boolean wait) {
-        setPosition(TIRROIR_ARRIERE, POS_STOCK, wait);
+    public void tiroirArriereStock(boolean wait) {
+        setPosition(TIROIR_ARRIERE, POS_STOCK, wait);
     }
 
     public void becAvantOuvert(boolean wait) {
@@ -166,5 +170,31 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     }
     public void becArriereFerme(boolean wait) {
         setPosition(BEC_AVANT, POS_FERME, wait);
+    }
+
+    public void ascenseurAvantHaut(boolean wait) {
+        setPosition(ASCENSEUR_AVANT, POS_HAUT, wait);
+    }
+    public void ascenseurAvantSplit(boolean wait) {
+        setPosition(ASCENSEUR_AVANT, POS_HAUT_SPLIT, wait);
+    }
+    public void ascenseurAvantStock(boolean wait) {
+        setPosition(ASCENSEUR_AVANT, POS_STOCK, wait);
+    }
+    public void ascenseurAvantBas(boolean wait) {
+        setPosition(ASCENSEUR_AVANT, POS_BAS, wait);
+    }
+
+    public void ascenseurArriereHaut(boolean wait) {
+        setPosition(ASCENSEUR_ARRIERE, POS_HAUT, wait);
+    }
+    public void ascenseurArriereSplit(boolean wait) {
+        setPosition(ASCENSEUR_ARRIERE, POS_HAUT_SPLIT, wait);
+    }
+    public void ascenseurArriereStock(boolean wait) {
+        setPosition(ASCENSEUR_ARRIERE, POS_STOCK, wait);
+    }
+    public void ascenseurArriereBas(boolean wait) {
+        setPosition(ASCENSEUR_ARRIERE, POS_BAS, wait);
     }
 }

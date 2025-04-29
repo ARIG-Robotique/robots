@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 public class NerellEnergyServiceRobot extends AbstractEnergyService {
 
     @Autowired
-    @Qualifier("servosAvant")
     private SD21Servos sd21Servos;
 
     @Autowired

@@ -2,7 +2,6 @@ package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.bras.PositionBras;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.NerellIOService;
 import org.arig.robot.services.NerellRobotServosService;
@@ -46,22 +45,122 @@ public class NerellServosCommands {
         servosService.setPositionById(id, 1500, speed);
     }
 
-    @ShellMethod("Configuration attente pince")
+    @ShellMethod("Configuration attente pince avant")
     public void configWaitPinceAvant(int wait) {
         for (int i = 0; i < nbLoop; i++) {
-            servosService.groupePincesAvantPrise(false);
+            servosService.groupePincesAvantOuvert(false);
             ThreadUtils.sleep(wait);
             servosService.groupePincesAvantFerme(false);
             ThreadUtils.sleep(wait);
         }
     }
 
-    @ShellMethod("Configuration attente ski")
+    @ShellMethod("Configuration attente pince arriere")
+    public void configWaitPinceArriere(int wait) {
+        for (int i = 0; i < nbLoop; i++) {
+            servosService.groupePincesArriereOuvert(false);
+            ThreadUtils.sleep(wait);
+            servosService.groupePincesArriereFerme(false);
+            ThreadUtils.sleep(wait);
+        }
+    }
+
+    @ShellMethod("Configuration attente doigts avant")
+    public void configWaitDoigtsAvant(int wait) {
+        for (int i = 0; i < nbLoop; i++) {
+            servosService.groupeDoigtsAvantOuvert(false);
+            ThreadUtils.sleep(wait);
+            servosService.groupeDoigtsAvantFerme(false);
+            ThreadUtils.sleep(wait);
+        }
+    }
+
+    @ShellMethod("Configuration attente doigts arriere")
+    public void configWaitDoigtsArriere(int wait) {
+        for (int i = 0; i < nbLoop; i++) {
+            servosService.groupeDoigtsArriereOuvert(false);
+            ThreadUtils.sleep(wait);
+            servosService.groupeDoigtsArriereFerme(false);
+            ThreadUtils.sleep(wait);
+        }
+    }
+
+    @ShellMethod("Configuration attente block colonne avant")
+    public void configWaitBlockColonneAvant(int wait) {
+        for (int i = 0; i < nbLoop; i++) {
+            servosService.groupeBlockColonneAvantOuvert(false);
+            ThreadUtils.sleep(wait);
+            servosService.groupeBlockColonneAvantFerme(false);
+            ThreadUtils.sleep(wait);
+        }
+    }
+
+    @ShellMethod("Configuration attente block colonne arriere")
+    public void configWaitBlockColonneArriere(int wait) {
+        for (int i = 0; i < nbLoop; i++) {
+            servosService.groupeBlockColonneArriereOuvert(false);
+            ThreadUtils.sleep(wait);
+            servosService.groupeBlockColonneArriereFerme(false);
+            ThreadUtils.sleep(wait);
+        }
+    }
+
+    @ShellMethod("Configuration attente ascenseur avant")
+    public void configWaitAscenseurAvant(int wait) {
+        for (int i = 0; i < nbLoop; i++) {
+            servosService.ascenseurAvantHaut(false);
+            ThreadUtils.sleep(wait);
+            servosService.ascenseurAvantBas(false);
+            ThreadUtils.sleep(wait);
+        }
+    }
+
+    @ShellMethod("Configuration attente ascenseur arriere")
+    public void configWaitAscenseurArriere(int wait) {
+        for (int i = 0; i < nbLoop; i++) {
+            servosService.ascenseurArriereHaut(false);
+            ThreadUtils.sleep(wait);
+            servosService.ascenseurArriereBas(false);
+            ThreadUtils.sleep(wait);
+        }
+    }
+
+    @ShellMethod("Configuration attente tiroir avant")
     public void configWaitTiroirAvant(int wait) {
         for (int i = 0; i < nbLoop; i++) {
-            servosService.tirroirAvantOuvert(false);
+            servosService.tiroirAvantOuvert(false);
             ThreadUtils.sleep(wait);
-            servosService.tirroirAvantStock(false);
+            servosService.tiroirAvantStock(false);
+            ThreadUtils.sleep(wait);
+        }
+    }
+
+    @ShellMethod("Configuration attente tiroir arriere")
+    public void configWaitTiroirArriere(int wait) {
+        for (int i = 0; i < nbLoop; i++) {
+            servosService.tiroirArriereOuvert(false);
+            ThreadUtils.sleep(wait);
+            servosService.tiroirArriereStock(false);
+            ThreadUtils.sleep(wait);
+        }
+    }
+
+    @ShellMethod("Configuration attente bec avant")
+    public void configWaitBecAvant(int wait) {
+        for (int i = 0; i < nbLoop; i++) {
+            servosService.becAvantOuvert(false);
+            ThreadUtils.sleep(wait);
+            servosService.becAvantFerme(false);
+            ThreadUtils.sleep(wait);
+        }
+    }
+
+    @ShellMethod("Configuration attente bec arriere")
+    public void configWaitBecArriere(int wait) {
+        for (int i = 0; i < nbLoop; i++) {
+            servosService.becArriereOuvert(false);
+            ThreadUtils.sleep(wait);
+            servosService.becArriereFerme(false);
             ThreadUtils.sleep(wait);
         }
     }

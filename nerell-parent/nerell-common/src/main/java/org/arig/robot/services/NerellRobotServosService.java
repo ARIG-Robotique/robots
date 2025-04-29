@@ -35,7 +35,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
             .position(POS_INIT, 1500)
             .position(POS_OUVERT, 1500)
             .position(POS_FERME, 1500);
-        Servo tiroirArriere = servo(TIROIR_ARRIERE_ID, TIRROIR_ARRIERE)
+        Servo tiroirArriere = servo(TIROIR_ARRIERE_ID, TIROIR_ARRIERE)
             .time(500)
             .position(POS_INIT, 1500)
             .position(POS_OUVERT, 1500)
@@ -56,12 +56,14 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
             .time(500)
             .position(POS_HAUT, 1500)
             .position(POS_HAUT_SPLIT, 1500)
+            .position(POS_STOCK, 1500)
             .position(POS_BAS, 1500)
             .position(POS_BAS_PRISE, 1500);
         Servo ascArriere = servo(ASCENSEUR_ARRIERE_ID, ASCENSEUR_ARRIERE)
             .time(500)
             .position(POS_HAUT, 1500)
             .position(POS_HAUT_SPLIT, 1500)
+            .position(POS_STOCK, 1500)
             .position(POS_BAS, 1500)
             .position(POS_BAS_PRISE, 1500);
 
@@ -78,34 +80,46 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
             .time(500)
             .position(POS_INIT, 1500)
             .position(POS_OUVERT, 1500)
+            .position(POS_OUVERT_PRISE, 1500)
+            .position(POS_OUVERT_DEPOSE, 1500)
             .position(POS_FERME, 1500);
         Servo pinceAvantDroite = servo(PINCE_AVANT_DROIT_ID, PINCE_AVANT_DROIT)
             .time(500)
             .position(POS_INIT, 1500)
             .position(POS_OUVERT, 1500)
+            .position(POS_OUVERT_PRISE, 1500)
+            .position(POS_OUVERT_DEPOSE, 1500)
             .position(POS_FERME, 1500);
         group(GROUP_PINCES_AVANT_ID, GROUP_PINCES_AVANT)
             .addServo(pinceAvantGauche)
             .addServo(pinceAvantDroite)
             .batch(POS_INIT)
             .batch(POS_OUVERT)
+            .batch(POS_OUVERT_PRISE)
+            .batch(POS_OUVERT_DEPOSE)
             .batch(POS_FERME);
 
         Servo pinceArriereGauche = servo(PINCE_ARRIERE_GAUCHE_ID, PINCE_ARRIERE_GAUCHE)
             .time(500)
             .position(POS_INIT, 1500)
             .position(POS_OUVERT, 1500)
+            .position(POS_OUVERT_PRISE, 1500)
+            .position(POS_OUVERT_DEPOSE, 1500)
             .position(POS_FERME, 1500);
         Servo pinceArriereDroite = servo(PINCE_ARRIERE_DROIT_ID, PINCE_ARRIERE_DROIT)
             .time(500)
             .position(POS_INIT, 1500)
             .position(POS_OUVERT, 1500)
+            .position(POS_OUVERT_PRISE, 1500)
+            .position(POS_OUVERT_DEPOSE, 1500)
             .position(POS_FERME, 1500);
         group(GROUP_PINCES_ARRIERE_ID, GROUP_PINCES_ARRIERE)
             .addServo(pinceArriereGauche)
             .addServo(pinceArriereDroite)
             .batch(POS_INIT)
             .batch(POS_OUVERT)
+            .batch(POS_OUVERT_PRISE)
+            .batch(POS_OUVERT_DEPOSE)
             .batch(POS_FERME);
 
         Servo doigtAvantGauche = servo(DOIGT_AVANT_GAUCHE_ID, DOIGT_AVANT_GAUCHE)
