@@ -121,30 +121,28 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         // Alim
         inAu = gpio.provisionDigitalInputPin(pcfAlim, PCF8574Pin.GPIO_00);
 
-        outAlimPuissanceServos = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_03);
-        outAlimPuissanceMoteurs = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_04);
-
-        tirette = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
+        outAlimPuissanceMoteurs = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_01);
+        outAlimPuissanceServos = gpio.provisionDigitalOutputPin(pcfAlim, PCF8574Pin.GPIO_02);
 
         // PCF1
-        calageAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
-        calageArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
-        calageAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
-        calageArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
-        stockAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
-        stockAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
-        stockArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
-        stockArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
+        calageAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
+        calageArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
+        calageAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
+        calageArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
+        stockAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
+        stockAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
+        stockArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
+        stockArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
 
         // PCF2
-        pinceAvantGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
-        pinceAvantDroite = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
-        pinceArriereGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
-        pinceArriereDroite = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
+        pinceAvantGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
+        pinceAvantDroite = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_02);
+        pinceArriereGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_03);
+        pinceArriereDroite = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_00);
         tiroirAvantHaut = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_04);
         tiroirAvantBas = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_05);
-        tiroirArriereHaut = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
-        tiroirArriereBas = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_07);
+        tiroirArriereHaut = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_07);
+        tiroirArriereBas = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_06);
     }
 
     @Override
