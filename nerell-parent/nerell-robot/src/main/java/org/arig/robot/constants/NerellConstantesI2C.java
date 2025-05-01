@@ -14,7 +14,7 @@ public interface NerellConstantesI2C {
     int PCF_ALIM_ADDRESS = PCF8574GpioProvider.PCF8574A_0x38;
 
     String PCF1_DEVICE_NAME = "PCF 1";
-    int PCF1_ADDRESS = PCF8574GpioProvider.PCF8574_0x25;
+    int PCF1_ADDRESS = PCF8574GpioProvider.PCF8574_0x27;
 
     String PCF2_DEVICE_NAME = "PCF 2";
     int PCF2_ADDRESS = PCF8574GpioProvider.PCF8574_0x26;
