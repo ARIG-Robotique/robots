@@ -7,6 +7,7 @@ import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.i2c.I2CBus;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.pi4j.gpio.extension.pcf.PCF8574GpioProvider;
@@ -49,6 +50,7 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     // private GpioPinDigitalInput inIrq5;
     // private GpioPinDigitalInput inIrq6;
 
+    // Input : GPIO Raspi
     private GpioPinDigitalInput tirette;
 
     // Input : Alimentation
@@ -110,6 +112,8 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         // Config des IO raspi //
         // ------------------- //
         gpio = GpioFactory.getInstance();
+
+        tirette = gpio.provisionDigitalInputPin(RaspiPin.GPIO_04);
 
         // Config PCF8574 //
         // -------------- //
