@@ -32,7 +32,6 @@ import org.arig.robot.system.capteurs.socket.IVisionBalise;
 import org.arig.robot.system.capteurs.socket.RPLidarA2TelemeterOverSocket;
 import org.arig.robot.system.encoders.i2c.ARIGI2C2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
-import org.arig.robot.system.motors.PCA9685ToTB6612Motor;
 import org.arig.robot.system.motors.PropulsionsPCA9685SimpleMotors;
 import org.arig.robot.system.process.RPLidarBridgeProcess;
 import org.arig.robot.system.servos.i2c.SD21Servos;
@@ -155,11 +154,6 @@ public class NerellRobotContext {
         final PropulsionsPCA9685SimpleMotors motors = new PropulsionsPCA9685SimpleMotors(PCA9685Pin.PWM_02, PCA9685Pin.PWM_03, PCA9685Pin.PWM_06, PCA9685Pin.PWM_07);
         motors.assignMotors(NerellConstantesConfig.numeroMoteurGauche, NerellConstantesConfig.numeroMoteurDroit);
         return motors;
-    }
-
-    @Bean
-    public PCA9685ToTB6612Motor solarWheelMotor() {
-        return new PCA9685ToTB6612Motor(PCA9685Pin.PWM_08, PCA9685Pin.PWM_09, PCA9685Pin.PWM_10);
     }
 
     @Bean
