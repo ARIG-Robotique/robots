@@ -40,6 +40,7 @@ public class NerellIOCommands {
 
     @ShellMethod("Read all IOs")
     public void readAllIO() {
+        log.info("AU = {}", nerellIOServiceRobot.auOk());
         log.info("Tirette = {}", nerellIOServiceRobot.tirette());
         log.info("================== FIXE ==================");
         log.info("Calage avant gauche = {}", nerellIOServiceRobot.calageAvantGauche());
