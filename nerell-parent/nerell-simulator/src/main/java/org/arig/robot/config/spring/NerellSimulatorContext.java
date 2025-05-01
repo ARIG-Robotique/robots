@@ -19,7 +19,6 @@ import org.arig.robot.system.avoiding.AvoidingServiceBouchon;
 import org.arig.robot.system.capteurs.LidarTelemeterBouchon;
 import org.arig.robot.system.capteurs.VisionBaliseBouchon;
 import org.arig.robot.system.capteurs.VisionBaliseOverSocket;
-import org.arig.robot.system.capteurs.i2c.GP2D12Telemeter;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.arig.robot.system.capteurs.socket.IVisionBalise;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
