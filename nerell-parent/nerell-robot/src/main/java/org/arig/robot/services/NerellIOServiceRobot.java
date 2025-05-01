@@ -35,9 +35,6 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     private PCF8574GpioProvider pcf1;
     private PCF8574GpioProvider pcf2;
 
-    @Autowired
-    private PCA9685GpioProvider pca9695;
-
     // Référence sur les PIN Inputs
     // ----------------------------
 
