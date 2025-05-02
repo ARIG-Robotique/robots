@@ -36,6 +36,19 @@ public class PropulsionsPCA9685ServosDriverMotors extends AbstractPropulsionsMot
     }
 
     @Override
+    protected void motorConfiguration() {
+        if (numMoteurGauche() == AbstractPropulsionsMotors.MOTOR_1)
+            motor1.reverse(invertMoteurGauche());
+        if (numMoteurGauche() == AbstractPropulsionsMotors.MOTOR_2)
+            motor2.reverse(invertMoteurGauche());
+
+        if (numMoteurDroit() == AbstractPropulsionsMotors.MOTOR_1)
+            motor1.reverse(invertMoteurDroit());
+        if (numMoteurDroit() == AbstractPropulsionsMotors.MOTOR_2)
+            motor2.reverse(invertMoteurDroit());
+    }
+
+    @Override
     public void speedMoteur1(final int val) {
         motor1.speed(val);
     }

@@ -17,7 +17,10 @@ public class BouchonMotor extends AbstractMotor {
     }
 
     @Override
-    public void speed(final int val) {
+    public void speed(int val) {
+        if (this.reverse()) {
+            val = -val;
+        }
         final int cmd = check(val + offsetValue);
         if (cmd == prev) {
             return;

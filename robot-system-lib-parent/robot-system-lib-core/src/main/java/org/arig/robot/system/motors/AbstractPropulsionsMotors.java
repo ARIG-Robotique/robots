@@ -22,6 +22,13 @@ public abstract class AbstractPropulsionsMotors {
     @Getter
     @Accessors(fluent = true)
     private int numMoteurDroit;
+    @Getter
+    @Accessors(fluent = true)
+    private boolean invertMoteurGauche;
+    @Getter
+    @Accessors(fluent = true)
+    private boolean invertMoteurDroit;
+
     private boolean alternate;
 
     protected int offsetValue;
@@ -46,6 +53,22 @@ public abstract class AbstractPropulsionsMotors {
         this.numMoteurGauche = numMoteurGauche;
         this.numMoteurDroit = numMoteurDroit;
     }
+
+    public final void setMotorConfiguration(boolean invertGauche, boolean invertDroit) {
+        exceptionAssignationMoteurGauche();
+        exceptionAssignationMoteurDroit();
+
+        log.info("Set motor configuration");
+        log.info(" * Invert gauche: {}", invertGauche);
+        log.info(" * Invert droit: {}", invertDroit);
+
+        this.invertMoteurGauche = invertGauche;
+        this.invertMoteurDroit = invertDroit;
+
+        motorConfiguration();
+    }
+
+    protected abstract void motorConfiguration();
 
     /**
      * Méthode de génération groupé de la commande droite / gauche

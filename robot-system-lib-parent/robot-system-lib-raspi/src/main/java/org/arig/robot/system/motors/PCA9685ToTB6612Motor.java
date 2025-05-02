@@ -69,7 +69,7 @@ public class PCA9685ToTB6612Motor extends AbstractMotor {
         prev = cmd;
         pca9685.setPwm(motorPin, 0, Math.abs(cmd));
 
-        final boolean dir = cmd > 0;
+        final boolean dir = this.reverse() ? cmd < 0 : cmd > 0;
         if (prevDirection != null && dir == prevDirection) {
             return;
         }

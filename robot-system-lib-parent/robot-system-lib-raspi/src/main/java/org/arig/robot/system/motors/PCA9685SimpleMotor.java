@@ -47,7 +47,7 @@ public class PCA9685SimpleMotor extends AbstractMotor {
             pca9685.setAlwaysOff(motorPin);
         }
 
-        final boolean dir = cmd > 0;
+        final boolean dir = reverse() ? cmd < 0 : cmd > 0;
         if (prevDirection != null && dir == prevDirection) {
             return;
         }

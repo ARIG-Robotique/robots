@@ -151,8 +151,9 @@ public class NerellRobotContext {
     @Bean
     public AbstractPropulsionsMotors motors() {
         // Configuration de la carte moteur propulsion.
-        final PropulsionsPCA9685SimpleMotors motors = new PropulsionsPCA9685SimpleMotors(PCA9685Pin.PWM_02, PCA9685Pin.PWM_03, PCA9685Pin.PWM_06, PCA9685Pin.PWM_07);
+        final PropulsionsPCA9685SimpleMotors motors = new PropulsionsPCA9685SimpleMotors(PCA9685Pin.PWM_00, PCA9685Pin.PWM_01, PCA9685Pin.PWM_02, PCA9685Pin.PWM_03);
         motors.assignMotors(NerellConstantesConfig.numeroMoteurGauche, NerellConstantesConfig.numeroMoteurDroit);
+        motors.setMotorConfiguration(NerellConstantesConfig.reverseMoteurGauche, NerellConstantesConfig.reverseMoteurDroit);
         return motors;
     }
 

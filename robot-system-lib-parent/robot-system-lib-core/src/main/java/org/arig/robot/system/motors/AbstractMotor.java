@@ -1,5 +1,8 @@
 package org.arig.robot.system.motors;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -14,6 +17,11 @@ public abstract class AbstractMotor {
     protected int minVal;
     protected int maxVal;
     protected int prev;
+
+    @Getter
+    @Setter
+    @Accessors(fluent = true)
+    private boolean reverse = false;
 
     public AbstractMotor(int offsetValue) {
         this.offsetValue = offsetValue;

@@ -38,6 +38,9 @@ public class PropulsionsMD22Motors extends AbstractPropulsionsMotors {
     private byte modeValue;
     private short accelValue;
 
+    private boolean invertMotor1;
+    private boolean invertMotor2;
+
     public PropulsionsMD22Motors(final String deviceName) {
         this(deviceName, PropulsionsMD22Motors.DEFAULT_MODE_VALUE, PropulsionsMD22Motors.DEFAULT_ACCEL_VALUE);
     }
@@ -75,7 +78,25 @@ public class PropulsionsMD22Motors extends AbstractPropulsionsMotors {
     }
 
     @Override
-    public void speedMoteur1(final int val) {
+    protected void motorConfiguration() {
+        if (numMoteurGauche() == AbstractPropulsionsMotors.MOTOR_1) {
+            invertMotor1 = invertMoteurGauche();
+        } else if (numMoteurGauche() == AbstractPropulsionsMotors.MOTOR_2) {
+            invertMotor2 = invertMoteurGauche();
+        }
+
+        if (numMoteurDroit() == AbstractPropulsionsMotors.MOTOR_1) {
+            invertMotor1 = invertMoteurDroit();
+        } else if (numMoteurDroit() == AbstractPropulsionsMotors.MOTOR_2) {
+            invertMotor2 = invertMoteurDroit();
+        }
+    }
+
+    @Override
+    public void speedMoteur1(int val) {
+        if (invertMotor1) {
+            val = -val;
+        }
         final byte cmd = (byte) check(val + offsetValue);
         if (cmd == prevM1) {
             return;
@@ -93,7 +114,10 @@ public class PropulsionsMD22Motors extends AbstractPropulsionsMotors {
     }
 
     @Override
-    public void speedMoteur2(final int val) {
+    public void speedMoteur2(int val) {
+        if (invertMotor2) {
+            val = -val;
+        }
         final byte cmd = (byte) check(val + offsetValue);
         if (cmd == prevM2) {
             return;

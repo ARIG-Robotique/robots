@@ -70,19 +70,12 @@ public class ARIG2024CanPropulsionsMotors extends AbstractPropulsionsMotors impl
     }
   }
 
-  public void setMotorConfiguration(boolean invertGauche, boolean invertDroit) {
-    exceptionAssignationMoteurGauche();
-    exceptionAssignationMoteurDroit();
-
-    log.info("Set motor configuration");
-    log.info(" * Invert gauche: {}", invertGauche);
-    log.info(" * Invert droit: {}", invertDroit);
-
+  protected void motorConfiguration() {
     byte config = 0;
-    if (invertGauche) {
+    if (invertMoteurGauche()) {
       config += (byte) (numMoteurGauche() == AbstractPropulsionsMotors.MOTOR_1 ? 1 : 2);
     }
-    if (invertDroit) {
+    if (invertMoteurDroit()) {
       config += (byte) (numMoteurDroit() == AbstractPropulsionsMotors.MOTOR_1 ? 1 : 2);
     }
 

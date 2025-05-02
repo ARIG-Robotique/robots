@@ -18,6 +18,9 @@ public class BouchonPropulsionsMotors extends AbstractPropulsionsMotors {
     }
 
     @Override
+    protected void motorConfiguration() {}
+
+    @Override
     public void speedMoteur1(final int val) {
         motor1.speed(val);
     }
