@@ -121,9 +121,9 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
 
         // PCF1
         calageAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_04);
-        calageArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
-        calageAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
+        calageArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
         calageArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
+        calageAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
         stockAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
         stockAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
         stockArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
