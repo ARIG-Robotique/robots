@@ -124,7 +124,7 @@ public interface NerellConstantesConfig {
     // Paramètre Physiques        //
     // -------------------------- //
 
-    double dstCallage = 113.0; // dos du robot <=> milieu du robot
+    double dstCallage = 141.5; // dos du robot <=> milieu du robot
 
     // -------------------------- //
     // Paramètre Avoiding service //
