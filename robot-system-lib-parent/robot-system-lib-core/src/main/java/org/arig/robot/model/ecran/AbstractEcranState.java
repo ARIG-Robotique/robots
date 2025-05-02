@@ -23,5 +23,6 @@ public abstract class AbstractEcranState implements Serializable {
     private boolean pamiTriangle = false;
     private boolean pamiCarre = false;
     private boolean pamiRond = false;
+    private boolean pamiStar = false;
     private Map<String, Boolean> options;
 }
