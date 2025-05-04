@@ -14,7 +14,7 @@ import org.arig.robot.constants.ConstantesConfig;
 public class RobotName {
 
   public enum RobotIdentification {
-    NERELL, ODIN, TINKER, PAMI_TRIANGLE, PAMI_CARRE, PAMI_ROND
+    NERELL, ODIN, TINKER, PAMI_TRIANGLE, PAMI_CARRE, PAMI_ROND, PAMI_STAR
   }
 
   private String name;
@@ -29,6 +29,8 @@ public class RobotName {
         return RobotIdentification.PAMI_CARRE;
       case "rond":
         return RobotIdentification.PAMI_ROND;
+      case "star":
+        return RobotIdentification.PAMI_STAR;
       default:
         return null;
     }
