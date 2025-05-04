@@ -41,7 +41,13 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
      * CONFIGURATION
      */
 
-    private boolean limit2Etages = false;
+    @Setter(AccessLevel.NONE)
+    private boolean limiter2Etages = false;
+
+    public void limiter2Etages(boolean limiter2Etages) {
+        log.info("[RS] Limiter à 2 étages : {}", limiter2Etages);
+        this.limiter2Etages = limiter2Etages;
+    }
 
     /**
      * STATUT
@@ -168,7 +174,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Override
     public Map<String, Boolean> gameConfigs() {
         Map<String, Boolean> r = new HashMap<>();
-        r.put("Limit 2 étages", limit2Etages);
+        r.put(StrategyOption.LIMITER_2_ETAGES.description(), limiter2Etages);
         return r;
     }
 

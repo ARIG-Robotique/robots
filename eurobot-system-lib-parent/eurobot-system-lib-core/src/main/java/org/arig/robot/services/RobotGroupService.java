@@ -94,7 +94,7 @@ public class RobotGroupService implements RobotGroup.Handler {
                 rs.strategy(Strategy.values()[data[0]]);
                 break;
             case CONFIG:
-                rs.limit2Etages(data[0] > 0);
+                rs.limiter2Etages(data[0] > 0);
                 break;
             case CURRENT_ACTION:
                 String actionName = null;
@@ -220,7 +220,7 @@ public class RobotGroupService implements RobotGroup.Handler {
 
     public void configuration() {
         byte[] data = new byte[]{
-                (byte) (rs.limit2Etages() ? 1 : 0)
+                (byte) (rs.limiter2Etages() ? 1 : 0)
         };
         sendEvent(StatusEvent.CONFIG, data);
     }

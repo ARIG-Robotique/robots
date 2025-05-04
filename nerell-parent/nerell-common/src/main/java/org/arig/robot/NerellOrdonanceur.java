@@ -228,7 +228,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             }
 
             nerellRobotStatus.twoRobots(nerellEcranService.config().isTwoRobots());
-            nerellRobotStatus.limit2Etages(nerellEcranService.config().hasOption(StrategyOption.LIMIT_2_ETAGES.name()));
+            nerellRobotStatus.limiter2Etages(nerellEcranService.config().hasOption(StrategyOption.LIMITER_2_ETAGES.description()));
 
             if (Boolean.TRUE.equals(configChangeFilter.filter(nerellEcranService.config()))) {
                 pamiTriangleGroupService.configuration();
