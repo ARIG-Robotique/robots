@@ -62,9 +62,13 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
             // Ajout des gradins bruts (en stocks)
             for (GradinBrut gradin : rs.gradinBrutStocks()) {
                 if (gradin.present()) {
-                    double x = gradin.getX();
-                    double y = gradin.getY();
-                    obstacles.add(new Rectangle((int) (x - 20 - rayonRobotCm), (int) (y - 5 - rayonRobotCm), 40 + (2 * rayonRobotCm), 10 + (2 * rayonRobotCm)));
+                    double x = gradin.getX() / 10;
+                    double y = gradin.getY() / 10;
+                    if (gradin.orientation() == GradinBrut.Orientation.HORIZONTAL) {
+                        obstacles.add(new Rectangle((int) (x - 20 - rayonRobotCm), (int) (y - 5 - rayonRobotCm), 40 + (2 * rayonRobotCm), 10 + (2 * rayonRobotCm)));
+                    } else {
+                        obstacles.add(new Rectangle((int) (x - 5 - rayonRobotCm), (int) (y - 20 - rayonRobotCm), 10 + (2 * rayonRobotCm), 40 + (2 * rayonRobotCm)));
+                    }
                 }
             }
         }

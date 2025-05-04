@@ -1,5 +1,6 @@
 package org.arig.robot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -29,6 +30,10 @@ public class GradinBrut extends Point {
         BLEU_BAS_CENTRE
     }
 
+    public enum Orientation {
+        VERTICAL, HORIZONTAL
+    }
+
     @JsonProperty("id")
     private final ID id;
     private final boolean bordure;
@@ -36,11 +41,14 @@ public class GradinBrut extends Point {
     private boolean present = true;
     @JsonProperty("bloque")
     private boolean bloque = false;
+    @JsonIgnore
+    private final Orientation orientation;
 
-    public GradinBrut(ID id, int x, int y, boolean bordure) {
+    public GradinBrut(ID id, int x, int y, boolean bordure, Orientation orientation) {
         super(x, y);
         this.id = id;
         this.bordure = bordure;
+        this.orientation = orientation;
     }
 
     public void setGradinPris() {
