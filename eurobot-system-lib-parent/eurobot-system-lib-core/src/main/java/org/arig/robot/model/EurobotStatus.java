@@ -33,6 +33,11 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     private Strategy strategy = Strategy.QUALIF;
 
+    @Override
+    public String strategyDescription() {
+        return strategy == null ? "Aucune stratégie" : strategy.description();
+    }
+
     /**
      * CONFIGURATION
      */

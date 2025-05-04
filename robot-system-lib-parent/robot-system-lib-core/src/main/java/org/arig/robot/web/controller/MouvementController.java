@@ -93,6 +93,7 @@ public class MouvementController {
         pos.put("typeAsserv", cmdRobot.typeAsserv());
         pos.put("pointsLidar", new ArrayList<>(lidarService.getDetectedPointsMm()));
         pos.put("collisions", new ArrayList<>(lidarService.getCollisionsShape()));
+        pos.put("strategy", rs.strategyDescription());
         pos.put("matchTime", rs.getElapsedTime());
         pos.put("score", rs.calculerPoints());
         pos.put("currentAction", rs.currentAction());

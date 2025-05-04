@@ -265,4 +265,6 @@ public abstract class AbstractRobotStatus {
 
     public abstract Map<String, String> deposesStatus();
 
+    public abstract String strategyDescription();
+
 }
