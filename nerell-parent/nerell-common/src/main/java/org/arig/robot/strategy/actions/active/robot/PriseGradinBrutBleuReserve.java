@@ -28,5 +28,6 @@ public class PriseGradinBrutBleuReserve extends AbstractPriseGradinBrutBleu {
     if (rs.team() == Team.JAUNE) {
       complete();
     }
+    super.refreshCompleted();
   }
 }

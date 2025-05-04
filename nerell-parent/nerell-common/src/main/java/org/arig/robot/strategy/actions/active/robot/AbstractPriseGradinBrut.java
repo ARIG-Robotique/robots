@@ -18,6 +18,13 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
   }
 
   @Override
+  public void refreshCompleted() {
+    if (gradin().present()) {
+      complete();
+    }
+  }
+
+  @Override
   public String name() {
     return EurobotConfig.ACTION_PRISE_GRADIN_BRUT_PREFIX + gradinId().name();
   }
