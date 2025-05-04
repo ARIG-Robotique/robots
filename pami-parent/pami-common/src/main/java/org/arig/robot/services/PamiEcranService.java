@@ -23,8 +23,7 @@ public class PamiEcranService extends EcranService {
       stateInfos.setTeam(rs.team());
       stateInfos.setStrategy(rs.strategy());
       stateInfos.setOptions(Map.of(
-          StrategyOption.OPTION_1.description(), rs.option_1(),
-          StrategyOption.OPTION_2.description(), rs.option_2()
+          StrategyOption.LIMIT_2_ETAGES.description(), rs.limit2Etages()
       ));
     }
   }

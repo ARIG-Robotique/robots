@@ -37,8 +37,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
      * CONFIGURATION
      */
 
-    private boolean option_1 = false;
-    private boolean option_2 = false;
+    private boolean limit2Etages = false;
 
     /**
      * STATUT
