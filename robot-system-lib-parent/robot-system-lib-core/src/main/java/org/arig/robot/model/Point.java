@@ -56,6 +56,10 @@ public class Point implements Clusterable {
         return Math.toDegrees(Math.atan2(dY, dX));
     }
 
+    public Point clone() {
+        return new Point(x, y);
+    }
+
     @JsonIgnore
     @Override
     public double[] getPoint() {

@@ -20,12 +20,14 @@ public interface EurobotConfig {
     int tableHeight = 2000;
     int tableBorder = 50;
 
+    double offsetGradinBrut = 270;
+
     // Noms des actions
     String ACTION_RETOUR_BACKSTAGE = "Retour backstage";
-    String ACTION_PRISE_STOCK_GRADIN_EQUIPE = "Prise stock gradin équipe";
 
     // Actions d'échappement
-    String ACTION_ECHAPPEMENT_ARUCO_PREFIX = "Echappement Aruco ";
+    String ACTION_PRISE_GRADIN_BRUT_PREFIX = "Prise ";
+    String ACTION_ECHAPPEMENT_ARUCO_PREFIX = "Echap. Aruco ";
 
     int PATHFINDER_COLONE_SIZE = 500;
 }
