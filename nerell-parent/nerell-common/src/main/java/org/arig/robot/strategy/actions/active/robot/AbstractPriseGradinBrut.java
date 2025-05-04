@@ -52,6 +52,8 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
     try {
       mv.pathTo(entryPoint());
 
+      mv.alignFrontTo(gradin());
+
       // a. Aligne la face qui est disponible
       // b. Prepare la prise
       // c. Avance jusqu'à la prise (capteurs ??)
@@ -67,6 +69,7 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
       // f. Recule 100 mm
 
       ThreadUtils.sleep(3000);
+      gradin().setGradinPris();
       complete();
 
     } catch (NoPathFoundException | AvoidingException e) {
