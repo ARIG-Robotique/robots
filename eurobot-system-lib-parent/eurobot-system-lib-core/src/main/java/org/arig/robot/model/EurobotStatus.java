@@ -149,6 +149,13 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     }
 
     @Override
+    public Map<String, Boolean> gameConfigs() {
+        Map<String, Boolean> r = new HashMap<>();
+        r.put("Limit 2 étages", limit2Etages);
+        return r;
+    }
+
+    @Override
     public Map<String, String> deposesStatus() {
         Map<String, String> r = new HashMap<>();
         r.put("Grand gradin equipe", grandGradinEquipe.toString());

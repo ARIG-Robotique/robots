@@ -258,11 +258,9 @@ public abstract class AbstractRobotStatus {
     public abstract int calculerPoints();
 
     public abstract Map<String, ?> gameStatus();
-
     public abstract Map<String, Boolean> gameFlags();
-
+    public abstract Map<String, Boolean> gameConfigs();
     public abstract Map<String, Integer> scoreStatus();
-
     public abstract Map<String, String> deposesStatus();
 
     public abstract String strategyDescription();

@@ -100,6 +100,7 @@ public class MouvementController {
         pos.put("actions", actions);
         pos.put("gameStatus", rs.gameStatus());
         pos.put("gameFlags", rs.gameFlags());
+        pos.put("gameConfigs", rs.gameConfigs());
         pos.put("scoreStatus", rs.scoreStatus());
         return pos;
     }
