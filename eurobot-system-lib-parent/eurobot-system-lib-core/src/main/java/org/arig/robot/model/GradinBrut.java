@@ -43,12 +43,12 @@ public class GradinBrut extends Point {
         this.bordure = bordure;
     }
 
-    public void pris() {
+    public void setGradinPris() {
         log.info("[RS] Gradin brut {} pris", id);
         present = false;
     }
 
-    public void bloquage() {
+    public void setGradinBloque() {
         log.warn("[RS] Gradin brut {} bloqué", id);
         bloque = true;
     }
