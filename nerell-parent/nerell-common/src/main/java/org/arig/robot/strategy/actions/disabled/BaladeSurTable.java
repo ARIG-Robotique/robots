@@ -14,7 +14,7 @@ public class BaladeSurTable extends AbstractEurobotAction {
 
     @Override
     public String name() {
-        return "Balade sur table CARAR";
+        return "Balade sur table";
     }
 
     @Override
@@ -32,15 +32,14 @@ public class BaladeSurTable extends AbstractEurobotAction {
             return new Point(getX(1825), 815);
         } else if (nbTry == 3) {
             return new Point(getX(1180), 815);
-        } else if (nbTry == 4) {
-            return new Point(getX(1865), 1165);
         }
-        return null;
+        // nbTry >= 4
+        return new Point(getX(1865), 1165);
     }
 
     @Override
     public int order() {
-        return 1;
+        return 1 + tableUtils.alterOrder(entryPoint());
     }
 
     @Override
