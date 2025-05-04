@@ -52,15 +52,21 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
     try {
       mv.pathTo(entryPoint());
 
-      // Aligne la face qui est disponible
-      if (!rs.faceAvantFull()) {
-        mv.alignFrontTo(gradin());
-      } else {
-        mv.alignBackTo(gradin());
-      }
+      // a. Aligne la face qui est disponible
+      // b. Prepare la prise
+      // c. Avance jusqu'à la prise (capteurs ??)
+      // d1. Si bordure
+      // d1.a Mise en stock planche
+      // d1.b Avance en calage bordure (simple ou double)
+      // d1.c Prise des colonnes dans robot (bas)
+      // d2. Si pas de bordure
+      // d2.a Mise en stock planche
+      // d2.b Avance diam (gradin) + 50
+      // d2.c Prise des colonnes dans robot (bas)
+      // e. Prise des colonnes dans robot (haut)
+      // f. Recule 100 mm
 
       ThreadUtils.sleep(3000);
-
       complete();
 
     } catch (NoPathFoundException | AvoidingException e) {

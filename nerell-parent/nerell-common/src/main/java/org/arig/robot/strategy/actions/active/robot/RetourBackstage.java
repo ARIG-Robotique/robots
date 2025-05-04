@@ -58,6 +58,8 @@ public class RetourBackstage extends AbstractNerellAction {
             complete(true);
             rs.disableAvoidance();
 
+            // TODO : Attente sortie des PAMIs, ou déploiement tiroir.
+
             log.info("Arrivée au backstage, on rentre bien dedans");
             mv.setVitessePercent(50, 100);
             mv.gotoPoint(getX(FINAL_X), FINAL_Y);
