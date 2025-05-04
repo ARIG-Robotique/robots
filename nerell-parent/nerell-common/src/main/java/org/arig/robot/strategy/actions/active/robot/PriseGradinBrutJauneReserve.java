@@ -26,7 +26,8 @@ public class PriseGradinBrutJauneReserve extends AbstractPriseGradinBrutJaune {
   @Override
   public void refreshCompleted() {
     if (rs.team() == Team.BLEU) {
-      complete();
+      log.info("PriseGradinBrutJauneReserve: complete car BLEU");
+      complete(true);
     }
     super.refreshCompleted();
   }
