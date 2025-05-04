@@ -3,7 +3,6 @@ package org.arig.robot.model;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +53,12 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     @Setter(AccessLevel.NONE)
     private boolean banderolleDeployee = false;
 
+    @Setter(AccessLevel.NONE)
+    private boolean faceAvantFull = false;
+
+    @Setter(AccessLevel.NONE)
+    private boolean faceArriereFull = false;
+
     private GradinBrutStocks gradinBrutStocks = new GradinBrutStocks();
 
     @Setter(AccessLevel.NONE)
@@ -72,6 +77,16 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public void banderolleDeployee(boolean banderolleDeployee) {
         log.info("[RS] Banderolle déployée : {}", banderolleDeployee);
         this.banderolleDeployee = banderolleDeployee;
+    }
+
+    public void faceAvantFull(boolean faceAvantFull) {
+        log.info("[RS] Face avant full : {}", faceAvantFull);
+        this.faceAvantFull = faceAvantFull;
+    }
+
+    public void faceArriereFull(boolean faceArriereFull) {
+        log.info("[RS] Face arriere full : {}", faceArriereFull);
+        this.faceArriereFull = faceArriereFull;
     }
 
     public void backstage(BackstageState backstage) {
@@ -145,6 +160,8 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         Map<String, Boolean> r = new HashMap<>();
         r.put("Banderolle dans le robot", banderolleDansRobot);
         r.put("Banderolle déployé", banderolleDeployee);
+        r.put("Face avant full", faceAvantFull);
+        r.put("Face arriere full", faceArriereFull);
         return r;
     }
 
