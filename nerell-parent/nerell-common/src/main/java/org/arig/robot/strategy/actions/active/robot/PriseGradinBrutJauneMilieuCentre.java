@@ -22,7 +22,7 @@ public class PriseGradinBrutJauneMilieuCentre extends AbstractPriseGradinBrutJau
     double distanceNord = tableUtils.distance(entryNord);
 
     Point entrySud = gradin().clone();
-    entryNord.addDeltaY(-EurobotConfig.offsetGradinBrut);
+    entrySud.addDeltaY(-EurobotConfig.offsetGradinBrut);
     double distanceSud = tableUtils.distance(entrySud);
 
     if (distanceNord < distanceSud) {
