@@ -10,6 +10,11 @@ public class TestRobotStatus extends AbstractRobotStatus {
     }
 
     @Override
+    public String strategyDescription() {
+        return "Test strat";
+    }
+
+    @Override
     public int calculerPoints() {
         return 2;
     }
@@ -21,6 +26,11 @@ public class TestRobotStatus extends AbstractRobotStatus {
 
     @Override
     public Map<String, Boolean> gameFlags() {
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public Map<String, Boolean> gameConfigs() {
         return Collections.emptyMap();
     }
 
