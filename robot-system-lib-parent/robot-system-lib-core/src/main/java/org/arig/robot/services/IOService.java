@@ -22,10 +22,15 @@ public interface IOService {
     boolean calageArriereGauche();
     boolean calageArriereDroit();
 
-    boolean calagePriseProduitAvant();
-    boolean calagePriseProduitAvant(int mandatorySensors);
-    boolean calagePriseProduitArriere();
-    boolean calagePriseProduitArriere(int mandatorySensors);
+    boolean calagePriseProduitPinceAvant();
+    boolean calagePriseProduitPinceAvant(int mandatorySensors);
+    boolean calagePriseProduitPinceArriere();
+    boolean calagePriseProduitPinceArriere(int mandatorySensors);
+
+    boolean calagePriseProduitSolAvant();
+    boolean calagePriseProduitSolAvant(int mandatorySensors);
+    boolean calagePriseProduitSolArriere();
+    boolean calagePriseProduitSolArriere(int mandatorySensors);
 
     // --------------------------------------------------------- //
     // -------------------------- OUTPUT ----------------------- //

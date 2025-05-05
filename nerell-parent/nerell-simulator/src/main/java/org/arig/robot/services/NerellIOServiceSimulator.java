@@ -17,22 +17,42 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
 
     // Calages
     @Override
-    public boolean calagePriseProduitAvant() {
-        return calagePriseProduitAvant(1);
+    public boolean calagePriseProduitPinceAvant() {
+        return calagePriseProduitPinceAvant(1);
     }
 
     @Override
-    public boolean calagePriseProduitAvant(int mandatorySensors) {
+    public boolean calagePriseProduitPinceAvant(int mandatorySensors) {
         return true;
     }
 
     @Override
-    public boolean calagePriseProduitArriere() {
-        return calagePriseProduitArriere(1);
+    public boolean calagePriseProduitPinceArriere() {
+        return calagePriseProduitPinceArriere(1);
     }
 
     @Override
-    public boolean calagePriseProduitArriere(int mandatorySensors) {
+    public boolean calagePriseProduitPinceArriere(int mandatorySensors) {
+        return true;
+    }
+
+    @Override
+    public boolean calagePriseProduitSolAvant() {
+        return calagePriseProduitSolAvant(1);
+    }
+
+    @Override
+    public boolean calagePriseProduitSolAvant(int mandatorySensors) {
+        return true;
+    }
+
+    @Override
+    public boolean calagePriseProduitSolArriere() {
+        return calagePriseProduitSolArriere(1);
+    }
+
+    @Override
+    public boolean calagePriseProduitSolArriere(int mandatorySensors) {
         return true;
     }
 
@@ -79,22 +99,22 @@ public class NerellIOServiceSimulator extends AbstractIOServiceBouchon implement
     }
 
     @Override
-    public boolean stockAvantGauche(boolean expectedSimulator) {
+    public boolean solAvantGauche(boolean expectedSimulator) {
         return expectedSimulator;
     }
 
     @Override
-    public boolean stockAvantDroite(boolean expectedSimulator) {
+    public boolean solAvantDroite(boolean expectedSimulator) {
         return expectedSimulator;
     }
 
     @Override
-    public boolean stockArriereGauche(boolean expectedSimulator) {
+    public boolean solArriereGauche(boolean expectedSimulator) {
         return expectedSimulator;
     }
 
     @Override
-    public boolean stockArriereDroite(boolean expectedSimulator) {
+    public boolean solArriereDroite(boolean expectedSimulator) {
         return expectedSimulator;
     }
 

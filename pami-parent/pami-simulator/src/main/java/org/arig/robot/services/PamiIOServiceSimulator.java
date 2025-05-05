@@ -24,22 +24,42 @@ public class PamiIOServiceSimulator extends AbstractIOServiceBouchon implements 
 
     // Calages
     @Override
-    public boolean calagePriseProduitAvant() {
-        return calagePriseProduitAvant(1);
+    public boolean calagePriseProduitPinceAvant() {
+        return calagePriseProduitPinceAvant(1);
     }
 
     @Override
-    public boolean calagePriseProduitAvant(int mandatorySensors) {
+    public boolean calagePriseProduitPinceAvant(int mandatorySensors) {
         return false;
     }
 
     @Override
-    public boolean calagePriseProduitArriere() {
-        return calagePriseProduitArriere(1);
+    public boolean calagePriseProduitPinceArriere() {
+        return calagePriseProduitPinceArriere(1);
     }
 
     @Override
-    public boolean calagePriseProduitArriere(int mandatorySensors) {
+    public boolean calagePriseProduitPinceArriere(int mandatorySensors) {
+        return false;
+    }
+
+    @Override
+    public boolean calagePriseProduitSolAvant() {
+        return calagePriseProduitSolAvant(1);
+    }
+
+    @Override
+    public boolean calagePriseProduitSolAvant(int mandatorySensors) {
+        return false;
+    }
+
+    @Override
+    public boolean calagePriseProduitSolArriere() {
+        return calagePriseProduitSolArriere(1);
+    }
+
+    @Override
+    public boolean calagePriseProduitSolArriere(int mandatorySensors) {
         return false;
     }
 

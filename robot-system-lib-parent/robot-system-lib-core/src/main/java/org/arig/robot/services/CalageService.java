@@ -34,21 +34,31 @@ public class CalageService {
             boolean doneAvant = false;
             boolean doneArriere = false;
             boolean doneTempo = false;
-            boolean donePriseProduitAvant = false;
-            boolean donePriseProduitArriere = false;
+            boolean donePriseProduitPinceAvant = false;
+            boolean donePriseProduitPinceArriere = false;
+            boolean donePriseProduitSolAvant = false;
+            boolean donePriseProduitSolArriere = false;
 
             if (!rs.matchEnabled() && !ioService.auOk()) {
-                doneAvant = doneArriere = doneTempo = donePriseProduitAvant = donePriseProduitArriere = true;
+                doneAvant = doneArriere = doneTempo =
+                    donePriseProduitPinceAvant = donePriseProduitPinceArriere =
+                    donePriseProduitSolAvant = donePriseProduitSolArriere = true;
             } else {
                 if (rs.calage().contains(TypeCalage.TEMPO)) {
                     doneTempo = rs.callageTime() < System.currentTimeMillis();
                 }
 
-                if (rs.calage().contains(TypeCalage.PRISE_PRODUIT_AVANT)) {
-                    donePriseProduitAvant = ioService.calagePriseProduitAvant(2);
+                if (rs.calage().contains(TypeCalage.PRISE_PRODUIT_PINCE_AVANT)) {
+                    donePriseProduitPinceAvant = ioService.calagePriseProduitPinceAvant(2);
                 }
-                if (rs.calage().contains(TypeCalage.PRISE_PRODUIT_ARRIERE)) {
-                    donePriseProduitArriere = ioService.calagePriseProduitArriere(2);
+                if (rs.calage().contains(TypeCalage.PRISE_PRODUIT_PINCE_ARRIERE)) {
+                    donePriseProduitPinceArriere = ioService.calagePriseProduitPinceArriere(2);
+                }
+                if (rs.calage().contains(TypeCalage.PRISE_PRODUIT_SOL_AVANT)) {
+                    donePriseProduitSolAvant = ioService.calagePriseProduitSolAvant(2);
+                }
+                if (rs.calage().contains(TypeCalage.PRISE_PRODUIT_SOL_ARRIERE)) {
+                    donePriseProduitSolArriere = ioService.calagePriseProduitSolArriere(2);
                 }
 
                 if (cmdRobot.isType(TypeConsigne.DIST) && cmdRobot.isType(TypeConsigne.ANGLE)) {
@@ -73,19 +83,27 @@ public class CalageService {
             }
 
             // le callage sur produit se fait avec un retard
-            if (donePriseProduitAvant || donePriseProduitArriere) {
+            if (donePriseProduitPinceAvant || donePriseProduitPinceArriere || donePriseProduitSolAvant || donePriseProduitSolArriere) {
                 if (stopWatchPriseProduit.isStopped()) {
                     stopWatchPriseProduit.start();
                 } else if (stopWatchPriseProduit.getTime(TimeUnit.MILLISECONDS) >= 400) {
                     stopWatchPriseProduit.reset();
 
-                    if (donePriseProduitAvant) {
-                        log.info("Callage complet : {}", TypeCalage.PRISE_PRODUIT_AVANT);
-                        rs.calageCompleted().add(TypeCalage.PRISE_PRODUIT_AVANT);
+                    if (donePriseProduitPinceAvant) {
+                        log.info("Callage complet : {}", TypeCalage.PRISE_PRODUIT_PINCE_AVANT);
+                        rs.calageCompleted().add(TypeCalage.PRISE_PRODUIT_PINCE_AVANT);
                     }
-                    if (donePriseProduitArriere) {
-                        log.info("Callage complet : {}", TypeCalage.PRISE_PRODUIT_ARRIERE);
-                        rs.calageCompleted().add(TypeCalage.PRISE_PRODUIT_ARRIERE);
+                    if (donePriseProduitPinceArriere) {
+                        log.info("Callage complet : {}", TypeCalage.PRISE_PRODUIT_PINCE_ARRIERE);
+                        rs.calageCompleted().add(TypeCalage.PRISE_PRODUIT_PINCE_ARRIERE);
+                    }
+                    if (donePriseProduitSolAvant) {
+                        log.info("Callage complet : {}", TypeCalage.PRISE_PRODUIT_SOL_AVANT);
+                        rs.calageCompleted().add(TypeCalage.PRISE_PRODUIT_SOL_AVANT);
+                    }
+                    if (donePriseProduitSolArriere) {
+                        log.info("Callage complet : {}", TypeCalage.PRISE_PRODUIT_SOL_ARRIERE);
+                        rs.calageCompleted().add(TypeCalage.PRISE_PRODUIT_SOL_ARRIERE);
                     }
 
                     trajectoryManager.calageBordureDone();

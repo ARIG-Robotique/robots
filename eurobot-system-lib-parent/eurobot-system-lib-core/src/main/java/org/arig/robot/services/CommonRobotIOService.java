@@ -12,10 +12,10 @@ public interface CommonRobotIOService extends IOService {
     boolean pinceArriereGauche(boolean expectedSimulator);
     boolean pinceArriereDroite(boolean expectedSimulator);
 
-    boolean stockAvantGauche(boolean expectedSimulator);
-    boolean stockAvantDroite(boolean expectedSimulator);
-    boolean stockArriereGauche(boolean expectedSimulator);
-    boolean stockArriereDroite(boolean expectedSimulator);
+    boolean solAvantGauche(boolean expectedSimulator);
+    boolean solAvantDroite(boolean expectedSimulator);
+    boolean solArriereGauche(boolean expectedSimulator);
+    boolean solArriereDroite(boolean expectedSimulator);
 
     boolean tiroirAvantHaut(boolean expectedSimulator);
     boolean tiroirAvantBas(boolean expectedSimulator);

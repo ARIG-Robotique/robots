@@ -53,23 +53,43 @@ public class PamiIOServiceRobot implements PamiIOService {
     // Calages
 
     @Override
-    public boolean calagePriseProduitAvant() {
-        return calagePriseProduitAvant(1);
+    public boolean calagePriseProduitPinceAvant() {
+        return calagePriseProduitPinceAvant(1);
     }
 
     @Override
-    public boolean calagePriseProduitAvant(int mandatorySensors) {
-        throw new NotImplementedException("calagePriseProduitAvant not implemented on PAMI");
+    public boolean calagePriseProduitPinceAvant(int mandatorySensors) {
+        throw new NotImplementedException("calagePriseProduitPinceAvant not implemented on PAMI");
     }
 
     @Override
-    public boolean calagePriseProduitArriere() {
-        return calagePriseProduitArriere(1);
+    public boolean calagePriseProduitPinceArriere() {
+        return calagePriseProduitPinceArriere(1);
     }
 
     @Override
-    public boolean calagePriseProduitArriere(int mandatorySensors) {
-        throw new NotImplementedException("calagePriseProduitArriere not implemented on PAMI");
+    public boolean calagePriseProduitPinceArriere(int mandatorySensors) {
+        throw new NotImplementedException("calagePriseProduitPinceArriere not implemented on PAMI");
+    }
+
+    @Override
+    public boolean calagePriseProduitSolAvant() {
+        return calagePriseProduitSolAvant(1);
+    }
+
+    @Override
+    public boolean calagePriseProduitSolAvant(int mandatorySensors) {
+        throw new NotImplementedException("calagePriseProduitSolAvant not implemented on PAMI");
+    }
+
+    @Override
+    public boolean calagePriseProduitSolArriere() {
+        return calagePriseProduitSolArriere(1);
+    }
+
+    @Override
+    public boolean calagePriseProduitSolArriere(int mandatorySensors) {
+        throw new NotImplementedException("calagePriseProduitSolArriere not implemented on PAMI");
     }
 
     @Override

@@ -53,10 +53,10 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     private GpioPinDigitalInput calageAvantDroit;
     private GpioPinDigitalInput calageArriereGauche;
     private GpioPinDigitalInput calageArriereDroit;
-    private GpioPinDigitalInput stockAvantGauche;
-    private GpioPinDigitalInput stockAvantDroit;
-    private GpioPinDigitalInput stockArriereGauche;
-    private GpioPinDigitalInput stockArriereDroit;
+    private GpioPinDigitalInput solAvantGauche;
+    private GpioPinDigitalInput solAvantDroit;
+    private GpioPinDigitalInput solArriereGauche;
+    private GpioPinDigitalInput solArriereDroit;
 
     // Input : Numerique 2
     private GpioPinDigitalInput pinceAvantGauche;
@@ -124,10 +124,10 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
         calageArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_06);
         calageArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_07);
         calageAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_05);
-        stockAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
-        stockAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
-        stockArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
-        stockArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
+        solAvantGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_01);
+        solAvantDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_00);
+        solArriereGauche = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_02);
+        solArriereDroit = gpio.provisionDigitalInputPin(pcf1, PCF8574Pin.GPIO_03);
 
         // PCF2
         pinceAvantGauche = gpio.provisionDigitalInputPin(pcf2, PCF8574Pin.GPIO_01);
@@ -176,12 +176,12 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
 
     // Calages
     @Override
-    public boolean calagePriseProduitAvant() {
-        return calagePriseProduitAvant(1);
+    public boolean calagePriseProduitPinceAvant() {
+        return calagePriseProduitPinceAvant(1);
     }
 
     @Override
-    public boolean calagePriseProduitAvant(int mandatorySensors) {
+    public boolean calagePriseProduitPinceAvant(int mandatorySensors) {
         if (mandatorySensors > 2) {
             throw new IllegalArgumentException("Le nombre de capteurs avant obligatoires ne peut pas être supérieur à 2");
         }
@@ -191,17 +191,47 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     }
 
     @Override
-    public boolean calagePriseProduitArriere() {
-        return calagePriseProduitArriere(1);
+    public boolean calagePriseProduitPinceArriere() {
+        return calagePriseProduitPinceArriere(1);
     }
 
     @Override
-    public boolean calagePriseProduitArriere(int mandatorySensors) {
+    public boolean calagePriseProduitPinceArriere(int mandatorySensors) {
         if (mandatorySensors > 2) {
             throw new IllegalArgumentException("Le nombre de capteurs arrière obligatoires ne peut pas être supérieur à 2");
         }
         int count = pinceArriereGauche(true) ? 1 : 0;
         count += pinceArriereDroite(true) ? 1 : 0;
+        return count >= mandatorySensors;
+    }
+
+    @Override
+    public boolean calagePriseProduitSolAvant() {
+        return calagePriseProduitSolAvant(1);
+    }
+
+    @Override
+    public boolean calagePriseProduitSolAvant(int mandatorySensors) {
+        if (mandatorySensors > 2) {
+            throw new IllegalArgumentException("Le nombre de capteurs sol obligatoires ne peut pas être supérieur à 2");
+        }
+        int count = solAvantGauche(true) ? 1 : 0;
+        count += solAvantDroite(true) ? 1 : 0;
+        return count >= mandatorySensors;
+    }
+
+    @Override
+    public boolean calagePriseProduitSolArriere() {
+        return calagePriseProduitSolArriere(1);
+    }
+
+    @Override
+    public boolean calagePriseProduitSolArriere(int mandatorySensors) {
+        if (mandatorySensors > 2) {
+            throw new IllegalArgumentException("Le nombre de capteurs sol obligatoires ne peut pas être supérieur à 2");
+        }
+        int count = solArriereGauche(true) ? 1 : 0;
+        count += solArriereDroite(true) ? 1 : 0;
         return count >= mandatorySensors;
     }
 
@@ -248,23 +278,23 @@ public class NerellIOServiceRobot implements NerellIOService, InitializingBean, 
     }
 
     @Override
-    public boolean stockAvantGauche(boolean expectedSimulator) {
-        return stockAvantGauche.isLow();
+    public boolean solAvantGauche(boolean expectedSimulator) {
+        return solAvantGauche.isLow();
     }
 
     @Override
-    public boolean stockAvantDroite(boolean expectedSimulator) {
-        return stockAvantDroit.isLow();
+    public boolean solAvantDroite(boolean expectedSimulator) {
+        return solAvantDroit.isLow();
     }
 
     @Override
-    public boolean stockArriereGauche(boolean expectedSimulator) {
-        return stockArriereGauche.isLow();
+    public boolean solArriereGauche(boolean expectedSimulator) {
+        return solArriereGauche.isLow();
     }
 
     @Override
-    public boolean stockArriereDroite(boolean expectedSimulator) {
-        return stockArriereDroit.isLow();
+    public boolean solArriereDroite(boolean expectedSimulator) {
+        return solArriereDroit.isLow();
     }
 
     @Override
