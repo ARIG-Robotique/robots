@@ -2,9 +2,7 @@ package org.arig.robot.services;
 
 import org.arig.robot.model.GradinBrut;
 import org.arig.robot.model.NerellRobotStatus;
-import org.springframework.stereotype.Component;
 
-@Component
 public class NerellFaceArriereService extends AbstractNerellFaceService {
 
   public NerellFaceArriereService(NerellRobotStatus rs, TrajectoryManager mv,

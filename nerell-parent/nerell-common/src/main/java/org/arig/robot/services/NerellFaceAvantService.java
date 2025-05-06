@@ -5,9 +5,7 @@ import org.arig.robot.model.GradinBrut;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.utils.ThreadUtils;
-import org.springframework.stereotype.Component;
 
-@Component
 public class NerellFaceAvantService extends AbstractNerellFaceService {
 
   public NerellFaceAvantService(NerellRobotStatus rs, TrajectoryManager mv,
