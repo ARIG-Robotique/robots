@@ -5,6 +5,8 @@ import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.GradinBrut;
+import org.arig.robot.services.AbstractNerellFaceService;
+import org.arig.robot.services.NerellFaceWrapper;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
 
@@ -36,6 +38,10 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
 
   @Override
   public boolean isValid() {
+    if (faceWrapper.getFace() == null) {
+      return false;
+    }
+
     return isTimeValid() && rs.getRemainingTime() > EurobotConfig.validTimePrise
         && gradin().present() && !gradin().bloque();
   }
@@ -52,10 +58,17 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
     try {
       mv.pathTo(entryPoint());
 
-      mv.alignFrontTo(gradin());
+      GradinBrut gradin = gradin();
+      NerellFaceWrapper.Face face = faceWrapper.getFace();
+      AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
 
-      // a. Aligne la face qui est disponible
-      // b. Prepare la prise
+
+      faceService.preparePriseGradinBrut(gradin);
+      if (!faceService.prendreGradinBrutStockTiroir()) {
+        gradin.setGradinBloque();
+        return;
+      }
+
       // c. Avance jusqu'à la prise (capteurs ??)
       // d1. Si bordure
       // d1.a Mise en stock planche
@@ -68,7 +81,6 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
       // e. Prise des colonnes dans robot (haut)
       // f. Recule 100 mm
 
-      ThreadUtils.sleep(3000);
       gradin().setGradinPris();
       complete();
 

@@ -80,18 +80,16 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
             .time(500)
             .position(POS_INIT, 2260)
             .position(POS_OUVERT, 1500)
-            .position(POS_OUVERT_PRISE, 1500)
+            .position(POS_OUVERT_PRISE, 1260)
             .position(POS_OUVERT_DEPOSE, 1500)
-            .position(POS_OUVERT_BANDEROLLE, 1500)
-            .position(POS_FERME, 1500);
+            .position(POS_STOCK, 1500);
         Servo pinceAvantDroite = servo(PINCE_AVANT_DROIT_ID, PINCE_AVANT_DROIT)
             .time(500)
             .position(POS_INIT, 800)
             .position(POS_OUVERT, 1500)
-            .position(POS_OUVERT_PRISE, 1500)
+            .position(POS_OUVERT_PRISE, 1660)
             .position(POS_OUVERT_DEPOSE, 1500)
-            .position(POS_OUVERT_BANDEROLLE, 1500)
-            .position(POS_FERME, 1500);
+            .position(POS_STOCK, 1500);
         group(GROUP_PINCES_AVANT_ID, GROUP_PINCES_AVANT)
             .addServo(pinceAvantGauche)
             .addServo(pinceAvantDroite)
@@ -99,7 +97,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
             .batch(POS_OUVERT)
             .batch(POS_OUVERT_PRISE)
             .batch(POS_OUVERT_DEPOSE)
-            .batch(POS_FERME);
+            .batch(POS_STOCK);
 
         Servo doigtAvantGauche = servo(DOIGT_AVANT_GAUCHE_ID, DOIGT_AVANT_GAUCHE)
             .time(500)
@@ -121,17 +119,17 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
         Servo pinceArriereGauche = servo(PINCE_ARRIERE_GAUCHE_ID, PINCE_ARRIERE_GAUCHE)
             .time(500)
             .position(POS_INIT, 810)
-            .position(POS_OUVERT_PRISE, 1500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_OUVERT_PRISE, 1770)
             .position(POS_OUVERT_DEPOSE, 1500)
-            .position(POS_OUVERT_BANDEROLLE, 1500)
             .position(POS_FERME, 1500);
         Servo pinceArriereDroite = servo(PINCE_ARRIERE_DROIT_ID, PINCE_ARRIERE_DROIT)
             .time(500)
             .position(POS_INIT, 2210)
-            .position(POS_OUVERT_PRISE, 1500)
+            .position(POS_OUVERT, 1500)
+            .position(POS_OUVERT_PRISE, 1200)
             .position(POS_OUVERT_DEPOSE, 1500)
-            .position(POS_OUVERT_BANDEROLLE, 1500)
-            .position(POS_FERME, 1500);
+            .position(POS_STOCK, 1500);
         group(GROUP_PINCES_ARRIERE_ID, GROUP_PINCES_ARRIERE)
             .addServo(pinceArriereGauche)
             .addServo(pinceArriereDroite)
@@ -139,7 +137,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
             .batch(POS_OUVERT)
             .batch(POS_OUVERT_PRISE)
             .batch(POS_OUVERT_DEPOSE)
-            .batch(POS_FERME);
+            .batch(POS_STOCK);
 
         Servo doigtArriereGauche = servo(DOIGT_ARRIERE_GAUCHE_ID, DOIGT_ARRIERE_GAUCHE)
             .time(500)
