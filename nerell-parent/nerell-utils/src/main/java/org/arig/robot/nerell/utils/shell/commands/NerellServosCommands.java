@@ -2,7 +2,10 @@ package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.GradinBrut;
 import org.arig.robot.services.AbstractEnergyService;
+import org.arig.robot.services.AbstractNerellFaceService;
+import org.arig.robot.services.NerellFaceWrapper;
 import org.arig.robot.services.NerellIOService;
 import org.arig.robot.services.NerellRobotServosService;
 import org.arig.robot.utils.ThreadUtils;
@@ -20,6 +23,7 @@ public class NerellServosCommands {
     private final NerellRobotServosService servosService;
     private final NerellIOService ioService;
     private final AbstractEnergyService energyService;
+    private final NerellFaceWrapper faceWrapper;
 
     private final int nbLoop = 5;
 
@@ -201,5 +205,28 @@ public class NerellServosCommands {
         }
 
         preparation();
+    }
+
+    @ShellMethod("Chargement face avant")
+    public void testChargementFaceAvant() {
+        testChargementFace(NerellFaceWrapper.Face.AVANT);
+    }
+
+    @ShellMethod("Chargement face arriere")
+    public void testChargementFaceArriere() {
+        testChargementFace(NerellFaceWrapper.Face.ARRIERE);
+    }
+
+    private void testChargementFace(NerellFaceWrapper.Face face) {
+        AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
+
+        try {
+            GradinBrut gradin = new GradinBrut(GradinBrut.ID.BLEU_BAS_CENTRE, 0, 0, false, GradinBrut.Orientation.HORIZONTAL);
+            faceService.preparePriseGradinBrut(gradin);
+            boolean priseOk = faceService.prendreGradinBrutStockTiroir();
+            log.info("Résultat chargement face {} : {}", face, priseOk);
+        } catch (Exception e) {
+            log.error("Erreur lors du chargement de la face {}", face, e);
+        }
     }
 }
