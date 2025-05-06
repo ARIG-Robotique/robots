@@ -44,31 +44,31 @@ public abstract class AbstractNerellFaceService {
   public boolean prendreGradinBrutStockTiroir() throws AvoidingException {
     log.info("Prise du gradin brut pour stock tiroir");
     deplacementPriseColonnesPinces();
-    if (!checkIOPinces()) {
+    /*if (!checkIOPinces()) {
       log.warn("Erreur de prise du gradin brut");
       log.info(" - Echappement prise du gradin brut");
       deplacementEchappementGradinBrut();
       log.info(" - Fermeture face, échec de la prise");
       fermeFaceEchecPrise();
       return false;
-    }
+    }*/
     log.info(" - Prepare mise en stock tiroir du gradin brut");
     prepareMiseEnStockTiroir();
-    if (!checkIOTiroir()) {
+    /*if (!checkIOTiroir()) {
       log.warn("Erreur de mise en stock du gradin brut");
       log.info(" - Fermeture face, échec de la mise en stock");
       fermeFaceEchecStockTiroir();
       return false;
-    }
+    }*/
     log.info(" - Mise en stock du gradin brut");
     miseEnStockTiroir();
     log.info(" - Mise en stock des colonnes au sol");
     deplacementPriseColonnesSol();
-    if (!checkIOColonnesSol()) {
+    /*if (!checkIOColonnesSol()) {
       log.warn("Erreur de prise des colonnes au sol");
       log.info(" - Fermeture face, échec de la prise des colonnes au sol");
       deplacementEchappementGradinBrut();
-    }
+    }*/
     log.info(" - Vérouillage des colonnes au sol");
     verrouillageColonnesSol();
 
