@@ -178,10 +178,10 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     }
 
     public void becArriereOuvert(boolean wait) {
-        setPosition(BEC_AVANT, POS_OUVERT, wait);
+        setPosition(BEC_ARRIERE, POS_OUVERT, wait);
     }
     public void becArriereFerme(boolean wait) {
-        setPosition(BEC_AVANT, POS_FERME, wait);
+        setPosition(BEC_ARRIERE, POS_FERME, wait);
     }
 
     public void ascenseurAvantHaut(boolean wait) {
