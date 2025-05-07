@@ -1,9 +1,11 @@
 package org.arig.robot.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.NerellRobotStatus;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class NerellFaceWrapper {
@@ -16,7 +18,7 @@ public class NerellFaceWrapper {
   private final NerellFaceAvantService faceAvantService;
   private final NerellFaceArriereService faceArriereService;
 
-  public Face getFace() {
+  public Face getEmptyFace() {
     if (robotStatus.faceAvant().isEmpty()) {
       return Face.AVANT;
     } else if (robotStatus.faceArriere().isEmpty()) {

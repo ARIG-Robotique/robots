@@ -37,7 +37,7 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
 
   @Override
   public boolean isValid() {
-    if (faceWrapper.getFace() == null) {
+    if (faceWrapper.getEmptyFace() == null) {
       return false;
     }
 
@@ -59,7 +59,7 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
       mv.pathTo(entryPoint());
 
       GradinBrut gradin = gradin();
-      NerellFaceWrapper.Face face = faceWrapper.getFace();
+      NerellFaceWrapper.Face face = faceWrapper.getEmptyFace();
       AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
 
       faceService.preparePriseGradinBrut(gradin);

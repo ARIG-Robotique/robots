@@ -12,25 +12,26 @@ public class ConstructionAreaTest {
         Assertions.assertTrue(area.isEmpty());
         Assertions.assertEquals(0, area.score());
 
-        area.addTribune(0, 0);
+        area.addGradin(0, 0);
+        Assertions.assertFalse(area.isEmpty());
         Assertions.assertEquals(4, area.score());
 
-        area.addTribune(1, 0);
+        area.addGradin(1, 0);
         Assertions.assertEquals(8, area.score());
 
-        area.addTribune(2, 0);
+        area.addGradin(2, 0);
         Assertions.assertEquals(12, area.score());
 
-        area.removeTribune(2, 0);
+        area.removeGradin(2, 0);
         Assertions.assertEquals(8, area.score());
-        area.addTribune(1, 1);
+        area.addGradin(1, 1);
         Assertions.assertEquals(16, area.score());
 
-        area.removeTribune(1, 1);
-        area.removeTribune(1, 0);
+        area.removeGradin(1, 1);
+        area.removeGradin(1, 0);
         Assertions.assertEquals(4, area.score());
-        area.addTribune(0, 1);
-        area.addTribune(0, 2);
+        area.addGradin(0, 1);
+        area.addGradin(0, 2);
         Assertions.assertEquals(28, area.score());
     }
 
@@ -39,10 +40,10 @@ public class ConstructionAreaTest {
         ConstructionArea area = new ConstructionArea("zone");
 
         IllegalArgumentException ex = Assertions
-            .assertThrows(IllegalArgumentException.class, () -> area.addTribune(2, 0));
+            .assertThrows(IllegalArgumentException.class, () -> area.addGradin(2, 0));
         Assertions.assertEquals("Rang 2 out of bounds", ex.getMessage());
 
-        ex = Assertions.assertThrows(IllegalArgumentException.class, () -> area.addTribune(0, 5));
+        ex = Assertions.assertThrows(IllegalArgumentException.class, () -> area.addGradin(0, 5));
         Assertions.assertEquals("Etage 5 out of bounds", ex.getMessage());
     }
 }

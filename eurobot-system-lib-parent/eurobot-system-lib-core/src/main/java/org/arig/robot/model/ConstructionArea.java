@@ -45,13 +45,13 @@ public class ConstructionArea {
         return score;
     }
 
-    public void addTribune(int rang, int etage) {
+    public void addGradin(int rang, int etage) {
         checkPosition(rang, etage);
         log.info("[RS] Ajout tribune rang {} etage {}", rang, etage);
         data[rang][etage] = true;
     }
 
-    public void removeTribune(int rang, int etage) {
+    public void removeGradin(int rang, int etage) {
         checkPosition(rang, etage);
         log.info("[RS] Remove tribune rang {} etage {}", rang, etage);
         data[rang][etage] = false;
