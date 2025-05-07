@@ -262,9 +262,15 @@ public class NerellServosCommands {
             log.error("Tirette non détectée");
             return;
         }
+
+        log.info("Pince  : G {} - D {}", ioService.pinceAvantGauche(true), ioService.pinceAvantDroite(true));
+        log.info("Sol    : G {} - D {}", ioService.solAvantGauche(true), ioService.solAvantDroite(true));
+        log.info("Tiroir : B {} - H {}", ioService.tiroirAvantBas(true), ioService.tiroirAvantHaut(true));
+
         if (ioService.pinceAvantGauche(true) && ioService.pinceAvantDroite(true) &&
             ioService.tiroirAvantHaut(true) && ioService.tiroirAvantBas(true)
         ) {
+            log.info("Construction 1 etage avec le stock pince et planche haut");
             servosService.groupePincesAvantPrise(true);
             servosService.ascenseurAvantHaut(true);
             servosService.tiroirAvantOuvert(true);
