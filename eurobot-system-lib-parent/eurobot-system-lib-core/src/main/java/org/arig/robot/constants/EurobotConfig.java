@@ -26,6 +26,7 @@ public interface EurobotConfig {
     String ACTION_RETOUR_BACKSTAGE = "Retour backstage";
 
     // Actions d'échappement
+    String ACTION_DEPOSE_GRADIN_PREFIX = "Depose ";
     String ACTION_PRISE_GRADIN_BRUT_PREFIX = "Prise ";
     String ACTION_ECHAPPEMENT_ARUCO_PREFIX = "Echap. Aruco ";
 
