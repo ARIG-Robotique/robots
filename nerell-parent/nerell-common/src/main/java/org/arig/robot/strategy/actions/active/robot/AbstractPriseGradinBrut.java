@@ -8,7 +8,6 @@ import org.arig.robot.model.GradinBrut;
 import org.arig.robot.services.AbstractNerellFaceService;
 import org.arig.robot.services.NerellFaceWrapper;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
-import org.arig.robot.utils.ThreadUtils;
 
 @Slf4j
 public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
@@ -55,6 +54,7 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
   public void execute() {
     mv.setVitessePercent(100, 100);
 
+    AbstractNerellFaceService.PriseGradinState priseGradinState = null;
     try {
       mv.pathTo(entryPoint());
 
@@ -62,31 +62,18 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
       NerellFaceWrapper.Face face = faceWrapper.getFace();
       AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
 
-
       faceService.preparePriseGradinBrut(gradin);
-      if (!faceService.prendreGradinBrutStockTiroir()) {
-        gradin.setGradinBloque();
-        return;
+      priseGradinState = faceService.prendreGradinBrutStockTiroir();
+      if (priseGradinState == AbstractNerellFaceService.PriseGradinState.OK) {
+        complete();
+        gradin().setGradinPris();
       }
-
-      // c. Avance jusqu'à la prise (capteurs ??)
-      // d1. Si bordure
-      // d1.a Mise en stock planche
-      // d1.b Avance en calage bordure (simple ou double)
-      // d1.c Prise des colonnes dans robot (bas)
-      // d2. Si pas de bordure
-      // d2.a Mise en stock planche
-      // d2.b Avance diam (gradin) + 50
-      // d2.c Prise des colonnes dans robot (bas)
-      // e. Prise des colonnes dans robot (haut)
-      // f. Recule 100 mm
-
-      gradin().setGradinPris();
-      complete();
 
     } catch (NoPathFoundException | AvoidingException e) {
       log.warn("Erreur prise {} : {}", name(), e.toString());
       updateValidTime();
+    } finally {
+      // TODO : Gestion prise gradin state pour finalisation prise
     }
   }
 }

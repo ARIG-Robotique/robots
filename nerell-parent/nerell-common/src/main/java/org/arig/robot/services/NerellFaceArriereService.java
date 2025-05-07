@@ -21,16 +21,6 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
   }
 
   @Override
-  protected void fermeFaceEchecPrise() {
-
-  }
-
-  @Override
-  protected void fermeFaceEchecStockTiroir() {
-
-  }
-
-  @Override
   protected void deplacementPriseColonnesPinces() {
 
   }
@@ -41,37 +31,32 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
   }
 
   @Override
-  protected void deplacementEchappementGradinBrut() {
+  protected void updateStockRobot(boolean expectedSimulator) {
 
   }
 
   @Override
-  protected boolean checkIOPinces() {
+  protected boolean checkIOsPinces() {
     return false;
   }
 
   @Override
-  protected void prepareMiseEnStockTiroir() {
-
-  }
-
-  @Override
-  protected void miseEnStockTiroir() {
-
-  }
-
-  @Override
-  protected boolean checkIOTiroir() {
+  protected boolean miseEnStockTiroir() {
     return false;
   }
 
   @Override
-  protected boolean checkIOColonnesSol() {
+  protected boolean checkIOsTiroir() {
     return false;
   }
 
   @Override
-  protected void verrouillageColonnesSol() {
+  protected boolean checkIOsColonnesSol() {
+    return false;
+  }
 
+  @Override
+  protected boolean verrouillageColonnesSol() {
+    return false;
   }
 }

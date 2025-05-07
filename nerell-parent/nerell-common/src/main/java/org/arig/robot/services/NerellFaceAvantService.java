@@ -1,11 +1,13 @@
 package org.arig.robot.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.GradinBrut;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.utils.ThreadUtils;
 
+@Slf4j
 public class NerellFaceAvantService extends AbstractNerellFaceService {
 
   public NerellFaceAvantService(NerellRobotStatus rs, TrajectoryManager mv,
@@ -25,22 +27,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     servos.groupeBlockColonneAvantOuvert(false);
     servos.groupePincesAvantOuvertPrise(true);
     servos.ascenseurAvantBas(false);
-    servos.groupeDoigtsAvantOuvert(true);
-  }
-
-  @Override
-  protected void fermeFaceEchecPrise() {
-    servos.groupeBlockColonneAvantOuvert(false);
-    servos.groupeDoigtsAvantFerme(true);
-    servos.ascenseurAvantBasPrise(true);
-    servos.groupePincesAvantFerme(true);
-    servos.tiroirAvantStock(false);
-    servos.becAvantFerme(false);
-  }
-
-  @Override
-  protected void fermeFaceEchecStockTiroir() {
-    fermeFaceEchecPrise();
+    servos.groupeDoigtsAvantOuvert(false);
   }
 
   @Override
@@ -58,35 +45,15 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   }
 
   @Override
-  protected void deplacementEchappementGradinBrut() throws AvoidingException {
-    mv.setVitessePercent(100, 100);
-    mv.reculeMM(100);
-  }
-
-  @Override
-  protected boolean checkIOPinces() {
+  protected boolean checkIOsPinces() {
     return ThreadUtils.waitUntil(
-      () -> ioService.pinceAvantGauche(true) && ioService.pinceArriereDroite(true),
+      () -> ioService.pinceAvantGauche(true) && ioService.pinceAvantDroite(true),
       20, 1000
     );
   }
 
   @Override
-  protected void prepareMiseEnStockTiroir() {
-    servos.groupeDoigtsAvantPrise(true);
-    servos.ascenseurAvantHaut(true);
-  }
-
-  @Override
-  protected void miseEnStockTiroir() {
-    servos.becAvantFerme(true);
-    servos.tiroirAvantStock(true);
-    servos.ascenseurAvantStock(true);
-    servos.groupePincesAvantStock(false);
-  }
-
-  @Override
-  protected boolean checkIOTiroir() {
+  protected boolean checkIOsTiroir() {
     return ThreadUtils.waitUntil(
         () -> ioService.tiroirAvantBas(true) && ioService.tiroirAvantHaut(true),
         20, 1000
@@ -94,7 +61,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   }
 
   @Override
-  protected boolean checkIOColonnesSol() {
+  protected boolean checkIOsColonnesSol() {
     return ThreadUtils.waitUntil(
         () -> ioService.solAvantGauche(true) && ioService.solAvantDroite(true),
         20, 1000
@@ -102,7 +69,52 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   }
 
   @Override
-  protected void verrouillageColonnesSol() {
+  protected void updateStockRobot(boolean expectedSimulator) {
+    rs.faceAvant()
+        .pinceDroite(ioService.pinceAvantDroite(expectedSimulator))
+        .pinceGauche(ioService.pinceAvantGauche(expectedSimulator))
+        .solGauche(ioService.solAvantGauche(expectedSimulator))
+        .solDroite(ioService.solAvantDroite(expectedSimulator))
+        .tiroirBas(ioService.tiroirAvantBas(expectedSimulator))
+        .tiroirHaut(ioService.tiroirAvantHaut(expectedSimulator));
+  }
+
+  @Override
+  protected boolean miseEnStockTiroir() {
+    servos.groupeDoigtsAvantPrise(true);
+    servos.ascenseurAvantHaut(true);
+    if (!checkIOsTiroir()) {
+      log.warn("Erreur de mise en stock du tiroir avant");
+      return false;
+    }
+
+    int nbTries = 1;
+    do {
+      if (nbTries > 1) {
+        log.info(" - Réouverture du tiroir avant pour le stock. Essai n°{}", nbTries);
+        servos.becAvantOuvert(true);
+        servos.tiroirAvantOuvert(true);
+        servos.ascenseurAvantHaut(true);
+
+        servos.becAvantFerme(true);
+        servos.becAvantOuvert(true);
+      }
+      servos.becAvantFerme(true);
+      servos.tiroirAvantStock(true);
+      servos.ascenseurAvantStock(true);
+
+      if (nbTries++ > 3) {
+        break;
+      }
+    } while (!checkIOsTiroir());
+
+    servos.groupePincesAvantStock(false);
+    return nbTries <= 3;
+  }
+
+  @Override
+  protected boolean verrouillageColonnesSol() {
     servos.groupeBlockColonneAvantFerme(true);
+    return checkIOsColonnesSol();
   }
 }

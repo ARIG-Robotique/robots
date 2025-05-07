@@ -3,12 +3,14 @@ package org.arig.robot.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Getter
-@Accessors(fluent = true)
+@Setter
+@Accessors(fluent = true, chain = true)
 public class StockFace {
 
   @JsonProperty

@@ -223,10 +223,82 @@ public class NerellServosCommands {
         try {
             GradinBrut gradin = new GradinBrut(GradinBrut.ID.BLEU_BAS_CENTRE, 0, 0, false, GradinBrut.Orientation.HORIZONTAL);
             faceService.preparePriseGradinBrut(gradin);
-            boolean priseOk = faceService.prendreGradinBrutStockTiroir();
-            log.info("Résultat chargement face {} : {}", face, priseOk);
+            boolean tirette = ThreadUtils.waitUntil(ioService::tirette, 1000, 60000);
+            if (!tirette) {
+                log.error("Tirette non détectée");
+                return;
+            }
+            AbstractNerellFaceService.PriseGradinState priseGradinState = faceService.prendreGradinBrutStockTiroir();
+            log.info("Résultat chargement face {} : {}", face, priseGradinState);
         } catch (Exception e) {
             log.error("Erreur lors du chargement de la face {}", face, e);
         }
+    }
+
+    @ShellMethod("Test construction etage 1 avant")
+    public void testConstructionEtage1Avant() {
+        testConstructionEtage1(NerellFaceWrapper.Face.AVANT);
+    }
+
+    @ShellMethod("Test construction etage 1 arriere")
+    public void testConstructionEtage1Arriere() {
+        testConstructionEtage1(NerellFaceWrapper.Face.ARRIERE);
+    }
+
+    private void testConstructionEtage1(NerellFaceWrapper.Face face) {
+        boolean tirette = ThreadUtils.waitUntil(ioService::tirette, 1000, 60000);
+        if (!tirette) {
+            log.error("Tirette non détectée");
+            return;
+        }
+        if (ioService.pinceAvantGauche(true) && ioService.pinceAvantDroite(true) &&
+            ioService.tiroirAvantHaut(true) && ioService.tiroirAvantBas(true)
+        ) {
+            servosService.groupePincesAvantDepose(true);
+            servosService.ascenseurAvantHaut(true);
+            servosService.tiroirAvantOuvert(true);
+            servosService.becAvantOuvert(true);
+            servosService.ascenseurAvantSplit(true);
+            servosService.becAvantFerme(true);
+            servosService.tiroirAvantStock(true);
+            servosService.ascenseurAvantBas(true);
+            servosService.groupeDoigtsAvantOuvert(true);
+
+            log.info("Enleve etage et tirette");
+            while(ioService.tirette() || ioService.pinceAvantGauche(false) || ioService.pinceAvantDroite(false)) {
+                ThreadUtils.sleep(100);
+            }
+
+            servosService.groupeDoigtsAvantFerme(false);
+            if (ioService.solAvantDroite(true) || ioService.solAvantGauche(true)) {
+                servosService.ascenseurAvantStock(false);
+            } else {
+                servosService.ascenseurAvantRepos(false);
+            }
+            servosService.groupePincesAvantFerme(false);
+
+        } else if (ioService.solAvantDroite(true) && ioService.solAvantGauche(true) &&
+                   !ioService.tiroirAvantHaut(true) && ioService.tiroirAvantBas(true)
+        ) {
+            servosService.groupeBlockColonneAvantOuvert(true);
+            // ????
+
+        } else {
+            log.error("Pas de construction possible étage 1 sur la face {}", face);
+        }
+    }
+
+    @ShellMethod("Test construction etage 2 avant")
+    public void testConstructionEtage2Avant() {
+        testConstructionEtage1(NerellFaceWrapper.Face.AVANT);
+    }
+
+    @ShellMethod("Test construction etage 2 arriere")
+    public void testConstructionEtage2Arriere() {
+        testConstructionEtage1(NerellFaceWrapper.Face.ARRIERE);
+    }
+
+    private void testConstructionEtage2(NerellFaceWrapper.Face face) {
+
     }
 }

@@ -34,9 +34,8 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final String POS_STOCK = "Stock";
     protected static final String POS_SPLIT = "Split";
     protected static final String POS_HAUT = "Haut";
-    protected static final String POS_HAUT_SPLIT = "Haut split";
     protected static final String POS_BAS = "Bas";
-    protected static final String POS_BAS_PRISE = "Bas prise";
+    protected static final String POS_REPOS = "Repos";
 
     protected static final String GROUP_INDIVIDUAL_AVANT = "Individuel avant";
     protected static final String GROUP_INDIVIDUAL_ARRIERE = "Individuel arrière";
@@ -74,13 +73,13 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
         groupeBlockColonneAvantOuvert(false);
         groupeBlockColonneArriereOuvert(false);
 
-        // Servo
-        setPosition(TIROIR_AVANT, POS_STOCK, false);
-        setPosition(TIROIR_ARRIERE, POS_STOCK, false);
+        // Servo individuels
+        tiroirAvantStock(false);
+        tiroirArriereStock(false);
+        ascenseurAvantRepos(false);
+        ascenseurArriereRepos(false);
         setPosition(BEC_AVANT, POS_INIT, false);
         setPosition(BEC_ARRIERE, POS_INIT, false);
-        setPosition(ASCENSEUR_AVANT, POS_BAS, false);
-        setPosition(ASCENSEUR_ARRIERE, POS_BAS, false);
     }
 
     //*******************************************//
@@ -188,7 +187,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
         setPosition(ASCENSEUR_AVANT, POS_HAUT, wait);
     }
     public void ascenseurAvantSplit(boolean wait) {
-        setPosition(ASCENSEUR_AVANT, POS_HAUT_SPLIT, wait);
+        setPosition(ASCENSEUR_AVANT, POS_SPLIT, wait);
     }
     public void ascenseurAvantStock(boolean wait) {
         setPosition(ASCENSEUR_AVANT, POS_STOCK, wait);
@@ -196,15 +195,15 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void ascenseurAvantBas(boolean wait) {
         setPosition(ASCENSEUR_AVANT, POS_BAS, wait);
     }
-    public void ascenseurAvantBasPrise(boolean wait) {
-        setPosition(ASCENSEUR_AVANT, POS_BAS_PRISE, wait);
+    public void ascenseurAvantRepos(boolean wait) {
+        setPosition(ASCENSEUR_AVANT, POS_REPOS, wait);
     }
 
     public void ascenseurArriereHaut(boolean wait) {
         setPosition(ASCENSEUR_ARRIERE, POS_HAUT, wait);
     }
     public void ascenseurArriereSplit(boolean wait) {
-        setPosition(ASCENSEUR_ARRIERE, POS_HAUT_SPLIT, wait);
+        setPosition(ASCENSEUR_ARRIERE, POS_SPLIT, wait);
     }
     public void ascenseurArriereStock(boolean wait) {
         setPosition(ASCENSEUR_ARRIERE, POS_STOCK, wait);
@@ -212,7 +211,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void ascenseurArriereBas(boolean wait) {
         setPosition(ASCENSEUR_ARRIERE, POS_BAS, wait);
     }
-    public void ascenseurArriereBasPrise(boolean wait) {
-        setPosition(ASCENSEUR_ARRIERE, POS_BAS_PRISE, wait);
+    public void ascenseurArriereRepos(boolean wait) {
+        setPosition(ASCENSEUR_ARRIERE, POS_REPOS, wait);
     }
 }

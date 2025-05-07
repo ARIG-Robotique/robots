@@ -44,10 +44,10 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
         Servo ascAvant = servo(ASCENSEUR_AVANT_ID, ASCENSEUR_AVANT)
             .time(800)
             .position(POS_HAUT, 490)
-            .position(POS_HAUT_SPLIT, 650)
+            .position(POS_SPLIT, 650)
             .position(POS_STOCK, 780)
-            .position(POS_BAS, 2200)
-            .position(POS_BAS_PRISE, 2120);
+            .position(POS_REPOS, 2120)
+            .position(POS_BAS, 2200);
         group(GROUP_INDIVIDUAL_AVANT_ID, GROUP_INDIVIDUAL_AVANT)
             .addServo(tiroirAvant)
             .addServo(becAvant)
@@ -67,10 +67,10 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
         Servo ascArriere = servo(ASCENSEUR_ARRIERE_ID, ASCENSEUR_ARRIERE)
             .time(800)
             .position(POS_HAUT, 540)
-            .position(POS_HAUT_SPLIT, 680)
+            .position(POS_SPLIT, 680)
             .position(POS_STOCK, 800)
-            .position(POS_BAS, 2190)
-            .position(POS_BAS_PRISE, 2120);
+            .position(POS_REPOS, 2120)
+            .position(POS_BAS, 2190);
         group(GROUP_INDIVIDUAL_ARRIERE_ID, GROUP_INDIVIDUAL_ARRIERE)
             .addServo(tiroirArriere)
             .addServo(becArriere)

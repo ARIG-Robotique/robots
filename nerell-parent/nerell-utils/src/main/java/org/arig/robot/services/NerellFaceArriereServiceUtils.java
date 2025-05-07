@@ -19,6 +19,4 @@ public class NerellFaceArriereServiceUtils extends NerellFaceArriereService {
   @Override
   protected void deplacementPriseColonnesSol() { /* NOP */ }
 
-  @Override
-  protected void deplacementEchappementGradinBrut() { /* NOP */ }
 }
