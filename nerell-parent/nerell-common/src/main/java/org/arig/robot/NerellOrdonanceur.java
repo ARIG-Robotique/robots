@@ -274,7 +274,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             position.setAngle(conv.degToPulse(90));
 
             if (!skip) {
-                robotStatus.enableCalageBordure(TypeCalage.AVANT);
+                robotStatus.enableCalage(TypeCalage.AVANT);
                 mv.avanceMMSansAngle(300);
 
                 position.getPt().setY(conv.mmToPulse(EurobotConfig.tableHeight - NerellConstantesConfig.dstCallage));
@@ -288,9 +288,9 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                     mv.gotoOrientationDeg(0);
                 }
 
-                robotStatus.enableCalageBordure(TypeCalage.AVANT);
+                robotStatus.enableCalage(TypeCalage.AVANT);
                 mv.avanceMM(450);
-                robotStatus.enableCalageBordure(TypeCalage.AVANT);
+                robotStatus.enableCalage(TypeCalage.AVANT);
                 mv.avanceMMSansAngle(100);
 
                 if (!io.auOk()) {

@@ -36,7 +36,7 @@ public class TasksScheduler implements InitializingBean {
     private TrajectoryManager trajectoryManager;
 
     @Autowired
-    private CalageService calageBordure;
+    private CalageService calageService;
 
     @Autowired
     private IOService ioService;
@@ -70,7 +70,7 @@ public class TasksScheduler implements InitializingBean {
                     lastTimeCalage = timeStartCalage;
 
                     if (!rs.calage().isEmpty()) {
-                        calageBordure.process();
+                        calageService.process();
                     }
                 }
 

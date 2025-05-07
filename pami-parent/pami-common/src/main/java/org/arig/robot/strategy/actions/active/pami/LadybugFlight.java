@@ -1,7 +1,6 @@
 package org.arig.robot.strategy.actions.active.pami;
 
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
@@ -12,14 +11,10 @@ import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.TrajectoryManager;
-import org.arig.robot.strategy.AbstractAction;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Collections;
-import java.util.List;
 
 @Slf4j
 @Component
@@ -97,7 +92,7 @@ public class LadybugFlight extends AbstractEurobotAction {
 
             }
 
-            rs.enableCalageBordure(TypeCalage.FORCE);
+            rs.enableCalage(TypeCalage.FORCE);
             mv.avanceMM(300);
             rs.disableAsserv();
 

@@ -184,7 +184,7 @@ public abstract class AbstractRobotStatus {
         this.disableAsserv();
         this.disableAvoidance();
         this.disableMatch();
-        this.disableCalageBordure();
+        this.disableCalage();
     }
 
     public boolean matchRunning() {
@@ -207,29 +207,29 @@ public abstract class AbstractRobotStatus {
 
     private List<TypeCalage> calageCompleted = new ArrayList<>(3);
 
-    public void enableCalageBordure(TypeCalage main, TypeCalage ... others) {
+    public void enableCalage(TypeCalage main, TypeCalage ... others) {
         calageCompleted.clear();
         calage.clear();
         calage.add(main);
         if (others != null) {
             calage.addAll(Arrays.asList(others));
         }
-        log.info("Activation calage bordure : {}", calage.stream()
+        log.info("Activation calage : {}", calage.stream()
                 .map(Enum::name).collect(Collectors.joining(", ")));
     }
 
     public void enableCalageTempo(long timeMs) {
-        enableCalageBordure(TypeCalage.TEMPO);
+        enableCalage(TypeCalage.TEMPO);
         callageTime = System.currentTimeMillis() + timeMs;
     }
 
     public void enableCalageTempo(long timeMs, TypeCalage ... others) {
-        enableCalageBordure(TypeCalage.TEMPO, others);
+        enableCalage(TypeCalage.TEMPO, others);
         callageTime = System.currentTimeMillis() + timeMs;
     }
 
-    public void disableCalageBordure() {
-        log.info("Désactivation calage bordure");
+    public void disableCalage() {
+        log.info("Désactivation calage");
         calage.clear();
     }
 

@@ -217,7 +217,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 position.setAngle(conv.degToPulse(180));
             }
             if (!skip) {
-                robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
+                robotStatus.enableCalage(TypeCalage.ARRIERE);
                 mv.reculeMMSansAngle(300);
 
                 position.getPt().setX(conv.mmToPulse(getX(OdinConstantesConfig.dstCallage)));
@@ -230,9 +230,9 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                 mv.avanceMM(70);
                 mv.gotoOrientationDeg(90);
 
-                robotStatus.enableCalageBordure(TypeCalage.AVANT);
+                robotStatus.enableCalage(TypeCalage.AVANT);
                 mv.avanceMM(400);
-                robotStatus.enableCalageBordure(TypeCalage.AVANT);
+                robotStatus.enableCalage(TypeCalage.AVANT);
                 mv.avanceMMSansAngle(100);
 
                 if (!io.auOk()) {
@@ -276,7 +276,7 @@ public class OdinOrdonanceur extends AbstractOrdonanceur {
                         groupService.waitInitStep(InitStep.NERELL_CALAGE_TERMINE); // Attente Nerell calé
                         mv.gotoPoint(getX(robotConfig.distanceCalageArriere() + 20), 1160);
                         mv.setVitesse(robotConfig.vitesse(10), robotConfig.vitesseOrientation());
-                        robotStatus.enableCalageBordure(TypeCalage.ARRIERE);
+                        robotStatus.enableCalage(TypeCalage.ARRIERE);
                         mv.reculeMMSansAngle(30);
                     }
                     //groupService.initStep(InitStep.ODIN_EN_POSITION);

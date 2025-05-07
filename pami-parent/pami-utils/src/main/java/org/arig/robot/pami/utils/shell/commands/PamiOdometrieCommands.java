@@ -59,7 +59,7 @@ public class PamiOdometrieCommands {
         rs.enableAsserv();
         rs.disableAvoidance();
 
-        rs.enableCalageBordure(TypeCalage.ARRIERE);
+        rs.enableCalage(TypeCalage.ARRIERE);
         trajectoryManager.setVitessePercent(100, 100);
         trajectoryManager.reculeMMSansAngle(1000);
         rs.enableForceMonitoring();
@@ -71,9 +71,9 @@ public class PamiOdometrieCommands {
             trajectoryManager.avanceMM(900);
             trajectoryManager.tourneDeg(-180);
         }
-        rs.enableCalageBordure(TypeCalage.ARRIERE);
+        rs.enableCalage(TypeCalage.ARRIERE);
         trajectoryManager.reculeMM(100);
-        rs.enableCalageBordure(TypeCalage.ARRIERE);
+        rs.enableCalage(TypeCalage.ARRIERE);
         trajectoryManager.reculeMMSansAngle(1000);
         rs.disableForceMonitoring();
         ThreadUtils.sleep(5000); // Stabilisation
@@ -141,7 +141,7 @@ public class PamiOdometrieCommands {
         rs.disableAvoidance();
 
         // Calage arriere
-        rs.enableCalageBordure(TypeCalage.ARRIERE);
+        rs.enableCalage(TypeCalage.ARRIERE);
         trajectoryManager.setVitessePercent(100, 100);
         trajectoryManager.reculeMMSansAngle(1000);
 
@@ -158,7 +158,7 @@ public class PamiOdometrieCommands {
             rs.enableForceMonitoring();
             currentPosition.updatePosition(0, 0, 0);
             trajectoryManager.gotoPoint(distanceReel - 50, 0, GotoOption.AVANT, GotoOption.SANS_ORIENTATION);
-            rs.enableCalageBordure(TypeCalage.AVANT);
+            rs.enableCalage(TypeCalage.AVANT);
             trajectoryManager.avanceMMSansAngle(200);
             rs.disableForceMonitoring();
             ThreadUtils.sleep(1000); // Stabilisation
@@ -180,7 +180,7 @@ public class PamiOdometrieCommands {
             rs.enableForceMonitoring();
             currentPosition.updatePosition(convRobot.mmToPulse(DISTANCE_TABLE - PamiConstantesConfig.dstCallageArriere), 0, 0);
             trajectoryManager.gotoPoint(DISTANCE_TABLE - distanceReel - 50, 0, GotoOption.ARRIERE, GotoOption.SANS_ORIENTATION);
-            rs.enableCalageBordure(TypeCalage.ARRIERE);
+            rs.enableCalage(TypeCalage.ARRIERE);
             trajectoryManager.reculeMMSansAngle(200);
             rs.disableForceMonitoring();
             ThreadUtils.sleep(1000); // Stabilisation
@@ -233,7 +233,7 @@ public class PamiOdometrieCommands {
         rs.disableAvoidance();
 
         // Calage arriere
-        rs.enableCalageBordure(TypeCalage.ARRIERE);
+        rs.enableCalage(TypeCalage.ARRIERE);
         trajectoryManager.setVitessePercent(50, 100);
         trajectoryManager.reculeMMSansAngle(1000);
         trajectoryManager.avanceMM(distanceCmd);
@@ -271,7 +271,7 @@ public class PamiOdometrieCommands {
             rs.enableAsserv();
             rs.disableAvoidance();
 
-            rs.enableCalageBordure(TypeCalage.ARRIERE);
+            rs.enableCalage(TypeCalage.ARRIERE);
             trajectoryManager.setVitessePercent(100, 100);
             trajectoryManager.reculeMMSansAngle(1000);
 
@@ -284,9 +284,9 @@ public class PamiOdometrieCommands {
                 trajectoryManager.tourneDeg(360 * (first ? 1 : -1));
                 trajectoryManager.gotoOrientationDeg(0);
             }
-            rs.enableCalageBordure(TypeCalage.ARRIERE);
+            rs.enableCalage(TypeCalage.ARRIERE);
             trajectoryManager.reculeMM(90);
-            rs.enableCalageBordure(TypeCalage.ARRIERE);
+            rs.enableCalage(TypeCalage.ARRIERE);
             trajectoryManager.reculeMMSansAngle(30);
 
             rs.disableForceMonitoring();
@@ -350,7 +350,7 @@ public class PamiOdometrieCommands {
             rs.enableAsserv();
             rs.disableAvoidance();
 
-            rs.enableCalageBordure(TypeCalage.ARRIERE);
+            rs.enableCalage(TypeCalage.ARRIERE);
             trajectoryManager.setVitessePercent(100, 100);
             trajectoryManager.reculeMMSansAngle(1000);
 
@@ -360,9 +360,9 @@ public class PamiOdometrieCommands {
             trajectoryManager.avanceMM(70);
             trajectoryManager.tourneDeg(360 * (first ? nbCycle : -nbCycle));
             trajectoryManager.gotoOrientationDeg(0);
-            rs.enableCalageBordure(TypeCalage.ARRIERE);
+            rs.enableCalage(TypeCalage.ARRIERE);
             trajectoryManager.reculeMM(70);
-            rs.enableCalageBordure(TypeCalage.ARRIERE);
+            rs.enableCalage(TypeCalage.ARRIERE);
             trajectoryManager.reculeMMSansAngle(70);
 
             rs.disableForceMonitoring();

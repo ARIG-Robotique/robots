@@ -224,14 +224,14 @@ public class MouvementController {
         if (type == TypeCalage.AVANT) {
             double mvt = dstToBorder - config.distanceCalageAvant() - 10;
             if (mvt > 0) {
-                rs.enableCalageBordure(type, TypeCalage.FORCE);
+                rs.enableCalage(type, TypeCalage.FORCE);
                 trajectoryManager.setVitessePercent(50, 100);
                 trajectoryManager.avanceMM(mvt);
             }
         } else {
             double mvt = dstToBorder - config.distanceCalageArriere() - 10;
             if (mvt > 0) {
-                rs.enableCalageBordure(type, TypeCalage.FORCE);
+                rs.enableCalage(type, TypeCalage.FORCE);
                 trajectoryManager.setVitessePercent(50, 100);
                 trajectoryManager.reculeMM(mvt);
             }
@@ -242,7 +242,7 @@ public class MouvementController {
         }
 
         trajectoryManager.setVitessePercent(0, 100);
-        rs.enableCalageBordure(type);
+        rs.enableCalage(type);
 
         if (type == TypeCalage.AVANT) {
             trajectoryManager.avanceMMSansAngle(40);

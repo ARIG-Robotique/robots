@@ -62,7 +62,7 @@ public class CalageService {
                 }
 
                 if (cmdRobot.isType(TypeConsigne.DIST) && cmdRobot.isType(TypeConsigne.ANGLE)) {
-                    // Calage bordure avec les deux asservissement. Un seul des capteurs suffit
+                    // Calage avec les deux asservissement. Un seul des capteurs suffit
                     if (rs.calage().contains(TypeCalage.AVANT)) {
                         doneAvant = ioService.calageAvantDroit() || ioService.calageAvantGauche();
                     }
@@ -71,7 +71,7 @@ public class CalageService {
                     }
 
                 } else {
-                    // Calage bordure avec un autre asservissement, ou uniquement la distance ou l'angle.
+                    // Calage avec un autre asservissement, ou uniquement la distance ou l'angle.
                     // Les deux capteurs sont utilisés pour le calage.
                     if (rs.calage().contains(TypeCalage.AVANT)) {
                         doneAvant = ioService.calageAvantDroit() && ioService.calageAvantGauche();
@@ -106,7 +106,7 @@ public class CalageService {
                         rs.calageCompleted().add(TypeCalage.PRISE_PRODUIT_SOL_ARRIERE);
                     }
 
-                    trajectoryManager.calageBordureDone();
+                    trajectoryManager.calageDone();
                 }
             } else if (stopWatchPriseProduit.isStarted()) {
                 stopWatchPriseProduit.reset();
@@ -126,7 +126,7 @@ public class CalageService {
                     rs.calageCompleted().add(TypeCalage.TEMPO);
                 }
 
-                trajectoryManager.calageBordureDone(); // TODO Rename
+                trajectoryManager.calageDone(); // TODO Rename
             }
         }
     }

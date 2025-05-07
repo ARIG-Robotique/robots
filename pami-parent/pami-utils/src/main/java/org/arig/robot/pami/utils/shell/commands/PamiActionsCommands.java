@@ -39,8 +39,8 @@ public class PamiActionsCommands {
                 ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
     }
 
-    @ShellMethod("Calage bordure")
     @SneakyThrows
+    @ShellMethod("Calage bordure")
     public void calageBordure() {
         ordonanceur.calageBordure(false);
     }

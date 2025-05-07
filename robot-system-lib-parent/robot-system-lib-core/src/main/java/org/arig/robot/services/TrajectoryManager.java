@@ -115,9 +115,9 @@ public class TrajectoryManager implements InitializingBean {
     private AtomicBoolean obstacleLowSpeed = new AtomicBoolean(false);
 
     /**
-     * Boolean si un calage bordure est demandé (consigne distance angle = 0)
+     * Boolean si un calage est demandé (consigne distance angle = 0)
      */
-    private AtomicBoolean calageBordure = new AtomicBoolean(false);
+    private AtomicBoolean calage = new AtomicBoolean(false);
 
     /**
      * Boolean pour relancer après un obstacle (gestion de l'évittement)
@@ -267,12 +267,12 @@ public class TrajectoryManager implements InitializingBean {
             oldTypeConsigne = cmdRobot.getTypes();
         }
 
-        if (calageBordure.get() || obstacleFound.get()) {
+        if (calage.get() || obstacleFound.get()) {
             // Un calage sur bordure est fait. On asservi sur place jusqu'au prochain mouvement
             cmdRobot.getConsigne().setDistance(0);
             cmdRobot.getConsigne().setOrientation(0);
             cmdRobot.setTypes(TypeConsigne.DIST, TypeConsigne.ANGLE);
-            calageBordure.set(false);
+            calage.set(false);
         }
 
         if (Boolean.TRUE.equals(obstacleNotFoundFilter.filter(obstacleFound.get())) && oldConsigne != null) {
@@ -968,7 +968,7 @@ public class TrajectoryManager implements InitializingBean {
         trajetEnApproche.set(false);
         refreshPath.set(false);
         obstacleFound.set(false);
-        calageBordure.set(false);
+        calage.set(false);
     }
 
     public long vitesseDistance() {
@@ -1055,9 +1055,9 @@ public class TrajectoryManager implements InitializingBean {
         obstacleFound.set(false);
     }
 
-    public void calageBordureDone() {
-        calageBordure.set(true);
-        rs.disableCalageBordure();
+    public void calageDone() {
+        calage.set(true);
+        rs.disableCalage();
     }
 
     public void refreshPathFinding() {
@@ -1087,7 +1087,7 @@ public class TrajectoryManager implements InitializingBean {
 
             if (rs.calage().contains(TypeCalage.FORCE)) {
                 rs.calageCompleted().add(TypeCalage.FORCE);
-                calageBordureDone();
+                calageDone();
             } else {
                 throw new MovementCancelledException();
             }
