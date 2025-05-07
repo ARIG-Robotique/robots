@@ -20,7 +20,7 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
 
   @Override
   public void refreshCompleted() {
-    if (!gradin().present()) {
+    if (!gradin().present() || gradin().bloque()) {
       complete(true);
     }
   }
