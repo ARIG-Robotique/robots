@@ -26,11 +26,9 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public static final String BLOCK_COLONNE_ARRIERE_GAUCHE = "Block colonne arrière gauche";
     public static final String BLOCK_COLONNE_ARRIERE_DROIT = "Block colonne arrière droit";
 
-    protected static final String POS_INIT = "Init";
     protected static final String POS_FERME = "Fermé";
     protected static final String POS_OUVERT = "Ouvert";
-    protected static final String POS_OUVERT_PRISE = "Ouvert prise";
-    protected static final String POS_OUVERT_DEPOSE = "Ouvert dépose";
+    protected static final String POS_PRISE = "Prise";
     protected static final String POS_STOCK = "Stock";
     protected static final String POS_SPLIT = "Split";
     protected static final String POS_HAUT = "Haut";
@@ -65,9 +63,8 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
 
     public void homes() {
         // Batch
-        setPositionBatch(GROUP_PINCES_AVANT, POS_INIT, false);
-        setPositionBatch(GROUP_PINCES_ARRIERE, POS_INIT, false);
-
+        groupePincesAvantRepos(false);
+        groupePincesArriereRepos(false);
         groupeDoigtsAvantFerme(false);
         groupeDoigtsArriereFerme(false);
         groupeBlockColonneAvantOuvert(false);
@@ -78,8 +75,8 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
         tiroirArriereStock(false);
         ascenseurAvantRepos(false);
         ascenseurArriereRepos(false);
-        setPosition(BEC_AVANT, POS_INIT, false);
-        setPosition(BEC_ARRIERE, POS_INIT, false);
+        becAvantRepos(false);
+        becArriereRepos(false);
     }
 
     //*******************************************//
@@ -88,40 +85,34 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void groupePincesAvantOuvert(boolean wait) {
         setPositionBatch(GROUP_PINCES_AVANT, POS_OUVERT, wait);
     }
-    public void groupePincesAvantOuvertPrise(boolean wait) {
-        setPositionBatch(GROUP_PINCES_AVANT, POS_OUVERT_PRISE, wait);
-    }
-    public void groupePincesAvantDepose(boolean wait) {
-        setPositionBatch(GROUP_PINCES_AVANT, POS_OUVERT_DEPOSE, wait);
-    }
-    public void groupePincesAvantFerme(boolean wait) {
-        setPositionBatch(GROUP_PINCES_AVANT, POS_FERME, wait);
+    public void groupePincesAvantPrise(boolean wait) {
+        setPositionBatch(GROUP_PINCES_AVANT, POS_PRISE, wait);
     }
     public void groupePincesAvantStock(boolean wait) {
         setPositionBatch(GROUP_PINCES_AVANT, POS_STOCK, wait);
+    }
+    public void groupePincesAvantRepos(boolean wait) {
+        setPositionBatch(GROUP_PINCES_AVANT, POS_REPOS, wait);
     }
 
     public void groupePincesArriereOuvert(boolean wait) {
         setPositionBatch(GROUP_PINCES_ARRIERE, POS_OUVERT, wait);
     }
-    public void groupePincesArriereOuvertPrise(boolean wait) {
-        setPositionBatch(GROUP_PINCES_ARRIERE, POS_OUVERT_PRISE, wait);
-    }
-    public void groupePincesArriereDepose(boolean wait) {
-        setPositionBatch(GROUP_PINCES_ARRIERE, POS_OUVERT_DEPOSE, wait);
-    }
-    public void groupePincesArriereFerme(boolean wait) {
-        setPositionBatch(GROUP_PINCES_ARRIERE, POS_FERME, wait);
+    public void groupePincesArrierePrise(boolean wait) {
+        setPositionBatch(GROUP_PINCES_ARRIERE, POS_PRISE, wait);
     }
     public void groupePincesArriereStock(boolean wait) {
         setPositionBatch(GROUP_PINCES_ARRIERE, POS_STOCK, wait);
+    }
+    public void groupePincesArriereRepos(boolean wait) {
+        setPositionBatch(GROUP_PINCES_ARRIERE, POS_REPOS, wait);
     }
 
     public void groupeDoigtsAvantOuvert(boolean wait) {
         setPositionBatch(GROUP_DOIGTS_AVANT, POS_OUVERT, wait);
     }
     public void groupeDoigtsAvantPrise(boolean wait) {
-        setPositionBatch(GROUP_DOIGTS_AVANT, POS_OUVERT_PRISE, wait);
+        setPositionBatch(GROUP_DOIGTS_AVANT, POS_PRISE, wait);
     }
     public void groupeDoigtsAvantFerme(boolean wait) {
         setPositionBatch(GROUP_DOIGTS_AVANT, POS_FERME, wait);
@@ -131,7 +122,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
         setPositionBatch(GROUP_DOIGTS_ARRIERE, POS_OUVERT, wait);
     }
     public void groupeDoigtsArrierePrise(boolean wait) {
-        setPositionBatch(GROUP_DOIGTS_ARRIERE, POS_OUVERT_PRISE, wait);
+        setPositionBatch(GROUP_DOIGTS_ARRIERE, POS_PRISE, wait);
     }
     public void groupeDoigtsArriereFerme(boolean wait) {
         setPositionBatch(GROUP_DOIGTS_ARRIERE, POS_FERME, wait);
@@ -175,12 +166,18 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void becAvantFerme(boolean wait) {
         setPosition(BEC_AVANT, POS_FERME, wait);
     }
+    public void becAvantRepos(boolean wait) {
+        setPosition(BEC_AVANT, POS_REPOS, wait);
+    }
 
     public void becArriereOuvert(boolean wait) {
         setPosition(BEC_ARRIERE, POS_OUVERT, wait);
     }
     public void becArriereFerme(boolean wait) {
         setPosition(BEC_ARRIERE, POS_FERME, wait);
+    }
+    public void becArriereRepos(boolean wait) {
+        setPosition(BEC_ARRIERE, POS_REPOS, wait);
     }
 
     public void ascenseurAvantHaut(boolean wait) {

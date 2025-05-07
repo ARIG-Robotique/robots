@@ -25,7 +25,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     servos.tiroirAvantOuvert(false);
     servos.becAvantOuvert(false);
     servos.groupeBlockColonneAvantOuvert(false);
-    servos.groupePincesAvantOuvertPrise(true);
+    servos.groupePincesAvantPrise(true);
     servos.ascenseurAvantBas(false);
     servos.groupeDoigtsAvantOuvert(false);
   }

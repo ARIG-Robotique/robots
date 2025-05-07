@@ -55,7 +55,7 @@ public class NerellServosCommands {
         for (int i = 0; i < nbLoop; i++) {
             servosService.groupePincesAvantOuvert(false);
             ThreadUtils.sleep(wait);
-            servosService.groupePincesAvantFerme(false);
+            servosService.groupePincesAvantRepos(false);
             ThreadUtils.sleep(wait);
         }
 
@@ -68,7 +68,7 @@ public class NerellServosCommands {
         for (int i = 0; i < nbLoop; i++) {
             servosService.groupePincesArriereOuvert(false);
             ThreadUtils.sleep(wait);
-            servosService.groupePincesArriereFerme(false);
+            servosService.groupePincesArriereRepos(false);
             ThreadUtils.sleep(wait);
         }
 
@@ -229,6 +229,16 @@ public class NerellServosCommands {
                 return;
             }
             AbstractNerellFaceService.PriseGradinState priseGradinState = faceService.prendreGradinBrutStockTiroir();
+            if (priseGradinState == AbstractNerellFaceService.PriseGradinState.ERREUR_COLONNES) {
+                log.info("Enleve tirrette pour stock colonnes");
+                tirette = ThreadUtils.waitUntil(() -> !ioService.tirette(), 1000, 60000);
+                if (tirette) {
+                    log.error("Tirette non enlevée");
+                    return;
+                }
+                servosService.groupeBlockColonneAvantFerme(true);
+                priseGradinState = AbstractNerellFaceService.PriseGradinState.OK;
+            }
             log.info("Résultat chargement face {} : {}", face, priseGradinState);
         } catch (Exception e) {
             log.error("Erreur lors du chargement de la face {}", face, e);
@@ -246,6 +256,7 @@ public class NerellServosCommands {
     }
 
     private void testConstructionEtage1(NerellFaceWrapper.Face face) {
+        log.info("Début test construction etage 1 sur la face {}. Start avec tirette", face);
         boolean tirette = ThreadUtils.waitUntil(ioService::tirette, 1000, 60000);
         if (!tirette) {
             log.error("Tirette non détectée");
@@ -254,7 +265,7 @@ public class NerellServosCommands {
         if (ioService.pinceAvantGauche(true) && ioService.pinceAvantDroite(true) &&
             ioService.tiroirAvantHaut(true) && ioService.tiroirAvantBas(true)
         ) {
-            servosService.groupePincesAvantDepose(true);
+            servosService.groupePincesAvantPrise(true);
             servosService.ascenseurAvantHaut(true);
             servosService.tiroirAvantOuvert(true);
             servosService.becAvantOuvert(true);
@@ -275,7 +286,7 @@ public class NerellServosCommands {
             } else {
                 servosService.ascenseurAvantRepos(false);
             }
-            servosService.groupePincesAvantFerme(false);
+            servosService.groupePincesAvantRepos(false);
 
         } else if (ioService.solAvantDroite(true) && ioService.solAvantGauche(true) &&
                    !ioService.tiroirAvantHaut(true) && ioService.tiroirAvantBas(true)
