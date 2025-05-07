@@ -9,7 +9,7 @@ public enum FutureUtils {
     ;
 
     /**
-     * Wrapper autour de CompletavleFuture#allOf pour récupérer le resultat
+     * Wrapper autour de CompletableFuture#allOf pour récupérer le resultat
      */
     public static <A, B> CompletableFuture<CompoundFutureResult2<A, B>> all(CompletableFuture<A> a, CompletableFuture<B> b) {
         return CompletableFuture.allOf(a, b)
@@ -19,7 +19,7 @@ public enum FutureUtils {
     }
 
     /**
-     * Wrapper autour de CompletavleFuture#allOf pour récupérer le resultat
+     * Wrapper autour de CompletableFuture#allOf pour récupérer le resultat
      */
     public static <A, B, C> CompletableFuture<CompoundFutureResult3<A, B, C>> all(CompletableFuture<A> a, CompletableFuture<B> b, CompletableFuture<C> c) {
         return CompletableFuture.allOf(a, b, c)
