@@ -28,11 +28,15 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
 
     protected static final String POS_FERME = "Fermé";
     protected static final String POS_OUVERT = "Ouvert";
+    protected static final String POS_SERRE = "Serré";
+    protected static final String POS_LACHE = "Lache";
     protected static final String POS_PRISE = "Prise";
+    protected static final String POS_PRISE_SOL = "Prise sol";
     protected static final String POS_STOCK = "Stock";
     protected static final String POS_SPLIT = "Split";
     protected static final String POS_HAUT = "Haut";
     protected static final String POS_BAS = "Bas";
+    protected static final String POS_ETAGE_2 = "Etage 2";
     protected static final String POS_REPOS = "Repos";
 
     protected static final String GROUP_INDIVIDUAL_AVANT = "Individuel avant";
@@ -88,6 +92,9 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void groupePincesAvantPrise(boolean wait) {
         setPositionBatch(GROUP_PINCES_AVANT, POS_PRISE, wait);
     }
+    public void groupePincesAvantPriseSol(boolean wait) {
+        setPositionBatch(GROUP_PINCES_AVANT, POS_PRISE_SOL, wait);
+    }
     public void groupePincesAvantStock(boolean wait) {
         setPositionBatch(GROUP_PINCES_AVANT, POS_STOCK, wait);
     }
@@ -101,6 +108,9 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void groupePincesArrierePrise(boolean wait) {
         setPositionBatch(GROUP_PINCES_ARRIERE, POS_PRISE, wait);
     }
+    public void groupePincesArrierePriseSol(boolean wait) {
+        setPositionBatch(GROUP_PINCES_ARRIERE, POS_PRISE_SOL, wait);
+    }
     public void groupePincesArriereStock(boolean wait) {
         setPositionBatch(GROUP_PINCES_ARRIERE, POS_STOCK, wait);
     }
@@ -111,8 +121,11 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void groupeDoigtsAvantOuvert(boolean wait) {
         setPositionBatch(GROUP_DOIGTS_AVANT, POS_OUVERT, wait);
     }
-    public void groupeDoigtsAvantPrise(boolean wait) {
-        setPositionBatch(GROUP_DOIGTS_AVANT, POS_PRISE, wait);
+    public void groupeDoigtsAvantLache(boolean wait) {
+        setPositionBatch(GROUP_DOIGTS_AVANT, POS_LACHE, wait);
+    }
+    public void groupeDoigtsAvantSerre(boolean wait) {
+        setPositionBatch(GROUP_DOIGTS_AVANT, POS_SERRE, wait);
     }
     public void groupeDoigtsAvantFerme(boolean wait) {
         setPositionBatch(GROUP_DOIGTS_AVANT, POS_FERME, wait);
@@ -121,8 +134,11 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void groupeDoigtsArriereOuvert(boolean wait) {
         setPositionBatch(GROUP_DOIGTS_ARRIERE, POS_OUVERT, wait);
     }
-    public void groupeDoigtsArrierePrise(boolean wait) {
-        setPositionBatch(GROUP_DOIGTS_ARRIERE, POS_PRISE, wait);
+    public void groupeDoigtsArriereLache(boolean wait) {
+        setPositionBatch(GROUP_DOIGTS_ARRIERE, POS_LACHE, wait);
+    }
+    public void groupeDoigtsArriereSerre(boolean wait) {
+        setPositionBatch(GROUP_DOIGTS_ARRIERE, POS_SERRE, wait);
     }
     public void groupeDoigtsArriereFerme(boolean wait) {
         setPositionBatch(GROUP_DOIGTS_ARRIERE, POS_FERME, wait);
@@ -195,6 +211,9 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void ascenseurAvantRepos(boolean wait) {
         setPosition(ASCENSEUR_AVANT, POS_REPOS, wait);
     }
+    public void ascenseurAvantEtage2(boolean wait) {
+        setPosition(ASCENSEUR_AVANT, POS_ETAGE_2, wait);
+    }
 
     public void ascenseurArriereHaut(boolean wait) {
         setPosition(ASCENSEUR_ARRIERE, POS_HAUT, wait);
@@ -210,5 +229,8 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     }
     public void ascenseurArriereRepos(boolean wait) {
         setPosition(ASCENSEUR_ARRIERE, POS_REPOS, wait);
+    }
+    public void ascenseurArriereEtage2(boolean wait) {
+        setPosition(ASCENSEUR_ARRIERE, POS_ETAGE_2, wait);
     }
 }

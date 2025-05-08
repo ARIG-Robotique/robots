@@ -27,7 +27,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     servos.groupeBlockColonneAvantOuvert(false);
     servos.groupePincesAvantPrise(true);
     servos.ascenseurAvantBas(false);
-    servos.groupeDoigtsAvantOuvert(false);
+    servos.groupeDoigtsAvantLache(false);
   }
 
   @Override
@@ -68,6 +68,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     );
   }
 
+  // TODO : Mettre dans un scheduler
   @Override
   protected void updateStockRobot(boolean expectedSimulator) {
     rs.faceAvant()
@@ -81,7 +82,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
 
   @Override
   protected boolean miseEnStockTiroir() {
-    servos.groupeDoigtsAvantPrise(true);
+    servos.groupeDoigtsAvantSerre(true);
     servos.ascenseurAvantHaut(true);
     if (!checkIOsTiroir()) {
       log.warn("Erreur de mise en stock du tiroir avant");

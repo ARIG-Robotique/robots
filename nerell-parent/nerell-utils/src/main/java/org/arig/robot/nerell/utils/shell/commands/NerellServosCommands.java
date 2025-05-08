@@ -279,7 +279,7 @@ public class NerellServosCommands {
             servosService.becAvantFerme(true);
             servosService.tiroirAvantStock(true);
             servosService.ascenseurAvantBas(true);
-            servosService.groupeDoigtsAvantOuvert(true);
+            servosService.groupeDoigtsAvantLache(true);
 
             log.info("Enleve etage et tirette");
             while(ioService.tirette() || ioService.pinceAvantGauche(false) || ioService.pinceAvantDroite(false)) {
