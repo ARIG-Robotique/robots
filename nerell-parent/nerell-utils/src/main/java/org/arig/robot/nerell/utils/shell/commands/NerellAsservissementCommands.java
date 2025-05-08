@@ -37,8 +37,8 @@ import java.util.List;
 
 @Slf4j
 @ShellComponent
-@ShellCommandGroup("Asservissement")
 @RequiredArgsConstructor
+@ShellCommandGroup("Asservissement")
 public class NerellAsservissementCommands {
 
     private final MonitoringWrapper monitoringWrapper;

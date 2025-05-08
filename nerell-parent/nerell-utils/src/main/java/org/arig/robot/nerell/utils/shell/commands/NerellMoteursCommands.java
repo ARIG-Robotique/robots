@@ -16,8 +16,8 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 
 @Slf4j
 @ShellComponent
-@ShellCommandGroup("Moteurs")
 @RequiredArgsConstructor
+@ShellCommandGroup("Moteurs")
 public class NerellMoteursCommands {
 
     private final AbstractRobotStatus rs;

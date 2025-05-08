@@ -225,6 +225,7 @@ public class NerellServosCommands {
         try {
             GradinBrut gradin = new GradinBrut(GradinBrut.ID.BLEU_BAS_CENTRE, 0, 0, false, GradinBrut.Orientation.HORIZONTAL);
             faceService.preparePriseGradinBrut(gradin);
+            log.info("Début chargement face {}. Start avec tirette", face);
             boolean tirette = ThreadUtils.waitUntil(ioService::tirette, 1000, 60000);
             if (!tirette) {
                 log.error("Tirette non détectée");
@@ -233,8 +234,8 @@ public class NerellServosCommands {
             AbstractNerellFaceService.PriseGradinState priseGradinState = faceService.prendreGradinBrutStockTiroir();
             if (priseGradinState == AbstractNerellFaceService.PriseGradinState.ERREUR_COLONNES) {
                 log.info("Enleve tirrette pour stock colonnes");
-                tirette = ThreadUtils.waitUntil(() -> !ioService.tirette(), 1000, 60000);
-                if (tirette) {
+                boolean tiretteEnleve = ThreadUtils.waitUntil(() -> !ioService.tirette(), 1000, 60000);
+                if (!tiretteEnleve) {
                     log.error("Tirette non enlevée");
                     return;
                 }
@@ -283,7 +284,7 @@ public class NerellServosCommands {
             servosService.ascenseurAvantBas(true);
             servosService.groupeDoigtsAvantLache(true);
 
-            log.info("Enleve etage et tirette");
+            log.info("Attente enleve etage et tirette");
             while(ioService.tirette() || ioService.pinceAvantGauche(false) || ioService.pinceAvantDroite(false)) {
                 ThreadUtils.sleep(100);
             }

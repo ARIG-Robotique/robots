@@ -100,7 +100,7 @@ public class NerellOdometrieCommands {
             roueGauche += d.getFields().get("gauche").doubleValue();
         }
 
-        // NB: Roue plus grande => perimètre plus grand => nombre de pulse plus petit
+        // NB : Roue plus grande => perimètre plus grand => nombre de pulse plus petit
         // Delta = distance roue gauche - distance roue droite
         // Si delta > 0 => roue gauche plus petite que la roue droite (roue gauche a fait plus de tour)
 
