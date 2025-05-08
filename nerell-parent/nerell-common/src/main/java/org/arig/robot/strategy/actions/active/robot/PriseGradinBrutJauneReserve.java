@@ -19,7 +19,7 @@ public class PriseGradinBrutJauneReserve extends AbstractPriseGradinBrutJaune {
   @Override
   public Point entryPoint() {
     Point entry = gradin().clone();
-    entry.addDeltaY(-EurobotConfig.offsetGradinBrut);
+    entry.addDeltaY(-EurobotConfig.offsetGradin);
     return entry;
   }
 
