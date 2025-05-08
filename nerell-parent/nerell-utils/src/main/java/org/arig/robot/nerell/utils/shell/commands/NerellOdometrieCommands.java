@@ -91,7 +91,7 @@ public class NerellOdometrieCommands {
         // Filtrage sur les métriques codeurs
         List<MonitorTimeSerie> codeursData = monitoringWrapper.monitorTimeSeriePoints().stream()
                 .filter(m -> m.getMeasurementName().equals("encodeurs"))
-                .collect(Collectors.toList());
+                .toList();
 
         monitoringWrapper.cleanAllPoints();
 
@@ -304,7 +304,7 @@ public class NerellOdometrieCommands {
             // Filtrage sur les métriques codeurs
             List<MonitorTimeSerie> codeursData = monitoringWrapper.monitorTimeSeriePoints().stream()
                     .filter(m -> m.getMeasurementName().equals("encodeurs"))
-                    .collect(Collectors.toList());
+                    .toList();
 
             monitoringWrapper.cleanAllPoints();
 
@@ -382,7 +382,7 @@ public class NerellOdometrieCommands {
             // Filtrage sur les métriques codeurs
             List<MonitorTimeSerie> codeursData = monitoringWrapper.monitorTimeSeriePoints().stream()
                     .filter(m -> m.getMeasurementName().equals("encodeurs"))
-                    .collect(Collectors.toList());
+                    .toList();
 
             monitoringWrapper.cleanAllPoints();
 
