@@ -31,15 +31,29 @@ public class StockFace {
     return !pinceGauche && !pinceDroite && !solGauche && !solDroite && !tiroirHaut && !tiroirBas;
   }
 
+  public boolean isInvalid() {
+    return nbEtageConstructible() == 0 && !isEmpty();
+  }
+
   public int nbEtageConstructible() {
-    int nbEtage = 0;
-    if (tiroirBas && solGauche && solDroite) {
-      nbEtage = 1;
+    if (!tiroirHaut && !tiroirBas) {
+      return 0;
     }
-    if (nbEtage == 1 && tiroirHaut && pinceGauche && pinceDroite) {
-      nbEtage = 2;
+    if ((solGauche != solDroite) || (pinceGauche != pinceDroite)) {
+      // On a un couple hybride -> Non géré pour le moment
+      return 0;
     }
 
-    return nbEtage;
+    if (tiroirBas && tiroirHaut && solGauche && solDroite && pinceGauche && pinceDroite ) {
+      // Collecte complete
+      return 2;
+    }
+    if (tiroirBas && ((solGauche && solDroite) || (pinceGauche && pinceDroite))) {
+      // Tiroir bas et au moins un couple de colonne
+      return 1;
+    }
+
+    // Pour le moment autres couple hybride ne sont pas gérés
+    return 0;
   }
 }
