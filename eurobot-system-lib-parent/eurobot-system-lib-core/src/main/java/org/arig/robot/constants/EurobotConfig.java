@@ -21,7 +21,7 @@ public interface EurobotConfig {
     int tableHeight = 2000;
     int tableBorder = 50;
 
-    double offsetGradinBrut = 270;
+    int offsetGradin = 270;
 
     // Noms des actions
     String ACTION_RETOUR_BACKSTAGE = "Retour backstage";

@@ -2,6 +2,7 @@ package org.arig.robot.services;
 
 import org.arig.robot.model.GradinBrut;
 import org.arig.robot.model.NerellRobotStatus;
+import org.arig.robot.model.Point;
 
 public class NerellFaceArriereService extends AbstractNerellFaceService {
 
@@ -11,7 +12,7 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
   }
 
   @Override
-  protected void aligneFaceGradinBrut(GradinBrut gradin) {
+  protected void aligneFace(Point gradin) {
       // TODO: Implement this method
       throw new UnsupportedOperationException("Method aligneFaceGradinBrut is not yet implemented.");
   }
@@ -41,7 +42,7 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
   }
 
   @Override
-  protected boolean checkIOsPinces() {
+  protected boolean iosPinces() {
       // TODO: Implement this method
       throw new UnsupportedOperationException("Method checkIOsPinces is not yet implemented.");
   }
@@ -53,20 +54,26 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
   }
 
   @Override
-  protected boolean checkIOsTiroir() {
+  protected boolean iosTiroir() {
       // TODO: Implement this method
       throw new UnsupportedOperationException("Method checkIOsTiroir is not yet implemented.");
   }
 
   @Override
-  protected boolean checkIOsColonnesSol() {
+  protected boolean iosColonnesSol() {
       // TODO: Implement this method
       throw new UnsupportedOperationException("Method checkIOsColonnesSol is not yet implemented.");
   }
 
   @Override
-  protected boolean verrouillageColonnesSol() {
+  protected void verrouillageColonnesSol() {
       // TODO: Implement this method
       throw new UnsupportedOperationException("Method verrouillageColonnesSol is not yet implemented.");
+  }
+
+  @Override
+  protected void deverouillageColonnesSol() {
+    // TODO: Implement this method
+    throw new UnsupportedOperationException("Method verrouillageColonnesSol is not yet implemented.");
   }
 }
