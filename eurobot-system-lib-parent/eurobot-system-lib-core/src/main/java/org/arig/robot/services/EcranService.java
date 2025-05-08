@@ -43,7 +43,7 @@ public class EcranService extends AbstractEcranService<EcranConfig, EcranState> 
                 Team.BLEU.name(), "blue"
         ));
         ecranParams.setStrategies(Stream.of(Strategy.values()).map(Strategy::description).collect(Collectors.toList()));
-        ecranParams.setOptions(Stream.of(StrategyOption.values()).map(StrategyOption::description).collect(Collectors.toList()));
+        ecranParams.setOptions(Stream.of(StrategyOption.values()).map(s -> s.description()+(s.defaultValue() ? "|1": "")).collect(Collectors.toList()));
         return ecranParams;
     }
 }

@@ -42,11 +42,23 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
      */
 
     @Setter(AccessLevel.NONE)
-    private boolean limiter2Etages = false;
+    private boolean limiter2Etages = StrategyOption.LIMITER_2_ETAGES.defaultValue();
 
     public void limiter2Etages(boolean limiter2Etages) {
-        log.info("[RS] Limiter à 2 étages : {}", limiter2Etages);
-        this.limiter2Etages = limiter2Etages;
+        if (this.limiter2Etages != limiter2Etages) {
+            log.info("[RS] Limiter à 2 étages : {}", limiter2Etages);
+            this.limiter2Etages = limiter2Etages;
+        }
+    }
+
+    @Setter(AccessLevel.NONE)
+    private boolean ejectionCoupDePute = StrategyOption.EJECTION_COUP_DE_PUTE.defaultValue();
+
+    public void ejectionCoupDePute(boolean ejectionCoupDePute) {
+        if (this.ejectionCoupDePute != ejectionCoupDePute) {
+            log.info("[RS] Ejection coup de pute : {}", ejectionCoupDePute);
+            this.ejectionCoupDePute = ejectionCoupDePute;
+        }
     }
 
     /**
@@ -161,6 +173,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public Map<String, Boolean> gameConfigs() {
         Map<String, Boolean> r = new HashMap<>();
         r.put(StrategyOption.LIMITER_2_ETAGES.description(), limiter2Etages);
+        r.put(StrategyOption.EJECTION_COUP_DE_PUTE.description(), ejectionCoupDePute);
         return r;
     }
 

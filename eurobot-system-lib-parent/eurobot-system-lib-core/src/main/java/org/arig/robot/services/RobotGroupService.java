@@ -95,6 +95,7 @@ public class RobotGroupService implements RobotGroup.Handler {
                 break;
             case CONFIG:
                 rs.limiter2Etages(data[0] > 0);
+                rs.ejectionCoupDePute(data[0] > 1);
                 break;
             case CURRENT_ACTION:
                 String actionName = null;

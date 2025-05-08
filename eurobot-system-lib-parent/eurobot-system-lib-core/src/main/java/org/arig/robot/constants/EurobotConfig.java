@@ -13,6 +13,7 @@ public interface EurobotConfig {
 
     // Durée de validités
     int validTimeEchappement = 20000;
+    int validTimeConstruction = 20000;
     int validTimePrise = 25000;
 
     // Valeurs min / max en mm des axes du repères
