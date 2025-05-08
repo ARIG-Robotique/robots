@@ -2,6 +2,7 @@ package org.arig.robot.services;
 
 import org.arig.robot.model.GradinBrut;
 import org.arig.robot.model.NerellRobotStatus;
+import org.arig.robot.model.Point;
 
 public class NerellFaceAvantServiceUtils extends NerellFaceAvantService {
 
@@ -11,7 +12,7 @@ public class NerellFaceAvantServiceUtils extends NerellFaceAvantService {
   }
 
   @Override
-  protected void aligneFaceGradinBrut(GradinBrut gradin) { /* NOP */ }
+  protected void aligneFace(Point gradin) { /* NOP */ }
 
   @Override
   protected void deplacementPriseColonnesPinces() { /* NOP */ }
