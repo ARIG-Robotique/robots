@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @ShellComponent
-@ShellCommandGroup("Odométrie")
 @RequiredArgsConstructor
+@ShellCommandGroup("Odométrie")
 public class NerellOdometrieCommands {
 
     private static final String LOG_SEPARATOR = "-------------------------------------";
@@ -46,6 +46,7 @@ public class NerellOdometrieCommands {
     private final ConvertionRobotUnit convRobot;
     private final Position currentPosition;
 
+    @ShellMethodAvailability
     public Availability alimentationOk() {
         return ioService.auOk() && energyService.checkServos() && energyService.checkMoteurs()
                 ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
@@ -53,7 +54,6 @@ public class NerellOdometrieCommands {
 
     @SneakyThrows
     @ShellMethod("Réglage coef roue")
-    @ShellMethodAvailability("alimentationOk")
     public void odometrieCoefRoue(int nbCycle) {
         encoders.reset();
         rs.enableAsserv();
@@ -137,7 +137,6 @@ public class NerellOdometrieCommands {
 
     @SneakyThrows
     @ShellMethod("Réglage distance")
-    @ShellMethodAvailability("alimentationOk")
     public void odometrieDistance(int nbCycle) {
 
         double distanceReel = DISTANCE_TABLE - (NerellConstantesConfig.dstCallage * 2);
@@ -232,7 +231,6 @@ public class NerellOdometrieCommands {
 
     @SneakyThrows
     @ShellMethod("Réglage distance (manuelle)")
-    @ShellMethodAvailability("alimentationOk")
     public void odometrieDistanceManuel(int distanceCmd) {
         encoders.reset();
         rs.enableAsserv();
@@ -252,7 +250,6 @@ public class NerellOdometrieCommands {
         log.info("Pour le calcule la méthode 'odometrie-distance-manuel-reglage --distance-cmd {} --mesure-mm <value>' peut être utilisée", distanceCmd);
     }
     @ShellMethod("Réglage distance (manuelle) - Application du nouveau paramètre de conversion")
-    @ShellMethodAvailability("alimentationOk")
     public void odometrieDistanceManuelReglage(double mesureMm, int distanceCmd) {
         double newCountPerMM = convRobot.countPerMm() * (distanceCmd / mesureMm);
         log.info(LOG_SEPARATOR);
@@ -266,7 +263,6 @@ public class NerellOdometrieCommands {
 
     @SneakyThrows
     @ShellMethod("Réglage rotation")
-    @ShellMethodAvailability("alimentationOk")
     public void odometrieRotation(int nbCycle) {
         boolean first = true;
         int i = 0;
@@ -347,7 +343,6 @@ public class NerellOdometrieCommands {
 
     @SneakyThrows
     @ShellMethod("Réglage entraxe")
-    @ShellMethodAvailability("alimentationOk")
     public void odometrieEntraxe(int nbCycle) {
         boolean first = true;
         int i = 0;

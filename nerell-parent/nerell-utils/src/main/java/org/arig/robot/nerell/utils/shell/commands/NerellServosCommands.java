@@ -13,11 +13,12 @@ import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellMethodAvailability;
 
 @Slf4j
 @ShellComponent
-@ShellCommandGroup("Servos")
 @AllArgsConstructor
+@ShellCommandGroup("Servos")
 public class NerellServosCommands {
 
     private final NerellRobotServosService servosService;
@@ -27,6 +28,7 @@ public class NerellServosCommands {
 
     private final int nbLoop = 5;
 
+    @ShellMethodAvailability
     public Availability alimentationOk() {
         return ioService.auOk() && energyService.checkServos()
                 ? Availability.available() : Availability.unavailable("Alimentation servos KO");

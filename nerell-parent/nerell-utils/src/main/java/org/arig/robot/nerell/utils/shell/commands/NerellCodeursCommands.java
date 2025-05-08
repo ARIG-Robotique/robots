@@ -15,6 +15,7 @@ import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellMethodAvailability;
 
 import java.io.FileOutputStream;
 import java.nio.charset.Charset;
@@ -49,8 +50,8 @@ public class NerellCodeursCommands {
     }
 
     @SneakyThrows
-    //@ShellMethodAvailability("alimentationOk")
-    //@ShellMethod("Capture des valeurs de codeurs des roues de propulsions")
+    @ShellMethodAvailability("alimentationOk")
+    @ShellMethod("Capture des valeurs de codeurs des roues de propulsions")
     public void captureCodeursPropulsions() {
         rs.enableCapture();
         ThreadUtils.sleep(2000);
