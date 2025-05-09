@@ -52,7 +52,7 @@ public class RPLidarA2TelemeterOverSocket extends AbstractTelemeterOverSocket {
     @Override
     public void printDeviceInfo() {
         DeviceInfos d = deviceInfo();
-        log.info("RPLidar A2 version [Firmware : {} ; Hardware {} ; Serial number : {}",
-                d.getFirmwareVersion(), d.getHardwareVersion(), d.getSerialNumber());
+        log.info("RPLidar A2 version [Bridge driver : {} ; Firmware : {} ; Hardware {} ; Serial number : {}]",
+                d.getDriver(), d.getFirmwareVersion(), d.getHardwareVersion(), d.getSerialNumber());
     }
 }

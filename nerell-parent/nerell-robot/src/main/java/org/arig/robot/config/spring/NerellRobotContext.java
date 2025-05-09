@@ -33,7 +33,7 @@ import org.arig.robot.system.capteurs.socket.RPLidarA2TelemeterOverSocket;
 import org.arig.robot.system.encoders.i2c.ARIGI2C2WheelsEncoders;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.PropulsionsPCA9685SimpleMotors;
-import org.arig.robot.system.process.RPLidarBridgeProcess;
+import org.arig.robot.system.process.LidarBridgeProcess;
 import org.arig.robot.system.servos.i2c.SD21Servos;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,8 +43,6 @@ import org.springframework.core.env.Environment;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Configuration
@@ -158,14 +156,14 @@ public class NerellRobotContext {
     }
 
     @Bean
-    public RPLidarBridgeProcess rplidarBridgeProcess() {
-        return new RPLidarBridgeProcess("/home/pi/rplidar_bridge");
+    public LidarBridgeProcess rplidarBridgeProcess() {
+        return new LidarBridgeProcess("/home/pi/lidar_bridge");
     }
 
     @Bean("rplidar")
     @DependsOn("rplidarBridgeProcess")
     public ILidarTelemeter rplidar() throws Exception {
-        final File socketFile = new File(RPLidarBridgeProcess.socketPath);
+        final File socketFile = new File(LidarBridgeProcess.socketPath);
         return new RPLidarA2TelemeterOverSocket(socketFile);
     }
 

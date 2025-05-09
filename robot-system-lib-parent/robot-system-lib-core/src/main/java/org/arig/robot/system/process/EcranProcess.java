@@ -71,6 +71,7 @@ public class EcranProcess implements InitializingBean, DisposableBean {
             args.add("debug");
         }
 
+        log.info("Lancement du process Ecran avec les paramètres : {}", StringUtils.join(args, " "));
         ProcessBuilder pb = new ProcessBuilder(args.toArray(new String[args.size()]));
         pb.directory(execDir);
 

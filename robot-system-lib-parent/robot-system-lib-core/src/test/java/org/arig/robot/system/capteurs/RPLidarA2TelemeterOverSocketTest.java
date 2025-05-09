@@ -43,6 +43,7 @@ abstract class RPLidarA2TelemeterOverSocketTest {
             Assertions.assertEquals(2, (long) infos.getHardwareVersion());
             Assertions.assertEquals("CCD2FFC1E8839EF2C0E69EF714655405", infos.getSerialNumber());
             firstLidar = true;
+            log.info("Lidar A2 premier achat");
         } catch (AssertionError e) {
             log.info("Pas le Lidar A2 premier achat");
         }
@@ -53,6 +54,7 @@ abstract class RPLidarA2TelemeterOverSocketTest {
             Assertions.assertEquals(5, (long) infos.getHardwareVersion());
             Assertions.assertEquals("DF889A87C5E392D3A5E49EF04F5D3D65", infos.getSerialNumber());
             secondLidar = true;
+            log.info("Lidar A2 second achat");
         } catch (AssertionError e) {
             log.info("Pas le Lidar A2 second achat");
         }
