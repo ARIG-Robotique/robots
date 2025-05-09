@@ -2,6 +2,7 @@ package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.ConstructionArea;
 import org.arig.robot.model.GradinBrut;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.AbstractNerellFaceService;
@@ -250,75 +251,41 @@ public class NerellServosCommands {
 
     @ShellMethod("Test construction etage 1 avant")
     public void testConstructionEtage1Avant() {
-        testConstructionEtage1(NerellFaceWrapper.Face.AVANT);
+        testConstructionEtage(NerellFaceWrapper.Face.AVANT, ConstructionArea.Etage.ETAGE_1);
     }
 
     @ShellMethod("Test construction etage 1 arriere")
     public void testConstructionEtage1Arriere() {
-        testConstructionEtage1(NerellFaceWrapper.Face.ARRIERE);
-    }
-
-    private void testConstructionEtage1(NerellFaceWrapper.Face face) {
-        log.info("Début test construction etage 1 sur la face {}. Start avec tirette", face);
-        boolean tirette = ThreadUtils.waitUntil(ioService::tirette, 1000, 60000);
-        if (!tirette) {
-            log.error("Tirette non détectée");
-            return;
-        }
-
-        log.info("Pince  : G {} - D {}", ioService.pinceAvantGauche(true), ioService.pinceAvantDroite(true));
-        log.info("Sol    : G {} - D {}", ioService.solAvantGauche(true), ioService.solAvantDroite(true));
-        log.info("Tiroir : B {} - H {}", ioService.tiroirAvantBas(true), ioService.tiroirAvantHaut(true));
-
-        if (ioService.pinceAvantGauche(true) && ioService.pinceAvantDroite(true) &&
-            ioService.tiroirAvantHaut(true) && ioService.tiroirAvantBas(true)
-        ) {
-            log.info("Construction 1 etage avec le stock pince et planche haut");
-            servosService.groupePincesAvantPrise(true);
-            servosService.ascenseurAvantHaut(true);
-            servosService.tiroirAvantOuvert(true);
-            servosService.becAvantOuvert(true);
-            servosService.ascenseurAvantSplit(true);
-            servosService.becAvantFerme(true);
-            servosService.tiroirAvantStock(true);
-            servosService.ascenseurAvantBas(true);
-            servosService.groupeDoigtsAvantLache(true);
-
-            log.info("Attente enleve etage et tirette");
-            while(ioService.tirette() || ioService.pinceAvantGauche(false) || ioService.pinceAvantDroite(false)) {
-                ThreadUtils.sleep(100);
-            }
-
-            servosService.groupeDoigtsAvantFerme(false);
-            if (ioService.solAvantDroite(true) || ioService.solAvantGauche(true)) {
-                servosService.ascenseurAvantStock(false);
-            } else {
-                servosService.ascenseurAvantRepos(false);
-            }
-            servosService.groupePincesAvantRepos(false);
-
-        } else if (ioService.solAvantDroite(true) && ioService.solAvantGauche(true) &&
-                   !ioService.tiroirAvantHaut(true) && ioService.tiroirAvantBas(true)
-        ) {
-            servosService.groupeBlockColonneAvantOuvert(true);
-            // ????
-
-        } else {
-            log.error("Pas de construction possible étage 1 sur la face {}", face);
-        }
+        testConstructionEtage(NerellFaceWrapper.Face.ARRIERE, ConstructionArea.Etage.ETAGE_1);
     }
 
     @ShellMethod("Test construction etage 2 avant")
     public void testConstructionEtage2Avant() {
-        testConstructionEtage1(NerellFaceWrapper.Face.AVANT);
+        testConstructionEtage(NerellFaceWrapper.Face.AVANT, ConstructionArea.Etage.ETAGE_2);
     }
 
     @ShellMethod("Test construction etage 2 arriere")
     public void testConstructionEtage2Arriere() {
-        testConstructionEtage1(NerellFaceWrapper.Face.ARRIERE);
+        testConstructionEtage(NerellFaceWrapper.Face.ARRIERE, ConstructionArea.Etage.ETAGE_2);
     }
 
-    private void testConstructionEtage2(NerellFaceWrapper.Face face) {
+    private void testConstructionEtage(NerellFaceWrapper.Face face, ConstructionArea.Etage etage) {
+        try {
+            log.info("Début test construction etage {} sur la face {}. Start avec tirette", etage.name(), face);
+            boolean tirette = ThreadUtils.waitUntil(ioService::tirette, 1000, 60000);
+            if (!tirette) {
+                log.error("Tirette non détectée");
+                return;
+            }
 
+            log.info("Pince  : G {} - D {}", ioService.pinceAvantGauche(true), ioService.pinceAvantDroite(true));
+            log.info("Sol    : G {} - D {}", ioService.solAvantGauche(true), ioService.solAvantDroite(true));
+            log.info("Tiroir : B {} - H {}", ioService.tiroirAvantBas(true), ioService.tiroirAvantHaut(true));
+
+            AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
+            faceService.deposeGradin(null, etage, 1);
+        } catch (Exception e) {
+            log.error("Erreur lors de la construction de l'étage 1 sur la face {}", face, e);
+        }
     }
 }
