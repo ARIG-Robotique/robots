@@ -26,20 +26,18 @@ public abstract class AbstractNerellFaceService {
   protected abstract boolean iosTiroir();
   protected abstract boolean iosColonnesSol();
 
-  protected abstract void updateStockRobot(boolean expectedSimulator);
-
   protected abstract void aligneFace(Point gradin) throws AvoidingException;
   protected abstract void ouvreFacePourPrise();
   protected abstract void deplacementPriseColonnesPinces() throws AvoidingException;
   protected abstract void deplacementPriseColonnesSol() throws AvoidingException;
+  protected abstract void echappementPriseGradinBrut(PriseGradinState state) throws AvoidingException;
+  protected abstract void deplacementDeposeColonnesSol(boolean reverse) throws AvoidingException;
   protected abstract void deplacementDeposeEtage() throws AvoidingException;
 
   protected abstract boolean miseEnStockTiroir();
   protected abstract void verrouillageColonnesSol();
-  protected abstract void deverouillageColonnesSol();
 
-  protected abstract void deposeEtage1() throws AvoidingException;
-  protected abstract void deposeEtage2() throws AvoidingException;
+  protected abstract void deposeEtage(ConstructionArea.Etage etage) throws AvoidingException;
 
   public void preparePriseGradinBrut(GradinBrut gradin) throws AvoidingException {
     log.info("Préparation de la prise du gradin brut : {}", gradin.id());
@@ -52,54 +50,39 @@ public abstract class AbstractNerellFaceService {
     ouvreFacePourPrise();
   }
 
-  public void prepareDeposeGradin(Point pointDepose) throws AvoidingException {
-
-  }
-
   public PriseGradinState prendreGradinBrutStockTiroir() throws AvoidingException {
-    try {
-      log.info("Prise du gradin brut pour stock tiroir");
+    log.info("Prise du gradin brut pour stock tiroir");
 
-      deplacementPriseColonnesPinces();
-      if (!iosPinces()) {
-        log.warn("Erreur de chargement du gradin brut dans les pinces");
-        return PriseGradinState.ERREUR_PINCES;
-      }
-      log.info(" - Mise en stock du gradin brut");
-      if (!miseEnStockTiroir()) {
-        log.warn("Erreur de mise en stock du gradin brut");
-        return PriseGradinState.ERREUR_TIROIR;
-      }
-
-      log.info(" - Mise en stock des colonnes au sol");
-      deplacementPriseColonnesSol();
-      if (!iosColonnesSol()) {
-        log.warn("Erreur de prise des colonnes au sol");
-        return PriseGradinState.ERREUR_COLONNES;
-      }
-      log.info(" - Vérouillage des colonnes au sol");
-      verrouillageColonnesSol();
-      return PriseGradinState.OK;
-
-    } finally {
-      updateStockRobot(true);
-
+    deplacementPriseColonnesPinces();
+    if (!iosPinces()) {
+      log.warn("Erreur de chargement du gradin brut dans les pinces");
+      echappementPriseGradinBrut(PriseGradinState.ERREUR_PINCES);
+      return PriseGradinState.ERREUR_PINCES;
     }
+    log.info(" - Mise en stock du gradin brut");
+    if (!miseEnStockTiroir()) {
+      log.warn("Erreur de mise en stock du gradin brut");
+      echappementPriseGradinBrut(PriseGradinState.ERREUR_TIROIR);
+      return PriseGradinState.ERREUR_TIROIR;
+    }
+
+    log.info(" - Mise en stock des colonnes au sol");
+    deplacementPriseColonnesSol();
+    if (!iosColonnesSol()) {
+      log.warn("Erreur de prise des colonnes au sol");
+      echappementPriseGradinBrut(PriseGradinState.ERREUR_COLONNES);
+      return PriseGradinState.ERREUR_COLONNES;
+    }
+    log.info(" - Vérouillage des colonnes au sol");
+    verrouillageColonnesSol();
+    return PriseGradinState.OK;
   }
 
   public void deposeGradin(Point rangPosition, ConstructionArea.Etage etage, int nbEtageRequis) throws AvoidingException {
     aligneFace(rangPosition);
-
-    if (etage == ConstructionArea.Etage.ETAGE_1) {
-      deposeEtage1();
-    } else if (etage == ConstructionArea.Etage.ETAGE_2) {
-      deposeEtage2();
-    }
-
+    deposeEtage(etage);
     if (nbEtageRequis == 2 && etage == ConstructionArea.Etage.ETAGE_1) {
-      deposeEtage2();
+      deposeEtage(ConstructionArea.Etage.ETAGE_2);
     }
-
-    updateStockRobot(false);
   }
 }

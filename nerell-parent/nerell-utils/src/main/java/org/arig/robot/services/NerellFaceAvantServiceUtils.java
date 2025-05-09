@@ -34,6 +34,24 @@ public class NerellFaceAvantServiceUtils extends NerellFaceAvantService {
   }
 
   @Override
+  protected void echappementPriseGradinBrut(PriseGradinState state) throws AvoidingException {
+    log.info("Echappement prise gradin brut {}", state.name());
+    ThreadUtils.sleep(5000);
+    servos.groupeBlockColonneAvantOuvert(false);
+    servos.tiroirAvantStock(false);
+    servos.becAvantFerme(false);
+    servos.ascenseurAvantRepos(false);
+    servos.groupeDoigtsAvantFerme(false);
+    servos.groupePincesAvantRepos(false);
+  }
+
+  @Override
+  protected void deplacementDeposeColonnesSol(boolean reverse) throws AvoidingException {
+    log.info("Déplacement pour prise colonnes sol");
+    ThreadUtils.sleep(5000);
+  }
+
+  @Override
   protected void deplacementDeposeEtage() throws AvoidingException {
     log.info("Enleve la tirette une fois la construction enlevé");
     while(ioService.tirette()) {

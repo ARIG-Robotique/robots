@@ -64,16 +64,17 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
 
       faceService.preparePriseGradinBrut(gradin);
       priseGradinState = faceService.prendreGradinBrutStockTiroir();
+      log.info("Prise de gradin brut {} : {}", gradin.id(), priseGradinState);
       if (priseGradinState == AbstractNerellFaceService.PriseGradinState.OK) {
-        complete();
         gradin().setGradinPris();
+      } else {
+        gradin().setGradinBloque();
       }
+      complete();
 
     } catch (NoPathFoundException | AvoidingException e) {
       log.warn("Erreur prise {} : {}", name(), e.toString());
       updateValidTime();
-    } finally {
-      // TODO : Gestion prise gradin state pour finalisation prise
     }
   }
 }

@@ -1,6 +1,7 @@
 package org.arig.robot.services;
 
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.model.ConstructionArea;
 import org.arig.robot.model.GradinBrut;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
@@ -34,6 +35,18 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
   protected void deplacementPriseColonnesSol() {
       // TODO: Implement this method
       throw new UnsupportedOperationException("Method deplacementPriseColonnesSol is not yet implemented.");
+  }
+
+  @Override
+  protected void echappementPriseGradinBrut(PriseGradinState state) throws AvoidingException {
+    // TODO: Implement this method
+    throw new UnsupportedOperationException("Method echappementPriseGradinBrut is not yet implemented.");
+  }
+
+  @Override
+  protected void deplacementDeposeColonnesSol(boolean reverse) throws AvoidingException {
+    // TODO: Implement this method
+    throw new UnsupportedOperationException("Method deplacementDeposeColonnesSol is not yet implemented.");
   }
 
   @Override
@@ -73,21 +86,8 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
   }
 
   @Override
-  protected void deverouillageColonnesSol() {
+  protected void deposeEtage(ConstructionArea.Etage etage) throws AvoidingException {
     // TODO: Implement this method
-    throw new UnsupportedOperationException("Method deverrouillageColonnesSol is not yet implemented.");
-  }
-
-  @Override
-  protected void deposeEtage1() throws AvoidingException {
-    // TODO: Implement this method
-    throw new UnsupportedOperationException("Method deposeEtage1 is not yet implemented.");
-
-  }
-
-  @Override
-  protected void deposeEtage2() throws AvoidingException {
-    // TODO: Implement this method
-    throw new UnsupportedOperationException("Method deposeEtage2 is not yet implemented.");
+    throw new UnsupportedOperationException("Method deposeEtage is not yet implemented.");
   }
 }

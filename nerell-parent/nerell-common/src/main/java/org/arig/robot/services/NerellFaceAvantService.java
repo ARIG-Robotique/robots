@@ -2,6 +2,7 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.model.ConstructionArea;
 import org.arig.robot.model.GradinBrut;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
@@ -23,7 +24,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
 
   @Override
   protected void ouvreFacePourPrise() {
-    servos.tiroirAvantOuvert(false);
+    servos.tiroirAvantPrise(false);
     servos.becAvantOuvert(false);
     servos.groupeBlockColonneAvantOuvert(false);
     servos.groupePincesAvantPrise(true);
@@ -36,6 +37,8 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     rs.enableCalage(TypeCalage.FORCE);
     mv.setVitessePercent(20, 100);
     mv.avanceMM(90);
+    mv.setVitessePercent(0, 100);
+    mv.avanceMM(10);
   }
 
   @Override
@@ -45,9 +48,34 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     mv.avanceMM(90);
   }
 
+  @Override
+  protected void echappementPriseGradinBrut(PriseGradinState state) throws AvoidingException {
+    log.info("Echappement de la prise du gradin brut. Erreur {}", state.name());
+    mv.setVitessePercent(100, 100);
+    mv.reculeMM(100);
+
+    servos.groupeBlockColonneAvantOuvert(false);
+    servos.tiroirAvantStock(false);
+    servos.becAvantFerme(false);
+    servos.ascenseurAvantRepos(false);
+    servos.groupeDoigtsAvantFerme(false);
+    servos.groupePincesAvantRepos(false);
+  }
+
+  @Override
+  protected void deplacementDeposeColonnesSol(boolean reverse) throws AvoidingException {
+    rs.enableCalage(TypeCalage.FORCE);
+    mv.setVitessePercent(100, 100);
+    if (!reverse) {
+      mv.reculeMM(50);
+    } else {
+      mv.avanceMM(50);
+    }
+  }
+
   protected void deplacementDeposeEtage() throws AvoidingException {
     mv.setVitessePercent(100, 100);
-    mv.reculeMM(90);
+    mv.reculeMM(100);
   }
 
   @Override
@@ -88,7 +116,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
       if (nbTries > 1) {
         log.info(" - Réouverture du tiroir avant pour le stock. Essai n°{}", nbTries);
         servos.becAvantOuvert(true);
-        servos.tiroirAvantOuvert(true);
+        servos.tiroirAvantPrise(true);
         servos.ascenseurAvantHaut(true);
 
         servos.becAvantFerme(true);
@@ -113,83 +141,65 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   }
 
   @Override
-  protected void deverouillageColonnesSol() {
-    servos.groupeBlockColonneAvantOuvert(true);
-  }
+  protected void deposeEtage(ConstructionArea.Etage etage) throws AvoidingException {
+    log.info("Dépose de l'étage {}", etage.name());
+    if (!ioService.tiroirAvantBas(true)) {
+      log.warn("Tiroir avant bas vide, on ne peut pas déposer");
+      return;
+    }
 
-  @Override
-  protected void deposeEtage1() throws AvoidingException {
     if (ioService.tiroirAvantBas(true) &&
-        ioService.pinceAvantGauche(true) &&
-        ioService.pinceAvantDroite(true)
+        ioService.solAvantGauche(true) &&
+        ioService.solAvantDroite(true) &&
+        !ioService.pinceAvantGauche(true) &&
+        !ioService.pinceAvantDroite(true)
     ) {
-      log.info("Dépose de l'étage 1 depuis les pinces");
-      servos.groupePincesAvantPrise(true);
-      servos.ascenseurAvantHaut(true);
-      servos.tiroirAvantOuvert(true);
-      servos.becAvantOuvert(true);
-      // TODO : Optimiser split
+      log.info("Récupération des colonnes en stock depuis le sol");
+      servos.groupePincesAvantPriseSol(false);
+      servos.groupeDoigtsAvantOuvert(false);
+      servos.groupeBlockColonneAvantOuvert(true);
+      deplacementDeposeColonnesSol(false);
+      servos.ascenseurAvantBas(true);
+      deplacementDeposeColonnesSol(true);
+      servos.groupePincesAvantStock(true);
+      servos.groupeDoigtsAvantSerre(true);
+    }
+
+    log.info("Dépose de l'étage {} depuis les pinces", etage.name());
+    servos.groupePincesAvantPrise(true);
+    servos.ascenseurAvantHaut(true);
+    servos.tiroirAvantDepose(true);
+    servos.becAvantOuvert(true);
+
+    if (ioService.tiroirAvantHaut(true)) {
+      log.info("Split tiroir avant pour la dépose");
       servos.ascenseurAvantSplit(true);
       servos.becAvantFerme(true);
       servos.tiroirAvantStock(true);
-      // FIN TODO
-      servos.ascenseurAvantBas(true);
-      servos.groupeDoigtsAvantLache(true);
-      deplacementDeposeEtage();
-      servos.groupeDoigtsAvantFerme(false);
+      if (etage == ConstructionArea.Etage.ETAGE_1) {
+        servos.ascenseurAvantBas(true);
+      } else {
+        servos.ascenseurAvantEtage2(true);
+      }
+    } else {
+      log.info("Pas de split tiroir");
+      if (etage == ConstructionArea.Etage.ETAGE_1) {
+        servos.ascenseurAvantBas(true);
+      } else {
+        servos.ascenseurAvantEtage2(true);
+      }
+      servos.becAvantFerme(false);
+      servos.tiroirAvantStock(false);
+    }
+
+    servos.groupeDoigtsAvantLache(true);
+    deplacementDeposeEtage();
+    servos.groupeDoigtsAvantFerme(false);
       if (ioService.solAvantDroite(true) || ioService.solAvantGauche(true)) {
         servos.ascenseurAvantStock(false);
       } else {
-        servos.ascenseurAvantRepos(false);
-      }
-      servos.groupePincesAvantRepos(false);
-
-      return;
+      servos.ascenseurAvantRepos(false);
     }
-    if (ioService.tiroirAvantBas(true) &&
-        ioService.solAvantGauche(true) &&
-        ioService.solAvantDroite(true)
-    ) {
-      log.info("Dépose de l'étage 1 depuis le sol");
-      // TODO
-    }
-  }
-
-  @Override
-  protected void deposeEtage2() throws AvoidingException {
-    if (ioService.tiroirAvantBas(true) &&
-        ioService.pinceAvantGauche(true) &&
-        ioService.pinceAvantDroite(true)
-    ) {
-      log.info("Dépose de l'étage 2 depuis les pinces");
-      servos.groupePincesAvantPrise(true);
-      servos.ascenseurAvantHaut(true);
-      servos.tiroirAvantOuvert(true);
-      servos.becAvantOuvert(true);
-      // TODO : Optimiser split
-      servos.ascenseurAvantSplit(true);
-      servos.becAvantFerme(true);
-      servos.tiroirAvantStock(true);
-      // FIN TODO
-      servos.ascenseurAvantBas(true);
-      servos.groupeDoigtsAvantLache(true);
-      deplacementDeposeEtage();
-      servos.groupeDoigtsAvantFerme(false);
-      if (ioService.solAvantDroite(true) || ioService.solAvantGauche(true)) {
-        servos.ascenseurAvantStock(false);
-      } else {
-        servos.ascenseurAvantRepos(false);
-      }
-      servos.groupePincesAvantRepos(false);
-
-      return;
-    }
-    if (ioService.tiroirAvantBas(true) &&
-        ioService.solAvantGauche(true) &&
-        ioService.solAvantDroite(true)
-    ) {
-      log.info("Dépose de l'étage 1 depuis le sol");
-      // TODO
-    }
+    servos.groupePincesAvantRepos(false);
   }
 }

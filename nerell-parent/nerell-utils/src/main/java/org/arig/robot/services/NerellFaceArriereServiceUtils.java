@@ -17,7 +17,7 @@ public class NerellFaceArriereServiceUtils extends NerellFaceArriereService {
 
   @Override
   protected void aligneFace(Point gradin) {
-    log.info("Aligne le dos avec le gradin");
+    log.info("Aligne la face avec le gradin");
     ThreadUtils.sleep(500);
   }
 
@@ -31,6 +31,24 @@ public class NerellFaceArriereServiceUtils extends NerellFaceArriereService {
   protected void deplacementPriseColonnesSol() {
     log.info("Déplacement pour prise colonnes sol");
     ThreadUtils.sleep(500);
+  }
+
+  @Override
+  protected void echappementPriseGradinBrut(PriseGradinState state) throws AvoidingException {
+    log.info("Echappement prise gradin brut {}", state.name());
+    ThreadUtils.sleep(5000);
+    servos.groupeBlockColonneArriereOuvert(false);
+    servos.tiroirArriereStock(false);
+    servos.becArriereFerme(false);
+    servos.ascenseurArriereRepos(false);
+    servos.groupeDoigtsArriereFerme(false);
+    servos.groupePincesArriereRepos(false);
+  }
+
+  @Override
+  protected void deplacementDeposeColonnesSol(boolean reverse) throws AvoidingException {
+    log.info("Déplacement pour prise colonnes sol");
+    ThreadUtils.sleep(2500);
   }
 
   @Override
