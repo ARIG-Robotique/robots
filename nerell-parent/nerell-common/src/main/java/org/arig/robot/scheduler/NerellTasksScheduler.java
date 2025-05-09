@@ -46,6 +46,25 @@ public class NerellTasksScheduler {
         }
     }
 
+    @Scheduled(fixedRate = 20)
+    public void refreshSateBasedOnIOs() {
+        rs.faceAvant()
+            .pinceDroite(ioService.pinceAvantDroite(true))
+            .pinceGauche(ioService.pinceAvantGauche(true))
+            .solGauche(ioService.solAvantGauche(true))
+            .solDroite(ioService.solAvantDroite(true))
+            .tiroirBas(ioService.tiroirAvantBas(true))
+            .tiroirHaut(ioService.tiroirAvantHaut(true));
+
+        rs.faceArriere()
+            .pinceDroite(ioService.pinceAvantDroite(true))
+            .pinceGauche(ioService.pinceAvantGauche(true))
+            .solGauche(ioService.solAvantGauche(true))
+            .solDroite(ioService.solAvantDroite(true))
+            .tiroirBas(ioService.tiroirAvantBas(true))
+            .tiroirHaut(ioService.tiroirAvantHaut(true));
+    }
+
     @Scheduled(fixedDelay = 20)
     public void obstacleAvoidanceTask() {
         if (rs.avoidanceEnabled()) {
