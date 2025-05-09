@@ -74,18 +74,6 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     );
   }
 
-  // TODO : Mettre dans un scheduler
-  @Override
-  protected void updateStockRobot(boolean expectedSimulator) {
-    rs.faceAvant()
-        .pinceDroite(ioService.pinceAvantDroite(expectedSimulator))
-        .pinceGauche(ioService.pinceAvantGauche(expectedSimulator))
-        .solGauche(ioService.solAvantGauche(expectedSimulator))
-        .solDroite(ioService.solAvantDroite(expectedSimulator))
-        .tiroirBas(ioService.tiroirAvantBas(expectedSimulator))
-        .tiroirHaut(ioService.tiroirAvantHaut(expectedSimulator));
-  }
-
   @Override
   protected boolean miseEnStockTiroir() {
     servos.groupeDoigtsAvantSerre(true);
