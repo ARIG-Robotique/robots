@@ -22,6 +22,7 @@ public interface EurobotConfig {
     int tableBorder = 50;
 
     int offsetGradin = 270;
+    int offsetBanderolle = 55;
 
     // Noms des actions
     String ACTION_RETOUR_BACKSTAGE = "Retour backstage";

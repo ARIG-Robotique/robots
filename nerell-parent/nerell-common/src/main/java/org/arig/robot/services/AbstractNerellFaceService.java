@@ -32,10 +32,14 @@ public abstract class AbstractNerellFaceService {
   protected abstract void ouvreFacePourPrise();
   protected abstract void deplacementPriseColonnesPinces() throws AvoidingException;
   protected abstract void deplacementPriseColonnesSol() throws AvoidingException;
+  protected abstract void deplacementDeposeEtage() throws AvoidingException;
 
   protected abstract boolean miseEnStockTiroir();
   protected abstract void verrouillageColonnesSol();
   protected abstract void deverouillageColonnesSol();
+
+  protected abstract void deposeEtage1() throws AvoidingException;
+  protected abstract void deposeEtage2() throws AvoidingException;
 
   public void preparePriseGradinBrut(GradinBrut gradin) throws AvoidingException {
     log.info("Préparation de la prise du gradin brut : {}", gradin.id());
@@ -48,8 +52,7 @@ public abstract class AbstractNerellFaceService {
     ouvreFacePourPrise();
   }
 
-  public void prepareDeposeGradin(Point pointDepose) {
-    log.info("Préparation de la dépose du gradin");
+  public void prepareDeposeGradin(Point pointDepose) throws AvoidingException {
 
   }
 
@@ -84,7 +87,19 @@ public abstract class AbstractNerellFaceService {
     }
   }
 
-  public void deposeGradin(Point rangPosition, ConstructionArea.Etage etage, int nbEtageRequis) {
+  public void deposeGradin(Point rangPosition, ConstructionArea.Etage etage, int nbEtageRequis) throws AvoidingException {
+    aligneFace(rangPosition);
 
+    if (etage == ConstructionArea.Etage.ETAGE_1) {
+      deposeEtage1();
+    } else if (etage == ConstructionArea.Etage.ETAGE_2) {
+      deposeEtage2();
+    }
+
+    if (nbEtageRequis == 2 && etage == ConstructionArea.Etage.ETAGE_1) {
+      deposeEtage2();
+    }
+
+    updateStockRobot(false);
   }
 }

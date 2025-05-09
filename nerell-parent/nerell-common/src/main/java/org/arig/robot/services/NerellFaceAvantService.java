@@ -45,6 +45,11 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     mv.avanceMM(90);
   }
 
+  protected void deplacementDeposeEtage() throws AvoidingException {
+    mv.setVitessePercent(100, 100);
+    mv.reculeMM(90);
+  }
+
   @Override
   protected boolean iosPinces() {
     return ThreadUtils.waitUntil(
@@ -122,5 +127,81 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   @Override
   protected void deverouillageColonnesSol() {
     servos.groupeBlockColonneAvantOuvert(true);
+  }
+
+  @Override
+  protected void deposeEtage1() throws AvoidingException {
+    if (ioService.tiroirAvantBas(true) &&
+        ioService.pinceAvantGauche(true) &&
+        ioService.pinceAvantDroite(true)
+    ) {
+      log.info("Dépose de l'étage 1 depuis les pinces");
+      servos.groupePincesAvantPrise(true);
+      servos.ascenseurAvantHaut(true);
+      servos.tiroirAvantOuvert(true);
+      servos.becAvantOuvert(true);
+      // TODO : Optimiser split
+      servos.ascenseurAvantSplit(true);
+      servos.becAvantFerme(true);
+      servos.tiroirAvantStock(true);
+      // FIN TODO
+      servos.ascenseurAvantBas(true);
+      servos.groupeDoigtsAvantLache(true);
+      deplacementDeposeEtage();
+      servos.groupeDoigtsAvantFerme(false);
+      if (ioService.solAvantDroite(true) || ioService.solAvantGauche(true)) {
+        servos.ascenseurAvantStock(false);
+      } else {
+        servos.ascenseurAvantRepos(false);
+      }
+      servos.groupePincesAvantRepos(false);
+
+      return;
+    }
+    if (ioService.tiroirAvantBas(true) &&
+        ioService.solAvantGauche(true) &&
+        ioService.solAvantDroite(true)
+    ) {
+      log.info("Dépose de l'étage 1 depuis le sol");
+      // TODO
+    }
+  }
+
+  @Override
+  protected void deposeEtage2() throws AvoidingException {
+    if (ioService.tiroirAvantBas(true) &&
+        ioService.pinceAvantGauche(true) &&
+        ioService.pinceAvantDroite(true)
+    ) {
+      log.info("Dépose de l'étage 2 depuis les pinces");
+      servos.groupePincesAvantPrise(true);
+      servos.ascenseurAvantHaut(true);
+      servos.tiroirAvantOuvert(true);
+      servos.becAvantOuvert(true);
+      // TODO : Optimiser split
+      servos.ascenseurAvantSplit(true);
+      servos.becAvantFerme(true);
+      servos.tiroirAvantStock(true);
+      // FIN TODO
+      servos.ascenseurAvantBas(true);
+      servos.groupeDoigtsAvantLache(true);
+      deplacementDeposeEtage();
+      servos.groupeDoigtsAvantFerme(false);
+      if (ioService.solAvantDroite(true) || ioService.solAvantGauche(true)) {
+        servos.ascenseurAvantStock(false);
+      } else {
+        servos.ascenseurAvantRepos(false);
+      }
+      servos.groupePincesAvantRepos(false);
+
+      return;
+    }
+    if (ioService.tiroirAvantBas(true) &&
+        ioService.solAvantGauche(true) &&
+        ioService.solAvantDroite(true)
+    ) {
+      log.info("Dépose de l'étage 1 depuis le sol");
+      // TODO
+    }
   }
 }

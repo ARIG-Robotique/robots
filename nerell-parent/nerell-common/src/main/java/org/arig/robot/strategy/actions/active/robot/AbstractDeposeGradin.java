@@ -85,10 +85,19 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
       Point rangPosition = rangPosition(rang);
       faceService.prepareDeposeGradin(rangPosition);
       faceService.deposeGradin(rangPosition, etage, nbEtageRequis);
+      constructionArea().addGradin(rang, etage);
+      if (nbEtageRequis == 2) {
+        constructionArea().addGradin(rang, ConstructionArea.Etage.ETAGE_2);
+      }
 
     } catch (NoPathFoundException | AvoidingException e) {
       log.warn("Erreur prise {} : {}", name(), e.toString());
       updateValidTime();
+    } finally {
+      if (constructionArea().getFirstConstructibleRang(rs.limiter2Etages()) == null) {
+        // On a déposé tous les gradins, on ne peut plus rien faire
+        complete();
+      }
     }
   }
 }
