@@ -89,6 +89,7 @@ public abstract class AbstractRobotStatus {
     private boolean pamiTriangleGroupOk = false;
     private boolean pamiCarreGroupOk = false;
     private boolean pamiRondGroupOk = false;
+    private boolean pamiStarGroupOk = false;
 
     private boolean simulateur = false;
 

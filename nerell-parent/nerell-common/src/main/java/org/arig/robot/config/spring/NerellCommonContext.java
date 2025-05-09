@@ -231,6 +231,23 @@ public class NerellCommonContext {
     }
 
     @Bean
+    public RobotGroup pamiStarGroup(NerellRobotStatus nerellRobotStatus, Environment env, ThreadPoolExecutor threadPoolTaskExecutor) throws IOException {
+        final Integer serverPort = env.getRequiredProperty("robot.server.pamis.star.port", Integer.class);
+
+        final String otherHost = env.getRequiredProperty("pamis.star.socket.host");
+        final Integer otherPort = env.getRequiredProperty("pamis.star.socket.port", Integer.class);
+
+        RobotGroupOverSocket robotGroupOverSocket = new RobotGroupOverSocket(nerellRobotStatus, AbstractRobotStatus::pamiStarGroupOk, serverPort, otherHost, otherPort, threadPoolTaskExecutor);
+        robotGroupOverSocket.openSocket();
+        return robotGroupOverSocket;
+    }
+
+    @Bean
+    public RobotGroupService pamiStarGroupService(final EurobotStatus rs, final RobotGroup pamiStarGroup, final ThreadPoolExecutor threadPoolTaskExecutor) {
+        return new RobotGroupService(rs, pamiStarGroup, threadPoolTaskExecutor);
+    }
+
+    @Bean
     public EcranProcess ecranProcess(Environment env) {
         final String ecranSocket = env.getRequiredProperty("ecran.socket.file");
         final String ecranBinary = env.getRequiredProperty("ecran.binary");

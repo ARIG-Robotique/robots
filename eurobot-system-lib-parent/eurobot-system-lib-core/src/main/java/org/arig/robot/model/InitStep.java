@@ -12,7 +12,7 @@ public enum InitStep {
     PAMI_TRIANGLE_CALAGE_TERMINE(1),
     PAMI_CARRE_CALAGE_TERMINE(2),
     PAMI_ROND_CALAGE_TERMINE(3),
-    PAMI_ETOILE_CALAGE_TERMINE(4);
+    PAMI_STAR_CALAGE_TERMINE(4);
 
     @Getter
     @Accessors(fluent = true)

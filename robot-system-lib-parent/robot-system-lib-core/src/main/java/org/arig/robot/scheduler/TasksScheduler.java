@@ -103,7 +103,7 @@ public class TasksScheduler implements InitializingBean {
                 long timeStartI2C = System.nanoTime();
                 long ellapsedI2C = timeStartI2C - lastTimeI2C;
 
-                if (ellapsedI2C >= robotConfig.i2cReadTimeMs() * MS_TO_NS) {
+                if (ellapsedI2C >= (long) robotConfig.i2cReadTimeMs() * MS_TO_NS) {
                     lastTimeI2C = timeStartI2C;
 
                     ioService.refreshAllIO();

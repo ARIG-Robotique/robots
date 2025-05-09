@@ -121,6 +121,7 @@ public abstract class AbstractEcranService<CONFIG extends AbstractEcranConfig, S
         stateInfos.setPamiTriangle(rs.pamiTriangleGroupOk());
         stateInfos.setPamiCarre(rs.pamiCarreGroupOk());
         stateInfos.setPamiRond(rs.pamiRondGroupOk());
+        stateInfos.setPamiStar(rs.pamiStarGroupOk());
     }
 
     public void updatePhoto(EcranPhoto query) {
