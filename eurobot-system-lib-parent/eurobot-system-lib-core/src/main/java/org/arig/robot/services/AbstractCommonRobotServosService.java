@@ -31,6 +31,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final String POS_SERRE = "Serré";
     protected static final String POS_LACHE = "Lache";
     protected static final String POS_PRISE = "Prise";
+    protected static final String POS_DEPOSE = "Dépose";
     protected static final String POS_PRISE_SOL = "Prise sol";
     protected static final String POS_STOCK = "Stock";
     protected static final String POS_SPLIT = "Split";
@@ -162,15 +163,21 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     //* Déplacements de servo                   *//
     //*******************************************//
 
-    public void tiroirAvantOuvert(boolean wait) {
-        setPosition(TIROIR_AVANT, POS_OUVERT, wait);
+    public void tiroirAvantDepose(boolean wait) {
+        setPosition(TIROIR_AVANT, POS_DEPOSE, wait);
+    }
+    public void tiroirAvantPrise(boolean wait) {
+        setPosition(TIROIR_AVANT, POS_PRISE, wait);
     }
     public void tiroirAvantStock(boolean wait) {
         setPosition(TIROIR_AVANT, POS_STOCK, wait);
     }
 
-    public void tiroirArriereOuvert(boolean wait) {
-        setPosition(TIROIR_ARRIERE, POS_OUVERT, wait);
+    public void tiroirArriereDepose(boolean wait) {
+        setPosition(TIROIR_ARRIERE, POS_DEPOSE, wait);
+    }
+    public void tiroirArrierePrise(boolean wait) {
+        setPosition(TIROIR_ARRIERE, POS_PRISE, wait);
     }
     public void tiroirArriereStock(boolean wait) {
         setPosition(TIROIR_ARRIERE, POS_STOCK, wait);

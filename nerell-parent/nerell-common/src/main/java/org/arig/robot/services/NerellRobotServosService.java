@@ -32,7 +32,8 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
 
         Servo tiroirAvant = servo(TIROIR_AVANT_ID, TIROIR_AVANT)
             .time(500)
-            .position(POS_OUVERT, 930)
+            .position(POS_DEPOSE, 930)
+            .position(POS_PRISE, 1190)
             .position(POS_STOCK, 1830);
         Servo becAvant = servo(BEC_AVANT_ID, BEC_AVANT)
             .time(500)
@@ -55,7 +56,8 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
 
         Servo tiroirArriere = servo(TIROIR_ARRIERE_ID, TIROIR_ARRIERE)
             .time(500)
-            .position(POS_OUVERT, 1200)
+            .position(POS_DEPOSE, 940)
+            .position(POS_PRISE, 1200)
             .position(POS_STOCK, 1880);
         Servo becArriere = servo(BEC_ARRIERE_ID, BEC_ARRIERE)
             .time(500)
@@ -79,14 +81,14 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
         Servo pinceAvantGauche = servo(PINCE_AVANT_GAUCHE_ID, PINCE_AVANT_GAUCHE)
             .time(500)
             .position(POS_OUVERT, 670)
-            .position(POS_PRISE, 1260)
+            .position(POS_PRISE, 1320)
             .position(POS_PRISE_SOL, 1860)
             .position(POS_STOCK, 1960)
             .position(POS_REPOS, 2260);
         Servo pinceAvantDroite = servo(PINCE_AVANT_DROIT_ID, PINCE_AVANT_DROIT)
             .time(500)
             .position(POS_OUVERT, 2350)
-            .position(POS_PRISE, 1660)
+            .position(POS_PRISE, 1720)
             .position(POS_PRISE_SOL, 1150)
             .position(POS_STOCK, 1070)
             .position(POS_REPOS, 800);

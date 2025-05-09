@@ -162,7 +162,7 @@ public class NerellServosCommands {
     public void configWaitTiroirAvant(int wait) {
         servosService.becAvantFerme(true);
         for (int i = 0; i < nbLoop; i++) {
-            servosService.tiroirAvantOuvert(false);
+            servosService.tiroirAvantDepose(false);
             ThreadUtils.sleep(wait);
             servosService.tiroirAvantStock(false);
             ThreadUtils.sleep(wait);
@@ -175,7 +175,7 @@ public class NerellServosCommands {
     public void configWaitTiroirArriere(int wait) {
         servosService.becArriereFerme(true);
         for (int i = 0; i < nbLoop; i++) {
-            servosService.tiroirArriereOuvert(false);
+            servosService.tiroirArriereDepose(false);
             ThreadUtils.sleep(wait);
             servosService.tiroirArriereStock(false);
             ThreadUtils.sleep(wait);
@@ -186,7 +186,7 @@ public class NerellServosCommands {
 
     @ShellMethod("Configuration attente bec avant")
     public void configWaitBecAvant(int wait) {
-        servosService.tiroirAvantOuvert(true);
+        servosService.tiroirAvantPrise(true);
         for (int i = 0; i < nbLoop; i++) {
             servosService.becAvantOuvert(false);
             ThreadUtils.sleep(wait);
@@ -199,7 +199,7 @@ public class NerellServosCommands {
 
     @ShellMethod("Configuration attente bec arriere")
     public void configWaitBecArriere(int wait) {
-        servosService.tiroirArriereOuvert(true);
+        servosService.tiroirArrierePrise(true);
         for (int i = 0; i < nbLoop; i++) {
             servosService.becArriereOuvert(false);
             ThreadUtils.sleep(wait);
