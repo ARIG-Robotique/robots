@@ -157,7 +157,7 @@ public class NerellRobotContext {
 
     @Bean
     public LidarBridgeProcess rplidarBridgeProcess() {
-        return new LidarBridgeProcess("/home/pi/lidar_bridge");
+        return new LidarBridgeProcess("/home/pi/rplidar_bridge");
     }
 
     @Bean("rplidar")

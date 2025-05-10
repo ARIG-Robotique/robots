@@ -2,6 +2,7 @@ package org.arig.robot.system.capteurs;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
@@ -33,12 +34,14 @@ abstract class RPLidarA2TelemeterOverSocketTest {
     void testDeviceInfos() {
         DeviceInfos infos = rpLidar.deviceInfo();
         Assertions.assertNotNull(infos);
+        if (StringUtils.isNotBlank(infos.getDriver())) {
+            Assertions.assertEquals("rplidar", infos.getDriver());
+        }
 
         boolean firstLidar = false;
         boolean secondLidar = false;
         try {
             // Lidar A2 premier achat
-            Assertions.assertEquals("rplidar", infos.getDriver());
             Assertions.assertEquals("1.20", infos.getFirmwareVersion());
             Assertions.assertEquals(2, (long) infos.getHardwareVersion());
             Assertions.assertEquals("CCD2FFC1E8839EF2C0E69EF714655405", infos.getSerialNumber());
@@ -49,7 +52,6 @@ abstract class RPLidarA2TelemeterOverSocketTest {
         }
 
         try {
-            Assertions.assertEquals("rplidar", infos.getDriver());
             Assertions.assertEquals("1.25", infos.getFirmwareVersion());
             Assertions.assertEquals(5, (long) infos.getHardwareVersion());
             Assertions.assertEquals("DF889A87C5E392D3A5E49EF04F5D3D65", infos.getSerialNumber());
