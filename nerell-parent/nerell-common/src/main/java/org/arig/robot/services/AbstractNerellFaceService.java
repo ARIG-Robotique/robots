@@ -56,13 +56,13 @@ public abstract class AbstractNerellFaceService {
 
     deplacementPriseColonnesPinces();
     if (!iosPinces()) {
-      log.warn("Erreur de chargement du gradin brut dans les pinces");
+      log.warn("Erreur de chargement du gradin brut dans les pinces (G : {} ; D : {})", ioService.pinceAvantGauche(false), ioService.pinceAvantDroite(false));
       echappementPriseGradinBrut(PriseGradinState.ERREUR_PINCES);
       return PriseGradinState.ERREUR_PINCES;
     }
     log.info(" - Mise en stock du gradin brut");
     if (!miseEnStockTiroir()) {
-      log.warn("Erreur de mise en stock du gradin brut");
+      log.warn("Erreur de mise en stock du gradin brut (B : {} ; H : {})", ioService.tiroirAvantBas(false), ioService.tiroirAvantHaut(false));
       echappementPriseGradinBrut(PriseGradinState.ERREUR_TIROIR);
       return PriseGradinState.ERREUR_TIROIR;
     }
@@ -70,7 +70,7 @@ public abstract class AbstractNerellFaceService {
     log.info(" - Mise en stock des colonnes au sol");
     deplacementPriseColonnesSol();
     if (!iosColonnesSol()) {
-      log.warn("Erreur de prise des colonnes au sol");
+      log.warn("Erreur de prise des colonnes au sol (G : {} ; D : {})", ioService.solAvantGauche(false), ioService.solAvantDroite(false));
       echappementPriseGradinBrut(PriseGradinState.ERREUR_COLONNES);
       return PriseGradinState.ERREUR_COLONNES;
     }

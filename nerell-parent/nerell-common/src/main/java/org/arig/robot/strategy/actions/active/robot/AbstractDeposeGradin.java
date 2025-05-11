@@ -77,7 +77,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
       } else {
         throw new RuntimeException("Impossible de déposer sur un rang sans limite a 2 étages. Pour le moment 😅");
       }
-      log.info("Demande de construction de {} etage.", nbEtageRequis);
+      log.info("Demande de construction de {} etage(s).", nbEtageRequis);
 
       NerellFaceWrapper.Face face = faceWrapper.getConstructionFace(nbEtageRequis);
       AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
