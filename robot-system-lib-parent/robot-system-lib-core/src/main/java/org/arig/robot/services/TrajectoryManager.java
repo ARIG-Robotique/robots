@@ -986,6 +986,15 @@ public class TrajectoryManager implements InitializingBean {
      * @param vOrientation vitesse pour la boucle orientation
      */
     public void setVitesse(long vDistance, long vOrientation) {
+        if (this.vitesseDistance.get() != vDistance || this.vitesseOrientation.get() != vOrientation) {
+            log.info("Configuration des vitesses :");
+            if (this.vitesseDistance.get() != vDistance) {
+                log.info(" - Distance : {} -> {}", this.vitesseDistance.get(), vDistance);
+            }
+            if (this.vitesseOrientation.get() != vOrientation) {
+                log.info(" - Orientation : {} -> {}", this.vitesseOrientation.get(), vOrientation);
+            }
+        }
         this.vitesseDistance.set(vDistance);
         this.vitesseOrientation.set(vOrientation);
         asservissementPolaire.setRampDistance(robotConfig.rampeAccelDistance(), robotConfig.rampeDecelDistance());

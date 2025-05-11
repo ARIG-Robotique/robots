@@ -79,7 +79,9 @@ public abstract class AbstractRampFilter implements RampFilter {
 
     @Override
     public void setRamps(double rampAcc, double rampDec) {
-        log.info("Configuration des rampes {} ( acc = {} ; dec = {} )", getName(), rampAcc, rampDec);
+        if (this.rampAcc != rampAcc || this.rampDec != rampDec) {
+            log.info("Configuration des rampes {} ( acc = {} ; dec = {} )", getName(), rampAcc, rampDec);
+        }
 
         this.rampAcc = rampAcc;
         this.rampDec = rampDec;
