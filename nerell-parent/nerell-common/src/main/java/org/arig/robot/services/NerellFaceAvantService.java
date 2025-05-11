@@ -78,6 +78,11 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     mv.reculeMM(100);
   }
 
+  protected void deplacementDeposeEtage2() throws AvoidingException {
+    mv.setVitessePercent(100, 100);
+    mv.avanceMM(100);
+  }
+
   @Override
   protected boolean iosPinces() {
     return ThreadUtils.waitUntil(
@@ -142,7 +147,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
 
   @Override
   protected void deposeEtage(ConstructionArea.Etage etage) throws AvoidingException {
-    log.info("Dépose de l'étage {}", etage.name());
+    log.info("Tentative de dépose de l'étage {}", etage.name());
     if (!ioService.tiroirAvantBas(true)) {
       log.warn("Tiroir avant bas vide, on ne peut pas déposer");
       return;
@@ -155,14 +160,18 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
         !ioService.pinceAvantDroite(true)
     ) {
       log.info("Récupération des colonnes en stock depuis le sol");
-      servos.groupePincesAvantPriseSol(false);
-      servos.groupeDoigtsAvantOuvert(false);
+      servos.groupePincesAvantPriseSol(true);
+      servos.groupeDoigtsAvantOuvert(true);
       servos.groupeBlockColonneAvantOuvert(true);
       deplacementDeposeColonnesSol(false);
       servos.ascenseurAvantBas(true);
       deplacementDeposeColonnesSol(true);
       servos.groupePincesAvantStock(true);
       servos.groupeDoigtsAvantSerre(true);
+      servos.ascenseurAvantStock(true);
+      if (etage == ConstructionArea.Etage.ETAGE_2) {
+        deplacementDeposeEtage2();
+      }
     }
 
     log.info("Dépose de l'étage {} depuis les pinces", etage.name());
@@ -194,12 +203,8 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
 
     servos.groupeDoigtsAvantLache(true);
     deplacementDeposeEtage();
-    servos.groupeDoigtsAvantFerme(false);
-      if (ioService.solAvantDroite(true) || ioService.solAvantGauche(true)) {
-        servos.ascenseurAvantStock(false);
-      } else {
-      servos.ascenseurAvantRepos(false);
-    }
+    servos.groupeDoigtsAvantFerme(true);
+    servos.ascenseurAvantStock(true);
     servos.groupePincesAvantRepos(false);
   }
 }

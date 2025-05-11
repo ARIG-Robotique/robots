@@ -53,7 +53,10 @@ public class NerellFaceWrapper {
     return null;
   }
 
-  public AbstractNerellFaceService getFaceService(final Face face ) {
+  public AbstractNerellFaceService getFaceService(final Face face) {
+    if (face == null) {
+      return null;
+    }
     return switch (face) {
       case AVANT -> faceAvantService;
       case ARRIERE -> faceArriereService;

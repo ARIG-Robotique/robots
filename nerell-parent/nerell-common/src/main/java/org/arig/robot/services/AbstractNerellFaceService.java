@@ -33,6 +33,7 @@ public abstract class AbstractNerellFaceService {
   protected abstract void echappementPriseGradinBrut(PriseGradinState state) throws AvoidingException;
   protected abstract void deplacementDeposeColonnesSol(boolean reverse) throws AvoidingException;
   protected abstract void deplacementDeposeEtage() throws AvoidingException;
+  protected abstract void deplacementDeposeEtage2() throws AvoidingException;
 
   protected abstract boolean miseEnStockTiroir();
   protected abstract void verrouillageColonnesSol();

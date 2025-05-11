@@ -56,6 +56,12 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
   }
 
   @Override
+  protected void deplacementDeposeEtage2() throws AvoidingException {
+    // TODO: Implement this method
+    throw new UnsupportedOperationException("Method deplacementDeposeEtage2 is not yet implemented.");
+  }
+
+  @Override
   protected boolean iosPinces() {
       // TODO: Implement this method
       throw new UnsupportedOperationException("Method iosPinces is not yet implemented.");
