@@ -145,17 +145,18 @@ public abstract class AbstractServosService {
      * Déplace un servo à une position nommée
      */
     public void setPosition(String servoName, String positionName, boolean wait) {
-        setPositionAndSpeed(servoName, positionName, -1, wait);
+        setPositionAndSpeed(servoName, positionName, null, wait);
     }
 
-    public void setPositionAndSpeed(String servoName, String positionName, int speed, boolean wait) {
+    public void setPositionAndSpeed(String servoName, String positionName, Byte speed, boolean wait) {
         Servo servo = servos.get(servoName);
         assert servo != null;
         ServoPosition position = servo.positions().get(positionName);
         assert position != null;
 
-        logPositionServo(servoName, positionName, position.value(), speed == -1 ? position.speed() : speed, wait);
-        setPosition(servo, position.value(), (byte) speed, wait);
+        byte realSpeed = speed == null ? position.speed() : speed;
+        logPositionServo(servoName, positionName, position.value(), realSpeed, wait);
+        setPosition(servo, position.value(), realSpeed, wait);
     }
 
     /**

@@ -40,8 +40,8 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final String POS_ETAGE_2 = "Etage 2";
     protected static final String POS_REPOS = "Repos";
 
-    protected static final int FULL_SPEED = 0;
-    protected static final int HALF_SPEED = 30;
+    protected static final byte FULL_SPEED = 0;
+    protected static final byte HALF_SPEED = 30;
 
     protected static final String GROUP_INDIVIDUAL_AVANT = "Individuel avant";
     protected static final String GROUP_INDIVIDUAL_ARRIERE = "Individuel arrière";
