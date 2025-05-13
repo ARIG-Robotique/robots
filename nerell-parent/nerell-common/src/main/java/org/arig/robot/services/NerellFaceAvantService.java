@@ -113,6 +113,24 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   }
 
   @Override
+  protected void updatePincesState(boolean gauche, boolean droite) {
+    log.info("Mise à jour du state des pinces : G {} ; D {}", gauche, droite);
+    rs.faceAvant().pinceGauche(gauche).pinceDroite(droite);
+  }
+
+  @Override
+  protected void updateColonnesSolState(boolean gauche, boolean droite) {
+    log.info("Mise à jour du state des colonnes sol : G {} ; D {}", gauche, droite);
+    rs.faceAvant().solGauche(gauche).solDroite(droite);
+  }
+
+  @Override
+  protected void updateTiroirState(boolean bas, boolean haut) {
+    log.info("Mise à jour du state du tiroir : B {} ; H {}", bas, haut);
+    rs.faceAvant().tiroirBas(bas).tiroirHaut(haut);
+  }
+
+  @Override
   protected boolean miseEnStockTiroir() {
     servos.groupeDoigtsAvantSerre(true);
     servos.ascenseurAvantHaut(true);

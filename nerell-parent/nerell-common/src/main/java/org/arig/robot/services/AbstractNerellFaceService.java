@@ -26,6 +26,10 @@ public abstract class AbstractNerellFaceService {
   protected abstract boolean iosTiroir();
   protected abstract boolean iosColonnesSol();
 
+  protected abstract void updatePincesState(boolean gauche, boolean droite);
+  protected abstract void updateColonnesSolState(boolean gauche, boolean droite);
+  protected abstract void updateTiroirState(boolean bas, boolean haut);
+
   protected abstract void aligneFace(Point gradin) throws AvoidingException;
   protected abstract void ouvreFacePourPrise();
   protected abstract void deplacementPriseColonnesPinces() throws AvoidingException;
@@ -60,12 +64,15 @@ public abstract class AbstractNerellFaceService {
       echappementPriseGradinBrut(PriseGradinState.ERREUR_PINCES);
       return PriseGradinState.ERREUR_PINCES;
     }
+    updatePincesState(true, true);
+
     log.info(" - Mise en stock du gradin brut");
     if (!miseEnStockTiroir()) {
       log.warn("Erreur de mise en stock du gradin brut (B : {} ; H : {})", ioService.tiroirAvantBas(false), ioService.tiroirAvantHaut(false));
       echappementPriseGradinBrut(PriseGradinState.ERREUR_TIROIR);
       return PriseGradinState.ERREUR_TIROIR;
     }
+    updateTiroirState(true, true);
 
     log.info(" - Mise en stock des colonnes au sol");
     deplacementPriseColonnesSol();
@@ -74,6 +81,8 @@ public abstract class AbstractNerellFaceService {
       echappementPriseGradinBrut(PriseGradinState.ERREUR_COLONNES);
       return PriseGradinState.ERREUR_COLONNES;
     }
+    updateColonnesSolState(true, true);
+
     log.info(" - Vérouillage des colonnes au sol");
     verrouillageColonnesSol();
     return PriseGradinState.OK;

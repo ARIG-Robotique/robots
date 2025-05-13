@@ -79,6 +79,24 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
   }
 
   @Override
+  protected void updatePincesState(boolean gauche, boolean droite) {
+    // TODO: Implement this method
+    throw new UnsupportedOperationException("Method updatePincesState is not yet implemented.");
+  }
+
+  @Override
+  protected void updateTiroirState(boolean bas, boolean haut) {
+    // TODO: Implement this method
+    throw new UnsupportedOperationException("Method updateTiroirState is not yet implemented.");
+  }
+
+  @Override
+  protected void updateColonnesSolState(boolean gauche, boolean droite) {
+    // TODO: Implement this method
+    throw new UnsupportedOperationException("Method updateColonnesSolState is not yet implemented.");
+  }
+
+  @Override
   protected boolean iosColonnesSol() {
       // TODO: Implement this method
       throw new UnsupportedOperationException("Method checkIOsColonnesSol is not yet implemented.");

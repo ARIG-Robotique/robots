@@ -44,6 +44,7 @@ public class NerellTasksScheduler {
         }
     }
 
+    /*
     @Scheduled(fixedRate = 20)
     public void refreshSateBasedOnIOs() {
         rs.faceAvant()
@@ -62,6 +63,7 @@ public class NerellTasksScheduler {
             .tiroirBas(ioService.tiroirAvantBas(true))
             .tiroirHaut(ioService.tiroirAvantHaut(true));
     }
+    */
 
     @Scheduled(fixedDelay = 20)
     public void obstacleAvoidanceTask() {
