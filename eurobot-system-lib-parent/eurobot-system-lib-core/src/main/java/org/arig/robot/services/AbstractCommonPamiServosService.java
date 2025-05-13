@@ -21,7 +21,7 @@ public abstract class AbstractCommonPamiServosService extends AbstractServosServ
     /* Méthode pour le positionnement d'origine */
     /* **************************************** */
 
-    public void homes() {
+    public void homes(boolean endMatch) {
         handFerme(false);
     }
 

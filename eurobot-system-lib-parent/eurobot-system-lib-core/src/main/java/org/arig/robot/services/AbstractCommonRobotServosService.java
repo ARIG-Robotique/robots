@@ -69,7 +69,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     /* Méthode pour le positionnement d'origine */
     /* **************************************** */
 
-    public void homes() {
+    public void homes(boolean endMatch) {
         // Batch
         groupePincesAvantRepos(false);
         groupePincesArriereRepos(false);
@@ -81,8 +81,13 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
         // Servo individuels
         tiroirAvantStock(false);
         tiroirArriereStock(false);
+        if (!endMatch) {
         ascenseurAvantRepos(false);
         ascenseurArriereRepos(false);
+        } else {
+            ascenseurAvantStock(false);
+            ascenseurArriereStock(false);
+        }
         becAvantRepos(false);
         becArriereRepos(false);
     }

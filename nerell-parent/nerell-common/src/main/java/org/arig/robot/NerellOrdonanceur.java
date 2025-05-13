@@ -209,7 +209,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         while (io.tirette()) {
             ThreadUtils.sleep(1000);
         }
-        servos.homes();
+        servos.homes(true);
     }
 
     /**

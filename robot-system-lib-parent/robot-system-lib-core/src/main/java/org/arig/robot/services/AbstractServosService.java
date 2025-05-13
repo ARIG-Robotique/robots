@@ -114,10 +114,10 @@ public abstract class AbstractServosService {
                 });
 
         log.info("Servos en position initiale");
-        homes();
+        homes(false);
     }
 
-    public abstract void homes();
+    public abstract void homes(boolean endMatch);
 
     //*******************************************//
     //* Déplacements                            *//
