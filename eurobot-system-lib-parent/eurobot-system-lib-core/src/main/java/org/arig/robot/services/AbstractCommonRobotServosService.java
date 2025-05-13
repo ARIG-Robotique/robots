@@ -130,6 +130,9 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     public void groupeDoigtsAvantOuvert(boolean wait) {
         setPositionBatch(GROUP_DOIGTS_AVANT, POS_OUVERT, wait);
     }
+    public void groupeDoigtsAvantPriseSol(boolean wait) {
+        setPositionBatch(GROUP_DOIGTS_AVANT, POS_PRISE_SOL, wait);
+    }
     public void groupeDoigtsAvantLache(boolean wait) {
         setPositionBatch(GROUP_DOIGTS_AVANT, POS_LACHE, wait);
     }
@@ -142,6 +145,9 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
 
     public void groupeDoigtsArriereOuvert(boolean wait) {
         setPositionBatch(GROUP_DOIGTS_ARRIERE, POS_OUVERT, wait);
+    }
+    public void groupeDoigtsArrierePriseSol(boolean wait) {
+        setPositionBatch(GROUP_DOIGTS_ARRIERE, POS_PRISE_SOL, wait);
     }
     public void groupeDoigtsArriereLache(boolean wait) {
         setPositionBatch(GROUP_DOIGTS_ARRIERE, POS_LACHE, wait);

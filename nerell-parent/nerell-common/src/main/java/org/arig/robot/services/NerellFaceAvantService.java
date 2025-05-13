@@ -5,6 +5,7 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.ConstructionArea;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.StockFace;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.utils.ThreadUtils;
 
@@ -174,17 +175,18 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
 
   @Override
   protected void deposeEtage(ConstructionArea.Etage etage) throws AvoidingException {
+    StockFace face = rs.faceAvant();
     log.info("Tentative de dépose de l'étage {}", etage.name());
-    if (!ioService.tiroirAvantBas(true)) {
+    if (!face.tiroirBas()) {
       log.warn("Tiroir avant bas vide, on ne peut pas déposer");
       return;
     }
 
-    if (ioService.tiroirAvantBas(true) &&
-        ioService.solAvantGauche(true) &&
-        ioService.solAvantDroite(true) &&
-        !ioService.pinceAvantGauche(true) &&
-        !ioService.pinceAvantDroite(true)
+    if (face.tiroirBas() &&
+        face.solGauche() &&
+        face.solDroite() &&
+        !face.pinceGauche() &&
+        !face.pinceDroite()
     ) {
       log.info("Récupération des colonnes en stock depuis le sol");
       servos.groupePincesAvantPriseSol(true);
@@ -193,9 +195,14 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
       deplacementDeposeColonnesSol(false);
       servos.ascenseurAvantBas(true);
       deplacementDeposeColonnesSol(true);
+      servos.groupeDoigtsAvantPriseSol(false);
       servos.groupePincesAvantStock(true);
       servos.groupeDoigtsAvantSerre(true);
+      updateColonnesSolState(false, false);
+      updatePincesState(true, true);
       servos.ascenseurAvantStock(true);
+      servos.groupePincesAvantPrise(true);
+      servos.ascenseurAvantHaut(true);
       if (etage == ConstructionArea.Etage.ETAGE_2) {
         deplacementDeposeEtage2();
       }
@@ -207,11 +214,12 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     servos.tiroirAvantDepose(true);
     servos.becAvantOuvert(true);
 
-    if (ioService.tiroirAvantHaut(true)) {
+    if (face.tiroirHaut()) {
       log.info("Split tiroir avant pour la dépose");
       servos.ascenseurAvantSplit(true);
       servos.becAvantFerme(true);
       servos.tiroirAvantStock(true);
+      updateTiroirState(true, false);
       if (etage == ConstructionArea.Etage.ETAGE_1) {
         servos.ascenseurAvantBas(true);
       } else {
@@ -226,10 +234,12 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
       }
       servos.becAvantFerme(false);
       servos.tiroirAvantStock(false);
+      updateTiroirState(false, false);
     }
 
     servos.groupeDoigtsAvantLache(true);
     deplacementDeposeEtage();
+    updatePincesState(false, false);
     servos.groupeDoigtsAvantFerme(true);
     servos.ascenseurAvantStock(true);
     servos.groupePincesAvantRepos(false);
