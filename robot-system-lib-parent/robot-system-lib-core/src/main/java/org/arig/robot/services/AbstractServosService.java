@@ -145,13 +145,17 @@ public abstract class AbstractServosService {
      * Déplace un servo à une position nommée
      */
     public void setPosition(String servoName, String positionName, boolean wait) {
+        setPositionAndSpeed(servoName, positionName, -1, wait);
+    }
+
+    public void setPositionAndSpeed(String servoName, String positionName, int speed, boolean wait) {
         Servo servo = servos.get(servoName);
         assert servo != null;
         ServoPosition position = servo.positions().get(positionName);
         assert position != null;
 
-        logPositionServo(servoName, positionName, position.value(), position.speed(), wait);
-        setPosition(servo, position.value(), position.speed(), wait);
+        logPositionServo(servoName, positionName, position.value(), speed == -1 ? position.speed() : speed, wait);
+        setPosition(servo, position.value(), (byte) speed, wait);
     }
 
     /**
@@ -170,8 +174,13 @@ public abstract class AbstractServosService {
     private void setPosition(Servo servo, int position, byte speed, boolean wait) {
         OffsetedDevice device = getDevice(servo.id());
         int currentPosition = device.servo().getPosition((byte) (servo.id() - device.offset()));
+        int currentSpeed = device.servo().getSpeed((byte) (servo.id() - device.offset()));
 
-        device.servo().setPositionAndSpeed((byte) (servo.id() - device.offset()), position, speed);
+        if (currentSpeed != speed) {
+            device.servo().setPositionAndSpeed((byte) (servo.id() - device.offset()), position, speed);
+        } else {
+            device.servo().setPosition((byte) (servo.id() - device.offset()), position);
+        }
 
         if (wait && currentPosition != position) {
             ThreadUtils.sleep(computeWaitTime(servo, currentPosition, position, speed));

@@ -40,6 +40,9 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     protected static final String POS_ETAGE_2 = "Etage 2";
     protected static final String POS_REPOS = "Repos";
 
+    protected static final int FULL_SPEED = 0;
+    protected static final int HALF_SPEED = 30;
+
     protected static final String GROUP_INDIVIDUAL_AVANT = "Individuel avant";
     protected static final String GROUP_INDIVIDUAL_ARRIERE = "Individuel arrière";
     protected static final String GROUP_PINCES_AVANT = "Pinces avant";
@@ -164,23 +167,42 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     //*******************************************//
 
     public void tiroirAvantDepose(boolean wait) {
-        setPosition(TIROIR_AVANT, POS_DEPOSE, wait);
+        tiroirAvantDepose(wait, false);
+    }
+
+    public void tiroirAvantDepose(boolean wait, boolean halfSpeed) {
+        setPositionAndSpeed(TIROIR_AVANT, POS_DEPOSE, halfSpeed ? HALF_SPEED : FULL_SPEED, wait);
     }
     public void tiroirAvantPrise(boolean wait) {
-        setPosition(TIROIR_AVANT, POS_PRISE, wait);
+        tiroirAvantPrise(wait, false);
+    }
+    public void tiroirAvantPrise(boolean wait, boolean halfSpeed) {
+        setPositionAndSpeed(TIROIR_AVANT, POS_PRISE, halfSpeed ? HALF_SPEED : FULL_SPEED, wait);
     }
     public void tiroirAvantStock(boolean wait) {
-        setPosition(TIROIR_AVANT, POS_STOCK, wait);
+        tiroirAvantStock(wait, false);
+    }
+    public void tiroirAvantStock(boolean wait, boolean halfSpeed) {
+        setPositionAndSpeed(TIROIR_AVANT, POS_STOCK, halfSpeed ? HALF_SPEED : FULL_SPEED, wait);
     }
 
     public void tiroirArriereDepose(boolean wait) {
-        setPosition(TIROIR_ARRIERE, POS_DEPOSE, wait);
+        tiroirArriereDepose(wait, false);
+    }
+    public void tiroirArriereDepose(boolean wait, boolean halfSpeed) {
+        setPositionAndSpeed(TIROIR_ARRIERE, POS_DEPOSE, halfSpeed ? HALF_SPEED : FULL_SPEED, wait);
     }
     public void tiroirArrierePrise(boolean wait) {
-        setPosition(TIROIR_ARRIERE, POS_PRISE, wait);
+        tiroirArrierePrise(wait, false);
+    }
+    public void tiroirArrierePrise(boolean wait, boolean halfSpeed) {
+        setPositionAndSpeed(TIROIR_ARRIERE, POS_PRISE, halfSpeed ? HALF_SPEED : FULL_SPEED, wait);
     }
     public void tiroirArriereStock(boolean wait) {
-        setPosition(TIROIR_ARRIERE, POS_STOCK, wait);
+        tiroirArriereStock(wait, false);
+    }
+    public void tiroirArriereStock(boolean wait, boolean halfSpeed) {
+        setPositionAndSpeed(TIROIR_ARRIERE, POS_STOCK, halfSpeed ? HALF_SPEED : FULL_SPEED, wait);
     }
 
     public void becAvantOuvert(boolean wait) {
