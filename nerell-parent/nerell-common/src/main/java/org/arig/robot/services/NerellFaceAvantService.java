@@ -27,9 +27,9 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     servos.tiroirAvantPrise(false);
     servos.becAvantOuvert(false);
     servos.groupeBlockColonneAvantOuvert(false);
-    servos.groupePincesAvantPrise(true);
-    servos.ascenseurAvantBas(false);
     servos.groupeDoigtsAvantLache(false);
+    servos.groupePincesAvantPrise(true);
+    servos.ascenseurAvantBas(true);
   }
 
   @Override
@@ -51,15 +51,21 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   @Override
   protected void echappementPriseGradinBrut(PriseGradinState state) throws AvoidingException {
     log.info("Echappement de la prise du gradin brut. Erreur {}", state.name());
+
+    servos.groupeBlockColonneAvantOuvert(false);
+
     mv.setVitessePercent(100, 100);
     mv.reculeMM(100);
 
-    servos.groupeBlockColonneAvantOuvert(false);
-    servos.tiroirAvantStock(false);
+    servos.tiroirAvantDepose(false);
+    servos.becAvantOuvert(false);
+    servos.groupeDoigtsAvantLache(false);
+    servos.groupePincesAvantPrise(false);
     servos.becAvantFerme(false);
-    servos.ascenseurAvantRepos(false);
-    servos.groupeDoigtsAvantFerme(false);
+    servos.ascenseurAvantRepos(true);
+    servos.groupeDoigtsAvantFerme(true);
     servos.groupePincesAvantRepos(false);
+    servos.tiroirAvantStock(false);
   }
 
   @Override
@@ -120,12 +126,16 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     do {
       if (nbTries > 1) {
         log.info(" - Réouverture du tiroir avant pour le stock. Essai n°{}", nbTries);
+        servos.tiroirAvantPrise(true, true);
         servos.becAvantOuvert(true);
-        servos.tiroirAvantPrise(true);
+        servos.tiroirAvantDepose(true, true);
         servos.ascenseurAvantHaut(true);
 
         servos.becAvantFerme(true);
         servos.becAvantOuvert(true);
+      } else {
+        log.info(" - Ouverture du tiroir pour mise en stock. Essai n°{}", nbTries);
+        servos.tiroirAvantDepose(true, true);
       }
       servos.becAvantFerme(true);
       servos.tiroirAvantStock(true);

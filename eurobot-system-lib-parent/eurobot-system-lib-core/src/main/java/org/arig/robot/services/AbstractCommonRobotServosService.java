@@ -82,8 +82,8 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
         tiroirAvantStock(false);
         tiroirArriereStock(false);
         if (!endMatch) {
-        ascenseurAvantRepos(false);
-        ascenseurArriereRepos(false);
+            ascenseurAvantRepos(false);
+            ascenseurArriereRepos(false);
         } else {
             ascenseurAvantStock(false);
             ascenseurArriereStock(false);
