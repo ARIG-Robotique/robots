@@ -5,7 +5,6 @@ import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.GradinBrut;
 import org.arig.robot.model.Team;
-import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.awt.*;

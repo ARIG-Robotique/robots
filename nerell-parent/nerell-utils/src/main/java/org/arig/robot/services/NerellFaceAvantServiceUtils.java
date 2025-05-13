@@ -2,7 +2,6 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;
-import org.arig.robot.model.GradinBrut;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.utils.ThreadUtils;

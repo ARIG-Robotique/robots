@@ -1,7 +1,6 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.StrategyOption;
 import org.arig.robot.model.Team;
@@ -9,7 +8,6 @@ import org.arig.robot.model.ecran.EcranConfig;
 import org.arig.robot.model.ecran.EcranParams;
 import org.arig.robot.model.ecran.EcranState;
 
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

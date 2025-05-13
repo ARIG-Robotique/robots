@@ -18,8 +18,6 @@ import org.arig.robot.model.ecran.EcranConfig;
 import org.arig.robot.model.ecran.EcranState;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
 import org.arig.robot.monitoring.MonitoringWrapper;
-import org.arig.robot.services.AbstractCommonRobotServosService;
-import org.arig.robot.services.CommonRobotIOService;
 import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.system.RobotGroupOverSocket;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;

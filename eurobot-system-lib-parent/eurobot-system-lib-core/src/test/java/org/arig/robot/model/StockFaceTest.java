@@ -2,7 +2,6 @@ package org.arig.robot.model;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.util.Assert;
 
 public class StockFaceTest {
 

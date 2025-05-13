@@ -8,9 +8,7 @@ import org.arig.robot.services.NerellEcranService;
 import org.arig.robot.services.NerellIOService;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
-import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 

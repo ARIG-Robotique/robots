@@ -2,7 +2,6 @@ package org.arig.robot.services;
 
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.ConstructionArea;
-import org.arig.robot.model.GradinBrut;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 

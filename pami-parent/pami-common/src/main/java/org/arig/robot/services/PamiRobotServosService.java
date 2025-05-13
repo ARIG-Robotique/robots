@@ -2,7 +2,6 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.RobotName;
-import org.arig.robot.model.servos.Servo;
 import org.arig.robot.system.servos.AbstractServos;
 import org.springframework.stereotype.Service;
 

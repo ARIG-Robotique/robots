@@ -1,7 +1,6 @@
 package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.Team;
 import org.arig.robot.system.servos.AbstractServos;
 
 @Slf4j
