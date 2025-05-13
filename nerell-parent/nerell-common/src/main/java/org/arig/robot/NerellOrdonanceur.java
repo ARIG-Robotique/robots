@@ -198,12 +198,18 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         nerellIO.enableAlimServos();
 
         // TODO : Check capteurs
-        nerellServos.groupePincesAvantPrise(false);
         nerellServos.groupeBlockColonneAvantOuvert(false);
-        nerellServos.groupePincesArrierePrise(false);
         nerellServos.groupeBlockColonneArriereOuvert(false);
         nerellServos.becAvantOuvert(false);
         nerellServos.becArriereOuvert(false);
+
+        nerellServos.ascenseurAvantStock(true);
+        nerellServos.groupePincesAvantPrise(true);
+        nerellServos.groupeDoigtsAvantLache(false);
+
+        nerellServos.ascenseurArriereStock(true);
+        nerellServos.groupePincesArrierePrise(true);
+        nerellServos.groupeDoigtsArriereLache(false);
 
         nerellEcranService.displayMessage("FIN - Enlever la tirette quand stock vide.");
         while (io.tirette()) {
