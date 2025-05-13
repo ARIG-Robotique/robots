@@ -70,6 +70,8 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
       ConstructionArea.Rang rang = constructionArea().getFirstConstructibleRang(rs.limiter2Etages());
       ConstructionArea.Etage etage = constructionArea().getFirstConstructibleEtage(rang, rs.limiter2Etages());
 
+      log.info("Dépose dans le RANG {} sur l'étage {}", rang.name(), etage.name());
+
       final int nbEtageRequis;
       if (rs.limiter2Etages()) {
         // Si on limite a 2 étage soit 1 ou 2 étage
@@ -80,6 +82,10 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
       log.info("Demande de construction de {} etage(s).", nbEtageRequis);
 
       NerellFaceWrapper.Face face = faceWrapper.getConstructionFace(nbEtageRequis);
+      if (face == null) {
+        log.warn("Pas de face pour la dépose de {} étage(s)", nbEtageRequis);
+        return;
+      }
       AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
 
       Point rangPosition = rangPosition(rang);

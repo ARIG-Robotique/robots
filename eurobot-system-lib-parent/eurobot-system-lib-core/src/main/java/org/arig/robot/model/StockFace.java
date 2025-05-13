@@ -44,7 +44,7 @@ public class StockFace {
       return 0;
     }
 
-    if (tiroirBas && tiroirHaut && solGauche && solDroite && pinceGauche && pinceDroite ) {
+    if (tiroirBas && tiroirHaut && solGauche && solDroite && pinceGauche && pinceDroite) {
       // Collecte complete
       return 2;
     }
