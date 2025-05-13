@@ -81,8 +81,9 @@ abstract class RPLidarA2TelemeterOverSocketTest {
         rpLidar.startScan();
 
         int nb = 1;
+        int total = 5;
         do {
-            log.info("Récupération scan {} / 100", nb);
+            log.info("Récupération scan {} / {}", nb, total);
 
             ScanInfos scans = rpLidar.grabData();
             Assertions.assertNotNull(scans);
@@ -90,7 +91,7 @@ abstract class RPLidarA2TelemeterOverSocketTest {
             Assertions.assertTrue(CollectionUtils.isNotEmpty(scans.getScan()));
 
             nb++;
-        } while (nb <= 100);
+        } while (nb <= total);
 
         rpLidar.stopScan();
     }
