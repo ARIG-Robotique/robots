@@ -61,7 +61,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
             .position(POS_STOCK, 1880);
         Servo becArriere = servo(BEC_ARRIERE_ID, BEC_ARRIERE)
             .time(500)
-            .position(POS_REPOS, 600)
+            .position(POS_REPOS, 630)
             .position(POS_OUVERT, 1800)
             .position(POS_SPLIT, 1620)
             .position(POS_FERME, 1570);
@@ -83,14 +83,14 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
             .position(POS_OUVERT, 670)
             .position(POS_PRISE, 1320)
             .position(POS_PRISE_SOL, 1860)
-            .position(POS_STOCK, 1960)
+            .position(POS_STOCK, 2020)
             .position(POS_REPOS, 2260);
         Servo pinceAvantDroite = servo(PINCE_AVANT_DROIT_ID, PINCE_AVANT_DROIT)
             .time(500)
             .position(POS_OUVERT, 2350)
-            .position(POS_PRISE, 1720)
+            .position(POS_PRISE, 1690)
             .position(POS_PRISE_SOL, 1150)
-            .position(POS_STOCK, 1070)
+            .position(POS_STOCK, 1040)
             .position(POS_REPOS, 800);
         group(GROUP_PINCES_AVANT_ID, GROUP_PINCES_AVANT)
             .addServo(pinceAvantGauche)
@@ -103,16 +103,16 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
 
         Servo doigtAvantGauche = servo(DOIGT_AVANT_GAUCHE_ID, DOIGT_AVANT_GAUCHE)
             .time(800)
-            .position(POS_OUVERT, 2380)
-            .position(POS_LACHE, 1710)
-            .position(POS_SERRE, 1410)
-            .position(POS_FERME, 810);
+            .position(POS_OUVERT, 2460)
+            .position(POS_LACHE, 1720)
+            .position(POS_SERRE, 1470)
+            .position(POS_FERME, 870);
         Servo doigtAvantDroite = servo(DOIGT_AVANT_DROIT_ID, DOIGT_AVANT_DROIT)
             .time(800)
-            .position(POS_OUVERT, 610)
+            .position(POS_OUVERT, 590)
             .position(POS_LACHE, 1310)
-            .position(POS_SERRE, 1580)
-            .position(POS_FERME, 2210);
+            .position(POS_SERRE, 1570)
+            .position(POS_FERME, 2190);
         group(GROUP_DOIGTS_AVANT_ID, GROUP_DOIGTS_AVANT)
             .addServo(doigtAvantGauche)
             .addServo(doigtAvantDroite)
