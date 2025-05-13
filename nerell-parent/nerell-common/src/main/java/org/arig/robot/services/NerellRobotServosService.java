@@ -110,13 +110,15 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
 
         Servo doigtAvantGauche = servo(DOIGT_AVANT_GAUCHE_ID, DOIGT_AVANT_GAUCHE)
             .time(TIME_DOIGTS)
-            .position(POS_OUVERT, 2460)
+            .position(POS_OUVERT, 2280)
+            .position(POS_PRISE_SOL, 1980)
             .position(POS_LACHE, 1720)
             .position(POS_SERRE, 1470)
             .position(POS_FERME, 870);
         Servo doigtAvantDroite = servo(DOIGT_AVANT_DROIT_ID, DOIGT_AVANT_DROIT)
             .time(TIME_DOIGTS)
-            .position(POS_OUVERT, 590)
+            .position(POS_OUVERT, 800)
+            .position(POS_PRISE_SOL, 1140)
             .position(POS_LACHE, 1310)
             .position(POS_SERRE, 1570)
             .position(POS_FERME, 2190);
@@ -154,12 +156,14 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
         Servo doigtArriereGauche = servo(DOIGT_ARRIERE_GAUCHE_ID, DOIGT_ARRIERE_GAUCHE)
             .time(TIME_DOIGTS)
             .position(POS_OUVERT, 780)
+            .position(POS_PRISE_SOL, 1080)
             .position(POS_LACHE, 1450)
             .position(POS_SERRE, 1500)
             .position(POS_FERME, 2340);
         Servo doigtArriereDroite = servo(DOIGT_ARRIERE_DROIT_ID, DOIGT_ARRIERE_DROIT)
             .time(TIME_DOIGTS)
             .position(POS_OUVERT, 2490)
+            .position(POS_PRISE_SOL, 2190)
             .position(POS_LACHE, 1820)
             .position(POS_SERRE, 1500)
             .position(POS_FERME, 920);
