@@ -21,8 +21,8 @@ public class NerellFaceWrapper {
   public Face getEmptyFace() {
     if (robotStatus.faceAvant().isEmpty()) {
       return Face.AVANT;
-    } else if (robotStatus.faceArriere().isEmpty()) {
-      return Face.ARRIERE;
+    //} else if (robotStatus.faceArriere().isEmpty()) {
+    //  return Face.ARRIERE;
     } else {
       return null;
     }
