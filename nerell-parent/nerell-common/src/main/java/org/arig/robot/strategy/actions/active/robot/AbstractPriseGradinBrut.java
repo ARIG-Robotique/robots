@@ -67,6 +67,13 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
       log.info("Prise de gradin brut {} : {}", gradin.id(), priseGradinState);
       if (priseGradinState == AbstractNerellFaceService.PriseGradinState.OK) {
         gradin().setGradinPris();
+        if (gradin.bordure()) {
+          if (face == NerellFaceWrapper.Face.AVANT) {
+            mv.reculeMM(100);
+          } else {
+            mv.avanceMM(100);
+          }
+        }
       } else {
         gradin().setGradinBloque();
       }
