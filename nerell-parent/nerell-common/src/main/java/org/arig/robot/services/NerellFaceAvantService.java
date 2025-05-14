@@ -36,9 +36,9 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   protected void deplacementPriseColonnesPinces() throws AvoidingException {
     rs.enableCalage(TypeCalage.FORCE);
     mv.setVitessePercent(20, 100);
-    mv.avanceMM(130);
+    mv.avanceMM(90);
     mv.setVitessePercent(0, 100);
-    mv.avanceMM(20);
+    mv.avanceMM(10);
   }
 
   @Override

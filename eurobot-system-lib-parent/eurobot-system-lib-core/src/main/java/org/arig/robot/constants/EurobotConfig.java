@@ -21,7 +21,7 @@ public interface EurobotConfig {
     int tableHeight = 2000;
     int tableBorder = 50;
 
-    int offsetGradin = 320;
+    int offsetGradin = 270;
     int offsetBanderolle = 55;
 
     // Noms des actions
