@@ -5,6 +5,7 @@ import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.GradinBrut;
 import org.arig.robot.model.Team;
+import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.awt.*;
@@ -13,22 +14,33 @@ import java.util.List;
 @Slf4j
 public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
 
+    private static final int rayonRobotCm = 16;
+
     @Autowired
     private EurobotStatus rs;
 
-    //@Autowired
-    //private TableUtils tableUtils;
+    @Autowired
+    private TableUtils tableUtils;
 
     @Override
     public void setObstacles(final List<Shape> obstacles) {
-        final int rayonRobotCm = 15;
 
-        // Zone des PAMI
+
         if (!rs.pamiRobot()) {
+            // Zone démarrage des PAMI
             if (rs.team() == Team.JAUNE) {
                 obstacles.add(new Rectangle(0, 155 - rayonRobotCm, 15 + rayonRobotCm, 45 + (2 * rayonRobotCm)));
             } else {
                 obstacles.add(new Rectangle(285 - rayonRobotCm, 155 - rayonRobotCm, 15 + rayonRobotCm, 45 + (2 * rayonRobotCm)));
+            }
+
+            // Zone de déplacement des pamis
+            if (rs.getRemainingTime() <= EurobotConfig.validRetourBackstageRemainingTimeNerell) {
+                if (rs.team() == Team.JAUNE) {
+                    obstacles.add(new Rectangle(60 - rayonRobotCm, 120 - rayonRobotCm, 82 + (2 * rayonRobotCm), 80 + (2 * rayonRobotCm)));
+                } else {
+                    obstacles.add(new Rectangle(82 - rayonRobotCm, 120 - rayonRobotCm, 82 + (2 * rayonRobotCm), 80 + (2 * rayonRobotCm)));
+                }
             }
         }
 
@@ -57,21 +69,75 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
             obstacles.add(new Rectangle(55 - rayonRobotCm, 0, 45 + (2 * rayonRobotCm), 15 + rayonRobotCm));
         }
 
+        // Zone de dépose des gradins
+        if (!rs.grandGradinEquipe().isEmpty()) {
+            int x = tableUtils.getX(rs.team() == Team.BLEU, 1225) / 10;
+            int y;
+            if (rs.grandGradinEquipe().data()[0][0]) {
+                y = 10 + (EurobotConfig.offsetBanderolle / 10);
+                obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.HORIZONTAL));
+            }
+            if (rs.grandGradinEquipe().data()[1][0]) {
+                y = 20 + (EurobotConfig.offsetBanderolle / 10);
+                obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.HORIZONTAL));
+            }
+            if (rs.grandGradinEquipe().data()[2][0]) {
+                y = 30 + (EurobotConfig.offsetBanderolle / 10);
+                obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.HORIZONTAL));
+            }
+        }
+        if (!rs.grandGradinAdverse().isEmpty()) {
+            int y = 28;
+            int x;
+            if (rs.grandGradinAdverse().data()[0][0]) {
+                x = tableUtils.getX(rs.team() == Team.BLEU, 100) / 10;
+                obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.VERTICAL));
+            }
+            if (rs.grandGradinAdverse().data()[1][0]) {
+                x = tableUtils.getX(rs.team() == Team.BLEU, 200) / 10;;
+                obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.VERTICAL));
+            }
+            if (rs.grandGradinAdverse().data()[2][0]) {
+                x = tableUtils.getX(rs.team() == Team.BLEU, 300) / 10;
+                obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.VERTICAL));
+            }
+        }
+        if (!rs.petitGradinEquipe().isEmpty()) {
+            int x = tableUtils.getX(rs.team() == Team.BLEU, 775) / 10;
+            int y;
+            if (rs.petitGradinEquipe().data()[0][0]) {
+                y = 10 ;
+                obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.HORIZONTAL));
+            }
+        }
+        if (!rs.petitGradinAdverse().isEmpty()) {
+            int x = tableUtils.getX(rs.team() == Team.BLEU, 2775) / 10;
+            int y;
+            if (rs.petitGradinAdverse().data()[0][0]) {
+                y = 10 ;
+                obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.HORIZONTAL));
+            }
+        }
+
         if (rs.getRemainingTime() > EurobotConfig.validRetourBackstageRemainingTimeNerell) {
             // Ajout des gradins bruts (en stocks)
             for (GradinBrut gradin : rs.gradinBrutStocks()) {
                 if (gradin.present()) {
                     double x = gradin.getX() / 10;
                     double y = gradin.getY() / 10;
-                    if (gradin.orientation() == GradinBrut.Orientation.HORIZONTAL) {
-                        obstacles.add(new Rectangle((int) (x - 20 - rayonRobotCm), (int) (y - 5 - rayonRobotCm), 40 + (2 * rayonRobotCm), 10 + (2 * rayonRobotCm)));
-                    } else {
-                        obstacles.add(new Rectangle((int) (x - 5 - rayonRobotCm), (int) (y - 20 - rayonRobotCm), 10 + (2 * rayonRobotCm), 40 + (2 * rayonRobotCm)));
-                    }
+                    obstacles.add(getObstacleGradin((int) x, (int) y, gradin.orientation()));
                 }
             }
         }
 
         super.setObstacles(obstacles);
+    }
+
+    private Rectangle getObstacleGradin(int x, int y, GradinBrut.Orientation orientation) {
+        if (orientation == GradinBrut.Orientation.HORIZONTAL) {
+            return new Rectangle(x - 20 - rayonRobotCm, y - 5 - rayonRobotCm, 40 + (2 * rayonRobotCm), 10 + (2 * rayonRobotCm));
+        } else {
+            return new Rectangle(x - 5 - rayonRobotCm, y - 20 - rayonRobotCm, 10 + (2 * rayonRobotCm), 40 + (2 * rayonRobotCm));
+        }
     }
 }
