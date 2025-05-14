@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
-public class ARIG2024IoPamiServos extends AbstractServos {
+public class ARIG2025IoPamiServos extends AbstractServos {
 
     private static final byte RELEASE_REGISTER = 'D';
     private static final byte VERSION_REGISTER = 'V';
@@ -24,11 +24,11 @@ public class ARIG2024IoPamiServos extends AbstractServos {
     @Autowired
     private I2CManager i2cManager;
 
-    public ARIG2024IoPamiServos() {
-        this("ARIG2024IoPamiServos");
+    public ARIG2025IoPamiServos() {
+        this("ARIG2025IoPamiServos");
     }
 
-    public ARIG2024IoPamiServos(final String deviceName) {
+    public ARIG2025IoPamiServos(final String deviceName) {
         super(NB_SERVOS);
         this.deviceName = deviceName;
     }

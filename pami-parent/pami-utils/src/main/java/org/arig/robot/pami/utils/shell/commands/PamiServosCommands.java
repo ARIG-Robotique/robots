@@ -18,7 +18,6 @@ import org.springframework.shell.standard.ShellMethod;
 @AllArgsConstructor
 public class PamiServosCommands {
 
-    private final PamiRobotStatus rs;
     private final PamiRobotServosService servosService;
     private final PamiIOService ioService;
     private final AbstractEnergyService energyService;

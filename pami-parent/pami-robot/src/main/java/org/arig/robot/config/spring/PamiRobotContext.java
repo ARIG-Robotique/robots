@@ -31,10 +31,10 @@ import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.arig.robot.system.capteurs.socket.IVisionBalise;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.encoders.can.ARIG2024Can2WheelsEncoders;
-import org.arig.robot.system.leds.ARIG2024IoPamiLeds;
+import org.arig.robot.system.leds.ARIG2025IoPamiLeds;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.can.ARIG2024CanPropulsionsMotors;
-import org.arig.robot.system.servos.i2c.ARIG2024IoPamiServos;
+import org.arig.robot.system.servos.i2c.ARIG2025IoPamiServos;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -66,8 +66,8 @@ public class PamiRobotContext {
         final RaspiI2CManager manager = new RaspiI2CManager();
 
         final I2CManagerDevice<I2CDevice> pamiIO = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(PamiConstantesI2C.ARIG_2024_PAMI_IO_NAME)
-                .device(i2cBus.getDevice(PamiConstantesI2C.ARIG_2024_PAMI_IO_ADDRESS))
+                .deviceName(PamiConstantesI2C.ARIG_2025_PAMI_IO_NAME)
+                .device(i2cBus.getDevice(PamiConstantesI2C.ARIG_2025_PAMI_IO_ADDRESS))
                 .build();
 
         manager.registerDevice(pamiIO);
@@ -76,18 +76,18 @@ public class PamiRobotContext {
     }
 
     @Bean
-    public ARIG2024IoPamiServos servos() {
-        return new ARIG2024IoPamiServos(PamiConstantesI2C.ARIG_2024_PAMI_IO_NAME);
+    public ARIG2025IoPamiServos servos() {
+        return new ARIG2025IoPamiServos(PamiConstantesI2C.ARIG_2025_PAMI_IO_NAME);
     }
 
     @Bean
     public ARIG2025IoPamiSensors sensors(I2CManager i2cManager) {
-        return new ARIG2025IoPamiSensors(i2cManager, PamiConstantesI2C.ARIG_2024_PAMI_IO_NAME);
+        return new ARIG2025IoPamiSensors(i2cManager, PamiConstantesI2C.ARIG_2025_PAMI_IO_NAME);
     }
 
     @Bean
-    public ARIG2024IoPamiLeds leds(I2CManager i2cManager) {
-        return new ARIG2024IoPamiLeds(i2cManager, PamiConstantesI2C.ARIG_2024_PAMI_IO_NAME);
+    public ARIG2025IoPamiLeds leds(I2CManager i2cManager) {
+        return new ARIG2025IoPamiLeds(i2cManager, PamiConstantesI2C.ARIG_2025_PAMI_IO_NAME);
     }
 
     @Bean

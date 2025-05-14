@@ -21,6 +21,7 @@ import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.arig.robot.system.capteurs.socket.IVisionBalise;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.i2c.ARIGI2C2WheelsEncoders;
+import org.arig.robot.system.leds.ARIG2025IoPamiLeds;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.BouchonPropulsionsMotors;
 import org.arig.robot.system.process.EcranProcess;
@@ -87,6 +88,11 @@ public class PamiSimulatorContext {
 
             }
         };
+    }
+
+    @Bean
+    public ARIG2025IoPamiLeds leds(I2CManager i2cManager) {
+        return new ARIG2025IoPamiLeds(i2cManager, "PAMI Leds");
     }
 
     @Bean

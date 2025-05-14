@@ -11,7 +11,7 @@ import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.PamiIOServiceRobot;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
-import org.arig.robot.system.leds.ARIG2024IoPamiLeds;
+import org.arig.robot.system.leds.ARIG2025IoPamiLeds;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -34,9 +34,7 @@ public class PamiIOCommands {
     private final AbstractEnergyService energyService;
     private final MonitoringWrapper monitoringWrapper;
     private final PamiRobotStatus rs;
-    private final Abstract2WheelsEncoders wheelsEncoders;
-    private final TrajectoryManager trajectoryManager;
-    private final ARIG2024IoPamiLeds arig2024IoPamiLeds;
+    private final ARIG2025IoPamiLeds arig2025IoPamiLeds;
 
     public Availability alimentationOk() {
         return pamiIOServiceRobot.auOk() && energyService.checkMoteurs()
@@ -76,22 +74,22 @@ public class PamiIOCommands {
 
     @ShellMethod
     public void testLeds() {
-        for (ARIG2024IoPamiLeds.LedColor c : ARIG2024IoPamiLeds.LedColor.values()) {
-            arig2024IoPamiLeds.setLedAU(c);
+        for (ARIG2025IoPamiLeds.LedColor c : ARIG2025IoPamiLeds.LedColor.values()) {
+            arig2025IoPamiLeds.setLedAU(c);
             ThreadUtils.sleep(1000);
         }
-        for (ARIG2024IoPamiLeds.LedColor c : ARIG2024IoPamiLeds.LedColor.values()) {
-            arig2024IoPamiLeds.setLedTeam(c);
+        for (ARIG2025IoPamiLeds.LedColor c : ARIG2025IoPamiLeds.LedColor.values()) {
+            arig2025IoPamiLeds.setLedTeam(c);
             ThreadUtils.sleep(1000);
         }
-        for (ARIG2024IoPamiLeds.LedColor c : ARIG2024IoPamiLeds.LedColor.values()) {
-            arig2024IoPamiLeds.setLedCalage(c);
+        for (ARIG2025IoPamiLeds.LedColor c : ARIG2025IoPamiLeds.LedColor.values()) {
+            arig2025IoPamiLeds.setLedCalage(c);
             ThreadUtils.sleep(1000);
         }
-        for (ARIG2024IoPamiLeds.LedColor c : ARIG2024IoPamiLeds.LedColor.values()) {
-            arig2024IoPamiLeds.setAllLeds(c);
+        for (ARIG2025IoPamiLeds.LedColor c : ARIG2025IoPamiLeds.LedColor.values()) {
+            arig2025IoPamiLeds.setAllLeds(c);
             ThreadUtils.sleep(1000);
         }
-        arig2024IoPamiLeds.setAllLeds(ARIG2024IoPamiLeds.LedColor.Black);
+        arig2025IoPamiLeds.setAllLeds(ARIG2025IoPamiLeds.LedColor.Black);
     }
 }
