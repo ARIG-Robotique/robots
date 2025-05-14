@@ -74,15 +74,15 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
             int x = tableUtils.getX(rs.team() == Team.BLEU, 1225) / 10;
             int y;
             if (rs.grandGradinEquipe().data()[0][0]) {
-                y = 10 + (EurobotConfig.offsetBanderolle / 10);
+                y = EurobotConfig.rang1Coord / 10;
                 obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.HORIZONTAL));
             }
             if (rs.grandGradinEquipe().data()[1][0]) {
-                y = 20 + (EurobotConfig.offsetBanderolle / 10);
+                y = EurobotConfig.rang2Coord / 10;
                 obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.HORIZONTAL));
             }
             if (rs.grandGradinEquipe().data()[2][0]) {
-                y = 30 + (EurobotConfig.offsetBanderolle / 10);
+                y = EurobotConfig.rang3Coord / 10;
                 obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.HORIZONTAL));
             }
         }
@@ -90,15 +90,15 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
             int y = 28;
             int x;
             if (rs.grandGradinAdverse().data()[0][0]) {
-                x = tableUtils.getX(rs.team() == Team.BLEU, 100) / 10;
+                x = tableUtils.getX(rs.team() == Team.BLEU, EurobotConfig.rang1Coord) / 10;
                 obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.VERTICAL));
             }
             if (rs.grandGradinAdverse().data()[1][0]) {
-                x = tableUtils.getX(rs.team() == Team.BLEU, 200) / 10;;
+                x = tableUtils.getX(rs.team() == Team.BLEU, EurobotConfig.rang2Coord) / 10;;
                 obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.VERTICAL));
             }
             if (rs.grandGradinAdverse().data()[2][0]) {
-                x = tableUtils.getX(rs.team() == Team.BLEU, 300) / 10;
+                x = tableUtils.getX(rs.team() == Team.BLEU, EurobotConfig.rang3Coord) / 10;
                 obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.VERTICAL));
             }
         }
@@ -106,7 +106,7 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
             int x = tableUtils.getX(rs.team() == Team.BLEU, 775) / 10;
             int y;
             if (rs.petitGradinEquipe().data()[0][0]) {
-                y = 10 ;
+                y = EurobotConfig.rang1Coord / 10;
                 obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.HORIZONTAL));
             }
         }
@@ -114,7 +114,7 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
             int x = tableUtils.getX(rs.team() == Team.BLEU, 2775) / 10;
             int y;
             if (rs.petitGradinAdverse().data()[0][0]) {
-                y = 10 ;
+                y = EurobotConfig.rang1Coord / 10;
                 obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.HORIZONTAL));
             }
         }

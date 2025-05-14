@@ -23,7 +23,6 @@ public interface EurobotConfig {
 
     int offsetPriseGradin = 270;
     int offsetDeposeGradin = 300;
-    int offsetBanderolle = 55;
 
     int rang1Coord = 100;
     int rang2Coord = 250;
