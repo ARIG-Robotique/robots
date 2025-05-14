@@ -1,10 +1,10 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Pami Triangle Simulator Greg" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <option name="ACTIVE_PROFILES" value="default,monitoring,simulateur,triangle,greg,greg-mac" />
+  <configuration default="false" name="Pami 2 Carre Simulator Greg" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="default,monitoring,simulateur,carre,greg,greg-mac" />
     <option name="ALTERNATIVE_JRE_PATH" value="Oracle 1.8" />
     <module name="robots.pami-parent.pami-simulator.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="org.arig.robot.config.spring.PamiSimulator" />
-    <option name="VM_PARAMETERS" value="-Dpami.id=triangle" />
+    <option name="VM_PARAMETERS" value="-Dpami.id=carre" />
     <option name="WORKING_DIRECTORY" value="file://$MODULE_WORKING_DIR$" />
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
