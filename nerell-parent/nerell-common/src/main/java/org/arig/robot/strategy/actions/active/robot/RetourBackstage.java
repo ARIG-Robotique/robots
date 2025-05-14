@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 public class RetourBackstage extends AbstractNerellAction {
 
     private static final int FINAL_X = 350;
-    private static final int FINAL_Y = 1775;
     private static final int ENTRY_X = FINAL_X;
     private static final int ENTRY_Y = 1400;
     private final Position position;
