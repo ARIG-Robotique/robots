@@ -4,6 +4,8 @@ public interface ConstantesConfig {
 
     // Profile de configuration pour le monitoring
     String profileMonitoring = "monitoring";
+    // Profile de configuration pour le simulateur
+    String profileSimulator = "simulateur";
 
     // Clé pour la récupération de l'identifiant d'exécution
     String keyExecutionId = "execution.id";

@@ -2,6 +2,7 @@ package org.arig.robot.config.spring;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.PamiOrdonanceur;
+import org.arig.robot.constants.ConstantesConfig;
 import org.arig.robot.constants.PamiConstantesConfig;
 import org.arig.robot.filters.common.LimiterFilter;
 import org.arig.robot.filters.common.LimiterFilter.LimiterType;
@@ -199,7 +200,7 @@ public class PamiCommonContext {
 //    }
 
     @Bean
-    @Profile("!simulateur")
+    @Profile("!" + ConstantesConfig.profileSimulator)
     public IEcran<EcranConfig, EcranState> ecran() {
         final String ecranHost = env.getRequiredProperty("ecran.socket.host");
         final Integer ecranPort = env.getRequiredProperty("ecran.socket.port", Integer.class);
