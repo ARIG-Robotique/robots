@@ -7,7 +7,6 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.BackstageState;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
-import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Component;
@@ -63,11 +62,11 @@ public class RetourBackstage extends AbstractNerellAction {
             if (position.getAngle() > 0) {
                 // Face Avant
                 mv.gotoOrientationDeg(90);
-                servos.tiroirAvantDepose(false);
+                servosNerell.tiroirAvantDepose(false);
             } else {
                 // Face Arrière
                 mv.gotoOrientationDeg(-90);
-                servos.tiroirArriereDepose(false);
+                servosNerell.tiroirArriereDepose(false);
             }
             log.info("Arrivée au backstage");
             groups.forEach(g -> g.backstage(BackstageState.TARGET_REACHED));

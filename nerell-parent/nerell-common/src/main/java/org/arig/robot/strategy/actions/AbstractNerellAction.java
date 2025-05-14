@@ -15,7 +15,7 @@ public abstract class AbstractNerellAction extends AbstractEurobotAction {
     protected NerellRobotServosService servosNerell;
 
     @Autowired
-    protected NerellIOService ioService;
+    protected NerellIOService ioNerell;
 
     @Autowired
     protected NerellFaceWrapper faceWrapper;
