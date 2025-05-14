@@ -15,6 +15,7 @@ import java.util.List;
 public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
 
     private static final int rayonRobotCm = 16;
+    private static final int rayonPamiCm = 10;
 
     @Autowired
     private EurobotStatus rs;
@@ -24,24 +25,51 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
 
     @Override
     public void setObstacles(final List<Shape> obstacles) {
-
-
         if (!rs.pamiRobot()) {
-            // Zone démarrage des PAMI
+            obstaclesRobot(obstacles);
+        } else {
+            obstaclesPami(obstacles);
+        }
+
+        super.setObstacles(obstacles);
+    }
+
+    private void obstaclesPami(List<Shape> obstacles) {
+        // Scene
+        if (rs.team() == Team.JAUNE) {
+            obstacles.add(new Rectangle(150 - rayonPamiCm, 155 - rayonPamiCm, 150 + (2 * rayonPamiCm), 45 + rayonPamiCm));
+        } else {
+            obstacles.add(new Rectangle(0, 155 - rayonPamiCm, 150 + (2 * rayonPamiCm), 45 + rayonPamiCm));
+        }
+
+        // Zone retour de Nerell
+        if (rs.team() == Team.JAUNE) {
+            obstacles.add(new Rectangle(0, 110, 60, 45));
+        } else {
+            obstacles.add(new Rectangle(240, 110, 60, 45));
+        }
+
+        // Zone table sans interret
+        obstacles.add(new Rectangle(0, 0, 300, 110));
+    }
+
+    private void obstaclesRobot(List<Shape> obstacles) {
+        // Zone démarrage des PAMI
+        if (rs.team() == Team.JAUNE) {
+            obstacles.add(new Rectangle(0, 155 - rayonRobotCm, 15 + rayonRobotCm, 45 + (2 * rayonRobotCm)));
+        } else {
+            obstacles.add(new Rectangle(285 - rayonRobotCm, 155 - rayonRobotCm, 15 + rayonRobotCm, 45 + (2 * rayonRobotCm)));
+        }
+
+        // Zone de déplacement des pamis
+        if (rs.getRemainingTime() <= EurobotConfig.validRetourBackstageRemainingTimeNerell) {
             if (rs.team() == Team.JAUNE) {
-                obstacles.add(new Rectangle(0, 155 - rayonRobotCm, 15 + rayonRobotCm, 45 + (2 * rayonRobotCm)));
+                obstacles.add(new Rectangle(60 - rayonRobotCm, 130 - rayonRobotCm, 45 + (2 * rayonRobotCm), 80 + (2 * rayonRobotCm)));
             } else {
-                obstacles.add(new Rectangle(285 - rayonRobotCm, 155 - rayonRobotCm, 15 + rayonRobotCm, 45 + (2 * rayonRobotCm)));
+                obstacles.add(new Rectangle(195 - rayonRobotCm, 130 - rayonRobotCm, 45 + (2 * rayonRobotCm), 80 + (2 * rayonRobotCm)));
             }
 
-            // Zone de déplacement des pamis
-            if (rs.getRemainingTime() <= EurobotConfig.validRetourBackstageRemainingTimeNerell) {
-                if (rs.team() == Team.JAUNE) {
-                    obstacles.add(new Rectangle(60 - rayonRobotCm, 120 - rayonRobotCm, 82 + (2 * rayonRobotCm), 80 + (2 * rayonRobotCm)));
-                } else {
-                    obstacles.add(new Rectangle(82 - rayonRobotCm, 120 - rayonRobotCm, 82 + (2 * rayonRobotCm), 80 + (2 * rayonRobotCm)));
-                }
-            }
+            obstacles.add(new Rectangle(105 - rayonRobotCm, 110 - rayonRobotCm, 90 + (2 * rayonRobotCm), 90 + (2 * rayonRobotCm)));
         }
 
         // Zones adverses
@@ -94,7 +122,8 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
                 obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.VERTICAL));
             }
             if (rs.grandGradinAdverse().data()[1][0]) {
-                x = tableUtils.getX(rs.team() == Team.BLEU, EurobotConfig.rang2Coord) / 10;;
+                x = tableUtils.getX(rs.team() == Team.BLEU, EurobotConfig.rang2Coord) / 10;
+                ;
                 obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.VERTICAL));
             }
             if (rs.grandGradinAdverse().data()[2][0]) {
@@ -119,8 +148,8 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
             }
         }
 
+        // Ajout des gradins bruts (en stocks)
         if (rs.getRemainingTime() > EurobotConfig.validRetourBackstageRemainingTimeNerell) {
-            // Ajout des gradins bruts (en stocks)
             for (GradinBrut gradin : rs.gradinBrutStocks()) {
                 if (gradin.present()) {
                     double x = gradin.getX() / 10;
@@ -129,8 +158,6 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
                 }
             }
         }
-
-        super.setObstacles(obstacles);
     }
 
     private Rectangle getObstacleGradin(int x, int y, GradinBrut.Orientation orientation) {
