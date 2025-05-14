@@ -28,6 +28,13 @@ public class PamiRobotServosService extends AbstractCommonPamiServosService {
                 .position(POS_OUVERT_1, 1600)
                 .position(POS_OUVERT_2, 1400);
 
+        } else if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
+            servo(HAND_ID, HAND)
+                .time(500)
+                .position(POS_FERME, 1500)
+                .position(POS_OUVERT_1, 1600)
+                .position(POS_OUVERT_2, 1400);
+
         } else {
             servo(HAND_ID, HAND)
                 .time(500)

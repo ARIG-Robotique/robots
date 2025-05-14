@@ -197,39 +197,56 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
             robotStatus.disableAvoidance();
 
             position.setPt(new Point(
-                    conv.mmToPulse(getX(1500)),
-                    conv.mmToPulse(1000)
+                    conv.mmToPulse(getX(200)),
+                    conv.mmToPulse(1775)
             ));
-            position.setAngle(conv.degToPulse(-90));
+            if (pamiRobotStatus.team() == Team.JAUNE) {
+                position.setAngle(conv.degToPulse(0));
+            } else {
+                position.setAngle(conv.degToPulse(180));
+            }
 
             if (!skip) {
                 robotStatus.enableCalageTempo(2000);
                 mv.reculeMMSansAngle(300);
 
                 RobotName.RobotIdentification id = robotName.id();
+                double x = getX(PamiConstantesConfig.dstCallageArriere);
+                double yBase = 1550;
                 if (id == RobotName.RobotIdentification.PAMI_TRIANGLE) {
                     position.setPt(new Point(
-                        conv.mmToPulse(getX((EurobotConfig.tableWidth / 2.0) - PamiConstantesConfig.dstCallageCote)),
-                        conv.mmToPulse(EurobotConfig.tableHeight - PamiConstantesConfig.dstCallageArriere)
+                        conv.mmToPulse(x),
+                        conv.mmToPulse(yBase + PamiConstantesConfig.dstCallageCote)
                     ));
                     groupService.initStep(InitStep.PAMI_TRIANGLE_CALAGE_TERMINE);
 
                 } else if (id == RobotName.RobotIdentification.PAMI_CARRE) {
                     position.setPt(new Point(
-                        conv.mmToPulse(getX(1275)),
-                        conv.mmToPulse(EurobotConfig.tableHeight - PamiConstantesConfig.dstCallageArriere)
+                        conv.mmToPulse(x),
+                        conv.mmToPulse(yBase + 3 * PamiConstantesConfig.dstCallageCote)
                     ));
                     groupService.initStep(InitStep.PAMI_CARRE_CALAGE_TERMINE);
 
-                } else {
+                } else if (id == RobotName.RobotIdentification.PAMI_ROND) {
                     position.setPt(new Point(
-                        conv.mmToPulse(getX(1050 + PamiConstantesConfig.dstCallageCote)),
-                        conv.mmToPulse(EurobotConfig.tableHeight - PamiConstantesConfig.dstCallageArriere)
+                        conv.mmToPulse(x),
+                        conv.mmToPulse(yBase + 5 * PamiConstantesConfig.dstCallageArriere)
                     ));
                     groupService.initStep(InitStep.PAMI_ROND_CALAGE_TERMINE);
+
+                } else {
+                    position.setPt(new Point(
+                        conv.mmToPulse(x),
+                        conv.mmToPulse(yBase + 7 *  PamiConstantesConfig.dstCallageCote)
+                    ));
+                    groupService.initStep(InitStep.PAMI_CARRE_CALAGE_TERMINE);
                 }
 
-                position.setAngle(conv.degToPulse(-90));
+                if (pamiRobotStatus.team() == Team.JAUNE) {
+                    position.setAngle(conv.degToPulse(0));
+                } else {
+                    position.setAngle(conv.degToPulse(180));
+                }
 
                 if (!io.auOk()) {
                     pamiEcranService.displayMessage("Echappement calage bordure car mauvais sens", LogLevel.ERROR);

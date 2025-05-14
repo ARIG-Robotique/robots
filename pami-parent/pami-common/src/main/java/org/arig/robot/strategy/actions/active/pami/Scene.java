@@ -21,21 +21,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class Scene extends AbstractEurobotAction {
 
-    @Autowired
-    private TableUtils tableUtils;
-
-    @Autowired
-    private EurobotStatus rs;
-
-    @Autowired
-    private TrajectoryManager mv;
-
-    @Autowired
-    private RobotName robotName;
-
-    @Getter
-    private final boolean completed = false;
-
     public int executionTimeMs() {
         return 0;
     }
@@ -80,7 +65,7 @@ public class Scene extends AbstractEurobotAction {
             mv.gotoPoint(entry.getX(), 1700, GotoOption.AVANT);
             mv.setVitessePercent(20, 100);
             rs.enableCalage(TypeCalage.PRISE_PRODUIT_SOL_AVANT);
-            mv.avanceMM(300);
+            mv.gotoPoint(entry.getX(), 1600, GotoOption.AVANT);
 
             complete(true);
             rs.disableAvoidance();

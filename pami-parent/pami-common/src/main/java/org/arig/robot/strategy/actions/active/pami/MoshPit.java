@@ -20,21 +20,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class MoshPit extends AbstractEurobotAction {
 
-    @Autowired
-    private TableUtils tableUtils;
-
-    @Autowired
-    private EurobotStatus rs;
-
-    @Autowired
-    private TrajectoryManager mv;
-
-    @Autowired
-    private RobotName robotName;
-
-    @Getter
-    private final boolean completed = false;
-
     public int executionTimeMs() {
         return 0;
     }
