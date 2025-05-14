@@ -22,7 +22,6 @@ public class DeposeGrandGradinEquipe extends AbstractDeposeGradin {
       case RANG_2 -> new Point(getX(CENTER_X), 2 * RANG_1_Y + ENTRY_Y);
       case RANG_3 -> new Point(getX(CENTER_X), 3 * RANG_1_Y + ENTRY_Y);
     };
-
   }
 
   @Override

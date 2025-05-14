@@ -70,7 +70,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
       ConstructionArea.Rang rang = constructionArea().getFirstConstructibleRang(rs.limiter2Etages());
       ConstructionArea.Etage etage = constructionArea().getFirstConstructibleEtage(rang, rs.limiter2Etages());
 
-      log.info("Dépose dans le RANG {} sur l'étage {}", rang.name(), etage.name());
+      log.info("Dépose dans le {} sur {}", rang.name(), etage.name());
 
       final int nbEtageRequis;
       if (rs.limiter2Etages()) {
