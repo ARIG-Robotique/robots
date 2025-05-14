@@ -46,7 +46,7 @@ public class PamiSimulatorContext {
     @Bean
     public RobotName robotName() {
         return RobotName.builder()
-                .id(RobotIdentification.PAMI_TRIANGLE)
+                .id(RobotName.fromPamiID())
                 .name("Pami (simulator)")
                 .version("latest")
                 .build();

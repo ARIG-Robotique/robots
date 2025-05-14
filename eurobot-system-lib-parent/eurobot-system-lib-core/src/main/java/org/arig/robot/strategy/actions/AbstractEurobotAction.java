@@ -10,8 +10,6 @@ import org.arig.robot.model.RobotName;
 import org.arig.robot.model.RobotName.RobotIdentification;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.TypeCalage;
-import org.arig.robot.services.AbstractCommonRobotServosService;
-import org.arig.robot.services.CommonRobotIOService;
 import org.arig.robot.services.RobotGroupService;
 import org.arig.robot.services.TrajectoryManager;
 import org.arig.robot.strategy.AbstractAction;
@@ -33,12 +31,6 @@ public abstract class AbstractEurobotAction extends AbstractAction {
 
     @Autowired
     protected RobotName robotName;
-
-    @Autowired
-    protected AbstractCommonRobotServosService servos;
-
-    @Autowired
-    protected CommonRobotIOService io;
 
     @Autowired
     protected TrajectoryManager mv;

@@ -80,14 +80,14 @@ public interface PamiConstantesConfig {
     double kiDistance = 0.5;
     double kdDistance = 125;
     double kpDistanceSimu = 12.9;
-    double kiDistanceSimu = 0.0;
+    double kiDistanceSimu = 0.1;
     double kdDistanceSimu = 0.008;
 
     double kpOrientation = 45;
     double kiOrientation = 0.6;
     double kdOrientation = 30;
     double kpOrientationSimu = 6.0;
-    double kiOrientationSimu = 0.0;
+    double kiOrientationSimu = 0.1;
     double kdOrientationSimu = 0.01;
 
     // --------------------------- //
@@ -106,8 +106,8 @@ public interface PamiConstantesConfig {
     // Paramètre Physiques        //
     // -------------------------- //
 
-    double dstCallageCote = 74; // coté du robot <=> milieu du robot
-    double dstCallageArriere = 65.0; // dos du robot <=> milieu du robot
+    double dstCallageCote = 40; // coté du robot <=> milieu du robot
+    double dstCallageArriere = 40; // dos du robot <=> milieu du robot
 
     // -------------------------- //
     // Paramètre Avoiding service //

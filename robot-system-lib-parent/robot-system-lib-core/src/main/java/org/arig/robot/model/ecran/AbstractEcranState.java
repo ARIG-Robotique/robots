@@ -9,8 +9,7 @@ import java.util.Map;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class AbstractEcranState implements Serializable {
-    private Enum<?> team;
-    private Enum<?> strategy;
+
     private String message = "";
     private boolean au = false;
     private boolean alimMoteurs = false;

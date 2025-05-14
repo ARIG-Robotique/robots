@@ -46,7 +46,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
     private ARIG2025IoPamiLeds leds;
 
     private int getX(int x) {
-        return tableUtils.getX(pamiRobotStatus.team() == Team.JAUNE, x);
+        return tableUtils.getX(pamiRobotStatus.team() == Team.BLEU, x);
     }
 
     private int getX(double x) {

@@ -3,6 +3,7 @@ package org.arig.robot.model;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +29,25 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         super(EurobotConfig.matchTimeMs, mainRobot, pamiRobot);
     }
 
+    @Setter(AccessLevel.NONE)
     private Team team;
+    public void team(Team team) {
+        if (this.team != team) {
+            log.info("[RS] Team : {} -> {}",this.team != null ? this.team.name() : "UNKNOWN",  team != null ? team.name() : "UNKNOWN");
+            this.team = team;
+        }
+    }
 
+    @Setter(AccessLevel.NONE)
     private Strategy strategy = Strategy.QUALIF;
+    public void strategy(Strategy strategy) {
+        if (this.strategy != strategy) {
+            log.info("[RS] Strategy : {} ({}) -> {} ({})",
+                this.strategy.name(), this.strategy.description(),
+                strategy.name(), strategy.description());
+            this.strategy = strategy;
+        }
+    }
 
     @Override
     public String strategyDescription() {
@@ -46,7 +63,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     public void limiter2Etages(boolean limiter2Etages) {
         if (this.limiter2Etages != limiter2Etages) {
-            log.info("[RS] Limiter à 2 étages : {}", limiter2Etages);
+            log.info("[RS] Limiter à 2 étages : {} -> {}", this.limiter2Etages, limiter2Etages);
             this.limiter2Etages = limiter2Etages;
         }
     }
@@ -56,7 +73,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
     public void ejectionCoupDePute(boolean ejectionCoupDePute) {
         if (this.ejectionCoupDePute != ejectionCoupDePute) {
-            log.info("[RS] Ejection coup de pute : {}", ejectionCoupDePute);
+            log.info("[RS] Ejection coup de pute : {} -> {}", this.ejectionCoupDePute, ejectionCoupDePute);
             this.ejectionCoupDePute = ejectionCoupDePute;
         }
     }
@@ -94,8 +111,10 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     }
 
     public void backstage(BackstageState backstage) {
-        log.info("[RS] Backstage : {}", backstage);
-        this.backstage = backstage;
+        if (this.backstage != backstage) {
+            log.info("[RS] Backstage : {} -> {}", this.backstage, backstage);
+            this.backstage = backstage;
+        }
     }
 
     /* *************************** SCORE *************************** */
