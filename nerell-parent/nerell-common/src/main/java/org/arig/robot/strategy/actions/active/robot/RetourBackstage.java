@@ -6,6 +6,7 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.BackstageState;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.Position;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
@@ -19,6 +20,12 @@ public class RetourBackstage extends AbstractNerellAction {
     private static final int FINAL_Y = 1775;
     private static final int ENTRY_X = FINAL_X;
     private static final int ENTRY_Y = 1400;
+    private final Position position;
+
+    public RetourBackstage(Position position) {
+        super();
+        this.position = position;
+    }
 
     @Override
     public String name() {
@@ -53,16 +60,21 @@ public class RetourBackstage extends AbstractNerellAction {
             log.info("Go backstage");
             groups.forEach(g -> g.backstage(BackstageState.IN_MOVE));
 
-            mv.pathTo(entryPoint(), GotoOption.SANS_ARRET_PASSAGE_ONLY_PATH);
+            mv.pathTo(entryPoint());
+            if (position.getAngle() > 0) {
+                // Face Avant
+                mv.gotoOrientationDeg(90);
+                servos.tiroirAvantDepose(false);
+            } else {
+                // Face Arrière
+                mv.gotoOrientationDeg(-90);
+                servos.tiroirArriereDepose(false);
+            }
+            log.info("Arrivée au backstage");
             groups.forEach(g -> g.backstage(BackstageState.TARGET_REACHED));
             complete(true);
             rs.disableAvoidance();
 
-            // TODO : Attente sortie des PAMIs, ou déploiement tiroir.
-
-            log.info("Arrivée au backstage, on rentre bien dedans");
-            mv.setVitessePercent(50, 100);
-            mv.gotoPoint(getX(FINAL_X), FINAL_Y);
             ThreadUtils.sleep((int) rs.getRemainingTime());
 
         } catch (NoPathFoundException | AvoidingException e) {
