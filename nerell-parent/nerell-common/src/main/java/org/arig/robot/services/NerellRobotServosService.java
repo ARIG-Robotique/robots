@@ -126,6 +126,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
             .addServo(doigtAvantGauche)
             .addServo(doigtAvantDroite)
             .batch(POS_OUVERT)
+            .batch(POS_PRISE_SOL)
             .batch(POS_LACHE)
             .batch(POS_SERRE)
             .batch(POS_FERME);
@@ -171,6 +172,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
             .addServo(doigtArriereGauche)
             .addServo(doigtArriereDroite)
             .batch(POS_OUVERT)
+            .batch(POS_PRISE_SOL)
             .batch(POS_LACHE)
             .batch(POS_SERRE)
             .batch(POS_FERME);
