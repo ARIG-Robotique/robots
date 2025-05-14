@@ -91,12 +91,16 @@ public abstract class AbstractNerellFaceService {
     return PriseGradinState.OK;
   }
 
-  public void deposeGradin(Point rangPosition, ConstructionArea.Etage etage, int nbEtageRequis) throws AvoidingException {
+  public void deposeGradin(ConstructionArea constructionArea, Point rangPosition,
+                           ConstructionArea.Rang rang, ConstructionArea.Etage etage,
+                           int nbEtageRequis) throws AvoidingException {
     aligneFace(rangPosition);
     deplacementDeposeInit();
     deposeEtage(etage);
+    constructionArea.addGradin(rang, etage);
     if (nbEtageRequis == 2 && etage == ConstructionArea.Etage.ETAGE_1) {
       deposeEtage(ConstructionArea.Etage.ETAGE_2);
+      constructionArea.addGradin(rang, ConstructionArea.Etage.ETAGE_2);
     }
   }
 }

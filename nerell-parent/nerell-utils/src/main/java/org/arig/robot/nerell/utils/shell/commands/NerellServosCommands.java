@@ -283,7 +283,7 @@ public class NerellServosCommands {
             log.info("Tiroir : B {} - H {}", ioService.tiroirAvantBas(true), ioService.tiroirAvantHaut(true));
 
             AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
-            faceService.deposeGradin(null, etage, 1);
+            faceService.deposeGradin(new ConstructionArea("Test"), null, ConstructionArea.Rang.RANG_1, etage, 1);
         } catch (Exception e) {
             log.error("Erreur lors de la construction de l'étage 1 sur la face {}", face, e);
         }

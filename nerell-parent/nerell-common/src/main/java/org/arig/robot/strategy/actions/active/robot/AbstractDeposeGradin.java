@@ -97,11 +97,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
       AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
 
       Point rangPosition = rangPosition(rang);
-      faceService.deposeGradin(rangPosition, etage, nbEtageRequis);
-      constructionArea().addGradin(rang, etage);
-      if (nbEtageRequis == 2) {
-        constructionArea().addGradin(rang, ConstructionArea.Etage.ETAGE_2);
-      }
+      faceService.deposeGradin(constructionArea(), rangPosition, rang, etage, nbEtageRequis);
 
     } catch (NoPathFoundException | AvoidingException e) {
       log.warn("Erreur prise {} : {}", name(), e.toString());
