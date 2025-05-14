@@ -5,8 +5,10 @@ import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.BackstageState;
+import org.arig.robot.model.GradinBrut;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
+import org.arig.robot.model.Team;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Component;
@@ -15,8 +17,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class RetourBackstage extends AbstractNerellAction {
 
-    private static final int FINAL_X = 350;
-    private static final int ENTRY_X = FINAL_X;
+    private static final int FINAL_X_GRADIN = 350;
+    private static final int FINAL_X_FREE = 190;
     private static final int ENTRY_Y = 1400;
     private final Position position;
 
@@ -37,7 +39,9 @@ public class RetourBackstage extends AbstractNerellAction {
 
     @Override
     public Point entryPoint() {
-        return new Point(getX(ENTRY_X), ENTRY_Y);
+        GradinBrut.ID gradinId = rs.team() == Team.JAUNE ? GradinBrut.ID.JAUNE_RESERVE : GradinBrut.ID.BLEU_RESERVE;
+        final int entryX = rs.gradinBrutStocks().get(gradinId).present() ? FINAL_X_GRADIN : FINAL_X_FREE;
+        return new Point(getX(entryX), ENTRY_Y);
     }
 
     @Override
