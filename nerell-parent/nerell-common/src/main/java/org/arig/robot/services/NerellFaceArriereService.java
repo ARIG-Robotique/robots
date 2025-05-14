@@ -25,6 +25,12 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
   }
 
   @Override
+  protected void deplacementDeposeInit() throws AvoidingException {
+    // TODO: Implement this method
+    throw new UnsupportedOperationException("Method deplacementDeposeInit is not yet implemented.");
+  }
+
+  @Override
   protected void deplacementPriseColonnesPinces() {
       // TODO: Implement this method
       throw new UnsupportedOperationException("Method deplacementPriseColonnesPinces is not yet implemented.");

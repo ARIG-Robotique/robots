@@ -13,13 +13,6 @@ import org.springframework.stereotype.Component;
 public class DeposePetitGradinEquipe extends AbstractDeposeGradin {
 
   private static final int CENTER_X = 775;
-  private static final int ENTRY_Y = EurobotConfig.offsetGradin;
-  private static final int RANG_1_Y = 75;
-
-  @Override
-  public Point entryPoint() {
-    return new Point(getX(CENTER_X), ENTRY_Y);
-  }
 
   @Override
   public boolean isValid() {
@@ -43,6 +36,6 @@ public class DeposePetitGradinEquipe extends AbstractDeposeGradin {
 
   @Override
   protected Point rangPosition(ConstructionArea.Rang rang) {
-    return new Point(getX(CENTER_X), RANG_1_Y);
+    return new Point(getX(CENTER_X), EurobotConfig.rang1Coord);
   }
 }

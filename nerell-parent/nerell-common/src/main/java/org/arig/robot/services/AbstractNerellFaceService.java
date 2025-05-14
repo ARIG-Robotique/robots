@@ -32,9 +32,12 @@ public abstract class AbstractNerellFaceService {
 
   protected abstract void aligneFace(Point gradin) throws AvoidingException;
   protected abstract void ouvreFacePourPrise();
+
   protected abstract void deplacementPriseColonnesPinces() throws AvoidingException;
   protected abstract void deplacementPriseColonnesSol() throws AvoidingException;
   protected abstract void echappementPriseGradinBrut(PriseGradinState state) throws AvoidingException;
+
+  protected abstract void deplacementDeposeInit() throws AvoidingException;
   protected abstract void deplacementDeposeColonnesSol(boolean reverse) throws AvoidingException;
   protected abstract void deplacementDeposeEtage() throws AvoidingException;
   protected abstract void deplacementDeposeEtage2() throws AvoidingException;
@@ -90,6 +93,7 @@ public abstract class AbstractNerellFaceService {
 
   public void deposeGradin(Point rangPosition, ConstructionArea.Etage etage, int nbEtageRequis) throws AvoidingException {
     aligneFace(rangPosition);
+    deplacementDeposeInit();
     deposeEtage(etage);
     if (nbEtageRequis == 2 && etage == ConstructionArea.Etage.ETAGE_1) {
       deposeEtage(ConstructionArea.Etage.ETAGE_2);

@@ -18,7 +18,7 @@ public class PriseGradinBrutBleuBasDroite extends AbstractPriseGradinBrutBleu {
   @Override
   public Point entryPoint() {
     Point entry = gradin().clone();
-    entry.addDeltaX(-EurobotConfig.offsetGradin);
+    entry.addDeltaX(-EurobotConfig.offsetPriseGradin);
     return entry;
   }
 }

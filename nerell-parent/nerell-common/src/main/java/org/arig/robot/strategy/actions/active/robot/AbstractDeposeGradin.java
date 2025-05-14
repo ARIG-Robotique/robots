@@ -22,6 +22,14 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
   }
 
   @Override
+  public Point entryPoint() {
+    ConstructionArea.Rang rang = constructionArea().getFirstConstructibleRang(rs.limiter2Etages());
+    Point entry = rangPosition(rang);
+    entry.addDeltaY(EurobotConfig.offsetDeposeGradin);
+    return entry;
+  }
+
+  @Override
   public int order() {
     // TODO : Prendre en compte la dépose des gradins exact pour le score
     int order = 0;
