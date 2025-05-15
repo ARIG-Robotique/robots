@@ -64,9 +64,9 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
         // Zone de déplacement des pamis
         if (rs.getRemainingTime() <= EurobotConfig.validRetourBackstageRemainingTimeNerell) {
             if (rs.team() == Team.JAUNE) {
-                obstacles.add(new Rectangle(60 - rayonRobotCm, 130 - rayonRobotCm, 45 + (2 * rayonRobotCm), 80 + (2 * rayonRobotCm)));
+                obstacles.add(new Rectangle(60 - rayonRobotCm, 148 - rayonRobotCm, 45 + (2 * rayonRobotCm), 80 + (2 * rayonRobotCm)));
             } else {
-                obstacles.add(new Rectangle(195 - rayonRobotCm, 130 - rayonRobotCm, 45 + (2 * rayonRobotCm), 80 + (2 * rayonRobotCm)));
+                obstacles.add(new Rectangle(195 - rayonRobotCm, 148 - rayonRobotCm, 45 + (2 * rayonRobotCm), 80 + (2 * rayonRobotCm)));
             }
 
             obstacles.add(new Rectangle(105 - rayonRobotCm, 110 - rayonRobotCm, 90 + (2 * rayonRobotCm), 90 + (2 * rayonRobotCm)));
