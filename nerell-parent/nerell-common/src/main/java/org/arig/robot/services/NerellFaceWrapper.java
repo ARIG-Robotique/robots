@@ -18,22 +18,20 @@ public class NerellFaceWrapper {
   private final NerellFaceAvantService faceAvantService;
   private final NerellFaceArriereService faceArriereService;
 
-  public Face getEmptyFace() {
-    if (robotStatus.faceAvant().isEmpty()) {
+  public Face getEmptyFace(boolean useTwoFaces) {
+    boolean avantEmpty = robotStatus.faceAvant().isEmpty();
+    boolean arriereEmpty = robotStatus.faceArriere().isEmpty();
+    if (avantEmpty) {
       return Face.AVANT;
-    //} else if (robotStatus.faceArriere().isEmpty()) {
-    //  return Face.ARRIERE;
-    } else {
-      return null;
     }
+    if (useTwoFaces && arriereEmpty) {
+      return Face.ARRIERE;
+    }
+
+    return null;
   }
 
   public Face getConstructionFace(int nbEtageRequis) {
-    if (robotStatus.faceAvant().isEmpty() && robotStatus.faceArriere().isEmpty()) {
-      // Aucune face n'est rempli pour faire une construction
-      return null;
-    }
-
     // Récupération de la face avec le nombre d'étage requis s'il y en a une
     if (robotStatus.faceAvant().nbEtageConstructible() == nbEtageRequis) {
       return Face.AVANT;

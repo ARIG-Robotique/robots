@@ -78,6 +78,16 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         }
     }
 
+    @Setter(AccessLevel.NONE)
+    private boolean useTwoFaces = StrategyOption.USE_TWO_FACES.defaultValue();
+
+    public void useTwoFaces(boolean useTwoFaces) {
+        if (this.useTwoFaces != useTwoFaces) {
+            log.info("[RS] Utiliser les deux faces : {} -> {}", this.useTwoFaces, useTwoFaces);
+            this.useTwoFaces = useTwoFaces;
+        }
+    }
+
     /**
      * STATUT
      */
@@ -193,6 +203,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         Map<String, Boolean> r = new HashMap<>();
         r.put(StrategyOption.LIMITER_2_ETAGES.description(), limiter2Etages);
         r.put(StrategyOption.EJECTION_COUP_DE_PUTE.description(), ejectionCoupDePute);
+        r.put(StrategyOption.USE_TWO_FACES.description(), useTwoFaces);
         return r;
     }
 

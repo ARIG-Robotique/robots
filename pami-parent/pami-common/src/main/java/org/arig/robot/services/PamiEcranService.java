@@ -24,7 +24,8 @@ public class PamiEcranService extends EcranService {
       stateInfos.setStrategy(rs.strategy());
       stateInfos.setOptions(Map.of(
           StrategyOption.LIMITER_2_ETAGES.description(), rs.limiter2Etages(),
-          StrategyOption.EJECTION_COUP_DE_PUTE.description(), rs.ejectionCoupDePute()
+          StrategyOption.EJECTION_COUP_DE_PUTE.description(), rs.ejectionCoupDePute(),
+          StrategyOption.USE_TWO_FACES.description(), rs.useTwoFaces()
       ));
     }
   }

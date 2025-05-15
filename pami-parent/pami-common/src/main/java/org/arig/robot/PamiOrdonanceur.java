@@ -172,6 +172,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
                 pamiRobotStatus.twoRobots(pamiEcranService.config().isTwoRobots());
                 pamiRobotStatus.limiter2Etages(pamiEcranService.config().hasOption(StrategyOption.LIMITER_2_ETAGES.description()));
                 pamiRobotStatus.ejectionCoupDePute(pamiEcranService.config().hasOption(StrategyOption.EJECTION_COUP_DE_PUTE.description()));
+                pamiRobotStatus.useTwoFaces(pamiEcranService.config().hasOption(StrategyOption.USE_TWO_FACES.description()));
 
                 done = pamiEcranService.config().isStartCalibration();
             }

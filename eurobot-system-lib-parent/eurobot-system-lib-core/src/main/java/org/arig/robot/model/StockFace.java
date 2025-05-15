@@ -56,4 +56,13 @@ public class StockFace {
     // Pour le moment autres couple hybride ne sont pas gérés
     return 0;
   }
+
+  public void clear() {
+    pinceGauche = false;
+    pinceDroite = false;
+    solGauche = false;
+    solDroite = false;
+    tiroirHaut = false;
+    tiroirBas = false;
+  }
 }
