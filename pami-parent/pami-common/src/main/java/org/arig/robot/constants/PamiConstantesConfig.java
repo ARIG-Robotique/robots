@@ -32,7 +32,7 @@ public interface PamiConstantesConfig {
     // Configuration des convertions //
     // ----------------------------- //
 
-    double entraxe = 137.5;
+    double entraxe = 112;
 
     // Diam <d_roue> mm => périmètre <xx> mm
     // <pulse_tour> p => <distance_tour> mm : <pulse_tour> / <distance_tour> = countPerMm
