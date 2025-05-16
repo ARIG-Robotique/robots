@@ -104,24 +104,60 @@ public class PamiIOServiceRobot implements PamiIOService {
 
     @Override
     public boolean calageArriereGauche() {
-        return arig2025IoPamiSensors.isArriereGauche();
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
+            return arig2025IoPamiSensors.isInput2();
+        } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+            return arig2025IoPamiSensors.isInput1();
+        } else if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
+            return arig2025IoPamiSensors.isInput1();
+        }
+
+        // PAMI Star
+        return arig2025IoPamiSensors.isInput1();
     }
 
     @Override
     public boolean calageArriereDroit() {
-        return arig2025IoPamiSensors.isArriereDroite();
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
+            return arig2025IoPamiSensors.isInput1();
+        } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+            return arig2025IoPamiSensors.isInput1();
+        } else if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
+            return arig2025IoPamiSensors.isInput1();
+        }
+
+        // PAMI Star
+        return arig2025IoPamiSensors.isInput1();
     }
 
     // Numerique
 
     @Override
     public boolean presenceSolGauche(boolean expectedSimulator) {
-        return arig2025IoPamiSensors.isSolGauche();
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
+            return arig2025IoPamiSensors.isInput4();
+        } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+            return arig2025IoPamiSensors.isInput1();
+        } else if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
+            return arig2025IoPamiSensors.isInput1();
+        }
+
+        // PAMI Star
+        return arig2025IoPamiSensors.isInput1();
     }
 
     @Override
     public boolean presenceSolDroit(boolean expectedSimulator) {
-        return arig2025IoPamiSensors.isSolDroit();
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
+            return arig2025IoPamiSensors.isInput3();
+        } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+            return arig2025IoPamiSensors.isInput1();
+        } else if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
+            return arig2025IoPamiSensors.isInput1();
+        }
+
+        // PAMI Star
+        return arig2025IoPamiSensors.isInput1();
     }
 
     // Analogique
