@@ -6,10 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.arig.robot.constants.ConstantesConfig;
 import org.arig.robot.model.PamiRobotStatus;
+import org.arig.robot.model.RobotName;
 import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.PamiIOServiceRobot;
 import org.arig.robot.services.TrajectoryManager;
+import org.arig.robot.system.capteurs.i2c.ARIG2025IoPamiSensors;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.leds.ARIG2025IoPamiLeds;
 import org.arig.robot.utils.ThreadUtils;
@@ -30,46 +32,30 @@ import java.util.List;
 @AllArgsConstructor
 public class PamiIOCommands {
 
-    private final PamiIOServiceRobot pamiIOServiceRobot;
-    private final AbstractEnergyService energyService;
-    private final MonitoringWrapper monitoringWrapper;
-    private final PamiRobotStatus rs;
+    private final ARIG2025IoPamiSensors arig2025IoPamiSensors;
     private final ARIG2025IoPamiLeds arig2025IoPamiLeds;
 
-    public Availability alimentationOk() {
-        return pamiIOServiceRobot.auOk() && energyService.checkMoteurs()
-            ? Availability.available() : Availability.unavailable("Alimentation moteurs KO");
-    }
-
-    private void startMonitoring() {
-        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
-        System.setProperty(ConstantesConfig.keyExecutionId, execId);
-        rs.enableForceMonitoring();
-        monitoringWrapper.cleanAllPoints();
-    }
-
-    @SneakyThrows
-    private void endMonitoring() {
-        monitoringWrapper.save();
-        rs.disableForceMonitoring();
-
-        final String execId = System.getProperty(ConstantesConfig.keyExecutionId);
-        final File execFile = new File("./logs/" + execId + ".exec");
-        DateTimeFormatter execIdPattern = DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat);
-        DateTimeFormatter savePattern = DateTimeFormatter.ofPattern(ConstantesConfig.executiondDateFormat);
-        List<String> lines = new ArrayList<>();
-        lines.add(LocalDateTime.parse(execId, execIdPattern).format(savePattern));
-        lines.add(LocalDateTime.now().format(savePattern));
-        FileUtils.writeLines(execFile, lines);
-    }
+    private final PamiIOServiceRobot pamiIOServiceRobot;
+    private final RobotName robotName;
 
     @ShellMethod("Identification des IOs")
     public void readAllIo() {
         log.info("Lecture des IOs");
+        log.info("Input 1 : {}", arig2025IoPamiSensors.isInput1());
+        log.info("Input 2 : {}", arig2025IoPamiSensors.isInput2());
+        log.info("Input 3 : {}", arig2025IoPamiSensors.isInput3());
+        log.info("Input 4 : {}", arig2025IoPamiSensors.isInput4());
+        log.info("Input 5 : {}", arig2025IoPamiSensors.isInput5());
+        log.info("Input 6 : {}", arig2025IoPamiSensors.isInput6());
+        log.info("Input 7 : {}", arig2025IoPamiSensors.isInput7());
+
+        log.info("\n===================================================\n");
+        log.info("{} real IOs name", robotName.name());
+        log.info("AU : {}", pamiIOServiceRobot.auOk());
         log.info("Calage arriere gauche : {}", pamiIOServiceRobot.calageArriereGauche());
-        log.info("Calage arriere droit  : {}", pamiIOServiceRobot.calageArriereDroit());
-        log.info("Sol gauche            : {}", pamiIOServiceRobot.presenceSolGauche(false));
-        log.info("Sol droit             : {}", pamiIOServiceRobot.presenceSolDroit(false));
+        log.info("Calage arriere droit : {}", pamiIOServiceRobot.calageArriereDroit());
+        log.info("Sol gauche : {}", pamiIOServiceRobot.presenceSolGauche(true));
+        log.info("Sol droit : {}", pamiIOServiceRobot.presenceSolDroit(true));
     }
 
     @ShellMethod
