@@ -49,13 +49,18 @@ public class PamiIOCommands {
         log.info("Input 6 : {}", arig2025IoPamiSensors.isInput6());
         log.info("Input 7 : {}", arig2025IoPamiSensors.isInput7());
 
-        log.info("\n===================================================\n");
+        log.info("");
+        log.info("===================================================");
+        log.info("");
+
         log.info("{} real IOs name", robotName.name());
         log.info("AU : {}", pamiIOServiceRobot.auOk());
         log.info("Calage arriere gauche : {}", pamiIOServiceRobot.calageArriereGauche());
         log.info("Calage arriere droit : {}", pamiIOServiceRobot.calageArriereDroit());
-        log.info("Sol gauche : {}", pamiIOServiceRobot.presenceSolGauche(true));
-        log.info("Sol droit : {}", pamiIOServiceRobot.presenceSolDroit(true));
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
+            log.info("Sol gauche : {}", pamiIOServiceRobot.presenceSolGauche(true));
+            log.info("Sol droit : {}", pamiIOServiceRobot.presenceSolDroit(true));
+        }
     }
 
     @ShellMethod
