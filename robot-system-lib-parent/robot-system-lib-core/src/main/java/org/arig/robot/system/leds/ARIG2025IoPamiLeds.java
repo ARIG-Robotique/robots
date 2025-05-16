@@ -15,6 +15,7 @@ public class ARIG2025IoPamiLeds {
     private LedColor ledAU;
     private LedColor ledTeam;
     private LedColor ledCalage;
+    private LedColor ledCentrale;
     private LedColor ledAll;
 
     @RequiredArgsConstructor
@@ -85,11 +86,23 @@ public class ARIG2025IoPamiLeds {
         }
     }
 
+    public void setLedCentrale(LedColor color) {
+        try {
+            if (ledCentrale != color) {
+                log.info("Led centrale : {} -> {}", ledCentrale != null ? ledCentrale.name() : "UNKNOWN", color.name());
+                ledCentrale = color;
+                i2cManager.sendData(deviceName, LED_REGISTER, (byte) 4, (byte) color.colorCode);
+            }
+        } catch (I2CException e) {
+            log.error("Erreur lors de l'affichage de la LED centrale");
+        }
+    }
+
     public void setAllLeds(LedColor color) {
         try {
             if (ledAll != color) {
                 log.info("All Leds : {} -> {}", ledAll != null ? ledAll.name() : "UNKNOWN", color.name());
-                ledAll = ledAU = ledTeam = ledCalage = color;
+                ledAll = ledAU = ledTeam = ledCalage = ledCentrale = color;
                 i2cManager.sendData(deviceName, LED_REGISTER, (byte) 0, (byte) color.colorCode);
             }
         } catch (I2CException e) {

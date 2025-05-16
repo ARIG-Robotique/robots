@@ -60,21 +60,26 @@ public class PamiIOCommands {
 
     @ShellMethod
     public void testLeds() {
+        arig2025IoPamiLeds.setAllLeds(ARIG2025IoPamiLeds.LedColor.Black);
         for (ARIG2025IoPamiLeds.LedColor c : ARIG2025IoPamiLeds.LedColor.values()) {
             arig2025IoPamiLeds.setLedAU(c);
-            ThreadUtils.sleep(1000);
+            ThreadUtils.sleep(500);
         }
         for (ARIG2025IoPamiLeds.LedColor c : ARIG2025IoPamiLeds.LedColor.values()) {
             arig2025IoPamiLeds.setLedTeam(c);
-            ThreadUtils.sleep(1000);
+            ThreadUtils.sleep(500);
         }
         for (ARIG2025IoPamiLeds.LedColor c : ARIG2025IoPamiLeds.LedColor.values()) {
             arig2025IoPamiLeds.setLedCalage(c);
-            ThreadUtils.sleep(1000);
+            ThreadUtils.sleep(500);
+        }
+        for (ARIG2025IoPamiLeds.LedColor c : ARIG2025IoPamiLeds.LedColor.values()) {
+            arig2025IoPamiLeds.setLedCentrale(c);
+            ThreadUtils.sleep(500);
         }
         for (ARIG2025IoPamiLeds.LedColor c : ARIG2025IoPamiLeds.LedColor.values()) {
             arig2025IoPamiLeds.setAllLeds(c);
-            ThreadUtils.sleep(1000);
+            ThreadUtils.sleep(500);
         }
         arig2025IoPamiLeds.setAllLeds(ARIG2025IoPamiLeds.LedColor.Black);
     }
