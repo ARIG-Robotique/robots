@@ -95,15 +95,22 @@ public class PamiRobotContext {
         final ARIG2024Can2WheelsEncoders encoders;
 
         if (robotName.id() == RobotIdentification.PAMI_TRIANGLE) {
-            encoders = new ARIG2024Can2WheelsEncoders(canBus, 2, 1);
+            encoders = new ARIG2024Can2WheelsEncoders(canBus, 1, 2);
+            encoders.setEncoderConfiguration(false, true);
 
         } else if (robotName.id() == RobotIdentification.PAMI_CARRE) {
             encoders = new ARIG2024Can2WheelsEncoders(canBus, 1, 2);
+            encoders.setEncoderConfiguration(false, false);
+
+        } else if (robotName.id() == RobotIdentification.PAMI_ROND) {
+            encoders = new ARIG2024Can2WheelsEncoders(canBus, 1, 2);
+            encoders.setEncoderConfiguration(false, false);
+
         } else {
             encoders = new ARIG2024Can2WheelsEncoders(canBus, 1, 2);
+            encoders.setEncoderConfiguration(false, false);
         }
 
-        encoders.setEncoderConfiguration(false, true);
         encoders.setCoefs(PamiConstantesConfig.coefCodeurGauche, PamiConstantesConfig.coefCodeurDroit);
         return encoders;
     }
@@ -126,16 +133,23 @@ public class PamiRobotContext {
         final ARIG2024CanPropulsionsMotors motors;
         if (robotName.id() == RobotIdentification.PAMI_TRIANGLE) {
             motors = new ARIG2024CanPropulsionsMotors(canBus);
-            motors.assignMotors(2, 1);
+            motors.assignMotors(1, 2);
             motors.setMotorConfiguration(true, false);
+
         } else if (robotName.id() == RobotIdentification.PAMI_CARRE) {
             motors = new ARIG2024CanPropulsionsMotors(canBus);
             motors.assignMotors(1, 2);
             motors.setMotorConfiguration(false, false);
+
+        } else if (robotName.id() == RobotIdentification.PAMI_ROND) {
+            motors = new ARIG2024CanPropulsionsMotors(canBus);
+            motors.assignMotors(1, 2);
+            motors.setMotorConfiguration(false, false);
+
         } else {
             motors = new ARIG2024CanPropulsionsMotors(canBus);
             motors.assignMotors(1, 2);
-            motors.setMotorConfiguration(false, true);
+            motors.setMotorConfiguration(false, false);
         }
         return motors;
     }
