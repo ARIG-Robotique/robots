@@ -15,7 +15,7 @@ public class ARIG2025IoPamiServos extends AbstractServos {
 
     private static final byte RELEASE_REGISTER = 'D';
     private static final byte VERSION_REGISTER = 'V';
-    private static final int NB_SERVOS = 2;
+    private static final int NB_SERVOS = 1;
 
     @Getter
     @Accessors(fluent = true)
