@@ -41,11 +41,13 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     @Autowired
     private RobotGroupService pamiCarreGroupService;
 
+    /*
     @Autowired
     private RobotGroupService pamiRondGroupService;
 
     @Autowired
     private RobotGroupService pamiStarGroupService;
+    */
 
     @Autowired
     private BaliseService baliseService;
@@ -77,12 +79,14 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         if (!pamiCarreGroupService.getGroup().isOpen()) {
             robotStatus.pamiCarreGroupOk(pamiCarreGroupService.getGroup().tryConnect());
         }
+        /*
         if (!pamiRondGroupService.getGroup().isOpen()) {
             robotStatus.pamiRondGroupOk(pamiRondGroupService.getGroup().tryConnect());
         }
         if (!pamiStarGroupService.getGroup().isOpen()) {
             robotStatus.pamiStarGroupOk(pamiStarGroupService.getGroup().tryConnect());
-    }
+        }
+        */
     }
 
     @Override
@@ -91,8 +95,10 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             ecranService.displayMessage("Arret du programme");
             pamiTriangleGroupService.quit();
             pamiCarreGroupService.quit();
+            /*
             pamiRondGroupService.quit();
             pamiStarGroupService.quit();
+             */
             throw new ExitProgram(true);
         }
     }
@@ -156,12 +162,14 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         if (robotStatus.pamiCarreGroupOk()) {
             pamiCarreGroupService.start();
         }
+        /*
         if (robotStatus.pamiRondGroupOk()) {
             pamiRondGroupService.start();
         }
         if (robotStatus.pamiStarGroupOk()) {
             pamiStarGroupService.start();
         }
+         */
     }
 
     @Override
@@ -192,8 +200,10 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     public void beforePowerOff() {
         pamiTriangleGroupService.end();
         pamiCarreGroupService.end();
+        /*
         pamiRondGroupService.end();
         pamiStarGroupService.end();
+         */
 
         nerellIO.enableAlimServos();
 
@@ -235,16 +245,20 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             if (Boolean.TRUE.equals(teamChangeFilter.filter(nerellEcranService.config().getTeam()))) {
                 pamiTriangleGroupService.team(nerellEcranService.config().getTeam());
                 pamiCarreGroupService.team(nerellEcranService.config().getTeam());
+                /*
                 pamiRondGroupService.team(nerellEcranService.config().getTeam());
                 pamiStarGroupService.team(nerellEcranService.config().getTeam());
+                 */
                 log.info("Team {}", nerellRobotStatus.team().name());
             }
 
             if (Boolean.TRUE.equals(strategyChangeFilter.filter(nerellEcranService.config().getStrategy()))) {
                 pamiTriangleGroupService.strategy(nerellEcranService.config().getStrategy());
                 pamiCarreGroupService.strategy(nerellEcranService.config().getStrategy());
+                /*
                 pamiRondGroupService.strategy(nerellEcranService.config().getStrategy());
                 pamiStarGroupService.strategy(nerellEcranService.config().getStrategy());
+                */
                 log.info("Strategy {}", nerellRobotStatus.strategy().name());
             }
 
@@ -256,8 +270,10 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             if (Boolean.TRUE.equals(configChangeFilter.filter(nerellEcranService.config()))) {
                 pamiTriangleGroupService.configuration();
                 pamiCarreGroupService.configuration();
+                /*
                 pamiRondGroupService.configuration();
                 pamiStarGroupService.configuration();
+                */
                 log.info("Config {}", nerellEcranService.config());
             }
 
@@ -282,6 +298,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             pamiCarreGroupService.waitInitStep(InitStep.PAMI_CARRE_CALAGE_TERMINE, 5);
         }
 
+        /*
         if (pamiRondGroupService.getGroup().isOpen()) {
             nerellEcranService.displayMessage("Calage Rond");
             pamiRondGroupService.calage();
@@ -293,6 +310,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
             pamiStarGroupService.calage();
             pamiStarGroupService.waitInitStep(InitStep.PAMI_STAR_CALAGE_TERMINE, 5);
         }
+        */
 
         nerellEcranService.displayMessage("Calage bordure");
         try {
@@ -404,8 +422,10 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
                 pamiTriangleGroupService.configuration();
                 pamiCarreGroupService.configuration();
+                /*
                 pamiRondGroupService.configuration();
                 pamiStarGroupService.configuration();
+                */
             }
 
             robotStatus.twoRobots(nerellEcranService.config().isTwoRobots());
@@ -422,11 +442,13 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         if (robotStatus.pamiCarreGroupOk()) {
             pamiCarreGroupService.ready();
         }
+        /*
         if (robotStatus.pamiRondGroupOk()) {
             pamiRondGroupService.ready();
         }
         if (robotStatus.pamiStarGroupOk()) {
             pamiStarGroupService.ready();
         }
+        */
     }
 }
