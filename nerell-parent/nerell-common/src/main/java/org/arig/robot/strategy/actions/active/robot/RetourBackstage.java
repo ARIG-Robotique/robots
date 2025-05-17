@@ -39,9 +39,9 @@ public class RetourBackstage extends AbstractNerellAction {
 
     @Override
     public Point entryPoint() {
-        GradinBrut.ID gradinId = rs.team() == Team.JAUNE ? GradinBrut.ID.JAUNE_HAUT_GAUCHE : GradinBrut.ID.BLEU_HAUT_DROITE;
-        final int entryX = rs.gradinBrutStocks().get(gradinId).present() ? FINAL_X_GRADIN : FINAL_X_FREE;
-        return new Point(getX(entryX), ENTRY_Y);
+        //GradinBrut.ID gradinId = rs.team() == Team.JAUNE ? GradinBrut.ID.JAUNE_HAUT_GAUCHE : GradinBrut.ID.BLEU_HAUT_DROITE;
+        //final int entryX = rs.gradinBrutStocks().get(gradinId).present() ? FINAL_X_GRADIN : FINAL_X_FREE;
+        return new Point(getX(FINAL_X_GRADIN), ENTRY_Y);
     }
 
     @Override
