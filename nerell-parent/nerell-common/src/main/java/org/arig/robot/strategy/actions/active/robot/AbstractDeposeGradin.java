@@ -52,6 +52,10 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
       return false;
     }
 
+    if (rs.useTwoFaces() && rs.getRemainingTime() >= (EurobotConfig.matchTimeMs / 2) && (rs.faceAvant().isEmpty() || rs.faceArriere().isEmpty())) {
+      return false;
+    }
+
     // Plus le temps de construire, on ne peut pas déposer
     if (rs.getRemainingTime() < EurobotConfig.validTimeConstruction) {
       return false;
