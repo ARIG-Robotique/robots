@@ -131,7 +131,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                     case QUALIF:
                     case FINALE_1:
                     case FINALE_2:
-                        mv.tourneDeg(180);
+                        log.info("Strategy {}. Calage terminé", nerellRobotStatus.strategy().name());
                         break;
 
                     default:
@@ -139,7 +139,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
                 }
 
 
-            } catch (AvoidingException e) {
+            } catch (Exception e /*AvoidingException e*/) {
                 nerellEcranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
                 throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);
             }
