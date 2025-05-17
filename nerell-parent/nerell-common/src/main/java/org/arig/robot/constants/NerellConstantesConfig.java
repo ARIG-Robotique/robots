@@ -140,9 +140,9 @@ public interface NerellConstantesConfig {
     PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.ANYA16;
     int pathFindingAngle = 45;
     int pathFindingAngleSafe = 50;
-    int pathFindingSeuilProximite = 440;
-    int pathFindingSeuilProximiteSafe = 500;
-    int pathFindingSeuilProximiteArig = 390;
+    int pathFindingSeuilProximite = 480;
+    int pathFindingSeuilProximiteSafe = 600;
+    int pathFindingSeuilProximiteArig = 440;
     int pathFindingTailleObstacle = NerellConstantesConfig.pathFindingSeuilProximite * 2 + 50;
     int pathFindingTailleObstacleArig = NerellConstantesConfig.pathFindingSeuilProximiteArig * 2 + 50;
     int pathFindingTailleObstaclePami = 600;
