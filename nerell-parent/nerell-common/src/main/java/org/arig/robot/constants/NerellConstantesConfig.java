@@ -143,7 +143,7 @@ public interface NerellConstantesConfig {
     int pathFindingSeuilProximite = 480;
     int pathFindingSeuilProximiteSafe = 600;
     int pathFindingSeuilProximiteArig = 440;
-    int pathFindingTailleObstacle = NerellConstantesConfig.pathFindingSeuilProximite * 2 + 50;
+    int pathFindingTailleObstacle = NerellConstantesConfig.pathFindingSeuilProximiteSafe * 2 + 50;
     int pathFindingTailleObstacleArig = NerellConstantesConfig.pathFindingSeuilProximiteArig * 2 + 50;
     int pathFindingTailleObstaclePami = 600;
 
