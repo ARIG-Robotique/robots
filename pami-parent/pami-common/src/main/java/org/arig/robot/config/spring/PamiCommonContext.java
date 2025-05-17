@@ -15,6 +15,7 @@ import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.PamiRobotStatus;
 import org.arig.robot.model.Position;
 import org.arig.robot.model.RobotConfig;
+import org.arig.robot.model.RobotName;
 import org.arig.robot.model.ecran.EcranConfig;
 import org.arig.robot.model.ecran.EcranState;
 import org.arig.robot.monitoring.MonitoringJsonWrapper;
@@ -101,8 +102,18 @@ public class PamiCommonContext {
     }
 
     @Bean
-    public ConvertionRobotUnit convertisseur() {
-        return new ConvertionRobotUnit(PamiConstantesConfig.countPerMm, PamiConstantesConfig.entraxe, true);
+    public ConvertionRobotUnit convertisseur(RobotName robotName) {
+        final double entraxe;
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
+            entraxe = PamiConstantesConfig.entraxeTriangle;
+        } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+            entraxe = PamiConstantesConfig.entraxeCarre;
+        } else if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
+            entraxe = PamiConstantesConfig.entraxeTriangle;
+        } else {
+            entraxe = PamiConstantesConfig.entraxeStar;
+        }
+        return new ConvertionRobotUnit(PamiConstantesConfig.countPerMm, entraxe, true);
     }
 
     @Bean

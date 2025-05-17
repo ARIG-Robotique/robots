@@ -39,6 +39,9 @@ public abstract class AbstractCommonPamiServosService extends AbstractServosServ
     public void handOuvert1(boolean wait) {
         setPosition(HAND, POS_OUVERT_1, wait);
     }
+    public boolean isOuvert1() {
+        return isInPosition(HAND, POS_OUVERT_1);
+    }
 
     public void handOuvert2(boolean wait) {
         setPosition(HAND, POS_OUVERT_2, wait);

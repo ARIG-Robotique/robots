@@ -119,6 +119,9 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
 
     @Override
     public void inMatch() {
+        if (robotStatus.getRemainingTime() <= EurobotConfig.pamiStartRemainingTimeMs && !pamiRobotStatus.showTime()) {
+            pamiRobotStatus.enableShowTime();
+        }
     }
 
     @Override
@@ -217,21 +220,24 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
                 if (id == RobotName.RobotIdentification.PAMI_TRIANGLE) {
                     position.setPt(new Point(
                         conv.mmToPulse(x),
-                        conv.mmToPulse(yBase + PamiConstantesConfig.dstCallageCote)
+                        //conv.mmToPulse(yBase + PamiConstantesConfig.dstCallageCote)
+                        conv.mmToPulse(2000 - 100)
                     ));
                     groupService.initStep(InitStep.PAMI_TRIANGLE_CALAGE_TERMINE);
 
                 } else if (id == RobotName.RobotIdentification.PAMI_CARRE) {
                     position.setPt(new Point(
                         conv.mmToPulse(x),
-                        conv.mmToPulse(yBase + 3 * PamiConstantesConfig.dstCallageCote)
+                        //conv.mmToPulse(yBase + 3 * PamiConstantesConfig.dstCallageCote)
+                        conv.mmToPulse(2000 - 225)
                     ));
                     groupService.initStep(InitStep.PAMI_CARRE_CALAGE_TERMINE);
 
                 } else if (id == RobotName.RobotIdentification.PAMI_ROND) {
                     position.setPt(new Point(
                         conv.mmToPulse(x),
-                        conv.mmToPulse(yBase + 5 * PamiConstantesConfig.dstCallageArriere)
+                        //conv.mmToPulse(yBase + 5 * PamiConstantesConfig.dstCallageArriere)
+                        conv.mmToPulse(2000 - 375)
                     ));
                     groupService.initStep(InitStep.PAMI_ROND_CALAGE_TERMINE);
 
@@ -363,8 +369,15 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
         );
 
         while (!groupService.isEnd() || !io.auOk()) {
+            if (!io.auOk()) {
+                pamiRobotStatus.disableShowTime();
+            } else {
+                pamiRobotStatus.enableShowTime();
+            }
+
             ThreadUtils.sleep(1000);
         }
+        pamiRobotStatus.disableShowTime();
 
         ecranService.displayMessage("FIN - Extinction");
         ThreadUtils.sleep(500);

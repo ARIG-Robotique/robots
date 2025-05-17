@@ -3,10 +3,12 @@ package org.arig.robot.scheduler;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.PamiRobotStatus;
 import org.arig.robot.monitoring.MonitoringWrapper;
+import org.arig.robot.services.AbstractCommonPamiServosService;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.BaliseService;
 import org.arig.robot.services.IOService;
 import org.arig.robot.services.PamiEcranService;
+import org.arig.robot.services.PamiRobotServosService;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,11 @@ public class PamiTasksScheduler {
     @Autowired
     protected MonitoringWrapper monitoringWrapper;
 
+    @Autowired
+    protected PamiRobotServosService robotServosService;
+  @Autowired
+  private PamiRobotServosService pamiRobotServosService;
+
     @Scheduled(fixedRate = 1000)
     public void ecranTask() {
         if (rs.ecranEnabled()) {
@@ -63,13 +70,24 @@ public class PamiTasksScheduler {
     }
 
     @Scheduled(fixedDelay = 5000)
-    public void systemCheckTensionTaks() {
+    public void systemCheckTensionTask() {
         if (rs.matchEnabled()) {
             if (!energyService.checkServos()) {
                 ioService.disableAlimServos();
             }
             if (!energyService.checkMoteurs()) {
                 ioService.disableAlimMoteurs();
+            }
+        }
+    }
+
+    @Scheduled(fixedDelay = 300)
+    public void showTimeTask() {
+        if (rs.showTime()) {
+            if (pamiRobotServosService.isOuvert1()) {
+                pamiRobotServosService.handOuvert2(false);
+            } else {
+                pamiRobotServosService.handOuvert1(false);
             }
         }
     }

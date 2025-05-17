@@ -31,9 +31,9 @@ public class MoshPit extends AbstractEurobotAction {
 
     @Override
     public Point entryPoint() {
-        if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
             return new Point(getX(1920), 1420);
-        } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+        } else if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
             return new Point(getX(1500), 1390);
         } else {
             return new Point(getX(1000), 1420);
@@ -42,7 +42,7 @@ public class MoshPit extends AbstractEurobotAction {
 
     @Override
     public void refreshCompleted() {
-        if (robotName.id() == RobotName.RobotIdentification.PAMI_STAR) {
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
             log.info("Mosh pit pas pour la Superstar");
             complete(true);
         }
@@ -55,7 +55,7 @@ public class MoshPit extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        if (robotName.id() == RobotName.RobotIdentification.PAMI_STAR) {
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
             return false;
         }
         return isTimeValid() && rs.getRemainingTime() <= EurobotConfig.pamiStartRemainingTimeMs;

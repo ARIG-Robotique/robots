@@ -32,12 +32,12 @@ public class Scene extends AbstractEurobotAction {
 
     @Override
     public Point entryPoint() {
-        return new Point(getX(1270), 1890);
+        return new Point(getX(1255), 1900);
     }
 
     @Override
     public void refreshCompleted() {
-        if (robotName.id() != RobotName.RobotIdentification.PAMI_STAR) {
+        if (robotName.id() != RobotName.RobotIdentification.PAMI_TRIANGLE) {
             log.info("Scene que pour la Superstar");
             complete(true);
         }
@@ -50,7 +50,7 @@ public class Scene extends AbstractEurobotAction {
 
     @Override
     public boolean isValid() {
-        if (robotName.id() != RobotName.RobotIdentification.PAMI_STAR) {
+        if (robotName.id() != RobotName.RobotIdentification.PAMI_TRIANGLE) {
             return false;
         }
         return isTimeValid() && rs.getRemainingTime() <= EurobotConfig.pamiStartRemainingTimeMs;
@@ -61,17 +61,17 @@ public class Scene extends AbstractEurobotAction {
         try {
             mv.setVitessePercent(100, 100);
             Point entry = entryPoint();
-            mv.pathTo(entry, GotoOption.AVANT);
-            mv.gotoPoint(entry.getX(), 1700, GotoOption.AVANT);
+            mv.gotoPoint(entry, GotoOption.AVANT);
+            mv.gotoPoint(entry.getX(), 1650, GotoOption.AVANT);
             mv.setVitessePercent(20, 100);
             rs.enableCalage(TypeCalage.PRISE_PRODUIT_SOL_AVANT);
-            mv.gotoPoint(entry.getX(), 1600, GotoOption.AVANT);
+            mv.gotoPoint(entry.getX(), 1500, GotoOption.AVANT);
 
             complete(true);
             rs.disableAvoidance();
 
             ThreadUtils.sleep((int) rs.getRemainingTime());
-        } catch (AvoidingException | NoPathFoundException e) {
+        } catch (AvoidingException e) {
             log.error("Erreur d'accès a la scene", e);
         }
     }

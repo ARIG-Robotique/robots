@@ -32,7 +32,10 @@ public interface PamiConstantesConfig {
     // Configuration des convertions //
     // ----------------------------- //
 
-    double entraxe = 112;
+    double entraxeTriangle = 101.5;
+    double entraxeCarre = 99.5;
+    double entraxeRond = 99;
+    double entraxeStar = 100;
 
     // Diam <d_roue> mm => périmètre <xx> mm
     // <pulse_tour> p => <distance_tour> mm : <pulse_tour> / <distance_tour> = countPerMm
@@ -106,8 +109,8 @@ public interface PamiConstantesConfig {
     // Paramètre Physiques        //
     // -------------------------- //
 
-    double dstCallageCote = 40; // coté du robot <=> milieu du robot
-    double dstCallageArriere = 40; // dos du robot <=> milieu du robot
+    double dstCallageCote = 56; // coté du robot <=> milieu du robot
+    double dstCallageArriere = 46.5; // dos du robot <=> milieu du robot
 
     // -------------------------- //
     // Paramètre Avoiding service //
