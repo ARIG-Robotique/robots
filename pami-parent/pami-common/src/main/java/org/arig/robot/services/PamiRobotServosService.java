@@ -17,23 +17,23 @@ public class PamiRobotServosService extends AbstractCommonPamiServosService {
         if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
             servo(HAND_ID, HAND)
                 .time(500)
-                .position(POS_FERME, 1500)
-                .position(POS_OUVERT_1, 1600)
-                .position(POS_OUVERT_2, 1400);
+                .position(POS_FERME, 600)
+                .position(POS_OUVERT_1, 2400)
+                .position(POS_OUVERT_2, 1700);
 
         } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
             servo(HAND_ID, HAND)
                 .time(500)
-                .position(POS_FERME, 1500)
-                .position(POS_OUVERT_1, 1600)
-                .position(POS_OUVERT_2, 1400);
+                .position(POS_FERME, 600)
+                .position(POS_OUVERT_1, 2400)
+                .position(POS_OUVERT_2, 1800);
 
         } else if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
             servo(HAND_ID, HAND)
                 .time(500)
-                .position(POS_FERME, 1500)
-                .position(POS_OUVERT_1, 1600)
-                .position(POS_OUVERT_2, 1400);
+                .position(POS_FERME, 600)
+                .position(POS_OUVERT_1, 2400)
+                .position(POS_OUVERT_2, 1700);
 
         } else {
             servo(HAND_ID, HAND)
@@ -42,5 +42,7 @@ public class PamiRobotServosService extends AbstractCommonPamiServosService {
                 .position(POS_OUVERT_1, 1600)
                 .position(POS_OUVERT_2, 1400);
         }
+
+        group(1, "Servos").addServo(servo(HAND));
     }
 }

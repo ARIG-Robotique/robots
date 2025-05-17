@@ -123,7 +123,7 @@ public class PamiIOServiceRobot implements PamiIOService {
         } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
             return arig2025IoPamiSensors.isInput1();
         } else if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
-            return arig2025IoPamiSensors.isInput1();
+            return arig2025IoPamiSensors.isInput2();
         }
 
         // PAMI Star

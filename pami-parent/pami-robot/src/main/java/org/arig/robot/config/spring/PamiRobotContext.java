@@ -103,8 +103,8 @@ public class PamiRobotContext {
             encoders.setEncoderConfiguration(false, true);
 
         } else if (robotName.id() == RobotIdentification.PAMI_ROND) {
-            encoders = new ARIG2024Can2WheelsEncoders(canBus, 1, 2);
-            encoders.setEncoderConfiguration(false, false);
+            encoders = new ARIG2024Can2WheelsEncoders(canBus, 2, 1);
+            encoders.setEncoderConfiguration(false, true);
 
         } else {
             encoders = new ARIG2024Can2WheelsEncoders(canBus, 1, 2);
@@ -143,8 +143,8 @@ public class PamiRobotContext {
 
         } else if (robotName.id() == RobotIdentification.PAMI_ROND) {
             motors = new ARIG2024CanPropulsionsMotors(canBus);
-            motors.assignMotors(1, 2);
-            motors.setMotorConfiguration(false, false);
+            motors.assignMotors(2, 1);
+            motors.setMotorConfiguration(true, false);
 
         } else {
             motors = new ARIG2024CanPropulsionsMotors(canBus);
