@@ -1,122 +1,254 @@
 package org.arig.robot.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.ConstructionArea;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.StockFace;
+import org.arig.robot.model.enums.TypeCalage;
+import org.arig.robot.utils.ThreadUtils;
 
+@Slf4j
 public class NerellFaceArriereService extends AbstractNerellFaceService {
 
   public NerellFaceArriereService(NerellRobotStatus rs, TrajectoryManager mv,
-                                  NerellRobotServosService servos, NerellIOService ioService) {
+                                NerellRobotServosService servos, NerellIOService ioService) {
     super(rs, mv, servos, ioService);
   }
 
   @Override
-  protected void aligneFace(Point gradin) {
-      // TODO: Implement this method
-      throw new UnsupportedOperationException("Method aligneFace is not yet implemented.");
+  protected void aligneFace(Point gradin) throws AvoidingException {
+    mv.alignBackTo(gradin);
   }
 
   @Override
   protected void ouvreFacePourPrise() {
-      // TODO: Implement this method
-      throw new UnsupportedOperationException("Method ouvreFacePourPrise is not yet implemented.");
+    servos.tiroirArrierePrise(false);
+    servos.becArriereOuvert(false);
+    servos.groupeBlockColonneArriereOuvert(false);
+    servos.groupeDoigtsArriereLache(false);
+    servos.groupePincesArrierePrise(true);
+    servos.ascenseurArriereBas(true);
   }
 
   @Override
-  protected void deplacementDeposeInit() throws AvoidingException {
-    // TODO: Implement this method
-    throw new UnsupportedOperationException("Method deplacementDeposeInit is not yet implemented.");
+  protected void deplacementPriseColonnesPinces() throws AvoidingException {
+    rs.enableCalage(TypeCalage.FORCE);
+    mv.setVitessePercent(20, 100);
+    mv.reculeMM(90);
+    mv.setVitessePercent(0, 100);
+    mv.reculeMM(10);
   }
 
   @Override
-  protected void deplacementPriseColonnesPinces() {
-      // TODO: Implement this method
-      throw new UnsupportedOperationException("Method deplacementPriseColonnesPinces is not yet implemented.");
-  }
-
-  @Override
-  protected void deplacementPriseColonnesSol() {
-      // TODO: Implement this method
-      throw new UnsupportedOperationException("Method deplacementPriseColonnesSol is not yet implemented.");
+  protected void deplacementPriseColonnesSol() throws AvoidingException {
+    rs.enableCalage(TypeCalage.ARRIERE, TypeCalage.FORCE);
+    mv.setVitessePercent(70, 100);
+    mv.reculeMM(90);
   }
 
   @Override
   protected void echappementPriseGradinBrut(PriseGradinState state) throws AvoidingException {
-    // TODO: Implement this method
-    throw new UnsupportedOperationException("Method echappementPriseGradinBrut is not yet implemented.");
+    log.info("Echappement de la prise du gradin brut. Erreur {}", state.name());
+
+    servos.groupeBlockColonneArriereOuvert(false);
+
+    mv.setVitessePercent(100, 100);
+    mv.avanceMM(100);
+
+    servos.tiroirArriereDepose(false);
+    servos.becArriereOuvert(false);
+    servos.groupeDoigtsArriereLache(false);
+    servos.groupePincesArrierePrise(false);
+    servos.becArriereFerme(false);
+    servos.ascenseurArriereRepos(true);
+    servos.groupeDoigtsArriereFerme(true);
+    servos.groupePincesArriereRepos(false);
+    servos.tiroirArriereStock(false);
+  }
+
+  @Override
+  protected void deplacementDeposeInit() throws AvoidingException {
+    rs.enableCalage(TypeCalage.FORCE);
+    mv.setVitessePercent(100, 100);
+    mv.reculeMM(130);
   }
 
   @Override
   protected void deplacementDeposeColonnesSol(boolean reverse) throws AvoidingException {
-    // TODO: Implement this method
-    throw new UnsupportedOperationException("Method deplacementDeposeColonnesSol is not yet implemented.");
+    rs.enableCalage(TypeCalage.FORCE);
+    mv.setVitessePercent(100, 100);
+    if (!reverse) {
+      mv.avanceMM(50);
+    } else {
+      mv.reculeMM(50);
+    }
   }
 
-  @Override
   protected void deplacementDeposeEtage() throws AvoidingException {
-    // TODO: Implement this method
-    throw new UnsupportedOperationException("Method deplacementDeposeEtage is not yet implemented.");
+    mv.setVitessePercent(100, 100);
+    mv.avanceMM(100);
   }
 
-  @Override
   protected void deplacementDeposeEtage2() throws AvoidingException {
-    // TODO: Implement this method
-    throw new UnsupportedOperationException("Method deplacementDeposeEtage2 is not yet implemented.");
+    mv.setVitessePercent(100, 100);
+    mv.reculeMM(100);
   }
 
   @Override
   protected boolean iosPinces() {
-      // TODO: Implement this method
-      throw new UnsupportedOperationException("Method iosPinces is not yet implemented.");
-  }
-
-  @Override
-  protected boolean miseEnStockTiroir() {
-      // TODO: Implement this method
-      throw new UnsupportedOperationException("Method miseEnStockTiroir is not yet implemented.");
+    return ThreadUtils.waitUntil(
+        () -> ioService.pinceArriereGauche(true) && ioService.pinceArriereDroite(true),
+        20, 1000
+    );
   }
 
   @Override
   protected boolean iosTiroir() {
-      // TODO: Implement this method
-      throw new UnsupportedOperationException("Method checkIOsTiroir is not yet implemented.");
-  }
-
-  @Override
-  protected void updatePincesState(boolean gauche, boolean droite) {
-    // TODO: Implement this method
-    throw new UnsupportedOperationException("Method updatePincesState is not yet implemented.");
-  }
-
-  @Override
-  protected void updateTiroirState(boolean bas, boolean haut) {
-    // TODO: Implement this method
-    throw new UnsupportedOperationException("Method updateTiroirState is not yet implemented.");
-  }
-
-  @Override
-  protected void updateColonnesSolState(boolean gauche, boolean droite) {
-    // TODO: Implement this method
-    throw new UnsupportedOperationException("Method updateColonnesSolState is not yet implemented.");
+    return ThreadUtils.waitUntil(
+        () -> ioService.tiroirArriereBas(true) && ioService.tiroirArriereHaut(true),
+        20, 1000
+    );
   }
 
   @Override
   protected boolean iosColonnesSol() {
-      // TODO: Implement this method
-      throw new UnsupportedOperationException("Method checkIOsColonnesSol is not yet implemented.");
+    return ThreadUtils.waitUntil(
+        () -> ioService.solArriereGauche(true) && ioService.solArriereDroite(true),
+        20, 1000
+    );
+  }
+
+  @Override
+  protected void updatePincesState(boolean gauche, boolean droite) {
+    log.info("Mise à jour du state des pinces : G {} ; D {}", gauche, droite);
+    rs.faceArriere().pinceGauche(gauche).pinceDroite(droite);
+  }
+
+  @Override
+  protected void updateColonnesSolState(boolean gauche, boolean droite) {
+    log.info("Mise à jour du state des colonnes sol : G {} ; D {}", gauche, droite);
+    rs.faceArriere().solGauche(gauche).solDroite(droite);
+  }
+
+  @Override
+  protected void updateTiroirState(boolean bas, boolean haut) {
+    log.info("Mise à jour du state du tiroir : B {} ; H {}", bas, haut);
+    rs.faceArriere().tiroirBas(bas).tiroirHaut(haut);
+  }
+
+  @Override
+  protected boolean miseEnStockTiroir() {
+    servos.groupeDoigtsArriereSerre(true);
+    servos.ascenseurArriereHaut(true);
+    if (!iosTiroir()) {
+      log.warn("Erreur de mise en stock du tiroir arriere");
+      return false;
+    }
+
+    int nbTries = 1;
+    do {
+      if (nbTries > 1) {
+        log.info(" - Réouverture du tiroir arriere pour le stock. Essai n°{}", nbTries);
+        servos.tiroirArrierePrise(true, true);
+        servos.becArriereOuvert(true);
+        servos.tiroirArriereDepose(true, true);
+        servos.ascenseurArriereHaut(true);
+
+        servos.becArriereFerme(true);
+        servos.becArriereOuvert(true);
+      } else {
+        log.info(" - Ouverture du tiroir pour mise en stock. Essai n°{}", nbTries);
+        servos.tiroirArriereDepose(true, true);
+      }
+      servos.becArriereFerme(true);
+      servos.tiroirArriereStock(true);
+      servos.ascenseurArriereStock(true);
+
+      if (nbTries++ > 3) {
+        break;
+      }
+    } while (!iosTiroir());
+
+    servos.groupePincesArriereStock(false);
+    return nbTries <= 3;
   }
 
   @Override
   protected void verrouillageColonnesSol() {
-      // TODO: Implement this method
-      throw new UnsupportedOperationException("Method verrouillageColonnesSol is not yet implemented.");
+    servos.groupeBlockColonneArriereFerme(true);
   }
 
   @Override
   protected void deposeEtage(ConstructionArea.Etage etage) throws AvoidingException {
-    // TODO: Implement this method
-    throw new UnsupportedOperationException("Method deposeEtage is not yet implemented.");
+    StockFace face = rs.faceArriere();
+    log.info("Tentative de dépose de l'étage {}", etage.name());
+    if (!face.tiroirBas()) {
+      log.warn("Tiroir arriere bas vide, on ne peut pas déposer");
+      return;
+    }
+
+    if (face.tiroirBas() &&
+        face.solGauche() &&
+        face.solDroite() &&
+        !face.pinceGauche() &&
+        !face.pinceDroite()
+    ) {
+      log.info("Récupération des colonnes en stock depuis le sol");
+      servos.groupePincesArrierePriseSol(true);
+      servos.groupeDoigtsArriereOuvert(true);
+      servos.groupeBlockColonneArriereOuvert(true);
+      deplacementDeposeColonnesSol(false);
+      servos.ascenseurArriereBas(true);
+      deplacementDeposeColonnesSol(true);
+      servos.groupeDoigtsArrierePriseSol(false);
+      servos.groupePincesArriereStock(true);
+      servos.groupeDoigtsArriereSerre(true);
+      updateColonnesSolState(false, false);
+      updatePincesState(true, true);
+      servos.ascenseurArriereStock(true);
+      servos.groupePincesArrierePrise(true);
+      servos.ascenseurArriereHaut(true);
+      if (etage == ConstructionArea.Etage.ETAGE_2) {
+        deplacementDeposeEtage2();
+      }
+    }
+
+    log.info("Dépose de l'étage {} depuis les pinces", etage.name());
+    servos.groupePincesArrierePrise(true);
+    servos.ascenseurArriereHaut(true);
+    servos.tiroirArriereDepose(true);
+    servos.becArriereOuvert(true);
+
+    if (face.tiroirHaut()) {
+      log.info("Split tiroir arriere pour la dépose");
+      servos.ascenseurArriereSplit(true);
+      servos.becArriereFerme(true);
+      servos.tiroirArriereStock(true);
+      updateTiroirState(true, false);
+      if (etage == ConstructionArea.Etage.ETAGE_1) {
+        servos.ascenseurArriereBas(true);
+      } else {
+        servos.ascenseurArriereEtage2(true);
+      }
+    } else {
+      log.info("Pas de split tiroir");
+      if (etage == ConstructionArea.Etage.ETAGE_1) {
+        servos.ascenseurArriereBas(true);
+      } else {
+        servos.ascenseurArriereEtage2(true);
+      }
+      servos.becArriereFerme(false);
+      servos.tiroirArriereStock(false);
+      updateTiroirState(false, false);
+    }
+
+    servos.groupeDoigtsArriereLache(true);
+    deplacementDeposeEtage();
+    updatePincesState(false, false);
+    servos.groupeDoigtsArriereFerme(true);
+    servos.ascenseurArriereStock(true);
+    servos.groupePincesArriereRepos(false);
   }
 }
