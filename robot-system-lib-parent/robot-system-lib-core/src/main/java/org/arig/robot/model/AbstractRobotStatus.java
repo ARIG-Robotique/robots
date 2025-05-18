@@ -82,6 +82,10 @@ public abstract class AbstractRobotStatus {
         return robotGroupOk ? true : twoRobots;
     }
 
+    public boolean havePamis() {
+        return pamiTriangleGroupOk || pamiCarreGroupOk || pamiRondGroupOk || pamiStarGroupOk;
+    }
+
     /**
      * Les robots/pamis communiquent
      */

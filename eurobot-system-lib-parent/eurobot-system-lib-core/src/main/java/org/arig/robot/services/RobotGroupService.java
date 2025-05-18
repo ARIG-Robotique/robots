@@ -166,8 +166,8 @@ public class RobotGroupService implements RobotGroup.Handler {
     }
 
     public void waitInitStep(InitStep s, int timeoutSecond) {
-        if (!rs.twoRobots()) {
-            log.warn("Un seul robot, on ne peut pas attendre l'autre robot !");
+        if (!rs.twoRobots() && !rs.havePamis()) {
+            log.warn("Un seul robot et/ou aucun PAMI, on ne peut pas attendre les autres !");
             return;
         }
 
