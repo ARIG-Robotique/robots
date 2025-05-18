@@ -20,6 +20,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class MoshPit extends AbstractEurobotAction {
 
+    private int tryFinalPoint = 0;
+    private boolean firstTime = true;
+
     public int executionTimeMs() {
         return 0;
     }
@@ -31,13 +34,7 @@ public class MoshPit extends AbstractEurobotAction {
 
     @Override
     public Point entryPoint() {
-        if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
-            return new Point(getX(1920), 1420);
-        } else if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
-            return new Point(getX(1500), 1390);
-        } else {
-            return new Point(getX(1000), 1420);
-        }
+        return new Point(getX(600), 1625);
     }
 
     @Override
@@ -65,7 +62,21 @@ public class MoshPit extends AbstractEurobotAction {
     public void execute() {
         try {
             mv.setVitessePercent(100, 100);
-            mv.pathTo(entryPoint(), GotoOption.AVANT);
+            mv.gotoPoint(entryPoint(), GotoOption.AVANT);
+            if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
+                if (tryFinalPoint == 0) {
+                    mv.pathTo(getX(1500), 1280);
+                } else if (tryFinalPoint == 1) {
+                    mv.pathTo(getX(1275), 1320);
+                } else if (tryFinalPoint == 2) {
+                    mv.pathTo(getX(1790), 1320);
+                }
+            } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+                if (firstTime) {
+                    ThreadUtils.sleep(3000);
+                }
+                mv.pathTo(getX(830), 1520);
+            }
             mv.alignFrontTo(getX(1270), 1600);
             complete(true);
             rs.disableAvoidance();
@@ -73,6 +84,12 @@ public class MoshPit extends AbstractEurobotAction {
             ThreadUtils.sleep((int) rs.getRemainingTime());
         } catch (AvoidingException | NoPathFoundException e) {
             log.error("Erreur d'accès au mosh pit", e);
+        } finally {
+            firstTime = false;
+            tryFinalPoint++;
+            if (tryFinalPoint > 2) {
+                tryFinalPoint = 0;
+            }
         }
     }
 }
