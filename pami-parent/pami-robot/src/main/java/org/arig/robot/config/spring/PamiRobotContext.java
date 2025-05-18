@@ -29,17 +29,22 @@ import org.arig.robot.system.capteurs.can.ARIG2024AlimentationController;
 import org.arig.robot.system.capteurs.i2c.ARIG2025IoPamiSensors;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.arig.robot.system.capteurs.socket.IVisionBalise;
+import org.arig.robot.system.capteurs.socket.LD19LidarTelemeterOverSocket;
+import org.arig.robot.system.capteurs.socket.RPLidarA2TelemeterOverSocket;
 import org.arig.robot.system.encoders.Abstract2WheelsEncoders;
 import org.arig.robot.system.encoders.can.ARIG2024Can2WheelsEncoders;
 import org.arig.robot.system.leds.ARIG2025IoPamiLeds;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.can.ARIG2024CanPropulsionsMotors;
+import org.arig.robot.system.process.LidarBridgeProcess;
 import org.arig.robot.system.servos.i2c.ARIG2025IoPamiServos;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 import tel.schich.javacan.NetworkDevice;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -154,65 +159,16 @@ public class PamiRobotContext {
         return motors;
     }
 
+    @Bean
+    public LidarBridgeProcess rplidarBridgeProcess() {
+        return new LidarBridgeProcess("/home/pi/lidar_bridge", "ldlidar");
+    }
+
     @Bean("rplidar")
+    @DependsOn("rplidarBridgeProcess")
     public ILidarTelemeter rplidar() throws Exception {
-        return new ILidarTelemeter() {
-            @Getter
-            @Setter
-            private boolean enabled = true;
-
-            @Override
-            public boolean isClusterable() {
-                return true;
-            }
-
-            @Override
-            public boolean isOpen() {
-                return true;
-            }
-
-            @Override
-            public void printDeviceInfo() { }
-
-            @Override
-            public void end() { }
-
-            @Override
-            public DeviceInfos deviceInfo() {
-                DeviceInfos di = new DeviceInfos();
-                di.setFirmwareVersion("1.0");
-                di.setSerialNumber("SN-666");
-                di.setHardwareVersion((short) 1);
-                return di;
-            }
-
-            @Override
-            public HealthInfos healthInfo() {
-                HealthInfos hi = new HealthInfos();
-                hi.setState(HealthState.OK);
-                return hi;
-            }
-
-            @Override
-            public void startScan() { }
-
-            @Override
-            public void startScan(Short speed) { }
-
-            @Override
-            public void stopScan() { }
-
-            @Override
-            public void setSpeed(Short speed) { }
-
-            @Override
-            public ScanInfos grabData() {
-                ScanInfos si = new ScanInfos();
-                si.setIgnored((short) 0);
-                si.setScan(new ArrayList<>());
-                return si;
-            }
-        };
+        final File socketFile = new File(LidarBridgeProcess.socketPath);
+        return new LD19LidarTelemeterOverSocket(socketFile);
     }
 
     @Bean
