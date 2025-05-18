@@ -62,6 +62,9 @@ public class MoshPit extends AbstractEurobotAction {
     public void execute() {
         try {
             mv.setVitessePercent(100, 100);
+            if (firstTime && robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+                ThreadUtils.sleep(3000);
+            }
             mv.gotoPoint(entryPoint(), GotoOption.AVANT);
             if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
                 if (tryFinalPoint == 0) {
@@ -72,9 +75,6 @@ public class MoshPit extends AbstractEurobotAction {
                     mv.pathTo(getX(1790), 1320);
                 }
             } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
-                if (firstTime) {
-                    ThreadUtils.sleep(3000);
-                }
                 mv.pathTo(getX(830), 1520);
             }
             mv.alignFrontTo(getX(1270), 1600);
