@@ -211,7 +211,6 @@ public class NerellCommonContext {
         return new RobotGroupService(rs, pamiCarreGroup, threadPoolTaskExecutor);
     }
 
-    /*
     @Bean
     public RobotGroup pamiRondGroup(NerellRobotStatus nerellRobotStatus, Environment env, ThreadPoolExecutor threadPoolTaskExecutor) throws IOException {
         final Integer serverPort = env.getRequiredProperty("robot.server.pamis.rond.port", Integer.class);
@@ -229,6 +228,7 @@ public class NerellCommonContext {
         return new RobotGroupService(rs, pamiRondGroup, threadPoolTaskExecutor);
     }
 
+    /*
     @Bean
     public RobotGroup pamiStarGroup(NerellRobotStatus nerellRobotStatus, Environment env, ThreadPoolExecutor threadPoolTaskExecutor) throws IOException {
         final Integer serverPort = env.getRequiredProperty("robot.server.pamis.star.port", Integer.class);
