@@ -2,6 +2,7 @@ package org.arig.robot.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.PamiRobotStatus;
+import org.arig.robot.model.Team;
 import org.arig.robot.monitoring.MonitoringWrapper;
 import org.arig.robot.services.AbstractCommonPamiServosService;
 import org.arig.robot.services.AbstractEnergyService;
@@ -11,6 +12,7 @@ import org.arig.robot.services.PamiEcranService;
 import org.arig.robot.services.PamiRobotServosService;
 import org.arig.robot.system.avoiding.AvoidingService;
 import org.arig.robot.system.blockermanager.SystemBlockerManager;
+import org.arig.robot.system.leds.ARIG2025IoPamiLeds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -32,21 +34,16 @@ public class PamiTasksScheduler {
     private PamiEcranService ecranService;
 
     @Autowired
-    private BaliseService baliseService;
-
-    @Autowired
     private IOService ioService;
 
     @Autowired
     private AbstractEnergyService energyService;
 
     @Autowired
-    protected MonitoringWrapper monitoringWrapper;
+    private PamiRobotServosService pamiRobotServosService;
 
     @Autowired
-    protected PamiRobotServosService robotServosService;
-  @Autowired
-  private PamiRobotServosService pamiRobotServosService;
+    private ARIG2025IoPamiLeds leds;
 
     @Scheduled(fixedRate = 1000)
     public void ecranTask() {
@@ -81,6 +78,8 @@ public class PamiTasksScheduler {
         }
     }
 
+    private byte ledsCounter = 0;
+
     @Scheduled(fixedDelay = 300)
     public void showTimeTask() {
         if (rs.showTime()) {
@@ -88,6 +87,49 @@ public class PamiTasksScheduler {
                 pamiRobotServosService.handOuvert2(false);
             } else {
                 pamiRobotServosService.handOuvert1(false);
+            }
+
+            ARIG2025IoPamiLeds.LedColor ledColor = rs.team() == Team.JAUNE ?
+                  ARIG2025IoPamiLeds.LedColor.Yellow : ARIG2025IoPamiLeds.LedColor.Blue;
+            switch(ledsCounter) {
+                case 0:
+                case 9:
+                    leds.setAllLeds(ARIG2025IoPamiLeds.LedColor.Black);
+                    break;
+                case 1:
+                    leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED1, ledColor);
+                    break;
+                case 2:
+                    leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED1, ledColor);
+                    leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED2, ledColor);
+                    break;
+                case 3:
+                  leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED2, ledColor);
+                  leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED3, ledColor);
+                  break;
+                case 4:
+                  leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED3, ledColor);
+                  leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED4, ledColor);
+                  break;
+                case 5:
+                  leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED4, ledColor);
+                  leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED5, ledColor);
+                  break;
+                case 6:
+                  leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED5, ledColor);
+                  leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED6, ledColor);
+                  break;
+                case 7:
+                  leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED6, ledColor);
+                  leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED7, ledColor);
+                  break;
+                case 8:
+                  leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED7, ledColor);
+                  break;
+            }
+            ledsCounter++;
+            if (ledsCounter > 15) {
+                ledsCounter = 0;
             }
         }
     }
