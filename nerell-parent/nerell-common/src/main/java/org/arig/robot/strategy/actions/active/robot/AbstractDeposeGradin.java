@@ -58,7 +58,10 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
       return false;
     }
 
-    if (rs.useTwoFaces() && rs.getRemainingTime() >= (EurobotConfig.matchTimeMs / 2) && (rs.faceAvant().isEmpty() || rs.faceArriere().isEmpty())) {
+    // Ne pas autoriser les déposes sans stock complet sur les deux faces quand deux faces actives
+    if (rs.useTwoFaces() && rs.getRemainingTime() >= EurobotConfig.validDeposeDeuxFacesNonPleineRemainingTimeNerell
+        && (rs.faceAvant().isEmpty() || rs.faceArriere().isEmpty()))
+    {
       return false;
     }
 

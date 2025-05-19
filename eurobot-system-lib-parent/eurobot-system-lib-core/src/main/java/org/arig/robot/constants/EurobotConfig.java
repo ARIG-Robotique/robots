@@ -11,6 +11,7 @@ public interface EurobotConfig {
     // Temps restants
     int validRetourBackstageRemainingTimeNerell = 10000;
     int validPriseAdverseRemainingTimeNerell = 30000;
+    int validDeposeDeuxFacesNonPleineRemainingTimeNerell = 30000;
 
     // Durée de validités
     int validTimeEchappement = 20000;
