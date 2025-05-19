@@ -64,10 +64,12 @@ public class RetourBackstage extends AbstractNerellAction {
                 // Face Avant
                 mv.gotoOrientationDeg(90);
                 servosNerell.tiroirAvantDepose(false);
+                servosNerell.becAvantOuvert(false);
             } else {
                 // Face Arrière
                 mv.gotoOrientationDeg(-90);
                 servosNerell.tiroirArriereDepose(false);
+                servosNerell.becArriereOuvert(false);
             }
             log.info("Arrivée au backstage");
             groups.forEach(g -> g.backstage(BackstageState.TARGET_REACHED));
