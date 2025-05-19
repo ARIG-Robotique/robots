@@ -11,6 +11,8 @@ import org.arig.robot.communication.socket.lidar.GrabDataQuery;
 import org.arig.robot.communication.socket.lidar.GrabDataResponse;
 import org.arig.robot.communication.socket.lidar.HealthInfosQuery;
 import org.arig.robot.communication.socket.lidar.HealthInfosResponse;
+import org.arig.robot.communication.socket.lidar.SetConfigurationQuery;
+import org.arig.robot.communication.socket.lidar.SetConfigurationResponse;
 import org.arig.robot.communication.socket.lidar.SetSpeedQuery;
 import org.arig.robot.communication.socket.lidar.SetSpeedResponse;
 import org.arig.robot.communication.socket.lidar.StartScanQuery;
@@ -141,6 +143,21 @@ public abstract class AbstractTelemeterOverSocket extends AbstractSocketClient<L
     try {
       openIfNecessary();
       sendToSocketAndGet(new SetSpeedQuery(speed), SetSpeedResponse.class);
+    } catch (Exception e) {
+      log.error("Erreur de lecture", e);
+    }
+  }
+
+  @Override
+  public void setConfiguration(boolean reverse, int offsetAngle, int excludeLowerThan, int excludeGreaterThan) {
+    try {
+      openIfNecessary();
+      SetConfigurationQuery q = new SetConfigurationQuery();
+      q.setReversed(reverse);
+      q.setAngleOffset(offsetAngle);
+      q.setExcludeLowerThan(excludeLowerThan);
+      q.setExcludeGreaterThan(excludeGreaterThan);
+      sendToSocketAndGet(q, SetSpeedResponse.class);
     } catch (Exception e) {
       log.error("Erreur de lecture", e);
     }

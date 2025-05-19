@@ -125,6 +125,11 @@ public class GP2D12Telemeter implements ILidarTelemeter {
     }
 
     @Override
+    public void setConfiguration(boolean reverse, int offsetAngle, int excludeLowerThan, int excludeGreaterThan) {
+        // NOOP
+    }
+
+    @Override
     public ScanInfos grabData() {
         if (!enabled) {
             return null;

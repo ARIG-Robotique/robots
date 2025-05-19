@@ -126,9 +126,9 @@ public interface PamiConstantesConfig {
     PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.ANYA16;
     int pathFindingAngle = 45;
     int pathFindingAngleSafe = 50;
-    int pathFindingSeuilProximite = 440;
-    int pathFindingSeuilProximiteSafe = 500;
-    int pathFindingSeuilProximiteArig = 390;
+    int pathFindingSeuilProximite = 160;
+    int pathFindingSeuilProximiteSafe = 200;
+    int pathFindingSeuilProximiteArig = 140;
     int pathFindingTailleObstacle = PamiConstantesConfig.pathFindingSeuilProximite * 2 + 50;
     int pathFindingTailleObstacleArig = PamiConstantesConfig.pathFindingSeuilProximiteArig * 2 + 50;
 

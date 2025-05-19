@@ -87,6 +87,11 @@ public class LidarTelemeterBouchon implements ILidarTelemeter {
     }
 
     @Override
+    public void setConfiguration(boolean reverse, int offsetAngle, int excludeLowerThan, int excludeGreaterThan) {
+        // NOOP
+    }
+
+    @Override
     public ScanInfos grabData() {
         ScanInfos r = new ScanInfos();
         r.setIgnored((short) 359);

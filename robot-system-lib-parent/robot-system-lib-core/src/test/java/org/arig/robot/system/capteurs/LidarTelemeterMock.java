@@ -63,6 +63,9 @@ public class LidarTelemeterMock implements ILidarTelemeter {
     public void setSpeed(final Short speed) { }
 
     @Override
+    public void setConfiguration(boolean reverse, int offsetAngle, int excludeLowerThan, int excludeGreaterThan) { }
+
+    @Override
     public ScanInfos grabData() {
         ScanInfos r = new ScanInfos();
         r.setIgnored((short) 359);

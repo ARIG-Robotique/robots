@@ -255,7 +255,7 @@ public abstract class AbstractOrdonanceur {
     /**
      * Valide le statut du lidar ou emet ExitProgram
      */
-    private void initLidar() {
+    protected void initLidar() {
         HealthInfos lidarHealth = lidar.healthInfo();
         if (!lidarHealth.isOk()) {
             String error = String.format("Status du Lidar KO : %s - %s - Code %s", lidarHealth.getState(), lidarHealth.getValue(), lidarHealth.getErrorCode());

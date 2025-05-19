@@ -22,5 +22,6 @@ public interface ILidarTelemeter {
     void startScan(Short speed);
     void stopScan();
     void setSpeed(Short speed);
+    void setConfiguration(boolean reverse, int offsetAngle, int excludeLowerThan, int excludeGreaterThan);
     ScanInfos grabData();
 }
