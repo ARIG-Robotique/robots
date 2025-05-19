@@ -126,6 +126,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
     @Override
     public void inMatch() {
         if (robotStatus.getRemainingTime() <= EurobotConfig.pamiStartRemainingTimeMs && !pamiRobotStatus.showTime()) {
+            log.info("Start show time animation \\°/");
             pamiRobotStatus.enableShowTime();
         }
     }
