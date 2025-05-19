@@ -69,12 +69,12 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     }
 
     @Setter(AccessLevel.NONE)
-    private boolean ejectionCoupDePute = StrategyOption.EJECTION_COUP_DE_PUTE.defaultValue();
+    private boolean eviterCoteAdverse = StrategyOption.EVITER_COTE_ADVERSE.defaultValue();
 
-    public void ejectionCoupDePute(boolean ejectionCoupDePute) {
-        if (this.ejectionCoupDePute != ejectionCoupDePute) {
-            log.info("[RS] Ejection coup de pute : {} -> {}", this.ejectionCoupDePute, ejectionCoupDePute);
-            this.ejectionCoupDePute = ejectionCoupDePute;
+    public void eviterCoteAdverse(boolean eviterCoteAdverse) {
+        if (this.eviterCoteAdverse != eviterCoteAdverse) {
+            log.info("[RS] Eviter coté adverse : {} -> {}", this.eviterCoteAdverse, eviterCoteAdverse);
+            this.eviterCoteAdverse = eviterCoteAdverse;
         }
     }
 
@@ -85,6 +85,16 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
         if (this.useTwoFaces != useTwoFaces) {
             log.info("[RS] Utiliser les deux faces : {} -> {}", this.useTwoFaces, useTwoFaces);
             this.useTwoFaces = useTwoFaces;
+        }
+    }
+
+    @Setter(AccessLevel.NONE)
+    private boolean ejectionCoupDePute = StrategyOption.EJECTION_COUP_DE_PUTE.defaultValue();
+
+    public void ejectionCoupDePute(boolean ejectionCoupDePute) {
+        if (this.ejectionCoupDePute != ejectionCoupDePute) {
+            log.info("[RS] Ejection coup de pute : {} -> {}", this.ejectionCoupDePute, ejectionCoupDePute);
+            this.ejectionCoupDePute = ejectionCoupDePute;
         }
     }
 
@@ -202,8 +212,9 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
     public Map<String, Boolean> gameConfigs() {
         Map<String, Boolean> r = new HashMap<>();
         r.put(StrategyOption.LIMITER_2_ETAGES.description(), limiter2Etages);
-        r.put(StrategyOption.EJECTION_COUP_DE_PUTE.description(), ejectionCoupDePute);
+        r.put(StrategyOption.EVITER_COTE_ADVERSE.description(), eviterCoteAdverse);
         r.put(StrategyOption.USE_TWO_FACES.description(), useTwoFaces);
+        r.put(StrategyOption.EJECTION_COUP_DE_PUTE.description(), ejectionCoupDePute);
         return r;
     }
 

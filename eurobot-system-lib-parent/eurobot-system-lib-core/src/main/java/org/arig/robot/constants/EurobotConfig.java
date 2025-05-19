@@ -9,7 +9,8 @@ public interface EurobotConfig {
     int pamiStartRemainingTimeMs = 15300;
 
     // Temps restants
-    int validRetourBackstageRemainingTimeNerell = 15000;
+    int validRetourBackstageRemainingTimeNerell = 10000;
+    int validPriseAdverseRemainingTimeNerell = 30000;
 
     // Durée de validités
     int validTimeEchappement = 20000;
