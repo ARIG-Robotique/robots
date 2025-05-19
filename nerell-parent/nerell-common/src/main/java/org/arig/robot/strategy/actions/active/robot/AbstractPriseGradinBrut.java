@@ -41,7 +41,13 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
       return false;
     }
 
-    return isTimeValid() && rs.getRemainingTime() > EurobotConfig.validTimePrise
+    // Forcer le remplissage des deux faces si on est en mode deux faces avant un certains moment de la fin
+    // Ajouter aussi le paramètre de la limite a deux niveaux ??
+    if (rs.useTwoFaces() && rs.getRemainingTime() >= EurobotConfig.validPriseDeuxFacesPleineRemainingTime && !rs.faceAvant().isEmpty() && !rs.faceArriere().isEmpty()) {
+      return false;
+    }
+
+    return isTimeValid() && rs.getRemainingTime() > EurobotConfig.validTimePriseRemainingTime
         && gradin().present() && !gradin().bloque();
   }
 
