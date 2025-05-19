@@ -16,6 +16,7 @@ public class DeposeGrandGradinAdverse extends AbstractDeposeGradin {
   @Override
   public Point entryPoint() {
     Point entry = super.entryPoint();
+    entry.addDeltaY(-EurobotConfig.offsetDeposeGradin); // Reset opération super.entryPoint
     if (rs.team() == Team.JAUNE) {
       entry.addDeltaX(-EurobotConfig.offsetDeposeGradin);
     } else {
