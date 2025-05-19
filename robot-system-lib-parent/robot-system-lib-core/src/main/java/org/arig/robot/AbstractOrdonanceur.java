@@ -240,7 +240,7 @@ public abstract class AbstractOrdonanceur {
     /**
      * Initialise le bus I2C ou emet ExitProgram
      */
-    private void initI2C() {
+    protected void initI2C() {
         try {
             ecranService.displayMessage("Scan I2C");
             i2CManager.executeScan();
